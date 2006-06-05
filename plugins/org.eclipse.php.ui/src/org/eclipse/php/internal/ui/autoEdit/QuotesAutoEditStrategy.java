@@ -1,0 +1,165 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
+
+package org.eclipse.php.internal.ui.autoEdit;
+
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentCommand;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.Logger;
+import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.core.format.FormatterUtils;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+
+/**
+ * 
+ * @author guy.g
+ *
+ */
+
+public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
+
+	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
+		if (TypingPreferences.closeQuotes && command.text != null) {
+			int length = command.text.length();
+			if (length == 0 && command.length == 1) {
+				try {
+					char removedChar = document.getChar(command.offset);
+					if (isQuote(removedChar)) {
+						deleteQuote((IStructuredDocument) document, command, removedChar);
+					}
+
+				} catch (BadLocationException e) {
+					Logger.logException(e);
+				}
+			}
+			if (length == 1) {
+				char c = command.text.charAt(0);
+				if (isQuote(c)) {
+					autoAddPairQuote((IStructuredDocument) document, command, c);
+				}
+			}
+		}
+	}
+
+	private void autoAddPairQuote(IStructuredDocument document, DocumentCommand command, char insertedChar) {
+		int startOffset = command.offset;
+		int endOffset = startOffset + command.length;
+
+		try {
+			String startState = FormatterUtils.getPartitionType(document, startOffset);
+			String endState = FormatterUtils.getPartitionType(document, endOffset);
+			if (startState == PHPPartitionTypes.PHP_QUOTED_STRING || endState == PHPPartitionTypes.PHP_QUOTED_STRING) {
+				if (endOffset < document.getLength() && startOffset == endOffset) {
+					char nextChar = document.getChar(endOffset);
+					if (insertedChar == nextChar) {
+						char prevChar = document.getChar(startOffset - 1);
+						if (prevChar != BACK_SLASH) {
+							if (command.length == 0) {
+								command.offset++;
+								command.text = "";
+							} else {
+								command.length++;
+							}
+						}
+					}
+				}
+				return;
+			}
+			if (isQuoteAllowed(startState, insertedChar)) {
+				if ((shouldAddClosingBracket(document, endOffset, true))) {
+					int result = isMatchingCharNeeded(document, endOffset, insertedChar);
+					if (result == MATCHING_BRACKET_NEEDED) {
+						command.text = command.text + insertedChar;
+						//making the change in ther documet ourselfs and consuming the original command
+						document.replace(command.offset, command.length, command.text);
+						document.getUndoManager().disableUndoManagement();
+						document.replace(command.offset + 1, 0, "");
+						document.getUndoManager().enableUndoManagement();
+						command.offset++; //this will cause the caret to be set between the quotes.
+						command.length = 0;
+						command.text = "";
+					}
+				}
+			}
+
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+			document.getUndoManager().enableUndoManagement();
+		}
+	}
+
+	/**
+	 * returns true if the lexical state demands qoute balance
+	 */
+	private boolean isQuoteAllowed(String state, char quote) {
+		return (state == PHPPartitionTypes.PHP_DEFAULT) || (state == PHPRegionTypes.PHP_OPENTAG) || (state == PHPRegionTypes.PHP_CLOSETAG);
+	}
+
+	public int isMatchingCharNeeded(IStructuredDocument document, int offset, char quoteChar) {
+		try {
+			String postCharState = FormatterUtils.getPartitionType(document, offset);
+			if (!(postCharState == PHPPartitionTypes.PHP_DEFAULT || postCharState == PHPRegionTypes.PHP_OPENTAG || postCharState == PHPRegionTypes.PHP_CLOSETAG)) {
+				if (isSpecialOpenCurlyInQuotes(document, offset)) {
+					postCharState = FormatterUtils.getPartitionType(document, offset + 1);
+				}
+			}
+
+			if (postCharState != PHPPartitionTypes.PHP_DEFAULT && postCharState != PHPRegionTypes.PHP_OPENTAG && postCharState != PHPRegionTypes.PHP_CLOSETAG) {
+				return SEARCH_NOT_VALID;
+			}
+			if (FormatterUtils.getPartitionType(document, document.getLength() - 1) == PHPPartitionTypes.PHP_QUOTED_STRING) {
+				IStructuredDocumentRegion sdRegion = document.getLastStructuredDocumentRegion();
+				ITextRegion tRegion = sdRegion.getLastRegion();
+				char lastChar = document.getChar(sdRegion.getStartOffset() + tRegion.getTextEnd() - 1);
+				if (lastChar != quoteChar) {
+					return MATCHING_BRACKET_NOT_NEEDED;
+				}
+			}
+
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+		}
+		return MATCHING_BRACKET_NEEDED;
+	}
+
+	private void deleteQuote(IStructuredDocument document, DocumentCommand command, char removedChar) {
+		int offset = command.offset;
+		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+		if (sdRegion == null || sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
+			return;
+		}
+
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		if (tRegion == null) {
+			return;
+		}
+		String regionType = tRegion.getType();
+		if (regionType != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+			return;
+		}
+		if (offset != tRegion.getStart() + sdRegion.getStartOffset() || tRegion.getTextLength() != 2) {
+			//looking only for the cases where the user is trying to remove the first quote out of two coupled ones.
+			return;
+		}
+		try {
+			char nextChar = document.getChar(offset + 1);
+			if (nextChar != removedChar) {
+				return;
+			}
+			command.length = 2;
+		} catch (BadLocationException e) {
+		}
+	}
+}

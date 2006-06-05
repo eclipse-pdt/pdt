@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="phpDebugPreferencesAddon" name="PHP Debug Preferences Page Addon" schema="schema/phpDebugPreferencesAddon.exsd"/>
+   <extension
+         point="org.eclipse.debug.ui.debugModelPresentations">
+      <debugModelPresentation
+            class="org.eclipse.php.debug.ui.presentation.PHPModelPresentation"
+            id="org.eclipse.php.debug.core">
+      </debugModelPresentation>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            name="%debuggingPHP.name"
+            description="%debuggingPHP.description"
+            id="org.eclipse.php.debug.ui.debugging"
+            parentId="org.eclipse.debug.ui.debugging">
+      </context>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.debugModelContextBindings">
+      <modelContextBinding
+            debugModelId="org.eclipse.php.debug.core"
+            contextId="org.eclipse.php.debug.ui.debugging">
+      </modelContextBinding>
+   </extension>
+<!--   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            icon="icons/full/cview16/pda.gif"
+            configTypeID="org.eclipse.php.debug.core.launchConfigurationType.php"
+            id="org.eclipse.php.debug.ui.launchConfigurationTypeImage">
+      </launchConfigurationTypeImage>
+   </extension> -->
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
+            description="%runPHPExecutable.description"
+            class="org.eclipse.php.debug.ui.launching.PHPExeLaunchConfigurationTabGroup"
+            id="org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe">
+      </launchConfigurationTabGroup>
+     </extension>
+	<!--======================================================================================-->
+	<!-- for breakpoint                                                                       -->
+	<!--======================================================================================-->
+	<extension point="org.eclipse.wst.sse.ui.breakpoint">
+		<breakpointContribution id="org.eclipse.php.debug.ui.providers">
+			<provider
+				contentTypes="org.eclipse.php.core.phpsource"
+				class="org.eclipse.php.debug.ui.breakpoint.provider.PHPBreakpointProvider:*php"
+				id="org.eclipse.php.debug.ui.breakpoint.provider.PHPBreakpointProvider" />
+		</breakpointContribution>
+	</extension> 
+
+	<extension
+         point="org.eclipse.ui.popupMenus">           
+      <viewerContribution
+            targetID="php.editor.contextMenu"
+            id="php.editor.menuActions">
+         <action
+               label="%runToLine.label"
+               definitionId="org.eclipse.debug.ui.commands.RunToLine"
+               class="org.eclipse.debug.ui.actions.RunToLineActionDelegate"
+               menubarPath="additions"
+               id="php.editor.context.runToLineAction"/>
+      </viewerContribution>
+      <objectContribution
+            objectClass="org.eclipse.php.debug.core.model.PHPConditionalBreakpoint"
+            id="org.eclipse.php.debug.PHPBreakpointActions">
+         <action
+               label="%setCondition.label"
+               class="org.eclipse.php.debug.ui.actions.BreakpointSetConditionAction"
+               menubarPath="emptyBreakpointGroup"
+               enablesFor="1"
+               id="org.eclipse.php.debug.ui.actions.BreakpointSetCondition">
+         </action>
+      </objectContribution>
+   </extension>
+      <extension
+         	point="org.eclipse.core.runtime.adapters">
+	      <factory
+	            class="org.eclipse.php.debug.ui.breakpoint.adapter.PHPEditorAdapterFactory"
+	            adaptableType="org.eclipse.php.ui.editor.PHPStructuredEditor">
+				<adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget"/>
+	      </factory>
+      </extension>
+    <extension
+       	point="org.eclipse.debug.ui.variableValueEditors">
+    	<variableValueEditor
+          modelId="org.eclipse.php.debug.core"
+          class="org.eclipse.php.debug.ui.actions.PHPVariableValueEditor"/>
+ 	</extension>
+ 	<extension
+         point="org.eclipse.debug.ui.consoleColorProviders">
+      <consoleColorProvider
+            class="org.eclipse.php.debug.ui.console.PHPConsoleColorProvider"
+            processType="org.eclipse.php.debug.core.launching.PHPProcess"
+            id="org.eclipse.php.debug.ui.consoleColorProvider">
+      </consoleColorProvider>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.consoleLineTrackers">
+      <consoleLineTracker
+            class="org.eclipse.php.debug.ui.console.PHPLineTracker"
+            processType="org.eclipse.php.debug.core.launching.PHPProcess"
+            id="org.eclipse.php.debug.ui.console.PHPLineTracker">
+      </consoleLineTracker>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.watchExpressionDelegates">
+         <watchExpressionDelegate
+         	debugModel="org.eclipse.php.debug.core"
+         	delegateClass="org.eclipse.php.debug.ui.watch.PHPWatchExpressionDelegate"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="PHP Tools"
+            id="org.eclipse.php.ui.views">
+      </category>
+      <!--  Add ICON icon="icons/full/obj16/xxx.gif" -->
+      <view
+            class="org.eclipse.php.debug.ui.views.PHPStackView"
+            category="org.eclipse.php.ui.views"
+            icon="platform:/plugin/org.eclipse.php.ui/icons/full/obj16/phpfile.gif"
+            name="%parameterStack.name"
+            id="org.eclipse.debug.ui.PHPStackView"/>
+   </extension>
+  
+    <extension
+          point="org.eclipse.ui.perspectiveExtensions">
+       <perspectiveExtension targetID="org.eclipse.debug.ui.DebugPerspective">
+          <view
+                visible="false"
+                relative="org.eclipse.debug.ui.VariableView"
+                relationship="stack"
+                id="org.eclipse.debug.ui.PHPStackView"/>
+       </perspectiveExtension>
+    </extension>  
+    
+    <extension
+	     point="org.eclipse.debug.ui.contextViewBindings">
+	   <contextViewBinding
+	         contextId="org.eclipse.php.debug.ui.debugging"
+	         viewId="org.eclipse.debug.ui.PHPStackView"/>
+    </extension>
+     
+    <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="PHP Tools"
+            id="org.eclipse.php.ui.views">
+      </category>
+      <view
+            class="org.eclipse.php.debug.ui.views.DebugOutputView"
+            category="org.eclipse.php.ui.views"
+            icon="platform:/plugin/org.eclipse.php.ui/icons/full/obj16/phpfile.gif"
+            name="%debugOutput.name"
+            id="org.eclipse.debug.ui.PHPDebugOutput"/>
+   </extension>
+
+<!--   <extension
+	     point="org.eclipse.debug.ui.contextViewBindings">
+	   <contextViewBinding
+	         contextId="org.eclipse.debug.ui.debugging"
+	         viewId="PHPDebugOutput"/>
+    </extension> -->
+
+    <extension point="org.eclipse.ui.perspectiveExtensions"> 
+        <perspectiveExtension 
+            targetID="org.eclipse.debug.ui.DebugPerspective"> 
+            <view id="org.eclipse.debug.ui.PHPDebugOutput" 
+                relative="org.eclipse.ui.console.ConsoleView" 
+                relationship="stack" 
+            /> 
+        </perspectiveExtension> 
+    </extension>     
+    
+    <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="PHP Tools"
+            id="org.eclipse.php.ui.views">
+      </category>
+      <view
+            class="org.eclipse.php.debug.ui.views.DebugBrowserView"
+            category="org.eclipse.php.ui.views"
+            icon="platform:/plugin/org.eclipse.php.ui/icons/full/obj16/phpfile.gif"
+            name="%browserOutput.name"
+            id="org.eclipse.debug.ui.PHPBrowserOutput"/>
+   </extension>
+
+    <extension point="org.eclipse.ui.perspectiveExtensions"> 
+        <perspectiveExtension 
+            targetID="org.eclipse.debug.ui.DebugPerspective"> 
+            <view id="org.eclipse.debug.ui.PHPBrowserOutput" 
+                relative="org.eclipse.ui.console.ConsoleView" 
+                relationship="stack" 
+            /> 
+        </perspectiveExtension> 
+    </extension> 
+    
+    <!-- =========================== -->
+	<!-- PHP Editor Text Hovers      -->
+	<!-- =========================== -->
+	<extension point="org.eclipse.php.ui.phpEditorTextHovers">
+	    <hover
+          label="%phpVariableHoverLabel"
+          description="%phpVariableHoverDescription"
+          class="org.eclipse.php.debug.ui.hovers.PHPDebugTextHover"
+          id="org.eclipse.php.debug.ui.hovers.PHPDebugTextHover">
+    	</hover>
+    </extension>
+    
+    <extension point="org.eclipse.ui.preferencePages">
+<!--		<page
+			category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
+			class="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+			id="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+			name="%debugPreferencePageName">
+			<keywordReference id="org.eclipse.php.debug.ui.debug" />
+		</page> -->
+		<page
+			category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
+			class="org.eclipse.php.debug.ui.preferences.PHPDebugPropertyPreferencePage"
+			id="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+			name="%debugPreferencePageName">
+			<keywordReference id="org.eclipse.php.debug.ui.debug" />
+		</page>
+      <page
+            name="%installPHPPageName"
+            category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
+            class="org.eclipse.php.debug.ui.preferences.phps.PHPsPreferencePage"
+            id="org.eclipse.php.debug.ui..preferencesphps.PHPsPreferencePage">
+         <keywordReference id="org.eclipse.php.debug.ui.debug"/>
+      </page>	
+    </extension>
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			id="org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"
+			name="%ProjectPage.name"
+			objectClass="org.eclipse.core.resources.IProject"
+			adaptable="true"
+			class="org.eclipse.php.debug.ui.preferences.PHPDebugPropertyPreferencePage" />
+	</extension>	
+	<extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="%DebugPerspective.name"
+            icon="$nl$/icons/full/eview16/debug_persp.gif" 
+            class="org.eclipse.php.debug.ui.PHPDebugPerspectiveFactory"
+            id="org.eclipse.php.debug.ui.PHPDebugPerspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.php.debug.ui.PHPDebugPerspective">
+         <view
+		       relative="org.eclipse.debug.ui.DebugView"
+		       relationship="stack"
+		       id="org.eclipse.wst.server.ui.ServersView">
+	     </view>
+	     <view
+                visible="true"
+                relative="org.eclipse.debug.ui.VariableView"
+                relationship="stack"
+                id="org.eclipse.debug.ui.PHPStackView">
+         </view>       
+         <actionSet
+               id="org.eclipse.ui.NavigateActionSet">
+         </actionSet>
+		 <actionSet
+               id="org.eclipse.debug.ui.breakpointActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
+            icon="icon/full/obj16/php_exec.gif"
+            id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"/>
+   </extension>
+   
+   
+      <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            label="%phpexeApplicationShortcut.label"
+            modes="run, debug"
+            icon="icon/full/obj16/php_exec.gif"
+            class="org.eclipse.php.debug.ui.launching.PHPExeLaunchShortcut"
+            id="org.eclipse.php.deubg.ui.phpexeShortcut">
+		 
+		 <contextualLaunch>
+		 	<contextLabel mode="run" label="%phpexeApplicationShortcut.label"/>
+		 	<enablement>
+		 		<count value="1"/>
+		 	</enablement>
+		 </contextualLaunch>
+		 <contextualLaunch>
+		 	<contextLabel mode="debug" label="%phpexeApplicationShortcut.label"/>
+		 	<enablement>
+		 		<count value="1"/>
+		 	</enablement>
+		 </contextualLaunch>
+		 
+         <perspective
+               id="org.eclipse.ui.resourcePerspective">
+         </perspective>
+         <perspective
+         	   id="org.eclipse.php.perspective">
+         </perspective>
+         <perspective
+               id="org.eclipse.debug.ui.DebugPerspective">
+         </perspective>
+ 
+      </shortcut>
+   </extension>
+   <extension point="org.eclipse.php.server.apache.ui.serverTab">
+		<serverTab
+			class="org.eclipse.php.debug.ui.launching.PHPServerTab"
+			tab="false" />
+	</extension>
+      
+<!-- Editor -->
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="%sourceNotFoundEditorName"
+           icon="platform:/plugin/org.eclipse.debug.ui/icons/full/obj16/stckframe_obj.gif" 
+            class="org.eclipse.php.debug.ui.sourcelookup.PHPSourceNotFoundEditor"
+            id="org.eclipse.php.debug.SourceNotFoundEditor">
+      </editor>
+   </extension>
+ 
+ <extension point="org.eclipse.core.expressions.propertyTesters">
+   <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="isRunnable"
+      type="org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"
+      class="org.eclipse.php.debug.ui.PropertyTesters.RunnablePropertyTester">
+   </propertyTester>
+      <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="isRunnable"
+      type="org.eclipse.core.internal.resources.Project"
+      class="org.eclipse.php.debug.ui.PropertyTesters.RunnablePropertyTester">
+   </propertyTester>
+<!--      <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="isRunnable"
+      type="org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"
+      class="org.eclipse.core.resources.IFolder">
+   </propertyTester> -->
+ </extension>
+ <extension
+       point="org.eclipse.php.debug.ui.phpDebugPreferencesAddon">
+    <debugPreferencesAddon
+          class="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencesWorkspaceAddon"
+          id="org.eclipse.php.debug.ui.debugWorkspacePreferencesAddon"
+          name="PHP Debug Preferences Workspace Addon"
+          preferencesPageId="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+          type="Workspace"/>
+    <debugPreferencesAddon
+          class="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencesProjectAddon"
+          id="org.eclipse.php.debug.ui.debugProjectPreferencesAddon"
+          name="PHP Debug Preferences Project-Specific Addon"
+          preferencesPageId="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+          type="Project Specific"/>
+ </extension>
+   
+</plugin>

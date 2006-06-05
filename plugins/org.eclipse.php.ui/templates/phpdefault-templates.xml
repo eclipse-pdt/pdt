@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+
+	<!--  php templates -->
+
+
+<template
+	name="pr"
+	description="%description.php.print"
+	id="org.eclipse.php.ui.editor.templates.php.print"
+	context="php"
+	enabled="true">print ${};
+${cursor}</template>
+
+<template
+	name="prs"
+	description="%description.php.print.string"
+	id="org.eclipse.php.ui.editor.templates.php.print.string"
+	context="php"
+	enabled="true">print "${}";
+${cursor}</template>
+
+<template
+	name="prln"
+	description="%description.php.print.newline"
+	id="org.eclipse.php.ui.editor.templates.php.print.newline"
+	context="php"
+	enabled="true">print ${}."\n";
+${cursor}</template>
+
+<template
+	name="prv"
+	description="%description.php.print.variable"
+	id="org.eclipse.php.ui.editor.templates.php.print.variable"
+	context="php"
+	enabled="true">print("\${dollar}${variable} = ". ${dollar}${variable});
+${cursor}</template>
+
+<template
+	name="prf"
+	description="%description.php.print.functionName"
+	id="org.eclipse.php.ui.editor.templates.php.print.functionName"
+	context="php"
+	enabled="true">print("${function_container}");
+${cursor}</template>
+
+<template
+	name="prc"
+	description="%description.php.print.className"
+	id="org.eclipse.php.ui.editor.templates.php.print.className"
+	context="php"
+	enabled="true">print("${class_container}");
+${cursor}</template>
+
+<template
+	name="eco"
+	description="%description.php.echo"
+	id="org.eclipse.php.ui.editor.templates.php.echo"
+	context="php"
+	enabled="true">echo("${}");
+${cursor}</template>
+
+<template
+	name="iter"
+	description="%description.php.arrayIterator"
+	id="org.eclipse.php.ui.editor.templates.php.arrayIterator"
+	context="php"
+	enabled="true">for (${dollar}${number_variable} = 0 ; ${dollar}${number_variable} &lt; count(${dollar}${array_variable}) ; ${dollar}${number_variable}++) {
+	${cursor};
+}
+</template>
+
+<template
+	name="inst"
+	description="%description.php.instanceof"
+	id="org.eclipse.php.ui.editor.templates.php.instanceof"
+	context="php"
+	enabled="true">if (${dollar}${variable} instanceof ${class}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="fore"
+	description="%description.php.foreach"
+	id="org.eclipse.php.ui.editor.templates.php.foreach"
+	context="php"
+	enabled="true">foreach (${dollar}${array_variable} as ${dollar}${variable}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="forek"
+	description="%description.php.foreachkey"
+	id="org.eclipse.php.ui.editor.templates.php.foreachkey"
+	context="php"
+	enabled="true">foreach (${dollar}${array_variable} as ${dollar}${number_variable} => ${dollar}${variable}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="swi"
+	description="%description.php.switch"
+	id="org.eclipse.php.ui.editor.templates.php.switch"
+	context="php"
+	enabled="true">switch (${dollar}${variable}) {
+	case ${value}:
+	${cursor};
+	break;
+	
+	default:
+		;
+	break;
+}
+</template>
+
+<template
+	name="fnc"
+	description="%description.php.functionStatement"
+	id="org.eclipse.php.ui.editor.templates.php.functionStatement"
+	context="php"
+	enabled="true">function ${}()
+{
+	${cursor};
+}
+</template>
+
+<template
+	name="cls"
+	description="%description.php.class"
+	id="org.eclipse.php.ui.editor.templates.php.class"
+	context="php"
+	enabled="true">class ${class_name} {
+	function ${function_name}() {
+		${cursor};
+	}
+}
+</template>
+
+<template
+	name="if"
+	description="%description.php.if"
+	id="org.eclipse.php.ui.editor.templates.php.if"
+	context="php"
+	enabled="true">if (${condition}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="els"
+	description="%description.php.else"
+	id="org.eclipse.php.ui.editor.templates.php.else"
+	context="php"
+	enabled="true">else {
+	${cursor};
+}
+</template>
+
+<template
+	name="elif"
+	description="%description.php.elif"
+	id="org.eclipse.php.ui.editor.templates.php.elif"
+	context="php"
+	enabled="true">elseif (${condition}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="while"
+	description="%description.php.while"
+	id="org.eclipse.php.ui.editor.templates.php.while"
+	context="php"
+	enabled="true">while (${condition}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="itdir"
+	description="%description.php.itdir"
+	id="org.eclipse.php.ui.editor.templates.php.itdir"
+	context="php"
+	enabled="true">${dollar}${dirh} = opendir(${dirname});
+if (${dollar}${dirh}) {
+	while (${dollar}${dir_element} = readdir(${dollar}${dirh})) {
+		${cursor};
+	}
+	unset(${dollar}${dir_element});
+	closedir(${dollar}${dirh});
+}
+</template>
+
+<template
+	name="my_fr"
+	description="%description.php.mySql.fr"
+	id="org.eclipse.php.ui.editor.templates.php.mySql.fr"
+	context="php"
+	enabled="true">while (${dollar}${row} = mysql_fetch_row(${dollar}${query})) {
+	${cursor};
+}
+</template>
+
+<template
+	name="my_fa"
+	description="%description.php.mySql.fa"
+	id="org.eclipse.php.ui.editor.templates.php.mySql.fa"
+	context="php"
+	enabled="true">while (${dollar}${row} = mysql_fetch_array(${dollar}${query})) {
+	${cursor};
+}
+</template>
+
+<template
+	name="my_fo"
+	description="%description.php.mySql.fo"
+	id="org.eclipse.php.ui.editor.templates.php.mySql.fo"
+	context="php"
+	enabled="true">while (${dollar}${row} = mysql_fetch_object(${dollar}${query})) {
+	${cursor};
+}
+</template>
+
+<template
+	name="my_gc"
+	description="%description.php.my_gc"
+	id="org.eclipse.php.ui.editor.templates.php.my_gc"
+	context="php"
+	enabled="true">ob_start();
+	
+${cursor};
+
+${dollar}${contents} = ob_get_contents();
+ob_end_clean();
+</template>
+
+<template
+	name="cln"
+	description="%description.php.cln"
+	id="org.eclipse.php.ui.editor.templates.php.cln"
+	context="php"
+	enabled="true">${dollar}${new_obj} = clone ${dollar}${variable};
+${cursor}</template>
+
+<template
+	name="pcon"
+	description="%description.php.pcon"
+	id="org.eclipse.php.ui.editor.templates.php.pcon"
+	context="php"
+	enabled="true">parent::__construct();
+${cursor}</template>
+
+<template
+	name="pclon"
+	description="%description.php.pclon"
+	id="org.eclipse.php.ui.editor.templates.php.pclon"
+	context="php"
+	enabled="true">parent::__clone();
+</template>
+
+
+
+	<!--  php doc templates -->
+
+
+<template
+	name="author"
+	description="%description.phpdoc.author"
+	id="org.eclipse.php.ui.editor.templates.phpdoc.author"
+	context="phpdoc"
+	enabled="true">@author ${user}
+</template>
+
+
+<!-- new PHP templates -->
+<template
+	name="New simple PHP file"
+	description="%description.newphp.simple"
+	id="org.eclipse.php.ui.editor.templates.newPhp.author"
+	context="newPhp"
+	enabled="true">&lt;?php
+
+?&gt;</template>
+
+<template
+	name="New PHP file - HTML frameset"
+	description="%description.newphp.html.frameset"
+	id="org.eclipse.php.ui.editor.templates.newPhp.html.frameset"
+	context="newPhp"
+	enabled="true">&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=${encoding}"&gt;
+&lt;title&gt;Insert title here&lt;/title&gt;
+&lt;/head&gt;
+&lt;frameset&gt;
+    &lt;frame&gt;
+    &lt;frame&gt;
+    &lt;noframes&gt;
+    &lt;body&gt;
+    &lt;p&gt;This page uses frames. The current browser you are using does not support frames.&lt;/p&gt;
+    &lt;?php
+
+	?&gt;
+    &lt;/body&gt;
+    &lt;/noframes&gt;
+&lt;/frameset&gt;
+&lt;/html&gt;</template>
+
+</templates>
+

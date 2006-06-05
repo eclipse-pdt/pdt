@@ -1,0 +1,148 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.ui.folding;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
+import org.eclipse.php.ui.preferences.PreferenceConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
+import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
+
+/**
+ * Java default folding preferences.
+ *
+ * @since 3.0
+ */
+public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBlock {
+
+	private IPreferenceStore fStore;
+	private OverlayPreferenceStore fOverlayStore;
+	private OverlayKey[] fKeys;
+	private Map fCheckBoxes = new HashMap();
+	private SelectionListener fCheckBoxListener = new SelectionListener() {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			Button button = (Button) e.widget;
+			fOverlayStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
+		}
+	};
+
+	public DefaultPHPFoldingPreferenceBlock() {
+		fStore = PreferenceConstants.getPreferenceStore();
+		fKeys = createKeys();
+		fOverlayStore = new OverlayPreferenceStore(fStore, fKeys);
+	}
+
+	private OverlayKey[] createKeys() {
+		ArrayList overlayKeys = new ArrayList();
+
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_FOLDING_PHPDOC));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_FOLDING_CLASSES));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_FOLDING_FUNCTIONS));
+		//		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_FOLDING_INCLUDES));
+
+		return (OverlayKey[]) overlayKeys.toArray(new OverlayKey[overlayKeys.size()]);
+	}
+
+	/*
+	 * @see org.eclipse.jdt.internal.ui.text.folding.IJavaFoldingPreferences#createControl(org.eclipse.swt.widgets.Group)
+	 */
+	public Control createControl(Composite composite) {
+		fOverlayStore.load();
+		fOverlayStore.start();
+
+		Composite inner = new Composite(composite, SWT.NONE);
+		GridLayout layout = new GridLayout(1, true);
+		layout.verticalSpacing = 3;
+		layout.marginWidth = 0;
+		inner.setLayout(layout);
+
+		Label label = new Label(inner, SWT.LEFT);
+		label.setText(FoldingMessages.DefaultPHPFoldingPreferenceBlock_title);
+
+		addCheckBox(inner, FoldingMessages.DefaultPHPFoldingPreferenceBlock_classes, PreferenceConstants.EDITOR_FOLDING_CLASSES, 0);
+		//		addCheckBox(inner, FoldingMessages.DefaultPHPFoldingPreferenceBlock_includes, PreferenceConstants.EDITOR_FOLDING_INCLUDES, 0);
+		addCheckBox(inner, FoldingMessages.DefaultPHPFoldingPreferenceBlock_functions, PreferenceConstants.EDITOR_FOLDING_FUNCTIONS, 0);
+		addCheckBox(inner, FoldingMessages.DefaultPHPFoldingPreferenceBlock_PHPdoc, PreferenceConstants.EDITOR_FOLDING_PHPDOC, 0);
+
+		return inner;
+	}
+
+	private Button addCheckBox(Composite parent, String label, String key, int indentation) {
+		Button checkBox = new Button(parent, SWT.CHECK);
+		checkBox.setText(label);
+
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		gd.horizontalIndent = indentation;
+		gd.horizontalSpan = 1;
+		gd.grabExcessVerticalSpace = false;
+		checkBox.setLayoutData(gd);
+		checkBox.addSelectionListener(fCheckBoxListener);
+
+		fCheckBoxes.put(checkBox, key);
+
+		return checkBox;
+	}
+
+	private void initializeFields() {
+		Iterator it = fCheckBoxes.keySet().iterator();
+		while (it.hasNext()) {
+			Button b = (Button) it.next();
+			String key = (String) fCheckBoxes.get(b);
+			b.setSelection(fOverlayStore.getBoolean(key));
+		}
+	}
+
+	/*
+	 * @see org.eclipse.jdt.internal.ui.text.folding.AbstractJavaFoldingPreferences#performOk()
+	 */
+	public void performOk() {
+		fOverlayStore.propagate();
+	}
+
+	/*
+	 * @see org.eclipse.jdt.internal.ui.text.folding.AbstractJavaFoldingPreferences#initialize()
+	 */
+	public void initialize() {
+		initializeFields();
+	}
+
+	/*
+	 * @see org.eclipse.jdt.internal.ui.text.folding.AbstractJavaFoldingPreferences#performDefaults()
+	 */
+	public void performDefaults() {
+		fOverlayStore.loadDefaults();
+		initializeFields();
+	}
+
+	/*
+	 * @see org.eclipse.jdt.internal.ui.text.folding.AbstractJavaFoldingPreferences#dispose()
+	 */
+	public void dispose() {
+		fOverlayStore.stop();
+	}
+}

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.php.ui" default="build.jars" basedir=".">
+
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="true"/>
+	<property name="javacSource" value="1.4"/>
+	<property name="javacTarget" value="1.4"/>
+	<property name="compilerArg" value=""/>
+	<path id="path_bootclasspath">
+		<fileset dir="${java.home}/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+
+	<target name="init" depends="properties">
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/org.eclipse.php.ui">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: org.eclipse.php.ui for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<zip destfile="${plugin.destination}/org.eclipse.php.ui_${VERSION}.jar" basedir="${temp.folder}/org.eclipse.php.ui_${VERSION}" filesonly="false" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="@dot" depends="init" unless="@dot" description="Create jar: org.eclipse.php.ui @dot.">
+		<delete dir="${temp.folder}/@dot.bin"/>
+		<mkdir dir="${temp.folder}/@dot.bin"/>
+		<!-- compile the source code -->
+		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
+			<compilerarg line="${compilerArg}"/>
+			<classpath>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.core.runtime_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.osgi_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.help_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.swt_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.swt.${BUILD_WS}.${BUILD_OS}.${BUILD_ARCH}_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jface_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.core.commands_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.workbench_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.workbench.compatibility_3.1.0/compatibility.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.workbench.compatibility_3.1.0/@dot"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.core.expressions_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.core.resources_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.core.resources.compatibility_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.core.resources.${BUILD_OS}_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.core.runtime.compatibility_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.update.configurator_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ant.core_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.core.variables_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.views_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.ide_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.update.core_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.update.core.${BUILD_OS}_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.update.ui_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.forms_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jface.text_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.text_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.workbench.texteditor_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.editors_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.core.filebuffers_3.1.2.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.php.core/bin/"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.php.core/@dot"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.sse.core_1.0.0.v200602041933.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.common.uriresolver_1.0.1.v200601310800.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.emf.common_2.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.html.core_1.0.0.v200602062135.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.css.core_1.0.0.v200602062135.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.xml.core_1.0.2.v200604050855.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.apache.xerces_2.7.0.v200602052214/resolver.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.apache.xerces_2.7.0.v200602052214/xercesImpl.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.apache.xerces_2.7.0.v200602052214/xml-apis.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.validation_1.0.1.v200602070050.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.common.frameworks_1.0.1.v200602070050.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jem.util_1.1.0.1/util.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.emf.ecore_2.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.emf.ecore.xmi_2.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.common.environment_1.0.0.v200602151541.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.osgi.util_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.emf.ecore.edit_2.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.emf.edit_2.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.common.emf_1.0.1.v200604190008.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.common.emfworkbench.integration_1.0.1.v200604190008.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.xsd_2.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.common.project.facet.core_1.0.1.v200603242204.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.server.core_1.0.2.v20060406.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.debug.core_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jem_1.1.0.1/javainst.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jem_1.1.0.1/mofjava.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jem.proxy_1.1.0.1/proxy.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jem.proxy_1.1.0.1/proxycommon.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jem.proxy_1.1.0.1/initparser.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jem.proxy_1.1.0.1/proxyremote.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jem.proxy_1.1.0.1/remotecommon.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jem.proxy_1.1.0.1/proxyide.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jdt.launching_3.1.0.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jdt.core_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.team.core_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jdt.debug_3.1.1/jdi.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jdt.debug_3.1.1/jdimodel.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.jdt.debug_3.1.1/tools.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.pde.core_3.1.1.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.sse.ui_1.0.1.v200602041933.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.debug.ui_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.console_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.search_3.1.2.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.common.frameworks.ui_1.0.1.v200603102027.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.web_1.0.1.v200603160007.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.common.modulecore_1.0.1.v200604191828.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/com.ibm.etools.emf.event_3.0.0.1/runtime/event.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.html.ui_1.0.0.v200604040555.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.xml.ui_1.0.2.v200604050855.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.common.ui_1.0.0.v200602061610.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.css.ui_1.0.0.v200602062135.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.javascript.ui_1.0.0.v200602062135.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.javascript.core_1.0.0.v200602062135.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.ui.browser_3.1.1.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.php.debug.core/bin/"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.php.debug.core/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.php.server.apache.core/bin/"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.php.server.apache.core/@dot"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.server.ui_1.0.2.v20060402.jar"/>
+				<pathelement path="${ECLIPSE_HOME}/plugins/org.eclipse.wst.internet.monitor.core_1.0.0.v20060312.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.php.server.apache.ui/bin/"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.php.server.apache.ui/@dot"/>
+			</classpath>
+			<src path="src/"			/>
+			</javac>
+		<!-- Copy necessary resources -->
+		<copy todir="${temp.folder}/@dot.bin" failonerror="true" overwrite="false">
+			<fileset dir="src/" excludes="**/*.java, **/package.htm*,null"			/>
+		</copy>
+		<mkdir dir="${build.result.folder}"/>
+		<copy todir="${build.result.folder}/@dot" failonerror="true" overwrite="false">
+			<fileset dir="${temp.folder}/@dot.bin"			/>
+		</copy>
+		<delete dir="${temp.folder}/@dot.bin"/>
+	</target>
+
+	<target name="src.zip" depends="init" unless="src.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<zip destfile="${build.result.folder}/src.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="src/" includes="**/*.java"			/>
+		</zip>
+	</target>
+
+	<target name="build.jars" depends="init" description="Build all the jars for the plug-in: org.eclipse.php.ui.">
+		<available property="@dot" file="${build.result.folder}/@dot"/>
+		<antcall target="@dot"/>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="src.zip" file="${build.result.folder}/src.zip"/>
+		<antcall target="src.zip"/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.php.ui_${VERSION}"/>
+		<copy todir="${destination.temp.folder}/org.eclipse.php.ui_${VERSION}" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}/@dot" includes="**"			/>
+		</copy>
+		<copy todir="${destination.temp.folder}/org.eclipse.php.ui_${VERSION}" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}" includes="plugin.xml,null,icons/,plugin.properties,schema/,templates/,META-INF/,bin/"			/>
+		</copy>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.php.ui_${VERSION}"/>
+		<copy file="${build.result.folder}/src.zip" todir="${destination.temp.folder}/org.eclipse.php.ui_${VERSION}" failonerror="false" overwrite="false"/>
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.php.ui_${VERSION}"/>
+		<copy file="${temp.folder}/@dot.bin.log" todir="${destination.temp.folder}/org.eclipse.php.ui_${VERSION}" failonerror="false" overwrite="false"/>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: org.eclipse.php.ui of all the zips, jars and logs created.">
+		<delete dir="${build.result.folder}/@dot"/>
+		<delete file="${build.result.folder}/src.zip"/>
+		<delete file="${plugin.destination}/org.eclipse.php.ui_${VERSION}.jar"/>
+		<delete file="${plugin.destination}/org.eclipse.php.ui_${VERSION}.zip"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="c:/development/PHPIDE/org.eclipse.php.ui" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: org.eclipse.php.ui.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}" includes="**/*.bin.log"			/>
+		</delete>
+		<zip destfile="${plugin.destination}/org.eclipse.php.ui_${VERSION}.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+</project>
