@@ -1,0 +1,92 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
+package org.eclipse.php.core.util;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+/**
+ * The MapXMLReader does the reading of Maps saved by the MapXMLWriter.
+ * For example, this XML output can be parsed by this reader into a Map:
+ * <pre>
+ * 		<?xml version="1.0" encoding="UTF-8"?>
+ *		<map>
+ *			<key name="first">
+ *				<value>good &gt; bye</value>
+ *			</key>
+ *			<key name="second">
+ *				<value>hello</value>
+ *			</key>
+ *			<key name="list of elements">
+ *				<value>A</value>
+ *				<value>B</value>
+ *				<value>C</value>
+ *			</key>
+ *		</map>
+ * </pre>
+ *
+ */
+public class MapXMLReader {
+
+	/**
+	 * Read a Map from the given input stream .
+	 * The returned Map will always have a String key and a List of one or more mapped values (also Strings).
+	 * 
+	 * @param input An InputStream.
+	 * @return A Map read from the input stream.
+	 * @throws IOException If any I/O error occures.
+	 * @throws ParserConfigurationException 
+	 * @throws SAXException 
+	 */
+	public static Map readMap(InputSource input) throws IOException, ParserConfigurationException, SAXException {
+		Map map = new HashMap();
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document dom = builder.parse(input);
+		NodeList keys = dom.getElementsByTagName(MapXMLWriter.KEY_TAG);
+		for (int i = 0; i < keys.getLength(); i++) {
+			Node node = keys.item(i);
+			NamedNodeMap attributes = node.getAttributes();
+			if (attributes != null) {
+				Node keyName = attributes.getNamedItem(MapXMLWriter.NAME_TAG);
+				if (keyName != null) {
+					String key = keyName.getNodeValue();
+					NodeList values = node.getChildNodes();
+					List valuesList = new ArrayList(values.getLength());
+					for (int j = 0; j < values.getLength(); j++) {
+						Node valueNode = values.item(j);
+						if (valueNode.getNodeType() == Node.ELEMENT_NODE) {
+							valueNode = valueNode.getFirstChild();
+							if (valueNode != null) {
+								valuesList.add(valueNode.getNodeValue());
+							}
+						}
+					}
+					map.put(key, valuesList);
+				}
+			}
+		}
+		return map;
+	}
+}

@@ -1,0 +1,35 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
+package org.eclipse.php.core.phpModel.phpElementData;
+
+
+import java.io.Serializable;
+
+
+public class PHPBlock implements Serializable {
+
+	private UserData startTag;
+	private UserData endTag;
+
+	public PHPBlock(UserData startTag, UserData endTag) {
+		this.startTag = startTag;
+		this.endTag = endTag;
+	}
+
+	public UserData getPHPStartTag() {
+		return startTag;
+	}
+
+	public UserData getPHPEndTag() {
+		return endTag;
+	}
+
+}

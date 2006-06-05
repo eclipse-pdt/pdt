@@ -1,0 +1,108 @@
+package org.eclipse.php.core.format;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.PHPCoreConstants;
+import org.eclipse.php.core.PHPCorePlugin;
+import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.preferences.IPreferencesPropagatorListener;
+import org.eclipse.php.core.preferences.PreferencesPropagator;
+import org.eclipse.php.core.preferences.PreferencesPropagatorEvent;
+import org.eclipse.php.core.preferences.PreferencesSupport;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+
+public class FormatPreferencesSupport {
+
+	private IDocument fLastDocument = null;
+	private IProject fLastProject = null;
+
+	private char indentationChar;
+	private int indentationSize;
+
+	private PreferencesSupport preferencesSupport = null;
+	private PreferencesPropagatorListener listener = null;
+
+	private boolean preferencesChanged = false;
+
+	private FormatPreferencesSupport() {
+		IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+
+		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
+	}
+
+	private static FormatPreferencesSupport instance = null;
+
+	public static FormatPreferencesSupport getInstance() {
+		if (instance == null) {
+			instance = new FormatPreferencesSupport();
+		}
+		return instance;
+	}
+
+	public int getIndentationSize(IDocument document) {
+		verifyValidity(document);
+		return indentationSize;
+	}
+
+	public char getIndentationChar(IDocument document) {
+		verifyValidity(document);
+		return indentationChar;
+	}
+
+	private void verifyValidity(IDocument document) {
+		if (fLastDocument != document) {
+			PHPEditorModel editorModel = (PHPEditorModel) StructuredModelManager.getModelManager().getExistingModelForEdit(document);
+			PHPProjectModel projectModel = editorModel.getProjectModel();
+
+			IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModel);
+			if (fLastProject != project) {
+				fLastProject = project;
+				verifyListening();
+			}
+		}
+
+		if (fLastDocument != document || preferencesChanged) {
+			String useTab = preferencesSupport.getPreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS, null, fLastProject);
+			String indentSize = preferencesSupport.getPreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE, null, fLastProject);
+
+			indentationChar = (Boolean.valueOf(useTab).booleanValue()) ? '\t' : ' ';
+			indentationSize = Integer.valueOf(indentSize).intValue();
+
+			preferencesChanged = false;
+			fLastDocument = document;
+		}
+	}
+
+	private void verifyListening() {
+		if(listener != null){
+			PreferencesPropagator.getInstance().removePropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
+			PreferencesPropagator.getInstance().removePropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+		}
+		
+		listener = new PreferencesPropagatorListener(fLastProject);
+		PreferencesPropagator.getInstance().addPropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
+		PreferencesPropagator.getInstance().addPropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+	}
+
+	private class PreferencesPropagatorListener implements IPreferencesPropagatorListener {
+
+		private IProject project;
+
+		public PreferencesPropagatorListener(IProject project) {
+			this.project = project;
+		}
+
+		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
+			preferencesChanged = true;
+		}
+
+		public IProject getProject() {
+			return project;
+		}
+
+	}
+
+}

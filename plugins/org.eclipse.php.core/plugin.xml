@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="phpModel" name="phpModel" schema="schema/phpModel.exsd"/>
+   <extension-point id="includePathVariableInitializer" name="Include Path Variable Initializer" schema="schema/includePathVariableInitializer.exsd"/>
+   <extension-point id="workspaceModelListener" name="workspaceModelListener" schema="schema/workspaceModelListener.exsd"/>
+   
+	<!-- PHP Model Handler -->
+	<extension
+         point="org.eclipse.wst.sse.core.modelHandler">
+      <modelHandler
+            default="yes"
+            class="org.eclipse.php.core.documentModel.handler.PHPModelHandler"
+            associatedContentTypeId="org.eclipse.php.core.phpsource"
+            id="org.eclipse.php.core.documentModel.handler">
+      </modelHandler>
+   </extension>
+
+	<!-- DocumentFactory extension for PHP: This is needed in order to bootstrap the lookup of the ModelHandler -->
+	<extension point="org.eclipse.core.filebuffers.documentCreation"
+         id="org.eclipse.wst.html.core.documentfactories"
+         name="PHP Document Creation Factory">
+         <!-- This is a base factory class included in WST -->
+      <factory
+            contentTypeId="org.eclipse.php.core.phpsource"
+            class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory"/>
+   </extension>
+   
+	<!-- PHP Content Type declaration -->
+	<extension
+         point="org.eclipse.core.runtime.contentTypes">
+         <content-type
+               base-type="org.eclipse.core.runtime.text"
+               default-charset="UTF-8"
+               file-extensions="php,php3,php4,phtml,inc,tpl"
+               id="phpsource"
+               name="PHP Content Type"
+               priority="high">
+			
+			<!-- Not used for now -->
+			<!--
+			<describer class="org.eclipse.php.core.documentModel.ContentDescriberForPHP"/>
+			-->
+		</content-type>
+   </extension>  
+ 
+  	<extension
+		id="PHPProblemsValidator"
+		name="PHPProblemsValidator"
+		point="org.eclipse.wst.validation.validator">
+		<validator>
+		    <projectNature id="org.eclipse.wst.common.modulecore.ModuleCoreNature" />
+			<projectNature id="org.eclipse.php.core.PHPNature" />
+			<projectNature id="org.eclipse.wst.web.StaticWebNature" />
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.php">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.inc">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.php3">
+			</filter>
+			<helper
+				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
+			</helper>
+			<run
+				enabled="true"
+				class="org.eclipse.php.core.documentModel.validate.PHPProblemsValidator">
+			</run>
+
+		</validator>
+	</extension>
+   
+
+ 
+  	<extension
+		id="PHPIncludePathValidator"
+		name="PHP Include Path Validator"
+		point="org.eclipse.wst.validation.validator">
+		<validator>
+		    <projectNature id="org.eclipse.wst.common.modulecore.ModuleCoreNature" />
+			<projectNature id="org.eclipse.php.core.PHPNature" />
+			<projectNature id="org.eclipse.wst.web.StaticWebNature" />
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.projectOptions">
+			</filter>
+			<helper
+				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
+			</helper>
+			<run
+				enabled="true"
+				class="org.eclipse.php.core.project.options.includepath.IncludePathValidator">
+			</run>
+			<dependentValidator
+               depValValue="true">
+         </dependentValidator>
+		</validator>
+	</extension>
+   
+   	 <extension
+		 id="PHPNature"
+		 name="PHP Properties"
+		 point="org.eclipse.core.resources.natures">
+		  <runtime>
+			 <run
+			   class="org.eclipse.php.core.project.PHPNature">
+			 </run>
+		  </runtime>
+	</extension>
+
+
+	<extension 
+		point="org.eclipse.core.resources.builders" 
+		id="PhpIncrementalProjectBuilder"
+		name="Incremental PHP project builder">
+		<builder>
+			<run class="org.eclipse.php.core.project.build.PhpIncrementalProjectBuilder">
+			</run>
+		</builder>
+	</extension>
+
+
+    <extension
+         point="org.eclipse.wst.server.core.moduleArtifactAdapters">
+       <moduleArtifactAdapter
+            id="org.eclipse.php.server.php1"
+            class="org.eclipse.php.core.project.deployables.PHPDeployableObjectAdapter">
+         <enablement>
+           <with variable="selection">
+             <adapt type="org.eclipse.core.resources.IProject"/>
+           </with>
+         </enablement>
+       </moduleArtifactAdapter>    
+   </extension>
+   
+   <extension
+         point="org.eclipse.wst.server.core.moduleArtifactAdapters">
+       <moduleArtifactAdapter
+            id="org.eclipse.php.server.php2"
+            class="org.eclipse.php.core.project.deployables.PHPDeployableObjectAdapter">
+         <enablement>
+           <with variable="selection">
+             <adapt type="org.eclipse.core.resources.IFile"/>
+           </with>
+         </enablement>
+       </moduleArtifactAdapter>    
+   </extension>
+   
+   <extension
+         point="org.eclipse.wst.server.core.moduleArtifactAdapters">
+       <moduleArtifactAdapter
+            id="org.eclipse.php.server.php3"
+            class="org.eclipse.php.core.project.deployables.PHPDeployableObjectAdapter">
+         <enablement>
+           <with variable="selection">
+             <adapt type="org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"/>
+           </with>
+         </enablement>
+       </moduleArtifactAdapter>    
+   </extension>
+
+
+   <extension point="org.eclipse.core.runtime.adapters">
+         <factory
+             class="org.eclipse.wst.php.core.project.deployables.PHPDeployableObjectAdapter"
+             adaptableType="org.eclipse.core.resources.IProject">
+            <adapter type="org.eclipse.php.core.project.deployables.IPHPModuleArtifact"/>
+        </factory>    
+   </extension> 
+
+     <extension
+         point="org.eclipse.wst.server.core.moduleFactories">
+      <moduleFactory
+            projects="true"
+            class="org.eclipse.php.core.project.deployables.PHPDeployableFactory"
+            id="org.eclipse.php.core.project.deployable.php">
+         <moduleType
+               versions="1.0"
+               types="PHP">
+         </moduleType>
+      </moduleFactory>
+   </extension>
+ <!--  <extension
+         point="org.eclipse.wst.common.frameworks.ExtendableOperation">
+      <extendableOperation
+            class="org.eclipse.jst.j2ee.internal.web.operations.AddServletOperation"
+            id="org.eclipse.jst.j2ee.internal.web.operations.AddServletOperation">
+      </extendableOperation> 
+   </extension> -->
+
+   <extension
+         id="PhpDocumentSetupParticipant"
+         name="PhpDocumentSetupParticipant"
+         point="org.eclipse.core.filebuffers.documentSetup">
+      <participant
+            contentTypeId="org.eclipse.php.core.phpsource"
+            class="org.eclipse.php.core.documentModel.PhpDocumentSetupParticipant">
+      </participant>
+   </extension>
+   <extension
+         point="org.eclipse.php.core.phpModel">
+      <PhpModel
+            class="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"
+            id="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"
+            name="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"/>
+   </extension>
+
+   <!-- initialize php ui preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+	   <initializer class="org.eclipse.php.core.preferences.PHPCorePreferenceInitializer"/>
+	</extension>
+
+</plugin>
