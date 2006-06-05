@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core Plug-in
+Bundle-SymbolicName: org.eclipse.php.debug.core; singleton:=true
+Bundle-Version: 0.1.0
+Bundle-Activator: org.eclipse.php.debug.core.PHPDebugPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.php.core,
+ org.eclipse.debug.core,
+ org.eclipse.debug.ui,
+ org.eclipse.ui.console,
+ org.eclipse.php.server.apache.core,
+ org.eclipse.wst.server.core,
+ org.eclipse.jface,
+ org.eclipse.wst.sse.ui
+Eclipse-AutoStart: true
+Export-Package: org.eclipse.php.debug.core,
+ org.eclipse.php.debug.core.communication,
+ org.eclipse.php.debug.core.debugger,
+ org.eclipse.php.debug.core.debugger.handlers,
+ org.eclipse.php.debug.core.debugger.messages,
+ org.eclipse.php.debug.core.debugger.parameters,
+ org.eclipse.php.debug.core.launching,
+ org.eclipse.php.debug.core.model,
+ org.eclipse.php.debug.core.preferences,
+ org.eclipse.php.debug.core.sourcelookup
+Bundle-Vendor: Eclipse.org

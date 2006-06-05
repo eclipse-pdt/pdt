@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension-point 
+   		id="phpDebugMessages" 
+   		name="PHP Debug Message" schema="schema/phpDebugMessages.exsd"/>
+   <extension-point id="phpDebugActions" name="PHP Debug Action" schema="schema/phpDebugActions.exsd"/>
+   <extension-point id="phpDebugHandlers" name="PHP Debug Handler" schema="schema/phpDebugHandlers.exsd"/>
+   <extension-point id="phpExe" name="PHP exe" schema="schema/phpExe.exsd"/>
+   <extension-point id="phpDebugParametersInitializers" name="phpDebugParametersInitializers" schema="schema/phpDebugParametersInitializer.exsd"/>
+    
+   <extension
+         point="org.eclipse.debug.core.sourceLocators">
+      <sourceLocator
+            name="PHP Source Lookup Director"
+            class="org.eclipse.php.debug.core.sourcelookup.PHPSourceLookupDirector"
+            id="org.eclipse.php.debug.core.sourceLookupDirector.php">
+      </sourceLocator>
+   </extension>
+   
+   <extension
+         point="org.eclipse.debug.core.sourcePathComputers">
+      <sourcePathComputer
+            class="org.eclipse.php.debug.core.sourcelookup.PHPSourcePathComputerDelegate"
+            id="org.eclipse.php.debug.core.sourcePathComputer.php">
+      </sourcePathComputer>
+   </extension>
+   
+   <extension
+         id="PHPConditionalBreakpointMarker"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.debug.core.lineBreakpointMarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   
+   <extension
+         point="org.eclipse.debug.core.breakpoints">
+      <breakpoint
+            markerType="org.eclipse.php.debug.core.PHPConditionalBreakpointMarker"
+            class="org.eclipse.php.debug.core.model.PHPConditionalBreakpoint"
+            id="org.eclipse.php.debug.core.lineBreakpoint">
+      </breakpoint>
+   </extension> 
+  
+  <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            name="PHP Executable"
+            delegate="org.eclipse.php.debug.core.launching.PHPExecutableLaunchDelegate"
+            modes="run"
+            id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
+      </launchConfigurationType>
+   </extension>
+   
+   <extension point="org.eclipse.debug.core.launchDelegates">
+     <launchDelegate
+        id="org.eclipse.php.debug.core.launching.launchDelegate.debug"
+        type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
+        sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+        sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
+        delegate="org.eclipse.php.debug.core.launching.PHPExecutableLaunchDelegate"
+        modes="debug"/>
+  </extension>
+ 
+  <extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceInitializer" />
+  </extension>
+  
+  <extension point="org.eclipse.php.debug.core.phpDebugMessages">
+
+	  <!-- Request Messages -->
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.AddBreakpointRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.AddBreakpointRequest"
+	    name="Add Breakpoint Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.AssignValueRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.AssignValueRequest"
+	    name="Assign Value Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsRequest"
+	    name="Cancel All Breakpoints Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.CancelBreakpointRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.CancelBreakpointRequest"
+	    name="Cancel Breakpoint Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.EvalRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.EvalRequest"
+	    name="Eval Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.GetCallStackRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.GetCallStackRequest"
+	    name="Get Call Stack Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueRequest"
+	    name="Get Stack Variable Value Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.GetVariableValueRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.GetVariableValueRequest"
+	    name="Get Variable Value Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.GoRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.GoRequest"
+	    name="Go Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.PauseDebuggerRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.PauseDebuggerRequest"
+	    name="Pause Debugger Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.StartRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.StartRequest"
+	    name="Start Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.StepIntoRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.StepIntoRequest"
+	    name="Step Into Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.StepOutRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.StepOutRequest"
+	    name="Step Out Request"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.StepOverRequest"
+            id="org.eclipse.php.debug.core.debugger.messages.StepOverRequest"
+	    name="Step Over Request"/>
+	    
+	  <!-- Response Messages -->
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.AddBreakpointResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.AddBreakpointResponse"
+	    name="Add Breakpoint Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.AssignValueResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.AssignValueResponse"
+	    name="Assign Value Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsResponse"
+	    name="Cancel All Breakpoints Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.CancelBreakpointResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.CancelBreakpointResponse"
+	    name="Cancel Breakpoint Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.EvalResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.EvalResponse"
+	    name="Eval Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.GetCallStackResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.GetCallStackResponse"
+	    name="Get Call Stack Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueResponse"
+	    name="Get Stack Variable Value Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.GetVariableValueResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.GetVariableValueResponse"
+	    name="Get Variable Value Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.GoResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.GoResponse"
+	    name="Go Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.PauseDebuggerResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.PauseDebuggerResponse"
+	    name="Pause Debugger Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.StartResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.StartResponse"
+	    name="Start Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.StepIntoResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.StepIntoResponse"
+	    name="Step Into Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.StepOutResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.StepOutResponse"
+	    name="Step Out Response"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.StepOverResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.StepOverResponse"
+	    name="Step Over Response"/>
+
+
+	  <!-- Notification Messages -->
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.DebuggerErrorNotification"
+            id="org.eclipse.php.debug.core.debugger.messages.DebuggerErrorNotification"
+	    name="Debugger Error Notification"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.DebugScriptEndedNotification"
+            id="org.eclipse.php.debug.core.debugger.messages.DebugScriptEndedNotification"
+	    name="Debug Script Ended Notification"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.DebugSessionClosedNotification"
+            id="org.eclipse.php.debug.core.debugger.messages.DebugSessionClosedNotification"
+	    name="Debug Session Closed Notification"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.DebugSessionStartedNotification"
+            id="org.eclipse.php.debug.core.debugger.messages.DebugSessionStartedNotification"
+	    name="Debug Session Started Notification"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.HeaderOutputNotification"
+            id="org.eclipse.php.debug.core.debugger.messages.HeaderOutputNotification"
+	    name="Header Output Notification"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.OutputNotification"
+            id="org.eclipse.php.debug.core.debugger.messages.OutputNotification"
+	    name="Output Notification"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.ParsingErrorNotification"
+            id="org.eclipse.php.debug.core.debugger.messages.ParsingErrorNotification"
+	    name="Parsing Error Notification"/>
+
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.ReadyNotification"
+            id="org.eclipse.php.debug.core.debugger.messages.ReadyNotification"
+	    name="Ready Notification"/>
+
+  </extension>
+  <extension
+        point="org.eclipse.php.debug.core.phpDebugParametersInitializers">
+     <initializer
+           class="org.eclipse.php.debug.core.debugger.parameters.DefaultDebugParametersInitializer"
+           id="org.eclipse.php.debug.core.defaultInitializer"
+           name="org.eclipse.php.debug.core.defaultInitializer"/>
+  </extension>
+  
+  <extension point="org.eclipse.php.server.apache.core.httpServerLaunchDelegate">
+		<httpServerLaunchDelegate
+			class="org.eclipse.php.debug.core.launching.PHPServerLaunchDelegate" />
+  </extension>
+  
+
+</plugin>

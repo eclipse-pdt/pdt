@@ -1,0 +1,206 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
+package org.eclipse.php.debug.core.launching;
+
+import java.io.File;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
+import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.ui.CommonTab;
+import org.eclipse.debug.ui.RefreshTab;
+import org.eclipse.php.core.PHPCoreConstants;
+import org.eclipse.php.debug.core.IPHPConstants;
+import org.eclipse.php.debug.core.PHPDebugPlugin;
+import org.eclipse.php.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
+
+public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate {
+
+    public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+
+        if (monitor.isCanceled()) {
+            return;
+        }
+
+        String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
+        //String projectName = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
+        String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+        boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RunWithDebugInfo, true);
+        
+        if (monitor.isCanceled()) {
+            return;
+        }
+        
+        if(fileNameString == null || fileNameString.equals(""))
+        	return;
+        
+        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        /*
+        IProject[] projects = workspaceRoot.getProjects();
+        IProject project = null;
+        for (int i = 0; i < projects.length; i++) {
+            if (projects[i].getName().equals(projectName)) {
+                project = projects[i];
+                break;
+            }
+        }
+        
+        if (project == null) project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        */
+        IPath filePath = new Path(fileNameString);
+        IResource res = workspaceRoot.findMember(filePath);
+        if(res == null)
+        	return;
+        
+        IFile resource = (IFile)res;
+        IProject project = resource.getProject();
+
+        if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
+
+            if (mode.equals(ILaunchManager.DEBUG_MODE))
+                runWithDebugInfo = false;
+            
+            
+            //if (fileNameString.startsWith("/"))filePath = filePath.removeFirstSegments(1);
+
+            IPath phpExe = new Path(phpExeString);
+            PHPProcess process = new PHPProcess(launch, phpExe.toOSString());
+            
+            boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+            int requestPort = PHPProjectPreferences.getDebugPort(project);
+            
+            //IFile file = project.getFile(filePath);
+
+            // Set Project Name
+            String projectString = project.getFullPath().toString();
+            ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
+            wc.setAttribute(IPHPConstants.PHP_Project, projectString);
+            wc.doSave();
+
+            if (monitor.isCanceled()) {
+                return;
+            }
+
+            //PHPDebugTarget target = new PHPDebugTarget(launch, phpExeString, file, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
+            PHPDebugTarget target = new PHPDebugTarget(launch, phpExeString, resource, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
+            launch.addDebugTarget(target);
+
+        } else {
+            // resolve location
+            IPath phpExe = new Path(phpExeString);
+
+            if (monitor.isCanceled()) {
+                return;
+            }
+
+            // resolve working directory
+            //            String projectFolderString = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String)null);
+
+            IPath projectLocation = project.getRawLocation();
+            if (projectLocation == null) {
+                projectLocation = project.getLocation();
+            }
+            String location = projectLocation.toOSString();
+            IPath p1 = new Path(location);
+            File projectDir = p1.toFile();
+
+            if (monitor.isCanceled()) {
+                return;
+            }
+
+            //            String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String)null);
+            IPath phpFile = new Path(fileNameString);
+            if (fileNameString.startsWith("/"))phpFile = phpFile.removeFirstSegments(1);
+
+            if (monitor.isCanceled()) {
+                return;
+            }
+
+            String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
+
+            if (monitor.isCanceled()) {
+                return;
+            }
+
+            String[] cmdLine = new String[] { phpExe.toOSString(), phpFile.toOSString() };
+
+            Process p = DebugPlugin.exec(cmdLine, projectDir, envp);
+            IProcess process = null;
+
+            // add process type to process attributes
+            Map processAttributes = new HashMap();
+            String programName = phpExe.lastSegment();
+            String extension = phpExe.getFileExtension();
+            if (extension != null) {
+                programName = programName.substring(0, programName.length() - (extension.length() + 1));
+            }
+            programName = programName.toLowerCase();
+            processAttributes.put(IProcess.ATTR_PROCESS_TYPE, programName);
+
+            if (p != null) {
+                monitor.beginTask(MessageFormat.format("start launch", new String[] { configuration.getName() }), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                process = DebugPlugin.newProcess(launch, p, phpExe.toOSString(), processAttributes);
+                if (process == null) {
+                    p.destroy();
+                    throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null)); //$NON-NLS-1$
+                }
+
+            }
+            process.setAttribute(IProcess.ATTR_CMDLINE, fileNameString);
+
+            if (CommonTab.isLaunchInBackground(configuration)) {
+                // refresh resources after process finishes
+                /*
+                 if (RefreshTab.getRefreshScope(configuration) != null) {
+                 BackgroundResourceRefresher refresher = new BackgroundResourceRefresher(configuration, process);
+                 refresher.startBackgroundRefresh();
+                 }               
+                 */
+            } else {
+                // wait for process to exit
+                while (!process.isTerminated()) {
+                    try {
+                        if (monitor.isCanceled()) {
+                            process.terminate();
+                            break;
+                        }
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                    }
+                }
+
+                // refresh resources
+                RefreshTab.refreshResources(configuration, monitor);
+            }
+        }
+
+    }
+
+}
