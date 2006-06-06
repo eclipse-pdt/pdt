@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.Logger;
+import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
@@ -22,14 +23,22 @@ import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.text.rules.SimpleStructuredRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
 public class PhpFormatter implements IStructuredFormatter {
 
+	private IIndentationStrategy defualtIndentationStrategy = new DefualtIndentationStrategy();;
+	private IIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
+	private IIndentationStrategy caseDefualtIndentationStrategy = new CaseDefualtIndentationStrategy();
+
 	protected PhpFormatConstraints fFormatContraints = null;
 	protected IStructuredFormatPreferences fFormatPreferences = null;
 	protected IProgressMonitor fProgressMonitor = null;
+
+	private static final byte CHAR_TAB = '\t';
+	private static final byte CHAR_SPACE = ' ';
 
 	private PhpFormatProcessorImpl fProcessoer = null;
 
@@ -44,29 +53,31 @@ public class PhpFormatter implements IStructuredFormatter {
 
 	}
 
+	/**
+	 * Recursivly call the format node on every node in the model
+	 * @param node - to fotmat
+	 * @param formatContraints
+	 */
 	private void formatNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
+
+		// if it is php node - format
+		if (node instanceof PHPElementImpl) {
+
+			IStructuredDocumentRegion sdRegionStart = node.getStartStructuredDocumentRegion();
+			IStructuredDocumentRegion sdRegionEnd = node.getEndStructuredDocumentRegion();
+			sdRegionEnd = sdRegionEnd == null ? sdRegionStart : sdRegionEnd;
+			format(sdRegionStart, sdRegionEnd);
+
+			return;
+		}
+
 		if (node.hasChildNodes()) { // container
-			formatChildNodes(node, formatContraints);
-		} else { // leaf
-			IStructuredDocumentRegion sdRegion = node.getStartStructuredDocumentRegion();
-			if (sdRegion != null && sdRegion.getType() == PHPRegionTypes.PHP_CONTENT) {
-				format(sdRegion);
+			IDOMNode child = (IDOMNode) node.getFirstChild();
+			while (child != null) {
+				formatNode(child, formatContraints);
+				child = (IDOMNode) child.getNextSibling();
 			}
 		}
-
-	}
-
-	private void formatChildNodes(IDOMNode node, IStructuredFormatContraints formatContraints) {
-		IDOMNode child = (IDOMNode) node.getFirstChild();
-
-		while (child != null) {
-			IStructuredDocumentRegion sdRegion = child.getStartStructuredDocumentRegion();
-			if (sdRegion.getType() == PHPRegionTypes.PHP_CONTENT) {
-				format(sdRegion);
-			}
-			child = (IDOMNode) child.getNextSibling();
-		}
-
 	}
 
 	public IStructuredFormatContraints getFormatContraints() {
@@ -100,61 +111,88 @@ public class PhpFormatter implements IStructuredFormatter {
 		return (fProcessoer == null) ? 0 : fProcessoer.getLength();
 	}
 
-	private void format(IStructuredDocumentRegion sdRegion) {
+	private void format(IStructuredDocumentRegion sdRegionStart, IStructuredDocumentRegion sdRegionEnd) {
+		assert sdRegionEnd != null && sdRegionStart != null;
 
-		int regionStart = sdRegion.getStartOffset();
-		int regionEnd = regionStart + sdRegion.getLength();
+		// resolce formatter range 
+		int regionStart = sdRegionStart.getStartOffset();
+		int regionEnd = sdRegionEnd.getEnd();
+
 		int formatRequestStart = getStart();
 		int formatRequestEnd = formatRequestStart + getLength();
 
-		int startFormat = (formatRequestStart < regionStart) ? regionStart : formatRequestStart;
-		int endFormat = (formatRequestEnd > regionEnd) ? regionEnd : formatRequestEnd;
+		int startFormat = Math.max(formatRequestStart, regionStart);
+		int endFormat = Math.min(formatRequestEnd, regionEnd);
 
-		IStructuredDocument document = sdRegion.getParentDocument();
+		// calculate lines
+		IStructuredDocument document = sdRegionStart.getParentDocument();
 		int lineIndex = document.getLineOfOffset(startFormat);
 		int endLineIndex = document.getLineOfOffset(endFormat);
 
+		// format each line
 		for (; lineIndex <= endLineIndex; lineIndex++) {
-			formatLine(sdRegion, lineIndex);
+			formatLine(document, lineIndex);
 		}
 
 	}
 
 	private StringBuffer resultBuffer = new StringBuffer();
 
-	private void formatLine(IStructuredDocumentRegion sdRegion, int lineNumber) {
-
+	/**
+	 * formats a PHP line according to the strategies and formatting conventions
+	 * @param document
+	 * @param lineNumber
+	 * TODO: we should invoke document.replace() one and not twice! 
+	 */
+	private void formatLine(IStructuredDocument document, int lineNumber) {
 		resultBuffer.setLength(0);
 
 		try {
-			IStructuredDocument document = sdRegion.getParentDocument();
-			IRegion lineInfo = document.getLineInformation(lineNumber);
-			int startOffset = lineInfo.getOffset();
-			int lineLength = lineInfo.getLength();
+			
+			// get original line information 
+			final IRegion originalLineInfo = document.getLineInformation(lineNumber);
+			final int orginalLineStart = originalLineInfo.getOffset();
+			final int originalLineLength = originalLineInfo.getLength();
+			
+			// fast resolving of empty line
+			if (originalLineLength == 0) return;
+			
+			// get formatted line information
+			final String lineText = document.get(orginalLineStart, originalLineLength);
+			final IRegion formattedLineInformation = getFormattedLineInformation(originalLineInfo, lineText);
 
-			if (!shouldReformat(document, lineInfo)) {
+			if (!shouldReformat(document, formattedLineInformation)) {
 				return;
 			}
-			String lineText = document.get(startOffset, lineLength);
 
 			// remove ending spaces.
-			int endingWhiteSpaces = getEndingWhiteSpaces(lineText);
-			if (endingWhiteSpaces != lineLength) {
-				document.replace(startOffset + endingWhiteSpaces, lineLength - endingWhiteSpaces, "");
+			final int formattedLineStart = formattedLineInformation.getOffset();
+			final int formattedLineLength = formattedLineInformation.getLength();
+			final int formattedTextEnd = formattedLineStart + formattedLineLength;
+			final int originalTextEnd = orginalLineStart + originalLineLength;
+			if (formattedTextEnd != originalTextEnd) {
+				document.replace(formattedTextEnd, originalTextEnd - formattedTextEnd, "");
 			}
-			if (endingWhiteSpaces == 0) {
+
+			// get regions
+			final int startingWhiteSpaces = formattedLineStart - orginalLineStart;
+			final IIndentationStrategy insertionStrategy;
+			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(formattedLineStart);
+			ITextRegion firstTokenInLine = sdRegion.getRegionAtCharacterOffset(formattedLineStart);
+
+			// if the first char is not from this line
+			if (firstTokenInLine == null)
 				return;
-			}
 
-			int startingWhiteSpaces = getStartingWhiteSpaces(lineText);
-
-			IIndentationStrategy insertionStrategy;
-
-			ITextRegion firstTokenInLine = sdRegion.getRegionAtCharacterOffset(lineInfo.getOffset());
-			if (firstTokenInLine.getStart() + sdRegion.getStartOffset() < lineInfo.getOffset() || firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
+			if (firstTokenInLine.getStart() + sdRegion.getStartOffset() < originalLineInfo.getOffset() || firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
 				//meaning we got previos line last token
 				firstTokenInLine = sdRegion.getRegionAtCharacterOffset(sdRegion.getStartOffset() + firstTokenInLine.getEnd());
 			}
+
+			// if the next char is not from this line
+			if (firstTokenInLine == null)
+				return;
+
 			String firstTokenType = firstTokenInLine.getType();
 			if (firstTokenType == PHPRegionTypes.PHP_CASE || firstTokenType == PHPRegionTypes.PHP_DEFAULT) {
 				insertionStrategy = caseDefualtIndentationStrategy;
@@ -167,54 +205,49 @@ public class PhpFormatter implements IStructuredFormatter {
 			insertionStrategy.placeMatchingBlanks(document, resultBuffer, lineNumber, document.getLineOffset(lineNumber));
 
 			// replace the starting spaces
-			document.replaceText(sdRegion, startOffset, startingWhiteSpaces, resultBuffer.toString());
+			final String newIndentation = resultBuffer.toString();
+			final String oldIndentation = lineText.substring(0, startingWhiteSpaces);
+			if (!newIndentation.equals(oldIndentation))
+				document.replaceText(sdRegion, orginalLineStart, startingWhiteSpaces, newIndentation);
 
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
 	}
 
+	/**
+	 * @return the formatted line (without whitespaces) information
+	 * Note: this is an O(n) implementation (firstly it looks a bit complicated but it worth it, 
+	 * the previous version was 3*n on the string's length)
+	 */
+	private IRegion getFormattedLineInformation(IRegion lineInfo, String lineText) {
+		// start checking from left and right to the center 
+		int leftNonWhitespaceChar = 0;
+		int rightNonWhitespaceChar = lineText.length() - 1;
+		final byte[] bytes = lineText.getBytes();
+		boolean keepSearching = true;
+		
+		while (keepSearching) {
+			final boolean leftIsWhiteSpace = bytes[leftNonWhitespaceChar] == CHAR_SPACE || bytes[leftNonWhitespaceChar] == CHAR_TAB; 
+			final boolean rightIsWhiteSpace = bytes[rightNonWhitespaceChar] == CHAR_SPACE || bytes[rightNonWhitespaceChar] == CHAR_TAB;
+			if (leftIsWhiteSpace) leftNonWhitespaceChar++;
+			if (rightIsWhiteSpace) rightNonWhitespaceChar--;
+			keepSearching = (leftIsWhiteSpace || rightIsWhiteSpace) && (leftNonWhitespaceChar < rightNonWhitespaceChar) ;
+		}
+		
+		// if line is empty then the indexes were switched
+		if (leftNonWhitespaceChar > rightNonWhitespaceChar) 
+			return new SimpleStructuredRegion(lineInfo.getOffset() , 0);  
+		
+		// if there are no changes - return the original line information, else build a fixed region
+		return leftNonWhitespaceChar == 0 && rightNonWhitespaceChar == lineText.length() - 1 ? 
+			lineInfo :  
+			new SimpleStructuredRegion(lineInfo.getOffset() + leftNonWhitespaceChar, rightNonWhitespaceChar - leftNonWhitespaceChar + 1); 
+	}
+
 	private boolean shouldReformat(IStructuredDocument document, IRegion lineInfo) {
-
-		if (lineInfo.getLength() == 0) {
-			return false;
-		}
-
-		int lineStart = lineInfo.getOffset();
-		int lineEnd = lineStart + lineInfo.getLength();
-
-		try {
-			while (Character.isWhitespace(document.getChar(lineStart)) && lineStart <= lineEnd) {
-				lineStart++;
-			}
-		} catch (BadLocationException e) {
-		}
-
-		String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineStart);
-
+		final String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineInfo.getOffset());
 		return ((checkedLineBeginState == PHPPartitionTypes.PHP_DEFAULT) || (checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT));
-	}
-
-	private static int getStartingWhiteSpaces(String text) {
-		int index = 0;
-		for (; index < text.length(); index++) {
-			char c = text.charAt(index);
-			if (c != ' ' && c != '\t') {
-				break;
-			}
-		}
-		return index;
-	}
-
-	private static int getEndingWhiteSpaces(String text) {
-		int index = text.length() - 1;
-		for (; index >= 0; index--) {
-			char c = text.charAt(index);
-			if (c != ' ' && c != '\t') {
-				break;
-			}
-		}
-		return index + 1;
 	}
 
 	protected IIndentationStrategy getIndentationStrategy(char c) {
@@ -227,9 +260,4 @@ public class PhpFormatter implements IStructuredFormatter {
 	private IIndentationStrategy getDefaultIndentationStrategy() {
 		return defualtIndentationStrategy;
 	}
-
-	private IIndentationStrategy defualtIndentationStrategy = new DefualtIndentationStrategy();;
-	private IIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
-	private IIndentationStrategy caseDefualtIndentationStrategy = new CaseDefualtIndentationStrategy();
-
 }

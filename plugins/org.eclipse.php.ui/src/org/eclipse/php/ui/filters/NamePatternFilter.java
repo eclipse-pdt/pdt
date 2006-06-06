@@ -12,7 +12,6 @@ package org.eclipse.php.ui.filters;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;

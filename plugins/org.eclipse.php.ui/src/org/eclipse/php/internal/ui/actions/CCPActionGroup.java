@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import org.eclipse.swt.dnd.Clipboard;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
-
+import org.eclipse.php.ui.IContextMenuConstants;
+import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchSite;
@@ -23,8 +22,6 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.part.Page;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
-
-import org.eclipse.php.ui.IContextMenuConstants;
 
 ;
 

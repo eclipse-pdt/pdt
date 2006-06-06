@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.project.ui.wizards;
 
+import org.eclipse.php.ui.preferences.ui.PHPVersionConfigurationBlock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Point;
@@ -25,7 +26,7 @@ import org.eclipse.wst.web.internal.operation.ISimpleWebModuleCreationDataModelP
 
 public class PHPProjectWizardBasePage extends DataModelWizardPage implements ISimpleWebModuleCreationDataModelProperties, IProjectCreationPropertiesNew {
 	protected NewProjectGroup projectNameGroup;
-    protected PHPVersionGroup fVersionGroup;
+	protected PHPVersionGroup fVersionGroup;
 
 	public PHPProjectWizardBasePage(IDataModel dataModel, String pageName) {
 		super(dataModel, pageName);
@@ -75,20 +76,24 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements ISi
 		return top;
 	}
 
-	private final void createProjectNameGroup(Composite parent) {
+	private void createProjectNameGroup(Composite parent) {
 		projectNameGroup = new NewProjectGroup(parent, model);
 	}
 
-	private final void createProjectOptionsGroup(Composite parent) {
+	protected void createProjectOptionsGroup(Composite parent) {
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(3, false);
 		composite.setLayout(layout);
-        fVersionGroup = new PHPVersionGroup(parent, this);
+		fVersionGroup = new PHPVersionGroup(parent, this);
 	}
-    
-    public void setProjectOptionInModel (IDataModel model){
-        fVersionGroup.setPropertiesInDataModel(model);
-    }
-                                                           
+
+	public void setProjectOptionInModel(IDataModel model) {
+		fVersionGroup.setPropertiesInDataModel(model);
+	}
+
+	public PHPVersionConfigurationBlock getPHPVersionBlock() {
+		return fVersionGroup.getVersionBlock();
+	}
+
 }

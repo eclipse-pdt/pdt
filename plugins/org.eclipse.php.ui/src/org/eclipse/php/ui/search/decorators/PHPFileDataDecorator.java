@@ -11,7 +11,14 @@
 package org.eclipse.php.ui.search.decorators;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
 
 /**
  * PHPFileDataDecorator is a simple proxy decorator that implements PHPFileData. 

@@ -11,7 +11,6 @@
 package org.eclipse.php.ui.util;
 
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.jface.util.Assert;
 import org.eclipse.php.ui.PHPUiPlugin;
 

@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.ui;
 
 import org.eclipse.jface.viewers.IBasicPropertyConstants;
-
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;

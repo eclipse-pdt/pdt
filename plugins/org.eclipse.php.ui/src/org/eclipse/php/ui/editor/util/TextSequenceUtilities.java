@@ -11,6 +11,7 @@
 package org.eclipse.php.ui.editor.util;
 
 import javax.swing.text.Segment;
+
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;

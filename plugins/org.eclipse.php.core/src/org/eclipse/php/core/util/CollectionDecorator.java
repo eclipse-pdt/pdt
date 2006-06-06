@@ -17,7 +17,7 @@
 package org.eclipse.php.core.util;
 
 import java.util.Collection;
-import java.util.Iterator; 
+import java.util.Iterator;
 
 /**
  *

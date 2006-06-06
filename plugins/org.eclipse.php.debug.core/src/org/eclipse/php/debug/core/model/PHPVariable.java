@@ -108,7 +108,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
         }
         boolean status = expressionManager.assignValue(changeVar, expression, 1);
         if (!status) {
-            Logger.debugMSG("PHPValue: Problem changing variable value");
+            Logger.debugMSG("[" + this + "] PHPValue: Problem changing variable value");
         }
         expressionManager.update(changeVar, 1);
         pValue.updateValue(changeVar.getValue());

@@ -10,35 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.core.project.options;
 
+import java.io.*;
+import java.util.*;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.core.internal.resources.XMLWriter;
-import org.eclipse.core.resources.ICommand;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.SubMenuManager;
 import org.eclipse.php.core.IncludePathContainerInitializer;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.PHPCorePlugin;
@@ -47,6 +30,7 @@ import org.eclipse.php.core.project.IIncludePathEntry;
 import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.php.core.project.options.includepath.IncludePathEntry;
 import org.eclipse.php.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.swt.widgets.Display;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -287,14 +271,13 @@ public class PHPProjectOptions {
 		return includePathEntries;
 	}
 
-	public void setRawIncludePath(IIncludePathEntry[] newIncludePathEntries, SubProgressMonitor monitor) throws CoreException {
+	public void setRawIncludePath(IIncludePathEntry[] newIncludePathEntries, SubProgressMonitor subProgressMonitor) throws CoreException {
 		IIncludePathEntry[] oldValue = includePathEntries;
 		includePathEntries = newIncludePathEntries;
-		IncludePathEntry.updateProjectReferences(includePathEntries,oldValue,project,monitor);
-		if (monitor != null) {
-			saveChanges(monitor);
-			notifyOptionChangeListeners(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, oldValue, newIncludePathEntries);
-		}
+		IncludePathEntry.updateProjectReferences (includePathEntries, oldValue, project, subProgressMonitor);
+		
+		saveChanges(subProgressMonitor);
+		notifyOptionChangeListeners(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, oldValue, newIncludePathEntries);
 	}
 
 	public static IPath getResolvedVariablePath(IPath path) {
@@ -350,5 +333,22 @@ public class PHPProjectOptions {
 		notifyOptionChangeListeners(key, object, null);
 
 		return object;
+	}
+	
+	public void removeResourceFromIncludePath(IResource resource) {
+		if (includePathEntries.length > 0) {
+			IIncludePathEntry[] newIncludePathEntries = new IIncludePathEntry[includePathEntries.length - 1];
+			for (int i = 0, j = 0; i < includePathEntries.length; ++i) {
+				if (includePathEntries[i].getResource() == resource) {
+					continue;
+				}
+				newIncludePathEntries[j++] = includePathEntries[i];
+			}
+			try {
+				setRawIncludePath(newIncludePathEntries, null);
+			} catch (Exception e) {
+				PHPCorePlugin.log(e);
+			}
+		}
 	}
 }

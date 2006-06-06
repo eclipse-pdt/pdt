@@ -12,6 +12,7 @@ package org.eclipse.php.ui.search;
 
 import java.text.Collator;
 import java.util.Comparator;
+
 import org.eclipse.ui.IWorkingSet;
 
 public class WorkingSetComparator implements Comparator {

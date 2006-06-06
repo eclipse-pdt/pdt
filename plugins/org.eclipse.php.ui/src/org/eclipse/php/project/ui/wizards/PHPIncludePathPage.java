@@ -22,7 +22,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 
@@ -45,7 +44,7 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 		fIncludePathsBlock.init(getDummyProject(), null);
 	}
 
-	protected IProject getDummyProject() {
+	public IProject getDummyProject() {
 		return ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project");
 	}
 	

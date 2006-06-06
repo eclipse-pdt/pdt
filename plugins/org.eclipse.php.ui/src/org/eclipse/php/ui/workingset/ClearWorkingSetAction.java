@@ -12,7 +12,6 @@ package org.eclipse.php.ui.workingset;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.util.Assert;
-
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.ui.PlatformUI;
 

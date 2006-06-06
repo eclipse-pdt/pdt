@@ -27,16 +27,10 @@ public class PHPDeployable extends ProjectModule {
 	public PHPDeployable(IProject project) {
 		super(project);
 		this.project = project;
-//		setPHPNature(getPHPNature());
 	}
 
-//	private void setPHPNature(PHPNature nature) {
-//		nature.setProject(getProject());
-//	}
-
-	// RSG - is this method needed?
 	public String getFactoryId() {
-		return "org.eclipse.php.deployable"; //$NON-NLS-1$
+		return "org.eclipse.php.core.project.deployable.php"; //$NON-NLS-1$
 	}
 
 	/**
@@ -94,7 +88,6 @@ public class PHPDeployable extends ProjectModule {
 	 * @see org.eclipse.wst.server.core.IModule#validate(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public IStatus validate(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -102,7 +95,6 @@ public class PHPDeployable extends ProjectModule {
 	 * @see org.eclipse.wst.server.core.IModule#getModuleType()
 	 */
 	public IModuleType getModuleType() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -110,7 +102,6 @@ public class PHPDeployable extends ProjectModule {
 	 * @see org.eclipse.wst.server.core.IModule#getChildModules(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public IModule[] getChildModules(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -118,7 +109,6 @@ public class PHPDeployable extends ProjectModule {
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

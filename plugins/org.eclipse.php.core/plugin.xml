@@ -4,6 +4,7 @@
    <extension-point id="phpModel" name="phpModel" schema="schema/phpModel.exsd"/>
    <extension-point id="includePathVariableInitializer" name="Include Path Variable Initializer" schema="schema/includePathVariableInitializer.exsd"/>
    <extension-point id="workspaceModelListener" name="workspaceModelListener" schema="schema/workspaceModelListener.exsd"/>
+   <extension-point id="buildersInitializer" name="buildersInitializer" schema="schema/buildersInitializer.exsd"/>
    
 	<!-- PHP Model Handler -->
 	<extension
@@ -214,5 +215,11 @@
 	<extension point="org.eclipse.core.runtime.preferences">
 	   <initializer class="org.eclipse.php.core.preferences.PHPCorePreferenceInitializer"/>
 	</extension>
+ <extension
+       point="org.eclipse.php.core.buildersInitializer">
+    <BuildersInitializer
+          id="org.eclipse.php.core.PhpIncrementalProjectBuilder"
+          name="PhpIncrementalProjectBuilder"/>
+ </extension>
 
 </plugin>

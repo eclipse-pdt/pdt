@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.ui.wizards.fields;
 
+import org.eclipse.php.ui.util.SWTUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -17,8 +18,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-import org.eclipse.php.ui.util.SWTUtil;
 
 ;
 

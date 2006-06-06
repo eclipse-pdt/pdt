@@ -10,20 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-
-import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.ui.actions.ActionGroup;
-
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.ui.IContextMenuConstants;
+import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.actions.ActionGroup;
 
 ;
 

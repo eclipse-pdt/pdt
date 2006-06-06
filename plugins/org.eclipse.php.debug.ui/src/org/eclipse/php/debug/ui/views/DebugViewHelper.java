@@ -12,16 +12,15 @@ package org.eclipse.php.debug.ui.views;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.launching.PHPProcess;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
-import org.eclipse.php.debug.core.launching.PHPProcess;
 
 public class DebugViewHelper {
 	

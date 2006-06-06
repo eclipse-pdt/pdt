@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
- 
+
 package org.eclipse.php.debug.ui.launching;
 
 import org.eclipse.core.resources.IFile;
@@ -41,7 +41,6 @@ import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 
 public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
@@ -80,8 +79,6 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	}
 
 	static public void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
-		boolean launched = false;
-
 		int entries = search == null ? 0 : search.length;
 		for (int i = 0; i < entries; i++) {
 			try {
@@ -90,18 +87,16 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				Object obj = search[i];
 
 				//TODO: if IProject, offer choices?
-				if (obj instanceof PHPCodeData)
-					obj=PHPModelUtil.getResource(obj);
-				
+				if (obj instanceof PHPCodeData) {
+					obj = PHPModelUtil.getResource(obj);
+				}
 				if (obj instanceof IFile) {
 					IFile file = (IFile) obj;
 					project = file.getProject();
-					String ext = file.getFileExtension();
-
 					IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-
-					if (contentType.isAssociatedWith(file.getName()))
-                        phpPathString = file.getFullPath().toString();
+					if (contentType.isAssociatedWith(file.getName())) {
+						phpPathString = file.getFullPath().toString();
+					}
 				}
 
 				if (phpPathString == null) {
@@ -110,26 +105,23 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				}
 
 				PHPexes exes = new PHPexes();
-				exes.load(SSECorePlugin.getDefault().getPluginPreferences());
-				PHPexeItem defaultEXE=exes.getDefaultItem();
-				String phpExeName=(defaultEXE!=null)?exes.getDefaultItem().getPhpEXE().getAbsolutePath().toString():null;
-				
-				if (phpExeName==null)
-				{
-					ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text, 
-						new Status(Status.ERROR,PHPDebugUIPlugin.ID,0,"",null));
+				exes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
+				PHPexeItem defaultEXE = exes.getDefaultItem();
+				String phpExeName = (defaultEXE != null) ? exes.getDefaultItem().getPhpEXE().getAbsolutePath().toString() : null;
+
+				if (phpExeName == null) {
+					ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text, new Status(Status.ERROR, PHPDebugUIPlugin.ID, 0, "", null));
 					return;
-					
 				}
-				
+
 				// Launch the app
 				ILaunchConfiguration config = findLaunchConfiguration(project.getName(), phpPathString, phpExeName, mode, configType);
-				if (config != null)
+				if (config != null) {
 					DebugUITools.launch(config, mode);
-				else
+				} else {
 					// Could not find launch configuration
 					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_config, null));
-
+				}
 			} catch (CoreException ce) {
 				final IStatus stat = ce.getStatus();
 				Display.getDefault().asyncExec(new Runnable() {
@@ -164,8 +156,9 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				}
 			}
 
-			if (config == null)
-				config = createConfiguration(phpProject, phpPathString, phpExeName,configType);
+			if (config == null) {
+				config = createConfiguration(phpProject, phpPathString, phpExeName, configType);
+			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
 		}
@@ -175,14 +168,13 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	/**
 	 * Create & return a new configuration
 	 */
-	static protected ILaunchConfiguration createConfiguration(String phpProject, String phpPathString,String phpExeName,  ILaunchConfigurationType configType) throws CoreException {
+	static protected ILaunchConfiguration createConfiguration(String phpProject, String phpPathString, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
 		ILaunchConfiguration config = null;
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom("New_configuration"));
 
-		wc.setAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, phpProject);
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
 		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, phpExeName);
-        wc.setAttribute(IPHPConstants.RunWithDebugInfo, PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(IPHPConstants.RunWithDebugInfo, PHPDebugPlugin.getDebugInfoOption());
 
 		config = wc.doSave();
 

@@ -11,6 +11,7 @@
 package org.eclipse.php.core.preferences;
 
 import java.util.EventObject;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 

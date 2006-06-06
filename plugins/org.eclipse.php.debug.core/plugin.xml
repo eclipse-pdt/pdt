@@ -274,6 +274,13 @@
 		<httpServerLaunchDelegate
 			class="org.eclipse.php.debug.core.launching.PHPServerLaunchDelegate" />
   </extension>
+  <extension
+        point="org.eclipse.php.debug.daemon.debugCommunicationDaemon">
+     <daemon
+           class="org.eclipse.php.debug.core.communication.DebuggerCommunicationDaemon"
+           id="org.eclipse.php.debug.core.BasicDebugDaemon"
+           name="Basic Debug Daemon"/>
+  </extension>
   
 
 </plugin>

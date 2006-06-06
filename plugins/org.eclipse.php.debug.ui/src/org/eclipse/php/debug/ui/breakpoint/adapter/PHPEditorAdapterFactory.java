@@ -10,19 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.debug.ui.breakpoint.adapter;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.ui.actions.IRunToLineTarget;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.debug.ui.breakpoint.adapter.PHPRunToLineAdapter;
+import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.php.debug.core.IPHPConstants;
+import org.eclipse.debug.ui.actions.IRunToLineTarget;
+import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.debug.ui.Logger;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 public class PHPEditorAdapterFactory implements IAdapterFactory {
 	/* (non-Javadoc)

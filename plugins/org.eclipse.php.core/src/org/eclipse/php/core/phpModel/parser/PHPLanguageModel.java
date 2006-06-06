@@ -13,13 +13,27 @@ package org.eclipse.php.core.phpModel.parser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.phpModel.IPHPLanguageModel;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 
 public abstract class PHPLanguageModel implements IPHPLanguageModel {
 

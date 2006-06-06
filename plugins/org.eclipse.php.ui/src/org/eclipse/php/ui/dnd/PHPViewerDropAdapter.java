@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.ui.dnd;
 
+import org.eclipse.jface.util.Assert;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
@@ -18,9 +20,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
-
-import org.eclipse.jface.util.Assert;
-import org.eclipse.jface.viewers.StructuredViewer;
 
 /**
  * A drag and drop adapter to be used together with structured viewers.

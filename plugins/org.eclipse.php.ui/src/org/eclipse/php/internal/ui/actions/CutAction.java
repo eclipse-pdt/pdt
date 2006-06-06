@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.CoreException;
-
-import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.swt.dnd.Clipboard;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
-
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;

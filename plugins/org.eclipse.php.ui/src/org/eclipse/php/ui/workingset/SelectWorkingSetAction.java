@@ -10,14 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.ui.workingset;
 
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.window.Window;
-
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
+import org.eclipse.php.ui.PHPUiPlugin;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;

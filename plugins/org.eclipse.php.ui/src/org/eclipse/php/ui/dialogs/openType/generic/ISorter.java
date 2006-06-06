@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.ui.dialogs.openType.generic;
 
-import java.util.List;
 
 public interface ISorter {
 

@@ -56,13 +56,7 @@ public class DefualtIndentationStrategy implements IIndentationStrategy {
 				continue;
 			}
 			int currLineEndOffset = lineInfo.getOffset() + lineInfo.getLength();
-			boolean isIndentationBase;
-			if (currLineEndOffset == 0) {
-				isIndentationBase = isIndentationBase(document, currLineEndOffset, offset);
-			} else {
-				//here was (in the studio)  (currLineEndOffset - 1) inside the min function 
-				isIndentationBase = isIndentationBase(document, Math.min(offset, currLineEndOffset), offset);
-			}
+			boolean isIndentationBase = isIndentationBase(document, Math.min(offset, currLineEndOffset), offset);
 			if (isIndentationBase) {
 				return currLineIndex;
 			}

@@ -11,7 +11,6 @@
 package org.eclipse.php.ui.preferences.includepath;
 
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.jface.util.Assert;
 
 public class IPVariableElement {

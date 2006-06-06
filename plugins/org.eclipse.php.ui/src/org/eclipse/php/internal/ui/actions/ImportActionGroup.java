@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import org.eclipse.php.ui.IContextMenuConstants;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.php.ui.IContextMenuConstants;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionGroup;

@@ -73,11 +73,6 @@ public class PHPSearchResultPage extends AbstractTextSearchViewPage implements I
 				IFile file = (IFile) element;
 				showWithMarker(editor, file, offset, length);
 			}
-		} else {
-			//			PHPSearchResult result= (PHPSearchResult) getInput();
-			//			IMatchPresentation participant= result.getSearchParticpant(element);
-			//			if (participant != null)
-			//				participant.showMatch(match, offset, length, activate);
 		}
 	}
 

@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.List;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

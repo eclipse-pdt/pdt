@@ -18,6 +18,7 @@ import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.php.ui.editor.templates.resolver.PhpTemplateArrayVariableResolver;
 import org.eclipse.php.ui.editor.templates.resolver.PhpTemplateClassContainerResolver;
 import org.eclipse.php.ui.editor.templates.resolver.PhpTemplateClassResolver;
+import org.eclipse.php.ui.editor.templates.resolver.PhpTemplateFileResolver;
 import org.eclipse.php.ui.editor.templates.resolver.PhpTemplateFunctionContainerResolver;
 import org.eclipse.php.ui.editor.templates.resolver.PhpTemplateNumberVariableResolver;
 import org.eclipse.php.ui.editor.templates.resolver.PhpTemplateVariableResolver;
@@ -44,6 +45,7 @@ public class PHPTemplateContextType extends TemplateContextType {
 		addResolver(new PhpTemplateNumberVariableResolver());
 		addResolver(new PhpTemplateArrayVariableResolver());
 		addResolver(new PhpTemplateClassResolver());
+		addResolver(new PhpTemplateFileResolver());
 	}
 
 	public void resolve(TemplateBuffer buffer, TemplateContext context) throws MalformedTreeException, BadLocationException {

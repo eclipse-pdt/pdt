@@ -2,15 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: PHP Debug Ui Plug-in
 Bundle-SymbolicName: org.eclipse.php.debug.ui; singleton:=true
-Bundle-Version: 0.1.0
+Bundle-Version: 0.1.3
 Bundle-Activator: org.eclipse.php.debug.ui.PHPDebugUIPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.core.expressions,
  org.eclipse.debug.ui,
- org.eclipse.ui.editors,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.debug.core,
  org.eclipse.wst.server.core,
@@ -26,9 +24,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.server.ui,
  org.eclipse.php.ui,
- org.eclipse.php.server.apache.core,
- org.eclipse.php.server.apache.ui,
- org.apache.ant
+ org.eclipse.php.server.apache.ui
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.debug.ui.actions,

@@ -37,8 +37,8 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPModifier;
 import org.eclipse.php.ui.editor.contentassist.PHPTextSequenceUtilities;
 import org.eclipse.php.ui.editor.util.TextSequence;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -167,11 +167,6 @@ public class CodeDataResolver {
 			return tmp;
 		}
 
-		if (haveSpacesAtEnd && isFunctionCall(projectModel, lastWord)) {
-			// the current position is between the end of a function call and open bracket.
-			return null;
-		}
-		
 		if ((tmp = getIfInArrayOption(projectModel, fileName, haveSpacesAtEnd, firstWord, lastWord, startPosition, offset, statmentText)) != null) {
 			// the current position is after '[' sign show special completion.
 			return tmp;
@@ -216,11 +211,6 @@ public class CodeDataResolver {
 		mergeData = ModelSupport.merge(functions, mergeData);
 		
 		return filterExact (mergeData, elementName);
-	}
-
-	private static boolean isFunctionCall (PHPProjectModel projectModel, String functionName) {
-		CodeData[] functionsData = projectModel.getFunction(functionName);
-		return functionsData != null && functionsData.length > 0;
 	}
 	
 	private boolean isPHPSingleQuote(IStructuredDocumentRegion sdRegion, ITextRegion textRegion) {

@@ -12,7 +12,14 @@ package org.eclipse.php.core.documentModel.dom;
 
 import org.eclipse.php.core.documentModel.validate.HTMLElementPropagatingValidator;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.w3c.dom.Document;
@@ -123,5 +130,17 @@ public class PHPElementImpl extends ElementImpl {
 		if (offset >= userData.getStartPosition() && offset <= userData.getEndPosition())
 			return true;
 		return false;
+	}
+	
+	public boolean matchTagName(String tagName) {
+		return tagName.equals("?>"); 
+	}
+	
+	public boolean isContainer() {
+		return true;
+	}
+
+	public boolean isJSPContainer() {
+		return true;
 	}
 }

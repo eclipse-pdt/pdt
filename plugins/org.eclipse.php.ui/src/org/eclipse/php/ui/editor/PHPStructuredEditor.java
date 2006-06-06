@@ -44,7 +44,6 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.ActionMessages;
 import org.eclipse.php.internal.ui.actions.AddBlockCommentAction;
 import org.eclipse.php.internal.ui.actions.BlockCommentAction;
@@ -281,8 +280,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.remove.block.comment"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.RemoveBlockComment", action); //$NON-NLS-1$
 		markAsStateDependentAction("org.eclipse.php.ui.actions.RemoveBlockComment", true); //$NON-NLS-1$
-		// markAsSelectionDependentAction("org.eclipse.php.ui.actions.RemoveBlockComment",
-		// true); //$NON-NLS-1$
 		((BlockCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new TextOperationAction(resourceBundle, "CommentAction_", this, ITextOperationTarget.PREFIX); //$NON-NLS-1$
@@ -298,10 +295,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		action = new OpenFunctionsManualAction(resourceBundle, this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.OpenFunctionsManualAction"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction", action); //$NON-NLS-1$
+		markAsStateDependentAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction", true); //$NON-NLS-1$
 		
 		action = new OpenDeclarationAction(resourceBundle, this);
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.open.editor"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.Open", action); //$NON-NLS-1$
+		markAsStateDependentAction("org.eclipse.php.ui.actions.Open", true); //$NON-NLS-1$
 	}
 
 	protected void addContextMenuActions(IMenuManager menu) {

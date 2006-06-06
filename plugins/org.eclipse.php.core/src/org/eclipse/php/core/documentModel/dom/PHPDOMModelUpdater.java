@@ -20,8 +20,7 @@ public class PHPDOMModelUpdater extends XMLModelUpdater {
 	}
 
 	protected boolean isNestedTagClose(String regionType) {
-		boolean result = regionType == PHPRegionTypes.PHP_CLOSETAG;
-		return result;
+		return regionType == PHPRegionTypes.PHP_CLOSETAG;
 	}
 
 }

@@ -16,9 +16,10 @@
 
 package org.eclipse.php.core.phpModel.parser.php5;
 
-import org.eclipse.php.core.phpModel.javacup.runtime.Symbol;
 import java.io.StringReader;
 import java.util.StringTokenizer;
+
+import org.eclipse.php.core.phpModel.javacup.runtime.Symbol;
 import org.eclipse.php.core.phpModel.parser.CompletionLexer;
 import org.eclipse.php.core.phpModel.parser.ParserClient;
 import org.eclipse.php.core.phpModel.parser.PhpParser;

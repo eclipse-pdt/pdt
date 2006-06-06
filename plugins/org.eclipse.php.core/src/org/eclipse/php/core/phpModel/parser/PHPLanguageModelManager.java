@@ -17,7 +17,6 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPKeywordData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.core.preferences.PreferencesPropagatorEvent;
-import org.eclipse.php.core.project.options.PHPProjectOptions;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionChangedHandler;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 

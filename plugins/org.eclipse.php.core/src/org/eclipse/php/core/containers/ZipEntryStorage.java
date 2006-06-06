@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -25,7 +26,6 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.util.Messages;
-import org.eclipse.core.resources.IProject;
  
 /**
  * Storage implementation for zip entries.

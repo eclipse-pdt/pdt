@@ -13,13 +13,36 @@ package org.eclipse.php.core.util;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.php.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory;
 import org.eclipse.php.core.phpModel.parser.VariableContextBuilder;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.BasicPHPDocTag;
+import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlockImp;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPTask;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableTypeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
+import org.eclipse.php.core.phpModel.phpElementData.UserData;
 
 public class SerializationUtil {
 

@@ -117,7 +117,9 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 
 	public Object[] getChildrenInternal(Object parentElement) {
 		if (parentElement instanceof IProject) {
-			groupNodes = getOutlineChildren((IProject) parentElement);
+			if (groupNodes == null) {
+				groupNodes = getOutlineChildren((IProject) parentElement);
+			}
 			return groupNodes;
 		} else if (parentElement instanceof OutlineNode) {
 			OutlineNode outlineNode = (OutlineNode) parentElement;

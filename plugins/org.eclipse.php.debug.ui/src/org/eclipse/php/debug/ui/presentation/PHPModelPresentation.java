@@ -10,16 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.debug.ui.presentation;
 
-import java.text.MessageFormat;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -28,24 +29,24 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.debug.ui.IValueDetailListener;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.php.core.containers.LocalFileStorage;
+import org.eclipse.php.core.containers.ZipEntryStorage;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.debug.core.model.PHPStackFrame;
 import org.eclipse.php.debug.core.model.PHPThread;
+import org.eclipse.php.debug.core.sourcelookup.PHPSourceNotFoundInput;
 import org.eclipse.php.debug.ui.Logger;
-import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
+import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.debug.ui.sourcelookup.PHPSourceNotFoundEditorInput;
+import org.eclipse.php.ui.containers.LocalFileStorageEditorInput;
+import org.eclipse.php.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
-import org.eclipse.php.core.containers.ZipEntryStorage;
-import org.eclipse.php.core.containers.LocalFileStorage;
-import org.eclipse.php.ui.containers.ZipEntryStorageEditorInput;
-import org.eclipse.php.ui.containers.LocalFileStorageEditorInput;
-import org.eclipse.php.debug.core.sourcelookup.PHPSourceNotFoundInput;
-import org.eclipse.php.debug.ui.sourcelookup.PHPSourceNotFoundEditorInput;
 
 /**
  * Renders PHP debug elements

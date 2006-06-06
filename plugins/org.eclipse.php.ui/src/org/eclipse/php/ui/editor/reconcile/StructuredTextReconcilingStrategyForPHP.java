@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor.reconcile;
 
+import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 
 /**
@@ -41,6 +41,11 @@ public class StructuredTextReconcilingStrategyForPHP extends AbstractStructuredT
 	 */
 	public boolean isTotalScope() {
 		return true;
+	}
+
+	protected boolean containsStep(IReconcileStep step) {
+		// TODO - Migration to Eclipse 3.2
+		return false;
 	}
 	
 	

@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.javacup;
 
-import org.eclipse.php.core.phpModel.javacup.runtime.Symbol;
-
 import java.util.Hashtable;
+
+import org.eclipse.php.core.phpModel.javacup.runtime.Symbol;
 
 /** This class implements a small scanner (aka lexical analyzer or lexer) for
  *  the JavaCup specification.  This scanner reads characters from standard 

@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.ui.console.IHyperlink;
-import org.eclipse.php.debug.core.launching.HyperlinkEntry;
 
 public class PHPHyperLink {
 

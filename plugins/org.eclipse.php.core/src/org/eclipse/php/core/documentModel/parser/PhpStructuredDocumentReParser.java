@@ -25,6 +25,17 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	}
 
 	/**
+	 * Adding the support to php comments
+	 */
+	protected StructuredDocumentEvent checkForComments() {
+		StructuredDocumentEvent result = checkForCriticalKey("/*");
+		if (result == null) {
+			result = checkForCriticalKey("*/");
+		}
+		return result != null ? result : super.checkForComments();
+	}
+	
+	/**
 	 * adds the Php structured documents regions reparsing...
 	 */
 	protected StructuredDocumentEvent core_reparse(int rescanStart, int rescanEnd, CoreNodeList oldNodes, boolean firstTime) {
@@ -163,7 +174,13 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	 * @param newNodes
 	 */
 	private CoreNodeList toUnionList(List newNodes) {
-
+		assert newNodes != null;
+		
+		// fast checking if the new Nodes are empty list
+		if (newNodes.size() == 0) {
+			return new CoreNodeList(null);
+		}
+		
 		int i = 0;
 		while (i + 1 < newNodes.size()) { // while we have next node  
 			final IStructuredDocumentRegion current = (IStructuredDocumentRegion) newNodes.get(i);
@@ -173,7 +190,9 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 			
 			// if we can merge the current 
 			// region with the next region - merge it!
-			if (type != PHPRegionTypes.PHP_SEMICOLON && type != PHPRegionTypes.PHP_CLOSETAG && newNodes.get(i + 1) != null) { 
+			if (current.getType() == PHPRegionContext.PHP_CONTENT && type != PHPRegionTypes.PHP_SEMICOLON && // it is php content not ending with semicolon 
+				type != PHPRegionTypes.PHP_CLOSETAG && type != PHPRegionTypes.PHP_OPENTAG && // or close/open tag 
+				next != null && next.getFirstRegion().getType() != PHPRegionTypes.PHP_CLOSETAG) { // or the next region is close tag 
 				 
 				final int itemLength = current.getLength();
 

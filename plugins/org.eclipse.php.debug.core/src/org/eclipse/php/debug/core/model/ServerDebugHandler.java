@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.model;
 
-import java.util.Hashtable;
-
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.debug.core.communication.DebugConnectionThread;
 import org.eclipse.php.debug.core.debugger.DebugError;
 import org.eclipse.php.debug.core.debugger.DefaultExpressionsManager;
 import org.eclipse.php.debug.core.debugger.IRemoteDebugger;
@@ -28,31 +27,31 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	private IRemoteDebugger fRemoteDebugger;
 	private PHPDebugTarget fDebugTarget;
 	private boolean fStatus;
-	
+	protected DebugConnectionThread fConnectionThread;
+
 	public ServerDebugHandler() {
-		fRemoteDebugger = createRemoteDebugger();
 	}
 
 	protected IRemoteDebugger createRemoteDebugger() {
-		return new RemoteDebugger(this);
+		return new RemoteDebugger(this, fConnectionThread);
 	}
-	
+
 	public IRemoteDebugger getRemoteDebugger() {
 		return fRemoteDebugger;
 	}
-	
+
 	public void sessionStarted(String fileName, String uri, String query, String options) {
 		super.sessionStarted(fileName, uri, query, options);
 		String sFileName = RemoteDebugger.convertToSystemIndependentFileName(fileName);
-		
+
 		fDebugTarget.setLastFileName(sFileName);
 		if (!fDebugTarget.isPHPCGI()) {
-            fDebugTarget.setServerWindows(false);
+			fDebugTarget.setServerWindows(false);
 			int index;
 			// check for Windows, since case isn't always returned correctly
 			if (fileName.startsWith(":\\", 1)) {
 				index = sFileName.toLowerCase().lastIndexOf(uri.toLowerCase());
-                fDebugTarget.setServerWindows(true);              
+				fDebugTarget.setServerWindows(true);
 			} else {
 				if (uri.startsWith("/~")) {
 					int iUDir = uri.indexOf("/", 1);
@@ -66,7 +65,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		StartLock startLock = fDebugTarget.getStartLock();
 		synchronized (startLock) {
 			if (startLock.isRunStart()) {
-                startLock.setStarted(true);
+				startLock.setStarted(true);
 				fDebugTarget.started();
 
 				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
@@ -85,7 +84,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		StartLock startLock = fDebugTarget.getStartLock();
 		synchronized (startLock) {
 			if (startLock.isRunStart()) {
-                startLock.setStarted(true);
+				startLock.setStarted(true);
 				fDebugTarget.started();
 
 				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
@@ -105,7 +104,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		fDebugTarget.setLastStop(lineNumber);
 		fDebugTarget.setLastFileName(RemoteDebugger.convertToSystemIndependentFileName(fileName));
 		String fLastcmd = fDebugTarget.getLastCommand();
-		Logger.debugMSG("PHPDebugTarget: lastCMD " + fLastcmd);
+		Logger.debugMSG("[" + this + "] PHPDebugTarget: lastCMD " + fLastcmd);
 
 		fDebugTarget.setBreakpoints(new IBreakpoint[] {});
 
@@ -136,25 +135,26 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	}
 
 	public void sessionEnded() {
-		Logger.debugMSG("PHPDebugTarget: Starting sessionEnded()");
+		Logger.debugMSG("[" + this + "] PHPDebugTarget: Starting sessionEnded()");
 		super.sessionEnded();
 
 	}
 
 	public void connectionClosed() {
-		Logger.debugMSG("PHPDebugTarget:Starting connectionClosed()");
+		Logger.debugMSG("[" + this + "] PHPDebugTarget:Starting connectionClosed()");
 		super.connectionClosed();
 		fRemoteDebugger.finish();
-		if (fDebugTarget.isPHPCGI()) {
-			Logger.debugMSG("PHPDebugTarget: Calling Terminated() for PHP CGI");
-			fDebugTarget.terminated();
-		}
+		//		if (fDebugTarget.isPHPCGI()) {
+		//			Logger.debugMSG("PHPDebugTarget: Calling Terminated() for PHP CGI");
+		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling Terminated()");
+		fDebugTarget.terminated();
+		//		}
 	}
 
 	public void handleScriptEnded() {
-		Logger.debugMSG("PHPDebugTarget: handleScriptEnded");
+		Logger.debugMSG("[" + this + "] PHPDebugTarget: handleScriptEnded");
 		try {
-			Logger.debugMSG("PHPDebugTarget: Calling Terminate()");
+			Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling Terminate()");
 			fDebugTarget.terminate();
 
 		} catch (DebugException e1) {
@@ -166,10 +166,10 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		super.multipleBindOccured();
 		Logger.log(Logger.WARNING, "PHPDebugTarget: Multiple Bind Occured");
 
-		Hashtable usedPorts = fDebugTarget.getUsedPorts();
-		synchronized (usedPorts) {
-			usedPorts.remove(String.valueOf(fDebugTarget.getRequestPort()));
-		}
+		//		Hashtable usedPorts = fDebugTarget.getUsedPorts();
+		//		synchronized (usedPorts) {
+		//			usedPorts.remove(String.valueOf(fDebugTarget.getRequestPort()));
+		//		}
 		/*            fRequestPort++;
 		 debugger.setDebugPort(fRequestPort);
 		 if (fIsPHPCGI){
@@ -226,6 +226,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void setDebugTarget(PHPDebugTarget debugTarget) {
 		this.fDebugTarget = debugTarget;
+		fConnectionThread = fDebugTarget.getConnectionThread();
+		fRemoteDebugger = createRemoteDebugger();
+		fConnectionThread.getCommunicationAdministrator().connectionEstablished();
 	}
 
 	public PHPDebugTarget getDebugTarget() {

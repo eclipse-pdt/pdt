@@ -233,7 +233,7 @@
             name="%installPHPPageName"
             category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
             class="org.eclipse.php.debug.ui.preferences.phps.PHPsPreferencePage"
-            id="org.eclipse.php.debug.ui..preferencesphps.PHPsPreferencePage">
+            id="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage">
          <keywordReference id="org.eclipse.php.debug.ui.debug"/>
       </page>	
     </extension>
@@ -275,6 +275,7 @@
 		 <actionSet
                id="org.eclipse.debug.ui.breakpointActionSet">
          </actionSet>
+		 <showInPart id="org.eclipse.ui.views.ResourceNavigator"/>
       </perspectiveExtension>
    </extension>
    <extension
@@ -321,10 +322,8 @@
       </shortcut>
    </extension>
    <extension point="org.eclipse.php.server.apache.ui.serverTab">
-		<serverTab
-			class="org.eclipse.php.debug.ui.launching.PHPServerTab"
-			tab="false" />
-	</extension>
+  		<serverTab class="org.eclipse.php.debug.ui.launching.PHPServerTab"/>
+   </extension>
       
 <!-- Editor -->
    <extension

@@ -15,7 +15,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.BasicPHPDocTag;
+import org.eclipse.php.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlockImp;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 
 /**
  * @author guy.g

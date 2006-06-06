@@ -29,24 +29,24 @@ public class DebugHandlersRegistry {
 
 	/** Debug handlers stored by ID */
 	private Dictionary actions = new Hashtable();
-	
+
 	/** Remote debuggers stored by debug handlers ID */
 	private Dictionary debuggers = new Hashtable();
-		
+
 	/** Instance of this registry */
 	private static DebugHandlersRegistry instance = null;
-	
+
 	private DebugHandlersRegistry() {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
-		
+
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (HANDLER_TAG.equals(element.getName())) {
-				
-				actions.put (element.getAttribute(ID_ATTRIBUTE), new DebugHandlerFactory(element));
-				
+
+				actions.put(element.getAttribute(ID_ATTRIBUTE), new DebugHandlerFactory(element));
+
 				String debugger = element.getAttribute(REMOTE_DEBUGGER_ATTRIBUTE);
 				if (debugger != null) {
 					debuggers.put(element.getAttribute(ID_ATTRIBUTE), debugger);
@@ -54,14 +54,14 @@ public class DebugHandlersRegistry {
 			}
 		}
 	}
-	
+
 	private static DebugHandlersRegistry getInstance() {
 		if (instance == null) {
 			instance = new DebugHandlersRegistry();
 		}
 		return instance;
 	}
-	
+
 	private Dictionary getHandlers() {
 		return actions;
 	}
@@ -71,20 +71,20 @@ public class DebugHandlersRegistry {
 	 *
 	 * @return handler Debug handler
 	 */
-	public static IDebugHandler getHandler (String id) throws Exception {
-		return ((DebugHandlerFactory)getInstance().getHandlers().get(id)).createHandler();
+	public static IDebugHandler getHandler(String id) throws Exception {
+		return ((DebugHandlerFactory) getInstance().getHandlers().get(id)).createHandler();
 	}
-	
+
 	/**
 	 * Returns remote debugger ID by the Debug Handler ID
 	 * 
 	 * @param debug handler ID.
 	 * @return remote debugger ID. 
 	 */
-	public static String getRemoteDebuggerID (String debugHandlerID) {
-		return (String)getInstance().debuggers.get(debugHandlerID);
+	public static String getRemoteDebuggerID(String debugHandlerID) {
+		return (String) getInstance().debuggers.get(debugHandlerID);
 	}
-	
+
 	/**
 	 * Factory of the debug handler object
 	 */
@@ -92,19 +92,17 @@ public class DebugHandlersRegistry {
 
 		IDebugHandler handler;
 		IConfigurationElement element;
-		
-		public DebugHandlerFactory (IConfigurationElement element) {
+
+		public DebugHandlerFactory(IConfigurationElement element) {
 			this.element = element;
 		}
-		
+
 		public IDebugHandler createHandler() {
-			if (handler == null) {
-				Platform.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.debug.core.phpDebugHandlers") {
-					public void run() throws Exception {
-						handler = (IDebugHandler) element.createExecutableExtension(CLASS_ATTRIBUTE);
-					}
-				});
-			}
+			Platform.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.debug.core.phpDebugHandlers") {
+				public void run() throws Exception {
+					handler = (IDebugHandler) element.createExecutableExtension(CLASS_ATTRIBUTE);
+				}
+			});
 			return handler;
 		}
 	}

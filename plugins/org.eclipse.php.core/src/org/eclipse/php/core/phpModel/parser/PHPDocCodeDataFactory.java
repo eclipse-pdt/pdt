@@ -11,8 +11,8 @@
 package org.eclipse.php.core.phpModel.parser;
 
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPProjectModelVisitor;
 import org.eclipse.php.core.phpModel.phpElementData.PHPDocTagData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPProjectModelVisitor;
 import org.eclipse.php.core.util.Visitor;
 
 

@@ -13,10 +13,20 @@ package org.eclipse.php.core.project;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
 import org.eclipse.wst.server.core.IModule;
@@ -180,8 +190,16 @@ public class PHPNature implements IProjectNature {
 	 *                if this method fails.
 	 */
 	public void configure() throws org.eclipse.core.runtime.CoreException {
-		addToFrontOfBuildSpec(VALIDATION_BUILDER_ID);
-		addToFrontOfBuildSpec(PHPProjectOptions.BUILDER_ID);
+        // enable workspace validation for this nature
+		  addToFrontOfBuildSpec(VALIDATION_BUILDER_ID);
+		  
+		  //  load all registered extensions and add them to build spec
+		  IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.buildersInitializer"); //$NON-NLS-1$
+		  for (int i = 0; i < elements.length; i++) {
+			  final IConfigurationElement element = elements[i];
+		      addToFrontOfBuildSpec(element.getAttribute("id")); //$NON-NLS-1$		   
+		  }
+
 
 	}
 

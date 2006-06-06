@@ -13,7 +13,6 @@ package org.eclipse.php.internal.ui.preferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.php.core.PHPCoreConstants;
-import org.eclipse.php.internal.ui.preferences.OptionsConfigurationBlock.ControlData;
 import org.eclipse.php.ui.preferences.IStatusChangeListener;
 import org.eclipse.php.ui.util.StatusInfo;
 import org.eclipse.swt.SWT;
@@ -23,7 +22,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
@@ -31,7 +35,7 @@ import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
  * @author guy.g
  *
  */
-public class PHPFormatterConfigurationBlock extends OptionsConfigurationBlock implements ModifyListener, SelectionListener {
+public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationBlock implements ModifyListener, SelectionListener {
 
 	private static final Key PREF_FORMATTER_USE_TABS = getPHPCoreKey(PHPCoreConstants.FORMATTER_USE_TABS);
 	private static final Key PREF_FORMATTER_INDENTATION_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);

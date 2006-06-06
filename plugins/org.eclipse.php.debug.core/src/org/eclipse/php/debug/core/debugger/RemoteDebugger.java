@@ -12,7 +12,7 @@ package org.eclipse.php.debug.core.debugger;
 
 import java.io.File;
 
-import org.eclipse.php.debug.core.communication.DebuggerCommunicationKit;
+import org.eclipse.php.debug.core.communication.DebugConnectionThread;
 import org.eclipse.php.debug.core.communication.ResponseHandler;
 import org.eclipse.php.debug.core.debugger.messages.AddBreakpointRequest;
 import org.eclipse.php.debug.core.debugger.messages.AddBreakpointResponse;
@@ -54,67 +54,40 @@ import org.eclipse.php.debug.core.debugger.messages.StepOverRequest;
 import org.eclipse.php.debug.core.debugger.messages.StepOverResponse;
 
 /**
- * @author eran
+ * An IRemoteDebugger implementation. 
  */
 public class RemoteDebugger implements IRemoteDebugger {
-    
-    public static final int PROTOCOL_ID = 2006040701;
-	
-	private DebuggerCommunicationKit kit;
+
+	public static final int PROTOCOL_ID = 2006040701;
+
+	private DebugConnectionThread connection;
 	private IDebugHandler debugHandler;
 
 	/**
 	 * Creates new RemoteDebugSession
 	 */
-	public RemoteDebugger(IDebugHandler debugHandler) {
-		this.kit = createCommunicationKit();
+	public RemoteDebugger(IDebugHandler debugHandler, DebugConnectionThread connectionThread) {
+		//		this.kit = createCommunicationKit();
+		connection = connectionThread;
 		this.debugHandler = debugHandler;
+		connection.setCommunicationAdministrator(this);
+		connection.setCommunicationClient(this);
 	}
-	
-	/**
-	 * Creates a DebuggerCommunicationKit.
-	 * Subclasses may override this method to create a different communication kit.
-	 * 
-	 * @return A newly created DebuggerCommunicationKit.
-	 */
-	protected DebuggerCommunicationKit createCommunicationKit() {
-		DebuggerCommunicationKit kit = new DebuggerCommunicationKit();
-		kit.setCommunicationAdministrator(this);
-		kit.setCommunicationClient(this);
-		return kit;
-	}
-	
+
 	public IDebugHandler getDebugHandler() {
 		return debugHandler;
 	}
-	
-	public DebuggerCommunicationKit getCommunicationKit() {
-		return kit;
-	}
 
-	public void openConnection(int debugPort) {
-		kit.openConnection(debugPort);
-	}
-
-	public void openConnection(String host, int remotePort) {
-		kit.connectToPeer(host, remotePort);
+	public DebugConnectionThread getConnectionThread() {
+		return connection;
 	}
 
 	public void closeConnection() {
-		kit.closeConnection();
-	}
-
-	public void setDebugPort(int debugPort) {
-		kit.closeConnection();
-		kit.openConnection(debugPort);
-	}
-
-	public int getPort() {
-		return kit.getPort();
+		connection.closeConnection();
 	}
 
 	public void setPeerResponseTimeout(int timeout) {
-		kit.setPeerResponseTimeout(timeout);
+		connection.setPeerResponseTimeout(timeout);
 	}
 
 	public void connectionEstablished() {
@@ -172,14 +145,14 @@ public class RemoteDebugger implements IRemoteDebugger {
 			debugError.setCode(errorLevel);
 			debugHandler.debuggerErrorOccured(debugError);
 		} else if (msg instanceof DebugScriptEndedNotification) {
-			debugHandler.handleScriptEnded(); // 2 options: close message or
+			debugHandler.handleScriptEnded(); // 2 options: close message or // XXX - uncomment
 			// start profile
 		}
 	}
 
 	public void closeDebugSession() {
-		if (kit.isConnected()) {
-			kit.sendNotification(new DebugSessionClosedNotification());
+		if (connection.isConnected()) {
+			connection.sendNotification(new DebugSessionClosedNotification());
 		}
 	}
 
@@ -207,20 +180,20 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	// ---------------------------------------------------------------------------
-	
+
 	/**
-	 * Sends the request through the communication kit and returns response 
+	 * Sends the request through the communication connection and returns response 
 	 * 
 	 * @param message request that will be sent to the debugger
 	 * @return message response recieved from the debugger
 	 */
-	public IDebugResponseMessage sendCustomRequest (IDebugRequestMessage request) {
+	public IDebugResponseMessage sendCustomRequest(IDebugRequestMessage request) {
 		IDebugResponseMessage response = null;
 		if (this.isActive()) {
 			try {
-				Object obj = kit.sendRequest(request);
+				Object obj = connection.sendRequest(request);
 				if (obj instanceof IDebugResponseMessage) {
-					response = (IDebugResponseMessage)obj;
+					response = (IDebugResponseMessage) obj;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -228,20 +201,19 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		return response;
 	}
-	
+
 	/**
-	 * Sends custom notification through the communication kit
+	 * Sends custom notification through the communication connection
 	 * 
 	 * @param message notification that will be delivered to the debugger
 	 * @return <code>true</code> if succeeded sending the message, <code>false</code> - otherwise
 	 */
-	public boolean sendCustomNotification (IDebugNotificationMessage notification) {
+	public boolean sendCustomNotification(IDebugNotificationMessage notification) {
 		if (this.isActive()) {
 			try {
-				kit.sendNotification(notification);
+				connection.sendNotification(notification);
 				return true;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -262,7 +234,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName());
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -284,7 +256,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName());
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
-			AddBreakpointResponse response = (AddBreakpointResponse) kit.sendRequest(request);
+			AddBreakpointResponse response = (AddBreakpointResponse) connection.sendRequest(request);
 			if (response != null && response.getStatus() == 0) {
 				// Log.writeLog("addBreakpoint");
 				breakpoint.setID(response.getBreakpointID());
@@ -304,7 +276,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		CancelBreakpointRequest request = new CancelBreakpointRequest();
 		request.setBreakpointID(id);
-		kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+		connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 		return true;
 	}
 
@@ -319,7 +291,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			CancelBreakpointRequest request = new CancelBreakpointRequest();
 			request.setBreakpointID(id);
-			CancelBreakpointResponse response = (CancelBreakpointResponse) kit.sendRequest(request);
+			CancelBreakpointResponse response = (CancelBreakpointResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -352,7 +324,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return false;
 		}
 		CancelAllBreakpointsRequest request = new CancelAllBreakpointsRequest();
-		kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+		connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 		return true;
 	}
 
@@ -366,7 +338,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			CancelAllBreakpointsRequest request = new CancelAllBreakpointsRequest();
-			CancelAllBreakpointsResponse response = (CancelAllBreakpointsResponse) kit.sendRequest(request);
+			CancelAllBreakpointsResponse response = (CancelAllBreakpointsResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -383,7 +355,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return false;
 		}
 		StepIntoRequest request = new StepIntoRequest();
-		kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+		connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 		return true;
 	}
 
@@ -396,7 +368,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepIntoRequest request = new StepIntoRequest();
-			StepIntoResponse response = (StepIntoResponse) kit.sendRequest(request);
+			StepIntoResponse response = (StepIntoResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -414,7 +386,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepOverRequest request = new StepOverRequest();
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -431,7 +403,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepOverRequest request = new StepOverRequest();
-			StepOverResponse response = (StepOverResponse) kit.sendRequest(request);
+			StepOverResponse response = (StepOverResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -449,7 +421,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepOutRequest request = new StepOutRequest();
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -466,7 +438,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepOutRequest request = new StepOutRequest();
-			StepOutResponse response = (StepOutResponse) kit.sendRequest(request);
+			StepOutResponse response = (StepOutResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -484,7 +456,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			GoRequest request = new GoRequest();
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -501,7 +473,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			GoRequest request = new GoRequest();
-			GoResponse response = (GoResponse) kit.sendRequest(request);
+			GoResponse response = (GoResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -519,7 +491,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		StartRequest request = new StartRequest();
 		try {
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -536,7 +508,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		StartRequest request = new StartRequest();
 		try {
-			StartResponse response = (StartResponse) kit.sendRequest(request);
+			StartResponse response = (StartResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -554,7 +526,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		PauseDebuggerRequest request = new PauseDebuggerRequest();
 		try {
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -571,7 +543,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		PauseDebuggerRequest request = new PauseDebuggerRequest();
 		try {
-			PauseDebuggerResponse response = (PauseDebuggerResponse) kit.sendRequest(request);
+			PauseDebuggerResponse response = (PauseDebuggerResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -590,7 +562,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		EvalRequest request = new EvalRequest();
 		request.setCommand(commandString);
 		try {
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -608,7 +580,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setDepth(depth);
 		request.setPath(path);
 		try {
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -629,7 +601,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setDepth(depth);
 		request.setPath(path);
 		try {
-			kit.sendRequest(request);
+			connection.sendRequest(request);
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -647,7 +619,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		EvalRequest request = new EvalRequest();
 		request.setCommand(commandString);
 		try {
-			EvalResponse response = (EvalResponse) kit.sendRequest(request);
+			EvalResponse response = (EvalResponse) connection.sendRequest(request);
 			String result = null;
 			if (response != null) {
 				if (response.getStatus() == 0) {
@@ -667,14 +639,14 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Finish the debugger running.
 	 */
 	public void finish() {
-		kit.closeConnection();
+		connection.closeConnection();
 	}
 
 	/**
 	 * Checks if there is a connection.
 	 */
 	public boolean isActive() {
-		return kit != null && kit.isConnected();
+		return connection != null && connection.isConnected();
 	}
 
 	public boolean getVariableValue(String var, int depth, String[] path, VariableValueResponseHandler responseHandler) {
@@ -686,7 +658,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setDepth(depth);
 		request.setPath(path);
 		try {
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -707,7 +679,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setPath(path);
 		GetVariableValueResponse response = null;
 		try {
-			response = (GetVariableValueResponse) kit.sendRequest(request);
+			response = (GetVariableValueResponse) connection.sendRequest(request);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
@@ -724,7 +696,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		GetCallStackRequest request = new GetCallStackRequest();
 		try {
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -742,7 +714,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		GetCallStackRequest request = new GetCallStackRequest();
 		PHPstack remoteStack = null;
 		try {
-			GetCallStackResponse response = (GetCallStackResponse) kit.sendRequest(request);
+			GetCallStackResponse response = (GetCallStackResponse) connection.sendRequest(request);
 			if (response != null) {
 				remoteStack = response.getPHPstack();
 			}
@@ -777,7 +749,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setLayerDepth(stackDepth);
 		request.setPath(path);
 		try {
-			kit.sendRequest(request, new ThisHandleResponse(responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -799,7 +771,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setPath(path);
 		GetStackVariableValueResponse response = null;
 		try {
-			response = (GetStackVariableValueResponse) kit.sendRequest(request);
+			response = (GetStackVariableValueResponse) connection.sendRequest(request);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}

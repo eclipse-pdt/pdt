@@ -12,8 +12,8 @@ package org.eclipse.php.core.phpModel.phpElementData;
 
 
 import org.eclipse.php.core.phpModel.parser.ModelSupport;
-import org.eclipse.php.core.phpModel.parser.PHPUserModel;
 import org.eclipse.php.core.phpModel.parser.PHPCodeContext;
+import org.eclipse.php.core.phpModel.parser.PHPUserModel;
 
 public final class PHPFileDataUtilities {
 

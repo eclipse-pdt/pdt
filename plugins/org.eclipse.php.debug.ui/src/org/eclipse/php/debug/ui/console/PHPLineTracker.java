@@ -10,16 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.debug.ui.console;
  
+import org.eclipse.debug.ui.console.FileLink;
 import org.eclipse.debug.ui.console.IConsole;
 import org.eclipse.debug.ui.console.IConsoleLineTrackerExtension;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.debug.core.launching.HyperlinkEntry;
 import org.eclipse.php.debug.core.launching.PHPHyperLink;
+import org.eclipse.php.debug.core.launching.PHPProcess;
 import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.ui.console.IHyperlink;
-import org.eclipse.debug.ui.console.FileLink;
-import org.eclipse.php.debug.core.launching.PHPProcess;
-import org.eclipse.php.debug.core.launching.HyperlinkEntry;
 
 /**
  * Processes task hyperlinks as lines are appended to the console

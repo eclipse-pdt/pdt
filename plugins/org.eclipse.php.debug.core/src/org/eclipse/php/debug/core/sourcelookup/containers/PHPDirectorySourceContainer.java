@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceContainerType;
 import org.eclipse.debug.core.sourcelookup.containers.DirectorySourceContainer;
-import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.core.containers.LocalFileStorage;
 import org.eclipse.php.core.containers.ZipEntryStorage;
+import org.eclipse.php.debug.core.Logger;
 
 public class PHPDirectorySourceContainer extends DirectorySourceContainer {
 

@@ -13,15 +13,13 @@ package org.eclipse.php.ui.util;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IStorage;
-
-import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 
 public class PHPUILabelProvider extends LabelProvider implements IColorProvider {
 

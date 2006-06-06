@@ -26,8 +26,10 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.php.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.documentModel.partitioner.PHPStructuredTextPartitioner;
+import org.eclipse.php.core.format.HTMLFormatProcessorForPhp;
 import org.eclipse.php.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.ui.autoEdit.CaseDefualtAutoEditStrategy;
@@ -51,7 +53,9 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
+import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
@@ -319,8 +323,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), PHPPartitionTypes.PHP_DEFAULT);
 
 		formatter.setMasterStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()));
-		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()), IHTMLPartitionTypes.HTML_DEFAULT);
-
+		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorForPhp()), IHTMLPartitions.HTML_DEFAULT );
 		return formatter;
 	}
 

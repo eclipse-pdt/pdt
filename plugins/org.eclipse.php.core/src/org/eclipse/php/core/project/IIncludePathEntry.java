@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.project;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 
@@ -59,5 +60,6 @@ public interface IIncludePathEntry {
 	IResource getResource();
 	boolean isExported();
 	String validate();
+	void setResource(IResource resource);
 	
 }

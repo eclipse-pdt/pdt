@@ -23,8 +23,8 @@ import org.eclipse.php.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionChangedHandler;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
-import org.eclipse.php.core.util.project.observer.ProjectRemovedObserversAttacher;
 import org.eclipse.php.core.util.project.observer.IProjectClosedObserver;
+import org.eclipse.php.core.util.project.observer.ProjectRemovedObserversAttacher;
 
 public class UserModelParserClientFactoryVersionDependent implements IParserClientFactory {
 

@@ -11,7 +11,6 @@
 package org.eclipse.php.ui.explorer;
 
 import org.eclipse.jface.viewers.Viewer;
-
 import org.eclipse.php.ui.util.PHPElementSorter;
 import org.eclipse.php.ui.workingset.HistoryWorkingSetUpdater;
 import org.eclipse.ui.IWorkingSet;

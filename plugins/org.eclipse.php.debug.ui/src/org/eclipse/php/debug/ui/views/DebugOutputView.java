@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.debug.core.model.DebugOutput;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
@@ -43,7 +44,6 @@ import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
-import org.eclipse.php.debug.ui.Logger;
 
 /**
  * View of the PHP parameter stack 

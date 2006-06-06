@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.ui.explorer;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;

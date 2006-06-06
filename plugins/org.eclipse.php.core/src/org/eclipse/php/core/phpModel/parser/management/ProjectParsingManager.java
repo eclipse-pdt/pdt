@@ -86,7 +86,7 @@ class ProjectParsingManager implements IProjectModelListener {
 		Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(file.getProject());
 		try {
 			parserManager.parse(inputStreamReader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 			return;
 		}
@@ -120,7 +120,7 @@ class ProjectParsingManager implements IProjectModelListener {
 			StringReader reader = new StringReader(sDocument.get());
 			Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(file.getProject());
 			parserManager.parse(reader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 			return;
 		}

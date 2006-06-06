@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.internal.ui.DialogSettingsHelper; // TODO: (Shalom) See https://bugs.eclipse.org/bugs/show_bug.cgi?id=111530 for 3.2 migration
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
@@ -25,21 +24,13 @@ import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.ui.util.StatusInfo;
-import org.eclipse.php.ui.wizards.fields.DialogField;
-import org.eclipse.php.ui.wizards.fields.IDialogFieldListener;
-import org.eclipse.php.ui.wizards.fields.IStringButtonAdapter;
-import org.eclipse.php.ui.wizards.fields.StringButtonDialogField;
-import org.eclipse.php.ui.wizards.fields.StringDialogField;
+import org.eclipse.php.ui.wizards.fields.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 
 public class AddPHPexeDialog extends StatusDialog {
 
@@ -284,32 +275,32 @@ public class AddPHPexeDialog extends StatusDialog {
 		return "ADD_PHPexe_DIALOG_SECTION"; //$NON-NLS-1$
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.window.Window#close()
-	 */
-	public boolean close() {
-		DialogSettingsHelper.persistShellGeometry(getShell(), getDialogSettingsSectionName());
-		return super.close();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.window.Window#getInitialLocation(org.eclipse.swt.graphics.Point)
-	 */
-	protected Point getInitialLocation(Point initialSize) {
-		Point initialLocation = DialogSettingsHelper.getInitialLocation(getDialogSettingsSectionName());
-		if (initialLocation != null) {
-			return initialLocation;
-		}
-		return super.getInitialLocation(initialSize);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.window.Window#getInitialSize()
-	 */
-	protected Point getInitialSize() {
-		Point size = super.getInitialSize();
-		return DialogSettingsHelper.getInitialSize(getDialogSettingsSectionName(), size);
-	}
+//	/* (non-Javadoc)
+//	 * @see org.eclipse.jface.window.Window#close()
+//	 */
+//	public boolean close() {
+//		DialogSettingsHelper.persistShellGeometry(getShell(), getDialogSettingsSectionName());
+//		return super.close();
+//	}
+//
+//	/* (non-Javadoc)
+//	 * @see org.eclipse.jface.window.Window#getInitialLocation(org.eclipse.swt.graphics.Point)
+//	 */
+//	protected Point getInitialLocation(Point initialSize) {
+//		Point initialLocation = DialogSettingsHelper.getInitialLocation(getDialogSettingsSectionName());
+//		if (initialLocation != null) {
+//			return initialLocation;
+//		}
+//		return super.getInitialLocation(initialSize);
+//	}
+//
+//	/* (non-Javadoc)
+//	 * @see org.eclipse.jface.window.Window#getInitialSize()
+//	 */
+//	protected Point getInitialSize() {
+//		Point size = super.getInitialSize();
+//		return DialogSettingsHelper.getInitialSize(getDialogSettingsSectionName(), size);
+//	}
 	
 	public static IStatus validateLocation(File phpHome) {
 		IStatus status = null;

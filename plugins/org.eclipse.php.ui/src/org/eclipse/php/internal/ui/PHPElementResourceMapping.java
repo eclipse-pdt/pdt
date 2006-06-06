@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui;
 
-import org.eclipse.core.internal.resources.mapping.ResourceMapping;
-import org.eclipse.core.internal.resources.mapping.ResourceMappingContext;
-import org.eclipse.core.internal.resources.mapping.ResourceTraversal;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.mapping.ResourceMapping;
+import org.eclipse.core.resources.mapping.ResourceMappingContext;
+import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.util.Assert;
@@ -50,6 +50,10 @@ public abstract class PHPElementResourceMapping extends ResourceMapping {
 			return super.hashCode();
 
 		return phpElement.hashCode();
+	}
+	
+	public String getModelProviderId() {
+		return ""; // TODO - Migration to Eclipse 3.2 (Create org.eclipse.core.resources.modelProviders extention ??)
 	}
 
 	//---- the factory code ---------------------------------------------------------------

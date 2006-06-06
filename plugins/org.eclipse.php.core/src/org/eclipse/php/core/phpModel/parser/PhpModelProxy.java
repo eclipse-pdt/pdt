@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.php.core.phpModel.phpElementData.*;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.php.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 
 public abstract class PhpModelProxy implements IPhpModel {
 

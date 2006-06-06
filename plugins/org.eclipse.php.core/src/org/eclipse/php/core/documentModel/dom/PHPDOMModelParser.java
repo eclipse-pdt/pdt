@@ -18,37 +18,16 @@ import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 
 public class PHPDOMModelParser extends XMLModelParser {
 
-	private boolean isPhpBranch = false; 
-	
 	public PHPDOMModelParser(DOMModelImpl model) {
 		super(model);
 	}
-
-	protected boolean isNestedCommentOpen(String regionType) {
-		boolean result = false;
-		return result;
-	}
-
-	protected boolean isNestedCommentText(String regionType) {
-		boolean result = false;
-		return result;
-	}
-
+	
 	protected boolean isNestedContent(String regionType) {
-		boolean result = regionType == PHPRegionTypes.PHP_CONTENT;
-		return result;
+		return regionType.startsWith("PHP"); 
 	}
 
-	/**
-	 * We need to start the nested tag if the PHP open tag is presented firstly
-	 */
 	protected boolean isNestedTag(String regionType) {
-		isPhpBranch = isPhpBranch || regionType == PHPRegionTypes.PHP_OPENTAG;
-		return isPhpBranch;
-	}
-
-	protected boolean isNestedTagName(String regionType) {
-		return false;
+		return regionType == PHPRegionTypes.PHP_OPENTAG || regionType == PHPRegionTypes.PHP_CLOSETAG;
 	}
 
 	protected boolean isNestedTagOpen(String regionType) {
@@ -56,15 +35,10 @@ public class PHPDOMModelParser extends XMLModelParser {
 	}
 
 	protected String computeNestedTag(String regionType, String tagName, IStructuredDocumentRegion structuredDocumentRegion, ITextRegion region) {
-		String resultTagName = tagName;
-		if (regionType == PHPRegionTypes.PHP_OPENTAG) {
-			resultTagName = PHPTagNames.PHP_SCRIPTLET;
-		}
-		return resultTagName;
+		return PHPTagNames.PHP_SCRIPTLET;
 	}
-
+	
 	protected boolean isNestedTagClose(String regionType) {
-		isPhpBranch = regionType == PHPRegionTypes.PHP_CLOSETAG;
-		return isPhpBranch;
+		return regionType == PHPRegionTypes.PHP_CLOSETAG;
 	}
 }

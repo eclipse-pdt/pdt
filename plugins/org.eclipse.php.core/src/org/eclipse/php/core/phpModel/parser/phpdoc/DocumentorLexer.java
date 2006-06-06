@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.eclipse.php.core.Logger;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.BasicPHPDocTag;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlockImp;
 
 
 

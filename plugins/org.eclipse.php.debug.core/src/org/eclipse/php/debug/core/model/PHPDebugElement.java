@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.model;
 
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.DebugElement;
 import org.eclipse.php.debug.core.IPHPConstants;
@@ -48,50 +46,10 @@ public abstract class PHPDebugElement extends DebugElement {
     public ILaunch getLaunch() {
         return getDebugTarget().getLaunch();
     }
-
-    /**
-     * Fires a debug event
-     * 
-     * @param event
-     *            the event to be fired
-     */
-    public void fireEvent(DebugEvent event) {
-        DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[] { event });
-    }
-
-    /**
-     * Fires a <code>CREATE</code> event for this element.
-     */
-    public void fireCreationEvent() {
-        fireEvent(new DebugEvent(this, DebugEvent.CREATE));
-    }
-
-    /**
-     * Fires a <code>RESUME</code> event for this element with the given
-     * detail.
-     * 
-     * @param detail
-     *            event detail code
-     */
-    public void fireResumeEvent(int detail) {
-        fireEvent(new DebugEvent(this, DebugEvent.RESUME, detail));
-    }
-
-    /**
-     * Fires a <code>SUSPEND</code> event for this element with the given
-     * detail.
-     * 
-     * @param detail
-     *            event detail code
-     */
-    public void fireSuspendEvent(int detail) {
-        fireEvent(new DebugEvent(this, DebugEvent.SUSPEND, detail));
-    }
-
-    /**
-     * Fires a <code>TERMINATE</code> event for this element.
-     */
-    public void fireTerminateEvent() {
-        fireEvent(new DebugEvent(this, DebugEvent.TERMINATE));
+    
+    public String toString() {
+    	String className = getClass().getName();
+    	className = className.substring(className.lastIndexOf('.') + 1);
+    	return className + "@" + Integer.toHexString(hashCode());
     }
 }

@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.ui.dnd;
 
-import org.eclipse.swt.dnd.DragSourceEvent;
-
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.dnd.DragSourceEvent;
 
 public class PHPViewerDragAdapter extends DelegatingDragAdapter {
 

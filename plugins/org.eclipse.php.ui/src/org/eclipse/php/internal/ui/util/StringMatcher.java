@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-import java.util.*;
+import java.util.Vector;
 
 /**
  * A string pattern matcher. Supports '*' and '?' wildcards.

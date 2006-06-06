@@ -16,7 +16,25 @@ import java.io.Serializable;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.AbstractCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPKeywordData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPModifier;
+import org.eclipse.php.core.phpModel.phpElementData.PHPProjectModelVisitor;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
+import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.core.util.Visitor;
 
 

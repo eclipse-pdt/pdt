@@ -12,6 +12,8 @@
 
 package org.eclipse.php.core.documentModel.parser;
 
+import java.io.IOException;
+
 
 
 /**

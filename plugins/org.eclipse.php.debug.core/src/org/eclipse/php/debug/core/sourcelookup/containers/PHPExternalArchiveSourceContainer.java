@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.sourcelookup.containers;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.sourcelookup.ISourceContainerType;
 import org.eclipse.debug.core.sourcelookup.containers.AbstractSourceContainer;
 import org.eclipse.debug.core.sourcelookup.containers.ExternalArchiveSourceContainer;
 import org.eclipse.php.core.containers.ZipEntryStorage;
-import org.eclipse.core.resources.IProject;
 
 public class PHPExternalArchiveSourceContainer extends AbstractSourceContainer {
 

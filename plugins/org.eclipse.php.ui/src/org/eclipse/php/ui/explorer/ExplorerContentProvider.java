@@ -10,29 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.ui.explorer;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.jface.viewers.IBasicPropertyConstants;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.core.documentModel.handler.PHPModelHandler;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.core.phpModel.parser.PHPUserModelManager;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
@@ -200,7 +187,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 						removeItem=fileData;
 				}
  			
-				postRemove(removeItem);
+				postRemove(parent, removeItem);
 			}
 		}
 		if ((status & IResourceDelta.ADDED) != 0) {
@@ -242,12 +229,12 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		});
 	}
 
-	private void postRemove(final Object element) {
+	private void postRemove(final Object parent, final Object element) {
 		postRunnable(new Runnable() {
 			public void run() {
 				Control ctrl = fViewer.getControl();
 				if (ctrl != null && !ctrl.isDisposed()) {
-					fViewer.remove(element);
+					fViewer.remove(parent, new Object[] {element});
 				}
 			}
 		});

@@ -13,8 +13,6 @@ package org.eclipse.php.core.project.options.includepath;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
 import org.eclipse.core.internal.resources.XMLWriter;
 import org.eclipse.core.resources.IProject;
@@ -244,7 +242,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 			if (changedReferences) {
 				IProject[] referenceProjects = (IProject[]) referenced.toArray(new IProject[referenced.size()]);
 				projectDescription.setReferencedProjects(referenceProjects);
-				project.setDescription(projectDescription, monitor);
+				project.setDescription(projectDescription, monitor);	
 			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
@@ -370,6 +368,14 @@ public class IncludePathEntry implements IIncludePathEntry {
 				throw new AssertionError(Messages.bind(Messages.includePath_unknownKind, ""));
 		}
 		return message;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.core.project.IIncludePathEntry#setResource(org.eclipse.core.resources.IResource)
+	 */
+	public void setResource(IResource resource) {
+		this.resource = resource;
+		
 	}
 
 }

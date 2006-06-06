@@ -13,12 +13,12 @@ package org.eclipse.php.debug.ui.breakpoint.provider;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -26,18 +26,21 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.core.containers.LocalFileStorage;
 import org.eclipse.php.core.containers.ZipEntryStorage;
+import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -47,144 +50,150 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakp
 
 public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableExtension {
 
-    public IStatus addBreakpoint(IDocument document, IEditorInput input, int editorLineNumber, int offset) throws CoreException {
-        // check if there is a valid position to set breakpoint
-        int pos = getValidPosition(document, editorLineNumber);
-        IStatus status = null;
-        if (pos >= 0) {
-            IResource res = getResourceFromInput(input);
-            if (res != null && (input instanceof IFileEditorInput)) {
+	public IStatus addBreakpoint(IDocument document, IEditorInput input, int editorLineNumber, int offset) throws CoreException {
+		// check if there is a valid position to set breakpoint
+		int pos = getValidPosition(document, editorLineNumber);
+		IStatus status = null;
+		IStatusLineManager statusLineMgr = PHPUiPlugin.getActivePage().getActiveEditor().getEditorSite().getActionBars().getStatusLineManager();
+		if (pos >= 0) {
+			IResource res = getResourceFromInput(input);
+			if (res != null && (input instanceof IFileEditorInput)) {
+				IBreakpoint point = null;
+				try {
+					editorLineNumber = document.getLineOfOffset(pos) + 1;
+					point = PHPDebugTarget.createBreakpoint(res, editorLineNumber);
+				} catch (BadLocationException e) {
+				}
+				if (point == null) {
+					status = new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IStatus.ERROR, MessageFormat.format(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, new Object[] {}), null); //$NON-NLS-1$
+				}
+			}
 
-                IBreakpoint point = PHPDebugTarget.createBreakpoint(res, editorLineNumber);
-                if (point == null) {
-                    status = new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IStatus.ERROR, MessageFormat.format(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, new Object[] {}), null); //$NON-NLS-1$
-                }
-            }
+			else if (input instanceof IStorageEditorInput) {
+				// For non-resources, use the workspace root and a coordinated
+				// attribute that is used to
+				// prevent unwanted (breakpoint) markers from being loaded
+				// into the editors.
+				res = ResourcesPlugin.getWorkspace().getRoot();
+				String id = input.getName();
+				IStorage storage = ((IStorageEditorInput) input).getStorage();
+				if (input instanceof IStorageEditorInput && ((IStorageEditorInput) input).getStorage() != null) {
+					id = storage.getFullPath().toString();
+				}
+				Map attributes = new HashMap();
+				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
+				String fileName = "";
+				IProject project = null;
+				if (storage instanceof ZipEntryStorage) {
+					fileName = RemoteDebugger.convertToSystemIndependentFileName(((ZipEntryStorage) storage).getZipEntry().getName());
+					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_zip);
+					project = ((ZipEntryStorage) storage).getProject();
+				} else if (storage instanceof LocalFileStorage) {
+					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_LFile);
+					fileName = RemoteDebugger.convertToSystemIndependentFileName(((LocalFileStorage) storage).getName());
+					String incDir = ((LocalFileStorage) storage).getIncBaseDirName();
+					incDir = RemoteDebugger.convertToSystemIndependentFileName(incDir);
+					if (incDir != null) {
+						fileName = id.substring(incDir.length() + 1);
+					}
+					project = ((LocalFileStorage) storage).getProject();
+				}
+				attributes.put(IPHPConstants.Include_Storage, fileName);
+				String projectName = "";
+				if (project != null)
+					projectName = project.getName();
+				attributes.put(IPHPConstants.Include_Storage_Project, projectName);
+				IBreakpoint point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
+				if (point == null) {
+					status = new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IStatus.ERROR, MessageFormat.format(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, new Object[] {}), null); //$NON-NLS-1$
+				}
+			}
+			statusLineMgr.setErrorMessage(null);
+		} else {
+			statusLineMgr.setErrorMessage(PHPDebugUIMessages.ErrorCreatingBreakpoint_1);
+		}
+		if (status == null) {
+			status = new Status(IStatus.OK, PHPDebugUIPlugin.getID(), IStatus.OK, MessageFormat.format(PHPDebugUIMessages.BreakpointCreated_1, new Object[] {}), null);
+		}
+		return status;
+	}
 
-            else if (input instanceof IStorageEditorInput) {
-                // For non-resources, use the workspace root and a coordinated
-                // attribute that is used to
-                // prevent unwanted (breakpoint) markers from being loaded
-                // into the editors.
-                res = ResourcesPlugin.getWorkspace().getRoot();
-                String id = input.getName();
-                IStorage storage = ((IStorageEditorInput) input).getStorage();
-                if (input instanceof IStorageEditorInput && ((IStorageEditorInput) input).getStorage() != null) {
-                    id = storage.getFullPath().toString();
-                }
-                Map attributes = new HashMap();
-                attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
-                String fileName = "";
-                IProject project = null;
-                if (storage instanceof ZipEntryStorage){
-                    fileName = RemoteDebugger.convertToSystemIndependentFileName(((ZipEntryStorage)storage).getZipEntry().getName()); 
-                    attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_zip);
-                    project = ((ZipEntryStorage)storage).getProject();                   
-                } else if (storage instanceof LocalFileStorage) {
-                    attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_LFile);
-                    fileName = RemoteDebugger.convertToSystemIndependentFileName(((LocalFileStorage)storage).getName());
-                    String incDir = ((LocalFileStorage)storage).getIncBaseDirName();
-                    incDir = RemoteDebugger.convertToSystemIndependentFileName(incDir);
-                    if (incDir != null){
-                        fileName = id.substring(incDir.length() + 1);
-                    }
-                    project = ((LocalFileStorage)storage).getProject();
-                }
-                attributes.put(IPHPConstants.Include_Storage, fileName);
-                String projectName = "";
-                if (project != null) projectName = project.getName();
-                attributes.put(IPHPConstants.Include_Storage_Project, projectName);
-                IBreakpoint point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
-                if (point == null) {
-                    status = new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IStatus.ERROR, MessageFormat.format(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, new Object[] {}), null); //$NON-NLS-1$
-                }
-            }
-        }
-        if (status == null) {
-            status = new Status(IStatus.OK, PHPDebugUIPlugin.getID(), IStatus.OK, MessageFormat.format(PHPDebugUIMessages.BreakpointCreated_1, new Object[] {}), null);
-        }
-        return status;
-    }
+	public IResource getResource(IEditorInput input) {
+		return getResourceFromInput(input);
+	}
 
-    public IResource getResource(IEditorInput input) {
-        return getResourceFromInput(input);
-    }
+	private IResource getResourceFromInput(IEditorInput input) {
+		IResource resource = (IResource) input.getAdapter(IFile.class);
+		/*        if (resource == null && input instanceof IStorageEditorInput) {
+		 resource = ResourcesPlugin.getWorkspace().getRoot();
+		 } else {
+		 resource = (IResource) input.getAdapter(IResource.class);
+		 }*/
+		if (resource == null) {
+			resource = ResourcesPlugin.getWorkspace().getRoot();
+		}
+		return resource;
+	}
 
-    private IResource getResourceFromInput(IEditorInput input) {
-        IResource resource = (IResource) input.getAdapter(IFile.class);
-/*        if (resource == null && input instanceof IStorageEditorInput) {
-            resource = ResourcesPlugin.getWorkspace().getRoot();
-        } else {
-            resource = (IResource) input.getAdapter(IResource.class);
-        }*/
-        if (resource == null) {
-            resource = ResourcesPlugin.getWorkspace().getRoot(); 
-        }
-        return resource;
-    }
+	/**
+	 * Finds a valid position somewhere on lineNumber in document, idoc, where a
+	 * breakpoint can be set and returns that position. -1 is returned if a
+	 * position could not be found.
+	 * 
+	 * @param idoc
+	 * @param editorLineNumber
+	 * @return position to set breakpoint or -1 if no position could be found
+	 */
+	private int getValidPosition(IDocument idoc, int editorLineNumber) {
+		int result = -1;
+		if (idoc != null) {
 
-    /**
-     * Finds a valid position somewhere on lineNumber in document, idoc, where a
-     * breakpoint can be set and returns that position. -1 is returned if a
-     * position could not be found.
-     * 
-     * @param idoc
-     * @param editorLineNumber
-     * @return position to set breakpoint or -1 if no position could be found
-     */
-    private int getValidPosition(IDocument idoc, int editorLineNumber) {
-        int result = -1;
-        if (idoc != null) {
+			int startOffset = 0;
+			int endOffset = 0;
+			try {
+				String partitionType = null;
+				IRegion line;
+				String linePart;
 
-            int startOffset = 0;
-            int endOffset = 0;
-            try {
-                IRegion line = idoc.getLineInformation(editorLineNumber - 1);
-                startOffset = line.getOffset();
-                endOffset = Math.max(line.getOffset(), line.getOffset() + line.getLength());
+				do {
+					line = idoc.getLineInformation(editorLineNumber - 1);
+					startOffset = line.getOffset();
+					endOffset = Math.max(line.getOffset(), line.getOffset() + line.getLength());
 
-                String lineText = idoc.get(startOffset, endOffset - startOffset).trim();
+					ITypedRegion[] partitions = null;
 
-                // blank lines or lines with only an open PHP
-                // tags cannot have a breakpoint
+					partitions = idoc.computePartitioning(startOffset, endOffset - startOffset);
 
-                if (lineText.equals("") || lineText.equals("<%") || //$NON-NLS-1$ //$NON-NLS-2$ 
-                    lineText.equals("%>") || lineText.equals("<?php") || lineText.equals("?>") || (lineText.trim()).startsWith("//")) {
-                    result = -1;
-                } else {
+					for (int i = 0; i < partitions.length; ++i) {
+						partitionType = partitions[i].getType();
+						if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
+							startOffset = partitions[i].getOffset();
+							linePart = idoc.get(startOffset, partitions[i].getLength()).trim();
+							if (Pattern.matches(".*[a-zA-Z]+.*", linePart) && !linePart.toLowerCase().startsWith("<?php")) {
+								result = startOffset;
+								break;
+							}
+						}
+					}
+					++editorLineNumber;
+				} while (PHPStructuredTextPartitioner.isPHPPartitionType(partitionType) && result == -1);
+			} catch (BadLocationException e) {
+				result = -1;
+			}
+		}
+		return result;
+	}
 
-                    // get all partitions for current line
-                    ITypedRegion[] partitions = null;
+	/**
+	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+	 *      java.lang.String, java.lang.Object)
+	 */
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		// not used
+	}
 
-                    partitions = idoc.computePartitioning(startOffset, endOffset - startOffset);
-
-                    for (int i = 0; i < partitions.length; ++i) {
-                        String type = partitions[i].getType();
-                        // if found PHP
-                        // return that position
-                        if (PHPStructuredTextPartitioner.isPHPPartitionType(type)) {
-                            result = partitions[i].getOffset();
-                        }
-                    }
-                }
-            } catch (BadLocationException e) {
-                result = -1;
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-     *      java.lang.String, java.lang.Object)
-     */
-    public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-        // not used
-    }
-
-    public void setSourceEditingTextTools(ISourceEditingTextTools tools) {
-        // not used
-    }
+	public void setSourceEditingTextTools(ISourceEditingTextTools tools) {
+		// not used
+	}
 
 }

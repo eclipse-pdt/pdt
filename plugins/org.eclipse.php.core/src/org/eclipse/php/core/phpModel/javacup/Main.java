@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.javacup;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 
 /** This class serves as the main driver for the JavaCup system.

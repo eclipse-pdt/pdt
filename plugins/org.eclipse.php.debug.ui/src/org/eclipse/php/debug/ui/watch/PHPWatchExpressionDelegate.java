@@ -10,82 +10,80 @@
  *******************************************************************************/
 package org.eclipse.php.debug.ui.watch;
 
-import java.util.regex.Pattern;
-
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugElement;
-import org.eclipse.debug.core.model.ISourceLocator;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IValue;
-import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.core.model.IWatchExpressionDelegate;
 import org.eclipse.debug.core.model.IWatchExpressionListener;
 import org.eclipse.debug.core.model.IWatchExpressionResult;
 import org.eclipse.php.debug.core.debugger.DefaultExpressionsManager;
 import org.eclipse.php.debug.core.debugger.Expression;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
-import org.eclipse.php.debug.core.model.PHPStackFrame;
 import org.eclipse.php.debug.core.model.PHPValue;
 import org.eclipse.php.debug.ui.Logger;
-import org.eclipse.core.runtime.IStatus;
 
 /**
  * 
  */
 public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
-	
-	private String fExpressionText;
-	private IWatchExpressionListener fListener;
-    private Pattern tab = Pattern.compile("\t");
-    private PHPDebugTarget debugTarget; 
+
+    private String fExpressionText;
+    private IWatchExpressionListener fListener;
+    private PHPDebugTarget debugTarget;
     private Job fRunDispatch;
 
-	/**
-	 * @see org.eclipse.debug.core.model.IWatchExpressionDelegate#getValue(java.lang.String, org.eclipse.debug.core.model.IDebugElement)
-	 */
-	public void evaluateExpression(String expression, IDebugElement context, IWatchExpressionListener listener) {
-		fExpressionText= expression;
-		fListener= listener;
-		// find a stack frame context if possible.
-		IStackFrame frame = null;
-		if (context instanceof IStackFrame) {
-			frame = (IStackFrame)context;
-		} else if (context instanceof IThread) {
-			try {
-				frame = ((IThread)context).getTopStackFrame();
-			} catch (DebugException e) {
+    /**
+     * @see org.eclipse.debug.core.model.IWatchExpressionDelegate#getValue(java.lang.String, org.eclipse.debug.core.model.IDebugElement)
+     */
+    public void evaluateExpression(String expression, IDebugElement context, IWatchExpressionListener listener) {
+        fExpressionText = expression;
+        fListener = listener;
+        // find a stack frame context if possible.
+        IStackFrame frame = null;
+        if (context instanceof IStackFrame) {
+            frame = (IStackFrame) context;
+        } else if (context instanceof IThread) {
+            try {
+                frame = ((IThread) context).getTopStackFrame();
+            } catch (DebugException e) {
                 Logger.logException(e);
-			}
-		}
-		if (frame == null) {
-			fListener.watchEvaluationFinished(null);	
-		} else {
-            debugTarget = (PHPDebugTarget)frame.getDebugTarget();
-            fRunDispatch = new EvaluationRunnable();
-            fRunDispatch.schedule();
-		}
-	}
+            }
+        }
+        if (frame == null) {
+            fListener.watchEvaluationFinished(null);
+        } else {
+            IDebugTarget target = frame.getDebugTarget();
+            if (target instanceof PHPDebugTarget){
+                debugTarget = (PHPDebugTarget) target;
+                fRunDispatch = new EvaluationRunnable();
+                fRunDispatch.schedule();
+            } else {
+                fListener.watchEvaluationFinished(null);
+            }
+        }
+    }
 
-	/**
-	 * Runnable used to evaluate the expression.
-	 */
-	private final class EvaluationRunnable extends Job  {
+    /**
+     * Runnable used to evaluate the expression.
+     */
+    private final class EvaluationRunnable extends Job {
 
         public EvaluationRunnable() {
             super("EvaluationRunnable");
             setSystem(true);
         }
-        
-		public IStatus run(IProgressMonitor monitor) {
-		
+
+        public IStatus run(IProgressMonitor monitor) {
+
             try {
                 IWatchExpressionResult watchResult = new IWatchExpressionResult() {
                     public IValue getValue() {
@@ -119,8 +117,8 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
             DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[] { new DebugEvent(PHPWatchExpressionDelegate.this, DebugEvent.SUSPEND, DebugEvent.EVALUATION_IMPLICIT) });
             return Status.OK_STATUS;
         }
-	} 
-	
+    }
+
     /**
      * Returns the variable value.
      * 

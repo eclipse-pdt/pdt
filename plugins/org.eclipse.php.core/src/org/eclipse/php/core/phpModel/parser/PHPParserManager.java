@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.util.regex.Pattern;
 
@@ -22,34 +21,34 @@ public abstract class PHPParserManager {
 
 	protected abstract PhpParser createPhpParser();
 
-	public void parse(Reader reader, String fileName, long lastModified, ParserClient client, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) throws IOException {
-		CompletionLexer lexer = createCompletionLexer(reader);
-		lexer.setUseAspTagsAsPhp(useAspTagsAsPhp);
-		lexer.setParserClient(client);
-		lexer.setTasksPatterns(tasksPatterns);
-		
-		if (phpParser == null) {
-			phpParser = createPhpParser();
-		}
-		phpParser.setScanner(lexer);
-		phpParser.setParserClient(client);
-
-		client.startParsing(fileName);
-		try {
-			phpParser.parse();
-		} catch (IOException ioe) {
-			throw ioe;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			client.finishParsing(phpParser.getLength(), phpParser.getCurrentLine(), lastModified);
-			reader.close();
-		}
-
+	/**
+	 * Builds the scheduler for the parsing tasks
+	 */
+	private static PhpParserSchedulerTask scheduler = PhpParserSchedulerTask.getInstance();
+	static {
+		assert scheduler != null; 
+		Thread thread = new Thread(scheduler);
+		thread.setName("PHP Parser Scheduler");
+		thread.start();
 	}
 	
-	public void parse(Reader reader, String fileName, long lastModified, ParserClient client, boolean useAspTagsAsPhp) throws IOException {
+	// parsing optimization variables 
+	private static final long DELAY_TIME = 500L;
+	private static long lastParsedTimestamp = 0L;
+	private static String lastParsedFilename;
+
+	public void parse(Reader reader, String fileName, long lastModified, ParserClient client, boolean useAspTagsAsPhp) {
 		parse(reader, fileName, lastModified, client, new Pattern[0], useAspTagsAsPhp);
 	}
 
+	public void parse(Reader reader, String fileName, long lastModified, ParserClient client, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) {
+
+		// Run the parsing task only if a DELAY_TIME has elapsed
+		final long currentTimestamp = System.currentTimeMillis();
+		if (currentTimestamp - lastParsedTimestamp > DELAY_TIME || !fileName.equals(lastParsedFilename)) {
+			scheduler.schedule(this, phpParser, client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
+		}
+		lastParsedTimestamp = currentTimestamp;
+		lastParsedFilename = fileName;
+	}
 }

@@ -1,5 +1,5 @@
 Bundle-SymbolicName: org.eclipse.php.core; singleton=true
-Bundle-Version: 0.1.0
+Bundle-Version: 0.1.3
 Bundle-Name: PHP core plug-in
 Bundle-Activator: org.eclipse.php.core.PHPCorePlugin
 Require-Bundle: org.eclipse.ui,
@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.common.frameworks,
  org.eclipse.core.filebuffers,
  org.eclipse.ui.ide,
- org.eclipse.wst.common.environment
+ org.eclipse.wst.common.environment,
+ org.apache.xerces
 Eclipse-AutoStart: true
 Provide-Package: org.eclipse.php.core,
  org.eclipse.php.core.containers,

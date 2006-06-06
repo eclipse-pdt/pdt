@@ -12,7 +12,7 @@ package org.eclipse.php.debug.core.debugger;
 
 import org.eclipse.php.debug.core.communication.CommunicationAdministrator;
 import org.eclipse.php.debug.core.communication.CommunicationClient;
-import org.eclipse.php.debug.core.communication.DebuggerCommunicationKit;
+import org.eclipse.php.debug.core.communication.DebugConnectionThread;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 
@@ -22,7 +22,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
  */
 public interface IRemoteDebugger extends Debugger, CommunicationClient, CommunicationAdministrator {
 	
-	public DebuggerCommunicationKit getCommunicationKit();
+	public DebugConnectionThread getConnectionThread();
 	
 	public IDebugHandler getDebugHandler ();
 	
@@ -37,10 +37,7 @@ public interface IRemoteDebugger extends Debugger, CommunicationClient, Communic
 	public boolean stepOver(StepOverResponseHandler responseHandler);
 	
 	public boolean stepInto(StepIntoResponseHandler responseHandler);
-
-	public void openConnection(int port);
 	
 	public IDebugResponseMessage sendCustomRequest (IDebugRequestMessage request);
 
-	public void setDebugPort(int requestPort);
 }

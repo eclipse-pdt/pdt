@@ -15,9 +15,9 @@
 
 package org.eclipse.php.core.phpModel.javacup;
 
-import org.eclipse.php.core.phpModel.javacup.runtime.lr_parser;
-
 import java.util.Hashtable;
+
+import org.eclipse.php.core.phpModel.javacup.runtime.lr_parser;
 
 /** CUP v0.10j generated parser.
   * @version Sat Jul 24 08:05:57 EDT 1999

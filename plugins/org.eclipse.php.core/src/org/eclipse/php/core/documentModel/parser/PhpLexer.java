@@ -380,38 +380,23 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	}
 
 	public static boolean isPHPQuotesState(String type) {
-		if (type == null) {
-			return false;
-		}
-		return (type.equals(PHP_CONSTANT_ENCAPSED_STRING));
+		return type == PHP_CONSTANT_ENCAPSED_STRING;
 	}
 
 	public static boolean isPHPCommentState(String type) {
-		if (type == null) {
-			return false;
-		}
-		return isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || type.equals(PHP_HEREDOC_TAG) || isPHPDocState(type);
+		return type == null ? false : isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || type == PHP_HEREDOC_TAG || isPHPDocState(type);
 	}
 
 	public static boolean isPHPDocState(String type) {
-		if (type == null) {
-			return false;
-		}
-		return type.startsWith("PHPDOC");// || type.equals(PHPRegionTypes.TASK);
+		return type == null ? false : type.startsWith("PHPDOC");
 	}
 
 	public static boolean isPHPMultiLineCommentState(String type) {
-		if (type == null) {
-			return false;
-		}
-		return type.startsWith(PHP_COMMENT) || type.equals(PHPRegionTypes.PHP_COMMENT_START) || type.equals(PHPRegionTypes.PHP_COMMENT_END);// || type.equals(PHPRegionTypes.TASK); 
+		return type == PHP_COMMENT || type == PHPRegionTypes.PHP_COMMENT_START || type == PHPRegionTypes.PHP_COMMENT_END; 
 	}
 
 	public static boolean isPHPLineCommentState(String type) {
-		if (type == null) {
-			return false;
-		}
-		return type.equals(PHP_LINE_COMMENT);// || type.equals(PHPRegionTypes.TASK);
+		return type == PHP_LINE_COMMENT ;
 	}
 
 	public static final boolean isPHPRegularState(String type) {

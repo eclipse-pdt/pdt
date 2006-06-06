@@ -10,14 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.ui.util;
 
-import org.eclipse.swt.widgets.Control;
-
-import org.eclipse.jface.util.Assert;
-import org.eclipse.jface.viewers.StructuredViewer;
-
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.jface.util.Assert;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.widgets.Control;
 
 public class FilterUpdater implements IResourceChangeListener {
 

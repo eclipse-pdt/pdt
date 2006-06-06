@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentCommand;
+import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.php.Logger;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.format.DefualtIndentationStrategy;
@@ -68,9 +73,9 @@ public class IndentLineAutoEditStrategy extends DefualtIndentationStrategy imple
 			// if we are in the blaks at the start of the element then select them
 			// so they will be replaced with the MatchingBlanks.
 			if (currentOffset < startOffset + i) {
-				if (command.length != 0) {
+				//if (command.length != 0) { // comment out in order to fix bug # 139437
 					command.offset = Math.min(command.offset, startOffset);
-				}
+				//}
 				command.length = Math.max(i, command.length);
 			}
 			command.text = helpBuffer.toString();

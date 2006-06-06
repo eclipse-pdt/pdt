@@ -12,11 +12,11 @@ package org.eclipse.php.debug.core.sourcelookup.containers;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.sourcelookup.ISourceContainerType;
 import org.eclipse.debug.core.sourcelookup.containers.AbstractSourceContainer;
 import org.eclipse.php.core.containers.LocalFileStorage;
-import org.eclipse.core.resources.IProject;
 
 public class PHPFileSourceContainer extends AbstractSourceContainer {
 

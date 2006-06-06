@@ -96,7 +96,12 @@ public class DebugMessagesRegistry {
 	 * @throws Exception 
 	 */
 	public static IDebugMessage getMessage(int type) throws Exception {
-		return (IDebugMessage) getInstance().getMessages().get(type).getClass().newInstance();
+		IntHashtable messages = getInstance().getMessages();
+		if (messages.containsKey(type)) {
+			return (IDebugMessage) messages.get(type).getClass().newInstance();
+		} else {
+			throw new Exception("Can't find message for type" + type +" in Debug messages registry!");
+		}
 	}
 	
 	/**

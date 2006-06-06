@@ -98,6 +98,12 @@ public class PhpSourceParser extends XMLSourceParser {
 		
 		while ((region = getNextRegion()) != null) {
 			type = region.getType();
+			
+			// If the type is php close tag we want it to be in a seperate structure document 
+			if (type == PHPRegionTypes.PHP_CLOSETAG && currentNode != null) {
+				currentNode.setEnded(true);
+			}
+
 			// these types (might) demand a IStructuredDocumentRegion for each
 			// of them
 			if (type == DOMRegionContext.BLOCK_TEXT) {
@@ -139,7 +145,7 @@ public class PhpSourceParser extends XMLSourceParser {
 				}
 			}
 			// the following contexts OPEN new StructuredDocumentRegions
-			else if ((currentNode != null && currentNode.isEnded()) || (type == PHPRegionTypes.PHP_OPENTAG) || (type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMRegionContext.XML_PI_OPEN)
+			else if ((currentNode != null && currentNode.isEnded()) || (type == PHPRegionTypes.PHP_OPENTAG) || (type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE)  
 				|| (type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_COMMENT_OPEN) || (type == DOMRegionContext.XML_CDATA_OPEN) || (type == DOMRegionContext.XML_DECLARATION_OPEN)) {
 				if (currentNode != null) {
 					// ensure that any existing node is at least terminated
@@ -239,7 +245,7 @@ public class PhpSourceParser extends XMLSourceParser {
 			// be more readable if that is handled here as well, but the
 			// current layout
 			// ensures that they open StructuredDocumentRegions the same way
-			if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == PHPRegionTypes.PHP_CLOSETAG)) {
+			if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == PHPRegionTypes.PHP_CLOSETAG) || (type == PHPRegionTypes.PHP_OPENTAG)) {
 				currentNode.setEnded(true);
 			}
 			if (headNode == null && currentNode != null) {

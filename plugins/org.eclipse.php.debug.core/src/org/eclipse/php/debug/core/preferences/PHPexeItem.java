@@ -12,9 +12,6 @@ package org.eclipse.php.debug.core.preferences;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-
 
 public class PHPexeItem {
 

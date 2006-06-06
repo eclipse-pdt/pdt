@@ -99,7 +99,7 @@ public class PHPEditorTextHoverDescriptor {
 	 * Creates the PHP editor text hover.
 	 */
 	public IPHPTextHover createTextHover() {
- 		String pluginId = fElement.getNamespace();
+ 		String pluginId = fElement.getNamespaceIdentifier();
 		boolean isHoversPlugInActivated= Platform.getBundle(pluginId).getState() == Bundle.ACTIVE;
 		if (isHoversPlugInActivated || canActivatePlugIn()) {
 			try {

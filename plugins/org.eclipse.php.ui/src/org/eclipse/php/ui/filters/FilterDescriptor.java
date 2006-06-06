@@ -21,11 +21,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ViewerFilter;
-
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
@@ -269,6 +267,6 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 	}
 
 	public String getPluginId() {
-		return fElement.getNamespace();
+		return fElement.getNamespaceIdentifier();
 	}
 }

@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentCommand;
+import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.Logger;
 import org.eclipse.php.core.format.CurlyCloseIndentationStrategy;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;

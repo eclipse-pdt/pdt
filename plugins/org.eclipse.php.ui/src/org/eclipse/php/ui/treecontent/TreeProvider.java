@@ -10,22 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.ui.treecontent;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.filters.FilterDescriptor;
-import org.eclipse.php.ui.filters.FilterMessages;
-import org.eclipse.ui.activities.WorkbenchActivityHelper;
 
 public class TreeProvider {
 	private static final String EXTENSION_POINT_NAME = "phpTreeContentProvider"; //$NON-NLS-1$

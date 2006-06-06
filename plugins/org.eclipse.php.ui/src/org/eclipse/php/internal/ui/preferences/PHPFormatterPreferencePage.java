@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
+import org.eclipse.php.ui.preferences.PropertyAndPreferencePage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
@@ -22,7 +23,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * @author guy.g
  */
 public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
-
+	
 	public static final String PREF_ID = "org.eclipse.php.ui.preferences.PHPFormatterPreferencePage"; //$NON-NLS-1$
 	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPFormatterPreferencePage"; //$NON-NLS-1$
 

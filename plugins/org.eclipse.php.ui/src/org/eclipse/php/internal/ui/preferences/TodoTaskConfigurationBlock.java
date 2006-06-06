@@ -17,14 +17,22 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.IFontProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.ui.preferences.IStatusChangeListener;
 import org.eclipse.php.ui.util.StatusInfo;
-import org.eclipse.php.ui.wizards.fields.*;
+import org.eclipse.php.ui.wizards.fields.DialogField;
+import org.eclipse.php.ui.wizards.fields.IDialogFieldListener;
+import org.eclipse.php.ui.wizards.fields.IListAdapter;
+import org.eclipse.php.ui.wizards.fields.ListDialogField;
+import org.eclipse.php.ui.wizards.fields.SelectionButtonDialogField;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -36,7 +44,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  */
-public class TodoTaskConfigurationBlock extends OptionsConfigurationBlock {
+public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock {
 
 	private static final Key PREF_TASK_TAGS = getPHPCoreKey(PHPCoreConstants.TASK_TAGS);
 	private static final Key PREF_TASK_PRIORITIES = getPHPCoreKey(PHPCoreConstants.TASK_PRIORITIES);

@@ -13,19 +13,15 @@ package org.eclipse.php.ui.explorer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.eclipse.core.resources.IResource;
-
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.php.ui.dnd.PHPViewerDropAdapter;
 import org.eclipse.php.ui.dnd.TransferDropTargetListener;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Shell;
-
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
-
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 public class SelectionTransferDropAdapter extends PHPViewerDropAdapter implements TransferDropTargetListener {

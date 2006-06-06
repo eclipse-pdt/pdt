@@ -10,7 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.core.util;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
@@ -227,9 +237,9 @@ public class DefaultCacheManager {
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 		} finally {
-			closeStream(din);
-			closeStream(bufin);
-			closeStream(in);
+			StreamUtils.closeStream(din);
+			StreamUtils.closeStream(bufin);
+			StreamUtils.closeStream(in);
 			if (invalidCache) {
 				if (cacheFile.delete()) {
 					PHPCorePlugin.logErrorMessage("Invalid cache version. The cache file was deleted.");//$NON-NLS-1$
@@ -289,30 +299,10 @@ public class DefaultCacheManager {
 		} catch (IOException e) {
 			PHPCorePlugin.log(e);
 		} finally {
-			closeStream(dout);
-			closeStream(out);
-			closeStream(bufout);
+			StreamUtils.closeStream(dout);
+			StreamUtils.closeStream(out);
+			StreamUtils.closeStream(bufout);
 		}
 		Runtime.getRuntime().gc();
-	}
-
-	// Stream closers.
-	// Use these until Java 5 will be supported. Then, it is best to move to Closeable interface.
-	private void closeStream(OutputStream output) {
-		try {
-			if (output != null) {
-				output.close();
-			}
-		} catch (IOException ioe) {
-		}
-	}
-
-	private void closeStream(InputStream input) {
-		try {
-			if (input != null) {
-				input.close();
-			}
-		} catch (IOException ioe) {
-		}
 	}
 }

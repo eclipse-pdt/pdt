@@ -60,7 +60,7 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 		toggleLinking = new ToggleLinkingAction(part);
 		fOpenEditorActionGroup = new OpenEditorActionGroup(part);
 
-//		fillContextMenu(fPart.getViewSite().getActionBars().getMenuManager());
+		//		fillContextMenu(fPart.getViewSite().getActionBars().getMenuManager());
 	}
 
 	public void dispose() {
@@ -73,8 +73,8 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 		fOpenEditorActionGroup.fillContextMenu(menu);
 		toggleAllAction.setChecked(fPart.isShowAll());
 
-		menu.add(toggleAllAction);
-		menu.add(toggleLinking);
+//		menu.add(toggleAllAction);
+//		menu.add(toggleLinking);
 	}
 
 	void updateActions() {
@@ -85,24 +85,29 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 	}
 
 	void fillToolBar(IToolBarManager toolBar) {
-
 		toolBar.add(collapseAllAction);
 		toolBar.add(sortAction);
 		toolBar.add(toggleLinking);
-
+	}
+	
+	void fillMenu(IMenuManager menu) {
+		toggleAllAction.setChecked(fPart.isShowAll());
+		menu.add(toggleAllAction);
+//		menu.add(toggleLinking);
 	}
 
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 		fOpenEditorActionGroup.fillActionBars(actionBars);
-	fillToolBar(actionBars.getToolBarManager());
+		fillToolBar(actionBars.getToolBarManager());
+		fillMenu(actionBars.getMenuManager());
 	}
 
 	public void setContext(ActionContext context) {
 		super.setContext(context);
 		fOpenEditorActionGroup.setContext(context);
 	}
-	
+
 	public void updateActionBars() {
 		super.updateActionBars();
 		fOpenEditorActionGroup.updateActionBars();

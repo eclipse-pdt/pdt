@@ -12,11 +12,29 @@ package org.eclipse.php.core.phpModel;
 
 import java.io.File;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocTagData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPKeywordData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPProjectModelVisitor;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
@@ -118,6 +136,57 @@ public class PHPModelUtil {
 		IResource resource = getResource(element);
 		return (resource != null) ? resource.getProject() : null;
 
+	}
+
+	public static class PHPContainerStringConverter {
+		public static String toString(Object phpElement) {
+			if (phpElement instanceof PHPCodeData) {
+				while (phpElement != null && !(phpElement instanceof PHPFileData)) {
+					phpElement = ((PHPCodeData) phpElement).getContainer();
+				}
+			}
+			if (phpElement == null) {
+				return "";
+			}
+			IResource res;
+			IPath path;
+			if ((res = getResource(phpElement)) != null && (path = res.getFullPath()) != null) {
+				return path.toPortableString();
+			}
+			return "";
+		}
+
+		public static Object toContainer(String sPath) {
+			IPath path = Path.fromPortableString(sPath);
+			if (path == null) {
+				return null;
+			}
+			IFile file = null;
+			try {
+				file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			} catch (IllegalArgumentException e) {
+			}
+			if (file != null) {
+				PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(file, false);
+				if (fileData != null) {
+					return fileData;
+				}
+			}
+			IFolder folder = null;
+			try {
+				folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
+			} catch (IllegalArgumentException e) {
+			}
+			if (folder != null) {
+				return folder;
+			}
+			IProject project = null;
+			try {
+				project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segments()[0]);
+			} catch (IllegalArgumentException e) {
+			}
+			return project;
+		}
 	}
 
 	public static boolean isReadOnly(Object target) {
@@ -275,5 +344,59 @@ public class PHPModelUtil {
 				return fileData;
 		}
 		return null;
+	}
+
+	/**
+	 * recursively checks if the given class extends the superclass
+	 * Currently only can detect for files that are inside the project
+	 * 
+	 * @param classData
+	 * @param superClassName
+	 * @return
+	 */
+	public static boolean hasSuperClass(PHPClassData classData, String superClassName) {
+		PHPSuperClassNameData currentSuperClassNameData = classData.getSuperClassData();
+		if (currentSuperClassNameData == null) {
+			return false;
+		}
+		String currentSuperClassName = currentSuperClassNameData.getName();
+		if (currentSuperClassName == null) {
+			return false;
+		}
+		String fileName;
+		UserData userData = classData.getUserData();
+		if (userData == null) {
+			fileName = null;
+		} else {
+			fileName = userData.getFileName();
+		}
+		if (currentSuperClassNameData.getName().compareToIgnoreCase(superClassName) == 0) {
+			return true;
+		}
+		PHPClassData currentSuperClassData;
+		IResource classDataResource = getResource(classData);
+		if (((classDataResource = getResource(classData)) == null)) { // the original file is not in project, seemingly
+			return false;
+		}
+		PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(classDataResource.getProject());
+		while ((currentSuperClassData = model.getClass(fileName, currentSuperClassNameData.getName())) != null) {
+			if ((currentSuperClassName = currentSuperClassData.getName()) == null) {
+				return false;
+			}
+			if (currentSuperClassName.compareToIgnoreCase(superClassName) == 0) {
+				return true;
+			}
+			// preparing to the next tick in the loop:
+			if ((currentSuperClassNameData = currentSuperClassData.getSuperClassData()) == null) {
+				return false;
+			}
+			userData = currentSuperClassData.getUserData();
+			if (userData == null) {
+				fileName = null;
+			} else {
+				fileName = userData.getFileName();
+			}
+		}
+		return false;
 	}
 }

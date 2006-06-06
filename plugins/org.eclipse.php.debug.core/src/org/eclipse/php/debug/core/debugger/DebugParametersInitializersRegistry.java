@@ -133,7 +133,7 @@ public class DebugParametersInitializersRegistry {
 			Enumeration e = factories.elements();
 			while (e.hasMoreElements()) {
 				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory)e.nextElement();
-				if (PHPDebugPlugin.getID().equals(initializerFactory.element.getNamespace())) {
+				if (PHPDebugPlugin.getID().equals(initializerFactory.element.getNamespaceIdentifier())) {
 					defaultParametersInitializerFactory = initializerFactory;
 				} else {
 					return initializerFactory.createParametersInitializer();

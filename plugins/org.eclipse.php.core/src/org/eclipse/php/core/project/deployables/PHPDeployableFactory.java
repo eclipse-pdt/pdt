@@ -14,16 +14,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
 
 public class PHPDeployableFactory extends ProjectModuleFactoryDelegate {
-	private static final String ID = "org.eclipse.php.deployable.php"; //$NON-NLS-1$
+	private static final String ID = "org.eclipse.php.core.project.deployable.php"; //$NON-NLS-1$
 	protected ArrayList moduleDelegates = new ArrayList();
 
-	/*
+	public PHPDeployableFactory() {
+        super();
+    }
+
+    /*
 	 * @see DeployableProjectFactoryDelegate#getFactoryID()
 	 */
 	public String getFactoryId() {
@@ -60,9 +66,8 @@ public class PHPDeployableFactory extends ProjectModuleFactoryDelegate {
 					deployable = createModule(projectModule.getId(), projectModule.getName(), projectModule.getType(), projectModule.getVersion(), projectModule.getProject());
 					nature.setModule(deployable);
 					projectModule.initialize(deployable);
-					//deployable = projectModule.getModule();
 				}
-				moduleDelegates.add(projectModule);
+				 if (projectModule != null)moduleDelegates.add(projectModule);
 				return deployable;
 			}
 		} catch (Exception e) {
@@ -86,27 +91,6 @@ public class PHPDeployableFactory extends ProjectModuleFactoryDelegate {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.ModuleFactoryDelegate#getModules()
-	 */
-/*	public IModule[] getModules() {
-		if (projects == null || projects.isEmpty())
-			cacheModules();
-		int i = 0;
-		Iterator modules = projects.keySet().iterator();
-		IModule[] modulesArray = new IModule[projects.size()];
-		while (modules.hasNext()) {
-			IModule[] module = null;
-			IProject project = (IProject) modules.next();
-			module = (IModule[]) projects.get(project);
-			modulesArray[i++] = module[0];
-		}
-		return modulesArray;
-
-	} */
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate#createModules(org.eclipse.core.resources.IProject)
 	 */
@@ -115,4 +99,17 @@ public class PHPDeployableFactory extends ProjectModuleFactoryDelegate {
 		IModule mod = createModule(project);
 		return (mod == null) ? null : new IModule[] { mod };
 	}
+    
+    /**
+     * Returns the list of resources that the module should listen to
+     * for state changes. The paths should be project relative paths.
+     * Subclasses can override this method to provide the paths.
+     *
+     * @return a possibly empty array of paths
+     */
+    protected IPath[] getListenerPaths() {
+        return new IPath[] {
+            new Path(".project"), // nature
+        };
+    }
 }

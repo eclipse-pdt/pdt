@@ -65,7 +65,8 @@
 				id="org.eclipse.php.project.ui.wizards.PHPProjectCreationWizard" />
 			<newWizardShortcut
 				id="org.eclipse.php.project.ui.wizards.PHPFileCreationWizard" />
-   <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+			<newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+			<showInPart id="org.eclipse.ui.views.ResourceNavigator"/>
 		</perspectiveExtension>
 		<perspectiveExtension
 			targetID="org.eclipse.ui.resourcePerspective">
@@ -420,14 +421,15 @@
 			visible="false"
 			id="org.eclipse.php.ui.PHPActionSet">
 			<action
-				icon="platform:/plugin/org.eclipse.jdt.ui/icons/full/etool16/opentype.gif"
-				toolbarPath="org.eclipse.search.searchActionSet/Search"
-				tooltip="%OpenTypeAction.tooltip"
-				definitionId="org.eclipse.php.ui.navigate.open.type"
-				label="%OpenTypeAction.label"
-				class="org.eclipse.php.internal.ui.actions.OpenTypeAction"
-				menubarPath="navigate/open.ext2"
-				id="openType" />
+         class="org.eclipse.php.internal.ui.actions.OpenTypeAction"
+         definitionId="org.eclipse.php.ui.navigate.open.type"
+         disabledIcon="icons/full/dtool16/opentype.gif"
+         icon="icons/full/etool16/opentype.gif"
+         id="openType"
+         label="%OpenTypeAction.label"
+         menubarPath="navigate/open.ext2"
+         toolbarPath="org.eclipse.search.searchActionSet/Search"
+         tooltip="%OpenTypeAction.tooltip"/>
 
 		</actionSet>
 	</extension>
@@ -1017,12 +1019,7 @@
 			<adapter type="org.eclipse.core.resources.IResource" />
 		</factory>
 	</extension>
-
-
-
-
-
-	<extension point="org.eclipse.ui.editorActions">
+	<!-- <extension point="org.eclipse.ui.editorActions">
 		<editorContribution
 			id="org.eclipse.ui.texteditor.ruler.actions"
 			targetID="org.eclipse.php.editor">
@@ -1033,7 +1030,7 @@
 				id="org.eclipse.ui.texteditor.BookmarkRulerAction"
 				label="%DummyLabel" />
 		</editorContribution>
-	</extension>
+	</extension> -->
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
 			id="org.eclipse.php.ui.PHPStructuredEditorPopupActions"
@@ -1220,6 +1217,12 @@
             id="org.eclipse.php.ui.phpDotNet"
             label="PHP.net"
             url="http://www.php.net/manual/en/"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="org.eclipse.php.ui.PHP"
+            name="PHP"/>
    </extension>
    
 </plugin>

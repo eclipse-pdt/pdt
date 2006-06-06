@@ -10,7 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor.contentassist;
 
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPKeywordData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPModifier;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.core.phpModel.phpElementData.SimplePHPCodeDataVisitor;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.util.PHPElementImageDescriptor;
 import org.eclipse.php.ui.util.PHPElementImageProvider;

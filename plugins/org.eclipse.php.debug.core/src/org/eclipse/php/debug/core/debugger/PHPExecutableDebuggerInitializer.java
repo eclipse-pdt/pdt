@@ -10,8 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.debugger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -22,7 +30,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 
 public class PHPExecutableDebuggerInitializer {
 
-	private String[] systemEnvironmentVariables = null;
+	private HashMap systemEnvironmentVariables = null;
 	private ILaunch launch;
 
 	public PHPExecutableDebuggerInitializer(ILaunch launch) throws IOException {
@@ -30,11 +38,11 @@ public class PHPExecutableDebuggerInitializer {
 		initializeSystemEnvironmentVariables();
 	}
 
-	public void initializeDebug(String phpExePath, String fileName, int debugPort, boolean stopAtFirstLine) {
-		initializeDebug(phpExePath, fileName, debugPort, "", stopAtFirstLine);
+	public void initializeDebug(String phpExePath, String fileName, int debugPort, boolean stopAtFirstLine, int debugSessionID) {
+		initializeDebug(phpExePath, fileName, debugPort, "", stopAtFirstLine, debugSessionID);
 	}
 
-	public void initializeDebug(String phpExe, String fileName, int debugPort, String extendedParameters, boolean stopAtFirstLine) {
+	public void initializeDebug(String phpExe, String fileName, int debugPort, String extendedParameters, boolean stopAtFirstLine, int debugSessionID) {
 		try {
 			IPath phpExePath = new Path(phpExe);
 			File workingDir = new File(phpExePath.removeLastSegments(1).toString());
@@ -43,13 +51,18 @@ public class PHPExecutableDebuggerInitializer {
 			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
 			parametersInitializer.addParameter(IDebugParametersKeys.PORT, new Integer(debugPort));
 			parametersInitializer.addParameter(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.valueOf(stopAtFirstLine));
+			parametersInitializer.addParameter(IDebugParametersKeys.SESSION_ID, new Integer(debugSessionID));
 
-			String combinedEnvVars[] = new String[systemEnvironmentVariables.length + 8];
-			String[] additionalVars = new String[] { "REQUEST_METHOD=GET", "SCRIPT_FILENAME=" + fileName, "SCRIPT_NAME=" + fileName, "PATH_TRANSLATED=" + fileName, "PATH_INFO=" + fileName, "QUERY_STRING=" + parametersInitializer.generateQuery() + extendedParameters + "&debug_host=127.0.0.1",
-				"REDIRECT_STATUS=1", "PHPRC=" + phpConfigDir, };
+			systemEnvironmentVariables.put("REQUEST_METHOD", "GET");
+			systemEnvironmentVariables.put("SCRIPT_FILENAME", fileName);
+			systemEnvironmentVariables.put("SCRIPT_NAME", fileName);
+			systemEnvironmentVariables.put("PATH_TRANSLATED", fileName);
+			systemEnvironmentVariables.put("PATH_INFO", fileName);
+			systemEnvironmentVariables.put("QUERY_STRING", parametersInitializer.generateQuery() + extendedParameters + "&debug_host=127.0.0.1");
+			systemEnvironmentVariables.put("REDIRECT_STATUS", "1");
+			systemEnvironmentVariables.put("PHPRC", phpConfigDir);
 
-			System.arraycopy(systemEnvironmentVariables, 0, combinedEnvVars, 0, systemEnvironmentVariables.length);
-			System.arraycopy(additionalVars, 0, combinedEnvVars, combinedEnvVars.length - 8, additionalVars.length);
+			String[] combinedEnvVars = mapAsArray(systemEnvironmentVariables);
 
 			String[] phpCmdArray = { phpExe, "-c", phpConfigDir, fileName };
 			Process p = Runtime.getRuntime().exec(phpCmdArray, combinedEnvVars, workingDir);
@@ -60,6 +73,17 @@ public class PHPExecutableDebuggerInitializer {
 		} catch (Exception e) {
 			System.out.println("PHP Executable debugger error: " + e.getMessage());
 		}
+	}
+
+	private String[] mapAsArray(Map map) {
+		String[] strArr = new String[map.size()];
+		Iterator entries = map.entrySet().iterator();
+		int index = 0;
+		while (entries.hasNext()) {
+			Entry entry = (Entry) entries.next();
+			strArr[index++] = entry.getKey() + "=" + entry.getValue();
+		}
+		return strArr;
 	}
 
 	private void initializeSystemEnvironmentVariables() throws IOException {
@@ -89,7 +113,7 @@ public class PHPExecutableDebuggerInitializer {
 			p = r.exec("set");
 		} else {
 			System.out.println("OS not known: " + OS);
-			systemEnvironmentVariables = new String[0];
+			systemEnvironmentVariables = new HashMap(0);
 			return;
 		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -98,8 +122,17 @@ public class PHPExecutableDebuggerInitializer {
 			list.add(line);
 		}
 		br.close();
-		systemEnvironmentVariables = new String[list.size()];
-		list.toArray(systemEnvironmentVariables);
+		systemEnvironmentVariables = new HashMap();
+		for (int i = 0; i < list.size(); i++) {
+			String[] env = ((String) list.get(i)).split("=");
+			if (env.length == 2) {
+				systemEnvironmentVariables.put(env[0], env[1]);
+			} else {
+				if (env.length == 1) {
+					systemEnvironmentVariables.put(env[0], "");
+				}
+			}
+		}
 	}
 
 	// the reader reads the output of the process

@@ -20,12 +20,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 
 	public void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int forOffset) throws BadLocationException {
-		IRegion indentationBaseLine = getLastLine(document, forOffset);
+		final IRegion indentationBaseLine = getCurlyOpenLineInformation(document, forOffset);
 		if (indentationBaseLine != null) {
-			String blanks = FormatterUtils.getLineBlanks(document, indentationBaseLine);
+			final String blanks = FormatterUtils.getLineBlanks(document, indentationBaseLine);
 			result.append(blanks);
 		}
-
 	}
 
 	/**
@@ -34,7 +33,7 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 	 *  TODO this function has a bug in it: if there is a '{' inside inner state then it will not ignore it 
 	 *  as it should.
 	 */
-	private IRegion getLastLine(IStructuredDocument document, int forOffset) throws BadLocationException {
+	protected IRegion getCurlyOpenLineInformation(IStructuredDocument document, int forOffset) throws BadLocationException {
 		int offset = forOffset;
 		int curlyCounter = 0;
 		while (offset >= 0) {

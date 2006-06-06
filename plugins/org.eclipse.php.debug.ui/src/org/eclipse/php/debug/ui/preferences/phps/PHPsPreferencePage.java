@@ -20,13 +20,13 @@ import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.ui.preferences.ui.AbstractPreferencePage;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 
 /**
  * The Installed PHPs preference page.
@@ -35,7 +35,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
  */
 public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkbenchPreferencePage {
 
-	public static String ID="org.eclipse.php.debug.ui..preferencesphps.PHPsPreferencePage";
+	public static String ID="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage";
 	// PHP Block
 	private InstalledPHPsBlock fPHPBlock;
 
@@ -56,6 +56,10 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 	public void init(IWorkbench workbench) {
 	}
 
+	protected Preferences getModelPreferences() {
+		return PHPDebugUIPlugin.getDefault().getPluginPreferences();
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */

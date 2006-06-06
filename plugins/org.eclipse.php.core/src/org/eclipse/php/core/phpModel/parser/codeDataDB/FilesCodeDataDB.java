@@ -11,7 +11,11 @@
 package org.eclipse.php.core.phpModel.parser.codeDataDB;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.List;
 
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 

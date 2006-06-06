@@ -26,9 +26,8 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.jface.text.source.IAnnotationModelListenerExtension;
 import org.eclipse.jface.util.ListenerList;
-import org.eclipse.swt.widgets.Display;
-
 import org.eclipse.php.ui.PHPUiPlugin;
+import org.eclipse.swt.widgets.Display;
 
 ;
 

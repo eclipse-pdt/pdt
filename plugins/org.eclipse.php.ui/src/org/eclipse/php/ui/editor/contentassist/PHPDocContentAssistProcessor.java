@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor.contentassist;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;

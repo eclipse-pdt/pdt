@@ -11,7 +11,6 @@
 package org.eclipse.php.ui.editor.adapter;
 
 import org.eclipse.php.core.documentModel.handler.PHPModelHandler;
-import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;

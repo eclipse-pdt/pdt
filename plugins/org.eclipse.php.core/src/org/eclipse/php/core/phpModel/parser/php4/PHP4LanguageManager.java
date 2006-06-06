@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser.php4;
 
-import org.eclipse.php.core.phpModel.parser.*;
+import org.eclipse.php.core.phpModel.parser.IPhpModel;
+import org.eclipse.php.core.phpModel.parser.PHPLanguageManager;
+import org.eclipse.php.core.phpModel.parser.PHPLanguageModel;
+import org.eclipse.php.core.phpModel.parser.PHPParserManager;
+import org.eclipse.php.core.phpModel.parser.PHPUserModel;
+import org.eclipse.php.core.phpModel.parser.ParserClient;
 
 public class PHP4LanguageManager implements PHPLanguageManager {
 

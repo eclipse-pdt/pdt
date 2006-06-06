@@ -14,10 +14,11 @@ package org.eclipse.php.ui.containers;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.ui.PHPUiPlugin;
+import org.eclipse.php.ui.util.PHPPluginImages;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.php.ui.util.PHPPluginImages;
-import org.eclipse.php.ui.PHPUiPlugin;
 
 public abstract class StorageEditorInput extends PlatformObject implements IStorageEditorInput {
 

@@ -16,13 +16,14 @@ import org.eclipse.php.ui.editor.hover.PHPCodeHyperLink;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
-public class OpenDeclarationAction extends TextEditorAction {
+public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 	
 	private CodeData fCodeData;
 	

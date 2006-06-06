@@ -12,7 +12,16 @@ package org.eclipse.php.core.util.collections;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.AbstractCollection;
+import java.util.AbstractSet;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ConcurrentModificationException;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 public class IntHashtable implements IntMap, Cloneable, Serializable {
 

@@ -66,8 +66,8 @@ public class PHPModuleCreationOperation extends AbstractDataModelOperation imple
 				String context = model.getStringProperty(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
 				options.setOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT, context);
 				IIncludePathEntry[] includePath = (IIncludePathEntry[]) model.getProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH);
-				options.setRawIncludePath(includePath, null);
-				options.saveChanges(monitor);
+				options.setRawIncludePath(includePath, (SubProgressMonitor)monitor);
+//				options.saveChanges(monitor);
                 
                 if (model.isPropertySet(Keys.PHP_VERSION)) {
                     String version = model.getStringProperty(Keys.PHP_VERSION);

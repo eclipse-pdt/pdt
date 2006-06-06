@@ -12,13 +12,6 @@ package org.eclipse.php.ui.preferences.includepath;
 
 import java.util.Arrays;
 
-import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.util.ListContentProvider;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.util.PHPPluginImages;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -31,6 +24,12 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.util.ListContentProvider;
+import org.eclipse.php.ui.PHPUiPlugin;
+import org.eclipse.php.ui.util.PHPPluginImages;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  */

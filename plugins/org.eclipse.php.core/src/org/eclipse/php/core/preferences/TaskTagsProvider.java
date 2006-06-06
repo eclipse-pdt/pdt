@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 
 /**
  * A task tags provider listens to any task-tags preferences changes and notify any listener

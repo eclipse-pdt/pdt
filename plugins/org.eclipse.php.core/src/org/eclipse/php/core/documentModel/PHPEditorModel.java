@@ -14,13 +14,23 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.documentModel.dom.PHPDOMDocument;
 import org.eclipse.php.core.documentModel.dom.PHPDOMModelParser;
 import org.eclipse.php.core.documentModel.dom.PHPDOMModelUpdater;
+import org.eclipse.php.core.documentModel.dom.PHPModelNotifier;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
+import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
+import org.eclipse.wst.sse.core.internal.text.CoreNodeList;
+import org.eclipse.wst.xml.core.internal.document.XMLModelNotifier;
+import org.eclipse.wst.xml.core.internal.document.XMLModelNotifierImpl;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
 import org.w3c.dom.Document;
@@ -31,6 +41,7 @@ import org.w3c.dom.Document;
 public class PHPEditorModel extends DOMStyleModelImpl {
 
 	public static final boolean FREQUENT_MODEL_UPDATE = true;
+	private XMLModelNotifier notifier;
 
 	/*
 	 * This is modeled after what is done for JSP
@@ -126,6 +137,56 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IFile file = (IFile) root.findMember(new Path(path));
 		return file;
+	}
+
+	
+	
+	
+	public XMLModelNotifier getModelNotifier() {
+		if (this.notifier == null) {
+			this.notifier = new PHPModelNotifier();
+		}
+		return this.notifier;
+	}
+
+	/**
+	 * When PHP regions are replace do step by step 
+	 */
+	public void nodesReplaced(StructuredDocumentRegionsReplacedEvent event) {
+
+		super.nodesReplaced(event);
+		
+		/*
+		// TRICKY : change DOM model by : newModel(null), newModel(new NewDocumentEvent((IStructuredDocument) event.getDocument(), event.getOriginalRequester()));
+		
+		// get event properties
+		assert event.getDocument() instanceof IStructuredDocument;
+		final IStructuredDocument document = (IStructuredDocument) event.getDocument();
+		final Object originalRequester = event.getOriginalRequester();
+		final int offset = event.getOffset();
+		final int eventLength = event.getLength();		
+
+		// first remove old regions
+		final IStructuredDocumentRegionList oldStructuredDocumentRegions = event.getOldStructuredDocumentRegions();
+		int length = oldStructuredDocumentRegions == null ? 0 : oldStructuredDocumentRegions.getLength();
+		for (int i =0; i < length; i++) {
+			// remove the deleted region from the list and apply the super method to remove it from dom
+			final IStructuredDocumentRegion item = oldStructuredDocumentRegions.item(i);
+			item.setNext(null);
+			final CoreNodeList coreNodeList = new CoreNodeList(item);
+			final StructuredDocumentRegionsReplacedEvent structuredDocumentRegionsReplacedEvent = new StructuredDocumentRegionsReplacedEvent(document, originalRequester, coreNodeList, null, null, offset, eventLength);
+
+			super.nodesReplaced(structuredDocumentRegionsReplacedEvent);
+			getModelNotifier().endChanging();
+		}
+
+		// then you can add them all
+		final IStructuredDocumentRegionList newStructuredDocumentRegions = event.getNewStructuredDocumentRegions();
+		final StructuredDocumentRegionsReplacedEvent newEvent = new StructuredDocumentRegionsReplacedEvent(document, originalRequester, null, newStructuredDocumentRegions, null, 0, 0);
+		super.nodesReplaced(newEvent);
+		
+		*/
+				
 	}
 
 }

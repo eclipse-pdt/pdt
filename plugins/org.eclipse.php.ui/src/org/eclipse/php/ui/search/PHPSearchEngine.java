@@ -217,7 +217,7 @@ public class PHPSearchEngine {
 			}
 			PHPConstantData constantData = constants[i];
 			if (SearchPattern.match(stringPattern, constantData.getName(), caseSensitive)) {
-				int start = constantData.getUserData().getStopPosition();
+				int start = constantData.getUserData().getStopPosition() + 1; // Shift by 1 (fixed bug #141302)
 				textResult.addMatch(new Match(new PHPConstantDataDecorator(constantData, project), start, constantData.getName().length()));
 			}
 			monitor.worked(1);

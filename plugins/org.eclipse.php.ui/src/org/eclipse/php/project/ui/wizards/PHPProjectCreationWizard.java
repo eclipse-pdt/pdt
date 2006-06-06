@@ -12,20 +12,25 @@ package org.eclipse.php.project.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.core.PHPCoreConstants;
+import org.eclipse.php.core.PHPCorePlugin;
+import org.eclipse.php.core.project.operation.PHPCreationDataModelProvider;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.ui.util.PHPPluginImages;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizard;
-import org.eclipse.php.core.PHPCoreConstants;
-import org.eclipse.php.core.project.operation.PHPCreationDataModelProvider;
-import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.ui.util.PHPPluginImages;
+import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class PHPProjectCreationWizard extends DataModelWizard implements IExecutableExtension, INewWizard {
 
@@ -72,6 +77,15 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 
 	protected void postPerformFinish() throws InvocationTargetException {
 		BasicNewProjectResourceWizard.updatePerspective(configElement);
+		
+		IProject createdProject = (IProject)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
+ 		if (createdProject != null) {
+ 			// Save any project-specific data (Fix Bug# 143406)
+ 			try {
+				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();
+			} catch (BackingStoreException e) {
+			}
+ 		}
 	}
 
 }

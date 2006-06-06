@@ -12,17 +12,17 @@
 
 package org.eclipse.php.core.phpModel.parser.php4;
 
-import org.eclipse.php.core.phpModel.javacup.runtime.Symbol;
-import org.eclipse.php.core.phpModel.javacup.sym;
-import org.eclipse.php.core.phpModel.parser.CompletionLexer;
-import org.eclipse.php.core.phpModel.parser.ParserClient;
-import org.eclipse.php.core.phpModel.parser.StateStack;
-import org.eclipse.php.core.util.collections.IntHashtable;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.eclipse.php.core.phpModel.javacup.sym;
+import org.eclipse.php.core.phpModel.javacup.runtime.Symbol;
+import org.eclipse.php.core.phpModel.parser.CompletionLexer;
+import org.eclipse.php.core.phpModel.parser.ParserClient;
+import org.eclipse.php.core.phpModel.parser.StateStack;
+import org.eclipse.php.core.util.collections.IntHashtable;
 
 
 /**

@@ -17,7 +17,14 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.debug.core.Logger;
-import org.eclipse.php.debug.core.debugger.*;
+import org.eclipse.php.debug.core.debugger.DefaultExpression;
+import org.eclipse.php.debug.core.debugger.DefaultExpressionsManager;
+import org.eclipse.php.debug.core.debugger.Expression;
+import org.eclipse.php.debug.core.debugger.ExpressionValue;
+import org.eclipse.php.debug.core.debugger.IRemoteDebugger;
+import org.eclipse.php.debug.core.debugger.PHPstack;
+import org.eclipse.php.debug.core.debugger.RemoteDebugger;
+import org.eclipse.php.debug.core.debugger.StackLayer;
 
 public class ContextManager {
 

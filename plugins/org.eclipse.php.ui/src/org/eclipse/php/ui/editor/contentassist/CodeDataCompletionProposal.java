@@ -26,15 +26,12 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.util.PHPCodeDataHTMLDescriptionUtilities;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.omg.IOP.CodecOperations;
 
 
 public class CodeDataCompletionProposal implements ICompletionProposal, ICompletionProposalExtension2, ICompletionProposalExtension3, ICompletionProposalExtension4 {

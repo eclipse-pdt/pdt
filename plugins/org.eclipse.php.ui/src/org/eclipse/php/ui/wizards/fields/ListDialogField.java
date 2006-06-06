@@ -153,12 +153,22 @@ public class ListDialogField extends DialogField {
 	 * Sets the index of the 'remove' button in the button label array passed in the constructor.
 	 * The behaviour of the button marked as the 'remove' button will then be handled internally.
 	 * (enable state, button invocation behaviour)
+	 * @see #getRemoveButtonIndex()
 	 */
 	public void setRemoveButtonIndex(int removeButtonIndex) {
 		Assert.isTrue(removeButtonIndex < fButtonLabels.length);
 		fRemoveButtonIndex = removeButtonIndex;
 	}
 
+	/**
+	 * Returns the index of the 'remove' button defined by {@link #setRemoveButtonIndex(int)}.
+	 * @return The 'remove' button index.
+	 * @see #setRemoveButtonIndex(int)
+	 */
+	public int getRemoveButtonIndex() {
+		return fRemoveButtonIndex;
+	}
+	
 	/**
 	 * Sets the index of the 'up' button in the button label array passed in the constructor.
 	 * The behaviour of the button marked as the 'up' button will then be handled internally.

@@ -27,13 +27,14 @@ import org.eclipse.php.ui.util.PHPManualFactory;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
-public class OpenFunctionsManualAction extends TextEditorAction {
+public class OpenFunctionsManualAction extends TextEditorAction implements IUpdate {
 
 	private PHPFunctionData functionData;
 
@@ -69,6 +70,9 @@ public class OpenFunctionsManualAction extends TextEditorAction {
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.TextEditorAction#update()
+	 */
 	public void update() {
 		super.update();
 		
