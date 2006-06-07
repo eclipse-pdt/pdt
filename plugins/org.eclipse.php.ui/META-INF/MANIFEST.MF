@@ -48,3 +48,4 @@ Export-Package: org.eclipse.php.project.ui.wizards,
  org.eclipse.php.ui.util,
  org.eclipse.php.ui.wizards,
  org.eclipse.php.ui.wizards.fields
+Bundle-Vendor: Eclipse.org
