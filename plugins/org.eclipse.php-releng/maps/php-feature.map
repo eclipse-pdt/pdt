@@ -1,0 +1,10 @@
+plugin@org.eclipse.php=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
+plugin@org.eclipse.php.core=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
+plugin@org.eclipse.php.debug.core=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
+plugin@org.eclipse.php.debug.daemon=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
+plugin@org.eclipse.php.debug.ui=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
+plugin@org.eclipse.php.server.apache.core=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
+plugin@org.eclipse.php.server.apache.ui=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
+plugin@org.eclipse.php.ui=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
+plugin@org.eclipse.php.delivery=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
+feature@org.eclipse.php_feature=PHP_IDE_0_1_3_20060529,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php-feature/
