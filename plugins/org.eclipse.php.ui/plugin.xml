@@ -23,6 +23,7 @@
  <extension-point id="hyperlinkDetectorForPHP" name="hyperlinkDetectorForPHP" schema="schema/hyperlinkDetectorForPHP.exsd"/>
  <extension-point id="phpOutlineElementComparer" name="phpOutlineElementComparer" schema="schema/phpOutlineElementComparer.exsd"/>
  <extension-point id="actionFilterDelegatorForPHPCodeData" name="actionFilterDelegatorForPHPCodeData" schema="schema/actionFilterDelegatorForPHPCodeData.exsd"/>
+ <extension-point id="hoverMessageDecorators" name="Hover Message Decorators" schema="schema/hoverMessageDecorators.exsd"/>
 
 	<!--extension point="org.eclipse.ui.editors.documentProviders"> 
 		<provider 
@@ -65,8 +66,7 @@
 				id="org.eclipse.php.project.ui.wizards.PHPProjectCreationWizard" />
 			<newWizardShortcut
 				id="org.eclipse.php.project.ui.wizards.PHPFileCreationWizard" />
-			<newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
-			<showInPart id="org.eclipse.ui.views.ResourceNavigator"/>
+   <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
 		</perspectiveExtension>
 		<perspectiveExtension
 			targetID="org.eclipse.ui.resourcePerspective">
@@ -670,6 +670,11 @@
 			description="%command.openFunctionsManual.description"
 			categoryId="org.eclipse.php.ui.category.source"
 			id="org.eclipse.php.ui.edit.OpenFunctionsManualAction"/>
+  <command
+        categoryId="org.eclipse.ui.category.edit"
+        description="Show Tooltip Description"
+        id="org.eclipse.php.ui.edit.text.show.phpdoc"
+        name="Show Tooltip Description"/>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -768,6 +773,11 @@
             contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.wst.sse.ui.format.document"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            commandId="org.eclipse.php.ui.edit.text.show.phpdoc"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F2"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
@@ -1019,7 +1029,12 @@
 			<adapter type="org.eclipse.core.resources.IResource" />
 		</factory>
 	</extension>
-	<!-- <extension point="org.eclipse.ui.editorActions">
+
+
+
+
+
+	<extension point="org.eclipse.ui.editorActions">
 		<editorContribution
 			id="org.eclipse.ui.texteditor.ruler.actions"
 			targetID="org.eclipse.php.editor">
@@ -1030,7 +1045,7 @@
 				id="org.eclipse.ui.texteditor.BookmarkRulerAction"
 				label="%DummyLabel" />
 		</editorContribution>
-	</extension> -->
+	</extension>
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
 			id="org.eclipse.php.ui.PHPStructuredEditorPopupActions"
