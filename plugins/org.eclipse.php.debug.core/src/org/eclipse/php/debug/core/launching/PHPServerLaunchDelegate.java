@@ -7,20 +7,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IDebugEventSetListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IMemoryBlock;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStreamsProxy;
-import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.Logger;
@@ -28,6 +16,7 @@ import org.eclipse.php.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.debug.core.debugger.PHPWebServerDebuggerInitializer;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.model.DebugSessionIdGenerator;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.server.apache.core.ApacheLaunchConfigurationDelegate;
@@ -96,23 +85,24 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 			// Generate a session id for this launch and put it in the map
 			int sessionID = DebugSessionIdGenerator.generateSessionID();
 			PHPSessionLaunchMapper.put(sessionID, new PHPServerLaunchDecorator(launch, apacheServerBehaviour, proj));
-
+			
+			// Fill all debug attributes:
+			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
+			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
+			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(isStopAtFirstLine));
+			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
+			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
+			
 			// Trigger the debug session by initiating a debug requset to the debug server
-			runDispatch = new RunDispatchJobWebServer(launch, URL, requestPort, isStopAtFirstLine, sessionID);
+			runDispatch = new RunDispatchJobWebServer(launch);
 			runDispatch.schedule();
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IDebugTarget#getProcess()
-	 */
-
-	public void runPHPWebServer(ILaunch launch, String url, int port, boolean stopAtFirstLine, int debugSessionID) {
+	public void runPHPWebServer(ILaunch launch) {
 		PHPWebServerDebuggerInitializer debuggerInitializer = new PHPWebServerDebuggerInitializer(launch);
-		try {
-			debuggerInitializer.debug(url, port, stopAtFirstLine, debugSessionID);
+		try {	
+			debuggerInitializer.debug();
 		} catch (DebugException e) {
 			IStatus status = e.getStatus();
 			String errorMessage = null;
@@ -188,24 +178,16 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 	 * Run is seperate thread so launch doesn't hang.
 	 */
 	class RunDispatchJobWebServer extends Job {
-		private String URL;
-		private int requestPort;
-		private boolean isStopAtFirstLine;
 		private ILaunch launch;
-		private int debugSessionId;
 
-		public RunDispatchJobWebServer(ILaunch launch, String URL, int requestPort, boolean isStopAtFirstLine, int debugSessionId) {
+		public RunDispatchJobWebServer(ILaunch launch) {
 			super("runPHPWebServer");
 			this.launch = launch;
-			this.URL = URL;
-			this.requestPort = requestPort;
-			this.isStopAtFirstLine = isStopAtFirstLine;
-			this.debugSessionId = debugSessionId;
 			setSystem(true);
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			runPHPWebServer(launch, URL, requestPort, isStopAtFirstLine, debugSessionId);
+			runPHPWebServer(launch);
 			Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling Terminated()");
 			terminated();
 			return Status.OK_STATUS;

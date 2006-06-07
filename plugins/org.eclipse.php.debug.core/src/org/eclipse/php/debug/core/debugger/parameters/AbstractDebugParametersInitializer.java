@@ -1,5 +1,10 @@
 package org.eclipse.php.debug.core.debugger.parameters;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import org.eclipse.debug.core.ILaunch;
+
 public abstract class AbstractDebugParametersInitializer implements IDebugParametersInitializer {
 
 	// Parameters
@@ -16,11 +21,37 @@ public abstract class AbstractDebugParametersInitializer implements IDebugParame
 
 	private String id = null;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer#getDebugHandler()
+	 */
 	public String getDebugHandler() {
 		return id;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer#setDebugHandler(java.lang.String)
+	 */
 	public void setDebugHandler(String id) {
 		this.id = id;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer#generateQuery(org.eclipse.debug.core.ILaunch)
+	 */
+	public String generateQuery(ILaunch launch) {
+		StringBuffer buf = new StringBuffer();
+
+		Hashtable parameters = generateQueryParameters(launch);
+		Enumeration e = parameters.keys();
+
+		while (e.hasMoreElements()) {
+			String key = (String) e.nextElement();
+			buf.append(key);
+			buf.append(parameters.get(key));
+			if (e.hasMoreElements()) {
+				buf.append('&'); //$NON-NLS-1$
+			}
+		}
+		return buf.toString();
 	}
 }

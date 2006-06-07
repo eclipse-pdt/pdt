@@ -17,6 +17,7 @@ import java.util.Hashtable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
@@ -161,7 +162,7 @@ public class DebugParametersInitializersRegistry {
 		}
 
 		public IDebugParametersInitializer createParametersInitializer() {
-			Platform.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.debug.core.phpDebugParametersInitializers") {
+			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.debug.core.phpDebugParametersInitializers") {
 				public void run() throws Exception {
 					parametersInitializer = (IDebugParametersInitializer) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}

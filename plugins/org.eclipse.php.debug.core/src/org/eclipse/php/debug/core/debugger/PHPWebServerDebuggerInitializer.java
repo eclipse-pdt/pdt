@@ -37,17 +37,11 @@ public class PHPWebServerDebuggerInitializer {
 		this.launch = launch;
 	}
 
-	public void debug(String url, int port, boolean stopAtFirstLine, int debugSessionID) throws DebugException {
+	public void debug() throws DebugException {
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
-		parametersInitializer.addParameter(IDebugParametersKeys.PORT, new Integer(port));
-		parametersInitializer.addParameter(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.TRUE);
-		parametersInitializer.addParameter(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.valueOf(stopAtFirstLine));
-		parametersInitializer.addParameter(IDebugParametersKeys.ORIGINAL_URL, url);
-		parametersInitializer.addParameter(IDebugParametersKeys.SESSION_ID, new Integer(debugSessionID));
-
-		String debugQuery = url + "?" + parametersInitializer.generateQuery();
+		String debugQuery = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL) + "?" + parametersInitializer.generateQuery(launch);
 		try {
-			connect(new URL(debugQuery), port, false);
+			connect(new URL(debugQuery), Integer.parseInt(launch.getAttribute(IDebugParametersKeys.PORT)), false);
 		} catch (java.net.MalformedURLException e) {
 			Logger.logException("Malformed URL Exception " + debugQuery, e); //Debugger_Unexpected_Error
 			String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;

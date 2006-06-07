@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.debugger.parameters;
 
+import java.util.Hashtable;
+
+import org.eclipse.debug.core.ILaunch;
+
 /**
  * A debug parameters initializer is used to generate debug query strings that will be delivered to the 
  * debug server when a debug session is initialized.
@@ -18,16 +22,17 @@ public interface IDebugParametersInitializer {
 
 	/**
 	 * Generate and return a debug query.
+	 * @param ILaunch launch
 	 * @return A debug query string
 	 */
-	public String generateQuery();
+	public String generateQuery(ILaunch launch);
 	
 	/**
-	 * Adds a debug parameter to the initializer.
-	 * @param key	The parameter identifier.
-	 * @param value	The parameter value.
+	 * Generate and returns a debug query parameters
+	 * @param ILaunch launch
+	 * @return A hastable containing debug query parameters
 	 */
-	public void addParameter(String key, Object value);
+	public Hashtable generateQueryParameters(ILaunch launch);
 	
 	/**
 	 * Returns ID of the corresponding Debug handler

@@ -42,6 +42,7 @@ import org.eclipse.php.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.PHPExecutableDebuggerInitializer;
 import org.eclipse.php.debug.core.debugger.PHPSessionLaunchMapper;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.model.DebugSessionIdGenerator;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 
@@ -103,9 +104,14 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 			// Generate a session id for this launch and put it in the map
 			int sessionID = DebugSessionIdGenerator.generateSessionID();
 			PHPSessionLaunchMapper.put(sessionID, launch);
+			
+			// Define all needed debug attributes:
+			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
+			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
+			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
 
 			// Trigger the debug session by initiating a debug requset to the php.exe
-			debugPHPExecutable(launch, phpExeString, absolutePath, requestPort, stopAtFirstLine, sessionID);
+			debugPHPExecutable(launch, phpExeString, absolutePath);
 		} else {
 			// resolve location
 			IPath phpExe = new Path(phpExeString);
@@ -198,10 +204,10 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 
 	}
 
-	public void debugPHPExecutable(ILaunch launch, String phpExe, String fileToDebug, int port, boolean stopAtFirstLine, int debugSessionID) throws DebugException {
+	public void debugPHPExecutable(ILaunch launch, String phpExe, String fileToDebug) throws DebugException {
 		try {
 			PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
-			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath(), port, stopAtFirstLine, debugSessionID);
+			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath());
 		} catch (java.io.IOException e1) {
 			Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e1);
 			String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;

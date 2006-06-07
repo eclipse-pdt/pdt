@@ -10,8 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.debugger.parameters;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.php.core.util.HostsCollector;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.RemoteDebugger;
@@ -21,104 +22,53 @@ import org.eclipse.php.debug.core.debugger.RemoteDebugger;
  */
 public class DefaultDebugParametersInitializer extends AbstractDebugParametersInitializer {
 
-	private HashMap parameters;
-
-	/**
-	 * DefaultDebugParametersInitializer Constructor.
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer#generateQueryParameters(org.eclipse.debug.core.ILaunch)
 	 */
-	public DefaultDebugParametersInitializer() {
-		parameters = new HashMap(5);
-	}
-
-	/**
-	 * Adds a debug parameter to this initializer.
-	 * Adding the same key more then once will replace the value to the latest given one.
-	 */
-	public void addParameter(String key, Object value) {
-		parameters.put(key, value);
-	}
-
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer#generateQuery()
-	 */
-	public String generateQuery() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(START_DEBUG);
-		buffer.append(1);
-		buffer.append('&');
-		buffer.append(DEBUG_PORT);
-		buffer.append(getPort());
-		if (isPassiveDebug()) {
-			buffer.append('&');
-			buffer.append(DEBUG_PASSIVE);
-			buffer.append(1);
-		}
-
-		buffer.append('&');
-		buffer.append(SEND_SESS_END);
-		buffer.append(1);
-
-		if (isWebServerDebugger()) {
-			buffer.append('&');
-			buffer.append(DEBUG_HOST);
-			buffer.append(HostsCollector.getHosts());
-
-			buffer.append('&');
-			buffer.append(DEBUG_NO_CACHE);
-			buffer.append(System.currentTimeMillis());
-		}
-
-		if (isFirstLineBreakpoint()) {
-			buffer.append('&');
-			buffer.append(DEBUG_STOP);
-			buffer.append(1);
-		}
-
-		buffer.append('&');
-		buffer.append(DEBUG_PROTOCOL);
-		buffer.append(RemoteDebugger.PROTOCOL_ID);
-
-		if (parameters.containsKey(IDebugParametersKeys.ORIGINAL_URL)) {
-			buffer.append('&');
-			buffer.append(ORIGINAL_URL);
-			buffer.append((String) parameters.get(IDebugParametersKeys.ORIGINAL_URL));
-		}
-
-		if (parameters.containsKey(IDebugParametersKeys.SESSION_ID)) {
-			buffer.append('&');
-			buffer.append(DEBUG_SESSION_ID);
-			buffer.append(parameters.get(IDebugParametersKeys.SESSION_ID));
-		}
-
-		return buffer.toString();
-	}
-
-	private int getPort() {
-		Object port = parameters.get(IDebugParametersKeys.PORT);
-		if (port == null || !(port instanceof Integer)) {
+	public Hashtable generateQueryParameters(ILaunch launch) {
+		Hashtable parameters = new Hashtable();
+		parameters.put(START_DEBUG, "1");
+		
+		Object port = launch.getAttribute(IDebugParametersKeys.PORT);
+		if (port != null) {
+			parameters.put(DEBUG_PORT, port);
+		} else {
 			PHPDebugPlugin.logErrorMessage("A port was not defined for the DefaultDebugParametersInitializer.");
-			return 0;
 		}
-		return ((Integer) port).intValue();
+		
+		if (getBooleanValue(launch.getAttribute(IDebugParametersKeys.PASSIVE_DEBUG))) {
+			parameters.put(DEBUG_PASSIVE, "1");
+		}
+
+		parameters.put(SEND_SESS_END, "1");
+
+		if (getBooleanValue(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
+			parameters.put(DEBUG_HOST, HostsCollector.getHosts());
+			parameters.put(DEBUG_NO_CACHE, Long.toString(System.currentTimeMillis()));
+		}
+
+		if (getBooleanValue(launch.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT))) {
+			parameters.put(DEBUG_STOP, "1");
+		}
+
+		parameters.put(DEBUG_PROTOCOL, Integer.toString(RemoteDebugger.PROTOCOL_ID));
+
+		String url = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
+		if (url != null) {
+			parameters.put(ORIGINAL_URL, url);
+		}
+
+		String sessID = launch.getAttribute(IDebugParametersKeys.SESSION_ID);
+		if (sessID != null) {
+			parameters.put(DEBUG_SESSION_ID, sessID);
+		}
+		
+		return parameters;
 	}
 
-	private boolean isPassiveDebug() {
-		return getBooleanValue(IDebugParametersKeys.PASSIVE_DEBUG);
-	}
-
-	private boolean isWebServerDebugger() {
-		return getBooleanValue(IDebugParametersKeys.WEB_SERVER_DEBUGGER);
-	}
-
-	private boolean isFirstLineBreakpoint() {
-		return getBooleanValue(IDebugParametersKeys.FIRST_LINE_BREAKPOINT);
-	}
-
-	private boolean getBooleanValue(String key) {
-		Object value = parameters.get(key);
-		if (value != null && value instanceof Boolean) {
-			return ((Boolean) value).booleanValue();
+	public boolean getBooleanValue(String value) {
+		if (value != null) {
+			return Boolean.parseBoolean(value);
 		}
 		return false;
 	}
