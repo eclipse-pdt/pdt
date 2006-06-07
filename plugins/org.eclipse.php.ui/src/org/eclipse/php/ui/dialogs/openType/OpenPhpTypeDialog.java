@@ -22,6 +22,8 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.php.core.phpModel.IPHPLanguageModel;
+import org.eclipse.php.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
@@ -39,9 +41,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 public class OpenPhpTypeDialog extends Dialog {
-	
+
 	private CodeData selectedElement = null;
-	
+
 	private BasicSelector basicSelector;
 
 	public OpenPhpTypeDialog(Shell parentShell) {
@@ -65,7 +67,7 @@ public class OpenPhpTypeDialog extends Dialog {
 		};
 		basicSelector = new BasicSelector(composite, phpTypeFilterCompositeFactory);
 		basicSelector.setLayoutData(new GridData(GridData.FILL_BOTH));
-//		basicSelector.setContentProvider(new PhpTypeContentProvider());
+		//		basicSelector.setContentProvider(new PhpTypeContentProvider());
 		basicSelector.addFilter(phpTypeFilter);
 		basicSelector.setLabelProvider(new PhpTypeTableLabelProvider());
 		basicSelector.setElements(getElements());
@@ -83,13 +85,13 @@ public class OpenPhpTypeDialog extends Dialog {
 				OpenPhpTypeDialog.this.getButton(IDialogConstants.OK_ID).setEnabled(true);
 			}
 		});
-//		basicSelector.setInput(new Object());
-//		basicSelector.setOkHandler(new IOkHandler() {
-//			public void okPressed(Object element) {
-//				openEditor((CodeData)element);
-//			}
-//		});
-		
+		//		basicSelector.setInput(new Object());
+		//		basicSelector.setOkHandler(new IOkHandler() {
+		//			public void okPressed(Object element) {
+		//				openEditor((CodeData)element);
+		//			}
+		//		});
+
 		return composite;
 	}
 
@@ -100,19 +102,26 @@ public class OpenPhpTypeDialog extends Dialog {
 		for (int i = 0; i < projects.length; i++) {
 			IProject project = projects[i];
 			try {
-			if (!project.hasNature(PHPNature.ID)) {
-				continue;
-			}
+				if (!project.exists() || !project.isOpen() || !project.hasNature(PHPNature.ID)) {
+					continue;
+				}
 			} catch (CoreException ce) {
 				ce.printStackTrace();
 				continue;
 			}
 			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-			addClassesData(projectModel.getPHPUserModel().getClasses(), arrayList);
-			addData(projectModel.getPHPUserModel().getFunctions(), arrayList);
-			addData(projectModel.getPHPUserModel().getConstants(), arrayList);
+			IPhpModel[] models = projectModel.getModels();
+			IPHPLanguageModel languageModel = projectModel.getPHPLanguageModel();
+			for (int j = 0; j < models.length; ++j) {
+				IPhpModel model = models[j];
+				if (model != languageModel) {
+					addClassesData(model.getClasses(), arrayList);
+					addData(model.getFunctions(), arrayList);
+					addData(model.getConstants(), arrayList);
+				}
+			}
 		}
-		
+
 		Object[] elements = arrayList.toArray();
 		Arrays.sort(elements, new Comparator() {
 			public int compare(Object arg0, Object arg1) {
@@ -122,11 +131,11 @@ public class OpenPhpTypeDialog extends Dialog {
 
 		return elements;
 	}
-	
+
 	private void addClassesData(CodeData[] classes, ArrayList arrayList) {
 		addData(classes, arrayList);
 		for (int i = 0; i < classes.length; i++) {
-			PHPClassData classData = (PHPClassData)classes[i];
+			PHPClassData classData = (PHPClassData) classes[i];
 			addData(classData.getConsts(), arrayList);
 			addData(classData.getFunctions(), arrayList);
 		}
@@ -148,20 +157,20 @@ public class OpenPhpTypeDialog extends Dialog {
 		return selectedElement;
 	}
 
-    protected void okPressed() {
-		selectedElement = (CodeData)basicSelector.getSelectedElement();
+	protected void okPressed() {
+		selectedElement = (CodeData) basicSelector.getSelectedElement();
 		super.okPressed();
-    }
-    protected void createButtonsForButtonBar(Composite parent) {
-    	super.createButtonsForButtonBar(parent);
+	}
+
+	protected void createButtonsForButtonBar(Composite parent) {
+		super.createButtonsForButtonBar(parent);
 		getButton(IDialogConstants.OK_ID).setEnabled(false);
-    }
+	}
 
 	public boolean close() {
 		basicSelector.close();
 
 		return super.close();
 	}
-    
-    
+
 }
