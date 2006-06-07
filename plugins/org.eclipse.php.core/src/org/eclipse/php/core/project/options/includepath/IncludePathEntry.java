@@ -359,8 +359,8 @@ public class IncludePathEntry implements IIncludePathEntry {
 					message = "included source not found: " + path.toOSString();
 				break;
 			case IIncludePathEntry.IPE_VARIABLE:
-				if (resource == null || !resource.exists())
-					message = "included variable not found: " + path.toOSString();
+//				if (resource == null || !resource.exists())
+//					message = "included variable not found: " + path.toOSString();
 				break;
 			case IIncludePathEntry.IPE_CONTAINER:
 				break;
