@@ -28,6 +28,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	public static final int CONSTANTS = 3;
 
 	Object[] groupNodes;
+	IProject fStoredProject;
 
 	public static class OutlineNode implements Comparable {
 		String text;
@@ -117,8 +118,9 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 
 	public Object[] getChildrenInternal(Object parentElement) {
 		if (parentElement instanceof IProject) {
-			if (groupNodes == null) {
+			if (groupNodes == null || (IProject)parentElement != fStoredProject) {
 				groupNodes = getOutlineChildren((IProject) parentElement);
+				fStoredProject = (IProject)parentElement;
 			}
 			return groupNodes;
 		} else if (parentElement instanceof OutlineNode) {
