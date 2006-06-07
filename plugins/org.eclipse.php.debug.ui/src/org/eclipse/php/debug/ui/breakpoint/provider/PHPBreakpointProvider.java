@@ -41,6 +41,7 @@ import org.eclipse.php.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.ui.PHPUiPlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -111,6 +112,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 			statusLineMgr.setErrorMessage(null);
 		} else {
 			statusLineMgr.setErrorMessage(PHPDebugUIMessages.ErrorCreatingBreakpoint_1);
+			Display.getDefault().beep();
 		}
 		if (status == null) {
 			status = new Status(IStatus.OK, PHPDebugUIPlugin.getID(), IStatus.OK, MessageFormat.format(PHPDebugUIMessages.BreakpointCreated_1, new Object[] {}), null);
