@@ -39,7 +39,7 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	 * Action definition ID of the edit -> show PHPdoc action
 	 * (value <code>"org.eclipse.php.ui.edit.text.show.phpdoc"</code>).
 	 */
-	public static final String SHOW_PHPDOC= "org.eclipse.php.ui.edit.text.show.phpdoc"; //$NON-NLS-1$
+	public static final String SHOW_PHPDOC = "org.eclipse.php.ui.edit.text.show.phpdoc"; //$NON-NLS-1$
 
 	/**
 	 * Action definition ID of the navigate -> Show Outline action

@@ -10,17 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor.hover;
 
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.ui.IEditorPart;
 
-public class PHPTextHoverProxy extends AbstractPHPTextHover {
+public class PHPTextHoverProxy extends AbstractPHPTextHover implements ITextHoverExtension, IInformationProviderExtension2 {
 	private PHPEditorTextHoverDescriptor fHoverDescriptor;
 	private IPHPTextHover fHover;
 
 	public PHPTextHoverProxy(PHPEditorTextHoverDescriptor descriptor, IEditorPart editor) {
-		fHoverDescriptor= descriptor;
+		fHoverDescriptor = descriptor;
 		if (editor != null) {
 			setEditorPart(editor);
 		}
@@ -71,9 +74,27 @@ public class PHPTextHoverProxy extends AbstractPHPTextHover {
 	}
 
 	private boolean createHover() {
-		fHover= fHoverDescriptor.createTextHover();
+		fHover = fHoverDescriptor.createTextHover();
 		if (fHover != null && getEditorPart() != null)
 			fHover.setEditorPart(getEditorPart());
 		return isCreated();
+	}
+
+	/*
+	 * @see org.eclipse.jface.text.ITextHoverExtension#getHoverControlCreator()
+	 * @since 3.0
+	 */
+	public IInformationControlCreator getHoverControlCreator() {
+		if (ensureHoverCreated() && (fHover instanceof ITextHoverExtension))
+			return ((ITextHoverExtension) fHover).getHoverControlCreator();
+
+		return null;
+	}
+
+	public IInformationControlCreator getInformationPresenterControlCreator() {
+		if (ensureHoverCreated() && (fHover instanceof IInformationProviderExtension2))
+			return ((IInformationProviderExtension2) fHover).getInformationPresenterControlCreator();
+
+		return null;
 	}
 }

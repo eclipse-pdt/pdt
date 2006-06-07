@@ -16,20 +16,30 @@ import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
+import org.eclipse.php.ui.editor.PHPEditorMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 
-public abstract class AbstractPHPTextHover implements IPHPTextHover {
-	
+public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverExtension {
+
 	protected Pattern tab = Pattern.compile("\t");
 	protected IEditorPart fEditor;
+	private IBindingService fBindingService;
+	{
+		fBindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+	}
 
 	public IEditorPart getEditorPart() {
 		return fEditor;
@@ -38,7 +48,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover {
 	public void setEditorPart(IEditorPart editorPart) {
 		fEditor = editorPart;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.text.ITextHover#getHoverRegion(org.eclipse.jface.text.ITextViewer, int)
 	 */
@@ -58,7 +68,24 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Returns the tool tip affordance string.
+	 *
+	 * @return the affordance string or <code>null</code> if disabled or no key binding is defined
+	 * @since 3.0
+	 */
+	protected String getTooltipAffordanceString() {
+		if (fBindingService == null)// || !JavaPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE))
+			return null;
+
+		String keySequence = fBindingService.getBestActiveBindingFormattedFor(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
+		if (keySequence == null)
+			return null;
+
+		return NLS.bind(PHPEditorMessages.HoverFocus_message, keySequence);
+	}
+
 	/*
 	 * @see ITextHoverExtension#getHoverControlCreator()
 	 * @since 3.0
@@ -66,7 +93,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover {
 	public IInformationControlCreator getHoverControlCreator() {
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true), null);
+				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true), getTooltipAffordanceString());
 			}
 		};
 	}

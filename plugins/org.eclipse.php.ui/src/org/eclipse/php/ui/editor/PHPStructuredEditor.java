@@ -18,18 +18,41 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.internal.text.link.contentassist.HTMLTextPresenter;
+import org.eclipse.jface.text.AbstractInformationControlManager;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.ITextViewerExtension4;
+import org.eclipse.jface.text.ITextViewerExtension5;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.information.IInformationProvider;
+import org.eclipse.jface.text.information.IInformationProviderExtension;
+import org.eclipse.jface.text.information.IInformationProviderExtension2;
+import org.eclipse.jface.text.information.InformationPresenter;
+import org.eclipse.jface.text.source.IAnnotationHover;
+import org.eclipse.jface.text.source.IAnnotationHoverExtension;
+import org.eclipse.jface.text.source.ILineRange;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.ISourceViewerExtension3;
+import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
@@ -39,6 +62,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.core.containers.LocalFileStorage;
 import org.eclipse.php.core.containers.ZipEntryStorage;
 import org.eclipse.php.core.documentModel.parser.PhpSourceParser;
+import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
@@ -48,16 +72,26 @@ import org.eclipse.php.internal.ui.actions.ActionMessages;
 import org.eclipse.php.internal.ui.actions.AddBlockCommentAction;
 import org.eclipse.php.internal.ui.actions.BlockCommentAction;
 import org.eclipse.php.internal.ui.actions.FoldingActionGroup;
+import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
 import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
 import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
 import org.eclipse.php.internal.ui.actions.RemoveBlockCommentAction;
 import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.containers.StorageEditorInput;
+import org.eclipse.php.ui.editor.hover.IHoverMessageDecorators;
+import org.eclipse.php.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.ResourceAction;
+import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -75,11 +109,41 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		// See StructuredTextEditor#isFoldingEnabled()
 		System.setProperty("org.eclipse.wst.sse.ui.foldingenabled", "foldingenabled"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
+	/** The information presenter. */
+	protected InformationPresenter fInformationPresenter;
 
 	private FoldingActionGroup foldingGroup;
-	
+	IHoverMessageDecorators messageDecorator;
+
 	public PHPStructuredEditor() {
 		initFolding();
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.hoverMessageDecorators");
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			try {
+				messageDecorator = (IHoverMessageDecorators) element.createExecutableExtension("class");
+			} catch (CoreException e) {
+				// TODO  - log exception
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+
+		IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
+			public IInformationControl createInformationControl(Shell shell) {
+				boolean cutDown = false;
+				int style = cutDown ? SWT.NONE : (SWT.V_SCROLL | SWT.H_SCROLL);
+				return new DefaultInformationControl(shell, SWT.RESIZE | SWT.TOOL, style, new HTMLTextPresenter(cutDown));
+			}
+		};
+
+		fInformationPresenter = new InformationPresenter(informationControlCreator);
+		fInformationPresenter.setSizeConstraints(60, 10, true, true);
+		fInformationPresenter.install(getSourceViewer());
 	}
 
 	/*
@@ -113,12 +177,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
 		} else if (input instanceof StorageEditorInput) {
-			StorageEditorInput editorInput = (StorageEditorInput)input;
+			StorageEditorInput editorInput = (StorageEditorInput) input;
 			IStorage storage = editorInput.getStorage();
-			if(storage instanceof ZipEntryStorage){
-				resource = ((ZipEntryStorage)storage).getProject();
-			} else if (storage instanceof LocalFileStorage){
-				resource = ((LocalFileStorage)storage).getProject();
+			if (storage instanceof ZipEntryStorage) {
+				resource = ((ZipEntryStorage) storage).getProject();
+			} else if (storage instanceof LocalFileStorage) {
+				resource = ((LocalFileStorage) storage).getProject();
 			}
 		}
 		PhpSourceParser.editFile.set(resource);
@@ -228,7 +292,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		return adapter;
 	}
 
-	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.sse.ui.StructuredTextEditor#dispose()
 	 */
@@ -245,20 +308,20 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
 		super.rulerContextMenuAboutToShow(menu);
-		IMenuManager foldingMenu= new MenuManager(PHPEditorMessages.PHP_Editor_FoldingMenu_name, "projection"); //$NON-NLS-1$
+		IMenuManager foldingMenu = new MenuManager(PHPEditorMessages.PHP_Editor_FoldingMenu_name, "projection"); //$NON-NLS-1$
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_RULERS, foldingMenu);
 
-		IAction action= getAction("FoldingToggle"); //$NON-NLS-1$
+		IAction action = getAction("FoldingToggle"); //$NON-NLS-1$
 		foldingMenu.add(action);
-		action= getAction("FoldingExpandAll"); //$NON-NLS-1$
+		action = getAction("FoldingExpandAll"); //$NON-NLS-1$
 		foldingMenu.add(action);
 	}
-	
+
 	protected void createActions() {
 		super.createActions();
-		
-		foldingGroup= new FoldingActionGroup(this, getTextViewer());
-		
+
+		foldingGroup = new FoldingActionGroup(this, getTextViewer());
+
 		ResourceBundle resourceBundle = ActionMessages.getResourceBundle();
 		ISourceViewer sourceViewer = getSourceViewer();
 		SourceViewerConfiguration configuration = getSourceViewerConfiguration();
@@ -296,11 +359,272 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.OpenFunctionsManualAction"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction", action); //$NON-NLS-1$
 		markAsStateDependentAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction", true); //$NON-NLS-1$
-		
+
 		action = new OpenDeclarationAction(resourceBundle, this);
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.open.editor"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.Open", action); //$NON-NLS-1$
 		markAsStateDependentAction("org.eclipse.php.ui.actions.Open", true); //$NON-NLS-1$
+
+		ResourceAction resAction = new TextOperationAction(ActionMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true);
+		resAction = new InformationDispatchAction(ActionMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
+		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC); //$NON-NLS-1$
+		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
+
+	}
+
+	/**
+	 * Information provider used to present focusable information shells.
+	 *
+	 * @since 3.2
+	 */
+	private static final class InformationProvider implements IInformationProvider, IInformationProviderExtension, IInformationProviderExtension2 {
+
+		private IRegion fHoverRegion;
+		private Object fHoverInfo;
+		private IInformationControlCreator fControlCreator;
+
+		InformationProvider(IRegion hoverRegion, Object hoverInfo, IInformationControlCreator controlCreator) {
+			fHoverRegion = hoverRegion;
+			fHoverInfo = hoverInfo;
+			fControlCreator = controlCreator;
+		}
+
+		/*
+		 * @see org.eclipse.jface.text.information.IInformationProvider#getSubject(org.eclipse.jface.text.ITextViewer, int)
+		 */
+		public IRegion getSubject(ITextViewer textViewer, int invocationOffset) {
+			return fHoverRegion;
+		}
+
+		/*
+		 * @see org.eclipse.jface.text.information.IInformationProvider#getInformation(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
+		 */
+		public String getInformation(ITextViewer textViewer, IRegion subject) {
+			return fHoverInfo.toString();
+		}
+
+		/*
+		 * @see org.eclipse.jface.text.information.IInformationProviderExtension#getInformation2(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
+		 * @since 3.2
+		 */
+		public Object getInformation2(ITextViewer textViewer, IRegion subject) {
+			return fHoverInfo;
+		}
+
+		/*
+		 * @see org.eclipse.jface.text.information.IInformationProviderExtension2#getInformationPresenterControlCreator()
+		 */
+		public IInformationControlCreator getInformationPresenterControlCreator() {
+			return fControlCreator;
+		}
+	}
+
+	/**
+	 * This action behaves in two different ways: If there is no current text
+	 * hover, the javadoc is displayed using information presenter. If there is
+	 * a current text hover, it is converted into a information presenter in
+	 * order to make it sticky.
+	 */
+	class InformationDispatchAction extends TextEditorAction {
+
+		/** The wrapped text operation action. */
+		private final TextOperationAction fTextOperationAction;
+
+		/**
+		 * Creates a dispatch action.
+		 *
+		 * @param resourceBundle the resource bundle
+		 * @param prefix the prefix
+		 * @param textOperationAction the text operation action
+		 */
+		public InformationDispatchAction(ResourceBundle resourceBundle, String prefix, final TextOperationAction textOperationAction) {
+			super(resourceBundle, prefix, PHPStructuredEditor.this);
+			if (textOperationAction == null)
+				throw new IllegalArgumentException();
+			fTextOperationAction = textOperationAction;
+		}
+
+		/*
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
+		public void run() {
+
+			ISourceViewer sourceViewer = getSourceViewer();
+			if (sourceViewer == null) {
+				fTextOperationAction.run();
+				return;
+			}
+
+			if (sourceViewer instanceof ITextViewerExtension4) {
+				ITextViewerExtension4 extension4 = (ITextViewerExtension4) sourceViewer;
+				if (extension4.moveFocusToWidgetToken())
+					return;
+			}
+
+			if (sourceViewer instanceof ITextViewerExtension2) {
+				// does a text hover exist?
+				ITextHover textHover = ((ITextViewerExtension2) sourceViewer).getCurrentTextHover();
+				if (textHover != null && makeTextHoverFocusable(sourceViewer, textHover))
+					return;
+			}
+
+			if (sourceViewer instanceof ISourceViewerExtension3) {
+				// does an annotation hover exist?
+				IAnnotationHover annotationHover = ((ISourceViewerExtension3) sourceViewer).getCurrentAnnotationHover();
+				if (annotationHover != null && makeAnnotationHoverFocusable(sourceViewer, annotationHover))
+					return;
+			}
+
+			// otherwise, just run the action
+			fTextOperationAction.run();
+		}
+
+		/**
+		 * Tries to make a text hover focusable (or "sticky").
+		 * 
+		 * @param sourceViewer the source viewer to display the hover over
+		 * @param textHover the hover to make focusable
+		 * @return <code>true</code> if successful, <code>false</code> otherwise
+		 * @since 3.2
+		 */
+		private boolean makeTextHoverFocusable(ISourceViewer sourceViewer, ITextHover textHover) {
+			Point hoverEventLocation = ((ITextViewerExtension2) sourceViewer).getHoverEventLocation();
+			int offset = computeOffsetAtLocation(sourceViewer, hoverEventLocation.x, hoverEventLocation.y);
+			if (offset == -1)
+				return false;
+
+			try {
+				IRegion hoverRegion = textHover.getHoverRegion(sourceViewer, offset);
+				if (hoverRegion == null)
+					return false;
+
+				String hoverInfo = textHover.getHoverInfo(sourceViewer, hoverRegion);
+
+				if (messageDecorator != null) {
+					String decoratedMessage = messageDecorator.getDecoratedMessage(hoverInfo);
+					if (decoratedMessage != null && decoratedMessage.length() > 0) {
+						hoverInfo = decoratedMessage;
+					}
+				}
+
+				IInformationControlCreator controlCreator = null;
+				if (textHover instanceof IInformationProviderExtension2)
+					controlCreator = ((IInformationProviderExtension2) textHover).getInformationPresenterControlCreator();
+
+				IInformationProvider informationProvider = new InformationProvider(hoverRegion, hoverInfo, controlCreator);
+
+				fInformationPresenter.setOffset(offset);
+				fInformationPresenter.setAnchor(AbstractInformationControlManager.ANCHOR_BOTTOM);
+				fInformationPresenter.setMargins(6, 6); // default values from AbstractInformationControlManager
+				String contentType = TextUtilities.getContentType(sourceViewer.getDocument(), PHPPartitionTypes.PHP_DOC, offset, true);
+				fInformationPresenter.setInformationProvider(informationProvider, contentType);
+				fInformationPresenter.showInformation();
+
+				return true;
+
+			} catch (BadLocationException e) {
+				return false;
+			}
+		}
+
+		/**
+		 * Tries to make an annotation hover focusable (or "sticky").
+		 * 
+		 * @param sourceViewer the source viewer to display the hover over
+		 * @param annotationHover the hover to make focusable
+		 * @return <code>true</code> if successful, <code>false</code> otherwise
+		 * @since 3.2
+		 */
+		private boolean makeAnnotationHoverFocusable(ISourceViewer sourceViewer, IAnnotationHover annotationHover) {
+			IVerticalRulerInfo info = getVerticalRuler();
+			int line = info.getLineOfLastMouseButtonActivity();
+			if (line == -1)
+				return false;
+
+			try {
+
+				// compute the hover information
+				Object hoverInfo;
+				if (annotationHover instanceof IAnnotationHoverExtension) {
+					IAnnotationHoverExtension extension = (IAnnotationHoverExtension) annotationHover;
+					ILineRange hoverLineRange = extension.getHoverLineRange(sourceViewer, line);
+					if (hoverLineRange == null)
+						return false;
+					final int maxVisibleLines = Integer.MAX_VALUE; // allow any number of lines being displayed, as we support scrolling
+					hoverInfo = extension.getHoverInfo(sourceViewer, hoverLineRange, maxVisibleLines);
+				} else {
+					hoverInfo = annotationHover.getHoverInfo(sourceViewer, line);
+				}
+
+				// hover region: the beginning of the concerned line to place the control right over the line
+				IDocument document = sourceViewer.getDocument();
+				int offset = document.getLineOffset(line);
+				String contentType = TextUtilities.getContentType(document, PHPPartitionTypes.PHP_DOC, offset, true);
+
+				IInformationControlCreator controlCreator = null;
+
+				/* 
+				 * XXX: This is a hack to avoid API changes at the end of 3.2,
+				 * and should be fixed for 3.3, see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=137967
+				 */
+				if ("org.eclipse.jface.text.source.projection.ProjectionAnnotationHover".equals(annotationHover.getClass().getName())) { //$NON-NLS-1$
+					controlCreator = new IInformationControlCreator() {
+						public IInformationControl createInformationControl(Shell shell) {
+							int shellStyle = SWT.RESIZE | SWT.TOOL | getOrientation();
+							int style = SWT.V_SCROLL | SWT.H_SCROLL;
+							return new SourceViewerInformationControl(shell, shellStyle, style);
+						}
+					};
+
+				} else {
+					if (annotationHover instanceof IInformationProviderExtension2)
+						controlCreator = ((IInformationProviderExtension2) annotationHover).getInformationPresenterControlCreator();
+					else if (annotationHover instanceof IAnnotationHoverExtension)
+						controlCreator = ((IAnnotationHoverExtension) annotationHover).getHoverControlCreator();
+				}
+
+				IInformationProvider informationProvider = new InformationProvider(new Region(offset, 0), hoverInfo, controlCreator);
+
+				fInformationPresenter.setOffset(offset);
+				fInformationPresenter.setAnchor(AbstractInformationControlManager.ANCHOR_RIGHT);
+				fInformationPresenter.setMargins(4, 0); // AnnotationBarHoverManager sets (5,0), minus SourceViewer.GAP_SIZE_1
+				fInformationPresenter.setInformationProvider(informationProvider, contentType);
+				fInformationPresenter.showInformation();
+
+				return true;
+
+			} catch (BadLocationException e) {
+				return false;
+			}
+		}
+
+		// modified version from TextViewer
+		private int computeOffsetAtLocation(ITextViewer textViewer, int x, int y) {
+
+			StyledText styledText = textViewer.getTextWidget();
+			IDocument document = textViewer.getDocument();
+
+			if (document == null)
+				return -1;
+
+			try {
+				int widgetOffset = styledText.getOffsetAtLocation(new Point(x, y));
+				Point p = styledText.getLocationAtOffset(widgetOffset);
+				if (p.x > x)
+					widgetOffset--;
+
+				if (textViewer instanceof ITextViewerExtension5) {
+					ITextViewerExtension5 extension = (ITextViewerExtension5) textViewer;
+					return extension.widgetOffset2ModelOffset(widgetOffset);
+				} else {
+					IRegion visibleRegion = textViewer.getVisibleRegion();
+					return widgetOffset + visibleRegion.getOffset();
+				}
+			} catch (IllegalArgumentException e) {
+				return -1;
+			}
+
+		}
 	}
 
 	protected void addContextMenuActions(IMenuManager menu) {
@@ -314,9 +638,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			addAction(subMenu, "org.eclipse.php.ui.actions.AddBlockComment"); //$NON-NLS-1$
 			addAction(subMenu, "org.eclipse.php.ui.actions.RemoveBlockComment"); //$NON-NLS-1$
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, subMenu);
-			
+
 			String openGroup = "group.open"; //$NON-NLS-1$
-			menu.appendToGroup (ITextEditorActionConstants.GROUP_EDIT, new Separator(openGroup));
+			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, new Separator(openGroup));
 			IAction action = getAction("org.eclipse.php.ui.actions.Open"); //$NON-NLS-1$
 			if (action != null) {
 				menu.appendToGroup(openGroup, action);

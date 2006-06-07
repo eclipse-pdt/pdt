@@ -100,4 +100,12 @@ public class PHPActionConstants {
 	 */
 	public static final String RENAME = "org.eclipse.php.ui.actions.Rename"; //$NON-NLS-1$
 
+	// Edit menu
+
+	/**
+	 * Edit menu: name of standard Show Javadoc global action
+	 * (value <code>"org.eclipse.jdt.php.actions.ShowPHPDoc"</code>).
+	 */
+	public static final String SHOW_PHP_DOC = "org.eclipse.php.ui.actions.ShowPHPDoc";
+
 }

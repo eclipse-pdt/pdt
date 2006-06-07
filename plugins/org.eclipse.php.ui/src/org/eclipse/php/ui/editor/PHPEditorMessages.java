@@ -18,7 +18,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Helper class to get NLSed messages.
  */
-final class PHPEditorMessages extends NLS {
+public final class PHPEditorMessages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.php.ui.editor.PHPEditorMessages"; //$NON-NLS-1$
 	private static ResourceBundle fResourceBundle;
@@ -28,6 +28,8 @@ final class PHPEditorMessages extends NLS {
 	}
 
 	public static String PHP_Editor_FoldingMenu_name;
+	public static String ShowPHPDoc_label;
+	public static String HoverFocus_message;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PHPEditorMessages.class);
