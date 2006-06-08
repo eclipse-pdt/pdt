@@ -85,14 +85,14 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 			// Generate a session id for this launch and put it in the map
 			int sessionID = DebugSessionIdGenerator.generateSessionID();
 			PHPSessionLaunchMapper.put(sessionID, new PHPServerLaunchDecorator(launch, apacheServerBehaviour, proj));
-			
+
 			// Fill all debug attributes:
 			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
 			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(isStopAtFirstLine));
 			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
 			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
-			
+
 			// Trigger the debug session by initiating a debug requset to the debug server
 			runDispatch = new RunDispatchJobWebServer(launch);
 			runDispatch.schedule();
@@ -101,7 +101,7 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 
 	public void runPHPWebServer(ILaunch launch) {
 		PHPWebServerDebuggerInitializer debuggerInitializer = new PHPWebServerDebuggerInitializer(launch);
-		try {	
+		try {
 			debuggerInitializer.debug();
 		} catch (DebugException e) {
 			IStatus status = e.getStatus();
@@ -114,7 +114,6 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 				fireError(status);
 				errorMessage = status.getMessage();
 			}
-			terminated();
 			displayErrorMessage(errorMessage);
 		}
 	}
@@ -152,14 +151,17 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 	 * Called when the debug session was terminated. 
 	 */
 	public void terminated() {
-		// We have to force the termination of the ILaunch because at this stage there is no
-		// PHPDebugTarget, thus we create a dummy debug target to overcome this issue and terminate the launch.
-		IDebugTarget dummyDebugTarget = new DummyDebugTarget(launch);
-		DebugEvent event = new DebugEvent(dummyDebugTarget, DebugEvent.TERMINATE);
-		if (launch != null) {
-			launch.addDebugTarget(dummyDebugTarget);
-			IDebugEventSetListener launchListener = (IDebugEventSetListener)launch;
-			launchListener.handleDebugEvents(new DebugEvent[] {event});
+		DebugEvent event = null;
+		if (launch.getDebugTarget() == null) {
+			// We have to force the termination of the ILaunch because at this stage there is no
+			// PHPDebugTarget, thus we create a dummy debug target to overcome this issue and terminate the launch.
+			IDebugTarget dummyDebugTarget = new DummyDebugTarget(launch);
+			event = new DebugEvent(dummyDebugTarget, DebugEvent.TERMINATE);
+			if (launch != null) {
+				launch.addDebugTarget(dummyDebugTarget);
+				IDebugEventSetListener launchListener = (IDebugEventSetListener) launch;
+				launchListener.handleDebugEvents(new DebugEvent[] { event });
+			}
 		}
 		event = new DebugEvent(this, DebugEvent.TERMINATE);
 		fireEvent(event);
@@ -199,81 +201,107 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 			return className + "@" + Integer.toHexString(hashCode());
 		}
 	}
-	
+
 	/*
 	 * A dummy debug target for the termination of the ILaunch.
 	 */
 	private class DummyDebugTarget implements IDebugTarget {
 
 		private ILaunch launch;
+
 		public DummyDebugTarget(ILaunch launch) {
 			this.launch = launch;
 		}
+
 		public String getName() throws DebugException {
 			return "Session Terminated";
 		}
+
 		public IProcess getProcess() {
 			return null;
 		}
+
 		public IThread[] getThreads() throws DebugException {
 			return null;
 		}
+
 		public boolean hasThreads() throws DebugException {
 			return false;
 		}
+
 		public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 			return false;
 		}
+
 		public IDebugTarget getDebugTarget() {
-			return null;
+			return this;
 		}
+
 		public ILaunch getLaunch() {
 			return launch;
 		}
+
 		public String getModelIdentifier() {
-			return null;
+			return "";
 		}
+
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
+
 		public boolean canTerminate() {
 			return true;
 		}
+
 		public boolean isTerminated() {
 			return true;
 		}
+
 		public void terminate() throws DebugException {
 		}
+
 		public boolean canResume() {
 			return false;
 		}
+
 		public boolean canSuspend() {
 			return false;
 		}
+
 		public boolean isSuspended() {
 			return false;
 		}
+
 		public void resume() throws DebugException {
 		}
+
 		public void suspend() throws DebugException {
 		}
+
 		public void breakpointAdded(IBreakpoint breakpoint) {
 		}
+
 		public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
 		}
+
 		public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		}
+
 		public boolean canDisconnect() {
 			return false;
 		}
+
 		public void disconnect() throws DebugException {
 		}
+
 		public boolean isDisconnected() {
 			return false;
 		}
+
 		public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 			return null;
 		}
+
 		public boolean supportsStorageRetrieval() {
 			return false;
 		}

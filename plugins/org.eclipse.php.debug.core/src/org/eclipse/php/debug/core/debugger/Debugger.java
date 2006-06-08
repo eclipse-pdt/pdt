@@ -16,10 +16,23 @@
 
 package org.eclipse.php.debug.core.debugger;
 
+
 /**
  * @author eran
  */
-public interface Debugger extends SessionHandler {
+public interface Debugger {
+	
+    /**
+     * Asynchronic start
+     * Returns true if successed sending the request, false otherwise.
+     */
+    public boolean start(StartResponseHandler responseHandler);
+
+    /**
+     * Synchronic start
+     * Returns true if successed start.
+     */
+    public boolean start();
 
     /**
      * Asynchronic addBreakpoint Returns true if successed sending the request,
@@ -192,6 +205,13 @@ public interface Debugger extends SessionHandler {
 
     // ---------------------------------------------------------------------------
 
+    // Interface for started response handler.
+    public static interface StartResponseHandler {
+
+        public void started(boolean success);
+
+    }
+    
     // Interface for an breakpoint added response handler.
     public static interface BreakpointAddedResponseHandler {
 
