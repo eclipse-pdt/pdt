@@ -12,38 +12,26 @@ package org.eclipse.php.debug.core.preferences;
 
 import java.io.File;
 
-
 public class PHPexeItem {
 
-	private static final char fgSeparator = File.separatorChar;
-
-	private static final String[] fgCandidatePHPLocations = { "php", //$NON-NLS-2$ //$NON-NLS-1$
-		"php.exe", //$NON-NLS-2$ //$NON-NLS-1$
-		//		"jre" + fgSeparator + "bin" + fgSeparator + "javaw",          //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
-		//		"jre" + fgSeparator + "bin" + fgSeparator + "javaw.exe",      //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$									
-		//		"bin" + fgSeparator + "java",                                 //$NON-NLS-2$ //$NON-NLS-1$
-		//		"bin" + fgSeparator + "java.exe",                             //$NON-NLS-2$ //$NON-NLS-1$
-		//		"jre" + fgSeparator + "bin" + fgSeparator + "java",           //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
-		//		"jre" + fgSeparator + "bin" + fgSeparator + "java.exe"};
-	};
+	private static final String[] fgCandidatePHPLocations = { "php", "php.exe" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	String name;
 	File location;
 	File phpEXE;
 	String version;
-	boolean editable=true;
-	
+	boolean editable = true;
 
 	public PHPexeItem(String name, String path) {
 		this.name = name;
-		setLocation( new File(path));
+		setLocation(new File(path));
 	}
 
-	public PHPexeItem(String name, File phpExeFile,boolean editable) {
+	public PHPexeItem(String name, File phpExeFile, boolean editable) {
 		this.name = name;
-		phpEXE=phpExeFile;
-		this.editable=editable;
-		location=phpExeFile.getParentFile();
+		phpEXE = phpExeFile;
+		this.editable = editable;
+		location = phpExeFile.getParentFile();
 	}
 
 	public PHPexeItem() {
@@ -55,7 +43,7 @@ public class PHPexeItem {
 
 	public void setLocation(File location) {
 		this.location = location;
-		phpEXE=findPHPExecutable(location);
+		phpEXE = findPHPExecutable(location);
 	}
 
 	public String getName() {
@@ -65,7 +53,6 @@ public class PHPexeItem {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 	public static File findPHPExecutable(File phpLocation) {
 
@@ -85,11 +72,11 @@ public class PHPexeItem {
 	}
 
 	public boolean equals(Object other) {
-		if (other==this)
+		if (other == this)
 			return true;
 		if (!(other instanceof PHPexeItem))
 			return false;
-		PHPexeItem item2=(PHPexeItem)other;
+		PHPexeItem item2 = (PHPexeItem) other;
 		return item2.name.equals(name) && item2.location.equals(location);
 	}
 
