@@ -14,64 +14,31 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.debug.internal.ui.SWTUtil;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.util.ListenerList;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.*;
 
 /**
  * A composite that displays installed PHP's in a table. PHPs can be 
@@ -120,14 +87,12 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 	/**
 	 * Selection listeners (checked PHP changes)
 	 */
-	private ListenerList fSelectionListeners = new ListenerList();
+	private ListenerList fSelectionListeners = new ListenerList(ListenerList.IDENTITY);
 
 	/**
 	 * Previous selection
 	 */
 	private ISelection fPrevSelection = new StructuredSelection();
-
-	private static String fgLastUsedID;
 
 	/** 
 	 * Content provider to show a list of PHPs
@@ -710,8 +675,8 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 	}
 
 	/**
-	 * Searches the specified directory recursively for installed VMs, adding each
-	 * detected VM to the <code>found</code> list. Any directories specified in
+	 * Searches the specified directory recursively for installed PHP executables, adding each
+	 * detected executable to the <code>found</code> list. Any directories specified in
 	 * the <code>ignore</code> are not traversed.
 	 * 
 	 * @param directory
@@ -724,6 +689,14 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 			return;
 		}
 
+		// Search the root directory
+		if (!ignore.contains(directory)) {
+			File foundExe = PHPexeItem.findPHPExecutable(directory);
+			if (foundExe != null) {
+				found.add(foundExe);
+			}
+		}
+
 		String[] names = directory.list();
 		if (names == null) {
 			return;
@@ -734,26 +707,22 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 				return;
 			}
 			File file = new File(directory, names[i]);
-			PHPexeItem[] vmTypes = phpExes.getEditableItems();
+			//			PHPexeItem[] vmTypes = phpExes.getEditableItems();
 			if (file.isDirectory()) {
 				try {
 					monitor.subTask(MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_14, new String[] { Integer.toString(found.size()), file.getCanonicalPath() })); //$NON-NLS-1$
 				} catch (IOException e) {
 				}
 				if (!ignore.contains(file)) {
-					boolean validLocation = false;
-
 					if (monitor.isCanceled()) {
 						return;
 					}
 					File foundExe = PHPexeItem.findPHPExecutable(file);
 					if (foundExe != null) {
 						found.add(foundExe);
-						validLocation = true;
+						ignore.add(file);
 					}
-					if (!validLocation) {
-						subDirs.add(file);
-					}
+					subDirs.add(file);
 				}
 			}
 		}
