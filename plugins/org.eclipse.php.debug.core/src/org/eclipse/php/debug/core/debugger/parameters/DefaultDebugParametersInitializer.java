@@ -68,7 +68,7 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 
 	public boolean getBooleanValue(String value) {
 		if (value != null) {
-			return Boolean.parseBoolean(value);
+			return Boolean.valueOf(value).booleanValue();
 		}
 		return false;
 	}
