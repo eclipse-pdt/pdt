@@ -19,9 +19,13 @@ import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
+import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableDebuggerInitializer {
 
@@ -58,8 +62,16 @@ public class PHPExecutableDebuggerInitializer {
 			Runnable reader = new ProcessOutputReader(p);
 			new Thread(reader).start();
 
-		} catch (Exception e) {
-			System.out.println("PHP Executable debugger error: " + e.getMessage());
+		} catch (final Exception e) {
+			final Display display = Display.getDefault();
+			display.asyncExec(new Runnable() {
+				public void run() {
+					String message = e.getLocalizedMessage();
+					message = message.replaceFirst(e.getClass().getName() + ": ", "");
+					MessageDialog.openError(display.getActiveShell(), "Error", NLS.bind("Error running PHP executable:\n\n{0}", message));
+				}
+			});
+			DebugPlugin.log(e);
 		}
 	}
 
