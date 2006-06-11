@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -40,8 +39,7 @@ import org.eclipse.php.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.php.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -55,7 +53,6 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 		// check if there is a valid position to set breakpoint
 		int pos = getValidPosition(document, editorLineNumber);
 		IStatus status = null;
-		IStatusLineManager statusLineMgr = PHPUiPlugin.getActivePage().getActiveEditor().getEditorSite().getActionBars().getStatusLineManager();
 		if (pos >= 0) {
 			IResource res = getResourceFromInput(input);
 			if (res != null && (input instanceof IFileEditorInput)) {
@@ -109,10 +106,8 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 					status = new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IStatus.ERROR, MessageFormat.format(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, new Object[] {}), null); //$NON-NLS-1$
 				}
 			}
-			statusLineMgr.setErrorMessage(null);
 		} else {
-			statusLineMgr.setErrorMessage(PHPDebugUIMessages.ErrorCreatingBreakpoint_1);
-			Display.getDefault().beep();
+			StatusLineMessageTimerManager.setErrorMessage(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, 1000, true); // hide message after 1 second
 		}
 		if (status == null) {
 			status = new Status(IStatus.OK, PHPDebugUIPlugin.getID(), IStatus.OK, MessageFormat.format(PHPDebugUIMessages.BreakpointCreated_1, new Object[] {}), null);
