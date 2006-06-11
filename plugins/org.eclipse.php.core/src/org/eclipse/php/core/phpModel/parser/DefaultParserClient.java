@@ -757,6 +757,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		if (currToken == getEOFTag()) {
 			addUnexpected = true;
 			unexpectedString = "End of File";
+			startPosition = --endPosition; 
 		} else if (currToken == getCONSTANT_ENCAPSED_STRINGTag()) {
 			addUnexpected = true;
 			endPosition = startPosition + currText.trim().length();

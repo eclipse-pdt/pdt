@@ -20,10 +20,10 @@ import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.internal.validation.HTMLValidator;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
@@ -55,10 +55,11 @@ public class PHPHTMLValidator extends HTMLValidator {
 			return;
 		}
 
-		if (typedRegion.getType().equals(IHTMLPartitionTypes.HTML_DEFAULT)) {
+		final String type = typedRegion.getType();
+		if (type.equals(IHTMLPartitions.HTML_DEFAULT)) {
 			super.validate(dirtyRegion, helper, reporter);
 			return;
-		} else if (!typedRegion.getType().equals(PHPPartitionTypes.PHP_DEFAULT)) {
+		} else if (!type.equals(PHPPartitionTypes.PHP_DEFAULT) && !type.equals(PHPPartitionTypes.PHP_QUOTED_STRING)) {
 			return;
 		}
 
@@ -94,9 +95,12 @@ public class PHPHTMLValidator extends HTMLValidator {
     			String descr = marker.getDescription();
     			LocalizedMessage mess = new LocalizedMessage(IMessage.HIGH_SEVERITY, descr);
     			UserData userData = marker.getUserData();
-    			//			mess.setLineNo(userData.get);
-    			mess.setOffset(userData.getStartPosition());
-    			mess.setLength(userData.getEndPosition() - userData.getStartPosition());
+    			
+    			final int startPosition = userData.getStartPosition();
+    			final int length = userData.getEndPosition() - startPosition;
+
+    			mess.setOffset(startPosition);
+				mess.setLength(length);
     			reporter.addMessage(this, mess);
     		}
 		} finally {

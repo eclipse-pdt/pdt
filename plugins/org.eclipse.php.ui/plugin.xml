@@ -267,6 +267,7 @@
 				id="org.eclipse.php.core.phpsource">
 				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT" />
 				<partitionType id="org.eclipse.php.PHP_DEFAULT" />
+				<partitionType id="org.eclipse.php.PHP_QUOTED_STRING" />				
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
