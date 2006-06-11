@@ -64,7 +64,7 @@ public class PHPSourceViewer extends Composite {
 		setupViewer();
 	}
 
-	protected void createControls(Composite parent) {
+	public void createControls(Composite parent) {
 		fText = new StyledText(parent, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		fText.getContent().addTextChangeListener(new TextChangeListener() {
 
@@ -198,7 +198,7 @@ public class PHPSourceViewer extends Composite {
 		fParser = newParser;
 	}
 
-	protected TextAttribute getAttribute(String namedStyle) {
+	public TextAttribute getAttribute(String namedStyle) {
 		TextAttribute ta = new TextAttribute(getDefaultForeground(), getDefaultBackground(), SWT.NORMAL);
 		if (namedStyle != null && styleProvider != null) {
 			ta = styleProvider.getTextAttributeForColor(namedStyle);
@@ -206,7 +206,7 @@ public class PHPSourceViewer extends Composite {
 		return ta;
 	}
 
-	protected void applyStyles() {
+	public void applyStyles() {
 		if (fText == null || fText.isDisposed() || fInput == null || fInput.length() == 0) {
 			return;
 		}
@@ -249,7 +249,7 @@ public class PHPSourceViewer extends Composite {
 		applyStyles();
 	}
 
-	protected void setupViewer() {
+	public void setupViewer() {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
