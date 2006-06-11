@@ -17,9 +17,9 @@ import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.ui.editor.templates.PhpTemplateContext;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 
 public class PhpTemplateClassResolver extends TemplateVariableResolver {
 

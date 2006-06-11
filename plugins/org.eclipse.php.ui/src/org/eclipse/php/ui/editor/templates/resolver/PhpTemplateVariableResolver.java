@@ -22,9 +22,9 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableTypeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
 import org.eclipse.php.ui.editor.templates.PhpTemplateContext;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 
 public class PhpTemplateVariableResolver extends TemplateVariableResolver {
 

@@ -12,7 +12,7 @@ import org.eclipse.php.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.core.preferences.PreferencesPropagator;
 import org.eclipse.php.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.core.preferences.PreferencesSupport;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 
 public class FormatPreferencesSupport {
 

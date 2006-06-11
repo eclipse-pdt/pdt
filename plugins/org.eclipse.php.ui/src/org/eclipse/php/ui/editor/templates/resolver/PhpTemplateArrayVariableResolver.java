@@ -20,15 +20,11 @@ import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.core.phpModel.parser.PHPCodeContext;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariableTypeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
-import org.eclipse.php.core.phpModel.phpElementData.PhpVariableTypeUtil;
+import org.eclipse.php.core.phpModel.phpElementData.*;
 import org.eclipse.php.ui.editor.templates.PhpTemplateContext;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 
 public class PhpTemplateArrayVariableResolver extends TemplateVariableResolver {
 
