@@ -1035,7 +1035,7 @@
 
 
 
-	<extension point="org.eclipse.ui.editorActions">
+	<!-- extension point="org.eclipse.ui.editorActions">
 		<editorContribution
 			id="org.eclipse.ui.texteditor.ruler.actions"
 			targetID="org.eclipse.php.editor">
@@ -1046,7 +1046,7 @@
 				id="org.eclipse.ui.texteditor.BookmarkRulerAction"
 				label="%DummyLabel" />
 		</editorContribution>
-	</extension>
+	</extension -->
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
 			id="org.eclipse.php.ui.PHPStructuredEditorPopupActions"
