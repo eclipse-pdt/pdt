@@ -44,7 +44,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -61,7 +60,6 @@ import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.explorer.ExplorerMessages;
 import org.eclipse.php.ui.explorer.IMultiElementTreeContentProvider;
 import org.eclipse.php.ui.explorer.PHPTreeViewer;
-import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.ui.util.DecoratingPHPLabelProvider;
 import org.eclipse.php.ui.util.EditorUtility;
@@ -87,7 +85,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-
 public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartListener {
 
 	private PHPTreeViewer fViewer;
@@ -95,22 +92,12 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	private PHPFunctionsLabelProvider fLabelProvider;
 
 	private Menu fContextMenu;
-	private boolean fLinkingEnabled;
 	private String fWorkingSetName;
-
-	private ISelection fLastOpenSelection;
-	private ISelectionChangedListener fPostSelectionListener;
 
 	private Action showFunctionHelpAction;
 	private FunctionsViewGroup actionGroup;
 
 	public PHPFunctionsPart() {
-		initLinkingEnabled();
-		fPostSelectionListener = new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				handlePostSelectionChanged(event);
-			}
-		};
 	}
 
 	public void createPartControl(Composite parent) {
@@ -121,14 +108,9 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		setUpPopupMenu();
 		actionGroup = new FunctionsViewGroup(this);
 
-		fViewer.addPostSelectionChangedListener(fPostSelectionListener);
+		//		fViewer.addPostSelectionChangedListener(fPostSelectionListener);
 		addDoubleClickListener();
 		addMouseTrackListener();
-		fViewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				fLastOpenSelection = event.getSelection();
-			}
-		});
 		getSite().getPage().addPartListener(this);
 
 		IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
@@ -139,12 +121,6 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		IEditorPart editorPart = getViewSite().getPage().getActiveEditor();
 		updateInputForCurrentEditor(editorPart);
 
-		if (isLinkingEnabled()) {
-			IEditorPart editor = getViewSite().getPage().getActiveEditor();
-			if (editor != null) {
-				editorActivated(editor);
-			}
-		}
 		fViewer.refresh();
 	}
 
@@ -232,16 +208,6 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		fViewer.getTree().setFocus();
 	}
 
-	private void handlePostSelectionChanged(SelectionChangedEvent event) {
-		ISelection selection = event.getSelection();
-		// If the selection is the same as the one that triggered the last
-		// open event then do nothing. The editor already got revealed.
-		if (isLinkingEnabled() && !selection.equals(fLastOpenSelection)) {
-			linkToEditor((IStructuredSelection) selection);
-		}
-		fLastOpenSelection = null;
-	}
-
 	private void linkToEditor(IStructuredSelection selection) {
 		// ignore selection changes if the package explorer is not the active part.
 		// In this case the selection change isn't triggered by a user.
@@ -279,8 +245,8 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	}
 
 	public PHPFunctionsContentProvider createContentProvider() {
-//		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
-//		boolean showCUChildren = store.getBoolean(PreferenceConstants.SHOW_CU_CHILDREN);
+		//		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
+		//		boolean showCUChildren = store.getBoolean(PreferenceConstants.SHOW_CU_CHILDREN);
 		return new PHPFunctionsContentProvider();
 	}
 
@@ -307,7 +273,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		}
 		super.dispose();
 	}
-	
+
 	public void partActivated(IWorkbenchPart part) {
 		if (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part instanceof PHPStructuredEditor) {
 			updateInputForCurrentEditor((IEditorPart) part);
@@ -351,26 +317,6 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 			return fViewer.getInput();
 		}
 		return null;
-	}
-
-	boolean isLinkingEnabled() {
-		return fLinkingEnabled;
-	}
-
-	private void initLinkingEnabled() {
-		fLinkingEnabled = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.LINK_EXPLORER_TO_EDITOR);
-	}
-
-	public void setLinkingEnabled(boolean enabled) {
-		fLinkingEnabled = enabled;
-		PreferenceConstants.getPreferenceStore().setValue(PreferenceConstants.LINK_EXPLORER_TO_EDITOR, enabled);
-
-		if (enabled) {
-			IEditorPart editor = getSite().getPage().getActiveEditor();
-			if (editor != null) {
-				editorActivated(editor);
-			}
-		}
 	}
 
 	String getFrameName(Object element) {
