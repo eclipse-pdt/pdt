@@ -70,6 +70,7 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		if (publish) {
 			if (!apacheServerBehaviour.publish(module, monitor)) {
 				// Return if the publish failed.
+				terminated();
 				return;
 			}
 		}
