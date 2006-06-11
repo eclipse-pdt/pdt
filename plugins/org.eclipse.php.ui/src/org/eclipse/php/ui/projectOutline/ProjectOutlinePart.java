@@ -59,7 +59,6 @@ import org.eclipse.php.internal.ui.util.TreePath;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.explorer.ExplorerMessages;
-import org.eclipse.php.ui.explorer.ExplorerPart;
 import org.eclipse.php.ui.explorer.IMultiElementTreeContentProvider;
 import org.eclipse.php.ui.explorer.PHPTreeViewer;
 import org.eclipse.php.ui.preferences.PreferenceConstants;

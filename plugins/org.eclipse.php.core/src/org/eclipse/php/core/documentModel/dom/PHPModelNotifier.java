@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.eclipse.php.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.core.documentModel.parser.regions.PHPRegionFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.xml.core.internal.Logger;

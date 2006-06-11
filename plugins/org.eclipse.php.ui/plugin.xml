@@ -228,7 +228,7 @@
 			class="org.eclipse.php.ui.outline.PHPContentOutlineConfiguration"
 			target="org.eclipse.php.core.phpsource" />
 		<propertySheetConfiguration
-			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
+			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.php.core.phpsource" />
 		<provisionalConfiguration
 			type="sourceeditingtexttools"
@@ -356,16 +356,6 @@
 				value="org.eclipse.php.core.PHPNature">
 			</filter>
 		</page>
-		<page
-			objectClass="com.zend.ide.classbrowser.PHPBrowserModel"
-			name="PHP Include Path"
-			class="org.eclipse.php.ui.preferences.includepath.IncludePathPropertyPage"
-			id="org.eclipse.php.ui.preferences.includepath.IncludePathPropertyPage">
-			<filter
-				name="nature"
-				value="org.eclipse.php.core.PHPNature">
-			</filter>
-		</page>
 	</extension>
 
 
@@ -383,7 +373,7 @@
 
 			<adapter type="org.eclipse.ui.IContributorResourceAdapter" />
 			<adapter
-				type="org.eclipse.ui.internal.ide.IContributorResourceAdapter2" />
+				type="org.eclipse.ui.ide.IContributorResourceAdapter2" />
 			<adapter type="org.eclipse.ui.IContainmentAdapter" />
 
 
@@ -400,7 +390,7 @@
 		</factory>
 
 		<factory
-			class="org.eclipse.jdt.internal.ui.ResourceAdapterFactory"
+			class="org.eclipse.core.internal.resources.mapping.ResourceAdapterFactory"
 			adaptableType="org.eclipse.core.resources.IResource">
 			<adapter
 				type="org.eclipse.php.core.phpModel.parser.PHPBrowserModel" />

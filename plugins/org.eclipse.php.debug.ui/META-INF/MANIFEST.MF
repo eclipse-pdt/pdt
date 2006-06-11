@@ -25,7 +25,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.server.ui,
  org.eclipse.php.ui,
  org.eclipse.php.server.apache.ui
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.debug.ui.actions,
  org.eclipse.php.debug.ui.breakpoint.adapter,

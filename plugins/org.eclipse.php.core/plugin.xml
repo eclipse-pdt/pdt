@@ -168,7 +168,7 @@
 
    <extension point="org.eclipse.core.runtime.adapters">
          <factory
-             class="org.eclipse.wst.php.core.project.deployables.PHPDeployableObjectAdapter"
+             class="org.eclipse.php.core.project.deployables.PHPDeployableObjectAdapter"
              adaptableType="org.eclipse.core.resources.IProject">
             <adapter type="org.eclipse.php.core.project.deployables.IPHPModuleArtifact"/>
         </factory>    

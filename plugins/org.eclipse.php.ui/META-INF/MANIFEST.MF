@@ -32,7 +32,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.search,
  org.eclipse.wst.common.modulecore,
  org.eclipse.ui.console
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Export-Package: org.eclipse.php.project.ui.wizards,
  org.eclipse.php.ui,
  org.eclipse.php.ui.containers,

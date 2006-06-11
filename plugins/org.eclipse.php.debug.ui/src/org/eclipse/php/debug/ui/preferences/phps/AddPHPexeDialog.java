@@ -24,13 +24,20 @@ import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.ui.util.StatusInfo;
-import org.eclipse.php.ui.wizards.fields.*;
+import org.eclipse.php.ui.wizards.fields.DialogField;
+import org.eclipse.php.ui.wizards.fields.IDialogFieldListener;
+import org.eclipse.php.ui.wizards.fields.IStringButtonAdapter;
+import org.eclipse.php.ui.wizards.fields.StringButtonDialogField;
+import org.eclipse.php.ui.wizards.fields.StringDialogField;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Shell;
 
 public class AddPHPexeDialog extends StatusDialog {
 
