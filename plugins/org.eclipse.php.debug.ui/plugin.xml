@@ -249,7 +249,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             name="%DebugPerspective.name"
-            icon="$nl$/icons/full/eview16/debug_persp.gif" 
+            icon="icon/full/obj16/debug_persp.gif" 
             class="org.eclipse.php.debug.ui.PHPDebugPerspectiveFactory"
             id="org.eclipse.php.debug.ui.PHPDebugPerspective">
       </perspective>
