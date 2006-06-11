@@ -67,9 +67,12 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		IModule module = moduleArtifact.getModule();
 
 		boolean publish = configuration.getAttribute(ApachePlugin.DEPLOYABLE, false);
-		if (publish)
-			apacheServerBehaviour.publish(module, monitor);
-
+		if (publish) {
+			if (!apacheServerBehaviour.publish(module, monitor)) {
+				// Return if the publish failed.
+				return;
+			}
+		}
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		IProject proj = module.getProject();
 		String project = proj.getFullPath().toString();
