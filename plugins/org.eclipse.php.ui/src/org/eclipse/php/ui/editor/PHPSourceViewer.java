@@ -43,16 +43,16 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
 public class PHPSourceViewer extends Composite {
 
-	protected Dictionary fContextStyleMap = null;
-	protected Color fDefaultBackground = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
-	protected Color fDefaultForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
-	protected String fInput = ""; //$NON-NLS-1$
+	private Dictionary fContextStyleMap = null;
+	private Color fDefaultBackground = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+	private Color fDefaultForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+	private String fInput = ""; //$NON-NLS-1$
 
 	private IStructuredDocumentRegion fNodes = null;
-	protected RegionParser fParser = null;
+	private RegionParser fParser = null;
 
-	protected StyledText fText = null;
-	protected PHPLineStyleProvider styleProvider;
+	private StyledText fText = null;
+	private PHPLineStyleProvider styleProvider;
 
 	public PHPSourceViewer(Composite parent, int style) {
 		super(parent, style);
