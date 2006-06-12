@@ -11,7 +11,6 @@
 package org.eclipse.php.ui.editor.adapter;
 
 import org.eclipse.php.core.documentModel.handler.PHPModelHandler;
-import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
@@ -39,15 +38,15 @@ public class PHPAdapterFactoryProvider implements AdapterFactoryProvider {
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
 
-// 		XMLPropertySourceAdapterFactory was removed in wtp 1.0
-//		factory = factoryRegistry.getFactoryFor(IPropertySource.class);
-//		if (factory == null) {
-//			factory = new XMLPropertySourceAdapterFactory();
-//			factoryRegistry.addFactory(factory);
-//		}
+		// 		XMLPropertySourceAdapterFactory was removed in wtp 1.0
+		//		factory = factoryRegistry.getFactoryFor(IPropertySource.class);
+		//		if (factory == null) {
+		//			factory = new XMLPropertySourceAdapterFactory();
+		//			factoryRegistry.addFactory(factory);
+		//		}
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		if (factory == null) {
-			factory = new JFaceNodeAdapterFactoryForHTML();
+			factory = new JFaceNodeAdapterFactoryForPHP();
 			factoryRegistry.addFactory(factory);
 		}
 	}
