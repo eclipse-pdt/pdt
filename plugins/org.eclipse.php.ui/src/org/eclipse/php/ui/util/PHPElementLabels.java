@@ -15,8 +15,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -520,7 +522,17 @@ public class PHPElementLabels {
 				
 			}
 		}
-		buf.append(cu.getName());
+		
+		// try to get the resource for the current PHPFileData.
+		// In case it exists, it means it is part of the project - so we want just the name.
+		// otherwise it is an include path and we need the full path
+		IPath path = new Path(cu.getName());
+		IFile resourceFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		if (resourceFile != null && resourceFile.exists()){
+			buf.append(cu.getComparableName());
+		} else {
+			buf.append(cu.getName());
+		}
 
 		if (getFlag(flags, CU_POST_QUALIFIED)) {
 			IFile file = (IFile) PHPModelUtil.getResource(cu);
