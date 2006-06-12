@@ -31,12 +31,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentDescription;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
-import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
+import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.php.core.project.build.PhpIncrementalProjectBuilder;
@@ -363,7 +361,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public void addFileToModel(IFile file) {
-		if (!this.isPhpFile(file)) {
+		if (!PHPModelUtil.isPhpFile(file)) {
 			return;
 		}
 
@@ -453,45 +451,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			IWorkspaceModelListener listener = (IWorkspaceModelListener) iter.next();
 			listener.projectModelChanged(project);
 		}
-	}
-
-	private boolean isPhpFile(IFile file) {
-		IContentDescription contentDescription;
-		try {
-			contentDescription = file.getContentDescription();
-		} catch (CoreException e) {
-			PHPCorePlugin.log(e);
-			return false;
-		}
-		if (contentDescription == null) {
-			if (hasPhpExtention(file)) {
-				PHPCorePlugin.logErrorMessage("content description null!");
-			}
-			return false;
-		}
-
-		if (!ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription.getContentType().getId())) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private boolean hasPhpExtention(IFile file) {
-		IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-		String[] validExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-		String fileName = file.getName();
-		int index = fileName.lastIndexOf('.');
-		if (index == -1) {
-			return false;
-		}
-		String ext = fileName.substring(index + 1);
-		for (int i = 0; i < validExtensions.length; i++) {
-			if (ext.equals(validExtensions[i])) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 }
