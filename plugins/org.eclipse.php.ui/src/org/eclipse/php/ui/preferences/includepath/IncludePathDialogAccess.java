@@ -288,9 +288,7 @@ public final class IncludePathDialogAccess {
 		
 		PHPUiPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTINCLUDEFOLDER, dialog.getFilterPath());
 		
-		IPath filterPath = Path.fromOSString(dialog.getFilterPath());
-		return new IPath[]{filterPath.makeAbsolute()};
-		
+		return new IPath[]{new Path(res).makeAbsolute()};
 	}
 
 	/**
