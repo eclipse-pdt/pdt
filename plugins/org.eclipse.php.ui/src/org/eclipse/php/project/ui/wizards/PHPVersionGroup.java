@@ -17,7 +17,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.php.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.preferences.PHPVersionPreferencePage;
+import org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage;
 import org.eclipse.php.ui.preferences.IStatusChangeListener;
 import org.eclipse.php.ui.preferences.ui.PHPVersionConfigurationBlock;
 import org.eclipse.swt.SWT;
@@ -97,7 +97,7 @@ public class PHPVersionGroup implements SelectionListener {
 	}
 
 	public void widgetDefaultSelected(SelectionEvent e) {
-		String prefID = PHPVersionPreferencePage.PREF_ID;
+		String prefID = PHPInterpreterPreferencePage.PREF_ID;
 		Map data = null;
 		PreferencesUtil.createPreferenceDialogOn(fPage.getShell(), prefID, new String[] { prefID }, data).open();
 		if (!fEnableProjectSettings.getSelection()) {

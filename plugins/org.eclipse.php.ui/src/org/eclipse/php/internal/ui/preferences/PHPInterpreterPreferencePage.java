@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -21,18 +20,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public class PHPVersionPreferencePage  extends PropertyAndPreferencePage {
+public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 
 	public static final String PREF_ID = "org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"; //$NON-NLS-1$
-	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPVersionPreferencePage"; //$NON-NLS-1$
+	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"; //$NON-NLS-1$
 
 	private PHPVersionConfigurationBlock fConfigurationBlock;
 
-	public PHPVersionPreferencePage() {
+	public PHPInterpreterPreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 
 		// only used when page is shown programatically
-		setTitle(PHPUIMessages.PHPVersionPreferencePage_title);
+		setTitle(PHPUIMessages.PHPInterpreterPreferencePage_title);
 	}
 
 	/*
@@ -45,11 +44,11 @@ public class PHPVersionPreferencePage  extends PropertyAndPreferencePage {
 		super.createControl(parent);
 
 		// TODO - Set the Help context ID
-//		if (isProjectPreferencePage()) {
-//			PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHPVERSION_PROPERTY_PAGE);
-//		} else {
-//			PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHPVERSION_PREFERENCE_PAGE);
-//		}
+		//		if (isProjectPreferencePage()) {
+		//			PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHPVERSION_PROPERTY_PAGE);
+		//		} else {
+		//			PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHPVERSION_PREFERENCE_PAGE);
+		//		}
 	}
 
 	/* (non-Javadoc)

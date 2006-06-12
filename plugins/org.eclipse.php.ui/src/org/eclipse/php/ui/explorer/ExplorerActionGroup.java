@@ -29,32 +29,19 @@ import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.ui.actions.BuildActionGroup;
-import org.eclipse.php.internal.ui.actions.CCPActionGroup;
-import org.eclipse.php.internal.ui.actions.ImportActionGroup;
-import org.eclipse.php.internal.ui.actions.NavigateActionGroup;
-import org.eclipse.php.internal.ui.actions.NewWizardsActionGroup;
-import org.eclipse.php.internal.ui.actions.ProjectActionGroup;
-import org.eclipse.php.internal.ui.actions.RefactorActionGroup;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.ui.IContextMenuConstants;
 import org.eclipse.php.ui.actions.CompositeActionGroup;
 import org.eclipse.php.ui.actions.CustomFiltersActionGroup;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.workingset.ExplorerViewActionGroup;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.IWorkingSetManager;
+import org.eclipse.ui.*;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.actions.OpenInNewWindowAction;
-import org.eclipse.ui.views.framelist.Frame;
-import org.eclipse.ui.views.framelist.FrameList;
-import org.eclipse.ui.views.framelist.GoIntoAction;
-import org.eclipse.ui.views.framelist.TreeFrame;
-
+import org.eclipse.ui.views.framelist.*;
 
 public class ExplorerActionGroup extends CompositeActionGroup {
 
@@ -62,6 +49,9 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 
 	private CollapseAllAction fCollapseAllAction;
 	private GoIntoAction fZoomInAction;
+	private BackAction fBackAction;
+	private ForwardAction fForwardAction;
+	private UpAction fUpAction;
 	private FrameList fFrameList;
 
 	private ToggleLinkingAction fToggleLinkingAction;
@@ -92,6 +82,10 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 		frameSource.connectTo(fFrameList);
 
 		fZoomInAction = new GoIntoAction(fFrameList);
+		fBackAction = new BackAction(fFrameList);
+		fForwardAction = new ForwardAction(fFrameList);
+		fUpAction = new UpAction(fFrameList);
+
 		fCollapseAllAction = new CollapseAllAction(fPart);
 		fToggleLinkingAction = new ToggleLinkingAction(fPart);
 	}
@@ -131,11 +125,18 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 	private void setGlobalActionHandlers(IActionBars actionBars) {
 
 		actionBars.setGlobalActionHandler(IWorkbenchActionConstants.GO_INTO, fZoomInAction);
+		actionBars.setGlobalActionHandler(ActionFactory.BACK.getId(), fBackAction);
+		actionBars.setGlobalActionHandler(ActionFactory.FORWARD.getId(), fForwardAction);
+		actionBars.setGlobalActionHandler(IWorkbenchActionConstants.UP, fUpAction);
 		fRefactorActionGroup.retargetFileMenuActions(actionBars);
 	}
 
 	void fillToolBar(IToolBarManager toolBar) {
+		toolBar.add(fBackAction);
+		toolBar.add(fForwardAction);
+		toolBar.add(fUpAction);
 
+		toolBar.add(new Separator());
 		toolBar.add(fCollapseAllAction);
 		toolBar.add(fToggleLinkingAction);
 
@@ -155,7 +156,7 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 		int size = selection.size();
 		Object element = selection.getFirstElement();
 
-//		dont support "go into"  addGotoMenu(menu, element, size);
+		//		dont support "go into"  addGotoMenu(menu, element, size);
 		addOpenNewWindowAction(menu, element);
 
 		super.fillContextMenu(menu);
@@ -208,10 +209,28 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 		if (event.stateMask != 0)
 			return;
 
+		if (event.keyCode == SWT.BS) {
+			if (fUpAction != null && fUpAction.isEnabled()) {
+				fUpAction.run();
+				event.doit = false;
+			}
+		}
 	}
 
 	private boolean doubleClickGoesInto() {
 		return PreferenceConstants.DOUBLE_CLICK_GOES_INTO.equals(PreferenceConstants.getPreferenceStore().getString(PreferenceConstants.DOUBLE_CLICK));
+	}
+
+	public FrameAction getUpAction() {
+		return fUpAction;
+	}
+
+	public FrameAction getBackAction() {
+		return fBackAction;
+	}
+
+	public FrameAction getForwardAction() {
+		return fForwardAction;
 	}
 
 	public ExplorerViewActionGroup getWorkingSetActionGroup() {

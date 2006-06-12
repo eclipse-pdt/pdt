@@ -307,9 +307,9 @@
 
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
-        class="org.eclipse.php.internal.ui.preferences.PHPVersionPreferencePage"
-        id="org.eclipse.php.ui.propertyPages.PHPVersionPreferencePage"
-			name="PHP Options"
+        class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
+        id="org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"
+			name="%phpInterpreterPreferenceName"
         objectClass="org.eclipse.core.resources.IProject">
 			<filter
 				name="nature"
@@ -772,7 +772,7 @@
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-        class="org.eclipse.php.internal.ui.preferences.PHPVersionPreferencePage"
+        class="org.eclipse.php.internal.ui.preferences.PHPBasePreferencePage"
 			id="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
         name="%phpPageName">
 			<keywordReference id="org.eclipse.php.ui.general" />
@@ -790,6 +790,13 @@
 			id="org.eclipse.php.ui.preferences.ui.PHPTemplatesPreferencePage"
 			name="%templatesPreferencePageName">
 			<keywordReference id="org.eclipse.php.ui.templates" />
+		</page>
+		<page
+			category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
+			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
+			id="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
+			name="%phpInterpreterPreferenceName">
+			<keywordReference id="org.eclipse.php.ui.phpInterpreter" />
 		</page>
 		<page
 			category="org.eclipse.php.ui.preferences.ui.PHPEditorPreferencePage"

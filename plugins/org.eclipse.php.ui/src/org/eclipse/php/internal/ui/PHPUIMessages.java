@@ -334,8 +334,8 @@ public final class PHPUIMessages extends NLS {
 		
 	public static String Preferences_php_editor_useAspTagsAsPhp_label;
 
-	public static String PHPVersionPreferencePage_description;
-	public static String PHPVersionPreferencePage_title;
+	public static String PHPInterpreterPreferencePage_description;
+	public static String PHPInterpreterPreferencePage_title;
 	public static String PHPVersionComboName;
 	public static String PHPVersionConfigurationBlock_needsbuild_title;
 	public static String PHPVersionConfigurationBlock_needsfullbuild_message;
@@ -359,6 +359,11 @@ public final class PHPUIMessages extends NLS {
 	public static String NewPHPManualSiteDialog_updateTitle;
 	public static String NewPHPManualSiteDialog_newTitle;
 	public static String NewPHPManualSiteDialog_chooseDir;
+	
+	public static String PHPBasePreferencePage_description;
+	public static String PHPBasePreferencePage_doubleclick_action;
+	public static String PHPBasePreferencePage_doubleclick_gointo;
+	public static String PHPBasePreferencePage_doubleclick_expand;
 	
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PHPUIMessages.class);
