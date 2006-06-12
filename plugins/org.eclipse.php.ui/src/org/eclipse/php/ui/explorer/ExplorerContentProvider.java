@@ -198,10 +198,9 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 			} else {
 				Object addItem=resource;
 				// if adding file, convert to php element
-				IFile file = (IFile) resource;
-				if (resource instanceof IFile && PHPModelUtil.isPhpFile(file))
+				if (resource instanceof IFile && PHPModelUtil.isPhpFile((IFile) resource))
 				{
-					PHPFileData fileData=PHPWorkspaceModelManager.getInstance().getModelForFile(file,true);
+					PHPFileData fileData=PHPWorkspaceModelManager.getInstance().getModelForFile((IFile) resource,true);
 					if (fileData!=null)
 						addItem=fileData;
 				}
