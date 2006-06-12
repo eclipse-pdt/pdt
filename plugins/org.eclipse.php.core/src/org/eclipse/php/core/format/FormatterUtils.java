@@ -13,49 +13,22 @@ package org.eclipse.php.core.format;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.core.documentModel.parser.PhpLexer;
-import org.eclipse.php.core.documentModel.parser.regions.PHPContentRegion;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class FormatterUtils {
+	private static PHPStructuredTextPartitioner partitioner = new PHPStructuredTextPartitioner();
+
+	public static String getPartitionType(IStructuredDocument document, int offset, boolean perferOpenPartitions) {
+		partitioner.connect(document);
+		return partitioner.getContentType(offset, perferOpenPartitions);
+	}
 
 	public static String getPartitionType(IStructuredDocument document, int offset) {
-		final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
-		final ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		if (tRegion == null) {
-			return null;
-		}
-		String result = null;
-
-		final String type = tRegion.getType();
-		if (tRegion instanceof PHPContentRegion) {
-			if (PhpLexer.isPHPMultiLineCommentState(type)) {
-				result = PHPPartitionTypes.PHP_MULTI_LINE_COMMENT; 
-			} else if (PhpLexer.isPHPLineCommentState(type)) {
-				result = PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT ; 
-			} else if (PhpLexer.isPHPDocState(type)) {
-				result = PHPPartitionTypes.PHP_DOC; 
-			} else if (PhpLexer.isPHPQuotesState(type)) {
-				result = checkBounds(sdRegion, tRegion, offset, PHPPartitionTypes.PHP_QUOTED_STRING);
-			} else if (PHPRegionTypes.TASK == type) {
-				// return the previous region type
-				if (sdRegion.getPrevious() == null) {
-					return null;
-				}
-				result = getPartitionType(document, sdRegion.getStartOffset() + tRegion.getStart() - 1);
-			} else {
-				result = PHPPartitionTypes.PHP_DEFAULT;
-			}
-		} else if (type == PHPRegionTypes.PHP_OPENTAG) {
-			result = offset >= sdRegion.getStartOffset() + tRegion.getTextEnd() ? PHPPartitionTypes.PHP_DEFAULT : PHPRegionTypes.PHP_OPENTAG;  
-		} else if (type == PHPRegionTypes.PHP_CLOSETAG) {
-			result = offset == sdRegion.getStartOffset() + tRegion.getStart() ? PHPPartitionTypes.PHP_DEFAULT :  PHPRegionTypes.PHP_CLOSETAG;
-		}
-		return result;
+		return getPartitionType(document, offset, false);
 	}
 
 	/**
@@ -105,7 +78,7 @@ public class FormatterUtils {
 		}
 		return helpBuffer.toString();
 	}
-	
+
 	/**
 	 * Returns the previous php structured document.
 	 * Special cases : 
@@ -118,12 +91,12 @@ public class FormatterUtils {
 
 		// get last region
 		currentStructuredDocumentRegion = currentStructuredDocumentRegion.getPrevious();
-			
+
 		// search for last php block (then returns the last region)
 		while (currentStructuredDocumentRegion != null && currentStructuredDocumentRegion.getType() != PHPRegionContext.PHP_CONTENT) {
 			currentStructuredDocumentRegion = currentStructuredDocumentRegion.getPrevious();
 		}
-		
+
 		return currentStructuredDocumentRegion;
 	}
 }

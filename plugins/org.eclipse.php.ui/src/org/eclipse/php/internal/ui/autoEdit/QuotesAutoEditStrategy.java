@@ -58,8 +58,8 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		int endOffset = startOffset + command.length;
 
 		try {
-			String startState = FormatterUtils.getPartitionType(document, startOffset);
-			String endState = FormatterUtils.getPartitionType(document, endOffset);
+			String startState = FormatterUtils.getPartitionType(document, startOffset, true);
+			String endState = FormatterUtils.getPartitionType(document, endOffset, true);
 			if (startState == PHPPartitionTypes.PHP_QUOTED_STRING || endState == PHPPartitionTypes.PHP_QUOTED_STRING) {
 				if (endOffset < document.getLength() && startOffset == endOffset) {
 					char nextChar = document.getChar(endOffset);
@@ -109,7 +109,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 
 	public int isMatchingCharNeeded(IStructuredDocument document, int offset, char quoteChar) {
 		try {
-			String postCharState = FormatterUtils.getPartitionType(document, offset);
+			String postCharState = FormatterUtils.getPartitionType(document, offset, true);
 			if (!(postCharState == PHPPartitionTypes.PHP_DEFAULT || postCharState == PHPRegionTypes.PHP_OPENTAG || postCharState == PHPRegionTypes.PHP_CLOSETAG)) {
 				if (isSpecialOpenCurlyInQuotes(document, offset)) {
 					postCharState = FormatterUtils.getPartitionType(document, offset + 1);
