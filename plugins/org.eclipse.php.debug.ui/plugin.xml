@@ -374,5 +374,11 @@
           preferencesPageId="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
           type="Project Specific"/>
  </extension>
+ <extension
+       point="org.eclipse.ui.themes">
+    <themeElementCategory
+          id="org.eclipse.php.debug.ui.themePHPDebug"
+          label="PHP Debug"/>
+ </extension>
    
 </plugin>

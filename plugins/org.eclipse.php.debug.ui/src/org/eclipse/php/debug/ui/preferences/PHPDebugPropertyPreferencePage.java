@@ -16,7 +16,7 @@ import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.ui.preferences.ui.ScrolledCompositeImpl;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -40,7 +40,7 @@ public class PHPDebugPropertyPreferencePage extends PropertyPreferencePage {
 	protected Control createWorkspaceContents(Composite composite) {
 		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
-		group.setLayout(new FillLayout(SWT.VERTICAL));
+		group.setLayout(new GridLayout());
 		try {
 			workspaceAddons = PHPDebugPreferencesAddonRegistry.getDebugPreferencesWorkspaceAddon(PAGE_ID);
 			for (int i = 0; i < workspaceAddons.length; i++) {
@@ -57,7 +57,7 @@ public class PHPDebugPropertyPreferencePage extends PropertyPreferencePage {
 	protected Control createProjectContents(Composite composite) {
 		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
-		group.setLayout(new FillLayout(SWT.VERTICAL));
+		group.setLayout(new GridLayout());
 		try {
 			projectScopeAddons = PHPDebugPreferencesAddonRegistry.getDebugPreferencesProjectAddon(PAGE_ID);
 			for (int i = 0; i < projectScopeAddons.length; i++) {

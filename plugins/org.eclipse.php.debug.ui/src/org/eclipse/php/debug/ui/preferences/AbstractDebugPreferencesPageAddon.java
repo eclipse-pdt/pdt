@@ -39,6 +39,7 @@ public abstract class AbstractDebugPreferencesPageAddon implements IPHPDebugPref
 		composite = new Composite(composite, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		return composite;
 	}
 

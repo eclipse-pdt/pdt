@@ -1230,5 +1230,11 @@
             id="org.eclipse.php.ui.PHP"
             name="PHP"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.themes">
+      <themeElementCategory
+            id="org.eclipse.php.ui.themePHP"
+            label="PHP"/>
+   </extension>
    
 </plugin>
