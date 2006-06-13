@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.php.server.ui">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.php.server.ui" id="serverWizardFragment" name="Server Wizard Fragment"/>
+      </appInfo>
+      <documentation>
+         The wizard fragments extention enables additions for the new server wizard and the edit server dialog when defining a server for PHP debug sessions.
+The extention accepts a factory class that can create a WizardFragment or a ServerRuntimeComposite when needed.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="wizardFragment"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="wizardFragment">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  An implementation of org.eclipse.php.server.ui.ICompositeFragmentFactory
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.server.ui.ICompositeFragmentFactory"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="serverTypeId" type="string">
+            <annotation>
+               <documentation>
+                  The server id.
+Although it is defined as optional field, when the visibility is set to &apos;By serverTypeId&apos; this field must be set to a valid value.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  The name of this fragment factory.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="visible" use="required">
+            <annotation>
+               <documentation>
+                  The visibility of this fragment. 
+When it is defined as &apos;Always&apos;, the fragment will appear in all the server types wizards and editors. In order to restrict the fragment to a specific server, switch the visibility to &apos;By serverTypeId&apos; and set the server id in the serverTypeId field.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Always">
+                  </enumeration>
+                  <enumeration value="By serverTypeId">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         0.1.3
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>
