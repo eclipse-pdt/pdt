@@ -173,7 +173,7 @@ public class PhpSourceParser extends XMLSourceParser {
 			// the following contexts neither open nor close
 			// StructuredDocumentRegions; just add to them
 			else if ((type == DOMRegionContext.XML_TAG_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == DOMRegionContext.XML_COMMENT_TEXT)
-				|| (type == DOMRegionContext.XML_PI_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) ||(currentNode != null && type != PHPRegionTypes.WHITESPACE && type != PHPRegionContext.PHP_CLOSE && type != PHPRegionTypes.PHP_SEMICOLON && region instanceof PHPContentRegion)) {
+				|| (type == DOMRegionContext.XML_PI_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) ||(currentNode != null && type != PHPRegionContext.PHP_CLOSE && type != PHPRegionTypes.PHP_SEMICOLON && region instanceof PHPContentRegion)) {
 				currentNode.addRegion(region);
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
@@ -192,7 +192,7 @@ public class PhpSourceParser extends XMLSourceParser {
 				// region.setParent(currentNode);
 			}
 			// this is extremely rare, but valid
-			else if (type == DOMRegionContext.WHITE_SPACE || type == PHPRegionTypes.WHITESPACE) {
+			else if (type == DOMRegionContext.WHITE_SPACE) {
 				ITextRegion lastRegion = currentNode.getLastRegion();
 				// pack the embedded container with this region
 				if (lastRegion instanceof ITextRegionContainer) {

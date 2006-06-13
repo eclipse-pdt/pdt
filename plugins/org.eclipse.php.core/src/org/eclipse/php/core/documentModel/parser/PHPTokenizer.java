@@ -835,10 +835,6 @@ public void setSourceParser(PhpSourceParser source) {
 				continue;
 			}
 			checkForTodo(commentType, commentStart, commentLegth, source.getText(commentStart, commentLegth));
-			if (context == PHPRegionTypes.WHITESPACE) {
-				((ITextRegion) storedPhpTokens.get(storedPhpTokens.size() - 1)).adjustLength(phpLexer.yylength());
-				return;
-			}
 			if (context.startsWith("PHPDOC") && context != PHPRegionTypes.PHPDOC_COMMENT_END) { //if its phpdoc tags
 				ITextRegion tRegion = new PHPContentRegion(phpLexer.getTokenStart(), phpLexer.yylength(), phpLexer.yylength(), context);
 				storedPhpTokens.add(tRegion);
