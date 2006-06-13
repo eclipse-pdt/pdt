@@ -267,7 +267,10 @@
 				id="org.eclipse.php.core.phpsource">
 				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT" />
 				<partitionType id="org.eclipse.php.PHP_DEFAULT" />
-				<partitionType id="org.eclipse.php.PHP_QUOTED_STRING" />				
+				<partitionType id="org.eclipse.php.PHP_QUOTED_STRING" />
+				<partitionType id="org.eclipse.php.PHP_MULTI_LINE_COMMENT" />
+				<partitionType id="org.eclipse.php.PHP_SINGLE_LINE_COMMENT" />
+				<partitionType id="org.eclipse.php.PHP_DOC" />		
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
