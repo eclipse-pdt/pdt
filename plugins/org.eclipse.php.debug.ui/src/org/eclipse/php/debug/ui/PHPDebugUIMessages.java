@@ -21,6 +21,8 @@ public class PHPDebugUIMessages extends NLS {
 
     public static String EnableSetCondition_1;
     public static String EnterCondition_1;
+
+	public static String InstalledPHPsBlock_16;
     public static String SetCondition_1;
     public static String ErrorCreatingBreakpoint_1;
     public static String BreakpointCreated_1;

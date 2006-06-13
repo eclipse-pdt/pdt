@@ -656,7 +656,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 			iter = locations.iterator();
 			while (iter.hasNext()) {
 				File location = (File) iter.next();
-				String name = location.getParentFile().getName();
+				String name = PHPDebugUIMessages.InstalledPHPsBlock_16;
 				String nameCopy = new String(name);
 				int i = 1;
 				while (isDuplicateName(nameCopy)) {
