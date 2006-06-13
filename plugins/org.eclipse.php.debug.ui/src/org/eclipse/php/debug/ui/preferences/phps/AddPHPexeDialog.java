@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.internal.ui.PixelConverter;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
@@ -24,20 +25,12 @@ import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.ui.util.StatusInfo;
-import org.eclipse.php.ui.wizards.fields.DialogField;
-import org.eclipse.php.ui.wizards.fields.IDialogFieldListener;
-import org.eclipse.php.ui.wizards.fields.IStringButtonAdapter;
-import org.eclipse.php.ui.wizards.fields.StringButtonDialogField;
-import org.eclipse.php.ui.wizards.fields.StringDialogField;
+import org.eclipse.php.ui.wizards.fields.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 
 public class AddPHPexeDialog extends StatusDialog {
 
@@ -115,13 +108,16 @@ public class AddPHPexeDialog extends StatusDialog {
 	}
 
 	protected Control createDialogArea(Composite ancestor) {
+		
+		PixelConverter pixelConverter = new PixelConverter(ancestor);
+		
 		createDialogFields();
 		Composite parent = (Composite) super.createDialogArea(ancestor);
 		((GridLayout) parent.getLayout()).numColumns = 3;
 
 		fPHPexeName.doFillIntoGrid(parent, 3);
 		fPHPRoot.doFillIntoGrid(parent, 3);
-		((GridData)fPHPRoot.getTextControl(parent).getLayoutData()).grabExcessHorizontalSpace = true;
+		((GridData)fPHPRoot.getTextControl(parent).getLayoutData()).widthHint = pixelConverter.convertWidthInCharsToPixels(50);
 
 		initializeFields();
 		createFieldListeners();
