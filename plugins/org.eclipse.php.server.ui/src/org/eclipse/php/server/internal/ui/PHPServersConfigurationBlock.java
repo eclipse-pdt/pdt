@@ -147,7 +147,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		Server theServer = null;
-		FragmentedWizard wizard = new FragmentedWizard(null, null);
+		ServerWizard wizard = new ServerWizard();
 		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 		if (dialog.open() == Window.CANCEL) {
 			monitor.setCanceled(true);
