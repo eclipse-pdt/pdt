@@ -10,8 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor;
 
-import java.util.Arrays;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -21,39 +20,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.link.contentassist.HTMLTextPresenter;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextOperationTarget;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.ITextViewerExtension4;
-import org.eclipse.jface.text.ITextViewerExtension5;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHoverExtension;
-import org.eclipse.jface.text.source.ILineRange;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.ISourceViewerExtension3;
-import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -68,15 +42,7 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.ui.actions.ActionMessages;
-import org.eclipse.php.internal.ui.actions.AddBlockCommentAction;
-import org.eclipse.php.internal.ui.actions.BlockCommentAction;
-import org.eclipse.php.internal.ui.actions.FoldingActionGroup;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
-import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
-import org.eclipse.php.internal.ui.actions.RemoveBlockCommentAction;
-import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.containers.StorageEditorInput;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorators;
@@ -89,10 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.ui.texteditor.ResourceAction;
-import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -114,6 +77,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	private FoldingActionGroup foldingGroup;
 	IHoverMessageDecorators messageDecorator;
+	
+	/** Cursor dependent actions. */
+	private List fCursorActions= new ArrayList(5);
 
 	public PHPStructuredEditor() {
 		initFolding();
@@ -329,20 +295,18 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		Action action = new ToggleCommentAction(resourceBundle, "ToggleCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.toggle.comment"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.ToggleCommentAction", action); //$NON-NLS-1$
-		markAsStateDependentAction("org.eclipse.php.ui.actions.ToggleCommentAction", true); //$NON-NLS-1$
 		((ToggleCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new AddBlockCommentAction(resourceBundle, "AddBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.add.block.comment"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.AddBlockComment", action); //$NON-NLS-1$
-		markAsStateDependentAction("org.eclipse.php.ui.actions.AddBlockComment", true); //$NON-NLS-1$
 		markAsSelectionDependentAction("org.eclipse.php.ui.actions.AddBlockComment", true); //$NON-NLS-1$
 		((BlockCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new RemoveBlockCommentAction(resourceBundle, "RemoveBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.remove.block.comment"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.RemoveBlockComment", action); //$NON-NLS-1$
-		markAsStateDependentAction("org.eclipse.php.ui.actions.RemoveBlockComment", true); //$NON-NLS-1$
+		markAsCursorDependentAction("org.eclipse.php.ui.actions.RemoveBlockComment", true); //$NON-NLS-1$
 		((BlockCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new TextOperationAction(resourceBundle, "CommentAction_", this, ITextOperationTarget.PREFIX); //$NON-NLS-1$
@@ -358,12 +322,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		action = new OpenFunctionsManualAction(resourceBundle, this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.OpenFunctionsManualAction"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction", action); //$NON-NLS-1$
-		markAsStateDependentAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction", true); //$NON-NLS-1$
+		markAsCursorDependentAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction", true); //$NON-NLS-1$
 
 		action = new OpenDeclarationAction(resourceBundle, this);
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.open.editor"); //$NON-NLS-1$
 		setAction("org.eclipse.php.ui.actions.Open", action); //$NON-NLS-1$
-		markAsStateDependentAction("org.eclipse.php.ui.actions.Open", true); //$NON-NLS-1$
+		markAsCursorDependentAction("org.eclipse.php.ui.actions.Open", true); //$NON-NLS-1$
 
 		ResourceAction resAction = new TextOperationAction(ActionMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true);
 		resAction = new InformationDispatchAction(ActionMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
@@ -687,5 +651,54 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			} else
 				sourceViewer.setTextHover(configuration.getTextHover(sourceViewer, t), t);
 		}
+	}
+	
+	/**
+	 * Updates the specified action by calling <code>IUpdate.update</code>
+	 * if applicable.
+	 *
+	 * @param actionId the action id
+	 */
+	private void updateAction(String actionId) {
+		Assert.isNotNull(actionId);
+		IAction action= getAction(actionId);
+		if (action instanceof IUpdate) {
+			((IUpdate) action).update();
+		}
+	}
+	
+	/**
+	 * Updates all cursor position dependent actions.
+	 */
+	protected void updateCursorDependentActions() {
+		if (fCursorActions != null) {
+			Iterator e= fCursorActions.iterator();
+			while (e.hasNext())
+				updateAction((String) e.next());
+		}
+	}
+	
+	/**
+	 * Marks or unmarks the given action to be updated on text cursor position changes.
+	 *
+	 * @param actionId the action id
+	 * @param mark <code>true</code> if the action is cursor position dependent
+	 */
+	public void markAsCursorDependentAction(String actionId, boolean mark) {
+		Assert.isNotNull(actionId);
+		if (mark) {
+			if (!fCursorActions.contains(actionId))
+				fCursorActions.add(actionId);
+		} else {
+			fCursorActions.remove(actionId);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.StructuredTextEditor#handleCursorPositionChanged()
+	 */
+	protected void handleCursorPositionChanged() {
+		updateCursorDependentActions();
+		super.handleCursorPositionChanged();
 	}
 }

@@ -14,11 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.BadPartitioningException;
-import org.eclipse.jface.text.IDocumentExtension3;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.*;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.ui.editor.contentassist.PHPTextSequenceUtilities;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -78,10 +74,16 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 		executeEdits(edits);
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.actions.AddBlockCommentAction#validSelection(org.eclipse.jface.text.ITextSelection)
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.ui.actions.BlockCommentAction#isValidSelection(org.eclipse.jface.text.ITextSelection, org.eclipse.jface.text.IDocumentExtension3)
 	 */
-	protected boolean isValidSelection(ITextSelection selection) {
-		return selection != null && !selection.isEmpty();
+	protected boolean isValidSelection(ITextSelection selection, IDocumentExtension3 docExtension) {
+		int offset = selection.getOffset();
+		try {
+			ITypedRegion partition = docExtension.getPartition(fDocumentPartitioning, offset, false);
+			return (partition.getType() == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT);
+		} catch (Exception e) {
+		}
+		return true;
 	}
 }

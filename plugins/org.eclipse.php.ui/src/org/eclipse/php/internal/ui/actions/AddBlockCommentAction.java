@@ -197,10 +197,16 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	    return partType == PHPPartitionTypes.PHP_QUOTED_STRING || partType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT;
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.actions.BlockCommentAction#validSelection(org.eclipse.jface.text.ITextSelection)
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.ui.actions.BlockCommentAction#isValidSelection(org.eclipse.jface.text.ITextSelection, org.eclipse.jface.text.IDocumentExtension3)
 	 */
-	protected boolean isValidSelection(ITextSelection selection) {
-		return selection != null && !selection.isEmpty() && selection.getLength() > 0;
+	protected boolean isValidSelection(ITextSelection selection, IDocumentExtension3 docExtension) {
+		int offset = selection.getOffset();
+		try {
+			ITypedRegion partition = docExtension.getPartition(fDocumentPartitioning, offset, false);
+			return (partition.getType() != PHPPartitionTypes.PHP_MULTI_LINE_COMMENT);
+		} catch (Exception e) {
+		}
+		return true;
 	}
 }

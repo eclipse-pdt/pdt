@@ -179,13 +179,6 @@ public abstract class BlockCommentAction extends TextEditorAction {
 		ITextEditor editor= getTextEditor();
 		if (editor == null || !ensureEditable(editor))
 			return;
-			
-		ITextSelection selection= getCurrentSelection();
-		if (!isValidSelection(selection))
-			return;
-		
-		if (!validateEditorInputState())
-			return;
 		
 		IDocumentProvider docProvider= editor.getDocumentProvider();
 		IEditorInput input= editor.getEditorInput();
@@ -200,6 +193,13 @@ public abstract class BlockCommentAction extends TextEditorAction {
 		if (document instanceof IDocumentExtension3)
 			docExtension= (IDocumentExtension3) document;
 		else
+			return;
+			
+		ITextSelection selection= getCurrentSelection();
+		if (!isValidSelection(selection, docExtension))
+			return;
+		
+		if (!validateEditorInputState())
 			return;
 		
 		IRewriteTarget target= (IRewriteTarget)editor.getAdapter(IRewriteTarget.class);
@@ -266,8 +266,29 @@ public abstract class BlockCommentAction extends TextEditorAction {
 		super.update();
 		
 		if (isEnabled()) {
-			if (!canModifyEditor() || !isValidSelection(getCurrentSelection()))
+			if (!canModifyEditor()) {
 				setEnabled(false);
+				return;
+			}
+			ITextEditor editor= getTextEditor();
+			if (editor != null) {
+				IDocumentProvider docProvider= editor.getDocumentProvider();
+				IEditorInput input= editor.getEditorInput();
+				if (docProvider != null && input != null) {
+					IDocument document= docProvider.getDocument(input);
+					if (document != null) {
+						ITextSelection selection = getCurrentSelection();
+						if (selection != null && !selection.isEmpty()) {
+							if (document instanceof IDocumentExtension3) {
+								IDocumentExtension3 docExtension = (IDocumentExtension3) document;
+								if (!isValidSelection(selection, docExtension)) {
+									setEnabled(false);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -305,9 +326,10 @@ public abstract class BlockCommentAction extends TextEditorAction {
 	 * Checks whether <code>selection</code> is valid.
 	 * 
 	 * @param selection the selection to check
+	 * @param docExtension the document extension where we get the partitioning from
 	 * @return <code>true</code> if the selection is valid, <code>false</code> otherwise
 	 */
-	protected abstract boolean isValidSelection(ITextSelection selection);
+	protected abstract boolean isValidSelection(ITextSelection selection, IDocumentExtension3 docExtension);
 
 	/**
 	 * Returns the text to be inserted at the selection start.
