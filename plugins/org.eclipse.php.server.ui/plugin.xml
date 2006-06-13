@@ -4,4 +4,35 @@
    <extension-point id="serverTab" name="Server Tab" schema="schema/serverTab.exsd"/>
    <extension-point id="serverWizardFragment" name="Server Wizard Fragment" schema="schema/serverWizardFragment.exsd"/>
 
+  <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    <launchConfigurationTypeImage
+      id="org.eclipse.php.server.ui.launchConfigurationTypeImage"
+      configTypeID="org.eclipse.php.server.core.launchConfigurationType"
+      icon="icons/full/obj16/server.gif">
+    </launchConfigurationTypeImage>
+  </extension>
+
+  <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+      id="org.eclipse.php.server.ui.launchConfigurationTabGroup"
+      type="org.eclipse.php.server.core.launchConfigurationType"
+      class="org.eclipse.php.server.ui.ServerLaunchConfigurationTabGroup">
+    </launchConfigurationTabGroup>
+  </extension>
+  
+  <extension
+        point="org.eclipse.php.server.ui.serverWizardFragment">
+     <wizardFragment
+           class="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
+           name="Basic Factory"
+           visible="Always"/>
+  </extension>
+  <extension
+        point="org.eclipse.ui.preferencePages">
+     <page
+           category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
+           class="org.eclipse.php.server.internal.ui.PHPServersPreferencePage"
+           id="org.eclipse.php.server.internal.ui.PHPServersPreferencePage"
+           name="%serversPreferencesPageName"/>
+  </extension>
 </plugin>

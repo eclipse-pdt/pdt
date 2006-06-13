@@ -25,6 +25,7 @@ import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.ServersManager;
 import org.eclipse.php.server.internal.ui.ClosableWizardDialog;
 import org.eclipse.php.server.internal.ui.ServerWizard;
+import org.eclipse.php.server.ui.wizard.WizardModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;

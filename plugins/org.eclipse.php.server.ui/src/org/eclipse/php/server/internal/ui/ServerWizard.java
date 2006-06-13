@@ -11,8 +11,8 @@
 package org.eclipse.php.server.internal.ui;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.server.ui.FragmentedWizard;
-import org.eclipse.php.server.ui.WizardModel;
+import org.eclipse.php.server.ui.wizard.FragmentedWizard;
+import org.eclipse.php.server.ui.wizard.WizardModel;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 

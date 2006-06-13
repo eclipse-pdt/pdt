@@ -26,7 +26,7 @@ public abstract class CompositeFragment extends Composite {
 	private boolean isComplete;
 	private String name;
 	private boolean isForEditing;
-	private Server server;
+	protected Server server;
 
 	/**
 	 * Constructs a new CompositeFragment.

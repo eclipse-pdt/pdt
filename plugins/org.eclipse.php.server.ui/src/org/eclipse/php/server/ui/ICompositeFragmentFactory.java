@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.server.ui;
 
+import org.eclipse.php.server.ui.wizard.WizardFragment;
 import org.eclipse.swt.widgets.Composite;
 
 /**

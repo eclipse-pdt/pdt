@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.ui;
+package org.eclipse.php.server.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -22,6 +22,9 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.php.server.internal.ui.WorkspaceRunnableAdapter;
+import org.eclipse.php.server.ui.Activator;
+import org.eclipse.php.server.ui.Logger;
+import org.eclipse.php.server.ui.ServerUtilities;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;

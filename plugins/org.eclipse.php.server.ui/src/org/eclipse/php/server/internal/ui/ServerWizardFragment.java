@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.php.server.ui.ICompositeFragmentFactory;
 import org.eclipse.php.server.ui.ServerFragmentsFactoryRegistry;
-import org.eclipse.php.server.ui.WizardFragment;
+import org.eclipse.php.server.ui.wizard.WizardFragment;
 
 public class ServerWizardFragment extends WizardFragment {
 	protected void createChildFragments(List list) {

@@ -49,6 +49,7 @@ public class Server {
 	 * @param publish
 	 */
 	public Server(String name, String host, String baseURL, String documentRoot, boolean publish) {
+		this();
 		setName(name);
 		setHost(host);
 		setBaseURL(baseURL);

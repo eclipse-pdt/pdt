@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.ui;
+package org.eclipse.php.server.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
