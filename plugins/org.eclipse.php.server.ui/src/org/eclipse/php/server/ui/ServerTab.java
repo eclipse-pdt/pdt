@@ -9,13 +9,22 @@
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
 package org.eclipse.php.server.ui;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.internal.core.LaunchConfigurationWorkingCopy;
+import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
+import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationPresentationManager;
+import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationView;
+import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationsDialog;
+import org.eclipse.debug.internal.ui.preferences.LaunchConfigurationsPreferencePage;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -38,9 +47,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class ServerTab extends AbstractLaunchConfigurationTab {
-	
+
 	private static final String SERVERS_PREFERENCES_PAGE_ID = "org.eclipse.php.server.internal.ui.PHPServersPreferencePage"; //$NON-NLS-1$
-	
+
 	protected IFile selectedFile = null;
 
 	protected Text fFile = null;
@@ -380,9 +389,9 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			if (obj != null && obj instanceof Server) {
 				server = (Server) servers.get(serverCombo.getSelectionIndex());
 
-//				ApacheServer apacheServer = (ApacheServer) server.getAdapter(ApacheServer.class);
-//				if (apacheServer == null)
-//					apacheServer = (ApacheServer) server.loadAdapter(ApacheServer.class, null);
+				//				ApacheServer apacheServer = (ApacheServer) server.getAdapter(ApacheServer.class);
+				//				if (apacheServer == null)
+				//					apacheServer = (ApacheServer) server.loadAdapter(ApacheServer.class, null);
 
 				boolean canPublish = false;
 				if (server != null)
@@ -415,11 +424,11 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 				serverCombo.select(0);
 		}
 
-//		if (servers != null) { // TODO - ?
-//			server = (Server) servers.get(serverCombo.getSelectionIndex());
-//			if (server != null)
-//				server.setupLaunchConfiguration(configuration, null);
-//		}
+		//		if (servers != null) { // TODO - ?
+		//			server = (Server) servers.get(serverCombo.getSelectionIndex());
+		//			if (server != null)
+		//				server.setupLaunchConfiguration(configuration, null);
+		//		}
 	}
 
 	/**
@@ -443,29 +452,29 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 
 				IStructuredSelection sel = Activator.currentSelection;
 				// TODO - ?
-//				IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(sel.getFirstElement());
-//
-//				if (moduleArtifact instanceof WebResource) {
-//					WebResource webResource = (WebResource) moduleArtifact;
-//					IModule module = webResource.getModule();
-//
-//					if (module != null) {
-//						IProject proj = module.getProject();
-//
-//						if (proj != null) {
-//							IPath filePath = webResource.getPath();
-//
-//							if (filePath.isEmpty()) {
-//								fileName = proj.getFullPath().toString();
-//							} else {
-//								IFile file = proj.getFile(filePath);
-//								fileName = file.getFullPath().toString();
-//							}
-//
-//							contextRoot = proj.getName();
-//						}
-//					}
-//				}
+				//				IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(sel.getFirstElement());
+				//
+				//				if (moduleArtifact instanceof WebResource) {
+				//					WebResource webResource = (WebResource) moduleArtifact;
+				//					IModule module = webResource.getModule();
+				//
+				//					if (module != null) {
+				//						IProject proj = module.getProject();
+				//
+				//						if (proj != null) {
+				//							IPath filePath = webResource.getPath();
+				//
+				//							if (filePath.isEmpty()) {
+				//								fileName = proj.getFullPath().toString();
+				//							} else {
+				//								IFile file = proj.getFile(filePath);
+				//								fileName = file.getFullPath().toString();
+				//							}
+				//
+				//							contextRoot = proj.getName();
+				//						}
+				//					}
+				//				}
 			}
 
 			initializeServerControl(configuration);
@@ -488,33 +497,34 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
 		return;
 	}
-//
-//	protected IModuleArtifact getModuleArtifact(String fileName, String projectName) {
-//		IModuleArtifact moduleArtifact = null;
-//
-//		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-//		IProject project = root.getProject(projectName);
-//		if (project == null) {
-//			return null;
-//		}
-//
-//		if (fileName != null && !(fileName.equals(""))) {
-//			IFile file = project.getFile(fileName);
-//			moduleArtifact = ServerPlugin.getModuleArtifact(file);
-//		} else {
-//			moduleArtifact = ServerPlugin.getModuleArtifact(project);
-//		}
-//		return moduleArtifact;
-//	}
+
+	//
+	//	protected IModuleArtifact getModuleArtifact(String fileName, String projectName) {
+	//		IModuleArtifact moduleArtifact = null;
+	//
+	//		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+	//		IProject project = root.getProject(projectName);
+	//		if (project == null) {
+	//			return null;
+	//		}
+	//
+	//		if (fileName != null && !(fileName.equals(""))) {
+	//			IFile file = project.getFile(fileName);
+	//			moduleArtifact = ServerPlugin.getModuleArtifact(file);
+	//		} else {
+	//			moduleArtifact = ServerPlugin.getModuleArtifact(project);
+	//		}
+	//		return moduleArtifact;
+	//	}
 
 	protected void initializeURLControl(String contextRoot, String fileName) {
 		if (server == null) {
 			return;
 		}
-//		Server as = (Server) server.getAdapter(ApacheServer.class);
-//		if (as == null) {
-//			as = (ApacheServer) server.loadAdapter(ApacheServer.class, null);
-//		}
+		//		Server as = (Server) server.getAdapter(ApacheServer.class);
+		//		if (as == null) {
+		//			as = (ApacheServer) server.loadAdapter(ApacheServer.class, null);
+		//		}
 		String urlString = server.getBaseURL();
 
 		if (urlString.equals("")) {
@@ -620,13 +630,24 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		setMessage(null);
 		setErrorMessage(null);
-
+		// TODO - Note that this method of removing invalid launches is still buggy
+		// In order to fix it completely, we might have to perform similar checks when removing or renaming a server from
+		// the PHP Servers preferences page.
 		try {
 			String serverName = launchConfig.getAttribute(Server.NAME, "");
-			if (serverName != null && !serverName.equals("")) {
+			if (!serverName.equals("")) {
 				Server server = ServersManager.getServer(serverName);
 				if (server == null) {
-					setErrorMessage("A Configuration for that server does not exist");
+					deleteLaunchConfiguration(launchConfig);
+					ILaunchConfiguration[] allConfigurations = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations();
+					for (int i = 0; i < allConfigurations.length; i++) {
+						launchConfig = allConfigurations[i];
+						serverName = launchConfig.getAttribute(Server.NAME, "");
+						if (!serverName.equals("") && ServersManager.getServer(serverName) == null) {
+							// The server was removed, so remove this launch configuration!
+							deleteLaunchConfiguration(launchConfig);
+						}
+					}
 					return false;
 				}
 			}
@@ -644,6 +665,25 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		}
 
 		return isValidExtension(launchConfig);
+	}
+
+	private void deleteLaunchConfiguration(final ILaunchConfiguration launchConfig) throws CoreException {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				ILaunchConfiguration config = launchConfig;
+				try {
+					if (config instanceof LaunchConfigurationWorkingCopy) {
+						config = ((LaunchConfigurationWorkingCopy) config).getOriginal();
+					}
+					if (config != null) {
+						config.delete();
+					}
+				} catch (CoreException ce) {
+					// Ignore
+				}
+			}
+		});
+
 	}
 
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {

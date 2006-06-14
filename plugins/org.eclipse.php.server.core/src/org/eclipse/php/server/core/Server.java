@@ -219,7 +219,7 @@ public class Server implements IXMLPreferencesStorable {
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		return "Server [" + getHost() + ']';
+		return "Server [" + getName() + "::"+ getHost() + ']';
 	}
 
 	/*

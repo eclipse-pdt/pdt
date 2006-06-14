@@ -17,8 +17,14 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.server.core.Server;
+import org.eclipse.php.ui.util.SWTUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 
 public class ServerEditDialog extends TitleAreaDialog implements IControlHandler {
 
@@ -39,18 +45,18 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
-		TabFolder tabFolder = new TabFolder(parent, SWT.TOP | SWT.FLAT);
+		CTabFolder tabs = SWTUtil.createTabFolder(parent);
 		ICompositeFragmentFactory[] factories = ServerFragmentsFactoryRegistry.getFragmentsFactories("");
 		for (int i = 0; i < factories.length; i++) {
-			TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
-			CompositeFragment fragment = factories[i].createComposite(tabFolder, this);
+			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
+			CompositeFragment fragment = factories[i].createComposite(tabs, this);
 			fragment.setServer(server);
 			tabItem.setText(fragment.getDisplayName());
 			tabItem.setControl(fragment);
 			runtimeComposites.add(fragment);
 		}
 		getShell().setText("Edit Server");
-		return tabFolder;
+		return tabs;
 	}
 
 	/* (non-Javadoc)

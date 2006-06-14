@@ -346,6 +346,11 @@ public class ServerCompositeFragment extends CompositeFragment {
 			}
 			server.setHost(modifiedValuesCache.host);
 			server.setName(modifiedValuesCache.serverName);
+			if (!originalValuesCache.serverName.equals(modifiedValuesCache.serverName)) {
+				// Update the ServerManager with the new server name
+				ServersManager.removeServer(originalValuesCache.serverName);
+				ServersManager.addServer(server);
+			}
 //			getServerWorkingCopy().save(true, null); // TODO - Save the server's properties ??
 		} catch (Throwable e) {
 			Logger.logException("Error while saving the new server settings", e);
