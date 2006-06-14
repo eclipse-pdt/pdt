@@ -43,9 +43,22 @@ public class PHPTextSequenceUtilities {
 	public static TextSequence getStatment(int offset, IStructuredDocumentRegion sdRegion, boolean removeComments) {
 		int startPosition = sdRegion.getStartOffset();
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		if (tRegion == null){
+			tRegion = sdRegion.getLastRegion();
+		}
+		// if we are standing at the beginning of a word and asking for completion 
 		if (tRegion.getType() != PHPRegionTypes.PHP_OPENTAG && sdRegion.getStartOffset(tRegion) == offset) {
 			tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
+			if (tRegion == null) {
+				sdRegion = sdRegion.getPrevious();
+				if (sdRegion == null)
+					return null;
+				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
+				if (tRegion == null)
+					return null;
+			}
 		}
+		
 		IStructuredDocument document = sdRegion.getParentDocument();
 		while (tRegion != null && tRegion.getType() != PHPRegionTypes.PHP_OPENTAG) {
 			String type = tRegion.getType();

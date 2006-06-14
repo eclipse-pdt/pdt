@@ -54,7 +54,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
-
 public class ContentAssistSupport implements IContentAssistSupport {
 
 	protected static final char[] phpDelimiters = new char[] { '?', ':', ';', '|', '^', '&', '<', '>', '+', '-', '.', '*', '/', '%', '!', '~', '[', ']', '(', ')', '{', '}', '@', '\n', '\t', ' ', ',', '$', '\'', '\"' };
@@ -67,7 +66,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	public static final ICompletionProposal[] EMPTY_CompletionProposal_ARRAY = new ICompletionProposal[0];
 	public static final CodeDataCompletionProposal[] EMPTY_CodeDataCompletionProposal_ARRAY = new CodeDataCompletionProposal[0];
-	private static final PHPProposalComperator proposalsComperator = new PHPProposalComperator() ;	
+	private static final PHPProposalComperator proposalsComperator = new PHPProposalComperator();
 
 	protected boolean showVariablesFromOtherFiles;
 	protected boolean determineObjectTypeFromOtherFile;
@@ -127,7 +126,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	public ICompletionProposal[] getCompletionOption(ITextViewer viewer, PHPEditorModel phpEditorModel, int offset) throws BadLocationException {
 		ICompletionProposal[] codeCompletionOptions = getCodeCompletionOptions(viewer, phpEditorModel, offset);
-		if(codeCompletionOptions == null){
+		if (codeCompletionOptions == null) {
 			return new ICompletionProposal[0];
 		}
 		return codeCompletionOptions;
@@ -137,18 +136,18 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		completionProposalGroup = null;
 		templateProposals = null;
 		calcCompletionOption(phpEditorModel, offset, viewer);
-		if(completionProposalGroup == null){
+		if (completionProposalGroup == null) {
 			return templateProposals;
 		}
-		return merg(completionProposalGroup.getCompletionProposals(),templateProposals);
+		return merg(completionProposalGroup.getCompletionProposals(), templateProposals);
 	}
 
 	protected ICompletionProposal[] getTemplates(ITextViewer viewer, int offset) {
-		PHPTemplateCompletionProcessor templateCompletionProcessor = getTemplateCompletionProcessor();		
+		PHPTemplateCompletionProcessor templateCompletionProcessor = getTemplateCompletionProcessor();
 		ICompletionProposal[] templatesCompletionProposals = templateCompletionProcessor.computeCompletionProposals(viewer, offset);
 		return templatesCompletionProposals;
 	}
-	
+
 	private PHPTemplateCompletionProcessor getTemplateCompletionProcessor() {
 		if (templateCompletionProcessor == null) {
 			templateCompletionProcessor = new PHPTemplateCompletionProcessor();
@@ -161,11 +160,11 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	protected String getTemplateContext() {
 		return PHPTemplateContextTypeIds.PHP;
 	}
-	
+
 	public char[] getAutoactivationTriggers() {
 		return autoActivationTriggers;
 	}
-	
+
 	protected void calcCompletionOption(PHPEditorModel editorModel, int offset, ITextViewer viewer) throws BadLocationException {
 		PHPFileData fileData = editorModel.getFileData();
 		if (fileData == null) {
@@ -178,16 +177,32 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		PHPProjectModel projectModel = editorModel.getProjectModel();
 
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
-		ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		ITextRegion textRegion = null;
+		// 	in case we are at the end of the document, asking for completion
+		if (offset == editorModel.getStructuredDocument().getLength()) {
+			textRegion = sdRegion.getLastRegion();
+		} else {
+			textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		}
+
+		if (textRegion == null)
+			return;
+
 		// find the start String for completion
 		int startOffset = sdRegion.getStartOffset(textRegion);
 
+		//in case we are standing at the beginning of a word and asking for completion 
 		//should not take into account the found region
 		//find the previous region and update the start offset
 		if (startOffset == offset) {
 			textRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
 			if (textRegion == null) {
-				return;
+				sdRegion = sdRegion.getPrevious();
+				if (sdRegion == null)
+					return;
+				textRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
+				if (textRegion == null)
+					return;
 			}
 			startOffset = sdRegion.getStartOffset(textRegion);
 		}
@@ -391,9 +406,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		completionProposalGroup = regularPHPCompletionProposalGroup;
 		completionProposalGroup.setData(offset, mergeData, startsWith, selectionLength);
-		
+
 		templateProposals = getTemplates(viewer, offset);
-		
+
 		return;
 	}
 
@@ -647,7 +662,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			classVariables = ModelSupport.getFilteredCodeData(projectModel.getClassVariables(fileName, className, ""), ModelSupport.NOT_STATIC_VARIABLES_FILTER);
 		}
 		CodeData[] result = ModelSupport.getFilteredCodeData(ModelSupport.merge(functions, classVariables), getAccessLevelFilter(projectModel, fileName, className, offset, isInstanceOf));
-		
+
 		if (addVariableDollar) {
 			completionProposalGroup = classVariableCallCompletionProposalGroup;
 		} else {
@@ -1149,7 +1164,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	private ICompletionProposal[] merg(ICompletionProposal[] sortedArray1, ICompletionProposal[] sortedArray2) {
 
 		// gets the arrays size
-		int firstLength = sortedArray1 == null ? 0 : sortedArray1.length ;
+		int firstLength = sortedArray1 == null ? 0 : sortedArray1.length;
 		int secondLength = sortedArray2 == null ? 0 : sortedArray2.length;
 
 		// creates a united empty one
@@ -1159,31 +1174,30 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		int position = 0;
 		if (sortedArray1 != null) {
 			System.arraycopy(sortedArray1, 0, mergedAndSorted, 0, firstLength);
-			position = firstLength; 
+			position = firstLength;
 		}
 		if (sortedArray2 != null) {
-			System.arraycopy(sortedArray2, 0, mergedAndSorted, position, secondLength);	
+			System.arraycopy(sortedArray2, 0, mergedAndSorted, position, secondLength);
 		}
-		
+
 		// then sort them
-		Arrays.sort(mergedAndSorted, proposalsComperator) ;
+		Arrays.sort(mergedAndSorted, proposalsComperator);
 
 		return mergedAndSorted;
 	}
-	
+
 	protected class PHPCompletionProposalGroup extends CompletionProposalGroup {
 
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			String suffix = " ";
 			int caretOffsetInSuffix = 1;
 			boolean showTypeHints = false;
-			
+
 			if (codeData instanceof PHPKeywordData) {
 				PHPKeywordData phpKeywordData = (PHPKeywordData) codeData;
 				suffix = phpKeywordData.getSuffix();
 				caretOffsetInSuffix = phpKeywordData.getSuffixOffset();
-			}
-			else if (codeData instanceof PHPFunctionData) {
+			} else if (codeData instanceof PHPFunctionData) {
 				PHPFunctionData phpFunctionData = (PHPFunctionData) codeData;
 				suffix = "()";
 				showTypeHints = true;
@@ -1199,7 +1213,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 						caretOffsetInSuffix++;
 					}
 				}
-			} else if(codeData instanceof PHPVariableData || codeData instanceof PHPConstantData){
+			} else if (codeData instanceof PHPVariableData || codeData instanceof PHPConstantData) {
 				suffix = "";
 				caretOffsetInSuffix = 0;
 			}
@@ -1288,7 +1302,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		}
 	}
-	
+
 	private class ClassVariableCallCompletionProposalGroup extends PHPCompletionProposalGroup {
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			if (codeData instanceof PHPClassVarData) {
@@ -1299,7 +1313,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	private class ClassStaticCallCompletionProposalGroup extends PHPCompletionProposalGroup {
-		
+
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			if (codeData instanceof PHPClassVarData) {
 				return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "$", "", 0, false);
