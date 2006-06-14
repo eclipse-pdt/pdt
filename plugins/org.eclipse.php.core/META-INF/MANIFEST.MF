@@ -39,5 +39,6 @@ Provide-Package: org.eclipse.php.core,
  org.eclipse.php.core.project.properties.handlers,
  org.eclipse.php.core.util,
  org.eclipse.php.core.util.collections,
+ org.eclipse.php.core.util.preferences,
  org.eclipse.php.core.util.project.observer
 Bundle-Vendor: Eclipse.org
