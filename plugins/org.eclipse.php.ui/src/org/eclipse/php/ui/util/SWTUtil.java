@@ -15,18 +15,14 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Caret;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Utility class to simplify access to some SWT resources.
@@ -74,8 +70,8 @@ public class SWTUtil {
 	 */
 	public static int getButtonWidthHint(Button button) {
 		button.setFont(JFaceResources.getDialogFont());
-		PixelConverter converter= new PixelConverter(button);
-		int widthHint= converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+		PixelConverter converter = new PixelConverter(button);
+		int widthHint = converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
 		return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
 	}
 
@@ -85,22 +81,42 @@ public class SWTUtil {
 	 * an instance of <code>GridData</code>.
 	 * 
 	 * @param button	the button for which to set the dimension hint
-	 */		
+	 */
 	public static void setButtonDimensionHint(Button button) {
 		Assert.isNotNull(button);
-		Object gd= button.getLayoutData();
+		Object gd = button.getLayoutData();
 		if (gd instanceof GridData) {
-			((GridData)gd).widthHint= getButtonWidthHint(button);	
-			((GridData)gd).horizontalAlignment = GridData.FILL;	 
+			((GridData) gd).widthHint = getButtonWidthHint(button);
+			((GridData) gd).horizontalAlignment = GridData.FILL;
 		}
 	}
-	
+
 	public static int getTableHeightHint(Table table, int rows) {
 		if (table.getFont().equals(JFaceResources.getDefaultFont()))
 			table.setFont(JFaceResources.getDialogFont());
-		int result= table.getItemHeight() * rows + table.getHeaderHeight();
+		int result = table.getItemHeight() * rows + table.getHeaderHeight();
 		if (table.getLinesVisible())
-			result+= table.getGridLineWidth() * (rows - 1);
-		return result;		
+			result += table.getGridLineWidth() * (rows - 1);
+		return result;
 	}
+
+	/**
+	 * Creates the tab folder for displaying the composite fragments
+	 * @param parent
+	 */
+	public static CTabFolder createTabFolder(Composite parent) {
+		Display display = getStandardDisplay();
+		Color c1 = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND), c2 = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+		CTabFolder tabs = new CTabFolder(parent, SWT.NO_REDRAW_RESIZE | SWT.NO_TRIM | SWT.FLAT);
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan = 2;
+		tabs.setSelectionBackground(new Color[] { c1, c2 }, new int[] { 100 }, true);
+		tabs.setSelectionForeground(getStandardDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+		tabs.setSimple(PlatformUI.getPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS));
+		tabs.setLayoutData(gd);
+		tabs.setBorderVisible(true);
+		tabs.setFont(parent.getFont());
+		return tabs;
+	}
+
 }
