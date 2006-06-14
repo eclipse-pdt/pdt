@@ -680,7 +680,12 @@
 			contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.php.ui.edit.text.toggle.comment"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-
+		<key
+            platform="gtk"
+            sequence="ESC CTRL+C"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.php.ui.edit.text.toggle.comment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 
 		<key
 			sequence="M1+M2+/"
@@ -766,6 +771,12 @@
 			sequence="M1+M2+F"
             contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.wst.sse.ui.format.document"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="gtk"
+            sequence="ESC CTRL+F"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.wst.sse.ui.format.document"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
             commandId="org.eclipse.php.ui.edit.text.show.phpdoc"
