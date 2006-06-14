@@ -441,7 +441,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 
 		try {
 			String fileName = configuration.getAttribute(Server.FILE_NAME, "");
-			String contextRoot = configuration.getAttribute(Server.DOCUMENT_ROOT, "");
+			String contextRoot = configuration.getAttribute(Server.CONTEXT_ROOT, "");
 			boolean deployable = configuration.getAttribute(Server.PUBLISH, false);
 			String url = configuration.getAttribute(Server.BASE_URL, "");
 
@@ -613,7 +613,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		String url = fURL.getText();
 		boolean deployable = publish.getSelection();
 		configuration.setAttribute(Server.FILE_NAME, fileName);
-		configuration.setAttribute(Server.DOCUMENT_ROOT, contextRoot);
+		configuration.setAttribute(Server.CONTEXT_ROOT, contextRoot);
 		configuration.setAttribute(Server.PUBLISH, deployable);
 		configuration.setAttribute(Server.BASE_URL, url);
 

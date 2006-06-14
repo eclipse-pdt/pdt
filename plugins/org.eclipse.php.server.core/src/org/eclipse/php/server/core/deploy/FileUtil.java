@@ -10,21 +10,19 @@
  *******************************************************************************/
 package org.eclipse.php.server.core.deploy;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.server.core.Activator;
 import org.eclipse.php.server.core.Logger;
 import org.eclipse.php.server.core.Messages;
+import org.eclipse.php.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -42,6 +40,25 @@ public class FileUtil {
 	 */
 	private FileUtil() {
 		super();
+	}
+
+	/**
+	 * Publish the project files into the server.
+	 * 
+	 * @param server
+	 * @param configuration
+	 * @param monitor
+	 */
+	public static boolean publish(Server server, IProject project, ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
+		String contextRoot = configuration.getAttribute(Server.CONTEXT_ROOT, (String) null);
+		IPath to = new Path(server.getDocumentRoot());
+		if (contextRoot != null && !contextRoot.equals("")) {
+			to = to.append(contextRoot);
+		}
+
+		String source = project.getLocation().toOSString();
+		String dest = to.toOSString();
+		return smartCopyDirectory(source, dest, monitor);
 	}
 
 	/**

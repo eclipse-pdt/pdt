@@ -36,6 +36,7 @@ public class Server implements IXMLPreferencesStorable {
 	public static final String PORT = "port";
 	public static final String HOSTNAME = "hostname";
 	public static final String FILE_NAME = "file_name";
+	public static final String CONTEXT_ROOT = "context_root";
 
 	private ServerHelper helper;
 

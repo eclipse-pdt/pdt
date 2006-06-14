@@ -20,6 +20,7 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.php.server.core.Activator;
 import org.eclipse.php.server.core.Logger;
 import org.eclipse.php.server.core.Server;
+import org.eclipse.php.server.core.deploy.FileUtil;
 
 /**
  * 
@@ -136,7 +137,7 @@ public class ServerLaunchConfigurationDelegate extends LaunchConfigurationDelega
 		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
 
 		if (publish) {
-			//            FileUtil.publish(module, monitor); // TODO - PUBLISH !!
+//			FileUtil.publish(null, configuration, monitor);
 		}
 		//        LaunchClientJob clientJob = new LaunchClientJob(server, modules, mode, moduleArtifact, launchableAdapter, client);
 		//        clientJob.schedule();
