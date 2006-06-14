@@ -76,13 +76,20 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	protected PHPsComboBlock phpsComboBlock;
 
 	protected boolean disableFileSelection = false;
+	protected boolean disableDebugInfoOption = false;
 
-	public PHPExecutableLaunchTab(boolean disableFileSelection) {
-		this.disableFileSelection = disableFileSelection;
+	public PHPExecutableLaunchTab(String mode) {
+		if(!mode.equals("run")) {
+			setDisableDebugInfoOption();
+		}
 	}
-
-	public PHPExecutableLaunchTab() {
-		new PHPExecutableLaunchTab(false);
+	
+	public void setDisableFileSelection() {
+		this.disableFileSelection = true;
+	}
+	
+	public void setDisableDebugInfoOption() {
+		this.disableDebugInfoOption = true;
 	}
 
 	// Selection changed listener (checked PHP exe)
@@ -123,9 +130,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		mainComposite.setLayoutData(gridData);
 
 		createLocationComponent(mainComposite);
-		createDebugInfoComponent(mainComposite);
+		if (!disableDebugInfoOption) {
+			createDebugInfoComponent(mainComposite);
+		}
 		//createWorkDirectoryComponent(mainComposite);
-		createArgumentComponent(mainComposite);
+		if (!disableFileSelection) {
+			createArgumentComponent(mainComposite);
+		}
 		createVerticalSpacer(mainComposite, 1);
 
 		Dialog.applyDialogFont(parent);
@@ -264,10 +275,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		argumentVariablesButton = createPushButton(composite, PHPDebugUIMessages.Variables, null); //$NON-NLS-1$
 		argumentVariablesButton.addSelectionListener(fListener);
 		addControlAccessibleListener(argumentVariablesButton, argumentVariablesButton.getText()); // need to strip the mnemonic from buttons
-		if (disableFileSelection) {
-			argumentField.setEnabled(false);
-			argumentVariablesButton.setEnabled(false);
-		}
+		argumentField.setEnabled(false);
+		argumentVariablesButton.setEnabled(false);
 
 	}
 
@@ -284,38 +293,43 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		updateLocation(configuration);
 		//updateWorkingDirectory(configuration);
-		updateArgument(configuration);
-		updateDebugInfoOption(configuration);
+		if (!disableDebugInfoOption) {
+			updateDebugInfoOption(configuration);
+		}
 
-		String argField = argumentField.getText();
-		//String workingDir = this.workDirectoryField.getText();
+		if (!disableFileSelection) {
+			updateArgument(configuration);
+			String argField = argumentField.getText();
+			//String workingDir = this.workDirectoryField.getText();
 
-		if (argField.equals("") && ApacheUIPlugin.currentSelection != null && !ApacheUIPlugin.currentSelection.isEmpty()) {
-			IStructuredSelection sel = (IStructuredSelection) ApacheUIPlugin.currentSelection;
-			IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(sel.getFirstElement());
+			if (argField.equals("") && ApacheUIPlugin.currentSelection != null && !ApacheUIPlugin.currentSelection.isEmpty()) {
+				IStructuredSelection sel = (IStructuredSelection) ApacheUIPlugin.currentSelection;
+				IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(sel.getFirstElement());
 
-			if (moduleArtifact instanceof WebResource) {
-				WebResource webResource = (WebResource) moduleArtifact;
-				IModule module = webResource.getModule();
+				if (moduleArtifact instanceof WebResource) {
+					WebResource webResource = (WebResource) moduleArtifact;
+					IModule module = webResource.getModule();
 
-				if (module != null) {
-					IProject proj = module.getProject();
+					if (module != null) {
+						IProject proj = module.getProject();
 
-					if (proj != null) {
-						IPath filePath = webResource.getPath();
+						if (proj != null) {
+							IPath filePath = webResource.getPath();
 
-						if (filePath.isEmpty()) {
-							argField = proj.getFullPath().toString();
-						} else {
-							IFile file = proj.getFile(filePath);
-							argField = file.getFullPath().toString();
+							if (filePath.isEmpty()) {
+								argField = proj.getFullPath().toString();
+							} else {
+								IFile file = proj.getFile(filePath);
+								argField = file.getFullPath().toString();
+							}
+
+							this.argumentField.setText(argField);
 						}
-
-						this.argumentField.setText(argField);
 					}
 				}
 			}
 		}
+
 	}
 
 	public String getName() {
@@ -385,14 +399,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
 		}
 
-		String arguments = argumentField.getText().trim();
-		if (arguments.length() == 0) {
+		String arguments = null;
+		if (disableFileSelection || (arguments = argumentField.getText().trim()).length() == 0) {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 		} else {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, arguments);
 		}
-
-		boolean debugInfo = runWithDebugInfo.getSelection();
+		boolean debugInfo = disableDebugInfoOption ? true : runWithDebugInfo.getSelection();
 		configuration.setAttribute(IPHPConstants.RunWithDebugInfo, debugInfo);
 
 	}
@@ -421,12 +434,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 					return false;
 				}
 			}
-
-			String phpFile = launchConfig.getAttribute(PHPCoreConstants.ATTR_FILE, "");
-			if (phpFile != "" && phpExe != null) {
-				if (!fileExists(phpFile)) {
-					setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
-					return false;
+			if (!disableFileSelection) {
+				String phpFile = launchConfig.getAttribute(PHPCoreConstants.ATTR_FILE, "");
+				if (phpFile != "" && phpExe != null) {
+					if (!fileExists(phpFile)) {
+						setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
+						return false;
+					}
 				}
 			}
 		} catch (CoreException e) {
