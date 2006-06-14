@@ -4,72 +4,72 @@
 	<!-- Run a given ${target} on all elements being built -->
 	<!-- Add on <ant> task for each top level element being built. -->
 	<!-- ===================================================================== -->
-	<property name="allElementsFile" value="${builder}/allElements.xml"/>
-	<import file="${allElementsFile}"/>
+	<property name="allElementsFile" value="${builder}/allElements.xml" />
+	<import file="${allElementsFile}" />
 	<target name="allElements">
-		<antcall target="allElementsDelegator"/>
+		<antcall target="allElementsDelegator" />
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- ===================================================================== -->
 	<target name="getBaseComponents" depends="checkLocalBase" unless="skipBase">
-		<get src="${eclipseBaseURL}" dest="${buildDirectory}/../temp-base.zip"/>
-		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-base.zip"/>
+		<get src="${eclipseBaseURL}" dest="${buildDirectory}/../temp-base.zip" />
+		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-base.zip" />
 	</target>
 
 	<target name="checkLocalBase">
-		<available file="${baseLocation}" property="skipBase"/>
+		<available file="${baseLocation}" property="skipBase" />
 	</target>
-	
-	
+
+
 	<!-- ===================================================================== -->
 	<!-- ===================================================================== -->
 	<target name="getDependencies" depends="checkLocalBase" unless="skipBase">
-		<get src="${emfBaseURL}" dest="${buildDirectory}/../temp-emf.zip"/>
-		<get src="${gefBaseURL}" dest="${buildDirectory}/../temp-gef.zip"/>
-		<get src="${jemBaseURL}" dest="${buildDirectory}/../temp-jem.zip"/>
-		<get src="${wstBaseURL}" dest="${buildDirectory}/../temp-wst.zip"/>
-		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-emf.zip"/>
-		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-gef.zip"/>
-		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-jem.zip"/>
-		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-wst.zip"/>
+		<get src="${emfBaseURL}" dest="${buildDirectory}/../temp-emf.zip" />
+		<get src="${gefBaseURL}" dest="${buildDirectory}/../temp-gef.zip" />
+		<get src="${jemBaseURL}" dest="${buildDirectory}/../temp-jem.zip" />
+		<get src="${wstBaseURL}" dest="${buildDirectory}/../temp-wst.zip" />
+		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-emf.zip" />
+		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-gef.zip" />
+		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-jem.zip" />
+		<unzip dest="${base}" overwrite="true" src="${buildDirectory}/../temp-wst.zip" />
 	</target>
-			
-	
-	
+
+
+
 	<!-- ===================================================================== -->
 	<!-- Check out map files from correct repository -->
 	<!-- Replace values for mapsCheckoutTag as desired. -->
 	<!-- ===================================================================== -->
 	<target name="getMapFiles" depends="checkLocalMaps" unless="skipMaps">
-		<property name="mapsCheckoutTag" value="HEAD"/>
-		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mapsCheckoutTag}"/>
+		<property name="mapsCheckoutTag" value="HEAD" />
+		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mapsCheckoutTag}" />
 	</target>
 
 	<target name="checkLocalMaps">
-		<available property="skipMaps" file="${buildDirectory}/maps"/>
+		<available property="skipMaps" file="${buildDirectory}/maps" />
 	</target>
 
 	<target name="tagMapFiles" if="tagMaps">
-		<cvs dest="${buildDirectory}/maps/${mapsRoot}" command="tag ${mapsTagTag}"/>
+		<cvs dest="${buildDirectory}/maps/${mapsRoot}" command="tag ${mapsTagTag}" />
 	</target>
 
 	<!-- ===================================================================== -->
 
 	<target name="clean" unless="noclean">
 		<antcall target="allElements">
-			<param name="target" value="cleanElement"/>
+			<param name="target" value="cleanElement" />
 		</antcall>
 	</target>
 
 	<target name="gatherLogs">
-		<mkdir dir="${buildDirectory}/${buildLabel}/compilelogs"/>
+		<mkdir dir="${buildDirectory}/${buildLabel}/compilelogs" />
 		<antcall target="allElements">
-			<param name="target" value="gatherLogs"/>
+			<param name="target" value="gatherLogs" />
 		</antcall>
 		<unzip dest="${buildDirectory}/${buildLabel}/compilelogs" overwrite="true">
 			<fileset dir="${buildDirectory}/features">
-				<include name="**/*.log.zip"/>
+				<include name="**/*.log.zip" />
 			</fileset>
 		</unzip>
 	</target>
@@ -84,8 +84,8 @@
 	<!-- Steps to do after setup but before starting the build proper -->
 	<!-- ===================================================================== -->
 	<target name="postSetup">
-		<antcall target="getBaseComponents"/>
-		<antcall target="getDependencies"/>
+		<antcall target="getBaseComponents" />
+		<antcall target="getDependencies" />
 	</target>
 
 	<!-- ===================================================================== -->
@@ -110,7 +110,7 @@
 	<!-- Steps to do after generating the build scripts. -->
 	<!-- ===================================================================== -->
 	<target name="postGenerate">
-		<antcall target="clean"/>
+		<antcall target="clean" />
 	</target>
 
 	<!-- ===================================================================== -->
@@ -130,16 +130,16 @@
 	<!-- ===================================================================== -->
 	<target name="preAssemble">
 	</target>
-	
+
 	<target name="assemble.org.eclipse.php_feature">
-				<ant antfile="${assembleScriptName}"/>
+		<ant antfile="${assembleScriptName}" />
 	</target>
 
 	<!-- ===================================================================== -->
 	<!-- Steps to do after  running assemble. -->
 	<!-- ===================================================================== -->
 	<target name="postAssemble">
-		
+
 	</target>
 
 	<!-- ===================================================================== -->
@@ -158,17 +158,33 @@
 	<!-- Steps to do after the build is done. -->
 	<!-- ===================================================================== -->
 	<target name="postBuild">
-		<!-- <cvschangelog dir="${buildDirectory}" cvsRoot=":pserver:qa@studiong.zend.com:/repository" start="20 May 2006" destfile="${buildDirectory}/${buildLabel}/changelog.xml"/>
+		<!-- Create a cvs change log -->
+		<property name="repos" value=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools" />
+		<property name="logDir" value="${buildDirectory}/changelog" />
+		<property name="logTime" value="1" />
 
-				<style in="${buildDirectory}/${buildLabel}/changelog.xml" 
+		<!-- Must checkout modules in order to generate changes log -->
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.core" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.debug.core" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.debug.daemon" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.debug.ui" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.help" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.server.apache.core" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.server.apache.ui" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.server.core" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.server.ui" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php.ui" />
+		<cvs cvsRoot="${repos}" dest="${logDir}" package="org.eclipse.php-feature" />
 
-				out="${buildDirectory}/${buildLabel}/changelog.html" 
+		<cvschangelog dir="${logDir}" cvsRoot="${repos}" daysinpast="${logTime}" destfile="${buildDirectory}/${buildLabel}/changelog.xml" />
 
-				>
+		<style in="${buildDirectory}/${buildLabel}/changelog.xml" out="${buildDirectory}/${buildLabel}/changelog.html" style="${builder}/changelog.xsl">
 
-				</style>
-				-->
-		<antcall target="gatherLogs"/>
+		</style>
+
+
+		<antcall target="gatherLogs" />
 	</target>
 
 	<!-- ===================================================================== -->
@@ -181,7 +197,7 @@
 	<!-- Steps to do to publish the build results -->
 	<!-- ===================================================================== -->
 	<target name="publish">
-		
+
 
 	</target>
 
@@ -189,7 +205,7 @@
 	<!-- Default target                                                        -->
 	<!-- ===================================================================== -->
 	<target name="noDefault">
-		<echo message="You must specify a target when invoking this file"/>
+		<echo message="You must specify a target when invoking this file" />
 	</target>
 
 </project>
