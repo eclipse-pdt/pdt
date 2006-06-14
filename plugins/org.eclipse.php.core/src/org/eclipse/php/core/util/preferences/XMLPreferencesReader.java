@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.core.Logger;
 import org.w3c.dom.Document;
@@ -67,7 +68,30 @@ public class XMLPreferencesReader {
 		return null;
 	}
 
+	/**
+	 * Reads a map of elements from the IPreferenceStore by a given key.
+	 * 
+	 * @param store
+	 * @param prefsKey
+	 * @return 
+	 */
 	public static HashMap[] read(IPreferenceStore store, String prefsKey) {
+		ArrayList maps = new ArrayList();
+		StringTokenizer st = new StringTokenizer(store.getString(prefsKey), new String(new char[] { DELIMITER }));
+		while (st.hasMoreTokens()) {
+			maps.add(read(st.nextToken()));
+		}
+		return (HashMap[]) maps.toArray(new HashMap[maps.size()]);
+	}
+	
+	/**
+	 * Reads a map of elements from the Preferences by a given key.
+	 * 
+	 * @param store
+	 * @param prefsKey
+	 * @return 
+	 */
+	public static HashMap[] read(Preferences store, String prefsKey) {
 		ArrayList maps = new ArrayList();
 		StringTokenizer st = new StringTokenizer(store.getString(prefsKey), new String(new char[] { DELIMITER }));
 		while (st.hasMoreTokens()) {
