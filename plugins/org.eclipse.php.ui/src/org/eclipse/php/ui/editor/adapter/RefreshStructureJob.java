@@ -168,9 +168,8 @@ class RefreshStructureJob extends Job {
 				for (int i = 0; i < viewers.length; i++) {
 					if (!viewers[i].getControl().isDisposed()) {
 						StructuredViewer viewer = viewers[i];
-						Node nodeX = node;
 						if (node.getNodeType() == Node.DOCUMENT_NODE || // this was the original condition
-							((nodeX.getNodeType() == Node.ELEMENT_NODE) && (((IDOMNode) nodeX).getFirstStructuredDocumentRegion().getType() == PHPRegionTypes.PHP_CONTENT) && (viewer.getContentProvider() instanceof PHPOutlineContentProvider) && (((PHPOutlineContentProvider) viewer
+							((node.getNodeType() == Node.ELEMENT_NODE) && (((IDOMNode) node).getFirstStructuredDocumentRegion().getType() == PHPRegionTypes.PHP_CONTENT) && (viewer.getContentProvider() instanceof PHPOutlineContentProvider) && (((PHPOutlineContentProvider) viewer
 								.getContentProvider()).getMode() == PHPOutlineContentProvider.MODE_PHP))) {
 							viewers[i].refresh(true);
 						} else {
