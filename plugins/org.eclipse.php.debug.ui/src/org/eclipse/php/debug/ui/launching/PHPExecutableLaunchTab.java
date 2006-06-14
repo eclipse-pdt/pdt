@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -79,15 +80,15 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	protected boolean disableDebugInfoOption = false;
 
 	public PHPExecutableLaunchTab(String mode) {
-		if(!mode.equals("run")) {
+		if (!mode.equals(ILaunchManager.RUN_MODE)) {
 			setDisableDebugInfoOption();
 		}
 	}
-	
+
 	public void setDisableFileSelection() {
 		this.disableFileSelection = true;
 	}
-	
+
 	public void setDisableDebugInfoOption() {
 		this.disableDebugInfoOption = true;
 	}
