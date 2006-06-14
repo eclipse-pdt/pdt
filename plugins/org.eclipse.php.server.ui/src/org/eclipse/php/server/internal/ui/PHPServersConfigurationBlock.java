@@ -24,7 +24,6 @@ import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.ServersManager;
 import org.eclipse.php.server.ui.Logger;
 import org.eclipse.php.server.ui.ServerEditDialog;
-import org.eclipse.php.server.ui.wizard.FragmentedWizard;
 import org.eclipse.php.server.ui.wizard.WizardModel;
 import org.eclipse.php.ui.preferences.ui.IPreferenceConfigurationBlock;
 import org.eclipse.php.ui.preferences.ui.ScrolledCompositeImpl;
@@ -137,6 +136,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 				fServersList.addElement(newServer);
 				fServersList.refresh();
 			}
+			ServersManager.addServer(newServer);
+			ServersManager.save();
 		} else if (index == IDX_EDIT) {
 			handleEditServerButtonSelected();
 			fServersList.refresh();
@@ -160,13 +161,6 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			Logger.logException("Error waiting for job", e);
 		}
 		theServer = (Server) wizard.getRootFragment().getWizardModel().getObject(WizardModel.SERVER);
-
-		try {
-			Platform.getJobManager().join("org.eclipse.wst.server.ui.family", new NullProgressMonitor());
-		} catch (Exception e) {
-			Logger.logException("Error waiting for job", e);
-		}
-
 		return theServer;
 	}
 
@@ -179,11 +173,13 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			monitor.setCanceled(true);
 			return;
 		}
+		ServersManager.save();
 	}
 
 	protected void handleRemoveServer() {
 		Server server = (Server) fServersList.getSelectedElements().get(0);
 		ServersManager.removeServer(server.getName());
+		ServersManager.save();
 	}
 
 	protected void updateStatus() {

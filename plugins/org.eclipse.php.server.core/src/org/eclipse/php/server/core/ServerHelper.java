@@ -27,48 +27,8 @@ public class ServerHelper {
 		this.map = new HashMap();
 	}
 
-	public void setAttribute(String attributeName, int value) {
-		int current = getAttribute(attributeName, 0);
-		if (current != 0 && current == value)
-			return;
-
-		map.put(attributeName, Integer.toString(value));
-		firePropertyChangeEvent(attributeName, new Integer(current), new Integer(value));
-	}
-
-	public void setAttribute(String attributeName, boolean value) {
-		boolean current = getAttribute(attributeName, false);
-
-		map.put(attributeName, Boolean.toString(value));
-		firePropertyChangeEvent(attributeName, new Boolean(current), new Boolean(value));
-	}
-
 	public void setAttribute(String attributeName, String value) {
 		String current = getAttribute(attributeName, (String) null);
-		if (current != null && current.equals(value))
-			return;
-
-		if (value == null)
-			map.remove(attributeName);
-		else
-			map.put(attributeName, value);
-		firePropertyChangeEvent(attributeName, current, value);
-	}
-
-	public void setAttribute(String attributeName, List value) {
-		List current = getAttribute(attributeName, (List) null);
-		if (current != null && current.equals(value))
-			return;
-
-		if (value == null)
-			map.remove(attributeName);
-		else
-			map.put(attributeName, value);
-		firePropertyChangeEvent(attributeName, current, value);
-	}
-
-	public void setAttribute(String attributeName, Map value) {
-		Map current = getAttribute(attributeName, (Map) null);
 		if (current != null && current.equals(value))
 			return;
 
@@ -135,58 +95,6 @@ public class ServerHelper {
 			if (obj == null)
 				return defaultValue;
 			return (String) obj;
-		} catch (Exception e) {
-			// ignore
-		}
-		return defaultValue;
-	}
-
-	public int getAttribute(String attributeName, int defaultValue) {
-		try {
-			Object obj = map.get(attributeName);
-			if (obj == null)
-				return defaultValue;
-			return Integer.parseInt((String) obj);
-		} catch (Exception e) {
-			// ignore
-		}
-		return defaultValue;
-	}
-
-	public boolean getAttribute(String attributeName, boolean defaultValue) {
-		try {
-			Object obj = map.get(attributeName);
-			if (obj == null)
-				return defaultValue;
-			return Boolean.valueOf((String) obj).booleanValue();
-		} catch (Exception e) {
-			// ignore
-		}
-		return defaultValue;
-	}
-
-	public List getAttribute(String attributeName, List defaultValue) {
-		try {
-			Object obj = map.get(attributeName);
-			if (obj == null)
-				return defaultValue;
-			List list = (List) obj;
-			if (list != null)
-				return list;
-		} catch (Exception e) {
-			// ignore
-		}
-		return defaultValue;
-	}
-
-	public Map getAttribute(String attributeName, Map defaultValue) {
-		try {
-			Object obj = map.get(attributeName);
-			if (obj == null)
-				return defaultValue;
-			Map map2 = (Map) obj;
-			if (map2 != null)
-				return map2;
 		} catch (Exception e) {
 			// ignore
 		}

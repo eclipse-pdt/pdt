@@ -12,16 +12,23 @@ package org.eclipse.php.server.core;
 
 import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
+import org.eclipse.php.core.util.preferences.IXMLPreferencesStorable;
 
 /**
  * A generic server implementation.
  */
-public class Server {
+public class Server implements IXMLPreferencesStorable {
 
+	// Used as a root element name when saving and loading the preferences.
+	public static final String SERVER_ELEMENT = "server";
+
+	// Server properties.
 	public static final String NAME = "name";
 	public static final String BASE_URL = "base_url";
 	public static final String DOCUMENT_ROOT = "document_root";
@@ -56,7 +63,7 @@ public class Server {
 		setDocumentRoot(documentRoot);
 		setPublish(publish);
 	}
-	
+
 	/**
 	 * Add a property change listener to this server.
 	 *
@@ -75,6 +82,27 @@ public class Server {
 		helper.removePropertyChangeListener(listener);
 	}
 
+	/**
+	 * Sets an arbitrary attribute to this Server.
+	 * 
+	 * @param attributeName The attribute name
+	 * @param value The String value of this attribute.
+	 */
+	public void setAttribute(String attributeName, String value) {
+		helper.setAttribute(attributeName, value);
+	}
+
+	/**
+	 * Returns an arbitrary attribute from this Server according to a given attribute name.
+	 * 
+	 * @param attributeName The attribute name
+	 * @param defaultValue A default value to use if the attribute was not found
+	 * @return The String value of this attribute
+	 */
+	public String getAttribute(String attributeName, String defaultValue) {
+		return helper.getAttribute(attributeName, defaultValue);
+	}
+
 	public String getContextRoot(IProject project) {
 		PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		String contextRoot = (String) options.getOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
@@ -87,43 +115,43 @@ public class Server {
 	}
 
 	public String getName() {
-		return helper.getAttribute(Server.NAME, "");
+		return getAttribute(Server.NAME, "");
 	}
-	
+
 	public void setName(String name) {
-		helper.setAttribute(Server.NAME, name);
+		setAttribute(Server.NAME, name);
 	}
-	
+
 	public String getBaseURL() {
-		return helper.getAttribute(Server.BASE_URL, "");
+		return getAttribute(Server.BASE_URL, "");
 	}
 
 	public void setBaseURL(String url) {
-		helper.setAttribute(Server.BASE_URL, url);
+		setAttribute(Server.BASE_URL, url);
 	}
 
 	public String getHost() {
-		return helper.getAttribute(Server.HOSTNAME, "localhost");
+		return getAttribute(Server.HOSTNAME, "localhost");
 	}
 
 	public void setHost(String host) {
-		helper.setAttribute(Server.HOSTNAME, host);
+		setAttribute(Server.HOSTNAME, host);
 	}
 
 	public void setDocumentRoot(String docRoot) {
-		helper.setAttribute(Server.DOCUMENT_ROOT, docRoot);
+		setAttribute(Server.DOCUMENT_ROOT, docRoot);
 	}
 
 	public String getDocumentRoot() {
-		return helper.getAttribute(Server.DOCUMENT_ROOT, "");
+		return getAttribute(Server.DOCUMENT_ROOT, "");
 	}
 
 	public boolean canPublish() {
-		return helper.getAttribute(Server.PUBLISH, false);
+		return Boolean.valueOf(getAttribute(Server.PUBLISH, "false")).booleanValue();
 	}
 
 	public void setPublish(boolean publish) {
-		helper.setAttribute(Server.PUBLISH, publish);
+		setAttribute(Server.PUBLISH, Boolean.toString(publish));
 	}
 
 	/**
@@ -171,15 +199,15 @@ public class Server {
 	}
 
 	public String getPortString() {
-		return helper.getAttribute(Server.PORT, "80");
+		return getAttribute(Server.PORT, "80");
 	}
 
 	public void setPort(String port) {
 		try {
 			if (port.equals("")) {
-				helper.setAttribute(Server.PORT, "80");
+				setAttribute(Server.PORT, "80");
 			} else {
-				helper.setAttribute(Server.PORT, port);
+				setAttribute(Server.PORT, port);
 			}
 		} catch (Throwable e) {
 			;
@@ -192,5 +220,30 @@ public class Server {
 	 */
 	public String toString() {
 		return "Server [" + getHost() + ']';
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.core.util.preferences.IXMLPreferencesStorable#restoreFromMap(java.util.HashMap)
+	 */
+	public void restoreFromMap(HashMap map) {
+		HashMap properties = (HashMap) map.get(SERVER_ELEMENT);
+		// This will cause for property change events to be fired on every attribute set.
+		Iterator keys = properties.keySet().iterator();
+		while (keys.hasNext()) {
+			String key = (String) keys.next();
+			setAttribute(key, (String) properties.get(key));
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.core.util.preferences.IXMLPreferencesStorable#storeToMap()
+	 */
+	public HashMap storeToMap() {
+		HashMap properties = new HashMap(helper.map);
+		HashMap serverMap = new HashMap(1);
+		serverMap.put(SERVER_ELEMENT, properties);
+		return serverMap;
 	}
 }
