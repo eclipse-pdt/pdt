@@ -11,20 +11,23 @@
 package org.eclipse.php.ui.outline;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.core.phpModel.phpElementData.*;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
 import org.eclipse.php.ui.treecontent.PHPTreeNode;
 import org.eclipse.php.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 
 public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
@@ -125,7 +128,35 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 			mode = MODE_PHP;
 			PHPUiPlugin.getDefault().getPreferenceStore().setValue(ChangeOutlineModeAction.PREF_OUTLINEMODE, mode);
 
+		}		
+		
+		PHPUiPlugin.getActiveWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionServiceListener());
+		
+	}
+	
+	private ISelectionListener getSelectionServiceListener() {
+		if (fSelectionListener == null) {
+			fSelectionListener = new PostSelectionServiceListener();
 		}
+		return fSelectionListener;
+	}
+
+	private ISelectionListener fSelectionListener = null;
+	
+	// this class intension is to get the selection event from the editor and then make sure the 
+	// selected elements have the IJFaceNodeAdapter as adapter - this adapter is responsible to refresh the outlineView 
+	private class PostSelectionServiceListener implements ISelectionListener {
+
+		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+			 if (selection instanceof IStructuredSelection) {
+				 IStructuredSelection structuredSelection = (IStructuredSelection)selection;
+				 for (Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
+					INodeNotifier node = (INodeNotifier) iter.next();
+					node.getAdapterFor(IJFaceNodeAdapter.class);
+				}
+			}
+		}
+		
 	}
 
 	public Object[] getChildren(Object object) {
@@ -173,6 +204,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 			return phpContentProvider.getElements(object);
 		} else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
 			PHPEditorModel editorModel = (PHPEditorModel) object;
+			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
 			PHPFileData fileData = editorModel.getFileData();
 			if (showGroups) {
 				Object[] nodes = { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_INCLUDES, "include files", fileData) };
