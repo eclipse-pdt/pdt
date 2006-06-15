@@ -182,7 +182,7 @@ public class PHPSearchEngine {
 				}
 			}
 			PHPClassData classData = classes[i];
-			if (SearchPattern.match(stringPattern, classData.getName(), caseSensitive)) {
+			if (SearchPattern.match(stringPattern, classData.getName(), caseSensitive, true)) {
 				int start = classData.getUserData().getStopPosition();
 				textResult.addMatch(new Match(new PHPClassDataDecorator(classData, project), start, classData.getName().length()));
 			}
@@ -199,7 +199,7 @@ public class PHPSearchEngine {
 				}
 			}
 			PHPFunctionData functionData = functions[i];
-			if (SearchPattern.match(stringPattern, functionData.getName(), caseSensitive)) {
+			if (SearchPattern.match(stringPattern, functionData.getName(), caseSensitive, true)) {
 				int start = functionData.getUserData().getStopPosition();
 				textResult.addMatch(new Match(new PHPFunctionDataDecorator(functionData, project), start, functionData.getName().length()));
 			}
@@ -216,7 +216,7 @@ public class PHPSearchEngine {
 				}
 			}
 			PHPConstantData constantData = constants[i];
-			if (SearchPattern.match(stringPattern, constantData.getName(), caseSensitive)) {
+			if (SearchPattern.match(stringPattern, constantData.getName(), caseSensitive, true)) {
 				int start = constantData.getUserData().getStopPosition() + 1; // Shift by 1 (fixed bug #141302)
 				textResult.addMatch(new Match(new PHPConstantDataDecorator(constantData, project), start, constantData.getName().length()));
 			}
