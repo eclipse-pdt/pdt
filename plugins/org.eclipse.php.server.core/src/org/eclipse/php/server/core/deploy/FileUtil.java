@@ -12,6 +12,8 @@ package org.eclipse.php.server.core.deploy;
 
 import java.io.*;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
@@ -28,6 +30,9 @@ import org.eclipse.swt.widgets.Display;
  * Utility class with an assortment of useful file methods.
  */
 public class FileUtil {
+
+	private static final Map EMPTY_MAP = new HashMap(0);
+
 	// size of the buffer
 	private static final int BUFFER = 10240;
 
@@ -44,11 +49,23 @@ public class FileUtil {
 	/**
 	 * Publish the project files into the server.
 	 * 
-	 * @param server
-	 * @param configuration
-	 * @param monitor
+	 * @param server A Server.
+	 * @param configuration ILaunchConfiguration that will be used to obtain the context root of the deployment.
+	 * @param monitor A progress monitor.
 	 */
 	public static boolean publish(Server server, IProject project, ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
+		return publish(server, project, configuration, EMPTY_MAP, monitor);
+	}
+
+	/**
+	 * Publish the project files into the server.
+	 * 
+	 * @param server A Server.
+	 * @param configuration ILaunchConfiguration that will be used to obtain the context root of the deployment.
+	 * @param ignoredResources A Map of resources names that will be ignored in the copy process.
+	 * @param monitor A progress monitor.
+	 */
+	public static boolean publish(Server server, IProject project, ILaunchConfiguration configuration, Map ignoredResources, IProgressMonitor monitor) throws CoreException {
 		String contextRoot = configuration.getAttribute(Server.CONTEXT_ROOT, (String) null);
 		IPath to = new Path(server.getDocumentRoot());
 		if (contextRoot != null && !contextRoot.equals("")) { //$NON-NLS-1$
@@ -57,7 +74,7 @@ public class FileUtil {
 
 		String source = project.getLocation().toOSString();
 		String dest = to.toOSString();
-		return smartCopyDirectory(source, dest, monitor);
+		return smartCopyDirectory(source, dest, ignoredResources, monitor);
 	}
 
 	/**
@@ -219,6 +236,24 @@ public class FileUtil {
 	 * @return true, only if the copy was successful
 	 */
 	public static boolean smartCopyDirectory(String from, String to, IProgressMonitor monitor) {
+		return smartCopyDirectory(from, to, EMPTY_MAP, monitor);
+	}
+
+	/**
+	 * Copys a directory from a to b, only modifying as needed
+	 * and deleting old files and directories.
+	 * This method also gets a Map of ignored resources that will not be copied in the process. The Map should
+	 * hold string names of the resources (without their paths) and the copy process will ignore any file 
+	 * or any directory (and its sub-hirarchy) that appears in the ignored map.
+	 * (Note: In the future we might wanna pass the full ignore path and not just the name)
+	 *
+	 * @param from a directory
+	 * @param to a directory
+	 * @param ignoredResources A Map of resources names that will be ignored in the copy process
+	 * @param monitor a progress monitor
+	 * @return true, only if the copy was successful
+	 */
+	public static boolean smartCopyDirectory(String from, String to, Map ignoredResources, IProgressMonitor monitor) {
 		try {
 			File fromDir = new File(from);
 			File toDir = new File(to);
@@ -289,13 +324,13 @@ public class FileUtil {
 				File current = fromFiles[i];
 
 				// check if this is a new or newer file
-				boolean copy = true;
+				boolean copy = false;
 				if (!current.isDirectory()) {
 					String name = current.getName();
 					long mod = current.lastModified();
-					for (int j = 0; j < toSize; j++) {
-						if (name.equals(toFiles[j].getName()) && mod <= toFiles[j].lastModified())
-							copy = false;
+					for (int j = 0; !copy && j < toSize; j++) {
+						if (name.equals(toFiles[j].getName()) && mod > toFiles[j].lastModified())
+							copy = true;
 					}
 				}
 
@@ -305,19 +340,24 @@ public class FileUtil {
 					if (!toFile.endsWith(File.separator))
 						toFile += File.separator;
 					toFile += current.getName();
-					if (current.isFile()) {
-						copyFile(fromFile, toFile);
-						monitor.worked(dw);
-					} else if (current.isDirectory()) {
-						monitor.subTask(NLS.bind(Messages.getString("FileUtil.copying"), new String[] { fromFile, toFile })); //$NON-NLS-1$
-						if (!smartCopyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, dw))) {
-							monitor.done();
-							return false;
+					if (!ignoredResources.containsKey(current.getName())) {
+						if (current.isFile()) {
+							copyFile(fromFile, toFile);
+							monitor.worked(dw);
+						} else if (current.isDirectory()) {
+							monitor.subTask(NLS.bind(Messages.getString("FileUtil.copying"), new String[] { fromFile, toFile })); //$NON-NLS-1$
+							if (!smartCopyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, dw))) {
+								monitor.done();
+								return false;
+							}
 						}
+					} else {
+						monitor.worked(dw);
 					}
 				}
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					return false;
+				}
 			}
 			monitor.worked(500 - dw * toSize);
 			monitor.done();

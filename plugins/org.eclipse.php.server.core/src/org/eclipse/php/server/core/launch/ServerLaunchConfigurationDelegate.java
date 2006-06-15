@@ -22,6 +22,7 @@ import org.eclipse.php.server.core.Activator;
 import org.eclipse.php.server.core.Logger;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.ServersManager;
+import org.eclipse.php.server.core.deploy.DeployFilter;
 import org.eclipse.php.server.core.deploy.FileUtil;
 
 /**
@@ -74,7 +75,7 @@ public class ServerLaunchConfigurationDelegate extends LaunchConfigurationDelega
 
 		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
 		if (publish) {
-			if (!FileUtil.publish(server, proj, configuration, monitor)) {
+			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
 				// Return if the publish failed.
 				return;
 			}
