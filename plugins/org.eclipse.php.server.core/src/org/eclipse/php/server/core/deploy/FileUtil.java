@@ -51,7 +51,7 @@ public class FileUtil {
 	public static boolean publish(Server server, IProject project, ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
 		String contextRoot = configuration.getAttribute(Server.CONTEXT_ROOT, (String) null);
 		IPath to = new Path(server.getDocumentRoot());
-		if (contextRoot != null && !contextRoot.equals("")) {
+		if (contextRoot != null && !contextRoot.equals("")) { //$NON-NLS-1$
 			to = to.append(contextRoot);
 		}
 
@@ -264,7 +264,7 @@ public class FileUtil {
 					monitor.done();
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
-							ErrorDialog.openError(Display.getDefault().getActiveShell(), "Publish Error", "Error while publishing files to the server.", new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "Make sure you have write permissions on the server's publish directory.", null));
+							ErrorDialog.openError(Display.getDefault().getActiveShell(), Messages.getString("FileUtil.publishError"), Messages.getString("FileUtil.serverPublishError"), new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, Messages.getString("FileUtil.writePermissionError"), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					});
 					return false;
