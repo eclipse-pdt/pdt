@@ -663,7 +663,7 @@ public abstract class OptionsConfigurationBlock {
 		return true;
 	}
 
-	private void prepareForBuild() {
+	protected void prepareForBuild() {
 
 		//implement this method for any actions that need to be taken before running build
 
