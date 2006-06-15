@@ -14,7 +14,6 @@ import java.io.*;
 import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -75,7 +74,7 @@ public class FileUtil {
 
 			File[] files = fromDir.listFiles();
 
-			toDir.mkdir();
+			toDir.mkdirs();
 
 			// cycle through files
 			int size = files.length;
@@ -261,7 +260,7 @@ public class FileUtil {
 				if (toDir.isFile()) {
 					toDir.delete();
 				}
-				if (!toDir.mkdir()) {
+				if (!toDir.mkdirs()) {
 					monitor.done();
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
