@@ -276,9 +276,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		argumentVariablesButton = createPushButton(composite, PHPDebugUIMessages.Variables, null); //$NON-NLS-1$
 		argumentVariablesButton.addSelectionListener(fListener);
 		addControlAccessibleListener(argumentVariablesButton, argumentVariablesButton.getText()); // need to strip the mnemonic from buttons
-		argumentField.setEnabled(false);
-		argumentVariablesButton.setEnabled(false);
-
 	}
 
 	/* (non-Javadoc)
