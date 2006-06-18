@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewerExtension2;
@@ -31,13 +32,7 @@ import org.eclipse.php.core.documentModel.partitioner.PHPStructuredTextPartition
 import org.eclipse.php.core.format.HTMLFormatProcessorForPhp;
 import org.eclipse.php.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.core.util.WeakPropertyChangeListener;
-import org.eclipse.php.internal.ui.autoEdit.CaseDefualtAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.CurlyCloseAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.CurlyOpenAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.DocBlockAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.IndentLineAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.MatchingBracketAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.QuotesAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.*;
 import org.eclipse.php.internal.ui.editor.PHPCodeHyperlinkDetector;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.ui.PHPUiPlugin;
@@ -52,7 +47,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
@@ -106,7 +101,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		public IContentAssistProccesorForPHP getProcessor() {
 			if (processor == null) {
-				Platform.run(new SafeRunnable("Error creation contentAssistProccesorForPHP for extension-point org.eclipse.php.ui.contentAssistProccesorForPHP") {
+				SafeRunner.run(new SafeRunnable("Error creation contentAssistProccesorForPHP for extension-point org.eclipse.php.ui.contentAssistProccesorForPHP") {
 					public void run() throws Exception {
 						processor = (IContentAssistProccesorForPHP) element.createExecutableExtension("class");
 					}
@@ -126,7 +121,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		public IHyperlinkDetectorForPHP getDetector() {
 			if (detector == null) {
-				Platform.run(new SafeRunnable("Error creation hyperlinkDetectorForPHP for extension-point org.eclipse.php.ui.hyperlinkDetectorForPHP") {
+				SafeRunner.run(new SafeRunnable("Error creation hyperlinkDetectorForPHP for extension-point org.eclipse.php.ui.hyperlinkDetectorForPHP") {
 					public void run() throws Exception {
 						detector = (IHyperlinkDetectorForPHP) element.createExecutableExtension("class");
 					}
@@ -148,8 +143,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			String[] htmlTypes = StructuredTextPartitionerForHTML.getConfiguredContentTypes();
 			configuredContentTypes = new String[2 + phpTypes.length + xmlTypes.length + htmlTypes.length];
 
-			configuredContentTypes[0] = IStructuredPartitionTypes.DEFAULT_PARTITION;
-			configuredContentTypes[1] = IStructuredPartitionTypes.UNKNOWN_PARTITION;
+			configuredContentTypes[0] = IStructuredPartitions.DEFAULT_PARTITION;
+			configuredContentTypes[1] = IStructuredPartitions.UNKNOWN_PARTITION;
 
 			int index = 0;
 			System.arraycopy(phpTypes, 0, configuredContentTypes, index += 2, phpTypes.length);

@@ -42,23 +42,23 @@ public class TypingPreferences {
 			public void propertyChange(PropertyChangeEvent event) {
 				String property = event.getProperty();
 				if (property == PreferenceConstants.EDITOR_CLOSE_STRINGS) {
-					closeQuotes = ((Boolean) event.getNewValue()).booleanValue();
+					closeQuotes = Boolean.getBoolean((String)event.getNewValue());
 					return;
 				}
 				if (property == PreferenceConstants.EDITOR_CLOSE_BRACKETS) {
-					closeBrackets = ((Boolean) event.getNewValue()).booleanValue();
+					closeBrackets = Boolean.getBoolean((String)event.getNewValue());
 					return;
 				}
 				if (property == PreferenceConstants.EDITOR_CLOSE_BRACES) {
-					closeCurlyBracket = ((Boolean) event.getNewValue()).booleanValue();
+					closeCurlyBracket = Boolean.getBoolean((String)event.getNewValue());
 					return;
 				}
 				if (property == PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS) {
-					closePhpdoc = ((Boolean) event.getNewValue()).booleanValue();
+					closePhpdoc = Boolean.getBoolean((String)event.getNewValue());
 					return;
 				}
 				if (property == PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS) {
-					addDocTags = ((Boolean) event.getNewValue()).booleanValue();
+					addDocTags = Boolean.getBoolean((String)event.getNewValue());
 					return;
 				}
 			}
