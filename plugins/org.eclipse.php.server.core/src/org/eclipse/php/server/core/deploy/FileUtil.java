@@ -33,6 +33,9 @@ public class FileUtil {
 
 	private static final Map EMPTY_MAP = new HashMap(0);
 
+	// A constant value of millisecond that will be used in the smart copy.
+	private static final long CONSTANT_TIME_DIFF = 2000L;
+
 	// size of the buffer
 	private static final int BUFFER = 10240;
 
@@ -254,6 +257,26 @@ public class FileUtil {
 	 * @return true, only if the copy was successful
 	 */
 	public static boolean smartCopyDirectory(String from, String to, Map ignoredResources, IProgressMonitor monitor) {
+		long timeDifference = 0L;
+		// Create a temporary file on the, possibly, remote machine. Then check the time of 
+		// the creation with compare to the local time.
+		// In case that the time gap is higher then the CONSTANT_TIME_DIFF update the timeDifference variable.
+		try {
+			File tempFile = File.createTempFile("probe", null, new File(to));
+			timeDifference = System.currentTimeMillis() - tempFile.lastModified();
+			System.out.println("timeDifference = " + timeDifference);
+			tempFile.delete();
+		} catch (IOException ioe) {
+		}
+		return smartCopyDirectory(from, to, ignoredResources, timeDifference, monitor);
+	}
+
+	/*
+	 * The smart copy method also recieve the gap in miliseconds between this machine and the (possibly) remote machine.
+	 * By using this data, the smart copy can decide which file should be copied.
+	 * A positive time difference means that this machine time is ahead of the other machine time.
+	 */
+	private static boolean smartCopyDirectory(String from, String to, Map ignoredResources, long timeDifference, IProgressMonitor monitor) {
 		try {
 			File fromDir = new File(from);
 			File toDir = new File(to);
@@ -324,13 +347,14 @@ public class FileUtil {
 				File current = fromFiles[i];
 
 				// check if this is a new or newer file
-				boolean copy = false;
+				boolean copy = true;
 				if (!current.isDirectory()) {
 					String name = current.getName();
-					long mod = current.lastModified();
-					for (int j = 0; !copy && j < toSize; j++) {
-						if (name.equals(toFiles[j].getName()) && mod > toFiles[j].lastModified())
-							copy = true;
+					// Deduct the time gap to clear the time gap before comparizon.
+					long mod = current.lastModified() - timeDifference;
+					for (int j = 0; j < toSize; j++) {
+						if (name.equals(toFiles[j].getName()) && mod <= toFiles[j].lastModified())
+							copy = false;
 					}
 				}
 
