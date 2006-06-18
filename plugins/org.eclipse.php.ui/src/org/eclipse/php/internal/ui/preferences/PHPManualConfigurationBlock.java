@@ -207,7 +207,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		ArrayList overlayKeys = new ArrayList();
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.PHP_MANUAL_SITE));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.PHP_MANUAL_SITES));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
