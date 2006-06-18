@@ -118,9 +118,12 @@ public class PHPContentAssistProcessor implements IContentAssistProcessor {
 
 					if (nestingLevel < 0) {
 						// int start= reader.getOffset();
-						if (looksLikeMethod(reader))
-							 // return start + 1;
+						if (looksLikeMethod(reader)) {
+							// return start + 1;
 							return reader.getOffset()+1;
+						} else {
+							return -1;
+						}
 					}
 				}
 
