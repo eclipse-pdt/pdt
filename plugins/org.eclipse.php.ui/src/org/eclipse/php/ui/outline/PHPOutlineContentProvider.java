@@ -128,12 +128,12 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 			mode = MODE_PHP;
 			PHPUiPlugin.getDefault().getPreferenceStore().setValue(ChangeOutlineModeAction.PREF_OUTLINEMODE, mode);
 
-		}		
-		
+		}
+
 		PHPUiPlugin.getActiveWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionServiceListener());
-		
+
 	}
-	
+
 	private ISelectionListener getSelectionServiceListener() {
 		if (fSelectionListener == null) {
 			fSelectionListener = new PostSelectionServiceListener();
@@ -142,21 +142,24 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 	}
 
 	private ISelectionListener fSelectionListener = null;
-	
+
 	// this class intension is to get the selection event from the editor and then make sure the 
 	// selected elements have the IJFaceNodeAdapter as adapter - this adapter is responsible to refresh the outlineView 
 	private class PostSelectionServiceListener implements ISelectionListener {
 
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			 if (selection instanceof IStructuredSelection) {
-				 IStructuredSelection structuredSelection = (IStructuredSelection)selection;
-				 for (Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
-					INodeNotifier node = (INodeNotifier) iter.next();
-					node.getAdapterFor(IJFaceNodeAdapter.class);
+			if (selection instanceof IStructuredSelection) {
+				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+				for (Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
+					Object next = iter.next();
+					if (next instanceof INodeNotifier) {
+						INodeNotifier node = (INodeNotifier) next;
+						node.getAdapterFor(IJFaceNodeAdapter.class);
+					}
 				}
 			}
 		}
-		
+
 	}
 
 	public Object[] getChildren(Object object) {
