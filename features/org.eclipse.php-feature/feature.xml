@@ -19,40 +19,10 @@
    </url>
 
    <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.wst.sse.core"/>
-      <import plugin="org.eclipse.wst.html.core"/>
-      <import plugin="org.eclipse.wst.xml.core"/>
-      <import plugin="org.eclipse.wst.validation"/>
-      <import plugin="org.eclipse.wst.server.core"/>
-      <import plugin="org.eclipse.wst.common.frameworks"/>
-      <import plugin="org.eclipse.core.filebuffers"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.wst.common.environment"/>
-      <import plugin="org.eclipse.debug.core"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.ui.console"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.wst.sse.ui"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.wst.html.ui"/>
-      <import plugin="org.eclipse.wst.server.ui"/>
-      <import plugin="org.eclipse.core.commands"/>
-      <import plugin="org.eclipse.core.expressions"/>
-      <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.wst.common.frameworks.ui"/>
-      <import plugin="org.eclipse.wst.web"/>
-      <import plugin="org.eclipse.wst.xml.ui"/>
-      <import plugin="org.eclipse.ui.browser"/>
-      <import plugin="org.eclipse.team.core"/>
-      <import plugin="org.eclipse.search"/>
-      <import plugin="org.eclipse.wst.common.modulecore"/>
-      <import plugin="org.apache.xerces"/>
+      <import feature="org.eclipse.wst" version="1.5.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.emf" version="2.2.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.gef" version="3.2.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.jem" version="1.2.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
