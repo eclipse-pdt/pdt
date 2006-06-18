@@ -15,7 +15,6 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 import org.eclipse.php.core.Logger;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
@@ -42,15 +41,10 @@ public class PhpParserSchedulerTask implements Runnable {
 	// this class is singleton - only one instance is allowed  
 	protected static final PhpParserSchedulerTask instance = new PhpParserSchedulerTask();
 
-	// needed for the parsing action (operates the parse async thread) 
-	protected final Display display;
-
 	/**
 	 * Private constructor, only one instance is given
 	 */
 	private PhpParserSchedulerTask() {
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		display = workbench == null ? null : PlatformUI.getWorkbench().getDisplay();
 	}
 
 	/**
@@ -73,8 +67,13 @@ public class PhpParserSchedulerTask implements Runnable {
 				// if release == null something with our stack lock mechanism is wrong!
 				assert release != null;
 
+				// this operation sets the release state to be started 
+				release.setAlive();
+				
 				// do the job of parsing with the given information
-				display.asyncExec(release);
+				final IWorkbench workbench = PlatformUI.getWorkbench();
+				if (workbench != null)
+					workbench.getDisplay().asyncExec(release);
 
 				// waits until the parse action is done, no cross parsing is allowed
 				release.join();
@@ -91,14 +90,12 @@ public class PhpParserSchedulerTask implements Runnable {
 	 * @throws InterruptedException 
 	 * @throws InterruptedException 
 	 */
-	protected ParserExecuter release() throws InterruptedException {
-
-		synchronized (buffer) {
+	protected synchronized ParserExecuter release() throws InterruptedException {
 
 			// pop a new parser task properties from stack
 			while (buffer.size() == 0) {
 				try {
-					buffer.wait();
+					wait();
 				} catch (InterruptedException e) {
 					// process of releasing was canceled
 					// ignore operation
@@ -109,10 +106,10 @@ public class PhpParserSchedulerTask implements Runnable {
 			final ParserExecuter item = (ParserExecuter) buffer.removeFirst();
 
 			// notify that the stack is not full 
-			buffer.notifyAll();
+			notifyAll();
 
 			return item;
-		}
+		
 
 	}
 
@@ -123,15 +120,13 @@ public class PhpParserSchedulerTask implements Runnable {
 	 * @param reader
 	 * @param lastModified
 	 */
-	public void schedule(PHPParserManager parserManager, PhpParser phpParser, ParserClient client, String filename, Reader reader, Pattern[] tasksPatterns, long lastModified, boolean useAspTagsAsPhp) {
-
-		synchronized (buffer) {
+	public synchronized void schedule(PHPParserManager parserManager, PhpParser phpParser, ParserClient client, String filename, Reader reader, Pattern[] tasksPatterns, long lastModified, boolean useAspTagsAsPhp) {
 
 			// add it (saftly)
 			// if the stack is full - wait() for an empty place 
 			while (buffer.size() >= BUFFER_MAX_SIZE) {
 				try {
-					buffer.wait();
+					wait();
 				} catch (InterruptedException e) {
 					// process of scheduling was canceled
 					// ignore operation
@@ -145,16 +140,17 @@ public class PhpParserSchedulerTask implements Runnable {
 			buffer.addFirst(parserProperties);
 
 			// now you can notify that the stack is not empty
-			buffer.notifyAll();
-
-		}
+			notifyAll();
 	}
 
 	/**
-	 * the parser properties holder and executer 
+	 * The task of parsing a php file 
 	 */
-	private static class ParserExecuter extends Thread {
+	private static class ParserExecuter implements Runnable {
 
+		private static final Object forJoin = new Object();
+		private static boolean alive = false;		
+		
 		private final PHPParserManager parserManager;
 		private PhpParser phpParser; // maybe we should re-create the parser
 		private final ParserClient client;
@@ -208,8 +204,46 @@ public class PhpParserSchedulerTask implements Runnable {
 					reader.close();
 				} catch (Exception e) {
 					Logger.logException(e);
+				} finally {
+
+					// notify for the join operation about the termination of the task
+					synchronized (forJoin) {
+						alive = false;
+						forJoin.notifyAll();
+					}
 				}
 			}
+		}
+		
+		/**
+		 * this implementation is the exactly the same as {@link Thread#join()} implementation
+		 * The thread will {@link Thread#wait()} untill 
+		 * {@link Object#notify()} or {@link Object#notifyAll()} will be invoked.
+		 * @throws InterruptedException
+		 */
+		public final void join() throws InterruptedException {
+
+			synchronized (forJoin) {
+				while (alive) {
+					forJoin.wait(0);
+				}
+			}
+			
+		}
+		
+		/**
+		 * Sets this task state as started 
+		 */
+		public final void setAlive() {
+
+			synchronized (forJoin) {
+				// don't wake this task if it is already alive
+				assert alive == false;
+
+				// sets the alive variable 
+				alive = true;
+			}
+			
 		}
 	}
 }
