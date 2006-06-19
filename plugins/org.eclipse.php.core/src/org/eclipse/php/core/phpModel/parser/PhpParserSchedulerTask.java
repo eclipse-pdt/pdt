@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
@@ -73,7 +74,7 @@ public class PhpParserSchedulerTask implements Runnable {
 
 				// this operation sets the release state to be started 
 				release.setAlive();
-				
+
 				// do the job of parsing with the given information
 				final IWorkbench workbench = PlatformUI.getWorkbench();
 				if (workbench != null)
@@ -81,6 +82,7 @@ public class PhpParserSchedulerTask implements Runnable {
 
 				// waits until the parse action is done, no cross parsing is allowed
 				release.join();
+				
 
 			} catch (InterruptedException e) {
 				// thread was stoped or canceled...
@@ -188,6 +190,7 @@ public class PhpParserSchedulerTask implements Runnable {
 		 */
 		public void run() {
 			try {
+
 				final CompletionLexer lexer = parserManager.createCompletionLexer(reader);
 				lexer.setUseAspTagsAsPhp(useAspTagsAsPhp);
 				lexer.setParserClient(client);
@@ -200,21 +203,23 @@ public class PhpParserSchedulerTask implements Runnable {
 				phpParser.setParserClient(client);
 
 				client.startParsing(filename);
+
 				phpParser.parse();
 
 			} catch (Exception e) {
 				Logger.logException(e);
 
-
 			} finally {
-				if (client != null && phpParser != null) {
-					client.finishParsing(phpParser.getLength(), phpParser.getCurrentLine(), lastModified);
-				}
-				
+
 				try {
-					reader.close();
-				} catch (Exception e) {
-					Logger.logException(e);
+					if (client != null && phpParser != null) {
+						client.finishParsing(phpParser.getLength(), phpParser.getCurrentLine(), lastModified);
+					}
+					
+					reader.close();					
+				} catch (IOException ex) {
+					Logger.logException(ex);
+				
 				} finally {
 
 					// notify for the join operation about the termination of the task
@@ -222,7 +227,9 @@ public class PhpParserSchedulerTask implements Runnable {
 						alive = false;
 						forJoin.notifyAll();
 					}
+					
 				}
+
 			}
 		}
 		
