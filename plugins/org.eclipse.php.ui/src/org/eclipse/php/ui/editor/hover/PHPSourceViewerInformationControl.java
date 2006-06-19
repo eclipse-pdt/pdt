@@ -10,24 +10,21 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor.hover;
 
-import org.eclipse.jface.preference.IPreferenceStore;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlExtension;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
+import org.eclipse.php.core.documentModel.partitioner.PHPStructuredTextPartitioner;
+import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
+import org.eclipse.php.ui.editor.highlighter.PHPLineStyleProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -38,6 +35,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
 /**
  * Source viewer based implementation of <code>IInformationControl</code>.
@@ -45,7 +49,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * @since 3.0
  */
-public class SourceViewerInformationControl implements IInformationControl, IInformationControlExtension, DisposeListener {
+public class PHPSourceViewerInformationControl implements IInformationControl, IInformationControlExtension, DisposeListener {
 
 	/** Border thickness in pixels. */
 	private static final int BORDER = 1;
@@ -84,6 +88,86 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 	 */
 	private int fMaxHeight = SWT.DEFAULT;
 
+	private Dictionary fContextStyleMap = null;
+	private IStructuredDocumentRegion fNodes = null;
+	private RegionParser fParser = null;
+	private PHPLineStyleProvider styleProvider;
+	private String fInput = ""; //$NON-NLS-1$
+
+	/**
+	 * @param newParser
+	 */
+	public void setParser(RegionParser newParser) {
+		fParser = newParser;
+	}
+
+	/**
+	 * @param newContextStyleMap
+	 *            java.util.Dictionary
+	 */
+	public void setContextStyleMap(Dictionary newContextStyleMap) {
+		fContextStyleMap = newContextStyleMap;
+	}
+
+	/**
+	 * @return java.util.Dictionary
+	 */
+	public Dictionary getContextStyleMap() {
+		return fContextStyleMap;
+	}
+
+	public RegionParser getParser() {
+		return fParser;
+	}
+
+	public TextAttribute getAttribute(String namedStyle) {
+		TextAttribute ta = new TextAttribute(fText.getBackground(), fText.getForeground(), SWT.NORMAL);
+		if (namedStyle != null && styleProvider != null) {
+			ta = styleProvider.getTextAttributeForColor(namedStyle);
+		}
+		return ta;
+	}
+
+	public void applyStyles() {
+		if (fText == null || fText.isDisposed() || fInput == null || fInput.length() == 0) {
+			return;
+		}
+		IStructuredDocumentRegion node = fNodes;
+		while (node != null) {
+			ITextRegionList regions = node.getRegions();
+			for (int i = 0; i < regions.size(); i++) {
+				ITextRegion currentRegion = regions.get(i);
+				// lookup the local coloring type and apply it
+				String namedStyle = (String) getContextStyleMap().get(currentRegion.getType());
+				if (namedStyle == null) {
+					continue;
+				}
+				TextAttribute attribute = getAttribute(namedStyle);
+				if (attribute == null) {
+					continue;
+				}
+
+				StyleRange style = new StyleRange(node.getStartOffset(currentRegion), currentRegion.getLength(), attribute.getForeground(), attribute.getBackground(), attribute.getStyle());
+				if ((attribute.getStyle() & TextAttribute.UNDERLINE) != 0) {
+					style.underline = true;
+					style.fontStyle &= ~TextAttribute.UNDERLINE;
+				}
+				fText.setStyleRange(style);
+			}
+			node = node.getNext();
+		}
+	}
+
+	public void initColorsMap() {
+		IModelManager mmanager = StructuredModelManager.getModelManager();
+		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
+
+		styleProvider = new PHPLineStyleProvider();
+		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
+
+		setContextStyleMap(contextStyleMap);
+	}
+
 	/**
 	 * Creates a default information control with the given shell as parent. The given
 	 * information presenter is used to process the information to be displayed. The given
@@ -93,7 +177,7 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 	 * @param shellStyle the additional styles for the shell
 	 * @param style the additional styles for the styled text widget
 	 */
-	public SourceViewerInformationControl(Shell parent, int shellStyle, int style) {
+	public PHPSourceViewerInformationControl(Shell parent, int shellStyle, int style) {
 		this(parent, shellStyle, style, null);
 	}
 
@@ -109,7 +193,7 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 	 *                         or <code>null</code> if the status field should be hidden
 	 * @since 3.0
 	 */
-	public SourceViewerInformationControl(Shell parent, int shellStyle, int style, String statusFieldText) {
+	public PHPSourceViewerInformationControl(Shell parent, int shellStyle, int style, String statusFieldText) {
 		GridLayout layout;
 		GridData gd;
 
@@ -139,9 +223,7 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 		}
 
 		// Source viewer
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
 		fViewer = new ProjectionViewer(composite, null, null, false, style);
-		//fViewer.configure(new SimpleJavaSourceViewerConfiguration(PHPPlugin.getDefault().getJavaTextTools().getColorManager(), store, null, PHPPartitionTypes.PHP_DOC, false));
 		fViewer.setEditable(false);
 
 		fText = fViewer.getTextWidget();
@@ -188,6 +270,7 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 			fStatusField.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
 
+		initColorsMap();
 		addDisposeListener(this);
 	}
 
@@ -199,7 +282,7 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 	 * @param parent the parent shell
 	 * @param style the additional styles for the styled text widget
 	 */
-	public SourceViewerInformationControl(Shell parent, int style) {
+	public PHPSourceViewerInformationControl(Shell parent, int style) {
 		this(parent, SWT.NO_TRIM | SWT.TOOL, style);
 	}
 
@@ -214,7 +297,7 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 	 *                         or <code>null</code> if the status field should be hidden
 	 * @since 3.0
 	 */
-	public SourceViewerInformationControl(Shell parent, int style, String statusFieldText) {
+	public PHPSourceViewerInformationControl(Shell parent, int style, String statusFieldText) {
 		this(parent, SWT.NO_TRIM | SWT.TOOL, style, statusFieldText);
 	}
 
@@ -225,7 +308,7 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 	 *
 	 * @param parent the parent shell
 	 */
-	public SourceViewerInformationControl(Shell parent) {
+	public PHPSourceViewerInformationControl(Shell parent) {
 		this(parent, SWT.NONE);
 	}
 
@@ -239,7 +322,7 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 	 *                         or <code>null</code> if the status field should be hidden
 	 * @since 3.0
 	 */
-	public SourceViewerInformationControl(Shell parent, String statusFieldText) {
+	public PHPSourceViewerInformationControl(Shell parent, String statusFieldText) {
 		this(parent, SWT.NONE, statusFieldText);
 	}
 
@@ -258,10 +341,11 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 	 * @see org.eclipse.jface.text.IInformationControlExtension2#setInput(java.lang.Object)
 	 */
 	public void setInput(Object input) {
-		if (input instanceof String)
+		if (input instanceof String) {
 			setInformation((String) input);
-		else
+		} else {
 			setInformation(null);
+		}
 	}
 
 	/*
@@ -273,9 +357,34 @@ public class SourceViewerInformationControl implements IInformationControl, IInf
 			return;
 		}
 
-		IDocument doc = new Document(content);
-		//JavaPlugin.getDefault().getJavaTextTools().setupJavaDocumentPartitioner(doc, IJavaPartitions.JAVA_PARTITIONING);
+		fInput = content;
+
+		StringBuffer buf = new StringBuffer();
+		buf.append("<?"); //$NON-NLS-1$
+		buf.append(content);
+		buf.append("?>"); //$NON-NLS-1$
+
+		IDocument doc = new Document(buf.toString());
+		DocumentReader docReader = new DocumentReader(doc);
+		getParser().reset(docReader);
+		IStructuredDocumentRegion sdRegion = getParser().getDocumentRegions();
+
+		// This hack is needed in order to remove the open and close PHP tags we added before.
+		// We were forced to add these tags, in order to enable PHP parser.
+		sdRegion = sdRegion.getNext(); // skip open PHP tag region
+		if (sdRegion.getNext() != null) {
+			fNodes = sdRegion;
+			do {
+				sdRegion.adjustStart(-2);
+				sdRegion = sdRegion.getNext();
+			} while (sdRegion.getNext() != null);
+			sdRegion.getPrevious().setNext(null); // remove close PHP tag region
+		}
+
+		doc = new Document(fInput);
+		doc.setDocumentPartitioner(new PHPStructuredTextPartitioner());
 		fViewer.setInput(doc);
+		applyStyles();
 	}
 
 	/*
