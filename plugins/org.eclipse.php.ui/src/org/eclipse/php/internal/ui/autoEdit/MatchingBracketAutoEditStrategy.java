@@ -132,30 +132,26 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 					continue;
 				}
 				int regionStart = sdRegion.getStart();
-				String text = sdRegion.getFullText();
 
-				ITextRegion tRegion = null;
-				int indexInText = text.length() - 1;
-				while (indexInText >= 0) {
-					char currChar = text.charAt(indexInText);
-					if (currChar == ROUND_OPEN || currChar == SQUARE_OPEN) {
-						tRegion = sdRegion.getRegionAtCharacterOffset(regionStart + indexInText);
-						if (tRegion.getType() == PHPRegionTypes.PHP_TOKEN || tRegion.getType() == PHPRegionTypes.PHP_SEMICOLON) {
-							if (currChar == bracketChar) {
-								if (matcher.match(document, regionStart + indexInText + 1) == null) {
+				ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(currOffset);
+				while (tRegion != null) {
+					String regionType = tRegion.getType();
+					if (regionType == PHPRegionTypes.PHP_TOKEN) {
+						char token = sdRegion.getText(tRegion).charAt(0);
+						if (token == ROUND_OPEN || token == SQUARE_OPEN) {
+							if (token == bracketChar) {
+								if (matcher.match(document, regionStart + tRegion.getStart() + 1) == null) {
 									return MATCHING_BRACKET_NEEDED;
 								}
 							}
 						}
-					} else if (currChar == CURLY_OPEN || currChar == CURLY_CLOSE) {
-						tRegion = sdRegion.getRegionAtCharacterOffset(regionStart + indexInText);
-						String regionType = tRegion.getType();
-						if (regionType == PHPRegionTypes.PHP_CURLY_OPEN || regionType == PHPRegionTypes.PHP_CURLY_CLOSE) {
-							return MATCHING_BRACKET_NOT_NEEDED;
-						}
+
+					} else if (regionType == PHPRegionTypes.PHP_CURLY_OPEN || regionType == PHPRegionTypes.PHP_CURLY_CLOSE) {
+						return MATCHING_BRACKET_NOT_NEEDED;
 					}
 
-					indexInText--;
+					currOffset = regionStart + tRegion.getStart() - 1;
+					tRegion = sdRegion.getRegionAtCharacterOffset(currOffset);
 				}
 
 				currOffset = sdRegion.getStartOffset() - 1;
@@ -208,7 +204,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 			return;
 		}
 		String regionType = tRegion.getType();
-		if (regionType != PHPRegionTypes.PHP_TOKEN && regionType != PHPRegionTypes.PHP_SEMICOLON) {
+		if (regionType != PHPRegionTypes.PHP_TOKEN) {
 			return;
 		}
 
