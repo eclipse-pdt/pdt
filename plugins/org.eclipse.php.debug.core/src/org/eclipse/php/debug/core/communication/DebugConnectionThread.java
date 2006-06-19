@@ -10,21 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.communication;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -41,11 +33,7 @@ import org.eclipse.php.debug.core.debugger.DebugMessagesRegistry;
 import org.eclipse.php.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugRequestHandler;
-import org.eclipse.php.debug.core.debugger.messages.DebugSessionStartedNotification;
-import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
-import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
-import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
-import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
+import org.eclipse.php.debug.core.debugger.messages.*;
 import org.eclipse.php.debug.core.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.debug.core.launching.PHPProcess;
 import org.eclipse.php.debug.core.launching.PHPServerLaunchDecorator;
@@ -492,18 +480,18 @@ public class DebugConnectionThread implements Runnable {
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebugInfo = false;
 		}
-		
+
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project;
 		String debugFileName;
-		
+
 		IPath filePath = new Path(fileNameString);
 		IResource res = workspaceRoot.findMember(filePath);
 		if (res != null) {
 			IFile fileToDebug = (IFile) res;
 			debugFileName = fileToDebug.getName();
 			project = fileToDebug.getProject();
-		} else if(projectString != null) {
+		} else if (projectString != null) {
 			project = workspaceRoot.getProject(projectString);
 			debugFileName = fileNameString;
 		} else {
@@ -692,7 +680,7 @@ public class DebugConnectionThread implements Runnable {
 								getCommunicationClient().handleNotification(newInputMessage);
 							} else if (newInputMessage instanceof IDebugRequestMessage) {
 
-//								int reqId = ((IDebugRequestMessage) newInputMessage).getID();
+								//								int reqId = ((IDebugRequestMessage) newInputMessage).getID();
 								IDebugMessageHandler requestHandler = DebugMessagesRegistry.getHandler((IDebugRequestMessage) newInputMessage);
 
 								if (requestHandler instanceof IDebugRequestHandler) {
@@ -758,15 +746,16 @@ public class DebugConnectionThread implements Runnable {
 		private void handleConnectionClosed() {
 			resetCommunication();
 			getCommunicationAdministrator().connectionClosed();
+			terminate();
 		}
 	}
 
 	public String toString() {
-    	String className = getClass().getName();
-    	className = className.substring(className.lastIndexOf('.') + 1);
-    	return className + "@" + Integer.toHexString(hashCode());
-    }
-	
+		String className = getClass().getName();
+		className = className.substring(className.lastIndexOf('.') + 1);
+		return className + "@" + Integer.toHexString(hashCode());
+	}
+
 	/**
 	 * This thread manages the Communication initiated by the peer.
 	 * All the messages that arrive form the peer are read by the ImputManager.
@@ -831,10 +820,9 @@ public class DebugConnectionThread implements Runnable {
 		 * message.
 		 */
 		public synchronized void stop() {
-			if (!inWork)
+			if (!inWork) {
 				return;
-			//System.out.println("InputManager "+"stop");
-			//Thread.currentThread().dumpStack();
+			}
 			inWork = false;
 			isAlive = true;
 			theThread.interrupt();
@@ -844,13 +832,8 @@ public class DebugConnectionThread implements Runnable {
 		 * Terminate this thread
 		 */
 		public synchronized void terminate() {
-			//System.out.println("InputManager "+"stop");
-			//Thread.currentThread().dumpStack();
 			inWork = false;
 			isAlive = false;
-			//            System.out.println("InputManager shutdown");
-			//			shutDown();
-			//            System.out.println("theThread.interrupt()");
 			theThread.interrupt();
 		}
 
@@ -874,6 +857,9 @@ public class DebugConnectionThread implements Runnable {
 							}
 						}
 					} catch (InterruptedException e) {
+						if (isDebugMode) {
+							System.out.println("interrupted: inWork = " + inWork + ", isAlive = " + isAlive);
+						}
 					}
 				}
 
@@ -890,7 +876,10 @@ public class DebugConnectionThread implements Runnable {
 					}
 					if (num < 0) {
 						shutDown();
-						System.out.println("Socket error (length is negative): possibly Server is SSL, Client is not.");
+						if (isDebugMode) {
+							System.out.println("Socket error (length is negative): possibly Server is SSL, Client is not.");
+						}
+						Logger.log(Logger.ERROR, "Socket error (length is negative): possibly Server is SSL, Client is not.");
 					}
 					// We have a new message. process it !!.
 					// This part is synchronized since we do not want the thread to be stoped
@@ -964,7 +953,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 
 		private void shutDown() {
-			inWork = false;
+			terminate();
 			cleanSocket();
 			inputMessageHandler.connectionClosed();
 		}
