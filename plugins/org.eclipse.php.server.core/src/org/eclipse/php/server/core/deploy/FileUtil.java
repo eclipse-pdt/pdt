@@ -33,9 +33,6 @@ public class FileUtil {
 
 	private static final Map EMPTY_MAP = new HashMap(0);
 
-	// A constant value of millisecond that will be used in the smart copy.
-	private static final long CONSTANT_TIME_DIFF = 2000L;
-
 	// size of the buffer
 	private static final int BUFFER = 10240;
 
@@ -264,7 +261,6 @@ public class FileUtil {
 		try {
 			File tempFile = File.createTempFile("probe", null, new File(to));
 			timeDifference = System.currentTimeMillis() - tempFile.lastModified();
-			System.out.println("timeDifference = " + timeDifference);
 			tempFile.delete();
 		} catch (IOException ioe) {
 		}
