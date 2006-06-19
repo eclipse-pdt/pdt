@@ -66,6 +66,14 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 			return super.core_reparse(rescanStart, rescanEnd, oldNodes, firstTime);
 		}
 		
+		// in case we edit PHP first region attach the previous one to the nodes list (for the <?php case)
+		IStructuredDocumentRegion previous = head.getPrevious();
+		if (isPreviousPhpOpenTag(previous)) {
+			rescanStart = previous.getStart();
+			oldNodes = attachFirst(previous, oldNodes);
+			head = previous;
+		}
+		
 		// Gets the old region (to restore the last state)
 		PHPStructuredDocumentRegion oldPhpStructureDocument = (PHPStructuredDocumentRegion) head;
 		
@@ -120,6 +128,28 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 		final StructuredDocumentEvent structuredDocumentEvent = super.minimumEvent(new CoreNodeList(firstOldNode, lastOldNode), toUnionList(newRegionList));
 		structuredDocumentEvent.setDeletedText(fDeletedText);
 		return structuredDocumentEvent;
+	}
+
+	/**
+	 * @param previous
+	 * @return
+	 */
+	private final boolean isPreviousPhpOpenTag(IStructuredDocumentRegion previous) {
+		if (previous == null || previous.getType() != PHPRegionContext.PHP_CONTENT) 
+			return false;
+		
+		final ITextRegion firstRegion = previous.getFirstRegion();
+		return (firstRegion != null && firstRegion.getType() == PHPRegionTypes.PHP_OPENTAG);
+	}
+
+	/**
+	 * Attach the previous region to the core node list 
+	 * @param previous
+	 * @param oldNodes
+	 * @return the complete list
+	 */
+	private CoreNodeList attachFirst(IStructuredDocumentRegion previous, CoreNodeList oldNodes) {
+		return new CoreNodeList(previous, oldNodes.item(oldNodes.getLength() - 1));
 	}
 
 	/**
