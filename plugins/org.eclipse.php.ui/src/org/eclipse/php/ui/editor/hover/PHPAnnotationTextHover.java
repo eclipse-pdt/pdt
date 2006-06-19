@@ -15,16 +15,18 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.Logger;
+import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.ui.util.CodeDataResolver;
-import org.eclipse.php.ui.util.PHPElementLabels;
+import org.eclipse.php.ui.util.PHPCodeDataHTMLDescriptionUtilities;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class PHPAnnotationTextHover extends AbstractPHPTextHover {
-	private final long LABEL_FLAGS = PHPElementLabels.DEFAULT_QUALIFIED | PHPElementLabels.ROOT_POST_QUALIFIED | PHPElementLabels.APPEND_ROOT_PATH | PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES | PHPElementLabels.M_APP_RETURNTYPE | PHPElementLabels.F_APP_TYPE_SIGNATURE
-		| PHPElementLabels.T_TYPE_PARAMETERS;
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		IDocument document = textViewer.getDocument();
@@ -33,10 +35,19 @@ public class PHPAnnotationTextHover extends AbstractPHPTextHover {
 				IStructuredDocument sDoc = (IStructuredDocument) document;
 				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(hoverRegion.getOffset());
 				ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(hoverRegion.getOffset());
-				if (textRegion.getTextEnd() >= hoverRegion.getOffset()) {
-					CodeData codeData = CodeDataResolver.getCodeData(textViewer, textRegion.getTextEnd());
+				if (sdRegion.getStartOffset() + textRegion.getTextEnd() >= hoverRegion.getOffset()) {
+					CodeData codeData = CodeDataResolver.getCodeData(textViewer, sdRegion.getStartOffset() + textRegion.getTextEnd());
 					if (codeData != null) {
-						return PHPElementLabels.getElementLabel(codeData, LABEL_FLAGS);
+						IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead (textViewer.getDocument());
+						if (sModel instanceof PHPEditorModel) {
+							try {
+								PHPEditorModel editorModel = (PHPEditorModel) sModel;
+								PHPProjectModel projectModel = editorModel.getProjectModel();
+								return PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel);
+							} finally {
+								sModel.releaseFromRead();
+							}
+						}
 					}
 				}
 			} catch (BadLocationException e) {
