@@ -22,6 +22,7 @@ import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.xml.core.internal.document.XMLModelNotifier;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
@@ -132,54 +133,10 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 		return file;
 	}
 
-	
-	
-	
 	public XMLModelNotifier getModelNotifier() {
 		if (this.notifier == null) {
 			this.notifier = new PHPModelNotifier();
 		}
 		return this.notifier;
 	}
-
-	/**
-	 * When PHP regions are replace do step by step 
-	 */
-	public void nodesReplaced(StructuredDocumentRegionsReplacedEvent event) {
-
-		super.nodesReplaced(event);
-		
-		/*
-		// TRICKY : change DOM model by : newModel(null), newModel(new NewDocumentEvent((IStructuredDocument) event.getDocument(), event.getOriginalRequester()));
-		
-		// get event properties
-		assert event.getDocument() instanceof IStructuredDocument;
-		final IStructuredDocument document = (IStructuredDocument) event.getDocument();
-		final Object originalRequester = event.getOriginalRequester();
-		final int offset = event.getOffset();
-		final int eventLength = event.getLength();		
-
-		// first remove old regions
-		final IStructuredDocumentRegionList oldStructuredDocumentRegions = event.getOldStructuredDocumentRegions();
-		int length = oldStructuredDocumentRegions == null ? 0 : oldStructuredDocumentRegions.getLength();
-		for (int i =0; i < length; i++) {
-			// remove the deleted region from the list and apply the super method to remove it from dom
-			final IStructuredDocumentRegion item = oldStructuredDocumentRegions.item(i);
-			item.setNext(null);
-			final CoreNodeList coreNodeList = new CoreNodeList(item);
-			final StructuredDocumentRegionsReplacedEvent structuredDocumentRegionsReplacedEvent = new StructuredDocumentRegionsReplacedEvent(document, originalRequester, coreNodeList, null, null, offset, eventLength);
-
-			super.nodesReplaced(structuredDocumentRegionsReplacedEvent);
-			getModelNotifier().endChanging();
-		}
-
-		// then you can add them all
-		final IStructuredDocumentRegionList newStructuredDocumentRegions = event.getNewStructuredDocumentRegions();
-		final StructuredDocumentRegionsReplacedEvent newEvent = new StructuredDocumentRegionsReplacedEvent(document, originalRequester, null, newStructuredDocumentRegions, null, 0, 0);
-		super.nodesReplaced(newEvent);
-		
-		*/
-				
-	}
-
 }
