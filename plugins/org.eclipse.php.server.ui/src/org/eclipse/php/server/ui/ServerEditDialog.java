@@ -21,6 +21,8 @@ import org.eclipse.php.ui.util.SWTUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -30,6 +32,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	private Server server;
 	private ArrayList runtimeComposites;
+	private SelectionListener tabsListener;
 
 	/**
 	 * Instantiate a new server edit dialog.
@@ -56,6 +59,8 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 			runtimeComposites.add(fragment);
 		}
 		getShell().setText("Edit Server");
+		tabsListener = new TabsSelectionListener();
+		tabs.addSelectionListener(tabsListener);
 		return tabs;
 	}
 
@@ -129,5 +134,20 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 	 */
 	public void setServer(Server server) {
 		this.server = server;
+	}
+	
+	private class TabsSelectionListener implements SelectionListener {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+			// Do nothing
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			CTabItem item = (CTabItem)e.item;
+			CompositeFragment fragment = (CompositeFragment)item.getControl();
+			setTitle(fragment.getTitle());
+			setDescription(fragment.getDescription());
+		}
+		
 	}
 }

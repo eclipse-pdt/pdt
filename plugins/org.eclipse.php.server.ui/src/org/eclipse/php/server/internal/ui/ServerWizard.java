@@ -30,7 +30,7 @@ import org.eclipse.ui.IWorkbench;
 public class ServerWizard extends FragmentedWizard implements INewWizard {
 
 	public ServerWizard() {
-		this("");
+		this("PHP Server Creation");
 	}
 
 	public ServerWizard(String title, WizardModel taskModel) {

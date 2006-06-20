@@ -27,6 +27,8 @@ public abstract class CompositeFragment extends Composite {
 	private String name;
 	private boolean isForEditing;
 	protected Server server;
+	private String title;
+	private String description;
 
 	/**
 	 * Constructs a new CompositeFragment.
@@ -92,6 +94,44 @@ public abstract class CompositeFragment extends Composite {
 		return name;
 	}
 
+	/**
+	 * Returns the fragment's title.
+	 */
+	public String getTitle() {
+		if (title == null) {
+			 title = "";
+		}
+		return title;
+	}
+	
+	/**
+	 * Sets the description for this fragment.
+	 * 
+	 * @param description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	/**
+	 * Returns the fragment's description.
+	 */
+	public String getDescription() {
+		if (description == null) {
+			description = "";
+		}
+		return description;
+	}
+	
+	/**
+	 * Sets the title for this fragment.
+	 * 
+	 * @param title
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
 	/**
 	 * Returns if this runtime composite was designated for editing mode.
 	 * When in editing, the behavior of the composite's creation and validation processes

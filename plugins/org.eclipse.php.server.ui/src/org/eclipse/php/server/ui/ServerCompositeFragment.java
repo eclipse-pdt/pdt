@@ -40,8 +40,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 */
 	public ServerCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		controlHandler.setTitle("Server");
-		controlHandler.setDescription("Specify the Server Information");
+		setDescription("Specify the Server Information");
+		controlHandler.setDescription(getDescription());
 		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
 		setDisplayName("Server");
 		createControl();
@@ -164,10 +164,11 @@ public class ServerCompositeFragment extends CompositeFragment {
 		browseButton.setEnabled(selected);
 		locationLabel.setEnabled(selected);
 		if (originalValuesCache.serverName != null && originalValuesCache.serverName.length() > 0) {
-			controlHandler.setTitle("Edit Server" + " [" + originalValuesCache.serverName + ']');
+			setTitle("Edit Server" + " [" + originalValuesCache.serverName + ']');
 		} else {
-			controlHandler.setTitle("Configure a PHP Server");
+			setTitle("Configure a PHP Server");
 		}
+		controlHandler.setTitle(getTitle());
 	}
 
 	protected void validate() {
@@ -176,7 +177,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			return;
 		}
 
-		setMessage("", IMessageProvider.NONE);
+		setMessage(getDescription(), IMessageProvider.NONE);
 
 		String serverName = modifiedValuesCache.serverName;
 		if (serverName == null || serverName.trim().equals("")) {
