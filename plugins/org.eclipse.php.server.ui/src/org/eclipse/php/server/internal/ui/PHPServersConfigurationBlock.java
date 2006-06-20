@@ -15,14 +15,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.ServersManager;
-import org.eclipse.php.server.ui.Logger;
 import org.eclipse.php.server.ui.ServerEditDialog;
 import org.eclipse.php.server.ui.wizard.WizardModel;
 import org.eclipse.php.ui.preferences.ui.IPreferenceConfigurationBlock;
@@ -39,10 +37,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
@@ -134,10 +129,14 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			Server newServer = getServerFromWizard();
 			if (newServer != null) {
 				fServersList.addElement(newServer);
-				fServersList.refresh();
+				ServersManager.addServer(newServer);
+				ServersManager.save();
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						fServersList.refresh();
+					}
+				});
 			}
-			ServersManager.addServer(newServer);
-			ServersManager.save();
 		} else if (index == IDX_EDIT) {
 			handleEditServerButtonSelected();
 			fServersList.refresh();
@@ -153,12 +152,6 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		if (dialog.open() == Window.CANCEL) {
 			monitor.setCanceled(true);
 			return null;
-		}
-
-		try {
-			Platform.getJobManager().join("org.eclipse.wst.server.ui.family", null);
-		} catch (Exception e) {
-			Logger.logException("Error waiting for job", e);
 		}
 		theServer = (Server) wizard.getRootFragment().getWizardModel().getObject(WizardModel.SERVER);
 		return theServer;

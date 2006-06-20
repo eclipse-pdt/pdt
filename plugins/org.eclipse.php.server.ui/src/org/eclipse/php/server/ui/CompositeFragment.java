@@ -54,7 +54,7 @@ public abstract class CompositeFragment extends Composite {
 	}
 
 	/**
-	 * Sets an Server.
+	 * Sets a Server.
 	 * 
 	 * @param server
 	 */

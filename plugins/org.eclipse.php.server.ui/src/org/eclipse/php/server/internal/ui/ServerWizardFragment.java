@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.server.internal.ui;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.php.server.core.Server;
+import org.eclipse.php.server.core.ServersManager;
 import org.eclipse.php.server.ui.Logger;
 import org.eclipse.php.server.ui.ServerCompositeFragment;
 import org.eclipse.php.server.ui.wizard.CompositeWizardFragment;
@@ -22,13 +25,6 @@ import org.eclipse.swt.widgets.Composite;
 public class ServerWizardFragment extends CompositeWizardFragment {
 
 	private ServerCompositeFragment comp;
-
-	//	protected void createChildFragments(List list) {
-	//		ICompositeFragmentFactory[] fragmentFactories = ServerFragmentsFactoryRegistry.getFragmentsFactories("org.eclipse.php.server.apache.13");
-	//		for (int i = 0; i < fragmentFactories.length; i++) {
-	//			list.add(fragmentFactories[i].createWizardFragment());
-	//		}
-	//	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.task.WizardFragment#createComposite()
@@ -49,10 +45,14 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	public void enter() {
 		if (comp != null) {
 			try {
-				Server server = new Server();
-				comp.setServer(server);
+
+				Server server = (Server) getWizardModel().getObject(WizardModel.SERVER);
+				if (server == null) {
+					server = new Server();
+					comp.setServer(server);
+				}
 			} catch (Exception e) {
-				System.out.println(e);
+				Logger.logException(e);
 			}
 		} else {
 			Logger.log(Logger.ERROR, "Could not display the Servers wizard (component is null).");
@@ -75,14 +75,33 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#exit()
 	 */
 	public void exit() {
-		try {
-			if (comp != null) {
-				if (comp.performOk()) {
-					WizardModel model = getWizardModel();
-					model.putObject(WizardModel.SERVER, comp.getServer());
-				}
-			}
-		} catch (Exception e) {
+		if (comp != null) {
+			WizardModel model = getWizardModel();
+			model.putObject(WizardModel.SERVER, comp.getServer());
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.server.ui.wizard.WizardFragment#performFinish(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public void performFinish(IProgressMonitor monitor) throws CoreException {
+		super.performFinish(monitor);
+		if (comp != null) {
+			comp.performOk();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.server.ui.wizard.WizardFragment#performCancel(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public void performCancel(IProgressMonitor monitor) throws CoreException {
+		super.performCancel(monitor);
+		// Clear any added server
+		if (getWizardModel().getObject(WizardModel.SERVER) != null) {
+			getWizardModel().putObject(WizardModel.SERVER, null);
+			ServersManager.save();
 		}
 	}
 }

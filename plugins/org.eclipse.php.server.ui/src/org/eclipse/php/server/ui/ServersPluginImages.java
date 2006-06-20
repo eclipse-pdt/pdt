@@ -1,4 +1,4 @@
-package org.eclipse.php.server.internal.ui;
+package org.eclipse.php.server.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,8 +8,6 @@ import java.util.Iterator;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.php.server.ui.Activator;
-import org.eclipse.php.server.ui.Logger;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 

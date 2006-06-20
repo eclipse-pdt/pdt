@@ -103,7 +103,7 @@ public abstract class WizardFragment {
 	 * Called when the wizard that this fragment belongs to has traversed
 	 * out of this wizard fragment. It is called to give the fragment the
 	 * opportunity to save any values entered into the composite or
-	 * update the task model.
+	 * update the wizard model.
 	 * <p>
 	 * When finish is pressed, the current fragment is exit()ed, and then
 	 * performFinish() is called on all of the fragments in the tree.

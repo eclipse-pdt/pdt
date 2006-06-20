@@ -6,7 +6,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.ServersManager;
-import org.eclipse.php.server.internal.ui.ServersPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -164,7 +163,11 @@ public class ServerCompositeFragment extends CompositeFragment {
 		publishDir.setEnabled(selected);
 		browseButton.setEnabled(selected);
 		locationLabel.setEnabled(selected);
-		controlHandler.setTitle("Edit Server" + " [" + originalValuesCache.serverName + ']');
+		if (originalValuesCache.serverName != null && originalValuesCache.serverName.length() > 0) {
+			controlHandler.setTitle("Edit Server" + " [" + originalValuesCache.serverName + ']');
+		} else {
+			controlHandler.setTitle("Configure a PHP Server");
+		}
 	}
 
 	protected void validate() {
@@ -351,12 +354,34 @@ public class ServerCompositeFragment extends CompositeFragment {
 				ServersManager.removeServer(originalValuesCache.serverName);
 				ServersManager.addServer(server);
 			}
-//			getServerWorkingCopy().save(true, null); // TODO - Save the server's properties ??
 		} catch (Throwable e) {
-			Logger.logException("Error while saving the new server settings", e);
+			Logger.logException("Error while saving the server settings", e);
 			return false;
 		}
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.server.ui.CompositeFragment#performCancel()
+	 */
+	public boolean performCancel() {
+		// Since the performOk might be triggered if this composite is inside a wizard fragment, we have to 
+		// implement the perform cancel to revert any changes made.
+		try {
+			if (server != null) {
+				server.setPort(String.valueOf(originalValuesCache.port));
+				server.setBaseURL(originalValuesCache.url);
+				server.setDocumentRoot(originalValuesCache.publishDir);
+				server.setPublish(originalValuesCache.canPublish);
+			}
+			server.setHost(originalValuesCache.host);
+			server.setName(originalValuesCache.serverName);
+		} catch (Throwable e) {
+			Logger.logException("Error while reverting the server settings", e);
+			return false;
+		}
+		return super.performCancel();
 	}
 
 	// A class used as a local original IServerWorkingCopy values cache.
