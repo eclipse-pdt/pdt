@@ -16,8 +16,7 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 import org.eclipse.php.core.Logger;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * This task handles the schedulaing of the model parser queue. <br>
@@ -72,17 +71,8 @@ public class PhpParserSchedulerTask implements Runnable {
 				// if release == null something with our stack lock mechanism is wrong!
 				assert release != null;
 
-				// this operation sets the release state to be started 
-				release.setAlive();
-
 				// do the job of parsing with the given information
-				final IWorkbench workbench = PlatformUI.getWorkbench();
-				if (workbench != null)
-					workbench.getDisplay().asyncExec(release);
-
-				// waits until the parse action is done, no cross parsing is allowed
-				release.join();
-				
+				runSyncTask(release);
 
 			} catch (InterruptedException e) {
 				// thread was stoped or canceled...
@@ -155,15 +145,25 @@ public class PhpParserSchedulerTask implements Runnable {
 			
 		}
 	}
+	
+	/**
+	 * This method runs sync task saftly 
+	 * @param release
+	 */
+	private final void runSyncTask(ParserExecuter release) {
+		Display display = Display.getDefault();
+		if (display.getThread() == Thread.currentThread()) {
+			release.run();
+		} else {
+			display.syncExec(release);	
+		}
+	}
 
 	/**
 	 * The task of parsing a php file 
 	 */
 	private static class ParserExecuter implements Runnable {
 
-		private static final Object forJoin = new Object();
-		private static boolean alive = false;		
-		
 		private final PHPParserManager parserManager;
 		private PhpParser phpParser; // maybe we should re-create the parser
 		private final ParserClient client;
@@ -216,55 +216,18 @@ public class PhpParserSchedulerTask implements Runnable {
 						client.finishParsing(phpParser.getLength(), phpParser.getCurrentLine(), lastModified);
 					}
 					
-					reader.close();					
-				} catch (IOException ex) {
+				} catch (Exception ex) {
 					Logger.logException(ex);
 				
 				} finally {
+					try {
+						reader.close();
+					} catch (IOException exception) {
+						Logger.logException(exception);
+					}					
 
-					// notify for the join operation about the termination of the task
-					synchronized (forJoin) {
-						alive = false;
-						forJoin.notifyAll();
-					}
-					
-				}
-
-			}
-		}
-		
-		/**
-		 * this implementation is the exactly the same as {@link Thread#join()} implementation
-		 * The thread will {@link Thread#wait()} untill 
-		 * {@link Object#notify()} or {@link Object#notifyAll()} will be invoked.
-		 * @throws InterruptedException
-		 */
-		public final void join() throws InterruptedException {
-
-			synchronized (forJoin) {
-
-				// simple join() implementation - wait till notification
-				while (alive) {
-					forJoin.wait(0);
 				}
 			}
-			
-		}
-		
-		/**
-		 * Sets this task state as started 
-		 */
-		public final void setAlive() {
-
-			synchronized (forJoin) {
-
-				// don't wake this task if it is already alive
-				assert alive == false;
-
-				// sets the alive variable 
-				alive = true;
-			}
-			
 		}
 	}
 }
