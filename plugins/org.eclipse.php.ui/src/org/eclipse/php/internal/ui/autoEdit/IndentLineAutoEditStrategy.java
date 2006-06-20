@@ -130,7 +130,7 @@ public class IndentLineAutoEditStrategy extends DefualtIndentationStrategy imple
 		}
 		int offset = command.offset;
 
-		String currentState = FormatterUtils.getPartitionType(document, offset);
+		String currentState = FormatterUtils.getPartitionType(document, offset, true);
 
 		char prevChar = document.getChar(offset - 1);
 		if (TypingPreferences.closeCurlyBracket && (prevChar == '{')) {
