@@ -107,6 +107,9 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 	 */
 	private int copyRestOfLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) throws BadLocationException {
 
+		if(command.offset + command.length == document.getLength()){ // if we're at the end of the document then nothing to copy
+			return 0;
+		}
 		int offset = command.offset;
 		IRegion lineInfo = document.getLineInformationOfOffset(offset);
 		int endOffset = lineInfo.getOffset() + lineInfo.getLength();

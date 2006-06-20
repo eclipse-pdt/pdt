@@ -74,7 +74,7 @@ public class IndentLineAutoEditStrategy extends DefualtIndentationStrategy imple
 			// so they will be replaced with the MatchingBlanks.
 			if (currentOffset < startOffset + i) {
 				//if (command.length != 0) { // comment out in order to fix bug # 139437
-					command.offset = Math.min(command.offset, startOffset);
+				command.offset = Math.min(command.offset, startOffset);
 				//}
 				command.length = Math.max(i, command.length);
 			}
@@ -133,8 +133,16 @@ public class IndentLineAutoEditStrategy extends DefualtIndentationStrategy imple
 		String currentState = FormatterUtils.getPartitionType(document, offset);
 
 		char prevChar = document.getChar(offset - 1);
-		if (TypingPreferences.closeCurlyBracket && (prevChar == '{') && (currentState == PHPPartitionTypes.PHP_DEFAULT)) {
-			return pairCurlyBracketAutoEditStrategy;
+		if (TypingPreferences.closeCurlyBracket && (prevChar == '{')) {
+			if (currentState != PHPPartitionTypes.PHP_DEFAULT) {
+				if (document.getLength() == offset) {// if we are editing in the end of the document then we need to check one step back
+					currentState = FormatterUtils.getPartitionType(document, offset - 1);
+				}
+			}
+			if (currentState == PHPPartitionTypes.PHP_DEFAULT) {
+				return pairCurlyBracketAutoEditStrategy;
+			}
+
 		}
 		return null;
 	}

@@ -118,6 +118,13 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 					postCharState = FormatterUtils.getPartitionType(document, offset + 2);
 				}
 			}
+			if (document.getLength() == offset + 1) { //if we are in the end of the document
+				postCharState = FormatterUtils.getPartitionType(document, offset);
+				if (postCharState == PHPPartitionTypes.PHP_DEFAULT || postCharState == PHPRegionTypes.PHP_OPENTAG || postCharState == PHPRegionTypes.PHP_CLOSETAG) {
+					return MATCHING_BRACKET_NEEDED;
+				}
+				return MATCHING_BRACKET_NOT_NEEDED;
+			}
 
 			if (postCharState != PHPPartitionTypes.PHP_DEFAULT && postCharState != PHPRegionTypes.PHP_OPENTAG && postCharState != PHPRegionTypes.PHP_CLOSETAG) {
 				return SEARCH_NOT_VALID;

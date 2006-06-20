@@ -82,6 +82,10 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 	 * excluding php closing tag (?>) and comments  
 	 */
 	protected boolean shouldAddClosingBracket(IStructuredDocument document, int offset, boolean isQuote) throws BadLocationException {
+		if(document.getLength() == offset){ // if we're at the end of the document then we could add the bracket
+			return true;
+		}
+		
 		char currChar = document.getChar(offset);
 		if (Character.isWhitespace(currChar) || isClosingBracket(currChar) || (isQuote && isQuote(currChar)) || currChar == ';') {
 			return true;
