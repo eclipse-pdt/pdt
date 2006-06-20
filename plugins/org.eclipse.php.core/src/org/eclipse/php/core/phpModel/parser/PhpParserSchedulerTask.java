@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 import org.eclipse.php.core.Logger;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * This task handles the schedulaing of the model parser queue. <br>
@@ -72,7 +71,7 @@ public class PhpParserSchedulerTask implements Runnable {
 				assert release != null;
 
 				// do the job of parsing with the given information
-				runSyncTask(release);
+				release.run();
 
 			} catch (InterruptedException e) {
 				// thread was stoped or canceled...
@@ -147,19 +146,6 @@ public class PhpParserSchedulerTask implements Runnable {
 	}
 	
 	/**
-	 * This method runs sync task saftly 
-	 * @param release
-	 */
-	private final void runSyncTask(ParserExecuter release) {
-		Display display = Display.getDefault();
-		if (display.getThread() == Thread.currentThread()) {
-			release.run();
-		} else {
-			display.syncExec(release);	
-		}
-	}
-
-	/**
 	 * The task of parsing a php file 
 	 */
 	private static class ParserExecuter implements Runnable {
@@ -190,7 +176,7 @@ public class PhpParserSchedulerTask implements Runnable {
 		 */
 		public void run() {
 			try {
-
+				
 				final CompletionLexer lexer = parserManager.createCompletionLexer(reader);
 				lexer.setUseAspTagsAsPhp(useAspTagsAsPhp);
 				lexer.setParserClient(client);
@@ -201,7 +187,7 @@ public class PhpParserSchedulerTask implements Runnable {
 				}
 				phpParser.setScanner(lexer);
 				phpParser.setParserClient(client);
-
+				
 				client.startParsing(filename);
 
 				phpParser.parse();
