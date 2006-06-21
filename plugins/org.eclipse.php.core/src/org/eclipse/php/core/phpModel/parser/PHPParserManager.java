@@ -32,23 +32,12 @@ public abstract class PHPParserManager {
 		thread.start();
 	}
 	
-	// parsing optimization variables 
-	private static final long DELAY_TIME = 500L;
-	private static long lastParsedTimestamp = 0L;
-	private static String lastParsedFilename;
-
 	public void parse(Reader reader, String fileName, long lastModified, ParserClient client, boolean useAspTagsAsPhp) {
 		parse(reader, fileName, lastModified, client, new Pattern[0], useAspTagsAsPhp);
 	}
 
 	public void parse(Reader reader, String fileName, long lastModified, ParserClient client, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) {
+		scheduler.schedule(this, phpParser, client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
 
-		// Run the parsing task only if a DELAY_TIME has elapsed
-		final long currentTimestamp = System.currentTimeMillis();
-		if (currentTimestamp - lastParsedTimestamp > DELAY_TIME || !fileName.equals(lastParsedFilename)) {
-			scheduler.schedule(this, phpParser, client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
-			lastParsedTimestamp = currentTimestamp;
-			lastParsedFilename = fileName;			
-		}
 	}
 }
