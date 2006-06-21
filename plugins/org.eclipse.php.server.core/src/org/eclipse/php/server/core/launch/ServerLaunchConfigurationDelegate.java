@@ -21,9 +21,9 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.php.server.core.Activator;
 import org.eclipse.php.server.core.Logger;
 import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.core.ServersManager;
 import org.eclipse.php.server.core.deploy.DeployFilter;
 import org.eclipse.php.server.core.deploy.FileUtil;
+import org.eclipse.php.server.core.manager.ServersManager;
 
 /**
  * Server launch configuration delegate.

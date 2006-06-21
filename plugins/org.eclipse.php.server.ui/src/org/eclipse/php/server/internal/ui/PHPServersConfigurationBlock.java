@@ -20,7 +20,7 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.core.ServersManager;
+import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.php.server.ui.ServerEditDialog;
 import org.eclipse.php.server.ui.wizard.WizardModel;
 import org.eclipse.php.ui.preferences.ui.IPreferenceConfigurationBlock;

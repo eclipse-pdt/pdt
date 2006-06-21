@@ -31,7 +31,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.core.ServersManager;
+import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.php.server.internal.ui.ClosableWizardDialog;
 import org.eclipse.php.server.internal.ui.ServerWizard;
 import org.eclipse.php.server.ui.wizard.WizardModel;

@@ -22,9 +22,11 @@ public class ServerHelper {
 
 	// property change listeners
 	private transient List propertyListeners;
+	private Server server;
 
-	public ServerHelper() {
+	public ServerHelper(Server server) {
 		this.map = new HashMap();
+		this.server = server;
 	}
 
 	public void setAttribute(String attributeName, String value) {
@@ -73,7 +75,7 @@ public class ServerHelper {
 		if (propertyListeners == null)
 			return;
 
-		PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+		PropertyChangeEvent event = new PropertyChangeEvent(server, propertyName, oldValue, newValue);
 		try {
 			Iterator iterator = propertyListeners.iterator();
 			while (iterator.hasNext()) {

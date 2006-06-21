@@ -44,7 +44,7 @@ public class Server implements IXMLPreferencesStorable {
 	 * Constructs a new Server
 	 */
 	public Server() {
-		helper = new ServerHelper();
+		helper = new ServerHelper(this);
 	}
 
 	/**

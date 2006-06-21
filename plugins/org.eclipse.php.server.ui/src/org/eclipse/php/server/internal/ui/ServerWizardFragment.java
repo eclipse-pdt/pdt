@@ -13,7 +13,7 @@ package org.eclipse.php.server.internal.ui;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.core.ServersManager;
+import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.php.server.ui.Logger;
 import org.eclipse.php.server.ui.ServerCompositeFragment;
 import org.eclipse.php.server.ui.wizard.CompositeWizardFragment;

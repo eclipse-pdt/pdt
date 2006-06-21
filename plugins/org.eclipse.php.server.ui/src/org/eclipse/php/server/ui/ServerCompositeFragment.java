@@ -5,7 +5,7 @@ import java.net.URL;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.core.ServersManager;
+import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
