@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.model;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -192,17 +196,28 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void parsingErrorOccured(DebugError debugError) {
 		super.parsingErrorOccured(debugError);
+		String sName = debugError.getFileName();
 		int length;
+		String rName;
 		if (!fDebugTarget.isPHPCGI()) {
 			length = fDebugTarget.getHTDocs().length() + fDebugTarget.getContextRoot().length();
+			rName = sName.substring(length);
 		} else {
 			length = fDebugTarget.getWorkspacePath().length() + fDebugTarget.getProjectName().length();
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IFile file = root.getFileForLocation(new Path(sName));
+			if (file != null) {
+				if (root.getProject(fDebugTarget.getProjectName()).equals(file.getProject())) {
+					rName = file.getProjectRelativePath().toOSString();
+				} else {
+					rName = ".." + file.getFullPath().toOSString();
+				}
+			} else {
+				rName = sName;
+			}
 		}
-		String sName = debugError.getFileName();
-		String rName = sName.substring(length);
 		String dFileName = RemoteDebugger.convertToSystemIndependentFileName(rName);
 		debugError.setFileName(dFileName);
-
 		fDebugTarget.getDebugErrors().add(debugError);
 
 		Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();
