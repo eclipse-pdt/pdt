@@ -143,6 +143,10 @@ public class DefualtIndentationStrategy implements IIndentationStrategy {
 		int regionStartOffset = sdRegion.getStartOffset();
 		int offset = forOffset;
 		while (startOffset <= offset) {
+			if(document.getLength() == offset){//if we are at the end of the document then we need to check one step before
+				offset--;
+				continue;
+			}
 			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 			if(tRegion == null){
 				return null;
