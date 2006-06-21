@@ -18,10 +18,10 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
-import org.eclipse.php.core.phpModel.parser.ModelListener;
-import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.parser.*;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlockImp;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
 import org.eclipse.swt.widgets.Control;
@@ -200,7 +200,10 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 				// if adding file, convert to php element
 				if (resource instanceof IFile && PHPModelUtil.isPhpFile((IFile) resource))
 				{
-					PHPFileData fileData=PHPWorkspaceModelManager.getInstance().getModelForFile((IFile) resource,true);
+					PHPFileData fileData=PHPWorkspaceModelManager.getInstance().getModelForFile((IFile) resource, false);
+					if(fileData == null){
+						fileData = PHPCodeDataFactory.createPHPFileData(((IFile) resource).getFullPath().toString(), PHPCodeDataFactory.createUserData(((IFile) resource).getFullPath().toString(), 0, 0, 0, 0), PHPCodeDataFactory.EMPTY_CLASS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY, VariableContextBuilder.createPHPVariablesTypeManager(new HashMap(), new HashMap()), PHPCodeDataFactory.EMPTY_INCLUDE_DATA_ARRAY, PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY, PHPCodeDataFactory.EMPTY_MARKERS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_PHP_BLOCK_ARRAY, new PHPDocBlockImp("","",new PHPDocTag[0],0), System.currentTimeMillis());
+					}
 					if (fileData!=null)
 						addItem=fileData;
 				}
