@@ -118,7 +118,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 			public String getDescription() {
 				PHPexeItem def = getPHPs(true).getDefaultItem();
 				if (def != null)
-					return def.getName() + "(" + def.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					return def.getName() + " (" + def.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				return "no php exes defined"; //$NON-NLS-1$
 			}
 		};
