@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.folding;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -22,26 +20,19 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.*;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
-import org.eclipse.wst.common.frameworks.internal.ui.Timer;
-import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 /**
@@ -49,16 +40,14 @@ import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider
  * 
  * @author shalom
  */
-public class DefaultPHPFoldingStructureProvider implements IProjectionListener, IStructuredTextFoldingProvider {
+public class DefaultPHPFoldingStructureProvider implements IProjectionListener, IStructuredTextFoldingProvider, IAnnotationModelListener {
 	private ProjectionViewer viewer;
 	private boolean collapseClasses;
 	private boolean collapseFunctions;
 	private boolean collapsePHPDoc;
 	private boolean allowCollapsing;
-	private IModelStateListener modelStateListener;
 	private ArrayList toRemove;
 	private Map newFolds;
-	private Timer timer;
 	private IDocument document;
 
 	public DefaultPHPFoldingStructureProvider() {
@@ -78,35 +67,9 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		// message.
 		projectionDisabled();
 		initialize();
-		if (document != null) {
-			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			if (model != null) {
-				modelStateListener = new PHPModelStateListener();
-				model.addModelStateListener(modelStateListener);
-				model.releaseFromRead();
-			} else {
-				PHPUiPlugin.logErrorMessage("getExistingModelForRead gave a null result");
-			}
-			timer = new Timer(1000, new TimerListener()); // TODO - Remove this timer and listen to the annotation end of drawing instead
-		}
 	}
 
 	public void projectionDisabled() {
-		if (timer != null) {
-			timer.stop();
-			timer = null;
-		}
-		if (document != null) {
-			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			if (model != null) {
-				model.removeModelStateListener(modelStateListener);
-				model.releaseFromRead();
-			} else {
-				PHPUiPlugin.logErrorMessage("getExistingModelForRead gave a null result");
-			}
-			modelStateListener = null;
-			document = null;
-		}
 	}
 
 	public void install(ProjectionViewer viewer) {
@@ -116,16 +79,14 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		}
 		this.viewer = viewer;
 		viewer.addProjectionListener(this);
+		viewer.getAnnotationModel().addAnnotationModelListener(this);
 	}
 
 	public void uninstall() {
-		if (timer != null) {
-			timer.stop();
-			timer = null;
-		}
 		if (isInstalled()) {
 			projectionDisabled();
 			viewer.removeProjectionListener(this);
+			viewer.getAnnotationModel().removeAnnotationModelListener(this);
 			viewer = null;
 		}
 	}
@@ -411,38 +372,6 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 	}
 
 	/*
-	 * A listener for the PHP model.
-	 * This listener starts the folding update on every modelChanged event.
-	 */
-	private class PHPModelStateListener implements IModelStateListener {
-		/**
-		 * Update the folds when the model is changed.
-		 */
-		public void modelChanged(IStructuredModel model) {
-			timer.restart();
-		}
-
-		// Do nothing on all other methods
-		public void modelAboutToBeChanged(IStructuredModel model) {
-		}
-
-		public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
-		}
-
-		public void modelResourceDeleted(IStructuredModel model) {
-		}
-
-		public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
-		}
-
-		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
-		}
-
-		public void modelReinitialized(IStructuredModel structuredModel) {
-		}
-	}
-
-	/*
 	 * An annotated position, which is a Position that holds an annotation that is assigned to it.
 	 */
 	private class AnnotatedPosition extends Position {
@@ -544,13 +473,13 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 				"\tcomment: \t" + isComment + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-
-	private class TimerListener implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.IAnnotationModelListener#modelChanged(org.eclipse.jface.text.source.IAnnotationModel)
+	 */
+	public void modelChanged(IAnnotationModel model) {
+		if (document != null) {
 			updateFolds();
-			timer.stop();
 		}
 	}
-
 }
