@@ -8,9 +8,8 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.core.format;
+package org.eclipse.php.core.format.htmlFormatters;
 
-import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.w3c.dom.Node;
@@ -23,7 +22,8 @@ import org.w3c.dom.Node;
 public class HTMLFormatProcessorForPhp extends HTMLFormatProcessorImpl {
 
 	protected IStructuredFormatter getFormatter(Node node) {
-		return node instanceof PHPElementImpl ? new PhpFormatter() : super.getFormatter(node);
+		IStructuredFormatter formatter = HTMLFormatterNoPHPFactory.getInstance().createFormatter(node, getFormatPreferences());		
+		return formatter;
 	}
 	
 	
