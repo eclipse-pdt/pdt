@@ -47,8 +47,8 @@ public abstract class PHPParserManager {
 		final long currentTimestamp = System.currentTimeMillis();
 		if (currentTimestamp - lastParsedTimestamp > DELAY_TIME || !fileName.equals(lastParsedFilename)) {
 			scheduler.schedule(this, phpParser, client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
+			lastParsedTimestamp = currentTimestamp;
+			lastParsedFilename = fileName;			
 		}
-		lastParsedTimestamp = currentTimestamp;
-		lastParsedFilename = fileName;
 	}
 }
