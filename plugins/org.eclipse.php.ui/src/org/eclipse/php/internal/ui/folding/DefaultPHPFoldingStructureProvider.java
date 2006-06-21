@@ -10,18 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.folding;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
@@ -33,6 +28,7 @@ import org.eclipse.php.core.phpModel.phpElementData.*;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
@@ -41,7 +37,7 @@ import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider
  * 
  * @author shalom
  */
-public class DefaultPHPFoldingStructureProvider implements IProjectionListener, IStructuredTextFoldingProvider, IAnnotationModelListener, ModelListener {
+public class DefaultPHPFoldingStructureProvider implements IProjectionListener, IStructuredTextFoldingProvider, ModelListener {
 
 	private static final PHPWorkspaceModelManager workspaceModelManagerInstance = PHPWorkspaceModelManager.getInstance();
 
@@ -50,9 +46,12 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 	private boolean collapseFunctions;
 	private boolean collapsePHPDoc;
 	private boolean allowCollapsing;
+	private IModelStateListener modelStateListener;
 	private ArrayList toRemove;
 	private Map newFolds;
+	private Timer timer;
 	private IDocument document;
+	private TimerTask timerTask;
 
 	public DefaultPHPFoldingStructureProvider() {
 		super();
@@ -71,9 +70,37 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		// message.
 		projectionDisabled();
 		initialize();
+		if (document != null) {
+			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			if (model != null) {
+				modelStateListener = new PHPModelStateListener();
+				model.addModelStateListener(modelStateListener);
+				model.releaseFromRead();
+			} else {
+				PHPUiPlugin.logErrorMessage("getExistingModelForRead gave a null result");
+			}
+			timer = new Timer(false); // TODO - Remove this timer and listen to the annotation end of drawing instead
+			timerTask = new FoldingTimerTask();
+		}
 	}
 
 	public void projectionDisabled() {
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+			timerTask = null;
+		}
+		if (document != null) {
+			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			if (model != null) {
+				model.removeModelStateListener(modelStateListener);
+				model.releaseFromRead();
+			} else {
+				PHPUiPlugin.logErrorMessage("getExistingModelForRead gave a null result");
+			}
+			modelStateListener = null;
+			document = null;
+		}
 	}
 
 	public void install(ProjectionViewer viewer) {
@@ -83,15 +110,17 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		}
 		this.viewer = viewer;
 		viewer.addProjectionListener(this);
-		viewer.getAnnotationModel().addAnnotationModelListener(this);
 		workspaceModelManagerInstance.addModelListener(this);
 	}
 
 	public void uninstall() {
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
 		if (isInstalled()) {
 			projectionDisabled();
 			viewer.removeProjectionListener(this);
-			viewer.getAnnotationModel().removeAnnotationModelListener(this);
 			workspaceModelManagerInstance.removeModelListener(this);
 			viewer = null;
 		}
@@ -377,6 +406,42 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 	}
 
 	/*
+	 * A listener for the PHP model.
+	 * This listener starts the folding update on every modelChanged event.
+	 */
+	private class PHPModelStateListener implements IModelStateListener {
+		/**
+		 * Update the folds when the model is changed.
+		 */
+		public void modelChanged(IStructuredModel model) {
+			if (timer != null) {
+				timer.cancel();
+			}
+			timer = new Timer(false);
+			timer.schedule(new FoldingTimerTask(), 1000);
+		}
+
+		// Do nothing on all other methods
+		public void modelAboutToBeChanged(IStructuredModel model) {
+		}
+
+		public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
+		}
+
+		public void modelResourceDeleted(IStructuredModel model) {
+		}
+
+		public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
+		}
+
+		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+		}
+
+		public void modelReinitialized(IStructuredModel structuredModel) {
+		}
+	}
+
+	/*
 	 * An annotated position, which is a Position that holds an annotation that is assigned to it.
 	 */
 	private class AnnotatedPosition extends Position {
@@ -479,12 +544,10 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.IAnnotationModelListener#modelChanged(org.eclipse.jface.text.source.IAnnotationModel)
-	 */
-	public void modelChanged(IAnnotationModel model) {
-		if (document != null) {
+	private class FoldingTimerTask extends TimerTask {
+		public void run() {
 			updateFolds();
+			timer.cancel();
 		}
 	}
 
@@ -500,7 +563,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 				PHPEditorModel editorModel = (PHPEditorModel) sModel;
 				if (editorModel.getFileData() == fileData) {
 					updateFolds();
-					allowCollapsing = true;
+					//					allowCollapsing = true; // TODO - Need a fix!
 				}
 			}
 		} catch (Throwable t) {
