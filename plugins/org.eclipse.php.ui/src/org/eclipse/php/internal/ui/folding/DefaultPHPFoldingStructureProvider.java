@@ -27,6 +27,7 @@ import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.*;
 import org.eclipse.php.ui.PHPUiPlugin;
@@ -40,7 +41,10 @@ import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider
  * 
  * @author shalom
  */
-public class DefaultPHPFoldingStructureProvider implements IProjectionListener, IStructuredTextFoldingProvider, IAnnotationModelListener {
+public class DefaultPHPFoldingStructureProvider implements IProjectionListener, IStructuredTextFoldingProvider, IAnnotationModelListener, ModelListener {
+
+	private static final PHPWorkspaceModelManager workspaceModelManagerInstance = PHPWorkspaceModelManager.getInstance();
+
 	private ProjectionViewer viewer;
 	private boolean collapseClasses;
 	private boolean collapseFunctions;
@@ -80,6 +84,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		this.viewer = viewer;
 		viewer.addProjectionListener(this);
 		viewer.getAnnotationModel().addAnnotationModelListener(this);
+		workspaceModelManagerInstance.addModelListener(this);
 	}
 
 	public void uninstall() {
@@ -87,6 +92,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 			projectionDisabled();
 			viewer.removeProjectionListener(this);
 			viewer.getAnnotationModel().removeAnnotationModelListener(this);
+			workspaceModelManagerInstance.removeModelListener(this);
 			viewer = null;
 		}
 	}
@@ -119,64 +125,63 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 				PHPEditorModel editorModel = (PHPEditorModel) sModel;
 				PHPFileData fileData = editorModel.getFileData();
 				if (fileData == null) {
-					// It's possible that while loading, the model is not yet ready, therefore, we have to force the 
-					// creation of the currently displayed file data (active editor).
+					// It's possible that while loading, the model is not yet ready, therefore, we will wait until the 
+					// model fires the fileDataAdded event with the currect file data.
 					// Fix bug #75
-					fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(editorModel.getId(), true);
+					return;
 				}
-				if (fileData != null) {
-					ProjectionAnnotationModel model = viewer.getProjectionAnnotationModel();
-					if (model != null) {
-						synchronized (model.getLockObject()) {
-							// Get the additions map that has a PHPProjectionAnnotation keys and AnnotatedPosition values
-							Map additions = computeAdditions(fileData);
-							toRemove.clear();
-							newFolds.clear();
+				workspaceModelManagerInstance.removeModelListener(this);
+				ProjectionAnnotationModel model = viewer.getProjectionAnnotationModel();
+				if (model != null) {
+					synchronized (model.getLockObject()) {
+						// Get the additions map that has a PHPProjectionAnnotation keys and AnnotatedPosition values
+						Map additions = computeAdditions(fileData);
+						toRemove.clear();
+						newFolds.clear();
 
-							// get the existing annotations. 
-							// In this map we use the AnnotatedPosition as keys
-							Iterator existing = model.getAnnotationIterator();
-							LinkedHashMap exitingHashMap = new LinkedHashMap();
-							while (existing.hasNext()) {
-								ProjectionAnnotation existingAnnotation = (ProjectionAnnotation) existing.next();
-								Position existingPosition = model.getPosition(existingAnnotation);
-								exitingHashMap.put(existingPosition, existingAnnotation);
+						// get the existing annotations. 
+						// In this map we use the AnnotatedPosition as keys
+						Iterator existing = model.getAnnotationIterator();
+						LinkedHashMap exitingHashMap = new LinkedHashMap();
+						while (existing.hasNext()) {
+							ProjectionAnnotation existingAnnotation = (ProjectionAnnotation) existing.next();
+							Position existingPosition = model.getPosition(existingAnnotation);
+							exitingHashMap.put(existingPosition, existingAnnotation);
+						}
+
+						Iterator additionsIterator = additions.values().iterator();
+
+						while (additionsIterator.hasNext()) {
+							AnnotatedPosition addedPosition = (AnnotatedPosition) additionsIterator.next();
+							// Try to remove the added Position from the existing positions.
+							// If the position was found and removed, then it was not new. Otherwise, it's a new
+							// one and we add it to the new folds. 
+							//								addedPosition.hashCode()
+							if (exitingHashMap.remove(addedPosition) == null) {
+								newFolds.put(addedPosition.getAnnotation(), addedPosition);
 							}
+						}
 
-							Iterator additionsIterator = additions.values().iterator();
+						// At this stage we have the added map.
+						// All the Annotations that are left in the hash need
+						// to be removed from the model.
+						Iterator annotationsToRemove = exitingHashMap.values().iterator();
+						while (annotationsToRemove.hasNext()) {
+							toRemove.add(annotationsToRemove.next());
+						}
+						//						List removals = new LinkedList();
+						//						model.getPosition((Annotation)removals.get(0));
+						//						Iterator existing = model.getAnnotationIterator();
+						//						while (existing.hasNext()) {
+						//							removals.add(existing.next());
+						//						}
 
-							while (additionsIterator.hasNext()) {
-								AnnotatedPosition addedPosition = (AnnotatedPosition) additionsIterator.next();
-								// Try to remove the added Position from the existing positions.
-								// If the position was found and removed, then it was not new. Otherwise, it's a new
-								// one and we add it to the new folds. 
-								//								addedPosition.hashCode()
-								if (exitingHashMap.remove(addedPosition) == null) {
-									newFolds.put(addedPosition.getAnnotation(), addedPosition);
-								}
-							}
-
-							// At this stage we have the added map.
-							// All the Annotations that are left in the hash need
-							// to be removed from the model.
-							Iterator annotationsToRemove = exitingHashMap.values().iterator();
-							while (annotationsToRemove.hasNext()) {
-								toRemove.add(annotationsToRemove.next());
-							}
-							//						List removals = new LinkedList();
-							//						model.getPosition((Annotation)removals.get(0));
-							//						Iterator existing = model.getAnnotationIterator();
-							//						while (existing.hasNext()) {
-							//							removals.add(existing.next());
-							//						}
-
-							/*
-							 *  Minimize the events being sent out - as this happens in the
-							 *  UI thread merge everything into one call.
-							 */
-							if (toRemove.size() > 0 || newFolds.size() > 0) {
-								model.replaceAnnotations((Annotation[]) toRemove.toArray(new Annotation[toRemove.size()]), newFolds);
-							}
+						/*
+						 *  Minimize the events being sent out - as this happens in the
+						 *  UI thread merge everything into one call.
+						 */
+						if (toRemove.size() > 0 || newFolds.size() > 0) {
+							model.replaceAnnotations((Annotation[]) toRemove.toArray(new Annotation[toRemove.size()]), newFolds);
 						}
 					}
 				}
@@ -473,7 +478,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 				"\tcomment: \t" + isComment + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.text.source.IAnnotationModelListener#modelChanged(org.eclipse.jface.text.source.IAnnotationModel)
 	 */
@@ -481,5 +486,36 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		if (document != null) {
 			updateFolds();
 		}
+	}
+
+	public void dataCleared() {
+		// Do nothing
+	}
+
+	public void fileDataAdded(PHPFileData fileData) {
+		IStructuredModel sModel = null;
+		try {
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			if (sModel != null && sModel instanceof PHPEditorModel) {
+				PHPEditorModel editorModel = (PHPEditorModel) sModel;
+				if (editorModel.getFileData() == fileData) {
+					updateFolds();
+					allowCollapsing = true;
+				}
+			}
+		} catch (Throwable t) {
+		} finally {
+			if (sModel != null) {
+				sModel.releaseFromRead();
+			}
+		}
+	}
+
+	public void fileDataChanged(PHPFileData fileData) {
+		// Do nothing
+	}
+
+	public void fileDataRemoved(PHPFileData fileData) {
+		// Do nothing
 	}
 }
