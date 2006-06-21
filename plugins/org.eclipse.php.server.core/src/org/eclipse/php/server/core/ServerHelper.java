@@ -100,4 +100,8 @@ public class ServerHelper {
 		}
 		return defaultValue;
 	}
+	
+	public void removeAttribute(String attributeName) {
+		map.remove(attributeName);
+	}
 }

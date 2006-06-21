@@ -104,6 +104,15 @@ public class Server implements IXMLPreferencesStorable {
 		return helper.getAttribute(attributeName, defaultValue);
 	}
 
+	/**
+	 * Removed an attribute.
+	 * 
+	 * @param attributeName The attribute name.
+	 */
+	public void removeAttribute(String attributeName) {
+		helper.removeAttribute(attributeName);
+	}
+	
 	public String getContextRoot(IProject project) {
 		PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		String contextRoot = (String) options.getOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
