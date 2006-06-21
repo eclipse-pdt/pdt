@@ -69,7 +69,7 @@ public class PhpParserSchedulerTask implements Runnable {
 
 				// if release == null something with our stack lock mechanism is wrong!
 				assert release != null;
-
+				
 				// do the job of parsing with the given information
 				release.run();
 
@@ -122,6 +122,15 @@ public class PhpParserSchedulerTask implements Runnable {
 
 		synchronized (bufferSyncronizer) {
 			
+			// check the top of the stack, if it is the file is already 
+			// on stack just ignore the last one
+			if (buffer.size() > 0) {
+				final ParserExecuter top = (ParserExecuter) buffer.getFirst();
+				if (top.filename.equals(filename)) {
+					buffer.removeFirst();
+				}
+			}
+			
 			// add it (saftly)
 			// if the stack is full - wait() for an empty place 
 			while (buffer.size() >= BUFFER_MAX_SIZE) {
@@ -154,7 +163,7 @@ public class PhpParserSchedulerTask implements Runnable {
 		private PhpParser phpParser; // maybe we should re-create the parser
 		private final ParserClient client;
 		private final String filename;
-		private final Reader reader;
+		public  Reader reader;
 		private final long lastModified;
 		private final Pattern[] tasksPatterns;
 		private final boolean useAspTagsAsPhp;
@@ -169,7 +178,7 @@ public class PhpParserSchedulerTask implements Runnable {
 			this.lastModified = lastModified;
 			this.useAspTagsAsPhp = useAspTagsAsPhp;
 		}
-
+		
 		/**
 		 * The parsing action - in a seperate (async) thread 
 		 * @throws InterruptedException 
