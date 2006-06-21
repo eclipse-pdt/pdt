@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.debugger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,6 +42,10 @@ public class PHPExecutableDebuggerInitializer {
 	}
 
 	public void initializeDebug(String phpExe, String fileName) {
+		initializeDebug(phpExe, fileName, null);
+	}
+
+	public void initializeDebug(String phpExe, String fileName, Map envVariables) {
 		try {
 			IPath phpExePath = new Path(phpExe);
 			File workingDir = new File(phpExePath.removeLastSegments(1).toString());
@@ -53,6 +61,9 @@ public class PHPExecutableDebuggerInitializer {
 			systemEnvironmentVariables.put("QUERY_STRING", parametersInitializer.generateQuery(launch) + "&debug_host=127.0.0.1");
 			systemEnvironmentVariables.put("REDIRECT_STATUS", "1");
 			systemEnvironmentVariables.put("PHPRC", phpConfigDir);
+			if (envVariables != null) {
+				systemEnvironmentVariables.putAll(envVariables);
+			}
 
 			String[] combinedEnvVars = mapAsArray(systemEnvironmentVariables);
 
