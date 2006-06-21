@@ -333,30 +333,34 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public void fileDataChanged(PHPFileData fileData) {
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			ModelListener listener = (ModelListener) iter.next();
-			listener.fileDataChanged(fileData);
+		ModelListener[] allListeners = new ModelListener[listeners.size()];
+		listeners.toArray(allListeners);
+		for (int i = 0; i < allListeners.length; i++) {
+			allListeners[i].fileDataChanged(fileData);
 		}
 	}
 
 	public void fileDataAdded(PHPFileData fileData) {
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			ModelListener listener = (ModelListener) iter.next();
-			listener.fileDataAdded(fileData);
+		ModelListener[] allListeners = new ModelListener[listeners.size()];
+		listeners.toArray(allListeners);
+		for (int i = 0; i < allListeners.length; i++) {
+			allListeners[i].fileDataAdded(fileData);
 		}
 	}
 
 	public void fileDataRemoved(PHPFileData fileData) {
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			ModelListener listener = (ModelListener) iter.next();
-			listener.fileDataRemoved(fileData);
+		ModelListener[] allListeners = new ModelListener[listeners.size()];
+		listeners.toArray(allListeners);
+		for (int i = 0; i < allListeners.length; i++) {
+			allListeners[i].fileDataRemoved(fileData);
 		}
 	}
 
 	public void dataCleared() {
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			ModelListener listener = (ModelListener) iter.next();
-			listener.dataCleared();
+		ModelListener[] allListeners = new ModelListener[listeners.size()];
+		listeners.toArray(allListeners);
+		for (int i = 0; i < allListeners.length; i++) {
+			allListeners[i].dataCleared();
 		}
 	}
 
