@@ -38,6 +38,8 @@ public class Server implements IXMLPreferencesStorable {
 	public static final String FILE_NAME = "file_name";
 	public static final String CONTEXT_ROOT = "context_root";
 
+	private static final int DEFAULT_HTTP_PORT = 80;
+
 	private ServerHelper helper;
 
 	/**
@@ -205,7 +207,11 @@ public class Server implements IXMLPreferencesStorable {
 	}
 
 	public int getPort() {
-		return Integer.parseInt(getPortString());
+		int port = Integer.parseInt(getPortString());
+		if (port < 0) {
+			port = DEFAULT_HTTP_PORT;
+		}
+		return port;
 	}
 
 	public String getPortString() {
