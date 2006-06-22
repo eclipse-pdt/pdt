@@ -63,8 +63,16 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			boolean isDocBlock = true;
 			// if this is the first line of the docBlock
 			if (trimedLine.startsWith("/**")) {
+				if(command.offset + command.length < lineInfo.getOffset() + line.indexOf("/**") + 3){ // checking we are after the /**
+					//otherwise there is no need to continue since its not inside the docblock
+					return;
+				}
 				isFirstLine = true;
 			} else if (trimedLine.startsWith("/*")) {
+				if(command.offset + command.length < lineInfo.getOffset() + line.indexOf("/*") + 2){ // checking we are after the /*
+					//otherwise there is no need to continue since its not inside the docblock
+					return;
+				}
 				isFirstLine = true;
 				isDocBlock = false;
 			}
@@ -214,8 +222,14 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 
+		boolean firstRegion = true;
+		
 		while (sdRegion != null) {
 			String text = sdRegion.getText();
+			if(firstRegion){
+				firstRegion = false;
+				text = text.substring(offset - sdRegion.getStartOffset());
+			}
 			int textLength = text.length();
 			if (textLength == 0) {
 				sdRegion = sdRegion.getNext();
