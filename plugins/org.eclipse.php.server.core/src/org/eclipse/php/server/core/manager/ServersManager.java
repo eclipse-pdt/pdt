@@ -102,8 +102,8 @@ public class ServersManager implements PropertyChangeListener {
 		}
 		ServersManager manager = getInstance();
 		Server removed = (Server) manager.servers.remove(serverName);
-		removed.removePropertyChangeListener(manager);
 		if (removed != null) {
+			removed.removePropertyChangeListener(manager);
 			ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_REMOVED, removed);
 			manager.fireEvent(event);
 		}
