@@ -166,6 +166,8 @@ public class ServersManager implements PropertyChangeListener {
 			Server server = new Server();
 			server.restoreFromMap(serverMap);
 			servers.put(server.getName(), server);
+			// Register the manager as a Server lister to get nofitications about attribute changes.
+			server.addPropertyChangeListener(this);
 		}
 	}
 
