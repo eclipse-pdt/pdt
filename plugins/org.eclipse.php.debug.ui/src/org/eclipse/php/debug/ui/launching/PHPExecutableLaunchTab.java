@@ -13,7 +13,6 @@ package org.eclipse.php.debug.ui.launching;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -37,8 +36,7 @@ import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.preferences.phps.PHPexeDescriptor;
 import org.eclipse.php.debug.ui.preferences.phps.PHPsComboBlock;
-import org.eclipse.php.server.apache.ui.ApacheUIPlugin;
-import org.eclipse.php.server.apache.ui.HTTPServerUtil;
+import org.eclipse.php.server.ui.ServerUtilities;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
@@ -48,49 +46,54 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.util.WebResource;
+import org.eclipse.swt.widgets.*;
 
 public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public final static String FIRST_EDIT = "editedByPHPExecutableLaunchTab"; //$NON-NLS-1$
 
-	protected Text locationField;
-	//protected Text workDirectoryField;
-	protected Button fileLocationButton;
-	protected Button fileWorkingDirectoryButton;
-	//protected Button workspaceWorkingDirectoryButton;
-	protected Button runWithDebugInfo;
+	private Text locationField;
+	private Button fileLocationButton;
+	private Button runWithDebugInfo;
 
-	protected Text argumentField;
-	protected Button argumentVariablesButton;
+	private Text argumentField;
+	private Button argumentVariablesButton;
 
 	protected SelectionAdapter selectionAdapter;
 
 	protected PHPsComboBlock phpsComboBlock;
 
-	protected boolean disableFileSelection = false;
-	protected boolean disableDebugInfoOption = false;
+	private boolean enableFileSelection;
+	private boolean enableDebugInfoOption;
 
 	public PHPExecutableLaunchTab(String mode) {
+		enableFileSelection = true;
 		if (!mode.equals(ILaunchManager.RUN_MODE)) {
-			setDisableDebugInfoOption();
+			setEnableDebugInfoOption(false);
 		}
 	}
 
-	public void setDisableFileSelection() {
-		this.disableFileSelection = true;
+	public void setEnableFileSelection(boolean enabled) {
+		if (enabled == enableFileSelection) {
+			return;
+		}
+		this.enableFileSelection = enabled;
+		if (argumentVariablesButton != null) {
+			argumentVariablesButton.setVisible(enabled);
+		}
+		if (argumentField != null) {
+			argumentField.setVisible(enabled);
+		}
+		
 	}
 
-	public void setDisableDebugInfoOption() {
-		this.disableDebugInfoOption = true;
+	public void setEnableDebugInfoOption(boolean enabled) {
+		if (enabled == enableDebugInfoOption) {
+			return;
+		}
+		this.enableDebugInfoOption = true;
+		if(runWithDebugInfo != null) {
+			runWithDebugInfo.setVisible(enabled);
+		}
 	}
 
 	// Selection changed listener (checked PHP exe)
@@ -131,11 +134,11 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		mainComposite.setLayoutData(gridData);
 
 		createLocationComponent(mainComposite);
-		if (!disableDebugInfoOption) {
+		if (enableDebugInfoOption) {
 			createDebugInfoComponent(mainComposite);
 		}
 		//createWorkDirectoryComponent(mainComposite);
-		if (!disableFileSelection) {
+		if (enableFileSelection) {
 			createArgumentComponent(mainComposite);
 		}
 		createVerticalSpacer(mainComposite, 1);
@@ -291,47 +294,15 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		updateLocation(configuration);
 		//updateWorkingDirectory(configuration);
-		if (!disableDebugInfoOption) {
+		if (enableDebugInfoOption) {
 			updateDebugInfoOption(configuration);
 		}
-
-		if (!disableFileSelection) {
+		if (enableFileSelection) {
 			updateArgument(configuration);
-			String argField = argumentField.getText();
-			//String workingDir = this.workDirectoryField.getText();
-
-			if (argField.equals("") && ApacheUIPlugin.currentSelection != null && !ApacheUIPlugin.currentSelection.isEmpty()) {
-				IStructuredSelection sel = (IStructuredSelection) ApacheUIPlugin.currentSelection;
-				IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(sel.getFirstElement());
-
-				if (moduleArtifact instanceof WebResource) {
-					WebResource webResource = (WebResource) moduleArtifact;
-					IModule module = webResource.getModule();
-
-					if (module != null) {
-						IProject proj = module.getProject();
-
-						if (proj != null) {
-							IPath filePath = webResource.getPath();
-
-							if (filePath.isEmpty()) {
-								argField = proj.getFullPath().toString();
-							} else {
-								IFile file = proj.getFile(filePath);
-								argField = file.getFullPath().toString();
-							}
-
-							this.argumentField.setText(argField);
-						}
-					}
-				}
-			}
 		}
-
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "PHP Exe";
 	}
 
@@ -398,12 +369,12 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		}
 
 		String arguments = null;
-		if (disableFileSelection || (arguments = argumentField.getText().trim()).length() == 0) {
+		if (!enableFileSelection || (arguments = argumentField.getText().trim()).length() == 0) {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 		} else {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, arguments);
 		}
-		boolean debugInfo = disableDebugInfoOption ? true : runWithDebugInfo.getSelection();
+		boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo.getSelection() : true;
 		configuration.setAttribute(IPHPConstants.RunWithDebugInfo, debugInfo);
 
 	}
@@ -432,7 +403,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 					return false;
 				}
 			}
-			if (!disableFileSelection) {
+			if (enableFileSelection) {
 				String phpFile = launchConfig.getAttribute(PHPCoreConstants.ATTR_FILE, "");
 				if (phpFile != "" && phpExe != null) {
 					if (!fileExists(phpFile)) {
@@ -478,7 +449,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 		//if(projStr == null || projStr.equals("") || projects == null)
 		//{
-		file = (IFile) HTTPServerUtil.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures());
+		file = (IFile) ServerUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures());
 		//}
 		//else
 		/*

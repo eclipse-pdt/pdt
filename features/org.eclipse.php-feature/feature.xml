@@ -47,14 +47,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.php.server.apache.core"
+         id="org.eclipse.php.server.core"
          download-size="0"
          install-size="0"
          version="0.1.5"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.php.server.apache.ui"
+         id="org.eclipse.php.server.ui"
          download-size="0"
          install-size="0"
          version="0.1.5"

@@ -10,15 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.debug.ui.PropertyTesters;
 
+import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.php.debug.ui.Logger;
-import org.eclipse.wst.server.ui.internal.ServerPropertyTester;
-//import org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp;
 
-public class RunnablePropertyTester extends ServerPropertyTester{
+public class RunnablePropertyTester extends PropertyTester{
 
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
         Class newClass = receiver.getClass();
@@ -45,7 +44,7 @@ public class RunnablePropertyTester extends ServerPropertyTester{
            Logger.logException(e);
         }
                 
-        return super.test(receiver, property, args, expectedValue);
+        return true;
     }
 
 }

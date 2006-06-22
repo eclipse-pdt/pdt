@@ -270,16 +270,16 @@
            name="org.eclipse.php.debug.core.defaultInitializer"/>
   </extension>
   
-  <extension point="org.eclipse.php.server.apache.core.httpServerLaunchDelegate">
-		<httpServerLaunchDelegate
-			class="org.eclipse.php.debug.core.launching.PHPServerLaunchDelegate" />
-  </extension>
   <extension
         point="org.eclipse.php.debug.daemon.debugCommunicationDaemon">
      <daemon
            class="org.eclipse.php.debug.core.communication.DebuggerCommunicationDaemon"
            id="org.eclipse.php.debug.core.BasicDebugDaemon"
            name="Basic Debug Daemon"/>
+  </extension>
+  <extension
+        point="org.eclipse.php.server.core.httpServerLaunchDelegate">
+     <launchDelegate class="org.eclipse.php.debug.core.launching.PHPServerLaunchDelegate"/>
   </extension>
   
 

@@ -321,7 +321,7 @@
  
       </shortcut>
    </extension>
-   <extension point="org.eclipse.php.server.apache.ui.serverTab">
+   <extension point="org.eclipse.php.server.ui.serverTab">
   		<serverTab class="org.eclipse.php.debug.ui.launching.PHPServerTab"/>
    </extension>
       

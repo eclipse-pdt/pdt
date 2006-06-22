@@ -12,15 +12,13 @@ package org.eclipse.php.debug.core.launching;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.php.server.apache.core.ApacheServerBehaviour;
 
 /**
- * PHPServerLaunchDecorator has extended functionalities that can return the ApacheServerBehaviour and the IProject
- * that are related to the ILaunch.
+ * PHPServerLaunchDecorator has extended functionalities that can return the IProject
+ * that is related to the ILaunch.
  */
 public class PHPServerLaunchDecorator extends PHPLaunchProxy {
 
-	private ApacheServerBehaviour serverBehaviour;
 	private IProject project;
 
 	/**
@@ -30,14 +28,9 @@ public class PHPServerLaunchDecorator extends PHPLaunchProxy {
 	 * @param serverBehaviour
 	 * @param project
 	 */
-	public PHPServerLaunchDecorator(ILaunch launch, ApacheServerBehaviour serverBehaviour, IProject project) {
+	public PHPServerLaunchDecorator(ILaunch launch, IProject project) {
 		super(launch);
-		this.serverBehaviour = serverBehaviour;
 		this.project = project;
-	}
-
-	public ApacheServerBehaviour getApacheServerBahavior() {
-		return serverBehaviour;
 	}
 
 	public IProject getProject() {

@@ -20,7 +20,7 @@ import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
-import org.eclipse.php.server.apache.ui.ApacheServerTab;
+import org.eclipse.php.server.ui.ServerTab;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,22 +29,20 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-public class PHPServerTab extends ApacheServerTab {
-	
+public class PHPServerTab extends ServerTab {
+
 	public static final String RUN_WITH_DEBUG = "run_with_debug";
-	
+
 	protected Button runWithDebugger;
 	protected boolean isChecked = false;
-	
-	public PHPServerTab()
-	{
+
+	public PHPServerTab() {
 		super();
 	}
-	
-	public void createExtensionControls(Composite parent)
-	{
+
+	public void createExtensionControls(Composite parent) {
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		
+
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 5;
@@ -52,43 +50,37 @@ public class PHPServerTab extends ApacheServerTab {
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 		composite.setLayoutData(data);
-		
-		runWithDebugger = new Button(composite,SWT.CHECK);
-		runWithDebugger.setText(PHPDebugUIMessages.PHPexe_Run_With_Debug_Info); 
+
+		runWithDebugger = new Button(composite, SWT.CHECK);
+		runWithDebugger.setText(PHPDebugUIMessages.PHPexe_Run_With_Debug_Info);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		runWithDebugger.setLayoutData(gd);
-		
+
 		runWithDebugger.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent se) {
-				Button b = (Button)se.getSource();
+				Button b = (Button) se.getSource();
 				isChecked = b.getSelection();
 				updateLaunchConfigurationDialog();
 			}
 		});
 	}
-	
-	protected void initializeExtensionControls(ILaunchConfiguration configuration)
-	{
-		try
-		{
+
+	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
+		try {
 			boolean checked = configuration.getAttribute(RUN_WITH_DEBUG, PHPDebugPlugin.getDebugInfoOption());
 			runWithDebugger.setSelection(checked);
-		}
-		catch (Exception e)
-		{
-            Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
+		} catch (Exception e) {
+			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}
 	}
-	
-	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration)
-	{
+
+	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
 		boolean checked = runWithDebugger.getSelection();
 		configuration.setAttribute(RUN_WITH_DEBUG, checked);
 	}
-	
-	protected boolean isValidExtension(ILaunchConfiguration launchConfig)
-	{
+
+	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {
 		return true;
 	}
     
@@ -102,7 +94,7 @@ public class PHPServerTab extends ApacheServerTab {
         if(server == null)
             return;
         
-        if (server.getId().equals(IPHPConstants.Default_Server_ID)) {
+        if (server.getName().equals(IPHPConstants.Default_Server_Name)) { // TODO - Use ID instead ?
             IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
             IProject[] projects = workspaceRoot.getProjects();
             IProject project = null;

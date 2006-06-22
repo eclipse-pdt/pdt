@@ -39,8 +39,7 @@ import org.eclipse.php.debug.core.launching.PHPProcess;
 import org.eclipse.php.debug.core.launching.PHPServerLaunchDecorator;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.server.apache.core.ApachePlugin;
-import org.eclipse.php.server.apache.core.ApacheServerBehaviour;
+import org.eclipse.php.server.core.Server;
 
 /**
  * The debug connection thread is responsible of initilizing and handle a single debug session that was
@@ -454,9 +453,11 @@ public class DebugConnectionThread implements Runnable {
 	private void hookServerDebug(ILaunch launch) throws CoreException {
 		PHPServerLaunchDecorator launchDecorator = (PHPServerLaunchDecorator) launch;
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
-		ApacheServerBehaviour serverBehaviour = launchDecorator.getApacheServerBahavior();
-		String URL = launchConfiguration.getAttribute(ApachePlugin.URL, "");
-		String contextRoot = launchConfiguration.getAttribute(ApachePlugin.CONTEXT_ROOT, "");
+		//		ApacheServerBehaviour serverBehaviour = launchDecorator.getApacheServerBahavior();
+		//		String URL = launchConfiguration.getAttribute(ApachePlugin.URL, "");
+		//		String contextRoot = launchConfiguration.getAttribute(ApachePlugin.CONTEXT_ROOT, "");
+		String URL = launchConfiguration.getAttribute(Server.BASE_URL, "");
+		String contextRoot = launchConfiguration.getAttribute(Server.CONTEXT_ROOT, "");
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(launchDecorator.getProject());
 		int requestPort = PHPProjectPreferences.getDebugPort(launchDecorator.getProject());
 		boolean runWithDebug = launchConfiguration.getAttribute("run_with_debug", true);
@@ -464,7 +465,7 @@ public class DebugConnectionThread implements Runnable {
 			runWithDebug = false;
 		}
 		PHPProcess process = new PHPProcess(launch, URL);
-		serverBehaviour.setProcess(process);
+		//		serverBehaviour.setProcess(process);
 		PHPDebugTarget target = new PHPDebugTarget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
 		launch.addDebugTarget(target);
 	}

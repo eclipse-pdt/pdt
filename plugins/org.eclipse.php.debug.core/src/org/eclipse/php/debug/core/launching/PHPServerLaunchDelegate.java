@@ -2,10 +2,8 @@ package org.eclipse.php.debug.core.launching;
 
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
@@ -19,26 +17,24 @@ import org.eclipse.php.debug.core.debugger.PHPWebServerDebuggerInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.model.DebugSessionIdGenerator;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.server.apache.core.ApacheLaunchConfigurationDelegate;
-import org.eclipse.php.server.apache.core.ApachePlugin;
-import org.eclipse.php.server.apache.core.ApacheServerBehaviour;
-import org.eclipse.php.server.apache.core.IHTTPServerLaunch;
+import org.eclipse.php.server.core.Server;
+import org.eclipse.php.server.core.deploy.DeployFilter;
+import org.eclipse.php.server.core.deploy.FileUtil;
+import org.eclipse.php.server.core.launch.IHTTPServerLaunch;
+import org.eclipse.php.server.core.launch.ServerLaunchConfigurationDelegate;
+import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerUtil;
 
 public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 
-	private ApacheLaunchConfigurationDelegate httpServerDelegate = null;
+	private ServerLaunchConfigurationDelegate httpServerDelegate = null;
 	private ILaunch launch;
 	private Job runDispatch;
 
 	public PHPServerLaunchDelegate() {
 	}
 
-	public void setHTTPServerDelegate(ApacheLaunchConfigurationDelegate delegate) {
+	public void setHTTPServerDelegate(ServerLaunchConfigurationDelegate delegate) {
 		this.httpServerDelegate = delegate;
 	}
 
@@ -50,45 +46,47 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 			return;
 		}
 
-		IServer server = ServerUtil.getServer(configuration);
+		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, ""));
 		if (server == null) {
-			Logger.log(Logger.ERROR, "Luanch configuration could not find server");
+			Logger.log(Logger.ERROR, "Launch configuration could not find server");
+			terminated();
 			// throw CoreException();
 			return;
 		}
+		String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
+		// Get the project from the file name
+		IPath filePath = new Path(fileName);
+		IProject proj = null;
+		try {
+			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
+		} catch (Throwable t) {
+		}
+		if (proj == null) {
+			Logger.log(Logger.ERROR, "Could not execute the debug (Project is null).");
+			return;
+		}
 
-		ApacheServerBehaviour apacheServerBehaviour = (ApacheServerBehaviour) server.loadAdapter(ApacheServerBehaviour.class, null);
-		apacheServerBehaviour.setupLaunch(launch, mode, monitor);
-
-		IModuleArtifact moduleArtifact = httpServerDelegate.getModuleArtifact(configuration);
-		if (moduleArtifact == null)
-			throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, PHPDebugCoreMessages.configurationError, null));
-
-		IModule module = moduleArtifact.getModule();
-
-		boolean publish = configuration.getAttribute(ApachePlugin.DEPLOYABLE, false);
+		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
 		if (publish) {
-			if (!apacheServerBehaviour.publish(module, monitor)) {
+			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
 				// Return if the publish failed.
 				terminated();
 				return;
 			}
 		}
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
-		IProject proj = module.getProject();
 		String project = proj.getFullPath().toString();
-
 		wc.setAttribute(IPHPConstants.PHP_Project, project);
 		wc.doSave();
 
-		String URL = configuration.getAttribute(ApachePlugin.URL, "");
+		String URL = configuration.getAttribute(Server.BASE_URL, "");
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebug == true) {
 			boolean isStopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(proj);
 			int requestPort = PHPProjectPreferences.getDebugPort(proj);
 
 			// Generate a session id for this launch and put it in the map
 			int sessionID = DebugSessionIdGenerator.generateSessionID();
-			PHPSessionLaunchMapper.put(sessionID, new PHPServerLaunchDecorator(launch, apacheServerBehaviour, proj));
+			PHPSessionLaunchMapper.put(sessionID, new PHPServerLaunchDecorator(launch, proj));
 
 			// Fill all debug attributes:
 			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
