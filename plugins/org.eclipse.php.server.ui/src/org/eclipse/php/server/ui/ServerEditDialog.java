@@ -49,7 +49,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
 		CTabFolder tabs = SWTUtil.createTabFolder(parent);
-		ICompositeFragmentFactory[] factories = ServerFragmentsFactoryRegistry.getFragmentsFactories("");
+		ICompositeFragmentFactory[] factories = ServerFragmentsFactoryRegistry.getFragmentsFactories();
 		for (int i = 0; i < factories.length; i++) {
 			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
 			CompositeFragment fragment = factories[i].createComposite(tabs, this);

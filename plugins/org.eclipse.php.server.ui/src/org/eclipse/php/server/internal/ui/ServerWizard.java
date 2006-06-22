@@ -52,7 +52,7 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 					loadChildren(children, list);
 					return;
 				}
-				ICompositeFragmentFactory[] factories = ServerFragmentsFactoryRegistry.getFragmentsFactories("");
+				ICompositeFragmentFactory[] factories = ServerFragmentsFactoryRegistry.getFragmentsFactories();
 				children = new WizardFragment[factories.length];
 				for (int i = 0; i < factories.length; i++) {
 					children[i] = factories[i].createWizardFragment();

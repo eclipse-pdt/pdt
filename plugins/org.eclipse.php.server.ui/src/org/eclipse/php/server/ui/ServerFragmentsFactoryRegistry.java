@@ -28,19 +28,15 @@ public class ServerFragmentsFactoryRegistry {
 
 	private static final String EXTENSION_POINT_NAME = "serverWizardFragment"; //$NON-NLS-1$
 	private static final String FRAGMENT_TAG = "wizardFragment"; //$NON-NLS-1$
+	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
-	private static final String SERVER_TYPE_ATTRIBUTE = "serverTypeId"; //$NON-NLS-1$
-	private static final String VISIBILITY_ATTRIBUTE = "visible"; //$NON-NLS-1$
-	private static final String VISIBILITY_ALWAYS = "Always";
+	private static final String PLACE_AFTER_ATTRIBUTE = "place after"; //$NON-NLS-1$
 
 	// Hold a Dictionary of Lists that contains the factories used for the creation of the fragments.
-	// The dictionary holds all the fragments that where assigned to appear in a specific server wizard / editorsssssssssssssssssssssssssssssssss.
-	private Dictionary fragmentsByType = new Hashtable();
-
-	// Hold the wizard fragments that should appear in all the servers wizards and editors.
-	private List allWizardsfragments = new ArrayList();
+	private List fragments = new ArrayList(5);
 
 	private static ServerFragmentsFactoryRegistry instance;
+	private ICompositeFragmentFactory[] factories;
 
 	/**
 	 * Returns an array on newly initialized WizardFragments that complies to the given server type 
@@ -51,24 +47,19 @@ public class ServerFragmentsFactoryRegistry {
 	 * @param serverType	The id of the server.
 	 * @return	An array of ICompositeFragmentFactory.
 	 */
-	public static ICompositeFragmentFactory[] getFragmentsFactories(String serverType) {
+	public static ICompositeFragmentFactory[] getFragmentsFactories() {
 		ServerFragmentsFactoryRegistry registry = getInstance();
-		List factories = (List) registry.fragmentsByType.get(serverType);
-		List allFragments = new ArrayList();
-		if (factories != null) {
-			for (int i = 0; i < factories.size(); i++) {
-				FragmentsFactory factory = (FragmentsFactory) factories.get(i);
-				allFragments.add(factory.createFragmentFactory());
+		if (registry.factories == null) {
+			List fragments = registry.fragments;
+			List factoriesList = new ArrayList();
+			for (int i = 0; i < fragments.size(); i++) {
+				FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
+				factoriesList.add(factory.createFragmentFactory());
 			}
+			registry.factories = new ICompositeFragmentFactory[factoriesList.size()];
+			factoriesList.toArray(registry.factories);
 		}
-		factories = registry.allWizardsfragments;
-		for (int i = 0; i < factories.size(); i++) {
-			FragmentsFactory factory = (FragmentsFactory) factories.get(i);
-			allFragments.add(factory.createFragmentFactory());
-		}
-		ICompositeFragmentFactory[] fragmentFactories = new ICompositeFragmentFactory[allFragments.size()];
-		allFragments.toArray(fragmentFactories);
-		return fragmentFactories;
+		return registry.factories;
 	}
 
 	private ServerFragmentsFactoryRegistry() {
@@ -78,23 +69,23 @@ public class ServerFragmentsFactoryRegistry {
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (FRAGMENT_TAG.equals(element.getName())) {
-				if (element.getAttribute(VISIBILITY_ATTRIBUTE).equals(VISIBILITY_ALWAYS)) {
-					allWizardsfragments.add(new FragmentsFactory(element));
+				String id = element.getAttribute(ID_ATTRIBUTE);
+				String placeAfter = element.getAttribute(PLACE_AFTER_ATTRIBUTE);
+				if (element.getNamespaceIdentifier().equals(Activator.PLUGIN_ID)) {
+					// Make sure that extentions that exists in this plugin will appear ahead of all others
+					// when the user-class calls for getFragmentsFactories().
+					fragments.add(0, new FragmentsFactory(element, id, placeAfter));
 				} else {
-					String type = element.getAttribute(SERVER_TYPE_ATTRIBUTE);
-					if (type != null) {
-						List list = (List) fragmentsByType.get(type.toLowerCase());
-						if (list == null) {
-							list = new ArrayList(5);
-							fragmentsByType.put(element.getAttribute(SERVER_TYPE_ATTRIBUTE).toLowerCase(), list);
-						}
-						list.add(new FragmentsFactory(element));
-					} else {
-						Logger.log(Logger.WARNING, "A server wizard fragment was defined without a required server ID.");
-					}
+					fragments.add(new FragmentsFactory(element, id, placeAfter));
 				}
 			}
 		}
+		sortFragmentsByPlace(fragments);
+	}
+
+	// Sort the fragments according to the 'place-after' attribute
+	private void sortFragmentsByPlace(List fragments2) {
+		// TODO
 	}
 
 	private static ServerFragmentsFactoryRegistry getInstance() {
@@ -108,9 +99,13 @@ public class ServerFragmentsFactoryRegistry {
 
 		private IConfigurationElement element;
 		private ICompositeFragmentFactory factory;
+		private String id;
+		private String placeAfter;
 
-		public FragmentsFactory(IConfigurationElement element) {
+		public FragmentsFactory(IConfigurationElement element, String id, String placeAfter) {
 			this.element = element;
+			this.id = id;
+			this.placeAfter = placeAfter;
 		}
 
 		public ICompositeFragmentFactory createFragmentFactory() {
@@ -120,6 +115,14 @@ public class ServerFragmentsFactoryRegistry {
 				}
 			});
 			return factory;
+		}
+
+		public String getID() {
+			return id;
+		}
+
+		public String getPlaceAfter() {
+			return placeAfter;
 		}
 	}
 }

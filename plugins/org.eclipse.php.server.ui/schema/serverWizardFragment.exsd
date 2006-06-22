@@ -55,14 +55,6 @@ The extention accepts a factory class that can create a WizardFragment or a Serv
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="serverTypeId" type="string">
-            <annotation>
-               <documentation>
-                  The server id.
-Although it is defined as optional field, when the visibility is set to &apos;By serverTypeId&apos; this field must be set to a valid value.
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="name" type="string">
             <annotation>
                <documentation>
@@ -70,21 +62,20 @@ Although it is defined as optional field, when the visibility is set to &apos;By
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="visible" use="required">
+         <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  The visibility of this fragment. 
-When it is defined as &apos;Always&apos;, the fragment will appear in all the server types wizards and editors. In order to restrict the fragment to a specific server, switch the visibility to &apos;By serverTypeId&apos; and set the server id in the serverTypeId field.
+                  The ID of this fragment factory.
                </documentation>
             </annotation>
-            <simpleType>
-               <restriction base="string">
-                  <enumeration value="Always">
-                  </enumeration>
-                  <enumeration value="By serverTypeId">
-                  </enumeration>
-               </restriction>
-            </simpleType>
+         </attribute>
+         <attribute name="place after" type="string">
+            <annotation>
+               <documentation>
+                  An optional ID for the wizard fragment factory that this factory should follow.
+Note that the use of this indicator will only ensure that this fragment will be placed after the given ID, but it does not ensure that the fragment will be right next to it (another fragment(s) might be positioned in between).
+               </documentation>
+            </annotation>
          </attribute>
       </complexType>
    </element>

@@ -24,8 +24,8 @@
         point="org.eclipse.php.server.ui.serverWizardFragment">
      <wizardFragment
            class="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
-           name="Basic Factory"
-           visible="Always"/>
+           id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
+           name="Basic Factory"/>
   </extension>
   <extension
         point="org.eclipse.ui.preferencePages">
