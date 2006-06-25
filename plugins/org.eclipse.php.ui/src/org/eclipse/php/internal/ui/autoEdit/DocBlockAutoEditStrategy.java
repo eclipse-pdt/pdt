@@ -153,6 +153,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			}
 
 			if (isDocBlock && TypingPreferences.addDocTags) {
+				//taking off the /** in order to find the closest codeData
 				document.getUndoManager().disableUndoManagement();
 				document.replace(lineStart, lineEnd - lineStart, "");
 				document.getUndoManager().enableUndoManagement();
@@ -165,10 +166,17 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				if (lineContent.equals("")) { //this is a patch in order to make PHPDescriptionTool add a default shortDescription
 					lineContent = null;
 				}
-
+				
 				String stub = getDocBlockStub(editorModel, document, lineStart, lineContent);
+				
+				// putting back the /** that was taken off
+				command.offset += commentStart.length();
+				document.getUndoManager().disableUndoManagement();
+				document.replace(lineStart, 0, commentStart);
+				document.getUndoManager().enableUndoManagement();
+				
 				if (stub != null) {
-					command.text = stub;
+					command.text = stub.substring(3);
 					if (lineContent == null) {
 						//this means that we added the default shortDescription to the docBlock
 						//now we want to make sure this description will be selected in the editor 
@@ -186,12 +194,11 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 						ITextEditor textEditor = (ITextEditor) editorPart;
 						//25 - stands for the shortDescription length
 						//E - stands for the first latter in the shortDescription
-						Display.getDefault().asyncExec(new SelectText(command.offset + stub.indexOf("E"), 25, textEditor));
+						Display.getDefault().asyncExec(new SelectText(command.offset + command.text.indexOf("E"), 25, textEditor));
 						return -1;
 					}
 					return rvPosition + lineContent.length();
 				}
-				command.text = commentStart + command.text;
 			} else {
 				lineStart += commentStartLength;
 				command.length += (command.offset - lineStart);
