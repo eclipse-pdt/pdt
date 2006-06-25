@@ -14,7 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -486,7 +489,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		}
 
 		initializeExtensionControls(configuration);
-		
 		isValid(configuration);
 	}
 
@@ -688,7 +690,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		if (projectPath == null || "".equals(projectPath)) {
 			return false;
 		}
-		
 		boolean file = false;
 		try {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -754,20 +755,11 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			monitor.setCanceled(true);
 			return null;
 		}
-
-		try {
-			Platform.getJobManager().join("org.eclipse.wst.server.ui.family", null);
-		} catch (Exception e) {
-			Logger.log(Logger.WARNING, "Error waiting for job", e);
-		}
 		theServer = (Server) wizard.getRootFragment().getWizardModel().getObject(WizardModel.SERVER);
-
-		try {
-			Platform.getJobManager().join("org.eclipse.wst.server.ui.family", new NullProgressMonitor());
-		} catch (Exception e) {
-			Logger.log(Logger.WARNING, "Error waiting for job", e);
+		if (theServer != null) {
+			ServersManager.addServer(theServer);
+			ServersManager.save();
 		}
-
 		return theServer;
 	}
 
