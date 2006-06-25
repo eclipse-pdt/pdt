@@ -21,7 +21,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.ActionGroup;
 
-public class ConfigureBuildPathActionGroup extends ActionGroup {
+public class ConfigureIncludePathActionGroup extends ActionGroup {
 
 	private IWorkbenchSite fSite;
 	private boolean fIsEditorOwner;
@@ -34,7 +34,7 @@ public class ConfigureBuildPathActionGroup extends ActionGroup {
 	 * 
 	 * @param part the view part that owns this action group
 	 */
-	public ConfigureBuildPathActionGroup(IViewPart part) {
+	public ConfigureIncludePathActionGroup(IViewPart part) {
 		fSite = part.getSite();
 		fConfigureIncludePath = new ConfigureIncludePathAction(fSite);
 		initialize(fSite.getSelectionProvider());
