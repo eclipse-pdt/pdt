@@ -30,6 +30,7 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractDebugPreferencesP
 	private Button fUsePHPDebugPerspective;
 	private Button fRunWithDebugInfo;
 	private Button fOpenDebugViews;
+	private Button fAutoSaveDirty;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = addPageContents(parent);
@@ -41,6 +42,7 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractDebugPreferencesP
 		fUsePHPDebugPerspective.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE));
 		fOpenDebugViews.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS));
 		fRunWithDebugInfo.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
+		fAutoSaveDirty.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY));
 	}
 
 	public boolean performOK(boolean isProjectSpecific) {
@@ -62,13 +64,14 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractDebugPreferencesP
 		fUsePHPDebugPerspective.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE));
 		fRunWithDebugInfo.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
 		fOpenDebugViews.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS));
+		fAutoSaveDirty.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY));
 	}
 
-	
 	private void addWorkspacePreferenceSubsection(Composite composite) {
 		fUsePHPDebugPerspective = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_2, PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE, 0);
 		fRunWithDebugInfo = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_5, PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, 0);
 		fOpenDebugViews = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_7, PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, 0);
+		fAutoSaveDirty = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_10, PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, 0);
 	}
 
 	private void savePreferences() {
@@ -76,6 +79,7 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractDebugPreferencesP
 		prefs.setValue(PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE, fUsePHPDebugPerspective.getSelection());
 		prefs.setValue(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, fRunWithDebugInfo.getSelection());
 		prefs.setValue(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, fOpenDebugViews.getSelection());
+		prefs.setValue(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, fAutoSaveDirty.getSelection());
 		PHPDebugPlugin.getDefault().savePluginPreferences();
 	}
 }

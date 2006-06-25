@@ -17,34 +17,34 @@ import org.eclipse.osgi.util.NLS;
  * 
  */
 public class PHPDebugUIMessages extends NLS {
-    private static final String BUNDLE_NAME = "org.eclipse.php.debug.ui.PHPDebugUIPluginResources";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.debug.ui.PHPDebugUIPluginResources";//$NON-NLS-1$
 
-    public static String EnableSetCondition_1;
-    public static String EnterCondition_1;
+	public static String EnableSetCondition_1;
+	public static String EnterCondition_1;
 
 	public static String InstalledPHPsBlock_16;
-    public static String SetCondition_1;
-    public static String ErrorCreatingBreakpoint_1;
-    public static String BreakpointCreated_1;
-    public static String MPresentation_Terminated_1;
-    public static String MPresentation_PHP_APP_1;
-    public static String MPresentation_Stepping_1;
-    public static String MPresentation_Suspended_1;
-    public static String MPresentation_SLineBreakpoint_1;
-    public static String MPresentation_File_1;
-    public static String MPresentation_ATLine_1;
-    public static String PHPPrimitiveValueEditor_0;
-    public static String PHPPrimitiveValueEditor_1;
-    public static String PHPPrimitiveValueEditor_2;
-    public static String PHPPrimitiveValueEditor_3;
-    public static String PHPPrimitiveValueEditor_4;
-    public static String PHPRunToLineAdapter_0;
+	public static String SetCondition_1;
+	public static String ErrorCreatingBreakpoint_1;
+	public static String BreakpointCreated_1;
+	public static String MPresentation_Terminated_1;
+	public static String MPresentation_PHP_APP_1;
+	public static String MPresentation_Stepping_1;
+	public static String MPresentation_Suspended_1;
+	public static String MPresentation_SLineBreakpoint_1;
+	public static String MPresentation_File_1;
+	public static String MPresentation_ATLine_1;
+	public static String PHPPrimitiveValueEditor_0;
+	public static String PHPPrimitiveValueEditor_1;
+	public static String PHPPrimitiveValueEditor_2;
+	public static String PHPPrimitiveValueEditor_3;
+	public static String PHPPrimitiveValueEditor_4;
+	public static String PHPRunToLineAdapter_0;
 
-    public static String PHPRunToLineAdapter_1;
+	public static String PHPRunToLineAdapter_1;
 
-    public static String PHPRunToLineAdapter_2;
-    
-    public static String BrowseWorkspace;
+	public static String PHPRunToLineAdapter_2;
+
+	public static String BrowseWorkspace;
 	public static String BrowseFilesystem;
 	public static String WorkingDirectory;
 	public static String Arguments;
@@ -60,14 +60,12 @@ public class PHPDebugUIMessages extends NLS {
 	public static String Select_Resource;
 	public static String Select_Project_Folder;
 
-	
-//  installed php exes	
+	//  installed php exes	
 	public static String PHPsPreferencePage_1;
 	public static String PHPsPreferencePage_2;
 	public static String PHPsPreferencePage_10;
 	public static String PHPsPreferencePage_11;
 	public static String PHPsPreferencePage_13;
-
 
 	public static String InstalledPHPsBlock_0;
 	public static String InstalledPHPsBlock_1;
@@ -88,7 +86,7 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String PHPexe_executable_was_not_found_1;
 	public static String PHPexe_ok_2;
-    public static String PHPexe_Run_With_Debug_Info;
+	public static String PHPexe_Run_With_Debug_Info;
 
 	public static String addPHPexeDialog_browse1;
 	public static String addPHPexeDialog_duplicateName;
@@ -100,52 +98,53 @@ public class PHPDebugUIMessages extends NLS {
 	public static String addPHPexeDialog_pickPHPRootDialog_message;
 	public static String AddPHPexeDialog_PHP_name_must_be_a_valid_file_name___0__1;
 	public static String AddPHPexeDialog_0;
-	
+
 	public static String PHPexesComboBlock_1;
 	public static String PHPexesComboBlock_2;
 	public static String PHPexesComboBlock_3;
 
-	public static String 	ShowPHPsPreferencePageTitle;
-	
-	public static String 	launch_failure_no_target;
-	public static String 	launch_failure_no_config;
-	
-	public static String 	launch_failure_msg_title;
-	public static String 	launch_failure_msg_text;
-	
-	public static String 	launch_noexe_msg_title;
-	public static String 	launch_noexe_msg_text;
-	
-    public static String PhpDebugPreferencePage_0;
-    public static String PhpDebugPreferencePage_1;
-    public static String PhpDebugPreferencePage_2;
-    public static String PhpDebugPreferencePage_3;
-    public static String PhpDebugPreferencePage_4;   
-    public static String PhpDebugPreferencePage_5;
-    public static String PhpDebugPreferencePage_6;
-    public static String PhpDebugPreferencePage_7;
-    public static String PhpDebugPreferencePage_8;
-    public static String PhpDebugPreferencePage_9;
-    public static String PHPsComboBlock_NoPHPsTitle;
-    public static String PHPsComboBlock_noPHPsMessage;	
-    public static String ShowView_errorTitle;
-    
-    public static String ConfigureProjectSettings;
-    public static String ConfigureWorkspaceSettings;
-    public static String EnableProjectSettings;
-    public static String PropertyPreferencePage_01;
-    public static String PropertyPreferencePage_02;
-    
-    public static String SourceNotFoundEditorInput_Source_not_found_for__0__2;
-    public static String SourceNotFoundEditorInput_Source_Not_Found_1;
+	public static String ShowPHPsPreferencePageTitle;
 
-    static {
-        // load message values from bundle file
-        NLS.initializeMessages(BUNDLE_NAME, PHPDebugUIMessages.class);
-    }
+	public static String launch_failure_no_target;
+	public static String launch_failure_no_config;
 
-    private PHPDebugUIMessages() {
-        // cannot create new instance
-    }
+	public static String launch_failure_msg_title;
+	public static String launch_failure_msg_text;
+
+	public static String launch_noexe_msg_title;
+	public static String launch_noexe_msg_text;
+
+	public static String PhpDebugPreferencePage_0;
+	public static String PhpDebugPreferencePage_1;
+	public static String PhpDebugPreferencePage_2;
+	public static String PhpDebugPreferencePage_3;
+	public static String PhpDebugPreferencePage_4;
+	public static String PhpDebugPreferencePage_5;
+	public static String PhpDebugPreferencePage_6;
+	public static String PhpDebugPreferencePage_7;
+	public static String PhpDebugPreferencePage_8;
+	public static String PhpDebugPreferencePage_9;
+	public static String PhpDebugPreferencePage_10;
+	public static String PHPsComboBlock_NoPHPsTitle;
+	public static String PHPsComboBlock_noPHPsMessage;
+	public static String ShowView_errorTitle;
+
+	public static String ConfigureProjectSettings;
+	public static String ConfigureWorkspaceSettings;
+	public static String EnableProjectSettings;
+	public static String PropertyPreferencePage_01;
+	public static String PropertyPreferencePage_02;
+
+	public static String SourceNotFoundEditorInput_Source_not_found_for__0__2;
+	public static String SourceNotFoundEditorInput_Source_Not_Found_1;
+
+	static {
+		// load message values from bundle file
+		NLS.initializeMessages(BUNDLE_NAME, PHPDebugUIMessages.class);
+	}
+
+	private PHPDebugUIMessages() {
+		// cannot create new instance
+	}
 
 }
