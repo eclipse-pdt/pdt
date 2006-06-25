@@ -13,7 +13,7 @@ package org.eclipse.php.core.documentModel.validate;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 
-class HTMLEmptyValidator extends ValidationComponent {
+public class HTMLEmptyValidator extends ValidationComponent {
 
 	/**
 	 * HTMLSimpleValidator constructor comment.

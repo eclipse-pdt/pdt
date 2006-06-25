@@ -11,6 +11,7 @@
 package org.eclipse.php.core.documentModel.dom;
 
 import org.eclipse.php.core.documentModel.validate.HTMLElementPropagatingValidator;
+import org.eclipse.php.core.documentModel.validate.HTMLEmptyValidator;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
@@ -62,8 +63,13 @@ public class PHPElementImpl extends ElementImpl {
 	public INodeAdapter getExistingAdapter(Object type) {
 		INodeAdapter result = null;
 
-		if (((Class) type).getName().equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator")) {
+		final String name = ((Class) type).getName();
+		if (name.equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator")) {
 			result = pValidator;
+		
+		// TRICKY: if we are in HTML Validator and we see a php element - just go out and do nothing !!! 
+		} else if (name.equals("org.eclipse.wst.sse.core.internal.validate.ValidationAdapter")) { 
+			result = new HTMLEmptyValidator();
 		} else {
 			result = super.getExistingAdapter(type);
 		}
