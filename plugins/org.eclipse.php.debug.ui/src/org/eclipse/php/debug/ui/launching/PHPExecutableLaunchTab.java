@@ -13,7 +13,6 @@ package org.eclipse.php.debug.ui.launching;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -25,7 +24,6 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.debug.core.IPHPConstants;
@@ -300,10 +298,11 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (enableFileSelection) {
 			updateArgument(configuration);
 		}
+		isValid(configuration);
 	}
 
 	public String getName() {
-		return "PHP Exe";
+		return "PHP Executable";
 	}
 
 	/**
@@ -380,12 +379,15 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	private boolean fileExists(String projectPath) {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		if (projectPath == null || "".equals(projectPath)) {
+			return false;
+		}
+
 		IPath p3 = new Path(projectPath);
 		boolean file = ResourcesPlugin.getWorkspace().getRoot().exists(p3);
-		if (file)
+		if (file) {
 			return true;
-
+		}
 		return false;
 	}
 
@@ -396,20 +398,25 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		setErrorMessage(null);
 		try {
 			String phpExe = launchConfig.getAttribute(PHPCoreConstants.ATTR_LOCATION, "");
-			if (phpExe != "" && phpExe != null) {
+			boolean phpExeExists = true;
+			try {
 				File file = new File(phpExe);
 				if (!file.exists()) {
-					setErrorMessage(PHPDebugUIMessages.PHP_Location_Message);
-					return false;
+					phpExeExists = false;
 				}
+			} catch (NullPointerException e) {
+				phpExeExists = false;
 			}
+			if (!phpExeExists) {
+				setErrorMessage(PHPDebugUIMessages.PHP_Location_Message);
+				return false;
+			}
+
 			if (enableFileSelection) {
 				String phpFile = launchConfig.getAttribute(PHPCoreConstants.ATTR_FILE, "");
-				if (phpFile != "" && phpExe != null) {
-					if (!fileExists(phpFile)) {
-						setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
-						return false;
-					}
+				if (!fileExists(phpFile)) {
+					setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
+					return false;
 				}
 			}
 		} catch (CoreException e) {
@@ -443,7 +450,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		/*
 		 String projStr = workDirectoryField.getText();
 		 */
-		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+//		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		//IProject[] projects = workspaceRoot.getProjects();
 		IFile file = null;
 
@@ -495,7 +502,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void activated(ILaunchConfigurationWorkingCopy workingCopy) {
 	}
-
+	
 	/*
 	 * Fix for Bug 60163 Accessibility: New Builder Dialog missing object info for textInput controls
 	 */

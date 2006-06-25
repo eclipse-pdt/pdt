@@ -18,13 +18,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.core.LaunchConfigurationWorkingCopy;
-import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
-import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationPresentationManager;
-import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationView;
-import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationsDialog;
-import org.eclipse.debug.internal.ui.preferences.LaunchConfigurationsPreferencePage;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -492,6 +486,8 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		}
 
 		initializeExtensionControls(configuration);
+		
+		isValid(configuration);
 	}
 
 	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
@@ -653,11 +649,9 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			}
 
 			String fileName = launchConfig.getAttribute(Server.FILE_NAME, "");
-			if (fileName != null && !(fileName.equals(""))) {
-				if (!fileExists(fileName)) {
-					setErrorMessage("File Does Not Exist");
-					return false;
-				}
+			if (!fileExists(fileName)) {
+				setErrorMessage("File Does Not Exist");
+				return false;
 			}
 
 		} catch (CoreException e) {
@@ -691,8 +685,11 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	}
 
 	private boolean fileExists(String projectPath) {
+		if (projectPath == null || "".equals(projectPath)) {
+			return false;
+		}
+		
 		boolean file = false;
-
 		try {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IPath p3 = new Path(projectPath);
