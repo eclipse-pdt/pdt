@@ -101,6 +101,7 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 			prefs.setValue(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, true);
 			PHPDebugPlugin.getDefault().savePluginPreferences();
 		}
+		
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
 			boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);

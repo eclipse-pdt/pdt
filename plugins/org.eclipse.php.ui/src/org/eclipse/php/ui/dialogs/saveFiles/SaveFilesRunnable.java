@@ -25,6 +25,7 @@ public class SaveFilesRunnable implements Runnable {
 	public SaveFilesRunnable(IProject project) {
 		this(project, false, false);
 	}
+	
 
 	public void run() {
 		saved = SaveFilesDialog.handleFilesToSave(project, showAutoSave, autoSave);
