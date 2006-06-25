@@ -14,44 +14,7 @@ import java.io.File;
 
 import org.eclipse.php.debug.core.communication.DebugConnectionThread;
 import org.eclipse.php.debug.core.communication.ResponseHandler;
-import org.eclipse.php.debug.core.debugger.messages.AddBreakpointRequest;
-import org.eclipse.php.debug.core.debugger.messages.AddBreakpointResponse;
-import org.eclipse.php.debug.core.debugger.messages.AssignValueRequest;
-import org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsRequest;
-import org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsResponse;
-import org.eclipse.php.debug.core.debugger.messages.CancelBreakpointRequest;
-import org.eclipse.php.debug.core.debugger.messages.CancelBreakpointResponse;
-import org.eclipse.php.debug.core.debugger.messages.DebugScriptEndedNotification;
-import org.eclipse.php.debug.core.debugger.messages.DebugSessionClosedNotification;
-import org.eclipse.php.debug.core.debugger.messages.DebugSessionStartedNotification;
-import org.eclipse.php.debug.core.debugger.messages.DebuggerErrorNotification;
-import org.eclipse.php.debug.core.debugger.messages.EvalRequest;
-import org.eclipse.php.debug.core.debugger.messages.EvalResponse;
-import org.eclipse.php.debug.core.debugger.messages.GetCallStackRequest;
-import org.eclipse.php.debug.core.debugger.messages.GetCallStackResponse;
-import org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueRequest;
-import org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueResponse;
-import org.eclipse.php.debug.core.debugger.messages.GetVariableValueRequest;
-import org.eclipse.php.debug.core.debugger.messages.GetVariableValueResponse;
-import org.eclipse.php.debug.core.debugger.messages.GoRequest;
-import org.eclipse.php.debug.core.debugger.messages.GoResponse;
-import org.eclipse.php.debug.core.debugger.messages.HeaderOutputNotification;
-import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
-import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
-import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
-import org.eclipse.php.debug.core.debugger.messages.OutputNotification;
-import org.eclipse.php.debug.core.debugger.messages.ParsingErrorNotification;
-import org.eclipse.php.debug.core.debugger.messages.PauseDebuggerRequest;
-import org.eclipse.php.debug.core.debugger.messages.PauseDebuggerResponse;
-import org.eclipse.php.debug.core.debugger.messages.ReadyNotification;
-import org.eclipse.php.debug.core.debugger.messages.StartRequest;
-import org.eclipse.php.debug.core.debugger.messages.StartResponse;
-import org.eclipse.php.debug.core.debugger.messages.StepIntoRequest;
-import org.eclipse.php.debug.core.debugger.messages.StepIntoResponse;
-import org.eclipse.php.debug.core.debugger.messages.StepOutRequest;
-import org.eclipse.php.debug.core.debugger.messages.StepOutResponse;
-import org.eclipse.php.debug.core.debugger.messages.StepOverRequest;
-import org.eclipse.php.debug.core.debugger.messages.StepOverResponse;
+import org.eclipse.php.debug.core.debugger.messages.*;
 
 /**
  * An IRemoteDebugger implementation. 
@@ -113,7 +76,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 			int serverProtocol = debugSessionStartedNotification.getServerProtocolID();
 			if (serverProtocol != PROTOCOL_ID) {
 				debugHandler.wrongDebugServer();
-				this.finish();
 				return;
 			}
 
@@ -876,7 +838,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 				}
 				((GetStackVariableValueResponseHandler) responseHandler).stackVariableValue(stackDepth, value, depth, path, result, success);
 			}
-
 		}
 	}
 }

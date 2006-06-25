@@ -227,6 +227,15 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.debug.core.model.SimpleDebugHandler#wrongDebugServer()
+	 */
+	public void wrongDebugServer() {
+		super.wrongDebugServer();
+		fDebugTarget.fireError("Incompatible Debug Server version.", null);
+		fRemoteDebugger.finish();
+	}
+
 	public void newOutput(String output) {
 		super.newOutput(output);
 		fDebugTarget.getOutputBufffer().append(output);

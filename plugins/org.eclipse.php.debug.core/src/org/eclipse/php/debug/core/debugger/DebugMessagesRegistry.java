@@ -53,7 +53,7 @@ public class DebugMessagesRegistry {
 			if (MESSAGE_TAG.equals(element.getName())) {
 				final IDebugMessage messages[] = new IDebugMessage[1];
 			
-				Platform.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.debug.core.phpDebugMessages") {
+				SafeRunnable.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.debug.core.phpDebugMessages") {
 					public void run() throws Exception {
 						messages[0] = (IDebugMessage) element.createExecutableExtension(CLASS_ATTRIBUTE);
 					}
@@ -100,7 +100,7 @@ public class DebugMessagesRegistry {
 		if (messages.containsKey(type)) {
 			return (IDebugMessage) messages.get(type).getClass().newInstance();
 		} else {
-			throw new Exception("Can't find message for type" + type +" in Debug messages registry!");
+			throw new Exception("Can't find message for ID = " + type +" in Debug messages registry!");
 		}
 	}
 	
@@ -132,7 +132,7 @@ public class DebugMessagesRegistry {
 		
 		public IDebugMessageHandler createHandler() {
 			if (handler == null) {
-				Platform.run(new SafeRunnable("Error creation handler for extension-point org.eclipse.php.debug.core.phpDebugMessages") {
+				SafeRunnable.run(new SafeRunnable("Error creation handler for extension-point org.eclipse.php.debug.core.phpDebugMessages") {
 					public void run() throws Exception {
 						handler = (IDebugMessageHandler) element.createExecutableExtension(HANDLER_ATTRIBUTE);
 					}

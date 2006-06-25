@@ -260,6 +260,10 @@
             class="org.eclipse.php.debug.core.debugger.messages.ReadyNotification"
             id="org.eclipse.php.debug.core.debugger.messages.ReadyNotification"
 	    name="Ready Notification"/>
+      <message
+            class="org.eclipse.php.debug.core.debugger.messages.UnknownMessageResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.UnknownMessageResponse"
+            name="Unknown Message Response"/>
 
   </extension>
   <extension
