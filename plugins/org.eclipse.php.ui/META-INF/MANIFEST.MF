@@ -36,6 +36,7 @@ Eclipse-LazyStart: true
 Export-Package: org.eclipse.php.project.ui.wizards,
  org.eclipse.php.ui,
  org.eclipse.php.ui.containers,
+ org.eclipse.php.ui.dialogs.saveFiles,
  org.eclipse.php.ui.editor,
  org.eclipse.php.ui.editor.contentassist,
  org.eclipse.php.ui.editor.hover,
