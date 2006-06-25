@@ -10,18 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.ui.workingset;
 
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.php.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.core.phpModel.parser.PHPLanguageManagerProvider;
 import org.eclipse.php.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.ui.functions.PHPFunctionsContentProvider;
 import org.eclipse.php.ui.functions.PHPFunctionsPart;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 
@@ -60,11 +62,22 @@ public class FunctionsViewGroup extends ViewActionGroup {
 		if (mode == currentMode) {
 			return;
 		}
+		//		BusyIndicator.showWhile(fPart.getSite().getShell().getDisplay(), new Runnable() {
+		//
+		//			public void run() {
+		//				((PHPFunctionsContentProvider) fPart.getViewer().getContentProvider()).setRoot(PHPLanguageManagerProvider.instance().getPHPLanguageManager(currentMode == PHP4 ? PHPVersion.PHP4 : PHPVersion.PHP5).getModel());
+		IPhpModel model = PHPLanguageManagerProvider.instance().getPHPLanguageManager(currentMode == PHP4 ? PHPVersion.PHP4 : PHPVersion.PHP5).getModel();
+		fPart.getViewer().setInput(model);
+		//				fPart.getViewer().refresh();
+		//				fPart.getViewer().getControl().redraw();
+		//			}
+		//			
+		//		});
 		currentMode = mode;
-		if (updateViewJob == null) {
-			updateViewJob = new UpdateViewJob();
-		}
-		updateViewJob.schedule();
+		//		if (updateViewJob == null) {
+		//			updateViewJob = new UpdateViewJob();
+		//		}
+		//		updateViewJob.schedule();
 		updateActions();
 	}
 
@@ -88,20 +101,20 @@ public class FunctionsViewGroup extends ViewActionGroup {
 			setMode(getVersion(PhpVersionProjectPropertyHandler.getVersion()));
 		}
 	}
-	
+
 	private String getVersion(int i) {
 		if (i == PHP4) {
 			return PHPVersion.PHP4;
 		}
-			
+
 		return PHPVersion.PHP5;
 	}
-	
+
 	private int getVersion(String s) {
 		if (PHPVersion.PHP4.equals(s)) {
 			return PHP4;
 		}
-		
+
 		return PHP5;
 	}
 
@@ -113,11 +126,12 @@ public class FunctionsViewGroup extends ViewActionGroup {
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					fPart.getViewer().setInput(PHPLanguageManagerProvider.instance().getPHPLanguageManager(currentMode == PHP4 ? PHPVersion.PHP4 : PHPVersion.PHP5).getModel());
-				}
-			});
+			//			Display.getDefault().asyncExec(new Runnable() {
+			//				public void run() {
+			fPart.getViewer().setInput(PHPLanguageManagerProvider.instance().getPHPLanguageManager(currentMode == PHP4 ? PHPVersion.PHP4 : PHPVersion.PHP5).getModel());
+			fPart.getViewer().refresh();
+			//				}
+			//			});
 			return Status.OK_STATUS;
 		}
 

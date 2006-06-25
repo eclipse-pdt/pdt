@@ -26,13 +26,14 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
-
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 public class PHPFunctionsContentProvider implements ITreeContentProvider {
 
 	public static final String CONSTANTS_NODE_NAME = "constants";
 	protected static final Object[] NO_CHILDREN = new Object[0];
-
+	private PHPLanguageModel model;
 
 	public PHPFunctionsContentProvider() {
 	}
@@ -51,7 +52,7 @@ public class PHPFunctionsContentProvider implements ITreeContentProvider {
 			IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(sp);
 			if (!project.isOpen()) {
 				return false;
-			}
+			} else return true;
 		}
 
 		if (element instanceof PHPCodeData) {
@@ -83,22 +84,6 @@ public class PHPFunctionsContentProvider implements ITreeContentProvider {
 		return PHPModelUtil.getParent(element);
 	}
 
-	private Object[] rootsChildren;
-	private PHPLanguageModel model;
-
-	private void initFunctions() {
-		CodeData[] functions = model.getFunctions();
-		CodeData[] classes = model.getClasses();
-		CodeData[] constants = model.getConstants();
-
-		if (functions.length > 0 && classes.length > 0 && constants.length > 0) {
-			rootsChildren = new Object[classes.length + functions.length + 1];
-			rootsChildren[0] = CONSTANTS_NODE_NAME;
-			System.arraycopy(classes, 0, rootsChildren, 1, classes.length);
-			System.arraycopy(functions, 0, rootsChildren, classes.length + 1, functions.length);
-		}
-	}
-
 	private Object[] getClassChildren(PHPClassData classData) {
 		ArrayList list = new ArrayList();
 		PHPFunctionData[] functions = classData.getFunctions();
@@ -119,6 +104,17 @@ public class PHPFunctionsContentProvider implements ITreeContentProvider {
 			return NO_CHILDREN;
 		}
 		if (parentElement instanceof PHPLanguageModel) {
+			PHPLanguageModel model = (PHPLanguageModel) parentElement;
+			CodeData[] functions = model.getFunctions();
+			CodeData[] classes = model.getClasses();
+//			CodeData[] constants = model.getConstants();
+			Object[] rootsChildren = NO_CHILDREN;
+			if (functions.length > 0 && classes.length > 0 /*&& constants.length > 0*/) {
+				rootsChildren = new Object[classes.length + functions.length + 1];
+				rootsChildren[0] = CONSTANTS_NODE_NAME;
+				System.arraycopy(classes, 0, rootsChildren, 1, classes.length);
+				System.arraycopy(functions, 0, rootsChildren, classes.length + 1, functions.length);
+			}
 			return rootsChildren;
 		}
 		if (parentElement instanceof PHPClassData) {
@@ -127,7 +123,6 @@ public class PHPFunctionsContentProvider implements ITreeContentProvider {
 		if (parentElement.equals(CONSTANTS_NODE_NAME)) {
 			return model.getConstants();
 		}
-
 		return NO_CHILDREN;
 	}
 
@@ -135,16 +130,11 @@ public class PHPFunctionsContentProvider implements ITreeContentProvider {
 		//        PHPModelManager.getInstance().removeModelListener(this);
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput == null) {
 			return;
 		}
 		model = (PHPLanguageModel) newInput;
-		new Runnable() {
-			public void run() {
-				initFunctions();
-			}
-		}.run();
 	}
 
 }
