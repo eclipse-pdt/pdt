@@ -37,7 +37,6 @@ public class ConfigureBuildPathActionGroup extends ActionGroup {
 	public ConfigureBuildPathActionGroup(IViewPart part) {
 		fSite = part.getSite();
 		fConfigureIncludePath = new ConfigureIncludePathAction(fSite);
-		fConfigureIncludePath.setActionDefinitionId(IPHPEditorActionDefinitionIds.CONFIGURE_INCLUDE_PATH);
 		initialize(fSite.getSelectionProvider());
 	}
 
@@ -65,7 +64,6 @@ public class ConfigureBuildPathActionGroup extends ActionGroup {
 	 */
 	public void fillActionBars(IActionBars actionBar) {
 		super.fillActionBars(actionBar);
-		setGlobalActionHandlers(actionBar);
 	}
 
 	/* (non-Javadoc)
@@ -86,9 +84,6 @@ public class ConfigureBuildPathActionGroup extends ActionGroup {
 		super.dispose();
 	}
 
-	private void setGlobalActionHandlers(IActionBars actionBars) {
-		actionBars.setGlobalActionHandler(PHPActionConstants.OPEN, fConfigureIncludePath);
-	}
 
 	private void appendToGroup(IMenuManager menu, IAction action) {
 		if (action.isEnabled())	
