@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -44,7 +45,10 @@ import org.eclipse.php.debug.core.debugger.PHPExecutableDebuggerInitializer;
 import org.eclipse.php.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.model.DebugSessionIdGenerator;
+import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesRunnable;
+import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate {
 	protected Map envVariables = null;
@@ -86,6 +90,16 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 			if (project == null) {
 				return;
 			}
+		}
+		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		boolean autoSave = prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY);
+		SaveFilesRunnable runnable = new SaveFilesRunnable(project, true, autoSave);
+		Display.getDefault().syncExec(runnable);
+		if (!runnable.isSaved())
+			return;
+		if (runnable.isAutoSaved() && !autoSave) {
+			prefs.setValue(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, true);
+			PHPDebugPlugin.getDefault().savePluginPreferences();
 		}
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {

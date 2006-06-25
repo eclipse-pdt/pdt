@@ -91,6 +91,12 @@ public class PHPDebugPlugin extends Plugin {
 
 	}
 
+	public static boolean getAutoSaveDirtyOption() {
+		Preferences prefs = getDefault().getPluginPreferences();
+		return prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY);
+
+	}
+
 	public static boolean getOpenDebugViewsOption() {
 		Preferences prefs = getDefault().getPluginPreferences();
 		return prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS);

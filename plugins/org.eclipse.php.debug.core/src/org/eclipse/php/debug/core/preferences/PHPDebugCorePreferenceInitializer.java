@@ -26,13 +26,14 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 
 		// formatting preferences
 		node.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, false);
-        node.putBoolean(PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE, true);
-        node.putBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, true);
-        node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
-        node.putInt(PHPDebugCorePreferenceNames.DEBUG_PORT, 10000);
-        node.put(PHPDebugCorePreferenceNames.DEDAULT_URL, "http://localhost");
-        node.put(PHPDebugCorePreferenceNames.DEDAULT_SERVER, IPHPConstants.Default_Server_ID);
-        
-        PHPDebugPlugin.getDefault().getPluginPreferences().setDefault(IPHPConstants.PHP_DEBUG_PARAMETERS_INITIALIZER, "org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
+		node.putBoolean(PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE, true);
+		node.putBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, true);
+		node.putBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, false);
+		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
+		node.putInt(PHPDebugCorePreferenceNames.DEBUG_PORT, 10000);
+		node.put(PHPDebugCorePreferenceNames.DEDAULT_URL, "http://localhost");
+		node.put(PHPDebugCorePreferenceNames.DEDAULT_SERVER, IPHPConstants.Default_Server_ID);
+
+		PHPDebugPlugin.getDefault().getPluginPreferences().setDefault(IPHPConstants.PHP_DEBUG_PARAMETERS_INITIALIZER, "org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
 	}
 }
