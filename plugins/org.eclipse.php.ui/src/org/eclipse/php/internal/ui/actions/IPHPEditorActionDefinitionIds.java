@@ -149,5 +149,12 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	 * @since 3.0
 	 */
 	public static final String TOGGLE_MARK_OCCURRENCES = "org.eclipse.php.ui.edit.text.toggleMarkOccurrences"; //$NON-NLS-1$
+	
+	/**
+	 * Action definition ID of the Configure Include Path action
+	 * (value <code>"org.eclipse.php.ui.edit.text.move.element"</code>).
+	 */
+	public static final String CONFIGURE_INCLUDE_PATH = "org.eclipse.php.ui.configure.include.path"; //$NON-NLS-1$
+
 
 }

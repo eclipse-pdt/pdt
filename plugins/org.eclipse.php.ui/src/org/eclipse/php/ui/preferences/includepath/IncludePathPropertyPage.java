@@ -46,8 +46,8 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * Property page for configuring the include path
  */
 public class IncludePathPropertyPage extends PropertyPage implements IStatusChangeListener {
-
-	public static final String PROP_ID = "org.eclipse.php.ui.preferences.ui.IncludePathPropertyPage"; //$NON-NLS-1$
+	
+	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.IncludePathPropertyPage"; //$NON-NLS-1$
 
 	private static final String PAGE_SETTINGS = "IncludePathPropertyPage"; //$NON-NLS-1$
 	private static final String INDEX = "pageIndex"; //$NON-NLS-1$

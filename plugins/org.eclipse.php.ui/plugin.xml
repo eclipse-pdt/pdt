@@ -354,7 +354,7 @@
 			objectClass="org.eclipse.core.resources.IProject"
 			name="PHP Include Path"
 			class="org.eclipse.php.ui.preferences.includepath.IncludePathPropertyPage"
-			id=" org.eclipse.php.ui.preferences.includepath.IncludePathPropertyPage">
+			id="org.eclipse.php.ui.propertyPages.IncludePathPropertyPage">
 			<filter
 				name="nature"
 				value="org.eclipse.php.core.PHPNature">

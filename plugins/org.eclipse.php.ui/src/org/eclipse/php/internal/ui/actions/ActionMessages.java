@@ -207,6 +207,12 @@ public final class ActionMessages extends NLS {
 	public static String UncommentAction_label;
 	public static String CommentAction_label;
 	public static String OpenFunctionsManualAction_label;
+	
+	public static String ConfigureIncludePathAction_label;
+	public static String ConfigureIncludePathAction_tooltip;
+	public static String ConfigureIncludePathAction_description;
+
+	
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, ActionMessages.class);
