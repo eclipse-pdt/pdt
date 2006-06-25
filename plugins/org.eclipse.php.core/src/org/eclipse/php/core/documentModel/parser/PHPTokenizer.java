@@ -783,7 +783,7 @@ public void setSourceParser(PhpSourceParser source) {
 		fBufferedContext = phpLexer.yylex();
 		fBufferedStart = phpLexer.getTokenStart();
 		fBufferedLength = phpLexer.yylength();
-		if (fBufferedContext == PHPRegionTypes.WHITESPACE) {
+		if (fBufferedContext == PHPRegionTypes.WHITESPACE && context != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
 			fShouldLoadBuffered = false;
 			length += fBufferedLength;
 		} else {
