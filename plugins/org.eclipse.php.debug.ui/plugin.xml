@@ -292,7 +292,7 @@
          point="org.eclipse.debug.ui.launchShortcuts">
       <shortcut
             label="%phpexeApplicationShortcut.label"
-            modes="run, debug"
+            modes="run, debug, profile"
             icon="icon/full/obj16/php_exec.gif"
             class="org.eclipse.php.debug.ui.launching.PHPExeLaunchShortcut"
             id="org.eclipse.php.deubg.ui.phpexeShortcut">
