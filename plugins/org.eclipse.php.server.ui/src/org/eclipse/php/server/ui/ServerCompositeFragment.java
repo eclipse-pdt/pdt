@@ -350,7 +350,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 			}
 			server.setHost(modifiedValuesCache.host);
 			server.setName(modifiedValuesCache.serverName);
-			if (!originalValuesCache.serverName.equals(modifiedValuesCache.serverName)) {
+			if (originalValuesCache.serverName != null && !originalValuesCache.serverName.equals("") &&
+					!originalValuesCache.serverName.equals(modifiedValuesCache.serverName)) {
 				// Update the ServerManager with the new server name
 				ServersManager.removeServer(originalValuesCache.serverName);
 				ServersManager.addServer(server);
