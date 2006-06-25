@@ -69,7 +69,7 @@ The extention accepts a factory class that can create a WizardFragment or a Serv
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="place after" type="string">
+         <attribute name="placeAfter" type="string">
             <annotation>
                <documentation>
                   An optional ID for the wizard fragment factory that this factory should follow.

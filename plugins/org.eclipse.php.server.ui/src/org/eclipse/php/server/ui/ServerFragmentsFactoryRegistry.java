@@ -11,8 +11,6 @@
 package org.eclipse.php.server.ui;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -30,7 +28,7 @@ public class ServerFragmentsFactoryRegistry {
 	private static final String FRAGMENT_TAG = "wizardFragment"; //$NON-NLS-1$
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
-	private static final String PLACE_AFTER_ATTRIBUTE = "place after"; //$NON-NLS-1$
+	private static final String PLACE_AFTER_ATTRIBUTE = "placeAfter"; //$NON-NLS-1$
 
 	// Hold a Dictionary of Lists that contains the factories used for the creation of the fragments.
 	private List fragments = new ArrayList(5);
@@ -80,12 +78,76 @@ public class ServerFragmentsFactoryRegistry {
 				}
 			}
 		}
-		sortFragmentsByPlace(fragments);
+		sortFragmentsByPlace();
 	}
 
 	// Sort the fragments according to the 'place-after' attribute
-	private void sortFragmentsByPlace(List fragments2) {
-		// TODO
+	private void sortFragmentsByPlace() {
+		// Scan the fragments and separate the fragments that lacks the place-after property from
+		// those that have it.
+		ArrayList rootsFragments = new ArrayList(fragments.size());
+		ArrayList nonRootFragments = new ArrayList(fragments.size());
+		for (int i = 0; i < fragments.size(); i++) {
+			FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
+			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) {
+				addAsList(rootsFragments, factory);
+			} else {
+				addAsList(nonRootFragments, factory);
+			}
+		}
+
+		// Traverse over the non-root fragments and position them.
+		for (int i = 0; i < nonRootFragments.size(); i++) {
+			FragmentsFactory factory = getFactory(nonRootFragments, i);
+			// try to move it to the roots fragments first (order is important).
+			boolean moved = placeFragment(rootsFragments, factory);
+			if (!moved) {
+				// in case we can't find it there, try to move it inside the non-roots fragments.
+				moved = placeFragment(nonRootFragments, factory);
+			}
+			if (!moved) {
+				// move it to the roots anyway, since there is an error in the extention definitions.
+				addAsList(rootsFragments, factory);
+				Logger.log(Logger.WARNING, "Invalid 'placeAfter' id (" + factory.getPlaceAfter() + ')');
+			}
+		}
+
+		// At this stage, the root fragments should hold all the fragments sorted.
+		fragments.clear();
+		for (int i = 0; i < rootsFragments.size(); i++) {
+			List list = (List) rootsFragments.get(i);
+			for (int j = 0; j < list.size(); j++) {
+				fragments.add(list.get(j));
+			}
+		}
+	}
+
+	private boolean placeFragment(List factories, FragmentsFactory factory) {
+		String placeAfter = factory.getPlaceAfter();
+		for (int i = 0; i < factories.size(); i++) {
+			List list = (List) factories.get(i);
+			for (int j = 0; j < list.size(); j++) {
+				FragmentsFactory nextFactory = (FragmentsFactory) list.get(j);
+				if (nextFactory.getID().equals(placeAfter)) {
+					// This list is the list we should add to
+					list.add(factory);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private FragmentsFactory getFactory(List nonRootFragments, int i) {
+		List list = (List) nonRootFragments.get(i);
+		return (FragmentsFactory) list.get(0);
+	}
+
+	// add an element to a List by wrapping it in another List.
+	private void addAsList(List target, Object element) {
+		List list = new ArrayList(3);
+		list.add(element);
+		target.add(list);
 	}
 
 	private static ServerFragmentsFactoryRegistry getInstance() {
