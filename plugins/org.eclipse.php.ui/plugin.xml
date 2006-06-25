@@ -66,7 +66,8 @@
 				id="org.eclipse.php.project.ui.wizards.PHPProjectCreationWizard" />
 			<newWizardShortcut
 				id="org.eclipse.php.project.ui.wizards.PHPFileCreationWizard" />
-   <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+   			<newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+			<showInPart id="org.eclipse.ui.views.ResourceNavigator"/>
 		</perspectiveExtension>
 		<perspectiveExtension
 			targetID="org.eclipse.ui.resourcePerspective">

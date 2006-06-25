@@ -174,7 +174,8 @@
             <view id="org.eclipse.debug.ui.PHPDebugOutput" 
                 relative="org.eclipse.ui.console.ConsoleView" 
                 relationship="stack" 
-            /> 
+            />
+            <showInPart id="org.eclipse.ui.views.ResourceNavigator"/> 
         </perspectiveExtension> 
     </extension>     
     
