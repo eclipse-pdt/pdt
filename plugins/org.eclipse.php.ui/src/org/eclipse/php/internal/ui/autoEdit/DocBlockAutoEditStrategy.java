@@ -200,10 +200,10 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 					return rvPosition + lineContent.length();
 				}
 			} else {
-				lineStart += commentStartLength;
-				command.length += (command.offset - lineStart);
-				command.offset = lineStart;
+				command.length += (command.offset - lineStart - commentStartLength);
+				command.offset = lineStart + commentStartLength;
 			}
+			lineStart += commentStartLength;
 			if (lineContent != null && !lineContent.equals("")) {
 				command.text += lineContent;
 				rvPosition = lineStart + command.text.length();
