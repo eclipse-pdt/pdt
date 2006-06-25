@@ -344,8 +344,6 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 	}
 
 	public void addFileToModel(IFile file) {
-		PHPFileData fileData = PHPCodeDataFactory.createPHPFileData(file.getFullPath().toString(), PHPCodeDataFactory.createUserData(file.getFullPath().toString(), 0, 0, 0, 0), PHPCodeDataFactory.EMPTY_CLASS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY, VariableContextBuilder.createPHPVariablesTypeManager(new HashMap(), new HashMap()), PHPCodeDataFactory.EMPTY_INCLUDE_DATA_ARRAY, PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY, PHPCodeDataFactory.EMPTY_MARKERS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_PHP_BLOCK_ARRAY, new PHPDocBlockImp("","",new PHPDocTag[0],0), System.currentTimeMillis());
-		userModel.insert(fileData);
 		fireFileDataAdded(file);		
 	}
 
