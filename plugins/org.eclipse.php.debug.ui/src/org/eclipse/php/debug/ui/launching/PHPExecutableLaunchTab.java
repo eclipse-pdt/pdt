@@ -65,8 +65,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 	public PHPExecutableLaunchTab(String mode) {
 		enableFileSelection = true;
-		if (!mode.equals(ILaunchManager.RUN_MODE)) {
-			setEnableDebugInfoOption(false);
+		if (mode.equals(ILaunchManager.RUN_MODE)) {
+			setEnableDebugInfoOption(true);
 		}
 	}
 
