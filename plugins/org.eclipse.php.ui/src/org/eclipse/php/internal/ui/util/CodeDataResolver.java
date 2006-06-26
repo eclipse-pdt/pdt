@@ -376,8 +376,11 @@ public class CodeDataResolver {
 	}
 
 	private CodeData[] getIfClassFunctionCall(PHPProjectModel projectModel, String fileName, String className, String functionName) {
-		CodeData[] tmp = new CodeData[] { projectModel.getClassFunctionData(fileName, className, functionName) };
-		return tmp;
+		CodeData classFunctionData = projectModel.getClassFunctionData(fileName, className, functionName);
+		if (classFunctionData != null) {
+			return new CodeData[] { classFunctionData };
+		}
+		return null;
 	}
 
 	/**
