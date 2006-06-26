@@ -19,8 +19,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.phpModel.IPHPLanguageModel;
@@ -204,12 +206,15 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	protected void loadFile(PHPLanguageManager languageManager) {
 		try {
 			String phpFunctionPath = languageManager.getPHPFunctionPath();
-			Reader reader = new InputStreamReader(PHPCorePlugin.getDefault().openStream(new Path(phpFunctionPath)));
+			Reader reader = new InputStreamReader(FileLocator.openStream(PHPCorePlugin.getDefault().getBundle(), new Path(phpFunctionPath), false));
 
-			// Reader reader = new InputStreamReader(new FileInputStream(new
-			// File(phpFunctionPath).getAbsoluteFile()));
+			// parse the language model
+			final PHPParserManager phpParserManager = languageManager.createPHPParserManager();
+			final ParserExecuter executer = new ParserExecuter(phpParserManager, null, new InnerParserClient(), phpFunctionPath, reader, new Pattern[0], 0, false);
+			executer.run();
+			
+			// phpParserManager.parse(reader, phpFunctionPath, 0, new InnerParserClient(), false);
 
-			languageManager.createPHPParserManager().parse(reader, phpFunctionPath, 0, new InnerParserClient(), false);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

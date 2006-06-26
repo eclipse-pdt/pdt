@@ -19,29 +19,28 @@ import org.eclipse.php.core.phpModel.parser.php5.PHP5LanguageManager;
 
 public class PHPLanguageManagerProvider {
 
-	private static PHPLanguageManagerProvider instance;
-
-	public static PHPLanguageManagerProvider instance() {
-		if (instance == null) {
-			instance = new PHPLanguageManagerProvider();
-		}
-		return instance;
-	}
-
-	private Map models;
-
-	private PHPLanguageManagerProvider() {
-		models = new HashMap();
-		initModels();
-	}
-
-	public PHPLanguageManager getPHPLanguageManager(String key) {
-		return (PHPLanguageManager) models.get(key);
-	}
-
-	private void initModels() {
+	// singleton value 
+	private static final PHPLanguageManagerProvider instance = new PHPLanguageManagerProvider(); 
+	private PHPLanguageManagerProvider() { }
+	
+	// avaliable models
+	private final static Map models = new HashMap();
+	static {
 		models.put(PHPVersion.PHP4, new PHP4LanguageManager());
 		models.put(PHPVersion.PHP5, new PHP5LanguageManager());
 	}
+	
+	/**
+	 * @return language provider instance
+	 */
+	public static PHPLanguageManagerProvider instance() {
+		return instance;
+	}
 
+	// get the relevant language model 
+	public PHPLanguageManager getPHPLanguageManager(String key) {
+		assert key.equals(PHPVersion.PHP4) || key.equals(PHPVersion.PHP5);
+		
+		return (PHPLanguageManager) models.get(key);
+	}
 }

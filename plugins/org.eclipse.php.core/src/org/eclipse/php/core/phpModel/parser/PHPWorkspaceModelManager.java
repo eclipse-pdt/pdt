@@ -13,8 +13,11 @@ package org.eclipse.php.core.phpModel.parser;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -30,6 +33,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.core.PHPCorePlugin;
@@ -49,35 +53,40 @@ import org.eclipse.php.core.util.project.observer.ProjectRemovedObserversAttache
 public class PHPWorkspaceModelManager implements ModelListener {
 
 	//this is a singleton
-	protected static PHPWorkspaceModelManager instance = null;
-
+	protected static final PHPWorkspaceModelManager instance = new PHPWorkspaceModelManager();
+	private PHPWorkspaceModelManager() { }
+	
+	/**
+	 * @return the singelton instance
+	 */
 	public static PHPWorkspaceModelManager getInstance() {
-
-		if (instance == null)
-			instance = new PHPWorkspaceModelManager();
-
 		return instance;
 	}
 
-	protected HashMap models = new HashMap();
-	private List listeners = Collections.synchronizedList(new ArrayList(2));
-	private HashMap workspaceModelListeners = new HashMap();
-	private List globalWorkspaceModelListeners = new ArrayList();
+	protected final static HashMap models = new HashMap();
 
-	private PHPWorkspaceModelManager() {
-
-	}
+	/**
+	 * Model listeners
+	 */
+	private final static Set modelListeners = Collections.synchronizedSet(new HashSet(2));
+	private final static Map workspaceModelListeners = Collections.synchronizedMap(new HashMap(2));
+	private final static Set globalWorkspaceModelListeners = Collections.synchronizedSet(new HashSet(2));
 
 	/*
 	 * This call is used to populate the model from the content of the project
 	 */
 	public void startup() {
-
 		initGlobalModelListeners();
 		
 		runBuild();
 
 		attachProjectOpenObserver();
+		
+		initLanguageModels(); 
+	}
+
+	private void initLanguageModels() {
+		PHPLanguageManagerProvider.instance();
 	}
 
 	private void initGlobalModelListeners() {
@@ -94,8 +103,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	private class WorkspaceModelListenerProxy {
-		IConfigurationElement element;
-		IWorkspaceModelListener listener;
+		private final IConfigurationElement element;
+		private IWorkspaceModelListener listener;
 
 		public WorkspaceModelListenerProxy(IConfigurationElement element) {
 			this.element = element;
@@ -103,7 +112,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 		public IWorkspaceModelListener getListener() {
 			if (listener == null) {
-				Platform.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.core.workspaceModelListener") {
+				SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.core.workspaceModelListener") {
 					public void run() throws Exception {
 						listener = (IWorkspaceModelListener) element.createExecutableExtension("class");
 					}
@@ -290,15 +299,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		return projects;
 	}
 
-	public void addModelListener(ModelListener l) {
-		if (!listeners.contains(l))
-			listeners.add(l);
-	}
-
-	public void removeModelListener(ModelListener l) {
-		listeners.remove(l);
-	}
-
 	public void removeModel(IProject removedProject) {
 		PHPProjectModel model = getModelForProject(removedProject);
 		if (model != null) {
@@ -332,49 +332,85 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		}
 	}
 
+	/** 
+	 * Model Listeners  
+	 */
+	public void addModelListener(ModelListener l) {
+		modelListeners.add(l);
+	}
+
+	public void removeModelListener(ModelListener l) {
+		modelListeners.remove(l);
+	}
+
+	private ModelListener[] getModelListenersIteratorCopy() {
+		synchronized (modelListeners) {
+			ModelListener[] iterator = new ModelListener[modelListeners.size()];
+			modelListeners.toArray(iterator);
+			return iterator;
+		}
+	}
+	
 	public void fileDataChanged(PHPFileData fileData) {
-		ModelListener[] allListeners = new ModelListener[listeners.size()];
-		listeners.toArray(allListeners);
-		for (int i = 0; i < allListeners.length; i++) {
-			allListeners[i].fileDataChanged(fileData);
+		ModelListener[] iterator = getModelListenersIteratorCopy();
+		for (int i=0;i<iterator.length;i++) {
+			iterator[i].fileDataChanged(fileData);
 		}
 	}
 
 	public void fileDataAdded(PHPFileData fileData) {
-		ModelListener[] allListeners = new ModelListener[listeners.size()];
-		listeners.toArray(allListeners);
-		for (int i = 0; i < allListeners.length; i++) {
-			allListeners[i].fileDataAdded(fileData);
+		ModelListener[] iterator = getModelListenersIteratorCopy();
+		for (int i=0;i<iterator.length;i++) {
+			iterator[i].fileDataAdded(fileData);
 		}
 	}
 
 	public void fileDataRemoved(PHPFileData fileData) {
-		ModelListener[] allListeners = new ModelListener[listeners.size()];
-		listeners.toArray(allListeners);
-		for (int i = 0; i < allListeners.length; i++) {
-			allListeners[i].fileDataRemoved(fileData);
+		ModelListener[] iterator = getModelListenersIteratorCopy();
+		for (int i=0;i<iterator.length;i++) {
+			iterator[i].fileDataRemoved(fileData);
 		}
 	}
 
 	public void dataCleared() {
-		ModelListener[] allListeners = new ModelListener[listeners.size()];
-		listeners.toArray(allListeners);
-		for (int i = 0; i < allListeners.length; i++) {
-			allListeners[i].dataCleared();
+		ModelListener[] iterator = getModelListenersIteratorCopy();
+		for (int i=0;i<iterator.length;i++) {
+			iterator[i].dataCleared();
 		}
 	}
 
+	/**
+	 * Workspace model listeners
+	 */
+	public void addWorkspaceModelListener(String projectName, IWorkspaceModelListener l) {
+		List wlisteners = (List) workspaceModelListeners.get(projectName);
+		if (wlisteners == null) {
+			wlisteners = Collections.synchronizedList(new ArrayList(2));
+			workspaceModelListeners.put(projectName, wlisteners);
+		}
+		if (!wlisteners.contains(l))
+			wlisteners.add(l);
+	}
+
+	public void removeWorkspaceModelListener(String projectName, IWorkspaceModelListener l) {
+		List wlisteners = (List) workspaceModelListeners.get(projectName);
+		if (wlisteners == null) {
+			return;
+		}
+		wlisteners.remove(l);
+	}	
+	
 	public void addFileToModel(IFile file) {
 		if (!PHPModelUtil.isPhpFile(file)) {
 			return;
 		}
 
-		PHPProjectModel projectModel = (PHPProjectModel) PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
+		PHPProjectModel projectModel = (PHPProjectModel) getModelForProject(file.getProject());
 		projectModel.addFileToModel(file);
 	}
 
 	public void removeFileFromModel(IFile file) {
-		PHPProjectModel projectModel = (PHPProjectModel) PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
+		PHPProjectModel projectModel = (PHPProjectModel) getModelForProject(file.getProject());
 		if (projectModel == null) {
 			return;
 		}
@@ -382,27 +418,11 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		projectModel.removeFileFromModel(file);
 	}
 
-	public void addWorkspaceModelListener(String projectName, IWorkspaceModelListener l) {
-		List listeners = (List) workspaceModelListeners.get(projectName);
-		if (listeners == null) {
-			listeners = Collections.synchronizedList(new ArrayList(2));
-			workspaceModelListeners.put(projectName, listeners);
-		}
-		if (!listeners.contains(l))
-			listeners.add(l);
-	}
-
-	public void removeWorkspaceModelListener(String projectName, IWorkspaceModelListener l) {
-		List listeners = (List) workspaceModelListeners.get(projectName);
-		if (listeners == null) {
-			return;
-		}
-		listeners.remove(l);
-	}
-
+	/**
+	 * Global listeners 
+	 */
 	public void addWorkspaceModelListener(IWorkspaceModelListener l) {
-		if (!globalWorkspaceModelListeners.contains(l))
-			globalWorkspaceModelListeners.add(l);
+		globalWorkspaceModelListeners.add(l);
 	}
 	
 	public void removeWorkspaceModelListener(IWorkspaceModelListener l) {

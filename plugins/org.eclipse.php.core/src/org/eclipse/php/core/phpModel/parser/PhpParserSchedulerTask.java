@@ -10,12 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
-
-import org.eclipse.php.core.Logger;
 
 /**
  * This task handles the schedulaing of the model parser queue. <br>
@@ -151,78 +148,6 @@ public class PhpParserSchedulerTask implements Runnable {
 			// now you can notify that the stack is not empty
 			bufferSyncronizer.notifyAll();
 			
-		}
-	}
-	
-	/**
-	 * The task of parsing a php file 
-	 */
-	private static class ParserExecuter implements Runnable {
-
-		private final PHPParserManager parserManager;
-		private PhpParser phpParser; // maybe we should re-create the parser
-		private final ParserClient client;
-		private final String filename;
-		public  Reader reader;
-		private final long lastModified;
-		private final Pattern[] tasksPatterns;
-		private final boolean useAspTagsAsPhp;
-
-		public ParserExecuter(PHPParserManager parserManager, PhpParser phpParser, ParserClient client, String filename, Reader reader, Pattern[] tasksPatterns, long lastModified, boolean useAspTagsAsPhp) {
-			this.parserManager = parserManager;
-			this.phpParser = phpParser;
-			this.client = client;
-			this.filename = filename;
-			this.reader = reader;
-			this.tasksPatterns = tasksPatterns;
-			this.lastModified = lastModified;
-			this.useAspTagsAsPhp = useAspTagsAsPhp;
-		}
-		
-		/**
-		 * The parsing action - in a seperate (async) thread 
-		 * @throws InterruptedException 
-		 */
-		public void run() {
-			try {
-				
-				final CompletionLexer lexer = parserManager.createCompletionLexer(reader);
-				lexer.setUseAspTagsAsPhp(useAspTagsAsPhp);
-				lexer.setParserClient(client);
-				lexer.setTasksPatterns(tasksPatterns);
-
-				if (phpParser == null) {
-					phpParser = parserManager.createPhpParser();
-				}
-				phpParser.setScanner(lexer);
-				phpParser.setParserClient(client);
-				
-				client.startParsing(filename);
-
-				phpParser.parse();
-
-			} catch (Exception e) {
-				Logger.logException(e);
-
-			} finally {
-
-				try {
-					if (client != null && phpParser != null) {
-						client.finishParsing(phpParser.getLength(), phpParser.getCurrentLine(), lastModified);
-					}
-					
-				} catch (Exception ex) {
-					Logger.logException(ex);
-				
-				} finally {
-					try {
-						reader.close();
-					} catch (IOException exception) {
-						Logger.logException(exception);
-					}					
-
-				}
-			}
 		}
 	}
 }
