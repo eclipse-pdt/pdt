@@ -125,67 +125,6 @@
 		</builder>
 	</extension>
 
-
-    <extension
-         point="org.eclipse.wst.server.core.moduleArtifactAdapters">
-       <moduleArtifactAdapter
-            id="org.eclipse.php.server.php1"
-            class="org.eclipse.php.core.project.deployables.PHPDeployableObjectAdapter">
-         <enablement>
-           <with variable="selection">
-             <adapt type="org.eclipse.core.resources.IProject"/>
-           </with>
-         </enablement>
-       </moduleArtifactAdapter>    
-   </extension>
-   
-   <extension
-         point="org.eclipse.wst.server.core.moduleArtifactAdapters">
-       <moduleArtifactAdapter
-            id="org.eclipse.php.server.php2"
-            class="org.eclipse.php.core.project.deployables.PHPDeployableObjectAdapter">
-         <enablement>
-           <with variable="selection">
-             <adapt type="org.eclipse.core.resources.IFile"/>
-           </with>
-         </enablement>
-       </moduleArtifactAdapter>    
-   </extension>
-   
-   <extension
-         point="org.eclipse.wst.server.core.moduleArtifactAdapters">
-       <moduleArtifactAdapter
-            id="org.eclipse.php.server.php3"
-            class="org.eclipse.php.core.project.deployables.PHPDeployableObjectAdapter">
-         <enablement>
-           <with variable="selection">
-             <adapt type="org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"/>
-           </with>
-         </enablement>
-       </moduleArtifactAdapter>    
-   </extension>
-
-
-   <extension point="org.eclipse.core.runtime.adapters">
-         <factory
-             class="org.eclipse.php.core.project.deployables.PHPDeployableObjectAdapter"
-             adaptableType="org.eclipse.core.resources.IProject">
-            <adapter type="org.eclipse.php.core.project.deployables.IPHPModuleArtifact"/>
-        </factory>    
-   </extension> 
-
-     <extension
-         point="org.eclipse.wst.server.core.moduleFactories">
-      <moduleFactory
-            projects="true"
-            class="org.eclipse.php.core.project.deployables.PHPDeployableFactory"
-            id="org.eclipse.php.core.project.deployable.php">
-         <moduleType
-               versions="1.0"
-               types="PHP">
-         </moduleType>
-      </moduleFactory>
-   </extension>
  <!--  <extension
          point="org.eclipse.wst.common.frameworks.ExtendableOperation">
       <extendableOperation

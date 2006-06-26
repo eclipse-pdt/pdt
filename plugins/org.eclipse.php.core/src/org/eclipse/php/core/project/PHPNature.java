@@ -13,23 +13,10 @@ package org.eclipse.php.core.project;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.eclipse.core.resources.ICommand;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
 
 public class PHPNature implements IProjectNature {
@@ -43,7 +30,6 @@ public class PHPNature implements IProjectNature {
 
 	//protected WebSettings fWebSettings;
 
-	protected IModule module;
 	protected IProject project;
 	protected PHPProjectOptions options;
 
@@ -136,7 +122,6 @@ public class PHPNature implements IProjectNature {
 	private void clean() {
 		options = null;
 		project = null;
-		module = null;
 	}
 
 	/**
@@ -190,36 +175,16 @@ public class PHPNature implements IProjectNature {
 	 *                if this method fails.
 	 */
 	public void configure() throws org.eclipse.core.runtime.CoreException {
-        // enable workspace validation for this nature
-		  addToFrontOfBuildSpec(VALIDATION_BUILDER_ID);
-		  
-		  //  load all registered extensions and add them to build spec
-		  IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.buildersInitializer"); //$NON-NLS-1$
-		  for (int i = 0; i < elements.length; i++) {
-			  final IConfigurationElement element = elements[i];
-		      addToFrontOfBuildSpec(element.getAttribute("id")); //$NON-NLS-1$		   
-		  }
+		// enable workspace validation for this nature
+		addToFrontOfBuildSpec(VALIDATION_BUILDER_ID);
 
+		//  load all registered extensions and add them to build spec
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.buildersInitializer"); //$NON-NLS-1$
+		for (int i = 0; i < elements.length; i++) {
+			final IConfigurationElement element = elements[i];
+			addToFrontOfBuildSpec(element.getAttribute("id")); //$NON-NLS-1$		   
+		}
 
-	}
-
-	/**
-	 * Gets the deployable.
-	 * 
-	 * @return Returns a IDeployable
-	 */
-	public IModule getModule() {
-		return module;
-	}
-
-	/**
-	 * Sets the deployable.
-	 * 
-	 * @param deployable
-	 *            The deployable to set
-	 */
-	public void setModule(IModule module) {
-		this.module = module;
 	}
 
 	/**
@@ -242,14 +207,14 @@ public class PHPNature implements IProjectNature {
 	public void setProject(org.eclipse.core.resources.IProject newProject) {
 		clean();
 		project = newProject;
-//		
-//      configure should only be called when project is created, not here		
-//		//need to be called here since getNature and createNature will not call it
-//		try {
-//			configure();
-//		} catch (CoreException e) {
-//			//Ignore
-//		}
+		//		
+		//      configure should only be called when project is created, not here		
+		//		//need to be called here since getNature and createNature will not call it
+		//		try {
+		//			configure();
+		//		} catch (CoreException e) {
+		//			//Ignore
+		//		}
 	}
 
 	/**
