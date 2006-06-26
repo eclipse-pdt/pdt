@@ -292,29 +292,53 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	}
 
 	protected void handleServerButtonSelected() {
-		Server newServer = getServerFromWizard();
+		final Server newServer = getServerFromWizard();
 		if (newServer != null) {
-			servers.add(newServer);
-			serverCombo.add(newServer.getName());
-			serverCombo.select(serverCombo.indexOf(newServer.getName()));
-			handleServerSelection();
-			updateLaunchConfigurationDialog();
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					servers.add(newServer);
+					serverCombo.add(newServer.getName());
+					serverCombo.select(serverCombo.indexOf(newServer.getName()));
+					handleServerSelection();
+				}
+			});
 		}
 	}
 
 	protected void handleConfigureButtonSelected() {
+		// Hold the current server name before we go into the configuration page
+		Object obj = servers.get(serverCombo.getSelectionIndex());
+		String selectedServer = null;
+		if (obj != null && obj instanceof Server) {
+			selectedServer = ((Server) obj).getName();
+		}
+
+		// Open the preferences dialog
 		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), SERVERS_PREFERENCES_PAGE_ID, null, null);
 		dialog.open();
-		int serverIndex = serverCombo.getSelectionIndex();
-		Object obj = servers.get(serverIndex);
-		if (obj instanceof Server) {
-			Server server = (Server) obj;
-			serverCombo.remove(serverIndex);
-			serverCombo.add(server.getName(), serverIndex);
-			serverCombo.select(serverIndex);
-			handleServerSelection();
-			updateLaunchConfigurationDialog();
+
+		// Update the combo with the complete servers list
+		servers = new ArrayList();
+		serverCombo.removeAll();
+		populateServerList((ArrayList) servers);
+		// initialize
+
+		if (!servers.isEmpty()) {
+			for (int i = 0; i < servers.size(); i++) {
+				Server svr = (Server) servers.get(i);
+				serverCombo.add(svr.getName());
+			}
 		}
+		int newIndex = serverCombo.indexOf(selectedServer);
+		if (newIndex < 0 && servers.size() > 0) {
+			// Select the default server
+			Server defaultServer = ServersManager.getDefaultServer();
+			serverCombo.select(serverCombo.indexOf(defaultServer.getName()));
+		} else {
+			serverCombo.select(newIndex);
+		}
+		
+		handleServerSelection();
 	}
 
 	public String[] getFileExtensions() {
