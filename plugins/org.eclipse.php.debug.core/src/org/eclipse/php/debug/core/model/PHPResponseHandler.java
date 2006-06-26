@@ -50,8 +50,12 @@ public class PHPResponseHandler {
     public class BreakpointRemovedResponseHandler implements org.eclipse.php.debug.core.debugger.Debugger.BreakpointRemovedResponseHandler {
 
         public void breakpointRemoved(int id, boolean success) {
-            if (!success)
-                Logger.log(Logger.ERROR, "PHPResponseHandler: BreakpointRemovedResponseHandler failed " + id);
+        	/**
+        	 * Commented, because breakpoint may be removed twice: once it's disabled, and another time - when it's actually
+        	 * removed (see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=147870)
+        	 */
+//            if (!success)
+//                Logger.log(Logger.ERROR, "PHPResponseHandler: BreakpointRemovedResponseHandler failed " + id);
 
         }
 
