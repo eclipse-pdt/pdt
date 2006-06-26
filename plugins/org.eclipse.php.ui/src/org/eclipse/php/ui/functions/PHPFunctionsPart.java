@@ -123,7 +123,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 				Display.getCurrent().asyncExec(new Runnable() {
 
 					public void run() {
-						if (shouldRefresh) {
+						if (!fViewer.getTree().isDisposed() && (shouldRefresh || fViewer.getTree().getItems().length == 0)) {
 							fViewer.refresh();
 							shouldRefresh = false;
 						}
