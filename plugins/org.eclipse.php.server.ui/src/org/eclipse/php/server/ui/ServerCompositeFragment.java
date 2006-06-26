@@ -83,8 +83,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 				validate();
 			}
 		});
-		createProjectLocationGroup(this);
 		createURLGroup(this);
+		createProjectLocationGroup(this);
 		init();
 		validate();
 
