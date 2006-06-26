@@ -18,6 +18,7 @@ import org.eclipse.php.Logger;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.format.FormatterUtils;
+import org.eclipse.ui.internal.menus.SReference;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -149,7 +150,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		if (regionType != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
 			return;
 		}
-		if (offset != tRegion.getStart() + sdRegion.getStartOffset() || tRegion.getTextLength() != 2) {
+		if (offset != tRegion.getStart() + sdRegion.getStartOffset() || (tRegion.getTextLength() != 2 && !isBetweenBackquotes(sdRegion, offset))) {
 			//looking only for the cases where the user is trying to remove the first quote out of two coupled ones.
 			return;
 		}
@@ -161,5 +162,30 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			command.length = 2;
 		} catch (BadLocationException e) {
 		}
+	}
+
+	private boolean isBetweenBackquotes(IStructuredDocumentRegion sdRegion, int offset) {
+		if (sdRegion.getParentDocument().getLength() <= offset) {
+			return false;
+		}
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		if (tRegion == null || tRegion.getLength() > 1) {
+			return false;
+		}
+
+		if (sdRegion.getText(tRegion).charAt(0) != BACK_QOUTE) {
+			return false;
+		}
+
+		tRegion = sdRegion.getRegionAtCharacterOffset(offset + 1);
+		if (tRegion == null || tRegion.getLength() > 1) {
+			return false;
+		}
+
+		if (sdRegion.getText(tRegion).charAt(0) != BACK_QOUTE) {
+			return false;
+		}
+		String startState = FormatterUtils.getPartitionType(sdRegion.getParentDocument(), offset, true);
+		return (startState != PHPPartitionTypes.PHP_QUOTED_STRING);
 	}
 }
