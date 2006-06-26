@@ -26,7 +26,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -101,7 +101,6 @@ import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
-
 public class ExplorerPart extends ViewPart implements IMenuListener {
 
 	private PHPTreeViewer fViewer;
@@ -127,7 +126,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			}
 		}
 
-		public void partBroughtToTop(IWorkbenchPart part) {	
+		public void partBroughtToTop(IWorkbenchPart part) {
 		}
 
 		public void partClosed(IWorkbenchPart part) {
@@ -308,8 +307,8 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 						if (project.isOpen() && ((IProject) object).hasNature(PHPNature.ID))
 							return false;
 					}
-					Object obj=filter(object,object,fViewer.getFilters());
-					return obj!=null && folder.members().length > 0;
+					Object obj = filter(object, object, fViewer.getFilters());
+					return obj != null && folder.members().length > 0;
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
@@ -425,10 +424,10 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 	private PHPTreeViewer createViewer(Composite composite) {
 		return new ExplorerTreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	}
-	
+
 	Object getElementOfInput(IEditorInput input) {
 		if (input instanceof IFileEditorInput)
-			return ((IFileEditorInput)input).getFile();
+			return ((IFileEditorInput) input).getFile();
 		return null;
 	}
 
@@ -553,18 +552,18 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 	public void dispose() {
 		if (fContextMenu != null && !fContextMenu.isDisposed())
 			fContextMenu.dispose();
-		
+
 		getSite().getPage().removePartListener(fPartListener);
 
 		if (fActionSet != null)
 			fActionSet.dispose();
-		
+
 		if (fFilterUpdater != null)
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(fFilterUpdater);
-		
+
 		if (fWorkingSetModel != null)
 			fWorkingSetModel.dispose();
-		
+
 		super.dispose();
 	}
 
@@ -577,53 +576,51 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 	}
 
 	void editorActivated(IEditorPart editor) {
-		if (!isLinkingEnabled())  
+		if (!isLinkingEnabled())
 			return;
-		Object input= getElementOfInput(editor.getEditorInput());
-		if (input == null) 
+		Object input = getElementOfInput(editor.getEditorInput());
+		if (input == null)
 			return;
 		if (!inputIsSelected(editor.getEditorInput()))
 			showInput(input);
 		else
 			this.fViewer.getTree().showSelection();
-	
+
 	}
-	
 
 	private boolean inputIsSelected(IEditorInput input) {
-		IStructuredSelection selection= (IStructuredSelection)fViewer.getSelection();
-		if (selection.size() != 1) 
+		IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
+		if (selection.size() != 1)
 			return false;
-		IEditorInput selectionAsInput= null;
-			selectionAsInput= EditorUtility.getEditorInput(selection.getFirstElement());
+		IEditorInput selectionAsInput = null;
+		selectionAsInput = EditorUtility.getEditorInput(selection.getFirstElement());
 		return input.equals(selectionAsInput);
 	}
 
-
 	boolean showInput(Object input) {
-		Object element= null;
-			
-		if (input instanceof IFile  ) {
-			element=  PHPWorkspaceModelManager.getInstance().getModelForFile((IFile)input,false);
+		Object element = null;
+
+		if (input instanceof IFile) {
+			element = PHPWorkspaceModelManager.getInstance().getModelForFile((IFile) input, false);
 		}
-				
-		if (element == null)  
-			element= input;
-				
+
+		if (element == null)
+			element = input;
+
 		if (element != null) {
-			ISelection newSelection= new StructuredSelection(element);
+			ISelection newSelection = new StructuredSelection(element);
 			if (fViewer.getSelection().equals(newSelection)) {
 				fViewer.reveal(element);
 			} else {
 				try {
-					fViewer.removePostSelectionChangedListener(fPostSelectionListener);						
+					fViewer.removePostSelectionChangedListener(fPostSelectionListener);
 					fViewer.setSelection(newSelection, true);
-	
+
 					while (element != null && fViewer.getSelection().isEmpty()) {
 						// Try to select parent in case element is filtered
-						element= getParent(element);
+						element = getParent(element);
 						if (element != null) {
-							newSelection= new StructuredSelection(element);
+							newSelection = new StructuredSelection(element);
 							fViewer.setSelection(newSelection, true);
 						}
 					}
@@ -635,18 +632,18 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		}
 		return false;
 	}
-	
+
 	private Object getParent(Object element) {
 		if (element instanceof PHPCodeData)
-			return ((PHPCodeData)element).getContainer();
+			return ((PHPCodeData) element).getContainer();
 		else if (element instanceof IResource)
-			return ((IResource)element).getParent();
-//		else if (element instanceof IStorage) {
-			// can't get parent - see bug 22376
-//		}
+			return ((IResource) element).getParent();
+		//		else if (element instanceof IStorage) {
+		// can't get parent - see bug 22376
+		//		}
 		return null;
 	}
-	
+
 	public TreeViewer getViewer() {
 		return fViewer;
 	}
@@ -794,7 +791,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 	}
 
 	private void createWorkingSetModel() {
-		Platform.run(new ISafeRunnable() {
+		SafeRunner.run(new ISafeRunnable() {
 			public void run() throws Exception {
 				fWorkingSetModel = new WorkingSetModel();
 			}
