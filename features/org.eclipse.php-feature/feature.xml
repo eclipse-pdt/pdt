@@ -16,6 +16,7 @@
 
    <url>
       <update label="%updateSiteName" url="http://download.eclipse.org/tools/php/updates/"/>
+      <discovery label="%updateSiteName" url="http://download.eclipse.org/tools/php/updates/"/>
    </url>
 
    <requires>
