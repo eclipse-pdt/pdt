@@ -73,20 +73,4 @@ public class PHPProjectPreferences {
         return hURL;
         
     }
-    
-    public static String getDefaultServerID (IProject project) {
-        Preferences prefs = getModelPreferences();
-        String hURL  = prefs.getString(PHPDebugCorePreferenceNames.DEDAULT_URL);
-        String id = prefs.getString(PHPDebugCorePreferenceNames.DEDAULT_SERVER);
-        if (project != null && getElementSettingsForProject(project)){
-            IScopeContext projectScope = getProjectScope(project);
-            String pURL = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.DEDAULT_URL, "");
-            if ( !hURL.equals("")) return id;
-            if ( !hURL.equals(pURL)) return id;
-            id = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.DEDAULT_SERVER, IPHPConstants.Default_Server_ID);
-        }
-        return id;
-        
-    }
-
 }

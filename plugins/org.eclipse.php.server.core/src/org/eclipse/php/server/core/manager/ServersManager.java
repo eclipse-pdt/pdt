@@ -29,8 +29,10 @@ import org.eclipse.php.server.core.Server;
 public class ServersManager implements PropertyChangeListener {
 
 	private ArrayList listeners;
+	private Server defaultServer;
 	private static ServersManager instance;
-	private static final String PREFERENCES_KEY = "phpServers";
+	private static final String SERVERS_PREFERENCES_KEY = "phpServers";
+	private static final String DEFAULT_SERVER_PREFERENCES_KEY = "defaultPHPServer";
 
 	public static ServersManager getInstance() {
 		if (instance == null) {
@@ -106,6 +108,14 @@ public class ServersManager implements PropertyChangeListener {
 			removed.removePropertyChangeListener(manager);
 			ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_REMOVED, removed);
 			manager.fireEvent(event);
+			if (removed == manager.defaultServer) {
+				// Set a different default server if possible
+				Server[] servers = getServers();
+				if (servers.length > 0) {
+					setDefaultServer(servers[0]);
+				}
+
+			}
 		}
 		return removed;
 	}
@@ -135,6 +145,28 @@ public class ServersManager implements PropertyChangeListener {
 	}
 
 	/**
+	 * Returns the dafault debug server.
+	 * 
+	 * @return
+	 */
+	public static Server getDefaultServer() {
+		return getInstance().defaultServer;
+	}
+
+	/**
+	 * Sets the default debug server.
+	 * 
+	 * @param element
+	 */
+	public static void setDefaultServer(Server element) {
+		ServersManager manager = getInstance();
+		if (element != manager.defaultServer) {
+			manager.defaultServer = element;
+			manager.innerSaveDefaultServer();
+		}
+	}
+
+	/**
 	 * Creates and adds a server.
 	 * 
 	 * @param name
@@ -152,22 +184,43 @@ public class ServersManager implements PropertyChangeListener {
 	 */
 	public static void save() {
 		Server[] servers = getServers();
-		XMLPreferencesWriter.write(Activator.getDefault().getPluginPreferences(), PREFERENCES_KEY, servers);
+		XMLPreferencesWriter.write(Activator.getDefault().getPluginPreferences(), SERVERS_PREFERENCES_KEY, servers);
 		Activator.getDefault().savePluginPreferences();
+	}
+
+	private void innerSaveDefaultServer() {
+		if (defaultServer != null) {
+			Activator.getDefault().getPluginPreferences().setValue(DEFAULT_SERVER_PREFERENCES_KEY, defaultServer.getName());
+			Activator.getDefault().savePluginPreferences();
+		}
 	}
 
 	// Loads the servers from the preferences store.
 	private void loadServers() {
+		String defaultServerName = Activator.getDefault().getPluginPreferences().getString(DEFAULT_SERVER_PREFERENCES_KEY);
 		// First, we read the configurations of the servers from the preferences.
-		HashMap[] serversConfigs = XMLPreferencesReader.read(Activator.getDefault().getPluginPreferences(), PREFERENCES_KEY);
+		HashMap[] serversConfigs = XMLPreferencesReader.read(Activator.getDefault().getPluginPreferences(), SERVERS_PREFERENCES_KEY);
 		// Then we create the servers from their configurations...
+		Server firstServer = null;
 		for (int i = 0; i < serversConfigs.length; i++) {
 			HashMap serverMap = serversConfigs[i];
 			Server server = new Server();
 			server.restoreFromMap(serverMap);
-			servers.put(server.getName(), server);
+			if (firstServer == null) {
+				firstServer = server;
+			}
+			String serverName = server.getName();
+			servers.put(serverName, server);
+			if (defaultServer == null && serverName.equals(defaultServerName)) {
+				defaultServer = server;
+			}
 			// Register the manager as a Server lister to get nofitications about attribute changes.
 			server.addPropertyChangeListener(this);
+		}
+		if (defaultServer == null) {
+			// make the first as default.
+			defaultServer = firstServer;
+			innerSaveDefaultServer();
 		}
 	}
 

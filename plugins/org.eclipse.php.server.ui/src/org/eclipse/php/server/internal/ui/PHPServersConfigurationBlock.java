@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
@@ -46,6 +47,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	private static final int IDX_ADD = 0;
 	private static final int IDX_EDIT = 1;
 	private static final int IDX_REMOVE = 2;
+	private static final int IDX_DEFAULT = 4;
 
 	private IStatus fServersStatus;
 	private ListDialogField fServersList;
@@ -60,7 +62,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	public Control createControl(Composite parent) {
 
 		ServerAdapter adapter = new ServerAdapter();
-		String buttons[] = new String[] { "New", "Edit", "Remove" };
+		String buttons[] = new String[] { "New", "Edit", "Remove", null, "Default" };
 		fServersList = new ListDialogField(adapter, buttons, new PHPServersLabelProvider()) {
 			protected boolean managedButtonPressed(int index) {
 				if (index == getRemoveButtonIndex()) {
@@ -80,6 +82,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			fServersList.selectFirstElement();
 		} else {
 			fServersList.enableButton(IDX_EDIT, false);
+			fServersList.enableButton(IDX_DEFAULT, false);
 		}
 
 		fServersStatus = new StatusInfo();
@@ -140,6 +143,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		} else if (index == IDX_EDIT) {
 			handleEditServerButtonSelected();
 			fServersList.refresh();
+		} else if (index == IDX_DEFAULT) {
+			setToDefault((Server) fServersList.getSelectedElements().get(0));
 		}
 	}
 
@@ -173,6 +178,11 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		Server server = (Server) fServersList.getSelectedElements().get(0);
 		ServersManager.removeServer(server.getName());
 		ServersManager.save();
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				fServersList.refresh();
+			}
+		});
 	}
 
 	protected void updateStatus() {
@@ -184,6 +194,10 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		List servers = new ArrayList();
 		populateServerList(servers);
 		fServersList.setElements(servers);
+		Server defaultServer = ServersManager.getDefaultServer();
+		if (defaultServer != null) {
+			setToDefault(defaultServer);
+		}
 	}
 
 	public void dispose() {
@@ -213,7 +227,25 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		}
 	}
 
+	protected boolean isDefault(Server element) {
+		return ServersManager.getDefaultServer() == element;
+	}
+
+	protected void setToDefault(Server element) {
+		fServersList.enableButton(IDX_DEFAULT, false);
+		ServersManager.setDefaultServer(element);
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				fServersList.refresh();
+			}
+		});
+	}
+
 	private class ServerAdapter implements IListAdapter, IDialogFieldListener {
+
+		private boolean canSetToDefault(List selectedElements) {
+			return hasActiveSelection(selectedElements) && !isDefault((Server) selectedElements.get(0));
+		}
 
 		private boolean hasActiveSelection(List selectedElements) {
 			return selectedElements.size() == 1;
@@ -234,11 +266,16 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			List selectedElements = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, hasActiveSelection(selectedElements));
 			field.enableButton(IDX_REMOVE, hasActiveSelection(selectedElements));
+			field.enableButton(IDX_DEFAULT, canSetToDefault(selectedElements));
 		}
 	}
 
 	private class PHPServersLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
+
 		public Font getFont(Object element) {
+			if (isDefault((Server) element)) {
+				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
+			}
 			return null;
 		}
 

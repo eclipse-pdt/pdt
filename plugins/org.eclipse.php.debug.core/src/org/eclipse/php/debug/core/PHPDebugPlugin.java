@@ -137,13 +137,9 @@ public class PHPDebugPlugin extends Plugin {
 	public static void createDefaultPHPServer() {
 		if (ServersManager.getServers().length == 0) {
 			String baseURL = getWorkspaceURL();
-			Server server = ServersManager.getServer(IPHPConstants.Default_Server_ID);
-			if (server == null) {
-				ServersManager.createServer(IPHPConstants.Default_Server_Name, baseURL);
-				ServersManager.save();
-			} else {
-				server.setBaseURL(baseURL);
-			}
+			Server server = ServersManager.createServer(IPHPConstants.Default_Server_Name, baseURL);
+			ServersManager.save();
+			ServersManager.setDefaultServer(server);
 		}
 	}
 
