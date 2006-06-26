@@ -11,6 +11,7 @@
 package org.eclipse.php.core.phpModel.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
@@ -172,6 +173,7 @@ public abstract class CompositePhpModel implements IPhpModel {
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getClasses(startsWith);
 			if (res != null && res.length > 0) {
+				Arrays.sort(res);
 				tempResultList.add(res);
 			}
 		}
