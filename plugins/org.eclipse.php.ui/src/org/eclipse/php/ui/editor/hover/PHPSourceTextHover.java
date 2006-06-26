@@ -20,7 +20,9 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.php.Logger;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.ui.text.PHPCodeReader;
 import org.eclipse.php.internal.ui.util.CodeDataResolver;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -29,9 +31,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class PHPSourceTextHover extends AbstractPHPTextHover implements IInformationProviderExtension2, ITextHoverExtension {
-
-	private static final int MAX_LINES = 10;
-	
 	/**
 	 * The hover control creator.
 	 * 
@@ -95,7 +94,7 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 				ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(hoverRegion.getOffset());
 				if (sdRegion.getStartOffset() + textRegion.getTextEnd() >= hoverRegion.getOffset()) {
 					CodeData codeData = CodeDataResolver.getCodeData(textViewer, sdRegion.getStartOffset() + textRegion.getTextEnd());
-					if (codeData != null) {
+					if (codeData != null && !(codeData instanceof PHPVariableData)) {
 						UserData userData = codeData.getUserData();
 						if (userData != null) {
 							IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
@@ -104,14 +103,12 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 								r.skip(userData.getStartPosition());
 								StringBuffer buf = new StringBuffer();
 								String line;
-								int lines = 0;
-								while (lines < MAX_LINES && (line = r.readLine()) != null) {
+								while ((line = r.readLine()) != null) {
 									buf.append(line);
 									buf.append("\n");
-									lines ++;
 								}
 								r.close();
-								return buf.toString();
+								return cutStatement(buf.toString());
 							}
 						}
 					}
@@ -121,5 +118,35 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 			}
 		}
 		return null;
+	}
+	
+	private String cutStatement(String code) {
+		try {
+			PHPCodeReader codeReader = new PHPCodeReader();
+			Document doc = new Document(code);
+			codeReader.configureForwardReader(doc, 0, doc.getLength(), true, true);
+			
+			int curlyBraces = 0;
+			
+			int ch = codeReader.read();
+			while (ch != PHPCodeReader.EOF) {
+				if (ch == ';' && curlyBraces == 0) {
+					break;
+				}
+				if (ch == '{') {
+					curlyBraces ++;
+				}
+				if (ch == '}') {
+					curlyBraces --;
+					if (curlyBraces == 0) {
+						break;
+					}
+				}
+				ch = codeReader.read();
+			}
+			code = code.substring(0, codeReader.getOffset()+1);
+		} catch (Exception e) {
+		}
+		return code;
 	}
 }
