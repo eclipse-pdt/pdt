@@ -70,8 +70,6 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPElementLabels_declseparator_string;
 	public static String PHPElementProperties_name;
 	public static String PHPImageLabelprovider_assert_wrongImage;
-	public static String PHPOutlineControl_statusFieldText_hideInheritedMembers;
-	public static String PHPOutlineControl_statusFieldText_showInheritedMembers;
 	public static String PHPPlugin_internal_error;
 	public static String PHPUI_defaultDialogMessage;
 	public static String PHPUIHelp_link_label;
@@ -80,7 +78,6 @@ public final class PHPUIMessages extends NLS {
 	public static String ResourceTransferDragAdapter_cannot_delete_resource;
 	public static String ResourceTransferDragAdapter_moving_resource;
 	public static String StatusBarUpdater_num_elements_selected;
-	public static String TypeInfoViewer_library_name_format;
 	public static String EditorUtility_concatModifierStrings;
 
 	public static String ProjectsWorkbookPage_projects_label;
