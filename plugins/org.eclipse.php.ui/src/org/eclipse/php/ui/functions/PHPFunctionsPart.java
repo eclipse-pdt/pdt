@@ -260,6 +260,14 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	}
 
 	public void partActivated(IWorkbenchPart part) {
+		if (part.equals(this)) {
+			Display.getCurrent().asyncExec(new Runnable() {
+				public void run() {
+					setFocus();
+				}
+
+			});
+		}
 	}
 
 	public void partBroughtToTop(IWorkbenchPart part) {
@@ -355,202 +363,6 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 			setContentDescription(inputText);
 			setTitleToolTip(getToolTipText(input));
 		}
-	}
-
-	private class FunctionsTreeViewer extends PHPTreeViewer {
-		//		java.util.List fPendingGetChildren;
-
-		public FunctionsTreeViewer(Composite parent, int style) {
-			super(parent, style);
-			//			fPendingGetChildren = Collections.synchronizedList(new ArrayList());
-			//            setComparer(new PHPElementComparer());
-		}
-
-		//		public void add(Object parentElement, Object[] childElements) {
-		//			if (fPendingGetChildren.contains(parentElement))
-		//				return;
-		//			super.add(parentElement, childElements);
-		//		}
-		//
-		//		protected Object[] getRawChildren(Object parent) {
-		//			try {
-		//				fPendingGetChildren.add(parent);
-		//				return super.getRawChildren(parent);
-		//			} finally {
-		//				fPendingGetChildren.remove(parent);
-		//			}
-		//		}
-		//
-		//		private Object getElement(TreeItem item) {
-		//			Object result = item.getData();
-		//			if (result == null)
-		//				return null;
-		//			return result;
-		//		}
-		//
-		//		private TreePath createTreePath(TreeItem item) {
-		//			List result = new ArrayList();
-		//			result.add(item.getData());
-		//			TreeItem parent = item.getParentItem();
-		//			while (parent != null) {
-		//				result.add(parent.getData());
-		//				parent = parent.getParentItem();
-		//			}
-		//			Collections.reverse(result);
-		//			return new TreePath(result.toArray());
-		//		}
-		//
-		//		public ISelection getSelection() {
-		//			IContentProvider cp = getContentProvider();
-		//			if (!(cp instanceof IMultiElementTreeContentProvider)) {
-		//				return super.getSelection();
-		//			}
-		//			Control control = getControl();
-		//			if (control == null || control.isDisposed()) {
-		//				return StructuredSelection.EMPTY;
-		//			}
-		//			Tree tree = getTree();
-		//			TreeItem[] selection = tree.getSelection();
-		//			List result = new ArrayList(selection.length);
-		//			List treePaths = new ArrayList();
-		//			for (int i = 0; i < selection.length; i++) {
-		//				TreeItem item = selection[i];
-		//				Object element = getElement(item);
-		//				if (element == null)
-		//					continue;
-		//				if (!result.contains(element)) {
-		//					result.add(element);
-		//				}
-		//				treePaths.add(createTreePath(item));
-		//			}
-		//			return new MultiElementSelection(this, result, (TreePath[]) treePaths.toArray(new TreePath[treePaths.size()]));
-		//		}
-		//
-		//		/*
-		//		 * @see org.eclipse.jface.viewers.StructuredViewer#filter(java.lang.Object)
-		//		 */
-		//		protected Object[] getFilteredChildren(Object parent) {
-		//			List list = new ArrayList();
-		//			ViewerFilter[] filters = fViewer.getFilters();
-		//			if (fViewer.getContentProvider() == null) {
-		//				return new Object[0];
-		//			}
-		//
-		//			Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
-		//			for (int i = 0; children != null && i < children.length; i++) {
-		//				Object object = children[i];
-		//				if (!isEssential(object)) {
-		//					object = filter(object, parent, filters);
-		//					if (object != null) {
-		//						list.add(object);
-		//					}
-		//				} else
-		//					list.add(object);
-		//			}
-		//			return list.toArray();
-		//		}
-		//
-		//		/*
-		//		 * @see AbstractTreeViewer#isExpandable(java.lang.Object)
-		//		 */
-		//		public boolean isExpandable(Object parent) {
-		//			ViewerFilter[] filters = fViewer.getFilters();
-		//			Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
-		//			for (int i = 0; i < children.length; i++) {
-		//				Object object = children[i];
-		//
-		//				if (isEssential(object))
-		//					return true;
-		//
-		//				object = filter(object, parent, filters);
-		//				if (object != null)
-		//					return true;
-		//			}
-		//			return false;
-		//		}
-		//
-		//		// Sends the object through the given filters
-		//		private Object filter(Object object, Object parent, ViewerFilter[] filters) {
-		//			for (int i = 0; i < filters.length; i++) {
-		//				ViewerFilter filter = filters[i];
-		//				if (!filter.select(fViewer, parent, object))
-		//					return null;
-		//			}
-		//			return object;
-		//		}
-		//
-		//		/*
-		//		 * @see org.eclipse.jface.viewers.StructuredViewer#filter(java.lang.Object[])
-		//		 * @since 3.0
-		//		 */
-		//		protected Object[] filter(Object[] elements) {
-		//			ViewerFilter[] filters = getFilters();
-		//			if (filters == null || filters.length == 0)
-		//				return elements;
-		//
-		//			ArrayList filtered = new ArrayList(elements.length);
-		//			Object root = getRoot();
-		//			for (int i = 0; i < elements.length; i++) {
-		//				boolean add = true;
-		//				if (!isEssential(elements[i])) {
-		//					for (int j = 0; j < filters.length; j++) {
-		//						add = filters[j].select(this, root, elements[i]);
-		//						if (!add)
-		//							break;
-		//					}
-		//				}
-		//				if (add)
-		//					filtered.add(elements[i]);
-		//			}
-		//			return filtered.toArray();
-		//		}
-		//
-		//		/* Checks if a filtered object in essential (ie. is a parent that
-		//		 * should not be removed).
-		//		 */
-		//		private boolean isEssential(Object object) {
-		//			if (object instanceof IContainer) {
-		//				IContainer folder = (IContainer) object;
-		//				try {
-		//					return folder.members().length > 0;
-		//				} catch (CoreException e) {
-		//					e.printStackTrace();
-		//				}
-		//			}
-		//			return false;
-		//		}
-		//
-		//		protected void handleInvalidSelection(ISelection invalidSelection, ISelection newSelection) {
-		//			IStructuredSelection is = (IStructuredSelection) invalidSelection;
-		//			List ns = null;
-		//			if (newSelection instanceof IStructuredSelection) {
-		//				ns = new ArrayList(((IStructuredSelection) newSelection).toList());
-		//			} else {
-		//				ns = new ArrayList();
-		//			}
-		//			boolean changed = false;
-		//			for (Iterator iter = is.iterator(); iter.hasNext();) {
-		//				Object element = iter.next();
-		//				if (element instanceof PHPProjectModel) {
-		//
-		//					IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) element);
-		//					if (!project.isOpen()) {
-		//						ns.add(project);
-		//						changed = true;
-		//					}
-		//				} else if (element instanceof IProject) {
-		//					IProject project = (IProject) element;
-		//					if (project.isOpen()) {
-		//						changed = true;
-		//					}
-		//				}
-		//			}
-		//			if (changed) {
-		//				newSelection = new StructuredSelection(ns);
-		//				setSelection(newSelection);
-		//			}
-		//			super.handleInvalidSelection(invalidSelection, newSelection);
-		//		}
 	}
 
 	class ShowFunctionHelpAction extends Action {
