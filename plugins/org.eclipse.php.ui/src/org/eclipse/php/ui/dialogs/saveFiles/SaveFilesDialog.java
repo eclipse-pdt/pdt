@@ -1,13 +1,9 @@
 package org.eclipse.php.ui.dialogs.saveFiles;
 
-import java.util.Arrays;
-
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.ui.util.ListContentProvider;
-import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesRunnable.AutoSaveHolder;
+import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -15,7 +11,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.ListDialog;
@@ -28,13 +23,13 @@ import org.eclipse.ui.dialogs.ListDialog;
  */
 public class SaveFilesDialog extends ListDialog {
 
-	boolean showAutoSave;
-	AutoSaveHolder autoSave;
+	boolean promptAutoSave;
+	SaveFilesResult result;
 
-	public SaveFilesDialog(Shell parent, boolean showAutoSave, AutoSaveHolder autoSave) {
+	public SaveFilesDialog(Shell parent, SaveFilesResult result, boolean promptAutoSave) {
 		super(parent);
-		this.showAutoSave = showAutoSave;
-		this.autoSave = autoSave;
+		this.promptAutoSave = promptAutoSave;
+		this.result = result;
 		setTitle("Save All Modified Resources");
 		setAddCancelButton(true);
 		setLabelProvider(createDialogLabelProvider());
@@ -43,18 +38,18 @@ public class SaveFilesDialog extends ListDialog {
 	}
 
 	protected Control createDialogArea(Composite container) {
-		Composite result = (Composite) super.createDialogArea(container);
-		if (showAutoSave) {
-			final Button check = new Button(result, SWT.CHECK);
+		Composite area = (Composite) super.createDialogArea(container);
+		if (promptAutoSave) {
+			final Button check = new Button(area, SWT.CHECK);
 			check.setText("&Save all modified resources automatically");
 			check.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					autoSave.setAutoSave(check.getSelection());
+					result.setAutoSave(check.getSelection());
 				}
 			});
-			applyDialogFont(result);
+			applyDialogFont(area);
 		}
-		return result;
+		return area;
 	}
 
 	private ILabelProvider createDialogLabelProvider() {
@@ -67,35 +62,5 @@ public class SaveFilesDialog extends ListDialog {
 				return ((IEditorPart) element).getTitle();
 			}
 		};
-	}
-
-	/**
-	 * Handle any files that must be saved prior to running
-	 * validation.
-	 * 
-	 * @param projects
-	 * 			The list of projects that will be validated.
-	 * @return
-	 * 			True if all files have been saved, false otherwise.
-	 */
-	public static boolean handleFilesToSave(IProject project, boolean showAutoSave, AutoSaveHolder autoSave) {
-
-		IEditorPart[] dirtyEditors = SaveFilesHelper.getDirtyEditors(project);
-		if (dirtyEditors == null || dirtyEditors.length == 0)
-			return true;
-		SaveFilesDialog sfDialog = null;
-		if (!autoSave.isAutoSave()) {
-			sfDialog = new SaveFilesDialog(Display.getCurrent().getActiveShell(), showAutoSave, autoSave);
-			sfDialog.setInput(Arrays.asList(dirtyEditors));
-		}
-		// Save all open editors.
-		if (autoSave.isAutoSave() || sfDialog.open() == Window.OK) {
-			int numDirtyEditors = dirtyEditors.length;
-			for (int i = 0; i < numDirtyEditors; i++) {
-				dirtyEditors[i].doSave(null);
-			}
-			return true;
-		}
-		return false;
 	}
 }

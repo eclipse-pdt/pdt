@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -47,13 +48,14 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.model.DebugSessionIdGenerator;
 import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesRunnable;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler;
+import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 
 public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate {
 	protected Map envVariables = null;
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+		IProgressMonitor subMonitor; // the total of monitor is 100
 		if (monitor.isCanceled()) {
 			return;
 		}
@@ -91,17 +93,11 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 				return;
 			}
 		}
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		boolean autoSave = prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY);
-		SaveFilesRunnable runnable = new SaveFilesRunnable(project, true, autoSave);
-		Display.getDefault().syncExec(runnable);
-		if (!runnable.isSaved())
+
+		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
+		if (!saveFiles(project, monitor)) {
 			return;
-		if (runnable.isAutoSaved() && !autoSave) {
-			prefs.setValue(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, true);
-			PHPDebugPlugin.getDefault().savePluginPreferences();
 		}
-		
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
 			boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
@@ -182,12 +178,14 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 			processAttributes.put(IProcess.ATTR_PROCESS_TYPE, programName);
 
 			if (p != null) {
-				monitor.beginTask(MessageFormat.format("start launch", new String[] { configuration.getName() }), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				subMonitor = new SubProgressMonitor(monitor, 80); // 10+80 of 100;
+				subMonitor.beginTask(MessageFormat.format("start launch", new String[] { configuration.getName() }), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 				process = DebugPlugin.newProcess(launch, p, phpExe.toOSString(), processAttributes);
 				if (process == null) {
 					p.destroy();
 					throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null)); //$NON-NLS-1$
 				}
+				subMonitor.done();
 
 			}
 			process.setAttribute(IProcess.ATTR_CMDLINE, fileNameString);
@@ -214,9 +212,24 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 				}
 
 				// refresh resources
-				RefreshTab.refreshResources(configuration, monitor);
+				subMonitor = new SubProgressMonitor(monitor, 10); // 10+80+10 of 100;
+				RefreshTab.refreshResources(configuration, subMonitor);
 			}
 		}
+
+	}
+
+	protected boolean saveFiles(IProject project, IProgressMonitor monitor) {
+		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		boolean autoSave = prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY);
+
+		SaveFilesResult result = SaveFilesHandler.handle(project, autoSave, true, monitor);
+
+		if (result.isAutoSave() && !autoSave) {
+			prefs.setValue(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, true);
+			PHPDebugPlugin.getDefault().savePluginPreferences();
+		}
+		return result.isSaved();
 
 	}
 
