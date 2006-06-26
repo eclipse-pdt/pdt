@@ -283,7 +283,7 @@ public class PHPTextSequenceUtilities {
 		int bracketsNum = 0;
 		for (; rv > 0; rv--) {
 			char currChar = textSequence.charAt(rv - 1);
-			if (!Character.isLetterOrDigit(currChar) && currChar != '_' && !(Character.isWhitespace(currChar) && currChar != '\n')) {
+			if (!Character.isLetterOrDigit(currChar) && currChar != '_' && currChar != '$' && !(Character.isWhitespace(currChar) && currChar != '\n')) {
 				switch (currChar) {
 					case '(':
 					case '[':
