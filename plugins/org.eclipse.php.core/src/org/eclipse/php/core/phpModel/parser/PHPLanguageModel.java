@@ -212,8 +212,6 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			final PHPParserManager phpParserManager = languageManager.createPHPParserManager();
 			final ParserExecuter executer = new ParserExecuter(phpParserManager, null, new InnerParserClient(), phpFunctionPath, reader, new Pattern[0], 0, false);
 			executer.run();
-			
-			// phpParserManager.parse(reader, phpFunctionPath, 0, new InnerParserClient(), false);
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
