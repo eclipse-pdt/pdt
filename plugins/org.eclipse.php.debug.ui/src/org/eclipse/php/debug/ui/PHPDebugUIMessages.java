@@ -109,7 +109,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String launch_failure_no_config;
 
 	public static String launch_failure_msg_title;
-	public static String launch_failure_msg_text;
+	public static String launch_failure_exec_msg_text;
+	public static String launch_failure_server_msg_text;
 
 	public static String launch_noexe_msg_title;
 	public static String launch_noexe_msg_text;

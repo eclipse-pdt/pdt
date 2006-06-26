@@ -72,7 +72,11 @@ public class FileUtil {
 			to = to.append(contextRoot);
 		}
 
-		String source = project.getLocation().toOSString();
+		IPath location = project.getLocation();
+		if (location == null) {
+			return false;
+		}
+		String source = location.toOSString();
 		String dest = to.toOSString();
 		return smartCopyDirectory(source, dest, ignoredResources, monitor);
 	}

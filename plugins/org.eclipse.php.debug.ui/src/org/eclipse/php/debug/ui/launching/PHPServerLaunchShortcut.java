@@ -8,21 +8,15 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-
 package org.eclipse.php.debug.ui.launching;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -39,47 +33,34 @@ import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.server.core.Server;
+import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
-public class PHPExeLaunchShortcut implements ILaunchShortcut {
+public class PHPServerLaunchShortcut implements ILaunchShortcut {
 
-	/**
-	 * 
-	 */
-	public PHPExeLaunchShortcut() {
-		super();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.jface.viewers.ISelection, java.lang.String)
-	 */
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
-			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, getPHPExeLaunchConfigType());
+			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, getPHPServerLaunchConfigType());
 		}
-
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.ui.IEditorPart, java.lang.String)
-	 */
 	public void launch(IEditorPart editor, String mode) {
 		IEditorInput input = editor.getEditorInput();
 		IFile file = (IFile) input.getAdapter(IFile.class);
 		if (file != null) {
-			searchAndLaunch(new Object[] { file }, mode, getPHPExeLaunchConfigType());
+			searchAndLaunch(new Object[] { file }, mode, getPHPServerLaunchConfigType());
 		}
-
 	}
 
-	protected ILaunchConfigurationType getPHPExeLaunchConfigType() {
+	private ILaunchConfigurationType getPHPServerLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-		return lm.getLaunchConfigurationType(IPHPConstants.PHPEXELaunchType);
+		return lm.getLaunchConfigurationType(IPHPConstants.PHPServerLaunchType);
 	}
-
-	static public void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
+	
+	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
 		int entries = search == null ? 0 : search.length;
 		for (int i = 0; i < entries; i++) {
 			try {
@@ -105,18 +86,18 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_target, null));
 				}
 
-				PHPexes exes = new PHPexes();
-				exes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
-				PHPexeItem defaultEXE = exes.getDefaultItem();
-				String phpExeName = (defaultEXE != null) ? exes.getDefaultItem().getPhpEXE().getAbsolutePath().toString() : null;
-
-				if (phpExeName == null) {
-					ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text, new Status(Status.ERROR, PHPDebugUIPlugin.ID, 0, "", null));
-					return;
+				Server defaultServer = ServersManager.getDefaultServer();
+				if (defaultServer == null) {
+					PHPDebugPlugin.createDefaultPHPServer();
+					defaultServer = ServersManager.getDefaultServer();
+					if (defaultServer == null) {
+						// Sould not happen
+						throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, "Could not create a defualt server for the launch.", null));
+					}
 				}
 
 				// Launch the app
-				ILaunchConfiguration config = findLaunchConfiguration(project.getName(), phpPathString, phpExeName, mode, configType);
+				ILaunchConfiguration config = findLaunchConfiguration(project, phpPathString, defaultServer, mode, configType);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
@@ -127,7 +108,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				final IStatus stat = ce.getStatus();
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_failure_msg_title, PHPDebugUIMessages.launch_failure_exec_msg_text, stat);
+						ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_failure_msg_title, PHPDebugUIMessages.launch_failure_server_msg_text, stat);
 					}
 				});
 			}
@@ -139,7 +120,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	 * 
 	 * @return a re-useable config or <code>null</code> if none
 	 */
-	static protected ILaunchConfiguration findLaunchConfiguration(String phpProject, String phpPathString, String phpExeName, String mode, ILaunchConfigurationType configType) {
+	static ILaunchConfiguration findLaunchConfiguration(IProject project, String fileName, Server server, String mode, ILaunchConfigurationType configType) {
 		ILaunchConfiguration config = null;
 
 		try {
@@ -147,18 +128,17 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 			int numConfigs = configs == null ? 0 : configs.length;
 			for (int i = 0; i < numConfigs; i++) {
-				String projectName = configs[i].getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
-				String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
+				String configuredServerName = configs[i].getAttribute(Server.NAME, (String) null);
+				String configuredFileName = configs[i].getAttribute(Server.FILE_NAME, (String) null);
 
-				if (phpPathString.equals(fileName) && phpProject.equals(projectName) && exeName.equals(phpExeName)) {
+				if (configuredFileName.equals(fileName) && server.getName().equals(configuredServerName)) {
 					config = configs[i].getWorkingCopy();
 					break;
 				}
 			}
 
 			if (config == null) {
-				config = createConfiguration(phpProject, phpPathString, phpExeName, configType);
+				config = createConfiguration(project, fileName, server, configType);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -169,20 +149,24 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	/**
 	 * Create & return a new configuration
 	 */
-	static protected ILaunchConfiguration createConfiguration(String phpProject, String phpPathString, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
+	static ILaunchConfiguration createConfiguration(IProject project, String fileName, Server server, ILaunchConfigurationType configType) throws CoreException {
 		ILaunchConfiguration config = null;
-		if(!FileUtils.fileExists(phpPathString)) {
+		if(!FileUtils.fileExists(fileName)) {
 			return null;
 		}
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom("New_configuration"));
 
-		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
-		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, phpExeName);
+		wc.setAttribute(Server.NAME, server.getName());
+		wc.setAttribute(Server.FILE_NAME, fileName);
+		wc.setAttribute(Server.CONTEXT_ROOT, project.getName());
+		wc.setAttribute(Server.BASE_URL,server.getBaseURL() + '/' + project.getName() + '/' + new Path(fileName).lastSegment());
 		wc.setAttribute(IPHPConstants.RunWithDebugInfo, PHPDebugPlugin.getDebugInfoOption());
+		if (server.canPublish()) {
+			wc.setAttribute(Server.PUBLISH, true);
+		}
 
 		config = wc.doSave();
 
 		return config;
 	}
-
 }

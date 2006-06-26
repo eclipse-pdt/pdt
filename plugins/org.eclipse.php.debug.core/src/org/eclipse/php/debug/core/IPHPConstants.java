@@ -36,6 +36,7 @@ public interface IPHPConstants {
     public static final String Include_Storage_Project = ID_PHP_DEBUG_CORE + ".project";  
     public static final String Default_Server_Name = "Default PHP Web Server"; 
 	public static final String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType";
+	public static final String PHPServerLaunchType = "org.eclipse.php.server.core.launchConfigurationType";
 
 	/**
 	 * Status code indicating an unexpected internal error (value <code>150</code>).

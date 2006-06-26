@@ -15,9 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -27,6 +25,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.core.util.FileUtils;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.php.server.internal.ui.ClosableWizardDialog;
@@ -651,7 +650,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			}
 
 			String fileName = launchConfig.getAttribute(Server.FILE_NAME, "");
-			if (!fileExists(fileName)) {
+			if (!FileUtils.fileExists(fileName)) {
 				setErrorMessage("File Does Not Exist");
 				return false;
 			}
@@ -684,22 +683,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {
 		return true;
-	}
-
-	private boolean fileExists(String projectPath) {
-		if (projectPath == null || "".equals(projectPath)) {
-			return false;
-		}
-		boolean file = false;
-		try {
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			IPath p3 = new Path(projectPath);
-
-			file = root.exists(p3);
-		} catch (Exception e) {
-		}
-
-		return file;
 	}
 
 	/**

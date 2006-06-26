@@ -321,6 +321,39 @@
          </perspective>
  
       </shortcut>
+      <shortcut
+            class="org.eclipse.php.debug.ui.launching.PHPServerLaunchShortcut"
+            icon="icon/full/obj16/server_run.gif"
+            id="org.eclipse.php.deubg.ui.phpServerShortcut"
+            label="%phpServerShortcut.label"
+            modes="run, debug, profile">
+            <contextualLaunch>
+		 	<contextLabel mode="run" label="%phpServerShortcut.label"/>
+		 	<enablement>
+		 		<count value="1"/>
+		 	</enablement>
+		 </contextualLaunch>
+         <contextualLaunch>
+            <contextLabel
+                  label="%phpServerShortcut.label"
+                  mode="debug"/>
+            <enablement>
+               <count value="1"/>
+            </enablement>
+         </contextualLaunch>
+		 
+         <perspective
+               id="org.eclipse.ui.resourcePerspective">
+         </perspective>
+         <perspective
+         	   id="org.eclipse.php.perspective">
+         </perspective>
+         <perspective
+               id="org.eclipse.debug.ui.DebugPerspective">
+         </perspective>
+      </shortcut>
+      
+      
    </extension>
    <extension point="org.eclipse.php.server.ui.serverTab">
   		<serverTab class="org.eclipse.php.debug.ui.launching.PHPServerTab"/>
