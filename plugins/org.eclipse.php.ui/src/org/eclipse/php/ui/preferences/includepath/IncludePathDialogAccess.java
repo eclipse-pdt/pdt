@@ -286,9 +286,10 @@ public final class IncludePathDialogAccess {
 			return null;
 		}
 		
-		PHPUiPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTINCLUDEFOLDER, dialog.getFilterPath());
+		IPath path = new Path(res).makeAbsolute();
+		PHPUiPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTINCLUDEFOLDER, path.toFile().getParent());
 		
-		return new IPath[]{new Path(res).makeAbsolute()};
+		return new IPath[]{path};
 	}
 
 	/**
