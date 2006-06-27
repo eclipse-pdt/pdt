@@ -22,7 +22,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.internal.core.LaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.core.util.FileUtils;
@@ -40,11 +39,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class ServerTab extends AbstractLaunchConfigurationTab {
-
-	private static final String SERVERS_PREFERENCES_PAGE_ID = "org.eclipse.php.server.internal.ui.PHPServersPreferencePage"; //$NON-NLS-1$
 
 	protected IFile selectedFile = null;
 
@@ -73,6 +69,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	private static final String READ_ONLY = "read-only";
 
 	protected WidgetListener fListener = new WidgetListener();
+	private boolean saveWorkingCopy;
 
 	protected class WidgetListener extends SelectionAdapter implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
@@ -306,38 +303,24 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	}
 
 	protected void handleConfigureButtonSelected() {
-		// Hold the current server name before we go into the configuration page
-		Object obj = servers.get(serverCombo.getSelectionIndex());
-		String selectedServer = null;
-		if (obj != null && obj instanceof Server) {
-			selectedServer = ((Server) obj).getName();
+		int selectionIndex = serverCombo.getSelectionIndex();
+		Server server = (Server) servers.get(selectionIndex);
+		String serverName = server.getName();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		NullProgressMonitor monitor = new NullProgressMonitor();
+		ServerEditDialog dialog = new ServerEditDialog(shell, server);
+		if (dialog.open() == Window.CANCEL) {
+			monitor.setCanceled(true);
+			return;
 		}
-
-		// Open the preferences dialog
-		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), SERVERS_PREFERENCES_PAGE_ID, null, null);
-		dialog.open();
-
-		// Update the combo with the complete servers list
-		servers = new ArrayList();
-		serverCombo.removeAll();
-		populateServerList((ArrayList) servers);
-		// initialize
-
-		if (!servers.isEmpty()) {
-			for (int i = 0; i < servers.size(); i++) {
-				Server svr = (Server) servers.get(i);
-				serverCombo.add(svr.getName());
-			}
+		ServersManager.save();
+		String newName = server.getName();
+		if (!newName.equals(serverName)) {
+			serverCombo.remove(selectionIndex);
+			serverCombo.add(newName, selectionIndex);
+			serverCombo.select(selectionIndex);
 		}
-		int newIndex = serverCombo.indexOf(selectedServer);
-		if (newIndex < 0 && servers.size() > 0) {
-			// Select the default server
-			Server defaultServer = ServersManager.getDefaultServer();
-			serverCombo.select(serverCombo.indexOf(defaultServer.getName()));
-		} else {
-			serverCombo.select(newIndex);
-		}
-		
+		saveWorkingCopy = true;
 		handleServerSelection();
 	}
 
@@ -465,9 +448,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			boolean deployable = configuration.getAttribute(Server.PUBLISH, false);
 			String url = configuration.getAttribute(Server.BASE_URL, "");
 
-			if (deployable) {
-				publish.setSelection(true);
-			}
+			publish.setSelection(deployable);
 			if (fileName.equals("") && Activator.currentSelection != null && !Activator.currentSelection.isEmpty()) {
 
 				IStructuredSelection sel = Activator.currentSelection;
@@ -511,41 +492,13 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			// ignore
 		}
 
-		initializeExtensionControls(configuration);
 		isValid(configuration);
 	}
-
-	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
-		return;
-	}
-
-	//
-	//	protected IModuleArtifact getModuleArtifact(String fileName, String projectName) {
-	//		IModuleArtifact moduleArtifact = null;
-	//
-	//		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-	//		IProject project = root.getProject(projectName);
-	//		if (project == null) {
-	//			return null;
-	//		}
-	//
-	//		if (fileName != null && !(fileName.equals(""))) {
-	//			IFile file = project.getFile(fileName);
-	//			moduleArtifact = ServerPlugin.getModuleArtifact(file);
-	//		} else {
-	//			moduleArtifact = ServerPlugin.getModuleArtifact(project);
-	//		}
-	//		return moduleArtifact;
-	//	}
 
 	protected void initializeURLControl(String contextRoot, String fileName) {
 		if (server == null) {
 			return;
 		}
-		//		Server as = (Server) server.getAdapter(ApacheServer.class);
-		//		if (as == null) {
-		//			as = (ApacheServer) server.loadAdapter(ApacheServer.class, null);
-		//		}
 		String urlString = server.getBaseURL();
 
 		if (urlString.equals("")) {
@@ -639,6 +592,14 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(Server.BASE_URL, url);
 
 		applyExtension(configuration);
+
+		if (saveWorkingCopy) {
+			try {
+				configuration.doSave();
+			} catch (CoreException e) {
+			}
+			saveWorkingCopy = false;
+		}
 	}
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
