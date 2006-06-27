@@ -47,7 +47,7 @@ public class PHP4LanguageModel extends PHPLanguageModel {
 
 	private void initKeywords() {
 		keyword = new PHPKeywordData[] { PHPCodeDataFactory.createPHPKeywordData("exit", "()", 1), PHPCodeDataFactory.createPHPKeywordData("die", "()", 1), PHPCodeDataFactory.createPHPKeywordData("function", " ", 1), PHPCodeDataFactory.createPHPKeywordData("const", " ", 1),
-			PHPCodeDataFactory.createPHPKeywordData("return", " ", 1), PHPCodeDataFactory.createPHPKeywordData("if", " ()", 2), PHPCodeDataFactory.createPHPKeywordData("elseif", " ()", 2), PHPCodeDataFactory.createPHPKeywordData("else", " ", 1),
+			PHPCodeDataFactory.createPHPKeywordData("return", " ", 1), PHPCodeDataFactory.createPHPKeywordData("if", " ()", 2), PHPCodeDataFactory.createPHPKeywordData("endif", ";", 1), PHPCodeDataFactory.createPHPKeywordData("elseif", " ()", 2), PHPCodeDataFactory.createPHPKeywordData("else", " ", 1),
 			PHPCodeDataFactory.createPHPKeywordData("while", " ()", 2), PHPCodeDataFactory.createPHPKeywordData("endwhile", ";", 1), PHPCodeDataFactory.createPHPKeywordData("do", " ", 1), PHPCodeDataFactory.createPHPKeywordData("for", " ()", 2),
 			PHPCodeDataFactory.createPHPKeywordData("endfor", ";", 1), PHPCodeDataFactory.createPHPKeywordData("foreach", " ()", 2), PHPCodeDataFactory.createPHPKeywordData("endforeach", ";", 1), PHPCodeDataFactory.createPHPKeywordData("declare", "()", 1),
 			PHPCodeDataFactory.createPHPKeywordData("enddeclare;", ";", 1), PHPCodeDataFactory.createPHPKeywordData("as", " ", 1), PHPCodeDataFactory.createPHPKeywordData("switch", " ()", 2), PHPCodeDataFactory.createPHPKeywordData("endswitch", ";", 1),
