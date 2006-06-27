@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -49,11 +50,11 @@ public class DeleteAction extends SelectionDispatchAction {
 			setEnabled(createWorkbenchAction(selection).isEnabled());
 			return;
 		}
-		Object []elements=selection.toArray();
-		boolean enabled=ActionUtils.isDeleteAvailable(elements);
-//TODO: disable until model supports delete 
+		Object[] elements = selection.toArray();
+		boolean enabled = ActionUtils.isDeleteAvailable(elements);
+		//TODO: disable until model supports delete 
 		if (enabled)
-			enabled=!ActionUtils.arePHPElements(elements);
+			enabled = !ActionUtils.arePHPElements(elements);
 		setEnabled(enabled);
 	}
 
@@ -75,7 +76,7 @@ public class DeleteAction extends SelectionDispatchAction {
 			if (element instanceof PHPFileData) {
 				PHPFileData phpFile = (PHPFileData) element;
 				list.add(PHPModelUtil.getResource(phpFile));
-			} else if (element instanceof IFile) {
+			} else if (element instanceof IFile || element instanceof IFolder) {
 				list.add(element);
 			}
 		}
@@ -84,8 +85,5 @@ public class DeleteAction extends SelectionDispatchAction {
 			createWorkbenchAction(sel).run();
 			return;
 		}
-//		TODO:  until model supports delete 
-
-		throw new RuntimeException("implement me, delete of model item within file");
 	}
 }
