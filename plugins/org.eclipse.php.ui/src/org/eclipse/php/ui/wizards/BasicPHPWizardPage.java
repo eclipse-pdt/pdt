@@ -125,7 +125,8 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		}
 		String selectedDirectory = dialog.open();
 		if (selectedDirectory != null)
-			text.setText(selectedDirectory);
+			text.add(selectedDirectory);
+			text.select(text.indexOf(selectedDirectory));
 	}
 
 	protected String handleFolderBrowseButtonPressed(String dir, String title, String message) {
