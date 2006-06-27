@@ -60,6 +60,7 @@ public final class PHPUIMessages extends NLS {
 	public static String CoreUtility_job_title;
 	public static String ElementValidator_cannotPerform;
 	public static String ExceptionDialog_seeErrorLogMessage;
+	public static String IncludePathDialogAccess_0;
 	public static String InitializeAfterLoadJob_real_job_name;
 	public static String InitializeAfterLoadJob_starter_job_name;
 	public static String OptionalMessageDialog_dontShowAgain;

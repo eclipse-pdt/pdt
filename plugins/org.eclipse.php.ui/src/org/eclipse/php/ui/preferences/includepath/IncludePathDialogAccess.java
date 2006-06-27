@@ -276,7 +276,7 @@ public final class IncludePathDialogAccess {
 		if (lastUsedPath == null) {
 			lastUsedPath = ""; //$NON-NLS-1$
 		}
-		DirectoryDialog dialog = new DirectoryDialog(shell, SWT.MULTI);
+		DirectoryDialog dialog = new DirectoryDialog(shell, SWT.SINGLE);
 		dialog.setText(PHPUIMessages.IncludePathDialogAccess_IncludePathFolderDialog_new_title);
 		dialog.setMessage(PHPUIMessages.IncludePathDialogAccess_IncludePathFolderDialog_new_description);
 		dialog.setFilterPath(lastUsedPath);
@@ -287,9 +287,39 @@ public final class IncludePathDialogAccess {
 		}
 		
 		IPath path = new Path(res).makeAbsolute();
-		PHPUiPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTINCLUDEFOLDER, path.toFile().getParent());
+		PHPUiPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTINCLUDEFOLDER, path.removeLastSegments(1).toOSString());
 		
 		return new IPath[]{path};
+	}
+	
+	/**
+	 * Shows the UI to configure include path folder entry.
+	 * The dialog returns the configured or <code>null</code> if the dialog has
+	 * been canceled. The dialog does not apply any changes.
+	 * 
+	 * @param shell The parent shell for the dialog.
+	 * @param initialEntry The path of the initial include path folder entry.
+	 * @return Returns the configured include path container entry path or <code>null</code> if the dialog has
+	 * been canceled by the user.
+	 */
+	public static IPath configureIncludePathFolderEntry(Shell shell, IPath initialEntry) {
+		if (initialEntry == null) {
+			throw new IllegalArgumentException();
+		}
+
+		String lastUsedPath = initialEntry.removeLastSegments(1).toOSString();
+
+		DirectoryDialog dialog = new DirectoryDialog(shell, SWT.SINGLE);
+		dialog.setText(PHPUIMessages.IncludePathDialogAccess_0);
+		dialog.setFilterPath(lastUsedPath);
+
+		String res = dialog.open();
+		if (res == null) {
+			return null;
+		}
+		IPath path = new Path(res).makeAbsolute();
+		PHPUiPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTINCLUDEFOLDER, path.removeLastSegments(1).toOSString());
+		return path;
 	}
 
 	/**
