@@ -339,7 +339,7 @@ public class ProjectsWorkbookPage extends IncludePathBasePage {
 
 		List elements = fProjectsList.getElements();
 		for (int i = 0; i < elements.size(); i++) {
-			IPListElement curr = (IPListElement) elements.get(0);
+			IPListElement curr = (IPListElement) elements.get(i);
 			selectable.remove(curr.getResource());
 		}
 		Object[] selectArr = selectable.toArray();
