@@ -556,7 +556,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 
 				if (server == null) { //server no longer exists				
 					setErrorMessage("Invalid server");
-					//serverCombo.clearSelection();  //appears to be broken...doesn't work with read only?												
 					serverCombo.setEnabled(false);
 					return;
 				}
@@ -566,7 +565,14 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 				//	setErrorMessage(Messages.errorServerAlreadyRunning);
 			} else {
 				if (serverCombo.getItemCount() > 0) {
-					serverCombo.select(0);
+					// Select the default server
+					Server defaultServer = ServersManager.getDefaultServer();
+					int nameIndex = serverCombo.indexOf(defaultServer.getName());
+					if (nameIndex > -1) {
+						serverCombo.select(nameIndex);
+					} else {
+						serverCombo.select(0);
+					}
 				}
 			}
 			//flag should only be set if launch has been attempted on the config
@@ -719,8 +725,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		Server theServer = null;
 
-		// try the full wizard
-		//RunOnServerWizard wizard = new RunOnServerWizard(module, "run");
 		ServerWizard wizard = new ServerWizard();
 		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 		if (dialog.open() == Window.CANCEL) {
