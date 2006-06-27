@@ -35,7 +35,9 @@ public class RunnablePropertyTester extends PropertyTester{
            project = (IProject)receiver;
         }
         
-        if (project == null)return true;
+        if (project == null || !project.isOpen()) {
+        	return true;
+        }
         try {
             if (project.isNatureEnabled(PHPNature.ID)){
                 return false;
