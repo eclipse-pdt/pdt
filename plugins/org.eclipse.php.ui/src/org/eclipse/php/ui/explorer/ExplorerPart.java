@@ -496,6 +496,8 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		IPHPTreeContentProvider[] treeProviders = TreeProvider.getTreeProviders(getViewSite().getId());
 		fContentProvider.setTreeProviders(treeProviders);
 		fViewer.setContentProvider(fContentProvider);
+		
+		fViewer.setSorter(new ExplorerSorter());
 
 		fLabelProvider = createLabelProvider();
 		fLabelProvider.setTreeProviders(treeProviders);
@@ -808,23 +810,6 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 
 	public int getRootMode() {
 		return fRootMode;
-	}
-
-	protected Object[] getFilteredChildren(Object parent) {
-		List list = new ArrayList();
-		ViewerFilter[] filters = fViewer.getFilters();
-		Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
-		//		for (int i = 0; i < children.length; i++) {
-		//			Object object = children[i];
-		//			if (!isEssential(object)) {
-		//				object = filter(object, parent, filters);
-		//				if (object != null) {
-		//					list.add(object);
-		//				}
-		//			} else
-		//				list.add(object);
-		//		}
-		return list.toArray();
 	}
 
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
