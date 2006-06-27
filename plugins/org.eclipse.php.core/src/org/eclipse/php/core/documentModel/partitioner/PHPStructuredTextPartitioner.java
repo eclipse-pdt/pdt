@@ -39,10 +39,14 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 
 	public ITypedRegion getPartition(int offset, boolean preferOpenPartitions) {
 		ITypedRegion region = getPartition(offset);
+		ITypedRegion newRegion;
 		if (preferOpenPartitions) {
 			if (region.getOffset() == offset) {
 				if (offset > 0) {
-					region = getPartition(offset - 1);
+					newRegion = getPartition(offset - 1);
+					String newRegionType = newRegion.getType();
+					if(newRegionType != PHPPartitionTypes.PHP_MULTI_LINE_COMMENT && newRegionType != PHPPartitionTypes.PHP_QUOTED_STRING)
+						region = newRegion;
 				}
 			}
 		}
