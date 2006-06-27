@@ -11,10 +11,7 @@
 package org.eclipse.php.core.phpModel.parser;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -410,17 +407,20 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		}
 
 		// Look in the other phpFileDataDB in global context.
-		Iterator iterator = phpFileDataDB.asList().iterator();
-		while (iterator.hasNext()) {
-			fileData = (PHPFileData) iterator.next();
-			if (fileData.getName().equals(fileName)) {
-				continue; // no point in looking again...
-			}
-			variablesTypeManager = fileData.getVariableTypeManager();
+		List list = Collections.synchronizedList(phpFileDataDB.asList());
+		synchronized (list) {
+			Iterator iterator = list.iterator();
+			while (iterator.hasNext()) {
+				fileData = (PHPFileData) iterator.next();
+				if (fileData.getName().equals(fileName)) {
+					continue; // no point in looking again...
+				}
+				variablesTypeManager = fileData.getVariableTypeManager();
 
-			typeData = variablesTypeManager.getVariableTypeData(context, variableName, fileData.getUserData().getStopLine());
-			if (typeData != null) {
-				return typeData.getType();
+				typeData = variablesTypeManager.getVariableTypeData(context, variableName, fileData.getUserData().getStopLine());
+				if (typeData != null) {
+					return typeData.getType();
+				}
 			}
 		}
 		return null;
