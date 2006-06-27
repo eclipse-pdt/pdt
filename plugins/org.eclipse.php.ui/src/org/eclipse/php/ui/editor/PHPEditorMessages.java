@@ -30,6 +30,7 @@ public final class PHPEditorMessages extends NLS {
 	public static String PHP_Editor_FoldingMenu_name;
 	public static String ShowPHPDoc_label;
 	public static String HoverFocus_message;
+	public static String HoverFocus_decoration;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PHPEditorMessages.class);
@@ -46,4 +47,5 @@ public final class PHPEditorMessages extends NLS {
 	}
 
 	public static String PHPStructuredEditor_Source;
+	
 }

@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -20,14 +24,40 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.internal.text.link.contentassist.HTMLTextPresenter;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.AbstractInformationControlManager;
+import org.eclipse.jface.text.Assert;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DefaultInformationControl;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.ITextViewerExtension4;
+import org.eclipse.jface.text.ITextViewerExtension5;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.source.*;
+import org.eclipse.jface.text.source.IAnnotationHover;
+import org.eclipse.jface.text.source.IAnnotationHoverExtension;
+import org.eclipse.jface.text.source.ILineRange;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.ISourceViewerExtension3;
+import org.eclipse.jface.text.source.IVerticalRulerInfo;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -42,7 +72,15 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.php.internal.ui.actions.ActionMessages;
+import org.eclipse.php.internal.ui.actions.AddBlockCommentAction;
+import org.eclipse.php.internal.ui.actions.BlockCommentAction;
+import org.eclipse.php.internal.ui.actions.FoldingActionGroup;
+import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
+import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
+import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
+import org.eclipse.php.internal.ui.actions.RemoveBlockCommentAction;
+import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.containers.StorageEditorInput;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorators;
@@ -55,7 +93,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.texteditor.*;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.IUpdate;
+import org.eclipse.ui.texteditor.ResourceAction;
+import org.eclipse.ui.texteditor.TextEditorAction;
+import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -88,10 +130,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			IConfigurationElement element = elements[i];
 			try {
 				messageDecorator = (IHoverMessageDecorators) element.createExecutableExtension("class");
-			} catch (CoreException e) {
-				// TODO  - log exception
-				e.printStackTrace();
+			} catch (CoreException e) {				
+				PHPUiPlugin.log(e);				
 			}
+		}
+		if (messageDecorator == null){
+			messageDecorator = new DefaultHoverMessageDecorator();
 		}
 
 	}
