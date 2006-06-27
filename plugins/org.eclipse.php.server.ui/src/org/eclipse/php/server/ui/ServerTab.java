@@ -491,8 +491,12 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		} catch (CoreException e) {
 			// ignore
 		}
-
+		initializeExtensionControls(configuration);
 		isValid(configuration);
+	}
+	
+	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
+		return;
 	}
 
 	protected void initializeURLControl(String contextRoot, String fileName) {

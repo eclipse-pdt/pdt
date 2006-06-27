@@ -11,10 +11,12 @@
 package org.eclipse.php.debug.ui.launching;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
@@ -35,38 +37,45 @@ public class PHPServerTab extends ServerTab {
 
 	protected Button runWithDebugger;
 	protected boolean isChecked = false;
+	private String mode;
 
 	public PHPServerTab() {
 		super();
 	}
 
 	public void createExtensionControls(Composite parent) {
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		mode = getLaunchConfigurationDialog().getMode();
+		if (ILaunchManager.RUN_MODE.equals(mode)) {
+			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
-		layout.numColumns = 2;
-		composite.setLayout(layout);
-		composite.setLayoutData(data);
+			Composite composite = new Composite(parent, SWT.NONE);
+			GridLayout layout = new GridLayout();
+			layout.marginWidth = 5;
+			layout.marginHeight = 5;
+			layout.numColumns = 2;
+			composite.setLayout(layout);
+			composite.setLayoutData(data);
 
-		runWithDebugger = new Button(composite, SWT.CHECK);
-		runWithDebugger.setText(PHPDebugUIMessages.PHPexe_Run_With_Debug_Info);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		runWithDebugger.setLayoutData(gd);
+			runWithDebugger = new Button(composite, SWT.CHECK);
+			runWithDebugger.setText(PHPDebugUIMessages.PHPexe_Run_With_Debug_Info);
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = 2;
+			runWithDebugger.setLayoutData(gd);
 
-		runWithDebugger.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent se) {
-				Button b = (Button) se.getSource();
-				isChecked = b.getSelection();
-				updateLaunchConfigurationDialog();
-			}
-		});
+			runWithDebugger.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent se) {
+					Button b = (Button) se.getSource();
+					isChecked = b.getSelection();
+					updateLaunchConfigurationDialog();
+				}
+			});
+		}
 	}
 
 	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
+		if (runWithDebugger == null) {
+			return;
+		}
 		try {
 			boolean checked = configuration.getAttribute(RUN_WITH_DEBUG, PHPDebugPlugin.getDebugInfoOption());
 			runWithDebugger.setSelection(checked);
@@ -76,6 +85,9 @@ public class PHPServerTab extends ServerTab {
 	}
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
+		if (runWithDebugger == null) {
+			return;
+		}
 		boolean checked = runWithDebugger.getSelection();
 		configuration.setAttribute(RUN_WITH_DEBUG, checked);
 	}
@@ -83,60 +95,54 @@ public class PHPServerTab extends ServerTab {
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {
 		return true;
 	}
-    
-    protected void createServerSelectionControl(Composite parent) {
-        PHPDebugPlugin.createDefaultPHPServer();
-        super.createServerSelectionControl(parent);
-    }
-    
-    protected void initializeURLControl(String projectName, String contextRoot, String fileName)
-    {
-        if(server == null)
-            return;
-        
-        if (server.getName().equals(IPHPConstants.Default_Server_Name)) { // TODO - Use ID instead ?
-            IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-            IProject[] projects = workspaceRoot.getProjects();
-            IProject project = null;
-            for (int i = 0; i < projects.length; i++) {
-                if (projects[i].getName().equals(projectName)) {
-                    project = projects[i];
-                    break;
-                }
-            }
-            String urlString = "";
-            if (project == null){
-                urlString = PHPDebugPlugin.getWorkspaceURL();
-            } else {
-                urlString = PHPProjectPreferences.getDefaultServerURL(project);
-            }
-            
-            
-            if(urlString.equals(""))
-                urlString = "http://localhost";
-            
-            StringBuffer url = new StringBuffer(urlString);
-            
-            url.append("/");
-            url.append(contextRoot);
-            if (contextRoot != "")url.append("/");
-            url.append(fileName);
-            
-            fURL.setText(url.toString());
-        } else {
-            super.initializeURLControl(contextRoot, fileName);
-        }
-        
 
-    }
-    
-    public String[] getRequiredNatures()
-    {
-    	return LaunchUtil.getRequiredNatures();
-    }
-    
-    public String[] getFileExtensions()
-    {
-    	return LaunchUtil.getFileExtensions();
-    }
+	protected void createServerSelectionControl(Composite parent) {
+		PHPDebugPlugin.createDefaultPHPServer();
+		super.createServerSelectionControl(parent);
+	}
+
+	protected void initializeURLControl(String contextRoot, String fileName) {
+		if (server == null)
+			return;
+
+		if (server.getName().equals(IPHPConstants.Default_Server_Name)) {
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+			IResource resource = workspaceRoot.findMember(fileName);
+			if (resource == null) {
+				super.initializeURLControl(contextRoot, fileName);
+				return;
+			}
+			IProject project = resource.getProject();
+			String urlString = "";
+			if (project == null) {
+				urlString = PHPDebugPlugin.getWorkspaceURL();
+			} else {
+				urlString = PHPProjectPreferences.getDefaultServerURL(project);
+			}
+
+			if (urlString.equals(""))
+				urlString = "http://localhost";
+
+			StringBuffer url = new StringBuffer(urlString);
+
+			url.append("/");
+			url.append(contextRoot);
+			if (contextRoot != "")
+				url.append("/");
+			url.append(fileName);
+
+			fURL.setText(url.toString());
+		} else {
+			super.initializeURLControl(contextRoot, fileName);
+		}
+
+	}
+
+	public String[] getRequiredNatures() {
+		return LaunchUtil.getRequiredNatures();
+	}
+
+	public String[] getFileExtensions() {
+		return LaunchUtil.getFileExtensions();
+	}
 }
