@@ -63,11 +63,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	private boolean enableFileSelection;
 	private boolean enableDebugInfoOption;
 
-	public PHPExecutableLaunchTab(String mode) {
+	public PHPExecutableLaunchTab() {
 		enableFileSelection = true;
-		if (mode.equals(ILaunchManager.RUN_MODE)) {
-			setEnableDebugInfoOption(true);
-		}
 	}
 
 	public void setEnableFileSelection(boolean enabled) {
@@ -122,6 +119,10 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	public void createControl(Composite parent) {
+		if (getLaunchConfigurationDialog().getMode().equals(ILaunchManager.RUN_MODE)) {
+			setEnableDebugInfoOption(true);
+		}
+		
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		setControl(mainComposite);
 		mainComposite.setFont(parent.getFont());

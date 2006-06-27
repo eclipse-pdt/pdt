@@ -23,7 +23,7 @@ public class PHPExeLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ArrayList tabs = new ArrayList(2);
 		
-		tabs.add(new PHPExecutableLaunchTab(mode));
+		tabs.add(new PHPExecutableLaunchTab());
 		tabs.add(new CommonTab());
 
 		AbstractLaunchConfigurationTab[] array = new AbstractLaunchConfigurationTab[tabs.size()];
