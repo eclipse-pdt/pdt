@@ -121,6 +121,9 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 			if (document.getLength() == offset + 1) { //if we are in the end of the document
 				postCharState = FormatterUtils.getPartitionType(document, offset);
 				if (postCharState == PHPPartitionTypes.PHP_DEFAULT || postCharState == PHPRegionTypes.PHP_OPENTAG || postCharState == PHPRegionTypes.PHP_CLOSETAG) {
+					if (document.getChar(offset) == getMatchingChar(bracketChar)) {
+						return MATCHING_BRACKET_NOT_NEEDED;
+					}
 					return MATCHING_BRACKET_NEEDED;
 				}
 				return MATCHING_BRACKET_NOT_NEEDED;
@@ -174,6 +177,8 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 	private void insertClosingChar(IStructuredDocument document, DocumentCommand command) {
 		int endSelection = command.offset + command.length;
 		char addedChar = command.text.charAt(0);
+		if (endSelection == document.getLength()) // nothing to match
+			return;
 		try {
 			char nextChar = document.getChar(endSelection);
 			if (nextChar == addedChar) {
@@ -183,7 +188,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 				if (result == MATCHING_BRACKET_NOT_NEEDED) {
 					// this check is for the case of ()) when the carret is between the two ')'
 					// typing ')' will add another ')' to the document
-					if (matcher.match(document, endSelection + 1) != null) {
+					if (matcher.match(document, endSelection + 1) != null || document.getLength() == endSelection + 1) {
 						if (command.length == 0) {
 							command.offset++;
 							command.text = "";
