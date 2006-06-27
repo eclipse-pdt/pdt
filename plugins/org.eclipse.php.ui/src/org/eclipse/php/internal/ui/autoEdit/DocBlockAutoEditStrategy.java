@@ -11,15 +11,30 @@
 
 package org.eclipse.php.internal.ui.autoEdit;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentCommand;
+import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.php.Logger;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.format.FormatterUtils;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.editor.util.PHPDocBlockSerialezer;
 import org.eclipse.php.internal.ui.editor.util.PHPDocTool;
 import org.eclipse.php.ui.PHPUiPlugin;
@@ -53,29 +68,29 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		try {
 			//the basic assumption is that we are allready in phpDoc state.
 			IRegion lineInfo = document.getLineInformationOfOffset(command.offset);
+
 			int startOffset = lineInfo.getOffset();
 
 			String line = document.get(startOffset, lineInfo.getLength());
 			String blanks = getBlanks(line);
 
 			String trimedLine = line.trim();
+
 			boolean isFirstLine = false;
 			boolean isDocBlock = true;
 			// if this is the first line of the docBlock
-			if (trimedLine.startsWith("/**")) {
-				if(command.offset + command.length < lineInfo.getOffset() + line.indexOf("/**") + 3){ // checking we are after the /**
-					//otherwise there is no need to continue since its not inside the docblock
+			int docStart;
+			if ((docStart = trimedLine.indexOf("/*")) != -1) {
+				if (command.offset + command.length < startOffset + docStart + 2)
 					return;
-				}
 				isFirstLine = true;
-			} else if (trimedLine.startsWith("/*")) {
-				if(command.offset + command.length < lineInfo.getOffset() + line.indexOf("/*") + 2){ // checking we are after the /*
-					//otherwise there is no need to continue since its not inside the docblock
-					return;
+				if (trimedLine.indexOf("/**") != docStart) {
+					isDocBlock = false;
 				}
-				isFirstLine = true;
-				isDocBlock = false;
 			}
+			Matcher m = Pattern.compile("/\\*.*\\*/").matcher(trimedLine);
+			if (m.find())
+				return;
 			if (isFirstLine) {
 				blanks += ' ';
 				command.text += blanks;
@@ -96,7 +111,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				return;
 			}
 			boolean lastLint = document.get(startOffset, command.offset - startOffset).endsWith("*/");
-			if (!lastLint)	{ // only if the line starts with * then we add * to the new line
+			if (!lastLint) { // only if the line starts with * then we add * to the new line
 				if (trimedLine.length() > 0 && trimedLine.charAt(0) == '*') {
 					command.text = command.text + blanks + lineStart;
 				}
@@ -107,12 +122,22 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 	}
 
 	private String getBlanks(String line) {
-		for (int index = 0; index < line.length(); index++) {
-			if (!Character.isWhitespace(line.charAt(index))) {
-				return line.substring(0, index);
-			}
+		int start;
+		start = line.indexOf("/*");
+		if (start < 0)
+			start = line.indexOf("*");
+		if (start >= 0) {
+			StringBuffer blanks = new StringBuffer(start);
+			for (int i = 0; i < start; ++i)
+				if (line.charAt(i) == '\t')
+					blanks.append('\t');
+				else
+					blanks.append(' ');
+			return blanks.toString();
+		} else {
+			return " ";
 		}
-		return line;
+
 	}
 
 	/**
@@ -121,18 +146,23 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 	 * -1 if the caret should be at the end of the command.text
 	 */
 	private int handleDocBlockStart(IStructuredDocument document, DocumentCommand command, String blanks, boolean isDocBlock) {
-		String commentStart = (isDocBlock) ? "/**" : "/*";
-		int commentStartLength = commentStart.length();
-		command.text += lineStart;
-		int rvPosition = command.offset + command.text.length();
-		int selectionEnd = command.offset + command.length;
-		if (isInsideExistingDocBlock(document, selectionEnd)) {
-			return -1;
-		}
+		int rvPosition = 0;
 		try {
 			IRegion lineInfo = document.getLineInformationOfOffset(command.offset);
 			int lineStart = lineInfo.getOffset();
 			String line = document.get(lineStart, command.offset - lineStart);
+
+			Matcher m = Pattern.compile("\\/\\*+").matcher(line);
+			m.find();
+			String commentStart = line.substring(m.start(), m.end());
+			int commentStartLength = commentStart.length();
+			command.text += "* ";
+			rvPosition = command.offset + command.text.length();
+			int selectionEnd = command.offset + command.length;
+			if (isInsideExistingDocBlock(document, selectionEnd)) {
+				return -1;
+			}
+
 			lineStart += line.indexOf(commentStart);
 			String lineContent = line.substring(line.indexOf(commentStart) + commentStartLength).trim();
 			rvPosition = lineStart + commentStartLength + command.text.length();
@@ -166,15 +196,15 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				if (lineContent.equals("")) { //this is a patch in order to make PHPDescriptionTool add a default shortDescription
 					lineContent = null;
 				}
-				
+
 				String stub = getDocBlockStub(editorModel, document, lineStart, lineContent);
-				
+
 				// putting back the /** that was taken off
 				command.offset += commentStart.length();
 				document.getUndoManager().disableUndoManagement();
 				document.replace(lineStart, 0, commentStart);
 				document.getUndoManager().enableUndoManagement();
-				
+
 				if (stub != null) {
 					command.text = stub.substring(3);
 					if (lineContent == null) {
@@ -230,10 +260,10 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 
 		boolean firstRegion = true;
-		
+
 		while (sdRegion != null) {
 			String text = sdRegion.getText();
-			if(firstRegion){
+			if (firstRegion) {
 				firstRegion = false;
 				text = text.substring(offset - sdRegion.getStartOffset());
 			}
