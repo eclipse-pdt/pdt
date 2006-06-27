@@ -48,11 +48,13 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 	 * out in relation to each other and the editor area.
 	 */
 	protected void addViews(IPageLayout layout) {
-		//		everything is based off the editor area
-        IFolderLayout outlineFolder= layout.createFolder(ID_Debug_INFO_FOLDER, IPageLayout.RIGHT, (float) 0.75, layout.getEditorArea());
+		
+		String editorArea = layout.getEditorArea();
+		
+		//	Everything is based off the editor area
+        IFolderLayout outlineFolder= layout.createFolder(ID_Debug_INFO_FOLDER, IPageLayout.RIGHT, (float) 0.75, editorArea);
         outlineFolder.addView(ID_PHPDebugOutput);
         outlineFolder.addView(ID_PHPBrowserOutput);
-		String editorArea = layout.getEditorArea();
 
 		// Top left: Resource Navigator view and PHP Explorer
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION, IPageLayout.LEFT, 0.22f, editorArea);
@@ -65,13 +67,11 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		bottomLeft.addView(ID_PROJECT_OUTLINE);
 		bottomLeft.addView(ID_FUNCTIONS);
 		
-
-		//Bottom: Attributes view, Problem View, Task List, placeholder for Design View Log
+		// Bottom: Attributes view, Problem View, Task List, placeholder for Design View Log
 		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION, IPageLayout.BOTTOM, 0.75f, editorArea);
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView(IPageLayout.ID_TASK_LIST);
         bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
-
+        bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 	}
-
 }
