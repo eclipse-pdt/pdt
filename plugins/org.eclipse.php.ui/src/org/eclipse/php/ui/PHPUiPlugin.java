@@ -29,6 +29,7 @@ import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.ui.editor.templates.PHPTemplateContextTypeIds;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.preferences.ui.MembersOrderPreferenceCache;
+import org.eclipse.php.ui.preferences.ui.PHPTemplateStore;
 import org.eclipse.php.ui.util.ImageDescriptorRegistry;
 import org.eclipse.php.ui.util.PHPManualDirectorDescriptor;
 import org.eclipse.php.ui.util.PHPManualSiteDescriptor;
@@ -186,7 +187,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public TemplateStore getTemplateStore() {
 		if (templateStore == null) {
-			templateStore = new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), PreferenceConstants.TEMPLATES_KEY);
+			templateStore = new PHPTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), PreferenceConstants.TEMPLATES_KEY);
 
 			try {
 				templateStore.load();
