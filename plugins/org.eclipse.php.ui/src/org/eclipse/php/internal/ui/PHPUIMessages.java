@@ -66,6 +66,7 @@ public final class PHPUIMessages extends NLS {
 	public static String OptionalMessageDialog_dontShowAgain;
 	public static String PHPAnnotationHover_multipleMarkersAtThisLine;
 	public static String PHPEditor_codeassist_noCompletions;
+	public static String PHPEditorTextHoverDescriptor_cannot_create_message_decorator_error;
 	public static String PHPElementLabels_comma_string;
 	public static String PHPElementLabels_concat_string;
 	public static String PHPElementLabels_declseparator_string;

@@ -1,29 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-	<extension-point
-		id="phpElementFilters"
-		name="PHP Element Filter"
-		schema="schema/phpElementFilters.exsd" />
-	<extension-point
-		id="foldingStructureProviders"
-		name="%foldingStructureProvidersExtensionPoint"
-		schema="schema/foldingStructureProviders.exsd" />
-	<extension-point
-		id="phpEditorTextHovers"
-		name="PHP Editor Text Hover"
-		schema="schema/phpEditorTextHovers.exsd" />
-	<extension-point
-		id="phpTreeContentProvider"
-		name="PHP Tree Content Provider"
-		schema="schema/phpTreeContentProvider.exsd" />
- <extension-point id="phpManualSites" name="PHP Manual URL" schema="schema/phpManualSites.exsd"/>
- <extension-point id="phpManualDirectors" name="PHP Manual Director" schema="schema/phpManualDirectors.exsd"/>
- <extension-point id="contentAssistProccesorForPHP" name="contentAssistProccesorForPHP" schema="schema/contentAssistProccesorForPHP.exsd"/>
- <extension-point id="hyperlinkDetectorForPHP" name="hyperlinkDetectorForPHP" schema="schema/hyperlinkDetectorForPHP.exsd"/>
- <extension-point id="phpOutlineElementComparer" name="phpOutlineElementComparer" schema="schema/phpOutlineElementComparer.exsd"/>
- <extension-point id="actionFilterDelegatorForPHPCodeData" name="actionFilterDelegatorForPHPCodeData" schema="schema/actionFilterDelegatorForPHPCodeData.exsd"/>
- <extension-point id="hoverMessageDecorators" name="Hover Message Decorators" schema="schema/hoverMessageDecorators.exsd"/>
+	<extension-point id="phpElementFilters" name="PHP Element Filter" schema="schema/phpElementFilters.exsd"/>
+	<extension-point id="foldingStructureProviders" name="%foldingStructureProvidersExtensionPoint" schema="schema/foldingStructureProviders.exsd"/>
+	<extension-point id="phpEditorTextHovers" name="PHP Editor Text Hover" schema="schema/phpEditorTextHovers.exsd"/>
+	<extension-point id="phpEditorTextHoverDecorator" name="PHP Editor Text Hover Decorator" schema="schema/phpEditorTextHoverDecorator.exsd"/>
+	<extension-point id="phpTreeContentProvider" name="PHP Tree Content Provider" schema="schema/phpTreeContentProvider.exsd"/>
+	<extension-point id="phpManualSites" name="PHP Manual URL" schema="schema/phpManualSites.exsd"/>
+	<extension-point id="phpManualDirectors" name="PHP Manual Director" schema="schema/phpManualDirectors.exsd"/>
+	<extension-point id="contentAssistProccesorForPHP" name="contentAssistProccesorForPHP" schema="schema/contentAssistProccesorForPHP.exsd"/>
+	<extension-point id="hyperlinkDetectorForPHP" name="hyperlinkDetectorForPHP" schema="schema/hyperlinkDetectorForPHP.exsd"/>
+	<extension-point id="phpOutlineElementComparer" name="phpOutlineElementComparer" schema="schema/phpOutlineElementComparer.exsd"/>
+	<extension-point id="actionFilterDelegatorForPHPCodeData" name="actionFilterDelegatorForPHPCodeData" schema="schema/actionFilterDelegatorForPHPCodeData.exsd"/>
 
 	<!--extension point="org.eclipse.ui.editors.documentProviders"> 
 		<provider 

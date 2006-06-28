@@ -40,6 +40,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 	{
 		fBindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 	}
+	protected IHoverMessageDecorators fDecorator;
 
 	public IEditorPart getEditorPart() {
 		return fEditor;
@@ -48,7 +49,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 	public void setEditorPart(IEditorPart editorPart) {
 		fEditor = editorPart;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.text.ITextHover#getHoverRegion(org.eclipse.jface.text.ITextViewer, int)
 	 */
@@ -96,5 +97,19 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true), getTooltipAffordanceString());
 			}
 		};
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.ui.editor.hover.IPHPTextHover#setMessageDecorator(org.eclipse.php.ui.editor.hover.IHoverMessageDecorators)
+	 */
+	public void setMessageDecorator(IHoverMessageDecorators decorator) {
+		fDecorator = decorator;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.ui.editor.hover.IPHPTextHover#getMessageDecorator()
+	 */
+	public IHoverMessageDecorators getMessageDecorator() {
+		return fDecorator;
 	}
 }

@@ -3,17 +3,17 @@
 <schema targetNamespace="org.eclipse.php.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.ui" id="hoverMessageDecorators" name="Hover Message Decorators"/>
+         <meta.schema plugin="org.eclipse.php.ui" id="phpEditorTextHoverDecorator" name="PHP Editor Text Hover Decorator"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point provides possibility to specify message decorator for PHP Editor Text Hover.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="HoverMessageDecorators" minOccurs="0" maxOccurs="1"/>
+            <element ref="decorator"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,26 +42,26 @@
       </complexType>
    </element>
 
-   <element name="HoverMessageDecorators">
+   <element name="decorator">
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  ID of this PHP Text Hover Message Decorator.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string">
+         <attribute name="hover" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  ID of the PHP Text Hover extension.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Class of this PHP Text Hover Message Decorator, which implements org.eclipse.php.ui.editor.hover.IHoverMessageDecorators.
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.php.ui.editor.hover.IHoverMessageDecorators"/>
@@ -76,7 +76,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         28 June 2006.
       </documentation>
    </annotation>
 
@@ -94,7 +94,9 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         &lt;p&gt;
+Plugins that want to extend this extension point must implement this interface: &lt;samp&gt;org.eclipse.php.ui.editor.hover.IHoverMessageDecorators&lt;/samp&gt;.
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -103,7 +105,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         No default implementation for this extension point.
       </documentation>
    </annotation>
 
