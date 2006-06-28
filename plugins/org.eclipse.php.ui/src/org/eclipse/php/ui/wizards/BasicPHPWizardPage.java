@@ -1,6 +1,7 @@
 package org.eclipse.php.ui.wizards;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.WizardPage;
@@ -128,6 +129,24 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 			text.add(selectedDirectory);
 			text.select(text.indexOf(selectedDirectory));
 	}
+	
+	protected void handleFileBrowseButtonPressed(Combo text, String[] extensions, String title, String fileName) {
+		FileDialog dialog = new FileDialog(text.getShell(), SWT.SAVE);
+		dialog.setText(title);
+		dialog.setFilterExtensions(extensions);
+		dialog.setFileName(fileName);
+		String dirName = text.getText();
+		if (!dirName.equals("")) { //$NON-NLS-1$
+			File path = new File(dirName);
+			if (path.exists())
+				dialog.setFilterPath(dirName);
+
+		}
+		String selectedDirectory = dialog.open();
+		if (selectedDirectory != null)
+			text.add(selectedDirectory);
+			text.select(text.indexOf(selectedDirectory));
+	}
 
 	protected String handleFolderBrowseButtonPressed(String dir, String title, String message) {
 		DirectoryDialog dialog = new DirectoryDialog(getShell());
@@ -169,6 +188,20 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 			fCurrStatus = status;
 		}
 		updateStatus(fCurrStatus);
+	}
+	
+	public ArrayList setComboItems(Combo combo, ArrayList arrItems) {
+		arrItems.clear();
+		arrItems.add(combo.getText()); // must be first
+		String[] items = combo.getItems();
+		for (int i = 0; i < items.length; i++) {
+			String curr = items[i];
+			if (!arrItems.contains(curr)) {
+				arrItems.add(curr);
+			}
+		}
+		return arrItems;
+
 	}
 
 	protected static class EnableSelectionAdapter extends SelectionAdapter {
