@@ -22,7 +22,6 @@ import org.eclipse.php.Logger;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.ui.text.PHPCodeReader;
 import org.eclipse.php.internal.ui.util.CodeDataResolver;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -100,15 +99,13 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 							IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
 							if (file != null) {
 								BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
-								r.skip(userData.getStartPosition());
-								StringBuffer buf = new StringBuffer();
-								String line;
-								while ((line = r.readLine()) != null) {
-									buf.append(line);
-									buf.append("\n");
-								}
+								int startPosition = userData.getStartPosition();
+								int len = userData.getEndPosition() - startPosition;
+								char[] buf = new char[len];
+								r.skip(startPosition);
+								r.read(buf, 0, len);
 								r.close();
-								return cutStatement(buf.toString());
+								return formatHoverInfo(new String(buf));
 							}
 						}
 					}
@@ -120,33 +117,29 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 		return null;
 	}
 	
-	private String cutStatement(String code) {
-		try {
-			PHPCodeReader codeReader = new PHPCodeReader();
-			Document doc = new Document(code);
-			codeReader.configureForwardReader(doc, 0, doc.getLength(), true, true);
-			
-			int curlyBraces = 0;
-			
-			int ch = codeReader.read();
-			while (ch != PHPCodeReader.EOF) {
-				if (ch == ';' && curlyBraces == 0) {
-					break;
-				}
-				if (ch == '{') {
-					curlyBraces ++;
-				}
-				if (ch == '}') {
-					curlyBraces --;
-					if (curlyBraces == 0) {
+	public String formatHoverInfo(String info) {
+		info = info.trim();
+		String[] lines = info.split("[\r\n]"); //$NON-NLS-1$
+		if (lines.length > 0) {
+			String lastLine = lines[lines.length-1];
+			int numCharsToStrip = 0;
+			while (Character.isWhitespace(lastLine.charAt(numCharsToStrip))) {
+				numCharsToStrip ++;
+			}
+			StringBuffer buf = new StringBuffer();
+			for (int i = 0; i < lines.length; ++i) {
+				int actuallyStrip = 0;
+				while (actuallyStrip < numCharsToStrip && actuallyStrip < lines[i].length()) {
+					if (!Character.isWhitespace(lines[i].charAt(actuallyStrip))) {
 						break;
 					}
+					actuallyStrip ++;
 				}
-				ch = codeReader.read();
+				buf.append(lines[i].substring(actuallyStrip));
+				buf.append("\n"); //$NON-NLS-1$
 			}
-			code = code.substring(0, codeReader.getOffset()+1);
-		} catch (Exception e) {
+			info = buf.toString();
 		}
-		return code;
+		return info;
 	}
 }
