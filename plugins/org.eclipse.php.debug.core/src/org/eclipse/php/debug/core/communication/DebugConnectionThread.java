@@ -445,12 +445,15 @@ public class DebugConnectionThread implements Runnable {
 			}
 		} else {
 			Logger.log(Logger.ERROR, "No session id");
-			// TODO - Display a user input that will fill up the needed information for the current debug session.
 		}
 	}
 
-	// Hook a server debug session
-	private void hookServerDebug(ILaunch launch) throws CoreException {
+	/**
+	 * Hook a server debug session
+	 * 
+	 * @param launch An {@link ILaunch}
+	 */
+	protected void hookServerDebug(ILaunch launch) throws CoreException {
 		PHPServerLaunchDecorator launchDecorator = (PHPServerLaunchDecorator) launch;
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		//		ApacheServerBehaviour serverBehaviour = launchDecorator.getApacheServerBahavior();
@@ -470,8 +473,12 @@ public class DebugConnectionThread implements Runnable {
 		launch.addDebugTarget(target);
 	}
 
-	// Hook a PHP executable debug session
-	private void hookPHPExeDebug(ILaunch launch) throws CoreException {
+	/**
+	 * Hook a PHP executable debug session
+	 * 
+	 * @param launch An {@link ILaunch}
+	 */
+	protected void hookPHPExeDebug(ILaunch launch) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
 		String fileNameString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
