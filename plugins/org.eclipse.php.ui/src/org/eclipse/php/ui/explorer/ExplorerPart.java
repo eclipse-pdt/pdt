@@ -306,11 +306,12 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 						IProject project = (IProject) object;
 						if (project.isOpen() && ((IProject) object).hasNature(PHPNature.ID))
 							return false;
+					} else {
+						Object obj = filter(object, object, fViewer.getFilters());
+						return obj != null && folder.members().length > 0;
 					}
-					Object obj = filter(object, object, fViewer.getFilters());
-					return obj != null && folder.members().length > 0;
 				} catch (CoreException e) {
-					e.printStackTrace();
+					return false;
 				}
 			}
 			return false;
