@@ -135,9 +135,7 @@ public class WorkingSetFilter extends ViewerFilter {
 			} else {
 				// compare resource paths
 				if (!isElementPathComputed) {
-					//					IResource elementResource= (IResource)element.getAdapter(IResource.class);
-					//					if (elementResource != null)
-					//						elementPath= elementResource.getFullPath();
+					elementPath = PHPModelUtil.getResource(element).getFullPath();
 				}
 				if (isEnclosing(cachedWorkingSet[i], elementPath))
 					return true;
@@ -159,7 +157,7 @@ public class WorkingSetFilter extends ViewerFilter {
 		if (elementPath == null) {
 			PHPCodeData phpElement = (PHPCodeData) element.getAdapter(PHPCodeData.class);
 			if (phpElement != null)
-				elementPath = PHPModelUtil.getResource(phpElement).getLocation();
+				elementPath = PHPModelUtil.getResource(phpElement).getFullPath();
 		}
 
 		if (elementPath == null && element instanceof IStorage)
