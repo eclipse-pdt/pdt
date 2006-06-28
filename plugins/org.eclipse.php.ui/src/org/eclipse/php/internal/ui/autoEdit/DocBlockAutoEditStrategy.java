@@ -199,6 +199,8 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 				String stub = getDocBlockStub(editorModel, document, lineStart, lineContent);
 
+				editorModel.releaseFromRead();
+				
 				// putting back the /** that was taken off
 				command.offset += commentStart.length();
 				document.getUndoManager().disableUndoManagement();

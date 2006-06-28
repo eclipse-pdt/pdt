@@ -54,7 +54,7 @@ public class FormatPreferencesSupport {
 
 	private void verifyValidity(IDocument document) {
 		if (fLastDocument != document) {
-			PHPEditorModel editorModel = (PHPEditorModel) StructuredModelManager.getModelManager().getExistingModelForEdit(document);
+			PHPEditorModel editorModel = (PHPEditorModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			PHPProjectModel projectModel = editorModel.getProjectModel();
 
 			IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModel);
@@ -62,6 +62,7 @@ public class FormatPreferencesSupport {
 				fLastProject = project;
 				verifyListening();
 			}
+			editorModel.releaseFromRead();
 		}
 
 		if (fLastDocument != document || preferencesChanged) {
