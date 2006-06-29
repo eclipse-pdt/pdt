@@ -18,11 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
+import org.eclipse.php.core.util.UnixChmodUtil;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 
 public class PHPexes {
@@ -42,12 +39,14 @@ public class PHPexes {
 		items = new HashMap();
 		loadExtensions();
 		String namesString = prefs.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_NAMES);
-		if (namesString == null)
+		if (namesString == null) {
 			namesString = "";
+		}
 		String[] names = (namesString.length() > 0) ? namesString.split(SEPARATOR) : new String[0];
 		String locationsString = prefs.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_LOCATIONS);
-		if (locationsString == null)
+		if (locationsString == null) {
 			locationsString = "";
+		}
 		String[] locations = (locationsString.length() > 0) ? locationsString.split(SEPARATOR) : new String[0];
 		assert names.length == locations.length;
 		for (int i = 0; i < locations.length; i++) {
@@ -55,11 +54,11 @@ public class PHPexes {
 			items.put(names[i], item);
 		}
 		String defaultLocationString = prefs.getString(PHPDebugCorePreferenceNames.DEFAULT_PHP);
-		if (defaultLocationString != null && defaultLocationString.length() > 0)
+		if (defaultLocationString != null && defaultLocationString.length() > 0) {
 			defaultItem = (PHPexeItem) items.get(defaultLocationString);
-		if (defaultItem==null && items.size()>0)
-		{
-			defaultItem=getItems()[0];
+		}
+		if (defaultItem == null && items.size() > 0) {
+			defaultItem = getItems()[0];
 		}
 	}
 
@@ -146,11 +145,11 @@ public class PHPexes {
 		return null;
 
 	}
-	
+
 	private void loadExtensions() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
-		
+
 		String myOS = null;
 		String OS = System.getProperty("os.name").toLowerCase();
 		if (OS.startsWith("windows")) {
@@ -160,7 +159,7 @@ public class PHPexes {
 		} else if (OS.startsWith("mac")) {
 			myOS = "Mac";
 		}
-		
+
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (PHPEXE_TAG.equals(element.getName())) {
@@ -168,7 +167,7 @@ public class PHPexes {
 				String location = element.getAttribute(LOCATION_ATTRIBUTE);
 				String version = element.getAttribute(VERSION_ATTRIBUTE);
 				boolean isDefault = "true".equalsIgnoreCase(element.getAttribute(DEFAULT_ATTRIBUTE));
-				
+
 				if (myOS != null) {
 					String os = element.getAttribute(OS_ATTRIBUTE);
 					if (os != null && !os.equals(myOS)) {
@@ -176,34 +175,39 @@ public class PHPexes {
 					}
 				}
 
-				String pluginId = element.getDeclaringExtension().getDeclaringPluginDescriptor().getUniqueIdentifier();
+				String pluginId = element.getDeclaringExtension().getNamespaceIdentifier();
 				StringBuffer buff = new StringBuffer("platform:/plugin/");
 				buff.append(pluginId);
 
-				if (!location.startsWith("/"))
+				if (!location.startsWith("/")) {
 					buff.append('/');
+				}
 
 				buff.append(location);
 				URL url;
 				try {
 					url = new URL(buff.toString());
-					url = Platform.resolve(url);
+					url = FileLocator.resolve(url);
 					String filename = url.getFile();
-//					if (filename.startsWith("/"))
-//						filename = filename.substring(1);
 					File file = new File(filename);
 					if (file.exists()) {
-						PHPexeItem newItem = new PHPexeItem(name, file,false);
+						PHPexeItem newItem = new PHPexeItem(name, file, false);
 						newItem.setVersion(version);
 						items.put(name, newItem);
-						if (isDefault)
+						if (isDefault) {
 							defaultItem = newItem;
-					} else
-						PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "php exe " + location + " not found in plugin " + pluginId, null));
+						}
+						if (!"Windows".equals(myOS)) {
+							// Try to setup permissions of this file:
+							UnixChmodUtil.chmod(filename, UnixChmodUtil.S_IRWXU|UnixChmodUtil.S_IRGRP|UnixChmodUtil.S_IXGRP|UnixChmodUtil.S_IROTH|UnixChmodUtil.S_IXOTH);
+						}
+					} else {
+						PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "PHP executable " + location + " not found in plugin " + pluginId, null));
+					}
 				} catch (MalformedURLException e) {
-					PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "php exe " + location + " not found in plugin " + pluginId, e));
+					PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "PHP executable " + location + " not found in plugin " + pluginId, e));
 				} catch (IOException e) {
-					PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "php exe " + location + " not found in plugin " + pluginId, e));
+					PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "PHP executable " + location + " not found in plugin " + pluginId, e));
 				}
 			}
 		}
