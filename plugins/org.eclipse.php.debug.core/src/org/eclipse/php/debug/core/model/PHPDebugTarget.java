@@ -15,43 +15,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IMarkerDelta;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IBreakpointManager;
-import org.eclipse.debug.core.IBreakpointManagerListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IMemoryBlock;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStackFrame;
-import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.*;
 import org.eclipse.php.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.communication.DebugConnectionThread;
+import org.eclipse.php.debug.core.debugger.*;
 import org.eclipse.php.debug.core.debugger.Breakpoint;
-import org.eclipse.php.debug.core.debugger.DebugError;
-import org.eclipse.php.debug.core.debugger.DebugHandlersRegistry;
-import org.eclipse.php.debug.core.debugger.DebugParametersInitializersRegistry;
-import org.eclipse.php.debug.core.debugger.DefaultExpressionsManager;
-import org.eclipse.php.debug.core.debugger.Expression;
-import org.eclipse.php.debug.core.debugger.IDebugHandler;
-import org.eclipse.php.debug.core.debugger.IRemoteDebugger;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.launching.PHPLaunchProxy;
 import org.eclipse.php.debug.core.launching.PHPProcess;
@@ -156,11 +133,11 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	public PHPDebugTarget(DebugConnectionThread connectionThread, ILaunch launch, String phpExe, IFile fileToDebug, int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
 		this(connectionThread, launch, phpExe, fileToDebug.getName(), PHPDebugTarget.getWorkspaceRootPath(fileToDebug.getWorkspace()), requestPort, process, runAsDebug, stopAtFirstLine, project);
 	}
-	
+
 	public static String getWorkspaceRootPath(IWorkspace ws) {
 		return ws.getRoot().getRawLocation().toString() + "/";
 	}
-	
+
 	public PHPDebugTarget(DebugConnectionThread connectionThread, ILaunch launch, String phpExe, String fileToDebug, String workspacePath, int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
 		super(null);
 		fConnectionThread = connectionThread;
@@ -337,8 +314,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 * @see org.eclipse.debug.core.model.IDebugElement#getLaunch()
 	 */
 	public ILaunch getLaunch() {
-		if (fLaunch instanceof PHPLaunchProxy){
-			return ((PHPLaunchProxy)fLaunch).getLaunch();
+		if (fLaunch instanceof PHPLaunchProxy) {
+			return ((PHPLaunchProxy) fLaunch).getLaunch();
 		}
 		return fLaunch;
 	}
@@ -382,7 +359,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		fLastcmd = "terminate";
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling closeDebugSession()");
 		debugger.closeDebugSession();
-
+//		terminated(); // TODO - Might be needed...
+//		fTermainateCalled = true;
 	}
 
 	/**
@@ -401,7 +379,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	private void completeTerminated() {
 		fTerminated = true;
 		fSuspended = false;
-		fThreads= new IThread[0];
+		fThreads = new IThread[0];
 		try {
 			fProcess.terminate();
 		} catch (DebugException e) {
@@ -1037,10 +1015,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	public org.eclipse.php.debug.core.debugger.Debugger.StartResponseHandler getStartResponseHandler() {
 		return fStartResponseHandler;
 	}
-	
+
 	public String toString() {
-    	String className = getClass().getName();
-    	className = className.substring(className.lastIndexOf('.') + 1);
-    	return className + "@" + Integer.toHexString(hashCode());
-    }
+		String className = getClass().getName();
+		className = className.substring(className.lastIndexOf('.') + 1);
+		return className + "@" + Integer.toHexString(hashCode());
+	}
 }

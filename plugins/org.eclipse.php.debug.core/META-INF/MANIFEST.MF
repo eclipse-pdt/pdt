@@ -26,5 +26,6 @@ Export-Package: org.eclipse.php.debug.core,
  org.eclipse.php.debug.core.launching,
  org.eclipse.php.debug.core.model,
  org.eclipse.php.debug.core.preferences,
- org.eclipse.php.debug.core.sourcelookup
+ org.eclipse.php.debug.core.sourcelookup,
+ org.eclipse.php.debug.core.sourcelookup.containers
 Bundle-Vendor: Eclipse.org
