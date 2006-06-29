@@ -5,6 +5,8 @@
 package org.eclipse.php.ui.dialogs.saveFiles;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -27,8 +29,8 @@ import org.eclipse.ui.PlatformUI;
 public class SaveFilesHandler {
 	public static SaveFilesResult handle(IProject project, boolean autoSave, boolean promptAutoSave, IProgressMonitor monitor) {
 		SaveFilesResult result = new SaveFilesResult();
-		IEditorPart[] dirtyEditors = getDirtyEditors(project);
-		if (dirtyEditors == null || dirtyEditors.length == 0) {
+		List dirtyEditors = getDirtyEditors(project);
+		if (dirtyEditors == null || dirtyEditors.size() == 0) {
 			result.setAccepted(true);
 			return result;
 		}
@@ -38,8 +40,8 @@ public class SaveFilesHandler {
 			result.setAccepted(true);
 			result.setSaved(dirtyEditors);
 		}
-		IEditorPart[] editorsToSave = result.getSaved();
-		if (editorsToSave.length>0) {
+		List editorsToSave = result.getSaved();
+		if (editorsToSave.size() > 0) {
 			Display.getDefault().syncExec(new SaveFilesRunnable(editorsToSave, monitor));
 		}
 		if (monitor.isCanceled()) {
@@ -57,7 +59,7 @@ public class SaveFilesHandler {
 	 * @return
 	 * 			An array of IEditorParts containing all the dirty editors for the files in the list.
 	 */
-	public static IEditorPart[] getDirtyEditors(IProject project) {
+	public static List getDirtyEditors(IProject project) {
 		List result = new ArrayList(0);
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
@@ -77,26 +79,25 @@ public class SaveFilesHandler {
 				}
 			}
 		}
-		return (IEditorPart[]) result.toArray(new IEditorPart[result.size()]);
+		return result;
 	}
 
 	protected static class SaveFilesRunnable implements Runnable {
-		IEditorPart[] dirtyEditors;
+		List dirtyEditors;
 		IProgressMonitor monitor;
 
-		public SaveFilesRunnable(IEditorPart[] dirtyEditors, IProgressMonitor monitor) {
+		public SaveFilesRunnable(List dirtyEditors, IProgressMonitor monitor) {
 			this.dirtyEditors = dirtyEditors;
 			this.monitor = monitor;
 		}
 
 		public void run() {
-			int numDirtyEditors = dirtyEditors.length;
-			monitor.beginTask("Saving edited files", numDirtyEditors);
-			for (int i = 0; i < numDirtyEditors; i++) {
+			monitor.beginTask("Saving edited files", dirtyEditors.size());
+			for (Iterator i = dirtyEditors.iterator(); i.hasNext();) {
 				if (monitor.isCanceled()) {
 					return;
 				}
-				dirtyEditors[i].doSave(monitor);
+				((IEditorPart) i.next()).doSave(monitor);
 				monitor.worked(1);
 			}
 			monitor.done();
@@ -104,11 +105,11 @@ public class SaveFilesHandler {
 	}
 
 	protected static class SaveFilesDialogRunnable implements Runnable {
-		IEditorPart[] dirtyEditors;
+		List dirtyEditors;
 		SaveFilesResult result;
 		boolean promptAutoSave;
 
-		public SaveFilesDialogRunnable(IEditorPart[] dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
+		public SaveFilesDialogRunnable(List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
 			this.dirtyEditors = dirtyEditors;
 			this.result = result;
 			this.promptAutoSave = promptAutoSave;
@@ -118,10 +119,7 @@ public class SaveFilesHandler {
 			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent().getActiveShell(), dirtyEditors, result, promptAutoSave);
 			if (sfDialog.open() == Window.OK) {
 				result.setAccepted(true);
-				Object[] toSave = sfDialog.getResult();
-				if(toSave.length>0) {
-					result.setSaved((IEditorPart[])toSave);
-				}
+				result.setSaved(Arrays.asList(sfDialog.getResult()));
 			}
 		}
 
@@ -129,7 +127,7 @@ public class SaveFilesHandler {
 	public static class SaveFilesResult {
 		boolean autoSave;
 		boolean accepted;
-		IEditorPart[] saved = new IEditorPart[0];
+		List saved = new ArrayList();
 
 		public boolean isAutoSave() {
 			return autoSave;
@@ -139,32 +137,32 @@ public class SaveFilesHandler {
 			this.autoSave = autoSave;
 		}
 
-		public void setSaved(IEditorPart[] saved) {
+		public void setSaved(List saved) {
 			this.saved = saved;
 		}
-		
+
 		public void setAccepted(boolean accepted) {
 			this.accepted = accepted;
 		}
+
 		public boolean isAccepted() {
 			return accepted;
 		}
-		public IEditorPart[] getSaved() {
+
+		public List getSaved() {
 			return saved;
 		}
-		public int getSavedCount() {
-			return this.saved.length;
-		}
+
 		public SaveFilesResult() {
 		}
 
-		public SaveFilesResult(IEditorPart[] saved, boolean accepted) {
+		public SaveFilesResult(List saved, boolean accepted) {
 			this();
 			setSaved(saved);
 			setAccepted(accepted);
 		}
 
-		public SaveFilesResult(IEditorPart[] saved, boolean accepted, boolean autoSave) {
+		public SaveFilesResult(List saved, boolean accepted, boolean autoSave) {
 			this(saved, accepted);
 			setAutoSave(autoSave);
 			setAccepted(accepted);

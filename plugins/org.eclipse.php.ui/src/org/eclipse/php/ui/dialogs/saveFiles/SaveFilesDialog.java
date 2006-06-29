@@ -1,8 +1,11 @@
 package org.eclipse.php.ui.dialogs.saveFiles;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.php.internal.ui.util.ListContentProvider;
 import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -26,14 +29,20 @@ public class SaveFilesDialog extends ListSelectionDialog {
 	boolean promptAutoSave;
 	SaveFilesResult result;
 
-	public SaveFilesDialog(Shell parent, IEditorPart[] dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {		
-		super(parent, dirtyEditors, new ArrayContentProvider(), new LabelProvider() {
+	public SaveFilesDialog(Shell parent, List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
+		super(parent, dirtyEditors, new ListContentProvider(), new LabelProvider() {
 			public Image getImage(Object element) {
 				return ((IEditorPart) element).getTitleImage();
 			}
 
 			public String getText(Object element) {
-				return ((IEditorPart) element).getTitle();
+				IEditorPart editor = (IEditorPart) element;
+				IFile file = (IFile) editor.getEditorInput().getAdapter(IResource.class);
+				String title = editor.getTitle();
+				if (file == null) {
+					return title;
+				}
+				return String.format("%s [%s]", new Object[] { title, file.getFullPath().toString() });
 			}
 		}, "Save Modified Resources");
 		this.promptAutoSave = promptAutoSave;
@@ -55,17 +64,5 @@ public class SaveFilesDialog extends ListSelectionDialog {
 			applyDialogFont(area);
 		}
 		return area;
-	}
-
-	private ILabelProvider createDialogLabelProvider() {
-		return new LabelProvider() {
-			public Image getImage(Object element) {
-				return ((IEditorPart) element).getTitleImage();
-			}
-
-			public String getText(Object element) {
-				return ((IEditorPart) element).getTitle();
-			}
-		};
 	}
 }
