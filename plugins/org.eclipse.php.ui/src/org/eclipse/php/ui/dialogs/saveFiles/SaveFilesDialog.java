@@ -1,8 +1,8 @@
 package org.eclipse.php.ui.dialogs.saveFiles;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.php.internal.ui.util.ListContentProvider;
 import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -26,15 +26,17 @@ public class SaveFilesDialog extends ListDialog {
 	boolean promptAutoSave;
 	SaveFilesResult result;
 
-	public SaveFilesDialog(Shell parent, SaveFilesResult result, boolean promptAutoSave) {
+	public SaveFilesDialog(Shell parent, IEditorPart[] dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
 		super(parent);
 		this.promptAutoSave = promptAutoSave;
 		this.result = result;
 		setTitle("Save All Modified Resources");
 		setAddCancelButton(true);
+		setInput(dirtyEditors);
+
 		setLabelProvider(createDialogLabelProvider());
 		setMessage("All modified resources must be saved before this operation.");
-		setContentProvider(new ListContentProvider());
+		setContentProvider(new ArrayContentProvider());
 	}
 
 	protected Control createDialogArea(Composite container) {

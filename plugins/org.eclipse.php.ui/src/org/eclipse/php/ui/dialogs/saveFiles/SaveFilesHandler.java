@@ -113,7 +113,7 @@ public class SaveFilesHandler {
 		}
 
 		public void run() {
-			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent().getActiveShell(), result, promptAutoSave);
+			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent().getActiveShell(), dirtyEditors, result, promptAutoSave);
 			if (sfDialog.open() == Window.OK) {
 				result.setSaved(true);
 			}
