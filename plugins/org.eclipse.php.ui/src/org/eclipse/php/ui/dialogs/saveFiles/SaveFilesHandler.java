@@ -29,19 +29,21 @@ public class SaveFilesHandler {
 		SaveFilesResult result = new SaveFilesResult();
 		IEditorPart[] dirtyEditors = getDirtyEditors(project);
 		if (dirtyEditors == null || dirtyEditors.length == 0) {
-			result.setSaved(true);
+			result.setAccepted(true);
 			return result;
 		}
 		if (!autoSave) {
 			Display.getDefault().syncExec(new SaveFilesDialogRunnable(dirtyEditors, result, promptAutoSave));
 		} else {
-			result.setSaved(true);
+			result.setAccepted(true);
+			result.setSaved(dirtyEditors);
 		}
-		if (result.isSaved()) {
-			Display.getDefault().syncExec(new SaveFilesRunnable(dirtyEditors, monitor));
+		IEditorPart[] editorsToSave = result.getSaved();
+		if (editorsToSave.length>0) {
+			Display.getDefault().syncExec(new SaveFilesRunnable(editorsToSave, monitor));
 		}
 		if (monitor.isCanceled()) {
-			result.setSaved(false);
+			result.setAccepted(false);
 		}
 		return result;
 	}
@@ -115,42 +117,57 @@ public class SaveFilesHandler {
 		public void run() {
 			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent().getActiveShell(), dirtyEditors, result, promptAutoSave);
 			if (sfDialog.open() == Window.OK) {
-				result.setSaved(true);
+				result.setAccepted(true);
+				Object[] toSave = sfDialog.getResult();
+				if(toSave.length>0) {
+					result.setSaved((IEditorPart[])toSave);
+				}
 			}
 		}
 
 	}
 	public static class SaveFilesResult {
 		boolean autoSave;
-		boolean saved;
+		boolean accepted;
+		IEditorPart[] saved = new IEditorPart[0];
 
 		public boolean isAutoSave() {
 			return autoSave;
-		}
-
-		public boolean isSaved() {
-			return saved;
 		}
 
 		public void setAutoSave(boolean autoSave) {
 			this.autoSave = autoSave;
 		}
 
-		public void setSaved(boolean saved) {
+		public void setSaved(IEditorPart[] saved) {
 			this.saved = saved;
 		}
-
+		
+		public void setAccepted(boolean accepted) {
+			this.accepted = accepted;
+		}
+		public boolean isAccepted() {
+			return accepted;
+		}
+		public IEditorPart[] getSaved() {
+			return saved;
+		}
+		public int getSavedCount() {
+			return this.saved.length;
+		}
 		public SaveFilesResult() {
 		}
 
-		public SaveFilesResult(boolean saved) {
+		public SaveFilesResult(IEditorPart[] saved, boolean accepted) {
 			this();
 			setSaved(saved);
+			setAccepted(accepted);
 		}
 
-		public SaveFilesResult(boolean saved, boolean autoSave) {
-			this(saved);
+		public SaveFilesResult(IEditorPart[] saved, boolean accepted, boolean autoSave) {
+			this(saved, accepted);
 			setAutoSave(autoSave);
+			setAccepted(accepted);
 		}
 	}
 }

@@ -224,12 +224,12 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 		boolean autoSave = prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY);
 
 		SaveFilesResult result = SaveFilesHandler.handle(project, autoSave, true, monitor);
-
+		if(!result.isAccepted()) return false;
 		if (result.isAutoSave() && !autoSave) {
 			prefs.setValue(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, true);
 			PHPDebugPlugin.getDefault().savePluginPreferences();
 		}
-		return result.isSaved();
+		return true;
 
 	}
 

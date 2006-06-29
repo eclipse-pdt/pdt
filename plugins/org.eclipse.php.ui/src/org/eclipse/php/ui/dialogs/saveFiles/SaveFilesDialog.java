@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.dialogs.ListDialog;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 
 /**
  * A generic save files dialog. The bulk of the code
@@ -21,22 +21,25 @@ import org.eclipse.ui.dialogs.ListDialog;
  * support in org.eclipse.jdt.internal.ui.refactoring.RefactoringSaveHelper.
  * This class is a good candidate for reuse amoung components.
  */
-public class SaveFilesDialog extends ListDialog {
+public class SaveFilesDialog extends ListSelectionDialog {
 
 	boolean promptAutoSave;
 	SaveFilesResult result;
 
-	public SaveFilesDialog(Shell parent, IEditorPart[] dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
-		super(parent);
+	public SaveFilesDialog(Shell parent, IEditorPart[] dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {		
+		super(parent, dirtyEditors, new ArrayContentProvider(), new LabelProvider() {
+			public Image getImage(Object element) {
+				return ((IEditorPart) element).getTitleImage();
+			}
+
+			public String getText(Object element) {
+				return ((IEditorPart) element).getTitle();
+			}
+		}, "Save Modified Resources");
 		this.promptAutoSave = promptAutoSave;
 		this.result = result;
-		setTitle("Save All Modified Resources");
-		setAddCancelButton(true);
-		setInput(dirtyEditors);
-
-		setLabelProvider(createDialogLabelProvider());
-		setMessage("All modified resources must be saved before this operation.");
-		setContentProvider(new ArrayContentProvider());
+		setTitle("Save Modified Resources");
+		setMessage("Do you want to save modified resources?");
 	}
 
 	protected Control createDialogArea(Composite container) {
