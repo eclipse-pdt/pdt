@@ -33,8 +33,8 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.RefreshTab;
 import org.eclipse.php.core.PHPCoreConstants;
@@ -51,7 +51,7 @@ import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler;
 import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 
-public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate {
+public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	protected Map envVariables = null;
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
@@ -95,9 +95,9 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 		}
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
-		if (!saveFiles(project, monitor)) {
-			return;
-		}
+		//		if (!saveFiles(project, monitor)) {
+		//			return;
+		//		}
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
 			boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
@@ -224,7 +224,8 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 		boolean autoSave = prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY);
 
 		SaveFilesResult result = SaveFilesHandler.handle(project, autoSave, true, monitor);
-		if(!result.isAccepted()) return false;
+		if (!result.isAccepted())
+			return false;
 		if (result.isAutoSave() && !autoSave) {
 			prefs.setValue(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, true);
 			PHPDebugPlugin.getDefault().savePluginPreferences();
@@ -243,5 +244,4 @@ public class PHPExecutableLaunchDelegate implements ILaunchConfigurationDelegate
 			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e1));
 		}
 	}
-
 }
