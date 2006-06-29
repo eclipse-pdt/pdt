@@ -382,8 +382,8 @@ public class PHPElementLabels {
 				}
 				if (getFlag(flags, M_PARAMETER_TYPES)) {
 					String t = parameters[i].getClassType();
-					if (t==null)
-						t="";
+					if (t == null)
+						t = "";
 					buf.append(t);
 				}
 				if (getFlag(flags, M_PARAMETER_NAMES)) {
@@ -429,10 +429,10 @@ public class PHPElementLabels {
 			buf.append(CONCAT_STRING);
 			PHPCodeData container = method.getContainer();
 			PHPClassData containerClass = null;
-			if(container != null && container instanceof PHPClassData) {
+			if (container != null && container instanceof PHPClassData) {
 				containerClass = (PHPClassData) container;
 			}
-			getTypeLabel(containerClass, T_FULLY_QUALIFIED | (flags & P_COMPRESSED), buf);			
+			getTypeLabel(containerClass, T_FULLY_QUALIFIED | (flags & P_COMPRESSED), buf);
 		}
 
 	}
@@ -478,7 +478,7 @@ public class PHPElementLabels {
 			buf.append(CONCAT_STRING);
 			PHPCodeData container = field.getContainer();
 			PHPClassData containerClass = null;
-			if(container != null && container instanceof PHPClassData) {
+			if (container != null && container instanceof PHPClassData) {
 				containerClass = (PHPClassData) container;
 			}
 			getTypeLabel(containerClass, T_FULLY_QUALIFIED | (flags & P_COMPRESSED), buf);
@@ -489,14 +489,13 @@ public class PHPElementLabels {
 	public static void getIncludeFileLabel(PHPIncludeFileData data, long flags, StringBuffer buf) {
 		if (getFlag(flags, CU_QUALIFIED)) {
 			IFile file = (IFile) PHPModelUtil.getResource(data);
-			if (file!=null)
-			{
+			if (file != null) {
 				IContainer folder = file.getParent();
 				if (!(folder instanceof IProject)) {
 					buf.append(folder.getName());
 					buf.append('.');
 				}
-				
+
 			}
 		}
 		buf.append(data.getName());
@@ -508,27 +507,31 @@ public class PHPElementLabels {
 			getPHPFolderLabel(folder, 0, buf);
 		}
 	}
-	
+
 	public static void getCompilationUnitLabel(PHPFileData cu, long flags, StringBuffer buf) {
 		if (getFlag(flags, CU_QUALIFIED)) {
 			IFile file = (IFile) PHPModelUtil.getResource(cu);
-			if (file!=null)
-			{
+			if (file != null) {
 				IContainer folder = file.getParent();
 				if (!(folder instanceof IProject)) {
 					buf.append(folder.getName());
 					buf.append('.');
 				}
-				
+
 			}
 		}
-		
+
 		// try to get the resource for the current PHPFileData.
 		// In case it exists, it means it is part of the project - so we want just the name.
 		// otherwise it is an include path and we need the full path
 		IPath path = new Path(cu.getName());
-		IFile resourceFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-		if (resourceFile != null && resourceFile.exists()){
+		IFile resourceFile = null;
+		try {
+			resourceFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		} catch (IllegalArgumentException e) {
+			// do nothing - this can happen when the file data is from a zip file under the include path.
+		}
+		if (resourceFile != null && resourceFile.exists()) {
 			buf.append(cu.getComparableName());
 		} else {
 			buf.append(cu.getName());
