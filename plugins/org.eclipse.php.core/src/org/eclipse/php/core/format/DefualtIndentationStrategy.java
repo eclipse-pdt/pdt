@@ -101,7 +101,7 @@ public class DefualtIndentationStrategy implements IIndentationStrategy {
 				return true;
 			}
 
-			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lineInfo.getOffset());
+			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lineInfo.getOffset()+1);
 
 			if (tokenType == PHPRegionTypes.PHP_TOKEN && document.getChar(sdRegion.getStartOffset() + token.getStart()) == ':') {
 				//checking if the line starts with "case" or "default"
@@ -143,12 +143,19 @@ public class DefualtIndentationStrategy implements IIndentationStrategy {
 		int regionStartOffset = sdRegion.getStartOffset();
 		int offset = forOffset;
 		while (startOffset <= offset) {
-			if(document.getLength() == offset){//if we are at the end of the document then we need to check one step before
+			if (document.getLength() == offset) {//if we are at the end of the document then we need to check one step before
 				offset--;
 				continue;
 			}
 			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-			if(tRegion == null){
+			if (tRegion == null) {
+				sdRegion = sdRegion.getPrevious();
+				if (sdRegion != null) {
+					regionStartOffset = sdRegion.getStartOffset();
+					tRegion = sdRegion.getLastRegion();
+					offset = tRegion.getStart() + regionStartOffset - 1;
+					continue;
+				}
 				return null;
 			}
 			if (tRegion.getStart() + regionStartOffset < startOffset) {
@@ -159,7 +166,7 @@ public class DefualtIndentationStrategy implements IIndentationStrategy {
 				offset = tRegion.getStart() + regionStartOffset - 1;
 				continue;
 			}
-			if (!PhpLexer.isPHPCommentState(tRegion.getType())) {
+			if (!PhpLexer.isPHPCommentState(tRegion.getType()) && tRegion.getType() != PHPRegionTypes.WHITESPACE) {
 				return tRegion;
 			}
 			offset = tRegion.getStart() + regionStartOffset - 1;
