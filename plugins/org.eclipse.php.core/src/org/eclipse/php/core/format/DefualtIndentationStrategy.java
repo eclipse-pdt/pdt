@@ -95,13 +95,18 @@ public class DefualtIndentationStrategy implements IIndentationStrategy {
 	boolean shouldIndent(IStructuredDocument document, int offset, int lineNumber) {
 		try {
 			IRegion lineInfo = document.getLineInformation(lineNumber);
-			ITextRegion token = getLastToken(document, lineInfo, offset);
-			String tokenType = (token == null) ? (PHPRegionTypes.WHITESPACE) : token.getType();
+			int lastTokenOffset = getLastTokenOffset(document, lineInfo, offset);
+			if (lastTokenOffset == -1) {
+				return false;
+			}
+			
+			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lastTokenOffset);
+			ITextRegion token = sdRegion.getRegionAtCharacterOffset(lastTokenOffset);
+			String tokenType = token.getType();
+			
 			if (tokenType == PHPRegionTypes.PHP_CURLY_OPEN) {
 				return true;
 			}
-
-			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lineInfo.getOffset()+1);
 
 			if (tokenType == PHPRegionTypes.PHP_TOKEN && document.getChar(sdRegion.getStartOffset() + token.getStart()) == ':') {
 				//checking if the line starts with "case" or "default"
@@ -136,7 +141,7 @@ public class DefualtIndentationStrategy implements IIndentationStrategy {
 		return document.get(startOffset, endOffset - startOffset).trim().length() == 0 || document.get(startOffset, currentOffset - startOffset).trim().length() == 0;
 	}
 
-	protected ITextRegion getLastToken(IStructuredDocument document, IRegion line, int forOffset) {
+	protected int getLastTokenOffset(IStructuredDocument document, IRegion line, int forOffset) {
 
 		int startOffset = line.getOffset();
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(forOffset);
@@ -156,23 +161,22 @@ public class DefualtIndentationStrategy implements IIndentationStrategy {
 					offset = tRegion.getStart() + regionStartOffset - 1;
 					continue;
 				}
-				return null;
+				return -1;
 			}
 			if (tRegion.getStart() + regionStartOffset < startOffset) {
 				//if the tRegion started before the line was then the first char in this line was a whitespace 
-				return null;
+				return -1;
 			}
 			if (tRegion.getTextEnd() + regionStartOffset > forOffset) {
 				offset = tRegion.getStart() + regionStartOffset - 1;
 				continue;
 			}
 			if (!PhpLexer.isPHPCommentState(tRegion.getType()) && tRegion.getType() != PHPRegionTypes.WHITESPACE) {
-				return tRegion;
+				return sdRegion.getStartOffset(tRegion);
 			}
 			offset = tRegion.getStart() + regionStartOffset - 1;
 		}
-
-		return null;
+		return -1;
 	}
 
 }
