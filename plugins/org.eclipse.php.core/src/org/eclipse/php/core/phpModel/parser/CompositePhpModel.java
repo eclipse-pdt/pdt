@@ -173,7 +173,6 @@ public abstract class CompositePhpModel implements IPhpModel {
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getClasses(startsWith);
 			if (res != null && res.length > 0) {
-				Arrays.sort(res);
 				tempResultList.add(res);
 			}
 		}
@@ -287,9 +286,12 @@ public abstract class CompositePhpModel implements IPhpModel {
 			return new CodeData[0];
 		}
 		CodeData[] res = (CodeData[]) results.get(0);
+		Arrays.sort(res);
 
 		for (int i = 1; i < results.size(); i++) {
-			res = ModelSupport.merge(res, (CodeData[]) results.get(i));
+			CodeData[] res1 = (CodeData[]) results.get(i);
+			Arrays.sort(res1);
+			res = ModelSupport.merge(res, res1);
 		}
 		return res;
 
