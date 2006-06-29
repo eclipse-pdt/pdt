@@ -26,7 +26,6 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
 import org.eclipse.swt.widgets.Control;
 
-
 public class ExplorerContentProvider extends StandardPHPElementContentProvider implements ITreeContentProvider, ModelListener, IResourceChangeListener {
 
 	ExplorerPart fPart;
@@ -85,7 +84,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		// JFace doesn't refresh when object isn't part of the viewer
 		// Therefore move the refresh start down to the viewer's input
 		if (root instanceof IWorkspaceRoot)
-			root=PHPWorkspaceModelManager.getInstance();
+			root = PHPWorkspaceModelManager.getInstance();
 		if (isParent(root, fInput))
 			root = fInput;
 		postRefresh(root, true);
@@ -135,13 +134,12 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 			}
 		}
 	}
-	
-	public void resourceChanged (IResourceChangeEvent event) {
+
+	public void resourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
-		if (delta!=null)
-		{
+		if (delta != null) {
 			IResource resource = delta.getResource();
-			processResourceDeltas (delta.getAffectedChildren(), resource);
+			processResourceDeltas(delta.getAffectedChildren(), resource);
 		}
 	}
 
@@ -179,36 +177,38 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 				postRefresh(internalGetParent(parent));
 				return true;
 			} else {
-				Object removeItem=resource;
-				if (resource instanceof IFile)
-				{
-					PHPFileData fileData=PHPModelUtil.getPHPFile((IFile)resource);
-					if (fileData!=null)
-						removeItem=fileData;
+				Object removeItem = resource;
+				if (resource instanceof IFile) {
+					PHPFileData fileData = PHPModelUtil.getPHPFile((IFile) resource);
+					if (fileData != null)
+						removeItem = fileData;
 				}
- 			
+
 				postRemove(parent, removeItem);
 			}
 		}
 		if ((status & IResourceDelta.ADDED) != 0) {
-			if (parent instanceof IFolder) {
-				// refresh one level above to deal with empty folder filtering properly
-				postRefresh(internalGetParent(parent));
-				return true;
-			} else {
-				Object addItem=resource;
-				// if adding file, convert to php element
-				if (resource instanceof IFile && PHPModelUtil.isPhpFile((IFile) resource))
-				{
-					PHPFileData fileData=PHPWorkspaceModelManager.getInstance().getModelForFile((IFile) resource, false);
-					if(fileData == null){
-						fileData = PHPCodeDataFactory.createPHPFileData(((IFile) resource).getFullPath().toString(), PHPCodeDataFactory.createUserData(((IFile) resource).getFullPath().toString(), 0, 0, 0, 0), PHPCodeDataFactory.EMPTY_CLASS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY, VariableContextBuilder.createPHPVariablesTypeManager(new HashMap(), new HashMap()), PHPCodeDataFactory.EMPTY_INCLUDE_DATA_ARRAY, PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY, PHPCodeDataFactory.EMPTY_MARKERS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_PHP_BLOCK_ARRAY, new PHPDocBlockImp("","",new PHPDocTag[0],0), System.currentTimeMillis());
-					}
-					if (fileData!=null)
-						addItem=fileData;
+			//The following commented lines are a workaround for bug #145969 - since this code is used to support a filter we do not support
+			//this code is not required
+			//			if (parent instanceof IFolder) {
+			//				// refresh one level above to deal with empty folder filtering properly
+			//				postRefresh(internalGetParent(parent));
+			//				return true;
+			//			} else {
+			Object addItem = resource;
+			// if adding file, convert to php element
+			if (resource instanceof IFile && PHPModelUtil.isPhpFile((IFile) resource)) {
+				PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile((IFile) resource, false);
+				if (fileData == null) {
+					fileData = PHPCodeDataFactory.createPHPFileData(((IFile) resource).getFullPath().toString(), PHPCodeDataFactory.createUserData(((IFile) resource).getFullPath().toString(), 0, 0, 0, 0), PHPCodeDataFactory.EMPTY_CLASS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY,
+						VariableContextBuilder.createPHPVariablesTypeManager(new HashMap(), new HashMap()), PHPCodeDataFactory.EMPTY_INCLUDE_DATA_ARRAY, PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY, PHPCodeDataFactory.EMPTY_MARKERS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_PHP_BLOCK_ARRAY,
+						new PHPDocBlockImp("", "", new PHPDocTag[0], 0), System.currentTimeMillis());
 				}
-				postAdd(parent, addItem);
+				if (fileData != null)
+					addItem = fileData;
 			}
+			postAdd(parent, addItem);
+			//			}
 		}
 		// open/close state change of a project
 		if ((flags & IResourceDelta.OPEN) != 0) {
@@ -236,7 +236,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 			public void run() {
 				Control ctrl = fViewer.getControl();
 				if (ctrl != null && !ctrl.isDisposed()) {
-					fViewer.remove(parent, new Object[] {element});
+					fViewer.remove(parent, new Object[] { element });
 				}
 			}
 		});
@@ -313,8 +313,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 	}
 
 	public Object[] getChildrenInternal(Object parentElement) {
-		if (parentElement instanceof PHPWorkspaceModelManager)
-		{
+		if (parentElement instanceof PHPWorkspaceModelManager) {
 			return getAllProjects();
 		}
 
