@@ -73,8 +73,10 @@ public class SaveFilesHandler {
 					if (input instanceof IFileEditorInput) {
 						IFileEditorInput fileInput = (IFileEditorInput) input;
 						IFile file = fileInput.getFile();
-						if (file.getProject() == project)
-							result.add(ep);
+						if (project != null && !(file.getProject() == project)){
+							continue;
+						}
+						result.add(ep);
 					}
 				}
 			}
