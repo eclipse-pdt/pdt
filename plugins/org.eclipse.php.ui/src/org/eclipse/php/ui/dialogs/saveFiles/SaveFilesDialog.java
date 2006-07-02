@@ -43,7 +43,7 @@ public class SaveFilesDialog extends ListSelectionDialog {
 				if (file == null) {
 					return title;
 				}
-				return MessageFormat.format("{0} [{1}]", new Object[] {title, file.getFullPath().toString()});
+				return MessageFormat.format("{0} [{1}]", new String[] {title, file.getFullPath().toString()});
 			}
 		}, "Save Modified Resources");
 		this.promptAutoSave = promptAutoSave;
