@@ -368,6 +368,7 @@ public class EditorUtility {
 				fileData = PHPModelUtil.getPHPFileContainer((PHPCodeData) element);
 			}
 			String phpFileName = fileData.getName();
+			phpFileName = phpFileName.substring(phpFileName.indexOf(File.separatorChar) + 1); // removing the name of the zip file from the file name
 
 			while (ze != null && !ze.getName().equals(phpFileName)) {
 				ze = is.getNextEntry();
