@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Server Ui Plug-in
 Bundle-SymbolicName: org.eclipse.php.server.ui;singleton:=true
-Bundle-Version: 0.1.6
+Bundle-Version: 0.1.7
 Bundle-Activator: org.eclipse.php.server.ui.Activator
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
