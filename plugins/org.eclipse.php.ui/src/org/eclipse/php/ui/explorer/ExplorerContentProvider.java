@@ -147,6 +147,11 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		if (deltas == null)
 			return false;
 
+		if(parent instanceof IWorkspaceRoot){ // the workspaceRoot is not a part of the tree model
+											  // it is represnted by the PHPWorkspaceModelManager
+			parent = PHPWorkspaceModelManager.getInstance();
+		}
+		
 		if (deltas.length > 1) {
 			// more than one child changed, refresh from here downwards
 			postRefresh(parent);
