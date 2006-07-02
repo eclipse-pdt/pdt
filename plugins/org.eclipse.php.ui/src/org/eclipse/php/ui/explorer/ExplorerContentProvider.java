@@ -172,11 +172,12 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 
 		// this could be optimized by handling all the added children in the parent
 		if ((status & IResourceDelta.REMOVED) != 0) {
-			if (parent instanceof IFolder) {
-				// refresh one level above to deal with empty folder filtering properly
-				postRefresh(internalGetParent(parent));
-				return true;
-			} else {
+//			look for explenation in the add section
+//			if (parent instanceof IFolder) {
+//				// refresh one level above to deal with empty folder filtering properly
+//				postRefresh(internalGetParent(parent));
+//				return true;
+//			} else {
 				Object removeItem = resource;
 				if (resource instanceof IFile) {
 					PHPFileData fileData = PHPModelUtil.getPHPFile((IFile) resource);
@@ -185,7 +186,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 				}
 
 				postRemove(parent, removeItem);
-			}
+//			}
 		}
 		if ((status & IResourceDelta.ADDED) != 0) {
 			//The following commented lines are a workaround for bug #145969 - since this code is used to support a filter we do not support
