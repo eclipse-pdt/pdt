@@ -246,7 +246,8 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 					if (isPhpFile(fileName)) {
 						int size = (int) ze.getSize();
 						LimitedByteReader byteReader = new LimitedByteReader(is, size);
-						parserManager.parse(byteReader, fileName, zipFile.lastModified(), client, UseAspTagsHandler.useAspTagsAsPhp(project));
+						ParserExecuter executer = new ParserExecuter(parserManager, null, client, fileName, byteReader, new Pattern[0], zipFile.lastModified(), UseAspTagsHandler.useAspTagsAsPhp(project));
+						executer.run();
 					} else {
 						is.skip(ze.getSize());
 					}
