@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -799,12 +800,12 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 				ResourcesPlugin.getWorkspace().removeResourceChangeListener(projectResourcesListener);
 				projectResourcesListener = null;
 				includeCacheManager.projectRemoved((IProject) resource);
-			} /*else {
+			} else {
 				removeProject(resource);
 				
 				PHPProjectOptions options = PHPProjectOptions.forProject(project);
 				options.removeResourceFromIncludePath(resource);
-			}*/
+			}
 		}
 	}
 
