@@ -534,7 +534,14 @@ public class PHPElementLabels {
 		if (resourceFile != null && resourceFile.exists()) {
 			buf.append(cu.getComparableName());
 		} else {
-			buf.append(cu.getName());
+			int indexOfZip = cu.getName().indexOf(".zip");
+			if (indexOfZip != -1) {
+				// start the file label after the ".zip/" 				
+				String name = cu.getName().substring(indexOfZip += 5, cu.getName().length());
+				buf.append(name);
+			} else {
+				buf.append(cu.getName());
+			}
 		}
 
 		if (getFlag(flags, CU_POST_QUALIFIED)) {
