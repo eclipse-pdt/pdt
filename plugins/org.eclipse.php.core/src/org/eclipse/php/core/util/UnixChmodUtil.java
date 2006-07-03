@@ -1,6 +1,5 @@
 package org.eclipse.php.core.util;
 
-import java.io.IOException;
 
 public class UnixChmodUtil {
 
@@ -32,8 +31,9 @@ public class UnixChmodUtil {
 		boolean status = true;
 		Runtime runtime = Runtime.getRuntime();
 		try {
-			runtime.exec(new String[] { "chmod", Integer.toString(mode, 8), file}); //$NON-NLS-1$
-		} catch (IOException e) {
+			Process p = runtime.exec(new String[] { "chmod", Integer.toString(mode, 8), file}); //$NON-NLS-1$
+			status = (p.waitFor() == 0);
+		} catch (Exception e) {
 			status = false;
 		}
 
