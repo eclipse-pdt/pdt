@@ -18,7 +18,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.php.Logger;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.core.format.DefualtIndentationStrategy;
+import org.eclipse.php.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.core.format.FormatterUtils;
 import org.eclipse.php.core.format.IIndentationStrategy;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  *
  */
 
-public class IndentLineAutoEditStrategy extends DefualtIndentationStrategy implements IAutoEditStrategy {
+public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy implements IAutoEditStrategy {
 
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (command.text != null && TextUtilities.endsWith(document.getLegalLineDelimiters(), command.text) != -1) {

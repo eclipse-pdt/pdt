@@ -29,7 +29,7 @@ import org.w3c.dom.Node;
 
 public class PhpFormatter implements IStructuredFormatter {
 
-	private IIndentationStrategy defualtIndentationStrategy = new DefualtIndentationStrategy();;
+	private IIndentationStrategy defualtIndentationStrategy = new DefaultIndentationStrategy();;
 	private IIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
 	private IIndentationStrategy caseDefualtIndentationStrategy = new CaseDefualtIndentationStrategy();
 

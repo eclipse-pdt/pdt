@@ -19,7 +19,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
-public class DefualtIndentationStrategy implements IIndentationStrategy {
+public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 	public void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int forOffset) throws BadLocationException {
 		int lastNonEmptyLineIndex = getIndentationBaseLine(document, lineNumber, forOffset);
