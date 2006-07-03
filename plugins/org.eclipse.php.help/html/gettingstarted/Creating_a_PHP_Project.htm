@@ -1,0 +1,168 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Creating a PHP Project</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 { list-style:disc; }
+ol.whs2 { list-style:decimal; }
+img_whs3 { border:none; width:23px; height:22px; float:none; border-style:none; }
+p.whs4 { text-align:center; }
+img_whs5 { border:none; width:385px; height:385px; float:none; border-style:none; }
+table.whs6 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs7 { width:50%; }
+tr.whs8 { x-cell-content-align:top; }
+td.whs9 { width:50%; padding-right:10px; padding-left:10px; border-left-style:none; border-top-style:none; border-bottom-style:none; border-right-style:none; }
+img_whs10 { border:none; width:246px; height:272px; float:none; border-style:none; }
+td.whs11 { width:50%; padding-right:10px; padding-left:10px; border-top-style:none; border-bottom-style:none; border-right-style:none; }
+img_whs12 { border:none; width:248px; height:272px; float:none; border-style:none; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("PHP Development User Guide\nThe Zend Eclipse IDE\nGetting Started\nBasic Tutorial\nCreating a PHP Project");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Eclipse_PHP_IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Creating a PHP Project</h1>
+
+<p>A PHP project contains source code and related files for maintaining 
+ a PHP Application. They can be organized in one of two different ways:</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p>Using the project as the source container.</p></li>
+	
+	<li class=kadov-p><p>Using source folders inside the project as the 
+ source container.</p></li>
+</ul>
+
+<h2>To create a project:</h2>
+
+<ol type="1" class="whs2">
+	
+	<li class=kadov-p><p>Click the create <span style="font-weight: bold;"><B>New</B></span> 
+ icon [<img src="Icon_Create-NEW.JPG" x-maintain-ratio="TRUE" width="23px" height="22px" border="0" class="img_whs3">] on the main menu bar or click <span style="font-weight: bold;"><B>File 
+ &gt; New PHP Project</B></span>. The <span style="font-weight: bold;"><B>New 
+ Project</B></span> wizard will open.</p></li>
+</ol>
+
+<p align="center" class="whs4"><img src="New_Project.JPG" x-maintain-ratio="TRUE" width="385px" height="385px" border="0" class="img_whs5"> </p>
+
+<ol start="2" type="1" class="whs2">
+	
+	<li class=kadov-p><p>Select <span style="font-weight: bold;"><B>PHP Project</B></span> 
+ and click <span style="font-weight: bold;"><B>Next</B></span>. The <span style="font-weight: bold;"><B>PHP 
+ project Creation</B></span> dialog will appear.</p></li>
+</ol>
+
+<p class=picture><img src="New_Project_Wizard_2.PNG" x-maintain-ratio="TRUE" width="385px" height="385px" border="0" class="img_whs5"></p>
+
+<ol start="3" type="1" class="whs2">
+	
+	<li class=kadov-p><p>Enter a name for your new project. By default, 
+ the project will map to an existing directory structure in the file system 
+ (displayed dimmed, in the <span style="font-weight: bold;"><B>Directory</B></span> 
+ field). To create the project and its resources in a <span style="font-style: italic;"><I>different</I></span> 
+ location, clear the <span style="font-weight: bold;"><B>Use </B></span><span 
+ style="font-weight: bold; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ "><U><B>d</B></U></span><span 
+ style="font-weight: bold;"><B>efault</B></span> checkbox and enter the new location 
+ in the Directory field). </p></li>
+	
+	<li class=kadov-p><p>If you want the new project to be dependent on 
+ one or more other projects, click <span style="font-weight: bold;"><B>Next</B></span>. 
+ The<span style="font-weight: bold;"><B> Project Include screen</B></span> will 
+ appear. </p></li>
+</ol>
+
+<p class=picture><img src="Project_Creation_2.JPG" x-maintain-ratio="TRUE" width="385px" height="385px" border="0" class="img_whs5"> </p>
+
+<ol start="3" type="1" class="whs2">
+	
+	<li class=kadov-p><p>Select the <span style="font-weight: bold;"><B>Projects</B></span> 
+ to be referenced, the <span style="font-weight: bold;"><B>Libraries</B></span> 
+ and the <span style="font-weight: bold;"><B>Path</B></span> order entries (each 
+ on its own tab).</p></li>
+	
+	<li class=kadov-p><p>Click <span style="font-weight: bold;"><B>Finish</B></span>. 
+ The new project will be created and listed in the navigation views.</p></li>
+</ol>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs6">
+<col class="whs7">
+<col class="whs7">
+
+<tr valign="top" class="whs8">
+<td width="50%" class="whs9">
+<p><img src="Navig_view_1.JPG" x-maintain-ratio="TRUE" width="246px" height="272px" border="0" class="img_whs10"></td>
+<td width="50%" class="whs11">
+<p><img src="Navig_view_2.JPG" x-maintain-ratio="TRUE" width="248px" height="272px" border="0" class="img_whs12"></td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

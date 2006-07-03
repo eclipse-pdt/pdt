@@ -1,0 +1,116 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>creating a php class</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=899>
+<meta name=layout-width content=668>
+
+
+<!--(Links)=========================================================-->
+
+<link rel=StyleSheet href=default.css>
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h1>Creating a PHP Class</h1>
+
+<p>In PHP, a class is simply a set of program statements that perform a 
+ specific task. A typical class definition contains both variables and 
+ functions, and serves as the template from which to spawn specific instances 
+ of that class. </p>
+
+<p>Once a class has been defined, PHP allows you to spawn as many instances 
+ of the class as you like. Each of these instances is a completely independent 
+ object, with its own properties and methods, and can therefore be manipulated 
+ independently of other objects. This comes in handy in situations where 
+ you need to spawn more than one instance of an object - for example, two 
+ simultaneous database links for two simultaneous queries, or two shopping 
+ carts. </p>
+
+<p>Classes also help you keep your code modular - you can define a class 
+ in a separate file, and include that file only in the scripts where you 
+ plan to use the class - and simplify code changes, since you only need 
+ to edit a single file to add new functionality to all your spawned objects. 
+ </p>
+
+<p>Creating a PHP class is quite easy. You can do it directly into a PHP 
+ file or into a Template. The code is automatically colored according to 
+ the Syntax Coloring set in Preferences.</p>
+
+<p>Enter all code between your PHP opening tag (e.g., “&lt;?php” ) and 
+ your PHP closing tag (e.g., “ ?&gt; ” ). </p>
+
+<p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Example 
+ Code</p>
+
+<p>In this example we will create the class of mammals “Bear”.</p>
+
+<p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Properties</p>
+
+<p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Functions</p>
+
+<p>We will now write the functions available to our Bears.</p>
+
+<p>Given the existing class of bears, it's now simple to spawn as many 
+ Bears as you like, and adjust the individual properties of each. For Example:</p>
+
+<p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Rules 
+ for Classes</p>
+
+<p>Every class definition begins with the keyword “class”, followed by 
+ a class name. You can give your class any name as long as it doesn't conflict 
+ with a reserved PHP word. </p>
+
+<p>A pair of curly braces encloses all class variables and functions, which 
+ are written as you would normally code them.</p>
+
+<p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Visibility</p>
+
+<p>PHP 5 introduces the concept of visibility to the object model. Visibility 
+ controls the extent to which object properties and methods can be manipulated 
+ by the caller, and plays an important role in defining how open or closed 
+ your class is.</p>
+
+<p>Three levels of visibility exist, ranging from most visible to least 
+ visible: public, private and protected. Within the class definition, you 
+ can mark the visibility of a property or method by preceding it with one 
+ of the keywords - public, private, or protected.</p>
+
+<p>By default, class methods and properties are public; this allows the 
+ calling script to reach inside your object instances and manipulate them 
+ directly. If you don't like the thought of this intrusion, you can mark 
+ a particular property or method as private or protected, depending on 
+ how much control you want to cede over the object's internals (more on 
+ this shortly).</p>
+
+<p>Note</p>
+
+<p>In PHP 4, class properties and methods are always public.</p>
+
+</body>
+
+</html>

@@ -2,10 +2,28 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Concepts" link_to="toc.xml#concepts"> 
-	<topic label="Main Topic"  href="html/concepts/maintopic.html"> 
-		<topic label="Sub Topic" href="html/concepts/subtopic.html" /> 
+	<topic label="PHP Perspectives"  href="html/concepts/php_perspectives.html">
 	</topic>
-	<topic label="Main Topic 2">
-		<topic label="Sub Topic 2" href="html/concepts/subtopic2.html" /> 
-	</topic> 
+	<topic label="Views">
+		<topic label="PHP Views" href="html/concepts/perspectivesandviews.html" /> 
+	</topic>
+<topic label="PHP Projects" href="html/concepts/maintopic.html"></topic>
+<topic label="PHP Perspectives" href="html/concepts/maintopic.html"></topic>
+<topic label="PHP Views" href="html/concepts/maintopic.html"></topic>
+<topic label="Editors" href="html/concepts/maintopic.html "></topic>
+<topic label="Templates" href="html/concepts/maintopic.html"></topic>
+<topic label="Debugger" href="html/concepts/maintopic.html"></topic>
+<topic label="Breakpoints" href="html/concepts/maintopic.html"></topic>
+<topic label="Include Path" href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Local Debugging" href="html/concepts/maintopic.html "></topic>
+<topic label="Remote Debugging" href="html/concepts/maintopic.html"></topic>
+<topic label="Errors" href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Hover" href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Search " href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Exclusion and Inclusion Filters" href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Showing and Hiding Elements" href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Tasks" href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Task references" href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Creating a Task" href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Setting File Properties" href="html/gettingstarted/maintopic.html"></topic>
 </toc>
