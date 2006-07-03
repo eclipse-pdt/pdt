@@ -1,5 +1,5 @@
 Bundle-SymbolicName: org.eclipse.php.core;singleton:=true
-Bundle-Version: 0.1.7
+Bundle-Version: 0.1.8
 Bundle-Name: PHP core plug-in
 Bundle-Activator: org.eclipse.php.core.PHPCorePlugin
 Require-Bundle: org.eclipse.ui,
