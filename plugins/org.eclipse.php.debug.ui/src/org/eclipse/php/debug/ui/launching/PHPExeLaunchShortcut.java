@@ -147,11 +147,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 			int numConfigs = configs == null ? 0 : configs.length;
 			for (int i = 0; i < numConfigs; i++) {
-				String projectName = configs[i].getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
 				String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
 
-				if (phpPathString.equals(fileName) && phpProject.equals(projectName) && exeName.equals(phpExeName)) {
+				if (phpPathString.equals(fileName) && exeName.equals(phpExeName)) {
 					config = configs[i].getWorkingCopy();
 					break;
 				}
