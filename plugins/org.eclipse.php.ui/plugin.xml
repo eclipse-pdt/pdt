@@ -82,10 +82,6 @@
 
 
 	<extension point="org.eclipse.ui.views">
-		<category
-			name="PHP Tools"
-			id="org.eclipse.php.ui.views">
-		</category>
 		<view
         category="org.eclipse.php.ui.views"
         class="org.eclipse.php.ui.explorer.ExplorerPart"
@@ -101,10 +97,6 @@
 
 
 	<extension point="org.eclipse.ui.views">
-		<category
-			name="PHP Tools"
-			id="org.eclipse.php.ui.views">
-		</category>
 		<view
 			name="PHP Functions"
 			category="org.eclipse.php.ui.views"

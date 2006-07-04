@@ -116,10 +116,6 @@
    </extension>
    <extension
          point="org.eclipse.ui.views">
-      <category
-            name="PHP Tools"
-            id="org.eclipse.php.ui.views">
-      </category>
       <!--  Add ICON icon="icons/full/obj16/xxx.gif" -->
       <view
             class="org.eclipse.php.debug.ui.views.PHPStackView"
@@ -149,10 +145,6 @@
      
     <extension
          point="org.eclipse.ui.views">
-      <category
-            name="PHP Tools"
-            id="org.eclipse.php.ui.views">
-      </category>
       <view
             class="org.eclipse.php.debug.ui.views.DebugOutputView"
             category="org.eclipse.php.ui.views"
@@ -181,10 +173,6 @@
     
     <extension
          point="org.eclipse.ui.views">
-      <category
-            name="PHP Tools"
-            id="org.eclipse.php.ui.views">
-      </category>
       <view
             class="org.eclipse.php.debug.ui.views.DebugBrowserView"
             category="org.eclipse.php.ui.views"
