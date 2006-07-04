@@ -17,7 +17,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
-public class CaseDefualtIndentationStrategy implements IIndentationStrategy {
+public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 
 	public void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int offset) throws BadLocationException {
 

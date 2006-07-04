@@ -29,9 +29,9 @@ import org.w3c.dom.Node;
 
 public class PhpFormatter implements IStructuredFormatter {
 
-	private IIndentationStrategy defualtIndentationStrategy = new DefaultIndentationStrategy();;
+	private IIndentationStrategy defaultIndentationStrategy = new DefaultIndentationStrategy();;
 	private IIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
-	private IIndentationStrategy caseDefualtIndentationStrategy = new CaseDefualtIndentationStrategy();
+	private IIndentationStrategy caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy();
 
 	protected PhpFormatConstraints fFormatContraints = null;
 	protected IStructuredFormatPreferences fFormatPreferences = null;
@@ -195,7 +195,7 @@ public class PhpFormatter implements IStructuredFormatter {
 
 			String firstTokenType = firstTokenInLine.getType();
 			if (firstTokenType == PHPRegionTypes.PHP_CASE || firstTokenType == PHPRegionTypes.PHP_DEFAULT) {
-				insertionStrategy = caseDefualtIndentationStrategy;
+				insertionStrategy = caseDefaultIndentationStrategy;
 			} else {
 				insertionStrategy = getIndentationStrategy(lineText.charAt(startingWhiteSpaces));
 			}
@@ -258,6 +258,6 @@ public class PhpFormatter implements IStructuredFormatter {
 	}
 
 	private IIndentationStrategy getDefaultIndentationStrategy() {
-		return defualtIndentationStrategy;
+		return defaultIndentationStrategy;
 	}
 }

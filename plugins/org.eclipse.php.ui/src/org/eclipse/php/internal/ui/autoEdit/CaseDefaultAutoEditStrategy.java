@@ -17,7 +17,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.Logger;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.core.format.CaseDefualtIndentationStrategy;
+import org.eclipse.php.core.format.CaseDefaultIndentationStrategy;
 import org.eclipse.php.core.format.FormatterUtils;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
@@ -26,7 +26,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * @author guy.g
  *
  */
-public class CaseDefualtAutoEditStrategy extends CaseDefualtIndentationStrategy implements IAutoEditStrategy {
+public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy implements IAutoEditStrategy {
 
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (command.text == null) {

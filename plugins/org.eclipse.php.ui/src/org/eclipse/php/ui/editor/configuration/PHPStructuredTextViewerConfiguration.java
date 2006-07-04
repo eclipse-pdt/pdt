@@ -323,10 +323,10 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private static IAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
 	private static IAutoEditStrategy matchingBAutoEditStrategy = new MatchingBracketAutoEditStrategy();
 	private static IAutoEditStrategy quotesAutoEditStrategy = new QuotesAutoEditStrategy();
-	private static IAutoEditStrategy caseDefualtAutoEditStrategy = new CaseDefualtAutoEditStrategy();
+	private static IAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
 	private static IAutoEditStrategy docBlockAutoEditStrategy = new DocBlockAutoEditStrategy();
 
-	private static IAutoEditStrategy[] defaultStrategies = new IAutoEditStrategy[] { indentLineAutoEditStrategy, curlyOpenAutoEditStrategy, curlyCloseAutoEditStrategy, matchingBAutoEditStrategy, quotesAutoEditStrategy, caseDefualtAutoEditStrategy };
+	private static IAutoEditStrategy[] defaultStrategies = new IAutoEditStrategy[] { indentLineAutoEditStrategy, curlyOpenAutoEditStrategy, curlyCloseAutoEditStrategy, matchingBAutoEditStrategy, quotesAutoEditStrategy, caseDefaultAutoEditStrategy };
 	private static IAutoEditStrategy[] quotesStrategies = new IAutoEditStrategy[] { quotesAutoEditStrategy };
 	private static IAutoEditStrategy[] docBlockStrategies = new IAutoEditStrategy[] { docBlockAutoEditStrategy };
 
