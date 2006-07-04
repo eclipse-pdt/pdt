@@ -33,11 +33,16 @@ import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableDebuggerInitializer {
 
+	/**Indicator for an executable ILaunch (inserted into the launch attributes)*/
+	public static final String EXECUTABLE_LAUNCH = "executable_launch";
+	
 	private HashMap systemEnvironmentVariables = null;
 	private ILaunch launch;
 
 	public PHPExecutableDebuggerInitializer(ILaunch launch) throws IOException {
 		this.launch = launch;
+		// Set a launch attribute to indicate that this is an executable launch.
+		launch.setAttribute(EXECUTABLE_LAUNCH, "true");
 		initializeSystemEnvironmentVariables();
 	}
 
