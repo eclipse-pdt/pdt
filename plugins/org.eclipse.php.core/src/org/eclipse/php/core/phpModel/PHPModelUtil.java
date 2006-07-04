@@ -385,6 +385,9 @@ public class PHPModelUtil {
 			return false;
 		}
 		PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(classDataResource.getProject());
+		if(model == null) {
+			return false; //TODO figure out why.
+		}
 		while ((currentSuperClassData = model.getClass(fileName, currentSuperClassNameData.getName())) != null) {
 			if ((currentSuperClassName = currentSuperClassData.getName()) == null) {
 				return false;
