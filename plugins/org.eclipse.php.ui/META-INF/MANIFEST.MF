@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.php.ui; singleton:=true
-Bundle-Version: 0.1.8
+Bundle-Version: 0.1.9
 Bundle-Name: PHP Ui Plug-in
 Bundle-Activator: org.eclipse.php.ui.PHPUiPlugin
 Bundle-Localization: plugin
