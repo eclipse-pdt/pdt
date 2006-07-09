@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 
@@ -158,7 +159,7 @@ public class PHPDebugPreferencesAddonRegistry {
 		}
 
 		public IPHPDebugPreferencesPageAddon createDebugPreferencesAddon() {
-			Platform.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.debug.ui.phpDebugPreferencesAddon") {
+			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.debug.ui.phpDebugPreferencesAddon") {
 				public void run() throws Exception {
 					preferencesPageAddon = (IPHPDebugPreferencesPageAddon) element.createExecutableExtension(CLASS_ATTRIBUTE);
 					preferencesPageAddon.setComparableName(element.getAttribute(NAME_ATTRIBUTE));

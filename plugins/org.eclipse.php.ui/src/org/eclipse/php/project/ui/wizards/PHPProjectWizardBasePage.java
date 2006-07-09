@@ -22,9 +22,8 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
-import org.eclipse.wst.web.internal.operation.ISimpleWebModuleCreationDataModelProperties;
 
-public class PHPProjectWizardBasePage extends DataModelWizardPage implements ISimpleWebModuleCreationDataModelProperties, IProjectCreationPropertiesNew {
+public class PHPProjectWizardBasePage extends DataModelWizardPage implements IProjectCreationPropertiesNew {
 	protected NewProjectGroup projectNameGroup;
 	protected PHPVersionGroup fVersionGroup;
 
