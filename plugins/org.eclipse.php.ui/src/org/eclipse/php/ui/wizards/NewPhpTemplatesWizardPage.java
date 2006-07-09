@@ -39,7 +39,7 @@ public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage
 
 	protected String getTemplatesLocationMessage() {
 		ContextTypeRegistry templateContextRegistry = getTemplatesContextTypeRegistry();
-		TemplateContextType templateContextType = templateContextRegistry.getContextType(PHPTemplateContextTypeIds.NEW_PHP);
+		TemplateContextType templateContextType = templateContextRegistry.getContextType(getTemplateContextTypeId());
 		String name = templateContextType.getName();
 		return NLS.bind(PHPUIMessages.newPhpFile_wizard_templatePage_phpTemplatesLocation, name);
 	}

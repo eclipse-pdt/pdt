@@ -42,9 +42,9 @@ import org.eclipse.ui.ide.IDE;
 
 public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	
-	private PHPFileCreationWizardPage phpFileCreationWizardPage;
+	protected PHPFileCreationWizardPage phpFileCreationWizardPage;
 	private ISelection selection;
-	private NewPhpTemplatesWizardPage newPhpTemplatesWizardPage;
+	protected NewPhpTemplatesWizardPage newPhpTemplatesWizardPage;
 
 	/**
 	 * Constructor for SampleNewWizard.
@@ -103,7 +103,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	 * the editor on the newly created file.
 	 * @param contents 
 	 */
-	private void doFinish(String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
+	protected void doFinish(String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
 		// create a sample file
 		monitor.beginTask(NLS.bind(PHPUIMessages.newPhpFile_create, fileName), 2);
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
