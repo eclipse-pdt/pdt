@@ -95,4 +95,11 @@ public class PHPDocBlockImp implements PHPDocBlock {
 	public boolean containsPosition(int position) {
 		return position > getStartPosition() && position <= getEndPosition();
 	}
+
+	public boolean hasTagOf(int id) {
+		final Iterator tagsOf = getTags(id);
+		return tagsOf != null && tagsOf.hasNext();
+	}
+	
+	
 }

@@ -20,6 +20,8 @@ import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileDataUtilities;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
@@ -31,6 +33,8 @@ public class ModelSupport {
 	public static final CodeDataFilter STATIC_VARIABLES_FILTER = new StaticVariablesFilter(true);
 	public static final CodeDataFilter NOT_STATIC_VARIABLES_FILTER = new StaticVariablesFilter(false);
 	public static final CodeDataFilter STATIC_FUNCTIONS_FILTER = new StaticFunctionsFilter(true);
+	public static final CodeDataFilter INTERNAL_CODEDATA_FILTER = new InternalPhpCodeData();
+	
 	public static final CodeDataFilter PIRVATE_ACCESS_LEVEL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
 			return true;
@@ -443,6 +447,21 @@ public class ModelSupport {
 		return result;
 	}
 
+	public static CodeData[] removeFilteredCodeData(CodeData[] data, CodeDataFilter codeDataFilter) {
+		if (data == null || data.length == 0) {
+			return data;
+		}
+		List listResult = new ArrayList();
+		for (int i = 0; i < data.length; i++) {
+			if (!codeDataFilter.accept(data[i])) {
+				listResult.add(data[i]);
+			}
+		}
+		CodeData[] result = new CodeData[listResult.size()];
+		listResult.toArray(result);
+		return result;
+	}
+
 	public static final PHPCodeContext EMPTY_CONTEXT = new PHPCodeContextImp("", "", "");
 
 	public static File[] getFileSStartingWith(File[] sortedArray, String startsWith, boolean caseSensitive) {
@@ -581,4 +600,19 @@ public class ModelSupport {
 
 		public abstract boolean verify(int modifier);
 	}
+	
+	private static final class InternalPhpCodeData implements CodeDataFilter {
+		
+		public boolean accept(CodeData codeData) {
+			if (codeData == null || !(codeData instanceof PHPCodeData))
+				return false;
+			else {
+				// safe cast
+				PHPCodeData phpData = (PHPCodeData) codeData;
+				PHPDocBlock docBlock = phpData.getDocBlock();
+				return docBlock != null && docBlock.hasTagOf(PHPDocTag.INTERNAL);
+			}
+		}
+	}
+	
 }

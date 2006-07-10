@@ -35,6 +35,8 @@ public interface PHPDocBlock extends Serializable {
 	PHPDocTag[] getTagsAsArray();
 
 	Iterator getTags(int id);
+	
+	public boolean hasTagOf(int id);	
 
 	int getType();
 

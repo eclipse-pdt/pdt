@@ -64,6 +64,9 @@ public abstract class CompletionProposalGroup {
 		}
 
 		CodeData[] tmp = ModelSupport.getCodeDataStartingWith(codeDataProposals, key);
+		
+		// filter internal code data
+		tmp = ModelSupport.removeFilteredCodeData(tmp, ModelSupport.INTERNAL_CODEDATA_FILTER);
 
 		CodeDataCompletionProposal[] result = new CodeDataCompletionProposal[tmp.length];
 		for (int i = 0; i < tmp.length; i++) {
