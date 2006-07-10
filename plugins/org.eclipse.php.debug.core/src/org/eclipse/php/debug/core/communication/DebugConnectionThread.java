@@ -685,7 +685,11 @@ public class DebugConnectionThread implements Runnable {
 						try {
 							if (newInputMessage instanceof DebugSessionStartedNotification) {
 								hookDebugSession((DebugSessionStartedNotification) newInputMessage);
-								getCommunicationClient().handleNotification(newInputMessage);
+								if (getCommunicationClient() != null) {
+									getCommunicationClient().handleNotification(newInputMessage);
+								} else {
+									handleConnectionClosed();
+								}
 							} else if (newInputMessage instanceof IDebugNotificationMessage) {
 								//System.out.println("Processing notification:"+ newInputMessage);
 								getCommunicationClient().handleNotification(newInputMessage);
@@ -756,8 +760,11 @@ public class DebugConnectionThread implements Runnable {
 
 		private void handleConnectionClosed() {
 			resetCommunication();
-			getCommunicationAdministrator().connectionClosed();
+			if (getCommunicationAdministrator() != null) {
+				getCommunicationAdministrator().connectionClosed();
+			}
 			terminate();
+			closeConnection();
 		}
 	}
 
