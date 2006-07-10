@@ -10,6 +10,5 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.debugger.messages;
 
-public abstract class DebugMessageNotificationImpl implements IDebugNotificationMessage {
-
+public abstract class DebugMessageNotificationImpl extends DebugMessageImpl implements IDebugNotificationMessage {
 }

@@ -10,21 +10,21 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.debugger.messages;
 
-public abstract class DebugMessageRequestImpl extends DebugMessageImpl implements IDebugRequestMessage {
+public abstract class DebugMessageImpl implements IDebugMessage {
+	
+	private String fEncoding;
 
-	private int id;
-
-	/**
-	 * Set the request id.
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.debug.core.debugger.messages.IDebugMessage#getEncoding()
 	 */
-	public void setID(int id) {
-		this.id = id;
+	public String getTransferEncoding() {
+		return fEncoding;
 	}
 
-	/**
-	 * Return the request id.
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.debug.core.debugger.messages.IDebugMessage#setEncoding(java.lang.String)
 	 */
-	public int getID() {
-		return this.id;
+	public void setTransferEncoding(String encoding) {
+		fEncoding = encoding;
 	}
 }

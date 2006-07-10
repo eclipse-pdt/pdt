@@ -42,7 +42,7 @@ public class OutputNotification extends DebugMessageNotificationImpl implements 
 	}
 
 	public void deserialize(DataInputStream in) throws IOException {
-		setOutput(CommunicationUtilities.readString(in));
+		setOutput(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 	}
 
 	public int getType() {
@@ -51,6 +51,6 @@ public class OutputNotification extends DebugMessageNotificationImpl implements 
 
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
-		CommunicationUtilities.writeString(out, getOutput());
+		CommunicationUtilities.writeEncodedString(out, getOutput(), getTransferEncoding());
 	}
 }

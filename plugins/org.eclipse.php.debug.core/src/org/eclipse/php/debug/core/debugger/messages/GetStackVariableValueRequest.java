@@ -96,7 +96,7 @@ public class GetStackVariableValueRequest extends DebugMessageRequestImpl implem
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setLayerDepth(in.readInt());
-		setVar(CommunicationUtilities.readString(in));
+		setVar(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 		setDepth(in.readInt());
 		int pathSize = in.readInt();
 		String[] path = new String[pathSize];
@@ -114,7 +114,7 @@ public class GetStackVariableValueRequest extends DebugMessageRequestImpl implem
 		out.writeShort(getType());
 		out.writeInt(getID());
 		out.writeInt(getLayerDepth());
-		CommunicationUtilities.writeString(out, getVar());
+		CommunicationUtilities.writeEncodedString(out, getVar(), getTransferEncoding());
 		out.writeInt(getDepth());
 		String[] path = getPath();
 		out.writeInt(path.length);

@@ -121,6 +121,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
 			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
+			launch.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
 
 			// Trigger the debug session by initiating a debug requset to the php.exe
 			debugPHPExecutable(launch, phpExeString, absolutePath);

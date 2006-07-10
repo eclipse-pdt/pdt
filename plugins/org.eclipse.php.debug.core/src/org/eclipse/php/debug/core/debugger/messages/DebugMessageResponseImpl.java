@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.debugger.messages;
 
-public abstract class DebugMessageResponseImpl implements IDebugResponseMessage {
+public abstract class DebugMessageResponseImpl extends DebugMessageImpl implements IDebugResponseMessage {
 
 	private int id;
 	private int status;

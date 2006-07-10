@@ -23,4 +23,5 @@ public interface IDebugParametersKeys {
 	public static final String PROTOCOL_ID = "protocolID";
 	public static final String ORIGINAL_URL = "uriginalURL";
 	public static final String SESSION_ID = "debugSessionID";
+	public static final String TRANSFER_ENCODING = "debugTransferEncoding";
 }

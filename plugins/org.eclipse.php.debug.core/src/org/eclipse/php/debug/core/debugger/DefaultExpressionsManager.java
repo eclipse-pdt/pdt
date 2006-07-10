@@ -32,12 +32,14 @@ public class DefaultExpressionsManager implements ExpressionsManager {
     //    private Map globalHashResultDepthOne = new HashMap();
     private String[] localsVariablePath = new String[] { "get_defined_vars()" };
     private String[] globalVariablePath = new String[] { "$GLOBALS" };
+    private ExpressionsValueDeserializer expressionValueDeserializer;
 
     /**
      * Creates new DefaultExpressionsManager
      */
-    public DefaultExpressionsManager(Debugger debugger) {
+    public DefaultExpressionsManager(Debugger debugger, String transferEncoding) {
         this.debugger = debugger;
+        expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
     }
 
     public String getExpressionValue(Expression expression, int depth) {
@@ -140,7 +142,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 
     public Expression[] getLocalVariables(int depth) {
         String value = getVariableValue(localsVariablePath, depth);
-        ExpressionValue variableValue = ExpressionsValueDeserializer.deserializer(null, value);
+        ExpressionValue variableValue = expressionValueDeserializer.deserializer(null, value);
 
         Expression[] localVariables = variableValue.getChildren();
         if (localVariables == null) {
@@ -172,7 +174,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 
     public Expression[] getGlobalVariables(int depth) {
         String value = getVariableValue(globalVariablePath, depth);
-        ExpressionValue variableValue = ExpressionsValueDeserializer.deserializer(null, value);
+        ExpressionValue variableValue = expressionValueDeserializer.deserializer(null, value);
 
         Expression[] globalVariables = variableValue.getChildren();
         if (globalVariables == null) {
@@ -220,7 +222,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 
     public void update(Expression expression, int depth) {
         String value = getExpressionValue(expression, depth);
-        expression.setValue(ExpressionsValueDeserializer.deserializer(expression, value));
+        expression.setValue(expressionValueDeserializer.deserializer(expression, value));
     }
 
 }

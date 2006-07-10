@@ -36,19 +36,22 @@ public class StackLayer {
     private String calledFunctionName;
 
     private List variables;
+    
+    private ExpressionsValueDeserializer expressionValueDeserializer;
 
     /**
      * Creates new StackLayer
      */
-    public StackLayer() {
+    public StackLayer(String transferEncoding) {
         variables = new ArrayList(6);
+        expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
     }
 
     /**
      * Creates new StackLayer
      */
-    public StackLayer(int depth, String callerFileName, int callerLineNumber, String callerFunctionName, String calledFileName, int calledLineNumber, String calledFunctionName) {
-        this();
+    public StackLayer(int depth, String callerFileName, int callerLineNumber, String callerFunctionName, String calledFileName, int calledLineNumber, String calledFunctionName, String transferEncoding) {
+        this(transferEncoding);
 
         this.depth = depth;
         setCallerFileName(callerFileName);
@@ -114,7 +117,7 @@ public class StackLayer {
 
     public void addVariable(String variableName, String value) {
         StackVariable variable = new DefaultStackVariable(variableName, getDepth());
-        variable.setValue(ExpressionsValueDeserializer.deserializer(variable, value));
+        variable.setValue(expressionValueDeserializer.deserializer(variable, value));
 
         variables.add(variable);
     }

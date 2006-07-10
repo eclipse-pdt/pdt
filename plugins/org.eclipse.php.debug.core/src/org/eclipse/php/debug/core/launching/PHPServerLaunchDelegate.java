@@ -94,6 +94,7 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(isStopAtFirstLine));
 			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
 			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
+			launch.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
 
 			// Trigger the debug session by initiating a debug requset to the debug server
 			runDispatch = new RunDispatchJobWebServer(launch);

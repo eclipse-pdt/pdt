@@ -25,6 +25,7 @@ import org.eclipse.php.debug.core.debugger.DebugError;
 import org.eclipse.php.debug.core.debugger.DefaultExpressionsManager;
 import org.eclipse.php.debug.core.debugger.IRemoteDebugger;
 import org.eclipse.php.debug.core.debugger.RemoteDebugger;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 
 public class ServerDebugHandler extends SimpleDebugHandler {
 
@@ -112,7 +113,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 		fDebugTarget.setBreakpoints(new IBreakpoint[] {});
 
-		fDebugTarget.setExpressionManager(new DefaultExpressionsManager(fRemoteDebugger));
+		fDebugTarget.setExpressionManager(new DefaultExpressionsManager(fRemoteDebugger, fDebugTarget.getLaunch().getAttribute(IDebugParametersKeys.TRANSFER_ENCODING)));
 
 		if (fLastcmd.equals("start")) {
 			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(), lineNumber);

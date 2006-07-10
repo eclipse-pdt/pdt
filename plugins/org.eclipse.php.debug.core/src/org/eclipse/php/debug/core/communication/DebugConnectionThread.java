@@ -35,6 +35,7 @@ import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugRequestHandler;
 import org.eclipse.php.debug.core.debugger.messages.*;
 import org.eclipse.php.debug.core.debugger.parameters.AbstractDebugParametersInitializer;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.launching.PHPProcess;
 import org.eclipse.php.debug.core.launching.PHPServerLaunchDecorator;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
@@ -454,6 +455,7 @@ public class DebugConnectionThread implements Runnable {
 	 * @param launch An {@link ILaunch}
 	 */
 	protected void hookServerDebug(ILaunch launch) throws CoreException {
+		inputManager.setTransferEncoding(launch.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING));
 		PHPServerLaunchDecorator launchDecorator = (PHPServerLaunchDecorator) launch;
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		//		ApacheServerBehaviour serverBehaviour = launchDecorator.getApacheServerBahavior();
@@ -479,6 +481,7 @@ public class DebugConnectionThread implements Runnable {
 	 * @param launch An {@link ILaunch}
 	 */
 	protected void hookPHPExeDebug(ILaunch launch) throws CoreException {
+		inputManager.setTransferEncoding(launch.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING));
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
 		String fileNameString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
@@ -779,6 +782,11 @@ public class DebugConnectionThread implements Runnable {
 		private boolean isAlive = true;
 		private Thread theThread;
 		private Object READY_FOR_RESTART_LOCK = new Object();
+		private String transferEncoding;
+		
+		public void setTransferEncoding(String transferEncoding) {
+ 			 this.transferEncoding = transferEncoding;
+		}
 
 		/**
 		 * Create an InputManager in a separate thread.
@@ -900,6 +908,9 @@ public class DebugConnectionThread implements Runnable {
 						}
 
 						IDebugMessage message = DebugMessagesRegistry.getMessage(messageType);
+						if (message != null) {
+							message.setTransferEncoding(transferEncoding);
+						}
 
 						// handle the message
 						if (message instanceof IDebugNotificationMessage) {

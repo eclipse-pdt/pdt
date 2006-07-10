@@ -46,7 +46,7 @@ public class GetVariableValueResponse extends DebugMessageResponseImpl implement
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setStatus(in.readInt());
-		setVarResult(CommunicationUtilities.readString(in));
+		setVarResult(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 	}
 
 	public int getType() {
@@ -57,6 +57,6 @@ public class GetVariableValueResponse extends DebugMessageResponseImpl implement
 		out.writeShort(getType());
 		out.writeInt(getID());
 		out.writeInt(getStatus());
-		CommunicationUtilities.writeString(out, getVarResult());
+		CommunicationUtilities.writeEncodedString(out, getVarResult(), getTransferEncoding());
 	}
 }

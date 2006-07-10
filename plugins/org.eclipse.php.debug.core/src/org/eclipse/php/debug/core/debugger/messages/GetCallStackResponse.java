@@ -50,10 +50,10 @@ public class GetCallStackResponse extends DebugMessageResponseImpl implements ID
 		PHPstack stack = new PHPstack();
 		int depth = in.readInt();
 		for (int i = 0; i < depth; i++) {
-			StackLayer layer = new StackLayer(i, CommunicationUtilities.readString(in), in.readInt(), CommunicationUtilities.readString(in), CommunicationUtilities.readString(in), in.readInt(), CommunicationUtilities.readString(in));
+			StackLayer layer = new StackLayer(i, CommunicationUtilities.readString(in), in.readInt(), CommunicationUtilities.readString(in), CommunicationUtilities.readString(in), in.readInt(), CommunicationUtilities.readString(in), getTransferEncoding());
 			int params = in.readInt();
 			for (int j = 0; j < params; j++) {
-				layer.addVariable(CommunicationUtilities.readString(in), CommunicationUtilities.readString(in));
+				layer.addVariable(CommunicationUtilities.readEncodedString(in, getTransferEncoding()), CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 			}
 			stack.addLayer(layer);
 		}

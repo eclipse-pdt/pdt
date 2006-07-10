@@ -18,59 +18,67 @@ import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 
 public class PHPProjectPreferences {
- 
-    public static String getPreferenceNodeQualifier() {
-        return IPHPConstants.DEBUG_QUALIFIER;
-    } 
-       
-    public static Preferences getModelPreferences() {
-        return PHPDebugPlugin.getDefault().getPluginPreferences();
-    }
 
-    public static IScopeContext getProjectScope(IProject project){
-        return new ProjectScope(project);
-    }
-    
-    public  static boolean getElementSettingsForProject(IProject project){
-        IScopeContext pScope = getProjectScope(project);
-        return pScope.getNode(getPreferenceNodeQualifier()).getBoolean(getProjectSettingsKey(), false);
-    }
-    
-    public static String getProjectSettingsKey() {
-        return IPHPConstants.DEBUG_PER_PROJECT;
-    }
-    
-    public static boolean getStopAtFirstLine (IProject project) {
-        Preferences prefs = getModelPreferences();
-        boolean stop = prefs.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
-        if (project != null && getElementSettingsForProject(project)){
-            IScopeContext projectScope = getProjectScope(project);
-           stop = projectScope.getNode(getPreferenceNodeQualifier()).getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, false);         
-        }
-        return stop;
-        
-    }
-    
-    public static int getDebugPort (IProject project) {
-        Preferences prefs = getModelPreferences();
-        int port = prefs.getInt(PHPDebugCorePreferenceNames.DEBUG_PORT);
-        if (project != null && getElementSettingsForProject(project)){
-            IScopeContext projectScope = getProjectScope(project);
-            int pPort = projectScope.getNode(getPreferenceNodeQualifier()).getInt(PHPDebugCorePreferenceNames.DEBUG_PORT, 0);
-            if ( pPort != 0 ) port = pPort;
-        }
-        return port;
-        
-    }
-    
-    public static String getDefaultServerURL (IProject project) {
-        Preferences prefs = getModelPreferences();
-        String hURL  = prefs.getString(PHPDebugCorePreferenceNames.DEDAULT_URL);
-        if (project != null && getElementSettingsForProject(project)){
-            IScopeContext projectScope = getProjectScope(project);
-            hURL = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.DEDAULT_URL, "");
-        }
-        return hURL;
-        
-    }
+	public static String getPreferenceNodeQualifier() {
+		return IPHPConstants.DEBUG_QUALIFIER;
+	}
+
+	public static Preferences getModelPreferences() {
+		return PHPDebugPlugin.getDefault().getPluginPreferences();
+	}
+
+	public static IScopeContext getProjectScope(IProject project) {
+		return new ProjectScope(project);
+	}
+
+	public static boolean getElementSettingsForProject(IProject project) {
+		IScopeContext pScope = getProjectScope(project);
+		return pScope.getNode(getPreferenceNodeQualifier()).getBoolean(getProjectSettingsKey(), false);
+	}
+
+	public static String getProjectSettingsKey() {
+		return IPHPConstants.DEBUG_PER_PROJECT;
+	}
+
+	public static boolean getStopAtFirstLine(IProject project) {
+		Preferences prefs = getModelPreferences();
+		boolean stop = prefs.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
+		if (project != null && getElementSettingsForProject(project)) {
+			IScopeContext projectScope = getProjectScope(project);
+			stop = projectScope.getNode(getPreferenceNodeQualifier()).getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, stop);
+		}
+		return stop;
+
+	}
+
+	public static int getDebugPort(IProject project) {
+		Preferences prefs = getModelPreferences();
+		int port = prefs.getInt(PHPDebugCorePreferenceNames.DEBUG_PORT);
+		if (project != null && getElementSettingsForProject(project)) {
+			IScopeContext projectScope = getProjectScope(project);
+			port = projectScope.getNode(getPreferenceNodeQualifier()).getInt(PHPDebugCorePreferenceNames.DEBUG_PORT, port);
+		}
+		return port;
+
+	}
+
+	public static String getDefaultServerURL(IProject project) {
+		Preferences prefs = getModelPreferences();
+		String hURL = prefs.getString(PHPDebugCorePreferenceNames.DEDAULT_URL);
+		if (project != null && getElementSettingsForProject(project)) {
+			IScopeContext projectScope = getProjectScope(project);
+			hURL = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.DEDAULT_URL, hURL);
+		}
+		return hURL;
+	}
+
+	public static String getTransferEncoding(IProject project) {
+		Preferences prefs = getModelPreferences();
+		String encoding = prefs.getString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
+		if (project != null && getElementSettingsForProject(project)) {
+			IScopeContext projectScope = getProjectScope(project);
+			encoding = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, encoding);
+		}
+		return encoding;
+	}
 }

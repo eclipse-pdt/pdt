@@ -45,7 +45,7 @@ public class EvalRequest extends DebugMessageRequestImpl implements IDebugReques
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
-		setCommand(CommunicationUtilities.readString(in));
+		setCommand(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 	}
 
 	public int getType() {
@@ -55,6 +55,6 @@ public class EvalRequest extends DebugMessageRequestImpl implements IDebugReques
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());
-		CommunicationUtilities.writeString(out, getCommand());
+		CommunicationUtilities.writeEncodedString(out, getCommand(), getTransferEncoding());
 	}
 }

@@ -80,7 +80,7 @@ public class GetVariableValueRequest extends DebugMessageRequestImpl implements 
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
-		setVar(CommunicationUtilities.readString(in));
+		setVar(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 		setDepth(in.readInt());
 		int pathSize = in.readInt();
 		if (pathSize > 0) {
@@ -99,7 +99,7 @@ public class GetVariableValueRequest extends DebugMessageRequestImpl implements 
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());
-		CommunicationUtilities.writeString(out, getVar());
+		CommunicationUtilities.writeEncodedString(out, getVar(), getTransferEncoding());
 		out.writeInt(getDepth());
 		String[] path = getPath();
 		out.writeInt(path.length);

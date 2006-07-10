@@ -86,8 +86,8 @@ public class AssignValueRequest extends DebugMessageRequestImpl implements IDebu
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
-		setVar(CommunicationUtilities.readString(in));
-		setValue(CommunicationUtilities.readString(in));
+		setVar(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
+		setValue(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 		setDepth(in.readInt());
 		int pathSize = in.readInt();
 		if (pathSize > 0) {
@@ -106,8 +106,8 @@ public class AssignValueRequest extends DebugMessageRequestImpl implements IDebu
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());
-		CommunicationUtilities.writeString(out, getVar());
-		CommunicationUtilities.writeString(out, getValue());
+		CommunicationUtilities.writeEncodedString(out, getVar(), getTransferEncoding());
+		CommunicationUtilities.writeEncodedString(out, getValue(), getTransferEncoding());
 		out.writeInt(getDepth());
 		String[] path = getPath();
 		out.writeInt(path.length);

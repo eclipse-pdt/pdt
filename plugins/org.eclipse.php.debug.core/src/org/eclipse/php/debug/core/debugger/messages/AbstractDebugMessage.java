@@ -14,7 +14,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class AbstractDebugMessage implements IDebugMessage {
+public abstract class AbstractDebugMessage implements IDebugMessage {
 
 	public int getType() {
 		return -1;

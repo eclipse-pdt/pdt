@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.preferences.EncodingSettings;
 import org.osgi.service.prefs.BackingStoreException;
 
 public class PHPDebugPreferencesProjectAddon extends AbstractDebugPreferencesPageAddon {
@@ -34,6 +35,7 @@ public class PHPDebugPreferencesProjectAddon extends AbstractDebugPreferencesPag
 	private Button fStopAtFirstLine;
 	private Text fDebugTextBox;
 	private Text fDefaultURLTextBox;
+	private EncodingSettings fEncodingSettings;
 	private PropertyPage propertyPage;
 
 	public void setCompositeAddon(Composite parent) {
@@ -45,23 +47,28 @@ public class PHPDebugPreferencesProjectAddon extends AbstractDebugPreferencesPag
 		this.propertyPage = propertyPage;
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		IScopeContext[] preferenceScopes = createPreferenceScopes(propertyPage);
-		fStopAtFirstLine.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE));
-		fDebugTextBox.setText(Integer.toString(prefs.getInt(PHPDebugCorePreferenceNames.DEBUG_PORT)));
-		fDefaultURLTextBox.setText(prefs.getString(PHPDebugCorePreferenceNames.DEDAULT_URL));
+		
+		boolean stopAtFirstLine = prefs.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
+		int port = prefs.getInt(PHPDebugCorePreferenceNames.DEBUG_PORT);
+		String url = prefs.getString(PHPDebugCorePreferenceNames.DEDAULT_URL);
+		String transferEncoding = prefs.getString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 
 		if (preferenceScopes[0] instanceof ProjectScope) {
 			IEclipsePreferences node = preferenceScopes[0].getNode(getPreferenceNodeQualifier());
 			if (node != null && getProject(propertyPage) != null) {
-				Integer port = new Integer(node.getInt(PHPDebugCorePreferenceNames.DEBUG_PORT, 0));
-				boolean stop = node.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, false);
-				String defaultURL = node.get(PHPDebugCorePreferenceNames.DEDAULT_URL, "http://localhost");
-				if (port.intValue() != 0) {
-					fDebugTextBox.setText(port.toString());
-					fStopAtFirstLine.setSelection(stop);
-					fDefaultURLTextBox.setText(defaultURL);
+				int pPort = node.getInt(PHPDebugCorePreferenceNames.DEBUG_PORT, 0);
+				if (pPort != 0) {
+					port = pPort;
+					stopAtFirstLine = node.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, stopAtFirstLine); 
+					url = node.get(PHPDebugCorePreferenceNames.DEDAULT_URL, url);
+					transferEncoding = node.get(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "");
 				}
 			}
 		}
+		fStopAtFirstLine.setSelection(stopAtFirstLine);
+		fDebugTextBox.setText(Integer.toString(port));
+		fDefaultURLTextBox.setText(url);
+		fEncodingSettings.setIANATag(transferEncoding);
 	}
 
 	public boolean performOK(boolean isProjectSpecific) {
@@ -82,6 +89,7 @@ public class PHPDebugPreferencesProjectAddon extends AbstractDebugPreferencesPag
 		fStopAtFirstLine.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE));
 		fDebugTextBox.setText(Integer.toString(prefs.getDefaultInt(PHPDebugCorePreferenceNames.DEBUG_PORT)));
 		fDefaultURLTextBox.setText(prefs.getDefaultString(PHPDebugCorePreferenceNames.DEDAULT_URL));
+		fEncodingSettings.setIANATag(prefs.getDefaultString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING));
 	}
 
 	protected String getPreferenceNodeQualifier() {
@@ -94,6 +102,15 @@ public class PHPDebugPreferencesProjectAddon extends AbstractDebugPreferencesPag
 		fDebugTextBox = addDebugPortTextField(composite, PHPDebugCorePreferenceNames.DEBUG_PORT, 6, 2);
 		addLabelControl(composite, PHPDebugUIMessages.PhpDebugPreferencePage_9, PHPDebugCorePreferenceNames.DEDAULT_URL);
 		fDefaultURLTextBox = addDefaultURLTextField(composite, PHPDebugCorePreferenceNames.DEDAULT_URL, 0, 2);
+		fEncodingSettings = addEncodingSettings(composite, "Debug Transfer Encoding");
+	}
+	
+	private EncodingSettings addEncodingSettings(Composite parent, String label) {
+		EncodingSettings encodingSettings = new EncodingSettings(parent, "Debug Transfer Encoding");
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        data.horizontalSpan = 2;
+		encodingSettings.setLayoutData(data);
+		return encodingSettings;
 	}
 
 	private Text addDebugPortTextField(Composite parent, String key, int textlimit, int horizontalIndent) {
@@ -135,16 +152,19 @@ public class PHPDebugPreferencesProjectAddon extends AbstractDebugPreferencesPag
 			node.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
 			node.putInt(PHPDebugCorePreferenceNames.DEBUG_PORT, Integer.parseInt(fDebugTextBox.getText()));
 			node.put(PHPDebugCorePreferenceNames.DEDAULT_URL, fDefaultURLTextBox.getText());
+			node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fEncodingSettings.getIANATag());
 		} else {
 			if (getProject(propertyPage) == null) {
 				prefs.setValue(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
 				prefs.setValue(PHPDebugCorePreferenceNames.DEBUG_PORT, fDebugTextBox.getText());
 				prefs.setValue(PHPDebugCorePreferenceNames.DEDAULT_URL, fDefaultURLTextBox.getText());
+				prefs.setValue(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fEncodingSettings.getIANATag());
 			} else {
 				if (node != null) {
 					node.remove(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
 					node.remove(PHPDebugCorePreferenceNames.DEBUG_PORT);
 					node.remove(PHPDebugCorePreferenceNames.DEDAULT_URL);
+					node.remove(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 				}
 			}
 		}

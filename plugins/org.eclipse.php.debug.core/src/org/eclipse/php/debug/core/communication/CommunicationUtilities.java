@@ -44,6 +44,34 @@ public class CommunicationUtilities {
 		return new String(readStringAsBytes(in));
 	}
 
+	public static String readEncodedString(DataInputStream in, String encoding) throws IOException {
+		byte[] byteArray = readStringAsBytes(in);
+		String rv = getTextFromBytes(byteArray, encoding);
+		return rv;
+	}
+	
+    public static void writeEncodedString(DataOutputStream out, String line, String encoding) throws IOException {
+        byte[] byteArray = getBytesFromText(line, encoding);
+        out.writeInt(byteArray.length);
+        out.write(byteArray);
+    }
+
+	public static final byte[] getBytesFromText(String text, String encoding) {
+		try {
+			return text.getBytes(encoding);
+		} catch (Exception e) {
+		}
+		return text.getBytes();
+	}
+
+	public static final String getTextFromBytes(byte[] theBytes, String encoding) {
+		try {
+			return new String(theBytes, encoding);
+		} catch (Exception e) {
+		}
+		return new String(theBytes);
+	}
+
 	public static byte[] readStringAsBytes(DataInputStream in) throws IOException {
 		int size = in.readInt();
 		byte[] byteArray = new byte[size];
