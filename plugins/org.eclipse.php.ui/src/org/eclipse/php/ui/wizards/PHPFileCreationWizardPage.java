@@ -195,9 +195,13 @@ public class PHPFileCreationWizardPage extends WizardPage {
 //				}
 			}
 		}
-		fileText.setText("newfile.php");
+		setInitialFileName("newfile.php");
 	}
 
+	protected void setInitialFileName(String fileName) {
+		fileText.setText(fileName);
+	}
+	
 	/**
 	 * Uses the standard container selection dialog to
 	 * choose the new value for the container field.

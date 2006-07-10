@@ -255,7 +255,6 @@ public class PHPSourceViewer extends Composite {
 
 		styleProvider = new PHPLineStyleProvider();
 		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
-
 		setContextStyleMap(contextStyleMap);
 	}
 
