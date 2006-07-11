@@ -43,11 +43,25 @@ public class FormatPreferencesSupport {
 	}
 
 	public int getIndentationSize(IDocument document) {
+		if(document == null){
+			String indentSize = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+			if(indentSize == null){
+				return 1;
+			}
+			return Integer.valueOf(indentSize).intValue();
+		}
 		verifyValidity(document);
 		return indentationSize;
 	}
 
 	public char getIndentationChar(IDocument document) {
+		if(document == null){
+			String useTab = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+			if(useTab == null){
+				return '\t';
+			}
+			return (Boolean.valueOf(useTab).booleanValue()) ? '\t' : ' ';
+		}
 		verifyValidity(document);
 		return indentationChar;
 	}
