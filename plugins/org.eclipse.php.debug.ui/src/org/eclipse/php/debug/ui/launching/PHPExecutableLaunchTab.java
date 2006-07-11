@@ -13,6 +13,7 @@ package org.eclipse.php.debug.ui.launching;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -448,38 +449,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * in the given field.
 	 */
 	private void handleVariablesButtonSelected(Text textField) {
-		/*
-		 String projStr = workDirectoryField.getText();
-		 */
-//		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		//IProject[] projects = workspaceRoot.getProjects();
 		IFile file = null;
-
-		//if(projStr == null || projStr.equals("") || projects == null)
-		//{
-		file = (IFile) ServerUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures());
-		//}
-		//else
-		/*
-		 {
-		 for (int i = 0; i < projects.length; i++) {
-		 IProject project = projects[i];
-		 if (project.getName().equals(projStr)) {
-		 file = (IFile)HTTPServerUtil.getFileFromDialog(
-		 project, 
-		 getShell(),
-		 LaunchUtil.getFileExtensions(),
-		 LaunchUtil.getRequiredNatures());
-		 break;
-		 }
-		 }
-		 
-		 }*/
-
+		IResource resource = ServerUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures());
+		if (resource instanceof IFile) {
+			file = (IFile) resource;
+		}
 		if (file != null) {
 			textField.setText(file.getFullPath().toString());
-			//IProject proj = file.getProject();
-			//workDirectoryField.setText(proj.getName());
 		}
 	}
 
