@@ -1001,18 +1001,37 @@
 			showScopeSection="true"
 			sizeHint="460,160" />
 	</extension>
+	
 	<extension point="org.eclipse.ui.actionSets">
 		<actionSet
 			id="org.eclipse.php.ui.SearchActionSet"
 			label="%PHPSearchActionSet.label"
 			visible="false">
+				
+			<!-- see https://bugs.eclipse.org/bugs/show_bug.cgi?id=149461 -->
+			<!-- Note: The menu (re-) definition has to be here due to bug: -->
+			<!-- =================================================================== -->
+			<!-- Search Menu                                                         -->
+			<!-- =================================================================== -->
+		    <menu
+		    	label="%searchMenu.label"
+		        path="navigate"
+		        id="org.eclipse.search.menu">
+		        	<groupMarker name="internalDialogGroup"/> <!-- not to be used by clients  -->
+		            <groupMarker name="dialogGroup"/> <!-- to be used by clients -->
+		            <separator name="fileSearchContextMenuActionsGroup"/> <!-- to be used by clients -->
+		            <separator name="contextMenuActionsGroup"/> <!-- to be used by clients -->
+		            <separator name="occurencesActionsGroup"/> <!-- to be used by clients -->
+		            <separator name="extraSearchGroup"/> <!-- to be used by clients -->
+			</menu>
+	
 			<action
 				class="org.eclipse.php.ui.search.OpenPHPSearchPageAction"
 				helpContextId="php_search_action_context"
 				icon="icons/full/obj16/php_search_obj.gif"
 				id="org.eclipse.php.ui.actions.OpenPHPSearchPage"
 				label="%openPHPSearchPageAction.label"
-				menubarPath="org.eclipse.search.menu/dialogGroup" />
+				menubarPath="org.eclipse.search.menu/dialogGroup"/>
 		</actionSet>
 	</extension>
 	<extension point="org.eclipse.core.runtime.adapters">
@@ -1022,10 +1041,6 @@
 			<adapter type="org.eclipse.core.resources.IResource" />
 		</factory>
 	</extension>
-
-
-
-
 
 	<!-- extension point="org.eclipse.ui.editorActions">
 		<editorContribution
