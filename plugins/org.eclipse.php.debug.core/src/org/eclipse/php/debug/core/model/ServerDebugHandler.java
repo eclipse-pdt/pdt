@@ -13,9 +13,11 @@ package org.eclipse.php.debug.core.model;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.debug.core.Logger;
@@ -113,7 +115,11 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 		fDebugTarget.setBreakpoints(new IBreakpoint[] {});
 
-		fDebugTarget.setExpressionManager(new DefaultExpressionsManager(fRemoteDebugger, fDebugTarget.getLaunch().getAttribute(IDebugParametersKeys.TRANSFER_ENCODING)));
+		ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
+		try {
+			fDebugTarget.setExpressionManager(new DefaultExpressionsManager(fRemoteDebugger, launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")));
+		} catch (CoreException e) {
+		}
 
 		if (fLastcmd.equals("start")) {
 			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(), lineNumber);

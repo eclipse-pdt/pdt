@@ -77,6 +77,9 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		String project = proj.getFullPath().toString();
 		wc.setAttribute(IPHPConstants.PHP_Project, project);
+		
+		// Set transfer encoding:
+		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
 		wc.doSave();
 
 		String URL = configuration.getAttribute(Server.BASE_URL, "");
@@ -94,7 +97,6 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(isStopAtFirstLine));
 			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
 			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
-			launch.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
 
 			// Trigger the debug session by initiating a debug requset to the debug server
 			runDispatch = new RunDispatchJobWebServer(launch);

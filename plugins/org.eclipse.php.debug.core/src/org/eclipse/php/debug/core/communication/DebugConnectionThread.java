@@ -455,9 +455,9 @@ public class DebugConnectionThread implements Runnable {
 	 * @param launch An {@link ILaunch}
 	 */
 	protected void hookServerDebug(ILaunch launch) throws CoreException {
-		inputManager.setTransferEncoding(launch.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING));
 		PHPServerLaunchDecorator launchDecorator = (PHPServerLaunchDecorator) launch;
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
+		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
 		//		ApacheServerBehaviour serverBehaviour = launchDecorator.getApacheServerBahavior();
 		//		String URL = launchConfiguration.getAttribute(ApachePlugin.URL, "");
 		//		String contextRoot = launchConfiguration.getAttribute(ApachePlugin.CONTEXT_ROOT, "");
@@ -481,8 +481,8 @@ public class DebugConnectionThread implements Runnable {
 	 * @param launch An {@link ILaunch}
 	 */
 	protected void hookPHPExeDebug(ILaunch launch) throws CoreException {
-		inputManager.setTransferEncoding(launch.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING));
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
+		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
 		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
 		String fileNameString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPConstants.RunWithDebugInfo, true);
