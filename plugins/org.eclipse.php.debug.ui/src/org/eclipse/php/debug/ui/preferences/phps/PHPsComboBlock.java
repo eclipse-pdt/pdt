@@ -16,9 +16,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.debug.internal.ui.SWTUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 
 /**
  * A composite that displays installed PHP's in a combo box, with a 'manage...'
