@@ -10,14 +10,24 @@
  *******************************************************************************/
 package org.eclipse.php.ui.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -46,7 +56,15 @@ import org.eclipse.php.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
@@ -90,25 +108,39 @@ public class EditorUtility {
 	 * @param line number
 	 * @throws CoreException 
 	 */
-	public static void openInEditor(String fileName, int lineNumber) throws CoreException {
+	public static IEditorPart openInEditor(String fileName, int lineNumber) throws CoreException {
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 
-		Path path = new Path(fileName);
-		IFile file = root.getFile(path);
-		if (file == null) { // full path specified
-			file = root.getFileForLocation(path);
+		IFile file = root.getFileForLocation(new Path(fileName));
+		if (file == null) {
+			IProject[] projects = root.getProjects();
+			for (int i = 0; i < projects.length; ++i) {
+				if (!projects[i].isOpen())
+					continue;
+				file = projects[i].getFile(fileName);
+				if (file != null) {
+					break;
+				}
+			}
+		}
+
+		if (file == null) {
+			return null;
 		}
 
 		IMarker marker = file.createMarker(IMarker.TEXT);
 		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
 		//marker.setAttribute(IDE.EDITOR_ID_ATTR, PHPUiConstants.PHP_EDITOR_ID);
 		IWorkbenchPage p = PHPUiPlugin.getActivePage();
+
+		IEditorPart editor = null;
 		if (p != null) {
-			IDE.openEditor(p, marker);
+			editor = IDE.openEditor(p, marker);
 		}
 		marker.delete();
+		return editor;
 	}
 
 	/**
