@@ -13,8 +13,22 @@ package org.eclipse.php.core.project;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.InvalidRegistryObjectException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
@@ -177,14 +191,28 @@ public class PHPNature implements IProjectNature {
 	public void configure() throws org.eclipse.core.runtime.CoreException {
 		// enable workspace validation for this nature
 		addToFrontOfBuildSpec(VALIDATION_BUILDER_ID);
+		addBuildersToProject();
+	}
 
+	/*
+	 * Adds to the project the builders registered to the buildersInitializer extention point (in case they are not in the list yet).
+	 * It is not enough to call this function in "configure" for the following reason:
+	 * in case a project has been created BEFORE a certain builder existed, the new builder will not be added to the old project, since "configure"
+	 * is called only upon creation. 
+	 */
+	public void addBuildersToProject() {
 		//  load all registered extensions and add them to build spec
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.buildersInitializer"); //$NON-NLS-1$
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
-			addToFrontOfBuildSpec(element.getAttribute("id")); //$NON-NLS-1$		   
+			try {
+				addToFrontOfBuildSpec(element.getAttribute("id"));
+			} catch (InvalidRegistryObjectException e) {
+				Logger.logException("Failed loading builder", e);
+			} catch (CoreException e) {
+				Logger.logException("Failed loading builder", e);
+			} //$NON-NLS-1$		   
 		}
-
 	}
 
 	/**
@@ -207,6 +235,7 @@ public class PHPNature implements IProjectNature {
 	public void setProject(org.eclipse.core.resources.IProject newProject) {
 		clean();
 		project = newProject;
+		addBuildersToProject();
 		//		
 		//      configure should only be called when project is created, not here		
 		//		//need to be called here since getNature and createNature will not call it
