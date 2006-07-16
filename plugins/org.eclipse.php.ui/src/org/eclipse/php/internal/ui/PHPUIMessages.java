@@ -260,6 +260,11 @@ public final class PHPUIMessages extends NLS {
 	public static String FoldingConfigurationBlock_error_not_exist;
 	public static String FoldingConfigurationBlock_info_no_preferences;
 	public static String typingPage_autoClose_title;
+	public static String typingPage_smartTab_title ;
+	public static String PHPEditorPreferencePage_typing_smartTab;
+	public static String SmartTypingConfigurationBlock_tabs_message_tooltip;
+	public static String SmartTypingConfigurationBlock_tabs_message_tab_text;
+	public static String SmartTypingConfigurationBlock_tabs_message_others_text;
 	public static String typingPage_autoClose_string;
 	public static String typingPage_autoClose_brackets;
 	public static String typingPage_autoClose_braces;

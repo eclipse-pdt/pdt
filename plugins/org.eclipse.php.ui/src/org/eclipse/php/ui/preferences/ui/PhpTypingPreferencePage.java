@@ -23,8 +23,11 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
  */
 public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferencePage {
 
+	private TypingConfigurationBlock typingConfigurationBlock;
+	
 	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
-		return new TypingConfigurationBlock(this, overlayPreferenceStore);
+		typingConfigurationBlock = new TypingConfigurationBlock(this, overlayPreferenceStore);
+		return typingConfigurationBlock;
 	}
 
 	protected String getHelpId() {
@@ -38,6 +41,17 @@ public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferenc
 
 	protected Label createDescriptionLabel(Composite parent) {
 		return null;
+	}
+
+	/**
+	 * This method overrides the default behavior in order to refresh 
+	 * values that are updated due to changes in other Preference pages
+	 */
+	public void setVisible(boolean visible) {
+		if(visible){
+			typingConfigurationBlock.refreshValues();
+		}
+		super.setVisible(visible);
 	}
 
 	protected void setPreferenceStore() {

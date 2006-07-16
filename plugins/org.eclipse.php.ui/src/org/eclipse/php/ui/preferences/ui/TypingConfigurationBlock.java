@@ -19,22 +19,22 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.text.Assert;
+import org.eclipse.php.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.util.Messages;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.util.ScrolledPageContent;
 import org.eclipse.php.ui.util.StatusInfo;
 import org.eclipse.php.ui.util.StatusUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 /**
@@ -112,6 +112,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_CLOSE_BRACKETS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_SMART_TAB));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
@@ -127,16 +128,58 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		GridLayout layout = new GridLayout();
 		control.setLayout(layout);
 
-		Composite composite;
+		Composite autoCloseComposite;
+		autoCloseComposite = createSubsection(control, PHPUIMessages.typingPage_autoClose_title);
+		addAutoclosingSection(autoCloseComposite);
 
-		composite = createSubsection(control, PHPUIMessages.typingPage_autoClose_title);
-		addAutoclosingSection(composite);
+		Composite smartTabSection;
+		smartTabSection = createSubsection(control, PHPUIMessages.typingPage_smartTab_title);
+		addSmartTabSection(smartTabSection);
 
 		scrolled.setContent(control);
 		final Point size = control.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		scrolled.setMinSize(size.x, size.y);
 		return scrolled;
 
+	}
+
+	private void addSmartTabSection(Composite smartTabComposite) {
+		GridLayout layout = new GridLayout();
+		smartTabComposite.setLayout(layout);
+
+		String label;
+		label = PHPUIMessages.PHPEditorPreferencePage_typing_smartTab;
+		addCheckBox(smartTabComposite, label, PreferenceConstants.EDITOR_SMART_TAB, 0);
+
+		createAutoIndentMessage(smartTabComposite);
+
+	}
+
+	private String autoIndentDetails = "";
+	private Link formatterPageLink;
+	private void createAutoIndentMessage(final Composite composite) {
+		String linkTooltip = PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tooltip;
+		char indentChar = FormatPreferencesSupport.getInstance().getIndentationChar(null);
+
+		if (indentChar == '\t') {
+
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text, new String[] { Integer.toString(4) });
+		} else {
+			int indentSize = FormatPreferencesSupport.getInstance().getIndentationSize(null);
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text, new String[] { Integer.toString(4), Integer.toString(indentSize), "space" });
+		} 
+
+		formatterPageLink = new Link(composite, SWT.NONE);
+		formatterPageLink.setText(autoIndentDetails);
+		formatterPageLink.setToolTipText(linkTooltip);
+		GridData gd = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+		gd.widthHint = 300; // don't get wider initially
+		formatterPageLink.setLayoutData(gd);
+		formatterPageLink.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				PreferencesUtil.createPreferenceDialogOn(formatterPageLink.getShell(), "org.eclipse.php.internal.ui.preferences.PHPFormatterPreferencePage", null, null); //$NON-NLS-1$
+			}
+		});
 	}
 
 	private Composite createSubsection(Composite parent, String label) {
@@ -249,5 +292,18 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 	protected static final int INDENT = 20;
 
 	private Map fTextFields = new HashMap();
+
+	public void refreshValues() {
+		char indentChar = FormatPreferencesSupport.getInstance().getIndentationChar(null);
+
+		if (indentChar == '\t') {
+
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text, new String[] { Integer.toString(4) });
+		} else {
+			int indentSize = FormatPreferencesSupport.getInstance().getIndentationSize(null);
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text, new String[] { Integer.toString(4), Integer.toString(indentSize), "space" });
+		}
+		formatterPageLink.setText(autoIndentDetails);
+	}
 
 }

@@ -591,6 +591,14 @@ public class PreferenceConstants {
 	public static final String EDITOR_VARIABLE_DEFAULT_COLOR = PHPColorHelper.getColorString(102, 0, 0) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
 	
 	/**
+	 * A named preference that controls the smart tab behavior.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 *
+	 */
+	public static final String EDITOR_SMART_TAB= "smart_tab"; //$NON-NLS-1$
+	
+	/**
 	 * A named preference that controls whether blank lines are cleared during formatting.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
@@ -768,6 +776,11 @@ public class PreferenceConstants {
 	
 	public static final String PHP_MANUAL_OPEN_IN_NEW_BROWSER = "phpManualOpenInNewBrowser"; //$NON-NLS-1$
 	
+	/**
+	 * some constants for auto-ident Smart Tab
+	 */
+	public static final String TAB = "tab"; //$NON-NLS-1$
+	public static final String FORMATTER_TAB_CHAR = PHPUiPlugin.ID + ".smart_tab.char"; //$NON-NLS-1$
 	
 	public static IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();

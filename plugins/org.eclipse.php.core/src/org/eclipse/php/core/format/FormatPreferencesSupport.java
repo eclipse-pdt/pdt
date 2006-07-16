@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.core.format;
 
 import org.eclipse.core.resources.IProject;
@@ -14,6 +24,11 @@ import org.eclipse.php.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.core.preferences.PreferencesSupport;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 
+/**
+ * 
+ * @author guy.g
+ *
+ */
 public class FormatPreferencesSupport {
 
 	private IDocument fLastDocument = null;
@@ -56,7 +71,7 @@ public class FormatPreferencesSupport {
 
 	public char getIndentationChar(IDocument document) {
 		if(document == null){
-			String useTab = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+			String useTab = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
 			if(useTab == null){
 				return '\t';
 			}
