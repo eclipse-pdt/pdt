@@ -37,6 +37,13 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 	private static Map fColorTypes;
 	
 	static {
+		initColorTypes();
+	}
+
+	/**
+	 * Initializes the fColorTypes once.
+	 */
+	private static void initColorTypes() {
 		fColorTypes = new HashMap();
 
 		// Normal text:
@@ -173,7 +180,6 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 
 		
 		fColorTypes.put(PHPRegionTypes.TASK, PreferenceConstants.EDITOR_TASK_COLOR);
-		
 	}
 
 	public PHPLineStyleProvider() {

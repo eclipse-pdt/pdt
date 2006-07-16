@@ -27,8 +27,7 @@ public abstract class PHPParserManager {
 	private static PhpParserSchedulerTask scheduler = PhpParserSchedulerTask.getInstance();
 	static {
 		assert scheduler != null; 
-		Thread thread = new Thread(scheduler);
-		thread.setName("PHP Parser Scheduler");
+		Thread thread = new Thread(scheduler, "PHP Parser Scheduler");
 		thread.start();
 	}
 	
