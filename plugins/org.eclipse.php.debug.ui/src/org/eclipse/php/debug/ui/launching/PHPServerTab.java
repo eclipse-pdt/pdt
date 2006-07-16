@@ -33,10 +33,10 @@ import org.eclipse.swt.widgets.Composite;
 
 public class PHPServerTab extends ServerTab {
 
-	public static final String RUN_WITH_DEBUG = "run_with_debug";
-
 	protected Button runWithDebugger;
-	protected boolean isChecked = false;
+	protected Button openBrowser;
+	protected boolean isRunWithDebugInfo;
+	protected boolean isOpenInBrowser;
 	private String mode;
 
 	public PHPServerTab() {
@@ -44,28 +44,40 @@ public class PHPServerTab extends ServerTab {
 	}
 
 	public void createExtensionControls(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 5;
+		layout.marginHeight = 5;
+		layout.numColumns = 1;
+		composite.setLayout(layout);
+		composite.setLayoutData(data);
+
+		// Add the 'Open in Browser' checkbox.
+		openBrowser = new Button(composite, SWT.CHECK);
+		openBrowser.setText(PHPDebugUIMessages.PHPdebug_open_in_browser);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		openBrowser.setLayoutData(gd);
+		openBrowser.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent se) {
+				Button b = (Button) se.getSource();
+				isOpenInBrowser = b.getSelection();
+				updateLaunchConfigurationDialog();
+			}
+		});
+
+		// Add the 'Run With Debug Info' checkbox in case we are in a 'Run' launch mode.
 		mode = getLaunchConfigurationDialog().getMode();
 		if (ILaunchManager.RUN_MODE.equals(mode)) {
-			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-
-			Composite composite = new Composite(parent, SWT.NONE);
-			GridLayout layout = new GridLayout();
-			layout.marginWidth = 5;
-			layout.marginHeight = 5;
-			layout.numColumns = 2;
-			composite.setLayout(layout);
-			composite.setLayoutData(data);
-
 			runWithDebugger = new Button(composite, SWT.CHECK);
 			runWithDebugger.setText(PHPDebugUIMessages.PHPexe_Run_With_Debug_Info);
-			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-			gd.horizontalSpan = 2;
+			gd = new GridData(GridData.FILL_HORIZONTAL);
 			runWithDebugger.setLayoutData(gd);
 
 			runWithDebugger.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent se) {
 					Button b = (Button) se.getSource();
-					isChecked = b.getSelection();
+					isRunWithDebugInfo = b.getSelection();
 					updateLaunchConfigurationDialog();
 				}
 			});
@@ -73,23 +85,23 @@ public class PHPServerTab extends ServerTab {
 	}
 
 	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
-		if (runWithDebugger == null) {
-			return;
-		}
 		try {
-			boolean checked = configuration.getAttribute(RUN_WITH_DEBUG, PHPDebugPlugin.getDebugInfoOption());
-			runWithDebugger.setSelection(checked);
+			isOpenInBrowser = configuration.getAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
+			openBrowser.setSelection(isOpenInBrowser);
+			if (runWithDebugger != null) {
+				isRunWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
+				runWithDebugger.setSelection(isRunWithDebugInfo);
+			}
 		} catch (Exception e) {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}
 	}
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
-		if (runWithDebugger == null) {
-			return;
+		configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, isOpenInBrowser);
+		if (runWithDebugger != null) {
+			configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, isRunWithDebugInfo);
 		}
-		boolean checked = runWithDebugger.getSelection();
-		configuration.setAttribute(RUN_WITH_DEBUG, checked);
 	}
 
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {

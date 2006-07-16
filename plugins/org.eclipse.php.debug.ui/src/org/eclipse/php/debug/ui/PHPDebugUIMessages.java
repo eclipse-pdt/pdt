@@ -87,6 +87,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPexe_executable_was_not_found_1;
 	public static String PHPexe_ok_2;
 	public static String PHPexe_Run_With_Debug_Info;
+	public static String PHPdebug_open_in_browser;
 
 	public static String addPHPexeDialog_browse1;
 	public static String addPHPexeDialog_duplicateName;
@@ -126,6 +127,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PhpDebugPreferencePage_8;
 	public static String PhpDebugPreferencePage_9;
 	public static String PhpDebugPreferencePage_10;
+	public static String PhpDebugPreferencePage_11;
 	
 	public static String PHPsComboBlock_NoPHPsTitle;
 	public static String PHPsComboBlock_noPHPsMessage;

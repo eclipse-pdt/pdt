@@ -28,7 +28,8 @@ public interface IPHPConstants {
 	public static final String ConditionEnabled = ID_PHP_DEBUG_CORE + ".ConditionEnabled";
 	public static final String Condition = ID_PHP_DEBUG_CORE + ".Condition";
 	public static final String PHPProcessType = ID_PHP_DEBUG_CORE + ".launching.PHPProcess";
-    public static final String RunWithDebugInfo = ID_PHP_DEBUG_CORE + ".RunWithDebugInfo";
+    public static final String RUN_WITH_DEBUG_INFO = ID_PHP_DEBUG_CORE + ".RunWithDebugInfo";
+    public static final String OPEN_IN_BROWSER = ID_PHP_DEBUG_CORE + ".OpenInBrowser";
     public static final String Include_Storage = ID_PHP_DEBUG_CORE + ".Include_Storage";
     public static final String Include_Storage_type = ID_PHP_DEBUG_CORE + ".Include_Storage_Type";
     public static final String Include_Storage_zip = ID_PHP_DEBUG_CORE + ".zip";

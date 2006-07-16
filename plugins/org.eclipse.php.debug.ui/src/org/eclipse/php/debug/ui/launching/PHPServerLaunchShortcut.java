@@ -12,8 +12,6 @@ package org.eclipse.php.debug.ui.launching;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.*;
@@ -22,15 +20,12 @@ import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.util.FileUtils;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
-import org.eclipse.php.debug.core.preferences.PHPexeItem;
-import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.server.core.Server;
@@ -59,7 +54,7 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
 		return lm.getLaunchConfigurationType(IPHPConstants.PHPServerLaunchType);
 	}
-	
+
 	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
 		int entries = search == null ? 0 : search.length;
 		for (int i = 0; i < entries; i++) {
@@ -151,7 +146,7 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 	 */
 	static ILaunchConfiguration createConfiguration(IProject project, String fileName, Server server, ILaunchConfigurationType configType) throws CoreException {
 		ILaunchConfiguration config = null;
-		if(!FileUtils.fileExists(fileName)) {
+		if (!FileUtils.fileExists(fileName)) {
 			return null;
 		}
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom("New_configuration"));
@@ -159,8 +154,9 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(Server.NAME, server.getName());
 		wc.setAttribute(Server.FILE_NAME, fileName);
 		wc.setAttribute(Server.CONTEXT_ROOT, project.getName());
-		wc.setAttribute(Server.BASE_URL,server.getBaseURL() + '/' + project.getName() + '/' + new Path(fileName).lastSegment());
-		wc.setAttribute(IPHPConstants.RunWithDebugInfo, PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(Server.BASE_URL, server.getBaseURL() + '/' + project.getName() + '/' + new Path(fileName).lastSegment());
+		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
 		if (server.canPublish()) {
 			wc.setAttribute(Server.PUBLISH, true);
 		}

@@ -350,7 +350,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 		boolean runOption = PHPDebugPlugin.getDebugInfoOption();
 		try {
-			runOption = configuration.getAttribute(IPHPConstants.RunWithDebugInfo, runOption);
+			runOption = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, runOption);
 		} catch (CoreException e) {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}
@@ -376,7 +376,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, arguments);
 		}
 		boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo.getSelection() : true;
-		configuration.setAttribute(IPHPConstants.RunWithDebugInfo, debugInfo);
+		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
 
 	}
 

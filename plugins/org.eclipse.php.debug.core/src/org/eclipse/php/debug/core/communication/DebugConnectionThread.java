@@ -485,7 +485,7 @@ public class DebugConnectionThread implements Runnable {
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
 		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
 		String fileNameString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPConstants.RunWithDebugInfo, true);
+		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
 		String projectString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
 
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {

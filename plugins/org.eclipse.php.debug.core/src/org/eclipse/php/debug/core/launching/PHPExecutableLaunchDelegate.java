@@ -63,7 +63,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
 		String projectName = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
 		String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-		boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RunWithDebugInfo, true);
+		boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
 
 		if (monitor.isCanceled()) {
 			return;

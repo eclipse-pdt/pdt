@@ -34,6 +34,7 @@ public class PHPDebugCorePreferenceNames {
 
 	public static final String DIALOG_COLUMN_WIDTH = Debug_ID + "phpdebug.dialog.columnwidth";//$NON-NLS-1$
 	public static final String RUN_WITH_DEBUG_INFO = Debug_ID + "run_with_debug_info";//$NON-NLS-1$
+	public static final String OPEN_IN_BROWSER = Debug_ID + "open_in_browser";//$NON-NLS-1$
 	public static final String AUTO_SAVE_DIRTY = Debug_ID + "auto_save_dirty";//$NON-NLS-1$
 	public static final String OPEN_DEBUG_VIEWS = Debug_ID + "open_debug_views";//$NON-NLS-1$
 	public static final String DEDAULT_URL = Debug_ID + "default_url";//$NON-NLS-1$

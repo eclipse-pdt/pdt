@@ -28,6 +28,7 @@ import org.eclipse.php.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.ui.PlatformUI;
 
 public class PHPWebServerDebuggerInitializer {
 
@@ -40,12 +41,30 @@ public class PHPWebServerDebuggerInitializer {
 	public void debug() throws DebugException {
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
 		String debugQuery = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL) + "?" + parametersInitializer.generateQuery(launch);
+		boolean openInBrowser = false;
 		try {
-			connect(new URL(debugQuery), Integer.parseInt(launch.getAttribute(IDebugParametersKeys.PORT)), false);
-		} catch (java.net.MalformedURLException e) {
-			Logger.logException("Malformed URL Exception " + debugQuery, e); //Debugger_Unexpected_Error
-			String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e));
+			openInBrowser = launch.getLaunchConfiguration().getAttribute(IPHPConstants.OPEN_IN_BROWSER, false);
+		} catch (Throwable t) {
+			Logger.logException("Error obtaining the 'openInBrowser' configuration.", t);
+		}
+		if (openInBrowser) {
+			// Start the debug session by openning a browser that will actually trigger the URL connection
+			// to the debug server.
+			try {
+				PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null).openURL(new URL(debugQuery));
+			} catch (Throwable t) {
+				Logger.logException("Error initializing the web browser.", t);
+				String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
+				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, t));
+			}
+		} else {
+			try {
+				connect(new URL(debugQuery), Integer.parseInt(launch.getAttribute(IDebugParametersKeys.PORT)), false);
+			} catch (java.net.MalformedURLException e) {
+				Logger.logException("Malformed URL Exception " + debugQuery, e); //Debugger_Unexpected_Error
+				String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
+				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e));
+			}
 		}
 	}
 
