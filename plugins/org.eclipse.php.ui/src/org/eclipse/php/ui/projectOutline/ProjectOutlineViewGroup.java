@@ -25,7 +25,7 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 	public static final int PHP4 = 1;
 	public static final int PHP5 = 2;
 
-	private ProjectOutlinePart fPart;
+	protected ProjectOutlinePart fPart;
 	private ToggleAllAction toggleAllAction;
 	private SortAction sortAction;
 	private ToggleLinkingAction toggleLinking;
@@ -73,11 +73,11 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 		fOpenEditorActionGroup.fillContextMenu(menu);
 		toggleAllAction.setChecked(fPart.isShowAll());
 
-//		menu.add(toggleAllAction);
-//		menu.add(toggleLinking);
+		//		menu.add(toggleAllAction);
+		//		menu.add(toggleLinking);
 	}
 
-	void updateActions() {
+	public void updateActions() {
 	}
 
 	public void setMode(int mode) {
@@ -89,11 +89,11 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 		toolBar.add(sortAction);
 		toolBar.add(toggleLinking);
 	}
-	
-	void fillMenu(IMenuManager menu) {
+
+	protected void fillMenu(IMenuManager menu) {
 		toggleAllAction.setChecked(fPart.isShowAll());
 		menu.add(toggleAllAction);
-//		menu.add(toggleLinking);
+		//		menu.add(toggleLinking);
 	}
 
 	public void fillActionBars(IActionBars actionBars) {

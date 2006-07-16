@@ -22,7 +22,7 @@ public class ProjectOutlineLabelProvider extends AppearanceAwareLabelProvider {
 
 	private TreeHierarchyLayoutProblemsDecorator fProblemDecorator;
 
-	ProjectOutlineLabelProvider(int textFlags, int imageFlags, ITreeContentProvider cp) {
+	public ProjectOutlineLabelProvider(int textFlags, int imageFlags, ITreeContentProvider cp) {
 		super(textFlags, imageFlags);
 		fProblemDecorator = new TreeHierarchyLayoutProblemsDecorator();
 		addLabelDecorator(fProblemDecorator);

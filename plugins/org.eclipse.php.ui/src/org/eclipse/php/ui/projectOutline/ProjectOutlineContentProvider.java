@@ -37,7 +37,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		int type;
 		ProjectOutlinePart part;
 
-		OutlineNode(int type, String text, PHPProjectModel model, ProjectOutlinePart part) {
+		public OutlineNode(int type, String text, PHPProjectModel model, ProjectOutlinePart part) {
 			this.type = type;
 			this.text = text;
 			this.model = model;
@@ -118,9 +118,9 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 
 	public Object[] getChildrenInternal(Object parentElement) {
 		if (parentElement instanceof IProject) {
-			if (groupNodes == null || (IProject)parentElement != fStoredProject) {
+			if (groupNodes == null || (IProject) parentElement != fStoredProject) {
 				groupNodes = getOutlineChildren((IProject) parentElement);
-				fStoredProject = (IProject)parentElement;
+				fStoredProject = (IProject) parentElement;
 			}
 			return groupNodes;
 		} else if (parentElement instanceof OutlineNode) {

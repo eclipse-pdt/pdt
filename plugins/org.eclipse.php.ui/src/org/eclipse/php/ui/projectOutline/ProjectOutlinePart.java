@@ -95,9 +95,9 @@ import org.eclipse.ui.part.ViewPart;
 
 public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 
-	private PHPTreeViewer fViewer;
-	private ProjectOutlineContentProvider fContentProvider;
-	private ProjectOutlineLabelProvider fLabelProvider;
+	protected PHPTreeViewer fViewer;
+	protected ProjectOutlineContentProvider fContentProvider;
+	protected ProjectOutlineLabelProvider fLabelProvider;
 
 	private Menu fContextMenu;
 	private boolean fLinkingEnabled;
@@ -106,9 +106,9 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 	private ISelection fLastOpenSelection;
 	private ISelectionChangedListener fPostSelectionListener;
 
-	private ProjectOutlineViewGroup actionGroup;
+	protected ProjectOutlineViewGroup actionGroup;
 	private UpdateViewJob updateViewJob;
-	private IProject currentProject;
+	protected IProject currentProject;
 
 	private boolean showAll = false;
 
@@ -192,7 +192,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 		setProviders();
 
 		setUpPopupMenu();
-		actionGroup = new ProjectOutlineViewGroup(this);
+		actionGroup = createActionGroup();
 
 		fViewer.addPostSelectionChangedListener(fPostSelectionListener);
 		addMouseTrackListener();
@@ -224,9 +224,13 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 		fViewer.refresh();
 
 		getSite().getPage().addPostSelectionListener(fSelectionListener);
-		
-		 PHPWorkspaceModelManager.getInstance().addModelListener(fContentProvider);
 
+		PHPWorkspaceModelManager.getInstance().addModelListener(fContentProvider);
+
+	}
+
+	protected ProjectOutlineViewGroup createActionGroup() {
+		return new ProjectOutlineViewGroup(this);
 	}
 
 	public void setProject(IProject project) {
@@ -239,7 +243,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 		}
 		updateViewJob.schedule();
 		actionGroup.updateActions();
-		
+
 	}
 
 	public void handleUpdateInput(IEditorPart editorPart) {
@@ -367,7 +371,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 		return new ProjectOutlineContentProvider(this, showCUChildren);
 	}
 
-	private ProjectOutlineLabelProvider createLabelProvider() {
+	protected ProjectOutlineLabelProvider createLabelProvider() {
 		return new ProjectOutlineLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.M_PARAMETER_NAMES, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS | PHPElementImageProvider.OVERLAY_ICONS, fContentProvider);
 	}
 
@@ -404,7 +408,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 		}
 		getSite().getPage().removePartListener(fPartListener);
 		getSite().getPage().removePostSelectionListener(fSelectionListener);
-		 PHPWorkspaceModelManager.getInstance().removeModelListener(fContentProvider);
+		PHPWorkspaceModelManager.getInstance().removeModelListener(fContentProvider);
 		super.dispose();
 	}
 
@@ -707,8 +711,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 	}
 
 	public boolean isInCurrentProject(PHPFileData fileData) {
-		if (currentProject!=null)
-		{
+		if (currentProject != null) {
 			return currentProject.equals(PHPModelUtil.getResource(fileData).getProject());
 		}
 		return false;
