@@ -22,7 +22,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.internal.core.LaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.core.util.FileUtils;
 import org.eclipse.php.server.core.Server;
@@ -449,34 +448,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			String url = configuration.getAttribute(Server.BASE_URL, "");
 
 			publish.setSelection(deployable);
-			if (fileName.equals("") && Activator.currentSelection != null && !Activator.currentSelection.isEmpty()) {
-
-				IStructuredSelection sel = Activator.currentSelection;
-				// TODO - ?
-				//				IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(sel.getFirstElement());
-				//
-				//				if (moduleArtifact instanceof WebResource) {
-				//					WebResource webResource = (WebResource) moduleArtifact;
-				//					IModule module = webResource.getModule();
-				//
-				//					if (module != null) {
-				//						IProject proj = module.getProject();
-				//
-				//						if (proj != null) {
-				//							IPath filePath = webResource.getPath();
-				//
-				//							if (filePath.isEmpty()) {
-				//								fileName = proj.getFullPath().toString();
-				//							} else {
-				//								IFile file = proj.getFile(filePath);
-				//								fileName = file.getFullPath().toString();
-				//							}
-				//
-				//							contextRoot = proj.getName();
-				//						}
-				//					}
-				//				}
-			}
 
 			initializeServerControl(configuration);
 
@@ -494,7 +465,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		initializeExtensionControls(configuration);
 		isValid(configuration);
 	}
-	
+
 	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
 		return;
 	}
