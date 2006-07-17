@@ -221,26 +221,6 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		}
 
 		/*
-		 * @see org.eclipse.jface.viewers.StructuredViewer#filter(java.lang.Object)
-		 */
-		protected Object[] getFilteredChildren(Object parent) {
-			List list = new ArrayList();
-			ViewerFilter[] filters = fViewer.getFilters();
-			Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
-			for (int i = 0; i < children.length; i++) {
-				Object object = children[i];
-				if (!isEssential(object)) {
-					object = filter(object, parent, filters);
-					if (object != null) {
-						list.add(object);
-					}
-				} else
-					list.add(object);
-			}
-			return list.toArray();
-		}
-
-		/*
 		 * @see AbstractTreeViewer#isExpandable(java.lang.Object)
 		 */
 		public boolean isExpandable(Object parent) {
@@ -261,12 +241,13 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 
 		// Sends the object through the given filters
 		private Object filter(Object object, Object parent, ViewerFilter[] filters) {
+			Object rv = null;
 			for (int i = 0; i < filters.length; i++) {
 				ViewerFilter filter = filters[i];
-				if (!filter.select(fViewer, parent, object))
-					return null;
+				if (filter.select(fViewer, parent, object))
+					rv = object;
 			}
-			return object;
+			return rv;
 		}
 
 		/*
