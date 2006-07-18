@@ -55,6 +55,12 @@
 			<newWizardShortcut
 				id="org.eclipse.php.project.ui.wizards.PHPFileCreationWizard" />
    			<newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+   			
+   			<!-- Add other Web document wizards shortcuts to the New menu: //-->
+   			<newWizardShortcut id="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard"/>
+   			<newWizardShortcut id="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"/>
+   			<newWizardShortcut id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"/>
+   			
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator"/>
 		</perspectiveExtension>
 		<perspectiveExtension
