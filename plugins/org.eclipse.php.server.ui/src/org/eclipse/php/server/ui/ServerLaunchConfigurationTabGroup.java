@@ -35,7 +35,7 @@ public class ServerLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 					try {
 						AbstractLaunchConfigurationTab newTab = (AbstractLaunchConfigurationTab) element.createExecutableExtension("class"); //$NON-NLS-1$
 						newTab.setLaunchConfigurationDialog(dialog);
-						list.add(0, (ILaunchConfigurationTab) newTab);
+						list.add((ILaunchConfigurationTab) newTab);
 						found = true;
 					} catch (Exception e) {
 						System.out.println(e);
