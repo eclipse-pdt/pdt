@@ -185,7 +185,7 @@ public class ContextManager {
     }
 
     private String getLocalFileName(String filename, String context, int length, boolean isWindows) {
-        String rName = filename.substring(length);
+        String rName = (filename.length() > length) ? filename.substring(length) : '/' + filename;
         if (context == null ){
             if (rName.startsWith("/")){
                 rName = rName.substring(1); 

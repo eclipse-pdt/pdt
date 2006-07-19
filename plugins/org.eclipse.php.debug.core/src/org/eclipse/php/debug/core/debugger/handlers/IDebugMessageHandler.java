@@ -11,12 +11,14 @@
 package org.eclipse.php.debug.core.debugger.handlers;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
+import org.eclipse.php.debug.core.model.PHPDebugTarget;
 
 public interface IDebugMessageHandler {
 	/**
 	 * Process the relevant message
 	 * 
 	 * @param message debug message
+	 * @param debugTarget The {@link PHPDebugTarget}
 	 */
-	public void handle(IDebugMessage request);
+	public void handle(IDebugMessage request, PHPDebugTarget debugTarget);
 }

@@ -68,6 +68,7 @@ public class DebugConnectionThread implements Runnable {
 	private int lastRequestID = 1000;
 	protected int peerResponseTimeout = 10000; // 10 seconds.
 	private Thread theThread;
+	private PHPDebugTarget debugTarget;
 
 	/**
 	 * Constructs a new DebugConnectionThread with a given Socket.
@@ -471,8 +472,8 @@ public class DebugConnectionThread implements Runnable {
 		}
 		PHPProcess process = new PHPProcess(launch, URL);
 		//		serverBehaviour.setProcess(process);
-		PHPDebugTarget target = new PHPDebugTarget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
-		launch.addDebugTarget(target);
+		debugTarget = new PHPDebugTarget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
+		launch.addDebugTarget(debugTarget);
 	}
 
 	/**
@@ -699,7 +700,7 @@ public class DebugConnectionThread implements Runnable {
 								IDebugMessageHandler requestHandler = DebugMessagesRegistry.getHandler((IDebugRequestMessage) newInputMessage);
 
 								if (requestHandler instanceof IDebugRequestHandler) {
-									requestHandler.handle((IDebugRequestMessage) newInputMessage);
+									requestHandler.handle((IDebugRequestMessage) newInputMessage, debugTarget);
 									IDebugResponseMessage response = ((IDebugRequestHandler) requestHandler).getResponseMessage();
 
 									//Log.writeLog("Client Sending response: " +response);
