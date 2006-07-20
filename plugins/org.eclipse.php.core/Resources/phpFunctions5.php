@@ -10168,6 +10168,22 @@ function is_writable($filename) {}
 function is_writeable($filename) {}
 
 /**
+ * Count the elements in an iterator 
+ *
+ * @return int
+ * @param  it Traversable
+ */
+function iterator_count($it) {}
+
+/**
+ * Copy the iterator into an array 
+ *
+ * @return array
+ * @param  it Traversable
+ */
+function iterator_to_array($it) {}
+
+/**
  * Get java server statistics 
  *
  * @return array
@@ -10330,6 +10346,15 @@ function ksort($array_arg, $sort_flags = null) {}
  * @return float
  */
 function lcg_value() {}
+
+/**
+ * Change symlink group 
+ *
+ * @return bool
+ * @param  filename string
+ * @param  group mixed
+ */
+function lchgrp($filename, $group) {}
 
 /**
  * Translate 8859 characters to t61 characters 
@@ -10920,6 +10945,15 @@ function mail($to, $subject, $message, $additional_headers = null, $additional_p
  * @vararg ... mixed
  */
 function max($arg1, $arg2 = null) {}
+
+/**
+ * Check if the string is valid for the specified encoding 
+ *
+ * @return bool
+ * @param  var string[optional]
+ * @param  encoding string
+ */
+function mb_check_encoding($var = null, $encoding) {}
 
 /**
  * Returns a case-folded version of sourcestring 
@@ -15914,8 +15948,10 @@ function oci_commit($connection) {}
  * @param  user string
  * @param  pass string
  * @param  db string[optional]
+ * @param  charset string[optional]
+ * @param  session_mode int[optional]
  */
-function oci_connect($user, $pass, $db = null) {}
+function oci_connect($user, $pass, $db = null, $charset = null, $session_mode = null) {}
 
 /**
  * Define a PHP variable to an Oracle column by name 
@@ -16203,8 +16239,9 @@ function oci_password_change($connection, $username, $old_password, $new_passwor
  * @param  user string
  * @param  pass string
  * @param  db string[optional]
+ * @param  charset string[optional]
  */
-function oci_pconnect($user, $pass, $db = null) {}
+function oci_pconnect($user, $pass, $db = null, $charset = null) {}
 
 /**
  * Return a single column of result data 
@@ -16505,8 +16542,10 @@ function ocilogoff($connection) {}
  * @param  user string
  * @param  pass string
  * @param  db string[optional]
+ * @param  charset string[optional]
+ * @param  session_mode int[optional]
  */
-function ocilogon($user, $pass, $db = null) {}
+function ocilogon($user, $pass, $db = null, $charset = null, $session_mode = null) {}
 
 /**
  * Initialize a new collection 
@@ -16580,8 +16619,9 @@ function ocipasswordchange($connection, $username, $old_password, $new_password)
  * @param  user string
  * @param  pass string
  * @param  db string[optional]
+ * @param  charset string[optional]
  */
-function ociplogon($user, $pass, $db = null) {}
+function ociplogon($user, $pass, $db = null, $charset = null) {}
 
 /**
  * Return a single column of result data 
@@ -21141,7 +21181,7 @@ function spl_autoload_functions() {}
  * Register given function as __autoload() implementation 
  *
  * @return bool
- * @param  autoload_function string[optional]
+ * @param  autoload_function mixed[optional]
  * @param  throw unknown[optional]
  */
 function spl_autoload_register($autoload_function = "spl_autoload", $throw = true) {}
@@ -21150,7 +21190,7 @@ function spl_autoload_register($autoload_function = "spl_autoload", $throw = tru
  * Unregister given function as __autoload() implementation 
  *
  * @return bool
- * @param  autoload_function string
+ * @param  autoload_function mixed
  */
 function spl_autoload_unregister($autoload_function) {}
 
@@ -22265,9 +22305,9 @@ function strtolower($str) {}
  *
  * @return int
  * @param  time string
- * @param  now int
+ * @param  now int[optional]
  */
-function strtotime($time, $now) {}
+function strtotime($time, $now = null) {}
 
 /**
  * Makes a string uppercase 
@@ -25600,7 +25640,6 @@ class ReflectionFunction {
      * @return mixed
      * @param  name string
      * @param  return bool[optional]
-     * @throws ReflectionException
      */
     function export($name, $return = null) {}
 
@@ -25733,6 +25772,13 @@ class ReflectionFunction {
      */
     function getExtensionName() {}
 
+    /**
+     * Returns whether this function is deprecated 
+     *
+     * @return bool
+     */
+    function isDeprecated() {}
+
 };
 
 class ReflectionParameter {
@@ -25771,11 +25817,25 @@ class ReflectionParameter {
     function getName() {}
 
     /**
-     * Returns this parameters's class hint or NULL if there is none 
+     * Returns the ReflectionFunction for the function of this parameter 
      *
-     * @return ReflectionClass
+     * @return ReflectionFunction
+     */
+    function getDeclaringFunction() {}
+
+    /**
+     * Returns in which class this parameter is defined (not the typehint of the parameter) 
+     *
+     * @return ReflectionClass|NULL
      */
     function getDeclaringClass() {}
+
+    /**
+     * Returns this parameters's class hint or NULL if there is none 
+     *
+     * @return ReflectionClass|NULL
+     */
+    function getClass() {}
 
     /**
      * Returns whether parameter MUST be an array 
@@ -25797,6 +25857,13 @@ class ReflectionParameter {
      * @return bool
      */
     function isPassedByReference() {}
+
+    /**
+     * Returns whether this parameter is an optional parameter 
+     *
+     * @return bool
+     */
+    function getPosition() {}
 
     /**
      * Returns whether this parameter is an optional parameter 
@@ -26452,6 +26519,13 @@ class ReflectionExtension {
      */
     function getClassNames() {}
 
+    /**
+     * Returns an array containing all names of all extensions this extension depends on 
+     *
+     * @return array
+     */
+    function getDependencies() {}
+
 };
 
 class XMLReader {
@@ -26985,15 +27059,15 @@ class SplFileInfo {
     /**
      * Class to use in openFile() 
      *
-     * @return SplFileObject
+     * @return void
      * @param  class_name string[optional]
      */
     function setFileClass($class_name = null) {}
 
     /**
-     * Class to use in getFileInfo(), getPathInfo(), getSubPathInfo() 
+     * Class to use in getFileInfo(), getPathInfo() 
      *
-     * @return SplFileObject
+     * @return void
      * @param  class_name string[optional]
      */
     function setInfoClass($class_name = null) {}
@@ -27075,14 +27149,6 @@ class RecursiveDirectoryIterator {
      * @return void
      */
     function getSubPathname() {}
-
-    /**
-     * Create SplFileInfo for sub path 
-     *
-     * @return SplFileInfo
-     * @param  class_info string[optional]
-     */
-    function getSubPathInfo($class_info = null) {}
 
 };
 
@@ -27570,28 +27636,28 @@ class RecursiveIteratorIterator {
     /**
      * Called when recursing one level down 
      *
-     * @return RecursiveIterator
+     * @return void
      */
     function beginChildren() {}
 
     /**
      * Called when end recursing one level 
      *
-     * @return RecursiveIterator
+     * @return void
      */
     function endChildren() {}
 
     /**
      * Called when the next element is available 
      *
-     * @return RecursiveIterator
+     * @return void
      */
     function nextElement() {}
 
     /**
      * Set the maximum allowed depth (or any depth if pmax_depth = -1] 
      *
-     * @return RecursiveIterator
+     * @return void
      * @param  max_depth unknown[optional]
      */
     function setMaxDepth($max_depth = -1) {}
@@ -27599,7 +27665,7 @@ class RecursiveIteratorIterator {
     /**
      * Return the maximum accepted depth or false if any depth is allowed 
      *
-     * @return RecursiveIterator
+     * @return int|false
      */
     function getMaxDepth() {}
 
@@ -27709,7 +27775,7 @@ class RecursiveFilterIterator {
     /**
      * Check whether the inner iterator's current element has children 
      *
-     * @return boolean
+     * @return bool
      */
     function hasChildren() {}
 
@@ -27831,7 +27897,7 @@ class RecursiveCachingIterator {
     /**
      * Check whether the current element of the inner iterator has children 
      *
-     * @return bolean
+     * @return bool
      */
     function hasChildren() {}
 
@@ -27874,7 +27940,7 @@ class NoRewindIterator {
     /**
      * Return inner iterators valid() 
      *
-     * @return void
+     * @return bool
      */
     function valid() {}
 
@@ -27913,7 +27979,7 @@ class InfiniteIterator {
     /**
      * Prevent a call to inner iterators rewind() (internally the current data will be fetched if valid()) 
      *
-     * @return unknown
+     * @return void
      */
     function next() {}
 
@@ -27923,35 +27989,35 @@ class EmptyIterator {
     /**
      * Does nothing  
      *
-     * @return unknown
+     * @return void
      */
     function rewind() {}
 
     /**
      * Return false 
      *
-     * @return unknown
+     * @return false
      */
     function valid() {}
 
     /**
-     * Throws exception 
+     * Throws exception BadMethodCallException 
      *
-     * @return unknown
+     * @return void
      */
     function key() {}
 
     /**
-     * Throws exception 
+     * Throws exception BadMethodCallException 
      *
-     * @return unknown
+     * @return void
      */
     function current() {}
 
     /**
      * Does nothing 
      *
-     * @return unknown
+     * @return void
      */
     function next() {}
 
@@ -27983,16 +28049,75 @@ class AppendIterator {
     /**
      * Check if the current state is valid 
      *
-     * @return boolean
+     * @return bool
      */
     function valid() {}
 
     /**
      * Forward to next element 
      *
-     * @return unknown
+     * @return void
      */
     function next() {}
+
+};
+
+class SimpleXMLIterator {
+    /**
+     * Rewind to first element 
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * Check whether iteration is valid 
+     *
+     * @return bool
+     */
+    function valid() {}
+
+    /**
+     * Get current element 
+     *
+     * @return mixed
+     */
+    function current() {}
+
+    /**
+     * Get name of current child element 
+     *
+     * @return mixed
+     */
+    function key() {}
+
+    /**
+     * Move to next element 
+     *
+     * @return void
+     */
+    function next() {}
+
+    /**
+     * Check whether element has children (elements) 
+     *
+     * @return bool
+     */
+    function hasChildren() {}
+
+    /**
+     * Get child element iterator 
+     *
+     * @return object
+     */
+    function getChildren() {}
+
+    /**
+     * Get number of child elements 
+     *
+     * @return int
+     */
+    function count() {}
 
 };
 
@@ -28470,7 +28595,7 @@ class COMPersistHelper {
 
 class swfaction {
     /**
-     * Returns a new SWFAction object, compiling the given script 
+     * Creates a new SWFAction object, compiling the given script 
      *
      * @return swfaction
      * @param  string unknown
@@ -28481,7 +28606,7 @@ class swfaction {
 
 class swfbitmap {
     /**
-     * Returns a new SWFBitmap object from jpg (with optional mask) or dbl file 
+     * Creates a new SWFBitmap object from jpg (with optional mask) or dbl file 
      *
      * @return swfbitmap
      * @param  file mixed
@@ -28507,7 +28632,7 @@ class swfbitmap {
 
 class swfbutton {
     /**
-     * Returns a new SWFButton object 
+     * Creates a new SWFButton object 
      *
      * @return swfbutton
      */
@@ -28762,7 +28887,7 @@ class swfdisplayitem {
 
 class swffill {
     /**
-     * Returns a new SWFFill object 
+     * Creates a new SWFFill object 
      *
      * @return swffill
      */
@@ -28836,7 +28961,7 @@ class swffontchar {
 
 class swffont {
     /**
-     * Returns a new SWFFont object from given file 
+     * Creates a new SWFFont object from given file 
      *
      * @return swffont
      * @param  filename string
@@ -28908,7 +29033,7 @@ class swffont {
 
 class swfgradient {
     /**
-     * Returns a new SWFGradient object 
+     * Creates a new SWFGradient object 
      *
      * @return swfgradient
      */
@@ -28930,7 +29055,7 @@ class swfgradient {
 
 class swfmorph {
     /**
-     * Returns a new SWFMorph object 
+     * Creates a new SWFMorph object 
      *
      * @return swfmorph
      */
@@ -28954,7 +29079,7 @@ class swfmorph {
 
 class swfsound {
     /**
-     * Returns a new SWFSound object from given file 
+     * Creates a new SWFSound object from given file 
      *
      * @return swfsound
      * @param  filename string
@@ -29069,7 +29194,7 @@ class swfmovie {
 
 class swfshape {
     /**
-     * Returns a new SWFShape object 
+     * Creates a new SWFShape object 
      *
      * @return swfshape
      */
@@ -29216,7 +29341,7 @@ class swfshape {
 
 class swfsprite {
     /**
-     * Returns a new SWFSprite object 
+     * Creates a new SWFSprite object 
      *
      * @return swfsprite
      */
@@ -29265,7 +29390,7 @@ class swfsprite {
 
 class swftext {
     /**
-     * Returns new SWFText object 
+     * Creates new SWFText object 
      *
      * @return swftext
      */
@@ -29388,7 +29513,7 @@ class swftext {
 
 class swftextfield {
     /**
-     * Returns a new SWFTextField object 
+     * Creates a new SWFTextField object 
      *
      * @return swftextfield
      * @param  flags int[optional]
@@ -29543,8 +29668,16 @@ class SimpleXMLElement {
      * Finds children of given node 
      *
      * @return SimpleXMLElement
+     * @param  ns string[optional]
      */
-    function children() {}
+    function children($ns = null) {}
+
+    /**
+     * Finds children of given node 
+     *
+     * @return string
+     */
+    function getName() {}
 
     /**
      * Identifies an element's attributes 
@@ -29553,6 +29686,26 @@ class SimpleXMLElement {
      * @param  ns string[optional]
      */
     function attributes($ns = null) {}
+
+    /**
+     * Add Element with optional namespace information 
+     *
+     * @return SimpleXMLElement
+     * @param  qName string
+     * @param  value string[optional]
+     * @param  ns string[optional]
+     */
+    function addChild($qName, $value = null, $ns = null) {}
+
+    /**
+     * Add Attribute with optional namespace information 
+     *
+     * @return void
+     * @param  qName string
+     * @param  value string
+     * @param  ns string[optional]
+     */
+    function addAttribute($qName, $value, $ns = null) {}
 
     /**
      * SimpleXMLElement constructor 
@@ -31833,10 +31986,10 @@ interface Countable {
 interface RecursiveIterator {
 };
 
-interface SeekableIterator {
+interface OuterIterator {
 };
 
-interface OuterIterator {
+interface SeekableIterator {
 };
 
 define("ABDAY_1", 0);
@@ -32152,6 +32305,7 @@ define("DATE_RFC850", 0);
 define("DATE_RFC1036", 0);
 define("DATE_RFC1123", 0);
 define("DATE_RFC2822", 0);
+define("DATE_RFC3339", 0);
 define("DATE_RSS", 0);
 define("DATE_W3C", 0);
 define("DAY_1", 0);
@@ -32720,6 +32874,7 @@ define("MYSQLI_REPORT_ALL", 0);
 define("MYSQLI_REPORT_ERROR", 0);
 define("MYSQLI_REPORT_INDEX", 0);
 define("MYSQLI_REPORT_OFF", 0);
+define("MYSQLI_REPORT_STRICT", 0);
 define("MYSQLI_RPL_ADMIN", 0);
 define("MYSQLI_RPL_MASTER", 0);
 define("MYSQLI_RPL_SLAVE", 0);
@@ -33320,12 +33475,14 @@ define("SQLT_AVC", 0);
 define("SQLT_BDOUBLE", 0);
 define("SQLT_BFILEE", 0);
 define("SQLT_BFLOAT", 0);
+define("SQLT_BIN", 0);
 define("SQLT_BLOB", 0);
 define("SQLT_CFILEE", 0);
 define("SQLT_CHR", 0);
 define("SQLT_CLOB", 0);
 define("SQLT_FLT", 0);
 define("SQLT_INT", 0);
+define("SQLT_LBI", 0);
 define("SQLT_LNG", 0);
 define("SQLT_LVC", 0);
 define("SQLT_NTY", 0);

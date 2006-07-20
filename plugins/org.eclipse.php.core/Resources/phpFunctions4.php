@@ -11546,6 +11546,15 @@ function mail($to, $subject, $message, $additional_headers = null, $additional_p
 function max($arg1, $arg2 = null) {}
 
 /**
+ * Check if the string is valid for the specified encoding 
+ *
+ * @return bool
+ * @param  var string[optional]
+ * @param  encoding string
+ */
+function mb_check_encoding($var = null, $encoding) {}
+
+/**
  * Returns a case-folded version of sourcestring 
  *
  * @return string
