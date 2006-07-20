@@ -7827,7 +7827,7 @@ function ifx_affected_rows($resultid) {}
 /**
  * Sets the default blob-mode for all select-queries  
  *
- * @return void
+ * @return bool
  * @param  mode int
  */
 function ifx_blobinfile_mode($mode) {}
@@ -7835,7 +7835,7 @@ function ifx_blobinfile_mode($mode) {}
 /**
  * Sets the default byte-mode for all select-queries  
  *
- * @return void
+ * @return bool
  * @param  mode int
  */
 function ifx_byteasvarchar($mode) {}
@@ -7843,7 +7843,7 @@ function ifx_byteasvarchar($mode) {}
 /**
  * Close informix connection 
  *
- * @return int
+ * @return bool
  * @param  connid resource[optional]
  */
 function ifx_close($connid = null) {}
@@ -7851,7 +7851,7 @@ function ifx_close($connid = null) {}
 /**
  * Connects to database using userid/password, returns connection id 
  *
- * @return int
+ * @return resource
  * @param  database string[optional]
  * @param  userid string[optional]
  * @param  password string[optional]
@@ -7887,7 +7887,7 @@ function ifx_create_char($param) {}
 /**
  * Executes a previously prepared query or opens a cursor for it 
  *
- * @return int
+ * @return bool
  * @param  resultid resource
  */
 function ifx_do($resultid) {}
@@ -7936,7 +7936,7 @@ function ifx_fieldtypes($resultid) {}
 /**
  * Deletes the blob-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  */
 function ifx_free_blob($bid) {}
@@ -7944,7 +7944,7 @@ function ifx_free_blob($bid) {}
 /**
  * Deletes the char-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  */
 function ifx_free_char($bid) {}
@@ -7952,7 +7952,7 @@ function ifx_free_char($bid) {}
 /**
  * Releases resources for query associated with resultid 
  *
- * @return int
+ * @return bool
  * @param  resultid resource
  */
 function ifx_free_result($resultid) {}
@@ -7960,7 +7960,7 @@ function ifx_free_result($resultid) {}
 /**
  * Returns the content of the blob-object 
  *
- * @return int
+ * @return string
  * @param  bid int
  */
 function ifx_get_blob($bid) {}
@@ -7968,7 +7968,7 @@ function ifx_get_blob($bid) {}
 /**
  * Returns the content of the char-object 
  *
- * @return int
+ * @return string
  * @param  bid int
  */
 function ifx_get_char($bid) {}
@@ -7993,7 +7993,7 @@ function ifx_htmltbl_result($resultid, $htmltableoptions = null) {}
 /**
  * Sets the default return value of a NULL-value on a fetch-row  
  *
- * @return void
+ * @return bool
  * @param  mode int
  */
 function ifx_nullformat($mode) {}
@@ -8017,7 +8017,7 @@ function ifx_num_rows($resultid) {}
 /**
  * Connects to database using userid/password, returns connection id 
  *
- * @return int
+ * @return resource
  * @param  database string[optional]
  * @param  userid string[optional]
  * @param  password string[optional]
@@ -8027,7 +8027,7 @@ function ifx_pconnect($database = null, $userid = null, $password = null) {}
 /**
  * Prepare a query on a given connection 
  *
- * @return int
+ * @return resource
  * @param  query string
  * @param  connid resource
  * @param  cursortype int[optional]
@@ -8038,7 +8038,7 @@ function ifx_prepare($query, $connid, $cursortype = null, $idarray = null) {}
 /**
  * Perform a query on a given connection 
  *
- * @return int
+ * @return resource
  * @param  query string
  * @param  connid resource
  * @param  cursortype int[optional]
@@ -8049,7 +8049,7 @@ function ifx_query($query, $connid, $cursortype = null, $idarray = null) {}
 /**
  * Sets the default text-mode for all select-queries 
  *
- * @return void
+ * @return bool
  * @param  mode int
  */
 function ifx_textasvarchar($mode) {}
@@ -8066,7 +8066,7 @@ function ifx_update_blob($bid, $content) {}
 /**
  * Updates the content of the char-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  * @param  content string
  */
@@ -8075,7 +8075,7 @@ function ifx_update_char($bid, $content) {}
 /**
  * Deletes the slob-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  */
 function ifxus_close_slob($bid) {}
@@ -8091,7 +8091,7 @@ function ifxus_create_slob($mode) {}
 /**
  * Deletes the slob-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  */
 function ifxus_free_slob($bid) {}
@@ -8108,7 +8108,7 @@ function ifxus_open_slob($bid, $mode) {}
 /**
  * Reads nbytes of the slob-object 
  *
- * @return int
+ * @return string
  * @param  bid int
  * @param  nbytes int
  */
@@ -10166,6 +10166,27 @@ function is_writable($filename) {}
  * @param  filename string
  */
 function is_writeable($filename) {}
+
+/**
+ * Get java server statistics 
+ *
+ * @return array
+ */
+function java_get_statistics() {}
+
+/**
+ * Clear last java exception 
+ *
+ * @return void
+ */
+function java_last_exception_clear() {}
+
+/**
+ * Get last Java exception 
+ *
+ * @return object
+ */
+function java_last_exception_get() {}
 
 /**
  * Returns name or number of day of week from julian day count 
@@ -21112,14 +21133,14 @@ function spl_autoload_extensions($file_extensions = null) {}
 /**
  * Return all registered __autoload() functionns 
  *
- * @return false|array
+ * @return array
  */
 function spl_autoload_functions() {}
 
 /**
  * Register given function as __autoload() implementation 
  *
- * @return void
+ * @return bool
  * @param  autoload_function string[optional]
  * @param  throw unknown[optional]
  */
@@ -24389,6 +24410,96 @@ function pg_connect($connection_string, $connect_type) {}
  */
 function pg_connect($host, $port, $options = null, $tty = null, $database) {}
 
+class Exception {
+    /**
+     * Clone the exception object 
+     *
+     * @return Exception
+     */
+    function __clone() {}
+
+    /**
+     * Exception constructor 
+     *
+     * @return Exception
+     * @param  message string
+     * @param  code int
+     */
+    function __construct($message, $code) {}
+
+    /**
+     * Get the file in which the exception occurred 
+     *
+     * @return string
+     */
+    function getFile() {}
+
+    /**
+     * Get the line in which the exception occurred 
+     *
+     * @return int
+     */
+    function getLine() {}
+
+    /**
+     * Get the exception message 
+     *
+     * @return string
+     */
+    function getMessage() {}
+
+    /**
+     * Get the exception code 
+     *
+     * @return int
+     */
+    function getCode() {}
+
+    /**
+     * Get the stack trace for the location in which the exception occurred 
+     *
+     * @return array
+     */
+    function getTrace() {}
+
+    /**
+     * Obtain the backtrace for the exception as a string (instead of an array) 
+     *
+     * @return string
+     */
+    function getTraceAsString() {}
+
+    /**
+     * Obtain the string representation of the Exception object 
+     *
+     * @return string
+     */
+    function __toString() {}
+
+};
+
+class ErrorException extends Exception {
+    /**
+     * ErrorException constructor 
+     *
+     * @return ErrorException
+     * @param  message string
+     * @param  code int
+     * @param  severity int
+     * @param  filename string[optional]
+     * @param  lineno int[optional]
+     */
+    function __construct($message, $code, $severity, $filename = null, $lineno = null) {}
+
+    /**
+     * Get the exception severity 
+     *
+     * @return int
+     */
+    function getSeverity() {}
+
+};
+
 class ApacheRequest {
     /**
      * 
@@ -24777,96 +24888,6 @@ class ApacheRequest {
 
 };
 
-class Exception {
-    /**
-     * Clone the exception object 
-     *
-     * @return Exception
-     */
-    function __clone() {}
-
-    /**
-     * Exception constructor 
-     *
-     * @return Exception
-     * @param  message string
-     * @param  code int
-     */
-    function __construct($message, $code) {}
-
-    /**
-     * Get the file in which the exception occurred 
-     *
-     * @return string
-     */
-    function getFile() {}
-
-    /**
-     * Get the line in which the exception occurred 
-     *
-     * @return int
-     */
-    function getLine() {}
-
-    /**
-     * Get the exception message 
-     *
-     * @return string
-     */
-    function getMessage() {}
-
-    /**
-     * Get the exception code 
-     *
-     * @return int
-     */
-    function getCode() {}
-
-    /**
-     * Get the stack trace for the location in which the exception occurred 
-     *
-     * @return array
-     */
-    function getTrace() {}
-
-    /**
-     * Obtain the backtrace for the exception as a string (instead of an array) 
-     *
-     * @return string
-     */
-    function getTraceAsString() {}
-
-    /**
-     * Obtain the string representation of the Exception object 
-     *
-     * @return string
-     */
-    function __toString() {}
-
-};
-
-class ErrorException extends Exception {
-    /**
-     * ErrorException constructor 
-     *
-     * @return ErrorException
-     * @param  message string
-     * @param  code int
-     * @param  severity int
-     * @param  filename string[optional]
-     * @param  lineno int[optional]
-     */
-    function __construct($message, $code, $severity, $filename = null, $lineno = null) {}
-
-    /**
-     * Get the exception severity 
-     *
-     * @return int
-     */
-    function getSeverity() {}
-
-};
-
 class PDO {
     /**
      * Creates a new large object, returning its identifier.  Must be called inside a transaction. 
@@ -24983,7 +25004,7 @@ class PDO {
     /**
      * Prepare and execute $sql; returns the statement object for iteration 
      *
-     * @return PDOStatement
+     * @return bool
      * @param  sql string
      * @param  args PDOStatement::setFetchMode()[optional]
      */
@@ -25545,7 +25566,7 @@ class DOMDocumentFragment {
     /**
      * 
      *
-     * @return void
+     * @return bool
      * @param  data string
      */
     function appendXML($data) {}
@@ -28194,6 +28215,13 @@ class SoapFault {
      */
     function SoapFault($faultcode, $faultstring, $faultactor = null, $detail = null, $faultname = null, $headerfault = null) {}
 
+    /**
+     * 
+     *
+     * @return object
+     */
+    function __toString() {}
+
 };
 
 class SoapVar {
@@ -29498,7 +29526,7 @@ class SimpleXMLElement {
     /**
      * Return all namespaces in use 
      *
-     * @return string
+     * @return array
      * @param  recursve bool[optional]
      */
     function getNamespaces($recursve = null) {}
@@ -29506,7 +29534,7 @@ class SimpleXMLElement {
     /**
      * Return all namespaces registered with document 
      *
-     * @return string
+     * @return array
      * @param  recursive bool[optional]
      */
     function getDocNamespaces($recursive = null) {}
@@ -29514,14 +29542,14 @@ class SimpleXMLElement {
     /**
      * Finds children of given node 
      *
-     * @return object
+     * @return SimpleXMLElement
      */
     function children() {}
 
     /**
      * Identifies an element's attributes 
      *
-     * @return array
+     * @return SimpleXMLElement
      * @param  ns string[optional]
      */
     function attributes($ns = null) {}
@@ -32150,6 +32178,7 @@ define("DB2_PARAM_INOUT", 0);
 define("DB2_PARAM_OUT", 0);
 define("DB2_PASSTHRU", 0);
 define("DB2_SCROLLABLE", 0);
+define("DB2_XML", 0);
 define("DEBUGGER_VERSION", 0);
 define("DECIMAL_POINT", 0);
 define("DECLINED", 0);
@@ -33560,6 +33589,10 @@ define("UPLOAD_ERR_NO_TMP_DIR", 0);
 define("UPLOAD_ERR_OK", 0);
 define("UPLOAD_ERR_PARTIAL", 0);
 define("WNOHANG", 0);
+define("WSDL_CACHE_BOTH", 0);
+define("WSDL_CACHE_DISK", 0);
+define("WSDL_CACHE_MEMORY", 0);
+define("WSDL_CACHE_NONE", 0);
 define("WUNTRACED", 0);
 define("X509_PURPOSE_ANY", 0);
 define("X509_PURPOSE_CRL_SIGN", 0);

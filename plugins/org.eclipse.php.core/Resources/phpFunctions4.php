@@ -7359,7 +7359,7 @@ function ifx_affected_rows($resultid) {}
 /**
  * Sets the default blob-mode for all select-queries  
  *
- * @return void
+ * @return bool
  * @param  mode int
  */
 function ifx_blobinfile_mode($mode) {}
@@ -7367,7 +7367,7 @@ function ifx_blobinfile_mode($mode) {}
 /**
  * Sets the default byte-mode for all select-queries  
  *
- * @return void
+ * @return bool
  * @param  mode int
  */
 function ifx_byteasvarchar($mode) {}
@@ -7375,7 +7375,7 @@ function ifx_byteasvarchar($mode) {}
 /**
  * Close informix connection 
  *
- * @return int
+ * @return bool
  * @param  connid resource[optional]
  */
 function ifx_close($connid = null) {}
@@ -7383,7 +7383,7 @@ function ifx_close($connid = null) {}
 /**
  * Connects to database using userid/password, returns connection id 
  *
- * @return int
+ * @return resource
  * @param  database string[optional]
  * @param  userid string[optional]
  * @param  password string[optional]
@@ -7419,7 +7419,7 @@ function ifx_create_char($param) {}
 /**
  * Executes a previously prepared query or opens a cursor for it 
  *
- * @return int
+ * @return bool
  * @param  resultid resource
  */
 function ifx_do($resultid) {}
@@ -7468,7 +7468,7 @@ function ifx_fieldtypes($resultid) {}
 /**
  * Deletes the blob-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  */
 function ifx_free_blob($bid) {}
@@ -7476,7 +7476,7 @@ function ifx_free_blob($bid) {}
 /**
  * Deletes the char-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  */
 function ifx_free_char($bid) {}
@@ -7484,7 +7484,7 @@ function ifx_free_char($bid) {}
 /**
  * Releases resources for query associated with resultid 
  *
- * @return int
+ * @return bool
  * @param  resultid resource
  */
 function ifx_free_result($resultid) {}
@@ -7492,7 +7492,7 @@ function ifx_free_result($resultid) {}
 /**
  * Returns the content of the blob-object 
  *
- * @return int
+ * @return string
  * @param  bid int
  */
 function ifx_get_blob($bid) {}
@@ -7500,7 +7500,7 @@ function ifx_get_blob($bid) {}
 /**
  * Returns the content of the char-object 
  *
- * @return int
+ * @return string
  * @param  bid int
  */
 function ifx_get_char($bid) {}
@@ -7525,7 +7525,7 @@ function ifx_htmltbl_result($resultid, $htmltableoptions = null) {}
 /**
  * Sets the default return value of a NULL-value on a fetch-row  
  *
- * @return void
+ * @return bool
  * @param  mode int
  */
 function ifx_nullformat($mode) {}
@@ -7549,7 +7549,7 @@ function ifx_num_rows($resultid) {}
 /**
  * Connects to database using userid/password, returns connection id 
  *
- * @return int
+ * @return resource
  * @param  database string[optional]
  * @param  userid string[optional]
  * @param  password string[optional]
@@ -7559,7 +7559,7 @@ function ifx_pconnect($database = null, $userid = null, $password = null) {}
 /**
  * Prepare a query on a given connection 
  *
- * @return int
+ * @return resource
  * @param  query string
  * @param  connid resource
  * @param  cursortype int[optional]
@@ -7570,7 +7570,7 @@ function ifx_prepare($query, $connid, $cursortype = null, $idarray = null) {}
 /**
  * Perform a query on a given connection 
  *
- * @return int
+ * @return resource
  * @param  query string
  * @param  connid resource
  * @param  cursortype int[optional]
@@ -7581,7 +7581,7 @@ function ifx_query($query, $connid, $cursortype = null, $idarray = null) {}
 /**
  * Sets the default text-mode for all select-queries 
  *
- * @return void
+ * @return bool
  * @param  mode int
  */
 function ifx_textasvarchar($mode) {}
@@ -7598,7 +7598,7 @@ function ifx_update_blob($bid, $content) {}
 /**
  * Updates the content of the char-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  * @param  content string
  */
@@ -7607,7 +7607,7 @@ function ifx_update_char($bid, $content) {}
 /**
  * Deletes the slob-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  */
 function ifxus_close_slob($bid) {}
@@ -7623,7 +7623,7 @@ function ifxus_create_slob($mode) {}
 /**
  * Deletes the slob-object 
  *
- * @return int
+ * @return bool
  * @param  bid int
  */
 function ifxus_free_slob($bid) {}
@@ -7640,7 +7640,7 @@ function ifxus_open_slob($bid, $mode) {}
 /**
  * Reads nbytes of the slob-object 
  *
- * @return int
+ * @return string
  * @param  bid int
  * @param  nbytes int
  */
@@ -10060,7 +10060,14 @@ function is_writable($filename) {}
 function is_writeable($filename) {}
 
 /**
- * Clear last java extension 
+ * Get java server statistics 
+ *
+ * @return array
+ */
+function java_get_statistics() {}
+
+/**
+ * Clear last java exception 
  *
  * @return void
  */
@@ -18124,7 +18131,7 @@ function pdf_add_bookmark($pdfdoc, $text, $parent = null, $open) {}
 /**
  * Adds link to web resource 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  llx float
  * @param  lly float
@@ -18137,7 +18144,7 @@ function pdf_add_launchlink($pdfdoc, $llx, $lly, $urx, $ury, $filename) {}
 /**
  * Adds link to web resource 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  llx float
  * @param  lly float
@@ -18151,7 +18158,7 @@ function pdf_add_locallink($pdfdoc, $llx, $lly, $urx, $ury, $page, $dest) {}
 /**
  * Sets annotation 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  llx float
  * @param  lly float
@@ -18178,7 +18185,7 @@ function pdf_add_outline($pdfdoc, $text, $parent = null, $open) {}
 /**
  * Adds link to PDF document 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  llx float
  * @param  lly float
@@ -18193,7 +18200,7 @@ function pdf_add_pdflink($pdfdoc, $llx, $lly, $urx, $ury, $filename, $page, $des
 /**
  * * Add an existing image as thumbnail for the current page. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  image int
  */
@@ -18202,7 +18209,7 @@ function pdf_add_thumbnail($pdf, $image) {}
 /**
  * Adds link to web resource 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  llx float
  * @param  lly float
@@ -18215,7 +18222,7 @@ function pdf_add_weblink($pdfdoc, $llx, $lly, $urx, $ury, $url) {}
 /**
  * Draws an arc 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  x float
  * @param  y float
@@ -18228,7 +18235,7 @@ function pdf_arc($pdfdoc, $x, $y, $radius, $start, $end) {}
 /**
  * * Draw a clockwise circular arc from alpha to beta degrees. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  x float
  * @param  y float
@@ -18241,7 +18248,7 @@ function pdf_arcn($pdf, $x, $y, $r, $alpha, $beta) {}
 /**
  * Adds a file attachment annotation at the rectangle specified by his lower left and upper right corners 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  lly float
  * @param  lly float
@@ -18258,7 +18265,7 @@ function pdf_attach_file($pdf, $lly, $lly, $urx, $ury, $filename, $description, 
 /**
  * Starts page 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  width float
  * @param  height float
@@ -18291,7 +18298,7 @@ function pdf_begin_template($pdf, $width, $height) {}
 /**
  * Draws a circle 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  x float
  * @param  y float
@@ -18302,7 +18309,7 @@ function pdf_circle($pdfdoc, $x, $y, $radius) {}
 /**
  * Clips to current path 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_clip($pdfdoc) {}
@@ -18310,7 +18317,7 @@ function pdf_clip($pdfdoc) {}
 /**
  * Closes the pdf document 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_close($pdfdoc) {}
@@ -18327,7 +18334,7 @@ function pdf_close_image($pdf, $pdfimage) {}
 /**
  * * Close all open page handles, and close the input PDF document. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  doc int
  */
@@ -18336,7 +18343,7 @@ function pdf_close_pdi($pdf, $doc) {}
 /**
  * * Close the page handle, and free all page-related resources. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  page int
  */
@@ -18345,7 +18352,7 @@ function pdf_close_pdi_page($pdf, $page) {}
 /**
  * Close path 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_closepath($pdfdoc) {}
@@ -18353,7 +18360,7 @@ function pdf_closepath($pdfdoc) {}
 /**
  * Close, fill and stroke current path 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_closepath_fill_stroke($pdfdoc) {}
@@ -18361,7 +18368,7 @@ function pdf_closepath_fill_stroke($pdfdoc) {}
 /**
  * Close path and draw line along path 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_closepath_stroke($pdfdoc) {}
@@ -18369,7 +18376,7 @@ function pdf_closepath_stroke($pdfdoc) {}
 /**
  * Concatenates a matrix to the current transformation matrix for text and graphics 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  a float
  * @param  b float
@@ -18383,7 +18390,7 @@ function pdf_concat($pdf, $a, $b, $c, $d, $e, $f) {}
 /**
  * Output text in next line 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  text string
  */
@@ -18392,7 +18399,7 @@ function pdf_continue_text($pdfdoc, $text) {}
 /**
  * Draws a curve 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  x1 float
  * @param  y1 float
@@ -18414,7 +18421,7 @@ function pdf_delete($pdfdoc) {}
 /**
  * Ends page 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_end_page($pdfdoc) {}
@@ -18422,7 +18429,7 @@ function pdf_end_page($pdfdoc) {}
 /**
  * * Finish the pattern definition. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  */
 function pdf_end_pattern($pdf) {}
@@ -18430,7 +18437,7 @@ function pdf_end_pattern($pdf) {}
 /**
  * * Finish the template definition. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  */
 function pdf_end_template($pdf) {}
@@ -18446,7 +18453,7 @@ function pdf_endpath($pdfdoc) {}
 /**
  * Fill current path 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_fill($pdfdoc) {}
@@ -18454,7 +18461,7 @@ function pdf_fill($pdfdoc) {}
 /**
  * Fill and stroke current path 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_fill_stroke($pdfdoc) {}
@@ -18473,7 +18480,7 @@ function pdf_findfont($pdfdoc, $fontname, $encoding, $embed = null) {}
 /**
  * Fetches the full buffer containig the generated PDF data 
  *
- * @return string
+ * @return int
  * @param  pdfdoc int
  */
 function pdf_get_buffer($pdfdoc) {}
@@ -18581,7 +18588,7 @@ function pdf_get_value($pdfdoc, $key, $modifier) {}
 /**
  * * Reset all implicit color and graphics state parameters to their defaults. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  */
 function pdf_initgraphics($pdf) {}
@@ -18589,7 +18596,7 @@ function pdf_initgraphics($pdf) {}
 /**
  * Draws a line 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  x float
  * @param  y float
@@ -18608,7 +18615,7 @@ function pdf_makespotcolor($pdf, $spotname) {}
 /**
  * Sets current point 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  x float
  * @param  y float
@@ -18618,7 +18625,7 @@ function pdf_moveto($pdfdoc, $x, $y) {}
 /**
  * Creates a new PDF object 
  *
- * @return resource
+ * @return int
  */
 function pdf_new() {}
 
@@ -18647,7 +18654,7 @@ function pdf_open_ccitt($pdf, $filename, $width, $height, $bitreverse, $k, $blac
 /**
  * Opens a new PDF document. If filename is NULL, document is created in memory. This is not yet fully supported 
  *
- * @return bool
+ * @return int
  * @param  pdfdoc int
  * @param  filename char[optional]
  */
@@ -18752,7 +18759,7 @@ function pdf_open_tiff($pdf, $tifffile) {}
 /**
  * Places image in the PDF document 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  pdfimage int
  * @param  x float
@@ -18764,7 +18771,7 @@ function pdf_place_image($pdf, $pdfimage, $x, $y, $scale) {}
 /**
  * * Place a PDF page with the lower left corner at (x, y), and scale it. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  page int
  * @param  x float
@@ -18777,7 +18784,7 @@ function pdf_place_pdi_page($pdf, $page, $x, $y, $sx, $sy) {}
 /**
  * Draws a rectangle 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  x float
  * @param  y float
@@ -18789,7 +18796,7 @@ function pdf_rect($pdfdoc, $x, $y, $width, $height) {}
 /**
  * Restores formerly saved enviroment 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_restore($pdfdoc) {}
@@ -18797,7 +18804,7 @@ function pdf_restore($pdfdoc) {}
 /**
  * Sets rotation 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  angle float
  */
@@ -18806,7 +18813,7 @@ function pdf_rotate($pdfdoc, $angle) {}
 /**
  * Saves current enviroment 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_save($pdfdoc) {}
@@ -18814,7 +18821,7 @@ function pdf_save($pdfdoc) {}
 /**
  * Sets scaling 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  x_scale float
  * @param  y_scale float
@@ -18824,7 +18831,7 @@ function pdf_scale($pdfdoc, $x_scale, $y_scale) {}
 /**
  * Sets color of box surounded all kinds of annotations and links 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  red float
  * @param  green float
@@ -18835,7 +18842,7 @@ function pdf_set_border_color($pdfdoc, $red, $green, $blue) {}
 /**
  * Sets the border dash style of all kinds of annotations and links 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  black float
  * @param  white float
@@ -18845,7 +18852,7 @@ function pdf_set_border_dash($pdfdoc, $black, $white) {}
 /**
  * Sets style of box surounding all kinds of annotations and link 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  style string
  * @param  width float
@@ -18958,7 +18965,7 @@ function pdf_set_leading($pdfdoc, $distance) {}
 /**
  * Sets arbitrary parameters 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  key string
  * @param  value string
@@ -18968,7 +18975,7 @@ function pdf_set_parameter($pdfdoc, $key, $value) {}
 /**
  * Sets the position of text for the next pdf_show call 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  x float
  * @param  y float
@@ -19005,7 +19012,7 @@ function pdf_set_transition($pdfdoc, $transition) {}
 /**
  * Sets arbitrary value 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  key string
  * @param  value float
@@ -19024,7 +19031,7 @@ function pdf_set_word_spacing($pdfdoc, $space) {}
 /**
  * * Set the current color space and color. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  type string
  * @param  colorspace string
@@ -19038,7 +19045,7 @@ function pdf_setcolor($pdf, $type, $colorspace, $c1, $c2 = null, $c3 = null, $c4
 /**
  * Sets dash pattern 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  black float
  * @param  white float
@@ -19048,7 +19055,7 @@ function pdf_setdash($pdfdoc, $black, $white) {}
 /**
  * Sets flatness 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  value float
  */
@@ -19057,7 +19064,7 @@ function pdf_setflat($pdfdoc, $value) {}
 /**
  * Sets the current font in the fiven fontsize 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  font int
  * @param  fontsize float
@@ -19067,7 +19074,7 @@ function pdf_setfont($pdfdoc, $font, $fontsize) {}
 /**
  * Sets drawing and filling color to gray value 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  value float
  */
@@ -19076,7 +19083,7 @@ function pdf_setgray($pdfdoc, $value) {}
 /**
  * Sets filling color to gray value 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  value float
  */
@@ -19085,7 +19092,7 @@ function pdf_setgray_fill($pdfdoc, $value) {}
 /**
  * Sets drawing color to gray value 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  value float
  */
@@ -19094,7 +19101,7 @@ function pdf_setgray_stroke($pdfdoc, $value) {}
 /**
  * Sets linecap parameter 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  value int
  */
@@ -19103,7 +19110,7 @@ function pdf_setlinecap($pdfdoc, $value) {}
 /**
  * Sets linejoin parameter 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  value int
  */
@@ -19112,7 +19119,7 @@ function pdf_setlinejoin($pdfdoc, $value) {}
 /**
  * Sets line width 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  width float
  */
@@ -19121,7 +19128,7 @@ function pdf_setlinewidth($pdfdoc, $width) {}
 /**
  * Explicitly set the current transformation matrix. 
  *
- * @return bool
+ * @return void
  * @param  pdf int
  * @param  a float
  * @param  b float
@@ -19135,7 +19142,7 @@ function pdf_setmatrix($pdf, $a, $b, $c, $d, $e, $f) {}
 /**
  * Sets miter limit 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  value float
  */
@@ -19153,7 +19160,7 @@ function pdf_setpolydash($pdfdoc, $darray) {}
 /**
  * Sets drawing and filling color to RGB color value 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  red float
  * @param  green float
@@ -19164,7 +19171,7 @@ function pdf_setrgbcolor($pdfdoc, $red, $green, $blue) {}
 /**
  * Sets filling color to RGB color value 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  red float
  * @param  green float
@@ -19175,7 +19182,7 @@ function pdf_setrgbcolor_fill($pdfdoc, $red, $green, $blue) {}
 /**
  * Sets drawing color to RGB color value 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  red float
  * @param  green float
@@ -19186,7 +19193,7 @@ function pdf_setrgbcolor_stroke($pdfdoc, $red, $green, $blue) {}
 /**
  * Output text at current position 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  text string
  */
@@ -19210,7 +19217,7 @@ function pdf_show_boxed($pdfdoc, $text, $x_koor, $y_koor, $width, $height, $mode
 /**
  * Output text at position 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  text string
  * @param  x_koor float
@@ -19221,7 +19228,7 @@ function pdf_show_xy($pdfdoc, $text, $x_koor, $y_koor) {}
 /**
  * Skew the coordinate system 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  xangle float
  * @param  yangle float
@@ -19242,7 +19249,7 @@ function pdf_stringwidth($pdfdoc, $text, $font = null, $size) {}
 /**
  * Draw line along path path 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function pdf_stroke($pdfdoc) {}
@@ -19250,7 +19257,7 @@ function pdf_stroke($pdfdoc) {}
 /**
  * Sets origin of coordinate system 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  x float
  * @param  y float
@@ -28473,6 +28480,13 @@ class SoapFault {
      */
     function SoapFault($faultcode, $faultstring, $faultactor = null, $detail = null, $faultname = null, $headerfault = null) {}
 
+    /**
+     * 
+     *
+     * @return object
+     */
+    function __toString() {}
+
 };
 
 class SoapVar {
@@ -30426,6 +30440,10 @@ define("W32API_CDECL", 0);
 define("W32API_REAL4", 0);
 define("W32API_REAL8", 0);
 define("WNOHANG", 0);
+define("WSDL_CACHE_BOTH", 0);
+define("WSDL_CACHE_DISK", 0);
+define("WSDL_CACHE_MEMORY", 0);
+define("WSDL_CACHE_NONE", 0);
 define("WUNTRACED", 0);
 define("X509_PURPOSE_ANY", 0);
 define("X509_PURPOSE_CRL_SIGN", 0);
