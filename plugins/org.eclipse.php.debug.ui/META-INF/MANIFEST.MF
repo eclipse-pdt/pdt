@@ -33,5 +33,6 @@ Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.debug.ui.breakpoint.provider,
  org.eclipse.php.debug.ui.launching,
  org.eclipse.php.debug.ui.preferences,
- org.eclipse.php.debug.ui.presentation
+ org.eclipse.php.debug.ui.presentation,
+ org.eclipse.php.debug.ui.sourcelookup
 Bundle-Vendor: Eclipse.org
