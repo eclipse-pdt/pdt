@@ -113,6 +113,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 	public PHPExecutableLaunchTab() {
 		enableFileSelection = true;
+		phpsComboBlock = new PHPsComboBlock();
 	}
 
 	/* (non-Javadoc)
@@ -231,7 +232,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	protected void createLocationComponent(final Composite parent) {
 
-		phpsComboBlock = new PHPsComboBlock();
 		//		phpsComboBlock.setDefaultPHPexeDescriptor(getDefaultPHPexeDescriptor());
 		phpsComboBlock.setSpecificPHPexeDescriptor(getSpecificPHPexeDescriptor());
 		phpsComboBlock.createControl(parent);
@@ -361,12 +361,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public boolean isValid(final ILaunchConfiguration launchConfig) {
 		setErrorMessage(null);
 		try {
-			String phpExe = launchConfig.getAttribute(PHPCoreConstants.ATTR_LOCATION, "");
-			if (phpExe.equals("")) {
-				final PHPexes phpExes = new PHPexes();
-				phpExes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
-				phpExe = phpExes.getDefaultItem().getPhpEXE().toString();
-			}
+			final String phpExe = launchConfig.getAttribute(PHPCoreConstants.ATTR_LOCATION, "");
 			boolean phpExeExists = true;
 			try {
 				final File file = new File(phpExe);
@@ -418,6 +413,17 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
+		try {
+			String location = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, ""); //$NON-NLS-1$
+			if (location.equals("")) {
+				final PHPexes phpExes = new PHPexes();
+				phpExes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
+				location = phpExes.getDefaultItem().getPhpEXE().toString();
+				configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
+			}
+		} catch (final CoreException e) {
+			Logger.log(Logger.ERROR, "Error setting default configuration", e); //$NON-NLS-1$
+		}
 		return;
 	}
 
@@ -460,7 +466,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		} catch (final CoreException ce) {
 			Logger.log(Logger.ERROR, "Error reading configuration", ce); //$NON-NLS-1$
 		}
-		argumentField.setText(arguments);
+		if (argumentField != null)
+			argumentField.setText(arguments);
 	}
 
 	/**
@@ -475,7 +482,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		} catch (final CoreException e) {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}
-		runWithDebugInfo.setSelection(runOption);
+		if (runWithDebugInfo != null)
+			runWithDebugInfo.setSelection(runOption);
 	}
 
 	/**
