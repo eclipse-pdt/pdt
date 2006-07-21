@@ -54,44 +54,52 @@ import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	protected Map envVariables = null;
 
-	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+	public void debugPHPExecutable(final ILaunch launch, final String phpExe, final String fileToDebug) throws DebugException {
+		try {
+			final PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
+			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath(), envVariables);
+		} catch (final java.io.IOException e1) {
+			Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e1);
+			final String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e1));
+		}
+	}
+
+	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
 		IProgressMonitor subMonitor; // the total of monitor is 100
-		if (monitor.isCanceled()) {
+		if (monitor.isCanceled())
 			return;
-		}
 
-		String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
-		String projectName = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
-		String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-		boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
+		final String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
+		final String projectName = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
+		final String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+		final boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
 
-		if (monitor.isCanceled()) {
+		if (monitor.isCanceled())
 			return;
-		}
 
 		if (fileNameString == null || fileNameString.equals(""))
 			return;
 
-		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		IPath filePath = new Path(fileNameString);
+		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		final IPath filePath = new Path(fileNameString);
 		IProject project = null;
 		String absolutePath = null;
 		if (projectName == null) {
-			IResource res = workspaceRoot.findMember(filePath);
+			final IResource res = workspaceRoot.findMember(filePath);
 			if (res == null)
 				return;
 			project = res.getProject();
 			absolutePath = res.getLocation().toString();
 		} else {
 			try {
-				IPath projectPath = new Path(projectName);
+				final IPath projectPath = new Path(projectName);
 				project = workspaceRoot.getProject(projectPath.lastSegment());
 				absolutePath = filePath.makeAbsolute().toString();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 			}
-			if (project == null) {
+			if (project == null)
 				return;
-			}
 		}
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
@@ -100,24 +108,28 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		//		}
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
-			boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
-			int requestPort = PHPProjectPreferences.getDebugPort(project);
+			final boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+			final int requestPort = PHPProjectPreferences.getDebugPort(project);
 
 			// Set Project Name
-			String projectString = project.getFullPath().toString();
-			ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
+			final String projectString = project.getFullPath().toString();
+
+			ILaunchConfigurationWorkingCopy wc;
+			if (configuration.isWorkingCopy())
+				wc = (ILaunchConfigurationWorkingCopy) configuration;
+			else
+				wc = configuration.getWorkingCopy();
 			wc.setAttribute(IPHPConstants.PHP_Project, projectString);
-			
+
 			// Set transfer encoding:
 			wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
 			wc.doSave();
 
-			if (monitor.isCanceled()) {
+			if (monitor.isCanceled())
 				return;
-			}
 
 			// Generate a session id for this launch and put it in the map
-			int sessionID = DebugSessionIdGenerator.generateSessionID();
+			final int sessionID = DebugSessionIdGenerator.generateSessionID();
 			PHPSessionLaunchMapper.put(sessionID, launch);
 
 			// Define all needed debug attributes:
@@ -129,54 +141,48 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			debugPHPExecutable(launch, phpExeString, absolutePath);
 		} else {
 			// resolve location
-			IPath phpExe = new Path(phpExeString);
+			final IPath phpExe = new Path(phpExeString);
 
-			if (monitor.isCanceled()) {
+			if (monitor.isCanceled())
 				return;
-			}
 
 			// resolve working directory
 			//            String projectFolderString = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String)null);
 
 			IPath projectLocation = project.getRawLocation();
-			if (projectLocation == null) {
+			if (projectLocation == null)
 				projectLocation = project.getLocation();
-			}
-			String location = projectLocation.toOSString();
-			IPath p1 = new Path(location);
-			File projectDir = p1.toFile();
+			final String location = projectLocation.toOSString();
+			final IPath p1 = new Path(location);
+			final File projectDir = p1.toFile();
 
-			if (monitor.isCanceled()) {
+			if (monitor.isCanceled())
 				return;
-			}
 
 			//            String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String)null);
 			IPath phpFile = new Path(fileNameString);
 			if (fileNameString.startsWith("/"))
 				phpFile = phpFile.removeFirstSegments(1);
 
-			if (monitor.isCanceled()) {
+			if (monitor.isCanceled())
 				return;
-			}
 
-			String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
+			final String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
 
-			if (monitor.isCanceled()) {
+			if (monitor.isCanceled())
 				return;
-			}
 
-			String[] cmdLine = new String[] { phpExe.toOSString(), phpFile.toOSString() };
+			final String[] cmdLine = new String[] { phpExe.toOSString(), phpFile.toOSString() };
 
-			Process p = DebugPlugin.exec(cmdLine, projectDir, envp);
+			final Process p = DebugPlugin.exec(cmdLine, projectDir, envp);
 			IProcess process = null;
 
 			// add process type to process attributes
-			Map processAttributes = new HashMap();
+			final Map processAttributes = new HashMap();
 			String programName = phpExe.lastSegment();
-			String extension = phpExe.getFileExtension();
-			if (extension != null) {
+			final String extension = phpExe.getFileExtension();
+			if (extension != null)
 				programName = programName.substring(0, programName.length() - (extension.length() + 1));
-			}
 			programName = programName.toLowerCase();
 			processAttributes.put(IProcess.ATTR_PROCESS_TYPE, programName);
 
@@ -186,7 +192,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				process = DebugPlugin.newProcess(launch, p, phpExe.toOSString(), processAttributes);
 				if (process == null) {
 					p.destroy();
-					throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null)); //$NON-NLS-1$
+					throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null)); 
 				}
 				subMonitor.done();
 
@@ -203,16 +209,15 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				 */
 			} else {
 				// wait for process to exit
-				while (!process.isTerminated()) {
+				while (!process.isTerminated())
 					try {
 						if (monitor.isCanceled()) {
 							process.terminate();
 							break;
 						}
 						Thread.sleep(50);
-					} catch (InterruptedException e) {
+					} catch (final InterruptedException e) {
 					}
-				}
 
 				// refresh resources
 				subMonitor = new SubProgressMonitor(monitor, 10); // 10+80+10 of 100;
@@ -222,11 +227,11 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 	}
 
-	protected boolean saveFiles(IProject project, IProgressMonitor monitor) {
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+	protected boolean saveFiles(final IProject project, final IProgressMonitor monitor) {
+		final Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		boolean autoSave = prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY);
 
-		SaveFilesResult result = SaveFilesHandler.handle(project, autoSave, true, monitor);
+		final SaveFilesResult result = SaveFilesHandler.handle(project, autoSave, true, monitor);
 		if (!result.isAccepted())
 			return false;
 		if (result.isAutoSave() && !autoSave) {
@@ -235,16 +240,5 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 		return true;
 
-	}
-
-	public void debugPHPExecutable(ILaunch launch, String phpExe, String fileToDebug) throws DebugException {
-		try {
-			PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
-			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath(), envVariables);
-		} catch (java.io.IOException e1) {
-			Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e1);
-			String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e1));
-		}
 	}
 }
