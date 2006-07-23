@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Zend's PHP IDE Developer Guide" topic="html/toc.html">
+   <topic label="Getting Started">
+      <anchor id="gettingstarted"/>
+   </topic>
+   <topic label="Perspectives">
+      <anchor id="samples" />
+   </topic>
+   <topic label="Editors and Views">
+      <anchor id="editorsandviews" />
+   </topic>
+   <topic label="Navigating">
+      <anchor id="navigating" />
+   </topic>
+   <topic label="Copying and Renaming">
+      <anchor id="copyingandrenaming" />
+   </topic>
+   <topic label="Comparing">
+      <anchor id="comparing"/>
+   </topic>
+   <topic label="Tasks">
+      <anchor id="tasks"/>
+   </topic>
+   <topic label="Concepts">
+      <anchor id="concepts"></anchor>
+   </topic>
+   
+</toc>

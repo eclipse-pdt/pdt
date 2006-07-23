@@ -2,8 +2,7 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Eclipse PHP IDE Developer Guide" topic="html/toc.html">
-
-   <topic label="Getting Started with the Eclipse PHP IDE" topic="html/gettingstarted.html">
+   <topic label="Using the Eclipse PHP IDE" topic="html/gettingstarted.html">
       <anchor id="gettingstarted"/>  </topic>
    <topic label="Creating a Project">  <anchor id="creatingaproject"/> </topic>
    <topic label="Concepts"> <anchor id="concepts">         </topic>

@@ -1,0 +1,518 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+
+<title>Code Assist</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=UTF-8">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=5169>
+<meta name=layout-width content=613>
+
+
+<link rel=StyleSheet href=default.css>
+
+
+
+</head>
+
+
+<body>
+
+<h2>Code Assist</h2>
+
+<p style="font-weight: normal;">The Code Assist feature provides a context-sensitive 
+ list of pre-existing code elements that you can enter at the cursor point 
+ in order to complete code that you have partially entered. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Code 
+ Assist works with types both <span style="font-weight: bold;">PHP</span> 
+ and <span style="font-weight: bold;">HTML</span>. </p>
+
+<h3>Elements Available Using Code Assist</h3>
+
+<p style="font-weight: bold;"><span style="font-weight: normal;">You can 
+ use this function to help </span><span style="font-weight: normal; font-style: italic;">insert</span><span 
+ style="font-weight: normal;"> or </span><span style="font-weight: normal; font-style: italic;">finish</span><span 
+ style="font-weight: normal;"> a </span><span style="font-style: italic;">tag</span><span 
+ style="font-weight: normal; font-style: italic;">,</span><span style="font-weight: normal;"> 
+ </span><span style="font-style: italic;">function</span><span style="font-weight: normal;"> 
+ or </span><span style="font-style: italic;">line of code</span><span style="font-weight: normal;"> 
+ in the editor as well as to select and insert </span><span style="font-style: italic;">templates</span><span 
+ style="font-weight: normal;"> and all of the following:</span></p>
+
+<ol>
+	
+	<li class=kadov-p
+		class=kadov-p><span style="x-text-underline: normal; font-style: italic; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">Constructor 
+ declarations</span>. </li>
+	
+	<li class=kadov-p
+		class=kadov-p><span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">Super 
+ classes</span> and the <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">interfaces</span> 
+ to be implemented (in the context of <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">class 
+ declarations</span> ).</li>
+	
+	<li class=kadov-p
+		class=kadov-p><span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">Class 
+ names</span> - in &quot;new&quot;, &quot;instance of&quot; or &quot;catch&quot; 
+ clauses. </li>
+	
+	<li class=kadov-p
+		class=kadov-p>All <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">functions</span> 
+ and <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">data 
+ members</span> of a <span style="font-style: italic;">class</span>, <span 
+ style="font-style: italic;">variable</span> or the <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">return 
+ values</span> of functions.</li>
+	
+	<li class=kadov-p
+		class=kadov-p>Elements defined as <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">static</span>.</li>
+	
+	<li class=kadov-p
+		class=kadov-p><span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">Array 
+ keys</span> of predefined PHP Arrays (including associative array keys 
+ for GLOBALS, _SERVER, _SESSION). </li>
+	
+	<li class=kadov-p
+		class=kadov-p>The entire list of PHP code elements will be presented 
+ (i.e., <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">classes</span>, 
+ <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">functions</span>, 
+ <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">constants</span>) 
+ when the user's intention is not obvious to Code Assist's algorithms.</li>
+	
+	<li class=kadov-p
+		class=kadov-p>PHP <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">reserved 
+ words</span>.</li>
+	
+	<li class=kadov-p
+		class=kadov-p>For <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">PHP 
+ Doc arguments</span> inside of PHPDoc blocks.</li>
+	
+	<li class=kadov-p
+		class=kadov-p>Registered <span style="font-style: italic;">templates</span>.</li>
+	
+	<li class=kadov-p
+		class=kadov-p>Attributes.</li>
+	
+	<li class=kadov-p
+		class=kadov-p>HTML tags.</li>
+</ol>
+
+
+<p>The location of the cursor in the source file provides the <span style="font-style: italic; font-weight: bold;">context</span> 
+ for Code Assist &nbsp;to offer suggestions for completion.</p>
+
+<p>These code proposals are presented in a drop-down menu from which the 
+ user can select. </p>
+
+<h4>PHP Code Assist includes</h4>
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p><p>Code Completion for nested functions.</p></li>
+	
+	<li class=kadov-p><p>Code Completion for function return values (using 
+ PHPDoc support).</p></li>
+</ul>
+
+<h4>HTML Code Assist </h4>
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p><p>Includes HTML tags, attributes and attribute values. 
+ </p></li>
+	
+	<li class=kadov-p><p>Also lists names and syntax.</p></li>
+</ul>
+
+<h3>Activating Code Assist</h3>
+
+<ol style="list-style: decimal;"
+	type=1>
+	
+	<li class=kadov-p><p>Open the file in the Editor and place the cursor 
+ at the location where you want to enter the code. </p></li>
+	
+	<li class=kadov-p><p>Enter the first few characters of the code.</p></li>
+	
+	<li class=kadov-p><p style="margin-top: 3pt;">Press <span style="font-weight: bold;">Ctrl+Space</span>.</p></li>
+	
+	<li class=kadov-p><p style="margin-top: 3pt;">The Code Assist drop-down 
+ menu will open and display an <span style="font-style: italic;">alphabetical 
+ list</span> of the available code, starting with the characters you have 
+ entered.</p></li>
+</ol>
+
+<p class=Figure><img src="code_asst_1.JPG"
+					x-maintain-ratio=TRUE
+					style="border: none;
+							width: 324px;
+							height: 527px;
+							float: none;
+							border-style: none;
+							border-style: none;"
+					width=324
+					height=527
+					border=0></p>
+
+<p class=Figure>Figure 1 <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->- 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Code Assist 
+ Drop Down Menu</p>
+
+<ol start=5
+	style="list-style: decimal;"
+	type=1>
+	
+	<li class=kadov-p><p style="margin-top: 13.5pt;">Each type of code 
+ element has a unique icon.</p></li>
+</ol>
+
+<p class=Figure><img src="code_asst_2.JPG"
+					x-maintain-ratio=TRUE
+					style="border: none;
+							width: 268px;
+							height: 186px;
+							float: none;
+							border-style: none;
+							border-style: none;"
+					width=268
+					height=186
+					border=0></p>
+
+<p class=Figure>Figure 2 <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->- 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Code Assist 
+ Icons</p>
+
+<ol start=6
+	style="list-style: decimal;"
+	type=1>
+	
+	<li class=kadov-p><p style="margin-top: 13.5pt;">Select the desired 
+ code from the list mouse (double-click or Enter).</p></li>
+</ol>
+
+<h4>Adding Code to the Code Assist Menu</h4>
+
+<p>You can add code elements to Code Assist for use <span style="font-style: italic;">within 
+ the scope</span> of the current <span style="x-text-underline: normal; font-style: italic; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">active</span> 
+ function, file or project. </p>
+
+<p>Variables belonging to different scopes are not available to each other 
+ via Code Assist.</p>
+
+<ol style="list-style: decimal;"
+	type=1>
+	
+	<li class=kadov-p><p>Create a PHP file as shown below.</p></li>
+	
+	<ol style="list-style: lower-roman;"
+		type=i>
+		
+		<li style="font-weight: bold; /*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;">&lt;<span 
+ style="font-weight: bold;">?</span>&nbsp;</p></li>
+		
+		<li style="/*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;"><span 
+ style="font-style: italic;"><!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span 
+ style="font-style: italic; font-weight: bold;"><!--kadov_tag{{</spaces>}}-->define('continent','africa')</span>;<br>
+		 <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$control 
+ = ''</p></li>
+		
+		<li style="font-weight: bold; /*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;"><!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$mail 
+ = 'int@zend.com'</p></li>
+		
+		<li style="/*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;"><!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->function 
+ <span style="font-style: italic; font-weight: bold;">media()</span> <!--kadov_tag{{<spaces>}}-->&nbsp;<span 
+ style="font-weight: bold;"><!--kadov_tag{{</spaces>}}-->{</span></p></li>
+		
+		<li style="/*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;"><!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$music 
+ = '';</p></li>
+		
+		<li style="/*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;"><!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$messenger 
+ = '';</p></li>
+		
+		<li style="/*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;"><!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$ 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->--------- 
+ <span style="font-size: 10pt; font-family: 'Courier New', monospace;">Location_1</span></p></li>
+		
+		<li style="font-weight: bold; /*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;"><!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span 
+ style="font-weight: bold;"><!--kadov_tag{{</spaces>}}-->}</span></p></li>
+		
+		<li style="/*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;"><!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$ 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->---------<span 
+ style="font-size: 10pt; font-family: 'Courier New', monospace;">Location_2</span></p></li>
+		
+		<li style="font-weight: bold; /*begin!kadov{{*/ font-weight: normal; /*}}end!kadov*/ "
+			class=kadov-p><p style="margin-left: 0in; font-weight: normal;"><!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;<span 
+ style="font-weight: bold;"><!--kadov_tag{{</spaces>}}-->?</span>&gt;</p></li>
+	</ol>
+	
+	<li class=kadov-p><p>Place the cursor at the $, on line &quot;<span 
+ style="font-weight: bold;">vii</span>&quot; marked by &quot;<span style="font-weight: bold;
+	font-size: 10pt;
+	font-family: 'Courier New', monospace;">Location_1</span>&quot;. This 
+ is <span style="font-style: italic;">within</span> <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->function 
+ &quot;media&quot;.</p></li>
+	
+	<li class=kadov-p><p>Type the letter &quot;<span style="font-weight: bold;">m</span>&quot; 
+ and click <span style="font-weight: bold;">CTRL-SPACE</span> to activate 
+ Code Assist. Code Assist will open with the options you have defined within 
+ the function.</p></li>
+	
+	<li class=kadov-p><p>The variable<span style="font-weight: bold;"> 
+ $mail</span> (not within the scope of &quot;<span style="font-style: italic;">media()</span>&quot; 
+ ) is <span style="font-style: italic; x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">not</span> 
+ available.</p></li>
+</ol>
+
+<p class=Figure><img src="code_asst_3.JPG"
+					x-maintain-ratio=TRUE
+					style="border: none;
+							width: 247px;
+							height: 207px;
+							float: none;
+							border-style: none;
+							border-style: none;"
+					width=247
+					height=207
+					border=0></p>
+
+<p class=Figure>Figure 3 <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->- 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Adding 
+ Code to Code Assist </p>
+
+<ol start=5
+	style="list-style: decimal;"
+	type=1>
+	
+	<li class=kadov-p><p>Next, place the cursor at the $, on line &quot;<span 
+ style="font-weight: bold;">ix</span>&quot; marked <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->by 
+ &quot;<span style="font-weight: bold;
+					font-size: 10pt;
+					font-family: 'Courier New', monospace;">Location_2</span>&quot;.</p></li>
+	
+	<li class=kadov-p><p>Type the letter &quot;<span style="font-weight: bold;">m</span>&quot; 
+ and click <span style="font-weight: bold;">CTRL-SPACE</span> to activate 
+ Code Assist. </p></li>
+</ol>
+
+<p class=Figure><img src="code_asst_5.JPG"
+					x-maintain-ratio=TRUE
+					style="border: none;
+							width: 235px;
+							height: 249px;
+							float: none;
+							border-style: none;
+							border-style: none;"
+					width=235
+					height=249
+					border=0></p>
+
+<p class=Figure>Figure 4 <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->- 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Code Assist 
+ - Context Sensitive (within function)</p>
+
+<p class=Note><span style="font-weight: bold;">Note:</span> &quot;<span 
+ style="font-family: 'Courier New', monospace;
+		font-size: 10pt;
+		font-weight: bold;
+		font-style: normal;">Location_2</span>&quot; is <span style="x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">not</span> 
+ part of function &quot;media&quot;, therefore $music and $messenger are 
+ not available here. <br>
+<br>
+The variable &quot;<span style="font-weight: bold;">mail</span>&quot; is 
+ potentially available to the entire file and therefore appears in the 
+ Code Assist list when it is activated at &quot;<span style="font-family: 'Courier New', monospace;
+	font-size: 10pt;
+	font-weight: bold;">Location_2</span>&quot;.</p>
+
+<p style="margin-left: 40px;">Because the cursor is not within the context 
+ of the function &quot;media&quot;, Code Assist now opens <span style="font-style: italic;">without</span> 
+ the &quot;media's&quot; variables (<span style="font-style: italic;">$music</span> 
+ and <span style="font-style: italic;">$messenger</span> ); they are available 
+ only when within the defining function.</p>
+
+<h4>Added Code - Available Within the Same Project</h4>
+
+<p>Code elements defined in one file are <span style="font-style: italic;">available 
+ for use by other files within the same project.</span> The example shown 
+ above was carried out in the PHP file named <span style="font-style: italic;">PHPfile2.php.</span> 
+ The file was created as part of the project named &quot;<span style="font-style: italic;">New_PHP_Project</span>&quot;.</p>
+
+<p style="margin-bottom: 9pt;">The code element defined in line <span style="font-weight: bold;">ii</span> 
+ of the PHP file <span style="font-style: italic;">PHPfile2.php</span> 
+ <span style="font-weight: bold;">[ </span>i.e., the define:<span style="font-style: italic; font-weight: bold;"> 
+ define('continent','africa')</span><span style="font-weight: bold;"> ]</span><span 
+ style="font-style: italic; font-weight: bold;"> </span>is available to 
+ all files in the same project. When the element is highlighted - Code 
+ Assist displays the original location of the code element and all other 
+ information available.</p>
+
+<p class=Figure><img src="code_asst_4.JPG"
+					x-maintain-ratio=TRUE
+					style="border: none;
+							width: 348px;
+							height: 331px;
+							float: none;
+							border-style: none;
+							border-style: none;"
+					width=348
+					height=331
+					border=0></p>
+
+<p class=Figure>Figure 5 <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->- 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Code Assist; 
+ New Elements Available within Same Project</p>
+
+<h4>@var tag as Class Type Hint</h4>
+
+<p>By using a <span style="font-style: italic;">comment</span> you can 
+ assign a variable its exact <span style="font-style: italic;">class value</span>. 
+ This assignment will affect the code completion of this variable accordingly. 
+ </p>
+
+<p>In the example below, '$myVar-&gt;' opens the code completion with 'Test' 
+ class function as defined in the comment.</p>
+
+<p class=Figure><img src="code_completion_2.JPG"
+					x-maintain-ratio=TRUE
+					style="border: none;
+							border-style: none;
+							width: 276px;
+							height: 189px;
+							float: none;"
+					width=276
+					height=189
+					border=0></p>
+
+<p class=Figure>Figure 6 - <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->@var 
+ tag</p>
+
+<p class=Note><span style="font-weight: bold;">Note:</span> Without the 
+ comment, code assist will not be available for the function.</p>
+
+<h4 style="font-weight: bold;"><strong><span style="font-weight: bold;">Code 
+ Assist Navigation</span></strong></h4>
+
+<p style="font-weight: normal;">Use the following controls to navigate 
+ within the Code Assist drop-down menu.</p>
+
+<h5>Keyboard</h5>
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p
+		class=kadov-p>Up / Down Arrow buttons</li>
+	
+	<li class=kadov-p
+		class=kadov-p>Page Up / Down buttons</li>
+	
+	<li class=kadov-p
+		class=kadov-p>Home / End buttons</li>
+</ul>
+
+<h5>Mouse</h5>
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p
+		class=kadov-p>Select a choice directly</li>
+	
+	<li class=kadov-p
+		class=kadov-p>Mouse scroll</li>
+	
+	<li class=kadov-p
+		class=kadov-p>Click once inside the Code Assist window:</li>
+	
+	<li style="list-style: circle;"
+		type=circle
+		class=kadov-p><p style="margin-left: 40px;">The mouse wheel scroll 
+ becomes available</p></li>
+</ul>
+
+<h3 style="margin-top: 5pt; margin-bottom: 5pt;">Setting PHP Preferences</h3>
+
+<ol style="list-style: decimal;
+			list-style-type: decimal;
+			list-style-image: none;
+			list-style-position: outside;"
+	type=1>
+	
+	<li class=kadov-p><p>Select <span style="font-weight: bold;">Preferences</span> 
+ from the Window menu. </p></li>
+	
+	<li class=kadov-p><p>Go to <b>PHP | Editor | Code Assist</b>.</p></li>
+	
+	<li class=kadov-p><p>Select your configuration options. </p></li>
+	
+	<li class=kadov-p><p style="margin-top: 6pt;">In addition, you can 
+ set a preference that causes code assist to pop up automatically when 
+ certain characters are typed, as in HTML and XML.</p></li>
+	
+	<li class=kadov-p-CFigure><p class=Figure><img src="configuring_code_assist.JPG"
+													x-maintain-ratio=TRUE
+													style="border: none;
+															width: 459px;
+															height: 361px;
+															float: none;
+															border-style: none;
+															border-style: none;"
+													width=459
+													height=361
+													border=0></p></li>
+</ol>
+
+<p class=Caption>Figure 6: <i>Setting Code Assist Preferences</i></p>
+
+<h3>Setting HTML Preferences</h3>
+
+<ol style="list-style: decimal;
+			list-style-type: decimal;
+			list-style-image: none;
+			list-style-position: outside;"
+	type=1>
+	
+	<li class=kadov-p><p>Select <span style="font-weight: bold;">Preferences</span> 
+ from the Window menu. </p></li>
+	
+	<li class=kadov-p><p>Select Web and XML Files from the navigator, followed 
+ by HTML Files. Expand. Select HTML Source.</p></li>
+	
+	<li class=kadov-p><p>In the Code Assist group box, select the <span 
+ style="font-style: italic;">Auto-Activation</span> check box.</p></li>
+	
+	<li class=kadov-p><p>Supply any additional characters that should trigger 
+ code assist .</p></li>
+	
+	<li class=kadov-p><p>If your cursor is in a position where code assist 
+ is available, a pop-up list of all available choices is displayed. For 
+ each of these choices, a brief description of the code is provided.</p></li>
+	
+	<li class=kadov-p><p>Complete the options for HTML Styles and HTML 
+ Source.</p></li>
+</ol>
+
+<p>&nbsp;</p>
+
+</body>
+
+</html>
