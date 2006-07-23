@@ -4,12 +4,11 @@
 <toc label="Getting Started" link_to="toc.xml#gettingstarted" href="gettingstarted.html"> 
 <topic label="System Requirements"  href="html/gettingstarted/systemrequirements.html"></topic>
 <topic label="Perspectives and Views" href="html/gettingstarted/perspectives.html"></topic>
-<topic label="Opening the Zend Studio PHP IDE" href="html/gettingstarted/opening_the_ide.html"></topic> 
+<topic label="Opening the Zend Studio Neon PHP IDE" href="html/gettingstarted/opening_the_ide.html"></topic> 
 
 <topic label="Configuring" >
 <topic label="Configuring the PHP Workbench" href="html/gettingstarted/preparing_the_workbench.html"></topic><topic label="Configuring Perspectives" href="html/gettingstarted/configuring_perspectives.html"></topic>
 <topic label="Configuring Internal Debug Preferences" href="html/gettingstarted/configuring_internal_debug_preferences.html"></topic>
-<topic label="Configuring Code Assist.html" href="html/gettingstarted/configuring_code_assist.html"></topic>
 <topic label="Configuring Typing Preferences" href="html/gettingstarted/qqqq.html"></topic>
 <topic  label="Configuring Debug Preferences" href="html/gettingstarted/configuring_internal_debug_preferences.html"></topic>
 <topic  label="Configuring Task Tag Preferences" href="html/gettingstarted/configuring_task_preferences.html"></topic>
@@ -28,8 +27,6 @@
 <topic label="Templates" href="html/gettingstarted/using_templates.html"></topic>
 <topic label="Exporting Templates" href="html/gettingstarted/exporting_templates.html"></topic>
 </topic>
-<topic label="Code Assist-Code Completion" href="html/gettingstarted/code_assist.html"></topic>
-
 <topic label="Problems View and Filtering" href="html/gettingstarted/problems_intro.html">
 <topic label="Problems View" href="html/gettingstarted/problems_view.html"></topic>
 <topic label="Filtering Problems" href="html/gettingstarted/filtering_problems.html"></topic>
@@ -41,6 +38,7 @@
 	
 </topic>
 
+<topic label="Debugging Code" href="html/gettingstarted/maintopic.html">
 <topic label="Debugging Code" href="html/gettingstarted/maintopic.html"></topic>
 </topic>
 <topic label="Working Sets" href="html/gettingstarted/working_sets.html">
