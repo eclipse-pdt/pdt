@@ -10060,7 +10060,30 @@ function is_writable($filename) {}
 function is_writeable($filename) {}
 
 /**
- * Clear last java extension 
+ * Create Java object 
+ *
+ * @return object
+ * @param  class string
+ * @vararg ...
+ */
+function java($class) {}
+
+/**
+ * Get java server statistics 
+ *
+ * @return array
+ */
+function java_get_statistics() {}
+
+/**
+ * Get Java extension version information 
+ *
+ * @return array
+ */
+function java_get_version_info() {}
+
+/**
+ * Clear last java exception 
  *
  * @return void
  */
@@ -10072,6 +10095,30 @@ function java_last_exception_clear() {}
  * @return object
  */
 function java_last_exception_get() {}
+
+/**
+ * Set encoding for PHP-Java data transfers 
+ *
+ * @return array
+ * @param  encoding string
+ */
+function java_set_encoding($encoding) {}
+
+/**
+ * Set if search for Java classes and methods should be case-insensitive 
+ *
+ * @return void
+ * @param  ignore bool
+ */
+function java_set_ignore_case($ignore) {}
+
+/**
+ * Set if exceptions should be thrown on errors 
+ *
+ * @return void
+ * @param  ignore bool
+ */
+function java_throw_exceptions($ignore) {}
 
 /**
  * Returns name or number of day of week from julian day count 
@@ -28012,6 +28059,28 @@ class XsltStylesheet {
 
 };
 
+class java {
+    /**
+     * Create Java object 
+     *
+     * @return java
+     * @param  classname string
+     * @vararg ...
+     */
+    function java($classname) {}
+
+};
+
+class JavaException {
+    /**
+     * Get Java exception that led to this exception 
+     *
+     * @return object
+     */
+    function getCause() {}
+
+};
+
 class SQLiteDatabase {
     /**
      * Opens a SQLite database. Will create the database if it does not exist. 
@@ -30573,54 +30642,6 @@ define("__CLASS__", 0);
 define("__FILE__", 0);
 define("__FUNCTION__", 0);
 define("__LINE__", 0);
-
-/**
- * Return Java exception object for last exception.
- * @return  object  
- * @version Buran 
- * @desc    Java Exception object, if there was an exception, false otherwise 
- */
-function java_last_exception_get() { }
-
-/**
- * Clear last Java exception object record.
- * @return  void 
- * @version Buran 
- * @desc    Clear last Java exception object record
- */
-function java_last_exception_clear() { }
-
-/**
- * Set case sensitivity for Java calls.
- * @return  void  
- * @param   ignore bool  
- * @version Buran 
- * @desc    Set case sensitivity for Java calls. if set, Java attribute and method names would be resolved disregarding case. 
- */
-function java_set_ignore_case($ignore) { }
-
-/**
- * Set encoding for strings received by Java from PHP. Default is UTF-8.
- * @return  array  
- * @version Buran
- * @desc    Set encoding for strings received by Java from PHP. Default is UTF-8. 
- */
-function java_set_encoding($encoding) { }
-
-class Java {
-
-	/**
-	 * Returns a new Java object 
-	 *
-	 * @return object
-	 * @param  class_name string
-	 * @param  parameters mixed[optional]
-	 * @vararg ... mixed 
-	 */
-	function __construct($class_name, $parameters) {}
-};
-
-
 
 class stdClass {
 };
