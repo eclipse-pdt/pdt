@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.Logger;
@@ -46,12 +47,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 
 public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	private class ControlAccessibleListener extends AccessibleAdapter {
@@ -76,12 +72,15 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			setDirty(true);
 			final Object source = e.getSource();
 
-			if (source == fileLocationButton)
+			if (source == fileLocationButton) {
 				handleFileLocationButtonSelected();
-			//} else if (source == workspaceWorkingDirectoryButton) {
-			//handleWorkspaceWorkingDirectoryButtonSelected();
-			else if (source == argumentVariablesButton)
+			} else if (source == argumentVariablesButton) {
 				handleVariablesButtonSelected(argumentField);
+			} else if (source == overrideBreakpiontSettings) {
+				handleBreakpointOverride();
+			} else if (source == breakOnFirstLine) {
+				handleBreakButtonSelected();
+			}
 		}
 	}
 
@@ -104,9 +103,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	protected WidgetListener fListener = new WidgetListener();
 
 	private Text locationField;
-
 	protected PHPsComboBlock phpsComboBlock;
-
+	protected Button overrideBreakpiontSettings;
+	protected Button breakOnFirstLine;
 	private Button runWithDebugInfo;
 
 	protected SelectionAdapter selectionAdapter;
@@ -176,6 +175,28 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		addControlAccessibleListener(argumentVariablesButton, argumentVariablesButton.getText()); // need to strip the mnemonic from buttons
 	}
 
+	// In case this is a debug mode, display checkboxes to override the 'Break on first line' attribute.
+	private void createBreakControl(Composite parent) {
+		String mode = getLaunchConfigurationDialog().getMode();
+		if (ILaunchManager.DEBUG_MODE.equals(mode)) {
+			Group group = new Group(parent, SWT.NONE);
+			group.setText("Breakpoint");
+			GridLayout layout = new GridLayout();
+			layout.numColumns = 1;
+			GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+			group.setLayout(layout);
+			group.setLayoutData(gridData);
+
+			overrideBreakpiontSettings = createCheckButton(group, "Override project/workspace 'Break at First Line' setting");
+			breakOnFirstLine = createCheckButton(group, "Break at First Line");
+			GridData data = (GridData) breakOnFirstLine.getLayoutData();
+			data.horizontalIndent = 20;
+
+			overrideBreakpiontSettings.addSelectionListener(fListener);
+			breakOnFirstLine.addSelectionListener(fListener);
+		}
+	}
+
 	public void createControl(final Composite parent) {
 		if (getLaunchConfigurationDialog().getMode().equals(ILaunchManager.RUN_MODE))
 			setEnableDebugInfoOption(true);
@@ -195,11 +216,11 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		//createWorkDirectoryComponent(mainComposite);
 		if (enableFileSelection)
 			createArgumentComponent(mainComposite);
+
+		createBreakControl(mainComposite);
 		createVerticalSpacer(mainComposite, 1);
 
 		Dialog.applyDialogFont(parent);
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -239,37 +260,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		phpsComboBlock.addSelectionChangedListener(fCheckListener);
 		final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		control.setLayoutData(gd);
-
-		//		Group group = new Group(parent, SWT.NONE);
-		//		String locationLabel = PHPDebugUIMessages.Location;
-		//		group.setText(locationLabel);
-		//		GridLayout layout = new GridLayout();
-		//		layout.numColumns = 1;	
-		//		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		//		group.setLayout(layout);
-		//		group.setLayoutData(gridData);
-		//		
-		//		locationField = new Text(group, SWT.BORDER);
-		//		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		//		gridData.widthHint = IDialogConstants.ENTRY_FIELD_WIDTH;
-		//		locationField.setLayoutData(gridData);
-		//		locationField.addModifyListener(fListener);
-		//		addControlAccessibleListener(locationField, group.getText());
-		//		
-		//		Composite buttonComposite = new Composite(group, SWT.NONE);
-		//		layout = new GridLayout();
-		//		layout.marginHeight = 0;
-		//        layout.marginWidth = 0;   
-		//		layout.numColumns = 3;
-		//		gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
-		//		buttonComposite.setLayout(layout);
-		//		buttonComposite.setLayoutData(gridData);
-		//		buttonComposite.setFont(parent.getFont());
-		//		
-		//		fileLocationButton= createPushButton(buttonComposite, PHPDebugUIMessages.BrowseFilesystem, null); //$NON-NLS-1$
-		//		fileLocationButton.addSelectionListener(fListener);
-		//		addControlAccessibleListener(fileLocationButton, group.getText() + " " + fileLocationButton.getText()); //$NON-NLS-1$
-
 	}
 
 	/* (non-Javadoc)
@@ -342,6 +332,15 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			textField.setText(file.getFullPath().toString());
 	}
 
+	protected void handleBreakpointOverride() {
+		breakOnFirstLine.setEnabled(overrideBreakpiontSettings.getSelection());
+		updateLaunchConfigurationDialog();
+	}
+
+	protected void handleBreakButtonSelected() {
+		updateLaunchConfigurationDialog();
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse.debug.core.ILaunchConfiguration)
 	 */
@@ -352,6 +351,15 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			updateDebugInfoOption(configuration);
 		if (enableFileSelection)
 			updateArgument(configuration);
+		// init the breakpoint settings
+		try {
+			boolean isOverrideBreakpointSetting = configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
+			overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
+			breakOnFirstLine.setEnabled(isOverrideBreakpointSetting);
+			breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
+		} catch (CoreException e) {
+			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
+		}
 		isValid(configuration);
 	}
 
@@ -407,6 +415,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		final boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo.getSelection() : true;
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
 
+		configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
+		configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 	}
 
 	/* (non-Javadoc)
@@ -420,6 +430,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				phpExes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
 				location = phpExes.getDefaultItem().getPhpEXE().toString();
 				configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
+				configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
 			}
 		} catch (final CoreException e) {
 			Logger.log(Logger.ERROR, "Error setting default configuration", e); //$NON-NLS-1$

@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.internal.core.LaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
@@ -32,7 +31,10 @@ import org.eclipse.php.server.ui.wizard.WizardModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -52,6 +54,8 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	protected Button publish;
 	protected Button createNewServer;
 	protected Button configureServers;
+	protected Button overrideBreakpiontSettings;
+	protected Button breakOnFirstLine;
 
 	protected String[] serverTypeIds;
 
@@ -86,6 +90,10 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 				handleServerButtonSelected();
 			} else if (source == configureServers) {
 				handleConfigureButtonSelected();
+			} else if (source == overrideBreakpiontSettings) {
+				handleBreakpointOverride();
+			} else if (source == breakOnFirstLine) {
+				handleBreakButtonSelected();
 			}
 		}
 	}
@@ -186,11 +194,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 
 		serverCombo = new Combo(group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		serverCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		serverCombo.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-
+		serverCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				handleServerSelection();
 			}
@@ -323,6 +327,15 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		handleServerSelection();
 	}
 
+	protected void handleBreakpointOverride() {
+		breakOnFirstLine.setEnabled(overrideBreakpiontSettings.getSelection());
+		updateLaunchConfigurationDialog();
+	}
+
+	protected void handleBreakButtonSelected() {
+		updateLaunchConfigurationDialog();
+	}
+
 	public String[] getFileExtensions() {
 		return null;
 	}
@@ -359,23 +372,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		}
 
 		return null;
-	}
-
-	private boolean isSupportedServer(String serverTypeId) {
-		if (serverTypeIds == null)
-			return true;
-		int size = serverTypeIds.length;
-		for (int i = 0; i < size; i++) {
-			if (matches(serverTypeId, serverTypeIds[i]))
-				return true;
-		}
-		return false;
-	}
-
-	private static boolean matches(String a, String b) {
-		if (a == null || b == null || "*".equals(a) || "*".equals(b) || a.startsWith(b) || b.startsWith(a))
-			return true;
-		return false;
 	}
 
 	/**
@@ -633,8 +629,8 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			public void run() {
 				ILaunchConfiguration config = launchConfig;
 				try {
-					if (config instanceof LaunchConfigurationWorkingCopy) {
-						config = ((LaunchConfigurationWorkingCopy) config).getOriginal();
+					if (config instanceof ILaunchConfigurationWorkingCopy) {
+						config = ((ILaunchConfigurationWorkingCopy) config).getOriginal();
 					}
 					if (config != null) {
 						config.delete();

@@ -20,6 +20,7 @@ public interface IDebugParametersKeys {
 	public static final String PASSIVE_DEBUG = "passiveDebug";
 	public static final String WEB_SERVER_DEBUGGER = "webServerDebugger";
 	public static final String FIRST_LINE_BREAKPOINT = "firstLineBreakpoint";
+	public static final String OVERRIDE_FIRST_LINE_BREAKPOINT = "overrideFirstLineBreakpoint";
 	public static final String PROTOCOL_ID = "protocolID";
 	public static final String ORIGINAL_URL = "uriginalURL";
 	public static final String SESSION_ID = "debugSessionID";

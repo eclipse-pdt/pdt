@@ -19,20 +19,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
@@ -108,7 +96,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		//		}
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
-			final boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+			boolean stopAtFirstLine = false;
+			if (configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false)) {
+				stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
+			} else {
+				stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+			}
 			final int requestPort = PHPProjectPreferences.getDebugPort(project);
 
 			// Set Project Name
@@ -192,7 +185,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				process = DebugPlugin.newProcess(launch, p, phpExe.toOSString(), processAttributes);
 				if (process == null) {
 					p.destroy();
-					throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null)); 
+					throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null));
 				}
 				subMonitor.done();
 

@@ -77,14 +77,19 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		String project = proj.getFullPath().toString();
 		wc.setAttribute(IPHPConstants.PHP_Project, project);
-		
+
 		// Set transfer encoding:
 		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
 		wc.doSave();
 
 		String URL = configuration.getAttribute(Server.BASE_URL, "");
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebug == true) {
-			boolean isStopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(proj);
+			boolean stopAtFirstLine = false;
+			if (wc.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false)) {
+				stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
+			} else {
+				stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(proj);
+			}
 			int requestPort = PHPProjectPreferences.getDebugPort(proj);
 
 			// Generate a session id for this launch and put it in the map
@@ -94,7 +99,7 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 			// Fill all debug attributes:
 			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
 			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
-			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(isStopAtFirstLine));
+			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
 			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
 			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
 
