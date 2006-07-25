@@ -41,7 +41,6 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.ui.actions.*;
-import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.containers.StorageEditorInput;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorators;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -60,27 +59,17 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 public class PHPStructuredEditor extends StructuredTextEditor {
 
-	static {
-		// Needed to enable the folding
-		// See StructuredTextEditor#isFoldingEnabled()
-		System.setProperty("org.eclipse.wst.sse.ui.foldingenabled", "foldingenabled"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
 	/** The information presenter. */
 	protected InformationPresenter fInformationPresenter;
 
-	private FoldingActionGroup foldingGroup;
-	
 	/** Cursor dependent actions. */
-	private List fCursorActions= new ArrayList(5);
+	private List fCursorActions = new ArrayList(5);
 
 	public PHPStructuredEditor() {
-		initFolding();
 	}
 
 	public void createPartControl(Composite parent) {
@@ -97,20 +86,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		fInformationPresenter = new InformationPresenter(informationControlCreator);
 		fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		fInformationPresenter.install(getSourceViewer());
-	}
-
-	/*
-	 * Initialize the folding support (hack the WST to enable folding)
-	 */
-	private void initFolding() {
-		// TODO - Might need a fix after the WST will support code folding
-		// officially.
-		boolean foldingEnabled = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
-		if (foldingEnabled) {
-			// Needed to enable the folding
-			// See StructuredTextEditor#isFoldingEnabled()
-			SSEUIPlugin.getDefault().getPreferenceStore().setValue(IStructuredTextFoldingProvider.FOLDING_ENABLED, true);
-		}
 	}
 
 	protected void handlePreferenceStoreChanged(PropertyChangeEvent event) {
@@ -245,35 +220,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		return adapter;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.sse.ui.StructuredTextEditor#dispose()
-	 */
-	public void dispose() {
-		super.dispose();
-		if (foldingGroup != null) {
-			foldingGroup.dispose();
-		}
-	}
-
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#rulerContextMenuAboutToShow(org.eclipse.jface.action.IMenuManager)
-	 */
-	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
-		super.rulerContextMenuAboutToShow(menu);
-		IMenuManager foldingMenu = new MenuManager(PHPEditorMessages.PHP_Editor_FoldingMenu_name, "projection"); //$NON-NLS-1$
-		menu.appendToGroup(ITextEditorActionConstants.GROUP_RULERS, foldingMenu);
-
-		IAction action = getAction("FoldingToggle"); //$NON-NLS-1$
-		foldingMenu.add(action);
-		action = getAction("FoldingExpandAll"); //$NON-NLS-1$
-		foldingMenu.add(action);
-	}
-
 	protected void createActions() {
 		super.createActions();
-
-		foldingGroup = new FoldingActionGroup(this, getTextViewer());
 
 		ResourceBundle resourceBundle = ActionMessages.getResourceBundle();
 		ISourceViewer sourceViewer = getSourceViewer();
@@ -452,7 +400,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				String hoverInfo = textHover.getHoverInfo(sourceViewer, hoverRegion);
 
 				if (textHover instanceof IPHPTextHover) {
-					IHoverMessageDecorators decorator = ((IPHPTextHover)textHover).getMessageDecorator();
+					IHoverMessageDecorators decorator = ((IPHPTextHover) textHover).getMessageDecorator();
 					if (decorator != null) {
 						String decoratedMessage = decorator.getDecoratedMessage(hoverInfo);
 						if (decoratedMessage != null && decoratedMessage.length() > 0) {
@@ -642,7 +590,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				sourceViewer.setTextHover(configuration.getTextHover(sourceViewer, t), t);
 		}
 	}
-	
+
 	/**
 	 * Updates the specified action by calling <code>IUpdate.update</code>
 	 * if applicable.
@@ -651,23 +599,23 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	private void updateAction(String actionId) {
 		Assert.isNotNull(actionId);
-		IAction action= getAction(actionId);
+		IAction action = getAction(actionId);
 		if (action instanceof IUpdate) {
 			((IUpdate) action).update();
 		}
 	}
-	
+
 	/**
 	 * Updates all cursor position dependent actions.
 	 */
 	protected void updateCursorDependentActions() {
 		if (fCursorActions != null) {
-			Iterator e= fCursorActions.iterator();
+			Iterator e = fCursorActions.iterator();
 			while (e.hasNext())
 				updateAction((String) e.next());
 		}
 	}
-	
+
 	/**
 	 * Marks or unmarks the given action to be updated on text cursor position changes.
 	 *
