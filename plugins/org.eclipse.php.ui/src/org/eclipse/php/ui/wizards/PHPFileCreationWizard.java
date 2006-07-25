@@ -15,11 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -31,6 +27,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.core.PHPCoreConstants;
+import org.eclipse.php.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -123,6 +121,19 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			stream.close();
 		} catch (IOException e) {
 		}
+		
+		// Change file encoding:
+		if (container instanceof IProject) {
+			PHPProjectOptions options = PHPProjectOptions.forProject((IProject)container);
+			if (options != null) {
+				String defaultEncoding = (String) options.getOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
+				if (defaultEncoding == null || defaultEncoding.length() == 0) {
+					defaultEncoding = container.getDefaultCharset();
+				}
+				file.setCharset(defaultEncoding, monitor);
+			}
+		}
+		
 		monitor.worked(1);
 		monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning, fileName));
 		getShell().getDisplay().asyncExec(new Runnable() {
