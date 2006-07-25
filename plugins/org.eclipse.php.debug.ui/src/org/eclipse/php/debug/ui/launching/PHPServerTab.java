@@ -111,12 +111,13 @@ public class PHPServerTab extends ServerTab {
 
 	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
 		try {
-			// init the breakpoint settings
-			boolean isOverrideBreakpointSetting = configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
-			overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
-			breakOnFirstLine.setEnabled(isOverrideBreakpointSetting);
-			breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
-
+			if (overrideBreakpiontSettings != null) {
+				// init the breakpoint settings
+				boolean isOverrideBreakpointSetting = configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
+				overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
+				breakOnFirstLine.setEnabled(isOverrideBreakpointSetting);
+				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
+			}
 			isOpenInBrowser = configuration.getAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
 			openBrowser.setSelection(isOpenInBrowser);
 			if (runWithDebugger != null) {
@@ -129,8 +130,10 @@ public class PHPServerTab extends ServerTab {
 	}
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
-		configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
+		if (overrideBreakpiontSettings != null) {
+			configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
+			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
+		}
 		configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, isOpenInBrowser);
 		if (runWithDebugger != null) {
 			configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, isRunWithDebugInfo);

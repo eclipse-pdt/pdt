@@ -13,6 +13,7 @@ package org.eclipse.php.debug.core.debugger.parameters;
 import java.util.Hashtable;
 
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.core.util.HostsCollector;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.RemoteDebugger;
@@ -47,7 +48,7 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 			parameters.put(DEBUG_NO_CACHE, Long.toString(System.currentTimeMillis()));
 		}
 
-		if (getBooleanValue(launch.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT))) {
+		if (ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode()) && getBooleanValue(launch.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT))) {
 			parameters.put(DEBUG_STOP, "1");
 		}
 
