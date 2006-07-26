@@ -10,28 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.ui.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -56,15 +43,7 @@ import org.eclipse.php.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorRegistry;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
@@ -144,7 +123,7 @@ public class EditorUtility {
 	}
 
 	/**
-	 * Opens a PHP editor for an element such as <code>PHPCodeData</code>, <code>IFile</code>, or <code>IStorage</code>.
+	 * Opens a PHP editor for an element such as <code>PHPCodeData</code>, <code>IFile</code>, <code>IStorage</code> or <code>IEditorInput</code>.
 	 * The editor is activated by default.
 	 * @return the IEditorPart or null if wrong element type or opening failed
 	 */
@@ -434,6 +413,9 @@ public class EditorUtility {
 
 		if (input instanceof IFile)
 			return new FileEditorInput((IFile) input);
+		
+		if (input instanceof IEditorInput)
+			return (IEditorInput)input;
 
 		return null;
 	}

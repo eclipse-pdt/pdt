@@ -20,6 +20,17 @@
 		id="org.eclipse.php.ui.PhpDocumentProvider"> 
 		</provider> 
 		</extension-->
+		
+	<!--======================================================================================-->
+    <!-- Document provider for ExternalFileEditorInput                                        -->
+    <!--======================================================================================-->
+    <extension point="org.eclipse.ui.editors.documentProviders">
+        <provider
+			inputTypes="org.eclipse.php.internal.ui.editor.ExternalFileEditorInput"
+            class="org.eclipse.ui.editors.text.TextFileDocumentProvider"
+        	id="org.eclipse.php.internal.ui.ExternalFileDocumentProvider">
+    	</provider>
+	</extension>
 
 	<!-- =============================== -->
 	<!-- PHP Perspective Definition -->

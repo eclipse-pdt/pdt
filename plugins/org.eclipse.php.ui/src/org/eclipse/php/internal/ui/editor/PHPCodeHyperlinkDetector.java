@@ -10,21 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
@@ -102,6 +95,12 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
 								if (file != null && file.exists()) {
 									return new IHyperlink[] { new WorkspaceFileHyperlink(new Region(sdRegion.getStartOffset(textRegion), textRegion.getTextLength()), file) };
 								}
+							}
+							
+							// Try to open external file:
+							File file = new File(fileName);
+							if (file.exists()) {
+								return new IHyperlink[] { new ExternalFileHyperlink(new Region(sdRegion.getStartOffset(textRegion), textRegion.getTextLength()), file) };
 							}
 						}
 					}
