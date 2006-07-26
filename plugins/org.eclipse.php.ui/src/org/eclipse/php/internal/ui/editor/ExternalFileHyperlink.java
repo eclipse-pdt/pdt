@@ -14,8 +14,11 @@ import java.io.File;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.ui.*;
-import org.eclipse.ui.ide.IDE;
+import org.eclipse.php.core.containers.LocalFileStorage;
+import org.eclipse.php.ui.containers.LocalFileStorageEditorInput;
+import org.eclipse.php.ui.util.EditorUtility;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.PartInitException;
 
 /**
  * Hyperlink for external files.
@@ -48,16 +51,11 @@ class ExternalFileHyperlink implements IHyperlink {
 
 	public void open() {
 		if (fHyperlinkFile != null) {
-			IEditorInput input = new ExternalFileEditorInput(fHyperlinkFile);
-			IEditorDescriptor descriptor;
+			LocalFileStorage fileStorage = new LocalFileStorage(fHyperlinkFile);
+			IEditorInput input = new LocalFileStorageEditorInput(fileStorage); 
 			try {
-				descriptor = IDE.getEditorDescriptor(input.getName(), true);
-				if (descriptor != null) {
-					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					IDE.openEditor(page, input, descriptor.getId(), true);
-				}
-			}
-			catch (PartInitException e) {
+				EditorUtility.openInEditor(input);
+			} catch (PartInitException e) {
 			}
 		}
 	}
