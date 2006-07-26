@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
@@ -40,19 +41,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
-
 /**
  * This class allows for the creation of a PHP file.
  */
 public class PHPFileCreationWizardPage extends WizardPage {
-	
+
 	private Text containerText;
 	private Text fileText;
 	private ISelection selection;
-//	private Combo templatesCombo;
+	//	private Combo templatesCombo;
 	//	private Combo encodingCombo;
-//	EncodingSettings encodingSettings;
-	
+	//	EncodingSettings encodingSettings;
+
 	protected static final String UTF_8 = "UTF 8";
 	protected static final String NO_TEMPLATE = "-- none -- ";
 
@@ -60,7 +60,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	 * Constructor for SampleNewWizardPage.
 	 * @param pageName
 	 */
-	public PHPFileCreationWizardPage(ISelection selection) {
+	public PHPFileCreationWizardPage(final ISelection selection) {
 		super("wizardPage");
 		setTitle("New PHP file");
 		setDescription("Create a new PHP file");
@@ -71,9 +71,9 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
-	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
+	public void createControl(final Composite parent) {
+		final Composite container = new Composite(parent, SWT.NULL);
+		final GridLayout layout = new GridLayout();
 		container.setLayout(layout);
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
@@ -85,15 +85,15 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		gd.widthHint = 400;
 		containerText.setLayoutData(gd);
 		containerText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
+			public void modifyText(final ModifyEvent e) {
 				dialogChanged();
 			}
 		});
 
-		Button button = new Button(container, SWT.PUSH);
+		final Button button = new Button(container, SWT.PUSH);
 		button.setText("Browse");
 		button.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				handleBrowse();
 			}
 		});
@@ -107,34 +107,34 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		//gd.widthHint = 300;
 		fileText.setLayoutData(gd);
 		fileText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
+			public void modifyText(final ModifyEvent e) {
 				dialogChanged();
 			}
 		});
 
-//		label = new Label(container, SWT.NULL);
-//		label.setText("Templates :");
-//
-//		templatesCombo = new Combo(container, SWT.READ_ONLY);
-//		templatesCombo.setItems(new String[] { NO_TEMPLATE });
-//		templatesCombo.setText(NO_TEMPLATE);
-//		gd = new GridData();
-//		gd.horizontalSpan = 2;
-//		gd.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-//		templatesCombo.setLayoutData(gd);
-//		templatesCombo.addModifyListener(new ModifyListener() {
-//			public void modifyText(ModifyEvent e) {
-//				dialogChanged();
-//			}
-//		});
+		//		label = new Label(container, SWT.NULL);
+		//		label.setText("Templates :");
+		//
+		//		templatesCombo = new Combo(container, SWT.READ_ONLY);
+		//		templatesCombo.setItems(new String[] { NO_TEMPLATE });
+		//		templatesCombo.setText(NO_TEMPLATE);
+		//		gd = new GridData();
+		//		gd.horizontalSpan = 2;
+		//		gd.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
+		//		templatesCombo.setLayoutData(gd);
+		//		templatesCombo.addModifyListener(new ModifyListener() {
+		//			public void modifyText(ModifyEvent e) {
+		//				dialogChanged();
+		//			}
+		//		});
 
 		//		label = new Label(container, SWT.NULL);
 		//		label.setText("Encoding :");
 
-//		encodingSettings = new PhpEncodingSettings(container, "Encoding");
-//		gd = new GridData(GridData.FILL_HORIZONTAL);
-//		gd.horizontalSpan = 3;
-//		encodingSettings.setLayoutData(gd);
+		//		encodingSettings = new PhpEncodingSettings(container, "Encoding");
+		//		gd = new GridData(GridData.FILL_HORIZONTAL);
+		//		gd.horizontalSpan = 3;
+		//		encodingSettings.setLayoutData(gd);
 		//		encodingSettings.setEncoding();
 
 		//		encodingCombo = new Combo(container, SWT.READ_ONLY);
@@ -159,62 +159,57 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	 * Tests if the current workbench selection is a suitable
 	 * container to use.
 	 */
-	private void initialize() {
+	protected void initialize() {
 		if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
-			IStructuredSelection ssel = (IStructuredSelection) selection;
+			final IStructuredSelection ssel = (IStructuredSelection) selection;
 			if (ssel.size() > 1)
 				return;
 			Object obj = ssel.getFirstElement();
 			IContainer container = null;
 			if (obj instanceof PHPCodeData)
-				obj=PHPModelUtil.getResource(obj);
-			else if (obj instanceof PHPNature) {
+				obj = PHPModelUtil.getResource(obj);
+			else if (obj instanceof PHPNature)
 				obj = ((PHPNature) obj).getProject();
-			} else if (obj instanceof PHPProjectModel) {
+			else if (obj instanceof PHPProjectModel)
 				obj = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) obj);
-			}
 
-			
 			if (obj instanceof IResource) {
 				if (obj instanceof IContainer)
 					container = (IContainer) obj;
 				else
 					container = ((IResource) obj).getParent();
 
-			} else if (obj instanceof PHPProjectModel) {
+			} else if (obj instanceof PHPProjectModel)
 				container = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) obj);
-			}
 
-			if (container != null) {
+			if (container != null)
 				containerText.setText(container.getFullPath().toString());
-//				IProject project = container.getProject();
-//				PHPProjectOptions options = PHPProjectOptions.forProject(project);
-//				if (options != null) {
-//					String defaultEncoding = (String) options.getOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
-//					encodingSettings.setIANATag(defaultEncoding);
-//				}
-			}
+			//				IProject project = container.getProject();
+			//				PHPProjectOptions options = PHPProjectOptions.forProject(project);
+			//				if (options != null) {
+			//					String defaultEncoding = (String) options.getOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
+			//					encodingSettings.setIANATag(defaultEncoding);
+			//				}
 		}
 		setInitialFileName("newfile.php");
 	}
 
-	protected void setInitialFileName(String fileName) {
+	protected void setInitialFileName(final String fileName) {
 		fileText.setText(fileName);
 	}
-	
+
 	/**
 	 * Uses the standard container selection dialog to
 	 * choose the new value for the container field.
 	 */
 
 	private void handleBrowse() {
-		ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, "Select New File Folder");
+		final ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, "Select New File Folder");
 		dialog.showClosedProjects(false);
-		if (dialog.open() == ContainerSelectionDialog.OK) {
-			Object[] result = dialog.getResult();
-			if (result.length == 1) {
+		if (dialog.open() == Window.OK) {
+			final Object[] result = dialog.getResult();
+			if (result.length == 1)
 				containerText.setText(((Path) result[0]).toOSString());
-			}
 		}
 	}
 
@@ -222,17 +217,15 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	 * Ensures that both text fields are set.
 	 */
 	private void dialogChanged() {
-		String container = getContainerName();
-		String fileName = getFileName();
+		final String container = getContainerName();
+		final String fileName = getFileName();
 
 		if (container.length() == 0) {
 			updateStatus("Folder must be specified");
 			return;
 		}
-		IResource resource = null;
-
-		IContainer containerFolder = getContainer(container);
-		if (containerFolder==null || !containerFolder.exists()) {
+		final IContainer containerFolder = getContainer(container);
+		if (containerFolder == null || !containerFolder.exists()) {
 			updateStatus("Selected folder does not exist");
 			return;
 		}
@@ -244,12 +237,12 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			updateStatus("Specified file already exists");
 			return;
 		}
-		
+
 		if (fileName.length() == 0) {
 			updateStatus("File name must be specified");
 			return;
 		}
-		IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+		final IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 		if (!contentType.isAssociatedWith(fileName)) {
 			updateStatus("File extension must be \"php\"");
 			return;
@@ -258,15 +251,15 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		updateStatus(null);
 	}
 
-	IContainer getContainer(String text ) {
-		Path path = new Path(text);
- 
-			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-			return (resource instanceof IContainer)? (IContainer)resource:null;
- 
+	IContainer getContainer(final String text) {
+		final Path path = new Path(text);
+
+		final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+		return resource instanceof IContainer ? (IContainer) resource : null;
+
 	}
 
-	private void updateStatus(String message) {
+	private void updateStatus(final String message) {
 		setErrorMessage(message);
 		setPageComplete(message == null);
 	}
