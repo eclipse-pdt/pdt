@@ -354,9 +354,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		// init the breakpoint settings
 		try {
 			boolean isOverrideBreakpointSetting = configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
-			overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
-			breakOnFirstLine.setEnabled(isOverrideBreakpointSetting);
-			breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
+			if(overrideBreakpiontSettings != null) {
+				overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
+			}
+			if(breakOnFirstLine != null) {
+				breakOnFirstLine.setEnabled(isOverrideBreakpointSetting);
+				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
+			}
 		} catch (CoreException e) {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}
@@ -415,8 +419,10 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		final boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo.getSelection() : true;
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
 
-		configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
-		configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
+		if(overrideBreakpiontSettings != null)
+			configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
+		if(breakOnFirstLine != null)
+			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 	}
 
 	/* (non-Javadoc)
