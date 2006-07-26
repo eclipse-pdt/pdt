@@ -46,8 +46,8 @@ import org.eclipse.ui.dialogs.ContainerSelectionDialog;
  */
 public class PHPFileCreationWizardPage extends WizardPage {
 
-	private Text containerText;
-	private Text fileText;
+	protected Text containerText;
+	protected Text fileText;
 	private ISelection selection;
 	//	private Combo templatesCombo;
 	//	private Combo encodingCombo;
@@ -159,7 +159,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	 * Tests if the current workbench selection is a suitable
 	 * container to use.
 	 */
-	protected void initialize() {
+	private void initialize() {
 		if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
 			final IStructuredSelection ssel = (IStructuredSelection) selection;
 			if (ssel.size() > 1)
@@ -216,7 +216,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	/**
 	 * Ensures that both text fields are set.
 	 */
-	private void dialogChanged() {
+	protected void dialogChanged() {
 		final String container = getContainerName();
 		final String fileName = getFileName();
 
