@@ -95,6 +95,9 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 						fileName = id.substring(incDir.length() + 1);
 					}
 					project = ((LocalFileStorage) storage).getProject();
+				} else {
+					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_RFile);
+					fileName = storage.getName();
 				}
 				attributes.put(IPHPConstants.Include_Storage, fileName);
 				String projectName = "";

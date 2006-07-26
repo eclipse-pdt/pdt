@@ -32,6 +32,7 @@ import org.eclipse.php.debug.core.debugger.Breakpoint;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.launching.PHPLaunchProxy;
 import org.eclipse.php.debug.core.launching.PHPProcess;
+import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
 /**
  * PHP Debug Target
@@ -359,8 +360,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		fLastcmd = "terminate";
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling closeDebugSession()");
 		debugger.closeDebugSession();
-//		terminated(); // TODO - Might be needed...
-//		fTermainateCalled = true;
+		//		terminated(); // TODO - Might be needed...
+		//		fTermainateCalled = true;
 	}
 
 	/**
@@ -543,7 +544,12 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 					String fileName;
 					if (!fIsPHPCGI) {
 						if (resource instanceof IWorkspaceRoot) {
-							fileName = fHTDocs + "/" + (String) marker.getAttribute(IPHPConstants.Include_Storage);
+							if (IPHPConstants.Include_Storage_RFile.equals(marker.getAttribute(IPHPConstants.Include_Storage_type))) {
+								fileName = (String) marker.getAttribute(IPHPConstants.Include_Storage);
+								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
+							} else {
+								fileName = fHTDocs + "/" + (String) marker.getAttribute(IPHPConstants.Include_Storage);
+							}
 						} else {
 							fileName = fHTDocs + fContextRoot + resource.getProjectRelativePath();
 						}

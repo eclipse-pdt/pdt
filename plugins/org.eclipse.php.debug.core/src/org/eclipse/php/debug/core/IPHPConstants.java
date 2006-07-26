@@ -34,6 +34,7 @@ public interface IPHPConstants {
     public static final String Include_Storage_type = ID_PHP_DEBUG_CORE + ".Include_Storage_Type";
     public static final String Include_Storage_zip = ID_PHP_DEBUG_CORE + ".zip";
     public static final String Include_Storage_LFile = ID_PHP_DEBUG_CORE + ".lfile";
+    public static final String Include_Storage_RFile = ID_PHP_DEBUG_CORE + ".rfile";
     public static final String Include_Storage_Project = ID_PHP_DEBUG_CORE + ".project";  
     public static final String Default_Server_Name = "Default PHP Web Server"; 
 	public static final String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType";
