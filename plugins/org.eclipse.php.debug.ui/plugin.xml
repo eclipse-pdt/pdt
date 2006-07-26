@@ -2,10 +2,11 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="phpDebugPreferencesAddon" name="PHP Debug Preferences Page Addon" schema="schema/phpDebugPreferencesAddon.exsd"/>
+   <extension-point id="phpDebugModelPresentations" name="PHP Debug Model Presentations" schema="schema/phpDebugModelPresentations.exsd"/>
    <extension
          point="org.eclipse.debug.ui.debugModelPresentations">
       <debugModelPresentation
-            class="org.eclipse.php.debug.ui.presentation.PHPModelPresentation"
+            class="org.eclipse.php.debug.ui.presentation.PHPModelPresentationDelegate"
             id="org.eclipse.php.debug.core">
       </debugModelPresentation>
    </extension>
@@ -401,6 +402,12 @@
     <themeElementCategory
           id="org.eclipse.php.debug.ui.themePHPDebug"
           label="PHP Debug"/>
+ </extension>
+ <extension
+       point="org.eclipse.php.debug.ui.phpDebugModelPresentations">
+    <phpDebugModelPresentation
+          class="org.eclipse.php.debug.ui.presentation.PHPModelPresentation"
+          id="org.eclipse.php.debug.ui.presentation.phpModelPresentation"/>
  </extension>
    
 </plugin>
