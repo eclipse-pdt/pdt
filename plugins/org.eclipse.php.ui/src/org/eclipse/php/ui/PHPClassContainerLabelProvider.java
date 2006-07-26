@@ -6,7 +6,6 @@ package org.eclipse.php.ui;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.util.PHPElementImageProvider;
@@ -16,38 +15,35 @@ public class PHPClassContainerLabelProvider extends LabelProvider {
 
 	// TODO getImage
 
-	public Image getImage(Object element) {
+	public Image getImage(final Object element) {
 		Object imageElement = PHPModelUtil.getResource(element);
-		if (imageElement == null) {
+		if (imageElement == null)
 			imageElement = element;
-		}
 		return (new PHPElementImageProvider()).getImageLabel(imageElement, 0);
 	}
 
-	public String getText(Object element, StringBuffer buf) {
+	public String getText(final Object element) {
+		return getText(element, new StringBuffer());
+	}
+
+	public String getText(final Object element, final StringBuffer buf) {
 
 		if (element instanceof PHPFileData) {
-			String label = ((PHPFileData) element).getName();
-			IFile file = (IFile) PHPModelUtil.getResource(element);
+			final String label = ((PHPFileData) element).getName();
+			final IFile file = (IFile) PHPModelUtil.getResource(element);
 			buf.ensureCapacity(buf.capacity() + label.length());
 			buf.insert(0, label);
-			if (file == null) {
+			if (file == null)
 				return buf.toString();
-			}
 			return buf.toString();
 		}
-		if (element instanceof PHPClassData) {
-			PHPClassData classData = (PHPClassData) element;
+		if (element instanceof PHPCodeData) {
+			final PHPCodeData codeData = (PHPCodeData) element;
 			PHPCodeData container;
-			if ((container = classData.getContainer()) != null) {
+			if ((container = codeData.getContainer()) != null)
 				return getText(container, buf);
-			}
 		}
 		return "";
 
-	}
-
-	public String getText(Object element) {
-		return getText(element, new StringBuffer());
 	}
 }
