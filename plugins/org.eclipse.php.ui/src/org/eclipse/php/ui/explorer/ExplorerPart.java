@@ -104,8 +104,8 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 public class ExplorerPart extends ViewPart implements IMenuListener {
 
 	private PHPTreeViewer fViewer;
-	private ExplorerContentProvider fContentProvider;
-	private ExplorerLabelProvider fLabelProvider;
+	protected ExplorerContentProvider fContentProvider;
+	protected ExplorerLabelProvider fLabelProvider;
 
 	private ExplorerActionGroup fActionSet;
 	private Menu fContextMenu;
@@ -513,7 +513,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		return fRootMode == ExplorerViewActionGroup.SHOW_WORKING_SETS;
 	}
 
-	private ExplorerLabelProvider createLabelProvider() {
+	protected ExplorerLabelProvider createLabelProvider() {
 		return new ExplorerLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.P_COMPRESSED, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS | PHPElementImageProvider.OVERLAY_ICONS, fContentProvider);
 	}
 

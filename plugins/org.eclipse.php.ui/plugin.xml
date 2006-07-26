@@ -66,6 +66,7 @@
    			<newWizardShortcut id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"/>
    			
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator"/>
+   <actionSet id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet"/>
 		</perspectiveExtension>
 		<perspectiveExtension
 			targetID="org.eclipse.ui.resourcePerspective">

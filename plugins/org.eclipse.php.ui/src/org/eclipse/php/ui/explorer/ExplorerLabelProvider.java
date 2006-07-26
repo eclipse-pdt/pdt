@@ -23,13 +23,13 @@ import org.eclipse.php.ui.util.TreeHierarchyLayoutProblemsDecorator;
  * </p>
  * @since 2.1
  */
-class ExplorerLabelProvider extends AppearanceAwareLabelProvider {
+public class ExplorerLabelProvider extends AppearanceAwareLabelProvider {
 
 	private ITreeContentProvider fContentProvider;
 
 	private TreeHierarchyLayoutProblemsDecorator fProblemDecorator;
 
-	ExplorerLabelProvider(int textFlags, int imageFlags, ITreeContentProvider cp) {
+	protected ExplorerLabelProvider(int textFlags, int imageFlags, ITreeContentProvider cp) {
 		super(textFlags, imageFlags);
 		fProblemDecorator = new TreeHierarchyLayoutProblemsDecorator();
 		addLabelDecorator(fProblemDecorator);

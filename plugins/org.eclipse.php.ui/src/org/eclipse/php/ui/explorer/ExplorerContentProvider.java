@@ -326,7 +326,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		return super.getChildrenInternal(parentElement);
 	}
 
-	private Object[] getAllProjects() {
+	protected Object[] getAllProjects() {
 		return ResourcesPlugin.getWorkspace().getRoot().getProjects();
 	}
 }
