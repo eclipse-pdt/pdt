@@ -110,8 +110,8 @@ public class ToggleCommentAction extends TextEditorAction {
 			return false;
 
 		ITextSelection textSelection= (ITextSelection) selection;
-		if (textSelection.getStartLine() < 0 || textSelection.getEndLine() < 0)
-			return false;
+		/*if (textSelection.getStartLine() < 0 || textSelection.getEndLine() < 0)
+			return false;*/
 
 		IDocument document= getTextEditor().getDocumentProvider().getDocument(getTextEditor().getEditorInput());
 
