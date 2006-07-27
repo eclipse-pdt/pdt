@@ -345,7 +345,10 @@
       
    </extension>
    <extension point="org.eclipse.php.server.ui.serverTab">
-  		<serverTab class="org.eclipse.php.debug.ui.launching.PHPServerTab"/>
+  		<serverTab
+          class="org.eclipse.php.debug.ui.launching.PHPServerTab"
+          id="org.eclipse.php.debug.ui.launching.PHPServerTab"
+          />
    </extension>
       
 <!-- Editor -->

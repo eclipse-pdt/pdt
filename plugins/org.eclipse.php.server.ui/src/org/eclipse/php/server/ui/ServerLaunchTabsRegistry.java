@@ -17,78 +17,69 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.util.SafeRunnable;
 
-/**
- * Server wizard fragments registry for all the org.eclipse.php.server.apache.ui.serverWizardFragment extentions. 
- */
-public class ServerFragmentsFactoryRegistry {
+public class ServerLaunchTabsRegistry {
 
-	private static final String EXTENSION_POINT_NAME = "serverWizardFragment"; //$NON-NLS-1$
-	private static final String FRAGMENT_TAG = "wizardFragment"; //$NON-NLS-1$
+	private static final String EXTENSION_POINT_NAME = "serverTab"; //$NON-NLS-1$
+	private static final String TAB_TAG = "serverTab"; //$NON-NLS-1$
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String PLACE_AFTER_ATTRIBUTE = "placeAfter"; //$NON-NLS-1$
 
-	// Hold a Dictionary of Lists that contains the factories used for the creation of the fragments.
-	private List fragments = new ArrayList(5);
+	// Hold a Dictionary of Lists that contains the factories used for the creation of the tabs.
+	private List factories = new ArrayList(5);
 
-	private static ServerFragmentsFactoryRegistry instance;
-	private ICompositeFragmentFactory[] factories;
+	private static ServerLaunchTabsRegistry instance;
 
 	/**
-	 * Returns an array on newly initialized WizardFragments that complies to the given server type 
-	 * id.
-	 * The returned fragments array contains a union of the server specific fragments and the global
-	 * fragments that can be defined by adding a fragments extention with a visibility of 'Always'.
+	 * Returns an array on newly initialized AbstractLaunchConfigurationTab.
 	 * 
-	 * @param serverType	The id of the server.
-	 * @return	An array of ICompositeFragmentFactory.
+	 * @return	An array of AbstractLaunchConfigurationTab.
 	 */
-	public static ICompositeFragmentFactory[] getFragmentsFactories() {
-		ServerFragmentsFactoryRegistry registry = getInstance();
-		if (registry.factories == null) {
-			List fragments = registry.fragments;
-			List factoriesList = new ArrayList();
-			for (int i = 0; i < fragments.size(); i++) {
-				FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
-				factoriesList.add(factory.createFragmentFactory());
-			}
-			registry.factories = new ICompositeFragmentFactory[factoriesList.size()];
-			factoriesList.toArray(registry.factories);
+	public static AbstractLaunchConfigurationTab[] getLaunchTabs() {
+		ServerLaunchTabsRegistry registry = getInstance();
+		List fragments = registry.factories;
+		List factoriesList = new ArrayList();
+		for (int i = 0; i < fragments.size(); i++) {
+			TabFactory factory = (TabFactory) fragments.get(i);
+			factoriesList.add(factory.createFragmentFactory());
 		}
-		return registry.factories;
+		AbstractLaunchConfigurationTab[] tabs = new AbstractLaunchConfigurationTab[factoriesList.size()];
+		factoriesList.toArray(tabs);
+		return tabs;
 	}
 
-	private ServerFragmentsFactoryRegistry() {
+	private ServerLaunchTabsRegistry() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(Activator.PLUGIN_ID, EXTENSION_POINT_NAME);
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
-			if (FRAGMENT_TAG.equals(element.getName())) {
+			if (TAB_TAG.equals(element.getName())) {
 				String id = element.getAttribute(ID_ATTRIBUTE);
 				String placeAfter = element.getAttribute(PLACE_AFTER_ATTRIBUTE);
 				if (element.getNamespaceIdentifier().equals(Activator.PLUGIN_ID)) {
 					// Make sure that extentions that exists in this plugin will appear ahead of all others
-					// when the user-class calls for getFragmentsFactories().
-					fragments.add(0, new FragmentsFactory(element, id, placeAfter));
+					// when the user-class calls for getLaunchTabs().
+					factories.add(0, new TabFactory(element, id, placeAfter));
 				} else {
-					fragments.add(new FragmentsFactory(element, id, placeAfter));
+					factories.add(new TabFactory(element, id, placeAfter));
 				}
 			}
 		}
 		sortFragmentsByPlace();
 	}
 
-	// Sort the fragments according to the 'place-after' attribute
+	// Sort the factories according to the 'placeAfter' attribute
 	private void sortFragmentsByPlace() {
-		// Scan the fragments and separate the fragments that lacks the place-after property from
+		// Scan the factories and separate the factories that lacks the place-after property from
 		// those that have it.
-		ArrayList rootsFragments = new ArrayList(fragments.size());
-		ArrayList nonRootFragments = new ArrayList(fragments.size());
-		for (int i = 0; i < fragments.size(); i++) {
-			FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
+		ArrayList rootsFragments = new ArrayList(factories.size());
+		ArrayList nonRootFragments = new ArrayList(factories.size());
+		for (int i = 0; i < factories.size(); i++) {
+			TabFactory factory = (TabFactory) factories.get(i);
 			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) {
 				addAsList(rootsFragments, factory);
 			} else {
@@ -96,13 +87,13 @@ public class ServerFragmentsFactoryRegistry {
 			}
 		}
 
-		// Traverse over the non-root fragments and position them.
+		// Traverse over the non-root factories and position them.
 		for (int i = 0; i < nonRootFragments.size(); i++) {
-			FragmentsFactory factory = getFactory(nonRootFragments, i);
-			// try to move it to the roots fragments first (order is important).
+			TabFactory factory = getFactory(nonRootFragments, i);
+			// try to move it to the roots factories first (order is important).
 			boolean moved = placeFragment(rootsFragments, factory);
 			if (!moved) {
-				// in case we can't find it there, try to move it inside the non-roots fragments.
+				// in case we can't find it there, try to move it inside the non-roots factories.
 				moved = placeFragment(nonRootFragments, factory);
 			}
 			if (!moved) {
@@ -113,21 +104,21 @@ public class ServerFragmentsFactoryRegistry {
 		}
 
 		// At this stage, the root fragments should hold all the fragments sorted.
-		fragments.clear();
+		factories.clear();
 		for (int i = 0; i < rootsFragments.size(); i++) {
 			List list = (List) rootsFragments.get(i);
 			for (int j = 0; j < list.size(); j++) {
-				fragments.add(list.get(j));
+				factories.add(list.get(j));
 			}
 		}
 	}
 
-	private boolean placeFragment(List factories, FragmentsFactory factory) {
+	private boolean placeFragment(List factories, TabFactory factory) {
 		String placeAfter = factory.getPlaceAfter();
 		for (int i = 0; i < factories.size(); i++) {
 			List list = (List) factories.get(i);
 			for (int j = 0; j < list.size(); j++) {
-				FragmentsFactory nextFactory = (FragmentsFactory) list.get(j);
+				TabFactory nextFactory = (TabFactory) list.get(j);
 				if (nextFactory.getID().equals(placeAfter)) {
 					// This list is the list we should add to
 					list.add(factory);
@@ -138,9 +129,9 @@ public class ServerFragmentsFactoryRegistry {
 		return false;
 	}
 
-	private FragmentsFactory getFactory(List nonRootFragments, int i) {
+	private TabFactory getFactory(List nonRootFragments, int i) {
 		List list = (List) nonRootFragments.get(i);
-		return (FragmentsFactory) list.get(0);
+		return (TabFactory) list.get(0);
 	}
 
 	// add an element to a List by wrapping it in another List.
@@ -150,30 +141,30 @@ public class ServerFragmentsFactoryRegistry {
 		target.add(list);
 	}
 
-	private static ServerFragmentsFactoryRegistry getInstance() {
+	private static ServerLaunchTabsRegistry getInstance() {
 		if (instance == null) {
-			instance = new ServerFragmentsFactoryRegistry();
+			instance = new ServerLaunchTabsRegistry();
 		}
 		return instance;
 	}
 
-	private class FragmentsFactory {
+	private class TabFactory {
 
 		private IConfigurationElement element;
-		private ICompositeFragmentFactory factory;
+		private AbstractLaunchConfigurationTab factory;
 		private String id;
 		private String placeAfter;
 
-		public FragmentsFactory(IConfigurationElement element, String id, String placeAfter) {
+		public TabFactory(IConfigurationElement element, String id, String placeAfter) {
 			this.element = element;
 			this.id = id;
 			this.placeAfter = placeAfter;
 		}
 
-		public ICompositeFragmentFactory createFragmentFactory() {
-			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.server.ui.serverWizardFragment") {
+		public AbstractLaunchConfigurationTab createFragmentFactory() {
+			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.server.ui.serverTabs") {
 				public void run() throws Exception {
-					factory = (ICompositeFragmentFactory) element.createExecutableExtension(CLASS_ATTRIBUTE);
+					factory = (AbstractLaunchConfigurationTab) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}
 			});
 			return factory;

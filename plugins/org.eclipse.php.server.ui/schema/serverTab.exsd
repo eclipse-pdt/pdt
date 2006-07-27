@@ -44,6 +44,13 @@
 
    <element name="serverTab">
       <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A unique id for this server launch tab.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
@@ -52,6 +59,14 @@
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.debug.ui.AbstractLaunchConfigurationTab"/>
                </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="placeAfter" type="string">
+            <annotation>
+               <documentation>
+                  An id for the server-tab that this tab should be placed after.
+This does not mean that the tab will appear right after the given id. It only specifies that this tab will be placed somewhere between the identified tab and the last &apos;Common&apos; tab.
+               </documentation>
             </annotation>
          </attribute>
       </complexType>
