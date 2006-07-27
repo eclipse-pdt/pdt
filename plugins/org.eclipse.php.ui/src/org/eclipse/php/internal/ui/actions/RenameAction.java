@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -44,7 +45,7 @@ public class RenameAction extends SelectionDispatchAction {
 	 */
 	public RenameAction(IWorkbenchSite site) {
 		super(site);
-		setText(ActionMessages.RenameAction_text);
+		setText(PHPUIMessages.RenameAction_text);
 		fRenamePHPElement = new RenamePHPElementAction(site);
 		fRenamePHPElement.setText(getText());
 		fRenameResource = new RenameResourceAction(site);
@@ -116,6 +117,6 @@ public class RenameAction extends SelectionDispatchAction {
 		if (fRenamePHPElement.canRun())
 			fRenamePHPElement.run(selection);
 		else
-			MessageDialog.openInformation(getShell(), ActionMessages.RenameAction_rename, ActionMessages.RenameAction_unavailable);
+			MessageDialog.openInformation(getShell(), PHPUIMessages.RenameAction_rename, PHPUIMessages.RenameAction_unavailable);
 	}
 }

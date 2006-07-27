@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.ui.PHPElementLabelProvider;
 import org.eclipse.php.ui.PHPUiPlugin;
@@ -137,8 +138,8 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 
 	private void internalRun() {
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), new PHPElementLabelProvider());
-		dialog.setTitle(ActionMessages.OpenProjectAction_dialog_title);
-		dialog.setMessage(ActionMessages.OpenProjectAction_dialog_message);
+		dialog.setTitle(PHPUIMessages.OpenProjectAction_dialog_title);
+		dialog.setMessage(PHPUIMessages.OpenProjectAction_dialog_message);
 		dialog.setElements(getClosedProjects());
 		dialog.setMultipleSelection(true);
 		int result = dialog.open();
@@ -149,7 +150,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		try {
 			PlatformUI.getWorkbench().getProgressService().run(true, true, new WorkbenchRunnableAdapter(runnable));
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, getShell(), ActionMessages.OpenProjectAction_dialog_title, ActionMessages.OpenProjectAction_error_message);
+			ExceptionHandler.handle(e, getShell(), PHPUIMessages.OpenProjectAction_dialog_title, PHPUIMessages.OpenProjectAction_error_message);
 		} catch (InterruptedException e) {
 		}
 	}
@@ -165,7 +166,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 						project.open(new SubProgressMonitor(monitor, 1));
 					} catch (CoreException e) {
 						if (errorStatus == null)
-							errorStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR, ActionMessages.OpenProjectAction_error_message, e);
+							errorStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR, PHPUIMessages.OpenProjectAction_error_message, e);
 						errorStatus.merge(e.getStatus());
 					}
 				}

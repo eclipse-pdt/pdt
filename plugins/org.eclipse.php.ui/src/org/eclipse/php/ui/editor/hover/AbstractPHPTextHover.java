@@ -20,8 +20,8 @@ import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.ui.editor.PHPEditorMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
@@ -84,7 +84,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 		if (keySequence == null)
 			return null;
 
-		return NLS.bind(PHPEditorMessages.HoverFocus_message, keySequence);
+		return NLS.bind(PHPUIMessages.HoverFocus_message, keySequence);
 	}
 
 	/*

@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
@@ -37,7 +38,7 @@ public class MoveAction extends SelectionDispatchAction {
 	 */
 	public MoveAction(IWorkbenchSite site) {
 		super(site);
-		setText(ActionMessages.MoveAction_text);
+		setText(PHPUIMessages.MoveAction_text);
 		fReorgMoveAction = new ReorgMoveAction(site);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
 	}
@@ -49,7 +50,7 @@ public class MoveAction extends SelectionDispatchAction {
 	public MoveAction(PHPStructuredEditor editor) {
 		super(editor.getEditorSite());
 		fEditor = editor;
-		setText(ActionMessages.MoveAction_text);
+		setText(PHPUIMessages.MoveAction_text);
 		fReorgMoveAction = new ReorgMoveAction(editor.getEditorSite());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
 	}
@@ -75,7 +76,7 @@ public class MoveAction extends SelectionDispatchAction {
 		if (tryReorgMove(selection))
 			return;
 
-		MessageDialog.openInformation(getShell(), ActionMessages.MoveAction_Move, ActionMessages.MoveAction_select);
+		MessageDialog.openInformation(getShell(), PHPUIMessages.MoveAction_Move, PHPUIMessages.MoveAction_select);
 	}
 
 	private boolean tryReorgMove(ITextSelection selection) {

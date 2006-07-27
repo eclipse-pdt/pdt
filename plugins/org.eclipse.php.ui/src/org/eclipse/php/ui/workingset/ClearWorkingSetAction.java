@@ -12,6 +12,7 @@ package org.eclipse.php.ui.workingset;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.ui.PlatformUI;
 
@@ -23,9 +24,9 @@ public class ClearWorkingSetAction extends Action {
 	private WorkingSetFilterActionGroup fActionGroup;
 
 	public ClearWorkingSetAction(WorkingSetFilterActionGroup actionGroup) {
-		super(WorkingSetMessages.ClearWorkingSetAction_text);
+		super(PHPUIMessages.ClearWorkingSetAction_text);
 		Assert.isNotNull(actionGroup);
-		setToolTipText(WorkingSetMessages.ClearWorkingSetAction_toolTip);
+		setToolTipText(PHPUIMessages.ClearWorkingSetAction_toolTip);
 		setEnabled(actionGroup.getWorkingSet() != null);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.CLEAR_WORKING_SET_ACTION);
 		fActionGroup = actionGroup;

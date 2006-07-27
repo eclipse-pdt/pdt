@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -35,8 +36,8 @@ public class ReorgMoveAction extends SelectionDispatchAction {
 	
 	public ReorgMoveAction(IWorkbenchSite site) {
 		super(site);
-		setText(ActionMessages.ReorgMoveAction_3);
-		setDescription(ActionMessages.ReorgMoveAction_4);
+		setText(PHPUIMessages.ReorgMoveAction_3);
+		setDescription(PHPUIMessages.ReorgMoveAction_4);
 		update(getSelection());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
 	}

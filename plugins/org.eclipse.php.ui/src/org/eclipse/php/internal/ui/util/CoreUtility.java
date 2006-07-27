@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.osgi.framework.Bundle;

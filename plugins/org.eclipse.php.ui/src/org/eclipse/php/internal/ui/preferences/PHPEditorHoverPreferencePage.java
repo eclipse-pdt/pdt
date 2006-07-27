@@ -9,8 +9,8 @@
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.preferences.ui.AbstractConfigurationBlockPreferencePage;
 import org.eclipse.php.ui.preferences.ui.IPreferenceConfigurationBlock;

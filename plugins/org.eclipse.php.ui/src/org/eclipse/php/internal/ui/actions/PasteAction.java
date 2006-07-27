@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -305,8 +306,8 @@ public class PasteAction extends SelectionDispatchAction {
 		Assert.isNotNull(clipboard);
 		fClipboard = clipboard;
 
-		setText(ActionMessages.PasteAction_text);
-		setDescription(ActionMessages.PasteAction_desc);
+		setText(PHPUIMessages.PasteAction_text);
+		setDescription(PHPUIMessages.PasteAction_desc);
 
 		ISharedImages workbenchImages = PHPUiPlugin.getDefault().getWorkbench().getSharedImages();
 		setDisabledImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
@@ -362,7 +363,7 @@ public class PasteAction extends SelectionDispatchAction {
 					return;// one is enough
 				}
 			}
-			MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), ActionMessages.RefactoringAction_refactoring, ActionMessages.RefactoringAction_disabled);
+			MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), PHPUIMessages.RefactoringAction_refactoring, PHPUIMessages.RefactoringAction_disabled);
 		} catch (CoreException e) {
 			PHPUiPlugin.log(e);
 		} catch (InvocationTargetException e) {

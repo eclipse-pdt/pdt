@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;

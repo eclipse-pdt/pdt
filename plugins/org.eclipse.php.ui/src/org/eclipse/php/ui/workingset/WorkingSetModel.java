@@ -24,6 +24,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IElementComparer;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.ui.ILocalWorkingSetManager;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkingSet;
@@ -226,7 +227,7 @@ public class WorkingSetModel {
 		addListenersToWorkingSetManagers();
 		fActiveWorkingSets = new ArrayList(2);
 
-		IWorkingSet others = fLocalWorkingSetManager.createWorkingSet(WorkingSetMessages.WorkingSetModel_others_name, new IAdaptable[0]);
+		IWorkingSet others = fLocalWorkingSetManager.createWorkingSet(PHPUIMessages.WorkingSetModel_others_name, new IAdaptable[0]);
 		others.setId(OthersWorkingSetUpdater.ID);
 		fLocalWorkingSetManager.addWorkingSet(others);
 		fActiveWorkingSets.add(others);

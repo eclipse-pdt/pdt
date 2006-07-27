@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.actions;
 import java.util.Iterator;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.swt.dnd.Clipboard;
@@ -27,7 +28,7 @@ public class CutAction extends SelectionDispatchAction {
 
 	public CutAction(IWorkbenchSite site, Clipboard clipboard, SelectionDispatchAction pasteAction) {
 		super(site);
-		setText(ActionMessages.CutAction_text);
+		setText(PHPUIMessages.CutAction_text);
 		fCopyToClipboardAction = new CopyToClipboardAction(site, clipboard, pasteAction);
 
 		ISharedImages workbenchImages = PHPUiPlugin.getDefault().getWorkbench().getSharedImages();

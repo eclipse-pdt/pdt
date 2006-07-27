@@ -26,6 +26,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.IContextMenuConstants;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
@@ -86,7 +87,7 @@ public class RefactorActionGroup extends ActionGroup {
 	private static class NoActionAvailable extends Action {
 		public NoActionAvailable() {
 			setEnabled(true);
-			setText(ActionMessages.RefactorActionGroup_no_refactoring_available);
+			setText(PHPUIMessages.RefactorActionGroup_no_refactoring_available);
 		}
 	}
 
@@ -217,7 +218,7 @@ public class RefactorActionGroup extends ActionGroup {
 	}
 
 	private void addRefactorSubmenu(IMenuManager menu) {
-		String menuText = ActionMessages.RefactorMenu_label;
+		String menuText = PHPUIMessages.RefactorMenu_label;
 
 		IMenuManager refactorSubmenu = new MenuManager(menuText, MENU_ID);
 		if (fEditor != null) {

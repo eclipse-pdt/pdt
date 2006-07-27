@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -31,8 +32,8 @@ public class DeleteAction extends SelectionDispatchAction {
 
 	public DeleteAction(IWorkbenchSite site) {
 		super(site);
-		setText(ActionMessages.DeleteAction_text);
-		setDescription(ActionMessages.DeleteAction_desc);
+		setText(PHPUIMessages.DeleteAction_text);
+		setDescription(PHPUIMessages.DeleteAction_desc);
 		ISharedImages workbenchImages = PHPUiPlugin.getDefault().getWorkbench().getSharedImages();
 		setDisabledImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
 		setImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));

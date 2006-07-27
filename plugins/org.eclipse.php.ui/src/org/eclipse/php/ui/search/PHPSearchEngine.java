@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPUserModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -100,7 +101,7 @@ public class PHPSearchEngine {
 		if (monitor != null && monitor.isCanceled())
 			throw new OperationCanceledException();
 		if (monitor != null) {
-			monitor.beginTask(SearchMessages.PHPEngine_searching, IProgressMonitor.UNKNOWN);
+			monitor.beginTask(PHPUIMessages.PHPEngine_searching, IProgressMonitor.UNKNOWN);
 		}
 		for (int i = 0; i < projectsInScope.length; i++) {
 			if (monitor != null && monitor.isCanceled())

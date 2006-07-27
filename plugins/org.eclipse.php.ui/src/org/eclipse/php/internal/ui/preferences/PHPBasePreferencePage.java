@@ -16,7 +16,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;

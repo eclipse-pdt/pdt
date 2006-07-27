@@ -21,7 +21,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.preferences.PHPManualConfigurationBlock.PHPManualConfig;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;

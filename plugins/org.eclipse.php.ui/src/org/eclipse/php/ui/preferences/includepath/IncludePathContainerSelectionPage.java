@@ -24,7 +24,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.ListContentProvider;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.util.PHPPluginImages;

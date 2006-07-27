@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.search.ui.NewSearchUI;
@@ -131,7 +132,7 @@ public class PHPSearchEditorOpener {
 					else
 						fEditor= null;
 				} catch (PartInitException ex) {
-					MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), SearchMessages.Search_Error_openEditor_title, SearchMessages.Search_Error_openEditor_message); 
+					MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), PHPUIMessages.Search_Error_openEditor_title, PHPUIMessages.Search_Error_openEditor_message); 
 					return null;
 				}
 			}

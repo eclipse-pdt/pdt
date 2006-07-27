@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
@@ -82,12 +83,12 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 		inner.setLayout(layout);
 
 		Label label = new Label(inner, SWT.LEFT);
-		label.setText(FoldingMessages.DefaultPHPFoldingPreferenceBlock_title);
+		label.setText(PHPUIMessages.DefaultPHPFoldingPreferenceBlock_title);
 
-		addCheckBox(inner, FoldingMessages.DefaultPHPFoldingPreferenceBlock_classes, PreferenceConstants.EDITOR_FOLDING_CLASSES, 0);
-		//		addCheckBox(inner, FoldingMessages.DefaultPHPFoldingPreferenceBlock_includes, PreferenceConstants.EDITOR_FOLDING_INCLUDES, 0);
-		addCheckBox(inner, FoldingMessages.DefaultPHPFoldingPreferenceBlock_functions, PreferenceConstants.EDITOR_FOLDING_FUNCTIONS, 0);
-		addCheckBox(inner, FoldingMessages.DefaultPHPFoldingPreferenceBlock_PHPdoc, PreferenceConstants.EDITOR_FOLDING_PHPDOC, 0);
+		addCheckBox(inner, PHPUIMessages.DefaultPHPFoldingPreferenceBlock_classes, PreferenceConstants.EDITOR_FOLDING_CLASSES, 0);
+		//		addCheckBox(inner, PHPUIMessages.DefaultPHPFoldingPreferenceBlock_includes, PreferenceConstants.EDITOR_FOLDING_INCLUDES, 0);
+		addCheckBox(inner, PHPUIMessages.DefaultPHPFoldingPreferenceBlock_functions, PreferenceConstants.EDITOR_FOLDING_FUNCTIONS, 0);
+		addCheckBox(inner, PHPUIMessages.DefaultPHPFoldingPreferenceBlock_PHPdoc, PreferenceConstants.EDITOR_FOLDING_PHPDOC, 0);
 
 		return inner;
 	}

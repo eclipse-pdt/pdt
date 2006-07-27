@@ -16,6 +16,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.ui.IContextMenuConstants;
@@ -49,7 +50,7 @@ public class NewWizardsActionGroup extends ActionGroup {
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (sel.size() <= 1 && isNewTarget(sel.getFirstElement())) {
-				IMenuManager newMenu = new MenuManager(ActionMessages.NewWizardsActionGroup_new);
+				IMenuManager newMenu = new MenuManager(PHPUIMessages.NewWizardsActionGroup_new);
 				menu.appendToGroup(IContextMenuConstants.GROUP_NEW, newMenu);
 				new PHPNewWizardMenu(newMenu, fSite.getWorkbenchWindow(), false);
 			}

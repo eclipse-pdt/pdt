@@ -22,7 +22,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.server.core.Activator;
 import org.eclipse.php.server.core.Logger;
-import org.eclipse.php.server.core.Messages;
+import org.eclipse.php.server.core.PHPServerCoreMessages;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 
@@ -100,7 +100,7 @@ public class FileUtil {
 			// cycle through files
 			int size = files.length;
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(NLS.bind(Messages.getString("FileUtil.copying"), new String[] { from, to }), size * 50); //$NON-NLS-1$
+			monitor.beginTask(NLS.bind(PHPServerCoreMessages.getString("FileUtil.copying"), new String[] { from, to }), size * 50); //$NON-NLS-1$
 
 			for (int i = 0; i < size; i++) {
 				File current = files[i];
@@ -113,7 +113,7 @@ public class FileUtil {
 					copyFile(fromFile, toFile);
 					monitor.worked(50);
 				} else if (current.isDirectory()) {
-					monitor.subTask(NLS.bind(Messages.getString("FileUtil.copying"), new String[] { fromFile, toFile })); //$NON-NLS-1$
+					monitor.subTask(NLS.bind(PHPServerCoreMessages.getString("FileUtil.copying"), new String[] { fromFile, toFile })); //$NON-NLS-1$
 					copyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, 50));
 				}
 				if (monitor.isCanceled())
@@ -121,7 +121,7 @@ public class FileUtil {
 			}
 			monitor.done();
 		} catch (Exception e) {
-			Logger.logException(Messages.getString("FileUtil.errorCopyingDirectory"), e); //$NON-NLS-1$
+			Logger.logException(PHPServerCoreMessages.getString("FileUtil.errorCopyingDirectory"), e); //$NON-NLS-1$
 		}
 	}
 
@@ -143,10 +143,10 @@ public class FileUtil {
 				out.write(buf, 0, avail);
 				avail = in.read(buf);
 			}
-			return new Status(IStatus.OK, Activator.PLUGIN_ID, 0, NLS.bind(Messages.getString("FileUtil.copying"), new String[] { to }), null); //$NON-NLS-1$
+			return new Status(IStatus.OK, Activator.PLUGIN_ID, 0, NLS.bind(PHPServerCoreMessages.getString("FileUtil.copying"), new String[] { to }), null); //$NON-NLS-1$
 		} catch (Exception e) {
-			Logger.logException(Messages.getString("FileUtil.errorCopyingFile"), e); //$NON-NLS-1$
-			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, NLS.bind(Messages.getString("FileUtil.errorCopyingFileTo"), new String[] { to, e.getLocalizedMessage() }), e); //$NON-NLS-1$
+			Logger.logException(PHPServerCoreMessages.getString("FileUtil.errorCopyingFile"), e); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, NLS.bind(PHPServerCoreMessages.getString("FileUtil.errorCopyingFileTo"), new String[] { to, e.getLocalizedMessage() }), e); //$NON-NLS-1$
 		} finally {
 			try {
 				if (in != null)
@@ -174,8 +174,8 @@ public class FileUtil {
 		try {
 			return copyFile(new FileInputStream(from), to);
 		} catch (Exception e) {
-			Logger.logException(Messages.getString("FileUtil.errorCopyingFile"), e); //$NON-NLS-1$
-			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, NLS.bind(Messages.getString("FileUtil.errorCopyingFileTo"), new String[] { to, e.getLocalizedMessage() }), e); //$NON-NLS-1$
+			Logger.logException(PHPServerCoreMessages.getString("FileUtil.errorCopyingFile"), e); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, NLS.bind(PHPServerCoreMessages.getString("FileUtil.errorCopyingFileTo"), new String[] { to, e.getLocalizedMessage() }), e); //$NON-NLS-1$
 		}
 	}
 
@@ -190,8 +190,8 @@ public class FileUtil {
 		try {
 			return copyFile(from.openStream(), to);
 		} catch (Exception e) {
-			Logger.logException(Messages.getString("FileUtil.errorCopyingFile"), e); //$NON-NLS-1$
-			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, NLS.bind(Messages.getString("FileUtil.errorCopyingFileTo"), new String[] { to, e.getLocalizedMessage() }), e); //$NON-NLS-1$
+			Logger.logException(PHPServerCoreMessages.getString("FileUtil.errorCopyingFile"), e); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, NLS.bind(PHPServerCoreMessages.getString("FileUtil.errorCopyingFileTo"), new String[] { to, e.getLocalizedMessage() }), e); //$NON-NLS-1$
 		}
 	}
 
@@ -209,7 +209,7 @@ public class FileUtil {
 			File[] files = dir.listFiles();
 			int size = files.length;
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(NLS.bind(Messages.getString("FileUtil.deleting"), new String[] { dir.getAbsolutePath() }), size * 10); //$NON-NLS-1$
+			monitor.beginTask(NLS.bind(PHPServerCoreMessages.getString("FileUtil.deleting"), new String[] { dir.getAbsolutePath() }), size * 10); //$NON-NLS-1$
 
 			// cycle through files
 			for (int i = 0; i < size; i++) {
@@ -218,13 +218,13 @@ public class FileUtil {
 					current.delete();
 					monitor.worked(10);
 				} else if (current.isDirectory()) {
-					monitor.subTask(NLS.bind(Messages.getString("FileUtil.deleting"), new String[] { current.getAbsolutePath() })); //$NON-NLS-1$
+					monitor.subTask(NLS.bind(PHPServerCoreMessages.getString("FileUtil.deleting"), new String[] { current.getAbsolutePath() })); //$NON-NLS-1$
 					deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
 				}
 			}
 			dir.delete();
 		} catch (Exception e) {
-			Logger.logException(Messages.getString("FileUtil.errorDeletingDirectory") + dir.getAbsolutePath(), e); //$NON-NLS-1$
+			Logger.logException(PHPServerCoreMessages.getString("FileUtil.errorDeletingDirectory") + dir.getAbsolutePath(), e); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
@@ -285,7 +285,7 @@ public class FileUtil {
 			int fromSize = fromFiles.length;
 
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(NLS.bind(Messages.getString("FileUtil.copying"), new String[] { from, to }), 550); //$NON-NLS-1$
+			monitor.beginTask(NLS.bind(PHPServerCoreMessages.getString("FileUtil.copying"), new String[] { from, to }), 550); //$NON-NLS-1$
 
 			File[] toFiles = null;
 
@@ -322,7 +322,7 @@ public class FileUtil {
 					monitor.done();
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
-							ErrorDialog.openError(Display.getDefault().getActiveShell(), Messages.getString("FileUtil.publishError"), Messages.getString("FileUtil.serverPublishError"), new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, Messages.getString("FileUtil.writePermissionError"), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							ErrorDialog.openError(Display.getDefault().getActiveShell(), PHPServerCoreMessages.getString("FileUtil.publishError"), PHPServerCoreMessages.getString("FileUtil.serverPublishError"), new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, PHPServerCoreMessages.getString("FileUtil.writePermissionError"), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					});
 					return false;
@@ -369,7 +369,7 @@ public class FileUtil {
 							copyFile(fromFile, toFile);
 							monitor.worked(dw);
 						} else if (current.isDirectory()) {
-							monitor.subTask(NLS.bind(Messages.getString("FileUtil.copying"), new String[] { fromFile, toFile })); //$NON-NLS-1$
+							monitor.subTask(NLS.bind(PHPServerCoreMessages.getString("FileUtil.copying"), new String[] { fromFile, toFile })); //$NON-NLS-1$
 							if (!smartCopyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, dw))) {
 								monitor.done();
 								return false;

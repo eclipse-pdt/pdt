@@ -15,6 +15,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -45,9 +46,9 @@ public class EditWorkingSetAction extends Action {
 	}
 
 	private EditWorkingSetAction(WorkingSetFilterActionGroup actionGroup) {
-		super(WorkingSetMessages.EditWorkingSetAction_text);
+		super(PHPUIMessages.EditWorkingSetAction_text);
 		Assert.isNotNull(actionGroup);
-		setToolTipText(WorkingSetMessages.EditWorkingSetAction_toolTip);
+		setToolTipText(PHPUIMessages.EditWorkingSetAction_toolTip);
 		setEnabled(actionGroup.getWorkingSet() != null);
 		fActionGroup = actionGroup;
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.EDIT_WORKING_SET_ACTION);
@@ -66,8 +67,8 @@ public class EditWorkingSetAction extends Action {
 		}
 		IWorkingSetEditWizard wizard = manager.createWorkingSetEditWizard(workingSet);
 		if (wizard == null) {
-			String title = WorkingSetMessages.EditWorkingSetAction_error_nowizard_title;
-			String message = WorkingSetMessages.EditWorkingSetAction_error_nowizard_message;
+			String title = PHPUIMessages.EditWorkingSetAction_error_nowizard_title;
+			String message = PHPUIMessages.EditWorkingSetAction_error_nowizard_message;
 			MessageDialog.openError(shell, title, message);
 			return;
 		}

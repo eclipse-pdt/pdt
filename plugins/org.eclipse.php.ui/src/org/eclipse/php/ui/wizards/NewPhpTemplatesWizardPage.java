@@ -14,7 +14,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.templates.PHPTemplateContextTypeIds;
 import org.eclipse.php.ui.preferences.PreferenceConstants;

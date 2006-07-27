@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
@@ -91,7 +92,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 						// do nothing.
 					}
 				}
-				if (fAutoRepeatOnFailure || MessageDialog.openQuestion(fShell, ActionMessages.CopyToClipboardAction_4, ActionMessages.CopyToClipboardAction_5))
+				if (fAutoRepeatOnFailure || MessageDialog.openQuestion(fShell, PHPUIMessages.CopyToClipboardAction_4, PHPUIMessages.CopyToClipboardAction_5))
 					copyToClipboard(resources, fileNames, names, phpElements, repeat + 1);
 			}
 		}
@@ -176,8 +177,8 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 
 	public CopyToClipboardAction(IWorkbenchSite site, Clipboard clipboard, SelectionDispatchAction pasteAction) {
 		super(site);
-		setText(ActionMessages.CopyToClipboardAction_text);
-		setDescription(ActionMessages.CopyToClipboardAction_desc);
+		setText(PHPUIMessages.CopyToClipboardAction_text);
+		setDescription(PHPUIMessages.CopyToClipboardAction_desc);
 		org.eclipse.jface.util.Assert.isNotNull(clipboard);
 		fClipboard = clipboard;
 		fPasteAction = pasteAction;

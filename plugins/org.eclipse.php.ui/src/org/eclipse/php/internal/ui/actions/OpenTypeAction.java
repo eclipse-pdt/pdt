@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.ui.PHPUiPlugin;
@@ -60,7 +61,7 @@ public class OpenTypeAction implements IWorkbenchWindowActionDelegate {
 		try {
 			editorPart = IDE.openEditor(activePage, file, true);
 		} catch (PartInitException e) {
-			ExceptionHandler.handle(e, ActionMessages.OpenTypeAction_errorTitle, ActionMessages.OpenTypeAction_errorMessage);
+			ExceptionHandler.handle(e, PHPUIMessages.OpenTypeAction_errorTitle, PHPUIMessages.OpenTypeAction_errorMessage);
 			return;
 		}
 		

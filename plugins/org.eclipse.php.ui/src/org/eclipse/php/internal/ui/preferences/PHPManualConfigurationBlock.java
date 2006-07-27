@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.preferences.PreferenceConstants;

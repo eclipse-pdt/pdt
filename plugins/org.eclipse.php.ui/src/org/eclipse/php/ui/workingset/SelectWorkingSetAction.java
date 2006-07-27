@@ -13,6 +13,7 @@ package org.eclipse.php.ui.workingset;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -44,9 +45,9 @@ public class SelectWorkingSetAction extends Action {
 	}
 
 	private SelectWorkingSetAction(WorkingSetFilterActionGroup actionGroup) {
-		super(WorkingSetMessages.SelectWorkingSetAction_text);
+		super(PHPUIMessages.SelectWorkingSetAction_text);
 		Assert.isNotNull(actionGroup);
-		setToolTipText(WorkingSetMessages.SelectWorkingSetAction_toolTip);
+		setToolTipText(PHPUIMessages.SelectWorkingSetAction_toolTip);
 		fActionGroup = actionGroup;
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.SELECT_WORKING_SET_ACTION);
 	}

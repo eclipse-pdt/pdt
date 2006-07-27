@@ -17,6 +17,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.ui.IContextMenuConstants;
 import org.eclipse.swt.widgets.Shell;
@@ -48,7 +49,7 @@ public class BuildActionGroup extends ActionGroup {
 		ISelectionProvider provider = fSite.getSelectionProvider();
 
 		fBuildAction = new BuildAction(shell, IncrementalProjectBuilder.INCREMENTAL_BUILD);
-		fBuildAction.setText(ActionMessages.BuildAction_label);
+		fBuildAction.setText(PHPUIMessages.BuildAction_label);
 		fBuildAction.setActionDefinitionId("org.eclipse.ui.project.buildProject"); //$NON-NLS-1$
 
 		fRefreshAction = new RefreshAction(fSite);

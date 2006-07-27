@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
@@ -34,18 +35,18 @@ public class PHPSearchQuery implements ISearchQuery {
 		textResult.removeAll();
 		PHPSearchEngine engine = new PHPSearchEngine();
 		int totalTicks = IProgressMonitor.UNKNOWN;
-		monitor.beginTask(SearchMessages.PHPSearchQuery_task_label, totalTicks);
+		monitor.beginTask(PHPUIMessages.PHPSearchQuery_task_label, totalTicks);
 		IProgressMonitor mainSearchPM = new SubProgressMonitor(monitor, totalTicks);
 		String stringPattern = null;
 		PatternQuerySpecification patternSpec = (PatternQuerySpecification) fPatternData;
 		stringPattern = patternSpec.getQuery();
 		engine.search(stringPattern, fPatternData.getScope(), textResult, patternSpec.isCaseSensitive(), mainSearchPM);
-		String message = Messages.format(SearchMessages.PHPSearchQuery_status_ok_message, String.valueOf(textResult.getMatchCount()));
+		String message = Messages.format(PHPUIMessages.PHPSearchQuery_status_ok_message, String.valueOf(textResult.getMatchCount()));
 		return new Status(IStatus.OK, PHPUiPlugin.getPluginId(), 0, message, null);
 	}
 
 	public String getLabel() {
-		return SearchMessages.PHPSearchQuery_label;
+		return PHPUIMessages.PHPSearchQuery_label;
 	}
 
 	public boolean canRerun() {
@@ -75,10 +76,10 @@ public class PHPSearchQuery implements ISearchQuery {
 	public String getResultLabel(int matchCount) {
 		if (matchCount == 1) {
 			String[] args = { fPatternData.getQuery(), fPatternData.getScopeDescription() };
-			return Messages.format(SearchMessages.PHPSearchOperation_singularOccurrencesPostfix, args);
+			return Messages.format(PHPUIMessages.PHPSearchOperation_singularOccurrencesPostfix, args);
 		} else {
 			Object[] args = { fPatternData.getQuery(), new Integer(matchCount), fPatternData.getScopeDescription() };
-			return Messages.format(SearchMessages.PHPSearchOperation_pluralOccurrencesPostfix, args);
+			return Messages.format(PHPUIMessages.PHPSearchOperation_pluralOccurrencesPostfix, args);
 		}
 	}
 

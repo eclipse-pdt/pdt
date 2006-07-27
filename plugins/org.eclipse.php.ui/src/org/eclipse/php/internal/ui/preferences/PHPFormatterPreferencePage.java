@@ -12,7 +12,7 @@ package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.preferences.PropertyAndPreferencePage;
 import org.eclipse.swt.widgets.Composite;

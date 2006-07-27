@@ -22,6 +22,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.actions.SelectionConverter;
 import org.eclipse.php.ui.PHPUiPlugin;
@@ -255,7 +256,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 	private Button fCaseSensitive;
 
 	private Button[] fSearchFor;
-	private String[] fSearchForText = { SearchMessages.SearchPage_searchFor_class, SearchMessages.SearchPage_searchFor_function, SearchMessages.SearchPage_searchFor_constant};
+	private String[] fSearchForText = { PHPUIMessages.SearchPage_searchFor_class, PHPUIMessages.SearchPage_searchFor_function, PHPUIMessages.SearchPage_searchFor_constant};
 
 	//---- Action Handling ------------------------------------------------
 
@@ -271,11 +272,11 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 		int searchScope = getContainer().getSelectedScope();
 		switch (searchScope) {
 			case ISearchPageContainer.WORKSPACE_SCOPE:
-				scopeDescription = SearchMessages.WorkspaceScope;
+				scopeDescription = PHPUIMessages.WorkspaceScope;
 				scope = factory.createWorkspaceSearchScope(getSearchFor());
 				break;
 			case ISearchPageContainer.SELECTION_SCOPE:
-				scopeDescription = SearchMessages.SelectionScope;
+				scopeDescription = PHPUIMessages.SelectionScope;
 				scope = factory.createSelectedPHPSearchScope(getSearchFor(), getContainer().getSelection());
 				break;
 			case ISearchPageContainer.SELECTED_PROJECTS_SCOPE:
@@ -283,11 +284,11 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 				IProject[] projects = PHPSearchScopeFactory.getInstance().getProjects(scope);
 				if (projects.length >= 1) {
 					if (projects.length == 1)
-						scopeDescription = Messages.format(SearchMessages.EnclosingProjectScope, projects[0].getName());
+						scopeDescription = Messages.format(PHPUIMessages.EnclosingProjectScope, projects[0].getName());
 					else
-						scopeDescription = Messages.format(SearchMessages.EnclosingProjectsScope, projects[0].getName());
+						scopeDescription = Messages.format(PHPUIMessages.EnclosingProjectsScope, projects[0].getName());
 				} else
-					scopeDescription = Messages.format(SearchMessages.EnclosingProjectScope, ""); //$NON-NLS-1$
+					scopeDescription = Messages.format(PHPUIMessages.EnclosingProjectScope, ""); //$NON-NLS-1$
 				break;
 			case ISearchPageContainer.WORKING_SET_SCOPE:
 				IWorkingSet[] workingSets = getContainer().getSelectedWorkingSets();
@@ -295,7 +296,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 				if (workingSets == null || workingSets.length < 1) {
 					return false;
 				}
-				scopeDescription = Messages.format(SearchMessages.WorkingSetScope, SearchUtil.toString(workingSets));
+				scopeDescription = Messages.format(PHPUIMessages.WorkingSetScope, SearchUtil.toString(workingSets));
 				scope = factory.createWorkingSetSearchScope(getSearchFor(), getContainer().getSelectedWorkingSets());
 //				SearchUtil.updateLRUWorkingSets(getContainer().getSelectedWorkingSets());
 
@@ -393,7 +394,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 	 if (!SearchParticipantsExtensionPoint.hasAnyParticipants())
 	 return new Composite(result, SWT.NULL);
 	 Button selectParticipants= new Button(result, SWT.PUSH);
-	 selectParticipants.setText(SearchMessages.getString("SearchPage.select_participants.label")); //$NON-NLS-1$
+	 selectParticipants.setText(PHPUIMessages.getString("SearchPage.select_participants.label")); //$NON-NLS-1$
 	 GridData gd= new GridData();
 	 gd.verticalAlignment= GridData.VERTICAL_ALIGN_BEGINNING;
 	 gd.horizontalAlignment= GridData.HORIZONTAL_ALIGN_END;
@@ -419,7 +420,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 
 		// Pattern text + info
 		Label label = new Label(result, SWT.LEFT);
-		label.setText(SearchMessages.SearchPage_expression_label);
+		label.setText(PHPUIMessages.SearchPage_expression_label);
 		label.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 2, 1));
 
 		// Pattern combo
@@ -443,7 +444,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 
 		// Ignore case checkbox		
 		fCaseSensitive = new Button(result, SWT.CHECK);
-		fCaseSensitive.setText(SearchMessages.SearchPage_expression_caseSensitive);
+		fCaseSensitive.setText(PHPUIMessages.SearchPage_expression_caseSensitive);
 		fCaseSensitive.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				fIsCaseSensitive = fCaseSensitive.getSelection();
@@ -522,7 +523,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 
 	private Control createSearchFor(Composite parent) {
 		Group result = new Group(parent, SWT.NONE);
-		result.setText(SearchMessages.SearchPage_searchFor_label);
+		result.setText(PHPUIMessages.SearchPage_searchFor_label);
 		result.setLayout(new GridLayout(3, true));
 
 		fSearchFor = new Button[fSearchForText.length];

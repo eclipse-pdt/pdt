@@ -17,6 +17,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.ui.treecontent.PHPTreeNode;
 import org.eclipse.ui.IWorkbenchSite;
@@ -38,9 +39,9 @@ public class ConfigureIncludePathAction extends SelectionDispatchAction {
 	 */
 	public ConfigureIncludePathAction(IWorkbenchSite site) {
 		super(site);
-		setText(ActionMessages.ConfigureIncludePathAction_label);
-		setToolTipText(ActionMessages.ConfigureIncludePathAction_tooltip);
-		setDescription(ActionMessages.ConfigureIncludePathAction_description);
+		setText(PHPUIMessages.ConfigureIncludePathAction_label);
+		setToolTipText(PHPUIMessages.ConfigureIncludePathAction_tooltip);
+		setDescription(PHPUIMessages.ConfigureIncludePathAction_description);
 		//PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_ACTION);
 	}
 

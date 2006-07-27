@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.core.project.operation.PHPCreationDataModelProvider;
-import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.preferences.PHPCoreOptionsConfigurationBlock;
 import org.eclipse.php.ui.preferences.IStatusChangeListener;
 import org.eclipse.php.ui.util.StatusInfo;

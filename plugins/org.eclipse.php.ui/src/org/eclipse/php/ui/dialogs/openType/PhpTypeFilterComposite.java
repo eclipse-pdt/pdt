@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.ui.dialogs.openType;
 
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.dialogs.openType.filter.IPhpTypeFilterReadModel;
 import org.eclipse.php.ui.dialogs.openType.filter.IPhpTypeFilterWriteModel;
 import org.eclipse.swt.SWT;

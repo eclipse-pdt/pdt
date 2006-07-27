@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
@@ -42,9 +43,9 @@ public class OpenAction extends SelectionDispatchAction {
 	 */
 	public OpenAction(IWorkbenchSite site) {
 		super(site);
-		setText(ActionMessages.OpenAction_label);
-		setToolTipText(ActionMessages.OpenAction_tooltip);
-		setDescription(ActionMessages.OpenAction_description);
+		setText(PHPUIMessages.OpenAction_label);
+		setToolTipText(PHPUIMessages.OpenAction_tooltip);
+		setDescription(PHPUIMessages.OpenAction_description);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_ACTION);
 	}
 
@@ -55,7 +56,7 @@ public class OpenAction extends SelectionDispatchAction {
 	public OpenAction(PHPStructuredEditor editor) {
 		this(editor.getEditorSite());
 		fEditor = editor;
-		setText(ActionMessages.OpenAction_declaration_label);
+		setText(PHPUIMessages.OpenAction_declaration_label);
 		setEnabled(SelectionConverter.canOperateOn(fEditor));
 	}
 
@@ -94,11 +95,11 @@ public class OpenAction extends SelectionDispatchAction {
 	public void run(ITextSelection selection) {
 		if (!ActionUtils.isProcessable(getShell(), fEditor))
 			return;
-		PHPCodeData element = SelectionConverter.codeResolve(fEditor, getShell(), getDialogTitle(), ActionMessages.OpenAction_select_element);
+		PHPCodeData element = SelectionConverter.codeResolve(fEditor, getShell(), getDialogTitle(), PHPUIMessages.OpenAction_select_element);
 		if (element == null) {
 			IEditorStatusLine statusLine = (IEditorStatusLine) fEditor.getAdapter(IEditorStatusLine.class);
 			if (statusLine != null)
-				statusLine.setMessage(true, ActionMessages.OpenAction_error_messageBadSelection, null);
+				statusLine.setMessage(true, PHPUIMessages.OpenAction_error_messageBadSelection, null);
 			getShell().getDisplay().beep();
 			return;
 		}
@@ -134,7 +135,7 @@ public class OpenAction extends SelectionDispatchAction {
 					OpenActionUtil.open(element, activateOnOpen);
 				}
 			} catch (PartInitException x) {
-				MessageDialog.openError(getShell(), ActionMessages.OpenAction_error_messageProblems, "");
+				MessageDialog.openError(getShell(), PHPUIMessages.OpenAction_error_messageProblems, "");
 
 			}
 		}
@@ -151,10 +152,10 @@ public class OpenAction extends SelectionDispatchAction {
 	}
 
 	private String getDialogTitle() {
-		return ActionMessages.OpenAction_error_title;
+		return PHPUIMessages.OpenAction_error_title;
 	}
 
 	private void showError(CoreException e) {
-		ExceptionHandler.handle(e, getShell(), getDialogTitle(), ActionMessages.OpenAction_error_message);
+		ExceptionHandler.handle(e, getShell(), getDialogTitle(), PHPUIMessages.OpenAction_error_message);
 	}
 }

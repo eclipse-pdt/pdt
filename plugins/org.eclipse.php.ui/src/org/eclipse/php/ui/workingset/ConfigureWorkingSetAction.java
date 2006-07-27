@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkingSet;
 
@@ -25,7 +26,7 @@ public class ConfigureWorkingSetAction extends Action {
 	private WorkingSetModel fWorkingSetModel;
 
 	public ConfigureWorkingSetAction(IWorkbenchPartSite site) {
-		super(WorkingSetMessages.ConfigureWorkingSetAction_label);
+		super(PHPUIMessages.ConfigureWorkingSetAction_label);
 		fSite = site;
 	}
 

@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.eclipse.php.internal.ui.actions.ActionMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
 import org.eclipse.php.internal.ui.actions.PHPActionConstants;
 import org.eclipse.ui.IActionBars;
@@ -46,9 +46,9 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	public PHPEditorActionBarContributor() {
 		super();
 
-		ResourceBundle b = ActionMessages.getBundleForConstructedKeys();
+		ResourceBundle b = PHPUIMessages.getBundleForConstructedKeys();
 
-		fRetargetShowPHPDoc = new RetargetAction(PHPActionConstants.SHOW_PHP_DOC, PHPEditorMessages.ShowPHPDoc_label);
+		fRetargetShowPHPDoc = new RetargetAction(PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages.ShowPHPDoc_label);
 		fRetargetShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		markAsPartListener(fRetargetShowPHPDoc);
 

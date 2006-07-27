@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.dialogs.openType.generic.filter.ElementSpecificFilter;
 import org.eclipse.php.ui.dialogs.openType.generic.filter.IFilter;
 import org.eclipse.php.ui.util.SearchPattern;

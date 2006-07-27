@@ -21,6 +21,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPElementLabelProvider;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.graphics.Color;
@@ -93,24 +94,24 @@ public abstract class SearchLabelProvider extends PHPElementLabelProvider {
 		if (matchCount < 2) {
 			if (matchCount == 1 && hasChildren(element)) {
 				if (potentialCount > 0)
-					return Messages.format(SearchMessages.SearchLabelProvider_potential_singular, elementName);
-				return Messages.format(SearchMessages.SearchLabelProvider_exact_singular, elementName);
+					return Messages.format(PHPUIMessages.SearchLabelProvider_potential_singular, elementName);
+				return Messages.format(PHPUIMessages.SearchLabelProvider_exact_singular, elementName);
 			}
 			if (potentialCount > 0)
-				return Messages.format(SearchMessages.SearchLabelProvider_potential_noCount, elementName);
-			return Messages.format(SearchMessages.SearchLabelProvider_exact_noCount, elementName);
+				return Messages.format(PHPUIMessages.SearchLabelProvider_potential_noCount, elementName);
+			return Messages.format(PHPUIMessages.SearchLabelProvider_exact_noCount, elementName);
 		} else {
 			int exactCount = matchCount - potentialCount;
 
 			if (potentialCount > 0 && exactCount > 0) {
 				String[] args = new String[] { elementName, String.valueOf(matchCount), String.valueOf(exactCount), String.valueOf(potentialCount) };
-				return Messages.format(SearchMessages.SearchLabelProvider_exact_and_potential_plural, args);
+				return Messages.format(PHPUIMessages.SearchLabelProvider_exact_and_potential_plural, args);
 			} else if (exactCount == 0) {
 				String[] args = new String[] { elementName, String.valueOf(matchCount) };
-				return Messages.format(SearchMessages.SearchLabelProvider_potential_plural, args);
+				return Messages.format(PHPUIMessages.SearchLabelProvider_potential_plural, args);
 			}
 			String[] args = new String[] { elementName, String.valueOf(matchCount) };
-			return Messages.format(SearchMessages.SearchLabelProvider_exact_plural, args);
+			return Messages.format(PHPUIMessages.SearchLabelProvider_exact_plural, args);
 		}
 	}
 

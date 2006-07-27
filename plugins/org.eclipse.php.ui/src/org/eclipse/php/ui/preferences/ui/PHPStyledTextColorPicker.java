@@ -13,7 +13,7 @@ package org.eclipse.php.ui.preferences.ui;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.util.PHPColorHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;

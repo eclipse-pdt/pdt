@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.StatusDialog;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.PHPCoreConstants;
-import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.preferences.TodoTaskConfigurationBlock.TodoTask;
 import org.eclipse.php.ui.util.StatusInfo;
 import org.eclipse.php.ui.wizards.fields.ComboDialogField;

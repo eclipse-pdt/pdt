@@ -17,8 +17,8 @@ import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.configuration.PHPStructuredTextViewerConfiguration;

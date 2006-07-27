@@ -10,15 +10,30 @@
  *******************************************************************************/
 package org.eclipse.php.ui.explorer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.IBasicPropertyConstants;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
-import org.eclipse.php.core.phpModel.parser.*;
+import org.eclipse.php.core.phpModel.parser.ModelListener;
+import org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory;
+import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.parser.VariableContextBuilder;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlockImp;
 import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;

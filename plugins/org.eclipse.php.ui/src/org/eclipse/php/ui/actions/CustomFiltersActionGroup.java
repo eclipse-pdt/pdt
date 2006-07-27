@@ -38,10 +38,10 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.filters.CustomFiltersDialog;
 import org.eclipse.php.ui.filters.FilterDescriptor;
-import org.eclipse.php.ui.filters.FilterMessages;
 import org.eclipse.php.ui.filters.NamePatternFilter;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.util.PHPPluginImages;
@@ -68,7 +68,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 
 	class ShowFilterDialogAction extends Action {
 		ShowFilterDialogAction() {
-			setText(FilterMessages.OpenCustomFiltersDialogAction_text);
+			setText(PHPUIMessages.OpenCustomFiltersDialogAction_text);
 			setImageDescriptor(PHPPluginImages.DESC_ELCL_FILTER);
 			setDisabledImageDescriptor(PHPPluginImages.DESC_DLCL_FILTER);
 		}

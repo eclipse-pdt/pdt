@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
@@ -109,7 +110,7 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 			return null;
 
 		final ViewerFilter[] result = new ViewerFilter[1];
-		String message = MessageFormat.format(FilterMessages.FilterDescriptor_filterCreationError_message, new Object[] { getId() });
+		String message = MessageFormat.format(PHPUIMessages.FilterDescriptor_filterCreationError_message, new Object[] { getId() });
 		ISafeRunnable code = new SafeRunnable(message) {
 			/*
 			 * @see org.eclipse.core.runtime.ISafeRunnable#run()
@@ -247,7 +248,7 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 			if (FILTER_TAG.equals(element.getName())) {
 
 				final FilterDescriptor[] desc = new FilterDescriptor[1];
-				Platform.run(new SafeRunnable(FilterMessages.FilterDescriptor_filterDescriptionCreationError_message) {
+				Platform.run(new SafeRunnable(PHPUIMessages.FilterDescriptor_filterDescriptionCreationError_message) {
 					public void run() throws Exception {
 						desc[0] = new FilterDescriptor(element);
 					}

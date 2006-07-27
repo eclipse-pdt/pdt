@@ -21,6 +21,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPElementLabelProvider;
 import org.eclipse.php.ui.util.PHPElementSorter;
 import org.eclipse.php.ui.util.PHPPluginImages;
@@ -121,16 +122,16 @@ public class PHPSearchResultPage extends AbstractTextSearchViewPage implements I
 			IDE.gotoMarker(editor, marker);
 			marker.delete();
 		} catch (CoreException e) {
-			throw new PartInitException(SearchMessages.PHPSearchResultPage_error_marker, e);
+			throw new PartInitException(PHPUIMessages.PHPSearchResultPage_error_marker, e);
 		}
 	}
 
 	private void initGroupingActions() {
-		fGroupProjectAction = new GroupAction(SearchMessages.PHPSearchResultPage_groupby_project, SearchMessages.PHPSearchResultPage_groupby_project_tooltip, this, PHPSearchTreeContentProvider.LEVEL_PROJECT);
+		fGroupProjectAction = new GroupAction(PHPUIMessages.PHPSearchResultPage_groupby_project, PHPUIMessages.PHPSearchResultPage_groupby_project_tooltip, this, PHPSearchTreeContentProvider.LEVEL_PROJECT);
 		PHPPluginImages.setLocalImageDescriptors(fGroupProjectAction, "group_by_project.gif"); //$NON-NLS-1$
-		fGroupFileAction = new GroupAction(SearchMessages.PHPSearchResultPage_groupby_file, SearchMessages.PHPSearchResultPage_groupby_file_tooltip, this, PHPSearchTreeContentProvider.LEVEL_FILE);
+		fGroupFileAction = new GroupAction(PHPUIMessages.PHPSearchResultPage_groupby_file, PHPUIMessages.PHPSearchResultPage_groupby_file_tooltip, this, PHPSearchTreeContentProvider.LEVEL_FILE);
 		PHPPluginImages.setLocalImageDescriptors(fGroupFileAction, "group_by_file.gif"); //$NON-NLS-1$
-		fGroupTypeAction = new GroupAction(SearchMessages.PHPSearchResultPage_groupby_type, SearchMessages.PHPSearchResultPage_groupby_type_tooltip, this, PHPSearchTreeContentProvider.LEVEL_TYPE);
+		fGroupTypeAction = new GroupAction(PHPUIMessages.PHPSearchResultPage_groupby_type, PHPUIMessages.PHPSearchResultPage_groupby_type_tooltip, this, PHPSearchTreeContentProvider.LEVEL_TYPE);
 		PHPPluginImages.setLocalImageDescriptors(fGroupTypeAction, "group_by_type.gif"); //$NON-NLS-1$
 	}
 

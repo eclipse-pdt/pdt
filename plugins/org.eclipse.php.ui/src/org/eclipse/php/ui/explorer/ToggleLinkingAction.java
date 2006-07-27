@@ -11,8 +11,8 @@
 package org.eclipse.php.ui.explorer;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.internal.ui.actions.ActionMessages;
 import org.eclipse.php.ui.util.PHPPluginImages;
 import org.eclipse.ui.PlatformUI;
 
@@ -30,9 +30,9 @@ public class ToggleLinkingAction extends Action {
 	 * Constructs a new action.
 	 */
 	public ToggleLinkingAction(ExplorerPart explorer) {
-		super(ActionMessages.ToggleLinkingAction_label);
-		setDescription(ActionMessages.ToggleLinkingAction_description);
-		setToolTipText(ActionMessages.ToggleLinkingAction_tooltip);
+		super(PHPUIMessages.ToggleLinkingAction_label);
+		setDescription(PHPUIMessages.ToggleLinkingAction_description);
+		setToolTipText(PHPUIMessages.ToggleLinkingAction_tooltip);
 		PHPPluginImages.setLocalImageDescriptors(this, "synced.gif"); //$NON-NLS-1$		
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.LINK_EDITOR_ACTION);
 

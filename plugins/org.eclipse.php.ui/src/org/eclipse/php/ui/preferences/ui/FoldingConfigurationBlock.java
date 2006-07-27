@@ -28,7 +28,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderDescriptor;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.util.PixelConverter;

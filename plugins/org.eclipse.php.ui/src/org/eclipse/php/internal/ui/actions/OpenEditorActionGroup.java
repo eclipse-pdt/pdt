@@ -19,6 +19,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.IContextMenuConstants;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.IActionBars;
@@ -133,7 +134,7 @@ public class OpenEditorActionGroup extends ActionGroup {
 			return;
 
 		// Create a menu.
-		IMenuManager submenu = new MenuManager(ActionMessages.OpenWithMenu_label);
+		IMenuManager submenu = new MenuManager(PHPUIMessages.OpenWithMenu_label);
 		submenu.add(new OpenWithMenu(fSite.getPage(), (IFile) resource));
 
 		// Add the submenu.

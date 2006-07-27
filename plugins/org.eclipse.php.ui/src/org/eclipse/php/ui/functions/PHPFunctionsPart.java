@@ -11,19 +11,10 @@
 package org.eclipse.php.ui.functions;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -36,30 +27,22 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.Logger;
-import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.ui.util.MultiElementSelection;
-import org.eclipse.php.internal.ui.util.TreePath;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.ui.explorer.ExplorerMessages;
-import org.eclipse.php.ui.explorer.IMultiElementTreeContentProvider;
 import org.eclipse.php.ui.explorer.PHPTreeViewer;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.ui.util.DecoratingPHPLabelProvider;
-import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.php.ui.util.PHPElementImageProvider;
 import org.eclipse.php.ui.util.PHPElementLabels;
 import org.eclipse.php.ui.util.PHPManualFactory;
@@ -79,7 +62,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.part.ViewPart;
@@ -329,7 +311,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		String result;
 		if (!(element instanceof IResource)) {
 			if (element instanceof PHPWorkspaceModelManager) {
-				result = ExplorerMessages.PHPExplorerPart_workspace;
+				result = PHPUIMessages.PHPExplorerPart_workspace;
 			} else if (element instanceof PHPCodeData) {
 				result = PHPElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
 			} else {
@@ -338,7 +320,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		} else {
 			IPath path = ((IResource) element).getFullPath();
 			if (path.isRoot()) {
-				result = ExplorerMessages.PHPExplorer_title;
+				result = PHPUIMessages.PHPExplorer_title;
 			} else {
 				result = path.makeRelative().toString();
 			}
@@ -347,10 +329,10 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		if (fWorkingSetName == null)
 			return result;
 
-		String wsstr = MessageFormat.format(ExplorerMessages.PHPExplorer_toolTip, new String[] { fWorkingSetName });
+		String wsstr = MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip, new String[] { fWorkingSetName });
 		if (result.length() == 0)
 			return wsstr;
-		return MessageFormat.format(ExplorerMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
+		return MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
 	}
 
 	void updateTitle() {

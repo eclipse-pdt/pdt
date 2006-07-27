@@ -14,6 +14,7 @@ import java.util.Arrays;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IWorkingSet;
@@ -58,7 +59,7 @@ public class SearchUtil {
 			for (int i= 0; i < workingSets.length; i++) {
 				String workingSetName= workingSets[i].getName();
 				if (firstFound)
-					result= Messages.format(SearchMessages.SearchUtil_workingSetConcatenation, new String[] {result, workingSetName}); 
+					result= Messages.format(PHPUIMessages.SearchUtil_workingSetConcatenation, new String[] {result, workingSetName}); 
 				else {
 					result= workingSetName;
 					firstFound= true;

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.folding;
 
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -39,7 +40,7 @@ class EmptyPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBlock {
 		label.setLayoutData(gd);
 
 		label= new Label(inner, SWT.CENTER);
-		label.setText(FoldingMessages.EmptyPHPFoldingPreferenceBlock_emptyCaption);
+		label.setText(PHPUIMessages.EmptyPHPFoldingPreferenceBlock_emptyCaption);
 		gd= new GridData(GridData.CENTER);
 		label.setLayoutData(gd);
 

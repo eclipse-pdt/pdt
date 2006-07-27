@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.ui.preferences.ui;
 
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.util.PositiveIntegerStringValidator;
 import org.eclipse.swt.SWT;

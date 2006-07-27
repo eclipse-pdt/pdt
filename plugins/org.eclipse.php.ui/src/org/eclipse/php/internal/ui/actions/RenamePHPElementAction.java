@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
@@ -72,7 +73,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		try {
 			run(element);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, ActionMessages.RenamePHPElementAction_name, ActionMessages.RenamePHPElementAction_exception);
+			ExceptionHandler.handle(e, PHPUIMessages.RenamePHPElementAction_name, PHPUIMessages.RenamePHPElementAction_exception);
 		}
 	}
 
@@ -90,9 +91,9 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 				return;
 			}
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, ActionMessages.RenamePHPElementAction_name, ActionMessages.RenamePHPElementAction_exception);
+			ExceptionHandler.handle(e, PHPUIMessages.RenamePHPElementAction_name, PHPUIMessages.RenamePHPElementAction_exception);
 		}
-		MessageDialog.openInformation(getShell(), ActionMessages.RenamePHPElementAction_name, ActionMessages.RenamePHPElementAction_not_available);
+		MessageDialog.openInformation(getShell(), PHPUIMessages.RenamePHPElementAction_name, PHPUIMessages.RenamePHPElementAction_not_available);
 	}
 
 	public boolean canRun() {
@@ -108,7 +109,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	}
 
 	private PHPCodeData getPHPElement() {
-		PHPCodeData[] elements = SelectionConverter.codeResolveHandled(fEditor, getShell(), ActionMessages.RenamePHPElementAction_name);
+		PHPCodeData[] elements = SelectionConverter.codeResolveHandled(fEditor, getShell(), PHPUIMessages.RenamePHPElementAction_name);
 		if (elements == null || elements.length != 1)
 			return null;
 		return elements[0];

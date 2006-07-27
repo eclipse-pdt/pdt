@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.phpElementData.PHPTask;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.MarkerRulerAction;
@@ -76,6 +77,6 @@ public class PHPTaskRulerAction extends TaskRulerAction {
 	 * @see AbstractRulerActionDelegate#createAction(ITextEditor, IVerticalRulerInfo)
 	 */
 	protected IAction createAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
-		return new TaskMarkerRulerAction(ActionMessages.getBundleForConstructedKeys(), "Editor.ManageTasks.", editor, rulerInfo); //$NON-NLS-1$
+		return new TaskMarkerRulerAction(PHPUIMessages.getBundleForConstructedKeys(), "Editor.ManageTasks.", editor, rulerInfo); //$NON-NLS-1$
 	}
 }

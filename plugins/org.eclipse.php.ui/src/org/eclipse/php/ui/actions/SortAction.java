@@ -12,8 +12,8 @@ package org.eclipse.php.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.util.PHPElementSorter;
 import org.eclipse.php.ui.util.PHPPluginImages;

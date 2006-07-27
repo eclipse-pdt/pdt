@@ -21,10 +21,7 @@ import org.eclipse.php.core.phpModel.parser.PHPLanguageManagerProvider;
 import org.eclipse.php.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.ui.functions.PHPFunctionsContentProvider;
 import org.eclipse.php.ui.functions.PHPFunctionsPart;
-import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 
 public class FunctionsViewGroup extends ViewActionGroup {

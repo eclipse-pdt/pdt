@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.util.TableLayoutComposite;

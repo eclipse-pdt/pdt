@@ -37,6 +37,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -122,8 +123,8 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 
 	public WorkingSetConfigurationDialog(Shell parentShell, IWorkingSet[] workingSets) {
 		super(parentShell);
-		setTitle(WorkingSetMessages.WorkingSetConfigurationDialog_title);
-		setMessage(WorkingSetMessages.WorkingSetConfigurationDialog_message);
+		setTitle(PHPUIMessages.WorkingSetConfigurationDialog_title);
+		setMessage(PHPUIMessages.WorkingSetConfigurationDialog_message);
 		fElements = new ArrayList(workingSets.length);
 		Filter filter = new Filter();
 		for (int i = 0; i < workingSets.length; i++) {
@@ -227,7 +228,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		data.grabExcessHorizontalSpace = true;
 		composite.setData(data);
 
-		fNewButton = createButton(buttonComposite, nextButtonId++, WorkingSetMessages.WorkingSetConfigurationDialog_new_label, false);
+		fNewButton = createButton(buttonComposite, nextButtonId++, PHPUIMessages.WorkingSetConfigurationDialog_new_label, false);
 		fNewButton.setFont(composite.getFont());
 		fNewButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -235,7 +236,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			}
 		});
 
-		fEditButton = createButton(buttonComposite, nextButtonId++, WorkingSetMessages.WorkingSetConfigurationDialog_edit_label, false);
+		fEditButton = createButton(buttonComposite, nextButtonId++, PHPUIMessages.WorkingSetConfigurationDialog_edit_label, false);
 		fEditButton.setFont(composite.getFont());
 		fEditButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -243,7 +244,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			}
 		});
 
-		fRemoveButton = createButton(buttonComposite, nextButtonId++, WorkingSetMessages.WorkingSetConfigurationDialog_remove_label, false);
+		fRemoveButton = createButton(buttonComposite, nextButtonId++, PHPUIMessages.WorkingSetConfigurationDialog_remove_label, false);
 		fRemoveButton.setFont(composite.getFont());
 		fRemoveButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -262,7 +263,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		buttons.setLayout(layout);
 
 		fUpButton = new Button(buttons, SWT.PUSH);
-		fUpButton.setText(WorkingSetMessages.WorkingSetConfigurationDialog_up_label);
+		fUpButton.setText(PHPUIMessages.WorkingSetConfigurationDialog_up_label);
 		fUpButton.setFont(parent.getFont());
 		setButtonLayoutData(fUpButton);
 		fUpButton.addSelectionListener(new SelectionAdapter() {
@@ -272,7 +273,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		});
 
 		fDownButton = new Button(buttons, SWT.PUSH);
-		fDownButton.setText(WorkingSetMessages.WorkingSetConfigurationDialog_down_label);
+		fDownButton.setText(PHPUIMessages.WorkingSetConfigurationDialog_down_label);
 		fDownButton.setFont(parent.getFont());
 		setButtonLayoutData(fDownButton);
 		fDownButton.addSelectionListener(new SelectionAdapter() {
@@ -282,7 +283,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		});
 
 		fSelectAll = new Button(buttons, SWT.PUSH);
-		fSelectAll.setText(WorkingSetMessages.WorkingSetConfigurationDialog_selectAll_label);
+		fSelectAll.setText(PHPUIMessages.WorkingSetConfigurationDialog_selectAll_label);
 		fSelectAll.setFont(parent.getFont());
 		setButtonLayoutData(fSelectAll);
 		fSelectAll.addSelectionListener(new SelectionAdapter() {
@@ -292,7 +293,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		});
 
 		fDeselectAll = new Button(buttons, SWT.PUSH);
-		fDeselectAll.setText(WorkingSetMessages.WorkingSetConfigurationDialog_deselectAll_label);
+		fDeselectAll.setText(PHPUIMessages.WorkingSetConfigurationDialog_deselectAll_label);
 		fDeselectAll.setFont(parent.getFont());
 		setButtonLayoutData(fDeselectAll);
 		fDeselectAll.addSelectionListener(new SelectionAdapter() {

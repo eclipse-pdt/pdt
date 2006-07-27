@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
@@ -692,7 +693,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		String result;
 		if (!(element instanceof IResource)) {
 			if (element instanceof PHPWorkspaceModelManager) {
-				result = ExplorerMessages.PHPExplorerPart_workspace;
+				result = PHPUIMessages.PHPExplorerPart_workspace;
 			} else if (element instanceof PHPCodeData) {
 				result = PHPElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
 			} else {
@@ -701,7 +702,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		} else {
 			IPath path = ((IResource) element).getFullPath();
 			if (path.isRoot()) {
-				result = ExplorerMessages.PHPExplorer_title;
+				result = PHPUIMessages.PHPExplorer_title;
 			} else {
 				result = path.makeRelative().toString();
 			}
@@ -710,10 +711,10 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		if (fWorkingSetName == null)
 			return result;
 
-		String wsstr = MessageFormat.format(ExplorerMessages.PHPExplorer_toolTip, new String[] { fWorkingSetName });
+		String wsstr = MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip, new String[] { fWorkingSetName });
 		if (result.length() == 0)
 			return wsstr;
-		return MessageFormat.format(ExplorerMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
+		return MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
 	}
 
 	void updateTitle() {

@@ -11,6 +11,7 @@
 package org.eclipse.php.ui.explorer;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.ui.util.PHPPluginImages;
 import org.eclipse.ui.PlatformUI;
@@ -20,9 +21,9 @@ class CollapseAllAction extends Action {
 	private ExplorerPart fPHPExplorer;
 
 	CollapseAllAction(ExplorerPart part) {
-		super(ExplorerMessages.CollapseAllAction_label);
-		setDescription(ExplorerMessages.CollapseAllAction_description);
-		setToolTipText(ExplorerMessages.CollapseAllAction_tooltip);
+		super(PHPUIMessages.CollapseAllAction_label);
+		setDescription(PHPUIMessages.CollapseAllAction_description);
+		setToolTipText(PHPUIMessages.CollapseAllAction_tooltip);
 		PHPPluginImages.setLocalImageDescriptors(this, "collapseall.gif"); //$NON-NLS-1$
 
 		fPHPExplorer = part;
