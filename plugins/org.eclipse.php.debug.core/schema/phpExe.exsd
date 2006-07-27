@@ -75,23 +75,6 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="os">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-            <simpleType>
-               <restriction base="string">
-                  <enumeration value="Linux">
-                  </enumeration>
-                  <enumeration value="Mac">
-                  </enumeration>
-                  <enumeration value="Windows">
-                  </enumeration>
-               </restriction>
-            </simpleType>
-         </attribute>
       </complexType>
    </element>
 

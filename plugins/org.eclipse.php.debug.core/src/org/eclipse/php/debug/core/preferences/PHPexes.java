@@ -12,7 +12,6 @@ package org.eclipse.php.debug.core.preferences;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ public class PHPexes {
 	private static final String LOCATION_ATTRIBUTE = "location"; //$NON-NLS-1$
 	private static final String VERSION_ATTRIBUTE = "version"; //$NON-NLS-1$
 	private static final String DEFAULT_ATTRIBUTE = "default"; //$NON-NLS-1$
-	private static final String OS_ATTRIBUTE = "os"; //$NON-NLS-1$
 
 	public void load(Preferences prefs) {
 		items = new HashMap();
@@ -150,15 +148,7 @@ public class PHPexes {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
 
-		String myOS = null;
-		String OS = System.getProperty("os.name").toLowerCase();
-		if (OS.startsWith("windows")) {
-			myOS = "Windows";
-		} else if (OS.startsWith("linux")) {
-			myOS = "Linux";
-		} else if (OS.startsWith("mac")) {
-			myOS = "Mac";
-		}
+		boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
@@ -168,46 +158,32 @@ public class PHPexes {
 				String version = element.getAttribute(VERSION_ATTRIBUTE);
 				boolean isDefault = "true".equalsIgnoreCase(element.getAttribute(DEFAULT_ATTRIBUTE));
 
-				if (myOS != null) {
-					String os = element.getAttribute(OS_ATTRIBUTE);
-					if (os != null && !os.equals(myOS)) {
-						continue; // Skip current PHP, since its OS doesn't match ours
-					}
-				}
-
 				String pluginId = element.getDeclaringExtension().getNamespaceIdentifier();
-				StringBuffer buff = new StringBuffer("platform:/plugin/");
-				buff.append(pluginId);
-
-				if (!location.startsWith("/")) {
-					buff.append('/');
-				}
-
-				buff.append(location);
-				URL url;
-				try {
-					url = new URL(buff.toString());
-					url = FileLocator.resolve(url);
-					String filename = url.getFile();
-					File file = new File(filename);
-					if (file.exists()) {
-						PHPexeItem newItem = new PHPexeItem(name, file, false);
-						newItem.setVersion(version);
-						items.put(name, newItem);
-						if (isDefault) {
-							defaultItem = newItem;
+				URL url = FileLocator.find(Platform.getBundle(pluginId), new Path(location), new HashMap());
+				boolean itemFound = false;
+				if (url != null) {
+					try {
+						url = FileLocator.resolve(url);
+						String filename = url.getFile();
+						File file = new File(filename);
+						if (file.exists()) {
+							PHPexeItem newItem = new PHPexeItem(name, file, false);
+							newItem.setVersion(version);
+							items.put(name, newItem);
+							if (isDefault) {
+								defaultItem = newItem;
+							}
+							itemFound = true;
+							if (!isWindows) {
+								// Try to setup permissions of this file:
+								UnixChmodUtil.chmod(filename, UnixChmodUtil.S_IRWXU | UnixChmodUtil.S_IRGRP | UnixChmodUtil.S_IXGRP | UnixChmodUtil.S_IROTH | UnixChmodUtil.S_IXOTH);
+							}
 						}
-						if (!"Windows".equals(myOS)) {
-							// Try to setup permissions of this file:
-							UnixChmodUtil.chmod(filename, UnixChmodUtil.S_IRWXU|UnixChmodUtil.S_IRGRP|UnixChmodUtil.S_IXGRP|UnixChmodUtil.S_IROTH|UnixChmodUtil.S_IXOTH);
-						}
-					} else {
-						PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "PHP executable " + location + " not found in plugin " + pluginId, null));
+					} catch (IOException e) {
 					}
-				} catch (MalformedURLException e) {
-					PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "PHP executable " + location + " not found in plugin " + pluginId, e));
-				} catch (IOException e) {
-					PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "PHP executable " + location + " not found in plugin " + pluginId, e));
+				}
+				if (!itemFound) {
+					PHPDebugPlugin.getDefault().getLog().log(new Status(1, PHPDebugPlugin.getID(), 1001, "PHP executable " + location + " not found neither in plugin " + pluginId + " nor in fragments attached to it", null));
 				}
 			}
 		}
