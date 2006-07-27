@@ -39,8 +39,6 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 
 public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	
-	private static final String EXTERNAL_PATH = "Resources/common.php";
-
 	protected PHPFunctionData[] functions = PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY;
 
 	protected Map functionsHash = new HashMap(3000);
@@ -209,17 +207,12 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		try {
 			final PHPParserManager phpParserManager = languageManager.createPHPParserManager();
 			
-			// parse the common functions
-			Reader reader = new InputStreamReader(FileLocator.openStream(PHPCorePlugin.getDefault().getBundle(), new Path(EXTERNAL_PATH), false));
-			ParserClient innerParserClient = new InnerParserClient();
-			ParserExecuter executer = new ParserExecuter(phpParserManager, null, innerParserClient, EXTERNAL_PATH, reader, new Pattern[0], 0, false);
-			executer.run();
-
 			// parse the specific language model
 			String phpFunctionPath = languageManager.getPHPFunctionPath();
-			reader = new InputStreamReader(FileLocator.openStream(PHPCorePlugin.getDefault().getBundle(), new Path(phpFunctionPath), false));
+			Reader reader = new InputStreamReader(FileLocator.openStream(PHPCorePlugin.getDefault().getBundle(), new Path(phpFunctionPath), false));
+			ParserClient innerParserClient = new InnerParserClient();
 
-			executer = new ParserExecuter(phpParserManager, null, innerParserClient, phpFunctionPath, reader, new Pattern[0], 0, false);
+			ParserExecuter executer = new ParserExecuter(phpParserManager, null, innerParserClient, phpFunctionPath, reader, new Pattern[0], 0, false);
 			executer.run();
 
 			

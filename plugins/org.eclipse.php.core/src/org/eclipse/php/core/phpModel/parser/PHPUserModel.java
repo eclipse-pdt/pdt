@@ -45,7 +45,6 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 
 	private List listeners = Collections.synchronizedList(new ArrayList(2));
 
-	private IProject project;
 	private PHPUserModelManager manager;
 
 	public PHPUserModel() {
