@@ -12,6 +12,7 @@ package org.eclipse.php.debug.ui.sourcelookup;
 
 import java.text.MessageFormat;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
@@ -20,6 +21,7 @@ import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.debug.core.sourcelookup.PHPSourceNotFoundInput;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
+import org.eclipse.php.ui.containers.StorageEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -89,7 +91,8 @@ public class PHPSourceNotFoundEditorInput extends PlatformObject implements IEdi
 	 */
 	public String getName() {
 		try {
-			return fFrame.getName();
+			String fullName = fFrame.getName();
+			return new Path(fullName).lastSegment();
 		} catch (DebugException e) {
 			return PHPDebugUIMessages.SourceNotFoundEditorInput_Source_Not_Found_1; //$NON-NLS-1$
 		}
@@ -110,6 +113,27 @@ public class PHPSourceNotFoundEditorInput extends PlatformObject implements IEdi
 			return MessageFormat.format(PHPDebugUIMessages.SourceNotFoundEditorInput_Source_not_found_for__0__2, new String[] { fFrameText }); //$NON-NLS-1$
 		}
 		return fTooltipText;
+	}
+
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (obj instanceof PHPSourceNotFoundEditorInput) {
+			if (fFrame != null) {
+				return fFrame.equals(((PHPSourceNotFoundEditorInput) obj).fFrame);
+			}
+		}
+		// To avoid openning of a source-not-found while the source appears in another editor
+		// we also check for StorageEditorInputs.
+		// TODO - Need a fix! An editor is still opened when clicking a breakpoint in the breakpoints view, while
+		// a remote sotrage editor is still open.
+		if (obj instanceof StorageEditorInput) {
+			StorageEditorInput storageEditorInput = (StorageEditorInput) obj;
+			String storageLocation = storageEditorInput.getStorage().getFullPath().toString();
+			return storageLocation.equals(fFrameText);
+		}
+		return super.equals(obj);
 	}
 
 }

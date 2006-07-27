@@ -14,15 +14,23 @@ import org.eclipse.debug.core.model.IStackFrame;
 
 public class PHPSourceNotFoundInput {
 
-    private IStackFrame stackFrame;
+	private IStackFrame stackFrame;
 
-    public PHPSourceNotFoundInput(IStackFrame stackFrame) {
-        this.stackFrame = stackFrame;
+	public PHPSourceNotFoundInput(IStackFrame stackFrame) {
+		this.stackFrame = stackFrame;
 
-    }
+	}
 
-    public IStackFrame getStackFrame() {
-        return this.stackFrame;
-    }
+	public IStackFrame getStackFrame() {
+		return this.stackFrame;
+	}
 
+	public boolean equals(Object obj) {
+		if (obj instanceof PHPSourceNotFoundInput) {
+			if (stackFrame != null) {
+				return stackFrame.equals(((PHPSourceNotFoundInput) obj).stackFrame);
+			}
+		}
+		return super.equals(obj);
+	}
 }
