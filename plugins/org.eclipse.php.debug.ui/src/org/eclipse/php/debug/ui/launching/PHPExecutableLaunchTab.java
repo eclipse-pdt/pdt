@@ -434,7 +434,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			if (location.equals("")) {
 				final PHPexes phpExes = new PHPexes();
 				phpExes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
-				location = phpExes.getDefaultItem().getPhpEXE().toString();
+				PHPexeItem phpExeItem = phpExes.getDefaultItem();
+				if(phpExeItem == null) return;
+				location = phpExeItem.getPhpEXE().toString();
 				configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
 				configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
 			}
