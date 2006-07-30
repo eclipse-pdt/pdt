@@ -10,15 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.ui.util;
 
+import java.util.Iterator;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelDecorator;
@@ -29,12 +32,15 @@ import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
+
 
 /**
  * LabelDecorator that decorates an element's image with error and warning overlays that
@@ -55,16 +61,12 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 	 */
 	public static class ProblemsLabelChangedEvent extends LabelProviderChangedEvent {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 7388414257854479746L;
 		private boolean fMarkerChange;
 
 		/**
 		 * Note: This constructor is for internal use only. Clients should not call this constructor.
 		 */
-		public ProblemsLabelChangedEvent(final IBaseLabelProvider source, final IResource[] changedResource, final boolean isMarkerChange) {
+		public ProblemsLabelChangedEvent(IBaseLabelProvider source, IResource[] changedResource, boolean isMarkerChange) {
 			super(source, changedResource);
 			fMarkerChange = isMarkerChange;
 		}
@@ -82,14 +84,14 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 
 	}
 
-	private static final int ERRORTICK_ERROR = PHPElementImageDescriptor.ERROR;
 	private static final int ERRORTICK_WARNING = PHPElementImageDescriptor.WARNING;
+	private static final int ERRORTICK_ERROR = PHPElementImageDescriptor.ERROR;
+
+	private ImageDescriptorRegistry fRegistry;
+	private boolean fUseNewRegistry = false;
+	private IProblemChangedListener fProblemChangedListener;
 
 	private ListenerList fListeners;
-	private IProblemChangedListener fProblemChangedListener;
-	private ImageDescriptorRegistry fRegistry;
-
-	private boolean fUseNewRegistry = false;
 
 	/**
 	 * Creates a new <code>ProblemsLabelDecorator</code>.
@@ -108,23 +110,30 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 	/**
 	 * Note: This constructor is for internal use only. Clients should not call this constructor.
 	 */
-	public ProblemsLabelDecorator(final ImageDescriptorRegistry registry) {
+	public ProblemsLabelDecorator(ImageDescriptorRegistry registry) {
 		fRegistry = registry;
 		fProblemChangedListener = null;
 	}
 
-	public void addListener(final ILabelProviderListener listener) {
-		if (fListeners == null)
-			fListeners = new ListenerList();
-		fListeners.add(listener);
-		if (fProblemChangedListener == null) {
-			fProblemChangedListener = new IProblemChangedListener() {
-				public void problemsChanged(final IResource[] changedResources, final boolean isMarkerChange) {
-					fireProblemsChanged(changedResources, isMarkerChange);
-				}
-			};
-			PHPUiPlugin.getDefault().getProblemMarkerManager().addListener(fProblemChangedListener);
+	private ImageDescriptorRegistry getRegistry() {
+		if (fRegistry == null) {
+			fRegistry = fUseNewRegistry ? new ImageDescriptorRegistry() : PHPUiPlugin.getImageDescriptorRegistry();
 		}
+		return fRegistry;
+	}
+
+	public String decorateText(String text, Object element) {
+		return text;
+	}
+
+	public Image decorateImage(Image image, Object obj) {
+		int adornmentFlags = computeAdornmentFlags(obj);
+		if (adornmentFlags != 0) {
+			ImageDescriptor baseImage = new ImageImageDescriptor(image);
+			Rectangle bounds = image.getBounds();
+			return getRegistry().get(new PHPElementImageDescriptor(baseImage, adornmentFlags, new Point(bounds.width, bounds.height)));
+		}
+		return image;
 	}
 
 	/**
@@ -132,96 +141,88 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 	 */
 	protected int computeAdornmentFlags(Object obj) {
 		try {
-			if (obj instanceof PHPProjectModel)
+			if (obj instanceof PHPProjectModel) {
 				obj = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) obj);
+
+			}
 			if (obj instanceof PHPCodeData) {
-				final IResource resource = PHPModelUtil.getResource(obj);
+				IResource resource = PHPModelUtil.getResource(obj);
 				return getErrorTicksFromMarkers(resource, IResource.DEPTH_ONE, (PHPCodeData) obj);
 
-			} else if (obj instanceof IResource)
+			} else if (obj instanceof IResource) {
 				return getErrorTicksFromMarkers((IResource) obj, IResource.DEPTH_INFINITE, null);
-		} catch (final CoreException e) {
-			if (e.getStatus().getCode() == IResourceStatus.MARKER_NOT_FOUND)
+			}
+		} catch (CoreException e) {
+			if (e.getStatus().getCode() == IResourceStatus.MARKER_NOT_FOUND) {
 				return 0;
+			}
 
 			PHPUiPlugin.log(e);
 		}
 		return 0;
 	}
 
-	public void decorate(final Object element, final IDecoration decoration) {
-		final int adornmentFlags = computeAdornmentFlags(element);
-		if (adornmentFlags == ERRORTICK_ERROR)
-			decoration.addOverlay(PHPPluginImages.DESC_OVR_ERROR);
-		else if (adornmentFlags == ERRORTICK_WARNING)
-			decoration.addOverlay(PHPPluginImages.DESC_OVR_WARNING);
-	}
-
-	public Image decorateImage(final Image image, final Object obj) {
-		final int adornmentFlags = computeAdornmentFlags(obj);
-		if (adornmentFlags != 0) {
-			final ImageDescriptor baseImage = new ImageImageDescriptor(image);
-			final Rectangle bounds = image.getBounds();
-			return getRegistry().get(new PHPElementImageDescriptor(baseImage, adornmentFlags, new Point(bounds.width, bounds.height)));
-		}
-		return image;
-	}
-
-	public String decorateText(final String text, final Object element) {
-		return text;
-	}
-
-	public void dispose() {
-		if (fProblemChangedListener != null) {
-			PHPUiPlugin.getDefault().getProblemMarkerManager().removeListener(fProblemChangedListener);
-			fProblemChangedListener = null;
-		}
-		if (fRegistry != null && fUseNewRegistry)
-			fRegistry.dispose();
-	}
-
-	private void fireProblemsChanged(final IResource[] changedResources, final boolean isMarkerChange) {
-		if (fListeners != null && !fListeners.isEmpty()) {
-			final LabelProviderChangedEvent event = new ProblemsLabelChangedEvent(this, changedResources, isMarkerChange);
-			final Object[] listeners = fListeners.getListeners();
-			for (int i = 0; i < listeners.length; i++)
-				((ILabelProviderListener) listeners[i]).labelProviderChanged(event);
-		}
-	}
-
-	private int getErrorTicksFromMarkers(final IResource res, final int depth, final PHPCodeData sourceElement) throws CoreException {
-		if (res == null || !res.isAccessible())
+	private int getErrorTicksFromMarkers(IResource res, int depth, PHPCodeData sourceElement) throws CoreException {
+		if (res == null || !res.isAccessible()) {
 			return 0;
+		}
 		int info = 0;
 
-		final IMarker[] markers = res.findMarkers(IMarker.PROBLEM, true, depth);
-		if (markers != null)
-			for (int i = 0; i < markers.length && info != ERRORTICK_ERROR; i++) {
-				final IMarker curr = markers[i];
+		IMarker[] markers = res.findMarkers(IMarker.PROBLEM, true, depth);
+		if (markers != null) {
+			for (int i = 0; i < markers.length && (info != ERRORTICK_ERROR); i++) {
+				IMarker curr = markers[i];
 				if (sourceElement == null || isMarkerInRange(curr, sourceElement)) {
-					final int priority = curr.getAttribute(IMarker.SEVERITY, -1);
-					if (priority == IMarker.SEVERITY_WARNING)
+					int priority = curr.getAttribute(IMarker.SEVERITY, -1);
+					if (priority == IMarker.SEVERITY_WARNING) {
 						info = ERRORTICK_WARNING;
-					else if (priority == IMarker.SEVERITY_ERROR)
+					} else if (priority == IMarker.SEVERITY_ERROR) {
 						info = ERRORTICK_ERROR;
+					}
 				}
 			}
+		}
 		return info;
 	}
 
-	private ImageDescriptorRegistry getRegistry() {
-		if (fRegistry == null)
-			fRegistry = fUseNewRegistry ? new ImageDescriptorRegistry() : PHPUiPlugin.getImageDescriptorRegistry();
-		return fRegistry;
+	private boolean isMarkerInRange(IMarker marker, PHPCodeData sourceElement) throws CoreException {
+		if (marker.isSubtypeOf(IMarker.TEXT)) {
+			int pos = marker.getAttribute(IMarker.CHAR_START, -1);
+			return isInside(pos, sourceElement);
+		}
+		return false;
 	}
 
-	private IMarker isAnnotationInRange(final IAnnotationModel model, final Annotation annot, final PHPCodeData sourceElement) throws CoreException {
+	private int getErrorTicksFromWorkingCopy(PHPFileData original, PHPCodeData sourceElement) throws CoreException {
+		int info = 0;
+		FileEditorInput editorInput = new FileEditorInput((IFile) PHPModelUtil.getResource(original));
+		IAnnotationModel model = null;// PHPUiPlugin.getDefault().getCompilationUnitDocumentProvider().getAnnotationModel(editorInput);
+		if (model != null) {
+			Iterator iter = model.getAnnotationIterator();
+			while ((info != ERRORTICK_ERROR) && iter.hasNext()) {
+				Annotation curr = (Annotation) iter.next();
+				IMarker marker = isAnnotationInRange(model, curr, sourceElement);
+				if (marker != null) {
+					int priority = marker.getAttribute(IMarker.SEVERITY, -1);
+					if (priority == IMarker.SEVERITY_WARNING) {
+						info = ERRORTICK_WARNING;
+					} else if (priority == IMarker.SEVERITY_ERROR) {
+						info = ERRORTICK_ERROR;
+					}
+				}
+			}
+		}
+		return info;
+	}
+
+	private IMarker isAnnotationInRange(IAnnotationModel model, Annotation annot, PHPCodeData sourceElement) throws CoreException {
 		if (annot instanceof MarkerAnnotation) {
-			final IMarker marker = ((MarkerAnnotation) annot).getMarker();
+			IMarker marker = ((MarkerAnnotation) annot).getMarker();
 			if (marker.exists() && marker.isSubtypeOf(IMarker.PROBLEM)) {
-				final Position pos = model.getPosition(annot);
-				if (pos != null && (sourceElement == null || isInside(pos.getOffset(), sourceElement)))
+				Position pos = model.getPosition(annot);
+				if (pos != null && (sourceElement == null || isInside(pos.getOffset(), sourceElement))) {
 					return marker;
+				}
 			}
 		}
 		return null;
@@ -236,34 +237,70 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 	 *
 	 * @since 2.1
 	 */
-	protected boolean isInside(final int pos, final PHPCodeData sourceElement) throws CoreException {
-		final UserData userdata = sourceElement.getUserData();
+	protected boolean isInside(int pos, PHPCodeData sourceElement) throws CoreException {
+		UserData userdata = sourceElement.getUserData();
 		if (userdata != null) {
-			final int rangeOffset = userdata.getStartPosition();
-			return rangeOffset <= pos && userdata.getStopPosition() > pos;
+			int rangeOffset = userdata.getStartPosition();
+			return (rangeOffset <= pos && userdata.getStopPosition() > pos);
 		}
 		return false;
 	}
 
-	public boolean isLabelProperty(final Object element, final String property) {
+	public void dispose() {
+		if (fProblemChangedListener != null) {
+			PHPUiPlugin.getDefault().getProblemMarkerManager().removeListener(fProblemChangedListener);
+			fProblemChangedListener = null;
+		}
+		if (fRegistry != null && fUseNewRegistry) {
+			fRegistry.dispose();
+		}
+	}
+
+	public boolean isLabelProperty(Object element, String property) {
 		return true;
 	}
 
-	private boolean isMarkerInRange(final IMarker marker, final PHPCodeData sourceElement) throws CoreException {
-		if (marker.isSubtypeOf(IMarker.TEXT)) {
-			final int pos = marker.getAttribute(IMarker.CHAR_START, -1);
-			return isInside(pos, sourceElement);
+	public void addListener(ILabelProviderListener listener) {
+		if (fListeners == null) {
+			fListeners = new ListenerList();
 		}
-		return false;
+		fListeners.add(listener);
+		if (fProblemChangedListener == null) {
+			fProblemChangedListener = new IProblemChangedListener() {
+				public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
+					fireProblemsChanged(changedResources, isMarkerChange);
+				}
+			};
+			PHPUiPlugin.getDefault().getProblemMarkerManager().addListener(fProblemChangedListener);
+		}
 	}
 
-	public void removeListener(final ILabelProviderListener listener) {
+	public void removeListener(ILabelProviderListener listener) {
 		if (fListeners != null) {
 			fListeners.remove(listener);
 			if (fListeners.isEmpty() && fProblemChangedListener != null) {
 				PHPUiPlugin.getDefault().getProblemMarkerManager().removeListener(fProblemChangedListener);
 				fProblemChangedListener = null;
 			}
+		}
+	}
+
+	private void fireProblemsChanged(IResource[] changedResources, boolean isMarkerChange) {
+		if (fListeners != null && !fListeners.isEmpty()) {
+			LabelProviderChangedEvent event = new ProblemsLabelChangedEvent(this, changedResources, isMarkerChange);
+			Object[] listeners = fListeners.getListeners();
+			for (int i = 0; i < listeners.length; i++) {
+				((ILabelProviderListener) listeners[i]).labelProviderChanged(event);
+			}
+		}
+	}
+
+	public void decorate(Object element, IDecoration decoration) {
+		int adornmentFlags = computeAdornmentFlags(element);
+		if (adornmentFlags == ERRORTICK_ERROR) {
+			decoration.addOverlay(PHPPluginImages.DESC_OVR_ERROR);
+		} else if (adornmentFlags == ERRORTICK_WARNING) {
+			decoration.addOverlay(PHPPluginImages.DESC_OVR_WARNING);
 		}
 	}
 
