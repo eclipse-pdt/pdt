@@ -157,6 +157,10 @@ public class PHPexes {
 				String location = element.getAttribute(LOCATION_ATTRIBUTE);
 				String version = element.getAttribute(VERSION_ATTRIBUTE);
 				boolean isDefault = "true".equalsIgnoreCase(element.getAttribute(DEFAULT_ATTRIBUTE));
+				
+				if(isWindows) {
+					location = location + ".exe"; //$NON-NLS-1$
+				}
 
 				String pluginId = element.getDeclaringExtension().getNamespaceIdentifier();
 				URL url = FileLocator.find(Platform.getBundle(pluginId), new Path(location), new HashMap());
