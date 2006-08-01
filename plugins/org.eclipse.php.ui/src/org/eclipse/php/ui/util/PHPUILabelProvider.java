@@ -13,6 +13,9 @@ package org.eclipse.php.ui.util;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -31,13 +34,13 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 	private int fImageFlags;
 	private int fTextFlags;
 
-	IPHPTreeContentProvider []treeProviders;
-	
+	IPHPTreeContentProvider[] treeProviders;
+
 	/**
 	 * Creates a new label provider with default flags.
 	 */
 	public PHPUILabelProvider() {
-		this(PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES, PHPElementImageProvider.OVERLAY_ICONS |  PHPElementImageProvider.SMALL_ICONS);
+		this(PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES, PHPElementImageProvider.OVERLAY_ICONS | PHPElementImageProvider.SMALL_ICONS);
 	}
 
 	/**
@@ -51,14 +54,29 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 		fStorageLabelProvider = new StorageLabelProvider();
 		fImageFlags = imageFlags;
 		fTextFlags = textFlags;
+
+		initExtensions();
 	}
 
-	
-	public void setTreeProviders(IPHPTreeContentProvider []providers)
-	{
-		this.treeProviders=providers;
+	private void initExtensions() {
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpLabelDecorator");
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			if (element.getName().equals("PHPLabelDecorator")) {
+				try {
+					ILabelDecorator decorator = (ILabelDecorator) element.createExecutableExtension("class");
+					addLabelDecorator(decorator);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
-	
+
+	public void setTreeProviders(IPHPTreeContentProvider[] providers) {
+		this.treeProviders = providers;
+	}
+
 	/**
 	 * Adds a decorator to the label provider
 	 */
@@ -131,10 +149,9 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 
 	public Image getImage(Object element) {
 		Image result = fImageLabelProvider.getImageLabel(element, evaluateImageFlags(element));
-		if (result==null && treeProviders!=null)
-		{
-			for (int i = 0; i < treeProviders.length&&result==null; i++) {
-				result=treeProviders[i].getImage(element);
+		if (result == null && treeProviders != null) {
+			for (int i = 0; i < treeProviders.length && result == null; i++) {
+				result = treeProviders[i].getImage(element);
 			}
 		}
 		if (result == null && (element instanceof IStorage)) {
@@ -156,15 +173,14 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 
 	public String getText(Object element) {
 		String result = PHPElementLabels.getTextLabel(element, evaluateTextFlags(element));
-		if (result.length() == 0 && treeProviders!=null)
-		{
+		if (result.length() == 0 && treeProviders != null) {
 			for (int i = 0; i < treeProviders.length; i++) {
-				result=treeProviders[i].getText(element);
-				if (result!=null && result.length()>0)
+				result = treeProviders[i].getText(element);
+				if (result != null && result.length() > 0)
 					break;
 			}
-			if (result==null)
-				result="";
+			if (result == null)
+				result = "";
 		}
 		if (result.length() == 0 && (element instanceof IStorage)) {
 			result = fStorageLabelProvider.getText(element);

@@ -12,6 +12,7 @@
 	<extension-point id="hyperlinkDetectorForPHP" name="hyperlinkDetectorForPHP" schema="schema/hyperlinkDetectorForPHP.exsd"/>
 	<extension-point id="phpOutlineElementComparer" name="phpOutlineElementComparer" schema="schema/phpOutlineElementComparer.exsd"/>
 	<extension-point id="actionFilterDelegatorForPHPCodeData" name="actionFilterDelegatorForPHPCodeData" schema="schema/actionFilterDelegatorForPHPCodeData.exsd"/>
+ <extension-point id="phpLabelDecorator" name="phpLabelDecorator" schema="schema/org.eclipse.php.ui.phplabeldecorator.exsd"/>
 
 	<!--extension point="org.eclipse.ui.editors.documentProviders"> 
 		<provider 
