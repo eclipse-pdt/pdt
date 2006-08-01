@@ -12,27 +12,21 @@ package org.eclipse.php.core.phpModel.parser;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.core.phpModel.IPHPLanguageModel;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlockImp;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariableTypeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class PHPProjectModel extends CompositePhpModel implements IPhpProjectModel, IAdaptable {
@@ -97,7 +91,7 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 
 		public IPhpModel getModel() {
 			if (model == null) {
-				Platform.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.core.phpModel") {
+				SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.core.phpModel") {
 					public void run() throws Exception {
 						model = (IPhpModel) element.createExecutableExtension("class");
 					}
