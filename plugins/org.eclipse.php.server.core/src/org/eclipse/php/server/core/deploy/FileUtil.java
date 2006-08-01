@@ -322,7 +322,8 @@ public class FileUtil {
 					monitor.done();
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
-							ErrorDialog.openError(Display.getDefault().getActiveShell(), PHPServerCoreMessages.getString("FileUtil.publishError"), PHPServerCoreMessages.getString("FileUtil.serverPublishError"), new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, PHPServerCoreMessages.getString("FileUtil.writePermissionError"), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							ErrorDialog.openError(Display.getDefault().getActiveShell(),
+								PHPServerCoreMessages.getString("FileUtil.publishError"), PHPServerCoreMessages.getString("FileUtil.serverPublishError"), new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, PHPServerCoreMessages.getString("FileUtil.writePermissionError"), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					});
 					return false;
@@ -370,7 +371,7 @@ public class FileUtil {
 							monitor.worked(dw);
 						} else if (current.isDirectory()) {
 							monitor.subTask(NLS.bind(PHPServerCoreMessages.getString("FileUtil.copying"), new String[] { fromFile, toFile })); //$NON-NLS-1$
-							if (!smartCopyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, dw))) {
+							if (!smartCopyDirectory(fromFile, toFile, ignoredResources, timeDifference, ProgressUtil.getSubMonitorFor(monitor, dw))) {
 								monitor.done();
 								return false;
 							}
