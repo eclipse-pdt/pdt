@@ -266,7 +266,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 
 	protected void createFileComponent(Composite parent) {
 		Group group = new Group(parent, SWT.NONE);
-		String projectLabel = "File";
+		String projectLabel = "File / Project";
 		group.setText(projectLabel);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
@@ -282,7 +282,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		fFile.addModifyListener(fListener);
 		addControlAccessibleListener(fFile, group.getText());
 
-		fileButton = createPushButton(group, "Files...", null);
+		fileButton = createPushButton(group, "Browse", null);
 		fileButton.addSelectionListener(fListener);
 		addControlAccessibleListener(fileButton, group.getText() + " " + fileButton.getText()); //$NON-NLS-1$
 	}
@@ -613,7 +613,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 
 			String fileName = launchConfig.getAttribute(Server.FILE_NAME, "");
 			if (!FileUtils.fileExists(fileName)) {
-				setErrorMessage("File Does Not Exist");
+				setErrorMessage("File / Project does not exist");
 				return false;
 			}
 
