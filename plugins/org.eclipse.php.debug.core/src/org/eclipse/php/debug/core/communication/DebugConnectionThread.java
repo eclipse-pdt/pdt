@@ -17,12 +17,9 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.util.BlockingQueue;
 import org.eclipse.php.core.util.collections.IntHashtable;
@@ -31,6 +28,7 @@ import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.DebugMessagesRegistry;
 import org.eclipse.php.debug.core.debugger.PHPSessionLaunchMapper;
+import org.eclipse.php.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugRequestHandler;
 import org.eclipse.php.debug.core.debugger.messages.*;
@@ -41,6 +39,7 @@ import org.eclipse.php.debug.core.launching.PHPServerLaunchDecorator;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.server.core.Server;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * The debug connection thread is responsible of initilizing and handle a single debug session that was
@@ -50,9 +49,11 @@ import org.eclipse.php.server.core.Server;
  */
 public class DebugConnectionThread implements Runnable {
 
+	protected static int startMessageId = (new DebugSessionStartedNotification()).getType();
 	private Socket socket;
 	private DataInputStream in;
 	private DataOutputStream out;
+	protected boolean validProtocol;
 	private boolean isInitialized;
 	private InputMessageHandler inputMessageHandler;
 	private CommunicationClient communicationClient;
@@ -605,6 +606,7 @@ public class DebugConnectionThread implements Runnable {
 		public void terminate() {
 			inWork = false;
 			isAlive = false;
+			validProtocol = false;
 			inputMessageQueue.releaseReaders();
 			inputMessageQueue.clear();
 			theThread.interrupt();
@@ -911,6 +913,23 @@ public class DebugConnectionThread implements Runnable {
 					synchronized (this) {
 
 						int messageType = in.readShort();
+						// If this is the first message, the protocol is still held as invalid. 
+						// Check that the first message hes the DebugSessionStartedNotification type. If not, then we
+						// can assume that the remote debugger protocol has a different version then expected.
+						if (!validProtocol && messageType != startMessageId) {
+							// display an error message that the protocol in used is wrong.
+							final String errorMessage = "Incompatible Debug Server version.\nProbebly the remote debugger protocol does not match the expected protocol version (" + RemoteDebugger.PROTOCOL_ID + ")";
+							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
+							DebugPlugin.log(status);
+							Display.getDefault().asyncExec(new Runnable() {
+								public void run() {
+									MessageDialog.openError(Display.getDefault().getActiveShell(), "Debugger Error", errorMessage);
+								}
+							});
+							shutDown();
+							return;
+						}
+						validProtocol = true;
 						if (isDebugMode) {
 							System.out.println("message type=" + messageType);
 						}
