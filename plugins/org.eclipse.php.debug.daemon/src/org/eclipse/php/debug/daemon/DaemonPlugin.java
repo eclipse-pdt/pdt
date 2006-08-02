@@ -23,7 +23,8 @@ public class DaemonPlugin extends Plugin {
 
 	//The shared instance.
 	private static DaemonPlugin plugin;
-	private ICommunicationDaemon daemon;
+	// Hold an array of possible daemons.
+	private ICommunicationDaemon[] daemons;
 
 	/**
 	 * The constructor.
@@ -37,10 +38,12 @@ public class DaemonPlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		daemon = CommunicationDaemonRegistry.getBestMatchCommunicationDaemon();
-		if (daemon != null) {
-			daemon.init();
-			daemon.startListen();
+		daemons = CommunicationDaemonRegistry.getBestMatchCommunicationDaemons();
+		if (daemons != null) {
+			for (int i = 0; i < daemons.length; i++) {
+				daemons[i].init();
+				daemons[i].startListen();
+			}
 		}
 	}
 
@@ -50,16 +53,18 @@ public class DaemonPlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
-		if (daemon != null) {
-			daemon.stopListen();
-			daemon = null;
+		if (daemons != null) {
+			for (int i = 0; i < daemons.length; i++) {
+				daemons[i].stopListen();
+			}
 		}
+		daemons = null;
 	}
 
 	public static String getID() {
 		return ID;
 	}
-	
+
 	/**
 	 * Returns the shared instance.
 	 */
@@ -67,17 +72,16 @@ public class DaemonPlugin extends Plugin {
 		return plugin;
 	}
 
+	public static void log(IStatus status) {
+		getDefault().getLog().log(status);
+	}
 
-    public static void log(IStatus status) {
-        getDefault().getLog().log(status);
-    }
+	public static void log(Throwable e) {
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, "Debug Daemon plugin internal error", e)); //$NON-NLS-1$
+	}
 
-    public static void log(Throwable e) {
-        log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, "Debug Daemon plugin internal error", e)); //$NON-NLS-1$
-    }
-
-    public static void logErrorMessage(String message) {
-        log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, message, null));
-    }
+	public static void logErrorMessage(String message) {
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, message, null));
+	}
 
 }

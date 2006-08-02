@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.debug.daemon.communication;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -32,8 +33,8 @@ public class CommunicationDaemonRegistry {
 	private static final String DAEMON_TAG = "daemon"; //$NON-NLS-1$
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
-	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
-	
+//	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
+
 	private static final String DEFAULT_DEBUG_DAEMONS_NAMESPACE = "org.eclipse.php.debug.core";
 
 	/** Actions stored by ID */
@@ -74,17 +75,18 @@ public class CommunicationDaemonRegistry {
 	}
 
 	/**
-	 * Return best matching ICommunicationDaemon.
-	 * The returned ICommunicationDaemon is always a new instance.
+	 * Return best matching ICommunicationDaemons array.
+	 * The returned ICommunicationDaemons are always new instances.
 	 * In case of an error, null is returned.
 	 * 
-	 * @return A new instance of a best match ICommunicationDaemon
+	 * @return New instances of a best match ICommunicationDaemons
 	 */
-	public static ICommunicationDaemon getBestMatchCommunicationDaemon() {
+	public static ICommunicationDaemon[] getBestMatchCommunicationDaemons() {
 		try {
 			ICommunicationDaemon defaultDaemon = null;
 			Dictionary factories = getInstance().getDaemons();
 			Enumeration e = factories.elements();
+			ArrayList daemons = new ArrayList(4);
 			while (e.hasMoreElements()) {
 				CommunicationDaemonFactory initializerFactory = (CommunicationDaemonFactory) e.nextElement();
 				ICommunicationDaemon initializerDaemon = initializerFactory.createDaemon();
@@ -94,13 +96,16 @@ public class CommunicationDaemonRegistry {
 					}
 				} else {
 					if (initializerDaemon.isEnabled()) {
-						return initializerDaemon;
+						daemons.add(initializerDaemon);
 					}
 				}
 			}
-			if (defaultDaemon != null) {
-				return defaultDaemon;
+			if (daemons.isEmpty() && defaultDaemon != null) {
+				return new ICommunicationDaemon[] { defaultDaemon };
 			}
+			ICommunicationDaemon[] daemonsLoaded = new ICommunicationDaemon[daemons.size()];
+			daemons.toArray(daemonsLoaded);
+			return daemonsLoaded;
 		} catch (Exception e) {
 			DaemonPlugin.log(e);
 		}
