@@ -35,9 +35,9 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 
 	private PHPUserModel userModel;
 	private IPHPLanguageModel languageModel;
-
 	private Collection listeners = Collections.synchronizedCollection(new HashSet(2));
-
+	private IProject currentProject;
+	
 
 	public PHPProjectModel() {
 		super();
@@ -49,6 +49,8 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 	}
 
 	public void initialize(IProject project) {
+		currentProject = project;
+		
 		userModel = new PHPUserModel();
 		userModel.initialize(project);
 		addModel(userModel);
@@ -71,6 +73,10 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 		addModelListenrs();
 	}
 
+	public IProject getProject() {
+		return currentProject;
+	}
+	
 	private void addModelListenrs() {
 		IPhpModel[] models = getModels();
 		for (int i = 0; i < models.length; i++) {
