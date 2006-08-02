@@ -642,7 +642,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return rv;
 	}
 
-	private void showClassCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean isInstanceOf, boolean addVariableDollar, boolean explicit) {
+	protected void showClassCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean isInstanceOf, boolean addVariableDollar, boolean explicit) {
 		CodeData[] functions = null;
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			functions = projectModel.getClassFunctions(fileName, className, "");
