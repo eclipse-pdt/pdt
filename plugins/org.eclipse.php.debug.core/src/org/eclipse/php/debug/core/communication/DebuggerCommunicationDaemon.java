@@ -16,7 +16,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.php.debug.core.Logger;
+import org.eclipse.php.debug.core.PHPDebugPlugin;
+import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 
@@ -33,18 +38,32 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	protected Object lock = new Object();
 	protected ServerSocket serverSocket;
 	protected boolean isAlive;
+	private IPropertyChangeListener portChangeListener;
 
 	/**
 	 * Constructs a new DebuggerCommunicationDaemon
 	 */
 	public DebuggerCommunicationDaemon() {
 	}
-	
+
 	/**
-	 * Initializes the ServerSocket and starts a listen thread.
+	 * Initializes the ServerSocket and starts a listen thread. Also, initialize a preferences
+	 * change listener for the port that is used by this daemon.
 	 */
 	public void init() {
+		initDeamonChangeListener();
 		resetSocket();
+	}
+
+	/**
+	 * Initialize a daemon change listener 
+	 */
+	protected void initDeamonChangeListener() {
+		if (portChangeListener == null) {
+			Preferences preferences = PHPDebugPlugin.getDefault().getPluginPreferences();
+			portChangeListener = new PortChangeListener();
+			preferences.addPropertyChangeListener(portChangeListener);
+		}
 	}
 
 	/**
@@ -167,5 +186,14 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	 */
 	public boolean isEnabled() {
 		return true;
+	}
+
+	// A port change listener
+	private class PortChangeListener implements IPropertyChangeListener {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event.getProperty().equals(PHPDebugCorePreferenceNames.DEBUG_PORT)) {
+				resetSocket();
+			}
+		}
 	}
 }
