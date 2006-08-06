@@ -28,6 +28,7 @@ import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.php.server.internal.ui.ClosableWizardDialog;
 import org.eclipse.php.server.internal.ui.ServerWizard;
 import org.eclipse.php.server.ui.wizard.WizardModel;
+import org.eclipse.php.ui.preferences.ui.ScrolledCompositeImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
@@ -36,6 +37,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -111,7 +113,8 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void createControl(Composite parent) {
 
-		Composite composite = new Composite(parent, SWT.NONE);
+		ScrolledCompositeImpl scrolledComposite = new ScrolledCompositeImpl(parent, SWT.V_SCROLL);
+		Composite composite = new Composite(scrolledComposite, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 5;
 		layout.marginHeight = 5;
@@ -125,7 +128,11 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		createExtensionControls(composite);
 
 		Dialog.applyDialogFont(composite);
-		setControl(composite);
+		scrolledComposite.setContent(composite);
+		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		scrolledComposite.setMinSize(size.x, size.y);
+
+		setControl(scrolledComposite);
 	}
 
 	public void createExtensionControls(Composite composite) {
@@ -431,7 +438,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 				serverCombo.select(0);
 		}
 	}
-	
+
 	/**
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(ILaunchConfiguration)
 	 */
