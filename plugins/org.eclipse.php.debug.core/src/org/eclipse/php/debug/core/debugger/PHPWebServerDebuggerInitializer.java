@@ -12,10 +12,7 @@ package org.eclipse.php.debug.core.debugger;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IStatus;
@@ -40,7 +37,13 @@ public class PHPWebServerDebuggerInitializer {
 
 	public void debug() throws DebugException {
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
-		String debugQuery = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL) + "?" + parametersInitializer.generateQuery(launch);
+		String encodedURL = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
+		try {
+			encodedURL = encodedURL.replaceAll(" ", "%20");
+		} catch (Exception e) {
+			Logger.logException("Error while trying to encode the debug URL: '" + encodedURL + "'", e);
+		}
+		String debugQuery = encodedURL + "?" + parametersInitializer.generateQuery(launch);
 		boolean openInBrowser = false;
 		try {
 			openInBrowser = launch.getLaunchConfiguration().getAttribute(IPHPConstants.OPEN_IN_BROWSER, false);
