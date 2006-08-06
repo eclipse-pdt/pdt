@@ -211,12 +211,15 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		mainComposite.setLayoutData(gridData);
 
 		createLocationComponent(mainComposite);
-		if (enableDebugInfoOption)
-			createDebugInfoComponent(mainComposite);
-		//createWorkDirectoryComponent(mainComposite);
-		if (enableFileSelection)
-			createArgumentComponent(mainComposite);
 
+		if (enableFileSelection) {
+			createArgumentComponent(mainComposite);
+		}
+		
+		if (enableDebugInfoOption) {
+			createDebugInfoComponent(mainComposite);
+		}
+		
 		createBreakControl(mainComposite);
 		createVerticalSpacer(mainComposite, 1);
 
@@ -354,10 +357,10 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		// init the breakpoint settings
 		try {
 			boolean isOverrideBreakpointSetting = configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
-			if(overrideBreakpiontSettings != null) {
+			if (overrideBreakpiontSettings != null) {
 				overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
 			}
-			if(breakOnFirstLine != null) {
+			if (breakOnFirstLine != null) {
 				breakOnFirstLine.setEnabled(isOverrideBreakpointSetting);
 				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
 			}
@@ -419,9 +422,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		final boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo.getSelection() : true;
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
 
-		if(overrideBreakpiontSettings != null)
+		if (overrideBreakpiontSettings != null)
 			configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
-		if(breakOnFirstLine != null)
+		if (breakOnFirstLine != null)
 			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 	}
 
@@ -435,7 +438,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				final PHPexes phpExes = new PHPexes();
 				phpExes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
 				PHPexeItem phpExeItem = phpExes.getDefaultItem();
-				if(phpExeItem == null) return;
+				if (phpExeItem == null)
+					return;
 				location = phpExeItem.getPhpEXE().toString();
 				configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
 				configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
