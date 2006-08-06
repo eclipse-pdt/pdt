@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.launching;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.debug.core.Logger;
+import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -31,8 +34,15 @@ public class PHPLaunchUtilities {
 	 * 
 	 * Note that the behaviour given by this function is mainly needed when we are in a PHP Perspective (not debug)
 	 * and a session without a breakpoint was launched. So in this case a 'force' output display is triggered.
+	 * 
+	 * This function also take into account the PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS flag and does not
+	 * show the debug views in case it was not chosen from the preferences.
 	 */
 	public static void showDebugView() {
+		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		if (!prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS)) {
+			return;
+		}
 		// Get the page through a UI thread! Otherwise, it wont work...
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
