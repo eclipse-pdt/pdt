@@ -36,9 +36,7 @@ import org.eclipse.swt.widgets.Group;
 public class PHPServerTab extends ServerTab {
 
 	protected Button runWithDebugger;
-	protected Button openBrowser;
 	protected boolean isRunWithDebugInfo;
-	protected boolean isOpenInBrowser;
 	private String mode;
 
 	public PHPServerTab() {
@@ -56,19 +54,7 @@ public class PHPServerTab extends ServerTab {
 		composite.setLayout(layout);
 		composite.setLayoutData(data);
 
-		// Add the 'Open in Browser' checkbox.
-		openBrowser = new Button(composite, SWT.CHECK);
-		openBrowser.setText(PHPDebugUIMessages.PHPdebug_open_in_browser);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		openBrowser.setLayoutData(gd);
-		openBrowser.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent se) {
-				Button b = (Button) se.getSource();
-				isOpenInBrowser = b.getSelection();
-				updateLaunchConfigurationDialog();
-			}
-		});
-
 		// Add the 'Run With Debug Info' checkbox in case we are in a 'Run' launch mode.
 		mode = getLaunchConfigurationDialog().getMode();
 		if (ILaunchManager.RUN_MODE.equals(mode)) {

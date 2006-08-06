@@ -56,6 +56,8 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	protected Button configureServers;
 	protected Button overrideBreakpiontSettings;
 	protected Button breakOnFirstLine;
+	protected Button openBrowser;
+	protected boolean isOpenInBrowser;
 
 	protected String[] serverTypeIds;
 
@@ -118,7 +120,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 
 		createServerControl(composite);
 		createFileComponent(composite);
-		createContextRootControl(composite);
+		//		createContextRootControl(composite);
 		createURLControl(composite);
 		createExtensionControls(composite);
 
@@ -149,28 +151,21 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			}
 		});
 
-	}
-
-	public void createContextRootControl(Composite parent) {
-		Group group = new Group(parent, SWT.NONE);
-		String projectLabel = "Context Root";
-		group.setText(projectLabel);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		group.setLayout(layout);
-		group.setLayoutData(gridData);
-
-		fContextRoot = new Text(group, SWT.SINGLE | SWT.BORDER);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		fContextRoot.setLayoutData(gd);
-		//fProject.setFont(font);
-		fContextRoot.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
+		// Add the 'Open in Browser' checkbox.
+		// Note that the button is added here but initialized in the extention controls initialization
+		// at the PHPServerTab subclass. (TODO: This should be redesigned!!)
+		openBrowser = new Button(group, SWT.CHECK);
+		openBrowser.setText("Open in Browser");
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		openBrowser.setLayoutData(gd);
+		openBrowser.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent se) {
+				Button b = (Button) se.getSource();
+				isOpenInBrowser = b.getSelection();
 				updateLaunchConfigurationDialog();
-				initializeURLControl();
 			}
 		});
+
 	}
 
 	protected void createServerSelectionControl(Composite parent) {
@@ -248,19 +243,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 		composite.setLayoutData(data);
-
-		publish = new Button(composite, SWT.CHECK);
-		publish.setText("Publish to Server");
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		publish.setLayoutData(gd);
-
-		publish.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent se) {
-				updateLaunchConfigurationDialog();
-			}
-		});
-
 		handleServerSelection();
 	}
 
@@ -268,23 +250,52 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		Group group = new Group(parent, SWT.NONE);
 		String projectLabel = "File / Project";
 		group.setText(projectLabel);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		GridLayout layout = new GridLayout(3, false);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayout(layout);
-		group.setLayoutData(gridData);
+		group.setLayoutData(gd);
 
 		fFile = new Text(group, SWT.SINGLE | SWT.BORDER);
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
 		//gridData = new GridData();
 		//gridData.widthHint = IDialogConstants.ENTRY_FIELD_WIDTH;
-		fFile.setLayoutData(gridData);
+		fFile.setLayoutData(gd);
 		fFile.addModifyListener(fListener);
-		addControlAccessibleListener(fFile, group.getText());
 
 		fileButton = createPushButton(group, "Browse", null);
+		gd = (GridData) fileButton.getLayoutData();
+		gd.horizontalSpan = 1;
 		fileButton.addSelectionListener(fListener);
-		addControlAccessibleListener(fileButton, group.getText() + " " + fileButton.getText()); //$NON-NLS-1$
+
+		publish = createCheckButton(group, "Publish to Server");
+		gd = (GridData) publish.getLayoutData();
+		gd.horizontalSpan = 3;
+
+		publish.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent se) {
+				updateLaunchConfigurationDialog();
+			}
+		});
+
+		Label contextLabel = new Label(group, SWT.NONE);
+		contextLabel.setText("Context Root: ");
+		gd = new GridData();
+		gd.horizontalSpan = 1;
+		//		gd.horizontalIndent = 10;
+		contextLabel.setLayoutData(gd);
+
+		fContextRoot = new Text(group, SWT.SINGLE | SWT.BORDER);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		fContextRoot.setLayoutData(gd);
+		fContextRoot.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateLaunchConfigurationDialog();
+				initializeURLControl();
+			}
+		});
+		handleServerSelection();
 	}
 
 	public String[] getRequiredNatures() {
@@ -386,20 +397,18 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			Object obj = servers.get(serverCombo.getSelectionIndex());
 			if (obj != null && obj instanceof Server) {
 				server = (Server) servers.get(serverCombo.getSelectionIndex());
-
-				//				ApacheServer apacheServer = (ApacheServer) server.getAdapter(ApacheServer.class);
-				//				if (apacheServer == null)
-				//					apacheServer = (ApacheServer) server.loadAdapter(ApacheServer.class, null);
-
 				boolean canPublish = false;
 				if (server != null)
 					canPublish = server.canPublish();
 
 				serverCanPublish = canPublish;
-				publish.setSelection(canPublish);
-				publish.setEnabled(canPublish);
-
-				initializeURLControl();
+				if (publish != null) {
+					publish.setSelection(canPublish);
+					publish.setEnabled(canPublish);
+				}
+				if (fURL != null) {
+					initializeURLControl();
+				}
 			}
 		}
 
@@ -421,14 +430,8 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			if (serverCombo.getItemCount() > 0)
 				serverCombo.select(0);
 		}
-
-		//		if (servers != null) { // TODO - ?
-		//			server = (Server) servers.get(serverCombo.getSelectionIndex());
-		//			if (server != null)
-		//				server.setupLaunchConfiguration(configuration, null);
-		//		}
 	}
-
+	
 	/**
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(ILaunchConfiguration)
 	 */
@@ -528,8 +531,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 				}
 
 				serverCombo.setText(server.getName());
-				//if (server.getServerState() != IServer.STATE_STOPPED)
-				//	setErrorMessage(Messages.errorServerAlreadyRunning);
+				publish.setEnabled(server.canPublish());
 			} else {
 				if (serverCombo.getItemCount() > 0) {
 					// Select the default server
@@ -540,6 +542,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 					} else {
 						serverCombo.select(0);
 					}
+					publish.setEnabled(defaultServer.canPublish());
 				}
 			}
 			//flag should only be set if launch has been attempted on the config
