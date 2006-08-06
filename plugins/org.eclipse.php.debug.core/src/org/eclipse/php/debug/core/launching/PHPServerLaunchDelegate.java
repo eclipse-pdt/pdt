@@ -39,6 +39,7 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 	}
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+		PHPLaunchUtilities.showDebugView();
 		boolean runWithDebug = configuration.getAttribute("run_with_debug", true);
 		this.launch = launch;
 		if (mode.equals(ILaunchManager.RUN_MODE) && !runWithDebug) {
