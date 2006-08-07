@@ -129,7 +129,7 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		}
 	}
 
-	private void displayErrorMessage(final String message) {
+	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(), "Debug Error", message);
