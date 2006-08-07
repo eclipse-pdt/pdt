@@ -549,7 +549,8 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 					} else {
 						serverCombo.select(0);
 					}
-					publish.setEnabled(defaultServer.canPublish());
+					server = ServersManager.getServer(serverCombo.getText());
+					publish.setEnabled(server.canPublish());
 				}
 			}
 			//flag should only be set if launch has been attempted on the config
