@@ -31,6 +31,8 @@ import org.eclipse.php.server.core.manager.ServersManager;
 //public class ServerLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 public class ServerLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
+	private static final String PHP_IDE_PLUGIN_PREFIX = "org.eclipse.php.";
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
@@ -39,16 +41,22 @@ public class ServerLaunchConfigurationDelegate extends LaunchConfigurationDelega
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(Activator.PLUGIN_ID, "httpServerLaunchDelegate");
-
-		if (elements == null || !elements[0].getName().equals("launchDelegate")) {
+		if (elements == null || elements.length == 0 || !elements[0].getName().equals("launchDelegate")) {
 			doLaunch(configuration, mode, launch, monitor);
 			return;
 		}
 
-		IConfigurationElement element = elements[0];
+		// Get the best match configuration element
+		IConfigurationElement element = null;
+		for (int i = 0; i < elements.length; i++) {
+			element = elements[i];
+			// Stop the search at the first external plugin.
+			if (!elements[i].getNamespaceIdentifier().startsWith(PHP_IDE_PLUGIN_PREFIX)) {
+				break;
+			}
+		}
 		IHTTPServerLaunch serverLaunch = (IHTTPServerLaunch) element.createExecutableExtension("class");
 		serverLaunch.setHTTPServerDelegate(this);
-
 		serverLaunch.launch(configuration, mode, launch, monitor);
 	}
 
