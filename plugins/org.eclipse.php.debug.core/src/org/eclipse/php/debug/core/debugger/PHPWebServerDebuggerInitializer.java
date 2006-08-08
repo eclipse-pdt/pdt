@@ -27,22 +27,15 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitialize
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.ui.PlatformUI;
 
-public class PHPWebServerDebuggerInitializer {
+/**
+ * A debug session initializer.
+ */
+public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 
-	private ILaunch launch;
-
-	public PHPWebServerDebuggerInitializer(ILaunch launch) {
-		this.launch = launch;
-	}
-
-	public void debug() throws DebugException {
+	public void debug(ILaunch launch) throws DebugException {
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
 		String encodedURL = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
-		try {
-			encodedURL = encodedURL.replaceAll(" ", "%20");
-		} catch (Exception e) {
-			Logger.logException("Error while trying to encode the debug URL: '" + encodedURL + "'", e);
-		}
+		encodedURL = encodedURL.replaceAll(" ", "%20");
 		String debugQuery = encodedURL + "?" + parametersInitializer.generateQuery(launch);
 		boolean openInBrowser = false;
 		try {
@@ -104,11 +97,11 @@ public class PHPWebServerDebuggerInitializer {
 		} catch (ConnectException exc) {
 			Logger.logException("Unable to connect to URL " + url, exc);
 			String errorMessage = MessageFormat.format(PHPDebugCoreMessages.DebuggerConnection_Failed_1, new String[] { url.toString() });
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
 		} catch (IOException exc) {
 			Logger.logException("Unable to connect to URL " + url, exc);
 			String errorMessage = MessageFormat.format(PHPDebugCoreMessages.DebuggerConnection_Failed_1, new String[] { url.toString() });
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
 		} catch (Exception exc) {
 			Logger.logException("Unexpected exception communicating with server", exc);
 			String errorMessage = exc.getMessage();

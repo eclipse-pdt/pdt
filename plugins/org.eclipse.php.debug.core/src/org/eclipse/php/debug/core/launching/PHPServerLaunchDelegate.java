@@ -12,6 +12,7 @@ import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
+import org.eclipse.php.debug.core.debugger.IDebuggerInitializer;
 import org.eclipse.php.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.debug.core.debugger.PHPWebServerDebuggerInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
@@ -30,8 +31,10 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 	private ServerLaunchConfigurationDelegate httpServerDelegate = null;
 	private ILaunch launch;
 	private Job runDispatch;
+	protected IDebuggerInitializer debuggerInitializer;
 
 	public PHPServerLaunchDelegate() {
+		debuggerInitializer = createDebuggerInitilizer();
 	}
 
 	public void setHTTPServerDelegate(ServerLaunchConfigurationDelegate delegate) {
@@ -110,10 +113,14 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		}
 	}
 
-	public void runPHPWebServer(ILaunch launch) {
-		PHPWebServerDebuggerInitializer debuggerInitializer = new PHPWebServerDebuggerInitializer(launch);
+	/**
+	 * Initiate a debug session.
+	 * 
+	 * @param launch
+	 */
+	protected void initiateDebug(ILaunch launch) {
 		try {
-			debuggerInitializer.debug();
+			debuggerInitializer.debug(launch);
 		} catch (DebugException e) {
 			IStatus status = e.getStatus();
 			String errorMessage = null;
@@ -129,6 +136,20 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		}
 	}
 
+	/**
+	 * Create an {@link IDebuggerInitializer}.
+	 * 
+	 * @return An {@link IDebuggerInitializer} instance.
+	 */
+	protected IDebuggerInitializer createDebuggerInitilizer() {
+		return new PHPWebServerDebuggerInitializer();
+	}
+
+	/**
+	 * Displays a dialod with an error message.
+	 * 
+	 * @param message The error to display.
+	 */
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -200,7 +221,7 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			runPHPWebServer(launch);
+			initiateDebug(launch);
 			Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling Terminated()");
 			terminated();
 			return Status.OK_STATUS;

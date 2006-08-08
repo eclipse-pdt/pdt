@@ -28,15 +28,15 @@ public interface IPHPConstants {
 	public static final String ConditionEnabled = ID_PHP_DEBUG_CORE + ".ConditionEnabled";
 	public static final String Condition = ID_PHP_DEBUG_CORE + ".Condition";
 	public static final String PHPProcessType = ID_PHP_DEBUG_CORE + ".launching.PHPProcess";
-    public static final String RUN_WITH_DEBUG_INFO = ID_PHP_DEBUG_CORE + ".RunWithDebugInfo";
-    public static final String OPEN_IN_BROWSER = ID_PHP_DEBUG_CORE + ".OpenInBrowser";
-    public static final String Include_Storage = ID_PHP_DEBUG_CORE + ".Include_Storage";
-    public static final String Include_Storage_type = ID_PHP_DEBUG_CORE + ".Include_Storage_Type";
-    public static final String Include_Storage_zip = ID_PHP_DEBUG_CORE + ".zip";
-    public static final String Include_Storage_LFile = ID_PHP_DEBUG_CORE + ".lfile";
-    public static final String Include_Storage_RFile = ID_PHP_DEBUG_CORE + ".rfile";
-    public static final String Include_Storage_Project = ID_PHP_DEBUG_CORE + ".project";  
-    public static final String Default_Server_Name = "Default PHP Web Server"; 
+	public static final String RUN_WITH_DEBUG_INFO = ID_PHP_DEBUG_CORE + ".RunWithDebugInfo";
+	public static final String OPEN_IN_BROWSER = ID_PHP_DEBUG_CORE + ".OpenInBrowser";
+	public static final String Include_Storage = ID_PHP_DEBUG_CORE + ".Include_Storage";
+	public static final String Include_Storage_type = ID_PHP_DEBUG_CORE + ".Include_Storage_Type";
+	public static final String Include_Storage_zip = ID_PHP_DEBUG_CORE + ".zip";
+	public static final String Include_Storage_LFile = ID_PHP_DEBUG_CORE + ".lfile";
+	public static final String Include_Storage_RFile = ID_PHP_DEBUG_CORE + ".rfile";
+	public static final String Include_Storage_Project = ID_PHP_DEBUG_CORE + ".project";
+	public static final String Default_Server_Name = "Default PHP Web Server";
 	public static final String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType";
 	public static final String PHPServerLaunchType = "org.eclipse.php.server.core.launchConfigurationType";
 
@@ -44,15 +44,21 @@ public interface IPHPConstants {
 	 * Status code indicating an unexpected internal error (value <code>150</code>).
 	 */
 	public static final int INTERNAL_ERROR = 150;
-	
+
+	/**
+	 * Status code indicating an error while connecting to the debug server (valuse <code>200</code>), usually, as a result
+	 * of a debug session that is initialized on a file that does not exist on the server side.
+	 */
+	public static final int DEBUG_CONNECTION_ERROR = 200;
+
 	/**
 	 * Debug parameters initializer preferences key
 	 */
 	public static final String PHP_DEBUG_PARAMETERS_INITIALIZER = ID_PHP_DEBUG_CORE + ".debugParametersInitializer";
 
-    public static final String DEBUG_PER_PROJECT = ID_PHP_DEBUG_CORE + ".use-project-settings"; //$NON-NLS-1$
-    public static final String DEBUG_QUALIFIER = ID_PHP_DEBUG_CORE + ".Debug_Process_Preferences"; //$NON-NLS-1$
-    public static final String PREFERENCE_PAGE_ID = "org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage";
-    public static final String PROJECT_PAGE_ID = "org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"; //$NON-NLS-1$
-    
+	public static final String DEBUG_PER_PROJECT = ID_PHP_DEBUG_CORE + ".use-project-settings"; //$NON-NLS-1$
+	public static final String DEBUG_QUALIFIER = ID_PHP_DEBUG_CORE + ".Debug_Process_Preferences"; //$NON-NLS-1$
+	public static final String PREFERENCE_PAGE_ID = "org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage";
+	public static final String PROJECT_PAGE_ID = "org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"; //$NON-NLS-1$
+
 }
