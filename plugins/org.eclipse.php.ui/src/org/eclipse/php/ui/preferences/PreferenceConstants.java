@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.ui.preferences;
 
+import java.util.Locale;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -897,6 +899,12 @@ public class PreferenceConstants {
 		
 		store.setDefault(PHP_MANUAL_SITE, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE);
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
+		
+		// default locale
+		if ((store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE)).equals("")) {
+			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE,Locale.getDefault().toString());
+			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
+		}
 	}
 
 	// Don't instantiate
