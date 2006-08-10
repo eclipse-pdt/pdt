@@ -173,6 +173,8 @@ public abstract class OptionsConfigurationBlock {
 
 	private final IWorkingCopyManager fManager;
 	private IWorkbenchPreferenceContainer fContainer;
+	
+	public boolean hasChanges = false;
 
 	private Map fDisabledProjectSettings; // null when project specific settings are turned off
 
@@ -316,6 +318,20 @@ public abstract class OptionsConfigurationBlock {
 
 		Combo comboBox = newComboControl(parent, key, values, valueLabels);
 		comboBox.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+
+		fLabels.put(comboBox, labelControl);
+
+		return comboBox;
+	}
+	
+	protected Combo addComboBox(Composite parent, String label, Key key, String[] values, String[] valueLabels) {
+		
+		Label labelControl = new Label(parent, SWT.LEFT);
+		labelControl.setFont(JFaceResources.getDialogFont());
+		labelControl.setText(label);
+
+		Combo comboBox = newComboControl(parent, key, values, valueLabels);
+		comboBox.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL ));
 
 		fLabels.put(comboBox, labelControl);
 
@@ -623,7 +639,10 @@ public abstract class OptionsConfigurationBlock {
 		List /* <PropertyChange>*/changedOptions = new ArrayList();
 		boolean needsBuild = getChanges(currContext, changedOptions);
 		if (changedOptions.isEmpty()) {
+			hasChanges = false;
 			return true;
+		} else {
+			hasChanges = true;
 		}
 
 		boolean doBuild = false;
