@@ -56,4 +56,14 @@ public interface PHPCoreConstants {
 
 	public static final String FORMATTER_USE_TABS = PLUGIN_ID + ".phpForamtterUseTabs"; //$NON-NLS-1$
 	public static final String FORMATTER_INDENTATION_SIZE = PLUGIN_ID + ".phpForamtterIndentationSize"; //$NON-NLS-1$
+	
+	/**
+	 * A name preference that locale for the workspace
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public final static String WORKSPACE_LOCALE = PLUGIN_ID + ".workspaceLocale"; //$NON-NLS-1$
+	public final static String WORKSPACE_DEFAULT_LOCALE = PLUGIN_ID + ".workspaceDefaultLocale"; //$NON-NLS-1$
+
 }

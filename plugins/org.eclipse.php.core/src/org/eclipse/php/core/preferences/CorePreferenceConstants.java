@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.preferences;
 
+import java.util.Locale;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.PHPCorePlugin;
@@ -41,6 +43,11 @@ public class CorePreferenceConstants {
 
 		store.setDefault(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		store.setDefault(PHPCoreConstants.FORMATTER_INDENTATION_SIZE, PHPCoreConstants.DEFAULT_INDENTATION_SIZE);
+		
+		if ((store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE)).equals("")) {
+			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE,Locale.getDefault().toString());
+			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
+		}
 	}
 
 	// Don't instantiate
