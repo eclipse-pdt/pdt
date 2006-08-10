@@ -11,73 +11,71 @@
 package org.eclipse.php.core.phpModel.parser.codeDataDB;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 
 public class TreeCodeDataDB implements CodeDataDB {
 
-	private final Map treeDatabase = new HashMap(1000);;
-	private final List flattenData = new ArrayList();
-	private List chachedList = null;
+	private List chachedList = null;;
+	private final Set sortedData = new TreeSet();
+	private final Map treeDatabase = new HashMap(1000);
 
-	public synchronized void clear() {
+	public synchronized void addCodeData(final CodeData codeData) {
 		chachedList = null;
-		treeDatabase.clear();
-		flattenData.clear();
-	}
-
-	public synchronized List getCodeData(String name) {
-		if (name == null) {
-			return null;
-		}
-		return (List) treeDatabase.get(getCodeDataIdentifier(name));
-	}
-
-	public synchronized void addCodeData(CodeData codeData) {
-		chachedList = null;
-		String codeDataIdentifier = getCodeDataIdentifier(codeData.getName());
+		final String codeDataIdentifier = getCodeDataIdentifier(codeData.getName());
 		List list = (ArrayList) treeDatabase.get(codeDataIdentifier);
 		if (list == null) {
 			list = new ArrayList();
 			treeDatabase.put(codeDataIdentifier, list);
-		} else {
+		} else
 			list.remove(codeData);
-		}
 		list.add(codeData);
-		flattenData.add(codeData);
-	}
-
-	public synchronized void removeCodeData(CodeData codeData) {
-		chachedList = null;
-		String codeDataIdentifier = getCodeDataIdentifier(codeData.getName());
-		ArrayList list = (ArrayList) treeDatabase.get(codeDataIdentifier);
-		if (list == null) {
-			return;
-		}
-		list.remove(codeData);
-		if (list.isEmpty()) {
-			treeDatabase.remove(list);
-		}
-		flattenData.remove(codeData);
+		sortedData.add(codeData);
 	}
 
 	/*
-		returns an unmodifiable instance of the (chached) list
-	*/
+	 returns an unmodifiable instance of the (chached) list
+	 */
 	public synchronized List asList() {
 		if (chachedList != null)
 			return chachedList;
 
-		chachedList = Collections.unmodifiableList(flattenData);
+		chachedList = Arrays.asList(sortedData.toArray());
 		return chachedList;
 	}
 
-	private String getCodeDataIdentifier(String name) {
+	public synchronized void clear() {
+		chachedList = null;
+		treeDatabase.clear();
+		sortedData.clear();
+	}
+
+	public synchronized List getCodeData(final String name) {
+		if (name == null)
+			return null;
+		return (List) treeDatabase.get(getCodeDataIdentifier(name));
+	}
+
+	private String getCodeDataIdentifier(final String name) {
 		return name.trim().toLowerCase();
+	}
+
+	public synchronized void removeCodeData(final CodeData codeData) {
+		chachedList = null;
+		final String codeDataIdentifier = getCodeDataIdentifier(codeData.getName());
+		final ArrayList list = (ArrayList) treeDatabase.get(codeDataIdentifier);
+		if (list == null)
+			return;
+		list.remove(codeData);
+		if (list.isEmpty())
+			treeDatabase.remove(list);
+		sortedData.remove(codeData);
 	}
 
 }
