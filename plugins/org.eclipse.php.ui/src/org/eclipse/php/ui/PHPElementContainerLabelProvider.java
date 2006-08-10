@@ -11,7 +11,7 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.util.PHPElementImageProvider;
 import org.eclipse.swt.graphics.Image;
 
-public class PHPClassContainerLabelProvider extends LabelProvider {
+public class PHPElementContainerLabelProvider extends LabelProvider {
 
 	// TODO getImage
 
@@ -39,9 +39,8 @@ public class PHPClassContainerLabelProvider extends LabelProvider {
 		}
 		if (element instanceof PHPCodeData) {
 			final PHPCodeData codeData = (PHPCodeData) element;
-			PHPCodeData container;
-			if ((container = codeData.getContainer()) != null)
-				return getText(container, buf);
+			PHPCodeData container = PHPModelUtil.getPHPFileContainer(codeData);
+			return getText(container, buf);
 		}
 		return "";
 
