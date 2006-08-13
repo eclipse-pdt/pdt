@@ -13,15 +13,11 @@ package org.eclipse.php.core.documentModel.dom;
 import org.eclipse.php.core.documentModel.validate.HTMLElementPropagatingValidator;
 import org.eclipse.php.core.documentModel.validate.HTMLEmptyValidator;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.core.phpModel.phpElementData.*;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -66,9 +62,9 @@ public class PHPElementImpl extends ElementImpl {
 		final String name = ((Class) type).getName();
 		if (name.equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator")) {
 			result = pValidator;
-		
-		// TRICKY: if we are in HTML Validator and we see a php element - just go out and do nothing !!! 
-		} else if (name.equals("org.eclipse.wst.sse.core.internal.validate.ValidationAdapter")) { 
+
+			// TRICKY: if we are in HTML Validator and we see a php element - just go out and do nothing !!! 
+		} else if (name.equals("org.eclipse.wst.sse.core.internal.validate.ValidationAdapter")) {
 			result = new HTMLEmptyValidator();
 		} else {
 			result = super.getExistingAdapter(type);
@@ -78,11 +74,10 @@ public class PHPElementImpl extends ElementImpl {
 	}
 
 	// return php model item  at offset
-	public PHPCodeData getPHPCodeData(int offset)
-	{
-		String location =  getModel().getBaseLocation();
+	public PHPCodeData getPHPCodeData(int offset) {
+		String location = getModel().getBaseLocation();
 		int start = getStartOffset();
-		offset=offset+start;
+		offset = offset + start;
 
 		PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(location);
 		if (fileData == null) {
@@ -91,21 +86,20 @@ public class PHPElementImpl extends ElementImpl {
 		PHPClassData[] classes = fileData.getClasses();
 		if (classes != null)
 			for (int i = 0; i < classes.length; i++) {
-				if (isInside(offset, classes[i]))
-				{
+				if (isInside(offset, classes[i])) {
 					PHPClassVarData[] vars = classes[i].getVars();
 					for (int j = 0; j < vars.length; j++) {
-						if (isInside(offset,vars[j]))
+						if (isInside(offset, vars[j]))
 							return vars[j];
 					}
 					PHPClassConstData[] consts = classes[i].getConsts();
 					for (int j = 0; j < consts.length; j++) {
-						if (isInside(offset,consts[j]))
+						if (isInside(offset, consts[j]))
 							return consts[j];
 					}
 					PHPFunctionData[] functions = classes[i].getFunctions();
 					for (int j = 0; j < functions.length; j++) {
-						if (isInside(offset,functions[j]))
+						if (isInside(offset, functions[j]))
 							return functions[j];
 					}
 					return classes[i];
@@ -115,20 +109,19 @@ public class PHPElementImpl extends ElementImpl {
 		PHPFunctionData[] functions = fileData.getFunctions();
 		if (functions != null)
 			for (int i = 0; i < functions.length; i++) {
-				if (isInside(offset,  functions[i]))
+				if (isInside(offset, functions[i]))
 					return functions[i];
 			}
- 
+
 		PHPConstantData[] constants = fileData.getConstants();
 		if (constants != null)
 			for (int i = 0; i < constants.length; i++) {
-				if (isInside(offset,  constants[i]))
+				if (isInside(offset, constants[i]))
 					return constants[i];
 			}
 		return null;
 	}
-	
-	
+
 	private boolean isInside(int offset, PHPCodeData codeData) {
 		UserData userData = codeData.getUserData();
 		if (userData == null)
@@ -137,11 +130,11 @@ public class PHPElementImpl extends ElementImpl {
 			return true;
 		return false;
 	}
-	
+
 	public boolean matchTagName(String tagName) {
-		return tagName.equals("?>"); 
+		return tagName.equals("?>");
 	}
-	
+
 	public boolean isContainer() {
 		return true;
 	}
@@ -149,4 +142,19 @@ public class PHPElementImpl extends ElementImpl {
 	public boolean isJSPContainer() {
 		return true;
 	}
+
+	public boolean isClosed() {
+		IStructuredDocumentRegion flatNode = getEndStructuredDocumentRegion();
+		if (flatNode != null) {
+			ITextRegionList regions = flatNode.getRegions();
+			if (regions != null && regions.size() != 0) {
+				ITextRegion region = regions.get(regions.size() - 1);
+				String regionType = region.getType();
+				if ("PHP_CLOSETAG".equals(regionType))
+					return true;
+			}
+		}
+		return super.isClosed();
+	}
+
 }
