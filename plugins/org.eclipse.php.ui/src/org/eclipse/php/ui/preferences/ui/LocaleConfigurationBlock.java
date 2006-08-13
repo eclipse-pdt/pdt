@@ -26,8 +26,8 @@ public class LocaleConfigurationBlock extends PHPCoreOptionsConfigurationBlock {
 	private Combo localeCombo;	
 	
 	
-	private String[] locales =  new String[] { "en_US", "it_IT" };
-	private String[] localesLabels = new String[] { Locale.ENGLISH.getDisplayLanguage(), Locale.ITALIAN.getDisplayLanguage() };
+	private String[] locales =  new String[] { "en_US"};
+	private String[] localesLabels = new String[] { Locale.ENGLISH.getDisplayLanguage()};
 	
 
 
