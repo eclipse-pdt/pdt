@@ -56,43 +56,17 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class PHPsComboBlock implements ISelectionProvider {
 
-	/**
-	 * This block's control
-	 */
-	private Composite fControl;
-
-	/**
-	 * VMs being displayed
-	 */
-	private final List fVMs = new ArrayList();
+	PHPexes exes;
 
 	/**
 	 * The main control
 	 */
 	private Combo fCombo;
 
-	// Action buttons
-	private Button fManageButton;
-
 	/**
-	 * Selection listeners (checked PHP changes)
+	 * This block's control
 	 */
-	private final ListenerList fSelectionListeners = new ListenerList();
-
-	/**
-	 * Previous selection
-	 */
-	private ISelection fPrevSelection = new StructuredSelection();
-
-	/**
-	 * Default PHP descriptor or <code>null</code> if none.
-	 */
-	private PHPexeDescriptor fDefaultDescriptor = null;
-
-	/**
-	 * Specific PHPexe descriptor or <code>null</code> if none.
-	 */
-	private PHPexeDescriptor fSpecificDescriptor = null;
+	private Composite fControl;
 
 	/**
 	 * Default PHPexe radio button or <code>null</code> if none
@@ -100,16 +74,42 @@ public class PHPsComboBlock implements ISelectionProvider {
 	private Button fDefaultButton = null;
 
 	/**
+	 * Default PHP descriptor or <code>null</code> if none.
+	 */
+	private PHPexeDescriptor fDefaultDescriptor = null;
+
+	// Action buttons
+	private Button fManageButton;
+
+	/**
+	 * Previous selection
+	 */
+	private ISelection fPrevSelection = new StructuredSelection();
+
+	/**
+	 * Selection listeners (checked PHP changes)
+	 */
+	private final ListenerList fSelectionListeners = new ListenerList();
+
+	/**
 	 * Selected PHPexe radio button
 	 */
 	private Button fSpecificButton = null;
+
+	/**
+	 * Specific PHPexe descriptor or <code>null</code> if none.
+	 */
+	private PHPexeDescriptor fSpecificDescriptor = null;
 
 	/**
 	 * The title used for the PHPexe block
 	 */
 	private String fTitle = null;
 
-	PHPexes exes;
+	/**
+	 * VMs being displayed
+	 */
+	private final List fVMs = new ArrayList();
 
 	public PHPsComboBlock() {
 		fDefaultDescriptor = new PHPexeDescriptor() {
@@ -128,54 +128,6 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	public void addSelectionChangedListener(final ISelectionChangedListener listener) {
 		fSelectionListeners.add(listener);
-	}
-
-	public PHPexes getPHPs(final boolean load) {
-		if (exes == null || load) {
-			exes = new PHPexes();
-			exes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
-		}
-		return exes;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-	 */
-	public ISelection getSelection() {
-		final PHPexeItem vm = getPHPexe();
-		if (vm == null)
-			return new StructuredSelection();
-		return new StructuredSelection(vm);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-	 */
-	public void removeSelectionChangedListener(final ISelectionChangedListener listener) {
-		fSelectionListeners.remove(listener);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-	 */
-	public void setSelection(final ISelection selection) {
-		if (selection instanceof IStructuredSelection)
-			if (!selection.equals(fPrevSelection)) {
-				fPrevSelection = selection;
-				if (selection.isEmpty()) {
-					fCombo.setText(""); //$NON-NLS-1$
-					fCombo.select(-1);
-					// need to do this to clear the old text
-					fCombo.setItems(new String[] {});
-					fillWithWorkspacePHPexes();
-				} else {
-					final Object jre = ((IStructuredSelection) selection).getFirstElement();
-					final int index = fVMs.indexOf(jre);
-					if (index >= 0)
-						fCombo.select(index);
-				}
-				fireSelectionChanged();
-			}
 	}
 
 	/**
@@ -215,7 +167,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 						setUseDefaultPHPexe();
 				}
 			});
-			data = new GridData();
+			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 3;
 			fDefaultButton.setLayoutData(data);
 			fDefaultButton.setFont(font);
@@ -296,6 +248,25 @@ public class PHPsComboBlock implements ISelectionProvider {
 		fillWithWorkspacePHPexes();
 	}
 
+	protected Button createPushButton(final Composite parent, final String label) {
+		return SWTUtil.createPushButton(parent, label, null);
+	}
+
+	/**
+	 * Populates the PHPexe table with existing PHPexes defined in the workspace.
+	 */
+	protected void fillWithWorkspacePHPexes() {
+
+		// fill with PHPexes
+		final List standins = new ArrayList();
+		final PHPexeItem[] types = getPHPs(true).getItems();
+		for (int i = 0; i < types.length; i++) {
+			final PHPexeItem type = types[i];
+			standins.add(type);
+		}
+		setPHPexes(standins);
+	}
+
 	/**
 	 * Fire current selection
 	 */
@@ -308,10 +279,6 @@ public class PHPsComboBlock implements ISelectionProvider {
 		}
 	}
 
-	protected Button createPushButton(final Composite parent, final String label) {
-		return SWTUtil.createPushButton(parent, label, null);
-	}
-
 	/**
 	 * Returns this block's control
 	 * 
@@ -319,6 +286,128 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	public Control getControl() {
 		return fControl;
+	}
+
+	/**
+	 * Returns the selected PHPexe or <code>null</code> if none.
+	 * 
+	 * @return the selected PHPexe or <code>null</code> if none
+	 */
+	public PHPexeItem getPHPexe() {
+		final int index = fCombo.getSelectionIndex();
+		if (index >= 0)
+			return (PHPexeItem) fVMs.get(index);
+		return null;
+	}
+
+	/**
+	 * Returns the PHPexes currently being displayed in this block
+	 * 
+	 * @return PHPexes currently being displayed in this block
+	 */
+	public PHPexeItem[] getPHPexes() {
+		return (PHPexeItem[]) fVMs.toArray(new PHPexeItem[fVMs.size()]);
+	}
+
+	public PHPexes getPHPs(final boolean load) {
+		if (exes == null || load) {
+			exes = new PHPexes();
+			exes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
+		}
+		return exes;
+	}
+
+	public String getSelectedLocation() {
+		if (fDefaultButton.getSelection()) {
+			final PHPexeItem defaultItem = getPHPs(false).getDefaultItem();
+			if (defaultItem == null)
+				return null;
+			return defaultItem.getPhpEXE().toString();
+		}
+		final PHPexeItem item = getPHPexe();
+		if (item != null)
+			return item.getPhpEXE().toString();
+		return ""; //$NON-NLS-1$
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+	 */
+	public ISelection getSelection() {
+		final PHPexeItem vm = getPHPexe();
+		if (vm == null)
+			return new StructuredSelection();
+		return new StructuredSelection(vm);
+	}
+
+	protected Shell getShell() {
+		return getControl().getShell();
+	}
+
+	/**
+	 * Returns whether the 'use default PHPexe' button is checked.
+	 * 
+	 * @return whether the 'use default PHPexe' button is checked
+	 */
+	public boolean isDefaultPHPexe() {
+		if (fDefaultButton != null)
+			return fDefaultButton.getSelection();
+		return false;
+	}
+
+	/**
+	 * Refresh the default PHPexe description.
+	 */
+	public void refresh() {
+		setDefaultPHPexeDescriptor(fDefaultDescriptor);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+	 */
+	public void removeSelectionChangedListener(final ISelectionChangedListener listener) {
+		fSelectionListeners.remove(listener);
+	}
+
+	private void setButtonTextFromDescriptor(final Button button, final PHPexeDescriptor descriptor) {
+		if (button != null) {
+			//update the description & PHPexe in case it has changed
+			final String currentText = button.getText();
+			final String newText = descriptor.getDescription();
+			if (!newText.equals(currentText)) {
+				button.setText(newText);
+				fControl.layout();
+			}
+		}
+	}
+
+	/**
+	 * Sets the Default PHPexe Descriptor for this block.
+	 * 
+	 * @param descriptor default PHPexe descriptor
+	 */
+	public void setDefaultPHPexeDescriptor(final PHPexeDescriptor descriptor) {
+		fDefaultDescriptor = descriptor;
+		setButtonTextFromDescriptor(fDefaultButton, descriptor);
+	}
+
+	/**
+	 * Sets the selected PHPexe, or <code>null</code>
+	 * 
+	 * @param vm PHPexe or <code>null</code>
+	 */
+	public void setPHPexe(final PHPexeItem vm) {
+		if (vm == null || vm != getPHPs(false).getDefaultItem()) {
+			fSpecificButton.setSelection(true);
+			fDefaultButton.setSelection(false);
+			fCombo.setEnabled(true);
+			fManageButton.setEnabled(true);
+			if (vm == null)
+				setSelection(new StructuredSelection());
+			else
+				setSelection(new StructuredSelection(vm));
+		} else
+			setUseDefaultPHPexe();
 	}
 
 	/**
@@ -353,85 +442,27 @@ public class PHPsComboBlock implements ISelectionProvider {
 		fCombo.setItems(names);
 	}
 
-	/**
-	 * Returns the PHPexes currently being displayed in this block
-	 * 
-	 * @return PHPexes currently being displayed in this block
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
 	 */
-	public PHPexeItem[] getPHPexes() {
-		return (PHPexeItem[]) fVMs.toArray(new PHPexeItem[fVMs.size()]);
-	}
-
-	protected Shell getShell() {
-		return getControl().getShell();
-	}
-
-	/**
-	 * Sets the selected PHPexe, or <code>null</code>
-	 * 
-	 * @param vm PHPexe or <code>null</code>
-	 */
-	public void setPHPexe(final PHPexeItem vm) {
-		if (vm == null || vm != getPHPs(false).getDefaultItem()) {
-			fSpecificButton.setSelection(true);
-			fDefaultButton.setSelection(false);
-			fCombo.setEnabled(true);
-			fManageButton.setEnabled(true);
-			if (vm == null)
-				setSelection(new StructuredSelection());
-			else
-				setSelection(new StructuredSelection(vm));
-		} else
-			setUseDefaultPHPexe();
-	}
-
-	/**
-	 * Returns the selected PHPexe or <code>null</code> if none.
-	 * 
-	 * @return the selected PHPexe or <code>null</code> if none
-	 */
-	public PHPexeItem getPHPexe() {
-		final int index = fCombo.getSelectionIndex();
-		if (index >= 0)
-			return (PHPexeItem) fVMs.get(index);
-		return null;
-	}
-
-	/**
-	 * Populates the PHPexe table with existing PHPexes defined in the workspace.
-	 */
-	protected void fillWithWorkspacePHPexes() {
-
-		// fill with PHPexes
-		final List standins = new ArrayList();
-		final PHPexeItem[] types = getPHPs(true).getItems();
-		for (int i = 0; i < types.length; i++) {
-			final PHPexeItem type = types[i];
-			standins.add(type);
-		}
-		setPHPexes(standins);
-	}
-
-	/**
-	 * Sets the Default PHPexe Descriptor for this block.
-	 * 
-	 * @param descriptor default PHPexe descriptor
-	 */
-	public void setDefaultPHPexeDescriptor(final PHPexeDescriptor descriptor) {
-		fDefaultDescriptor = descriptor;
-		setButtonTextFromDescriptor(fDefaultButton, descriptor);
-	}
-
-	private void setButtonTextFromDescriptor(final Button button, final PHPexeDescriptor descriptor) {
-		if (button != null) {
-			//update the description & PHPexe in case it has changed
-			final String currentText = button.getText();
-			final String newText = descriptor.getDescription();
-			if (!newText.equals(currentText)) {
-				button.setText(newText);
-				fControl.layout();
+	public void setSelection(final ISelection selection) {
+		if (selection instanceof IStructuredSelection)
+			if (!selection.equals(fPrevSelection)) {
+				fPrevSelection = selection;
+				if (selection.isEmpty()) {
+					fCombo.setText(""); //$NON-NLS-1$
+					fCombo.select(-1);
+					// need to do this to clear the old text
+					fCombo.setItems(new String[] {});
+					fillWithWorkspacePHPexes();
+				} else {
+					final Object jre = ((IStructuredSelection) selection).getFirstElement();
+					final int index = fVMs.indexOf(jre);
+					if (index >= 0)
+						fCombo.select(index);
+				}
+				fireSelectionChanged();
 			}
-		}
 	}
 
 	/**
@@ -445,14 +476,12 @@ public class PHPsComboBlock implements ISelectionProvider {
 	}
 
 	/**
-	 * Returns whether the 'use default PHPexe' button is checked.
+	 * Sets the title used for this PHPexe block
 	 * 
-	 * @return whether the 'use default PHPexe' button is checked
+	 * @param title title for this PHPexe block 
 	 */
-	public boolean isDefaultPHPexe() {
-		if (fDefaultButton != null)
-			return fDefaultButton.getSelection();
-		return false;
+	public void setTitle(final String title) {
+		fTitle = title;
 	}
 
 	/**
@@ -467,35 +496,6 @@ public class PHPsComboBlock implements ISelectionProvider {
 			fPrevSelection = null;
 			fireSelectionChanged();
 		}
-	}
-
-	/**
-	 * Sets the title used for this PHPexe block
-	 * 
-	 * @param title title for this PHPexe block 
-	 */
-	public void setTitle(final String title) {
-		fTitle = title;
-	}
-
-	/**
-	 * Refresh the default PHPexe description.
-	 */
-	public void refresh() {
-		setDefaultPHPexeDescriptor(fDefaultDescriptor);
-	}
-
-	public String getSelectedLocation() {
-		if (fDefaultButton.getSelection()) {
-			final PHPexeItem defaultItem = getPHPs(false).getDefaultItem();
-			if (defaultItem == null)
-				return null;
-			return defaultItem.getPhpEXE().toString();
-		}
-		final PHPexeItem item = getPHPexe();
-		if (item != null)
-			return item.getPhpEXE().toString();
-		return ""; //$NON-NLS-1$
 	}
 
 }
