@@ -13,10 +13,12 @@ package org.eclipse.php.ui.filters;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.project.PHPNature;
 
 
 /**
@@ -34,9 +36,14 @@ public class NonPHPElementFilter extends ViewerFilter {
 		if (element instanceof PHPCodeData || element instanceof PHPProjectModel)
 			return true;
 
-		if (element instanceof IResource) {
-			IProject project = ((IResource) element).getProject();
-			return project == null || !project.isOpen();
+		if (element instanceof IProject) {
+			IProject project = (IProject) element;			
+			try {
+				if (!project.hasNature(PHPNature.ID))
+					return false;
+			} catch (CoreException e) {
+			}
+			return project.isOpen();
 		}
 
 		// Exclude all IStorage elements which are neither Java elements nor resources
