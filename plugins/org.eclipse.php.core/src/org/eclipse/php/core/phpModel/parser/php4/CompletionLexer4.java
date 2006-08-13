@@ -2009,13 +2009,13 @@ appendTextToComment();
         case 593: break;
         case 203: 
           { 
-    if (asp_tags || yytext().charAt(1)!='%') { /* asp comment? */
+    if (asp_tags || yytext().charAt(0)!='%') { /* asp comment? */
    		handleCommentEnd();
         yypushback(yylength());
 		yybegin(ST_IN_SCRIPTING);
 		//return T_COMMENT;
 	} else {
-//		yymore();
+		appendTextToComment();
 	}
  }
         case 594: break;
