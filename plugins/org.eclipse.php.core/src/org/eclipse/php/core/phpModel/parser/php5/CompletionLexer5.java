@@ -1325,7 +1325,9 @@ class CompletionLexer5 extends CompletionLexer implements org.eclipse.php.core.p
             }
             lastPhpDocText = null;
         }
-        noSymboles = false;        
+        if(noSymboles && symbolNumber != ParserConstants5.T_INLINE_HTML){	// T_INLINE_HTML doesn't infect the phpDoc 
+        	noSymboles = false;        
+        }
         return new Symbol(symbolNumber, leftPosition, leftPosition + getTokenLength());
     }
 
