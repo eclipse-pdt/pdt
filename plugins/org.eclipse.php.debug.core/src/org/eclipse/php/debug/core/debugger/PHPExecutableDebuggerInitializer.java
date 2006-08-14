@@ -29,6 +29,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableDebuggerInitializer {
@@ -55,6 +56,10 @@ public class PHPExecutableDebuggerInitializer {
 			IPath phpExePath = new Path(phpExe);
 			File workingDir = new File(phpExePath.removeLastSegments(1).toString());
 			String phpConfigDir = workingDir.getAbsolutePath();
+			String phpIniLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
+			if(phpIniLocation != null && !phpIniLocation.equals("")) {
+				phpConfigDir = phpIniLocation;
+			}
 
 			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
 
