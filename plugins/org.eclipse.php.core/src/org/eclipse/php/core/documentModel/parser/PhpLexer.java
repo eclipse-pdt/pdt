@@ -19,45 +19,186 @@ import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.util.collections.IntHashtable;
 
 public abstract class PhpLexer implements Scanner, PHPRegionTypes {
+	private class BasicLexerState implements LexerState {
+
+		private final byte lexicalState = (byte) getYy_lexical_state();
+		private StateStack phpStack;
+
+		public BasicLexerState() {
+			if (!PhpLexer.this.phpStack.isEmpty())
+				phpStack = PhpLexer.this.phpStack.createClone();
+		}
+
+		public boolean equals(final Object o) {
+			if (o == this)
+				return true;
+			if (o == null)
+				return false;
+			if (!(o instanceof BasicLexerState))
+				return false;
+			final BasicLexerState tmp = (BasicLexerState) o;
+			if (tmp.lexicalState != lexicalState)
+				return false;
+			if (phpStack != null && !phpStack.equals(tmp.phpStack))
+				return false;
+			return phpStack == tmp.phpStack;
+		}
+
+		public boolean equalsCurrentStack(final LexerState obj) {
+			if (obj == this)
+				return true;
+			if (obj == null)
+				return false;
+			if (!(obj instanceof BasicLexerState))
+				return false;
+			final BasicLexerState tmp = (BasicLexerState) obj;
+			if (tmp.lexicalState != lexicalState)
+				return false;
+			final StateStack activeStack = getActiveStack();
+			final StateStack otherActiveStack = tmp.getActiveStack();
+			if (!(activeStack == otherActiveStack || activeStack != null && activeStack.equals(otherActiveStack)))
+				return false;
+			return true;
+		}
+
+		public boolean equalsTop(final LexerState obj) {
+			return obj != null && obj.getTopState() == lexicalState;
+		}
+
+		protected StateStack getActiveStack() {
+			return phpStack;
+		}
+
+		public int getTopState() {
+			return lexicalState;
+		}
+
+		public boolean isSubstateOf(final int state) {
+			if (lexicalState == state)
+				return true;
+			final StateStack activeStack = getActiveStack();
+			if (activeStack == null)
+				return false;
+			return activeStack.contains(state);
+		}
+
+		public void restoreState(final Scanner scanner) {
+			final PhpLexer lexer = (PhpLexer) scanner;
+
+			if (phpStack == null)
+				lexer.phpStack.clear();
+			else
+				lexer.phpStack.copyFrom(phpStack);
+
+			lexer.yybegin(lexicalState);
+		}
+
+		public String toString() {
+			final StateStack stack = getActiveStack();
+			final String stackStr = stack == null ? "null" : stack.toString();
+			return "Stack: " + stackStr + ", currState: " + lexicalState;
+		}
+
+	}
+
+	private class HeredocState implements LexerState {
+		private String myHeredoc;
+		private BasicLexerState theState;
+
+		public HeredocState(final BasicLexerState state) {
+			theState = state;
+			myHeredoc = heredoc;
+		}
+
+		public boolean equals(final Object obj) {
+			return obj != null && obj instanceof HeredocState && ((HeredocState) obj).theState.equals(theState) && ((HeredocState) obj).myHeredoc.equals(myHeredoc);
+		}
+
+		public boolean equalsCurrentStack(final LexerState obj) {
+			if (obj == this)
+				return true;
+			if (obj == null)
+				return false;
+			if (!(obj instanceof HeredocState))
+				return false;
+			return theState.equals(((HeredocState) obj).theState);
+		}
+
+		public boolean equalsTop(final LexerState obj) {
+			return theState.equalsTop(obj);
+		}
+
+		public int getTopState() {
+			return theState.getTopState();
+		}
+
+		public boolean isSubstateOf(final int state) {
+			return theState.isSubstateOf(state);
+		}
+
+		public void restoreState(final Scanner scanner) {
+			final PhpLexer lexer = (PhpLexer) scanner;
+			theState.restoreState(lexer);
+			lexer.heredoc = myHeredoc;
+			lexer.heredoc_len = myHeredoc.length();
+		}
+
+	}
+
+	// A pool of states. To avoid creation of a new state on each createMemento.
+	private static final IntHashtable lexerStates = new IntHashtable(100);
+	final public static int ST_PHP_BACKQUOTE = 8;
+	final public static int ST_PHP_COMMENT = 16;
+	final public static int ST_PHP_DOC_COMMENT = 18;
+	final public static int ST_PHP_DOUBLE_QUOTES = 4;
+	final public static int ST_PHP_HEREDOC = 12;
+	final public static int ST_PHP_IN_SCRIPTING = 2;
+
+	final public static int ST_PHP_LINE_COMMENT = 20;
+
+	final public static int ST_PHP_SINGLE_QUOTE = 6;
+
 	/**
 	 * This character denotes the end of file
 	 */
 	final public static int YYEOF = -1;
 
-	final public static int ST_PHP_SINGLE_QUOTE = 6;
-	final public static int ST_PHP_COMMENT = 16;
-	final public static int ST_PHP_DOUBLE_QUOTES = 4;
-	final public static int ST_PHP_HEREDOC = 12;
-	final public static int ST_PHP_LINE_COMMENT = 20;
-	final public static int ST_PHP_BACKQUOTE = 8;
-	final public static int ST_PHP_DOC_COMMENT = 18;
-	final public static int ST_PHP_IN_SCRIPTING = 2;
-
-	protected abstract int getYy_lexical_state();
-
-	protected abstract int getYy_markedPos();
-
-	protected abstract int getYy_endRead();
-
-	protected abstract char[] getYy_buffer();
-
-	public abstract void yybegin(int newState);
-
-	public abstract void reset(char array[], int offset, int length);
-
-	public abstract void reset(Reader reader, char[] buffer, int[] parameters);
-
-	public abstract int[] getParamenters();
-	
-	protected abstract int getYy_startRead();
-
-	protected abstract int getYy_pushBackPosition();
-
-	public abstract int yylength();
-
-	public int getTokenStart() {
-		return this.getYy_startRead() - this.getYy_pushBackPosition();
+	protected static final boolean isLowerCase(final String text) {
+		if (text == null)
+			return false;
+		for (int i = 0; i < text.length(); i++)
+			if (!Character.isLowerCase(text.charAt(i)))
+				return false;
+		return true;
 	}
+
+	public static boolean isPHPCommentState(final String type) {
+		return type == null ? false : isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || type == PHP_HEREDOC_TAG || isPHPDocState(type);
+	}
+
+	public static boolean isPHPDocState(final String type) {
+		return type == null ? false : type.startsWith("PHPDOC");
+	}
+
+	public static boolean isPHPLineCommentState(final String type) {
+		return type == PHP_LINE_COMMENT;
+	}
+
+	public static boolean isPHPMultiLineCommentState(final String type) {
+		return type == PHP_COMMENT || type == PHPRegionTypes.PHP_COMMENT_START || type == PHPRegionTypes.PHP_COMMENT_END;
+	}
+
+	public static boolean isPHPQuotesState(final String type) {
+		return type == PHP_CONSTANT_ENCAPSED_STRING || type == PHP_HEREDOC_TAG;
+	}
+
+	public static final boolean isPHPRegularState(final String type) {
+		return !isPHPCommentState(type) && !isPHPQuotesState(type);
+	}
+
+	protected boolean asp_tags = true;
+
+	protected int defaultReturnValue = -1;
 
 	//    public static final boolean isPHPRegularState(int state) {
 	//        return !isPHPCommentState(state) && !isPHPQuotesState(state);
@@ -76,33 +217,14 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	//                state == ST_PHP_BACKQUOTE;
 	//    }
 
-	protected int defaultReturnValue = -1;
-
 	protected int firstPos = -1; // the first position in the array
-	protected int heredoc_len = 0;
-	protected String heredoc = null;
-	protected boolean asp_tags = true;
 
+	protected String heredoc = null;
+	protected int heredoc_len = 0;
 	protected StateStack phpStack;
 
-	public void initialize(int state) {
-		phpStack = new StateStack();
-		beginState(state);
-	}
-
-	protected void beginState(int state) {
+	protected void beginState(final int state) {
 		yybegin(state);
-	}
-
-	protected void pushState(int state) {
-		//System.out.println("pushState");
-		phpStack.pushStack(getYy_lexical_state());
-		yybegin(state);
-	}
-
-	protected void popState() {
-		//System.out.println("popState");
-		yybegin(phpStack.popStack());
 	}
 
 	/**
@@ -111,207 +233,35 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	private int buildStateKey() {
 		int rv = getYy_lexical_state();
 
-		for (int i = 0; i < phpStack.size(); i++) {
+		for (int i = 0; i < phpStack.size(); i++)
 			rv = 31 * rv + phpStack.get(i);
-		}
-		if (heredoc != null) {
-			for (int i = 0; i < heredoc.length(); i++) {
+		if (heredoc != null)
+			for (int i = 0; i < heredoc.length(); i++)
 				rv = 31 * rv + heredoc.charAt(i);
-			}
-		}
 		return rv;
 	}
 
-	private class BasicLexerState implements LexerState {
-
-		private StateStack phpStack;
-		private byte lexicalState = (byte) getYy_lexical_state();
-
-		public BasicLexerState() {
-			if (!PhpLexer.this.phpStack.isEmpty()) {
-				this.phpStack = PhpLexer.this.phpStack.createClone();
-			}
-		}
-
-		public boolean equals(Object o) {
-			if (o == this) {
-				return true;
-			}
-			if (o == null) {
-				return false;
-			}
-			if (!(o instanceof BasicLexerState)) {
-				return false;
-			}
-			BasicLexerState tmp = (BasicLexerState) o;
-			if (tmp.lexicalState != this.lexicalState) {
-				return false;
-			}
-			if (this.phpStack != null && !this.phpStack.equals(tmp.phpStack)) {
-				return false;
-			}
-			return this.phpStack == tmp.phpStack;
-		}
-
-		public boolean equalsTop(LexerState obj) {
-			return obj != null && obj.getTopState() == lexicalState;
-		}
-
-		public boolean equalsCurrentStack(LexerState obj) {
-			if (obj == this) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof BasicLexerState)) {
-				return false;
-			}
-			BasicLexerState tmp = (BasicLexerState) obj;
-			if (tmp.lexicalState != this.lexicalState) {
-				return false;
-			}
-			StateStack activeStack = getActiveStack();
-			StateStack otherActiveStack = tmp.getActiveStack();
-			if (!(activeStack == otherActiveStack || (activeStack != null && activeStack.equals(otherActiveStack)))) {
-				return false;
-			}
-			return true;
-		}
-
-		public int getTopState() {
-			return lexicalState;
-		}
-
-		protected StateStack getActiveStack() {
-			return this.phpStack;
-		}
-
-		public void restoreState(Scanner scanner) {
-			PhpLexer lexer = (PhpLexer) scanner;
-
-			if (this.phpStack == null) {
-				lexer.phpStack.clear();
-			} else {
-				lexer.phpStack.copyFrom(this.phpStack);
-			}
-
-			lexer.yybegin(this.lexicalState);
-		}
-
-		public boolean isSubstateOf(int state) {
-			if (lexicalState == state) {
-				return true;
-			}
-			StateStack activeStack = this.getActiveStack();
-			if (activeStack == null) {
-				return false;
-			}
-			return activeStack.contains(state);
-		}
-
-		public String toString() {
-			StateStack stack = getActiveStack();
-			String stackStr = (stack == null) ? "null" : stack.toString();
-			return "Stack: " + stackStr + ", currState: " + this.lexicalState;
-		}
-
-	}
-
-	private class HeredocState implements LexerState {
-		private String myHeredoc;
-		private BasicLexerState theState;
-
-		public HeredocState(BasicLexerState state) {
-			theState = state;
-			myHeredoc = PhpLexer.this.heredoc;
-		}
-
-		public boolean isSubstateOf(int state) {
-			return theState.isSubstateOf(state);
-		}
-
-		public void restoreState(Scanner scanner) {
-			PhpLexer lexer = (PhpLexer) scanner;
-			theState.restoreState(lexer);
-			lexer.heredoc = myHeredoc;
-			lexer.heredoc_len = myHeredoc.length();
-		}
-
-		public int getTopState() {
-			return theState.getTopState();
-		}
-
-		public boolean equalsCurrentStack(LexerState obj) {
-			if (obj == this) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof HeredocState)) {
-				return false;
-			}
-			return theState.equals(((HeredocState) obj).theState);
-		}
-
-		public boolean equalsTop(LexerState obj) {
-			return theState.equalsTop(obj);
-		}
-
-		public boolean equals(Object obj) {
-			return (obj != null && obj instanceof HeredocState && ((HeredocState) obj).theState.equals(theState) && ((HeredocState) obj).myHeredoc.equals(myHeredoc));
-		}
-
-	}
-
-	// A pool of states. To avoid creation of a new state on each createMemento.
-	private static IntHashtable lexerStates = new IntHashtable(100);
-
 	public Object createLexicalStateMemento() {
 		//System.out.println("lexerStates size:" + lexerStates.size());
-		int key = buildStateKey();
+		final int key = buildStateKey();
 		Object state = lexerStates.get(key);
 		if (state == null) {
 			state = new BasicLexerState();
-			if (getYy_lexical_state() == PhpLexer.ST_PHP_HEREDOC) {
+			if (getYy_lexical_state() == PhpLexer.ST_PHP_HEREDOC)
 				state = new HeredocState((BasicLexerState) state);
-			}
 			lexerStates.put(key, state);
 		}
 		return state;
 	}
 
+	public boolean getAspTags() {
+		return asp_tags;
+	}
+
 	// lex to the EOF. and return the ending state.
 	public Object getEndingState() throws IOException {
 		lexToEnd();
-		return this.createLexicalStateMemento();
-	}
-
-	// lex to the end of the stream.
-	public String lexToEnd() throws IOException {
-		String curr = this.yylex();
-		String last = curr;
-		while (curr != null) {
-			last = curr;
-			curr = yylex();
-		}
-		return last;
-	}
-
-	public String lexToTokenAt(int offset) throws IOException {
-		if (this.firstPos + offset < this.getYy_markedPos()) {
-			throw new RuntimeException("Bad offset");
-		}
-		String t = yylex();
-		while (this.getYy_markedPos() < this.firstPos + offset && t != null) {
-			t = yylex();
-		}
-		return t;
-	}
-
-	public int getMarkedPos() {
-		return this.getYy_markedPos();
+		return createLexicalStateMemento();
 	}
 
 	/**
@@ -321,30 +271,64 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 		return firstPos;
 	}
 
-	public void getText(int start, int length, Segment s) {
-		if (start + length > this.getYy_endRead()) {
+	public int getMarkedPos() {
+		return getYy_markedPos();
+	}
+
+	public abstract int[] getParamenters();
+
+	public void getText(final int start, final int length, final Segment s) {
+		if (start + length > getYy_endRead())
 			throw new RuntimeException("bad segment !!");
-		}
-		s.array = this.getYy_buffer();
+		s.array = getYy_buffer();
 		s.offset = start;
 		s.count = length;
 	}
 
-	/**
-	 * reset to a new segment. this do not change the state of the lexer.
-	 * This method is used to scan nore than one segment as if the are one segment.
-	 */
-
-	/**
-	 * reset to a new segment. this do not change the state of the lexer.
-	 * This method is used to scan nore than one segment as if the are one segment.
-	 */
-	public void reset(Segment s) {
-		reset(s.array, s.offset, s.count);
+	public int getTokenStart() {
+		return getYy_startRead() - getYy_pushBackPosition();
 	}
 
-	public void setState(Object state) {
-		((LexerState) state).restoreState(this);
+	protected abstract char[] getYy_buffer();
+
+	protected abstract int getYy_endRead();
+
+	protected abstract int getYy_lexical_state();
+
+	protected abstract int getYy_markedPos();
+
+	protected abstract int getYy_pushBackPosition();
+
+	protected abstract int getYy_startRead();
+
+	public void initialize(final int state) {
+		phpStack = new StateStack();
+		beginState(state);
+	}
+
+	/**
+	 * reset to a new segment. this do not change the state of the lexer.
+	 * This method is used to scan nore than one segment as if the are one segment.
+	 */
+
+	// lex to the end of the stream.
+	public String lexToEnd() throws IOException {
+		String curr = yylex();
+		String last = curr;
+		while (curr != null) {
+			last = curr;
+			curr = yylex();
+		}
+		return last;
+	}
+
+	public String lexToTokenAt(final int offset) throws IOException {
+		if (firstPos + offset < getYy_markedPos())
+			throw new RuntimeException("Bad offset");
+		String t = yylex();
+		while (getYy_markedPos() < firstPos + offset && t != null)
+			t = yylex();
+		return t;
 	}
 
 	/*
@@ -359,47 +343,38 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	 }
 	 */
 
-	public void setAspTags(boolean b) {
+	protected void popState() {
+		//System.out.println("popState");
+		yybegin(phpStack.popStack());
+	}
+
+	protected void pushState(final int state) {
+		//System.out.println("pushState");
+		phpStack.pushStack(getYy_lexical_state());
+		yybegin(state);
+	}
+
+	public abstract void reset(char array[], int offset, int length);
+
+	public abstract void reset(Reader reader, char[] buffer, int[] parameters);
+
+	/**
+	 * reset to a new segment. this do not change the state of the lexer.
+	 * This method is used to scan nore than one segment as if the are one segment.
+	 */
+	public void reset(final Segment s) {
+		reset(s.array, s.offset, s.count);
+	}
+
+	public void setAspTags(final boolean b) {
 		asp_tags = b;
 	}
 
-	public boolean getAspTags() {
-		return asp_tags;
+	public void setState(final Object state) {
+		((LexerState) state).restoreState(this);
 	}
 
-	protected static final boolean isLowerCase(String text) {
-		if (text == null) {
-			return false;
-		}
-		for (int i = 0; i < text.length(); i++) {
-			if (!Character.isLowerCase(text.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
+	public abstract void yybegin(int newState);
 
-	public static boolean isPHPQuotesState(String type) {
-		return type == PHP_CONSTANT_ENCAPSED_STRING;
-	}
-
-	public static boolean isPHPCommentState(String type) {
-		return type == null ? false : isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || type == PHP_HEREDOC_TAG || isPHPDocState(type);
-	}
-
-	public static boolean isPHPDocState(String type) {
-		return type == null ? false : type.startsWith("PHPDOC");
-	}
-
-	public static boolean isPHPMultiLineCommentState(String type) {
-		return type == PHP_COMMENT || type == PHPRegionTypes.PHP_COMMENT_START || type == PHPRegionTypes.PHP_COMMENT_END; 
-	}
-
-	public static boolean isPHPLineCommentState(String type) {
-		return type == PHP_LINE_COMMENT ;
-	}
-
-	public static final boolean isPHPRegularState(String type) {
-		return !isPHPCommentState(type) && !isPHPQuotesState(type);
-	}
+	public abstract int yylength();
 }

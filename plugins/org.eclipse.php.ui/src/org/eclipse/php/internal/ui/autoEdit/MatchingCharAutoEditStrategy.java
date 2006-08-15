@@ -46,15 +46,15 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 
 	protected static HTMLDocumentRegionEdgeMatcher matcher = new HTMLDocumentRegionEdgeMatcher();
 
-	protected boolean isClosingBracket(char c) {
-		return (c == ROUND_CLOSE) || (c == SQUARE_CLOSE) || (c == CURLY_CLOSE);
+	protected boolean isClosingBracket(final char c) {
+		return c == ROUND_CLOSE || c == SQUARE_CLOSE || c == CURLY_CLOSE;
 	}
 
-	protected boolean isQuote(char c) {
-		return (c == SINGLE_QOUTE) || (c == DOUBLE_QOUTES) || (c == BACK_QOUTE);
+	protected boolean isQuote(final char c) {
+		return c == SINGLE_QOUTE || c == DOUBLE_QOUTES || c == BACK_QOUTE;
 	}
 
-	protected static char getMatchingChar(char c) {
+	protected static char getMatchingChar(final char c) {
 		switch (c) {
 			case CURLY_OPEN:
 				return CURLY_CLOSE;
@@ -81,69 +81,64 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 	 * returns true if the offset in the document is not to the left of text
 	 * excluding php closing tag (?>) and comments  
 	 */
-	protected boolean shouldAddClosingBracket(IStructuredDocument document, int offset, boolean isQuote) throws BadLocationException {
-		if(document.getLength() == offset){ // if we're at the end of the document then we could add the bracket
+	protected boolean shouldAddClosingBracket(final IStructuredDocument document, final int offset, final boolean isQuote) throws BadLocationException {
+		if (document.getLength() == offset)
 			return true;
-		}
-		
-		char currChar = document.getChar(offset);
-		if (Character.isWhitespace(currChar) || isClosingBracket(currChar) || (isQuote && isQuote(currChar)) || currChar == ';') {
+
+		final char currChar = document.getChar(offset);
+		if (Character.isWhitespace(currChar) || isClosingBracket(currChar) || isQuote && isQuote(currChar) || currChar == ';')
 			return true;
-		}
-		if (offset + 1 >= document.getLength()) {
+		if (offset + 1 >= document.getLength())
 			return false;
-		}
-		char nextChar = document.getChar(offset + 1);
-		String state = FormatterUtils.getPartitionType(document, offset);
+		final char nextChar = document.getChar(offset + 1);
+		final String state = FormatterUtils.getPartitionType(document, offset);
 
-		if (state == PHPPartitionTypes.PHP_DEFAULT || state == PHPRegionTypes.PHP_OPENTAG || state == PHPRegionTypes.PHP_CLOSETAG) {
-			if (currChar == '?' && nextChar == '>') {
-				return true;
-			}
-			if (currChar == '<' && nextChar == '<') { // checking for heredoc
-				int position = offset + 2;
-				while (position < document.getLength()) {
-					char c = document.getChar(position);
-					if (Character.isWhitespace(c)) {
-						if (position + 1 == document.getLength()) { // if its the end of the text then its ok
-							return true;
-						}
-						//                        TODO add support in heredoc state
-						//                        String state1 = FormatterUtils.getPartitionType(document, position + 1);
-						//                        if (state1 == PhpLexer.ST_PHP_HEREDOC) {
-						//                            return true;
-						//                        }
-						break;
-					}
-					position++;
-				}
-			}
-		}
-
-		if (currChar == '/' && (nextChar == '/' || nextChar == '*')) {
+		if (state == PHPPartitionTypes.PHP_DEFAULT || state == PHPRegionTypes.PHP_OPENTAG || state == PHPRegionTypes.PHP_CLOSETAG)
+			// should work everywhere:
 			return true;
-		}
+		/*			if (currChar == '?' && nextChar == '>') {
+		 return true;
+		 }
+		 if (currChar == '<' && nextChar == '<') { // checking for heredoc
+		 //				return true;
+		 int position = offset + 2;
+		 while (position < document.getLength()) {
+		 char c = document.getChar(position);
+		 if (Character.isWhitespace(c)) {
+		 if (position + 1 == document.getLength()) { // if its the end of the text then its ok
+		 return true;
+		 }
+		 //                        TO_DO add support in heredoc state
+		 //                        String state1 = FormatterUtils.getPartitionType(document, position + 1);
+		 //                        if (state1 == PhpLexer.ST_PHP_HEREDOC) {
+		 //                            return true;
+		 //                        }
+		 break;
+		 }
+		 position++;
+		 }
+		 }
+		 */
+
+		if (currChar == '/' && (nextChar == '/' || nextChar == '*'))
+			return true;
 		return false;
 	}
 
-	protected static boolean isSpecialOpenCurlyInQuotes(IStructuredDocument document, int offset) throws BadLocationException {
-		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
-		if (sdRegion == null) {
+	protected static boolean isSpecialOpenCurlyInQuotes(final IStructuredDocument document, final int offset) throws BadLocationException {
+		final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+		if (sdRegion == null)
 			return false;
-
-		}
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		final ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		// TODO need to support heredoc also
-		if (tRegion.getType() != PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE) {
+		if (tRegion.getType() != PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE)
 			return false;
-		}
 
-		char firstChar = document.getChar(sdRegion.getStartOffset() + tRegion.getStart());
-		if (firstChar != DOUBLE_QOUTES && firstChar != BACK_QOUTE) {
+		final char firstChar = document.getChar(sdRegion.getStartOffset() + tRegion.getStart());
+		if (firstChar != DOUBLE_QOUTES && firstChar != BACK_QOUTE)
 			return false;
-		}
 
-		char bracketChar = document.getChar(offset + 1);
+		final char bracketChar = document.getChar(offset + 1);
 		return bracketChar == '$';
 	}
 
