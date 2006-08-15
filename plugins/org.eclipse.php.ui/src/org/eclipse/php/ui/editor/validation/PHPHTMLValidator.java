@@ -40,9 +40,9 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 public class PHPHTMLValidator extends HTMLValidator {
 
 	private IDocument fDocument;
-	
+
 	public PHPHTMLValidator() {
-		
+
 	}
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
@@ -59,52 +59,53 @@ public class PHPHTMLValidator extends HTMLValidator {
 		if (type.equals(IHTMLPartitions.HTML_DEFAULT)) {
 			super.validate(dirtyRegion, helper, reporter);
 			return;
-		} else if (!type.equals(PHPPartitionTypes.PHP_DEFAULT) && !type.equals(PHPPartitionTypes.PHP_QUOTED_STRING)) {
+		} else if (!isPHPPartition(type)) {
 			return;
 		}
 
-        IStructuredModel structuredModel = null;
-        try {
-    		structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-    		if (structuredModel == null) {
-    			return; // error
-    		}
-    		PHPEditorModel model = (PHPEditorModel) structuredModel;
-    
-    		//@GINO: Updata the FileData because the content has changed
-    		//this might not be the best way to do this
-    		if (!PHPEditorModel.FREQUENT_MODEL_UPDATE)
-    			model.updateFileData();
-    
-    		PHPFileData fileData = model.getFileData();
-    		if (fileData == null) {
-    			return;
-    		}
-    
-    		reporter.removeAllMessages(this);
-    		IPHPMarker[] markers = fileData.getMarkers();
-    
-    		if (markers == null) {
-    			return;
-    		}
-    		for (int i = 0; markers.length > i; i++) {
-    			IPHPMarker marker = markers[i];
-    			if(marker.getType().equals(IPHPMarker.TASK)){
-    				continue;
-    			}
-    			String descr = marker.getDescription();
-    			LocalizedMessage mess = new LocalizedMessage(IMessage.HIGH_SEVERITY, descr);
-    			UserData userData = marker.getUserData();
-    			
-    			final int startPosition = userData.getStartPosition();
-    			final int length = userData.getEndPosition() - startPosition;
+		IStructuredModel structuredModel = null;
+		try {
+			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+			if (structuredModel == null) {
+				return; // error
+			}
+			PHPEditorModel model = (PHPEditorModel) structuredModel;
 
-    			mess.setOffset(startPosition);
+			//@GINO: Updata the FileData because the content has changed
+			//this might not be the best way to do this
+			if (!PHPEditorModel.FREQUENT_MODEL_UPDATE)
+				model.updateFileData();
+
+			PHPFileData fileData = model.getFileData();
+			if (fileData == null) {
+				return;
+			}
+
+			reporter.removeAllMessages(this);
+			IPHPMarker[] markers = fileData.getMarkers();
+
+			if (markers == null) {
+				return;
+			}
+			for (int i = 0; markers.length > i; i++) {
+				IPHPMarker marker = markers[i];
+				if (marker.getType().equals(IPHPMarker.TASK)) {
+					continue;
+				}
+				String descr = marker.getDescription();
+				LocalizedMessage mess = new LocalizedMessage(IMessage.HIGH_SEVERITY, descr);
+				UserData userData = marker.getUserData();
+
+				final int startPosition = userData.getStartPosition();
+				final int length = userData.getEndPosition() - startPosition;
+
+				mess.setOffset(startPosition);
 				mess.setLength(length);
-    			reporter.addMessage(this, mess);
-    		}
+				reporter.addMessage(this, mess);
+			}
 		} finally {
-			if (structuredModel != null)structuredModel.releaseFromRead();
+			if (structuredModel != null)
+				structuredModel.releaseFromRead();
 		}
 
 	}
@@ -122,5 +123,12 @@ public class PHPHTMLValidator extends HTMLValidator {
 		if (document == fDocument) {
 			fDocument = null;
 		}
+	}
+
+	private boolean isPHPPartition(String type) {
+		if (type == null || type == "") {
+			return false;
+		}
+		return ((type.equals(PHPPartitionTypes.PHP_DEFAULT)) || (type.equals(PHPPartitionTypes.PHP_DOC)) || (type.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)) || (type.equals(PHPPartitionTypes.PHP_QUOTED_STRING)) || (type.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)));
 	}
 }
