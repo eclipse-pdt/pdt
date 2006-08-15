@@ -128,6 +128,7 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 
 		// Strings
 		fColorTypes.put(PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING, PreferenceConstants.EDITOR_STRING_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE, PreferenceConstants.EDITOR_STRING_COLOR);
 
 		// Comments
 		fColorTypes.put(PHPRegionTypes.PHP_COMMENT, PreferenceConstants.EDITOR_COMMENT_COLOR);
