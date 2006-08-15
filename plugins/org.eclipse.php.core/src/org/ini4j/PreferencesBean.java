@@ -15,12 +15,12 @@
  */
 package org.ini4j;
 
-import java.lang.reflect.*;
-import java.util.prefs.*;
+import java.lang.reflect.Proxy;
+import java.util.prefs.Preferences;
 
 public class PreferencesBean {
 	public static/*<T> T*/Object newInstance(final Class/*<T>*/clazz, final Preferences prefs) {
-		return clazz.cast(Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] { clazz }, new AbstractBeanInvocationHandler() {
+		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] { clazz }, new AbstractBeanInvocationHandler() {
 			protected Object getPropertySpi(final String property, final Class/*<?>*/clazz) {
 				return prefs.get(property, null);
 			}
@@ -32,6 +32,6 @@ public class PreferencesBean {
 			protected void setPropertySpi(final String property, final Object value, final Class/*<?>*/clazz) {
 				prefs.put(property, value.toString());
 			}
-		}));
+		});
 	}
 }

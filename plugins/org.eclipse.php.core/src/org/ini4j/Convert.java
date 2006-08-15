@@ -19,7 +19,7 @@ package org.ini4j;
 class Convert {
 	protected static String escape(final String line) {
 		final int len = line.length();
-		final StringBuilder buffer = new StringBuilder(len * 2);
+		final StringBuffer buffer = new StringBuffer(len * 2);
 
 		for (int i = 0; i < len; i++) {
 			final char c = line.charAt(i);
@@ -39,7 +39,7 @@ class Convert {
 
 	protected static String unescape(final String line) {
 		final int n = line.length();
-		final StringBuilder buffer = new StringBuilder(n);
+		final StringBuffer buffer = new StringBuffer(n);
 
 		for (int i = 0; i < n;) {
 			char c = line.charAt(i++);

@@ -115,7 +115,7 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 			String value = (String) get(key);
 
 			if (value != null && value.indexOf(SUBST_CHAR) >= 0) {
-				final StringBuilder buffer = new StringBuilder(value);
+				final StringBuffer buffer = new StringBuffer(value);
 				resolve(buffer, this);
 				value = buffer.toString();
 			}
@@ -139,8 +139,8 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 				bean = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { clazz }, new BeanInvocationHandler());
 				_beans.put(clazz, bean);
 			}
-
-			return clazz.cast(bean);
+			return bean;
+			//			return clazz.cast(bean);
 		}
 	}
 
@@ -225,7 +225,7 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 		return (Section) remove(section.getName());
 	}
 
-	protected void resolve(final StringBuilder buffer, Section owner) {
+	protected void resolve(final StringBuffer buffer, Section owner) {
 		int begin = -1;
 		int end = -1;
 
@@ -374,8 +374,8 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 			bean = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { clazz }, new BeanInvocationHandler());
 			_beans.put(clazz, bean);
 		}
-
-		return clazz.cast(bean);
+		return bean;
+		//		return clazz.cast(bean);
 	}
 
 }
