@@ -120,7 +120,7 @@ public class CodeDataResolver {
 			return tmp;
 		}
 
-		if (isPHPSingleQuote(sdRegion, textRegion) || (!type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && PhpLexer.isPHPCommentState(type))) {
+		if (isPHPSingleQuote(sdRegion, textRegion) || PhpLexer.isPHPCommentState(type)) {
 			// we dont have code completion inside single quotes.
 			return null;
 		}

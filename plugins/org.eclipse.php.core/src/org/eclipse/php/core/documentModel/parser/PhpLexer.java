@@ -173,7 +173,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	}
 
 	public static boolean isPHPCommentState(final String type) {
-		return type == null ? false : isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || type == PHP_HEREDOC_TAG || isPHPDocState(type);
+		return type == null ? false : isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || isPHPDocState(type);
 	}
 
 	public static boolean isPHPDocState(final String type) {
