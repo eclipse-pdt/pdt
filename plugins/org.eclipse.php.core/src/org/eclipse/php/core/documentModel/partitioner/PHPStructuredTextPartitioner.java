@@ -40,7 +40,7 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 	public ITypedRegion getPartition(int offset, boolean preferOpenPartitions) {
 		ITypedRegion region = getPartition(offset);
 		ITypedRegion newRegion;
-		if (preferOpenPartitions) {
+		if (isPHPPartitionType(region.getType()) && preferOpenPartitions) { //if its not in php partition then its not relevate to go back
 			if (region.getOffset() == offset) {
 				if (offset > 0) {
 					newRegion = getPartition(offset - 1);
