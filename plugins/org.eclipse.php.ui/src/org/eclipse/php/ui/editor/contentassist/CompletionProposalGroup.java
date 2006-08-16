@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor.contentassist;
 
+import java.util.ArrayList;
+
 import org.eclipse.php.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 
@@ -27,13 +29,25 @@ public abstract class CompletionProposalGroup {
 		setOffset(0);
 	}
 
-	public void setData(int offset, CodeData[] data, String key, int selectionLength) {
+	public void setData(int offset, CodeData[] data, String key, int selectionLength, boolean isKeyStrict) {
 		setOffset(offset);
+		if(isKeyStrict) {
+			ArrayList strictData = new ArrayList(1);
+			for(int i = 0; i < data.length;  ++i)
+				if(key.equalsIgnoreCase(data[i].getName())) {
+					strictData.add(data[i]);
+				}
+			data = (CodeData[]) strictData.toArray(new CodeData[strictData.size()]);
+		}
 		setCodeDataProposals(data);
 		this.key = key;
 		this.selectionLength = selectionLength;
 	}
-
+	
+	public void setData(int offset, CodeData[] data, String key, int selectionLength) {
+		setData(offset, data, key, selectionLength, false);
+	}
+	
 	public int getOffset() {
 		return offset;
 	}

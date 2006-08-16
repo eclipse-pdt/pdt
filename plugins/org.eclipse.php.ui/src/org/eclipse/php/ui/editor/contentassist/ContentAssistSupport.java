@@ -152,6 +152,11 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void calcCompletionOption(PHPEditorModel editorModel, int offset, ITextViewer viewer) throws BadLocationException {
+		
+		final int originalOffset = viewer.getSelectedRange().x;
+		final boolean isStrict = originalOffset != offset ? true : false;
+
+
 		PHPFileData fileData = editorModel.getFileData();
 		if (fileData == null) {
 			return;
@@ -173,7 +178,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		if (textRegion == null)
 			return;
-		
+
 		if (textRegion.getType() == PHPRegionTypes.PHP_CLOSETAG) { // dont provide completion if staying after PHP close tag.
 			return;
 		}
@@ -237,7 +242,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		int line = sdRegion.getParentDocument().getLineOfOffset(offset);
-		if (isClassFunctionCompletion(projectModel, fileName, statmentText, offset, line, selectionLength, lastWord, startPosition, haveSpacesAtEnd, explicit)) {
+		if (isClassFunctionCompletion(projectModel, fileName, statmentText, offset, line, selectionLength, lastWord, startPosition, haveSpacesAtEnd, explicit, isStrict)) {
 			// the current position is in class function.
 			return;
 		}
@@ -262,9 +267,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		if (haveSpacesAtEnd) {
-			getRegularCompletion(viewer, projectModel, fileName, "", offset, selectionLength, explicit, sdRegion, textRegion);
+			getRegularCompletion(viewer, projectModel, fileName, "", offset, selectionLength, explicit, sdRegion, textRegion, isStrict);
 		} else {
-			getRegularCompletion(viewer, projectModel, fileName, lastWord, offset, selectionLength, explicit, sdRegion, textRegion);
+			getRegularCompletion(viewer, projectModel, fileName, lastWord, offset, selectionLength, explicit, sdRegion, textRegion, isStrict);
 		}
 
 		return;
@@ -320,38 +325,39 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return true;
 	}
 
-	private void getRegularCompletion(ITextViewer viewer, PHPProjectModel projectModel, String fileName, String startsWith, int offset, int selectionLength, boolean explicit, IStructuredDocumentRegion sdRegion, ITextRegion tRegion) {
-		if (!explicit && startsWith.length() == 0) {
+	private void getRegularCompletion(final ITextViewer viewer, final PHPProjectModel projectModel, final String fileName, String startsWith, final int offset, final int selectionLength, boolean explicit, final IStructuredDocumentRegion sdRegion, final ITextRegion tRegion, boolean isStrict) {
+		if (!explicit && startsWith.length() == 0)
 			return;
-		}
-		String type = tRegion.getType();
+
+		final String type = tRegion.getType();
+
+		ArrayList strictCodes;
+
 		if (startsWith.startsWith("$")) {
-			if (!explicit && !autoShowVariables) {
+			if (!explicit && !autoShowVariables)
 				return;
-			}
 			if (PhpLexer.isPHPQuotesState(type)) {
-				IStructuredDocument doc = sdRegion.getParentDocument();
+				final IStructuredDocument doc = sdRegion.getParentDocument();
 				try {
-					char charBefore = doc.get(offset - 2, 1).charAt(0);
-					if (charBefore == '\\') {
+					final char charBefore = doc.get(offset - 2, 1).charAt(0);
+					if (charBefore == '\\')
 						return;
-					}
-				} catch (BadLocationException badLocationException) {
+				} catch (final BadLocationException badLocationException) {
 					Logger.logException(badLocationException);
 				}
 			}
-			PHPCodeContext context = getContext(projectModel, fileName, offset - startsWith.length());
+			final PHPCodeContext context = getContext(projectModel, fileName, offset - startsWith.length());
 
 			startsWith = startsWith.substring(1);
 			CodeData[] variables = projectModel.getVariables(fileName, context, startsWith, showVariablesFromOtherFiles);
 			completionProposalGroup = phpCompletionProposalGroup;
-			completionProposalGroup.setData(offset, variables, startsWith, selectionLength);
+			completionProposalGroup.setData(offset, variables, startsWith, selectionLength, isStrict);
 			return;
 		}
 
-		if (PhpLexer.isPHPQuotesState(type) || (type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(tRegion) + tRegion.getLength() <= offset)) {
+		if (PhpLexer.isPHPQuotesState(type) || type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(tRegion) + tRegion.getLength() <= offset) {
 			completionProposalGroup = regularPHPCompletionProposalGroup;
-			completionProposalGroup.setData(offset, null, startsWith, selectionLength);
+			completionProposalGroup.setData(offset, null, startsWith, selectionLength, isStrict);
 			return;
 		}
 
@@ -360,34 +366,30 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] keywords = null;
 
 		if (explicit || autoShowFunctionsKeywordsConstants) {
-			if (startsWith.length() == 0) {
+			if (startsWith.length() == 0)
 				functions = projectModel.getFunctions();
-			} else {
+			else {
 				functions = projectModel.getFunctions(startsWith);
 			}
 
-			if (!disableConstants) {
-				if (startsWith.length() == 0) {
+			if (!disableConstants)
+				if (startsWith.length() == 0)
 					constans = projectModel.getConstants();
-				} else {
+				else {
 					constans = projectModel.getConstants(startsWith, constantCaseSensitive);
 				}
-			}
 
 			keywords = projectModel.getKeywordData();
 		}
 
 		CodeData[] classes = null;
-		if (showClassNamesInGlobalList) {
-			if (explicit || autoShowClassNames) {
+		if (showClassNamesInGlobalList)
+			if (explicit || autoShowClassNames)
 				classes = projectModel.getClasses();
-			}
-		}
 
 		CodeData[] mergeData = null;
-		if (shouldAddPHPTag(sdRegion.getParentDocument(), offset, startsWith)) {
+		if (shouldAddPHPTag(sdRegion.getParentDocument(), offset, startsWith))
 			mergeData = phpTagDataArray;
-		}
 
 		mergeData = ModelSupport.merge(keywords, mergeData);
 		mergeData = ModelSupport.merge(classes, mergeData);
@@ -395,7 +397,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		mergeData = ModelSupport.merge(functions, mergeData);
 
 		completionProposalGroup = regularPHPCompletionProposalGroup;
-		completionProposalGroup.setData(offset, mergeData, startsWith, selectionLength);
+		completionProposalGroup.setData(offset, mergeData, startsWith, selectionLength, isStrict);
 
 		templateProposals = getTemplates(viewer, offset);
 
@@ -424,7 +426,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	}
 
-	private boolean isClassFunctionCompletion(PHPProjectModel projectModel, String fileName, TextSequence statmentText, int offset, int line, int selectionLength, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd, boolean explicit) {
+	private boolean isClassFunctionCompletion(PHPProjectModel projectModel, String fileName, TextSequence statmentText, int offset, int line, int selectionLength, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd, boolean explicit, boolean isStrict) {
 		startFunctionPosition = PHPTextSequenceUtilities.readBackwardSpaces(statmentText, startFunctionPosition);
 		if (startFunctionPosition <= 2) {
 			return false;
@@ -456,7 +458,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			boolean isInstanceOf = !parent.equals("$this");
 			//boolean addVariableDollar = parent.endsWith("()");
 			boolean addVariableDollar = false;
-			showClassCall(projectModel, fileName, offset, className, functionName, selectionLength, isInstanceOf, addVariableDollar, explicit);
+			showClassCall(projectModel, fileName, offset, className, functionName, selectionLength, isInstanceOf, addVariableDollar, explicit, isStrict);
 		}
 		return true;
 	}
@@ -642,10 +644,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return rv;
 	}
 
-	protected void showClassCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean isInstanceOf, boolean addVariableDollar, boolean explicit) {
+	protected void showClassCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean isInstanceOf, boolean addVariableDollar, boolean explicit, boolean isStrict) {
 		CodeData[] functions = null;
 		if (explicit || autoShowFunctionsKeywordsConstants) {
-			functions = projectModel.getClassFunctions(fileName, className, "");
+			functions = projectModel.getClassFunctions(fileName, className, startWith.length() == 0 ? "" : startWith);
 		}
 		CodeData[] classVariables = null;
 		if (explicit || autoShowVariables) {
@@ -658,7 +660,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		} else {
 			completionProposalGroup = phpCompletionProposalGroup;
 		}
-		completionProposalGroup.setData(offset, result, startWith, selectionLength);
+		completionProposalGroup.setData(offset, result, startWith, selectionLength, isStrict);
 	}
 
 	private void showClassStaticCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean explicit) {
