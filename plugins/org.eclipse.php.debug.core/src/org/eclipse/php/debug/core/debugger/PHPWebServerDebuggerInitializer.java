@@ -25,18 +25,21 @@ import org.eclipse.php.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * A debug session initializer.
  */
 public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
-
+	private DebugException exception;
+	
 	public void debug(ILaunch launch) throws DebugException {
+		exception = null;
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
 		String encodedURL = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
 		encodedURL = encodedURL.replaceAll(" ", "%20");
-		String debugQuery = encodedURL + "?" + parametersInitializer.generateQuery(launch);
+		final String debugQuery = encodedURL + "?" + parametersInitializer.generateQuery(launch);
 		boolean openInBrowser = false;
 		try {
 			openInBrowser = launch.getLaunchConfiguration().getAttribute(IPHPConstants.OPEN_IN_BROWSER, false);
@@ -46,12 +49,20 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		if (openInBrowser) {
 			// Start the debug session by openning a browser that will actually trigger the URL connection
 			// to the debug server.
-			try {
-				PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null).openURL(new URL(debugQuery));
-			} catch (Throwable t) {
-				Logger.logException("Error initializing the web browser.", t);
-				String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
-				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, t));
+			
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					try {
+						PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null).openURL(new URL(debugQuery));
+					} catch (Throwable t) {
+						Logger.logException("Error initializing the web browser.", t);
+						String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
+						exception = new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, t));
+					}
+				}
+			});
+			if (exception != null) {
+				throw exception;
 			}
 		} else {
 			try {
