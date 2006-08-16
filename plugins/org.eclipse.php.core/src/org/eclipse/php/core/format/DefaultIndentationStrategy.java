@@ -21,129 +21,34 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class DefaultIndentationStrategy implements IIndentationStrategy {
 
-	public void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int forOffset) throws BadLocationException {
-		int lastNonEmptyLineIndex = getIndentationBaseLine(document, lineNumber, forOffset);
-		IRegion lastNonEmptyLine = document.getLineInformation(lastNonEmptyLineIndex);
-		String blanks = FormatterUtils.getLineBlanks(document, lastNonEmptyLine);
-		result.append(blanks);
-
-		int lastLineEndOffset = lastNonEmptyLine.getOffset() + lastNonEmptyLine.getLength();
-		int offset;
-		int line;
-		if (forOffset < lastLineEndOffset) {
-			offset = forOffset;
-			line = lineNumber;
-		} else {
-			offset = lastLineEndOffset;
-			line = lastNonEmptyLineIndex;
-		}
-		if (shouldIndent(document, offset, line)) {
-			int indentationSize = FormatPreferencesSupport.getInstance().getIndentationSize(document);
-			char indentationChar = FormatPreferencesSupport.getInstance().getIndentationChar(document);
-			for (int i = 0; i < indentationSize; i++) {
-				result.append(indentationChar);
-			}
-		}
+	/**
+	 * Check if the line contains any non blank chars.
+	 */
+	protected static boolean isBlanks(final IStructuredDocument document, final int startOffset, final int endOffset, final int currentOffset) throws BadLocationException {
+		return document.get(startOffset, endOffset - startOffset).trim().length() == 0 || document.get(startOffset, currentOffset - startOffset).trim().length() == 0;
 	}
 
-	private int getIndentationBaseLine(IStructuredDocument document, int lineNumber, int offset) throws BadLocationException {
+	private int getIndentationBaseLine(final IStructuredDocument document, final int lineNumber, final int offset) throws BadLocationException {
 		int currLineIndex = lineNumber;
 		while (currLineIndex >= 0) {
-			IRegion lineInfo = document.getLineInformation(currLineIndex);
+			final IRegion lineInfo = document.getLineInformation(currLineIndex);
 			if (lineInfo.getLength() == 0) {
 				//then its not indentation base for sure
 				currLineIndex--;
 				continue;
 			}
-			int currLineEndOffset = lineInfo.getOffset() + lineInfo.getLength();
-			boolean isIndentationBase = isIndentationBase(document, Math.min(offset, currLineEndOffset), offset);
-			if (isIndentationBase) {
+			final int currLineEndOffset = lineInfo.getOffset() + lineInfo.getLength();
+			final boolean isIndentationBase = isIndentationBase(document, Math.min(offset, currLineEndOffset), offset);
+			if (isIndentationBase)
 				return currLineIndex;
-			}
 			currLineIndex--;
 		}
 		return 0;
 	}
 
-	private boolean isIndentationBase(IStructuredDocument document, int checkedOffset, int forOffset) throws BadLocationException {
-		IRegion lineInfo = document.getLineInformationOfOffset(checkedOffset);
-		int lineStart = lineInfo.getOffset();
+	protected int getLastTokenOffset(final IStructuredDocument document, final IRegion line, final int forOffset) {
 
-		if (isBlanks(document, lineStart, checkedOffset, forOffset)) {
-			return false;
-		}
-
-		//need to get to the first tRegion - so that we wont get the state of the 
-		//tRegion in the previos line
-		while (Character.isWhitespace(document.getChar(lineStart))) {
-			lineStart++;
-		}
-
-		String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineStart);
-
-		String checkedLineEndState = FormatterUtils.getPartitionType(document, checkedOffset);
-
-		String forLineEndState = FormatterUtils.getPartitionType(document, forOffset);
-
-		if (shouldNotConsiderAsIndentationBase(checkedLineBeginState, forLineEndState)) {
-			return false;
-		}
-
-		return (lineShouldInedent(checkedLineBeginState, checkedLineEndState) || (forLineEndState == checkedLineBeginState));
-	}
-
-	boolean shouldIndent(IStructuredDocument document, int offset, int lineNumber) {
-		try {
-			IRegion lineInfo = document.getLineInformation(lineNumber);
-			int lastTokenOffset = getLastTokenOffset(document, lineInfo, offset);
-			if (lastTokenOffset == -1) {
-				return false;
-			}
-			
-			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lastTokenOffset);
-			ITextRegion token = sdRegion.getRegionAtCharacterOffset(lastTokenOffset);
-			String tokenType = token.getType();
-			
-			if (tokenType == PHPRegionTypes.PHP_CURLY_OPEN) {
-				return true;
-			}
-
-			if (tokenType == PHPRegionTypes.PHP_TOKEN && document.getChar(sdRegion.getStartOffset() + token.getStart()) == ':') {
-				//checking if the line starts with "case" or "default"
-				int currentOffset = sdRegion.getStartOffset() + token.getStart() - 1;
-				while (currentOffset >= lineInfo.getOffset()) {
-					token = sdRegion.getRegionAtCharacterOffset(currentOffset);
-					tokenType = token.getType();
-					if ((tokenType == PHPRegionTypes.PHP_CASE) || (tokenType == PHPRegionTypes.PHP_DEFAULT)) {
-						return true;
-					}
-					currentOffset = sdRegion.getStartOffset() + token.getStart() - 1;
-				}
-
-			}
-		} catch (BadLocationException e) {
-		}
-		return false;
-	}
-
-	boolean shouldNotConsiderAsIndentationBase(String currentState, String forState) {
-		return (currentState != forState) && (currentState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || currentState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || currentState == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT || currentState == PHPPartitionTypes.PHP_DOC || currentState == PHPPartitionTypes.PHP_QUOTED_STRING);
-	}
-
-	boolean lineShouldInedent(String beginState, String endState) {
-		return (beginState == PHPPartitionTypes.PHP_DEFAULT || endState == PHPPartitionTypes.PHP_DEFAULT);
-	}
-
-	/**
-	 * Check if the line contains any non blank chars.
-	 */
-	protected static boolean isBlanks(IStructuredDocument document, int startOffset, int endOffset, int currentOffset) throws BadLocationException {
-		return document.get(startOffset, endOffset - startOffset).trim().length() == 0 || document.get(startOffset, currentOffset - startOffset).trim().length() == 0;
-	}
-
-	protected int getLastTokenOffset(IStructuredDocument document, IRegion line, int forOffset) {
-
-		int startOffset = line.getOffset();
+		final int startOffset = line.getOffset();
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(forOffset);
 		int regionStartOffset = sdRegion.getStartOffset();
 		int offset = forOffset;
@@ -163,20 +68,105 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				}
 				return -1;
 			}
-			if (tRegion.getStart() + regionStartOffset < startOffset) {
+			if (tRegion.getStart() + regionStartOffset < startOffset)
 				//if the tRegion started before the line was then the first char in this line was a whitespace 
 				return -1;
-			}
 			if (tRegion.getTextEnd() + regionStartOffset > forOffset) {
 				offset = tRegion.getStart() + regionStartOffset - 1;
 				continue;
 			}
-			if (!PhpLexer.isPHPCommentState(tRegion.getType()) && tRegion.getType() != PHPRegionTypes.WHITESPACE) {
+			if (!PhpLexer.isPHPCommentState(tRegion.getType()) && tRegion.getType() != PHPRegionTypes.WHITESPACE)
 				return sdRegion.getStartOffset(tRegion);
-			}
 			offset = tRegion.getStart() + regionStartOffset - 1;
 		}
 		return -1;
+	}
+
+	private boolean isIndentationBase(final IStructuredDocument document, final int checkedOffset, final int forOffset) throws BadLocationException {
+		final IRegion lineInfo = document.getLineInformationOfOffset(checkedOffset);
+		int lineStart = lineInfo.getOffset();
+
+		if (isBlanks(document, lineStart, checkedOffset, forOffset))
+			return false;
+
+		//need to get to the first tRegion - so that we wont get the state of the 
+		//tRegion in the previos line
+		while (Character.isWhitespace(document.getChar(lineStart)))
+			lineStart++;
+
+		final String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineStart, true);
+
+		final String checkedLineEndState = FormatterUtils.getPartitionType(document, checkedOffset, true);
+
+		final String forLineEndState = FormatterUtils.getPartitionType(document, forOffset);
+
+		if (shouldNotConsiderAsIndentationBase(checkedLineBeginState, forLineEndState))
+			return false;
+
+		return lineShouldInedent(checkedLineBeginState, checkedLineEndState) || forLineEndState == checkedLineBeginState;
+	}
+
+	boolean lineShouldInedent(final String beginState, final String endState) {
+		return beginState == PHPPartitionTypes.PHP_DEFAULT || endState == PHPPartitionTypes.PHP_DEFAULT;
+	}
+
+	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuffer result, final int lineNumber, final int forOffset) throws BadLocationException {
+		final int lastNonEmptyLineIndex = getIndentationBaseLine(document, lineNumber, forOffset);
+		final IRegion lastNonEmptyLine = document.getLineInformation(lastNonEmptyLineIndex);
+		final String blanks = FormatterUtils.getLineBlanks(document, lastNonEmptyLine);
+		result.append(blanks);
+
+		final int lastLineEndOffset = lastNonEmptyLine.getOffset() + lastNonEmptyLine.getLength();
+		int offset;
+		int line;
+		if (forOffset < lastLineEndOffset) {
+			offset = forOffset;
+			line = lineNumber;
+		} else {
+			offset = lastLineEndOffset;
+			line = lastNonEmptyLineIndex;
+		}
+		if (shouldIndent(document, offset, line)) {
+			final int indentationSize = FormatPreferencesSupport.getInstance().getIndentationSize(document);
+			final char indentationChar = FormatPreferencesSupport.getInstance().getIndentationChar(document);
+			for (int i = 0; i < indentationSize; i++)
+				result.append(indentationChar);
+		}
+	}
+
+	boolean shouldIndent(final IStructuredDocument document, final int offset, final int lineNumber) {
+		try {
+			final IRegion lineInfo = document.getLineInformation(lineNumber);
+			final int lastTokenOffset = getLastTokenOffset(document, lineInfo, offset);
+			if (lastTokenOffset == -1)
+				return false;
+
+			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lastTokenOffset);
+			ITextRegion token = sdRegion.getRegionAtCharacterOffset(lastTokenOffset);
+			String tokenType = token.getType();
+
+			if (tokenType == PHPRegionTypes.PHP_CURLY_OPEN)
+				return true;
+
+			if (tokenType == PHPRegionTypes.PHP_TOKEN && document.getChar(sdRegion.getStartOffset() + token.getStart()) == ':') {
+				//checking if the line starts with "case" or "default"
+				int currentOffset = sdRegion.getStartOffset() + token.getStart() - 1;
+				while (currentOffset >= lineInfo.getOffset()) {
+					token = sdRegion.getRegionAtCharacterOffset(currentOffset);
+					tokenType = token.getType();
+					if (tokenType == PHPRegionTypes.PHP_CASE || tokenType == PHPRegionTypes.PHP_DEFAULT)
+						return true;
+					currentOffset = sdRegion.getStartOffset() + token.getStart() - 1;
+				}
+
+			}
+		} catch (final BadLocationException e) {
+		}
+		return false;
+	}
+
+	boolean shouldNotConsiderAsIndentationBase(final String currentState, final String forState) {
+		return currentState != forState && (currentState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || currentState == PHPPartitionTypes.PHP_DOC || currentState == PHPPartitionTypes.PHP_QUOTED_STRING);
 	}
 
 }
