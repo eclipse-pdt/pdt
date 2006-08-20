@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -33,6 +34,7 @@ import org.eclipse.php.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.core.format.htmlFormatters.HTMLFormatProcessorForPhp;
 import org.eclipse.php.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.ui.autoEdit.*;
+import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPCodeHyperlinkDetector;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.ui.PHPUiPlugin;
@@ -342,5 +344,14 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			return docBlockStrategies;
 		}
 		return super.getAutoEditStrategies(sourceViewer, contentType);
+	}
+	
+	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
+		if (contentType == PHPPartitionTypes.PHP_DEFAULT) {
+			// use php's doubleclick strategy
+			return new PHPDoubleClickStrategy();
+		}
+		else
+			return super.getDoubleClickStrategy(sourceViewer, contentType);
 	}
 }
