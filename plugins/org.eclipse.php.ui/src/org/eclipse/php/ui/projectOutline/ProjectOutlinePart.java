@@ -20,8 +20,6 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -47,12 +45,12 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.PHPUIMessages;
+import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.actions.OpenAction;
 import org.eclipse.php.internal.ui.util.MultiElementSelection;
@@ -92,33 +90,231 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.wst.xml.core.internal.document.NodeImpl;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 
-	protected PHPTreeViewer fViewer;
-	protected ProjectOutlineContentProvider fContentProvider;
-	protected ProjectOutlineLabelProvider fLabelProvider;
+	private class ProjectOutlineTreeViewer extends PHPTreeViewer {
+		java.util.List fPendingGetChildren;
 
-	private Menu fContextMenu;
-	private boolean fLinkingEnabled;
-	private String fWorkingSetName;
+		public ProjectOutlineTreeViewer(final Composite parent, final int style) {
+			super(parent, style);
+			fPendingGetChildren = Collections.synchronizedList(new ArrayList());
+			setComparer(new PHPElementComparer());
+		}
 
-	private ISelection fLastOpenSelection;
-	private ISelectionChangedListener fPostSelectionListener;
+		public void add(final Object parentElement, final Object[] childElements) {
+			if (fPendingGetChildren.contains(parentElement))
+				return;
+			super.add(parentElement, childElements);
+		}
+
+		private TreePath createTreePath(final TreeItem item) {
+			final List result = new ArrayList();
+			result.add(item.getData());
+			TreeItem parent = item.getParentItem();
+			while (parent != null) {
+				result.add(parent.getData());
+				parent = parent.getParentItem();
+			}
+			Collections.reverse(result);
+			return new TreePath(result.toArray());
+		}
+
+		// Sends the object through the given filters
+		private Object filter(final Object object, final Object parent, final ViewerFilter[] filters) {
+			for (int i = 0; i < filters.length; i++) {
+				final ViewerFilter filter = filters[i];
+				if (!filter.select(fViewer, parent, object))
+					return null;
+			}
+			return object;
+		}
+
+		/*
+		 * @see org.eclipse.jface.viewers.StructuredViewer#filter(java.lang.Object[])
+		 * @since 3.0
+		 */
+		protected Object[] filter(final Object[] elements) {
+			final ViewerFilter[] filters = getFilters();
+			if (filters == null || filters.length == 0)
+				return elements;
+
+			final ArrayList filtered = new ArrayList(elements.length);
+			final Object root = getRoot();
+			for (int i = 0; i < elements.length; i++) {
+				boolean add = true;
+				if (!isEssential(elements[i]))
+					for (int j = 0; j < filters.length; j++) {
+						add = filters[j].select(this, root, elements[i]);
+						if (!add)
+							break;
+					}
+				if (add)
+					filtered.add(elements[i]);
+			}
+			return filtered.toArray();
+		}
+
+		private Object getElement(final TreeItem item) {
+			final Object result = item.getData();
+			if (result == null)
+				return null;
+			return result;
+		}
+
+		/*
+		 * @see org.eclipse.jface.viewers.StructuredViewer#filter(java.lang.Object)
+		 */
+		protected Object[] getFilteredChildren(final Object parent) {
+			final List list = new ArrayList();
+			final ViewerFilter[] filters = fViewer.getFilters();
+			if (fViewer.getContentProvider() == null)
+				return new Object[0];
+
+			final Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
+			for (int i = 0; children != null && i < children.length; i++) {
+				Object object = children[i];
+				if (!isEssential(object)) {
+					object = filter(object, parent, filters);
+					if (object != null)
+						list.add(object);
+				} else
+					list.add(object);
+			}
+			return list.toArray();
+		}
+
+		protected Object[] getRawChildren(final Object parent) {
+			try {
+				fPendingGetChildren.add(parent);
+				return super.getRawChildren(parent);
+			} finally {
+				fPendingGetChildren.remove(parent);
+			}
+		}
+
+		public ISelection getSelection() {
+			final IContentProvider cp = getContentProvider();
+			if (!(cp instanceof IMultiElementTreeContentProvider))
+				return super.getSelection();
+			final Control control = getControl();
+			if (control == null || control.isDisposed())
+				return StructuredSelection.EMPTY;
+			final Tree tree = getTree();
+			final TreeItem[] selection = tree.getSelection();
+			final List result = new ArrayList(selection.length);
+			final List treePaths = new ArrayList();
+			for (int i = 0; i < selection.length; i++) {
+				final TreeItem item = selection[i];
+				final Object element = getElement(item);
+				if (element == null)
+					continue;
+				if (!result.contains(element))
+					result.add(element);
+				treePaths.add(createTreePath(item));
+			}
+			return new MultiElementSelection(this, result, (TreePath[]) treePaths.toArray(new TreePath[treePaths.size()]));
+		}
+
+		protected void handleInvalidSelection(final ISelection invalidSelection, ISelection newSelection) {
+			final IStructuredSelection is = (IStructuredSelection) invalidSelection;
+			List ns = null;
+			if (newSelection instanceof IStructuredSelection)
+				ns = new ArrayList(((IStructuredSelection) newSelection).toList());
+			else
+				ns = new ArrayList();
+			boolean changed = false;
+			for (final Iterator iter = is.iterator(); iter.hasNext();) {
+				final Object element = iter.next();
+				if (element instanceof PHPProjectModel) {
+
+					final IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) element);
+					if (!project.isOpen()) {
+						ns.add(project);
+						changed = true;
+					}
+				} else if (element instanceof IProject) {
+					final IProject project = (IProject) element;
+					if (project.isOpen())
+						changed = true;
+				}
+			}
+			if (changed) {
+				newSelection = new StructuredSelection(ns);
+				setSelection(newSelection, true);
+			}
+			super.handleInvalidSelection(invalidSelection, newSelection);
+		}
+
+		/* Checks if a filtered object in essential (ie. is a parent that
+		 * should not be removed).
+		 */
+		private boolean isEssential(final Object object) {
+			if (object instanceof IContainer) {
+				final IContainer folder = (IContainer) object;
+				try {
+					return folder.members().length > 0;
+				} catch (final CoreException e) {
+					e.printStackTrace();
+				}
+			}
+			return false;
+		}
+
+		/*
+		 * @see AbstractTreeViewer#isExpandable(java.lang.Object)
+		 */
+		public boolean isExpandable(final Object parent) {
+			final ViewerFilter[] filters = fViewer.getFilters();
+			final Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
+			for (int i = 0; i < children.length; i++) {
+				Object object = children[i];
+
+				if (isEssential(object))
+					return true;
+
+				object = filter(object, parent, filters);
+				if (object != null)
+					return true;
+			}
+			return false;
+		}
+	}
+	class UpdateViewJob extends Job {//implements Runnable {
+
+		public UpdateViewJob() {
+			super("updateViewJob");
+			setSystem(true);
+		}
+
+		protected IStatus run(final IProgressMonitor monitor) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					getViewer().setInput(currentProject);
+				}
+			});
+			return Status.OK_STATUS;
+		}
+
+	}
 
 	protected ProjectOutlineViewGroup actionGroup;
-	private UpdateViewJob updateViewJob;
+
 	protected IProject currentProject;
+	protected ProjectOutlineContentProvider fContentProvider;
+	private Menu fContextMenu;
 
-	private boolean showAll = false;
+	protected ProjectOutlineLabelProvider fLabelProvider;
 
-	OpenAction openEditorAction;
-
-	private IPartListener fPartListener = new IPartListener() {
+	private ISelection fLastOpenSelection;
+	private boolean fLinkingEnabled;
+	private final IPartListener fPartListener = new IPartListener() {
 		public void partActivated(IWorkbenchPart part) {
-			if (ProjectOutlinePart.this.getViewer().getTree().getVisible() && part instanceof PHPStructuredEditor) {
+			if (getViewer().getTree().getVisible() && part instanceof PHPStructuredEditor)
 				updateInputForCurrentEditor((IEditorPart) part);
-			}
 		}
 
 		public void partBroughtToTop(IWorkbenchPart part) {
@@ -133,8 +329,9 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 		public void partOpened(IWorkbenchPart part) {
 		}
 	};
+	private ISelectionChangedListener fPostSelectionListener;
 
-	private ISelectionListener fSelectionListener = new ISelectionListener() {
+	private final ISelectionListener fSelectionListener = new ISelectionListener() {
 
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if (selection instanceof IStructuredSelection) {
@@ -143,287 +340,66 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 					Object firstElement = structuredSelection.getFirstElement();
 					if (firstElement instanceof IProject) {
 						setProject((IProject) structuredSelection.getFirstElement());
-					} else if (firstElement instanceof PHPElementImpl && part instanceof PHPStructuredEditor && isLinkingEnabled()) {
-						PHPElementImpl phpElement = (PHPElementImpl) firstElement;
-						PHPCodeData codeData = phpElement.getPHPCodeData(((TextSelection) selection).getOffset());
-						if (codeData != null) {
-							getViewer().setSelection(new StructuredSelection(codeData), true);
-						} else {
-							getViewer().setSelection(null);
+						return;
+					}
+					if (isLinkingEnabled()) {
+						PHPCodeData codeData = null;
+						if (firstElement instanceof PHPElementImpl && part instanceof PHPStructuredEditor) {
+							PHPElementImpl phpElement = (PHPElementImpl) firstElement;
+							codeData = phpElement.getPHPCodeData(((TextSelection) selection).getOffset());
+						} else if (firstElement instanceof NodeImpl) {
+							final IDOMDocument doc = (IDOMDocument) ((NodeImpl) firstElement).getOwnerDocument();
+							IDOMModel model = doc.getModel();
+							if (!(model instanceof PHPEditorModel))
+								return;
+							codeData = PHPElementImpl.getPHPCodeData((NodeImpl) firstElement, ((TextSelection) selection).getOffset());
+						} else if (firstElement instanceof PHPCodeData) {
+							codeData = (PHPCodeData) firstElement;
+							getViewer().reveal(codeData);
+							return;
 						}
+						if (codeData != null)
+							getViewer().setSelection(new StructuredSelection(codeData), true);
+						else
+							getViewer().setSelection(null);
 					}
 				}
-
 			}
 		}
-
 	};
 
-	class UpdateViewJob extends Job {//implements Runnable {
+	protected PHPTreeViewer fViewer;
 
-		public UpdateViewJob() {
-			super("updateViewJob");
-			setSystem(true);
-		}
+	private String fWorkingSetName;
 
-		protected IStatus run(IProgressMonitor monitor) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					getViewer().setInput(currentProject);
-				}
-			});
-			return Status.OK_STATUS;
-		}
+	OpenAction openEditorAction;
 
-	}
+	private boolean showAll = false;
+
+	private UpdateViewJob updateViewJob;
 
 	public ProjectOutlinePart() {
 		initLinkingEnabled();
 		fPostSelectionListener = new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
+			public void selectionChanged(final SelectionChangedEvent event) {
 				handlePostSelectionChanged(event);
 			}
 		};
 	}
 
-	public void createPartControl(Composite parent) {
-		fViewer = createViewer(parent);
-		fViewer.setUseHashlookup(true);
-		setProviders();
-
-		setUpPopupMenu();
-		actionGroup = createActionGroup();
-
-		fViewer.addPostSelectionChangedListener(fPostSelectionListener);
-		addMouseTrackListener();
-		fViewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				fLastOpenSelection = event.getSelection();
-				openEditorAction.run((IStructuredSelection) fLastOpenSelection);
-			}
-		});
-		getSite().getPage().addPartListener(fPartListener);
-
-		IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
-		fViewer.addSelectionChangedListener(new StatusBarUpdater(slManager));
-
-		updateTitle();
-
-		IEditorPart editorPart = getViewSite().getPage().getActiveEditor();
-		updateInputForCurrentEditor(editorPart);
-
-		openEditorAction = new OpenAction(this.getSite());
-		fillActionBars();
-
-		if (isLinkingEnabled()) {
-			IEditorPart editor = getViewSite().getPage().getActiveEditor();
-			if (editor != null) {
-				editorActivated(editor);
-			}
-		}
-		fViewer.refresh();
-
-		getSite().getPage().addPostSelectionListener(fSelectionListener);
-
-		PHPWorkspaceModelManager.getInstance().addModelListener(fContentProvider);
-
-	}
-
-	protected ProjectOutlineViewGroup createActionGroup() {
-		return new ProjectOutlineViewGroup(this);
-	}
-
-	public void setProject(IProject project) {
-		if (project == currentProject) {
-			return;
-		}
-		currentProject = project;
-		if (updateViewJob == null) {
-			updateViewJob = new UpdateViewJob();
-		}
-		updateViewJob.schedule();
-		actionGroup.updateActions();
-
-	}
-
-	public void handleUpdateInput(IEditorPart editorPart) {
-		IProject project = null;
-
-		if (editorPart != null) {
-			if (editorPart instanceof PHPStructuredEditor) {
-				PHPStructuredEditor phpEditor = (PHPStructuredEditor) editorPart;
-				IFile file = phpEditor.getFile();
-				project = file.getProject();
-			} else {
-				IEditorInput editorInput = editorPart.getEditorInput();
-				if (editorInput instanceof FileEditorInput) {
-					FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
-					project = fileEditorInput.getFile().getProject();
-				}
-			}
-		}
-		setProject(project);
-	}
-
-	private void setUpPopupMenu() {
-
-		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(this);
-		fContextMenu = menuMgr.createContextMenu(fViewer.getTree());
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager mgr) {
-				ISelection selection = fViewer.getSelection();
-				if (!selection.isEmpty()) {
-					IStructuredSelection s = (IStructuredSelection) selection;
-					if (s.getFirstElement() instanceof PHPFunctionData) {
-						//						mgr.add(action);
-					}
-				}
-			}
-		});
-		fViewer.getTree().setMenu(fContextMenu);
-		IWorkbenchPartSite site = getSite();
-		site.registerContextMenu(menuMgr, fViewer);
-		site.setSelectionProvider(fViewer);
-	}
-
-	private void updateInputForCurrentEditor(final IEditorPart editorPart) {
-		handleUpdateInput(editorPart);
-	}
-
-	private PHPTreeViewer createViewer(Composite composite) {
-		return new ProjectOutlineTreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
-	}
-
 	private void addMouseTrackListener() {
 		final Tree tree = fViewer.getTree();
 		tree.addMouseTrackListener(new MouseTrackAdapter() {
-			public void mouseHover(MouseEvent e) {
-				TreeItem item = tree.getItem(new Point(e.x, e.y));
+			public void mouseHover(final MouseEvent e) {
+				final TreeItem item = tree.getItem(new Point(e.x, e.y));
 				if (item != null) {
-					Object o = item.getData();
-					if (o instanceof PHPCodeData) {
+					final Object o = item.getData();
+					if (o instanceof PHPCodeData)
 						tree.setToolTipText(fLabelProvider.getTooltipText(o));
-					}
 				}
 			}
 
 		});
-	}
-
-	public void setFocus() {
-		fViewer.getTree().setFocus();
-	}
-
-	private void handlePostSelectionChanged(SelectionChangedEvent event) {
-		ISelection selection = event.getSelection();
-		// If the selection is the same as the one that triggered the last
-		// open event then do nothing. The editor already got revealed.
-		if (isLinkingEnabled() && !selection.equals(fLastOpenSelection)) {
-			linkToEditor((IStructuredSelection) selection);
-		}
-		fLastOpenSelection = null;
-	}
-
-	private void linkToEditor(IStructuredSelection selection) {
-		// ignore selection changes if the package explorer is not the active part.
-		// In this case the selection change isn't triggered by a user.
-		if (this != getSite().getPage().getActivePart())
-			return;
-		Object obj = selection.getFirstElement();
-
-		if (selection.size() == 1) {
-			IEditorPart part = EditorUtility.isOpenInEditor(obj);
-			if (part != null) {
-				IWorkbenchPage page = getSite().getPage();
-				page.bringToTop(part);
-				if (obj instanceof PHPCodeData)
-					EditorUtility.revealInEditor(part, (PHPCodeData) obj);
-			}
-		}
-	}
-
-	private void setProviders() {
-		fContentProvider = createContentProvider();
-		IPHPTreeContentProvider[] treeProviders = TreeProvider.getTreeProviders(getViewSite().getId());
-		fContentProvider.setTreeProviders(treeProviders);
-		fViewer.setContentProvider(fContentProvider);
-
-		fLabelProvider = createLabelProvider();
-		fLabelProvider.setTreeProviders(treeProviders);
-		fViewer.setLabelProvider(new DecoratingPHPLabelProvider(fLabelProvider, false));
-	}
-
-	void projectStateChanged(Object root) {
-		Control ctrl = fViewer.getControl();
-		if (ctrl != null && !ctrl.isDisposed()) {
-			fViewer.refresh(root, true);
-			// trigger a syntetic selection change so that action refresh their
-			// enable state.
-			fViewer.setSelection(fViewer.getSelection());
-		}
-	}
-
-	public ProjectOutlineContentProvider createContentProvider() {
-		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
-		boolean showCUChildren = store.getBoolean(PreferenceConstants.SHOW_CU_CHILDREN);
-		return new ProjectOutlineContentProvider(this, showCUChildren);
-	}
-
-	protected ProjectOutlineLabelProvider createLabelProvider() {
-		return new ProjectOutlineLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.M_PARAMETER_NAMES, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS | PHPElementImageProvider.OVERLAY_ICONS, fContentProvider);
-	}
-
-	public void setShowAll(boolean showAll) {
-		if (showAll != this.showAll) {
-			this.showAll = showAll;
-			if (updateViewJob == null) {
-				updateViewJob = new UpdateViewJob();
-			}
-			updateViewJob.schedule();
-		}
-	}
-
-	private Object findInputElement() {
-		Object input = getSite().getPage().getInput();
-		if (input instanceof IWorkspace || input instanceof IWorkspaceRoot) {
-			return PHPWorkspaceModelManager.getInstance();
-		} else if (input instanceof IProject) {
-			return PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) input);
-		} else if (input instanceof IContainer) {
-			return input;
-		}
-		return PHPWorkspaceModelManager.getInstance();
-	}
-
-	private void fillActionBars() {
-		IActionBars actionBars = getViewSite().getActionBars();
-		actionGroup.fillActionBars(actionBars);
-	}
-
-	public void dispose() {
-		if (fContextMenu != null && !fContextMenu.isDisposed()) {
-			fContextMenu.dispose();
-		}
-		getSite().getPage().removePartListener(fPartListener);
-		getSite().getPage().removePostSelectionListener(fSelectionListener);
-		PHPWorkspaceModelManager.getInstance().removeModelListener(fContentProvider);
-		super.dispose();
-	}
-
-	public void menuAboutToShow(IMenuManager menu) {
-		PHPUiPlugin.createStandardGroups(menu);
-		actionGroup.setContext(new ActionContext(fViewer.getSelection()));
-		actionGroup.fillContextMenu(menu);
-		actionGroup.setContext(null);
-	}
-
-	void editorActivated(IEditorPart editor) {
-	}
-
-	public TreeViewer getViewer() {
-		return fViewer;
 	}
 
 	public void collapseAll() {
@@ -435,285 +411,287 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 		}
 	}
 
-	public Object getViewPartInput() {
-		if (fViewer != null) {
-			return fViewer.getInput();
+	protected ProjectOutlineViewGroup createActionGroup() {
+		return new ProjectOutlineViewGroup(this);
+	}
+
+	public ProjectOutlineContentProvider createContentProvider() {
+		final IPreferenceStore store = PreferenceConstants.getPreferenceStore();
+		final boolean showCUChildren = store.getBoolean(PreferenceConstants.SHOW_CU_CHILDREN);
+		return new ProjectOutlineContentProvider(this, showCUChildren);
+	}
+
+	protected ProjectOutlineLabelProvider createLabelProvider() {
+		return new ProjectOutlineLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.M_PARAMETER_NAMES, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS | PHPElementImageProvider.OVERLAY_ICONS, fContentProvider);
+	}
+
+	public void createPartControl(final Composite parent) {
+		fViewer = createViewer(parent);
+		setProviders();
+		fViewer.setUseHashlookup(true);
+
+		setUpPopupMenu();
+		actionGroup = createActionGroup();
+
+		fViewer.addPostSelectionChangedListener(fPostSelectionListener);
+		addMouseTrackListener();
+		fViewer.addOpenListener(new IOpenListener() {
+			public void open(final OpenEvent event) {
+				fLastOpenSelection = event.getSelection();
+				openEditorAction.run((IStructuredSelection) fLastOpenSelection);
+			}
+		});
+		getSite().getPage().addPartListener(fPartListener);
+
+		final IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
+		fViewer.addSelectionChangedListener(new StatusBarUpdater(slManager));
+
+		updateTitle();
+
+		final IEditorPart editorPart = getViewSite().getPage().getActiveEditor();
+		updateInputForCurrentEditor(editorPart);
+
+		openEditorAction = new OpenAction(getSite());
+		fillActionBars();
+
+		if (isLinkingEnabled()) {
+			final IEditorPart editor = getViewSite().getPage().getActiveEditor();
+			if (editor != null)
+				editorActivated(editor);
 		}
+		fViewer.refresh();
+
+		getSite().getPage().addPostSelectionListener(fSelectionListener);
+
+		PHPWorkspaceModelManager.getInstance().addModelListener(fContentProvider);
+
+	}
+
+	private PHPTreeViewer createViewer(final Composite composite) {
+		return new ProjectOutlineTreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+	}
+
+	public void dispose() {
+		if (fContextMenu != null && !fContextMenu.isDisposed())
+			fContextMenu.dispose();
+		getSite().getPage().removePartListener(fPartListener);
+		getSite().getPage().removePostSelectionListener(fSelectionListener);
+		PHPWorkspaceModelManager.getInstance().removeModelListener(fContentProvider);
+		super.dispose();
+	}
+
+	void editorActivated(final IEditorPart editor) {
+	}
+
+	private void fillActionBars() {
+		final IActionBars actionBars = getViewSite().getActionBars();
+		actionGroup.fillActionBars(actionBars);
+	}
+
+	String getFrameName(final Object element) {
+		if (element instanceof PHPCodeData)
+			return ((PHPCodeData) element).getName();
+		return fLabelProvider.getText(element);
+	}
+
+	String getToolTipText(final Object element) {
+		String result;
+		if (!(element instanceof IResource)) {
+			if (element instanceof PHPWorkspaceModelManager)
+				result = PHPUIMessages.PHPExplorerPart_workspace;
+			else if (element instanceof PHPCodeData)
+				result = PHPElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
+			else
+				result = fLabelProvider.getText(element);
+		} else {
+			final IPath path = ((IResource) element).getFullPath();
+			if (path.isRoot())
+				result = PHPUIMessages.PHPExplorer_title;
+			else
+				result = path.makeRelative().toString();
+		}
+
+		if (fWorkingSetName == null)
+			return result;
+
+		final String wsstr = MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip, new String[] { fWorkingSetName });
+		if (result.length() == 0)
+			return wsstr;
+		return MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
+	}
+
+	public TreeViewer getViewer() {
+		return fViewer;
+	}
+
+	public Object getViewPartInput() {
+		if (fViewer != null)
+			return fViewer.getInput();
 		return null;
 	}
 
-	boolean isLinkingEnabled() {
-		return fLinkingEnabled;
+	private void handlePostSelectionChanged(final SelectionChangedEvent event) {
+		final ISelection selection = event.getSelection();
+		// If the selection is the same as the one that triggered the last
+		// open event then do nothing. The editor already got revealed.
+		if (isLinkingEnabled() && !selection.equals(fLastOpenSelection))
+			linkToEditor((IStructuredSelection) selection);
+		fLastOpenSelection = selection;
+	}
+
+	public void handleUpdateInput(final IEditorPart editorPart) {
+		IProject project = null;
+
+		if (editorPart != null)
+			if (editorPart instanceof PHPStructuredEditor) {
+				final PHPStructuredEditor phpEditor = (PHPStructuredEditor) editorPart;
+				final IFile file = phpEditor.getFile();
+				project = file.getProject();
+			} else {
+				final IEditorInput editorInput = editorPart.getEditorInput();
+				if (editorInput instanceof FileEditorInput) {
+					final FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
+					project = fileEditorInput.getFile().getProject();
+				}
+			}
+		setProject(project);
 	}
 
 	private void initLinkingEnabled() {
 		fLinkingEnabled = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.LINK_EXPLORER_TO_EDITOR);
 	}
 
-	public void setLinkingEnabled(boolean enabled) {
-		fLinkingEnabled = enabled;
-		PreferenceConstants.getPreferenceStore().setValue(PreferenceConstants.LINK_EXPLORER_TO_EDITOR, enabled);
-
-		if (enabled) {
-			IEditorPart editor = getSite().getPage().getActiveEditor();
-			if (editor != null) {
-				editorActivated(editor);
-			}
-		}
+	public boolean isInCurrentProject(final Object element) {
+		if (currentProject != null)
+			return currentProject.equals(PHPModelUtil.getResource(element).getProject());
+		return false;
 	}
 
-	String getFrameName(Object element) {
-		if (element instanceof PHPCodeData) {
-			return ((PHPCodeData) element).getName();
-		} else {
-			return fLabelProvider.getText(element);
-		}
-	}
-
-	String getToolTipText(Object element) {
-		String result;
-		if (!(element instanceof IResource)) {
-			if (element instanceof PHPWorkspaceModelManager) {
-				result = PHPUIMessages.PHPExplorerPart_workspace;
-			} else if (element instanceof PHPCodeData) {
-				result = PHPElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
-			} else {
-				result = fLabelProvider.getText(element);
-			}
-		} else {
-			IPath path = ((IResource) element).getFullPath();
-			if (path.isRoot()) {
-				result = PHPUIMessages.PHPExplorer_title;
-			} else {
-				result = path.makeRelative().toString();
-			}
-		}
-
-		if (fWorkingSetName == null)
-			return result;
-
-		String wsstr = MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip, new String[] { fWorkingSetName });
-		if (result.length() == 0)
-			return wsstr;
-		return MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
-	}
-
-	void updateTitle() {
-		Object input = fViewer.getInput();
-		if (input == null || (input instanceof PHPWorkspaceModelManager)) {
-			setContentDescription(""); //$NON-NLS-1$
-			setTitleToolTip(""); //$NON-NLS-1$
-		} else {
-			String inputText = PHPElementLabels.getTextLabel(input, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
-			setContentDescription(inputText);
-			setTitleToolTip(getToolTipText(input));
-		}
-	}
-
-	private class ProjectOutlineTreeViewer extends PHPTreeViewer {
-		java.util.List fPendingGetChildren;
-
-		public ProjectOutlineTreeViewer(Composite parent, int style) {
-			super(parent, style);
-			fPendingGetChildren = Collections.synchronizedList(new ArrayList());
-			setComparer(new PHPElementComparer());
-		}
-
-		public void add(Object parentElement, Object[] childElements) {
-			if (fPendingGetChildren.contains(parentElement))
-				return;
-			super.add(parentElement, childElements);
-		}
-
-		protected Object[] getRawChildren(Object parent) {
-			try {
-				fPendingGetChildren.add(parent);
-				return super.getRawChildren(parent);
-			} finally {
-				fPendingGetChildren.remove(parent);
-			}
-		}
-
-		private Object getElement(TreeItem item) {
-			Object result = item.getData();
-			if (result == null)
-				return null;
-			return result;
-		}
-
-		private TreePath createTreePath(TreeItem item) {
-			List result = new ArrayList();
-			result.add(item.getData());
-			TreeItem parent = item.getParentItem();
-			while (parent != null) {
-				result.add(parent.getData());
-				parent = parent.getParentItem();
-			}
-			Collections.reverse(result);
-			return new TreePath(result.toArray());
-		}
-
-		public ISelection getSelection() {
-			IContentProvider cp = getContentProvider();
-			if (!(cp instanceof IMultiElementTreeContentProvider)) {
-				return super.getSelection();
-			}
-			Control control = getControl();
-			if (control == null || control.isDisposed()) {
-				return StructuredSelection.EMPTY;
-			}
-			Tree tree = getTree();
-			TreeItem[] selection = tree.getSelection();
-			List result = new ArrayList(selection.length);
-			List treePaths = new ArrayList();
-			for (int i = 0; i < selection.length; i++) {
-				TreeItem item = selection[i];
-				Object element = getElement(item);
-				if (element == null)
-					continue;
-				if (!result.contains(element)) {
-					result.add(element);
-				}
-				treePaths.add(createTreePath(item));
-			}
-			return new MultiElementSelection(this, result, (TreePath[]) treePaths.toArray(new TreePath[treePaths.size()]));
-		}
-
-		/*
-		 * @see org.eclipse.jface.viewers.StructuredViewer#filter(java.lang.Object)
-		 */
-		protected Object[] getFilteredChildren(Object parent) {
-			List list = new ArrayList();
-			ViewerFilter[] filters = fViewer.getFilters();
-			if (fViewer.getContentProvider() == null) {
-				return new Object[0];
-			}
-
-			Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
-			for (int i = 0; children != null && i < children.length; i++) {
-				Object object = children[i];
-				if (!isEssential(object)) {
-					object = filter(object, parent, filters);
-					if (object != null) {
-						list.add(object);
-					}
-				} else
-					list.add(object);
-			}
-			return list.toArray();
-		}
-
-		/*
-		 * @see AbstractTreeViewer#isExpandable(java.lang.Object)
-		 */
-		public boolean isExpandable(Object parent) {
-			ViewerFilter[] filters = fViewer.getFilters();
-			Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
-			for (int i = 0; i < children.length; i++) {
-				Object object = children[i];
-
-				if (isEssential(object))
-					return true;
-
-				object = filter(object, parent, filters);
-				if (object != null)
-					return true;
-			}
-			return false;
-		}
-
-		// Sends the object through the given filters
-		private Object filter(Object object, Object parent, ViewerFilter[] filters) {
-			for (int i = 0; i < filters.length; i++) {
-				ViewerFilter filter = filters[i];
-				if (!filter.select(fViewer, parent, object))
-					return null;
-			}
-			return object;
-		}
-
-		/*
-		 * @see org.eclipse.jface.viewers.StructuredViewer#filter(java.lang.Object[])
-		 * @since 3.0
-		 */
-		protected Object[] filter(Object[] elements) {
-			ViewerFilter[] filters = getFilters();
-			if (filters == null || filters.length == 0)
-				return elements;
-
-			ArrayList filtered = new ArrayList(elements.length);
-			Object root = getRoot();
-			for (int i = 0; i < elements.length; i++) {
-				boolean add = true;
-				if (!isEssential(elements[i])) {
-					for (int j = 0; j < filters.length; j++) {
-						add = filters[j].select(this, root, elements[i]);
-						if (!add)
-							break;
-					}
-				}
-				if (add)
-					filtered.add(elements[i]);
-			}
-			return filtered.toArray();
-		}
-
-		/* Checks if a filtered object in essential (ie. is a parent that
-		 * should not be removed).
-		 */
-		private boolean isEssential(Object object) {
-			if (object instanceof IContainer) {
-				IContainer folder = (IContainer) object;
-				try {
-					return folder.members().length > 0;
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
-			}
-			return false;
-		}
-
-		protected void handleInvalidSelection(ISelection invalidSelection, ISelection newSelection) {
-			IStructuredSelection is = (IStructuredSelection) invalidSelection;
-			List ns = null;
-			if (newSelection instanceof IStructuredSelection) {
-				ns = new ArrayList(((IStructuredSelection) newSelection).toList());
-			} else {
-				ns = new ArrayList();
-			}
-			boolean changed = false;
-			for (Iterator iter = is.iterator(); iter.hasNext();) {
-				Object element = iter.next();
-				if (element instanceof PHPProjectModel) {
-
-					IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) element);
-					if (!project.isOpen()) {
-						ns.add(project);
-						changed = true;
-					}
-				} else if (element instanceof IProject) {
-					IProject project = (IProject) element;
-					if (project.isOpen()) {
-						changed = true;
-					}
-				}
-			}
-			if (changed) {
-				newSelection = new StructuredSelection(ns);
-				setSelection(newSelection);
-			}
-			super.handleInvalidSelection(invalidSelection, newSelection);
-		}
+	boolean isLinkingEnabled() {
+		return fLinkingEnabled;
 	}
 
 	public boolean isShowAll() {
 		return showAll;
 	}
 
-	public boolean isInCurrentProject(PHPFileData fileData) {
-		if (currentProject != null) {
-			return currentProject.equals(PHPModelUtil.getResource(fileData).getProject());
+	private void linkToEditor(final IStructuredSelection selection) {
+		// ignore selection changes if the package explorer is not the active part.
+		// In this case the selection change isn't triggered by a user.
+		if (this != getSite().getPage().getActivePart())
+			return;
+		final Object obj = selection.getFirstElement();
+
+		if (selection.size() == 1) {
+			final IEditorPart part = EditorUtility.isOpenInEditor(obj);
+			if (part != null) {
+				final IWorkbenchPage page = getSite().getPage();
+				page.bringToTop(part);
+				if (obj instanceof PHPCodeData)
+					EditorUtility.revealInEditor(part, (PHPCodeData) obj);
+			}
 		}
-		return false;
+	}
+
+	public void menuAboutToShow(final IMenuManager menu) {
+		PHPUiPlugin.createStandardGroups(menu);
+		actionGroup.setContext(new ActionContext(fViewer.getSelection()));
+		actionGroup.fillContextMenu(menu);
+		actionGroup.setContext(null);
+	}
+
+	void projectStateChanged(final Object root) {
+		final Control ctrl = fViewer.getControl();
+		if (ctrl != null && !ctrl.isDisposed()) {
+			fViewer.refresh(root, true);
+			// trigger a syntetic selection change so that action refresh their
+			// enable state.
+			fViewer.setSelection(fViewer.getSelection());
+		}
+	}
+
+	public void setFocus() {
+		fViewer.getTree().setFocus();
+	}
+
+	public void setLinkingEnabled(final boolean enabled) {
+		fLinkingEnabled = enabled;
+		PreferenceConstants.getPreferenceStore().setValue(PreferenceConstants.LINK_EXPLORER_TO_EDITOR, enabled);
+
+		if (enabled) {
+			final IEditorPart editor = getSite().getPage().getActiveEditor();
+			if (editor != null)
+				editorActivated(editor);
+		}
+	}
+
+	public void setProject(final IProject project) {
+		if (project == currentProject)
+			return;
+		currentProject = project;
+		if (updateViewJob == null)
+			updateViewJob = new UpdateViewJob();
+		updateViewJob.schedule();
+		actionGroup.updateActions();
+
+	}
+
+	private void setProviders() {
+		fContentProvider = createContentProvider();
+		final IPHPTreeContentProvider[] treeProviders = TreeProvider.getTreeProviders(getViewSite().getId());
+		fContentProvider.setTreeProviders(treeProviders);
+		fViewer.setContentProvider(fContentProvider);
+
+		fLabelProvider = createLabelProvider();
+		fLabelProvider.setTreeProviders(treeProviders);
+		fViewer.setLabelProvider(new DecoratingPHPLabelProvider(fLabelProvider, false));
+	}
+
+	public void setShowAll(final boolean showAll) {
+		if (showAll != this.showAll) {
+			this.showAll = showAll;
+			if (updateViewJob == null)
+				updateViewJob = new UpdateViewJob();
+			updateViewJob.schedule();
+		}
+	}
+
+	private void setUpPopupMenu() {
+
+		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(this);
+		fContextMenu = menuMgr.createContextMenu(fViewer.getTree());
+		menuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(final IMenuManager mgr) {
+				final ISelection selection = fViewer.getSelection();
+				if (!selection.isEmpty()) {
+					final IStructuredSelection s = (IStructuredSelection) selection;
+					if (s.getFirstElement() instanceof PHPFunctionData) {
+						//						mgr.add(action);
+					}
+				}
+			}
+		});
+		fViewer.getTree().setMenu(fContextMenu);
+		final IWorkbenchPartSite site = getSite();
+		site.registerContextMenu(menuMgr, fViewer);
+		site.setSelectionProvider(fViewer);
+	}
+
+	private void updateInputForCurrentEditor(final IEditorPart editorPart) {
+		handleUpdateInput(editorPart);
+	}
+
+	void updateTitle() {
+		final Object input = fViewer.getInput();
+		if (input == null || input instanceof PHPWorkspaceModelManager) {
+			setContentDescription(""); //$NON-NLS-1$
+			setTitleToolTip(""); //$NON-NLS-1$
+		} else {
+			final String inputText = PHPElementLabels.getTextLabel(input, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
+			setContentDescription(inputText);
+			setTitleToolTip(getToolTipText(input));
+		}
 	}
 }

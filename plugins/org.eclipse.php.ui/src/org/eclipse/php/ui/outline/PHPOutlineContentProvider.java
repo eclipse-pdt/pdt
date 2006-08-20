@@ -36,35 +36,46 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 
 public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 
-	public static final int MODE_PHP = 1;
-	public static final int MODE_HTML = 2;
-	public static final int MODE_MIXED = 3;
-
-	public static final int GROUP_CLASSES = 1;
-	public static final int GROUP_CONSTANTS = 2;
-	public static final int GROUP_FUNCTIONS = 3;
-	public static final int GROUP_INCLUDES = 4;
-
-	private static final Image CLASSES_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage();
-	private static final Image CONSTANTS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage();
-	private static final Image FUNCTIONS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage();
-	private static final Image INCLUDES_GROUP_IMAGE = PHPPluginImages.DESC_OBJS_INCLUDE.createImage();
-
-	StandardPHPElementContentProvider phpContentProvider = new StandardPHPElementContentProvider(true);
-
-	int mode;
-	boolean showGroups = false;
-
 	static class GroupNode {
-		String text;
 		Object[] children;
 		PHPFileData fileData;
+		String text;
 		int type;
 
-		GroupNode(int type, String text, PHPFileData fileData) {
+		GroupNode(final int type, final String text, final PHPFileData fileData) {
 			this.type = type;
 			this.text = text;
 			this.fileData = fileData;
+		}
+
+		public Object[] getChildren() {
+			if (children == null)
+				loadChildren();
+			return children;
+		}
+
+		public Image getImage() {
+			switch (type) {
+				case GROUP_CLASSES:
+					return CLASSES_GROUP_IMAGE;
+				case GROUP_FUNCTIONS:
+					return FUNCTIONS_GROUP_IMAGE;
+				case GROUP_CONSTANTS:
+					return CONSTANTS_GROUP_IMAGE;
+				case GROUP_INCLUDES:
+					return INCLUDES_GROUP_IMAGE;
+			}
+			return null;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public boolean hasChildren() {
+			if (children == null)
+				loadChildren();
+			return children.length > 0;
 		}
 
 		void loadChildren() {
@@ -82,48 +93,58 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 					break;
 
 				case GROUP_INCLUDES:
-					if (fileData != null) {
+					if (fileData != null)
 						children = fileData.getIncludeFiles();
-					} else {
+					else
 						children = new Object[0];
-					}
 					break;
 
 				default:
 					break;
 			}
 		}
-
-		public boolean hasChildren() {
-			if (children == null)
-				loadChildren();
-			return children.length > 0;
-		}
-
-		public Object[] getChildren() {
-			if (children == null)
-				loadChildren();
-			return children;
-		}
-
-		public String getText() {
-			return text;
-		}
-
-		public Image getImage() {
-			switch (type) {
-				case GROUP_CLASSES:
-					return CLASSES_GROUP_IMAGE;
-				case GROUP_FUNCTIONS:
-					return FUNCTIONS_GROUP_IMAGE;
-				case GROUP_CONSTANTS:
-					return CONSTANTS_GROUP_IMAGE;
-				case GROUP_INCLUDES:
-					return INCLUDES_GROUP_IMAGE;
-			}
-			return null;
-		}
 	}
+	// this class intension is to get the selection event from the editor and then make sure the 
+	// selected elements have the IJFaceNodeAdapter as adapter - this adapter is responsible to refresh the outlineView 
+	private class PostSelectionServiceListener implements ISelectionListener {
+
+		public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
+			if (selection instanceof IStructuredSelection) {
+				final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+				for (final Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
+					final Object next = iter.next();
+					if (next instanceof INodeNotifier) {
+						final INodeNotifier node = (INodeNotifier) next;
+						node.getAdapterFor(IJFaceNodeAdapter.class);
+					}
+				}
+			}
+		}
+
+	}
+
+	private static final Image CLASSES_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage();
+
+	private static final Image CONSTANTS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage();
+	private static final Image FUNCTIONS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage();
+	public static final int GROUP_CLASSES = 1;
+	public static final int GROUP_CONSTANTS = 2;
+
+	public static final int GROUP_FUNCTIONS = 3;
+	public static final int GROUP_INCLUDES = 4;
+	private static final Image INCLUDES_GROUP_IMAGE = PHPPluginImages.DESC_OBJS_INCLUDE.createImage();
+	public static final int MODE_HTML = 2;
+
+	public static final int MODE_MIXED = 3;
+
+	public static final int MODE_PHP = 1;
+	private ISelectionListener fSelectionListener = null;
+
+	int mode;
+
+	StandardPHPElementContentProvider phpContentProvider = new StandardPHPElementContentProvider(true);
+
+	boolean showGroups = false;
 
 	public PHPOutlineContentProvider() {
 		super();
@@ -138,116 +159,126 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 
 	}
 
-	private ISelectionListener getSelectionServiceListener() {
-		if (fSelectionListener == null) {
-			fSelectionListener = new PostSelectionServiceListener();
-		}
-		return fSelectionListener;
-	}
-
-	private ISelectionListener fSelectionListener = null;
-
-	// this class intension is to get the selection event from the editor and then make sure the 
-	// selected elements have the IJFaceNodeAdapter as adapter - this adapter is responsible to refresh the outlineView 
-	private class PostSelectionServiceListener implements ISelectionListener {
-
-		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-				for (Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
-					Object next = iter.next();
-					if (next instanceof INodeNotifier) {
-						INodeNotifier node = (INodeNotifier) next;
-						node.getAdapterFor(IJFaceNodeAdapter.class);
-					}
-				}
-			}
-		}
-
-	}
-
-	public Object[] getChildren(Object object) {
+	public Object[] getChildren(final Object object) {
 		if (object instanceof PHPElementImpl && mode == MODE_MIXED) {
-			ArrayList list = getPHPChildren((PHPElementImpl) object);
+			final ArrayList list = getPHPChildren((PHPElementImpl) object);
 			return list.toArray();
-		} else if (object instanceof PHPCodeData) {
+		} else if (object instanceof PHPCodeData)
 			return phpContentProvider.getChildren(object);
-		} else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
-			PHPEditorModel editorModel = (PHPEditorModel) object;
-			PHPFileData fileData = editorModel.getFileData();
+		else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
+			final PHPEditorModel editorModel = (PHPEditorModel) object;
+			final PHPFileData fileData = editorModel.getFileData();
 			if (showGroups) {
-				Object[] nodes = { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_INCLUDES, "include files", fileData) };
+				final Object[] nodes = { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_INCLUDES, "include files", fileData) };
 				return nodes;
-
-			} else {
-				Object[] providerChildren = phpContentProvider.getChildren(fileData);
-				Object[] children = new Object[providerChildren.length + 1];
-				System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
-				children[0] = new GroupNode(GROUP_INCLUDES, "include files", fileData);
-				return children;
 			}
-		} else if (object instanceof GroupNode) {
+			final Object[] providerChildren = phpContentProvider.getChildren(fileData);
+			final Object[] children = new Object[providerChildren.length + 1];
+			System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
+			children[0] = new GroupNode(GROUP_INCLUDES, "include files", fileData);
+			return children;
+		} else if (object instanceof GroupNode)
 			return ((GroupNode) object).getChildren();
-		} else if (object instanceof PHPTreeNode) {
+		else if (object instanceof PHPTreeNode)
 			return ((PHPTreeNode) object).getChildren();
-		}
 		return super.getChildren(object);
 	}
 
-	public Object getParent(Object object) {
+	public Object[] getElements(final Object object) {
+		if (object instanceof PHPElementImpl && mode == MODE_MIXED) {
+			final ArrayList list = getPHPChildren((PHPElementImpl) object);
+			return list.toArray();
+		} else if (object instanceof PHPCodeData)
+			return phpContentProvider.getElements(object);
+		else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
+			final PHPEditorModel editorModel = (PHPEditorModel) object;
+			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
+			final PHPFileData fileData = editorModel.getFileData();
+			if (showGroups) {
+				final Object[] nodes = { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_INCLUDES, "include files", fileData) };
+				return nodes;
+
+			}
+			final Object[] providerChildren = phpContentProvider.getElements(fileData);
+			final Object[] children = new Object[providerChildren.length + 1];
+			System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
+			children[0] = new GroupNode(GROUP_INCLUDES, "include files", fileData);
+			return children;
+
+		} else if (object instanceof GroupNode)
+			return ((GroupNode) object).getChildren();
+
+		return super.getElements(object);
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public Object getParent(final Object object) {
 
 		if (object instanceof PHPCodeData) {
-			PHPCodeData codeData = (PHPCodeData) object;
+			final PHPCodeData codeData = (PHPCodeData) object;
 			return codeData.getContainer();
 		}
 		return super.getParent(object);
 	}
 
-	public Object[] getElements(Object object) {
-		if (object instanceof PHPElementImpl && mode == MODE_MIXED) {
-			ArrayList list = getPHPChildren((PHPElementImpl) object);
-			return list.toArray();
-		} else if (object instanceof PHPCodeData) {
-			return phpContentProvider.getElements(object);
-		} else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
-			PHPEditorModel editorModel = (PHPEditorModel) object;
-			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
-			PHPFileData fileData = editorModel.getFileData();
-			if (showGroups) {
-				Object[] nodes = { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_INCLUDES, "include files", fileData) };
-				return nodes;
+	private ArrayList getPHPChildren(final PHPElementImpl phpElement) {
+		final String location = phpElement.getModel().getBaseLocation();
+		final int start = phpElement.getStartOffset();
+		final int end = phpElement.getEndOffset();
 
-			} else {
-				Object[] providerChildren = phpContentProvider.getElements(fileData);
-				Object[] children = new Object[providerChildren.length + 1];
-				System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
-				children[0] = new GroupNode(GROUP_INCLUDES, "include files", fileData);
-				return children;
-			}
-		} else if (object instanceof GroupNode) {
-			return ((GroupNode) object).getChildren();
-		}
-
-		return super.getElements(object);
+		final PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(location);
+		final ArrayList list = getPHPChildren(fileData, start, end);
+		return list;
 	}
 
-	public boolean hasChildren(Object object) {
+	private ArrayList getPHPChildren(final PHPFileData fileData, final int start, final int end) {
+		final ArrayList list = new ArrayList();
+
+		if (fileData == null)
+			return list;
+		final PHPClassData[] classes = fileData.getClasses();
+		if (classes != null)
+			for (int i = 0; i < classes.length; i++)
+				if (isInside(start, end, classes[i]))
+					list.add(classes[i]);
+
+		final PHPFunctionData[] functions = fileData.getFunctions();
+		if (functions != null)
+			for (int i = 0; i < functions.length; i++)
+				if (isInside(start, end, functions[i]))
+					list.add(functions[i]);
+		return list;
+	}
+
+	private ISelectionListener getSelectionServiceListener() {
+		if (fSelectionListener == null)
+			fSelectionListener = new PostSelectionServiceListener();
+		return fSelectionListener;
+	}
+
+	public boolean getShowGroups() {
+		return showGroups;
+	}
+
+	public boolean hasChildren(final Object object) {
 		if (object instanceof PHPElementImpl) {
-			ArrayList list = getPHPChildren((PHPElementImpl) object);
+			final ArrayList list = getPHPChildren((PHPElementImpl) object);
 			return list.size() > 0;
-		} else if (object instanceof PHPCodeData) {
+		} else if (object instanceof PHPCodeData)
 			return phpContentProvider.hasChildren(object);
-		} else if (object instanceof GroupNode) {
+		else if (object instanceof GroupNode)
 			return ((GroupNode) object).hasChildren();
-		} else if (object instanceof PHPTreeNode) {
+		else if (object instanceof PHPTreeNode)
 			return ((PHPTreeNode) object).hasChildren();
-		}
 
 		return super.hasChildren(object);
 	}
 
-	boolean isInside(int start, int end, PHPCodeData codeData) {
-		UserData userData = codeData.getUserData();
+	boolean isInside(final int start, final int end, final PHPCodeData codeData) {
+		final UserData userData = codeData.getUserData();
 		if (userData == null)
 			return false;
 		if (start <= userData.getStartPosition() && end >= userData.getEndPosition())
@@ -255,52 +286,12 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 		return false;
 	}
 
-	private ArrayList getPHPChildren(PHPElementImpl phpElement) {
-		String location = phpElement.getModel().getBaseLocation();
-		final int start = phpElement.getStartOffset();
-		final int end = phpElement.getEndOffset();
-
-		PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(location);
-		ArrayList list = getPHPChildren(fileData, start, end);
-		return list;
-	}
-
-	private ArrayList getPHPChildren(PHPFileData fileData, int start, int end) {
-		ArrayList list = new ArrayList();
-
-		if (fileData == null) {
-			return list;
-		}
-		PHPClassData[] classes = fileData.getClasses();
-		if (classes != null)
-			for (int i = 0; i < classes.length; i++) {
-				if (isInside(start, end, classes[i]))
-					list.add(classes[i]);
-			}
-
-		PHPFunctionData[] functions = fileData.getFunctions();
-		if (functions != null)
-			for (int i = 0; i < functions.length; i++) {
-				if (isInside(start, end, functions[i]))
-					list.add(functions[i]);
-			}
-		return list;
-	}
-
-	public int getMode() {
-		return mode;
-	}
-
-	public void setMode(int mode) {
+	public void setMode(final int mode) {
 		this.mode = mode;
 	}
 
-	public boolean getShowGroups() {
-		return showGroups;
-	}
-
-	public void setShowGroups(boolean show) {
-		if (show != this.showGroups) {
+	public void setShowGroups(final boolean show) {
+		if (show != showGroups) {
 
 		}
 		showGroups = show;
