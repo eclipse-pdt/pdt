@@ -349,6 +349,8 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 							codeData = phpElement.getPHPCodeData(((TextSelection) selection).getOffset());
 						} else if (firstElement instanceof NodeImpl) {
 							final IDOMDocument doc = (IDOMDocument) ((NodeImpl) firstElement).getOwnerDocument();
+							if (doc == null)
+								return;
 							IDOMModel model = doc.getModel();
 							if (!(model instanceof PHPEditorModel))
 								return;
