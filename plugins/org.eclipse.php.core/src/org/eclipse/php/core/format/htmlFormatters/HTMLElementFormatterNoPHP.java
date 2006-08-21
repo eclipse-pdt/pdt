@@ -11,8 +11,10 @@
 
 package org.eclipse.php.core.format.htmlFormatters;
 
+import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.wst.html.core.internal.format.HTMLElementFormatter;
 import org.eclipse.wst.html.core.internal.provisional.HTMLFormatContraints;
+import org.eclipse.wst.xml.core.internal.document.TextImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
@@ -23,33 +25,43 @@ import org.w3c.dom.Node;
  * @author guy.g
  *
  */
-public class HTMLElementFormatterNoPHP extends HTMLElementFormatter implements IHTMLFormatterNoPHPWrapper{
-	
+public class HTMLElementFormatterNoPHP extends HTMLElementFormatter implements IHTMLFormatterNoPHPWrapper {
+
 	//refering to the implementation in base
-	protected void formatChildNodes(IDOMNode node, HTMLFormatContraints contraints){
+	protected void formatChildNodes(IDOMNode node, HTMLFormatContraints contraints) {
 		HTMLFormatterNoPHPBase.formatChildNodes(this, node, contraints);
 	}
 
-	protected void insertBreakAfter(IDOMNode node, HTMLFormatContraints contraints){
+	protected void insertBreakAfter(IDOMNode node, HTMLFormatContraints contraints) {
 		HTMLFormatterNoPHPBase.insertBreakAfter(this, node, contraints);
 	}
 
 	protected void insertBreakBefore(IDOMNode node, HTMLFormatContraints contraints) {
 		HTMLFormatterNoPHPBase.insertBreakBefore(this, node, contraints);
 	}
-	
+
 	//imlementing IHTMLFormatterNoPHPWrapper
 	public boolean runCanInsertBreakAfter(Node node) {
 		return super.canInsertBreakAfter(node);
 	}
 
 	public boolean runCanInsertBreakBefore(Node node) {
+		Node previous = node.getPreviousSibling();
+		if (previous instanceof PHPElementImpl) {
+			return false;
+		}
+		if (previous instanceof TextImpl) {
+			TextImpl text = (TextImpl) previous;
+			if (text.getFirstStructuredDocumentRegion().getType().indexOf("PHP") != -1) {
+				return false;
+			}
+		}
 		return super.canInsertBreakBefore(node);
 	}
 
 	public void runFormatNode(IDOMNode node, HTMLFormatContraints contraints) {
 		super.formatNode(node, contraints);
-		
+
 	}
 
 	public String runGetBreakSpaces(Node node) {
@@ -69,8 +81,7 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter implements I
 	}
 
 	public void runSetWidth(HTMLFormatContraints contraints, String source) {
-		super.setWidth(contraints, source);		
+		super.setWidth(contraints, source);
 	}
-	
 
 }
