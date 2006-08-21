@@ -28,10 +28,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -434,19 +431,23 @@ public class EditorUtility {
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IWorkspaceRoot root = workspace.getRoot();
 
-		IFile file = root.getFileForLocation(new Path(fileName));
+		IPath path = new Path(fileName);
+		IFile file = root.getFileForLocation(path);
 		if (file == null) {
-			final IProject[] projects = root.getProjects();
-			for (int i = 0; i < projects.length; ++i) {
-				if (!projects[i].isOpen())
-					continue;
-				file = projects[i].getFile(fileName);
-				if (file != null)
-					break;
+			file = root.getFile(path);
+			if (file == null) {
+				final IProject[] projects = root.getProjects();
+				for (int i = 0; i < projects.length; ++i) {
+					if (!projects[i].isOpen())
+						continue;
+					file = projects[i].getFile(path);
+					if (file != null)
+						break;
+				}
 			}
 		}
 
-		if (file == null)
+		if (file == null || !file.exists())
 			return null;
 
 		final IMarker marker = file.createMarker(IMarker.TEXT);
