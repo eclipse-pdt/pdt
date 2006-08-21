@@ -140,6 +140,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 	public static final int MODE_PHP = 1;
 	private ISelectionListener fSelectionListener = null;
 
+	GroupNode[] groupNodes;
 	int mode;
 
 	StandardPHPElementContentProvider phpContentProvider = new StandardPHPElementContentProvider(true);
@@ -168,10 +169,9 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 		else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
 			final PHPEditorModel editorModel = (PHPEditorModel) object;
 			final PHPFileData fileData = editorModel.getFileData();
-			if (showGroups) {
-				final Object[] nodes = { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_INCLUDES, "include files", fileData) };
-				return nodes;
-			}
+			final GroupNode[] groupNodes = getGroupNodes(fileData);
+			if (groupNodes != null)
+				return groupNodes;
 			final Object[] providerChildren = phpContentProvider.getChildren(fileData);
 			final Object[] children = new Object[providerChildren.length + 1];
 			System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
@@ -194,11 +194,9 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 			final PHPEditorModel editorModel = (PHPEditorModel) object;
 			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
 			final PHPFileData fileData = editorModel.getFileData();
-			if (showGroups) {
-				final Object[] nodes = { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_INCLUDES, "include files", fileData) };
-				return nodes;
-
-			}
+			final GroupNode[] groupNodes = getGroupNodes(fileData);
+			if (groupNodes != null)
+				return groupNodes;
 			final Object[] providerChildren = phpContentProvider.getElements(fileData);
 			final Object[] children = new Object[providerChildren.length + 1];
 			System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
@@ -211,6 +209,16 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 		return super.getElements(object);
 	}
 
+	GroupNode[] getGroupNodes(final PHPFileData fileData) {
+		if (showGroups) {
+			if (groupNodes != null)
+				return groupNodes;
+			groupNodes = new GroupNode[] { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_INCLUDES, "include files", fileData) };
+		} else
+			groupNodes = null;
+		return groupNodes;
+	}
+
 	public int getMode() {
 		return mode;
 	}
@@ -219,7 +227,17 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 
 		if (object instanceof PHPCodeData) {
 			final PHPCodeData codeData = (PHPCodeData) object;
-			return codeData.getContainer();
+			final PHPCodeData container = codeData.getContainer();
+			if (container instanceof PHPFileData && showGroups) {
+				Object[] children;
+				for (int i = 0; i < groupNodes.length; ++i) {
+					children = groupNodes[i].getChildren();
+					for (int j = 0; j < children.length; ++j)
+						if (children[j] == object)
+							return groupNodes[i];
+				}
+			} else
+				return container;
 		}
 		return super.getParent(object);
 	}
