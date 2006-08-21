@@ -72,7 +72,7 @@ public class PHPElementImpl extends ElementImpl {
 							return functions[j];
 					return classes[i];
 				}
-		return null;
+		return fileData;
 
 	}
 

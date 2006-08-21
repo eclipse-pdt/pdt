@@ -282,8 +282,9 @@ public class PHPModelUtil {
 			if (element instanceof IProject)
 				return PHPWorkspaceModelManager.getInstance();
 			final IResource parent = ((IResource) element).getParent();
-			if (parent instanceof IProject)
-				return PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) parent);
+			if (parent instanceof IProject) {
+//				return PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) parent);
+			}
 
 			return parent;
 		} else if (element instanceof PHPCodeData) {

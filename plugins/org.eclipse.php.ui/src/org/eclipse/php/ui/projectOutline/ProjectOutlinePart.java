@@ -31,7 +31,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IOpenListener;
@@ -45,14 +44,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.PHPUIMessages;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
-import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.actions.OpenAction;
+import org.eclipse.php.internal.ui.editor.LinkingSelectionListener;
 import org.eclipse.php.internal.ui.util.MultiElementSelection;
 import org.eclipse.php.internal.ui.util.TreePath;
 import org.eclipse.php.ui.PHPUiPlugin;
@@ -83,16 +81,12 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.wst.xml.core.internal.document.NodeImpl;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 
@@ -331,7 +325,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 	};
 	private ISelectionChangedListener fPostSelectionListener;
 
-	private final ISelectionListener fSelectionListener = new ISelectionListener() {
+	private final LinkingSelectionListener fSelectionListener = new LinkingSelectionListener() {
 
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if (selection instanceof IStructuredSelection) {
@@ -342,31 +336,9 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 						setProject((IProject) structuredSelection.getFirstElement());
 						return;
 					}
-					if (isLinkingEnabled()) {
-						PHPCodeData codeData = null;
-						if (firstElement instanceof PHPElementImpl && part instanceof PHPStructuredEditor) {
-							PHPElementImpl phpElement = (PHPElementImpl) firstElement;
-							codeData = phpElement.getPHPCodeData(((TextSelection) selection).getOffset());
-						} else if (firstElement instanceof NodeImpl) {
-							final IDOMDocument doc = (IDOMDocument) ((NodeImpl) firstElement).getOwnerDocument();
-							if (doc == null)
-								return;
-							IDOMModel model = doc.getModel();
-							if (!(model instanceof PHPEditorModel))
-								return;
-							codeData = PHPElementImpl.getPHPCodeData((NodeImpl) firstElement, ((TextSelection) selection).getOffset());
-						} else if (firstElement instanceof PHPCodeData) {
-							codeData = (PHPCodeData) firstElement;
-							getViewer().reveal(codeData);
-							return;
-						}
-						if (codeData != null)
-							getViewer().setSelection(new StructuredSelection(codeData), true);
-						else
-							getViewer().setSelection(null);
-					}
 				}
 			}
+			super.selectionChanged(part, selection);
 		}
 	};
 
@@ -381,7 +353,6 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 	private UpdateViewJob updateViewJob;
 
 	public ProjectOutlinePart() {
-		initLinkingEnabled();
 		fPostSelectionListener = new ISelectionChangedListener() {
 			public void selectionChanged(final SelectionChangedEvent event) {
 				handlePostSelectionChanged(event);
@@ -429,10 +400,13 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 
 	public void createPartControl(final Composite parent) {
 		fViewer = createViewer(parent);
+		fSelectionListener.setViewer(getViewer());
+		fSelectionListener.setResetEmptySelection(true);
 		setProviders();
 		fViewer.setUseHashlookup(true);
 
 		setUpPopupMenu();
+		initLinkingEnabled();
 		actionGroup = createActionGroup();
 
 		fViewer.addPostSelectionChangedListener(fPostSelectionListener);
@@ -447,7 +421,6 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 
 		final IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
 		fViewer.addSelectionChangedListener(new StatusBarUpdater(slManager));
-
 		updateTitle();
 
 		final IEditorPart editorPart = getViewSite().getPage().getActiveEditor();
@@ -456,15 +429,10 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 		openEditorAction = new OpenAction(getSite());
 		fillActionBars();
 
-		if (isLinkingEnabled()) {
-			final IEditorPart editor = getViewSite().getPage().getActiveEditor();
-			if (editor != null)
-				editorActivated(editor);
-		}
+		// refresh linking:
+		setLinkingEnabled(isLinkingEnabled());
+
 		fViewer.refresh();
-
-		getSite().getPage().addPostSelectionListener(fSelectionListener);
-
 		PHPWorkspaceModelManager.getInstance().addModelListener(fContentProvider);
 
 	}
@@ -560,7 +528,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 	}
 
 	private void initLinkingEnabled() {
-		fLinkingEnabled = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.LINK_EXPLORER_TO_EDITOR);
+		setLinkingEnabled(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.LINK_BROWSING_PROJECTS_TO_EDITOR));
 	}
 
 	public boolean isInCurrentProject(final Object element) {
@@ -618,13 +586,22 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 
 	public void setLinkingEnabled(final boolean enabled) {
 		fLinkingEnabled = enabled;
-		PreferenceConstants.getPreferenceStore().setValue(PreferenceConstants.LINK_EXPLORER_TO_EDITOR, enabled);
+		PreferenceConstants.getPreferenceStore().setValue(PreferenceConstants.LINK_BROWSING_PROJECTS_TO_EDITOR, enabled);
+
+		final IWorkbenchPartSite site = getSite();
+		if (site == null)
+			return;
+		final IWorkbenchPage page = site.getPage();
+		if (page == null)
+			return;
 
 		if (enabled) {
-			final IEditorPart editor = getSite().getPage().getActiveEditor();
+			page.addPostSelectionListener(fSelectionListener);
+			final IEditorPart editor = page.getActiveEditor();
 			if (editor != null)
 				editorActivated(editor);
-		}
+		} else
+			page.removePostSelectionListener(fSelectionListener);
 	}
 
 	public void setProject(final IProject project) {

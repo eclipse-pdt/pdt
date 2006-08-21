@@ -97,6 +97,16 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		if (parentElement instanceof IContainer)
 			return getFolderChildren((IContainer) parentElement, null);
 
+		if (parentElement instanceof IFile) {
+			final IFile file = (IFile) parentElement;
+			final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
+			if (projectModel != null) {
+				final PHPFileData fileData = projectModel.getFileData(file.getFullPath().toString());
+				if (fileData != null)
+					return getFileChildren(fileData);
+			}
+
+		}
 		if (parentElement instanceof PHPFileData)
 			return getFileChildren((PHPFileData) parentElement);
 		if (parentElement instanceof PHPClassData)
@@ -147,16 +157,13 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		try {
 			final IResource[] members = folder.members();
 			final IProject project = folder.getProject();
-			final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-			if (projectModel == null)
-				return members;
 			if (!project.exists())
 				return members;
 			final ArrayList folderList = new ArrayList();
 			final ArrayList fileList = new ArrayList();
 			for (int i = 0; i < members.length; i++) {
 				final IResource member = members[i];
-				PHPFileData fileData = null;
+				//				PHPFileData fileData = null;
 				boolean filterOut = false;
 				if (filterNames != null)
 					for (int j = 0; j < filterNames.length; j++)
@@ -168,14 +175,12 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 					continue;
 				if (member instanceof IFolder)
 					folderList.add(member);
-				else {
-					if (member instanceof IFile)
-						fileData = projectModel.getFileData(member.getFullPath().toString());
-					if (fileData != null)
-						fileList.add(fileData);
-					else
-						fileList.add(members[i]);
-				}
+				else if (member instanceof IFile)
+					//						fileData = projectModel.getFileData(member.getFullPath().toString());
+					//					if (fileData != null)
+					//						fileList.add(fileData);
+					//					else
+					fileList.add(members[i]);
 			}
 			folderList.addAll(fileList);
 			return folderList.toArray();
@@ -184,7 +189,7 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		}
 	}
 
-	public final Object getParent(final Object element) {
+	public Object getParent(final Object element) {
 		if (!exists(element))
 			return null;
 		return internalGetParent(element);
