@@ -102,7 +102,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				absolutePath = filePath.makeAbsolute().toString();
 			} catch (final Exception e) {
 			}
-			if (project == null)
+			if (project == null || !project.isAccessible())
 				return;
 		}
 
