@@ -16,6 +16,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.core.documentModel.parser.structregions.PHPStructuredDocumentRegion;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
@@ -24,6 +25,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.rules.SimpleStructuredRegion;
+import org.eclipse.wst.xml.core.internal.document.TextImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
@@ -61,14 +63,12 @@ public class PhpFormatter implements IStructuredFormatter {
 	private void formatNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 
 		// if it is php node - format
-		if (node instanceof PHPElementImpl) {
+		if (node instanceof PHPElementImpl || (node instanceof TextImpl && node.getFirstStructuredDocumentRegion() instanceof PHPStructuredDocumentRegion)) {
 
 			IStructuredDocumentRegion sdRegionStart = node.getStartStructuredDocumentRegion();
 			IStructuredDocumentRegion sdRegionEnd = node.getEndStructuredDocumentRegion();
 			sdRegionEnd = sdRegionEnd == null ? sdRegionStart : sdRegionEnd;
 			format(sdRegionStart, sdRegionEnd);
-
-			return;
 		}
 
 		if (node.hasChildNodes()) { // container
@@ -148,15 +148,16 @@ public class PhpFormatter implements IStructuredFormatter {
 		resultBuffer.setLength(0);
 
 		try {
-			
+
 			// get original line information 
 			final IRegion originalLineInfo = document.getLineInformation(lineNumber);
 			final int orginalLineStart = originalLineInfo.getOffset();
 			final int originalLineLength = originalLineInfo.getLength();
-			
+
 			// fast resolving of empty line
-			if (originalLineLength == 0) return;
-			
+			if (originalLineLength == 0)
+				return;
+
 			// get formatted line information
 			final String lineText = document.get(orginalLineStart, originalLineLength);
 			final IRegion formattedLineInformation = getFormattedLineInformation(originalLineInfo, lineText);
@@ -226,23 +227,23 @@ public class PhpFormatter implements IStructuredFormatter {
 		int rightNonWhitespaceChar = lineText.length() - 1;
 		final byte[] bytes = lineText.getBytes();
 		boolean keepSearching = true;
-		
+
 		while (keepSearching) {
-			final boolean leftIsWhiteSpace = bytes[leftNonWhitespaceChar] == CHAR_SPACE || bytes[leftNonWhitespaceChar] == CHAR_TAB; 
+			final boolean leftIsWhiteSpace = bytes[leftNonWhitespaceChar] == CHAR_SPACE || bytes[leftNonWhitespaceChar] == CHAR_TAB;
 			final boolean rightIsWhiteSpace = bytes[rightNonWhitespaceChar] == CHAR_SPACE || bytes[rightNonWhitespaceChar] == CHAR_TAB;
-			if (leftIsWhiteSpace) leftNonWhitespaceChar++;
-			if (rightIsWhiteSpace) rightNonWhitespaceChar--;
-			keepSearching = (leftIsWhiteSpace || rightIsWhiteSpace) && (leftNonWhitespaceChar < rightNonWhitespaceChar) ;
+			if (leftIsWhiteSpace)
+				leftNonWhitespaceChar++;
+			if (rightIsWhiteSpace)
+				rightNonWhitespaceChar--;
+			keepSearching = (leftIsWhiteSpace || rightIsWhiteSpace) && (leftNonWhitespaceChar < rightNonWhitespaceChar);
 		}
-		
+
 		// if line is empty then the indexes were switched
-		if (leftNonWhitespaceChar > rightNonWhitespaceChar) 
-			return new SimpleStructuredRegion(lineInfo.getOffset() , 0);  
-		
+		if (leftNonWhitespaceChar > rightNonWhitespaceChar)
+			return new SimpleStructuredRegion(lineInfo.getOffset(), 0);
+
 		// if there are no changes - return the original line information, else build a fixed region
-		return leftNonWhitespaceChar == 0 && rightNonWhitespaceChar == lineText.length() - 1 ? 
-			lineInfo :  
-			new SimpleStructuredRegion(lineInfo.getOffset() + leftNonWhitespaceChar, rightNonWhitespaceChar - leftNonWhitespaceChar + 1); 
+		return leftNonWhitespaceChar == 0 && rightNonWhitespaceChar == lineText.length() - 1 ? lineInfo : new SimpleStructuredRegion(lineInfo.getOffset() + leftNonWhitespaceChar, rightNonWhitespaceChar - leftNonWhitespaceChar + 1);
 	}
 
 	private boolean shouldReformat(IStructuredDocument document, IRegion lineInfo) {
