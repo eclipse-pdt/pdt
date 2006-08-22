@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.Assert;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.Logger;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorators;
@@ -305,18 +306,22 @@ public class PHPEditorTextHoverDescriptor {
 				}
 			}
 			if (fDecorator == null) {
-				fDecorator = new NullTextHoverMessageDecorator();
+				fDecorator = new DefaultTextHoverMessageDecorator();
 			}
 		}
 		return fDecorator;
 	}
 
-	class NullTextHoverMessageDecorator implements IHoverMessageDecorators {
+	class DefaultTextHoverMessageDecorator implements IHoverMessageDecorators {
 		/* (non-Javadoc)
 		 * @see org.eclipse.php.ui.editor.hover.IHoverMessageDecorators#getDecoratedMessage(java.lang.String)
 		 */
 		public String getDecoratedMessage(String msg) {
-			return msg;
+			
+			String hoverMessage = PHPUIMessages.getString("HoverFocus_decoration");					
+			hoverMessage = NLS.bind(hoverMessage, msg);			
+			return hoverMessage;
+			
 		}
 	}
 }
