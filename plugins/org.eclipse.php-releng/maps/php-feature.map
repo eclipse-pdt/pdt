@@ -9,3 +9,4 @@ plugin@org.eclipse.php.ui=PHP_IDE_0_2_2_20060730,:pserver:anonymous@dev.eclipse.
 plugin@org.eclipse.php.help=PHP_IDE_0_2_2_20060730,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
 plugin@org.eclipse.php.delivery=PHP_IDE_0_2_2_20060730,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,
 feature@org.eclipse.php_feature=PHP_IDE_0_2_2_20060730,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php-feature/
+feature@org.eclipse.php.sdk=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php.sdk-feature/
