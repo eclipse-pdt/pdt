@@ -20,32 +20,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/**
- * JDK JAR Services API alapú service keresõ osztály.
- *
- * @author Szkiba Iván
- * @version $Name$
- */
 class ServiceFinder {
-	/**
-	 * Service objektum keresés és példányosítás
-	 *
-	 * a JDK JAR specifikációban definiált <B>Services API</B>-nak
-	 * megfelelõen service osztály keresés, majd pedig példány képzés a context
-	 * ClassLoader segítségével.</p><p>
-	 * Az implementáló osztály név keresése a <CODE>serviceId</CODE> nevû
-	 * system property vizsgálatával kezdõdik. Amennyiben nincs ilyen
-	 * property, úgy a keresés a
-	 * <CODE>/META-INF/services/<I>serviceId</I></CODE> nevû file tartalmával
-	 * folytatódik. Amennyiben nincs ilyen nevû file, úgy a paraméterként átadott
-	 * <CODE>defaultService</CODE> lesz az osztály neve.</p><p>
-	 * A fenti keresést követõen történik a példány képzés. A visszatérési
-	 * érték mindig egy valódi objektum, lévén minden hiba exception-t generál.
-	 * @param serviceId keresett osztály/service neve
-	 * @param defaultService alapértelmezett implementáló osztály neve
-	 * @throws IllegalArgumentException keresési vagy példányosítási hiba esetén
-	 * @return a keresett osztály implementáló objektum
-	 */
+
 	protected static Object findService(final String serviceId, final String defaultService) throws IllegalArgumentException {
 		try {
 			return findServiceClass(serviceId, defaultService).newInstance();
@@ -54,22 +30,7 @@ class ServiceFinder {
 		}
 	}
 
-	/**
-	 * Service osztály keresés
-	 *
-	 * a JDK JAR specifikációban definiált <B>Services API</B>-nak
-	 * megfelelõen service osztály keresés.</p><p>
-	 * Az implementáló osztály név keresése a <CODE>serviceId</CODE> nevû
-	 * system property vizsgálatával kezdõdik. Amennyiben nincs ilyen
-	 * property, úgy a keresés a
-	 * <CODE>/META-INF/services/<I>serviceId</I></CODE> nevû file tartalmával
-	 * folytatódik. Amennyiben nincs ilyen nevû file, úgy a paraméterként átadott
-	 * <CODE>defaultService</CODE> lesz az osztály neve.</p><p>
-	 * @param serviceId keresett osztály/service neve
-	 * @param defaultService alapértelmezett implementáló osztály neve
-	 * @throws IllegalArgumentException keresési vagy példányosítási hiba esetén
-	 * @return a keresett osztály objektum
-	 */
+
 	protected static Class findServiceClass(final String serviceId, final String defaultService) throws IllegalArgumentException {
 		final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		final String serviceClassName = findServiceClassName(serviceId, defaultService);
@@ -81,22 +42,6 @@ class ServiceFinder {
 		}
 	}
 
-	/**
-	 * Service osztály nevének keresése
-	 *
-	 * a JDK JAR specifikációban definiált <B>Services API</B>-nak
-	 * megfelelõen service osztály keresés.</p><p>
-	 * Az implementáló osztály név keresése a <CODE>serviceId</CODE> nevû
-	 * system property vizsgálatával kezdõdik. Amennyiben nincs ilyen
-	 * property, úgy a keresés a
-	 * <CODE>/META-INF/services/<I>serviceId</I></CODE> nevû file tartalmával
-	 * folytatódik. Amennyiben nincs ilyen nevû file, úgy a paraméterként átadott
-	 * <CODE>defaultService</CODE> lesz az osztály neve.</p><p>
-	 * @param serviceId keresett osztály/service neve
-	 * @param defaultService alapértelmezett implementáló osztály neve
-	 * @throws IllegalArgumentException keresési vagy példányosítási hiba esetén
-	 * @return a keresett osztály neve
-	 */
 	protected static String findServiceClassName(final String serviceId, final String defaultService) throws IllegalArgumentException {
 		if (defaultService == null)
 			throw new IllegalArgumentException("Provider for " + serviceId + " cannot be found"); //$NON-NLS-1$ //$NON-NLS-2$

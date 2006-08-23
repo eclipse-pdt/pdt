@@ -24,24 +24,10 @@ public class InvalidIniFormatException extends IOException {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Példány képzés adott üzenettel.
-	 *
-	 * Ez a konstruktor rendszerint új exception generálására használatos, amikor is
-	 * valamely feltétel ellenõrzése hibát jelez.
-	 * @param message hiba szöveges megnevezése
-	 */
 	public InvalidIniFormatException(final String message) {
 		super(message);
 	}
 
-	/**
-	 * Példány képzés adott kiváltó okkal.
-	 *
-	 * Ez a konstruktor minden további szöveges magyarázat nélkül egy exception tovább adására
-	 * szolgál.
-	 * @param cause a hibát kiváltó exception
-	 */
 	public InvalidIniFormatException(final Throwable cause) {
 		super();
 		initCause(cause);
