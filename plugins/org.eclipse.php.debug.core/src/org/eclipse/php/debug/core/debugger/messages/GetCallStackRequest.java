@@ -11,7 +11,6 @@
 /*
  * GetCallStackRequest.java
  *
- * Created on 22 מרץ 2001, 18:38
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

@@ -11,7 +11,6 @@
 /*
  * PHPstack.java
  *
- * Created on 22 מרץ 2001, 19:06
  */
 
 package org.eclipse.php.debug.core.debugger;

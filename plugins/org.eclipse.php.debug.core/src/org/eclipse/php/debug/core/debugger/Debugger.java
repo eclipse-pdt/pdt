@@ -11,7 +11,6 @@
 /*
  * Debugger.java
  *
- * Created on 23 ����? 2000, 15:32
  */
 
 package org.eclipse.php.debug.core.debugger;

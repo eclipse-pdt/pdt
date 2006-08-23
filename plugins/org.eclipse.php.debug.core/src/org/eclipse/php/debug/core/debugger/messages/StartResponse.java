@@ -11,7 +11,6 @@
 /*
  * StartResponse.java
  *
- * Created on 29 מאי 2000, 17:30
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

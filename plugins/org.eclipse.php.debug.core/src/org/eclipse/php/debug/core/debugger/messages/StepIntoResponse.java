@@ -11,7 +11,6 @@
 /*
  * StepIntoResponse.java
  *
- * Created on 27 אפריל 2000, 18:51
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

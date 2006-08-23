@@ -11,7 +11,6 @@
 /*
  * StartDebugNotification.java
  *
- * Created on 29 ������� 2000, 16:21
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

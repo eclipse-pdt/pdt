@@ -11,7 +11,6 @@
 /*
  * DebugError.java
  *
- * Created on 10 אוקטובר 2000, 19:03
  */
 
 package org.eclipse.php.debug.core.debugger;

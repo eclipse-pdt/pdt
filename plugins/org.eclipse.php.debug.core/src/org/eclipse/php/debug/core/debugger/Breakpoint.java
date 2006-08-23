@@ -11,7 +11,6 @@
 /*
  * Breakpoint.java
  *
- * Created on 27 ����� 2000, 16:45
  */
 
 package org.eclipse.php.debug.core.debugger;

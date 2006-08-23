@@ -11,7 +11,6 @@
 /*
  * ReadyNotification.java
  *
- * Created on 27 אפריל 2000, 18:57
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

@@ -11,7 +11,6 @@
 /*
  * CancelBreakpointResponse.java
  *
- * Created on 14 מאי 2000, 18:51
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

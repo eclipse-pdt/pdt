@@ -11,7 +11,6 @@
 /*
  * StepOutResponse.java
  *
- * Created on 30 אפריל 2000, 15:51
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

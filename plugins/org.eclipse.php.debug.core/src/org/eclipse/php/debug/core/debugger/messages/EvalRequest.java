@@ -11,7 +11,6 @@
 /*
  * EvalRequest.java
  *
- * Created on 5 ιεπι 2000, 15:22
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

@@ -11,7 +11,6 @@
 /*
  * GetStackVariableValueRequest.java
  *
- * Created on 29 אפרי? 2001, 17:22
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

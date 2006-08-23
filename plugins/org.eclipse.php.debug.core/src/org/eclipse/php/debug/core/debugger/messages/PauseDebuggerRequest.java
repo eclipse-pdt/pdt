@@ -11,7 +11,6 @@
 /*
  * PauseDebuggerRequest
  *
- * Created on 27 אפריל 2000, 16:18
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

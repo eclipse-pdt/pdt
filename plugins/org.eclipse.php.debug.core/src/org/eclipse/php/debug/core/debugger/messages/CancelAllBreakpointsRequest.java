@@ -11,7 +11,6 @@
 /*
  * CancelAllBreakpointsRequest.java
  *
- * Created on 14 מאי 2000, 19:03
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

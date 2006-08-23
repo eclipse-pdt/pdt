@@ -11,7 +11,6 @@
 /*
  * DefaultExpressionsManager.java
  *
- * Created on 3 אפריל 2001, 19:32
  */
 
 package org.eclipse.php.debug.core.debugger;

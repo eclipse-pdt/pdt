@@ -11,7 +11,6 @@
 /*
  * GetVariableValueRequest.java
  *
- * Created on 29 ינואר 2001, 16:35
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

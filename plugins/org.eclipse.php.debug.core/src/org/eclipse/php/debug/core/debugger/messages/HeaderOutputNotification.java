@@ -11,7 +11,6 @@
 /*
  * HeaderOutputNotification.java
  *
- * Created on 10 דצמבר 2000, 12:50
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

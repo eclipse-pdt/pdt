@@ -11,7 +11,6 @@
 /*
  * DebuggerErrorNotification.java
  *
- * Created on 18 ιεπι 2000, 20:01
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

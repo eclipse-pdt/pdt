@@ -11,7 +11,6 @@
 /*
  * StackLayer.java
  *
- * Created on 22 מרץ 2001, 19:02
  */
 
 package org.eclipse.php.debug.core.debugger;

@@ -11,7 +11,6 @@
 /*
  * StepOverResponse.java
  *
- * Created on 5 ιεπι 2000, 13:23
  */
 
 package org.eclipse.php.debug.core.debugger.messages;

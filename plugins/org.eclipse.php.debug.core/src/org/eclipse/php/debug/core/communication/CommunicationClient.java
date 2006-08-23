@@ -8,11 +8,6 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-/*
- * CommClient.java
- *
- * Created on 23 אפריל 2000, 16:27
- */
 
 package org.eclipse.php.debug.core.communication;
 

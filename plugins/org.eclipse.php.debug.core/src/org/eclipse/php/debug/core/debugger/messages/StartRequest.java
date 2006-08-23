@@ -11,7 +11,6 @@
 /*
  * StartRequest.java
  *
- * Created on 29 מאי 2000, 17:24
  */
 
 package org.eclipse.php.debug.core.debugger.messages;
