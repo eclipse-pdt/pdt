@@ -55,8 +55,8 @@ public class VariableContextBuilder {
 	}
 
 	/**
-	 * If a variable with the same name doesn’t exists in the model add it,
-	 * otherwise don’t do nothing
+	 * If a variable with the same name doesnï¿½t exists in the model add it,
+	 * otherwise donï¿½t do nothing
 	 */
 	public void addVariable(PHPCodeContext context, PHPVariableData variable) {
 		if (getVariable(context, variable.getName()) != null) {
