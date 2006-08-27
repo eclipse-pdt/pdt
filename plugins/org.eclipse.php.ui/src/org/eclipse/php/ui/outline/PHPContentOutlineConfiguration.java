@@ -80,7 +80,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		if (fContentProvider == null) {
 			//			if (getFactory() != null) {
 			viewer.setComparer(new PHPOutlineElementComparer());
-			fContentProvider = new PHPOutlineContentProvider();
+			fContentProvider = new PHPOutlineContentProvider(viewer);
 			fContentProvider.phpContentProvider.setTreeProviders(getTreeProviders());
 			//			} else {
 			//				fContentProvider = super.getContentProvider(viewer);

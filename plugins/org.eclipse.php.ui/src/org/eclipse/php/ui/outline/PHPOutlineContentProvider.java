@@ -15,8 +15,11 @@ import java.util.Iterator;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
@@ -28,13 +31,94 @@ import org.eclipse.php.ui.StandardPHPElementContentProvider;
 import org.eclipse.php.ui.treecontent.PHPTreeNode;
 import org.eclipse.php.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 
-public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
+public class PHPOutlineContentProvider extends JFaceNodeContentProvider implements ModelListener {
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	 */
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		super.inputChanged(viewer, oldInput, newInput);
+		if (oldInput == null && newInput != null) {
+			PHPWorkspaceModelManager.getInstance().addModelListener(this);
+		} else if (oldInput != null && newInput == null) {
+			PHPWorkspaceModelManager.getInstance().removeModelListener(this);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider#dispose()
+	 */
+	public void dispose() {
+		PHPWorkspaceModelManager.getInstance().removeModelListener(this);
+		PHPUiPlugin.getActiveWorkbenchWindow().getSelectionService().removePostSelectionListener(getSelectionServiceListener());
+		super.dispose();
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#dataCleared()
+	 */
+	public void dataCleared() {
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataAdded(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
+	 */
+	public void fileDataAdded(PHPFileData fileData) {
+		if (editorModel != null && editorModel.getBaseLocation().equals(fileData.getUserData().getFileName())) {
+			this.fileData = fileData;
+			postRefresh(true);
+		}
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataChanged(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
+	 */
+	public void fileDataChanged(PHPFileData fileData) {
+		if (editorModel != null && this.fileData.getComparableName().equals(fileData.getComparableName())) {
+			if (groupNodes != null)
+				for (int i = 0; i < groupNodes.length; ++i) {
+					groupNodes[i].reset(fileData);
+					postRefresh(groupNodes[i], true);
+				}
+		} else {
+			postRefresh(editorModel, true);
+		}
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataRemoved(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
+	 */
+	public void fileDataRemoved(PHPFileData fileData) {
+	}
+
+	private void postRefresh(final Object element, final boolean updateLabels) {
+		final Runnable runnable = new Runnable() {
+			public void run() {
+				if(viewer == null)
+					return;
+				Control control = viewer.getControl();
+				if(control == null || control.isDisposed() || !control.isVisible())
+					return;
+
+				if (element == null)
+					viewer.refresh(updateLabels);
+				else
+					viewer.refresh(element, updateLabels);
+			}
+		};
+		viewer.getControl().getDisplay().asyncExec(runnable);
+	}
+
+	private void postRefresh(final boolean updateLabels) {
+		postRefresh(null, updateLabels);
+	}
 
 	static class GroupNode {
 		Object[] children;
@@ -52,6 +136,11 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 			if (children == null)
 				loadChildren();
 			return children;
+		}
+
+		public void reset(PHPFileData fileData) {
+			this.fileData = fileData;
+			children = null;
 		}
 
 		public Image getImage() {
@@ -79,28 +168,27 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 		}
 
 		void loadChildren() {
-			switch (type) {
-				case GROUP_CLASSES:
-					children = fileData.getClasses();
-					break;
+			if (fileData != null) {
+				switch (type) {
+					case GROUP_CLASSES:
+						children = fileData.getClasses();
+						break;
 
-				case GROUP_FUNCTIONS:
-					children = fileData.getFunctions();
-					break;
+					case GROUP_FUNCTIONS:
+						children = fileData.getFunctions();
+						break;
 
-				case GROUP_CONSTANTS:
-					children = fileData.getConstants();
-					break;
+					case GROUP_CONSTANTS:
+						children = fileData.getConstants();
+						break;
 
-				case GROUP_INCLUDES:
-					if (fileData != null)
+					case GROUP_INCLUDES:
 						children = fileData.getIncludeFiles();
-					else
-						children = new Object[0];
-					break;
-
-				default:
-					break;
+						break;
+				}
+			}
+			if (children == null) {
+				children = new Object[0];
 			}
 		}
 	}
@@ -109,16 +197,16 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 	private class PostSelectionServiceListener implements ISelectionListener {
 
 		public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
-			if (selection instanceof IStructuredSelection) {
-				final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-				for (final Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
-					final Object next = iter.next();
-					if (next instanceof INodeNotifier) {
-						final INodeNotifier node = (INodeNotifier) next;
-						node.getAdapterFor(IJFaceNodeAdapter.class);
-					}
-				}
-			}
+			//			if (selection instanceof IStructuredSelection) {
+			//				final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			//				for (final Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
+			//					final Object next = iter.next();
+			//					if (next instanceof INodeNotifier) {
+			//						final INodeNotifier node = (INodeNotifier) next;
+			//						node.getAdapterFor(IJFaceNodeAdapter.class);
+			//					}
+			//				}
+			//			}
 		}
 
 	}
@@ -140,21 +228,28 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 	public static final int MODE_PHP = 1;
 	private ISelectionListener fSelectionListener = null;
 
+	PHPEditorModel editorModel;
+	PHPFileData fileData;
+
 	GroupNode[] groupNodes;
 	int mode;
 
 	StandardPHPElementContentProvider phpContentProvider = new StandardPHPElementContentProvider(true);
 
-	boolean showGroups = false;
+	boolean showGroups;
 
-	public PHPOutlineContentProvider() {
+	TreeViewer viewer;
+
+	public PHPOutlineContentProvider(TreeViewer viewer) {
 		super();
+		this.viewer = viewer;
 		mode = PHPUiPlugin.getDefault().getPreferenceStore().getInt(ChangeOutlineModeAction.PREF_OUTLINEMODE);
 		if (mode == 0) {
 			mode = MODE_PHP;
 			PHPUiPlugin.getDefault().getPreferenceStore().setValue(ChangeOutlineModeAction.PREF_OUTLINEMODE, mode);
 
 		}
+		showGroups = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(ShowGroupsAction.PREF_SHOW_GROUPS);
 
 		PHPUiPlugin.getActiveWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionServiceListener());
 
@@ -167,11 +262,14 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 		} else if (object instanceof PHPCodeData)
 			return phpContentProvider.getChildren(object);
 		else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
+			editorModel = (PHPEditorModel) object;
 			final PHPEditorModel editorModel = (PHPEditorModel) object;
-			final PHPFileData fileData = editorModel.getFileData();
-			final GroupNode[] groupNodes = getGroupNodes(fileData);
-			if (groupNodes != null)
-				return groupNodes;
+			fileData = editorModel.getFileData();
+			if (fileData != null) {
+				final GroupNode[] groupNodes = getGroupNodes(fileData);
+				if (groupNodes != null)
+					return groupNodes;
+			}
 			final Object[] providerChildren = phpContentProvider.getChildren(fileData);
 			final Object[] children = new Object[providerChildren.length + 1];
 			System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
@@ -191,7 +289,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 		} else if (object instanceof PHPCodeData)
 			return phpContentProvider.getElements(object);
 		else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
-			final PHPEditorModel editorModel = (PHPEditorModel) object;
+			editorModel = (PHPEditorModel) object;
 			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
 			final PHPFileData fileData = editorModel.getFileData();
 			final GroupNode[] groupNodes = getGroupNodes(fileData);
@@ -309,9 +407,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider {
 	}
 
 	public void setShowGroups(final boolean show) {
-		if (show != showGroups) {
-
-		}
 		showGroups = show;
+		postRefresh(true);
 	}
 }
