@@ -148,11 +148,12 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 	private void updateFolds() {
 		IStructuredModel sModel = null;
+		PHPFileData fileData = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (sModel != null && sModel instanceof PHPEditorModel) {
 				PHPEditorModel editorModel = (PHPEditorModel) sModel;
-				PHPFileData fileData = editorModel.getFileData();
+				fileData = editorModel.getFileData();
 				if (fileData == null) {
 					// It's possible that while loading, the model is not yet ready, therefore, we will wait until the 
 					// model fires the fileDataAdded event with the currect file data.
@@ -220,8 +221,11 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		} finally {
 			if (sModel != null) {
 				sModel.releaseFromRead();
+				if (fileData != null){
+					allowCollapsing = false;
+				}
 			}
-			allowCollapsing = false;
+			
 		}
 	}
 
