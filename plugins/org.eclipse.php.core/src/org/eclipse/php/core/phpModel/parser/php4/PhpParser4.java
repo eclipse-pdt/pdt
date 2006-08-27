@@ -2280,13 +2280,7 @@ public class PhpParser4 extends org.eclipse.php.core.phpModel.javacup.runtime.lr
         DocumentorLexer docLexer = new DocumentorLexer(new StringReader(comment));
         PHPDocBlock rv = docLexer.parse();
         rv.setStartPosition(startPosition);
-        int numOfR = 0;
-        for(int i = 0 ; i < comment.length() ; i++){
-        	if(comment.charAt(i) == '\r'){
-        		numOfR++;
-        	}
-        }
-        rv.setEndPosition(startPosition + comment.length()  - numOfR - 1);
+        rv.setEndPosition(startPosition + comment.length() - 1);
         return rv;
     }
 
