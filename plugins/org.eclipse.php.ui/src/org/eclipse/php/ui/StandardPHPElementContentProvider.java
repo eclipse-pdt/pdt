@@ -35,16 +35,6 @@ import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 public class StandardPHPElementContentProvider implements ITreeContentProvider {
 
 	protected static final Object[] NO_CHILDREN = new Object[0];
-
-	protected static Object[] concatenate(final Object[] a1, final Object[] a2) {
-		final int a1Len = a1.length;
-		final int a2Len = a2.length;
-		final Object[] res = new Object[a1Len + a2Len];
-		System.arraycopy(a1, 0, res, 0, a1Len);
-		System.arraycopy(a2, 0, res, a1Len, a2Len);
-		return res;
-	}
-
 	protected boolean fProvideMembers;
 
 	IPHPTreeContentProvider[] treeProviders;
@@ -53,35 +43,27 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		this(false);
 	}
 
-	public StandardPHPElementContentProvider(final boolean provideMembers) {
+	public StandardPHPElementContentProvider(boolean provideMembers) {
 		fProvideMembers = provideMembers;
 	}
 
-	public void dispose() {
-
-	}
-
-	protected boolean exists(final Object element) {
-		if (element == null)
-			return false;
-		if (element instanceof IResource)
-			return ((IResource) element).exists();
-
-		return true;
-	}
-
-	final public Object[] getChildren(final Object parentElement) {
+	final public Object[] getChildren(Object parentElement) {
 		Object[] children = getChildrenInternal(parentElement);
-		if (treeProviders != null)
+		if (treeProviders != null) {
 			for (int i = 0; i < treeProviders.length; i++) {
-				final Object[] subChildren = treeProviders[i].getChildren(parentElement);
+				Object[] subChildren = treeProviders[i].getChildren(parentElement);
 				if (subChildren != null && subChildren.length > 0)
 					children = concatenate(children, subChildren);
 			}
+		}
 		return children;
 	}
 
-	protected Object[] getChildrenInternal(final Object parentElement) {
+	public void setTreeProviders(IPHPTreeContentProvider[] providers) {
+		this.treeProviders = providers;
+	}
+	
+	protected Object[] getChildrenInternal(Object parentElement) {
 		if (!exists(parentElement))
 			return NO_CHILDREN;
 
@@ -98,10 +80,10 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 			return getFolderChildren((IContainer) parentElement, null);
 
 		if (parentElement instanceof IFile) {
-			final IFile file = (IFile) parentElement;
-			final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
+			IFile file = (IFile) parentElement;
+			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
 			if (projectModel != null) {
-				final PHPFileData fileData = projectModel.getFileData(file.getFullPath().toString());
+				PHPFileData fileData = projectModel.getFileData(file.getFullPath().toString());
 				if (fileData != null)
 					return getFileChildren(fileData);
 			}
@@ -115,187 +97,233 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		return NO_CHILDREN;
 	}
 
-	private Object[] getClassChildren(final PHPClassData classData) {
-		final ArrayList list = new ArrayList();
-		final PHPFunctionData[] functions = classData.getFunctions();
-		if (functions != null)
-			for (int i = 0; i < functions.length; i++)
-				list.add(functions[i]);
-		final PHPVariableData[] vars = classData.getVars();
-		if (vars != null)
-			for (int i = 0; i < vars.length; i++)
-				list.add(vars[i]);
-		final PHPClassConstData[] consts = classData.getConsts();
-		if (consts != null)
-			for (int i = 0; i < consts.length; i++)
-				list.add(consts[i]);
-		return list.toArray();
-	}
-
-	public Object[] getElements(final Object parent) {
-		return getChildren(parent);
-	}
-
-	private Object[] getFileChildren(final PHPFileData fileData) {
-		final ArrayList list = new ArrayList();
-		final PHPClassData[] classData = fileData.getClasses();
-		if (classData != null)
-			for (int i = 0; i < classData.length; i++)
+	private Object[] getFileChildren(PHPFileData fileData) {
+		ArrayList list = new ArrayList();
+		PHPClassData[] classData = fileData.getClasses();
+		if (classData != null) {
+			for (int i = 0; i < classData.length; i++) {
 				list.add(classData[i]);
-		final PHPFunctionData[] functions = fileData.getFunctions();
-		if (functions != null)
-			for (int i = 0; i < functions.length; i++)
+			}
+		}
+		PHPFunctionData[] functions = fileData.getFunctions();
+		if (functions != null) {
+			for (int i = 0; i < functions.length; i++) {
 				list.add(functions[i]);
-		final PHPConstantData[] consts = fileData.getConstants();
-		if (consts != null)
-			for (int i = 0; i < consts.length; i++)
+			}
+		}
+		PHPConstantData[] consts = fileData.getConstants();
+		if (consts != null) {
+			for (int i = 0; i < consts.length; i++) {
 				list.add(consts[i]);
+			}
+		}
 		return list.toArray();
 	}
 
-	protected Object[] getFolderChildren(final IContainer folder, final String[] filterNames) {
-		try {
-			final IResource[] members = folder.members();
-			final IProject project = folder.getProject();
-			if (!project.exists())
-				return members;
-			final ArrayList folderList = new ArrayList();
-			final ArrayList fileList = new ArrayList();
-			for (int i = 0; i < members.length; i++) {
-				final IResource member = members[i];
-				//				PHPFileData fileData = null;
-				boolean filterOut = false;
-				if (filterNames != null)
-					for (int j = 0; j < filterNames.length; j++)
-						if (filterNames[j].equals(member.getName())) {
-							filterOut = true;
-							break;
-						}
-				if (filterOut)
-					continue;
-				if (member instanceof IFolder)
-					folderList.add(member);
-				else if (member instanceof IFile)
-					//						fileData = projectModel.getFileData(member.getFullPath().toString());
-					//					if (fileData != null)
-					//						fileList.add(fileData);
-					//					else
-					fileList.add(members[i]);
+	private Object[] getClassChildren(PHPClassData classData) {
+		ArrayList list = new ArrayList();
+		PHPFunctionData[] functions = classData.getFunctions();
+		if (functions != null) {
+			for (int i = 0; i < functions.length; i++) {
+				list.add(functions[i]);
 			}
-			folderList.addAll(fileList);
-			return folderList.toArray();
-		} catch (final CoreException e) {
-			return NO_CHILDREN;
 		}
+		PHPVariableData[] vars = classData.getVars();
+		if (vars != null) {
+			for (int i = 0; i < vars.length; i++) {
+				list.add(vars[i]);
+			}
+		}
+		PHPClassConstData[] consts = classData.getConsts();
+		if (consts != null) {
+			for (int i = 0; i < consts.length; i++) {
+				list.add(consts[i]);
+			}
+		}
+		return list.toArray();
 	}
 
-	public Object getParent(final Object element) {
+	public final Object getParent(Object element) {
 		if (!exists(element))
 			return null;
 		return internalGetParent(element);
 	}
 
-	protected Object[] getPHPProjects(final PHPWorkspaceModelManager modelManager) {
-		return modelManager.listProjects();
+	final public boolean hasChildren(Object element) {
+		boolean areChildren = hasChildrenInternal(element);
+
+		return areChildren;
+	}
+	
+	protected boolean hasChildrenInternal(Object element) {
+		if (getProvideMembers()) {
+			// assume CUs and class files are never empty
+			if (element instanceof PHPFileData) {
+				return true;
+			}
+		} else {
+			// don't allow to drill down into a compilation unit or class file
+			if (element instanceof PHPFileData || element instanceof IFile) {
+				return false;
+			}
+		}
+
+		if (element instanceof PHPProjectModel) {
+			PHPProjectModel sp = (PHPProjectModel) element;
+			IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(sp);
+			if (!project.isOpen()) {
+				return false;
+			}
+		}
+
+		if (element instanceof PHPCodeData) {
+			PHPCodeData codeData = (PHPCodeData) element;
+			return PHPModelUtil.hasChildren(codeData);
+		}
+		Object[] children = getChildren(element);
+		return (children != null) && children.length > 0;
 	}
 
-	protected Object[] getProjectChildren(final IProject project) {
-		final String[] filterNames = {};
-		return getProjectChildren(project, filterNames);
+	public Object[] getElements(Object parent) {
+		return getChildren(parent);
 	}
 
-	protected Object[] getProjectChildren(final IProject project, final String[] filterNames) {
-		if (!project.isOpen())
-			return NO_CHILDREN;
+	public void dispose() {
 
-		final Object[] children = getFolderChildren(project, filterNames);
-
-		return children;
 	}
 
-	protected Object[] getProjectChildren(final PHPProjectModel model) {
-		final IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(model);
-		return getProjectChildren(project);
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+
+		if (treeProviders != null) {
+			for (int i = 0; i < treeProviders.length; i++) {
+				treeProviders[i].inputChanged(viewer, oldInput, newInput);
+			}
+		}
 	}
 
-	protected Object[] getProjectChildren(final PHPProjectModel model, final String[] filterNames) {
-		final IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(model);
-		return getProjectChildren(project, filterNames);
+	protected boolean exists(Object element) {
+		if (element == null) {
+			return false;
+		}
+		if (element instanceof IResource) {
+			return ((IResource) element).exists();
+		}
+		
+		return true;
 	}
 
 	public boolean getProvideMembers() {
 		return fProvideMembers;
 	}
 
-	final public boolean hasChildren(final Object element) {
-		final boolean areChildren = hasChildrenInternal(element);
-
-		return areChildren;
+	protected Object[] getPHPProjects(PHPWorkspaceModelManager modelManager) {
+		return modelManager.listProjects();
 	}
 
-	protected boolean hasChildrenInternal(final Object element) {
-		if (getProvideMembers()) {
-			// assume CUs and class files are never empty
-			if (element instanceof PHPFileData)
-				return true;
-		} else // don't allow to drill down into a compilation unit or class file
-		if (element instanceof PHPFileData || element instanceof IFile)
-			return false;
+	protected Object[] getProjectChildren(PHPProjectModel model) {
+		IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(model);
+		return getProjectChildren(project);
+	}
 
-		if (element instanceof PHPProjectModel) {
-			final PHPProjectModel sp = (PHPProjectModel) element;
-			final IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(sp);
-			if (!project.isOpen())
-				return false;
+	protected Object[] getProjectChildren(PHPProjectModel model, String[] filterNames) {
+		IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(model);
+		return getProjectChildren(project, filterNames);
+	}
+	
+	protected Object[] getProjectChildren(IProject project) {
+		String[] filterNames = {};
+		return getProjectChildren(project, filterNames);
+	}
+
+	protected Object[] getProjectChildren(IProject project, String[] filterNames) {
+		if (!project.isOpen())
+			return NO_CHILDREN;
+
+		Object[] children = getFolderChildren(project, filterNames);
+
+		return children;
+	}
+
+	protected boolean isProjectRoot(IContainer root) {
+		return (root instanceof IProject);
+	}
+
+	protected Object[] getFolderChildren(IContainer folder, String[] filterNames) {
+		try {
+			IResource[] members = folder.members();
+			IProject project = folder.getProject();
+			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+			if (projectModel == null)
+				return members;
+			if (!project.exists())
+				return members;
+			ArrayList folderList = new ArrayList();
+			ArrayList fileList = new ArrayList();
+			for (int i = 0; i < members.length; i++) {
+				IResource member = members[i];
+				//				PHPFileData fileData = null;
+				boolean filterOut = false;
+				if (filterNames != null)
+					for (int j = 0; j < filterNames.length; j++) {
+						if (filterNames[j].equals(member.getName())) {
+							filterOut = true;
+							break;
+						}
+					}
+				if (filterOut)
+					continue;
+				if (member instanceof IFolder) {
+					folderList.add(member);
+				} else {
+					if (member instanceof IFile)
+					//						fileData = projectModel.getFileData(member.getFullPath().toString());
+					//					if (fileData != null)
+					//						fileList.add(fileData);
+					//					else
+					fileList.add(members[i]);
+				}
+			}
+			folderList.addAll(fileList);
+			return folderList.toArray();
+		} catch (CoreException e) {
+			return NO_CHILDREN;
 		}
-
-		if (element instanceof PHPCodeData) {
-			final PHPCodeData codeData = (PHPCodeData) element;
-			return PHPModelUtil.hasChildren(codeData);
-		}
-		final Object[] children = getChildren(element);
-		return children != null && children.length > 0;
 	}
 
-	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-
-		if (treeProviders != null)
-			for (int i = 0; i < treeProviders.length; i++)
-				treeProviders[i].inputChanged(viewer, oldInput, newInput);
-	}
-
-	protected Object internalGetParent(final Object element) {
+	protected Object internalGetParent(Object element) {
 		return PHPModelUtil.getParent(element);
 	}
 
-	protected boolean isProjectRoot(final IContainer root) {
-		return root instanceof IProject;
+	protected Object skipProjectRoot(IFolder root) {
+		if (isProjectRoot(root))
+			return root.getParent();
+		return root;
+	}
+	
+	protected static Object[] concatenate(Object[] a1, Object[] a2) {
+		int a1Len = a1.length;
+		int a2Len = a2.length;
+		Object[] res = new Object[a1Len + a2Len];
+		System.arraycopy(a1, 0, res, 0, a1Len);
+		System.arraycopy(a2, 0, res, a1Len, a2Len);
+		return res;
 	}
 
-	protected boolean isSourceFolderEmpty(final Object element) {
+	protected boolean isSourceFolderEmpty(Object element) {
 		if (element instanceof IFolder) {
-			final IFolder folder = (IFolder) element;
+			IFolder folder = (IFolder) element;
 			try {
-				if (folder.exists() && folder.members().length == 0)
+				if (folder.exists() && (folder.members().length == 0))
 					return true;
-			} catch (final CoreException e) {
+			} catch (CoreException e) {
 				e.printStackTrace();
 			}
 		}
 		return false;
 	}
 
-	public void setProvideMembers(final boolean b) {
+	public void setProvideMembers(boolean b) {
 		fProvideMembers = b;
 	}
 
-	public void setTreeProviders(final IPHPTreeContentProvider[] providers) {
-		treeProviders = providers;
-	}
-
-	protected Object skipProjectRoot(final IFolder root) {
-		if (isProjectRoot(root))
-			return root.getParent();
-		return root;
-	}
 }
