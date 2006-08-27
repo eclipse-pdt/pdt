@@ -136,6 +136,16 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		return -1;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.ui.StandardPHPElementContentProvider#dispose()
+	 */
+	public void dispose() {
+		// TODO Auto-generated method stub
+		PHPWorkspaceModelManager.getInstance().removeWorkspaceModelListener(this);
+		PHPWorkspaceModelManager.getInstance().removeModelListener(this);
+		super.dispose();
+	}
+
 	private ProjectOutlinePart fPart;
 	IProject fStoredProject;
 
@@ -160,7 +170,6 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	}
 
 	public void fileDataChanged(final PHPFileData fileData) {
-
 		if (fPart.isInCurrentProject(fileData))
 			postRefresh(fileData, true);
 	}
@@ -235,30 +244,34 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	}
 
 	private void postRefresh(final Object root, final boolean updateLabels) {
+		
 		final Runnable runnable = new Runnable() {
 			public void run() {
-				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed()) {
-					IResource res = PHPModelUtil.getResource(root);
-					PHPProjectModel model = null;
-					if (res != null)
-						model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
-					OutlineNode outlineNode;
-					for (int i = 0; i < groupNodes.length; i++) {
-						outlineNode = groupNodes[i];
-						if (model != outlineNode.getModel())
-							outlineNode.setModel(model);
-						outlineNode.resetChildren();
+				if(fViewer == null)
+					return;
+				Control control = fViewer.getControl();
+				if(control == null || control.isDisposed() || !control.isVisible())
+					return;
+				
+				IResource res = PHPModelUtil.getResource(root);
+				PHPProjectModel model = null;
+				if (res != null)
+					model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
+				OutlineNode outlineNode;
+				for (int i = 0; i < groupNodes.length; i++) {
+					outlineNode = groupNodes[i];
+					if (model != outlineNode.getModel())
+						outlineNode.setModel(model);
+					outlineNode.resetChildren();
 
-						//						ISelection selection = fViewer.getSelection();
+					//						ISelection selection = fViewer.getSelection();
 
-						// bug workaround
-						//						fViewer.getTree().setRedraw(false);
-						//						fViewer.getTree().setRedraw(true);
+					// bug workaround
+					//						fViewer.getTree().setRedraw(false);
+					//						fViewer.getTree().setRedraw(true);
 
-						fViewer.refresh(groupNodes[i], updateLabels);
-						//						fViewer.setSelection(selection);
-					}
+					fViewer.refresh(groupNodes[i], updateLabels);
+					//						fViewer.setSelection(selection);
 				}
 				//				fViewer.getTree().setRedraw(false);
 				//				fViewer.getTree().setRedraw(true);
