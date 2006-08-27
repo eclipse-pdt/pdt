@@ -215,11 +215,13 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 	private void postAdd(final Object parent, final Object element) {
 		postRunnable(new Runnable() {
 			public void run() {
-				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed()) {
-					if (fViewer.testFindItem(element) == null)
+				if(fViewer == null)
+					return;
+				Control control = fViewer.getControl();
+				if(control == null || control.isDisposed() || !control.isVisible())
+					return;
+				if (fViewer.testFindItem(element) == null)
 						fViewer.add(parent, element);
-				}
 			}
 		});
 	}
