@@ -37,7 +37,7 @@ public class LinkingSelectionListener implements ISelectionListener {
 	}
 
 	public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
-		if (viewer == null)
+		if (viewer == null || viewer.getControl() == null || viewer.getControl().isDisposed())
 			return;
 		if (selection instanceof IStructuredSelection) {
 			final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
