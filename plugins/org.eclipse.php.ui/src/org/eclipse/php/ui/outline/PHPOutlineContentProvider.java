@@ -11,10 +11,8 @@
 package org.eclipse.php.ui.outline;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
@@ -34,7 +32,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 
@@ -71,8 +68,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataAdded(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
 	 */
 	public void fileDataAdded(PHPFileData fileData) {
-		if (editorModel != null && editorModel.getBaseLocation().equals(fileData.getUserData().getFileName())) {
-			this.fileData = fileData;
+		if (editorModel != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName())) {
 			postRefresh(true);
 		}
 	}
@@ -81,7 +77,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataChanged(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
 	 */
 	public void fileDataChanged(PHPFileData fileData) {
-		if (editorModel != null && this.fileData.getComparableName().equals(fileData.getComparableName())) {
+		if (editorModel != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName())) {
 			if (groupNodes != null)
 				for (int i = 0; i < groupNodes.length; ++i) {
 					groupNodes[i].reset(fileData);
@@ -101,10 +97,10 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	private void postRefresh(final Object element, final boolean updateLabels) {
 		final Runnable runnable = new Runnable() {
 			public void run() {
-				if(viewer == null)
+				if (viewer == null)
 					return;
 				Control control = viewer.getControl();
-				if(control == null || control.isDisposed() || !control.isVisible())
+				if (control == null || control.isDisposed() || !control.isVisible())
 					return;
 
 				if (element == null)
@@ -229,7 +225,6 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	private ISelectionListener fSelectionListener = null;
 
 	PHPEditorModel editorModel;
-	PHPFileData fileData;
 
 	GroupNode[] groupNodes;
 	int mode;
@@ -264,7 +259,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 		else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
 			editorModel = (PHPEditorModel) object;
 			final PHPEditorModel editorModel = (PHPEditorModel) object;
-			fileData = editorModel.getFileData();
+			PHPFileData fileData = editorModel.getFileData();
 			if (fileData != null) {
 				final GroupNode[] groupNodes = getGroupNodes(fileData);
 				if (groupNodes != null)
