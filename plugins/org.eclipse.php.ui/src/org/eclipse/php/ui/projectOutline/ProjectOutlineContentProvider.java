@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.ui.projectOutline;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -19,13 +23,14 @@ import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
 import org.eclipse.swt.widgets.Control;
 
 public class ProjectOutlineContentProvider extends StandardPHPElementContentProvider implements ModelListener, IWorkspaceModelListener {
 	public static class OutlineNode implements Comparable {
-		Object[] children;
+		HashMap children;
 		PHPProjectModel model;
 		ProjectOutlinePart part;
 		String text;
@@ -56,7 +61,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				return new Object[0];
 			if (children == null)
 				loadChildren();
-			return children;
+			return children.keySet().toArray();
 		}
 
 		public PHPProjectModel getModel() {
@@ -76,34 +81,83 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				return false;
 			if (children == null)
 				loadChildren();
-			return children.length > 0;
+			return children.size() > 0;
+		}
+
+		PHPCodeData[] addChildren(PHPFileData newData) {
+			PHPCodeData[] newChildren = new PHPCodeData[0];
+			if (newData != null) {
+				switch (type) {
+					case CLASSES:
+						newChildren = newData.getClasses();
+						break;
+					case FUNCTIONS:
+						newChildren = newData.getFunctions();
+						break;
+					case CONSTANTS:
+						newChildren = newData.getConstants();
+						break;
+				}
+			}
+			for (int i = 0; i < newChildren.length; ++i) {
+				children.put(newChildren[i], newChildren[i]);
+			}
+
+			return newChildren;
+
+		}
+
+		PHPCodeData[] removeChildren(PHPFileData oldData) {
+			PHPCodeData[] oldChildren = new PHPCodeData[0];
+			if (oldData != null) {
+				switch (type) {
+					case CLASSES:
+						oldChildren = oldData.getClasses();
+						break;
+					case FUNCTIONS:
+						oldChildren = oldData.getFunctions();
+						break;
+					case CONSTANTS:
+						oldChildren = oldData.getConstants();
+						break;
+				}
+			}
+			for (int i = 0; i < oldChildren.length; ++i) {
+				children.remove(oldChildren[i]);
+			}
+
+			return oldChildren;
+
 		}
 
 		void loadChildren() {
+			children = new HashMap(1);
+			Object[] aChildren = new Object[0];
 			switch (type) {
 				case CLASSES:
 					if (part.isShowAll())
-						children = model.getClasses();
+						aChildren = model.getClasses();
 					else
-						children = model.getPHPUserModel().getClasses();
+						aChildren = model.getPHPUserModel().getClasses();
 					break;
 
 				case FUNCTIONS:
 					if (part.isShowAll())
-						children = model.getFunctions();
+						aChildren = model.getFunctions();
 					else
-						children = model.getPHPUserModel().getFunctions();
+						aChildren = model.getPHPUserModel().getFunctions();
 					break;
 
 				case CONSTANTS:
 					if (part.isShowAll())
-						children = model.getConstants();
+						aChildren = model.getConstants();
 					else
-						children = model.getPHPUserModel().getConstants();
+						aChildren = model.getPHPUserModel().getConstants();
 					break;
 
-				default:
-					break;
+			}
+			for (int i = 0; i < aChildren.length; ++i) {
+				children.put(aChildren[i], aChildren[i]);
 			}
 		}
 
@@ -163,21 +217,15 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	}
 
 	public void fileDataAdded(final PHPFileData fileData) {
-		// TODO Auto-generated method stub
-		if (fPart.isInCurrentProject(fileData))
-			postRefresh(fileData, true);
-
+		postAdd(fileData);
 	}
 
 	public void fileDataChanged(final PHPFileData fileData) {
-		if (fPart.isInCurrentProject(fileData))
-			postRefresh(fileData, true);
+		postRefresh(fileData, true);
 	}
 
 	public void fileDataRemoved(final PHPFileData fileData) {
-		// TODO Auto-generated method stub
-		if (fPart.isInCurrentProject(fileData))
-			postRefresh(fileData, true);
+		postRemove(fileData);
 
 	}
 
@@ -243,49 +291,164 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		return parent;
 	}
 
-	private void postRefresh(final Object root, final boolean updateLabels) {
-		
-		final Runnable runnable = new Runnable() {
+	private void postAdd(final PHPFileData fileData) {
+		if (fViewer == null || fViewer.getControl() == null)
+			return;
+
+		Runnable runnable = new Runnable() {
 			public void run() {
-				if(fViewer == null)
+				if (fViewer == null)
 					return;
+
 				Control control = fViewer.getControl();
-				if(control == null || control.isDisposed() || !control.isVisible())
+				if (control == null || control.isDisposed())
 					return;
-				
-				IResource res = PHPModelUtil.getResource(root);
-				PHPProjectModel model = null;
-				if (res != null)
-					model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
+
+				IResource res = PHPModelUtil.getResource(fileData);
+				if (res == null)
+					return;
+
+				if (res.getProject() != fStoredProject)
+					return;
+
+				PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
 				OutlineNode outlineNode;
+				Object[] toUpdate;
 				for (int i = 0; i < groupNodes.length; i++) {
 					outlineNode = groupNodes[i];
 					if (model != outlineNode.getModel())
 						outlineNode.setModel(model);
-					outlineNode.resetChildren();
-
-					//						ISelection selection = fViewer.getSelection();
-
-					// bug workaround
-					//						fViewer.getTree().setRedraw(false);
-					//						fViewer.getTree().setRedraw(true);
-
-					fViewer.refresh(groupNodes[i], updateLabels);
-					//						fViewer.setSelection(selection);
+					toUpdate = outlineNode.addChildren(fileData);
+					fViewer.add(outlineNode, toUpdate);
 				}
-				//				fViewer.getTree().setRedraw(false);
-				//				fViewer.getTree().setRedraw(true);
-				fViewer.refresh(updateLabels);
 			}
 		};
 		fViewer.getControl().getDisplay().asyncExec(runnable);
 	}
 
+	private void postRemove(final PHPFileData fileData) {
+		if (fViewer == null || fViewer.getControl() == null)
+			return;
+
+		Runnable runnable = new Runnable() {
+			public void run() {
+				if (fViewer == null)
+					return;
+
+				Control control = fViewer.getControl();
+				if (control == null || control.isDisposed())
+					return;
+
+				IResource res = PHPModelUtil.getResource(fileData);
+				if (res == null)
+					return;
+
+				if (res.getProject() != fStoredProject)
+					return;
+
+				PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
+				OutlineNode outlineNode;
+				Object[] toUpdate;
+				for (int i = 0; i < groupNodes.length; i++) {
+					outlineNode = groupNodes[i];
+					if (model != outlineNode.getModel())
+						outlineNode.setModel(model);
+					toUpdate = outlineNode.removeChildren(fileData);
+					fViewer.remove(outlineNode, toUpdate);
+				}
+			}
+		};
+		fViewer.getControl().getDisplay().asyncExec(runnable);
+	}
+
+	PHPFileData fStoredFileData;
+	int inProgress = 0;
+	LinkedList toAdd = new LinkedList();
+	LinkedList toRemove = new LinkedList();
+
+	private void postRefresh(final Object root, final boolean updateLabels) {
+		if (fViewer == null || fViewer.getControl() == null)
+			return;
+		final Runnable runnable = new Runnable() {
+			public void run() {
+				boolean queued = false;
+				if (inProgress > 2)
+					queued = true;
+				if (fViewer == null) {
+					--inProgress;
+					return;
+				}
+				Control control = fViewer.getControl();
+				if (control == null || control.isDisposed()) {
+					--inProgress;
+					return;
+				}
+
+				IResource res = PHPModelUtil.getResource(root);
+				if (res == null) {
+					--inProgress;
+					return;
+				}
+
+				if (res.getProject() != fStoredProject) {
+					--inProgress;
+					return;
+				}
+
+				PHPProjectModel model = null;
+				if (res != null)
+					model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
+				OutlineNode outlineNode;
+				PHPCodeData[] currentToAdd;
+				PHPCodeData[] currentToRemove;
+
+				PHPFileData newData = null;
+				PHPFileData oldData = null;
+				if (root instanceof PHPFileData) {
+					newData = (PHPFileData) root;
+				}
+				if (fStoredFileData != null) {
+					oldData = fStoredFileData;
+				}
+				fStoredFileData = newData;
+				if (newData != null && oldData != null && oldData.getComparableName().equals(newData.getComparableName())) {
+					for (int i = 0; i < groupNodes.length; i++) {
+						outlineNode = groupNodes[i];
+						if (model != outlineNode.getModel())
+							outlineNode.setModel(model);
+						currentToRemove = outlineNode.removeChildren(oldData);
+						currentToAdd = outlineNode.addChildren(newData);
+						toRemove.addAll(Arrays.asList(currentToRemove));
+						toAdd.addAll(Arrays.asList(currentToAdd));
+						if (!queued) {
+							fViewer.remove(toRemove.toArray(new PHPCodeData[toRemove.size()]));
+							fViewer.add(outlineNode, toAdd.toArray(new PHPCodeData[toAdd.size()]));
+							toRemove.clear();
+							toAdd.clear();
+						}
+					}
+				} else {
+					for (int i = 0; i < groupNodes.length; i++) {
+						outlineNode = groupNodes[i];
+						if (model != outlineNode.getModel())
+							outlineNode.setModel(model);
+						outlineNode.loadChildren();
+					}
+					if (!queued)
+						fViewer.refresh(updateLabels);
+				}
+				--inProgress;
+			}
+		};
+		if (inProgress < 1) {
+			++inProgress;
+			fViewer.getControl().getDisplay().asyncExec(runnable);
+		}
+	}
+
 	public void projectModelAdded(final IProject project) {
 		if (fPart.isInCurrentProject(project))
 			postRefresh(project, true);
-		// TODO Auto-generated method stub
-
 	}
 
 	public void projectModelChanged(final IProject project) {
