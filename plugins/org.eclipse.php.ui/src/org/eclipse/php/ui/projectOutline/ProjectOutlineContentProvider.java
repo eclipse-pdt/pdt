@@ -396,8 +396,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				}
 
 				PHPProjectModel model = null;
-				if (res != null)
-					model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
+				model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
 				OutlineNode outlineNode;
 				PHPCodeData[] currentToAdd;
 				PHPCodeData[] currentToRemove;
