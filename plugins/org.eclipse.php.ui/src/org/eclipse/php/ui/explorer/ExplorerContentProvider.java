@@ -218,7 +218,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 				if(fViewer == null)
 					return;
 				Control control = fViewer.getControl();
-				if(control == null || control.isDisposed() || !control.isVisible())
+				if(control == null || control.isDisposed())
 					return;
 				if (fViewer.testFindItem(element) == null)
 						fViewer.add(parent, element);

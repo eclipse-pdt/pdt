@@ -100,7 +100,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 				if (viewer == null)
 					return;
 				Control control = viewer.getControl();
-				if (control == null || control.isDisposed() || !control.isVisible())
+				if (control == null || control.isDisposed())
 					return;
 
 				if (element == null)
