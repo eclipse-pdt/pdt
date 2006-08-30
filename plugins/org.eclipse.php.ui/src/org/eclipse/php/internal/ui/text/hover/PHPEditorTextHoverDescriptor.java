@@ -306,7 +306,7 @@ public class PHPEditorTextHoverDescriptor {
 				}
 			}
 			if (fDecorator == null) {
-				fDecorator = new DefaultTextHoverMessageDecorator();
+				fDecorator = new NullTextHoverMessageDecorator();
 			}
 		}
 		return fDecorator;
@@ -321,6 +321,16 @@ public class PHPEditorTextHoverDescriptor {
 			String hoverMessage = PHPUIMessages.getString("HoverFocus_decoration");					
 			hoverMessage = NLS.bind(hoverMessage, msg);			
 			return hoverMessage;
+			
+		}
+	}
+	
+	class NullTextHoverMessageDecorator implements IHoverMessageDecorators {
+		/* (non-Javadoc)
+		 * @see org.eclipse.php.ui.editor.hover.IHoverMessageDecorators#getDecoratedMessage(java.lang.String)
+		 */
+		public String getDecoratedMessage(String msg) {
+			return msg;
 			
 		}
 	}
