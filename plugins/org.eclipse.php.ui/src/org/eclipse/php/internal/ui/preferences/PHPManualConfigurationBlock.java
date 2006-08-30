@@ -55,78 +55,78 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 public class PHPManualConfigurationBlock implements IPreferenceConfigurationBlock {
-	
+
 	public static class PHPManualConfig {
 		private String label;
 		private String url;
 		private String extension;
 		private boolean isContributed;
-		
-		public PHPManualConfig (String label, String url, String extension, boolean isContributed) {
+
+		public PHPManualConfig(String label, String url, String extension, boolean isContributed) {
 			this.label = label;
 			this.url = url;
 			this.isContributed = isContributed;
 			this.extension = extension;
 		}
 
-        public boolean isContributed() {
+		public boolean isContributed() {
 			return isContributed;
 		}
 
-        public String getLabel() {
+		public String getLabel() {
 			return label;
 		}
 
-        public String getUrl() {
+		public String getUrl() {
 			return url;
 		}
-        
-        public String getExtension() {
-        	return extension;
-        }
-	}
-	
-	private class PHPManualLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
-        public Font getFont(Object element) {
-        	if (isDefault((PHPManualConfig)element)) {
-        		return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
-        	}
-        	return null;
-		}
 
-        public Image getColumnImage(Object element, int columnIndex) {
+		public String getExtension() {
+			return extension;
+		}
+	}
+
+	private class PHPManualLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
+		public Font getFont(Object element) {
+			if (isDefault((PHPManualConfig) element)) {
+				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
+			}
 			return null;
 		}
 
-        public String getColumnText(Object element, int columnIndex) {
-        	if (columnIndex == 0) {
-        		return ((PHPManualConfig)element).label;
-        	} else if (columnIndex == 1) {
-        		return ((PHPManualConfig)element).url;
-        	} else if (columnIndex == 2) {
-        		return ((PHPManualConfig)element).extension;
-        	}
-        	return null;
+		public Image getColumnImage(Object element, int columnIndex) {
+			return null;
+		}
+
+		public String getColumnText(Object element, int columnIndex) {
+			if (columnIndex == 0) {
+				return ((PHPManualConfig) element).label;
+			} else if (columnIndex == 1) {
+				return ((PHPManualConfig) element).url;
+			} else if (columnIndex == 2) {
+				return ((PHPManualConfig) element).extension;
+			}
+			return null;
 		}
 	}
-	
+
 	private class PHPManualSorter extends ViewerSorter {
-		
-        public int compare(Viewer viewer, Object e1, Object e2) {
-			return collator.compare(((PHPManualConfig)e1).label, ((PHPManualConfig)e2).label);
+
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			return collator.compare(((PHPManualConfig) e1).label, ((PHPManualConfig) e2).label);
 		}
 	}
-	
+
 	private class PHPManualAdapter implements IListAdapter, IDialogFieldListener {
 
 		private boolean canEdit(List selectedElements) {
-			return selectedElements.size() == 1 && !((PHPManualConfig)selectedElements.get(0)).isContributed;
+			return selectedElements.size() == 1 && !((PHPManualConfig) selectedElements.get(0)).isContributed;
 		}
-		
+
 		private boolean canRemove(List selectedElements) {
 			Object[] elements = selectedElements.toArray();
-			for (int i=0; i<elements.length; i++) {
-				if (((PHPManualConfig)elements[i]).isContributed) {
+			for (int i = 0; i < elements.length; i++) {
+				if (((PHPManualConfig) elements[i]).isContributed) {
 					return false;
 				}
 			}
@@ -136,40 +136,40 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		private boolean canSetToDefault(List selectedElements) {
 			return selectedElements.size() == 1 && !isDefault((PHPManualConfig) selectedElements.get(0));
 		}
-		
-        public void dialogFieldChanged(DialogField field) {
+
+		public void dialogFieldChanged(DialogField field) {
 		}
 
-        public void customButtonPressed(ListDialogField field, int index) {
-        	sideButtonPressed(index);
+		public void customButtonPressed(ListDialogField field, int index) {
+			sideButtonPressed(index);
 		}
 
-        public void doubleClicked(ListDialogField field) {
-        	if (canEdit(field.getSelectedElements())) {
+		public void doubleClicked(ListDialogField field) {
+			if (canEdit(field.getSelectedElements())) {
 				sideButtonPressed(IDX_EDIT);
 			}
 		}
 
-        public void selectionChanged(ListDialogField field) {
-        	List selectedElements = field.getSelectedElements();
+		public void selectionChanged(ListDialogField field) {
+			List selectedElements = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, canEdit(selectedElements));
 			field.enableButton(IDX_DEFAULT, canSetToDefault(selectedElements));
 			field.enableButton(IDX_REMOVE, canRemove(selectedElements));
 		}
 	}
-	
+
 	private static final int IDX_ADD = 0;
 	private static final int IDX_EDIT = 1;
 	private static final int IDX_REMOVE = 2;
 	private static final int IDX_DEFAULT = 4;
-	
+
 	public static final String PREFERENCES_DELIMITER = new String(new char[] { 5 });
-	
+
 	private IStatus fPHPManualStatus;
 	private ListDialogField fPHPManualButtonsList;
 	private PreferencePage fMainPreferencePage;
 	private OverlayPreferenceStore fStore;
-	
+
 	private Map fCheckBoxes = new HashMap();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -182,19 +182,19 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 			fStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
 		}
 	};
-	
-	protected boolean isDefault (PHPManualConfig element) {
+
+	protected boolean isDefault(PHPManualConfig element) {
 		return fPHPManualButtonsList.getIndexOfElement(element) == 0;
 	}
-	
-	protected void setToDefault (PHPManualConfig element) {
+
+	protected void setToDefault(PHPManualConfig element) {
 		List elements = fPHPManualButtonsList.getElements();
-		elements.remove (element);
-		elements.add (0, element);
+		elements.remove(element);
+		elements.add(0, element);
 		fPHPManualButtonsList.setElements(elements);
 		fPHPManualButtonsList.enableButton(IDX_DEFAULT, false);
 	}
-	
+
 	public PHPManualConfigurationBlock(PreferencePage mainPreferencePage, OverlayPreferenceStore store) {
 		Assert.isNotNull(mainPreferencePage);
 		Assert.isNotNull(store);
@@ -202,7 +202,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		fStore = store;
 		fStore.addKeys(createOverlayStoreKeys());
 	}
-	
+
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 		ArrayList overlayKeys = new ArrayList();
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.PHP_MANUAL_SITE));
@@ -213,28 +213,28 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		overlayKeys.toArray(keys);
 		return keys;
 	}
-	
-    public Control createControl(Composite parent) {
-    	
-    	PHPManualAdapter adapter = new PHPManualAdapter();
-		String buttons[] = new String[] {  PHPUIMessages.PHPManualConfigurationBlock_new, PHPUIMessages.PHPManualConfigurationBlock_edit, PHPUIMessages.PHPManualConfigurationBlock_remove, null, PHPUIMessages.PHPManualConfigurationBlock_default };
+
+	public Control createControl(Composite parent) {
+
+		PHPManualAdapter adapter = new PHPManualAdapter();
+		String buttons[] = new String[] { PHPUIMessages.PHPManualConfigurationBlock_new, PHPUIMessages.PHPManualConfigurationBlock_edit, PHPUIMessages.PHPManualConfigurationBlock_remove, null, PHPUIMessages.PHPManualConfigurationBlock_default };
 		fPHPManualButtonsList = new ListDialogField(adapter, buttons, new PHPManualLabelProvider());
 		fPHPManualButtonsList.setDialogFieldListener(adapter);
 		fPHPManualButtonsList.setRemoveButtonIndex(IDX_REMOVE);
-		
+
 		String[] columnsHeaders = new String[] { PHPUIMessages.PHPManualConfigurationBlock_siteName, PHPUIMessages.PHPManualConfigurationBlock_url, PHPUIMessages.PHPManualConfigurationBlock_fileExtension };
 		fPHPManualButtonsList.setTableColumns(new ListDialogField.ColumnsDescription(columnsHeaders, true));
 		fPHPManualButtonsList.setViewerSorter(new PHPManualSorter());
-		
+
 		if (fPHPManualButtonsList.getSize() > 0) {
 			fPHPManualButtonsList.selectFirstElement();
 		} else {
 			fPHPManualButtonsList.enableButton(IDX_EDIT, false);
 			fPHPManualButtonsList.enableButton(IDX_DEFAULT, false);
 		}
-		
+
 		fPHPManualStatus = new StatusInfo();
-		
+
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -244,8 +244,8 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 
 		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(parent, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite composite = new Composite(scrolledCompositeImpl, SWT.NONE);
-        composite.setLayout(layout);
-        scrolledCompositeImpl.setContent(composite);
+		composite.setLayout(layout);
+		scrolledCompositeImpl.setContent(composite);
 
 		scrolledCompositeImpl.setLayout(layout);
 		scrolledCompositeImpl.setFont(parent.getFont());
@@ -257,17 +257,17 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 
 		Control buttonsControl = fPHPManualButtonsList.getButtonBox(composite);
 		buttonsControl.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING));
-		
+
 		addCheckBox(composite, PHPUIMessages.PHPManualConfigurationBlock_openInNewBrowser, PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER, 0);
 		addFiller(composite);
-		
+
 		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        scrolledCompositeImpl.setMinSize(size.x, size.y);
-		
+		scrolledCompositeImpl.setMinSize(size.x, size.y);
+
 		return scrolledCompositeImpl;
 	}
-    
-    private Button addCheckBox(Composite parent, String label, String key, int indentation) {
+
+	private Button addCheckBox(Composite parent, String label, String key, int indentation) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 
@@ -279,10 +279,10 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 
 		fCheckBoxes.put(checkBox, key);
 		checkBox.setSelection(fStore.getBoolean(key));
-		
+
 		return checkBox;
 	}
-    
+
 	private void addFiller(Composite composite) {
 		PixelConverter pixelConverter = new PixelConverter(composite);
 		Label filler = new Label(composite, SWT.LEFT);
@@ -292,61 +292,60 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		filler.setLayoutData(gd);
 	}
 
-    protected void sideButtonPressed (int index) {
+	protected void sideButtonPressed(int index) {
 		if (index == IDX_ADD) {
 			NewPHPManualSiteDialog dialog = new NewPHPManualSiteDialog(fMainPreferencePage.getShell(), null, fPHPManualButtonsList.getElements());
 			if (dialog.open() == Window.OK) {
 				fPHPManualButtonsList.addElement(dialog.getResult());
 			}
-		}
-		else if (index == IDX_EDIT) {
-			PHPManualConfig edited = (PHPManualConfig)fPHPManualButtonsList.getSelectedElements().get(0);
+		} else if (index == IDX_EDIT) {
+			PHPManualConfig edited = (PHPManualConfig) fPHPManualButtonsList.getSelectedElements().get(0);
 			NewPHPManualSiteDialog dialog = new NewPHPManualSiteDialog(fMainPreferencePage.getShell(), edited, fPHPManualButtonsList.getElements());
-			if (dialog.open() == Window.OK) {
+			// in case there was no change, dialog.getResult() will be null and nothing should happen (sending null will throw an exception)
+			if (dialog.open() == Window.OK && dialog.getResult() != null) {
 				fPHPManualButtonsList.replaceElement(edited, dialog.getResult());
 			}
+		} else if (index == IDX_DEFAULT) {
+			setToDefault((PHPManualConfig) fPHPManualButtonsList.getSelectedElements().get(0));
 		}
-		else if (index == IDX_DEFAULT) {
-			setToDefault ((PHPManualConfig)fPHPManualButtonsList.getSelectedElements().get(0));
-		}
-    }
-    
-    protected void updateStatus() {
-    	fMainPreferencePage.setValid(fPHPManualStatus.isOK());
-		StatusUtil.applyToStatusLine(fMainPreferencePage, fPHPManualStatus);
-    }
+	}
 
-    public void initialize() {
-    	List configs = new ArrayList();
-    	
-    	initFromExtensions(configs);
-    	initFromPreferences(fStore, configs);
-		
-		fPHPManualButtonsList.setElements (configs);
-		
+	protected void updateStatus() {
+		fMainPreferencePage.setValid(fPHPManualStatus.isOK());
+		StatusUtil.applyToStatusLine(fMainPreferencePage, fPHPManualStatus);
+	}
+
+	public void initialize() {
+		List configs = new ArrayList();
+
+		initFromExtensions(configs);
+		initFromPreferences(fStore, configs);
+
+		fPHPManualButtonsList.setElements(configs);
+
 		PHPManualConfig defaultConfig = getActiveManualSite(fStore, configs);
 		if (defaultConfig != null) {
 			setToDefault(defaultConfig);
 		}
 	}
-    
-    /**
-     * Initializes array of PHPManualConfigs from known phpManualSite extensions
-     * @param configs
-     */
-    public static void initFromExtensions (List configs) {
-    	PHPManualSiteDescriptor[] descs = PHPUiPlugin.getDefault().getPHPManualSiteDescriptors();
-		for (int i=0; i < descs.length; ++i) {
-			configs.add(new PHPManualConfig(descs[i].getLabel(), descs[i].getURL(), descs[i].getExtension(), true)); 
+
+	/**
+	 * Initializes array of PHPManualConfigs from known phpManualSite extensions
+	 * @param configs
+	 */
+	public static void initFromExtensions(List configs) {
+		PHPManualSiteDescriptor[] descs = PHPUiPlugin.getDefault().getPHPManualSiteDescriptors();
+		for (int i = 0; i < descs.length; ++i) {
+			configs.add(new PHPManualConfig(descs[i].getLabel(), descs[i].getURL(), descs[i].getExtension(), true));
 		}
-    }
-    
-    /**
-     * Initializes array of PHPManualConfigs from preferences
-     * @param configs
-     */
-    public static void initFromPreferences (IPreferenceStore store, List configs) {
-    	String storedSites = store.getString(PreferenceConstants.PHP_MANUAL_SITES);
+	}
+
+	/**
+	 * Initializes array of PHPManualConfigs from preferences
+	 * @param configs
+	 */
+	public static void initFromPreferences(IPreferenceStore store, List configs) {
+		String storedSites = store.getString(PreferenceConstants.PHP_MANUAL_SITES);
 		if (storedSites != null) {
 			StringTokenizer sitesTokenizer = new StringTokenizer(storedSites, PREFERENCES_DELIMITER);
 			while (sitesTokenizer.hasMoreTokens()) {
@@ -357,8 +356,8 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 						String extension = sitesTokenizer.nextToken();
 						PHPManualConfig config = new PHPManualConfig(name, url, extension, false);
 						boolean alreadyExists = false;
-						for (int i=0; i<configs.size(); ++i) {
-							PHPManualConfig existing = (PHPManualConfig)configs.get(i);
+						for (int i = 0; i < configs.size(); ++i) {
+							PHPManualConfig existing = (PHPManualConfig) configs.get(i);
 							if (existing.label.equals(config.label) || existing.url.equals(config.url)) {
 								alreadyExists = true;
 							}
@@ -370,38 +369,38 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 				}
 			}
 		}
-    }
-    
-    /**
-     * Returns active PHP manual site config
-     * @return active PHP manual site config
-     */
-    public static PHPManualConfig getActiveManualSite (IPreferenceStore store, List configs) {
-    	String storedSite = store.getString(PreferenceConstants.PHP_MANUAL_SITE);
-    	for (int i=0; i<configs.size(); ++i) {
-			PHPManualConfig config = (PHPManualConfig)configs.get(i);
+	}
+
+	/**
+	 * Returns active PHP manual site config
+	 * @return active PHP manual site config
+	 */
+	public static PHPManualConfig getActiveManualSite(IPreferenceStore store, List configs) {
+		String storedSite = store.getString(PreferenceConstants.PHP_MANUAL_SITE);
+		for (int i = 0; i < configs.size(); ++i) {
+			PHPManualConfig config = (PHPManualConfig) configs.get(i);
 			if (config.url.equals(storedSite)) {
 				return config;
 			}
-    	}
-    	return null;
-    }
-    
-    public void dispose() {
-    	// nothing to dispose
+		}
+		return null;
 	}
 
-    public void performDefaults() {
+	public void dispose() {
+		// nothing to dispose
+	}
+
+	public void performDefaults() {
 		initialize();
 		updateStatus();
 	}
 
-    public void performOk() {
-    	StringBuffer sitesBuffer = new StringBuffer();
+	public void performOk() {
+		StringBuffer sitesBuffer = new StringBuffer();
 		Object[] elements = fPHPManualButtonsList.getElements().toArray();
 		if (elements != null && elements.length > 0) {
-			for (int i = 0; i < elements.length; ++i)  {
-				PHPManualConfig config = (PHPManualConfig)elements[i];
+			for (int i = 0; i < elements.length; ++i) {
+				PHPManualConfig config = (PHPManualConfig) elements[i];
 				if (!config.isContributed) {
 					if (sitesBuffer.length() != 0) {
 						sitesBuffer.append(PREFERENCES_DELIMITER);
@@ -413,9 +412,9 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 					sitesBuffer.append(config.extension);
 				}
 			}
-			
+
 			fStore.setValue(PreferenceConstants.PHP_MANUAL_SITES, sitesBuffer.toString());
-			fStore.setValue(PreferenceConstants.PHP_MANUAL_SITE, ((PHPManualConfig)elements[0]).url);
+			fStore.setValue(PreferenceConstants.PHP_MANUAL_SITE, ((PHPManualConfig) elements[0]).url);
 		}
 	}
 }
