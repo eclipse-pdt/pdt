@@ -603,26 +603,25 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 	boolean showInput(Object element) {
 		if (element != null) {
 			ISelection newSelection = new StructuredSelection(element);
-			fViewer.setSelection(newSelection, true);
-			//			if (fViewer.getSelection().equals(newSelection)) {
-			//				fViewer.reveal(element);
-			//			} else {
-			//				try {
-			//					fViewer.removePostSelectionChangedListener(fPostSelectionListener);
-			//					fViewer.setSelection(newSelection, true);
-			//
-			//					while (element != null && fViewer.getSelection().isEmpty()) {
-			//						// Try to select parent in case element is filtered
-			//						element = getParent(element);
-			//						if (element != null) {
-			//							newSelection = new StructuredSelection(element);
-			//							fViewer.setSelection(newSelection, true);
-			//						}
-			//					}
-			//				} finally {
-			//					fViewer.addPostSelectionChangedListener(fPostSelectionListener);
-			//				}
-			//			}
+			if (fViewer.getSelection().equals(newSelection)) {
+				fViewer.reveal(element);
+			} else {
+				try {
+					fViewer.removePostSelectionChangedListener(fPostSelectionListener);
+					fViewer.setSelection(newSelection, true);
+
+					while (element != null && fViewer.getSelection().isEmpty()) {
+						// Try to select parent in case element is filtered
+						element = fContentProvider.getParent(element);
+						if (element != null) {
+							newSelection = new StructuredSelection(element);
+							fViewer.setSelection(newSelection, true);
+						}
+					}
+				} finally {
+					fViewer.addPostSelectionChangedListener(fPostSelectionListener);
+				}
+			}
 			return true;
 		}
 		return false;
