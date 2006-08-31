@@ -880,7 +880,7 @@ public class PreferenceConstants {
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_ROOT_CONTEXT, "");
 		
 		// Folding options
-		store.setDefault(EDITOR_FOLDING_ENABLED, true);
+		store.setDefault(EDITOR_FOLDING_ENABLED, false);
 		store.setDefault(EDITOR_FOLDING_PROVIDER, "org.eclipse.php.ui.defaultFoldingProvider"); //$NON-NLS-1$
 		store.setDefault(EDITOR_FOLDING_PHPDOC, true);
 		store.setDefault(EDITOR_FOLDING_CLASSES, false);
