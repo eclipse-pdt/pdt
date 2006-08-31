@@ -78,6 +78,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -102,14 +104,29 @@ import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
-public class ExplorerPart extends ViewPart implements IMenuListener {
+public class ExplorerPart extends ViewPart implements IMenuListener, FocusListener {
 
 	private PHPTreeViewer fViewer;
 	protected ExplorerContentProvider fContentProvider;
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
+	 */
+	public void focusGained(FocusEvent e) {
+		fContentProvider.postRefresh(fViewer.getInput());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
+	 */
+	public void focusLost(FocusEvent e) {
+	}
+
 	protected ExplorerLabelProvider fLabelProvider;
 
 	private ExplorerActionGroup fActionSet;
 	private Menu fContextMenu;
+
 	private boolean fLinkingEnabled;
 	private String fWorkingSetName;
 
@@ -163,14 +180,14 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 				fPendingGetChildren.remove(parent);
 			}
 		}
-		
+
 		private Object getElement(TreeItem item) {
 			Object result = item.getData();
 			if (result == null)
 				return null;
 			return result;
 		}
-		
+
 		private TreePath createTreePath(TreeItem item) {
 			List result = new ArrayList();
 			result.add(item.getData());
@@ -239,6 +256,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			}
 			return false;
 		}
+
 		// Sends the object through the given filters
 		private Object filter(Object object, Object parent, ViewerFilter[] filters) {
 			Object rv = null;
@@ -297,6 +315,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			}
 			return false;
 		}
+
 		protected void handleInvalidSelection(ISelection invalidSelection, ISelection newSelection) {
 			IStructuredSelection is = (IStructuredSelection) invalidSelection;
 			List ns = null;
@@ -329,8 +348,6 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			super.handleInvalidSelection(invalidSelection, newSelection);
 		}
 
-
-
 	}
 
 	public ExplorerPart() {
@@ -340,9 +357,11 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			}
 		};
 	}
-	
-		public void createPartControl(Composite parent) {
+
+	public void createPartControl(Composite parent) {
 		fViewer = createViewer(parent);
+		fViewer.getControl().addFocusListener(this);
+
 		fSelectionListener.setViewer(getViewer());
 		fViewer.setUseHashlookup(true);
 		initDragAndDrop();
@@ -405,7 +424,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		}
 
 	}
-	
+
 	private PHPTreeViewer createViewer(Composite composite) {
 		return new ExplorerTreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	}
@@ -415,17 +434,17 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			return ((IFileEditorInput) input).getFile();
 		return null;
 	}
-	
+
 	public void setFocus() {
 		fViewer.getTree().setFocus();
 
 	}
-	
+
 	private void initDragAndDrop() {
 		initDrag();
 		initDrop();
 	}
-		
+
 	private void initKeyListener() {
 		fViewer.getControl().addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent event) {
@@ -433,7 +452,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			}
 		});
 	}
-	
+
 	private void handlePostSelectionChanged(SelectionChangedEvent event) {
 		ISelection selection = event.getSelection();
 		// If the selection is the same as the one that triggered the last
@@ -443,7 +462,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		}
 		fLastOpenSelection = null;
 	}
-	
+
 	private void linkToEditor(IStructuredSelection selection) {
 		// ignore selection changes if the package explorer is not the active part.
 		// In this case the selection change isn't triggered by a user.
@@ -461,7 +480,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			}
 		}
 	}
-	
+
 	private void initDrag() {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
 		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), ResourceTransfer.getInstance(), FileTransfer.getInstance() };
@@ -469,14 +488,13 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		fViewer.addDragSupport(ops, transfers, new PHPViewerDragAdapter(fViewer, dragListeners));
 	}
 
-
 	private void initDrop() {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT;
 		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), FileTransfer.getInstance() };
 		TransferDropTargetListener[] dropListeners = new TransferDropTargetListener[] { new SelectionTransferDropAdapter(fViewer), new FileTransferDropAdapter(fViewer) };
 		fViewer.addDropSupport(ops, transfers, new DelegatingDropAdapter(dropListeners));
 	}
-	
+
 	private void setProviders() {
 		fContentProvider = createContentProvider();
 		IPHPTreeContentProvider[] treeProviders = TreeProvider.getTreeProviders(getViewSite().getId());
@@ -489,7 +507,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		fLabelProvider.setTreeProviders(treeProviders);
 		fViewer.setLabelProvider(new DecoratingPHPLabelProvider(fLabelProvider, false));
 	}
-	
+
 	void projectStateChanged(Object root) {
 		Control ctrl = fViewer.getControl();
 		if (ctrl != null && !ctrl.isDisposed()) {
@@ -499,7 +517,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			fViewer.setSelection(fViewer.getSelection());
 		}
 	}
-	
+
 	public ExplorerContentProvider createContentProvider() {
 		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
 		boolean showCUChildren = store.getBoolean(PreferenceConstants.SHOW_CU_CHILDREN);
@@ -507,14 +525,15 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			return new ExplorerContentProvider(this, showCUChildren);
 		return new WorkingSetAwareContentProvider(this, showCUChildren, fWorkingSetModel);
 	}
-	
+
 	boolean showProjects() {
 		return fRootMode == ExplorerViewActionGroup.SHOW_PROJECTS;
 	}
 
 	boolean showWorkingSets() {
 		return fRootMode == ExplorerViewActionGroup.SHOW_WORKING_SETS;
-	}		
+	}
+
 	protected ExplorerLabelProvider createLabelProvider() {
 		return new ExplorerLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.P_COMPRESSED, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS | PHPElementImageProvider.OVERLAY_ICONS, fContentProvider);
 	}
@@ -531,7 +550,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		}
 		return PHPWorkspaceModelManager.getInstance();
 	}
-	
+
 	public void dispose() {
 		getSite().getPage().removePostSelectionListener(fSelectionListener);
 		if (fContextMenu != null && !fContextMenu.isDisposed())
@@ -571,7 +590,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			this.fViewer.getTree().showSelection();
 
 	}
-	
+
 	private boolean inputIsSelected(IEditorInput input) {
 		IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
 		if (selection.size() != 1)
@@ -612,19 +631,19 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 	public TreeViewer getViewer() {
 		return fViewer;
 	}
-	
+
 	private void fillActionBars() {
 		IActionBars actionBars = getViewSite().getActionBars();
 		fActionSet.fillActionBars(actionBars);
 	}
-	
+
 	/**
 	 * Returns the current selection.
 	 */
 	private ISelection getSelection() {
 		return fViewer.getSelection();
 	}
-	
+
 	public void collapseAll() {
 		try {
 			fViewer.getControl().setRedraw(false);
@@ -633,22 +652,22 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			fViewer.getControl().setRedraw(true);
 		}
 	}
-	
+
 	public Object getViewPartInput() {
 		if (fViewer != null) {
 			return fViewer.getInput();
 		}
 		return null;
 	}
-	
+
 	boolean isLinkingEnabled() {
 		return fLinkingEnabled;
 	}
-	
+
 	private void initLinkingEnabled() {
 		setLinkingEnabled(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.LINK_BROWSING_PROJECTS_TO_EDITOR));
 	}
-	
+
 	public void setLinkingEnabled(boolean enabled) {
 		fLinkingEnabled = enabled;
 		PreferenceConstants.getPreferenceStore().setValue(PreferenceConstants.LINK_BROWSING_PROJECTS_TO_EDITOR, enabled);
@@ -667,7 +686,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 				editorActivated(editor);
 		} else
 			page.removePostSelectionListener(fSelectionListener);
-	}	
+	}
 
 	String getFrameName(Object element) {
 		if (element instanceof PHPCodeData) {
@@ -675,7 +694,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 		}
 		return fLabelProvider.getText(element);
 	}
-	
+
 	String getToolTipText(Object element) {
 		String result;
 		if (!(element instanceof IResource)) {
@@ -715,7 +734,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			setTitleToolTip(getToolTipText(input));
 		}
 	}
-	
+
 	void setWorkingSetName(String workingSetName) {
 		fWorkingSetName = workingSetName;
 	}
@@ -753,7 +772,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			fWorkingSetModel.configured();
 		}
 	}
-	
+
 	private void setSorter() {
 		if (showWorkingSets()) {
 			fViewer.setSorter(new WorkingSetAwarePHPElementSorter());
@@ -761,7 +780,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 			fViewer.setSorter(new PHPElementSorter());
 		}
 	}
-	
+
 	private void createWorkingSetModel() {
 		SafeRunner.run(new ISafeRunnable() {
 			public void run() throws Exception {
@@ -774,11 +793,11 @@ public class ExplorerPart extends ViewPart implements IMenuListener {
 
 		});
 	}
-		
+
 	public WorkingSetModel getWorkingSetModel() {
 		return fWorkingSetModel;
 	}
-	
+
 	public int getRootMode() {
 		return fRootMode;
 	}

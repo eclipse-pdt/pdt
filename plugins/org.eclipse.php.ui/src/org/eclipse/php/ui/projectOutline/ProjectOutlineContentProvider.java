@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.ui.projectOutline;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -23,8 +22,11 @@ import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
 import org.eclipse.swt.widgets.Control;
 
@@ -35,6 +37,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		ProjectOutlinePart part;
 		String text;
 		int type;
+		Boolean b = new Boolean(true);
 
 		public OutlineNode(final int type, final String text, final PHPProjectModel model, final ProjectOutlinePart part) {
 			this.type = type;
@@ -100,7 +103,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				}
 			}
 			for (int i = 0; i < newChildren.length; ++i) {
-				children.put(newChildren[i], newChildren[i]);
+				children.put(newChildren[i], b);
 			}
 
 			return newChildren;
@@ -157,7 +160,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 
 			}
 			for (int i = 0; i < aChildren.length; ++i) {
-				children.put(aChildren[i], aChildren[i]);
+				children.put(aChildren[i], b);
 			}
 		}
 
@@ -283,10 +286,13 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		final Object parent = super.internalGetParent(element);
 		if (parent == fViewer.getInput() || parent instanceof PHPFileData)
 			for (int i = 0; i < groupNodes.length; ++i) {
-				final Object[] children = groupNodes[i].getChildren();
-				for (int j = 0; j < children.length; ++j)
-					if (children[j] == element)
-						return groupNodes[i];
+				if (groupNodes[i].getType() == CLASSES && element instanceof PHPClassData) {
+					return groupNodes[i];
+				} else if (groupNodes[i].getType() == FUNCTIONS && element instanceof PHPFunctionData) {
+					return groupNodes[i];
+				} else if (groupNodes[i].getType() == CONSTANTS && element instanceof PHPConstantData) {
+					return groupNodes[i];
+				}
 			}
 		return parent;
 	}
@@ -366,14 +372,11 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	LinkedList toAdd = new LinkedList();
 	LinkedList toRemove = new LinkedList();
 
-	private void postRefresh(final Object root, final boolean updateLabels) {
+	public void postRefresh(final Object root, final boolean updateLabels) {
 		if (fViewer == null || fViewer.getControl() == null)
 			return;
 		final Runnable runnable = new Runnable() {
 			public void run() {
-				boolean queued = false;
-				if (inProgress > 2)
-					queued = true;
 				if (fViewer == null) {
 					--inProgress;
 					return;
@@ -398,44 +401,16 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				PHPProjectModel model = null;
 				model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
 				OutlineNode outlineNode;
-				PHPCodeData[] currentToAdd;
-				PHPCodeData[] currentToRemove;
-
-				PHPFileData newData = null;
-				PHPFileData oldData = null;
-				if (root instanceof PHPFileData) {
-					newData = (PHPFileData) root;
-				}
-				if (fStoredFileData != null) {
-					oldData = fStoredFileData;
-				}
-				fStoredFileData = newData;
-				if (newData != null && oldData != null && oldData.getComparableName().equals(newData.getComparableName())) {
-					for (int i = 0; i < groupNodes.length; i++) {
-						outlineNode = groupNodes[i];
-						if (model != outlineNode.getModel())
-							outlineNode.setModel(model);
-						currentToRemove = outlineNode.removeChildren(oldData);
-						currentToAdd = outlineNode.addChildren(newData);
-						toRemove.addAll(Arrays.asList(currentToRemove));
-						toAdd.addAll(Arrays.asList(currentToAdd));
-						if (!queued) {
-							fViewer.remove(toRemove.toArray(new PHPCodeData[toRemove.size()]));
-							fViewer.add(outlineNode, toAdd.toArray(new PHPCodeData[toAdd.size()]));
-							toRemove.clear();
-							toAdd.clear();
-						}
-					}
-				} else {
+				if (inProgress < 2) {
 					for (int i = 0; i < groupNodes.length; i++) {
 						outlineNode = groupNodes[i];
 						if (model != outlineNode.getModel())
 							outlineNode.setModel(model);
 						outlineNode.loadChildren();
+						fViewer.refresh(outlineNode, false);
 					}
-					if (!queued)
-						fViewer.refresh(updateLabels);
 				}
+				//				}
 				--inProgress;
 			}
 		};

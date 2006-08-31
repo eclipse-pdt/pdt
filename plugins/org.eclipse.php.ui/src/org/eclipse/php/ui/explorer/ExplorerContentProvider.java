@@ -10,22 +10,21 @@
  *******************************************************************************/
 package org.eclipse.php.ui.explorer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.ModelListener;
-import org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.phpModel.parser.VariableContextBuilder;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlockImp;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
 import org.eclipse.swt.widgets.Control;
@@ -68,7 +67,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		fInput = newInput;
 	}
 
-	private void postRefresh(Object root) {
+	public void postRefresh(Object root) {
 		// JFace doesn't refresh when object isn't part of the viewer
 		// Therefore move the refresh start down to the viewer's input
 		if (root instanceof IWorkspaceRoot)
@@ -91,7 +90,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		postRunnable(new Runnable() {
 			public void run() {
 				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed()) {
+				if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible()) {
 					fViewer.refresh(root, updateLabels);
 				}
 			}
@@ -99,11 +98,12 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 	}
 
 	private void postRunnable(final Runnable r) {
-		Control ctrl = fViewer.getControl();
+		final Control ctrl = fViewer.getControl();
 		final Runnable trackedRunnable = new Runnable() {
 			public void run() {
 				try {
-					r.run();
+					if (ctrl.isVisible())
+						r.run();
 				} finally {
 					removePendingChange();
 				}
@@ -164,44 +164,13 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 
 		// this could be optimized by handling all the added children in the parent
 		if ((status & IResourceDelta.REMOVED) != 0) {
-			//			look for explenation in the add section
-			//			if (parent instanceof IFolder) {
-			//				// refresh one level above to deal with empty folder filtering properly
-			//				postRefresh(internalGetParent(parent));
-			//				return true;
-			//			} else {
 			Object removeItem = resource;
-			if (resource instanceof IFile) {
-				PHPFileData fileData = PHPModelUtil.getPHPFile((IFile) resource);
-				if (fileData != null)
-					removeItem = fileData;
-			}
-
 			postRemove(parent, removeItem);
 			//			}
 		}
 		if ((status & IResourceDelta.ADDED) != 0) {
-			//The following commented lines are a workaround for bug #145969 - since this code is used to support a filter we do not support
-			//this code is not required
-			//			if (parent instanceof IFolder) {
-			//				// refresh one level above to deal with empty folder filtering properly
-			//				postRefresh(internalGetParent(parent));
-			//				return true;
-			//			} else {
 			Object addItem = resource;
-			// if adding file, convert to php element
-			if (resource instanceof IFile && PHPModelUtil.isPhpFile((IFile) resource)) {
-				PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile((IFile) resource, false);
-				if (fileData == null) {
-					fileData = PHPCodeDataFactory.createPHPFileData(((IFile) resource).getFullPath().toString(), PHPCodeDataFactory.createUserData(((IFile) resource).getFullPath().toString(), 0, 0, 0, 0), PHPCodeDataFactory.EMPTY_CLASS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY,
-						VariableContextBuilder.createPHPVariablesTypeManager(new HashMap(), new HashMap()), PHPCodeDataFactory.EMPTY_INCLUDE_DATA_ARRAY, PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY, PHPCodeDataFactory.EMPTY_MARKERS_DATA_ARRAY, PHPCodeDataFactory.EMPTY_PHP_BLOCK_ARRAY,
-						new PHPDocBlockImp("", "", new PHPDocTag[0], 0), System.currentTimeMillis());
-				}
-				if (fileData != null)
-					addItem = fileData;
-			}
-			postAdd(parent, addItem);
-			//			}
+			postRemove(parent, addItem);
 		}
 		// open/close state change of a project
 		if ((flags & IResourceDelta.OPEN) != 0) {
@@ -215,13 +184,13 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 	private void postAdd(final Object parent, final Object element) {
 		postRunnable(new Runnable() {
 			public void run() {
-				if(fViewer == null)
+				if (fViewer == null)
 					return;
 				Control control = fViewer.getControl();
-				if(control == null || control.isDisposed())
+				if (control == null || control.isDisposed() && control.isVisible())
 					return;
 				if (fViewer.testFindItem(element) == null)
-						fViewer.add(parent, element);
+					fViewer.add(parent, element);
 			}
 		});
 	}
@@ -230,7 +199,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		postRunnable(new Runnable() {
 			public void run() {
 				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed()) {
+				if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible()) {
 					fViewer.remove(parent, new Object[] { element });
 				}
 			}
@@ -262,12 +231,10 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 	}
 
 	public void fileDataChanged(PHPFileData fileData) {
-		ArrayList list = new ArrayList();
 		IResource res = PHPModelUtil.getResource(fileData);
 		if (res == null)
 			return;
-		list.add(res);
-		postRefresh(list, true);
+		postRefresh(res, false);
 	}
 
 	public void fileDataAdded(PHPFileData fileData) {
@@ -287,7 +254,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		postRunnable(new Runnable() {
 			public void run() {
 				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed()) {
+				if (ctrl != null && !ctrl.isDisposed() && !ctrl.isVisible()) {
 					for (Iterator iter = toRefresh.iterator(); iter.hasNext();) {
 						fViewer.refresh(iter.next(), updateLabels);
 					}

@@ -68,6 +68,8 @@ import org.eclipse.php.ui.util.PHPElementImageProvider;
 import org.eclipse.php.ui.util.PHPElementLabels;
 import org.eclipse.php.ui.util.StatusBarUpdater;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Point;
@@ -88,7 +90,24 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 
-public class ProjectOutlinePart extends ViewPart implements IMenuListener {
+public class ProjectOutlinePart extends ViewPart implements IMenuListener, FocusListener {
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
+	 */
+	public void focusGained(FocusEvent e) {
+		// TODO Auto-generated method stub
+		((ProjectOutlineContentProvider) fViewer.getContentProvider()).postRefresh(fViewer.getInput(), true);
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
+	 */
+	public void focusLost(FocusEvent e) {
+		// TODO Auto-generated method stub
+
+	}
 
 	private class ProjectOutlineTreeViewer extends PHPTreeViewer {
 		java.util.List fPendingGetChildren;
@@ -400,6 +419,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener {
 
 	public void createPartControl(final Composite parent) {
 		fViewer = createViewer(parent);
+		fViewer.getControl().addFocusListener(this);
 		fSelectionListener.setViewer(getViewer());
 		fSelectionListener.setResetEmptySelection(true);
 		setProviders();
