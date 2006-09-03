@@ -12,6 +12,8 @@ package org.eclipse.php.ui.projectOutline;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -200,6 +202,8 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		// TODO Auto-generated method stub
 		PHPWorkspaceModelManager.getInstance().removeWorkspaceModelListener(this);
 		PHPWorkspaceModelManager.getInstance().removeModelListener(this);
+		if (timer == null)
+			timer.cancel();
 		super.dispose();
 	}
 
@@ -371,6 +375,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	int inProgress = 0;
 	LinkedList toAdd = new LinkedList();
 	LinkedList toRemove = new LinkedList();
+	Timer timer;
 
 	public void postRefresh(final Object root, final boolean updateLabels) {
 		if (fViewer == null || fViewer.getControl() == null)
@@ -378,46 +383,54 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		final Runnable runnable = new Runnable() {
 			public void run() {
 				if (fViewer == null) {
-					--inProgress;
+					//					--inProgress;
 					return;
 				}
 				Control control = fViewer.getControl();
 				if (control == null || control.isDisposed()) {
-					--inProgress;
+					//					--inProgress;
 					return;
 				}
 
 				IResource res = PHPModelUtil.getResource(root);
 				if (res == null) {
-					--inProgress;
+					//					--inProgress;
 					return;
 				}
 
 				if (res.getProject() != fStoredProject) {
-					--inProgress;
+					//					--inProgress;
 					return;
 				}
 
 				PHPProjectModel model = null;
 				model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
 				OutlineNode outlineNode;
-				if (inProgress < 2) {
-					for (int i = 0; i < groupNodes.length; i++) {
-						outlineNode = groupNodes[i];
-						if (model != outlineNode.getModel())
-							outlineNode.setModel(model);
-						outlineNode.loadChildren();
-						fViewer.refresh(outlineNode, false);
-					}
+				//				if (inProgress < 2) {
+				for (int i = 0; i < groupNodes.length; i++) {
+					outlineNode = groupNodes[i];
+					if (model != outlineNode.getModel())
+						outlineNode.setModel(model);
+					outlineNode.loadChildren();
+					fViewer.refresh(outlineNode, false);
 				}
 				//				}
-				--inProgress;
+				//				}
+				//				--inProgress;
 			}
 		};
-		if (inProgress < 1) {
-			++inProgress;
-			fViewer.getControl().getDisplay().asyncExec(runnable);
+		//		if (inProgress < 2) {
+		//			++inProgress;
+		if (timer != null) {
+			timer.cancel();
 		}
+		timer = new Timer(true);
+		timer.schedule(new TimerTask() {
+			public void run() {
+				fViewer.getControl().getDisplay().asyncExec(runnable);
+			}
+		}, 1000);
+		//		}
 	}
 
 	public void projectModelAdded(final IProject project) {
