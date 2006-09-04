@@ -136,7 +136,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		}
 
 		void loadChildren() {
-			if(model == null)
+			if (model == null)
 				return;
 			children = new HashMap(1);
 			Object[] aChildren = new Object[0];
@@ -204,7 +204,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		// TODO Auto-generated method stub
 		PHPWorkspaceModelManager.getInstance().removeWorkspaceModelListener(this);
 		PHPWorkspaceModelManager.getInstance().removeModelListener(this);
-		if (timer == null)
+		if (timer != null)
 			timer.cancel();
 		super.dispose();
 	}
@@ -290,7 +290,9 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	protected Object internalGetParent(final Object element) {
 		// TODO Auto-generated method stub
 		final Object parent = super.internalGetParent(element);
-		if (parent == fViewer.getInput() || parent instanceof PHPFileData)
+		if (parent == fViewer.getInput() || parent instanceof PHPFileData) {
+			if (groupNodes == null)
+				return null;
 			for (int i = 0; i < groupNodes.length; ++i) {
 				if (groupNodes[i].getType() == CLASSES && element instanceof PHPClassData) {
 					return groupNodes[i];
@@ -300,6 +302,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					return groupNodes[i];
 				}
 			}
+		}
 		return parent;
 	}
 
