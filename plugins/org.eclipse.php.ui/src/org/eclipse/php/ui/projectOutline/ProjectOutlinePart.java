@@ -20,10 +20,13 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IMenuListener;
@@ -48,6 +51,7 @@ import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.actions.OpenAction;
 import org.eclipse.php.internal.ui.editor.LinkingSelectionListener;
@@ -535,8 +539,8 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		if (editorPart != null)
 			if (editorPart instanceof PHPStructuredEditor) {
 				final PHPStructuredEditor phpEditor = (PHPStructuredEditor) editorPart;
-				final IFile file = phpEditor.getFile();
-				project = file.getProject();
+				PHPFileData fileData = phpEditor.getPHPFileData();
+				project = PHPWorkspaceModelManager.getInstance().getProjectForFileData(fileData, currentProject);
 			} else {
 				final IEditorInput editorInput = editorPart.getEditorInput();
 				if (editorInput instanceof FileEditorInput) {
@@ -544,7 +548,8 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 					project = fileEditorInput.getFile().getProject();
 				}
 			}
-		setProject(project);
+		if (project != null)
+			setProject(project);
 	}
 
 	private void initLinkingEnabled() {
