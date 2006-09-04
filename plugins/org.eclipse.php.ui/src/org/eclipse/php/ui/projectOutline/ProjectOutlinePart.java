@@ -17,16 +17,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IMenuListener;
@@ -311,6 +307,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					getViewer().setInput(currentProject);
+					fContentProvider.postRefresh(currentProject, false);
 				}
 			});
 			return Status.OK_STATUS;
@@ -376,11 +373,6 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	private UpdateViewJob updateViewJob;
 
 	public ProjectOutlinePart() {
-		fPostSelectionListener = new ISelectionChangedListener() {
-			public void selectionChanged(final SelectionChangedEvent event) {
-				handlePostSelectionChanged(event);
-			}
-		};
 	}
 
 	private void addMouseTrackListener() {
@@ -425,13 +417,19 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		fViewer = createViewer(parent);
 		fViewer.getControl().addFocusListener(this);
 		fSelectionListener.setViewer(getViewer());
-		fSelectionListener.setResetEmptySelection(true);
+		fSelectionListener.setResetEmptySelection(false);
 		setProviders();
 		fViewer.setUseHashlookup(true);
 
 		setUpPopupMenu();
 		initLinkingEnabled();
 		actionGroup = createActionGroup();
+
+		fPostSelectionListener = new ISelectionChangedListener() {
+			public void selectionChanged(final SelectionChangedEvent event) {
+				handlePostSelectionChanged(event);
+			}
+		};
 
 		fViewer.addPostSelectionChangedListener(fPostSelectionListener);
 		addMouseTrackListener();
