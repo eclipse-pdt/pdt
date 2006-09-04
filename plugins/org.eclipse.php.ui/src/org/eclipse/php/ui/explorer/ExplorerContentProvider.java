@@ -283,7 +283,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		final Object parent = super.internalGetParent(element);
 		if (parent instanceof PHPFileData) {
 			final IResource file = PHPModelUtil.getResource(element);
-			if (file != null)
+			if (file != null && file.getProject()!= null && file.getProject().isAccessible())
 				return file;
 		}
 		return parent;
