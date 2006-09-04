@@ -11,6 +11,7 @@
 package org.eclipse.php.core.phpModel.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -199,6 +200,31 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		//		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		//		workspace.removeResourceChangeListener(this);
 
+	}
+
+	public IProject getProjectForFileData(PHPFileData fileData, IProject defaultProject) {
+		IResource res = PHPModelUtil.getResource(fileData);
+		IProject project = res.getProject();
+		if (project.isAccessible())
+			return project;
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		ArrayList projects = new ArrayList(Arrays.asList(root.getProjects()));
+		if (defaultProject != null) { // rearrange the projects
+			projects.remove(defaultProject);
+			projects.add(0, defaultProject);
+		}
+		String filenameOS = new Path(fileData.getName()).toOSString();
+		for (Iterator i = projects.iterator(); i.hasNext();) {
+			project = (IProject) i.next();
+			PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+			if (model != null) {
+				fileData = model.getFileData(filenameOS);
+				if (fileData != null)
+					return project;
+			}
+		}
+		return null;
 	}
 
 	public PHPFileData getModelForFile(String filename, boolean forceCreation) {
@@ -428,12 +454,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			return;
 		}
 
-		PHPProjectModel projectModel = (PHPProjectModel) getModelForProject(file.getProject());
+		PHPProjectModel projectModel = getModelForProject(file.getProject());
 		projectModel.addFileToModel(file);
 	}
 
 	public void removeFileFromModel(IFile file) {
-		PHPProjectModel projectModel = (PHPProjectModel) getModelForProject(file.getProject());
+		PHPProjectModel projectModel = getModelForProject(file.getProject());
 		if (projectModel == null) {
 			return;
 		}
