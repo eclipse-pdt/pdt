@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -82,15 +83,20 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 
 public class ProjectOutlinePart extends ViewPart implements IMenuListener, FocusListener {
+
+	final String MEMENTO_KEY_PROJECT = "ProjectOutlinePart.storedProjectName";
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
@@ -319,6 +325,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	protected ProjectOutlineViewGroup actionGroup;
 
 	protected IProject currentProject;
+	private String initProjectName;
 	protected ProjectOutlineContentProvider fContentProvider;
 	private Menu fContextMenu;
 
@@ -342,6 +349,8 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		}
 
 		public void partOpened(IWorkbenchPart part) {
+			if (getViewer().getTree().getVisible() && part instanceof PHPStructuredEditor)
+				updateInputForCurrentEditor((IEditorPart) part);
 		}
 	};
 	private ISelectionChangedListener fPostSelectionListener;
@@ -349,6 +358,9 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	private final LinkingSelectionListener fSelectionListener = new LinkingSelectionListener() {
 
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+			if (part instanceof IEditorPart) {
+				handleUpdateInput((IEditorPart) part);
+			}
 			if (selection instanceof IStructuredSelection) {
 				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 				if (structuredSelection.size() > 0) {
@@ -414,7 +426,25 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		return new ProjectOutlineLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.M_PARAMETER_NAMES, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS | PHPElementImageProvider.OVERLAY_ICONS, fContentProvider);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
+	 */
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
+		super.init(site, memento);
+		initProjectName = memento.getString(MEMENTO_KEY_PROJECT);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
+	 */
+	public void saveState(IMemento memento) {
+		if (currentProject != null)
+			memento.putString(MEMENTO_KEY_PROJECT, currentProject.getName());
+		super.saveState(memento);
+	}
+
 	public void createPartControl(final Composite parent) {
+		getSite().getPage().addPartListener(fPartListener);
 		fViewer = createViewer(parent);
 		fViewer.getControl().addFocusListener(this);
 		fSelectionListener.setViewer(getViewer());
@@ -440,7 +470,6 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 				openEditorAction.run((IStructuredSelection) fLastOpenSelection);
 			}
 		});
-		getSite().getPage().addPartListener(fPartListener);
 
 		final IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
 		fViewer.addSelectionChangedListener(new StatusBarUpdater(slManager));
@@ -454,10 +483,12 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 
 		// refresh linking:
 		setLinkingEnabled(isLinkingEnabled());
+		if (initProjectName != null) {
+			setProject(ResourcesPlugin.getWorkspace().getRoot().getProject(initProjectName));
+		}
 
-		fViewer.refresh();
 		PHPWorkspaceModelManager.getInstance().addModelListener(fContentProvider);
-
+		fViewer.refresh();
 	}
 
 	private PHPTreeViewer createViewer(final Composite composite) {
