@@ -291,8 +291,9 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		// TODO Auto-generated method stub
 		final Object parent = super.internalGetParent(element);
 		if (parent == fViewer.getInput() || parent instanceof PHPFileData) {
-			if (groupNodes == null)
-				return null;
+			if (groupNodes == null) {
+				groupNodes = getOutlineChildren(fStoredProject);
+			}
 			for (int i = 0; i < groupNodes.length; ++i) {
 				if (groupNodes[i].getType() == CLASSES && element instanceof PHPClassData) {
 					return groupNodes[i];
