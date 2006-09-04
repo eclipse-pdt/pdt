@@ -525,8 +525,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	public PHPFileData getPHPFileData() {
 		final String filename = getModel().getBaseLocation();
-		final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filename));
-		return PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject()).getFileData(filename);
+		return PHPWorkspaceModelManager.getInstance().getModelForFile(filename);
 	}
 
 	public SourceViewerConfiguration getSourceViwerConfiguration() {
