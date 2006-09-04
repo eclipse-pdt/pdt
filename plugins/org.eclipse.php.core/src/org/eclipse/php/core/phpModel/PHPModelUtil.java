@@ -190,17 +190,14 @@ public class PHPModelUtil {
 	public static Object getExternalResource(final Object element, final IProject project) {
 		if (!(element instanceof PHPCodeData))
 			return null;
-		String fileName = ((PHPCodeData) element).getUserData().getFileName();
+		PHPCodeData codeData = (PHPCodeData)element;
+		PHPFileData fileData = PHPModelUtil.getPHPFileContainer(codeData);
+		if(fileData == null)
+			return null;
+		String fileName = fileData.getName();
 		final File file = new File(fileName);
 		if (file != null && file.exists())
 			return file;
-		PHPFileData fileData = null;
-		if (element instanceof PHPFileData)
-			fileData = (PHPFileData) element;
-		else
-			fileData = getPHPFileContainer((PHPCodeData) element);
-		if (fileData == null)
-			return null;
 		PHPProjectModel projectModel = null;
 		if (project == null) {
 			fileName = fileData.getName();
@@ -317,6 +314,8 @@ public class PHPModelUtil {
 	}
 
 	public static PHPFileData getPHPFileContainer(final PHPCodeData element) {
+		if(element instanceof PHPFileData)
+			return (PHPFileData)element;
 		PHPCodeData parent = element.getContainer();
 		while (parent != null && !(parent instanceof PHPFileData))
 			parent = parent.getContainer();
