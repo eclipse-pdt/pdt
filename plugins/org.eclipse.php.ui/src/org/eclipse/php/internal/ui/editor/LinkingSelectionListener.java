@@ -36,8 +36,13 @@ public class LinkingSelectionListener implements ISelectionListener {
 
 	public LinkingSelectionListener() {
 	}
-	
-	Object computeSelectedElement(IWorkbenchPart part, ISelection selection) {
+
+	protected ISelection createSelection(Object element) {
+		ISelection selection = new StructuredSelection(element);
+		return selection;
+	}
+
+	protected Object computeSelectedElement(IWorkbenchPart part, ISelection selection) {
 		if (viewer == null || viewer.getControl() == null || viewer.getControl().isDisposed())
 			return null;
 		if (selection instanceof IStructuredSelection) {
@@ -58,8 +63,6 @@ public class LinkingSelectionListener implements ISelectionListener {
 					codeData = PHPElementImpl.getPHPCodeData((NodeImpl) firstElement, ((TextSelection) selection).getOffset());
 				} else if (firstElement instanceof PHPCodeData) {
 					codeData = (PHPCodeData) firstElement;
-					viewer.reveal(codeData);
-					return null;
 				}
 				Object selectedElement = null;
 				if (codeData != null)
@@ -79,9 +82,12 @@ public class LinkingSelectionListener implements ISelectionListener {
 
 	public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
 		Object selectedElement = computeSelectedElement(part, selection);
-		if (selectedElement != null)
-			viewer.setSelection(new StructuredSelection(selectedElement), true);
-		else if (resetEmptySelection && !viewer.getSelection().isEmpty())
+		if (selectedElement != null) {
+			Object oldSelectedElement = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+			if (selectedElement.equals(oldSelectedElement))
+				return;
+			viewer.setSelection(createSelection(selectedElement), true);
+		} else if (resetEmptySelection && !viewer.getSelection().isEmpty())
 			viewer.setSelection(null);
 	}
 
