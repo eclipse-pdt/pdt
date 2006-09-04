@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -54,8 +55,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	//this is a singleton
 	protected static final PHPWorkspaceModelManager instance = new PHPWorkspaceModelManager();
-	private PHPWorkspaceModelManager() { }
-	
+
+	private PHPWorkspaceModelManager() {
+	}
+
 	/**
 	 * @return the singelton instance
 	 */
@@ -77,12 +80,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	 */
 	public void startup() {
 		initGlobalModelListeners();
-		
+
 		runBuild();
 
 		attachProjectOpenObserver();
-		
-		initLanguageModels(); 
+
+		initLanguageModels();
 	}
 
 	private void initLanguageModels() {
@@ -99,7 +102,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				addWorkspaceModelListener(listener);
 			}
 		}
-		
+
 	}
 
 	private class WorkspaceModelListenerProxy {
@@ -133,7 +136,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				for (int i = 0; i < affectedChildren.length; i++) {
 					resourceDelta = affectedChildren[i];
 					IResource resource = resourceDelta.getResource();
-					IProject project = (IProject)resource;
+					IProject project = (IProject) resource;
 					int eventFlags = resourceDelta.getFlags();
 					if ((eventFlags & IResourceDelta.OPEN) != 0) {
 						//could be an OPEN or CLOSE
@@ -141,7 +144,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 							runBuild(project);
 						}
 					}
-				}				
+				}
 			}
 
 		});
@@ -201,12 +204,32 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public PHPFileData getModelForFile(String filename, boolean forceCreation) {
 
 		Path path = new Path(filename);
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
-		PHPProjectModel projModel = getModelForProject(project, forceCreation);
-		if (projModel == null) {
-			return null;
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject project = root.getProject(path.segment(0));
+		final PHPProjectModel projModel;
+		if (!project.isAccessible()) {
+			project = null;
+			projModel = null;
+		} else {
+			projModel = getModelForProject(project, forceCreation);
 		}
-		PHPFileData fileData = projModel.getFileData(filename);
+
+		PHPFileData fileData = null;
+
+		if (projModel == null) { // possibly external resource
+			IProject[] projects = root.getProjects();
+			String filenameOS = new Path(filename).toOSString();
+			for (int i = 0; i < projects.length; ++i) {
+				PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(projects[i]);
+				if (model != null) {
+					fileData = model.getFileData(filenameOS);
+					if (fileData != null)
+						break;
+				}
+			}
+		} else {
+			fileData = projModel.getFileData(filename);
+		}
 		if (fileData == null && forceCreation) {
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			addFileToModel(file);
@@ -214,14 +237,14 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		}
 		return fileData;
 	}
-	
+
 	public PHPFileData getModelForFile(IFile file, boolean forceCreation) {
 
 		PHPProjectModel projModel = getModelForProject(file.getProject(), forceCreation);
 		if (projModel == null) {
 			return null;
 		}
-		String filename=file.getFullPath().toString();
+		String filename = file.getFullPath().toString();
 		PHPFileData fileData = projModel.getFileData(filename);
 		if (fileData == null && forceCreation) {
 			addFileToModel(file);
@@ -350,31 +373,31 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			return iterator;
 		}
 	}
-	
+
 	public void fileDataChanged(PHPFileData fileData) {
 		ModelListener[] iterator = getModelListenersIteratorCopy();
-		for (int i=0;i<iterator.length;i++) {
+		for (int i = 0; i < iterator.length; i++) {
 			iterator[i].fileDataChanged(fileData);
 		}
 	}
 
 	public void fileDataAdded(PHPFileData fileData) {
 		ModelListener[] iterator = getModelListenersIteratorCopy();
-		for (int i=0;i<iterator.length;i++) {
+		for (int i = 0; i < iterator.length; i++) {
 			iterator[i].fileDataAdded(fileData);
 		}
 	}
 
 	public void fileDataRemoved(PHPFileData fileData) {
 		ModelListener[] iterator = getModelListenersIteratorCopy();
-		for (int i=0;i<iterator.length;i++) {
+		for (int i = 0; i < iterator.length; i++) {
 			iterator[i].fileDataRemoved(fileData);
 		}
 	}
 
 	public void dataCleared() {
 		ModelListener[] iterator = getModelListenersIteratorCopy();
-		for (int i=0;i<iterator.length;i++) {
+		for (int i = 0; i < iterator.length; i++) {
 			iterator[i].dataCleared();
 		}
 	}
@@ -398,8 +421,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			return;
 		}
 		wlisteners.remove(l);
-	}	
-	
+	}
+
 	public void addFileToModel(IFile file) {
 		if (!PHPModelUtil.isPhpFile(file)) {
 			return;
@@ -424,17 +447,17 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public void addWorkspaceModelListener(IWorkspaceModelListener l) {
 		globalWorkspaceModelListeners.add(l);
 	}
-	
+
 	public void removeWorkspaceModelListener(IWorkspaceModelListener l) {
 		globalWorkspaceModelListeners.remove(l);
 	}
-	
+
 	public void fireProjectModelAdded(IProject project) {
-		for(Iterator iter = globalWorkspaceModelListeners.iterator(); iter.hasNext();) {
+		for (Iterator iter = globalWorkspaceModelListeners.iterator(); iter.hasNext();) {
 			IWorkspaceModelListener listener = (IWorkspaceModelListener) iter.next();
 			listener.projectModelAdded(project);
 		}
-		
+
 		List listeners = (List) workspaceModelListeners.get(project.getName());
 		if (listeners == null) {
 			return;
@@ -450,7 +473,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			IWorkspaceModelListener listener = (IWorkspaceModelListener) iter.next();
 			listener.projectModelRemoved(project);
 		}
-		
+
 		List listeners = (List) workspaceModelListeners.get(project.getName());
 		if (listeners == null) {
 			return;
