@@ -90,7 +90,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		postRunnable(new Runnable() {
 			public void run() {
 				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible()) {
+				if (ctrl != null && !ctrl.isDisposed()) {
 					fViewer.refresh(root, updateLabels);
 				}
 			}
@@ -102,8 +102,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		final Runnable trackedRunnable = new Runnable() {
 			public void run() {
 				try {
-					if (ctrl.isVisible())
-						r.run();
+					r.run();
 				} finally {
 					removePendingChange();
 				}
@@ -187,7 +186,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 				if (fViewer == null)
 					return;
 				Control control = fViewer.getControl();
-				if (control == null || control.isDisposed() && control.isVisible())
+				if (control == null || control.isDisposed())
 					return;
 				if (fViewer.testFindItem(element) == null)
 					fViewer.add(parent, element);
@@ -199,7 +198,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		postRunnable(new Runnable() {
 			public void run() {
 				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible()) {
+				if (ctrl != null && !ctrl.isDisposed()) {
 					fViewer.remove(parent, new Object[] { element });
 				}
 			}
@@ -254,7 +253,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		postRunnable(new Runnable() {
 			public void run() {
 				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed() && !ctrl.isVisible()) {
+				if (ctrl != null && !ctrl.isDisposed()) {
 					for (Iterator iter = toRefresh.iterator(); iter.hasNext();) {
 						fViewer.refresh(iter.next(), updateLabels);
 					}
@@ -283,7 +282,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		final Object parent = super.internalGetParent(element);
 		if (parent instanceof PHPFileData) {
 			final IResource file = PHPModelUtil.getResource(element);
-			if (file != null && file.getProject()!= null && file.getProject().isAccessible())
+			if (file != null && file.getProject() != null && file.getProject().isAccessible())
 				return file;
 		}
 		return parent;
