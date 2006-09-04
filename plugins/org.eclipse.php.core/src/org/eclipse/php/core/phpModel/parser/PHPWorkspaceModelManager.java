@@ -172,8 +172,20 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		WorkspaceJob cleanJob = new WorkspaceJob("Creating php model ...") {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
-					ResourcesPlugin.getWorkspace().build(PhpIncrementalProjectBuilder.FULL_BUILD, monitor);
-					//					ResourcesPlugin.getWorkspace().getRoot().accept(new FullPhpProjectBuildVisitor());
+					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+					for (int i = 0; i < projects.length; i++) {
+						IProject project = projects[i];
+						boolean hasNature;
+						try {
+							hasNature = project.hasNature(PHPNature.ID);
+						} catch (CoreException e) {
+							PHPCorePlugin.log(e);
+							return null;
+						}
+						if (hasNature) {
+							project.build(PhpIncrementalProjectBuilder.FULL_BUILD, monitor);
+						}
+					}
 				} finally {
 					monitor.done();
 				}
