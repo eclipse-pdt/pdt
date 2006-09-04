@@ -4,6 +4,7 @@
  */
 package org.eclipse.php.internal.ui.editor;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -35,10 +36,10 @@ public class LinkingSelectionListener implements ISelectionListener {
 
 	public LinkingSelectionListener() {
 	}
-
-	public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
+	
+	Object computeSelectedElement(IWorkbenchPart part, ISelection selection) {
 		if (viewer == null || viewer.getControl() == null || viewer.getControl().isDisposed())
-			return;
+			return null;
 		if (selection instanceof IStructuredSelection) {
 			final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			if (structuredSelection.size() > 0) {
@@ -50,28 +51,38 @@ public class LinkingSelectionListener implements ISelectionListener {
 				} else if (firstElement instanceof NodeImpl) {
 					final IDOMDocument doc = (IDOMDocument) ((NodeImpl) firstElement).getOwnerDocument();
 					if (doc == null)
-						return;
+						return null;
 					final IDOMModel model = doc.getModel();
 					if (!(model instanceof PHPEditorModel))
-						return;
+						return null;
 					codeData = PHPElementImpl.getPHPCodeData((NodeImpl) firstElement, ((TextSelection) selection).getOffset());
 				} else if (firstElement instanceof PHPCodeData) {
 					codeData = (PHPCodeData) firstElement;
 					viewer.reveal(codeData);
-					return;
+					return null;
 				}
 				Object selectedElement = null;
 				if (codeData != null)
-					if (codeData instanceof PHPFileData)
-						selectedElement = PHPModelUtil.getResource(codeData);
-					else
+					if (codeData instanceof PHPFileData) {
+						IResource res = PHPModelUtil.getResource(codeData);
+						if (res.getProject() != null && res.getProject().isAccessible())
+							selectedElement = res;
+						else
+							selectedElement = codeData;
+					} else
 						selectedElement = codeData;
-				if (selectedElement != null)
-					viewer.setSelection(new StructuredSelection(selectedElement), true);
-				else if (resetEmptySelection)
-					viewer.setSelection(null);
+				return selectedElement;
 			}
 		}
+		return null;
+	}
+
+	public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
+		Object selectedElement = computeSelectedElement(part, selection);
+		if (selectedElement != null)
+			viewer.setSelection(new StructuredSelection(selectedElement), true);
+		else if (resetEmptySelection)
+			viewer.setSelection(null);
 	}
 
 	public void setResetEmptySelection(final boolean resetEmptySelection) {
