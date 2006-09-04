@@ -35,7 +35,6 @@ import org.eclipse.php.ui.preferences.ui.MembersOrderPreferenceCache;
 import org.eclipse.php.ui.projectOutline.ProjectOutlineContentProvider.OutlineNode;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
-
 /**
  * Sorter for Java elements. Ordered by element category, then by element name. 
  * Package fragment roots are sorted as ordered on the classpath.
@@ -166,11 +165,11 @@ public class PHPElementSorter extends ViewerSorter {
 			}
 			return 0; // can't compare
 		}
-		
+
 		// if it is an outline node (classes, functions, constants) sort by type
 		if (cat1 == OUTLINE_NODES && cat2 == OUTLINE_NODES) {
-			assert e1 instanceof OutlineNode && e2 instanceof OutlineNode; 
-			return ((Comparable) e1).compareTo(e2);	
+			assert e1 instanceof OutlineNode && e2 instanceof OutlineNode;
+			return ((Comparable) e1).compareTo(e2);
 		}
 
 		if (e1 instanceof PHPCodeData) {
@@ -183,7 +182,7 @@ public class PHPElementSorter extends ViewerSorter {
 				}
 			}
 		}
-		
+
 		String name1 = getElementName(e1);
 		String name2 = getElementName(e2);
 
@@ -209,10 +208,13 @@ public class PHPElementSorter extends ViewerSorter {
 			PHPFunctionParameter[] params2 = ((PHPFunctionData) e2).getParameters();
 			int len = Math.min(params1.length, params2.length);
 			for (int i = 0; i < len; i++) {
-				cmp = getCollator().compare(params1[i].getClassType(), params2[i].getClassType());
-				if (cmp != 0) {
+				cmp = getCollator().compare(params1[i].getName(), params2[i].getName());
+				if (cmp != 0)
 					return cmp;
-				}
+				if (params1[i].getClassType() != null && params2[i].getClassType() != null)
+					cmp = getCollator().compare(params1[i].getClassType(), params2[i].getClassType());
+				if (cmp != 0)
+					return cmp;
 			}
 			return params1.length - params2.length;
 		}
