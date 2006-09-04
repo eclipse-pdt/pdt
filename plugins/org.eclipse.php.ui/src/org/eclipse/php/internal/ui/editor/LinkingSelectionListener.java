@@ -81,7 +81,7 @@ public class LinkingSelectionListener implements ISelectionListener {
 		Object selectedElement = computeSelectedElement(part, selection);
 		if (selectedElement != null)
 			viewer.setSelection(new StructuredSelection(selectedElement), true);
-		else if (resetEmptySelection)
+		else if (resetEmptySelection && !viewer.getSelection().isEmpty())
 			viewer.setSelection(null);
 	}
 
