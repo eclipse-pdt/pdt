@@ -203,10 +203,15 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public IProject getProjectForFileData(PHPFileData fileData, IProject defaultProject) {
+		if (fileData == null)
+			return null;
 		IResource res = PHPModelUtil.getResource(fileData);
-		IProject project = res.getProject();
-		if (project.isAccessible())
-			return project;
+		IProject project;
+		if (res != null) {
+			project = res.getProject();
+			if (project.isAccessible())
+				return project;
+		}
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		ArrayList projects = new ArrayList(Arrays.asList(root.getProjects()));
