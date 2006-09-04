@@ -306,7 +306,8 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		protected IStatus run(final IProgressMonitor monitor) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					getViewer().setInput(currentProject);
+					if (getViewer().getInput() != currentProject)
+						getViewer().setInput(currentProject);
 					fContentProvider.postRefresh(currentProject, false);
 				}
 			});
