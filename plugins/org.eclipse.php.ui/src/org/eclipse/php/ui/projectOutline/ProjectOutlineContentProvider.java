@@ -136,25 +136,27 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		}
 
 		void loadChildren() {
+			if(model == null)
+				return;
 			children = new HashMap(1);
 			Object[] aChildren = new Object[0];
 			switch (type) {
 				case CLASSES:
-					if (part.isShowAll())
+					if (part.isShowAll() || model.getPHPUserModel() == null)
 						aChildren = model.getClasses();
 					else
 						aChildren = model.getPHPUserModel().getClasses();
 					break;
 
 				case FUNCTIONS:
-					if (part.isShowAll())
+					if (part.isShowAll() || model.getPHPUserModel() == null)
 						aChildren = model.getFunctions();
 					else
 						aChildren = model.getPHPUserModel().getFunctions();
 					break;
 
 				case CONSTANTS:
-					if (part.isShowAll())
+					if (part.isShowAll() || model.getPHPUserModel() == null)
 						aChildren = model.getConstants();
 					else
 						aChildren = model.getPHPUserModel().getConstants();
