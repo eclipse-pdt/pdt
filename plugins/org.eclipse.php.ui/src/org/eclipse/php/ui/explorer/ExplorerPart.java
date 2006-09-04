@@ -47,9 +47,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.PHPUIMessages;
+import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.php.internal.ui.editor.LinkingSelectionListener;
 import org.eclipse.php.internal.ui.util.MultiElementSelection;
@@ -809,8 +811,20 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 	}
 
 	private LinkingSelectionListener fSelectionListener = new LinkingSelectionListener() {
-		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			super.selectionChanged(part, selection);
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.php.internal.ui.editor.LinkingSelectionListener#createSelection(java.lang.Object)
+		 */
+		protected ISelection createSelection(Object element) {
+			if (element instanceof PHPCodeData) {
+				PHPFileData fileData = PHPModelUtil.getPHPFileContainer((PHPCodeData) element);
+				IResource res = PHPModelUtil.getResource(fileData);
+				if (res.getProject().isAccessible()) {
+					return new StructuredSelection(res);
+				}
+				return new StructuredSelection(fileData);
+			}
+			return super.createSelection(element);
 		}
 
 	};
