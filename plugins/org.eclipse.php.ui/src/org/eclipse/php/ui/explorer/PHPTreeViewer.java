@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.ui.explorer;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
@@ -26,6 +27,24 @@ public class PHPTreeViewer extends TreeViewer {
 
 	public PHPTreeViewer(Tree tree) {
 		super(tree);
+	}
+
+	ISelection storedSelection;
+
+	/**
+	 * @return the storedSelection
+	 */
+	public ISelection getStoredSelection() {
+		return storedSelection;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.StructuredViewer#setSelection(org.eclipse.jface.viewers.ISelection, boolean)
+	 */
+	public void setSelection(ISelection selection, boolean reveal) {
+		storedSelection = selection;
+		// TODO Auto-generated method stub
+		super.setSelection(selection, reveal);
 	}
 
 }
