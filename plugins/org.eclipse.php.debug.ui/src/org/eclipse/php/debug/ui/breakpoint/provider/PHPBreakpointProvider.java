@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
@@ -53,21 +54,23 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 		// check if there is a valid position to set breakpoint
 		int pos = getValidPosition(document, editorLineNumber);
 		IStatus status = null;
+		IBreakpoint point = null;
 		if (pos >= 0) {
 			IResource res = getResourceFromInput(input);
 			if (res != null && (input instanceof IFileEditorInput)) {
-				IBreakpoint point = null;
 				try {
 					editorLineNumber = document.getLineOfOffset(pos) + 1;
+					Integer lineNumberInt = new Integer(editorLineNumber);
+					IMarker[] breakpoints = res.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
+					for (int i = 0; i < breakpoints.length; ++i) {
+						if (breakpoints[i].getAttributes().get("lineNumber").equals(lineNumberInt)) {
+							throw new BadLocationException();
+						}
+					}
 					point = PHPDebugTarget.createBreakpoint(res, editorLineNumber);
 				} catch (BadLocationException e) {
 				}
-				if (point == null) {
-					status = new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IStatus.ERROR, MessageFormat.format(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, new Object[] {}), null); //$NON-NLS-1$
-				}
-			}
-
-			else if (input instanceof IStorageEditorInput) {
+			} else if (input instanceof IStorageEditorInput) {
 				// For non-resources, use the workspace root and a coordinated
 				// attribute that is used to
 				// prevent unwanted (breakpoint) markers from being loaded
@@ -104,12 +107,10 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				if (project != null)
 					projectName = project.getName();
 				attributes.put(IPHPConstants.Include_Storage_Project, projectName);
-				IBreakpoint point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
-				if (point == null) {
-					status = new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IStatus.ERROR, MessageFormat.format(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, new Object[] {}), null); //$NON-NLS-1$
-				}
+				point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
 			}
-		} else {
+		}
+		if (point == null) {
 			StatusLineMessageTimerManager.setErrorMessage(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, 1000, true); // hide message after 1 second
 		}
 		if (status == null) {
@@ -188,7 +189,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
 	 *      java.lang.String, java.lang.Object)
 	 */
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) {
 		// not used
 	}
 
