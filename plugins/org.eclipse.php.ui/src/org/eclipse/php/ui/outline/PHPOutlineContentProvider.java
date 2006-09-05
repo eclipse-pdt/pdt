@@ -37,6 +37,11 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 
 public class PHPOutlineContentProvider extends JFaceNodeContentProvider implements ModelListener {
 
+	public PHPOutlineContentProvider() {
+		super();
+		PHPWorkspaceModelManager.getInstance().addModelListener(this);
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
@@ -44,8 +49,10 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 		super.inputChanged(viewer, oldInput, newInput);
 		if (oldInput == null && newInput != null) {
 			PHPWorkspaceModelManager.getInstance().addModelListener(this);
+			postRefresh(newInput, true);
 		} else if (oldInput != null && newInput == null) {
 			PHPWorkspaceModelManager.getInstance().removeModelListener(this);
+			postRefresh(true);
 		}
 	}
 
@@ -68,7 +75,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataAdded(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
 	 */
 	public void fileDataAdded(PHPFileData fileData) {
-		if (editorModel != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName())) {
+		if (editorModel != null && editorModel.getFileData() != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName())) {
 			postRefresh(true);
 		}
 	}
@@ -77,14 +84,14 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataChanged(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
 	 */
 	public void fileDataChanged(PHPFileData fileData) {
-		if (editorModel != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName())) {
-			if (groupNodes != null)
+		if (editorModel != null && editorModel.getFileData() != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName())) {
+			if (groupNodes == null)
+				postRefresh(editorModel, true);
+			else
 				for (int i = 0; i < groupNodes.length; ++i) {
 					groupNodes[i].reset(fileData);
 					postRefresh(groupNodes[i], true);
 				}
-		} else {
-			postRefresh(editorModel, true);
 		}
 	}
 
@@ -109,7 +116,9 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 					viewer.refresh(element, updateLabels);
 			}
 		};
-		viewer.getControl().getDisplay().asyncExec(runnable);
+		Control control = viewer.getControl();
+		if (control != null && !control.isDisposed())
+			viewer.getControl().getDisplay().asyncExec(runnable);
 	}
 
 	private void postRefresh(final boolean updateLabels) {
