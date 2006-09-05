@@ -175,6 +175,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (int i = 0; i < projects.length; i++) {
 						IProject project = projects[i];
+						if (!project.isOpen()) {
+							continue;
+						}
 						boolean hasNature;
 						try {
 							hasNature = project.hasNature(PHPNature.ID);
