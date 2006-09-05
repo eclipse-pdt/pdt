@@ -20,24 +20,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.RefreshTab;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.phpIni.IniModifier;
 import org.eclipse.php.debug.core.IPHPConstants;
@@ -52,6 +42,7 @@ import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler;
 import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
+import org.eclipse.swt.widgets.Display;
 
 
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
@@ -91,8 +82,15 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String absolutePath = null;
 		if (projectName == null) {
 			final IResource res = workspaceRoot.findMember(filePath);
-			if (res == null)
+			if (res == null){
+				final Display display = Display.getDefault();
+				display.asyncExec(new Runnable() {
+					public void run() {																	
+						MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath)); 
+					}
+				});
 				return;
+			}
 			project = res.getProject();
 			absolutePath = res.getLocation().toString();
 		} else {

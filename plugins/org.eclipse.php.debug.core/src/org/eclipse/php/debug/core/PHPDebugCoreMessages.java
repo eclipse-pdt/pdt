@@ -17,7 +17,7 @@ import org.eclipse.osgi.util.NLS;
  * 
  */
 public class PHPDebugCoreMessages extends NLS {
-    private static final String BUNDLE_NAME = "org.eclipse.php.debug.core.PHPDebugCorePluginResources";//$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.eclipse.php.debug.core.PHPDebugCoreMessages";//$NON-NLS-1$
 
     public static String LineBreakPointMessage_1;
     public static String ConditionalBreakPointMessage_1;
@@ -29,6 +29,8 @@ public class PHPDebugCoreMessages extends NLS {
     public static String DebuggerConnection_Failed_1;
     public static String DebuggerConnection_Exception_1;
     public static String Debugger_Unexpected_Error_1;
+    public static String Debugger_ResourceNotFound;
+    public static String Debugger_LaunchError_title;
     
     public static String configurationError;
 
