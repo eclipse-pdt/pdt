@@ -822,7 +822,9 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 				if (res != null && res.getProject().isAccessible()) {
 					return new StructuredSelection(res);
 				}
-				return new StructuredSelection(fileData);
+				if (fileData != null) {
+					return new StructuredSelection(fileData);
+				}
 			}
 			return super.createSelection(element);
 		}
