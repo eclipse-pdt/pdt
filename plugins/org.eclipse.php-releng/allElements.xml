@@ -15,7 +15,7 @@
  		</ant>
  		<ant antfile="${genericTargets}" target="${target}">
  			 		<property name="type" value="feature"/>
- 			 		<property name="id" value="org.eclipse.php.sdk"/>
+ 			 		<property name="id" value="org.eclipse.php.sdk_feature"/>
  		</ant>
  	</target>
  
@@ -46,22 +46,22 @@
 	     <ant antfile="${assembleScriptName}"/>
 	</target>
 	
-	<target name="assemble.org.eclipse.php.sdk">
+	<target name="assemble.org.eclipse.php.sdk_feature">
 		     <property name="archiveName" value="org.eclipse.php_feature-sdk-${buildId}.zip"/>
 		     <ant antfile="${assembleScriptName}"/>
 		</target>
 
-		<target name="assemble.org.eclipse.php.sdk.macosx.carbon.ppc">
+		<target name="assemble.org.eclipse.php.sdk_feature.macosx.carbon.ppc">
 		     <property name="archiveName" value="org.eclipse.php_feature-sdk-${buildId}-macosx-carbon.tar.gz"/>
 		     <ant antfile="${assembleScriptName}"/>
 		</target>
 		
-		<target name="assemble.org.eclipse.php.sdk.linux.gtk.x86">
+		<target name="assemble.org.eclipse.php.sdk_feature.linux.gtk.x86">
 		     <property name="archiveName" value="org.eclipse.php_feature-sdk-${buildId}-linux-gtk.tar.gz"/>
 		     <ant antfile="${assembleScriptName}"/>
 		</target>
 		
-		<target name="assemble.org.eclipse.php.sdk.win32.win32.x86">
+		<target name="assemble.org.eclipse.php.sdk_feature.win32.win32.x86">
 		     <property name="archiveName" value="org.eclipse.php_feature-sdk-${buildId}-win32.zip"/>
 		     <ant antfile="${assembleScriptName}"/>
 		</target>
