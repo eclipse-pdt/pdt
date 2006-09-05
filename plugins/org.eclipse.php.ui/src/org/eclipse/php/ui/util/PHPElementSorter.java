@@ -186,18 +186,6 @@ public class PHPElementSorter extends ViewerSorter {
 		String name1 = getElementName(e1);
 		String name2 = getElementName(e2);
 
-		if (e1 instanceof PHPClassData) { // handle anonymous types
-			if (name1.length() == 0) {
-				if (name2.length() == 0) {
-					return getCollator().compare(((PHPClassData) e1).getSuperClassData().getName(), ((PHPClassData) e2).getSuperClassData().getName());
-				} else {
-					return 1;
-				}
-			} else if (name2.length() == 0) {
-				return -1;
-			}
-		}
-
 		int cmp = getCollator().compare(name1, name2);
 		if (cmp != 0) {
 			return cmp;
@@ -208,13 +196,14 @@ public class PHPElementSorter extends ViewerSorter {
 			PHPFunctionParameter[] params2 = ((PHPFunctionData) e2).getParameters();
 			int len = Math.min(params1.length, params2.length);
 			for (int i = 0; i < len; i++) {
-				cmp = getCollator().compare(params1[i].getName(), params2[i].getName());
-				if (cmp != 0)
-					return cmp;
-				if (params1[i].getClassType() != null && params2[i].getClassType() != null)
-					cmp = getCollator().compare(params1[i].getClassType(), params2[i].getClassType());
-				if (cmp != 0)
-					return cmp;
+				String classType1 = params1[i].getClassType();
+				String classType2 = params2[i].getClassType();
+				if (classType1 == null) {
+					if (classType2 == null)
+						return 0;
+					return 1;
+				} else if (classType2 == null)
+					return -1;
 			}
 			return params1.length - params2.length;
 		}
