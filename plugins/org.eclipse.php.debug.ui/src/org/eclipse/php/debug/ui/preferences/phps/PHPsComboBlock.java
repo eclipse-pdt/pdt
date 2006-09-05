@@ -230,12 +230,8 @@ public class PHPsComboBlock implements ISelectionProvider {
 					// reset in case default has changed
 					setUseDefaultPHPexe();
 				else {
-					// restore selection
-					if (newIndex >= 0)
-						fCombo.select(newIndex);
-					else
-						// select the first PHPexe
-						fCombo.select(0);
+					if (fCombo != null)
+						fCombo.select(fCombo.indexOf(fDefaultDescriptor.getDescription()));
 					setPHPexe(getPHPexe());
 				}
 			}
