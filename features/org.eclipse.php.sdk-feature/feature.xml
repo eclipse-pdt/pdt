@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.org.php.sdk_feature"
+      id="org.eclipse.php.sdk_feature"
       label="%featureName"
       version="0.2.3"
       provider-name="%providerName">
