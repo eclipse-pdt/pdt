@@ -208,7 +208,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 				return super.getSelection();
 			}
 			Control control = getControl();
-			if (control == null || control.isDisposed()) {
+			if (control == null || control.isDisposed() || !control.isVisible()) {
 				return StructuredSelection.EMPTY;
 			}
 			Tree tree = getTree();
@@ -512,7 +512,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 
 	void projectStateChanged(Object root) {
 		Control ctrl = fViewer.getControl();
-		if (ctrl != null && !ctrl.isDisposed()) {
+		if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible()) {
 			fViewer.refresh(root, true);
 			// trigger a syntetic selection change so that action refresh their
 			// enable state.

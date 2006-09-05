@@ -89,10 +89,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 	private void postRefresh(final Object root, final boolean updateLabels) {
 		postRunnable(new Runnable() {
 			public void run() {
-				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed()) {
-					fViewer.refresh(root, updateLabels);
-				}
+				fViewer.refresh(root, updateLabels);
 			}
 		});
 	}
@@ -102,7 +99,8 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		final Runnable trackedRunnable = new Runnable() {
 			public void run() {
 				try {
-					r.run();
+					if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible())
+						r.run();
 				} finally {
 					removePendingChange();
 				}
@@ -185,9 +183,6 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 			public void run() {
 				if (fViewer == null)
 					return;
-				Control control = fViewer.getControl();
-				if (control == null || control.isDisposed())
-					return;
 				if (fViewer.testFindItem(element) == null)
 					fViewer.add(parent, element);
 			}
@@ -197,10 +192,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 	private void postRemove(final Object parent, final Object element) {
 		postRunnable(new Runnable() {
 			public void run() {
-				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed()) {
-					fViewer.remove(parent, new Object[] { element });
-				}
+				fViewer.remove(parent, new Object[] { element });
 			}
 		});
 	}
@@ -253,7 +245,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		postRunnable(new Runnable() {
 			public void run() {
 				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed()) {
+				if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible()) {
 					for (Iterator iter = toRefresh.iterator(); iter.hasNext();) {
 						fViewer.refresh(iter.next(), updateLabels);
 					}
