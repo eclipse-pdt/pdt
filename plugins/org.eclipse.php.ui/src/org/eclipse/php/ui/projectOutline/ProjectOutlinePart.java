@@ -41,7 +41,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
@@ -220,7 +219,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 			if (!(cp instanceof IMultiElementTreeContentProvider))
 				return super.getSelection();
 			final Control control = getControl();
-			if (control == null || control.isDisposed())
+			if (control == null || control.isDisposed() || !control.isVisible())
 				return StructuredSelection.EMPTY;
 			final Tree tree = getTree();
 			final TreeItem[] selection = tree.getSelection();
@@ -431,7 +430,8 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	 */
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
-		initProjectName = memento.getString(MEMENTO_KEY_PROJECT);
+		if (memento != null)
+			initProjectName = memento.getString(MEMENTO_KEY_PROJECT);
 	}
 
 	/* (non-Javadoc)
@@ -544,7 +544,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		return MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
 	}
 
-	public TreeViewer getViewer() {
+	public PHPTreeViewer getViewer() {
 		return fViewer;
 	}
 
@@ -627,7 +627,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 
 	void projectStateChanged(final Object root) {
 		final Control ctrl = fViewer.getControl();
-		if (ctrl != null && !ctrl.isDisposed()) {
+		if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible()) {
 			fViewer.refresh(root, true);
 			// trigger a syntetic selection change so that action refresh their
 			// enable state.
