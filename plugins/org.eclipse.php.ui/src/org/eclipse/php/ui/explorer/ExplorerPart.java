@@ -819,7 +819,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 			if (element instanceof PHPCodeData) {
 				PHPFileData fileData = PHPModelUtil.getPHPFileContainer((PHPCodeData) element);
 				IResource res = PHPModelUtil.getResource(fileData);
-				if (res.getProject().isAccessible()) {
+				if (res != null && res.getProject().isAccessible()) {
 					return new StructuredSelection(res);
 				}
 				return new StructuredSelection(fileData);
