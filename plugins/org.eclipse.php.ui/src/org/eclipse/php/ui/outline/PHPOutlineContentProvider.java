@@ -114,6 +114,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 					viewer.refresh(updateLabels);
 				else
 					viewer.refresh(element, updateLabels);
+				viewer.expandAll();
 			}
 		};
 		Control control = viewer.getControl();

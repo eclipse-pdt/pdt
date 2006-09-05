@@ -29,15 +29,15 @@ public class ShowGroupsAction extends Action {
 		this.treeViewer = treeViewer;
 		PHPPluginImages.setLocalImageDescriptors(this, "showGroups.gif"); //$NON-NLS-1$
 		setToolTipText("Show Groups");
-		PHPUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener(){
+		PHPUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(ChangeOutlineModeAction.PREF_OUTLINEMODE))
-				{
+				if (event.getProperty().equals(ChangeOutlineModeAction.PREF_OUTLINEMODE)) {
 					setEnabled(isEnabled());
 				}
-				
-			}});
+
+			}
+		});
 		boolean show = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_SHOW_GROUPS); //$NON-NLS-1$
 		setChecked(show);
 	}
@@ -48,6 +48,7 @@ public class ShowGroupsAction extends Action {
 			PHPOutlineContentProvider phpContentProvider = (PHPOutlineContentProvider) contentProvider;
 			phpContentProvider.setShowGroups(isChecked());
 			treeViewer.refresh(false);
+			treeViewer.expandAll();
 			PHPUiPlugin.getDefault().getPreferenceStore().setValue(PREF_SHOW_GROUPS, isChecked());
 		}
 	}
@@ -56,11 +57,9 @@ public class ShowGroupsAction extends Action {
 		IContentProvider contentProvider = treeViewer.getContentProvider();
 		if (contentProvider instanceof PHPOutlineContentProvider) {
 			PHPOutlineContentProvider phpContentProvider = (PHPOutlineContentProvider) contentProvider;
-			return PHPOutlineContentProvider.MODE_PHP==phpContentProvider.getMode();
-		}	
+			return PHPOutlineContentProvider.MODE_PHP == phpContentProvider.getMode();
+		}
 		return super.isEnabled();
 	}
-	
-	
 
 }
