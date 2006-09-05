@@ -17,7 +17,6 @@ import java.util.TimerTask;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
@@ -30,6 +29,7 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
+import org.eclipse.php.ui.explorer.PHPTreeViewer;
 import org.eclipse.swt.widgets.Control;
 
 public class ProjectOutlineContentProvider extends StandardPHPElementContentProvider implements ModelListener, IWorkspaceModelListener {
@@ -142,21 +142,21 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 			Object[] aChildren = new Object[0];
 			switch (type) {
 				case CLASSES:
-					if (part.isShowAll() || model.getPHPUserModel() == null)
+					if (part.isShowAll())
 						aChildren = model.getClasses();
 					else
 						aChildren = model.getPHPUserModel().getClasses();
 					break;
 
 				case FUNCTIONS:
-					if (part.isShowAll() || model.getPHPUserModel() == null)
+					if (part.isShowAll())
 						aChildren = model.getFunctions();
 					else
 						aChildren = model.getPHPUserModel().getFunctions();
 					break;
 
 				case CONSTANTS:
-					if (part.isShowAll() || model.getPHPUserModel() == null)
+					if (part.isShowAll())
 						aChildren = model.getConstants();
 					else
 						aChildren = model.getPHPUserModel().getConstants();
@@ -212,7 +212,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	private ProjectOutlinePart fPart;
 	IProject fStoredProject;
 
-	private TreeViewer fViewer;
+	private PHPTreeViewer fViewer;
 
 	OutlineNode[] groupNodes;
 
@@ -274,7 +274,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	 */
 	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		super.inputChanged(viewer, oldInput, newInput);
-		fViewer = (TreeViewer) viewer;
+		fViewer = (PHPTreeViewer) viewer;
 		if (oldInput == null && newInput != null) {
 			PHPWorkspaceModelManager.getInstance().addWorkspaceModelListener(this);
 			PHPWorkspaceModelManager.getInstance().addModelListener(this);
@@ -282,6 +282,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 			PHPWorkspaceModelManager.getInstance().removeWorkspaceModelListener(this);
 			PHPWorkspaceModelManager.getInstance().removeModelListener(this);
 		}
+		fViewer.refresh(true);
 	}
 
 	/* (non-Javadoc)
@@ -317,7 +318,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					return;
 
 				Control control = fViewer.getControl();
-				if (control == null || control.isDisposed())
+				if (control == null || control.isDisposed() || !control.isVisible())
 					return;
 
 				IResource res = PHPModelUtil.getResource(fileData);
@@ -352,7 +353,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					return;
 
 				Control control = fViewer.getControl();
-				if (control == null || control.isDisposed())
+				if (control == null || control.isDisposed() || !control.isVisible())
 					return;
 
 				IResource res = PHPModelUtil.getResource(fileData);
@@ -393,7 +394,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					return;
 				}
 				Control control = fViewer.getControl();
-				if (control == null || control.isDisposed()) {
+				if (control == null || control.isDisposed() || !control.isVisible()) {
 					//					--inProgress;
 					return;
 				}
@@ -418,7 +419,8 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					if (model != outlineNode.getModel())
 						outlineNode.setModel(model);
 					outlineNode.loadChildren();
-					fViewer.refresh(outlineNode, false);
+					fViewer.refresh(outlineNode, true);
+					fViewer.setSelection(fViewer.getStoredSelection(), true);
 				}
 				//				}
 				//				}
