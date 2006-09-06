@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.core.documentModel.partitioner;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IDocumentPartitionerExtension2;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.core.documentModel.parser.regions.PHPContentRegion;
@@ -51,14 +53,22 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 	public ITypedRegion getPartition(final int offset, final boolean preferOpenPartitions) {
 		ITypedRegion region = getPartition(offset);
 		ITypedRegion newRegion;
-		if ((isPHPPartitionType(region.getType()) || offset == fStructuredDocument.getLength()) && preferOpenPartitions)
+		if ((isPHPPartitionType(region.getType()) || offset == fStructuredDocument.getLength()) && preferOpenPartitions) {
 			if (region.getOffset() == offset)
 				if (offset > 0) {
-					newRegion = getPartition(offset - 1);
-					final String newRegionType = newRegion.getType();
-					if (newRegionType != PHPPartitionTypes.PHP_MULTI_LINE_COMMENT && newRegionType != PHPPartitionTypes.PHP_QUOTED_STRING && newRegionType != PHPPartitionTypes.PHP_DOC)
-						region = newRegion;
+					IRegion lineInfo = null;
+					try {
+						lineInfo = fStructuredDocument.getLineInformationOfOffset(offset);
+					} catch (BadLocationException e) {
+					}
+					if (lineInfo == null || lineInfo.getOffset() != offset || offset == fStructuredDocument.getLength()) {
+						newRegion = getPartition(offset - 1);
+						final String newRegionType = newRegion.getType();
+						if (newRegionType != PHPPartitionTypes.PHP_MULTI_LINE_COMMENT && newRegionType != PHPPartitionTypes.PHP_QUOTED_STRING && newRegionType != PHPPartitionTypes.PHP_DOC)
+							region = newRegion;
+					}
 				}
+		}
 		return region;
 	}
 

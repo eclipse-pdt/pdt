@@ -27,6 +27,7 @@ import org.eclipse.php.Logger;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.core.format.FormatterUtils;
 import org.eclipse.php.core.phpModel.parser.*;
 import org.eclipse.php.core.phpModel.phpElementData.*;
 import org.eclipse.php.core.util.WeakPropertyChangeListener;
@@ -152,10 +153,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void calcCompletionOption(PHPEditorModel editorModel, int offset, ITextViewer viewer) throws BadLocationException {
-		
+
 		final int originalOffset = viewer.getSelectedRange().x;
 		final boolean isStrict = originalOffset != offset ? true : false;
-
 
 		PHPFileData fileData = editorModel.getFileData();
 		if (fileData == null) {
@@ -166,7 +166,6 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
 		PHPProjectModel projectModel = editorModel.getProjectModel();
-
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
 		ITextRegion textRegion = null;
 		// 	in case we are at the end of the document, asking for completion
@@ -190,14 +189,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		//should not take into account the found region
 		//find the previous region and update the start offset
 		if (startOffset == offset) {
-			textRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
-			if (textRegion == null) {
-				sdRegion = sdRegion.getPrevious();
-				if (sdRegion == null)
-					return;
-				textRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
-				if (textRegion == null)
-					return;
+			ITextRegion preTextRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
+			IStructuredDocumentRegion preSdRegion = null;
+			if (preTextRegion != null || ((preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null)) {
+				if (preTextRegion.getType() == "") {
+					// TODO needs to be fixed. The problem is what to do if the cursor is exatly between problematic regions, e.g. single line comment and quoted string?? 
+				}
 			}
 			startOffset = sdRegion.getStartOffset(textRegion);
 		}
