@@ -94,32 +94,7 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		final String state = FormatterUtils.getPartitionType(document, offset);
 
 		if (state == PHPPartitionTypes.PHP_DEFAULT || state == PHPRegionTypes.PHP_OPENTAG || state == PHPRegionTypes.PHP_CLOSETAG)
-			// should work everywhere:
 			return true;
-		/*			if (currChar == '?' && nextChar == '>') {
-		 return true;
-		 }
-		 if (currChar == '<' && nextChar == '<') { // checking for heredoc
-		 //				return true;
-		 int position = offset + 2;
-		 while (position < document.getLength()) {
-		 char c = document.getChar(position);
-		 if (Character.isWhitespace(c)) {
-		 if (position + 1 == document.getLength()) { // if its the end of the text then its ok
-		 return true;
-		 }
-		 //                        TO_DO add support in heredoc state
-		 //                        String state1 = FormatterUtils.getPartitionType(document, position + 1);
-		 //                        if (state1 == PhpLexer.ST_PHP_HEREDOC) {
-		 //                            return true;
-		 //                        }
-		 break;
-		 }
-		 position++;
-		 }
-		 }
-		 */
-
 		if (currChar == '/' && (nextChar == '/' || nextChar == '*'))
 			return true;
 		return false;
