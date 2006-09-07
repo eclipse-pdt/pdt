@@ -110,7 +110,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		//		}
 
 		File phpIni = IniModifier.findPHPIni(phpExeString);
-		if(IniModifier.findPHPIni(phpExeString) != null) {
+		if(phpIni != null) {
 			File tempIni = IniModifier.addIncludePath(phpIni, project);
 			if(tempIni != null) {
 				launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
