@@ -23,7 +23,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.core.PHPCoreConstants;
@@ -140,36 +139,25 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	protected void createArgumentComponent(final Composite parent) {
 		final Group group = new Group(parent, SWT.NONE);
-		final String groupName = PHPDebugUIMessages.Arguments;
+		final String groupName = PHPDebugUIMessages.PHP_File;
 		group.setText(groupName);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		
+		GridLayout layout = new GridLayout(3, false);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayout(layout);
-		group.setLayoutData(gridData);
+		group.setLayoutData(gd);
 		group.setFont(parent.getFont());
-
-		//argumentField = new Text(group, SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
-		argumentField = new Text(group, SWT.BORDER);
-		//gridData = new GridData(GridData.FILL_BOTH);
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.widthHint = IDialogConstants.ENTRY_FIELD_WIDTH;
-		//gridData.heightHint = 30;
-		argumentField.setLayoutData(gridData);
+		
+		argumentField = new Text(group, SWT.SINGLE | SWT.BORDER);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		argumentField.setLayoutData(gd);
 		argumentField.addModifyListener(fListener);
 		addControlAccessibleListener(argumentField, group.getText());
-
-		final Composite composite = new Composite(group, SWT.NONE);
-		layout = new GridLayout();
-		layout.numColumns = 1;
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		gridData = new GridData(GridData.HORIZONTAL_ALIGN_END);
-		composite.setLayout(layout);
-		composite.setLayoutData(gridData);
-		composite.setFont(parent.getFont());
-
-		argumentVariablesButton = createPushButton(composite, PHPDebugUIMessages.Variables, null);
+		
+		argumentVariablesButton = createPushButton(group, PHPDebugUIMessages.Browse, null);
+		gd = (GridData) argumentVariablesButton.getLayoutData();
+		gd.horizontalSpan = 1;
 		argumentVariablesButton.addSelectionListener(fListener);
 		addControlAccessibleListener(argumentVariablesButton, argumentVariablesButton.getText()); // need to strip the mnemonic from buttons
 	}
