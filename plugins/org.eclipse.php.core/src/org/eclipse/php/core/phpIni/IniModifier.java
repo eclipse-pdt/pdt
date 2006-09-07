@@ -27,27 +27,44 @@ import org.ini4j.IniParser;
 public class IniModifier {
 	static final String PARAM_INCLUDE_PATH = "include_path";
 	static final String PATH_SEPARATOR = System.getProperty("os.name").toLowerCase().startsWith("windows") ? ";" : ":";
+	static final String PHP_SECTION_NAME = "PHP";
+
+	private static String getParameter(Ini parameters, String sectionName, String parameterName) {
+		return (String) ((Ini.Section) parameters.get(sectionName)).get(parameterName);
+	}
+
+	private static void setParameter(Ini parameters, String sectionName, String parameterName, String value) {
+		((Ini.Section) parameters.get(sectionName)).put(parameterName, value);
+	}
 
 	public static File addIncludePath(final File phpIni, final IPath[] includePaths) {
+		if (includePaths.length < 0) {
+			return phpIni;
+		}
 		try {
 			final File tempFile = createTempFile();
 			if (tempFile == null)
 				return null;
 			final Ini parameters = new Ini();
-			parameters.load(new FileInputStream(phpIni), Ini.IGNORE_ESCAPE | Ini.STRIP_QUOTES);
-			final String includePath = (String) ((Ini.Section) parameters.get(IniParser.DEFAULT_SECTION_NAME)).get(PARAM_INCLUDE_PATH);
+			parameters.load(new FileInputStream(phpIni), Ini.IGNORE_ESCAPE);
+			String sectionName = PHP_SECTION_NAME;
+			String includePath = getParameter(parameters, PHP_SECTION_NAME, PARAM_INCLUDE_PATH);
+			if (includePath == null) {
+				includePath = getParameter(parameters, sectionName = IniParser.DEFAULT_SECTION_NAME, PARAM_INCLUDE_PATH);
+			}
 			final StringBuffer includePathBuffer;
 
 			if (includePath != null) {
-				includePathBuffer = new StringBuffer(includePath);
+				includePathBuffer = new StringBuffer(includePath.replaceAll("\"", ""));
 				includePathBuffer.append(PATH_SEPARATOR);
 			} else
 				includePathBuffer = new StringBuffer();
+
 			for (int i = 0; i < includePaths.length; ++i)
 				includePathBuffer.append(includePaths[i].toOSString()).append(PATH_SEPARATOR);
 			includePathBuffer.insert(0, "\"");
 			includePathBuffer.append("\"");
-			((Ini.Section) parameters.get(IniParser.DEFAULT_SECTION_NAME)).put(PARAM_INCLUDE_PATH, includePathBuffer.toString());
+			setParameter(parameters, sectionName, PARAM_INCLUDE_PATH, includePathBuffer.toString());
 			parameters.store(new FileOutputStream(tempFile), Ini.IGNORE_ESCAPE);
 			return tempFile;
 		} catch (final IOException e) {
