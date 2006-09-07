@@ -48,6 +48,8 @@
 			<actionSet id="org.eclipse.debug.ui.launchActionSet" />
 			<actionSet id="org.eclipse.ui.NavigateActionSet" />
 			<actionSet id="org.eclipse.php.ui.PHPActionSet" />
+		    <actionSet id="org.eclipse.debug.ui.breakpointActionSet" />
+			
 			<viewShortcut id="org.eclipse.ui.views.ContentOutline" />
 			<viewShortcut id="org.eclipse.ui.views.PropertySheet" />
 			<viewShortcut id="org.eclipse.ui.views.ResourceNavigator" />
