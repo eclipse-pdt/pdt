@@ -146,7 +146,7 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 
 	static public int FORCE_QUOTES = 1 << 2;
 	static public int IGNORE_ESCAPE = 1;
-	private static final String OPERATOR = " " + IniParser.OPERATOR + " "; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String OPERATOR = String.valueOf(IniParser.OPERATOR); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * 
