@@ -30,7 +30,11 @@ public class IniModifier {
 	static final String PHP_SECTION_NAME = "PHP";
 
 	private static String getParameter(Ini parameters, String sectionName, String parameterName) {
-		return (String) ((Ini.Section) parameters.get(sectionName)).get(parameterName);
+		Ini.Section section = (Ini.Section) parameters.get(sectionName);
+		if (section != null) {
+			return (String) section.get(parameterName);
+		}
+		return null;
 	}
 
 	private static void setParameter(Ini parameters, String sectionName, String parameterName, String value) {
