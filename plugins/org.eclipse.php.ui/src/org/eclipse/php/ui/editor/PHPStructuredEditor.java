@@ -11,6 +11,7 @@
 package org.eclipse.php.ui.editor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -91,6 +92,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.ResourceAction;
@@ -104,6 +106,10 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 
 public class PHPStructuredEditor extends StructuredTextEditor {
+	
+	IWorkbenchPart getPart() {
+		return this;
+	}
 
 	/**
 	 * This action behaves in two different ways: If there is no current text
@@ -491,26 +497,22 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					if (event.getSelection().isEmpty() || selecting)
 						return;
 
-					if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && !getSourceViewer().getTextWidget().isFocusControl())
+					if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && getSite().getPage().getActivePart() != getPart())
 						if (event.getSelection() instanceof IStructuredSelection) {
 							final ISelection current = getSelectionProvider().getSelection();
 							if (current instanceof IStructuredSelection) {
-								final Object newSelection = ((IStructuredSelection) event.getSelection()).getFirstElement();
-								final Object currentSelection = ((IStructuredSelection) current).getFirstElement();
-								if (current instanceof TextSelection && newSelection instanceof PHPCodeData) {
-									if (PHPElementImpl.isInside(((TextSelection) current).getOffset(), (PHPCodeData) newSelection)) {
-										return;
-									}
-								}
-								if (!currentSelection.equals(newSelection))
-									if (newSelection != null) {
+								final Object[] currentSelection = ((IStructuredSelection) current).toArray();
+								final Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
+								if (!Arrays.equals(currentSelection, newSelection))
+									if (newSelection.length > 0) {
 										/*
 										 * No ordering is guaranteed for
 										 * multiple selection
 										 */
+										final Object o = newSelection[0];
 										selecting = true;
-										if (newSelection instanceof PHPCodeData)
-											setSelection((PHPCodeData) newSelection, true);
+										if (o instanceof PHPCodeData)
+											setSelection((PHPCodeData) o, true);
 										selecting = false;
 									}
 							}
