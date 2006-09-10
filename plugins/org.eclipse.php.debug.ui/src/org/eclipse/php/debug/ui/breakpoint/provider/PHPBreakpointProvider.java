@@ -145,7 +145,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 	 * @param editorLineNumber
 	 * @return position to set breakpoint or -1 if no position could be found
 	 */
-	private int getValidPosition(IDocument idoc, int editorLineNumber) {
+	public static int getValidPosition(IDocument idoc, int editorLineNumber) {
 		int result = -1;
 		if (idoc != null) {
 

@@ -25,6 +25,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String InstalledPHPsBlock_16;
 	public static String SetCondition_1;
 	public static String ErrorCreatingBreakpoint_1;
+	public static String CannotRunToLine;
 	public static String BreakpointCreated_1;
 	public static String MPresentation_Terminated_1;
 	public static String MPresentation_PHP_APP_1;

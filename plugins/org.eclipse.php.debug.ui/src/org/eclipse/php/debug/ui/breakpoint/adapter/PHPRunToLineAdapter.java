@@ -33,6 +33,8 @@ import org.eclipse.php.debug.core.model.PHPDebugElement;
 import org.eclipse.php.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.debug.ui.breakpoint.provider.PHPBreakpointProvider;
+import org.eclipse.php.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -64,8 +66,31 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
                 errorMessage = PHPDebugUIMessages.PHPRunToLineAdapter_1;
             } else {
                 ITextSelection textSelection = (ITextSelection) selection;
-                int lineNumber = textSelection.getStartLine() + 1;
-                if (lineNumber > 0) {
+
+				int lineNumber = 0;
+				try {
+					lineNumber = document.getLineOfOffset(textSelection.getOffset()) + 1;
+				} catch (BadLocationException e) {
+				}
+				// Figure out if the selected line is a valid line to place a temporary breakpoint for the run-to-line
+				int validLinePosition = PHPBreakpointProvider.getValidPosition(document, lineNumber);
+				if (validLinePosition < 0) {
+					StatusLineMessageTimerManager.setErrorMessage(PHPDebugUIMessages.CannotRunToLine, 1000, true); // hide message after 1 second
+					return;
+				} else {
+					int validLineNumber = 0;
+					try {
+						validLineNumber = document.getLineOfOffset(validLinePosition) + 1;
+						if (validLineNumber != lineNumber) {
+							StatusLineMessageTimerManager.setErrorMessage(PHPDebugUIMessages.CannotRunToLine, 1000, true); // hide message after 1 second
+							return;
+						}
+					} catch (BadLocationException ble) {
+						StatusLineMessageTimerManager.setErrorMessage(PHPDebugUIMessages.CannotRunToLine, 1000, true); // hide message after 1 second
+						return;
+					}
+				}
+				if (lineNumber > 0) {
                     if (getValidPosition(document, lineNumber) != -1) {
                         if (target instanceof IAdaptable) {
                             IDebugTarget debugTarget = (IDebugTarget) ((IAdaptable) target).getAdapter(IDebugTarget.class);
