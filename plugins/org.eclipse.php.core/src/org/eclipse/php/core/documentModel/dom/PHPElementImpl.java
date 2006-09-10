@@ -13,7 +13,14 @@ package org.eclipse.php.core.documentModel.dom;
 import org.eclipse.php.core.documentModel.validate.HTMLElementPropagatingValidator;
 import org.eclipse.php.core.documentModel.validate.HTMLEmptyValidator;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -49,7 +56,7 @@ public class PHPElementImpl extends ElementImpl {
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
 	}
-	
+
 	//
 	// Catch the HTML adapter so HTML syntax checking isn't done for
 	// a PHP Region. Not sure that this is a very good way to
@@ -63,7 +70,7 @@ public class PHPElementImpl extends ElementImpl {
 		final String name = ((Class) type).getName();
 		if (name.equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator")) {
 			result = pValidator;
-			
+
 			// TRICKY: if we are in HTML Validator and we see a php element - just go out and do nothing !!! 
 		} else if (name.equals("org.eclipse.wst.sse.core.internal.validate.ValidationAdapter")) {
 			result = new HTMLEmptyValidator();
@@ -120,7 +127,7 @@ public class PHPElementImpl extends ElementImpl {
 
 	}
 
-	private static boolean isInside(int offset, PHPCodeData codeData) {
+	public static boolean isInside(int offset, PHPCodeData codeData) {
 		UserData userData = codeData.getUserData();
 		if (userData == null)
 			return false;
