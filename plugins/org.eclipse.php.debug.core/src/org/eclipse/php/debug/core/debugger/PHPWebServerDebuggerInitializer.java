@@ -75,7 +75,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		}
 	}
 
-	private void connect(URL url, int port, boolean isDebugPassive) throws DebugException {
+	protected void connect(URL url, int port, boolean isDebugPassive) throws DebugException {
 		try {
 			URLConnection connection = url.openConnection();
 			String headerKey = connection.getHeaderFieldKey(1);
