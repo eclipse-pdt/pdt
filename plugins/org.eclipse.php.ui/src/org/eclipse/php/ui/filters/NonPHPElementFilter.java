@@ -10,16 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.ui.filters;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.project.PHPNature;
-
 
 /**
  * Filters out all non-PHP elements.
@@ -36,8 +37,13 @@ public class NonPHPElementFilter extends ViewerFilter {
 		if (element instanceof PHPCodeData || element instanceof PHPProjectModel)
 			return true;
 
+		if (element instanceof IFile) {
+			PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(((IFile) element).getFullPath().toString());
+			return (fileData != null);
+		}
+
 		if (element instanceof IProject) {
-			IProject project = (IProject) element;			
+			IProject project = (IProject) element;
 			try {
 				if (!project.hasNature(PHPNature.ID))
 					return false;
