@@ -11,7 +11,6 @@
 package org.eclipse.php.ui.editor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -44,6 +43,7 @@ import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.ITextViewerExtension4;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
@@ -64,6 +64,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.containers.LocalFileStorage;
 import org.eclipse.php.core.containers.ZipEntryStorage;
+import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -193,7 +194,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 				/* 
 				 * XXX: This is a hack to avoid API changes at the end of 3.2,
-				 * and should be fixed for 3.3, see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=137967
 				 */
 				if ("org.eclipse.jface.text.source.projection.ProjectionAnnotationHover".equals(annotationHover.getClass().getName()))
 					controlCreator = new IInformationControlCreator() {
@@ -495,18 +495,22 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 						if (event.getSelection() instanceof IStructuredSelection) {
 							final ISelection current = getSelectionProvider().getSelection();
 							if (current instanceof IStructuredSelection) {
-								final Object[] currentSelection = ((IStructuredSelection) current).toArray();
-								final Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
-								if (!Arrays.equals(currentSelection, newSelection))
-									if (newSelection.length > 0) {
+								final Object newSelection = ((IStructuredSelection) event.getSelection()).getFirstElement();
+								final Object currentSelection = ((IStructuredSelection) current).getFirstElement();
+								if (current instanceof TextSelection && newSelection instanceof PHPCodeData) {
+									if (PHPElementImpl.isInside(((TextSelection) current).getOffset(), (PHPCodeData) newSelection)) {
+										return;
+									}
+								}
+								if (!currentSelection.equals(newSelection))
+									if (newSelection != null) {
 										/*
 										 * No ordering is guaranteed for
 										 * multiple selection
 										 */
-										final Object o = newSelection[0];
 										selecting = true;
-										if (o instanceof PHPCodeData)
-											setSelection((PHPCodeData) o, true);
+										if (newSelection instanceof PHPCodeData)
+											setSelection((PHPCodeData) newSelection, true);
 										selecting = false;
 									}
 							}
