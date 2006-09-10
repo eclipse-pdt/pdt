@@ -47,8 +47,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String BrowseWorkspace;
 	public static String BrowseFilesystem;
 	public static String WorkingDirectory;
-	public static String Arguments;
-	public static String Variables;
+	public static String PHP_File;
+	public static String Browse;
 	public static String Location;
 	public static String PHP_Location_Message;
 	public static String PHP_Location_No_Empty;
