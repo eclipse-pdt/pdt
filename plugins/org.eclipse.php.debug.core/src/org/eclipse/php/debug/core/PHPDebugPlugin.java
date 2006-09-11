@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
@@ -150,7 +154,10 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static void log(IStatus status) {
-		getDefault().getLog().log(status);
+		try {
+			getDefault().getLog().log(status);
+		} catch (Exception e) {
+		}
 	}
 
 	public static void log(Throwable e) {
