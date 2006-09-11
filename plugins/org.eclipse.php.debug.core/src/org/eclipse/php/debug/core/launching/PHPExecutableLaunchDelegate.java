@@ -93,15 +93,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		if (projectName == null) {
 			final IResource res = workspaceRoot.findMember(filePath);
 			if (res == null || !res.isAccessible()) {
-				final Display display = Display.getDefault();
-				display.asyncExec(new Runnable() {
-					public void run() {
-						MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
-					}
-				});
+				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
 				return;
 			}
 			project = res.getProject();
+			if (project == null){
+				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));
+			}
 			absolutePath = res.getLocation().toString();
 		} else {
 			try {
@@ -113,12 +111,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 
 		if (project == null || !project.isAccessible()) {
-			final Display display = Display.getDefault();
-			display.asyncExec(new Runnable() {
-				public void run() {
-					MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
-				}
-			});
+			displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));			
 		}
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
@@ -280,5 +273,14 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 		return true;
 
+	}
+	
+	private void displayErrorMessage(final String message){
+		final Display display = Display.getDefault();
+		display.asyncExec(new Runnable() {
+			public void run() {																	
+				MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, message); 
+			}
+		});
 	}
 }
