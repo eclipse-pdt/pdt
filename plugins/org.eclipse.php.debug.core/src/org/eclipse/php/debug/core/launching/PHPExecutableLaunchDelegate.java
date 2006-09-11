@@ -92,7 +92,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String absolutePath = null;
 		if (projectName == null) {
 			final IResource res = workspaceRoot.findMember(filePath);
-			if (res == null) {
+			if (res == null || !res.isAccessible()) {
 				final Display display = Display.getDefault();
 				display.asyncExec(new Runnable() {
 					public void run() {
@@ -110,8 +110,15 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				absolutePath = filePath.makeAbsolute().toString();
 			} catch (final Exception e) {
 			}
-			if (project == null || !project.isAccessible())
-				return;
+		}
+
+		if (project == null || !project.isAccessible()) {
+			final Display display = Display.getDefault();
+			display.asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
+				}
+			});
 		}
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
