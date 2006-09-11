@@ -167,15 +167,15 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		final String mode = getLaunchConfigurationDialog().getMode();
 		if (ILaunchManager.DEBUG_MODE.equals(mode)) {
 			final Group group = new Group(parent, SWT.NONE);
-			group.setText("Breakpoint");
+			group.setText(PHPDebugUIMessages.Breakpoint_Group_Label);
 			final GridLayout layout = new GridLayout();
 			layout.numColumns = 1;
 			final GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 			group.setLayout(layout);
 			group.setLayoutData(gridData);
 
-			overrideBreakpiontSettings = createCheckButton(group, "Override project/workspace 'Break at First Line' setting");
-			breakOnFirstLine = createCheckButton(group, "Break at First Line");
+			overrideBreakpiontSettings = createCheckButton(group, PHPDebugUIMessages.Breakpoint_Group_Override_Break_Setting);
+			breakOnFirstLine = createCheckButton(group, PHPDebugUIMessages.Breakpoint_Group_BreakAtFirstLine);
 			final GridData data = (GridData) breakOnFirstLine.getLayoutData();
 			data.horizontalIndent = 20;
 

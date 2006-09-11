@@ -60,6 +60,9 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHP_File_Not_Exist;
 	public static String Select_Resource;
 	public static String Select_Project_Folder;
+	public static String Breakpoint_Group_Label;
+	public static String Breakpoint_Group_Override_Break_Setting;
+	public static String Breakpoint_Group_BreakAtFirstLine;
 
 	//  installed php exes	
 	public static String PHPsPreferencePage_1;
