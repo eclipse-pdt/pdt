@@ -17,7 +17,7 @@ import org.eclipse.osgi.util.NLS;
  * 
  */
 public class PHPDebugUIMessages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.php.debug.ui.PHPDebugUIPluginResources";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.debug.ui.PHPDebugUIMessages";//$NON-NLS-1$
 
 	public static String EnableSetCondition_1;
 	public static String EnterCondition_1;
