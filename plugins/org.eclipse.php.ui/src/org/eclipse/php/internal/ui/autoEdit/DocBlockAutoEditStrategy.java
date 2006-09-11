@@ -99,13 +99,13 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				if (partitionType == PHPPartitionTypes.PHP_DEFAULT || partitionType == PHPPartitionTypes.PHP_DOC || partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
 					int placeCaretAt = handleDocBlockStart(document, command, blanks, isDocBlock);
 					if (placeCaretAt != -1) {
-						document.replace(command.offset, command.length, command.text);
-						command.offset = placeCaretAt;
-						command.length = 0;
-						command.text = "";
-						document.getUndoManager().disableUndoManagement();
-						document.replace(command.offset, command.length, command.text);
-						document.getUndoManager().enableUndoManagement();
+//						document.replace(command.offset, command.length, command.text);
+//						command.offset = placeCaretAt;
+//						command.length = 0;
+//						command.text = "";
+//						document.getUndoManager().disableUndoManagement();
+//						document.replace(command.offset, command.length, command.text);
+//						document.getUndoManager().enableUndoManagement();
 					}
 				}
 				return;
@@ -170,16 +170,6 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			int lineEnd = selectionEnd;
 			if (selectionEnd < lineInfo.getOffset() + lineInfo.getLength()) {
 				lineInfo = document.getLineInformationOfOffset(selectionEnd);
-				String lineEndString = document.get(selectionEnd, lineInfo.getOffset() + lineInfo.getLength() - selectionEnd);
-				if (lineEndString.length() > 0) {
-					int i = 0;
-					char c = lineEndString.charAt(0);
-					for (i = 0; i < lineEndString.length() && Character.isWhitespace(c) && c != '\n'; i++) {
-						c = lineEndString.charAt(i);
-						command.length++;
-					}
-					lineEnd += i;
-				}
 			}
 
 			if (isDocBlock && TypingPreferences.addDocTags) {
