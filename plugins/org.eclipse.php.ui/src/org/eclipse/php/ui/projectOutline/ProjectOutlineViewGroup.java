@@ -26,7 +26,7 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 	public static final int PHP5 = 2;
 
 	protected ProjectOutlinePart fPart;
-	private ToggleAllAction toggleAllAction;
+	//private ToggleAllAction toggleAllAction;
 	private SortAction sortAction;
 	private ToggleLinkingAction toggleLinking;
 	private CollapseAllAction collapseAllAction;
@@ -50,8 +50,8 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 	public ProjectOutlineViewGroup(ProjectOutlinePart part) {
 		this.fPart = part;
 
-		toggleAllAction = new ToggleAllAction(this); //$NON-NLS-1$
-		toggleAllAction.setText("Show All");
+//		toggleAllAction = new ToggleAllAction(this); //$NON-NLS-1$
+//		toggleAllAction.setText("Show All");
 
 		sortAction = new SortAction(part.getViewer());
 
@@ -71,7 +71,7 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
 		fOpenEditorActionGroup.fillContextMenu(menu);
-		toggleAllAction.setChecked(fPart.isShowAll());
+		//toggleAllAction.setChecked(fPart.isShowAll());
 
 		//		menu.add(toggleAllAction);
 		//		menu.add(toggleLinking);
@@ -91,8 +91,8 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 	}
 
 	protected void fillMenu(IMenuManager menu) {
-		toggleAllAction.setChecked(fPart.isShowAll());
-		menu.add(toggleAllAction);
+//		toggleAllAction.setChecked(fPart.isShowAll());
+//		menu.add(toggleAllAction);
 		//		menu.add(toggleLinking);
 	}
 
