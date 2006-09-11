@@ -167,7 +167,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		}
 		if ((status & IResourceDelta.ADDED) != 0) {
 			Object addItem = resource;
-			postRemove(parent, addItem);
+			postAdd(parent, addItem);
 		}
 		// open/close state change of a project
 		if ((flags & IResourceDelta.OPEN) != 0) {
