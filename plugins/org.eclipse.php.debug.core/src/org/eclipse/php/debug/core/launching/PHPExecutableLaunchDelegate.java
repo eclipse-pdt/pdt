@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.launching;
 
-
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -20,8 +19,20 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
@@ -44,7 +55,6 @@ import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler;
 import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 import org.eclipse.swt.widgets.Display;
 
-
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	protected Map envVariables = null;
 
@@ -58,7 +68,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e1));
 		}
 	}
-	
+
 	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
 		PHPLaunchUtilities.showDebugView();
 		IProgressMonitor subMonitor; // the total of monitor is 100
@@ -82,11 +92,11 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String absolutePath = null;
 		if (projectName == null) {
 			final IResource res = workspaceRoot.findMember(filePath);
-			if (res == null){
+			if (res == null) {
 				final Display display = Display.getDefault();
 				display.asyncExec(new Runnable() {
-					public void run() {																	
-						MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath)); 
+					public void run() {
+						MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
 					}
 				});
 				return;
@@ -110,13 +120,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		//		}
 
 		File phpIni = IniModifier.findPHPIni(phpExeString);
-		if(phpIni != null) {
+		if (phpIni != null) {
 			File tempIni = IniModifier.addIncludePath(phpIni, project);
-			if(tempIni != null) {
+			if (tempIni != null) {
 				launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 			}
 		}
-		
+
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
 			boolean stopAtFirstLine = false;
 			if (configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false)) {
@@ -191,13 +201,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			String phpConfigDir = workingDir.getAbsolutePath();
 
 			String phpIniLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
-			if(phpIniLocation != null && !phpIniLocation.equals("")) {
+			if (phpIniLocation != null && !phpIniLocation.equals("")) {
 				phpConfigDir = phpIniLocation;
 			}
 
 			final String[] cmdLine = new String[] { phpExe.toOSString(), "-c", phpConfigDir, phpFile.toOSString() };
 
-			final Process p = DebugPlugin.exec(cmdLine, projectDir, envp);
+			final Process p = DebugPlugin.exec(cmdLine, workingDir, envp);
 			IProcess process = null;
 
 			// add process type to process attributes
