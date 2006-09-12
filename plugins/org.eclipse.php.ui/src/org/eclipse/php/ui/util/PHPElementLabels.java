@@ -379,15 +379,19 @@ public class PHPElementLabels {
 			for (int i = 0; i < nParams; i++) {
 				if (i > 0) {
 					buf.append(COMMA_STRING); //$NON-NLS-1$
+					buf.append(" ");
 				}
 				if (getFlag(flags, M_PARAMETER_TYPES)) {
 					String t = parameters[i].getClassType();
-					if (t == null)
-						t = "";
+					if (t == null){
+						t = ""; 
+					} else { 
+						t += " ";
+					}
 					buf.append(t);
 				}
 				if (getFlag(flags, M_PARAMETER_NAMES)) {
-					buf.append(" $" + parameters[i].getName());
+					buf.append("$" + parameters[i].getName());
 					String defaultValue = parameters[i].getDefaultValue();
 					if (defaultValue != null && !defaultValue.equals("")) {
 						buf.append(" = " + defaultValue);
