@@ -23,9 +23,11 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPModifier;
@@ -97,46 +99,45 @@ public class PHPElementSorter extends ViewerSorter {
 	 */
 	public int category(Object element) {
 		if (element instanceof PHPCodeData) {
-
 			if (element instanceof PHPFunctionData) {
-				PHPFunctionData function = (PHPFunctionData) element;
-				if (false) {//function.isConstructor()) {
-					return getMemberCategory(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX);
-				}
-				int flags = function.getModifiers();
-				if (PHPModifier.isStatic(flags))
+				if (PHPModifier.isStatic(((PHPFunctionData) element).getModifiers())) {
 					return getMemberCategory(MembersOrderPreferenceCache.STATIC_FUNCTIONS_INDEX);
-				else
-					return getMemberCategory(MembersOrderPreferenceCache.FUNCTIONS_INDEX);
-
-			} else if (element instanceof PHPClassVarData) {
-				PHPClassVarData var = (PHPClassVarData) element;
-				int flags = var.getModifiers();
-				if (PHPModifier.isStatic(flags))
+				}
+				return getMemberCategory(MembersOrderPreferenceCache.FUNCTIONS_INDEX);
+			}
+			if (element instanceof PHPClassData) {
+				return getMemberCategory(MembersOrderPreferenceCache.CLASS_INDEX);
+			}
+			if (element instanceof PHPConstantData || element instanceof PHPClassConstData) {
+				return getMemberCategory(MembersOrderPreferenceCache.CONSTANTS_INDEX);
+			}
+			if (element instanceof PHPClassVarData) {
+				if (PHPModifier.isStatic(((PHPClassVarData) element).getModifiers())) {
 					return getMemberCategory(MembersOrderPreferenceCache.STATIC_VARS_INDEX);
-				else
-					return getMemberCategory(MembersOrderPreferenceCache.VARS_INDEX);
+				}
+				return getMemberCategory(MembersOrderPreferenceCache.VARS_INDEX);
+			}
+		}
 
-			} else if (element instanceof PHPClassVarData) {
-				return getMemberCategory(MembersOrderPreferenceCache.CLASS_INDEX);
-			} else if (element instanceof PHPClassVarData) {
-				return getMemberCategory(MembersOrderPreferenceCache.CLASS_INDEX);
-			} else if (element instanceof PHPProjectModel)
-				return PROJECTS;
-			else if (element instanceof PHPClassData)
-				return CLASSFILES;
-			else if (element instanceof PHPFileData)
-				return COMPILATIONUNITS;
-			return JAVAELEMENTS;
-		} else if (element instanceof IFile) {
-			return RESOURCES;
-		} else if (element instanceof IProject) {
+		if (element instanceof PHPProjectModel) {
 			return PROJECTS;
-		} else if (element instanceof IContainer) {
+		}
+		if (element instanceof PHPFileData) {
+			return COMPILATIONUNITS;
+		}
+		if (element instanceof IFile) {
+			return RESOURCES;
+		}
+		if (element instanceof IProject) {
+			return PROJECTS;
+		}
+		if (element instanceof IContainer) {
 			return RESOURCEFOLDERS;
-		} else if (element instanceof IStorage) {
+		}
+		if (element instanceof IStorage) {
 			return STORAGE;
-		} else if (element instanceof OutlineNode) {
+		}
+		if (element instanceof OutlineNode) {
 			return OUTLINE_NODES;
 		}
 		return OTHERS;
