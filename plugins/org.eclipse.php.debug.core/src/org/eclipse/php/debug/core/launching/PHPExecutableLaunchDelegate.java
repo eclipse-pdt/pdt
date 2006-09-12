@@ -204,8 +204,14 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			if (phpIniLocation != null && !phpIniLocation.equals("")) {
 				phpConfigDir = phpIniLocation;
 			}
-
-			final String[] cmdLine = new String[] { phpExe.toOSString(), "-c", phpConfigDir, phpFile.toOSString() };
+			final IResource res = workspaceRoot.findMember(filePath);
+			String fileName = null;
+			if (res != null) {
+				fileName = res.getLocation().toOSString();
+			} else {
+				fileName = filePath.toOSString();
+			}
+			final String[] cmdLine = new String[] { phpExe.toOSString(), "-c", phpConfigDir, fileName };
 
 			final Process p = DebugPlugin.exec(cmdLine, workingDir, envp);
 			IProcess process = null;
