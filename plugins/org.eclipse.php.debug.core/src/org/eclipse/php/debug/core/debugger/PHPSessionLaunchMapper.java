@@ -25,6 +25,7 @@ import org.eclipse.php.debug.core.launching.PHPServerLaunchDecorator;
  */
 public class PHPSessionLaunchMapper implements ILaunchesListener {
 
+	private static final String SYSTEM_DEBUG_PROPERTY = "org.eclipse.php.debug.ui.activeDebugging";
 	private static PHPSessionLaunchMapper instance;
 	private IntHashtable map;
 
@@ -73,9 +74,11 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	}
 
 	public void launchesAdded(ILaunch[] launches) {
+		updateSystemProperty(launches);
 	}
 
 	public void launchesChanged(ILaunch[] launches) {
+		updateSystemProperty(launches);
 	}
 
 	public void launchesRemoved(ILaunch[] launches) {
@@ -94,5 +97,22 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 				}
 			}
 		}
+		updateSystemProperty(launches);
+	}
+
+	/*
+	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property. 
+	 * This method is important for any action that is defined to be visible when a debug session is 
+	 * active (such as the Run to Line action).
+	 * 
+	 * @param launches
+	 */
+	private void updateSystemProperty(ILaunch[] launches) {
+		boolean hasActiveLaunch = false;
+		for (int i = 0; i < launches.length; i++) {
+			ILaunch launch = launches[i];
+			hasActiveLaunch |= !launch.isTerminated();
+		}
+		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true" : "false");
 	}
 }

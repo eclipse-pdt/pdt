@@ -55,17 +55,23 @@
 		</breakpointContribution>
 	</extension> 
 
+	
 	<extension
          point="org.eclipse.ui.popupMenus">           
       <viewerContribution
-            targetID="php.editor.contextMenu"
+            targetID="org.eclipse.php.core.phpsource.source.EditorContext"
             id="php.editor.menuActions">
          <action
-               label="%runToLine.label"
-               definitionId="org.eclipse.debug.ui.commands.RunToLine"
                class="org.eclipse.debug.ui.actions.RunToLineActionDelegate"
-               menubarPath="additions"
-               id="php.editor.context.runToLineAction"/>
+               definitionId="org.eclipse.debug.ui.commands.RunToLine"
+               id="php.editor.context.runToLineAction"
+               label="%runToLine.label"
+               menubarPath="additions"/>
+         <visibility>
+            <systemProperty
+                  name="org.eclipse.php.debug.ui.activeDebugging"
+                  value="true"/>
+         </visibility>
       </viewerContribution>
       <objectContribution
             objectClass="org.eclipse.php.debug.core.model.PHPConditionalBreakpoint"
