@@ -108,6 +108,9 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 public class ExplorerPart extends ViewPart implements IMenuListener, FocusListener {
 
+	private static String MEMENTO_ROOT_MODE = "ExplorerPart.rootMode";
+	private static String MEMENTO_WORKING_SET = "ExplorerPart.workingSet";
+
 	private PHPTreeViewer fViewer;
 	protected ExplorerContentProvider fContentProvider;
 
@@ -782,17 +785,21 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		}
 	}
 
-	private void createWorkingSetModel() {
+	private void createWorkingSetModel(final IMemento memento) {
 		SafeRunner.run(new ISafeRunnable() {
 			public void run() throws Exception {
-				fWorkingSetModel = new WorkingSetModel();
+				fWorkingSetModel = new WorkingSetModel(memento);
 			}
 
 			public void handleException(Throwable exception) {
-				fWorkingSetModel = new WorkingSetModel();
+				fWorkingSetModel = new WorkingSetModel(memento);
 			}
 
 		});
+	}
+
+	private void createWorkingSetModel() {
+		createWorkingSetModel(null);
 	}
 
 	public WorkingSetModel getWorkingSetModel() {
@@ -805,9 +812,28 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
-		if (showWorkingSets()) {
-			createWorkingSetModel();
+		if (memento != null) {
+			final Integer rootModeInteger = memento.getInteger(MEMENTO_ROOT_MODE);
+			if (rootModeInteger != null) {
+				fRootMode = rootModeInteger.intValue();
+			}
 		}
+		if (showWorkingSets()) {
+			createWorkingSetModel(memento.getChild(MEMENTO_WORKING_SET));
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
+	 */
+	public void saveState(IMemento memento) {
+		if (memento != null) {
+			memento.putInteger(MEMENTO_ROOT_MODE, fRootMode);
+			IMemento wsMemento = memento.createChild(MEMENTO_WORKING_SET);
+			fWorkingSetModel.saveState(wsMemento);
+
+		}
+		super.saveState(memento);
 	}
 
 	private LinkingSelectionListener fSelectionListener = new LinkingSelectionListener() {

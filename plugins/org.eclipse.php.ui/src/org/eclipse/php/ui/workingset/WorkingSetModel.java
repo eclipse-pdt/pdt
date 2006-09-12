@@ -222,26 +222,31 @@ public class WorkingSetModel {
 		}
 	}
 
-	public WorkingSetModel() {
-		fLocalWorkingSetManager = PlatformUI.getWorkbench().createLocalWorkingSetManager();
-		addListenersToWorkingSetManagers();
-		fActiveWorkingSets = new ArrayList(2);
+	private void initialize(IMemento memento) {
+		if (memento == null) {
+			fLocalWorkingSetManager = PlatformUI.getWorkbench().createLocalWorkingSetManager();
+			addListenersToWorkingSetManagers();
+			fActiveWorkingSets = new ArrayList(2);
 
-		IWorkingSet others = fLocalWorkingSetManager.createWorkingSet(PHPUIMessages.WorkingSetModel_others_name, new IAdaptable[0]);
-		others.setId(OthersWorkingSetUpdater.ID);
-		fLocalWorkingSetManager.addWorkingSet(others);
-		fActiveWorkingSets.add(others);
+			IWorkingSet others = fLocalWorkingSetManager.createWorkingSet(PHPUIMessages.WorkingSetModel_others_name, new IAdaptable[0]);
+			others.setId(OthersWorkingSetUpdater.ID);
+			fLocalWorkingSetManager.addWorkingSet(others);
+			fActiveWorkingSets.add(others);
+		} else {
+			restoreState(memento);
+		}
 
 		if (fOthersWorkingSetUpdater != null)
 			fOthersWorkingSetUpdater.init(this);
 		fElementMapper.rebuild(getActiveWorkingSets());
 	}
 
+	public WorkingSetModel() {
+		initialize(null);
+	}
+
 	public WorkingSetModel(IMemento memento) {
-		restoreState(memento);
-		if (fOthersWorkingSetUpdater != null)
-			fOthersWorkingSetUpdater.init(this);
-		fElementMapper.rebuild(getActiveWorkingSets());
+		initialize(memento);
 	}
 
 	private void addListenersToWorkingSetManagers() {
