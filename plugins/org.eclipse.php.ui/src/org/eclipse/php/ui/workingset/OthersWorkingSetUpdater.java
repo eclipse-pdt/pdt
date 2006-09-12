@@ -21,11 +21,12 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.IWorkingSetUpdater;
@@ -146,10 +147,16 @@ public class OthersWorkingSetUpdater implements IWorkingSetUpdater {
 				}
 			}
 		}
-		IProject[] phpProjects = PHPWorkspaceModelManager.getInstance().listProjects();
-		for (int i = 0; i < phpProjects.length; i++) {
-			if (!projects.contains(phpProjects[i]))
-				result.add(phpProjects[i]);
+		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		for (int i = 0; i < allProjects.length; i++) {
+			try {
+				if (!allProjects[i].hasNature(PHPNature.ID)) {
+					continue;
+				}
+			} catch (CoreException e) {
+			}
+			if (!projects.contains(allProjects[i]))
+				result.add(allProjects[i]);
 		}
 		//		Object[] rProjects= model.getNonPHPResources();
 		//		for (int i= 0; i < rProjects.length; i++) {
