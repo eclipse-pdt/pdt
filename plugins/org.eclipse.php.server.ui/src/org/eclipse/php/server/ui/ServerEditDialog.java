@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.server.core.Server;
@@ -118,6 +119,20 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 			}
 			button.setEnabled(true);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#setMessage(java.lang.String, int)
+	 */
+	public void setMessage(String newMessage, int newType) {
+		// Override the WARNING with an INFORMATION. 
+		// We have a bug that cause the warning to be displayed in all the tabs and not
+		// only in the selected one. (TODO - Fix this)
+		if (newType == IMessageProvider.WARNING) {
+			newType = IMessageProvider.INFORMATION;
+		}
+		super.setMessage(newMessage, newType);
 	}
 
 	/*
