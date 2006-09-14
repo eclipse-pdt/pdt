@@ -882,14 +882,14 @@
 			id="org.eclipse.php.ui.functionsManual" />
 	</extension>
 
-	<!-- this makes "run as" show up in php explorer-->
+	<!-- this makes "run as" show up in php explorer
 	<extension point="org.eclipse.core.runtime.adapters">
 		<factory
 			class=""
 			adaptableType="org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp">
 			<adapter type="org.eclipse.debug.ui.actions.ILaunchable" />
 		</factory>
-	</extension>
+	</extension> -->
 	<extension
 		point="org.eclipse.core.filebuffers.annotationModelCreation">
 	</extension>

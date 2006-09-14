@@ -296,12 +296,18 @@
 		 	<contextLabel mode="run" label="%phpexeApplicationShortcut.label"/>
 		 	<enablement>
 		 		<count value="1"/>
+     <test
+           property="org.eclipse.php.debug.ui.launchablePHP"
+           value="true"/>
 		 	</enablement>
 		 </contextualLaunch>
 		 <contextualLaunch>
 		 	<contextLabel mode="debug" label="%phpexeApplicationShortcut.label"/>
 		 	<enablement>
 		 		<count value="1"/>
+     <test
+           property="org.eclipse.php.debug.ui.launchablePHP"
+           value="true"/>
 		 	</enablement>
 		 </contextualLaunch>
 		 
@@ -326,6 +332,9 @@
 		 	<contextLabel mode="run" label="%phpServerShortcut.label"/>
 		 	<enablement>
 		 		<count value="1"/>
+     <test
+           property="org.eclipse.php.debug.ui.launchablePHP"
+           value="true"/>
 		 	</enablement>
 		 </contextualLaunch>
          <contextualLaunch>
@@ -334,6 +343,9 @@
                   mode="debug"/>
             <enablement>
                <count value="1"/>
+               <test
+                     property="org.eclipse.php.debug.ui.launchablePHP"
+                     value="true"/>
             </enablement>
          </contextualLaunch>
 		 
@@ -367,7 +379,16 @@
             id="org.eclipse.php.debug.SourceNotFoundEditor">
       </editor>
    </extension>
- 
+   <extension point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.php.debug.ui.PropertyTesters.PHPLaunchPropertyTester"
+            id="org.eclipse.php.debug.ui.launchPropertyTester"
+            namespace="org.eclipse.php.debug.ui"
+            properties="launchablePHP"
+            type="java.lang.Object"/>
+   
+   </extension>
+ <!--
  <extension point="org.eclipse.core.expressions.propertyTesters">
    <propertyTester
       id="org.eclipse.wst.server.ui.propertyTester"
@@ -383,14 +404,14 @@
       type="org.eclipse.core.internal.resources.Project"
       class="org.eclipse.php.debug.ui.PropertyTesters.RunnablePropertyTester">
    </propertyTester>
-<!--      <propertyTester
+      <propertyTester
       id="org.eclipse.wst.server.ui.propertyTester"
       namespace="org.eclipse.wst.server.ui"
       properties="isRunnable"
       type="org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"
       class="org.eclipse.core.resources.IFolder">
-   </propertyTester> -->
- </extension>
+   </propertyTester>
+ </extension> -->
  <extension
        point="org.eclipse.php.debug.ui.phpDebugPreferencesAddon">
     <debugPreferencesAddon
