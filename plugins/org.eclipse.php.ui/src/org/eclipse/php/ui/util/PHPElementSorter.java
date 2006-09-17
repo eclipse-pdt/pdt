@@ -100,6 +100,10 @@ public class PHPElementSorter extends ViewerSorter {
 	public int category(Object element) {
 		if (element instanceof PHPCodeData) {
 			if (element instanceof PHPFunctionData) {
+				PHPFunctionData function = (PHPFunctionData) element;
+				if (function.getContainer() instanceof PHPClassData && ("__construct".equals(function.getName()) || "__destruct".equals(function.getName()))) {
+					return getMemberCategory(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX);
+				}
 				if (PHPModifier.isStatic(((PHPFunctionData) element).getModifiers())) {
 					return getMemberCategory(MembersOrderPreferenceCache.STATIC_FUNCTIONS_INDEX);
 				}
