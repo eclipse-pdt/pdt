@@ -216,11 +216,11 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 
 		public ISelection getSelection() {
 			final IContentProvider cp = getContentProvider();
+			final Control control = getControl();
+			if (control == null || control.isDisposed())
+				return StructuredSelection.EMPTY;
 			if (!(cp instanceof IMultiElementTreeContentProvider))
 				return super.getSelection();
-			final Control control = getControl();
-			if (control == null || control.isDisposed() || !control.isVisible())
-				return StructuredSelection.EMPTY;
 			final Tree tree = getTree();
 			final TreeItem[] selection = tree.getSelection();
 			final List result = new ArrayList(selection.length);
@@ -313,9 +313,10 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 				public void run() {
 					if (getViewer().getInput() != currentProject)
 						getViewer().setInput(currentProject);
-					fContentProvider.postRefresh(currentProject, false);
 				}
 			});
+			fContentProvider.postRefresh(currentProject, true);
+
 			return Status.OK_STATUS;
 		}
 
@@ -365,7 +366,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 				if (structuredSelection.size() > 0) {
 					Object firstElement = structuredSelection.getFirstElement();
 					if (firstElement instanceof IProject) {
-						setProject((IProject) structuredSelection.getFirstElement());
+						setProject((IProject) firstElement);
 						return;
 					}
 				}
@@ -667,7 +668,6 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 			updateViewJob = new UpdateViewJob();
 		updateViewJob.schedule();
 		actionGroup.updateActions();
-
 	}
 
 	private void setProviders() {
