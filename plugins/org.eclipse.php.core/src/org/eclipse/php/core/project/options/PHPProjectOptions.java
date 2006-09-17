@@ -66,8 +66,9 @@ public class PHPProjectOptions {
 	public static final String USER_LIBRARY_CONTAINER_ID = "org.eclipse.php.USER_LIBRARY"; //$NON-NLS-1$
 
 	public static PHPProjectOptions forProject(final IProject project) {
-		if (!project.isAccessible())
+		if (!project.exists() || !project.isAccessible()) {
 			return null;
+		}
 		PHPNature nature = null;
 		try {
 			nature = (PHPNature) project.getNature(PHPNature.ID);
