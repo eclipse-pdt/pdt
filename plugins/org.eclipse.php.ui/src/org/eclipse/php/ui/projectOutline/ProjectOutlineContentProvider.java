@@ -104,6 +104,9 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 						break;
 				}
 			}
+			if (children == null) {
+				children = new HashMap(newChildren.length);
+			}
 			for (int i = 0; i < newChildren.length; ++i) {
 				children.put(newChildren[i], b);
 			}
@@ -282,7 +285,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 			PHPWorkspaceModelManager.getInstance().removeWorkspaceModelListener(this);
 			PHPWorkspaceModelManager.getInstance().removeModelListener(this);
 		}
-		fViewer.refresh(true);
+		postRefresh(newInput, true);
 	}
 
 	/* (non-Javadoc)
