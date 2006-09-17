@@ -27,7 +27,6 @@ import org.eclipse.php.Logger;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.core.format.FormatterUtils;
 import org.eclipse.php.core.phpModel.parser.*;
 import org.eclipse.php.core.phpModel.phpElementData.*;
 import org.eclipse.php.core.util.WeakPropertyChangeListener;
@@ -1202,7 +1201,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 						caretOffsetInSuffix++;
 					}
 				}
-			} else if (codeData instanceof PHPVariableData || codeData instanceof PHPConstantData) {
+			} else if (codeData instanceof PHPVariableData || codeData instanceof PHPConstantData || codeData instanceof PHPClassConstData) {
 				suffix = "";
 				caretOffsetInSuffix = 0;
 			}
