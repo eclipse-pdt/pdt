@@ -830,7 +830,9 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		if (memento != null) {
 			memento.putInteger(MEMENTO_ROOT_MODE, fRootMode);
 			IMemento wsMemento = memento.createChild(MEMENTO_WORKING_SET);
-			fWorkingSetModel.saveState(wsMemento);
+			if (fWorkingSetModel != null) {
+				fWorkingSetModel.saveState(wsMemento);
+			}
 
 		}
 		super.saveState(memento);
