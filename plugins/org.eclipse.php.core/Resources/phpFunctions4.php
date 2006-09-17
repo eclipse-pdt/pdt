@@ -25782,6 +25782,14 @@ function zend_current_obfuscation_level() {}
 function zend_get_cfg_var($option_name) {}
 
 /**
+ * 
+ *
+ * @return int
+ * @param  all bool[optional]
+ */
+function zend_get_id($all = null) {}
+
+/**
  * Verifies license in filename, if it's valid - returns array of license fields, if not - returns error string 
  *
  * @return mixed
@@ -25835,6 +25843,13 @@ function zend_loader_file_licensed() {}
 function zend_loader_install_license($license_file, $override) {}
 
 /**
+ * 
+ *
+ * @return int
+ */
+function zend_loader_version() {}
+
+/**
  * Return the special ID used to request the Zend logo in phpinfo screens
  *
  * @return string
@@ -25866,6 +25881,13 @@ function zend_obfuscate_class_name($class_name) {}
  * @param  function_name string
  */
 function zend_obfuscate_function_name($function_name) {}
+
+/**
+ * 
+ *
+ * @return int
+ */
+function zend_optimizer_version() {}
 
 /**
  * 
@@ -25969,6 +25991,29 @@ function zip_read($zip) {}
  * @return string
  */
 function zlib_get_coding_type() {}
+
+
+class stdClass {
+};
+
+/**
+ * @return resource
+ * @param  connection_string string
+ * @param  connect_type int
+ * @desc   Open a PostgreSQL connection
+ */
+function pg_connect($connection_string, $connect_type) {}
+
+/**
+ * @return resource
+ * @param  host string
+ * @param  port string
+ * @param  options string[optional]
+ * @param  tty string[optional]
+ * @param  database string
+ * @desc   Open a PostgreSQL connection
+ */
+function pg_connect($host, $port, $options = null, $tty = null, $database) {}
 
 class OCI_Lob {
     /**
