@@ -2346,9 +2346,8 @@ public class PhpLexer5 extends PhpLexer {
           { 
     if (!phpStack.isEmpty()) {
         popState();
-        return  PHP_CURLY_CLOSE;
     }
-    return  UNKNOWN_TOKEN;
+    return  PHP_CURLY_CLOSE;
  }
         case 799: break;
         case 26: 
