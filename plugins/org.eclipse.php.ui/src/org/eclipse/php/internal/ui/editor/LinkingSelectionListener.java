@@ -60,7 +60,9 @@ public class LinkingSelectionListener implements ISelectionListener {
 					final IDOMModel model = doc.getModel();
 					if (!(model instanceof PHPEditorModel))
 						return null;
-					codeData = PHPElementImpl.getPHPCodeData((NodeImpl) firstElement, ((TextSelection) selection).getOffset());
+					if (selection instanceof TextSelection) {
+						codeData = PHPElementImpl.getPHPCodeData((NodeImpl) firstElement, ((TextSelection) selection).getOffset());
+					}
 				} else if (firstElement instanceof PHPCodeData) {
 					codeData = (PHPCodeData) firstElement;
 				}
