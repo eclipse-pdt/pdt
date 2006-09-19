@@ -66,7 +66,7 @@ public class PhpFormatter implements IStructuredFormatter {
 		if (node instanceof PHPElementImpl || (node instanceof TextImpl && node.getFirstStructuredDocumentRegion() instanceof PHPStructuredDocumentRegion)) {
 
 			IStructuredDocumentRegion sdRegionStart = node.getStartStructuredDocumentRegion();
-			IStructuredDocumentRegion sdRegionEnd = node.getEndStructuredDocumentRegion();
+			IStructuredDocumentRegion sdRegionEnd = node.getLastStructuredDocumentRegion();
 			sdRegionEnd = sdRegionEnd == null ? sdRegionStart : sdRegionEnd;
 			format(sdRegionStart, sdRegionEnd);
 		}
