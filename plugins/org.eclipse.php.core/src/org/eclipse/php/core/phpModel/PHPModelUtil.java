@@ -190,9 +190,9 @@ public class PHPModelUtil {
 	public static Object getExternalResource(final Object element, final IProject project) {
 		if (!(element instanceof PHPCodeData))
 			return null;
-		PHPCodeData codeData = (PHPCodeData)element;
+		PHPCodeData codeData = (PHPCodeData) element;
 		PHPFileData fileData = PHPModelUtil.getPHPFileContainer(codeData);
-		if(fileData == null)
+		if (fileData == null)
 			return null;
 		String fileName = fileData.getName();
 		final File file = new File(fileName);
@@ -280,7 +280,7 @@ public class PHPModelUtil {
 				return PHPWorkspaceModelManager.getInstance();
 			final IResource parent = ((IResource) element).getParent();
 			if (parent instanceof IProject) {
-//				return PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) parent);
+				//				return PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) parent);
 			}
 
 			return parent;
@@ -314,8 +314,8 @@ public class PHPModelUtil {
 	}
 
 	public static PHPFileData getPHPFileContainer(final PHPCodeData element) {
-		if(element instanceof PHPFileData)
-			return (PHPFileData)element;
+		if (element instanceof PHPFileData)
+			return (PHPFileData) element;
 		PHPCodeData parent = element.getContainer();
 		while (parent != null && !(parent instanceof PHPFileData))
 			parent = parent.getContainer();
@@ -411,7 +411,7 @@ public class PHPModelUtil {
 		else if (element instanceof PHPClassData) {
 			final PHPClassData classData = (PHPClassData) element;
 			return classData.getFunctions().length > 0 || classData.getVars().length > 0 || classData.getConsts().length > 0;
-		} else if (element instanceof PHPVariableData || element instanceof PHPKeywordData || element instanceof PHPConstantData || element instanceof PHPClassConstData)
+		} else if (element instanceof PHPVariableData || element instanceof PHPKeywordData || element instanceof PHPConstantData || element instanceof PHPClassConstData || element instanceof PHPIncludeFileData)
 			return false;
 		return true;
 
