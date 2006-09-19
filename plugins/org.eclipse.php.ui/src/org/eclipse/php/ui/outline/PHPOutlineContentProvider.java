@@ -132,6 +132,11 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 		String text;
 		int type;
 
+		public void setFileData(PHPFileData fileData) {
+			this.fileData = fileData;
+			loadChildren();
+		}
+
 		GroupNode(final int type, final String text, final PHPFileData fileData) {
 			this.type = type;
 			this.text = text;
@@ -278,7 +283,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 			final Object[] providerChildren = phpContentProvider.getChildren(fileData);
 			final Object[] children = new Object[providerChildren.length + 1];
 			System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
-			children[0] = new GroupNode(GROUP_INCLUDES, "include files", fileData);
+			children[0] = getIncludeFilesNode(fileData);
 			return children;
 		} else if (object instanceof GroupNode)
 			return ((GroupNode) object).getChildren();
@@ -286,6 +291,8 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 			return ((PHPTreeNode) object).getChildren();
 		return super.getChildren(object);
 	}
+
+	GroupNode includes = null;
 
 	public Object[] getElements(final Object object) {
 		if (object instanceof PHPElementImpl && mode == MODE_MIXED) {
@@ -303,7 +310,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 			final Object[] providerChildren = phpContentProvider.getElements(fileData);
 			final Object[] children = new Object[providerChildren.length + 1];
 			System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
-			children[0] = new GroupNode(GROUP_INCLUDES, "include files", fileData);
+			children[0] = getIncludeFilesNode(fileData);
 			return children;
 
 		} else if (object instanceof GroupNode)
@@ -312,11 +319,20 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 		return super.getElements(object);
 	}
 
+	GroupNode getIncludeFilesNode(PHPFileData fileData) {
+		if (includes == null) {
+			includes = new GroupNode(GROUP_INCLUDES, "include files", fileData);
+		} else {
+			includes.setFileData(fileData);
+		}
+		return includes;
+	}
+
 	GroupNode[] getGroupNodes(final PHPFileData fileData) {
 		if (showGroups) {
 			if (groupNodes != null)
 				return groupNodes;
-			groupNodes = new GroupNode[] { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_INCLUDES, "include files", fileData) };
+			groupNodes = new GroupNode[] { new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), getIncludeFilesNode(fileData) };
 		} else
 			groupNodes = null;
 		return groupNodes;
