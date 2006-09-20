@@ -100,7 +100,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	private CompletionProposalGroup newStatmentCompletionProposalGroup = new NewStatmentCompletionProposalGroup();
 	private CompletionProposalGroup arrayCompletionProposalGroup = new ArrayCompletionProposalGroup();
 	private CompletionProposalGroup classStaticCallCompletionProposalGroup = new ClassStaticCallCompletionProposalGroup();
-	private CompletionProposalGroup classVariableCallCompletionProposalGroup = new ClassVariableCallCompletionProposalGroup();
+	protected CompletionProposalGroup classVariableCallCompletionProposalGroup = new ClassVariableCallCompletionProposalGroup();
 
 	public ContentAssistSupport() {
 		// Initialize all preferences
@@ -271,12 +271,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return;
 	}
 
-	private static boolean isFunctionCall(PHPProjectModel projectModel, String functionName) {
+	protected static boolean isFunctionCall(PHPProjectModel projectModel, String functionName) {
 		CodeData[] functionsData = projectModel.getFunction(functionName);
 		return functionsData != null && functionsData.length > 0;
 	}
 
-	private boolean isPHPSingleQuote(IStructuredDocumentRegion sdRegion, ITextRegion textRegion) {
+	protected boolean isPHPSingleQuote(IStructuredDocumentRegion sdRegion, ITextRegion textRegion) {
 		if (PhpLexer.isPHPQuotesState(textRegion.getType())) {
 			char firstChar = sdRegion.getText(textRegion).charAt(0);
 			return (firstChar == '\'');
@@ -284,7 +284,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return false;
 	}
 
-	private boolean isInArrayOptionQuotes(PHPProjectModel projectModel, String fileName, String type, int offset, int selectionLength, TextSequence text) {
+	protected boolean isInArrayOptionQuotes(PHPProjectModel projectModel, String fileName, String type, int offset, int selectionLength, TextSequence text) {
 		if (!PhpLexer.isPHPQuotesState(type)) {
 			return false;
 		}
@@ -321,7 +321,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return true;
 	}
 
-	private void getRegularCompletion(final ITextViewer viewer, final PHPProjectModel projectModel, final String fileName, String startsWith, final int offset, final int selectionLength, boolean explicit, final IStructuredDocumentRegion sdRegion, final ITextRegion tRegion, boolean isStrict) {
+	protected void getRegularCompletion(final ITextViewer viewer, final PHPProjectModel projectModel, final String fileName, String startsWith, final int offset, final int selectionLength, boolean explicit, final IStructuredDocumentRegion sdRegion, final ITextRegion tRegion, boolean isStrict) {
 		if (!explicit && startsWith.length() == 0)
 			return;
 
@@ -422,7 +422,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	}
 
-	private boolean isClassFunctionCompletion(PHPProjectModel projectModel, String fileName, TextSequence statmentText, int offset, int line, int selectionLength, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd, boolean explicit, boolean isStrict) {
+	protected boolean isClassFunctionCompletion(PHPProjectModel projectModel, String fileName, TextSequence statmentText, int offset, int line, int selectionLength, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd, boolean explicit, boolean isStrict) {
 		startFunctionPosition = PHPTextSequenceUtilities.readBackwardSpaces(statmentText, startFunctionPosition);
 		if (startFunctionPosition <= 2) {
 			return false;
@@ -467,7 +467,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	 * @param offset       - the offset in the document
 	 */
 
-	private String getClassName(PHPProjectModel projectModel, String fileName, TextSequence statmentText, int endPosition, int offset, int line) {
+	protected String getClassName(PHPProjectModel projectModel, String fileName, TextSequence statmentText, int endPosition, int offset, int line) {
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statmentText, endPosition); // read whitespace
 
 		boolean isClassTriger = false;
@@ -506,7 +506,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	/**
 	 * getting an instance and finding its type.
 	 */
-	private String innerGetClassName(PHPProjectModel projectModel, String fileName, TextSequence statmentText, int propertyEndPosition, boolean isClassTriger, int offset, int line) {
+	protected String innerGetClassName(PHPProjectModel projectModel, String fileName, TextSequence statmentText, int propertyEndPosition, boolean isClassTriger, int offset, int line) {
 
 		int classNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, propertyEndPosition, true);
 		String className = statmentText.subSequence(classNameStart, propertyEndPosition).toString();
@@ -552,7 +552,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return null;
 	}
 
-	private boolean isClassFunctionCall(PHPProjectModel projectModel, String fileName, String className, String functionName) {
+	protected boolean isClassFunctionCall(PHPProjectModel projectModel, String fileName, String className, String functionName) {
 		CodeData functionData = projectModel.getClassFunctionData(fileName, className, functionName);
 		return functionData != null;
 	}
@@ -560,7 +560,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	/**
 	 * finding the type of the class variable.
 	 */
-	private String getVarType(PHPProjectModel projectModel, String fileName, String className, String varName, int statmentStart, int line) {
+	protected String getVarType(PHPProjectModel projectModel, String fileName, String className, String varName, int statmentStart, int line) {
 		String tempType = PHPFileDataUtilities.getVariableType(fileName, "this;*" + varName, statmentStart, line, projectModel.getPHPUserModel(), determineObjectTypeFromOtherFile);
 		if (tempType != null) {
 			return tempType;
@@ -590,7 +590,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	/**
 	 * finding the return type of the function.
 	 */
-	private String getFunctionReturnType(PHPProjectModel projectModel, String fileName, String className, String functionName) {
+	protected String getFunctionReturnType(PHPProjectModel projectModel, String fileName, String className, String functionName) {
 		CodeData classFunction = projectModel.getClassFunctionData(fileName, className, functionName);
 		if (classFunction != null) {
 			if (classFunction instanceof PHPFunctionData) {
@@ -659,7 +659,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		completionProposalGroup.setData(offset, result, startWith, selectionLength, isStrict);
 	}
 
-	private void showClassStaticCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean explicit) {
+	protected void showClassStaticCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean explicit) {
 		CodeData[] functions = null;
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			functions = projectModel.getClassFunctions(fileName, className, "");
@@ -678,7 +678,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		completionProposalGroup.setData(offset, result, startWith, selectionLength);
 	}
 
-	private PHPClassData getContainerClassData(PHPProjectModel projectModel, String fileName, int offset) {
+	protected PHPClassData getContainerClassData(PHPProjectModel projectModel, String fileName, int offset) {
 		PHPFileData fileData = projectModel.getFileData(fileName);
 		return PHPFileDataUtilities.getContainerClassDada(fileData, offset);
 	}
@@ -713,7 +713,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	 * ModelSupport.PROTECTED_ACCESS_LEVEL_FILTER - if we can see protected fields
 	 * ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER - if we can see public fields
 	 */
-	private CodeDataFilter getAccessLevelFilter(PHPProjectModel projectModel, String fileName, String className, int offset, boolean isInstanceOf) {
+	protected CodeDataFilter getAccessLevelFilter(PHPProjectModel projectModel, String fileName, String className, int offset, boolean isInstanceOf) {
 		PHPCodeContext context = getContext(projectModel, fileName, offset);
 		String contextClassName = context.getContainerClassName();
 		// if the name of the context class is the same as the className itself then we are
@@ -740,12 +740,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER;
 	}
 
-	private PHPCodeContext getContext(PHPProjectModel projectModel, String fileName, int offset) {
+	protected PHPCodeContext getContext(PHPProjectModel projectModel, String fileName, int offset) {
 		PHPFileData fileData = projectModel.getFileData(fileName);
 		return ModelSupport.createContext(fileData, offset);
 	}
 
-	private boolean isInFunctionDeclaretion(PHPProjectModel projectModel, String fileName, TextSequence text, int offset, int selectionLength, boolean explicit) {
+	protected boolean isInFunctionDeclaretion(PHPProjectModel projectModel, String fileName, TextSequence text, int offset, int selectionLength, boolean explicit) {
 		// are we inside function declaretion statment
 		int functionStart = PHPTextSequenceUtilities.isInFunctionDeclaretion(text);
 		if (functionStart == -1) {
@@ -798,7 +798,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return true;
 	}
 
-	private boolean isInClassDeclaretion(PHPProjectModel projectModel, TextSequence text, int offset, int selectionLength, boolean explicit) {
+	protected boolean isInClassDeclaretion(PHPProjectModel projectModel, TextSequence text, int offset, int selectionLength, boolean explicit) {
 		int classEnd = PHPTextSequenceUtilities.isInClassDeclaretion(text);
 		if (classEnd == -1) {
 			return false;
@@ -879,7 +879,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return true;
 	}
 
-	private void showInterfaceList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
+	protected void showInterfaceList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -900,7 +900,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		completionProposalGroup.setData(offset, interfacesArray, startWith, selectionLength);
 	}
 
-	private void showExtendsImplementsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
+	protected void showExtendsImplementsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -909,9 +909,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		completionProposalGroup.setData(offset, result, startWith, selectionLength);
 	}
 
-	private CodeData[] extendedImplementCodeData;
+	protected CodeData[] extendedImplementCodeData;
 
-	private CodeData[] getExtendsImplementsCodeData(PHPProjectModel projectModel) {
+	protected CodeData[] getExtendsImplementsCodeData(PHPProjectModel projectModel) {
 		if (extendedImplementCodeData == null) {
 			CodeData extendsCodeData = null;
 			CodeData implementsCodeData = null;
@@ -935,7 +935,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return extendedImplementCodeData;
 	}
 
-	private void showImplementsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
+	protected void showImplementsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -944,9 +944,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		completionProposalGroup.setData(offset, result, startWith, selectionLength);
 	}
 
-	private static CodeData[] implementCodeData;
+	protected static CodeData[] implementCodeData;
 
-	private CodeData[] getImplementsCodeData(PHPProjectModel projectModel) {
+	protected CodeData[] getImplementsCodeData(PHPProjectModel projectModel) {
 		String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
 		boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
 		if (!isPHP5) {
@@ -1031,7 +1031,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return newClasses;
 	}
 
-	private boolean isInCatchStatment(PHPProjectModel projectModel, TextSequence text, int offset, int selectionLength, boolean explicit) {
+	protected boolean isInCatchStatment(PHPProjectModel projectModel, TextSequence text, int offset, int selectionLength, boolean explicit) {
 		Matcher matcher = catchPattern.matcher(text);
 		int catchStart = text.length();
 		while (matcher.find()) {
@@ -1067,7 +1067,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return true;
 	}
 
-	private void showClassList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean isNewStatment, boolean explicit) {
+	protected void showClassList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean isNewStatment, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1084,7 +1084,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		completionProposalGroup.setData(offset, classes, startWith, selectionLength);
 	}
 
-	private boolean isNewOrInstanceofStatment(PHPProjectModel projectModel, String keyword, String startWith, int offset, int selectionLength, boolean explicit, String type) {
+	protected boolean isNewOrInstanceofStatment(PHPProjectModel projectModel, String keyword, String startWith, int offset, int selectionLength, boolean explicit, String type) {
 		if (PhpLexer.isPHPQuotesState(type)) {
 			return false;
 		}
@@ -1102,7 +1102,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return false;
 	}
 
-	private boolean isInArrayOption(PHPProjectModel projectModel, String fileName, boolean haveSpacesAtEnd, String firstWord, String lastWord, int startPosition, int offset, int selectionLength, TextSequence text) {
+	protected boolean isInArrayOption(PHPProjectModel projectModel, String fileName, boolean haveSpacesAtEnd, String firstWord, String lastWord, int startPosition, int offset, int selectionLength, TextSequence text) {
 		boolean isArrayOption = false;
 		if (startPosition > 0 && !lastWord.startsWith("$")) {
 			if (haveSpacesAtEnd) {
@@ -1149,7 +1149,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return true;
 	}
 
-	private ICompletionProposal[] merg(ICompletionProposal[] sortedArray1, ICompletionProposal[] sortedArray2) {
+	protected ICompletionProposal[] merg(ICompletionProposal[] sortedArray1, ICompletionProposal[] sortedArray2) {
 
 		// gets the arrays size
 		int firstLength = sortedArray1 == null ? 0 : sortedArray1.length;
