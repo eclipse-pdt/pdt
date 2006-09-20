@@ -10,15 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.debug.ui.PropertyTesters;
 
-import java.io.File;
-import java.util.AbstractCollection;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.ui.part.FileEditorInput;
 
 /**
