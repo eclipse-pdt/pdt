@@ -40,46 +40,28 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPVariableTypeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
 
-
 public abstract class DefaultParserClient extends ContextParserClient {
 
-	private PHPUserModel userModel = null;
+	protected PHPUserModel userModel = null;
+	protected String workingFileName;
+	protected List functions;
+	protected List classVars;
+	protected List classConsts;
+	protected List classFunctions;
+	protected List classes;
+	protected List includeFiles;
+	protected List markers;
+	protected List functionParameters;
+	protected List phpTags;
+	protected List constans;
+	protected PHPDocBlock firstPHPDocBlock;
+	protected Stack functionsStack;
+	protected Stack classesStack;
+	protected Stack classVarsStack;
+	protected Stack classConstsStack;
+	protected Stack classFunctionsStack;
 
-	private String workingFileName;
-
-	private List functions;
-
-	private List classVars;
-
-	private List classConsts;
-
-	private List classFunctions;
-
-	private List classes;
-
-	private List includeFiles;
-
-	private List markers;
-
-	private List functionParameters;
-
-	private List phpTags;
-
-	private List constans;
-
-	private PHPDocBlock firstPHPDocBlock;
-
-	private Stack functionsStack;
-
-	private Stack classesStack;
-
-	private Stack classVarsStack;
-
-	private Stack classConstsStack;
-
-	private Stack classFunctionsStack;
-
-	private VariableContextBuilder variableContextBuilder;
+	protected VariableContextBuilder variableContextBuilder;
 
 	private boolean hadReturnStatement;
 
@@ -476,15 +458,15 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		for (int i = 0; i < cls.length; i++) {
 			cls[i].setContainer(fileData);
 		}
-		
+
 		for (int i = 0; i < func.length; i++) {
 			func[i].setContainer(fileData);
 		}
-		
+
 		for (int i = 0; i < allConstans.length; i++) {
 			allConstans[i].setContainer(fileData);
 		}
-		
+
 		userModel.insert(fileData);
 	}
 
@@ -502,7 +484,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	 *            the model yet)
 	 */
 
-	private void fixObjectInstantiation(PHPClassData[] cls, PHPFunctionData[] func) {
+	protected void fixObjectInstantiation(PHPClassData[] cls, PHPFunctionData[] func) {
 		PHPVariablesTypeManager variablesTypeManager = variableContextBuilder.getPHPVariablesTypeManager();
 		Map variablesInstansiations = variablesTypeManager.getVariablesInstansiation();
 
@@ -530,28 +512,28 @@ public abstract class DefaultParserClient extends ContextParserClient {
 			// }
 			// but its OK since we dont need to support them here - its being
 			// fixed in the codeCompletion
-            if(variableContext[0].equals("this") && variableContext.length > 3){
-                //this part solves the case were $this->a = $b;
-                int length = variableContext.length;
-                contextFunctionName = variableContext[length - 1];
-                contextClassName = variableContext[length - 2];
-                for(int i = length - 3 ; i >= 0; i--){
-                    if(variableContext[i].equals("null")){
-                        continue;
-                    }
-                    variableName = (variableName == null) ? variableContext[i] : variableContext[i] + ";" + variableName;                
-                }
-            } else {
-                if(variableContext.length >= 3){
-                    contextFunctionName = variableContext[2];
-                }
-                if(variableContext.length >= 2){
-                    contextClassName = variableContext[1];
-                }
-                if(variableContext.length >= 1){
-                    variableName = variableContext[0];
-                }
-            }
+			if (variableContext[0].equals("this") && variableContext.length > 3) {
+				//this part solves the case were $this->a = $b;
+				int length = variableContext.length;
+				contextFunctionName = variableContext[length - 1];
+				contextClassName = variableContext[length - 2];
+				for (int i = length - 3; i >= 0; i--) {
+					if (variableContext[i].equals("null")) {
+						continue;
+					}
+					variableName = (variableName == null) ? variableContext[i] : variableContext[i] + ";" + variableName;
+				}
+			} else {
+				if (variableContext.length >= 3) {
+					contextFunctionName = variableContext[2];
+				}
+				if (variableContext.length >= 2) {
+					contextClassName = variableContext[1];
+				}
+				if (variableContext.length >= 1) {
+					variableName = variableContext[0];
+				}
+			}
 
 			PHPCodeContext codeContext = ModelSupport.createContext(contextClassName, contextFunctionName);
 
@@ -757,7 +739,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		if (currToken == getEOFTag()) {
 			addUnexpected = true;
 			unexpectedString = "End of File";
-			startPosition = --endPosition; 
+			startPosition = --endPosition;
 		} else if (currToken == getCONSTANT_ENCAPSED_STRINGTag()) {
 			addUnexpected = true;
 			endPosition = startPosition + currText.trim().length();
@@ -823,11 +805,11 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		markers.add(new PHPMarker(IPHPMarker.ERROR, description, userData));
 	}
 
-	public void handleTask(String taskName, String description, int startPosition, int endPosition, int lineNumber){
+	public void handleTask(String taskName, String description, int startPosition, int endPosition, int lineNumber) {
 		UserData userData = PHPCodeDataFactory.createUserData(workingFileName, startPosition, endPosition, startPosition, lineNumber);
 		markers.add(new PHPTask(taskName, description, userData));
 	}
-	
+
 	private String getConstantValue(int tag) {
 		String rv = getError(tag);
 		if (rv != null) {
