@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.ui.filters;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 
 
@@ -29,6 +31,11 @@ public class PHPFileFilter extends ViewerFilter {
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof PHPFileData)
 			return false;
+		
+		if (element instanceof IFile) {
+			PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(((IFile) element).getFullPath().toString());
+			return (fileData == null);
+		}
 
 		return true;
 	}
