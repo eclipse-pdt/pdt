@@ -156,7 +156,9 @@ public class DebugConnectionThread implements Runnable {
 		} catch (SocketException se) {
 			// probably because the remote host disconnected
 			// Just log a warning (might be removed in the near future)
-			Logger.log(Logger.WARNING, se.getMessage(), se);
+			if (isDebugMode) {
+				Logger.log(Logger.WARNING, se.getMessage(), se);
+			}
 		} catch (Exception exc) {
 			PHPDebugPlugin.log(exc);
 		}
