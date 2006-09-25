@@ -240,6 +240,11 @@
 			objectClass="org.eclipse.core.resources.IProject"
 			adaptable="true"
 			class="org.eclipse.php.debug.ui.preferences.PHPDebugPropertyPreferencePage" />
+  <page
+        class="org.eclipse.php.debug.ui.breakpoint.property.PHPBreakpointPropertyPage"
+        id="org.eclipse.php.debug.ui.property.PHPConditionalBreakpointPropertyPage"
+        name="%PHPConditionalBreakpointPage.name"
+        objectClass="org.eclipse.php.debug.core.model.PHPConditionalBreakpoint"/>
 	</extension>	
 	<extension
          point="org.eclipse.ui.perspectives">
