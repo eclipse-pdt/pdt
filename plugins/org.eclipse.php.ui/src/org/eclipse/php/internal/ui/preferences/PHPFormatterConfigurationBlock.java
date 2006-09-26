@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.ui.preferences.IStatusChangeListener;
+import org.eclipse.php.ui.preferences.PHPCoreOptionsConfigurationBlock;
 import org.eclipse.php.ui.util.StatusInfo;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;

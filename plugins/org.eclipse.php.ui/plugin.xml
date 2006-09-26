@@ -860,11 +860,6 @@
         class="org.eclipse.php.internal.ui.preferences.PHPFormatterPreferencePage"
         id="org.eclipse.php.internal.ui.preferences.PHPFormatterPreferencePage"
         name="%formatterPreferencePageName"/>
-  <page
-        category="org.eclipse.ui.preferencePages.Workspace"
-        class="org.eclipse.php.ui.preferences.ui.LocalePreferencePage"
-        id="org.eclipse.php.ui.locale"
-        name="%languageSettingsPageName"/>
 	</extension>
 
 	<extension point="org.eclipse.ui.keywords">

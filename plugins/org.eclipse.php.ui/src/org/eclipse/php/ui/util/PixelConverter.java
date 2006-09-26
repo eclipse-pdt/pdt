@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.ui.util;
+package org.eclipse.php.ui.util;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.graphics.FontMetrics;

@@ -18,8 +18,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.project.IIncludePathEntry;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
-import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.ui.util.ExceptionHandler;
+import org.eclipse.php.ui.util.PixelConverter;
 import org.eclipse.swt.widgets.Shell;
 
 /**

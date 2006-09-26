@@ -12,7 +12,7 @@ package org.eclipse.php.ui.wizards.fields;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.php.internal.ui.util.PixelConverter;
+import org.eclipse.php.ui.util.PixelConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

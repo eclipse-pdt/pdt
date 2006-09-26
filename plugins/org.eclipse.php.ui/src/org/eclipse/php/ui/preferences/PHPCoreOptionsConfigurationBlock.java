@@ -1,9 +1,7 @@
-package org.eclipse.php.internal.ui.preferences;
+package org.eclipse.php.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.core.PHPCorePlugin;
-import org.eclipse.php.ui.preferences.IStatusChangeListener;
-import org.eclipse.php.ui.preferences.OptionsConfigurationBlock;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;

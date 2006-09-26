@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.internal.ui.util.PixelConverter;
+import org.eclipse.php.ui.util.PixelConverter;
 import org.eclipse.php.ui.wizards.fields.DialogField;
 import org.eclipse.php.ui.wizards.fields.LayoutUtil;
 import org.eclipse.php.ui.wizards.fields.ListDialogField;
