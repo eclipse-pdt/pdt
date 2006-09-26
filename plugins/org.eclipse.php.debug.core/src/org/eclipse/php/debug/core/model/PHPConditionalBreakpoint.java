@@ -95,7 +95,9 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
         marker.setAttribute(IPHPConstants.ConditionEnabled, new Boolean(enabled));
         int lineNumber = ((Integer) marker.getAttribute(IMarker.LINE_NUMBER)).intValue();
         if (enabled) {
-            marker.setAttribute(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.ConditionalBreakPointMessage_1, new String[] { marker.getResource().getName(), Integer.toString(lineNumber) }));
+        	String message = MessageFormat.format(PHPDebugCoreMessages.ConditionalBreakPointMessage_1, new String[] { marker.getResource().getName(), Integer.toString(lineNumber) });
+        	message +=  MessageFormat.format(PHPDebugCoreMessages.ConditionalBreakPointMessage_2, new String[] {condition});
+            marker.setAttribute(IMarker.MESSAGE, message);
         } else {
             marker.setAttribute(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { marker.getResource().getName(), Integer.toString(lineNumber) }));
         }
