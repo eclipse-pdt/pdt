@@ -235,11 +235,14 @@
     </extension>
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
-			id="org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"
-			name="%ProjectPage.name"
-			objectClass="org.eclipse.core.resources.IProject"
-			adaptable="true"
-			class="org.eclipse.php.debug.ui.preferences.PHPDebugPropertyPreferencePage" />
+        class="org.eclipse.php.debug.ui.preferences.PHPDebugPropertyPreferencePage"
+        id="org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"
+        name="%ProjectPage.name"
+        objectClass="org.eclipse.core.resources.IProject">
+     <filter
+           name="nature"
+           value="org.eclipse.php.core.PHPNature"/>
+  </page>
   <page
         class="org.eclipse.php.debug.ui.breakpoint.property.PHPBreakpointPropertyPage"
         id="org.eclipse.php.debug.ui.property.PHPConditionalBreakpointPropertyPage"
