@@ -22,23 +22,24 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.ILineBreakpoint;
 import org.eclipse.debug.core.model.IValue;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugModelPresentation;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.IValueDetailListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.core.containers.LocalFileStorage;
 import org.eclipse.php.core.containers.ZipEntryStorage;
 import org.eclipse.php.debug.core.IPHPConstants;
-import org.eclipse.php.debug.core.model.PHPDebugTarget;
-import org.eclipse.php.debug.core.model.PHPLineBreakpoint;
-import org.eclipse.php.debug.core.model.PHPStackFrame;
-import org.eclipse.php.debug.core.model.PHPThread;
+import org.eclipse.php.debug.core.model.*;
 import org.eclipse.php.debug.core.sourcelookup.PHPSourceNotFoundInput;
 import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.debug.ui.breakpoint.PHPBreakpointImageDescriptor;
 import org.eclipse.php.debug.ui.sourcelookup.PHPSourceNotFoundEditorInput;
 import org.eclipse.php.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.ui.containers.ZipEntryStorageEditorInput;
+import org.eclipse.php.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -48,6 +49,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
  * Renders PHP debug elements
  */
 public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation {
+	private ImageDescriptorRegistry fDebugImageRegistry;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -64,7 +67,37 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 	 */
 	public Image getImage(Object element) {
+		if (element instanceof PHPConditionalBreakpoint) {
+			return getBreakpointImage((PHPConditionalBreakpoint) element);
+		}
 		return null;
+	}
+
+	// Returns the conditional breakpoint icon (enabled / disabled).
+	// In case the breakpoint is not conditional, return null and let the default breakpoint
+	// icon.
+	private Image getBreakpointImage(PHPConditionalBreakpoint breakpoint) {
+		try {
+			if (breakpoint.isConditionEnabled()) {
+				PHPBreakpointImageDescriptor descriptor;
+				if (breakpoint.isEnabled()) {
+					descriptor = new PHPBreakpointImageDescriptor(DebugUITools.getImageDescriptor(IDebugUIConstants.IMG_OBJS_BREAKPOINT), PHPBreakpointImageDescriptor.CONDITIONAL | PHPBreakpointImageDescriptor.ENABLED);
+				} else {
+					descriptor = new PHPBreakpointImageDescriptor(DebugUITools.getImageDescriptor(IDebugUIConstants.IMG_OBJS_BREAKPOINT_DISABLED), PHPBreakpointImageDescriptor.CONDITIONAL);
+				}
+				return getDebugImageRegistry().get(descriptor);
+			}
+		} catch (CoreException e) {
+			return null;
+		}
+		return null;
+	}
+
+	protected ImageDescriptorRegistry getDebugImageRegistry() {
+		if (fDebugImageRegistry == null) {
+			fDebugImageRegistry = PHPDebugUIPlugin.getImageDescriptorRegistry();
+		}
+		return fDebugImageRegistry;
 	}
 
 	/*

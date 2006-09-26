@@ -24,6 +24,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -42,6 +43,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 
     //The shared instance.
     private static PHPDebugUIPlugin plugin;
+
+	private ImageDescriptorRegistry fImageDescriptorRegistry;
 
     public static final String ID="org.eclipse.php.debug.ui";
 	public static final int INTERNAL_ERROR = 10001;
@@ -98,6 +101,16 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
         return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.php.debug.ui", path);
     }
 
+    /**
+	 * Returns the image descriptor registry used for this plugin.
+	 */
+	public static ImageDescriptorRegistry getImageDescriptorRegistry() {
+		if (getDefault().fImageDescriptorRegistry == null) {
+			getDefault().fImageDescriptorRegistry = new ImageDescriptorRegistry();
+		}
+		return getDefault().fImageDescriptorRegistry;
+	}
+	
     /**
      * Returns the active workbench window
      * 
