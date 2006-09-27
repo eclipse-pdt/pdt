@@ -133,16 +133,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 				ISelection selection = fViewer.getSelection();
 				if (!selection.isEmpty()) {
 					IStructuredSelection s = (IStructuredSelection) selection;
-					PHPFunctionData funcData = null;
 					if (s.getFirstElement() instanceof PHPFunctionData) {
-						funcData = (PHPFunctionData) s.getFirstElement();
-					}
-					if (funcData == null)
-						return;
-
-					PHPCodeData container = funcData.getContainer();
-					// do not add Help context menu to class methods, only to global functions
-					if (!(container instanceof PHPClassData)) {
 						mgr.add(showFunctionHelpAction);
 					}
 				}
