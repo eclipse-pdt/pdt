@@ -59,18 +59,30 @@
 	<extension
          point="org.eclipse.ui.popupMenus">           
       <viewerContribution
-            targetID="org.eclipse.php.core.phpsource.source.EditorContext"
-            id="php.editor.menuActions">
+            id="php.editor.menuActions"
+            sibling_order="org.eclipse.pde.internal.core.text.plugin.PluginElementNode@16bf146"
+            targetID="org.eclipse.php.core.phpsource.source.EditorContext">
          <action
                class="org.eclipse.debug.ui.actions.RunToLineActionDelegate"
                definitionId="org.eclipse.debug.ui.commands.RunToLine"
                id="php.editor.context.runToLineAction"
                label="%runToLine.label"
                menubarPath="additions"/>
+         <action
+               class="org.eclipse.php.debug.ui.actions.PHPWatchAction"
+               enablesFor="+"
+               icon="icon/full/etool16/watch_exp.gif"
+               id="org.eclipse.php.debug.ui.popup.WatchAction"
+               label="%Watch.label"
+               menubarPath="additions">
+         </action>
          <visibility>
-            <systemProperty
-                  name="org.eclipse.php.debug.ui.activeDebugging"
-                  value="true"/>
+            <and>
+             	<systemProperty
+                	name="org.eclipse.php.debug.ui.activeDebugging"
+                 	value="true"/>
+              <objectClass name="org.eclipse.wst.xml.core.internal.provisional.document.IDOMText"/>
+         	</and>
          </visibility>
       </viewerContribution>
       <objectContribution
@@ -280,6 +292,7 @@
                id="org.eclipse.debug.ui.breakpointActionSet">
          </actionSet>
 		 <showInPart id="org.eclipse.ui.views.ResourceNavigator"/>
+   <actionSet id="org.eclipse.php.debug.ui.actionSet"/>
       </perspectiveExtension>
    </extension>
    <extension
@@ -446,6 +459,42 @@
     <phpDebugModelPresentation
           class="org.eclipse.php.debug.ui.presentation.PHPModelPresentation"
           id="org.eclipse.php.debug.ui.presentation.phpModelPresentation"/>
+ </extension>
+ <extension
+       point="org.eclipse.ui.actionSets">
+    <actionSet
+          id="org.eclipse.php.debug.ui.actionSet"
+          label="%PHPDebugActionSet.name"
+          visible="false">
+          <menu
+          		label="%RunMenu.label"
+          		path="additions"
+         		id="org.eclipse.ui.run">
+            	<separator
+                  	name="phpGroup">
+            	</separator>
+          </menu>
+       <action
+             class="org.eclipse.php.debug.ui.actions.PHPWatchAction"
+             disabledIcon="icon/full/dtool16/watch_exp.gif"
+             enablesFor="+"
+             helpContextId="watch_action_context"
+             hoverIcon="icon/full/etool16/watch_exp.gif"
+             icon="icon/full/etool16/watch_exp.gif"
+             id="org.eclipse.php.debug.ui.WatchAction"
+             label="%Watch.label"
+             menubarPath="org.eclipse.ui.run/phpGroup"
+             style="push">
+          <enablement>
+          		<and>
+             		<systemProperty
+                   		name="org.eclipse.php.debug.ui.activeDebugging"
+                   		value="true"/>
+               <objectClass name="org.eclipse.wst.xml.core.internal.provisional.document.IDOMText"/>
+              	</and>
+          </enablement>
+       </action>
+    </actionSet>
  </extension>
    
 </plugin>
