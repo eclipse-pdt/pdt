@@ -375,6 +375,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 			debugger.closeConnection();
 		}
 		completeTerminated();
+		PHPSessionLaunchMapper.updateSystemProperty(DebugPlugin.getDefault().getLaunchManager().getLaunches());
 	}
 
 	private void completeTerminated() {

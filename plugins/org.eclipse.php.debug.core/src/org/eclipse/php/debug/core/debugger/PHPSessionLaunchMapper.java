@@ -100,14 +100,14 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 		updateSystemProperty(launches);
 	}
 
-	/*
+	/**
 	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property. 
 	 * This method is important for any action that is defined to be visible when a debug session is 
 	 * active (such as the Run to Line action).
 	 * 
 	 * @param launches
 	 */
-	private void updateSystemProperty(ILaunch[] launches) {
+	public static void updateSystemProperty(ILaunch[] launches) {
 		boolean hasActiveLaunch = false;
 		for (int i = 0; i < launches.length; i++) {
 			ILaunch launch = launches[i];
