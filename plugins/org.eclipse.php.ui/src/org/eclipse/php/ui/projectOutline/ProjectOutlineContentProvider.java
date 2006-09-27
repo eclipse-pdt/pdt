@@ -393,45 +393,32 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		final Runnable runnable = new Runnable() {
 			public void run() {
 				if (fViewer == null) {
-					//					--inProgress;
 					return;
 				}
 				Control control = fViewer.getControl();
 				if (control == null || control.isDisposed() || !control.isVisible()) {
-					//					--inProgress;
 					return;
 				}
-
 				IResource res = PHPModelUtil.getResource(root);
 				if (res == null) {
-					//					--inProgress;
 					return;
 				}
-
 				if (res.getProject() != fStoredProject) {
-					//					--inProgress;
 					return;
 				}
-
 				PHPProjectModel model = null;
 				model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
 				OutlineNode outlineNode;
-				//				if (inProgress < 2) {
 				for (int i = 0; i < groupNodes.length; i++) {
 					outlineNode = groupNodes[i];
 					if (model != outlineNode.getModel())
 						outlineNode.setModel(model);
 					outlineNode.loadChildren();
 					fViewer.refresh(outlineNode, true);
-					fViewer.setSelection(fViewer.getStoredSelection(), true);
+//					fViewer.setSelection(fViewer.getStoredSelection(), true);
 				}
-				//				}
-				//				}
-				//				--inProgress;
 			}
 		};
-		//		if (inProgress < 2) {
-		//			++inProgress;
 		if (timer != null) {
 			timer.cancel();
 		}
@@ -441,7 +428,6 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				fViewer.getControl().getDisplay().asyncExec(runnable);
 			}
 		}, 1000);
-		//		}
 	}
 
 	public void projectModelAdded(final IProject project) {

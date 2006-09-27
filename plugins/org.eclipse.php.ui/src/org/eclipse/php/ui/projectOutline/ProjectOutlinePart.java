@@ -407,6 +407,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		try {
 			fViewer.getControl().setRedraw(false);
 			fViewer.collapseToLevel(getViewPartInput(), AbstractTreeViewer.ALL_LEVELS);
+			fLastOpenSelection = null;
 		} finally {
 			fViewer.getControl().setRedraw(true);
 		}
