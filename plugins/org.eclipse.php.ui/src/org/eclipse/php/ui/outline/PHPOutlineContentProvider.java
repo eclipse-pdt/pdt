@@ -308,11 +308,17 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 			if (groupNodes != null)
 				return groupNodes;
 			final Object[] providerChildren = phpContentProvider.getElements(fileData);
+			GroupNode includesNode= getIncludeFilesNode(fileData);
+			//If the include files node has no children , do not put it in the outline tree
+			if (!includesNode.hasChildren()){
+				return providerChildren;
+			}
+			
 			final Object[] children = new Object[providerChildren.length + 1];
 			System.arraycopy(providerChildren, 0, children, 1, providerChildren.length);
-			children[0] = getIncludeFilesNode(fileData);
+			children[0] = includesNode;
 			return children;
-
+			
 		} else if (object instanceof GroupNode)
 			return ((GroupNode) object).getChildren();
 
