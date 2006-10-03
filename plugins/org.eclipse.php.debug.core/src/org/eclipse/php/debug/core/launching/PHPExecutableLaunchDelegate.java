@@ -99,6 +99,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			project = res.getProject();
 			if (project == null){
 				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));
+				return;
 			}
 			absolutePath = res.getLocation().toString();
 		} else {
@@ -111,7 +112,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 
 		if (project == null || !project.isAccessible()) {
-			displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));			
+			displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));
+			return;
 		}
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
