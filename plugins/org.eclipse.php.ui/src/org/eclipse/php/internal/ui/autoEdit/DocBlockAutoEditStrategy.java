@@ -99,13 +99,13 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				if (partitionType == PHPPartitionTypes.PHP_DEFAULT || partitionType == PHPPartitionTypes.PHP_DOC || partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
 					int placeCaretAt = handleDocBlockStart(document, command, blanks, isDocBlock);
 					if (placeCaretAt != -1) {
-//						document.replace(command.offset, command.length, command.text);
-//						command.offset = placeCaretAt;
-//						command.length = 0;
-//						command.text = "";
-//						document.getUndoManager().disableUndoManagement();
-//						document.replace(command.offset, command.length, command.text);
-//						document.getUndoManager().enableUndoManagement();
+						document.replace(command.offset, command.length, command.text);					
+						command.offset = placeCaretAt;
+						command.length = 0;
+						command.text = "";
+						document.getUndoManager().disableUndoManagement();
+						document.replace(command.offset, command.length, command.text);
+						document.getUndoManager().enableUndoManagement();
 					}
 				}
 				return;
