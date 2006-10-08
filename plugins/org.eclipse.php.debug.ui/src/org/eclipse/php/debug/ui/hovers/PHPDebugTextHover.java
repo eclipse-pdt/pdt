@@ -104,9 +104,9 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
     					return null;
     				}
     				// Check for the file path within the project
-    				String fileInDebug = stackFrame.getDebugTarget().getName();
+    				String fileInDebug = stackFrame.getSourceName();
     				String fileInProject = fi.getFile().getProjectRelativePath().toString();
-    				if (fileInDebug.endsWith('/' + fileInProject) || fileInDebug.equals(fileInProject)) {
+    				if (fileInDebug != null && fileInDebug.endsWith('/' + fileInProject) || fileInDebug.equals(fileInProject)) {
     					PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
     					return debugTarget;
     				}
