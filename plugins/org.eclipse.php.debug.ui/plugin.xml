@@ -274,11 +274,6 @@
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
             targetID="org.eclipse.php.debug.ui.PHPDebugPerspective">
-         <view
-		       relative="org.eclipse.debug.ui.DebugView"
-		       relationship="stack"
-		       id="org.eclipse.wst.server.ui.ServersView">
-	     </view>
 	     <view
                 visible="true"
                 relative="org.eclipse.debug.ui.VariableView"
