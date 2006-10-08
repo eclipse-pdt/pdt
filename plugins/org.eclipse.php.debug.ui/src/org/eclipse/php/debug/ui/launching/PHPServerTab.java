@@ -22,22 +22,19 @@ import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.ui.Logger;
-import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.server.ui.ServerTab;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
+/**
+ * PHP server tab that is displayed in the Run/Debug launch configuration tabs.
+ * 
+ * @author Robert G., Shalom G.
+ */
 public class PHPServerTab extends ServerTab {
-
-	protected Button runWithDebugger;
-	protected boolean isRunWithDebugInfo;
-	private String mode;
 
 	public PHPServerTab() {
 		super();
@@ -53,24 +50,6 @@ public class PHPServerTab extends ServerTab {
 		layout.numColumns = 1;
 		composite.setLayout(layout);
 		composite.setLayoutData(data);
-
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		// Add the 'Run With Debug Info' checkbox in case we are in a 'Run' launch mode.
-		mode = getLaunchConfigurationDialog().getMode();
-		if (ILaunchManager.RUN_MODE.equals(mode)) {
-			runWithDebugger = new Button(composite, SWT.CHECK);
-			runWithDebugger.setText(PHPDebugUIMessages.PHPexe_Run_With_Debug_Info);
-			gd = new GridData(GridData.FILL_HORIZONTAL);
-			runWithDebugger.setLayoutData(gd);
-
-			runWithDebugger.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent se) {
-					Button b = (Button) se.getSource();
-					isRunWithDebugInfo = b.getSelection();
-					updateLaunchConfigurationDialog();
-				}
-			});
-		}
 	}
 
 	// In case this is a debug mode, display checkboxes to override the 'Break on first line' attribute.
@@ -106,10 +85,6 @@ public class PHPServerTab extends ServerTab {
 			}
 			isOpenInBrowser = configuration.getAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
 			openBrowser.setSelection(isOpenInBrowser);
-			if (runWithDebugger != null) {
-				isRunWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
-				runWithDebugger.setSelection(isRunWithDebugInfo);
-			}
 		} catch (Exception e) {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}
@@ -121,9 +96,7 @@ public class PHPServerTab extends ServerTab {
 			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 		}
 		configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, isOpenInBrowser);
-		if (runWithDebugger != null) {
-			configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, isRunWithDebugInfo);
-		}
+		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true); // Always run with debug info
 	}
 
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {
