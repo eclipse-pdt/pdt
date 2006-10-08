@@ -15,11 +15,8 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.php.core.documentModel.PHPFileVisitor;
+import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
@@ -27,64 +24,20 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPTask;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.core.preferences.TaskTagsProvider;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
+import org.eclipse.wst.validation.internal.TaskListUtility;
 import org.eclipse.wst.validation.internal.core.Message;
-import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
-import org.eclipse.wst.validation.internal.provisional.core.IReporter;
-import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
-import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
-public class PHPProblemsValidator implements IValidator {
+public class PHPProblemsValidator {
 
-	static boolean shouldValidate(IFile file) {
-		IResource resource = file;
-		do {
-			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || (resource.getName().charAt(0) == '.' && resource.getType() == IResource.FOLDER)) {
-				return false;
-			}
-			resource = resource.getParent();
-		} while ((resource.getType() & IResource.PROJECT) == 0);
-		return true;
-	}
+	private static String ID = "org.eclipse.php.core.documentModel.validate.PHPProblemsValidator";
 
-
-	public void cleanup(IReporter reporter) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
-		String[] uris = helper.getURIs();
-		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
-		if (uris.length > 0) {
-			IFile currentFile = null;
-			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
-				currentFile = wsRoot.getFile(new Path(uris[i]));
-				if (currentFile != null && currentFile.exists()) {
-					validateFile(currentFile, reporter);
-				}
-			}
-		} else {
-			// it's an entire workspace "clean"
-			PHPFileVisitor visitor = new PHPFileVisitor(reporter);
-			try {
-				//  collect all jsp files
-				ResourcesPlugin.getWorkspace().getRoot().accept(visitor, IResource.DEPTH_INFINITE);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-			IFile[] files = visitor.getFiles();
-			for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
-				validateFile(files[i], reporter);
-			}
-		}
-
-	}
+	private static String[] owners = new String[] { ID };
 
 	private TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();
 
-	private void validateFile(IFile phpFile, IReporter reporter) {
+	public void validateFile(IFile phpFile) {
 
 		PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(phpFile.getFullPath().toString(), true);
 		if (fileData == null) {
@@ -93,7 +46,12 @@ public class PHPProblemsValidator implements IValidator {
 		IPHPMarker[] markers = fileData.getMarkers();
 		IMarker[] rullerAddedMarkers = null; // We have to get all the markers, so we wont delete the ruler-added ones (Fix Bug #95)
 		Map[] rullerMarkersAttributes = null;
-		reporter.removeAllMessages(this, phpFile);
+		try {
+			TaskListUtility.removeAllTasks(phpFile, owners, phpFile.getFullPath().toString());
+		} catch (CoreException e2) {
+			Logger.logException(e2);
+		}
+
 		try {
 			rullerAddedMarkers = phpFile.findMarkers(IMarker.TASK, false, IResource.DEPTH_INFINITE);
 			rullerMarkersAttributes = new Map[rullerAddedMarkers.length];
@@ -111,34 +69,39 @@ public class PHPProblemsValidator implements IValidator {
 			}
 			boolean caseSensitive = taskTagsProvider.getProjectTagsCaseSensitive(phpFile.getProject());
 
-			for (int i = 0; markers.length > i; i++) {
-				String type = markers[i].getType();
-				if (type.equals(IPHPMarker.TASK)) {
-					PHPTask task = (PHPTask) markers[i];
-					String descr = task.getTaskName() + " " + task.getDescription();
-					UserData userData = task.getUserData();
-					int prio = getPriority(task.getTaskName(), tags, caseSensitive);
-					try {
-						IMarker marker = phpFile.createMarker(IMarker.TASK);
-						marker.setAttribute(IMarker.LINE_NUMBER, userData.getStopLine() + 1);
-						marker.setAttribute(IMarker.CHAR_START, userData.getStartPosition());
-						marker.setAttribute(IMarker.CHAR_END, userData.getEndPosition() + 1);
-						marker.setAttribute(IMarker.MESSAGE, descr);
-						marker.setAttribute(IMarker.PRIORITY, prio);
-					} catch (CoreException e) {
-						// Logger.logException(e);
+			try {
+				for (int i = 0; markers.length > i; i++) {
+					String type = markers[i].getType();
+					if (type.equals(IPHPMarker.TASK)) {
+						PHPTask task = (PHPTask) markers[i];
+						String descr = task.getTaskName() + " " + task.getDescription();
+						UserData userData = task.getUserData();
+						int prio = getPriority(task.getTaskName(), tags, caseSensitive);
+						try {
+							IMarker marker = phpFile.createMarker(IMarker.TASK);
+							marker.setAttribute(IMarker.LINE_NUMBER, userData.getStopLine() + 1);
+							marker.setAttribute(IMarker.CHAR_START, userData.getStartPosition());
+							marker.setAttribute(IMarker.CHAR_END, userData.getEndPosition() + 1);
+							marker.setAttribute(IMarker.MESSAGE, descr);
+							marker.setAttribute(IMarker.PRIORITY, prio);
+						} catch (CoreException e) {
+							// Logger.logException(e);
+						}
+						continue;
 					}
-					continue;
+					if (!type.equals(IPHPMarker.ERROR) && !type.equals(IPHPMarker.WARNING) && !type.equals(IPHPMarker.INFO)) {
+						continue;
+					}
+					String descr = markers[i].getDescription();
+					UserData userData = markers[i].getUserData();
+					Message mess = new LocalizedMessage(IMessage.HIGH_SEVERITY, descr, phpFile);
+					int lineNo = userData.getStopLine() + 1;
+					mess.setLineNo(lineNo);
+
+					TaskListUtility.addTask(ID, phpFile, String.valueOf(lineNo), null, descr, IMessage.HIGH_SEVERITY, phpFile.getFullPath().toString(), null, -1, -1);
 				}
-				if (!type.equals(IPHPMarker.ERROR) && !type.equals(IPHPMarker.WARNING) && !type.equals(IPHPMarker.INFO)) {
-					continue;
-				}
-				String descr = markers[i].getDescription();
-				UserData userData = markers[i].getUserData();
-				Message mess = new LocalizedMessage(IMessage.HIGH_SEVERITY, descr, phpFile);
-				int lineNo = userData.getStopLine() + 1;
-				mess.setLineNo(lineNo);
-				reporter.addMessage(this, mess);
+			} catch (CoreException e) {
+				Logger.logException(e);
 			}
 
 			// Add the non-IPHPMarkers (ruler-added markers).
@@ -155,6 +118,14 @@ public class PHPProblemsValidator implements IValidator {
 					}
 				}
 			}
+		}
+	}
+
+	public void removeFile(IFile phpFile) {
+		try {
+			TaskListUtility.removeAllTasks(phpFile, owners, phpFile.getFullPath().toString());
+		} catch (CoreException e) {
+			Logger.logException(e);
 		}
 	}
 

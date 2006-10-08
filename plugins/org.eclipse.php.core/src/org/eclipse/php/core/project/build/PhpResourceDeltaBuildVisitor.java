@@ -10,25 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.core.project.build;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.php.core.PHPCorePlugin;
+import org.eclipse.php.core.documentModel.validate.PHPProblemsValidator;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.project.PHPNature;
 
 public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 
-	private IProgressMonitor monitor;
-
-	public PhpResourceDeltaBuildVisitor(IProgressMonitor monitor) {
-		this.monitor = monitor;
-	}
-
+	private PHPProblemsValidator validator = new PHPProblemsValidator();
 	
 	public boolean visit(IResourceDelta delta) throws CoreException {
 		switch (delta.getResource().getType()) {
@@ -51,11 +42,13 @@ public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 		switch (fileDelta.getKind()) {
 			case IResourceDelta.ADDED:
 				PHPWorkspaceModelManager.getInstance().addFileToModel(file);
-				return;
+			case IResourceDelta.CHANGED:
+				validator.validateFile(file);
+				break;
 			case IResourceDelta.REMOVED:
 				PHPWorkspaceModelManager.getInstance().removeFileFromModel(file);
-				return;
-			case IResourceDelta.CHANGED:
+				validator.removeFile(file);
+				break;
 		}
 	}
 

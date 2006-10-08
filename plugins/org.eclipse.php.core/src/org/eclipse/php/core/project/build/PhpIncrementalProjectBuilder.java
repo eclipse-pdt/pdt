@@ -24,7 +24,6 @@ import org.eclipse.php.core.project.PHPNature;
 
 public class PhpIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
-	public static final int PHP_VERSION_CHANGE_BUILD = 64;
 
 	public PhpIncrementalProjectBuilder() {
 	}
@@ -32,22 +31,17 @@ public class PhpIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
 	protected void startupOnInitialize() {
 		super.startupOnInitialize();
-		
-//		getCommand().setBuilding(PHP_VERSION_CHANGE_BUILD, true);
 	}
 
 	
 
 	protected void clean(IProgressMonitor monitor) throws CoreException {
-		cleanBuild(monitor);
+		cleanBuild();
 	}
 
 
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
-		if (kind == CLEAN_BUILD) {
-			cleanBuild(monitor);
-			return null;
-		}else if (kind == FULL_BUILD) {
+		if (kind == FULL_BUILD) {
 			fullBuild();
 			return null;
 		}
@@ -75,11 +69,7 @@ public class PhpIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
 	private void buildDelta(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
 		// the visitor does the work.
-		delta.accept(new PhpResourceDeltaBuildVisitor(monitor));
-	}
-
-	private void cleanBuild(IProgressMonitor monitor) {
-		cleanBuild();
+		delta.accept(new PhpResourceDeltaBuildVisitor());
 	}
 
 	private void cleanBuild(IProject project) {

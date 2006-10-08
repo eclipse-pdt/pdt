@@ -46,39 +46,6 @@
    </extension>  
  
   	<extension
-		id="PHPProblemsValidator"
-		name="PHPProblemsValidator"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-		    <projectNature id="org.eclipse.wst.common.modulecore.ModuleCoreNature" />
-			<projectNature id="org.eclipse.php.core.PHPNature" />
-			<projectNature id="org.eclipse.wst.web.StaticWebNature" />
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.php">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.inc">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.php3">
-			</filter>
-			<helper
-				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
-			</helper>
-			<run
-				enabled="true"
-				class="org.eclipse.php.core.documentModel.validate.PHPProblemsValidator">
-			</run>
-
-		</validator>
-	</extension>
-   
-
- 
-  	<extension
 		id="PHPIncludePathValidator"
 		name="PHP Include Path Validator"
 		point="org.eclipse.wst.validation.validator">

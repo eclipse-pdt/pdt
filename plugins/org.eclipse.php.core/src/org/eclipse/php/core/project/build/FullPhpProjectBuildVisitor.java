@@ -14,9 +14,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.php.core.documentModel.validate.PHPProblemsValidator;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 
 public class FullPhpProjectBuildVisitor implements IResourceVisitor {
+
+	private PHPProblemsValidator validator = new PHPProblemsValidator();
+
 	public boolean visit(IResource resource) {
 		// parse each PHP file with the parserFacade which adds it to
 		// the model
@@ -38,16 +42,11 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 			return false;
 		}
 
-//		PHPProjectModel projectModel = (PHPProjectModel) PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-//		if (projectModel == null) {
-//			projectModel = new PHPProjectModel(project);
-//			PHPWorkspaceModelManager.getInstance().putModel(project, projectModel);
-//		}
-
 		return true;
 	}
 
 	private void handle(IFile file) {
 		PHPWorkspaceModelManager.getInstance().addFileToModel(file);
+		validator.validateFile(file);
 	}
 }
