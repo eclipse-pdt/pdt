@@ -1,50 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Getting Started" link_to="toc.xml#gettingstarted" href="gettingstarted.html"> 
-<topic label="System Requirements"  href="html/gettingstarted/systemrequirements.html"></topic>
-<topic label="Perspectives and Views" href="html/gettingstarted/perspectives.html"></topic>
-<topic label="Opening the Zend Studio Neon PHP IDE" href="html/gettingstarted/opening_the_ide.html"></topic> 
-
-<topic label="Configuring" >
-<topic label="Configuring the PHP Workbench" href="html/gettingstarted/preparing_the_workbench.html"></topic><topic label="Configuring Perspectives" href="html/gettingstarted/configuring_perspectives.html"></topic>
-<topic label="Configuring Internal Debug Preferences" href="html/gettingstarted/configuring_internal_debug_preferences.html"></topic>
-<topic label="Configuring Typing Preferences" href="html/gettingstarted/qqqq.html"></topic>
-<topic  label="Configuring Debug Preferences" href="html/gettingstarted/configuring_internal_debug_preferences.html"></topic>
-<topic  label="Configuring Task Tag Preferences" href="html/gettingstarted/configuring_task_preferences.html"></topic>
-</topic>
-<topic label="Projects" >
-<topic label="Creating a Project" href="html/gettingstarted/creating_a_project.html"></topic>
-<topic label="Creating a Folder" href="html/gettingstarted/creating_a_folder.html"></topic><topic label="Browsing and Navigating" href="html/gettingstarted/package_explorer.html"></topic>
-
-<topic label="Opening PHP Elements in the Project" href="html/gettingstarted/open_php_element.html"></topic>
-</topic>
-<topic label="Working with Code" >
-<topic label="Moving and Copying PHP Elements" href="html/gettingstarted/moving_and_copying.html"></topic>
-<topic label="PHP Code Gallery" href="html/gettingstarted/moving_and_copying.html"></topic>
-
-<topic label="Templates" href="html/gettingstarted/template_intro.html">
-<topic label="Templates" href="html/gettingstarted/using_templates.html"></topic>
-<topic label="Exporting Templates" href="html/gettingstarted/exporting_templates.html"></topic>
-</topic>
-<topic label="Problems View and Filtering" href="html/gettingstarted/problems_intro.html">
-<topic label="Problems View" href="html/gettingstarted/problems_view.html"></topic>
-<topic label="Filtering Problems" href="html/gettingstarted/filtering_problems.html"></topic>
-
-</topic>
-
-<topic label="Comenting lines and Blocks" href="html/gettingstarted/commenting_lines_and_blocks.html"></topic>
-<topic label="Local History" href="html/gettingstarted/local_history.html"></topic>
-	
-</topic>
-
-<topic label="Debugging Code" href="html/gettingstarted/maintopic.html">
-<topic label="Debugging Code" href="html/gettingstarted/maintopic.html"></topic>
-</topic>
-<topic label="Working Sets" href="html/gettingstarted/working_sets.html">
-<topic label="Create Working Sets" href="html/gettingstarted/maintopic.html"></topic>
-</topic>
-<topic label="Tasks" >
-<topic label="Tasks" href="html/gettingstarted/tasks.html"></topic>
-</topic>
+<toc label="Getting Started" link_to="toc.xml#gettingstarted" href="gettingstarted.html">
+  <topic label="System Requirements"  href="html/gettingstarted/systemrequirements.html"></topic>
+  <topic label="Preparing the Workbench"  href="html/gettingstarted/preparing_the_workbench.html"></topic>
+  <topic label="Opening the Eclipse PHP IDE" href="html/gettingstarted/opening_the_ide.html"></topic>
+  <topic label="Perspectives" href="html/gettingstarted/perspectives.html"></topic>
+  <topic label="Configuring Perspectives" href="html/gettingstarted/configuring_perspectives.html"></topic>
+  <topic label="Configuring Internal Debug Preferences" href="html/gettingstarted/configuring_internal_debug_preferences.html"></topic>
+  <topic label="Configuring Code Assist.html" href="html/gettingstarted/configuring_code_assist.html"></topic>
+  <topic label="Projects">
+    <topic label="Creating a Project" href="html/gettingstarted/creating_a_project.html"></topic>
+    <topic label="Browsing and Navigating" href="html/gettingstarted/package_explorer.html"></topic>
+    <topic label="Creating a Folder" href="html/gettingstarted/creating_a_folder.html"></topic>
+    <topic label="Opening PHP Elements in the Project" href="html/gettingstarted/maintopic.html"></topic>
+    <topic label="Moing and Copying PHP Elements" href="html/gettingstarted/maintopic.html"></topic>
+    <topic label="Code Completion" href="html/gettingstarted/maintopic.html"></topic>
+    <topic label="Comenting lines and Blocks" href="html/gettingstarted/maintopic.html"></topic>
+    <topic label="Templates" href="html/gettingstarted/maintopic.html"></topic>
+    <topic label="Using Templates" href="html/gettingstarted/maintopic.html"></topic>
+    <topic label="Local History" href="html/gettingstarted/maintopic.html"></topic>
+    <topic label="Debugging and Analyzing Code" href="html/gettingstarted/maintopic.html"></topic>
+  </topic>
 </toc>
