@@ -44,7 +44,6 @@ import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.ITextViewerExtension4;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
@@ -56,6 +55,7 @@ import org.eclipse.jface.text.source.ILineRange;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension3;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
@@ -65,7 +65,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.containers.LocalFileStorage;
 import org.eclipse.php.core.containers.ZipEntryStorage;
-import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -87,8 +86,12 @@ import org.eclipse.php.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.TextChangeListener;
+import org.eclipse.swt.custom.TextChangedEvent;
+import org.eclipse.swt.custom.TextChangingEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -106,7 +109,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 
 public class PHPStructuredEditor extends StructuredTextEditor {
-	
+
 	IWorkbenchPart getPart() {
 		return this;
 	}
@@ -459,6 +462,30 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		fInformationPresenter = new InformationPresenter(informationControlCreator);
 		fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		fInformationPresenter.install(getSourceViewer());
+
+		StyledText styledText = getTextViewer().getTextWidget();
+		styledText.getContent().addTextChangeListener(new TextChangeListener() {
+
+			public void textChanging(TextChangingEvent event) {
+			}
+
+			public void textChanged(TextChangedEvent event) {
+			}
+
+			public void textSet(TextChangedEvent event) {
+				Display.getCurrent().asyncExec(new Runnable() {
+
+					public void run() {
+						SourceViewer viewer = getTextViewer();
+						ISelection selection = viewer.getSelection();
+						viewer.refresh();
+						viewer.setSelection(selection);
+					}
+
+				});
+			}
+
+		});
 	}
 
 	protected void doSetInput(final IEditorInput input) throws CoreException {
