@@ -55,16 +55,17 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
 		final IContributionItem showGroupsItem = new ActionContributionItem(new ShowGroupsAction("Show Groups", viewer));
+		final IContributionItem toggleLinking = super.createMenuContributions(viewer)[0];
 		final IContributionItem sortItem = new ActionContributionItem(new SortAction(viewer));
 		items = super.createToolbarContributions(viewer);
 		if (items == null)
 			items = new IContributionItem[] { sortItem, showGroupsItem };
 		else {
-			final IContributionItem[] combinedItems = new IContributionItem[items.length + 2];
+			final IContributionItem[] combinedItems = new IContributionItem[items.length + 3];
 			System.arraycopy(items, 0, combinedItems, 0, items.length);
 			combinedItems[items.length] = sortItem;
 			combinedItems[items.length + 1] = showGroupsItem;
-			// combinedItems[items.length + 1] = toggleLinkItem;
+			combinedItems[items.length + 2] = toggleLinking;
 			items = combinedItems;
 		}
 		return items;
@@ -120,5 +121,4 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			treeProviders = TreeProvider.getTreeProviders(IPageLayout.ID_OUTLINE);
 		return treeProviders;
 	}
-
 }
