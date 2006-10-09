@@ -1254,7 +1254,7 @@ class CompletionLexer5 extends CompletionLexer implements org.eclipse.php.core.p
 
 			String description = comment.substring(descriptionStartPositionInComment,taskEndPositionInComment);
 			description = description.trim();
-			parserClient.handleTask(taskName, description, commentStartPosition + taskStartPositionInComment, commentStartPosition + taskEndPositionInComment  - 1,commentStartLine + lineCnt);
+			parserClient.handleTask(taskName, description, commentStartPosition - yy_pushbackPos + taskStartPositionInComment, commentStartPosition - yy_pushbackPos + taskEndPositionInComment - 1 , commentStartLine + lineCnt);
 		}
     }
     
