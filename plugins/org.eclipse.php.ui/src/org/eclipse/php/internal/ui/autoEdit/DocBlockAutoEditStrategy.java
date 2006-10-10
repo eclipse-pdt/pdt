@@ -174,9 +174,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 			if (isDocBlock && TypingPreferences.addDocTags) {
 				//taking off the /** in order to find the closest codeData
-				document.getUndoManager().disableUndoManagement();
 				document.replace(lineStart, lineEnd - lineStart, "");
-				document.getUndoManager().enableUndoManagement();
 				command.offset = lineStart;
 
 				// making sure the new fileData will be created after the deletion
@@ -193,9 +191,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				
 				// putting back the /** that was taken off
 				command.offset += commentStart.length();
-				document.getUndoManager().disableUndoManagement();
 				document.replace(lineStart, 0, commentStart);
-				document.getUndoManager().enableUndoManagement();
 
 				if (stub != null) {
 					command.text = stub.substring(3);
