@@ -313,10 +313,13 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), PHPPartitionTypes.PHP_DEFAULT);
-
-		formatter.setMasterStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()));
-		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorForPhp()), IHTMLPartitions.HTML_DEFAULT );
+		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IHTMLPartitions.HTML_DEFAULT);
+		formatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorForPhp()));
+		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_DEFAULT );
+		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_DOC );
+		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_MULTI_LINE_COMMENT );
+		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_QUOTED_STRING );
+		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT );
 		return formatter;
 	}
 
