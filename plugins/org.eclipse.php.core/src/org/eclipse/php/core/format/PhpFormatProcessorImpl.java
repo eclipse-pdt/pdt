@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.w3c.dom.Node;
@@ -46,9 +47,43 @@ public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 	}
 
 	public void formatDocument(IDocument document, int start, int length) throws IOException, CoreException {
-		this.start = start;
-		this.length = length;
-		super.formatDocument(document, start, length);
+
+		if (document == null)
+			return;
+
+		if ((start >= 0) && (length >= 0)) {
+			// the following if is the reason for not using the super (except for saving the start and length)
+			// the bug in the super is that in a multipass formatter the document length is changed and thus
+			// the test (start + length <= document.getLength()) is not valid because it will always fail
+			if ((start + length > document.getLength())) {
+				if (start > document.getLength()) {
+					return;
+				}
+				length = document.getLength() - start;
+			}
+			this.start = start;
+			this.length = length;
+			IStructuredModel structuredModel = null;
+			// OutputStream outputStream = null;
+			try {
+				// setup structuredModel
+				// Note: We are getting model for edit. Will save model if
+				// model changed.
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
+
+				// format
+				formatModel(structuredModel, start, length);
+
+				// save model if needed
+				if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
+					structuredModel.save();
+			} finally {
+				// ensureClosed(outputStream, null);
+				// release from model manager
+				if (structuredModel != null)
+					structuredModel.releaseFromEdit();
+			}
+		}
 	}
 
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {
