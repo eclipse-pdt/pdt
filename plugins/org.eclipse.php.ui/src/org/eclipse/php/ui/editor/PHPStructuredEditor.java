@@ -18,6 +18,8 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -463,6 +465,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		fInformationPresenter.install(getSourceViewer());
 
+		// bug fix - #154817
 		StyledText styledText = getTextViewer().getTextWidget();
 		styledText.getContent().addTextChangeListener(new TextChangeListener() {
 
@@ -473,19 +476,36 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			}
 
 			public void textSet(TextChangedEvent event) {
-				Display.getCurrent().asyncExec(new Runnable() {
-
-					public void run() {
-						SourceViewer viewer = getTextViewer();
-						ISelection selection = viewer.getSelection();
-						viewer.refresh();
-						viewer.setSelection(selection);
-					}
-
-				});
+				refreshViewer();
 			}
 
 		});
+
+		//		 bug fix - #156810
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
+
+			public void resourceChanged(IResourceChangeEvent event) {
+				if (getSite().getPage().getActiveEditor().equals(PHPStructuredEditor.this) && event.getType() == IResourceChangeEvent.POST_CHANGE && event.getDelta() != null) {
+					refreshViewer();
+				}
+			}
+
+		});
+
+	}
+
+	private void refreshViewer() {
+		Display.getCurrent().asyncExec(new Runnable() {
+
+			public void run() {
+				SourceViewer viewer = getTextViewer();
+				ISelection selection = viewer.getSelection();
+				viewer.refresh();
+				viewer.setSelection(selection);
+			}
+
+		});
+
 	}
 
 	protected void doSetInput(final IEditorInput input) throws CoreException {
