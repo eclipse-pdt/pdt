@@ -779,8 +779,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		if (!fStatus) {
 			Logger.log(Logger.ERROR_DEBUG, "PHPDebugTarget: debugger.stepOver return false");
 		}
-		int detail = DebugEvent.STEP_OVER;
-		resumed(detail);
+		// Fix the 'suspend' state that was lost during stepping.
+		// Removed these 2 lines.
+//		int detail = DebugEvent.STEP_OVER;
+//		resumed(detail);
 	}
 
 	/**
