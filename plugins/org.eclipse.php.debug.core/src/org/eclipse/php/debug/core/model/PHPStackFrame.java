@@ -299,10 +299,13 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object obj) {
+    	if (obj == this) {
+    		return true;
+    	}
         if (obj instanceof PHPStackFrame) {
             PHPStackFrame sf = (PHPStackFrame) obj;
             try {
-                return sf.checkSourceName().equals(checkSourceName()) && sf.checkLineNumber() == checkLineNumber() && sf.fId == fId;
+                return sf.fId == fId && sf.checkSourceName().equals(checkSourceName()) && sf.getName().equals(getName());
             } catch (DebugException e) {
             }
         }

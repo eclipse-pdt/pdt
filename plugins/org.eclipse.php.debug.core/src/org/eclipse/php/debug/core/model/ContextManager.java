@@ -76,8 +76,9 @@ public class ContextManager {
             fPreviousFrames = createNewFrames(layers, thread, length, context, isWindows);
             fVariables = createVariables(main, false, true);
         }
+        int topID = fPreviousFrames[0] instanceof PHPStackFrame ? ((PHPStackFrame)fPreviousFrames[0]).getIdentifier() : 0;
         fPreviousFrames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (main) ? "" : fPreviousFrames[1].getName(),
-            fTarget.getLastStop(), 0, getLocalFileName(fTarget.getLastFileName(), context, length, isWindows));
+            fTarget.getLastStop(), topID, getLocalFileName(fTarget.getLastFileName(), context, length, isWindows));
         createStackVariables(layers);
         return fPreviousFrames;
     }
@@ -137,7 +138,7 @@ public class ContextManager {
         }
 
         frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), 
-            fTarget.getLastStop(), 0, getLocalFileName(fTarget.getLastFileName(), context, length, isWindows));
+            fTarget.getLastStop(), frameCt, getLocalFileName(fTarget.getLastFileName(), context, length, isWindows));
         fPreviousLayers = layers;
         return frames;
     }

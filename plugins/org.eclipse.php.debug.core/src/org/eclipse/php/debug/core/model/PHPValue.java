@@ -152,4 +152,53 @@ public class PHPValue extends PHPDebugElement implements IValue {
         }
 
     }
+
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof PHPValue)) {
+			return false;
+		}
+		PHPValue otherValue = (PHPValue) obj;
+		boolean otherValueNull = otherValue.fValue.getValue() == null;
+		if (fVariable.getFullName().equals(otherValue.fVariable.getFullName()) && (otherValueNull || fValue.getValueAsString().equals(otherValue.fValue.getValueAsString()))) {
+			if (!fHasChildren) {
+				return !otherValue.fHasChildren;
+			}
+			if (fChildren.length == 0) {
+				try {
+					getVariables();
+				} catch (DebugException e) {
+				}
+			}
+			if (otherValue.fChildren.length == 0) {
+				try {
+					otherValue.getVariables();
+				} catch (DebugException e) {
+				}
+			}
+			if (fChildren.length != otherValue.fChildren.length) {
+				return false;
+			}
+			try {
+				for (int i = 0; i < fChildren.length; i++) {
+					IVariable myChild = fChildren[i];
+					IVariable otherChild = otherValue.fChildren[i];
+
+					if (!myChild.getValue().equals(otherChild.getValue())) {
+						return false;
+					}
+				}
+			} catch (DebugException e) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public int hashCode() {
+		return super.hashCode(); // fVariable.getFullName().hashCode() + fValue.getValueAsString().hashCode();
+	}
 }

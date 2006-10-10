@@ -152,4 +152,42 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
         return true;
     }
 
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof PHPVariable)) {
+			return false;
+		}
+		PHPVariable variable = (PHPVariable)obj;
+		
+		if (!variable.getDebugTarget().equals(getDebugTarget())) {
+			return false;
+		}
+		
+		if (!variable.variable.getFullName().equals(this.variable.getFullName())) {
+			return false;
+		}
+		
+		IValue myValue = null;
+		IValue otherValue = null;
+		try {
+			myValue = getValue();
+			otherValue = variable.getValue();
+		} catch (DebugException e) {
+		}
+		if (myValue == otherValue || (myValue != null && myValue.equals(otherValue))) {
+			return true;
+		}
+		return false;
+	}
+
+	public int hashCode() {
+		int valueHash = 0;
+		try {
+			valueHash = getValue().hashCode();
+		} catch (DebugException e) {
+		} 
+		return getDebugTarget().hashCode() + valueHash+ variable.getFullName().hashCode();
+	}
 }
