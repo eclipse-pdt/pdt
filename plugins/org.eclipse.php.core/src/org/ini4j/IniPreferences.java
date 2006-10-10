@@ -96,7 +96,7 @@ public class IniPreferences extends AbstractPreferences {
 		 * @param key key to getvalue for
 		 */
 		protected String getSpi(final String key) {
-			return _section.fetch(key);
+			return _section.fetch(key)[0];
 		}
 
 		/**

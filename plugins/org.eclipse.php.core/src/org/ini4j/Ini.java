@@ -25,9 +25,12 @@ import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Proxy;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
@@ -70,7 +73,12 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 		}
 
 		public void handleOption(final String name, final String value) {
-			currentSection.put(name, value);
+			List valuesList = (ArrayList) currentSection.get(name);
+			if (valuesList == null) {
+				valuesList = new ArrayList(1);
+				currentSection.put(name, valuesList);
+			}
+			valuesList.add(value);
 		}
 
 		public void startIni() {
@@ -111,15 +119,17 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 			_name = name;
 		}
 
-		public String fetch(final Object key) {
-			String value = (String) get(key);
-
-			if (value != null && value.indexOf(SUBST_CHAR) >= 0) {
-				final StringBuffer buffer = new StringBuffer(value);
-				resolve(buffer, this);
-				value = buffer.toString();
+		public String[] fetch(final Object key) {
+			List list = (List) get(key);
+			String[] values = (String[]) list.toArray(new String[list.size()]);
+			for (int i = 0; i < values.length; ++i) {
+				if (values[i] != null && values[i].indexOf(SUBST_CHAR) >= 0) {
+					final StringBuffer buffer = new StringBuffer(values[i]);
+					resolve(buffer, this);
+					values[i] = buffer.toString();
+				}
 			}
-			return value;
+			return values;
 		}
 
 		public String getName() {
@@ -247,7 +257,7 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 				String var = buffer.substring(begin + SUBST_BEGIN_LEN, end);
 				String group = null;
 				final int sep = var.indexOf(SUBST_SEPARATOR);
-				String value = null;
+				List values = new ArrayList(1);
 
 				if (sep > 0) {
 					group = var.substring(0, sep);
@@ -256,20 +266,26 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 
 				if (var != null)
 					if (group == null)
-						value = owner.fetch(var);
-					else if (SUBST_ENVIRONMENT.equals(group))
-						value = System.getenv(var);
-					else if (SUBST_PROPERTY.equals(group))
-						value = System.getProperty(var);
-					else {
+						values = Arrays.asList(owner.fetch(var));
+					else if (SUBST_ENVIRONMENT.equals(group)) {
+						String value = System.getenv(var);
+						if (value != null)
+							values.add(value);
+
+					} else if (SUBST_PROPERTY.equals(group)) {
+						String value = System.getProperty(var);
+						if (value != null)
+							values.add(value);
+
+					} else {
 						owner = (Section) get(group);
 
 						if (owner != null)
-							value = owner.fetch(var);
+							values = Arrays.asList(owner.fetch(var));
 					}
 
-				if (value != null)
-					buffer.replace(begin, end + SUBST_END_LEN, value);
+				if (values.size() > 0)
+					buffer.replace(begin, end + SUBST_END_LEN, (String) values.get(0));
 			}
 		}
 	}
@@ -304,17 +320,21 @@ public class Ini extends LinkedHashMap/*<String,Ini.Section>*/
 			{
 				e = (Map.Entry) j.next();
 				String key = (String) e.getKey();
-				String value = (String) e.getValue();
-				if ((mode & IGNORE_ESCAPE) == 0) {
-					key = Convert.escape(key);
-					value = Convert.escape(value);
+				List values = (List) e.getValue();
+				String value;
+				for (Iterator k = values.iterator(); k.hasNext();) {
+					value = (String) k.next();
+					if ((mode & IGNORE_ESCAPE) == 0) {
+						key = Convert.escape(key);
+						value = Convert.escape(value);
+					}
+					if ((mode & FORCE_QUOTES) > 0)
+						value = "\"" + value + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+					pr.print(key);
+					pr.print(OPERATOR);
+					pr.print(value);
+					pr.println();
 				}
-				if ((mode & FORCE_QUOTES) > 0)
-					value = "\"" + value + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-				pr.print(key);
-				pr.print(OPERATOR);
-				pr.print(value);
-				pr.println();
 			}
 
 			pr.println();

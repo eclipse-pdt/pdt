@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -32,13 +33,35 @@ public class IniModifier {
 	private static String getParameter(Ini parameters, String sectionName, String parameterName) {
 		Ini.Section section = (Ini.Section) parameters.get(sectionName);
 		if (section != null) {
-			return (String) section.get(parameterName);
+			List values = (List) section.get(parameterName);
+			if (values != null && values.size() > 0)
+				return (String) values.get(0);
 		}
 		return null;
 	}
 
 	private static void setParameter(Ini parameters, String sectionName, String parameterName, String value) {
-		((Ini.Section) parameters.get(sectionName)).put(parameterName, value);
+		Ini.Section section = (Ini.Section) parameters.get(sectionName);
+		if (section == null) {
+			parameters.add(sectionName);
+			section = (Ini.Section) parameters.get(sectionName);
+		}
+		List values = (List) section.get(parameterName);
+		if(values == null) {
+			values = new ArrayList(1);
+			section.put(parameterName, values);
+		}
+		boolean found = false;
+		for (Iterator i = values.iterator(); i.hasNext();) {
+			String existingValue = (String) i.next();
+			if (existingValue.equals(value)) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			values.add(value);
+		}
 	}
 
 	public static File addIncludePath(final File phpIni, final IPath[] includePaths) {

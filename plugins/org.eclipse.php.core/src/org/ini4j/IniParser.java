@@ -97,7 +97,7 @@ public class IniParser {
 
 				if (name.length() == 0)
 					parseError(line, reader.getLineNumber());
-
+				
 				handler.handleOption(name, value);
 			}
 		}
