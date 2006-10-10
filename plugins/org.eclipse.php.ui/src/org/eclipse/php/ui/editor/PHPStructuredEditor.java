@@ -485,8 +485,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 
 			public void resourceChanged(IResourceChangeEvent event) {
-				if (getSite().getPage().getActiveEditor().equals(PHPStructuredEditor.this) && event.getType() == IResourceChangeEvent.POST_CHANGE && event.getDelta() != null) {
-					refreshViewer();
+				try {
+					if (getSite().getPage().getActiveEditor().equals(PHPStructuredEditor.this) && event.getType() == IResourceChangeEvent.POST_CHANGE && event.getDelta() != null) {
+						refreshViewer();
+					}
+				} catch (NullPointerException e) {
+
 				}
 			}
 
@@ -537,6 +541,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				boolean selecting = false;
 
 				public void selectionChanged(final SelectionChangedEvent event) {
+					if (!outlinePage.getConfiguration().isLinkedWithEditor(null)) {
+						return;
+					}
 					/*
 					 * The isFiringSelection check only works if a
 					 * selection listener
