@@ -34,6 +34,7 @@ public class PhpFormatter implements IStructuredFormatter {
 	private IIndentationStrategy defaultIndentationStrategy = new DefaultIndentationStrategy();;
 	private IIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
 	private IIndentationStrategy caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy();
+	private IIndentationStrategy commentIndentationStrategy = new CommentIndentationStrategy();
 
 	protected PhpFormatConstraints fFormatContraints = null;
 	protected IStructuredFormatPreferences fFormatPreferences = null;
@@ -197,6 +198,8 @@ public class PhpFormatter implements IStructuredFormatter {
 			String firstTokenType = firstTokenInLine.getType();
 			if (firstTokenType == PHPRegionTypes.PHP_CASE || firstTokenType == PHPRegionTypes.PHP_DEFAULT) {
 				insertionStrategy = caseDefaultIndentationStrategy;
+			} else if (isPHPCommentRegion(firstTokenType)) {
+				insertionStrategy = commentIndentationStrategy;
 			} else {
 				insertionStrategy = getIndentationStrategy(lineText.charAt(startingWhiteSpaces));
 			}
@@ -214,6 +217,14 @@ public class PhpFormatter implements IStructuredFormatter {
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
+	}
+	
+	/**
+	 * @return whether we are inside a php comment  
+	 */
+	private boolean isPHPCommentRegion(String tokenType){
+		return (tokenType == PHPRegionTypes.PHP_COMMENT || tokenType == PHPRegionTypes.PHP_COMMENT_END ||
+				tokenType == PHPRegionTypes.PHPDOC_COMMENT || tokenType == PHPRegionTypes.PHPDOC_COMMENT_END);
 	}
 
 	/**
