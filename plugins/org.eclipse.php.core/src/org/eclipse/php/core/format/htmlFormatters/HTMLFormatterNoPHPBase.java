@@ -52,16 +52,25 @@ public class HTMLFormatterNoPHPBase {
 				break;
 			IDOMNode next = (IDOMNode) child.getNextSibling();
 
-			if(child instanceof PHPElementImpl){
+			if (isPHPNode(child)) {
 				child = next;
 				continue;
 			}
-			if(child instanceof TextImpl){
-					TextImpl text = (TextImpl) child;
-					if(text.getFirstStructuredDocumentRegion().getType().indexOf("PHP") != -1){
-						child = next;
-						continue;
+			if (child instanceof TextImpl) {
+				TextImpl text = (TextImpl) child;
+				// If the text is empty but after it there is a PHP then we don't want to 
+				// indent either.
+
+				//empty: if there is only one sdRegion and is text is empty
+				if (text.getFirstStructuredDocumentRegion() == text.getLastStructuredDocumentRegion()) {
+					String textStr = text.getFirstStructuredDocumentRegion().getText().trim();
+					if (textStr.equals("")) {
+						if (isPHPNode(next)) {
+							child = next;
+							continue;
+						}
 					}
+				}
 			}
 
 			if (insertBreak && f.runCanInsertBreakBefore(child)) {
@@ -73,8 +82,7 @@ public class HTMLFormatterNoPHPBase {
 				if (formatter instanceof IHTMLFormatterNoPHPWrapper) {
 					IHTMLFormatterNoPHPWrapper htmlFormatter = (IHTMLFormatterNoPHPWrapper) formatter;
 					htmlFormatter.runFormatNode(child, contraints);
-				}
-				else {
+				} else {
 					formatter.format(child);
 				}
 			}
@@ -82,8 +90,7 @@ public class HTMLFormatterNoPHPBase {
 			if (f.runCanInsertBreakAfter(child)) {
 				f.runInsertBreakAfter(child, contraints);
 				insertBreak = false; // not to insert twice
-			}
-			else {
+			} else {
 				insertBreak = true;
 			}
 
@@ -92,6 +99,19 @@ public class HTMLFormatterNoPHPBase {
 
 		if (contraints != null)
 			contraints.setFormatWithSiblingIndent(indent);
+	}
+
+	private static boolean isPHPNode(IDOMNode node) {
+		if (node instanceof PHPElementImpl) {
+			return true;
+		}
+		if (node instanceof TextImpl) {
+			TextImpl text = (TextImpl) node;
+			if (text.getFirstStructuredDocumentRegion().getType().indexOf("PHP") != -1) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static void insertBreakAfter(IHTMLFormatterNoPHPWrapper f, IDOMNode node, HTMLFormatContraints contraints) {
@@ -108,8 +128,7 @@ public class HTMLFormatterNoPHPBase {
 		if (next == null) { // last spaces
 			// use parent indent for the end tag
 			spaces = f.runGetBreakSpaces(parent);
-		}
-		else if (next.getNodeType() == Node.TEXT_NODE) {
+		} else if (next.getNodeType() == Node.TEXT_NODE) {
 			if (contraints != null && contraints.getFormatWithSiblingIndent()) {
 				IDOMNode text = (IDOMNode) next;
 				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory.getInstance().createFormatter(text, f.getFormatPreferences());
@@ -119,8 +138,7 @@ public class HTMLFormatterNoPHPBase {
 				}
 			}
 			return;
-		}
-		else {
+		} else {
 			spaces = f.runGetBreakSpaces(node);
 		}
 		if (spaces == null || spaces.length() == 0)
@@ -153,8 +171,7 @@ public class HTMLFormatterNoPHPBase {
 				}
 			}
 			return;
-		}
-		else {
+		} else {
 			spaces = f.runGetBreakSpaces(node);
 		}
 		if (spaces == null || spaces.length() == 0)
