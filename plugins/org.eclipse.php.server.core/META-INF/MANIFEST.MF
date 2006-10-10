@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Server Core Plug-in
 Bundle-SymbolicName: org.eclipse.php.server.core;singleton:=true
-Bundle-Version: 0.2.4
+Bundle-Version: 0.2.5
 Bundle-Activator: org.eclipse.php.server.core.Activator
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
