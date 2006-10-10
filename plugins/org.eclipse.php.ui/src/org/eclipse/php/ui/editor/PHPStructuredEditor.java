@@ -495,7 +495,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	private void refreshViewer() {
-		Display.getCurrent().asyncExec(new Runnable() {
+		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
 				SourceViewer viewer = getTextViewer();
