@@ -17,6 +17,7 @@ import java.util.TimerTask;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
@@ -415,7 +416,10 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 						outlineNode.setModel(model);
 					outlineNode.loadChildren();
 					fViewer.refresh(outlineNode, true);
-//					fViewer.setSelection(fViewer.getStoredSelection(), true);
+				}
+				ISelection currentSelection = fViewer.getSelection();
+				if(currentSelection.isEmpty()) {
+					fViewer.setSelection(fViewer.getStoredSelection(), false);
 				}
 			}
 		};
