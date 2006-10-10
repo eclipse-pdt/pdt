@@ -97,7 +97,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener2;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.ResourceAction;
@@ -111,11 +114,6 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 
 public class PHPStructuredEditor extends StructuredTextEditor {
-
-	IWorkbenchPart getPart() {
-		return this;
-	}
-
 	/**
 	 * This action behaves in two different ways: If there is no current text
 	 * hover, the javadoc is displayed using information presenter. If there is
@@ -452,7 +450,22 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	public void createPartControl(final Composite parent) {
 		super.createPartControl(parent);
+		getSite().getWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
 
+			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
+				if (changeId == IWorkbenchPage.CHANGE_EDITOR_CLOSE) {
+					if (partRef.getPart(false) == getEditorPart()) {
+						PHPWorkspaceModelManager.getInstance().addFileToModel(getFile());
+					}
+				}
+			}
+
+			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+			}
+
+			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
+			}
+		});
 		final IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell shell) {
 				boolean cutDown = false;
@@ -551,7 +564,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					if (event.getSelection().isEmpty() || selecting)
 						return;
 
-					if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && getSite().getPage().getActivePart() != getPart())
+					if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && getSite().getPage().getActivePart() != getEditorPart())
 						if (event.getSelection() instanceof IStructuredSelection) {
 							final ISelection current = getSelectionProvider().getSelection();
 							if (current instanceof IStructuredSelection) {
