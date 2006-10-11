@@ -57,7 +57,6 @@ import org.eclipse.jface.text.source.ILineRange;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension3;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
@@ -514,15 +513,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	private void refreshViewer() {
 		Display.getDefault().asyncExec(new Runnable() {
-
 			public void run() {
-				SourceViewer viewer = getTextViewer();
-				ISelection selection = viewer.getSelection();
-				viewer.getTextWidget().redraw();
-				doSetSelection(selection);
-
+				getTextViewer().getTextWidget().redraw();
 			}
-
 		});
 
 	}
