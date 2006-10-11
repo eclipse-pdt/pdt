@@ -518,8 +518,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			public void run() {
 				SourceViewer viewer = getTextViewer();
 				ISelection selection = viewer.getSelection();
-				viewer.refresh();
-				viewer.setSelection(selection);
+				viewer.getTextWidget().redraw();
+				doSetSelection(selection);
+
 			}
 
 		});
