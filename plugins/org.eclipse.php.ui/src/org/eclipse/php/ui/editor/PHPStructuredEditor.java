@@ -454,7 +454,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
 				if (changeId == IWorkbenchPage.CHANGE_EDITOR_CLOSE) {
 					if (partRef.getPart(false) == getEditorPart()) {
-						PHPWorkspaceModelManager.getInstance().addFileToModel(getFile());
+						IFile file = getFile();
+						if(file.isAccessible()) {
+							PHPWorkspaceModelManager.getInstance().addFileToModel(getFile());
+						}
 						getSite().getWorkbenchWindow().removePerspectiveListener(this);
 					}
 				}
