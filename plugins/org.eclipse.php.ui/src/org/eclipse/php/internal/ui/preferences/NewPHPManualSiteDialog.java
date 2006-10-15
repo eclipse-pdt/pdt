@@ -130,7 +130,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			}
 		});
 		
-		browseButton = new Button(composite, SWT.BORDER);
+		browseButton = new Button(composite, SWT.NULL);
         data = new GridData();
         data.horizontalAlignment = SWT.END;
         data.widthHint = 50;
