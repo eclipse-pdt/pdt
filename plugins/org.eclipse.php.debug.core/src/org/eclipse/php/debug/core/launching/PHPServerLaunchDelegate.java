@@ -41,8 +41,17 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		this.httpServerDelegate = delegate;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.server.core.launch.IHTTPServerLaunch#launch(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
+	 */
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		PHPLaunchUtilities.showDebugView();
+		if (!PHPLaunchUtilities.checkDebugAllPages(configuration, launch)) {
+			monitor.setCanceled(true);
+			monitor.done();
+			return;
+		}
 		boolean runWithDebug = configuration.getAttribute("run_with_debug", true);
 		this.launch = launch;
 		if (mode.equals(ILaunchManager.RUN_MODE) && !runWithDebug) {

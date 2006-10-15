@@ -10,15 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.debug.ui.IDebugUIConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.manager.ServersManager;
@@ -36,12 +37,18 @@ public class PHPDebugPlugin extends Plugin {
 	private static PHPDebugPlugin plugin;
 	private static String fPHPDebugPerspective = "org.eclipse.php.debug.ui.PHPDebugPerspective";
 	private static String fDebugPerspective = "org.eclipse.debug.ui.DebugPerspective";
+	private static boolean fIsSupportingMultipleDebugAllPages = false;
+	private boolean fInitialAutoRemoveLaunches;
+	private static boolean fLaunchChangedAutoRemoveLaunches;
 
 	/**
 	 * The constructor.
 	 */
 	public PHPDebugPlugin() {
 		plugin = this;
+		IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
+		fInitialAutoRemoveLaunches = preferenceStore.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
+		preferenceStore.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
 	}
 
 	public static final boolean DebugPHP;
@@ -67,6 +74,7 @@ public class PHPDebugPlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
+		DebugUIPlugin.getDefault().getPreferenceStore().setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES, fInitialAutoRemoveLaunches);
 	}
 
 	/**
@@ -168,4 +176,76 @@ public class PHPDebugPlugin extends Plugin {
 		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, message, null));
 	}
 
+	/**
+	 * Returns if multiple sessions of debug launches are allowed when one of the launches 
+	 * contains a 'debug all pages' attribute.
+	 * 
+	 * @return True, the multiple sessions are allowed; False, otherwise.
+	 */
+	public static boolean supportsMultipleDebugAllPages() {
+		return fIsSupportingMultipleDebugAllPages;
+	}
+
+	/**
+	 * Allow or disallow the multiple debug sessions that has a launch attribute of 'debug all pages'.
+	 * 
+	 * @param supported 
+	 */
+	public static void setMultipleDebugAllPages(boolean supported) {
+		fIsSupportingMultipleDebugAllPages = supported;
+	}
+
+	//
+	//	/**
+	//	 * Returns true if the auto remove launches was disabled by a PHP launch.
+	//	 * The auto remove flag is usually disabled when a PHP server launch was triggered and a 
+	//	 * 'debug all pages' flag was on.
+	//	 * Note that this method will return true only if a php launch set it and the debug preferences has a 'true'
+	//	 * value for IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES.
+	//	 * 
+	//	 * @return True iff the auto remove old launches was disabled.
+	//	 */
+	//	public static boolean isDisablingAutoRemoveLaunches() {
+	//		return fDisableAutoRemoveLaunches;
+	//	}
+
+	/**
+	 * Enable or disable the auto remove old launches flag. 
+	 * The auto remove flag is usually disabled when a PHP server launch was triggered and a 
+	 * 'debug all pages' flag was on.
+	 * Note that this method actually sets the IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES preferences key 
+	 * for the {@link DebugUIPlugin}.
+	 * 
+	 * @param disableAutoRemoveLaunches
+	 */
+	public static void setDisableAutoRemoveLaunches(boolean disableAutoRemoveLaunches) {
+		if (DebugUIPlugin.getDefault().getPreferenceStore().getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES) == disableAutoRemoveLaunches) {
+			fLaunchChangedAutoRemoveLaunches = true;
+			DebugUIPlugin.getDefault().getPreferenceStore().setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES, !disableAutoRemoveLaunches);
+		}
+	}
+
+	/**
+	 * Returns the initial value of the auto-remove-old launches.
+	 * 
+	 * @return
+	 */
+	public boolean getInitialAutoRemoveLaunches() {
+		return fInitialAutoRemoveLaunches;
+	}
+	
+	// 
+	private class AutoRemoveOldLaunchesListener implements IPropertyChangeListener {
+
+		public void propertyChange(PropertyChangeEvent event) {
+			if (IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES.equals(event.getProperty())) {
+				if (fLaunchChangedAutoRemoveLaunches ) {
+					fLaunchChangedAutoRemoveLaunches = false;// We got the event, so reset the flag.
+				} else {
+					// The event was triggered from some other source - e.g. The user changed the preferences manually.
+					fInitialAutoRemoveLaunches = ((Boolean)event.getNewValue()).booleanValue();
+				}
+			} 
+		}
+	}
 }
