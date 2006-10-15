@@ -95,7 +95,7 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
 		wc.doSave();
 
-		String URL = configuration.getAttribute(Server.BASE_URL, "");
+		String URL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebug == true) {
 			boolean stopAtFirstLine = false;
 			if (wc.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false)) {

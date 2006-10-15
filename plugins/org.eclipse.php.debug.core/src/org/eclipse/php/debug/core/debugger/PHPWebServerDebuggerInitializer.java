@@ -37,9 +37,9 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 	public void debug(ILaunch launch) throws DebugException {
 		exception = null;
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
-		String encodedURL = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
+		String encodedURL = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL).trim();
 		encodedURL = encodedURL.replaceAll(" ", "%20");
-		final String debugQuery = encodedURL + "?" + parametersInitializer.generateQuery(launch);
+		final String debugQuery = encodedURL + '?' + parametersInitializer.generateQuery(launch);
 		boolean openInBrowser = false;
 		try {
 			openInBrowser = launch.getLaunchConfiguration().getAttribute(IPHPConstants.OPEN_IN_BROWSER, false);
