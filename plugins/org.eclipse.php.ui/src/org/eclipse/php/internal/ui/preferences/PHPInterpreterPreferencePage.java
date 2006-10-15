@@ -22,7 +22,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 
-	public static final String PREF_ID = "org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"; //$NON-NLS-1$
+	public static final String PREF_ID = "org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"; //$NON-NLS-1$
 	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"; //$NON-NLS-1$
 
 	private PHPVersionConfigurationBlock fConfigurationBlock;
