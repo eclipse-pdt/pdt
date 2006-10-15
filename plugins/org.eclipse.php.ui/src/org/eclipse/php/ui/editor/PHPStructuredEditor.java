@@ -455,7 +455,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				if (changeId == IWorkbenchPage.CHANGE_EDITOR_CLOSE) {
 					if (partRef.getPart(false) == getEditorPart()) {
 						IFile file = getFile();
-						if(file.isAccessible()) {
+						if (file.exists() && file.isAccessible()) {
 							PHPWorkspaceModelManager.getInstance().addFileToModel(getFile());
 						}
 						getSite().getWorkbenchWindow().removePerspectiveListener(this);
