@@ -19,6 +19,8 @@ import java.util.Iterator;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.util.BlockingQueue;
@@ -441,13 +443,31 @@ public class DebugConnectionThread implements Runnable {
 	protected void hookDebugSession(DebugSessionStartedNotification debugSessionStartedNotification) throws CoreException {
 		String query = debugSessionStartedNotification.getQuery();
 		int sessionID = getSessionID(query);
-		ILaunch launch = PHPSessionLaunchMapper.remove(sessionID);
+		// Get the launch, but keep it in the mapper for any other debug requests that are 
+		// related to the debug session id.
+		// The launch is mapped until the launches are cleared.
+		ILaunch launch = PHPSessionLaunchMapper.get(sessionID);
 		if (launch != null) {
+			// Remove any debug targets and processes that were terminated.
+			IDebugTarget[] debugTargets = launch.getDebugTargets();
+			IProcess[] processes = launch.getProcesses();
+			for (int i = 0; i < debugTargets.length; i++) {
+				if (debugTargets[i].isTerminated()) {
+					launch.removeDebugTarget(debugTargets[i]);
+				}
+			}
+			for (int i = 0; i < processes.length; i++) {
+				if (processes[i].isTerminated()) {
+					launch.removeProcess(processes[i]);
+				}
+			}
+			
 			if (launch instanceof PHPServerLaunchDecorator) {
 				hookServerDebug(launch);
 			} else {
 				hookPHPExeDebug(launch);
 			}
+			
 		} else {
 			Logger.log(Logger.ERROR, "No session id");
 		}
@@ -462,9 +482,6 @@ public class DebugConnectionThread implements Runnable {
 		PHPServerLaunchDecorator launchDecorator = (PHPServerLaunchDecorator) launch;
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
-		//		ApacheServerBehaviour serverBehaviour = launchDecorator.getApacheServerBahavior();
-		//		String URL = launchConfiguration.getAttribute(ApachePlugin.URL, "");
-		//		String contextRoot = launchConfiguration.getAttribute(ApachePlugin.CONTEXT_ROOT, "");
 		String URL = launchConfiguration.getAttribute(Server.BASE_URL, "");
 		String contextRoot = launchConfiguration.getAttribute(Server.CONTEXT_ROOT, "");
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(launchDecorator.getProject());
@@ -474,7 +491,6 @@ public class DebugConnectionThread implements Runnable {
 			runWithDebug = false;
 		}
 		PHPProcess process = new PHPProcess(launch, URL);
-		//		serverBehaviour.setProcess(process);
 		debugTarget = new PHPDebugTarget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
 		launch.addDebugTarget(debugTarget);
 	}
