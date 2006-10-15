@@ -86,6 +86,8 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -102,9 +104,12 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
+import org.eclipse.ui.views.navigator.NavigatorDragAdapter;
+import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
 public class ExplorerPart extends ViewPart implements IMenuListener, FocusListener {
 
@@ -113,6 +118,8 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 
 	private PHPTreeViewer fViewer;
 	protected ExplorerContentProvider fContentProvider;
+
+	private Listener dragDetectListener;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
@@ -445,9 +452,20 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 
 	}
 
-	private void initDragAndDrop() {
-		initDrag();
-		initDrop();
+	protected void initDragAndDrop() {
+		int ops = DND.DROP_COPY | DND.DROP_MOVE;
+		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), ResourceTransfer.getInstance(), FileTransfer.getInstance(), PluginTransfer.getInstance() };
+		TreeViewer viewer = getViewer();
+		viewer.addDragSupport(ops, transfers, new NavigatorDragAdapter(viewer));
+		NavigatorDropAdapter adapter = new NavigatorDropAdapter(viewer);
+		adapter.setFeedbackEnabled(false);
+		viewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, adapter);
+		//        dragDetectListener = new Listener() {
+		//            public void handleEvent(Event event) {
+		//                dragDetected = true;
+		//            }
+		//        };
+		viewer.getControl().addListener(SWT.DragDetect, dragDetectListener);
 	}
 
 	private void initKeyListener() {
@@ -484,20 +502,6 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 					EditorUtility.revealInEditor(part, (PHPCodeData) obj);
 			}
 		}
-	}
-
-	private void initDrag() {
-		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
-		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), ResourceTransfer.getInstance(), FileTransfer.getInstance() };
-		TransferDragSourceListener[] dragListeners = new TransferDragSourceListener[] { new SelectionTransferDragAdapter(fViewer), new ResourceTransferDragAdapter(fViewer), new FileTransferDragAdapter(fViewer) };
-		fViewer.addDragSupport(ops, transfers, new PHPViewerDragAdapter(fViewer, dragListeners));
-	}
-
-	private void initDrop() {
-		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT;
-		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), FileTransfer.getInstance() };
-		TransferDropTargetListener[] dropListeners = new TransferDropTargetListener[] { new SelectionTransferDropAdapter(fViewer), new FileTransferDropAdapter(fViewer) };
-		fViewer.addDropSupport(ops, transfers, new DelegatingDropAdapter(dropListeners));
 	}
 
 	private void setProviders() {
