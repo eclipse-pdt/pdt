@@ -465,7 +465,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		//                dragDetected = true;
 		//            }
 		//        };
-		viewer.getControl().addListener(SWT.DragDetect, dragDetectListener);
+//		viewer.getControl().addListener(SWT.DragDetect, dragDetectListener);
 	}
 
 	private void initKeyListener() {
