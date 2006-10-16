@@ -229,13 +229,14 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 	}
 
 	public void fileDataAdded(PHPFileData fileData) {
-		// not needed, since this event is notified in <code>resourceChanged</code>
-		//postAdd(PHPModelUtil.getParent(fileData), fileData);
+		IResource res = PHPModelUtil.getResource(fileData);
+		if(res != null)
+			postRefresh(res);
+		else
+			postRefresh(fileData);
 	}
 
 	public void fileDataRemoved(PHPFileData fileData) {
-		// not needed, since this event is notified in <code>resourceChanged</code>
-		//postRemove(fileData);
 	}
 
 	public void dataCleared() {
@@ -262,7 +263,6 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		if (parentElement instanceof PHPWorkspaceModelManager) {
 			return getAllProjects();
 		}
-
 		return super.getChildrenInternal(parentElement);
 	}
 
