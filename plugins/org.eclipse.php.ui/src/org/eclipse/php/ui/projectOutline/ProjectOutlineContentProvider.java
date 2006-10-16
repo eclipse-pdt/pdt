@@ -257,9 +257,17 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		return super.getChildrenInternal(parentElement);
 	}
 
+	OutlineNode[] nodes;
+
 	private OutlineNode[] getOutlineChildren(final IProject project) {
 		final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-		final OutlineNode[] nodes = { new OutlineNode(CLASSES, "classes", projectModel, fPart), new OutlineNode(FUNCTIONS, "functions", projectModel, fPart), new OutlineNode(CONSTANTS, "constants", projectModel, fPart) };
+		if (nodes == null) {
+			nodes = new OutlineNode[] { new OutlineNode(CONSTANTS, "constants", projectModel, fPart), new OutlineNode(CLASSES, "classes", projectModel, fPart), new OutlineNode(FUNCTIONS, "functions", projectModel, fPart) };
+		} else {
+			for (int i = 0; i < nodes.length; ++i) {
+				nodes[i].setModel(projectModel);
+			}
+		}
 		return nodes;
 	}
 
