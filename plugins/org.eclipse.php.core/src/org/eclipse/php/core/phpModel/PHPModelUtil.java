@@ -292,8 +292,6 @@ public class PHPModelUtil {
 			if (parent == null && element instanceof PHPFileData) {
 				final IResource resource = getResource(element);
 				final IResource parentResource = resource.getParent();
-				//				if (parentResource instanceof IProject)
-				//					return PHPModelManager.getInstance().getModelForProject((IProject)parentResource).PHPBrowserModel();
 				return parentResource;
 			}
 			return parent;
