@@ -181,10 +181,10 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		}
 	}
 
-	public static final int CLASSES = 1;
-
-	public static final int CONSTANTS = 3;
-	public static final int FUNCTIONS = 2;
+	public static final int INCLUDES = 1;
+	public static final int CONSTANTS = 2;
+	public static final int CLASSES = 3;
+	public static final int FUNCTIONS = 4;
 
 	/**
 	 * Retunrs the node type or -1 if the given object is not an OutlineNode.
@@ -418,7 +418,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					fViewer.refresh(outlineNode, true);
 				}
 				ISelection currentSelection = fViewer.getSelection();
-				if(currentSelection.isEmpty()) {
+				if (currentSelection.isEmpty()) {
 					fViewer.setSelection(fViewer.getStoredSelection(), false);
 				}
 			}
