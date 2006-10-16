@@ -37,17 +37,15 @@ public class ProjectOutlineLabelProvider extends AppearanceAwareLabelProvider {
 	}
 
 	public String getTooltipText(Object element) {
-		String description = "";
 		String postfix = "";
 		if (element instanceof PHPCodeData) {
 			PHPCodeData codeData = (PHPCodeData) element;
-			description = codeData.getDescription();
 			UserData userData = codeData.getUserData();
 			if (userData != null)
-				postfix = "(" + userData.getFileName() + ")";
+				postfix = " (" + userData.getFileName() + ")";
 		}
 		String text = PHPElementLabels.getTooltipTextLabel(element);
-		return description + "" + text + postfix;
+		return text + postfix;
 	}
 
 }
