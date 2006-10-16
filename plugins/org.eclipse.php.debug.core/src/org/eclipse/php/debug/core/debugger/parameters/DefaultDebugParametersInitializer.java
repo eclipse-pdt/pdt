@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.core.util.HostsCollector;
+import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.RemoteDebugger;
 
@@ -58,7 +59,13 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		if (url != null) {
 			parameters.put(ORIGINAL_URL, url);
 		}
-
+		String sessionSetting = launch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
+		if (IPHPConstants.DEBUGGING_ALL_PAGES.equals(sessionSetting)) {
+			parameters.put(DEBUG_ALL_PAGES, "1");
+		} else if (IPHPConstants.DEBUGGING_FIRST_PAGE.equals(sessionSetting)) {
+			parameters.put(DEBUG_FIRST_PAGE, "1");
+		}
+			
 		String sessID = launch.getAttribute(IDebugParametersKeys.SESSION_ID);
 		if (sessID != null) {
 			parameters.put(DEBUG_SESSION_ID, sessID);

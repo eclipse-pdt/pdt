@@ -8,16 +8,18 @@ import org.eclipse.debug.core.ILaunch;
 public abstract class AbstractDebugParametersInitializer implements IDebugParametersInitializer {
 
 	// Parameters
-	public static final String START_DEBUG = "start_debug=";
-	public static final String DEBUG_PORT = "debug_port=";
-	public static final String DEBUG_PASSIVE = "debug_passive=";
-	public static final String DEBUG_HOST = "debug_host=";
-	public static final String SEND_SESS_END = "send_sess_end=";
-	public static final String DEBUG_NO_CACHE = "debug_no_cache=";
-	public static final String DEBUG_STOP = "debug_stop=";
-	public static final String DEBUG_PROTOCOL = "debug_protocol=";
-	public static final String ORIGINAL_URL = "original_url=";
-	public static final String DEBUG_SESSION_ID = "debug_session_id=";
+	public static final String START_DEBUG = "start_debug="; //$NON-NLS-1$
+	public static final String DEBUG_PORT = "debug_port="; //$NON-NLS-1$
+	public static final String DEBUG_PASSIVE = "debug_passive="; //$NON-NLS-1$
+	public static final String DEBUG_HOST = "debug_host="; //$NON-NLS-1$
+	public static final String SEND_SESS_END = "send_sess_end="; //$NON-NLS-1$
+	public static final String DEBUG_NO_CACHE = "debug_no_cache="; //$NON-NLS-1$
+	public static final String DEBUG_STOP = "debug_stop="; //$NON-NLS-1$
+	public static final String DEBUG_PROTOCOL = "debug_protocol="; //$NON-NLS-1$
+	public static final String ORIGINAL_URL = "original_url="; //$NON-NLS-1$
+	public static final String DEBUG_SESSION_ID = "debug_session_id="; //$NON-NLS-1$
+	public static final String DEBUG_FIRST_PAGE = "debug_new_session="; //$NON-NLS-1$
+	public static final String DEBUG_ALL_PAGES = "debug_start_session="; //$NON-NLS-1$
 
 	private String id = null;
 

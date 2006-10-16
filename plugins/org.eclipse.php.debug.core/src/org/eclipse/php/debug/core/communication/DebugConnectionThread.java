@@ -447,6 +447,18 @@ public class DebugConnectionThread implements Runnable {
 		// related to the debug session id.
 		// The launch is mapped until the launches are cleared.
 		ILaunch launch = PHPSessionLaunchMapper.get(sessionID);
+		if (launch == null) {
+			// We cannot find a launch the we can associate to the given session id (if any)
+			// Try to take the first launch that is terminated and has a 'Debug all Pages' attribute.
+			ILaunch[] launchs = DebugPlugin.getDefault().getLaunchManager().getLaunches();
+			for (int i = 0; i < launchs.length; i++) {
+				ILaunch aLaunch = launchs[i];
+				if (aLaunch.isTerminated() && IPHPConstants.DEBUGGING_ALL_PAGES.equals(aLaunch.getAttribute(IPHPConstants.DEBUGGING_PAGES))) {
+					launch = aLaunch;
+					break;
+				}
+			}
+		}
 		if (launch != null) {
 			// Remove any debug targets and processes that were terminated.
 			IDebugTarget[] debugTargets = launch.getDebugTargets();
@@ -461,14 +473,14 @@ public class DebugConnectionThread implements Runnable {
 					launch.removeProcess(processes[i]);
 				}
 			}
-			
-			if (launch instanceof PHPServerLaunchDecorator) {
+
+			if (launch instanceof PHPServerLaunchDecorator || Boolean.toString(true).equals(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
 				hookServerDebug(launch);
 			} else {
 				hookPHPExeDebug(launch);
 			}
-			
 		} else {
+			// TODO - Display an error/warning message to the user.
 			Logger.log(Logger.ERROR, "No session id");
 		}
 	}
@@ -479,8 +491,16 @@ public class DebugConnectionThread implements Runnable {
 	 * @param launch An {@link ILaunch}
 	 */
 	protected void hookServerDebug(ILaunch launch) throws CoreException {
-		PHPServerLaunchDecorator launchDecorator = (PHPServerLaunchDecorator) launch;
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
+		PHPServerLaunchDecorator launchDecorator;
+		if (launch instanceof PHPServerLaunchDecorator) {
+			launchDecorator = (PHPServerLaunchDecorator) launch;
+		} else {
+			// Get the project by its name
+			String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			launchDecorator = new PHPServerLaunchDecorator(launch, project);
+		}
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
 		String URL = launchConfiguration.getAttribute(Server.BASE_URL, "");
 		String contextRoot = launchConfiguration.getAttribute(Server.CONTEXT_ROOT, "");
@@ -811,9 +831,9 @@ public class DebugConnectionThread implements Runnable {
 		private Thread theThread;
 		private Object READY_FOR_RESTART_LOCK = new Object();
 		private String transferEncoding;
-		
+
 		public void setTransferEncoding(String transferEncoding) {
- 			 this.transferEncoding = transferEncoding;
+			this.transferEncoding = transferEncoding;
 		}
 
 		/**
