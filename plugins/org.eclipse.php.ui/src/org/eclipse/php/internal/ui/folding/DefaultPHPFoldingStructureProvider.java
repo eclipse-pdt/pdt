@@ -61,7 +61,17 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		toRemove = new ArrayList();
 		newFolds = new LinkedHashMap();
 	}
-
+	
+	static int failCount;
+	static final int MAX_RETRY = 3;
+	static final int THREAD_DELAY=5000;
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.projection.IProjectionListener#projectionEnabled()
+	 * 
+	 * In case getExistingModelForRead returns null, schedule a thread that starts after THREAD_DELAY milliseconds
+	 * retry for MAX_RETRY times.
+	 */
 	public void projectionEnabled() {
 		// http://home.ott.oti.com/teams/wswb/anon/out/vms/index.html
 		// projectionEnabled messages are not always paired with projectionDisabled
@@ -76,8 +86,18 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 				modelStateListener = new PHPModelStateListener();
 				model.addModelStateListener(modelStateListener);
 				model.releaseFromRead();
+				failCount=0;
 			} else {
-				PHPUiPlugin.logErrorMessage("getExistingModelForRead gave a null result");
+				TimerTask thread = new TimerTask(){
+					public void run() {
+						if (failCount++ < MAX_RETRY) {							
+							projectionEnabled();	
+						}
+					}					
+				};
+				Timer t = new Timer(false);
+				t.schedule(thread, THREAD_DELAY);
+				return;
 			}
 			timer = new Timer(false); // TODO - Remove this timer and listen to the annotation end of drawing instead
 			timerTask = new FoldingTimerTask();
@@ -95,9 +115,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 			if (model != null) {
 				model.removeModelStateListener(modelStateListener);
 				model.releaseFromRead();
-			} else {
-				PHPUiPlugin.logErrorMessage("getExistingModelForRead gave a null result");
-			}
+			} 
 			modelStateListener = null;
 			document = null;
 		}
