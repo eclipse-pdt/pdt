@@ -13,7 +13,12 @@ package org.eclipse.php.ui.outline;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
@@ -32,11 +37,8 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	protected IContributionItem[] createMenuContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 		final IContributionItem showPHPItem = new ActionContributionItem(new ChangeOutlineModeAction(PHPUIMessages.PHPOutlinePage_mode_php, PHPOutlineContentProvider.MODE_PHP, viewer));
 		final IContributionItem showHTMLItem = new ActionContributionItem(new ChangeOutlineModeAction(PHPUIMessages.PHPOutlinePage_mode_html, PHPOutlineContentProvider.MODE_HTML, viewer));
-		//		IContributionItem showMixedItem = new ActionContributionItem(new ChangeOutlineModeAction(PHPUIMessages.PHPOutlinePage_mode_mixed,PHPOutlineContentProvider.MODE_HTML,viewer));
-		//final IContributionItem showGroupsItem = new ActionContributionItem(new ShowGroupsAction(PHPUIMessages.PHPOutlinePage_show_groups, viewer));
 		items = super.createMenuContributions(viewer);
 		if (items == null)
 			items = new IContributionItem[] { showPHPItem, showHTMLItem };
@@ -45,8 +47,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			System.arraycopy(items, 0, combinedItems, 0, items.length);
 			combinedItems[items.length] = showPHPItem;
 			combinedItems[items.length + 1] = showHTMLItem;
-			//			combinedItems[items.length+2] = showMixedItem;
-			//combinedItems[items.length + 2] = showGroupsItem;
 			items = combinedItems;
 		}
 		return items;
@@ -74,25 +74,17 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	public IContentProvider getContentProvider(final TreeViewer viewer) {
 		if (fContentProvider == null) {
-			//			if (getFactory() != null) {
 			viewer.setComparer(new PHPOutlineElementComparer());
 			fContentProvider = new PHPOutlineContentProvider(viewer);
 			fContentProvider.phpContentProvider.setTreeProviders(getTreeProviders());
-			//			} else {
-			//				fContentProvider = super.getContentProvider(viewer);
-			//			}
 		}
 		return fContentProvider;
 	}
 
 	public ILabelProvider getLabelProvider(final TreeViewer viewer) {
 		if (fLabelProvider == null) {
-			//			if (getFactory() != null) {
 			fLabelProvider = new PHPOutlineLabelProvider();
 			fLabelProvider.phpLabelProvider.setTreeProviders(getTreeProviders());
-			//			} else {
-			//				fLabelProvider = super.getLabelProvider(viewer);
-			//			}
 		}
 		return fLabelProvider;
 	}
