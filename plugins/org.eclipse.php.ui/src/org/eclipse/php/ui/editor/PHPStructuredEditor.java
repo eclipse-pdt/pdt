@@ -540,6 +540,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		super.doSetInput(input);
 	}
 
+	ISelectionChangedListener selectionListener;
+
 	public Object getAdapter(final Class required) {
 		final Object adapter = super.getAdapter(required);
 
@@ -547,44 +549,47 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		// so that if outline selects codedata, editor selects correct item
 		if (adapter instanceof ConfigurableContentOutlinePage && IContentOutlinePage.class.equals(required)) {
 			final ConfigurableContentOutlinePage outlinePage = (ConfigurableContentOutlinePage) adapter;
-			outlinePage.addSelectionChangedListener(new ISelectionChangedListener() {
+			if (selectionListener == null) {
+				selectionListener = new ISelectionChangedListener() {
 
-				boolean selecting = false;
+					boolean selecting = false;
 
-				public void selectionChanged(final SelectionChangedEvent event) {
-					if (!outlinePage.getConfiguration().isLinkedWithEditor(null)) {
-						return;
-					}
-					/*
-					 * The isFiringSelection check only works if a
-					 * selection listener
-					 */
-					if (event.getSelection().isEmpty() || selecting)
-						return;
-
-					if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && getSite().getPage().getActivePart() != getEditorPart())
-						if (event.getSelection() instanceof IStructuredSelection) {
-							final ISelection current = getSelectionProvider().getSelection();
-							if (current instanceof IStructuredSelection) {
-								final Object[] currentSelection = ((IStructuredSelection) current).toArray();
-								final Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
-								if (!Arrays.equals(currentSelection, newSelection))
-									if (newSelection.length > 0) {
-										/*
-										 * No ordering is guaranteed for
-										 * multiple selection
-										 */
-										final Object o = newSelection[0];
-										selecting = true;
-										if (o instanceof PHPCodeData)
-											setSelection((PHPCodeData) o, true);
-										selecting = false;
-									}
-							}
+					public void selectionChanged(final SelectionChangedEvent event) {
+						if (!outlinePage.getConfiguration().isLinkedWithEditor(null)) {
+							return;
 						}
-				}
+						/*
+						 * The isFiringSelection check only works if a
+						 * selection listener
+						 */
+						if (event.getSelection().isEmpty() || selecting)
+							return;
 
-			});
+						if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && getSite().getPage().getActivePart() != getEditorPart())
+							if (event.getSelection() instanceof IStructuredSelection) {
+								final ISelection current = getSelectionProvider().getSelection();
+								if (current instanceof IStructuredSelection) {
+									final Object[] currentSelection = ((IStructuredSelection) current).toArray();
+									final Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
+									if (!Arrays.equals(currentSelection, newSelection))
+										if (newSelection.length > 0) {
+											/*
+											 * No ordering is guaranteed for
+											 * multiple selection
+											 */
+											final Object o = newSelection[0];
+											selecting = true;
+											if (o instanceof PHPCodeData)
+												setSelection((PHPCodeData) o, true);
+											selecting = false;
+										}
+								}
+							}
+					}
+
+				};
+			}
+			outlinePage.addSelectionChangedListener(selectionListener);
 		}
 		return adapter;
 	}
