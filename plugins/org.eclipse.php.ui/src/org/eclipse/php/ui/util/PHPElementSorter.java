@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
@@ -30,15 +31,18 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPModifier;
+import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.ui.PHPUiPlugin;
+import org.eclipse.php.ui.outline.PHPOutlineContentProvider.GroupNode;
 import org.eclipse.php.ui.preferences.ui.MembersOrderPreferenceCache;
 import org.eclipse.php.ui.projectOutline.ProjectOutlineContentProvider.OutlineNode;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
- * Sorter for Java elements. Ordered by element category, then by element name. 
+ * Sorter for PHP elements. Ordered by element category, then by element name. 
  * Package fragment roots are sorted as ordered on the classpath.
  * 
  * <p>
@@ -48,6 +52,10 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  * @since 2.0
  */
 public class PHPElementSorter extends ViewerSorter {
+
+	int flags;
+	boolean usingCategories = true;
+	boolean usingLocation = false;
 
 	private static final int PROJECTS = 1;
 	private static final int PACKAGEFRAGMENTROOTS = 2;
@@ -66,8 +74,8 @@ public class PHPElementSorter extends ViewerSorter {
 
 	// Includes all categories ordered using the OutlineSortOrderPage:
 	// types, initializers, methods & fields
-	private static final int MEMBERSOFFSET = 15;
-	private static final int OUTLINE_NODES = 16;
+	private static final int MEMBERSOFFSET = 16;
+	private static final int OUTLINE_NODES = 15;
 
 	private static final int JAVAELEMENTS = 50;
 	private static final int OTHERS = 51;
@@ -115,6 +123,10 @@ public class PHPElementSorter extends ViewerSorter {
 			if (element instanceof PHPConstantData || element instanceof PHPClassConstData) {
 				return getMemberCategory(MembersOrderPreferenceCache.CONSTANTS_INDEX);
 			}
+			if (element instanceof PHPIncludeFileData) {
+				return getMemberCategory(MembersOrderPreferenceCache.INCLUDEFILES_INDEX);
+			}
+
 			if (element instanceof PHPClassVarData) {
 				if (PHPModifier.isStatic(((PHPClassVarData) element).getModifiers())) {
 					return getMemberCategory(MembersOrderPreferenceCache.STATIC_VARS_INDEX);
@@ -141,7 +153,7 @@ public class PHPElementSorter extends ViewerSorter {
 		if (element instanceof IStorage) {
 			return STORAGE;
 		}
-		if (element instanceof OutlineNode) {
+		if (element instanceof OutlineNode || element instanceof GroupNode) {
 			return OUTLINE_NODES;
 		}
 		return OTHERS;
@@ -156,38 +168,67 @@ public class PHPElementSorter extends ViewerSorter {
 	 * @see ViewerSorter#compare
 	 */
 	public int compare(Viewer viewer, Object e1, Object e2) {
+
 		int cat1 = category(e1);
 		int cat2 = category(e2);
 
-		if (cat1 != cat2)
-			return cat1 - cat2;
+		if (usingCategories) {
+			if (cat1 != cat2)
+				return cat1 - cat2;
+		}
 
 		if (cat1 == PROJECTS || cat1 == RESOURCES || cat1 == RESOURCEFOLDERS || cat1 == STORAGE || cat1 == OTHERS) {
 			String name1 = getNonPHPElementLabel(viewer, e1);
 			String name2 = getNonPHPElementLabel(viewer, e2);
-			if (name1 != null && name2 != null) {
+			if (name1 == name2)
+				return 0;
+			if (name1 != null) {
 				return getCollator().compare(name1, name2);
 			}
-			return 0; // can't compare
+			return -1; // can't compare
 		}
 
 		// if it is an outline node (classes, functions, constants) sort by type
 		if (cat1 == OUTLINE_NODES && cat2 == OUTLINE_NODES) {
-			assert e1 instanceof OutlineNode && e2 instanceof OutlineNode;
 			return ((Comparable) e1).compareTo(e2);
 		}
 
+		int vis = 0;
 		if (e1 instanceof PHPCodeData) {
 			if (fMemberOrderCache.isSortByVisibility()) {
 				int flags1 = getVisibilityCode(e1);
 				int flags2 = getVisibilityCode(e2);
-				int vis = fMemberOrderCache.getVisibilityIndex(flags1) - fMemberOrderCache.getVisibilityIndex(flags2);
-				if (vis != 0) {
-					return vis;
+				vis = fMemberOrderCache.getVisibilityIndex(flags1) - fMemberOrderCache.getVisibilityIndex(flags2);
+				if (usingCategories) {
+					if (vis != 0) {
+						return vis;
+					}
 				}
 			}
 		}
 
+		boolean currentUsingLocation = false;
+
+		UserData userData1 = null;
+		UserData userData2 = null;
+
+		if (usingLocation && e1 instanceof PHPCodeData && e2 instanceof PHPCodeData) {
+			currentUsingLocation = true;
+			PHPCodeData code1 = (PHPCodeData) e1;
+			PHPCodeData code2 = (PHPCodeData) e2;
+			if (PHPModelUtil.getPHPFileContainer(code1) != PHPModelUtil.getPHPFileContainer(code2)) {
+				currentUsingLocation = false;
+			} else {
+				userData1 = code1.getUserData();
+				userData2 = code2.getUserData();
+
+				if (userData1 == null || userData2 == null)
+					currentUsingLocation = false;
+			}
+		}
+		if (currentUsingLocation) {
+			return userData1.getStartPosition() - userData2.getStartPosition();
+		}
 		String name1 = getElementName(e1);
 		String name2 = getElementName(e2);
 
@@ -196,7 +237,9 @@ public class PHPElementSorter extends ViewerSorter {
 			return cmp;
 		}
 
-		if (e1 instanceof PHPFunctionData) {
+		// from here names are equal:
+
+		if (e1 instanceof PHPFunctionData && e2 instanceof PHPFunctionData) {
 			PHPFunctionParameter[] params1 = ((PHPFunctionData) e1).getParameters();
 			PHPFunctionParameter[] params2 = ((PHPFunctionData) e2).getParameters();
 			int len = Math.min(params1.length, params2.length);
@@ -211,6 +254,11 @@ public class PHPElementSorter extends ViewerSorter {
 					return -1;
 			}
 			return params1.length - params2.length;
+		}
+		if (!usingCategories) { // process categories after names, if not categorized:
+			if (cat1 != cat2)
+				return cat1 - cat2;
+			return vis;
 		}
 		return 0;
 	}
@@ -259,8 +307,35 @@ public class PHPElementSorter extends ViewerSorter {
 	private String getElementName(Object element) {
 		if (element instanceof PHPCodeData) {
 			return ((PHPCodeData) element).getName();
-		} else {
-			return element.toString();
 		}
+		return element.toString();
+	}
+
+	/**
+	 * @return the usingCategories
+	 */
+	public boolean isUsingCategories() {
+		return usingCategories;
+	}
+
+	/**
+	 * @param usingCategories the usingCategories to set
+	 */
+	public void setUsingCategories(boolean usingCategories) {
+		this.usingCategories = usingCategories;
+	}
+
+	/**
+	 * @return the usingLocation
+	 */
+	public boolean isUsingLocation() {
+		return usingLocation;
+	}
+
+	/**
+	 * @param usingLocation the usingLocation to set
+	 */
+	public void setUsingLocation(boolean usingLocation) {
+		this.usingLocation = usingLocation;
 	}
 }

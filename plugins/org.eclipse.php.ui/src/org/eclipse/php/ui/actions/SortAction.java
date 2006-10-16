@@ -21,21 +21,27 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.PlatformUI;
 
 public class SortAction extends Action {
-	
-	public static final String PREF_IS_SORTED="SortingAction.isChecked";
-	private TreeViewer treeViewer;
-	private PHPElementSorter fSorter= new PHPElementSorter();
 
-	public SortAction( TreeViewer treeViewer) {
+	public static final String PREF_IS_SORTED = "SortingAction.isChecked";
+	private TreeViewer treeViewer;
+	private PHPElementSorter fSorter;
+
+	public SortAction(TreeViewer treeViewer) {
 		super();
-		this.treeViewer=treeViewer;
+
+		fSorter = new PHPElementSorter();
+		fSorter.setUsingCategories(false);
+		fSorter.setUsingLocation(true);
+
+		this.treeViewer = treeViewer;
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.SORTING_OUTLINE_ACTION);
 		setText(PHPUIMessages.PHPOutlinePage_Sort_label);
 		PHPPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.gif"); //$NON-NLS-1$
 		setToolTipText(PHPUIMessages.PHPOutlinePage_Sort_tooltip);
 		setDescription(PHPUIMessages.PHPOutlinePage_Sort_description);
+		treeViewer.setSorter(fSorter);
 
-		boolean checked= PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_IS_SORTED); //$NON-NLS-1$
+		boolean checked = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_IS_SORTED); //$NON-NLS-1$
 		valueChanged(checked, false);
 	}
 
@@ -47,7 +53,10 @@ public class SortAction extends Action {
 		setChecked(on);
 		BusyIndicator.showWhile(treeViewer.getControl().getDisplay(), new Runnable() {
 			public void run() {
-				treeViewer.setSorter(on ? fSorter : null);						}
+				fSorter.setUsingLocation(!on);
+				treeViewer.refresh();
+				treeViewer.expandAll();
+			}
 		});
 
 		if (store)
