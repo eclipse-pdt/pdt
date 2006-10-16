@@ -92,6 +92,8 @@ public class MembersOrderPreferenceCache implements IPropertyChangeListener {
 			String token = tokenizer.nextToken().trim();
 			if ("T".equals(token)) { //$NON-NLS-1$
 				offsets[CLASS_INDEX] = i++;
+			} else if ("I".equals(token)) { //$NON-NLS-1$
+				offsets[INCLUDEFILES_INDEX] = i++;
 			} else if ("F".equals(token)) { //$NON-NLS-1$
 				offsets[FUNCTIONS_INDEX] = i++;
 			} else if ("V".equals(token)) { //$NON-NLS-1$
@@ -102,6 +104,8 @@ public class MembersOrderPreferenceCache implements IPropertyChangeListener {
 				offsets[STATIC_FUNCTIONS_INDEX] = i++;
 			} else if ("C".equals(token)) { //$NON-NLS-1$
 				offsets[CONSTRUCTORS_INDEX] = i++;
+			} else if ("S".equals(token)) { //$NON-NLS-1$
+				offsets[CONSTANTS_INDEX] = i++;
 			}
 		}
 		return i == N_CATEGORIES;

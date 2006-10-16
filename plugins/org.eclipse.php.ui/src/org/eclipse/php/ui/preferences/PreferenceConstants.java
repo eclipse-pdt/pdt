@@ -135,7 +135,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public final static String CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC = "contentAssistAutoactivationTriggersPHPDoc"; //$NON-NLS-1$
-	
+
 	/**
 	 * A named preference that controls whether to start actiactivation on class names
 	 * <p>
@@ -368,8 +368,8 @@ public class PreferenceConstants {
 	 * uses a roll over to display multiple annotations
 	 * </p>
 	 */
-	public static final String EDITOR_ANNOTATION_ROLL_OVER= "editor_annotation_roll_over"; //$NON-NLS-1$
-	
+	public static final String EDITOR_ANNOTATION_ROLL_OVER = "editor_annotation_roll_over"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that holds the color for the PHP boundary makers (open/close tags)
 	 * <p>
@@ -412,7 +412,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public final static String EDITOR_CLOSE_STRINGS = "closeStrings"; //$NON-NLS-1$
-	
+
 	/**
 	 * A named preference that controls whether the 'close phpdoc and comments' feature is
 	 * enabled.
@@ -421,7 +421,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public final static String EDITOR_CLOSE_PHPDOCS_AND_COMMENTS = "closePhpDocsAndComments"; //$NON-NLS-1$
-	
+
 	/**
 	 * A named preference that controls whether the 'close phpdoc and comments' feature is
 	 * enabled.
@@ -430,7 +430,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public final static String EDITOR_ADD_PHPDOC_TAGS = "autoAddPhpDocTags"; //$NON-NLS-1$
-	
+
 	/**
 	 * A named preference that holds the color for the PHP comments
 	 * <p>
@@ -446,7 +446,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_COMMENT_DEFAULT_COLOR = PHPColorHelper.getColorString(128, 128, 128) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
-	
+
 	/**
 	 * A named preference that holds the color for the TASK tag inside the comment
 	 * <p>
@@ -591,15 +591,15 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_VARIABLE_DEFAULT_COLOR = PHPColorHelper.getColorString(102, 0, 0) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
-	
+
 	/**
 	 * A named preference that controls the smart tab behavior.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 *
 	 */
-	public static final String EDITOR_SMART_TAB= "smart_tab"; //$NON-NLS-1$
-	
+	public static final String EDITOR_SMART_TAB = "smart_tab"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether blank lines are cleared during formatting.
 	 * <p>
@@ -706,7 +706,7 @@ public class PreferenceConstants {
 	public static final String EDITOR_FOLDING_PHPDOC = "foldPHPDoc"; //$NON-NLS-1$
 	public static final String EDITOR_FOLDING_CLASSES = "foldClasses"; //$NON-NLS-1$
 	public static final String EDITOR_FOLDING_FUNCTIONS = "foldFunctions"; //$NON-NLS-1$
-//	public static final String EDITOR_FOLDING_INCLUDES = "foldIncludes"; //$NON-NLS-1$
+	//	public static final String EDITOR_FOLDING_INCLUDES = "foldIncludes"; //$NON-NLS-1$
 	/**
 	 * A named preference that controls whether folding is enabled in the PHP editor.
 	 * <p>
@@ -716,9 +716,9 @@ public class PreferenceConstants {
 	 * @since 3.1
 	 * @see IStructuredTextFoldingProvider#FOLDING_ENABLED
 	 */
-//	public static final String EDITOR_FOLDING_ENABLED= "editor_folding_enabled"; //$NON-NLS-1$
-	public static final String EDITOR_FOLDING_ENABLED= IStructuredTextFoldingProvider.FOLDING_ENABLED;
-	
+	//	public static final String EDITOR_FOLDING_ENABLED= "editor_folding_enabled"; //$NON-NLS-1$
+	public static final String EDITOR_FOLDING_ENABLED = IStructuredTextFoldingProvider.FOLDING_ENABLED;
+
 	/**
 	 * A named preference that stores the configured folding provider.
 	 * <p>
@@ -727,10 +727,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.1
 	 */
-	public static final String EDITOR_FOLDING_PROVIDER= "editor_folding_provider"; //$NON-NLS-1$
+	public static final String EDITOR_FOLDING_PROVIDER = "editor_folding_provider"; //$NON-NLS-1$
 
-	
-	
 	public static final String TYPING_AUTO_CLOSE_STRING = "typing_autoclose_string"; //$NON-NLS-1$
 
 	public static final String TYPING_AUTO_CLOSE_BRACKETS = "typing_autoclose_brackets"; //$NON-NLS-1$
@@ -745,17 +743,17 @@ public class PreferenceConstants {
 	 * The id of the best match hover contributed for extension point
 	 * <code>javaEditorTextHovers</code>.
 	 */
-	public static final String ID_BESTMATCH_HOVER= "org.eclipse.php.ui.editor.hover.BestMatchHover"; //$NON-NLS-1$
-	
+	public static final String ID_BESTMATCH_HOVER = "org.eclipse.php.ui.editor.hover.BestMatchHover"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that defines whether the hint to make hover sticky should be shown.
 	 */
-	public static final String EDITOR_SHOW_TEXT_HOVER_AFFORDANCE= "PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE"; //$NON-NLS-1$
-	
+	public static final String EDITOR_SHOW_TEXT_HOVER_AFFORDANCE = "PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that defines the key for the hover modifiers.
 	 */
-	public static final String EDITOR_TEXT_HOVER_MODIFIERS= "hoverModifiers"; //$NON-NLS-1$
+	public static final String EDITOR_TEXT_HOVER_MODIFIERS = "hoverModifiers"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that defines the key for the hover modifier state masks.
@@ -764,34 +762,32 @@ public class PreferenceConstants {
 	 * 
 	 * @see #EDITOR_TEXT_HOVER_MODIFIERS
 	 */
-	public static final String EDITOR_TEXT_HOVER_MODIFIER_MASKS= "hoverModifierMasks"; //$NON-NLS-1$
+	public static final String EDITOR_TEXT_HOVER_MODIFIER_MASKS = "hoverModifierMasks"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that defines the key for the default PHP Manual site.
 	 */
 	public static final String PHP_MANUAL_SITE = "phpManualSite";
-		
+
 	/**
 	 * A named preference that defines the key for the stored PHP Manual sites 
 	 */
 	public static final String PHP_MANUAL_SITES = "phpManualSites";
-	
+
 	public static final String PHP_MANUAL_OPEN_IN_NEW_BROWSER = "phpManualOpenInNewBrowser"; //$NON-NLS-1$
-	
+
 	/**
 	 * some constants for auto-ident Smart Tab
 	 */
 	public static final String TAB = "tab"; //$NON-NLS-1$
 	public static final String FORMATTER_TAB_CHAR = PHPUiPlugin.ID + ".smart_tab.char"; //$NON-NLS-1$
-	
+
 	public static IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
 
 	/**
 	 * Initializes the given preference store with the default values.
-	 *
-	 * @param store the preference store to be initialized
 	 */
 	public static void initializeDefaultValues() {
 		IPreferenceStore store = getPreferenceStore();
@@ -826,7 +822,7 @@ public class PreferenceConstants {
 		store.setDefault(TEMPLATES_USE_CODEFORMATTER, true);
 
 		// MembersOrderPreferencePage
-		store.setDefault(APPEARANCE_MEMBER_SORT_ORDER, "T,SV,SF,V,C,F"); //$NON-NLS-1$
+		store.setDefault(APPEARANCE_MEMBER_SORT_ORDER, "I,S,T,C,SV,SF,V,F"); //$NON-NLS-1$
 
 		store.setDefault(EDITOR_CORRECTION_INDICATION, true);
 		store.setDefault(EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE, true);
@@ -874,35 +870,34 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_PHPDOC_COLOR, EDITOR_PHPDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_TASK_COLOR, EDITOR_TASK_DEFAULT_COLOR);
 
-	
 		// PHP options
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION, PHPVersion.PHP5);
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_ROOT_CONTEXT, "");
-		
+
 		// Folding options
 		store.setDefault(EDITOR_FOLDING_ENABLED, false);
 		store.setDefault(EDITOR_FOLDING_PROVIDER, "org.eclipse.php.ui.defaultFoldingProvider"); //$NON-NLS-1$
 		store.setDefault(EDITOR_FOLDING_PHPDOC, true);
 		store.setDefault(EDITOR_FOLDING_CLASSES, false);
 		store.setDefault(EDITOR_FOLDING_FUNCTIONS, false);
-//		store.setDefault(EDITOR_FOLDING_INCLUDES, false);
+		//		store.setDefault(EDITOR_FOLDING_INCLUDES, false);
 		store.setDefault(TYPING_AUTO_CLOSE_STRING, true);
 		store.setDefault(TYPING_AUTO_CLOSE_BRACKETS, true);
 		store.setDefault(TYPING_AUTO_CLOSE_BRACES, true);
 
 		store.setDefault(NEW_PHP_FILE_TEMPLATE, "New simple PHP file"); //$NON-NLS-1$
-		
-		String mod1Name= Action.findModifierString(SWT.MOD1);	// SWT.COMMAND on Mac; SWT.CONTROL elsewhere
+
+		String mod1Name = Action.findModifierString(SWT.MOD1); // SWT.COMMAND on Mac; SWT.CONTROL elsewhere
 		store.setDefault(EDITOR_TEXT_HOVER_MODIFIERS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
 		store.setDefault(EDITOR_TEXT_HOVER_MODIFIER_MASKS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$
 		store.setDefault(EDITOR_SHOW_TEXT_HOVER_AFFORDANCE, true);
-		
+
 		store.setDefault(PHP_MANUAL_SITE, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE);
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
-		
+
 		// default locale
 		if ((store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE)).equals("")) {
-			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE,Locale.getDefault().toString());
+			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, Locale.getDefault().toString());
 			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
 		}
 	}
