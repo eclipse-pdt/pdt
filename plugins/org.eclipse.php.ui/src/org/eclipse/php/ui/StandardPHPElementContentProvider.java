@@ -29,6 +29,7 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 
@@ -62,7 +63,7 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 	public void setTreeProviders(IPHPTreeContentProvider[] providers) {
 		this.treeProviders = providers;
 	}
-	
+
 	protected Object[] getChildrenInternal(Object parentElement) {
 		if (!exists(parentElement))
 			return NO_CHILDREN;
@@ -99,6 +100,18 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 
 	private Object[] getFileChildren(PHPFileData fileData) {
 		ArrayList list = new ArrayList();
+		PHPIncludeFileData[] includes = fileData.getIncludeFiles();
+		if (includes != null) {
+			for (int i = 0; i < includes.length; i++) {
+				list.add(includes[i]);
+			}
+		}
+		PHPConstantData[] consts = fileData.getConstants();
+		if (consts != null) {
+			for (int i = 0; i < consts.length; i++) {
+				list.add(consts[i]);
+			}
+		}
 		PHPClassData[] classData = fileData.getClasses();
 		if (classData != null) {
 			for (int i = 0; i < classData.length; i++) {
@@ -109,12 +122,6 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		if (functions != null) {
 			for (int i = 0; i < functions.length; i++) {
 				list.add(functions[i]);
-			}
-		}
-		PHPConstantData[] consts = fileData.getConstants();
-		if (consts != null) {
-			for (int i = 0; i < consts.length; i++) {
-				list.add(consts[i]);
 			}
 		}
 		return list.toArray();
@@ -154,7 +161,7 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 
 		return areChildren;
 	}
-	
+
 	protected boolean hasChildrenInternal(Object element) {
 		if (getProvideMembers()) {
 			// assume CUs and class files are never empty
@@ -208,7 +215,7 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		if (element instanceof IResource) {
 			return ((IResource) element).exists();
 		}
-		
+
 		return true;
 	}
 
@@ -229,7 +236,7 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(model);
 		return getProjectChildren(project, filterNames);
 	}
-	
+
 	protected Object[] getProjectChildren(IProject project) {
 		String[] filterNames = {};
 		return getProjectChildren(project, filterNames);
@@ -276,11 +283,11 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 					folderList.add(member);
 				} else {
 					if (member instanceof IFile)
-					//						fileData = projectModel.getFileData(member.getFullPath().toString());
-					//					if (fileData != null)
-					//						fileList.add(fileData);
-					//					else
-					fileList.add(members[i]);
+						//						fileData = projectModel.getFileData(member.getFullPath().toString());
+						//					if (fileData != null)
+						//						fileList.add(fileData);
+						//					else
+						fileList.add(members[i]);
 				}
 			}
 			folderList.addAll(fileList);
@@ -299,7 +306,7 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 			return root.getParent();
 		return root;
 	}
-	
+
 	protected static Object[] concatenate(Object[] a1, Object[] a2) {
 		int a1Len = a1.length;
 		int a2Len = a2.length;
