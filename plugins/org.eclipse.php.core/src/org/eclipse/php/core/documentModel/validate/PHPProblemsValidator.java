@@ -121,14 +121,6 @@ public class PHPProblemsValidator {
 		}
 	}
 
-	public void removeFile(IFile phpFile) {
-		try {
-			TaskListUtility.removeAllTasks(phpFile, owners, phpFile.getFullPath().toString());
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
-	}
-
 	private int getPriority(String tagName, TaskTag[] tags, boolean caseSensitive) {
 		for (int i = 0; i < tags.length; i++) {
 			boolean tagFound;
