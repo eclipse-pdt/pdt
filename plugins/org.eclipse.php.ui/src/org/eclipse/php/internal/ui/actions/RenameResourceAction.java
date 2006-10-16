@@ -10,22 +10,21 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.explorer.ExplorerPart;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.internal.ViewSite;
-
+import org.eclipse.ui.views.navigator.ResourceNavigatorRenameAction;
 
 public class RenameResourceAction extends SelectionDispatchAction {
 
-	Tree tree;
+	TreeViewer treeViewer;
 
 	public RenameResourceAction(IWorkbenchSite site) {
 		super(site);
@@ -34,7 +33,7 @@ public class RenameResourceAction extends SelectionDispatchAction {
 			IWorkbenchPart part = viewSite.getPart();
 			if (part instanceof ExplorerPart) {
 				ExplorerPart explorer = (ExplorerPart) part;
-				tree = explorer.getViewer().getTree();
+				treeViewer = explorer.getViewer();
 			}
 		}
 	}
@@ -53,20 +52,12 @@ public class RenameResourceAction extends SelectionDispatchAction {
 			return;
 		if (!ActionUtils.isRenameAvailable(resource))
 			return;
-		if (ActionUtils.containsOnlyProjects(selection.toList()) || ActionUtils.containsOnly(selection.toList(), IFile.class)) {
-			createWorkbenchAction(selection).run();
-			return;
-		}
-		throw new RuntimeException("implement me-- rename model item within file");
-
+		createWorkbenchAction(selection).run();
 	}
 
-	private org.eclipse.ui.actions.RenameResourceAction createWorkbenchAction(IStructuredSelection selection) {
-		org.eclipse.ui.actions.RenameResourceAction action;
-		if (tree != null)
-			action = new org.eclipse.ui.actions.RenameResourceAction(getShell(), tree);
-		else
-			action = new org.eclipse.ui.actions.RenameResourceAction(getShell());
+	private ResourceNavigatorRenameAction createWorkbenchAction(IStructuredSelection selection) {
+		ResourceNavigatorRenameAction action;
+		action = new ResourceNavigatorRenameAction(getShell(), treeViewer);
 		action.selectionChanged(selection);
 		return action;
 	}
@@ -75,7 +66,7 @@ public class RenameResourceAction extends SelectionDispatchAction {
 		if (selection.size() != 1)
 			return null;
 		Object first = selection.getFirstElement();
-		if ((first instanceof PHPCodeData)&&!(first instanceof PHPFileData))
+		if ((first instanceof PHPCodeData) && !(first instanceof PHPFileData))
 			return null;
 		first = PHPModelUtil.getResource(first);
 		if (!(first instanceof IResource))
