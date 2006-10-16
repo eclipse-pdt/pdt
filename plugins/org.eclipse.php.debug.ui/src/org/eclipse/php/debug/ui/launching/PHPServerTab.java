@@ -116,7 +116,7 @@ public class PHPServerTab extends ServerTab {
 			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 			IResource resource = workspaceRoot.findMember(fileName);
 			if (resource == null) {
-				super.initializeURLControl(contextRoot, fileName);
+				fURL.setText(super.computeURL(contextRoot, fileName));
 				return;
 			}
 			IProject project = resource.getProject();
@@ -140,7 +140,7 @@ public class PHPServerTab extends ServerTab {
 
 			fURL.setText(url.toString());
 		} else {
-			super.initializeURLControl(contextRoot, fileName);
+			fURL.setText(super.computeURL(contextRoot, fileName));
 		}
 
 	}
