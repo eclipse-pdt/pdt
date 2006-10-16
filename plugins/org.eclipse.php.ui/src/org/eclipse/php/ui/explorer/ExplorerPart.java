@@ -31,7 +31,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -57,10 +56,6 @@ import org.eclipse.php.internal.ui.editor.LinkingSelectionListener;
 import org.eclipse.php.internal.ui.util.MultiElementSelection;
 import org.eclipse.php.internal.ui.util.TreePath;
 import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.dnd.DelegatingDropAdapter;
-import org.eclipse.php.ui.dnd.PHPViewerDragAdapter;
-import org.eclipse.php.ui.dnd.ResourceTransferDragAdapter;
-import org.eclipse.php.ui.dnd.TransferDropTargetListener;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.php.ui.treecontent.TreeProvider;
@@ -86,7 +81,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
@@ -396,6 +390,12 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		if (fWorkingSetModel != null)
 			fActionSet.getWorkingSetActionGroup().setWorkingSetModel(fWorkingSetModel);
 
+		if (memento != null) {
+			IMemento wsMemento = memento.getChild(MEMENTO_WORKING_SET);
+			if (wsMemento != null)
+				fActionSet.restoreFilterAndSorterState(memento.getChild(MEMENTO_WORKING_SET));
+		}
+
 		fViewer.setInput(findInputElement());
 
 		initKeyListener();
@@ -465,7 +465,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		//                dragDetected = true;
 		//            }
 		//        };
-//		viewer.getControl().addListener(SWT.DragDetect, dragDetectListener);
+		//		viewer.getControl().addListener(SWT.DragDetect, dragDetectListener);
 	}
 
 	private void initKeyListener() {
@@ -814,6 +814,8 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		return fRootMode;
 	}
 
+	IMemento memento;
+
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		if (memento != null) {
@@ -825,6 +827,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		if (showWorkingSets()) {
 			createWorkingSetModel(memento.getChild(MEMENTO_WORKING_SET));
 		}
+		this.memento = memento;
 	}
 
 	/* (non-Javadoc)
@@ -837,7 +840,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 			if (fWorkingSetModel != null) {
 				fWorkingSetModel.saveState(wsMemento);
 			}
-
+			fActionSet.saveFilterAndSorterState(wsMemento);
 		}
 		super.saveState(memento);
 	}

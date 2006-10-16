@@ -153,8 +153,9 @@ public class WorkingSetFilterActionGroup extends ActionGroup implements IWorking
 	 */
 	public void saveState(IMemento memento) {
 		String workingSetName = ""; //$NON-NLS-1$
-		if (fWorkingSet != null)
+		if (fWorkingSet != null) {
 			workingSetName = fWorkingSet.getName();
+		}
 		memento.putString(TAG_WORKING_SET_NAME, workingSetName);
 	}
 

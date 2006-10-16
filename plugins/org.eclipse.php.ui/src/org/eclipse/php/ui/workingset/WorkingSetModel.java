@@ -380,7 +380,9 @@ public class WorkingSetModel {
 			fConfigured = Boolean.valueOf(configured).booleanValue();
 		fLocalWorkingSetManager = PlatformUI.getWorkbench().createLocalWorkingSetManager();
 		addListenersToWorkingSetManagers();
-		fLocalWorkingSetManager.restoreState(memento.getChild(TAG_LOCAL_WORKING_SET_MANAGER));
+		IMemento managerMemento = memento.getChild(TAG_LOCAL_WORKING_SET_MANAGER);
+		if (managerMemento != null)
+			fLocalWorkingSetManager.restoreState(managerMemento);
 		IWorkingSet history = getHistoryWorkingSet();
 		if (history != null) {
 			fLocalWorkingSetManager.removeWorkingSet(history);
