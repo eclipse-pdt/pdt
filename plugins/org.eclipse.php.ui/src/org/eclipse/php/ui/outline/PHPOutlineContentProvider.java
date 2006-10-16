@@ -26,19 +26,19 @@ import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
 import org.eclipse.php.ui.treecontent.PHPTreeNode;
 import org.eclipse.php.ui.util.PHPPluginImages;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 
 public class PHPOutlineContentProvider extends JFaceNodeContentProvider implements ModelListener {
-
-	public PHPOutlineContentProvider() {
-		super();
-		PHPWorkspaceModelManager.getInstance().addModelListener(this);
-	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -75,7 +75,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	public void fileDataAdded(final PHPFileData fileData) {
 		if (editorModel != null && editorModel.getFileData() != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName()))
 			postRefresh(true);
-	}
+		}
 
 	/** (non-Javadoc)
 	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataChanged(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
@@ -89,7 +89,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 					groupNodes[i].reset(fileData);
 					postRefresh(groupNodes[i], true);
 				}
-	}
+		}
 
 	/** (non-Javadoc)
 	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataRemoved(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
@@ -111,8 +111,8 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 				else
 					viewer.refresh(element, updateLabels);
 				if (element instanceof PHPEditorModel) {
-					viewer.expandAll();
-				}
+				viewer.expandAll();
+			}
 			}
 		};
 		final Control control = viewer.getControl();
@@ -211,8 +211,8 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 				}
 			if (children == null)
 				children = new Object[0];
+			}
 		}
-	}
 	// this class intension is to get the selection event from the editor and then make sure the 
 	// selected elements have the IJFaceNodeAdapter as adapter - this adapter is responsible to refresh the outlineView 
 	private class PostSelectionServiceListener implements ISelectionListener {
@@ -259,9 +259,14 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 
 	TreeViewer viewer;
 
-	public PHPOutlineContentProvider(final TreeViewer viewer) {
+	private PHPOutlineLabelProvider labelProvider;
+	
+	public PHPOutlineContentProvider(final TreeViewer viewer, PHPOutlineLabelProvider labelProvider) {
 		super();
+
 		this.viewer = viewer;
+		this.labelProvider = labelProvider;
+
 		mode = PHPUiPlugin.getDefault().getPreferenceStore().getInt(ChangeOutlineModeAction.PREF_OUTLINEMODE);
 		if (mode == 0) {
 			mode = MODE_PHP;
@@ -271,6 +276,23 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 		showGroups = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(ShowGroupsAction.PREF_SHOW_GROUPS);
 
 		PHPUiPlugin.getActiveWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionServiceListener());
+
+		registerMouseTrackListener();
+	}
+
+	private void registerMouseTrackListener() {
+		final Tree tree = viewer.getTree();
+		tree.addMouseTrackListener(new MouseTrackAdapter() {
+			public void mouseHover(final MouseEvent e) {
+				final TreeItem item = tree.getItem(new Point(e.x, e.y));
+				if (item != null) {
+					final Object o = item.getData();
+					if (o instanceof PHPCodeData)
+						tree.setToolTipText(labelProvider.getTooltipText(o));
+				}
+			}
+
+		});
 
 	}
 
@@ -309,7 +331,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 			if (groupNodes != null)
 				return groupNodes;
 			return getElements(fileData);
-		}
+			}
 		return super.getElements(object);
 	}
 

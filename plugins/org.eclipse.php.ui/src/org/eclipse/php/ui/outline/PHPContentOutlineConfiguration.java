@@ -75,7 +75,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	public IContentProvider getContentProvider(final TreeViewer viewer) {
 		if (fContentProvider == null) {
 			viewer.setComparer(new PHPOutlineElementComparer());
-			fContentProvider = new PHPOutlineContentProvider(viewer);
+			fContentProvider = new PHPOutlineContentProvider(viewer, (PHPOutlineLabelProvider)getLabelProvider(viewer));
 			fContentProvider.phpContentProvider.setTreeProviders(getTreeProviders());
 		}
 		return fContentProvider;

@@ -13,6 +13,7 @@ package org.eclipse.php.ui.outline;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.ui.outline.PHPOutlineContentProvider.GroupNode;
 import org.eclipse.php.ui.treecontent.PHPTreeNode;
+import org.eclipse.php.ui.util.PHPElementLabels;
 import org.eclipse.php.ui.util.PHPUILabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -42,5 +43,9 @@ public class PHPOutlineLabelProvider extends JFaceNodeLabelProvider {
 
 		return super.getText(element);
 
+	}
+
+	public String getTooltipText(Object element) {
+		return PHPElementLabels.getTooltipTextLabel(element);
 	}
 }
