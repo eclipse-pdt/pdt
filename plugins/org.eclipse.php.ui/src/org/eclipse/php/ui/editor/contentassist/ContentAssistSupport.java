@@ -663,15 +663,16 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] functions = null;
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			functions = projectModel.getClassFunctions(fileName, className, "");
-			String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
-			boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
-			if (isPHP5) {
-				functions = ModelSupport.getFilteredCodeData(functions, ModelSupport.STATIC_FUNCTIONS_FILTER);
-			}
+//			Do not remove the following comments - supposed to ne used with "Strict" checkbox
+//			String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
+//			boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
+//			if (isPHP5) {
+//				functions = ModelSupport.getFilteredCodeData(functions, ModelSupport.STATIC_FUNCTIONS_FILTER);
+//			}
 		}
 		CodeData[] classVariables = null;
 		if (explicit || autoShowVariables) {
-			classVariables = ModelSupport.merge(ModelSupport.getFilteredCodeData(projectModel.getClassVariables(fileName, className, ""), ModelSupport.STATIC_VARIABLES_FILTER), projectModel.getClassConsts(fileName, className, ""));
+			classVariables = ModelSupport.merge(projectModel.getClassVariables(fileName, className, ""), projectModel.getClassConsts(fileName, className, ""));
 		}
 		CodeData[] result = ModelSupport.getFilteredCodeData(ModelSupport.merge(functions, classVariables), getAccessLevelFilter(projectModel, fileName, className, offset, false));
 		completionProposalGroup = classStaticCallCompletionProposalGroup;
@@ -721,15 +722,22 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (contextClassName.equals(className)) {
 			return ModelSupport.PIRVATE_ACCESS_LEVEL_FILTER;
 		}
-		// if we are out side of a class or this is an instance of a class and not $this
-		if (contextClassName.equals("") || isInstanceOf) {
+		
+//		if this is an instance of a class and not $this
+		if (isInstanceOf) {
 			return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER;
 		}
+		
+		// if we are out side of a class 
+		if (contextClassName.equals("")) {
+			return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC;
+		}
+		
 		PHPClassData classData = projectModel.getClass(fileName, contextClassName);
 		String superClassName = classData.getSuperClassData().getName();
 		while (superClassName != null) {
 			if (superClassName.equals(className)) {
-				return ModelSupport.PROTECTED_ACCESS_LEVEL_FILTER;
+				return ModelSupport.PROTECTED_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC;//exclude non static vars !!!
 			}
 			classData = projectModel.getClass(fileName, superClassName);
 			if (classData == null) {
@@ -737,6 +745,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			}
 			superClassName = classData.getSuperClassData().getName();
 		}
+		
+		//inside a class with no inheritence
+		if (superClassName == null && !contextClassName.equals("")){
+			return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC; 
+		}
+		
 		return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER;
 	}
 

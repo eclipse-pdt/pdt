@@ -50,6 +50,41 @@ public class ModelSupport {
 			return (!PHPModifier.isPrivate(modifier) && !PHPModifier.isProtected(modifier));
 		}
 	};
+	
+	public static final CodeDataFilter PROTECTED_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC = new AccessLevelFilter() {
+		//implements stub with no usage
+		public boolean verify(int modifier) {
+			return true;
+		}
+		
+		public boolean accept(CodeData codeData) {
+			if (codeData instanceof PHPClassVarData) {
+				return PROTECTED_ACCESS_LEVEL_FILTER.accept(codeData) && STATIC_VARIABLES_FILTER.accept(codeData);
+			}
+			if (codeData instanceof PHPFunctionData){
+				return PROTECTED_ACCESS_LEVEL_FILTER.accept(codeData);
+			}
+				
+			return true;
+		}
+	};
+	
+	public static final CodeDataFilter PUBLIC_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC = new AccessLevelFilter() {
+		//implements the stub with no usage
+		public boolean verify(int modifier) {
+			return true;
+		}
+		
+		public boolean accept(CodeData codeData) {
+			if (codeData instanceof PHPClassVarData) {
+				return PUBLIC_ACCESS_LEVEL_FILTER.accept(codeData) && STATIC_VARIABLES_FILTER.accept(codeData);
+			}
+			if (codeData instanceof PHPFunctionData) {
+				return PUBLIC_ACCESS_LEVEL_FILTER.accept(codeData);
+			}
+			return true;
+		}
+	};
 
 	private static final int SMALL_ARRAY_SIZE = 12;
 
@@ -566,6 +601,7 @@ public class ModelSupport {
 		}
 
 	}
+	
 
 	private static class StaticFunctionsFilter implements CodeDataFilter {
 
