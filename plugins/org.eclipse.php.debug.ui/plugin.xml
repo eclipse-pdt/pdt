@@ -383,8 +383,13 @@
           class="org.eclipse.php.debug.ui.launching.PHPServerTab"
           id="org.eclipse.php.debug.ui.launching.PHPServerTab"
           />
+        <serverTab
+          class="org.eclipse.php.debug.ui.launching.PHPServerAdvancedTab"
+          id="org.eclipse.php.debug.ui.launching.PHPServerAdvancedTab"
+          placeAfter="org.eclipse.php.debug.ui.launching.PHPServerTab"
+          />
    </extension>
-      
+   
 <!-- Editor -->
    <extension
          point="org.eclipse.ui.editors">

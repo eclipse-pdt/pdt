@@ -20,6 +20,8 @@ public abstract class AbstractDebugParametersInitializer implements IDebugParame
 	public static final String DEBUG_SESSION_ID = "debug_session_id="; //$NON-NLS-1$
 	public static final String DEBUG_FIRST_PAGE = "debug_new_session="; //$NON-NLS-1$
 	public static final String DEBUG_ALL_PAGES = "debug_start_session="; //$NON-NLS-1$
+	public static final String DEBUG_START_URL = "debug_start_url="; //$NON-NLS-1$
+	public static final String DEBUG_CONTINUE = "debug_cont_session="; //$NON-NLS-1$
 
 	private String id = null;
 

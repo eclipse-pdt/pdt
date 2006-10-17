@@ -64,6 +64,7 @@ public interface IPHPConstants {
 	public static final String DEBUGGING_PAGES = "debugPages"; //$NON-NLS-1$
 	public static final String DEBUGGING_ALL_PAGES = "debugAllPages"; //$NON-NLS-1$
 	public static final String DEBUGGING_FIRST_PAGE = "debugFirstPage"; //$NON-NLS-1$
-	
-
+	public static final String DEBUGGING_START_FROM = "debugFrom"; //$NON-NLS-1$
+	public static final String DEBUGGING_SHOULD_CONTINUE = "debugFromURL"; //$NON-NLS-1$
+	public static final String DEBUGGING_START_FROM_URL = "debugContinue"; //$NON-NLS-1$
 }

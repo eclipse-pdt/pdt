@@ -12,10 +12,13 @@ package org.eclipse.php.debug.core.debugger.parameters;
 
 import java.util.Hashtable;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.core.util.HostsCollector;
 import org.eclipse.php.debug.core.IPHPConstants;
+import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.RemoteDebugger;
 
@@ -30,14 +33,14 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 	public Hashtable generateQueryParameters(ILaunch launch) {
 		Hashtable parameters = new Hashtable();
 		parameters.put(START_DEBUG, "1");
-		
+
 		Object port = launch.getAttribute(IDebugParametersKeys.PORT);
 		if (port != null) {
 			parameters.put(DEBUG_PORT, port);
 		} else {
 			PHPDebugPlugin.logErrorMessage("A port was not defined for the DefaultDebugParametersInitializer.");
 		}
-		
+
 		if (getBooleanValue(launch.getAttribute(IDebugParametersKeys.PASSIVE_DEBUG))) {
 			parameters.put(DEBUG_PASSIVE, "1");
 		}
@@ -59,18 +62,29 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		if (url != null) {
 			parameters.put(ORIGINAL_URL, url);
 		}
-		String sessionSetting = launch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
-		if (IPHPConstants.DEBUGGING_ALL_PAGES.equals(sessionSetting)) {
-			parameters.put(DEBUG_ALL_PAGES, "1");
-		} else if (IPHPConstants.DEBUGGING_FIRST_PAGE.equals(sessionSetting)) {
-			parameters.put(DEBUG_FIRST_PAGE, "1");
+		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
+		if (launchConfiguration != null) {
+			try {
+				String sessionSetting = launchConfiguration.getAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES);
+				if (IPHPConstants.DEBUGGING_ALL_PAGES.equals(sessionSetting)) {
+					parameters.put(DEBUG_ALL_PAGES, "1");
+				} else if (IPHPConstants.DEBUGGING_FIRST_PAGE.equals(sessionSetting)) {
+					parameters.put(DEBUG_FIRST_PAGE, "1");
+				} else if (IPHPConstants.DEBUGGING_START_FROM.equals(sessionSetting)) {
+					parameters.put(DEBUG_START_URL, launchConfiguration.getAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, ""));
+					if (launchConfiguration.getAttribute(IPHPConstants.DEBUGGING_SHOULD_CONTINUE, false)) {
+						parameters.put(DEBUG_CONTINUE, "1");
+					}
+				}
+			} catch (CoreException ce) {
+				Logger.logException(ce);
+			}
 		}
-			
 		String sessID = launch.getAttribute(IDebugParametersKeys.SESSION_ID);
 		if (sessID != null) {
 			parameters.put(DEBUG_SESSION_ID, sessID);
 		}
-		
+
 		return parameters;
 	}
 
