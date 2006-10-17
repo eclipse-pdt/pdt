@@ -46,8 +46,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	private Button resetBt;
 	private Text debugFromTxt;
 	protected WidgetListener listener;
-	
-	private ILaunchConfiguration launchConfiguration;
+	protected ILaunchConfiguration launchConfiguration;
 
 	/**
 	 * Constructor
