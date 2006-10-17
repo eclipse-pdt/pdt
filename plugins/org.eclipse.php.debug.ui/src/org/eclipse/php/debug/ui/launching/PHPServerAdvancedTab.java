@@ -20,6 +20,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.php.debug.core.IPHPConstants;
+import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.swt.SWT;
@@ -44,6 +45,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	private Button debugContinueBt;
 	private Button resetBt;
 	private Text debugFromTxt;
+	protected Button openBrowser;
+	protected boolean isOpenInBrowser;
 	protected Button overrideBreakpiontSettings;
 	protected Button breakOnFirstLine;
 	protected WidgetListener listener;
@@ -90,15 +93,40 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		group.setText("Session Settings");
 
-		debugAllPagesBt = createRadioButton(group, "Debug &All Pages");
-		GridData data = (GridData) debugAllPagesBt.getLayoutData();
+		// Add the 'Open in Browser' checkbox.
+		openBrowser = new Button(group, SWT.CHECK);
+		openBrowser.setText("Open in Browser");
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 3;
+		openBrowser.setLayoutData(data);
+		openBrowser.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent se) {
+				Button b = (Button) se.getSource();
+				isOpenInBrowser = b.getSelection();
+				if (!isOpenInBrowser) {
+					debugFirstPageBt.setSelection(true);
+					debugAllPagesBt.setSelection(false);
+					debugStartFromBt.setSelection(false);
+					debugContinueBt.setSelection(false);
+				}
+				enableSessionSettingButtons(isOpenInBrowser);
+				updateLaunchConfigurationDialog();
+			}
+		});
+
+		debugAllPagesBt = createRadioButton(group, "Debug &All Pages");
+		data = (GridData) debugAllPagesBt.getLayoutData();
+		data.horizontalSpan = 3;
+		data.horizontalIndent = 20;
 
 		debugFirstPageBt = createRadioButton(group, "Debug &First Page Only");
 		data = (GridData) debugFirstPageBt.getLayoutData();
 		data.horizontalSpan = 3;
+		data.horizontalIndent = 20;
 
 		debugStartFromBt = createRadioButton(group, "&Start Debug from:");
+		data = (GridData) debugStartFromBt.getLayoutData();
+		data.horizontalIndent = 20;
 
 		debugFromTxt = new Text(group, SWT.SINGLE | SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -119,7 +147,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		debugContinueBt = createCheckButton(group, "&Continue Debug from This Page");
 		data = (GridData) debugContinueBt.getLayoutData();
 		data.horizontalSpan = 3;
-		data.horizontalIndent = 20;
+		data.horizontalIndent = 40;
 
 		// Add listeners
 		debugStartFromBt.addSelectionListener(new SelectionAdapter() {
@@ -136,6 +164,18 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		debugContinueBt.addSelectionListener(listener);
 		debugStartFromBt.addSelectionListener(listener);
 		debugFromTxt.addModifyListener(listener);
+	}
+
+	private void enableSessionSettingButtons(boolean isOpenInBrowser) {
+		// also check for debug mode.
+		String mode = getLaunchConfigurationDialog().getMode();
+		isOpenInBrowser = isOpenInBrowser && ILaunchManager.DEBUG_MODE.equals(mode);
+		debugFirstPageBt.setEnabled(isOpenInBrowser);
+		debugAllPagesBt.setEnabled(isOpenInBrowser);
+		debugStartFromBt.setEnabled(isOpenInBrowser);
+		debugContinueBt.setEnabled(false);
+		resetBt.setEnabled(false);
+		debugFromTxt.setEnabled(false);
 	}
 
 	/**
@@ -162,6 +202,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		launchConfiguration = configuration;
 		try {
+			isOpenInBrowser = configuration.getAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
+			openBrowser.setSelection(isOpenInBrowser);
 			String debugSetting = configuration.getAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES);
 			if (IPHPConstants.DEBUGGING_ALL_PAGES.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(false);
@@ -189,15 +231,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			}
 			updateDebugFrom();
 
-			// Disables/Enables all the controls according the the debug mode.
-			String mode = getLaunchConfigurationDialog().getMode();
-			boolean isDebugMode = ILaunchManager.DEBUG_MODE.equals(mode);
-			debugFirstPageBt.setEnabled(isDebugMode);
-			debugAllPagesBt.setEnabled(isDebugMode);
-			debugStartFromBt.setEnabled(isDebugMode);
-			debugContinueBt.setEnabled(isDebugMode);
-			resetBt.setEnabled(isDebugMode);
-			debugFromTxt.setEnabled(isDebugMode);
+			enableSessionSettingButtons(isOpenInBrowser);
 		} catch (CoreException e) {
 		}
 		isValid(configuration);
@@ -209,21 +243,24 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		launchConfiguration = configuration;
-
-		if (debugAllPagesBt.getSelection()) {
-			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES);
-			configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, true);
-		} else if (debugFirstPageBt.getSelection()) {
-			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_FIRST_PAGE);
+		configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, isOpenInBrowser);
+		if (isOpenInBrowser) {
+			if (debugAllPagesBt.getSelection()) {
+				configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES);
+			} else if (debugFirstPageBt.getSelection()) {
+				configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_FIRST_PAGE);
+			} else {
+				configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_START_FROM);
+				configuration.setAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
+				configuration.setAttribute(IPHPConstants.DEBUGGING_SHOULD_CONTINUE, debugContinueBt.getSelection());
+			}
+			if (overrideBreakpiontSettings != null) {
+				configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
+				configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
+			}
 		} else {
-			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_START_FROM);
-			configuration.setAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
-			configuration.setAttribute(IPHPConstants.DEBUGGING_SHOULD_CONTINUE, debugContinueBt.getSelection());
-			configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, true);
-		}
-		if (overrideBreakpiontSettings != null) {
-			configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
-			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
+			// Allow only debug-first-page
+			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_FIRST_PAGE);
 		}
 		applyExtension(configuration);
 	}
