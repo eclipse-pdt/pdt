@@ -16,18 +16,12 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
-import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.php.server.ui.ServerTab;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 
 /**
  * PHP server tab that is displayed in the Run/Debug launch configuration tabs.
@@ -41,48 +35,10 @@ public class PHPServerTab extends ServerTab {
 	}
 
 	public void createExtensionControls(Composite parent) {
-		createBreakControl(parent);
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
-		layout.numColumns = 1;
-		composite.setLayout(layout);
-		composite.setLayoutData(data);
-	}
-
-	// In case this is a debug mode, display checkboxes to override the 'Break on first line' attribute.
-	protected void createBreakControl(Composite parent) {
-		String mode = getLaunchConfigurationDialog().getMode();
-		if (ILaunchManager.DEBUG_MODE.equals(mode)) {
-			Group group = new Group(parent, SWT.NONE);
-			group.setText("Breakpoint");
-			GridLayout layout = new GridLayout();
-			layout.numColumns = 1;
-			GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-			group.setLayout(layout);
-			group.setLayoutData(gridData);
-
-			overrideBreakpiontSettings = createCheckButton(group, "Override project/workspace 'Break at First Line' setting");
-			breakOnFirstLine = createCheckButton(group, "Break at First Line");
-			GridData data = (GridData) breakOnFirstLine.getLayoutData();
-			data.horizontalIndent = 20;
-
-			overrideBreakpiontSettings.addSelectionListener(fListener);
-			breakOnFirstLine.addSelectionListener(fListener);
-		}
 	}
 
 	protected void initializeExtensionControls(ILaunchConfiguration configuration) {
 		try {
-			if (overrideBreakpiontSettings != null) {
-				// init the breakpoint settings
-				boolean isOverrideBreakpointSetting = configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
-				overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
-				breakOnFirstLine.setEnabled(isOverrideBreakpointSetting);
-				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
-			}
 			isOpenInBrowser = configuration.getAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
 			openBrowser.setSelection(isOpenInBrowser);
 		} catch (Exception e) {
@@ -91,10 +47,6 @@ public class PHPServerTab extends ServerTab {
 	}
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
-		if (overrideBreakpiontSettings != null) {
-			configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
-			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
-		}
 		configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, isOpenInBrowser);
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true); // Always run with debug info
 	}
