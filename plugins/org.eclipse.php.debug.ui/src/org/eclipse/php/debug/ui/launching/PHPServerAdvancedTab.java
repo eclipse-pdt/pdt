@@ -188,7 +188,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
 			}
 			updateDebugFrom();
-			
+
 			// Disables/Enables all the controls according the the debug mode.
 			String mode = getLaunchConfigurationDialog().getMode();
 			boolean isDebugMode = ILaunchManager.DEBUG_MODE.equals(mode);
@@ -212,12 +212,14 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 		if (debugAllPagesBt.getSelection()) {
 			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES);
+			configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, true);
 		} else if (debugFirstPageBt.getSelection()) {
 			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_FIRST_PAGE);
 		} else {
 			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_START_FROM);
 			configuration.setAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
 			configuration.setAttribute(IPHPConstants.DEBUGGING_SHOULD_CONTINUE, debugContinueBt.getSelection());
+			configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, true);
 		}
 		if (overrideBreakpiontSettings != null) {
 			configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
@@ -286,7 +288,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 		overrideBreakpiontSettings.addSelectionListener(listener);
 		breakOnFirstLine.addSelectionListener(listener);
-		
+
 		// Disables/Enables all the controls according the the debug mode.
 		String mode = getLaunchConfigurationDialog().getMode();
 		boolean isDebugMode = ILaunchManager.DEBUG_MODE.equals(mode);
