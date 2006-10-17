@@ -65,7 +65,24 @@ public class ServerLaunchTabsRegistry {
 					// when the user-class calls for getLaunchTabs().
 					factories.add(0, new TabFactory(element, id, placeAfter));
 				} else {
-					factories.add(new TabFactory(element, id, placeAfter));
+					boolean override = false;
+					for (int j = 0; !override && j < factories.size(); j++) {
+						// Check for overriding id's.
+						// Override as needed when the element namespace identifier is from 
+						// an external plugin. The procedure will take the first overidden id.
+						TabFactory factory = (TabFactory)factories.get(j);
+						if (id.equals(factory.id)) {
+							override = true;
+							if (!element.getNamespaceIdentifier().startsWith("org.eclipse.php.")) {  //$NON-NLS-1$
+								factories.remove(j);
+								factories.add(new TabFactory(element, id, placeAfter));
+								break;
+							}
+						}
+					}
+					if (!override) {
+						factories.add(new TabFactory(element, id, placeAfter));
+					}
 				}
 			}
 		}
