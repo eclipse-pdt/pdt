@@ -453,7 +453,8 @@ public class DebugConnectionThread implements Runnable {
 			ILaunch[] launchs = DebugPlugin.getDefault().getLaunchManager().getLaunches();
 			for (int i = 0; i < launchs.length; i++) {
 				ILaunch aLaunch = launchs[i];
-				if (aLaunch.isTerminated() && IPHPConstants.DEBUGGING_ALL_PAGES.equals(aLaunch.getAttribute(IPHPConstants.DEBUGGING_PAGES))) {
+				String debugType = aLaunch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
+				if (aLaunch.isTerminated() && (IPHPConstants.DEBUGGING_ALL_PAGES.equals(debugType) || IPHPConstants.DEBUGGING_START_FROM.equals(debugType))) {
 					launch = aLaunch;
 					break;
 				}

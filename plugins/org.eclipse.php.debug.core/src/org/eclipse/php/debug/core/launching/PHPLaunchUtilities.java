@@ -100,30 +100,40 @@ public class PHPLaunchUtilities {
 		newLaunch.setAttribute(IPHPConstants.DEBUGGING_PAGES, newLaunchConfiguration.getAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES));
 		checkAutoRemoveLaunches();
 		ILaunch[] launches = DebugPlugin.getDefault().getLaunchManager().getLaunches();
-		boolean hasDebugAllLaunch = false;
-		// check for a launch that has a 'debug all pages' attribute
-		for (int i = 0; !hasDebugAllLaunch && i < launches.length; i++) {
+		boolean hasContiniousLaunch = false;
+		// check for a launch that has a 'debug all pages' or 'start debug from' attribute
+		for (int i = 0; !hasContiniousLaunch && i < launches.length; i++) {
 			ILaunch launch = launches[i];
-			if (launch != newLaunch) {
-				if (isDebugAllPages(launch)) {
-					hasDebugAllLaunch = true;
+			if (launch != newLaunch && ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode())) {
+				if (isDebugAllPages(launch) || isStartDebugFrom(launch)) {
+					hasContiniousLaunch = true;
 				}
 			}
 		}
 		// Check if the new launch is 'debug all pages'
-		final boolean newIsDebugAllPages = isDebugAllPages(newLaunch);
-		final boolean fHasDebugAllLaunch = hasDebugAllLaunch;
 
-		if ((fHasDebugAllLaunch || newIsDebugAllPages) && launches.length > 1) {
+		boolean newLaunchIsDebug = ILaunchManager.DEBUG_MODE.equals(newLaunch.getLaunchMode());
+		final boolean newIsDebugAllPages = newLaunchIsDebug && isDebugAllPages(newLaunch);
+		final boolean newIsStartDebugFrom = newLaunchIsDebug && isStartDebugFrom(newLaunch);
+		final boolean fHasContiniousLaunch = hasContiniousLaunch;
+
+		if ((fHasContiniousLaunch || newIsDebugAllPages || newIsStartDebugFrom) && launches.length > 1) {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					// TODO - Advanced message dialog with 'don't show this again' check.
-					if (fHasDebugAllLaunch) {
-						confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), "Launch Confirmation",
-							"A previous launch with 'Debug All Pages' attribute was identifed.\nLaunching a new session will terminate and remove the old launch, directing all future debug requests associated with it to the new launch.\nDo you wish to continue and launch a new session?");
+					if (fHasContiniousLaunch) {
+						confirm = MessageDialog
+							.openConfirm(Display.getDefault().getActiveShell(), "Launch Confirmation",
+								"A previous launch with 'Debug All Pages' or 'Start Debug From' attribute was identifed.\nLaunching a new session will terminate and remove the old launch, directing all future debug requests associated with it to the new launch.\nDo you wish to continue and launch a new session?");
 					} else {
-						confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), "Launch Confirmation",
-							"The requested launch has a 'Debug All Pages' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?");
+						if (newIsDebugAllPages) {
+							confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), "Launch Confirmation",
+								"The requested launch has a 'Debug All Pages' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?");
+						} else {
+							// newIsStartDebugFrom == true
+							confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), "Launch Confirmation",
+								"The requested launch has a 'Start Debug From' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?");
+						}
 					}
 					if (confirm) {
 						// disable the auto remove launches for the next launch
@@ -138,7 +148,7 @@ public class PHPLaunchUtilities {
 			});
 			return confirm;
 		} else {
-			if (newIsDebugAllPages) {
+			if (newIsDebugAllPages || newIsStartDebugFrom) {
 				PHPDebugPlugin.setDisableAutoRemoveLaunches(true);
 			} else {
 				// There are no other launches AND the new launch doesn't have a debug-all-pages.
@@ -167,6 +177,18 @@ public class PHPLaunchUtilities {
 	public static boolean isDebugAllPages(ILaunch launch) throws CoreException {
 		String attribute = launch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
 		return attribute != null && attribute.equals(IPHPConstants.DEBUGGING_ALL_PAGES);
+	}
+
+	/**
+	 * Returns if the given launch configuration holds an attribute for 'start debug from'.
+	 * 
+	 * @param launchConfiguration An {@link ILaunchConfiguration}
+	 * @return True, if the configuration holds an attribute for 'start debug from'.
+	 * @throws CoreException 
+	 */
+	public static boolean isStartDebugFrom(ILaunch launch) throws CoreException {
+		String attribute = launch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
+		return attribute != null && attribute.equals(IPHPConstants.DEBUGGING_START_FROM);
 	}
 
 	// terminate and remove all the existing launches accept for the given new launch.
