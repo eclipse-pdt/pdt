@@ -1,0 +1,196 @@
+<project name="Build specific targets and properties" default="noDefault">
+
+	<!-- ===================================================================== -->
+	<!-- Run a given ${target} on all elements being built -->
+	<!-- Add on <ant> task for each top level element being built. -->
+	<!-- ===================================================================== -->
+	<target name="allElements">
+
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.php_feature" />
+		</ant>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Check out map files from correct repository -->
+	<!-- Replace values for mapsCheckoutTag as desired. -->
+	<!-- ===================================================================== -->
+	<target name="getMapFiles" depends="checkLocalMaps" unless="skipMaps">
+		<property name="mapsCheckoutTag" value="HEAD" />
+		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mapsCheckoutTag}" />
+	</target>
+
+	<target name="checkLocalMaps">
+		<available property="skipMaps" file="${buildDirectory}/maps" />
+	</target>
+
+	<target name="tagMapFiles" if="tagMaps">
+		<cvs dest="${buildDirectory}/maps/${mapsRoot}" command="tag ${mapsTagTag}" />
+	</target>
+
+	<!-- ===================================================================== -->
+
+	<target name="clean" unless="noclean">
+		<antcall target="allElements">
+			<param name="target" value="cleanElement" />
+		</antcall>
+	</target>
+
+	<target name="gatherLogs">
+		<mkdir dir="${buildDirectory}/${buildLabel}/compilelogs" />
+		<antcall target="allElements">
+			<param name="target" value="gatherLogs" />
+		</antcall>
+		<unzip dest="${buildDirectory}/${buildLabel}/compilelogs" overwrite="true">
+			<fileset dir="${buildDirectory}/features">
+				<include name="**/*.log.zip" />
+			</fileset>
+		</unzip>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before setup -->
+	<!-- ===================================================================== -->
+	<target name="preSetup">
+		<mkdir dir="${buildDirectory}/${buildLabel}" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after setup but before starting the build proper -->
+	<!-- ===================================================================== -->
+	<target name="postSetup">
+		<available file="${buildDirectory}/plugins/org.eclipse.platform/plugin.xml" property="baseExists" />
+		<antcall target="getBaseEclipse" />
+		<available file="${buildDirectory}/plugins/org.eclipse.emf/plugin.xml" property="emfExists" />
+		<antcall target="getEMF" />
+		<available file="${buildDirectory}/plugins/org.eclipse.gef/plugin.xml" property="gefExists" />
+		<antcall target="getGEF" />
+		<available file="${buildDirectory}/plugins/org.eclipse.wst/plugin.xml" property="wstExists" />
+		<antcall target="getWST" />
+		<available file="${buildDirectory}/plugins/org.eclipse.jem/plugin.xml" property="jemExists" />
+		<antcall target="getJEM" />
+
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="preFetch">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="postFetch">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before generating the build scripts. -->
+	<!-- ===================================================================== -->
+	<target name="preGenerate">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after generating the build scripts. -->
+	<!-- ===================================================================== -->
+	<target name="postGenerate">
+		<antcall target="clean" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="preProcess">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="postProcess">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running assemble. -->
+	<!-- ===================================================================== -->
+	<target name="preAssemble">
+	</target>
+
+	<target name="assemble.org.eclipse.php_feature">
+		<property name="archiveName" value="org.eclipse.php_feature-${buildLabel}.zip" />
+		<ant antfile="${assembleScriptName}" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after  running assemble. -->
+	<!-- ===================================================================== -->
+	<target name="postAssemble">
+
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running package. -->
+	<!-- ===================================================================== -->
+	<target name="prePackage">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after  running package. -->
+	<!-- ===================================================================== -->
+	<target name="postPackage">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the build is done. -->
+	<!-- ===================================================================== -->
+	<target name="postBuild">
+		<!-- Not in use
+                <antcall target="gatherLogs" />
+                -->
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do to test the build results -->
+	<!-- ===================================================================== -->
+	<target name="test">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do to publish the build results -->
+	<!-- ===================================================================== -->
+	<target name="publish">
+
+
+	</target>
+
+	<target name="getBaseInit">
+		<dirname property="antfile.dir" file="${ant.file}" />
+	</target>
+
+	<target name="getBaseEclipse" unless="baseExists" depends="getBaseInit">
+		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getBaseEclipse" />
+	</target>
+
+	<target name="getEMF" unless="emfExists" depends="getBaseInit">
+		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getEMF" />
+	</target>
+
+	<target name="getGEF" unless="gefExists" depends="getBaseInit">
+		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getGEF" />
+	</target>
+	<target name="getWST" unless="wstExists" depends="getBaseInit">
+		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getWST" />
+	</target>
+
+	<target name="getJEM" unless="jemExists" depends="getBaseInit">
+		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getJEM" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+		<echo message="You must specify a target when invoking this file" />
+	</target>
+
+</project>
