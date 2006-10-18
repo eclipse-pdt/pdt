@@ -149,6 +149,7 @@
 		<!-- Not in use
                 <antcall target="gatherLogs" />
                 -->
+		<ant antfile="${builder}/../buildutilities.xml" />
 	</target>
 
 	<!-- ===================================================================== -->
