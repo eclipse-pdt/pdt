@@ -149,7 +149,7 @@
 		<!-- Not in use
                 <antcall target="gatherLogs" />
                 -->
-		<ant antfile="${builder}/../buildutilities.xml" />
+		<ant antfile="${builder}/../buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages"/>
 	</target>
 
 	<!-- ===================================================================== -->
