@@ -53,6 +53,8 @@
 	<!-- Steps to do before setup -->
 	<!-- ===================================================================== -->
 	<target name="preSetup">
+		<ant antfile="${builder}/../label.xml" />
+		<property file="${buildDirectory}/label.properties" />
 		<mkdir dir="${buildDirectory}/${buildLabel}" />
 	</target>
 

@@ -1,0 +1,58 @@
+<project default="label"  basedir=".">
+
+    <!-- Load environment variables -->
+    <property environment="env"/>
+
+    <!-- Capture the computer name in a cross-platform manner -->
+    <property name="env.COMPUTERNAME" value="${env.HOSTNAME}"/>
+
+
+   <target name="label">
+        <available file="${buildDirectory}/label.properties" property="label.properties.exists"/>
+        <antcall target="create.label.properties"/>
+    </target>
+
+    <target name="create.label.properties" unless="label.properties.exists">
+                     <mkdir dir="${buildDirectory}" />
+                     <tstamp>
+                        <format property="date" pattern="yyyyMMdd" timezone="UTC"/>
+                    </tstamp>
+                     <tstamp>
+                        <format property="time" pattern="HHmm" timezone="UTC"/>
+                    </tstamp>
+                     <property name="timestamp" value="${date}${time}" />
+                     <property name="buildType" value="I" />
+                     <property name="buildId" value="${buildType}${timestamp}" />
+
+                     <!--this naming convention used by php scripts on download server-->
+                     <property name="buildLabel" value="${buildType}${date}" />
+
+                     <!--store the build label information in a file-->
+                     <echo file="${buildDirectory}/label.properties" append="true" >
+                     buildType=${buildType}
+                     </echo>
+                     <echo file="${buildDirectory}/label.properties" append="true" >
+                     buildId=${buildId}
+                     </echo>
+                     <echo file="${buildDirectory}/label.properties" append="true" >
+                     timestamp=${timestamp}
+                     </echo>
+                     <echo file="${buildDirectory}/label.properties" append="true" >
+                     buildLabel=${buildLabel}
+                     </echo>
+                     <echo file="${buildDirectory}/label.properties" append="true" >
+                     date=${date}
+                     </echo>
+                     <echo file="${buildDirectory}/label.properties" append="true" >
+                     time=${time}
+                     </echo>
+
+
+                    <echo file="${buildDirectory}/buildmachineinfo.properties" append="true">
+                    buildComputer="${env.COMPUTERNAME}"
+                    buildOS="${env.OS}"
+                    </echo>
+
+    </target>
+
+</project>
