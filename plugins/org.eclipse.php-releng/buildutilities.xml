@@ -122,9 +122,9 @@
         <!-- ================================================================================== -->
 
         <!--  use releng task of unpackUpdateJars -->
-        <unpackUpdateJars site="${tmpsite}/eclipse"
+       <!-- <unpackUpdateJars site="${tmpsite}/eclipse"
                           output="${tmpsite}/unpacked/eclipse" />
-
+-->
         <!-- add copy of legal doc's here, product.ini, etc., before re-zipping 
         <copy todir="${tmpsite}/unpacked/eclipse"
               overwrite="false">
@@ -140,7 +140,7 @@
 
         <!-- recreate zip file now, same name, traditional content, which is mix of folders and jars -->
         <zip destfile="${buildDirectory}/${buildLabel}/${archiveName}"
-             basedir="${tmpsite}/unpacked"
+             basedir="${tmpsite}"
              update="false"
              duplicate="preserve" />
         
@@ -187,7 +187,7 @@
 
 
     <target name="createPackFilesIfDesired" if="doPack" depends="init">
-        <java jar="${pde.builder.path}/startup.jar"
+        <java jar="${baseLocation}/startup.jar"
               fork="true"
               jvm="${java-home}/bin/java"
               failonerror="true"
