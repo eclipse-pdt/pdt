@@ -62,7 +62,7 @@
 	<!-- Steps to do after setup but before starting the build proper -->
 	<!-- ===================================================================== -->
 	<target name="postSetup">
-		<available file="${buildDirectory}/plugins/org.eclipse.platform/plugin.xml" property="baseExists" />
+	<!--	<available file="${buildDirectory}/plugins/org.eclipse.platform/plugin.xml" property="baseExists" />
 		<antcall target="getBaseEclipse" />
 		<available file="${buildDirectory}/plugins/org.eclipse.emf/plugin.xml" property="emfExists" />
 		<antcall target="getEMF" />
@@ -72,7 +72,7 @@
 		<antcall target="getWST" />
 		<available file="${buildDirectory}/plugins/org.eclipse.jem/plugin.xml" property="jemExists" />
 		<antcall target="getJEM" />
-
+-->
 	</target>
 
 	<!-- ===================================================================== -->
