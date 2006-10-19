@@ -439,8 +439,9 @@ public class DebugConnectionThread implements Runnable {
 	 * session currectly.
 	 *  
 	 * @param debugSessionStartedNotification
+	 * @return True, if the debug session hook was successful; False, otherwise.
 	 */
-	protected void hookDebugSession(DebugSessionStartedNotification debugSessionStartedNotification) throws CoreException {
+	protected boolean hookDebugSession(DebugSessionStartedNotification debugSessionStartedNotification) throws CoreException {
 		String query = debugSessionStartedNotification.getQuery();
 		int sessionID = getSessionID(query);
 		// Get the launch, but keep it in the mapper for any other debug requests that are 
@@ -480,12 +481,30 @@ public class DebugConnectionThread implements Runnable {
 			} else {
 				hookPHPExeDebug(launch);
 			}
+			return true;
 		} else {
-			// TODO - Display an error/warning message to the user.
-			Logger.log(Logger.ERROR, "No session id");
+			return handleHookError("No session id");
 		}
 	}
 
+	/**
+	 * Handle a debug session hook error.
+	 * This method can be subclassed for handling more complex causes.
+	 * The default implementation is to display the toString() value of the cause and return false.
+	 * 
+	 * @param cause An object that represents the cause for the error. Can be a String description or a different
+	 * 				complex object that can supply more information.
+	 * @return True, if the error was fixed in this method; False, otherwise.
+	 */
+	protected boolean handleHookError(Object cause) {
+		if (cause != null) {
+			Logger.log(Logger.ERROR, cause.toString());
+		} else {
+			Logger.log(Logger.ERROR, "Debug hook error");
+		}
+		return false;
+	}
+	
 	/**
 	 * Hook a server debug session
 	 * 
