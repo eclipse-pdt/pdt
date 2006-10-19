@@ -50,7 +50,7 @@
   <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            name="PHP Executable"
+            name="%PHPScriptLaunch.label"
             delegate="org.eclipse.php.debug.core.launching.PHPExecutableLaunchDelegate"
             modes="run"
             id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
