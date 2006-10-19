@@ -118,7 +118,7 @@
 	<target name="preAssemble">
 	</target>
 
-	<target name="assemble.org.eclipse.php_feature">
+	<target name="assemble.org.eclipse.php.sdk_feature">
 		<property name="archiveName" value="org.eclipse.php_feature-sdk-${buildLabel}.zip" />
 		<ant antfile="${assembleScriptName}" />
 	</target>
