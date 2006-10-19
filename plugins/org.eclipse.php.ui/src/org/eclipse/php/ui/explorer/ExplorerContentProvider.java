@@ -95,6 +95,8 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 	}
 
 	private void postRunnable(final Runnable r) {
+		if(fViewer == null)
+			return;
 		final Control ctrl = fViewer.getControl();
 		final Runnable trackedRunnable = new Runnable() {
 			public void run() {
