@@ -260,4 +260,18 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 		// the list may changed so get the list size again...
 		return new CoreNodeList((IStructuredDocumentRegion) newNodes.get(0), (IStructuredDocumentRegion) newNodes.get(newNodes.size() - 1));
 	}
+	
+	/**
+	 * This function was added in order to support asp tags in PHP (bug fix #150363)
+	 */
+	protected StructuredDocumentEvent checkForCrossStructuredDocumentRegionSyntax() {
+		StructuredDocumentEvent result = super.checkForCrossStructuredDocumentRegionSyntax();
+		if(result == null){
+			result = checkForCriticalKey("<%"); //$NON-NLS-1$
+			if (result == null)
+				result = checkForCriticalKey("%>"); //$NON-NLS-1$
+			
+		}
+		return result;
+	}
 }
