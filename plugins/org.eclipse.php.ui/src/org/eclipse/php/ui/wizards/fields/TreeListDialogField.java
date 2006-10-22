@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Tree;
  * DialogFields controls are: Label, List and Composite containing buttons.
  */
 public class TreeListDialogField extends DialogField {
-
 	protected TreeViewer fTree;
 	protected ILabelProvider fLabelProvider;
 	protected TreeViewerAdapter fTreeViewerAdapter;
@@ -68,7 +67,7 @@ public class TreeListDialogField extends DialogField {
 
 	private Label fLastSeparator;
 
-	private Tree fTreeControl;
+	Tree fTreeControl;
 	private Composite fButtonsControl;
 	private ISelection fSelectionWhenEnabled;
 
