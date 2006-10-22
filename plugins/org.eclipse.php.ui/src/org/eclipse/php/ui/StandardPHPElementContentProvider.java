@@ -81,13 +81,7 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 			return getFolderChildren((IContainer) parentElement, null);
 
 		if (parentElement instanceof IFile) {
-			IFile file = (IFile) parentElement;
-			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
-			if (projectModel != null) {
-				PHPFileData fileData = projectModel.getFileData(file.getFullPath().toString());
-				if (fileData != null)
-					return getFileChildren(fileData);
-			}
+			return getFileChildren((IFile) parentElement);
 
 		}
 		if (parentElement instanceof PHPFileData)
@@ -98,7 +92,18 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		return NO_CHILDREN;
 	}
 
-	private Object[] getFileChildren(PHPFileData fileData) {
+	protected Object[] getFileChildren(IFile parentElement) {
+		IFile file = parentElement;
+		PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
+		if (projectModel != null) {
+			PHPFileData fileData = projectModel.getFileData(file.getFullPath().toString());
+			if (fileData != null)
+				return getFileChildren(fileData);
+		}
+		return NO_CHILDREN;
+	}
+
+	protected Object[] getFileChildren(PHPFileData fileData) {
 		ArrayList list = new ArrayList();
 		PHPIncludeFileData[] includes = fileData.getIncludeFiles();
 		if (includes != null) {
@@ -127,7 +132,7 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 		return list.toArray();
 	}
 
-	private Object[] getClassChildren(PHPClassData classData) {
+	protected Object[] getClassChildren(PHPClassData classData) {
 		ArrayList list = new ArrayList();
 		PHPFunctionData[] functions = classData.getFunctions();
 		if (functions != null) {
@@ -283,10 +288,6 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 					folderList.add(member);
 				} else {
 					if (member instanceof IFile)
-						//						fileData = projectModel.getFileData(member.getFullPath().toString());
-						//					if (fileData != null)
-						//						fileList.add(fileData);
-						//					else
 						fileList.add(members[i]);
 				}
 			}
