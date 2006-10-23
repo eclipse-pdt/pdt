@@ -244,11 +244,13 @@ public class VariableBlock {
 
 	public boolean performOk() {
 		ArrayList removedVariables = new ArrayList();
-		ArrayList changedVariables = new ArrayList();
+		ArrayList changedVariables = new ArrayList();		
 		removedVariables.addAll(Arrays.asList(PHPProjectOptions.getIncludePathVariableNames()));
 
 		// remove all unchanged
 		List changedElements = fVariablesList.getElements();
+		List unchangedElements = fVariablesList.getElements();
+		
 		for (int i = changedElements.size() - 1; i >= 0; i--) {
 			IPVariableElement curr = (IPVariableElement) changedElements.get(i);
 			if (curr.isReserved()) {
@@ -257,12 +259,14 @@ public class VariableBlock {
 				IPath path = curr.getPath();
 				IPath prevPath = PHPProjectOptions.getIncludePathVariable(curr.getName());
 				if (prevPath != null && prevPath.equals(path)) {
-					changedElements.remove(curr);
+					changedElements.remove(curr);					
 				} else {
 					changedVariables.add(curr.getName());
+					unchangedElements.remove(curr);
 				}
 			}
 			removedVariables.remove(curr.getName());
+			
 		}
 		int steps = changedElements.size() + removedVariables.size();
 		if (steps > 0) {
@@ -280,7 +284,7 @@ public class VariableBlock {
 				needsBuild = (res == 0);
 			}
 
-			final VariableBlockRunnable runnable = new VariableBlockRunnable(removedVariables, changedElements, needsBuild);
+			final VariableBlockRunnable runnable = new VariableBlockRunnable(removedVariables, changedElements, unchangedElements, needsBuild);
 			Job buildJob = new Job(PHPUIMessages.VariableBlock_job_description) {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
@@ -335,12 +339,15 @@ public class VariableBlock {
 	private class VariableBlockRunnable implements IRunnableWithProgress {
 		private List fToRemove;
 		private List fToChange;
+		private List fUnchanged;
 		private boolean fDoBuild;
 
-		public VariableBlockRunnable(List toRemove, List toChange, boolean doBuild) {
+		public VariableBlockRunnable(List toRemove, List toChange, List unchanged, boolean doBuild) {
 			fToRemove = toRemove;
 			fToChange = toChange;
+			fUnchanged = unchanged;
 			fDoBuild = doBuild;
+			
 		}
 
 		/*
@@ -361,12 +368,18 @@ public class VariableBlock {
 		}
 
 		public void setVariables(IProgressMonitor monitor) throws CoreException {
-			int nVariables = fToChange.size() + fToRemove.size();
+			int nVariables = fToChange.size() + fToRemove.size() + fUnchanged.size();
 
 			String[] names = new String[nVariables];
 			IPath[] paths = new IPath[nVariables];
 			int k = 0;
 
+			for (int i = 0; i < fUnchanged.size(); i++) {
+				IPVariableElement curr = (IPVariableElement) fUnchanged.get(i);
+				names[k] = curr.getName();
+				paths[k] = curr.getPath();
+				k++;
+			}
 			for (int i = 0; i < fToChange.size(); i++) {
 				IPVariableElement curr = (IPVariableElement) fToChange.get(i);
 				names[k] = curr.getName();
