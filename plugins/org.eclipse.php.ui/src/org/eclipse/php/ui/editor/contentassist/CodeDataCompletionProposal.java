@@ -22,12 +22,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
-
 public class CodeDataCompletionProposal implements ICompletionProposal, ICompletionProposalExtension2, ICompletionProposalExtension3, ICompletionProposalExtension4 {
 
 	private static final PHPCompletionRendererVisitor rendererVisitor = new PHPCompletionRendererVisitor();
 	private static final PHPContextInfoRendererVisitor contextRendererVisitor = new PHPContextInfoRendererVisitor();
-	
+
 	protected static final char[] phpDelimiters = new char[] { '?', ':', ';', '|', '^', '&', '<', '>', '+', '-', '.', '*', '/', '%', '!', '~', '[', ']', '(', ')', '{', '}', '@', '\n', '\t', ' ', ',', '$', '\'', '\"' };
 
 	private String displayText;
@@ -82,6 +81,10 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 			while (position < end) {
 				char ch = document.getChar(position);
 				if (isDelimeter(ch, phpDelimiters)) {
+					// solve bug #139028 - avoid case of double suffix, in case there already is one. 
+					if (suffix.startsWith(String.valueOf(ch))) {
+						suffix = "";
+					}
 					break;
 				}
 				replacementLength++;
@@ -104,21 +107,22 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 		IDocument document = viewer.getDocument();
 		apply(document);
-		int replacementPosition =  replacementOffset + getReplacementString().length() - suffix.length() + caretOffsetInSuffix;
+		int replacementPosition = replacementOffset + getReplacementString().length() - suffix.length() + caretOffsetInSuffix;
 		viewer.getSelectionProvider().setSelection(new TextSelection(document, replacementPosition, 0));
 	}
 
 	public void selected(ITextViewer viewer, boolean smartToggle) {
 		if (projectModel == null) {
-            IStructuredModel structuredModel = null;
-            try {
-                structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
-                if (structuredModel != null && structuredModel instanceof PHPEditorModel) {
-                    projectModel = ((PHPEditorModel) structuredModel).getProjectModel();
-                }
-            } finally {
-                if (structuredModel != null)structuredModel.releaseFromRead();
-            }
+			IStructuredModel structuredModel = null;
+			try {
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
+				if (structuredModel != null && structuredModel instanceof PHPEditorModel) {
+					projectModel = ((PHPEditorModel) structuredModel).getProjectModel();
+				}
+			} finally {
+				if (structuredModel != null)
+					structuredModel.releaseFromRead();
+			}
 		}
 	}
 
@@ -167,7 +171,7 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 		}
 		return contextInfo;
 	}
-		
+
 	public String getDisplayString() {
 		initialize();
 		return displayText;
@@ -177,7 +181,7 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 		initialize();
 		return displayImage;
 	}
-	
+
 	private void initialize() {
 		if (displayText != null) {
 			return;
@@ -198,7 +202,7 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 	public int getPrefixCompletionStart(IDocument document, int completionOffset) {
 		return replacementOffset;
 	}
-	
+
 	public CodeData getCodeData() {
 		return codeData;
 	}
