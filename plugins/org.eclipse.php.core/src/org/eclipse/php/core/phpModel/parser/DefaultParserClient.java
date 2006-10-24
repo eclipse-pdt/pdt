@@ -10,35 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
 
-import org.eclipse.php.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
-import org.eclipse.php.core.phpModel.phpElementData.PHPBlock;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileDataUtilities;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPMarker;
-import org.eclipse.php.core.phpModel.phpElementData.PHPTask;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariableTypeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
-import org.eclipse.php.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.core.phpModel.phpElementData.*;
 
 public abstract class DefaultParserClient extends ContextParserClient {
 
@@ -398,15 +372,40 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	}
 
 	private void restoreToDefaultContext(int endPosition) {
-		boolean isInsideClass = !getCurrentClassName().equals("");
-		if (!getCurrentFunctionName().equals("")) {
-			handleFunctionDeclarationEnds(getCurrentFunctionName(), isInsideClass, endPosition);
+		final String currentClassName = getCurrentClassName();
+		final boolean isInsideClass = currentClassName.length() > 0;
+		final String currentFunctionName = getCurrentFunctionName();
+		if (currentFunctionName.length() > 0) {
+			endPosition = getEndPosition(endPosition, currentFunctionName, isInsideClass ? classFunctions : functions);
+			handleFunctionDeclarationEnds(currentFunctionName, isInsideClass, endPosition);
 			restoreToDefaultContext(endPosition);
 		}
 		if (isInsideClass) {
-			handleClassDeclarationEnds(getCurrentClassName(), endPosition);
+			endPosition = getEndPosition(endPosition, currentClassName, classes);
+			handleClassDeclarationEnds(currentClassName, endPosition);
 			restoreToDefaultContext(endPosition);
 		}
+	}
+
+	//This method gets the end position in case there's a syntax error and 
+	//a class OR a function are not closed properly
+	private int getEndPosition(int endPosition, final String currentElementName, Collection repository) {
+		for (Iterator iter = repository.iterator(); iter.hasNext();) {
+			PHPCodeData element = (PHPCodeData) iter.next();
+			if (currentElementName.equals(element.getName())) {
+				UserData elementUserData = element.getUserData();
+				int elementStartPosition = elementUserData.getStartPosition();
+				int phpStartPosition = 0;
+				for (Iterator iterator = phpTags.iterator(); iterator.hasNext();) {
+					UserData phpUserData = (UserData) iterator.next();
+					phpStartPosition = phpUserData.getStartPosition();
+					if (phpStartPosition > elementStartPosition) {
+						return phpStartPosition; 
+					}
+				}
+			}
+		}
+		return endPosition;
 	}
 
 	public void finishParsing(int lastPosition, int lastLine, long lastModified) {
