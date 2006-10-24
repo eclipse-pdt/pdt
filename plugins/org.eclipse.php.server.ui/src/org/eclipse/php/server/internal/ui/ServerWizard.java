@@ -13,6 +13,7 @@ package org.eclipse.php.server.internal.ui;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.server.PHPServerUIMessages;
 import org.eclipse.php.server.ui.ICompositeFragmentFactory;
 import org.eclipse.php.server.ui.ServerFragmentsFactoryRegistry;
 import org.eclipse.php.server.ui.wizard.FragmentedWizard;
@@ -30,7 +31,7 @@ import org.eclipse.ui.IWorkbench;
 public class ServerWizard extends FragmentedWizard implements INewWizard {
 
 	public ServerWizard() {
-		this("PHP Server Creation");
+		this(PHPServerUIMessages.getString("ServerWizard.serverCreation")); //$NON-NLS-1$
 	}
 
 	public ServerWizard(String title, WizardModel taskModel) {

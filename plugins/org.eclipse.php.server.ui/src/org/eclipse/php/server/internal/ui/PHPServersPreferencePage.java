@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.server.internal.ui;
 
+import org.eclipse.php.server.PHPServerUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.preferences.ui.AbstractConfigurationBlockPreferencePage;
 import org.eclipse.php.ui.preferences.ui.IPreferenceConfigurationBlock;
@@ -30,7 +31,7 @@ public class PHPServersPreferencePage extends AbstractConfigurationBlockPreferen
 	}
 
 	protected void setDescription() {
-		setDescription("PHP Servers Management\n\nNote that removing a Server definition will also remove any Launch-Configuration that is using it.");
+		setDescription(PHPServerUIMessages.getString("PHPServersPreferencePage.removeLaunchNote")); //$NON-NLS-1$
 	}
 
 	protected void setPreferenceStore() {

@@ -13,7 +13,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin implements ISelectionListener {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.php.server.ui";
+	public static final String PLUGIN_ID = "org.eclipse.php.server.ui"; //$NON-NLS-1$
 
 	// Debug mode identifier
 	public static final boolean isDebugMode;

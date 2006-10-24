@@ -130,7 +130,7 @@ public class FragmentedWizard implements IWizard {
 		} catch (Exception e) {
 			t = e;
 		}
-		Logger.logException("Error cancelling task wizard", t);
+		Logger.logException("Error cancelling task wizard", t); //$NON-NLS-1$
 
 		if (t instanceof CoreException) {
 			ServerUtilities.openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
@@ -162,7 +162,7 @@ public class FragmentedWizard implements IWizard {
 							}
 						});
 					} catch (Exception e) {
-						Logger.logException("Could not enter/exit page", e);
+						Logger.logException("Could not enter/exit page", e); //$NON-NLS-1$
 					}
 				}
 
@@ -173,7 +173,7 @@ public class FragmentedWizard implements IWizard {
 						}
 
 						public boolean belongsTo(Object family) {
-							return "org.eclipse.wst.server.ui.family".equals(family);
+							return "org.eclipse.wst.server.ui.family".equals(family); //$NON-NLS-1$
 						}
 
 						public IStatus run(IProgressMonitor monitor2) {
@@ -182,7 +182,7 @@ public class FragmentedWizard implements IWizard {
 								while (iterator.hasNext())
 									executeTask((WizardFragment) iterator.next(), FINISH, monitor2);
 							} catch (CoreException ce) {
-								Logger.logException("Error finishing wizard job", ce);
+								Logger.logException("Error finishing wizard job", ce); //$NON-NLS-1$
 								return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, ce.getLocalizedMessage(), null);
 							}
 							return Status.OK_STATUS;
@@ -208,16 +208,16 @@ public class FragmentedWizard implements IWizard {
 				runnable.run(new NullProgressMonitor());
 			return true;
 		} catch (InvocationTargetException te) {
-			Logger.logException("Error finishing task wizard", te);
+			Logger.logException("Error finishing task wizard", te); //$NON-NLS-1$
 			t = te.getCause();
 		} catch (Exception e) {
-			Logger.logException("Error finishing task wizard 2", e);
+			Logger.logException("Error finishing task wizard 2", e); //$NON-NLS-1$
 			t = e;
 		}
 		if (t instanceof CoreException) {
 			ServerUtilities.openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
 		} else if (t instanceof NullPointerException)
-			ServerUtilities.openError("NullPointerException");
+			ServerUtilities.openError("NullPointerException"); //$NON-NLS-1$
 		else
 			ServerUtilities.openError(t.getLocalizedMessage());
 
@@ -325,7 +325,7 @@ public class FragmentedWizard implements IWizard {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException("Error adding fragments to wizard", e);
+			Logger.logException("Error adding fragments to wizard", e); //$NON-NLS-1$
 		} finally {
 			addingPages = false;
 		}
@@ -346,7 +346,7 @@ public class FragmentedWizard implements IWizard {
 			if (page != null)
 				return page;
 		} catch (Exception e) {
-			Logger.logException("Error getting fragment data", e);
+			Logger.logException("Error getting fragment data", e); //$NON-NLS-1$
 		}
 
 		return null;

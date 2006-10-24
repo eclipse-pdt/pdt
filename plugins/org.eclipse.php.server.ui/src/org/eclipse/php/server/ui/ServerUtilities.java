@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.server.PHPServerUIMessages;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.ide.dialogs.ResourceSorter;
@@ -55,7 +56,7 @@ public class ServerUtilities {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = getShell();
-				MessageDialog.openError(shell, "Error", message);
+				MessageDialog.openError(shell, PHPServerUIMessages.getString("ServerUtilities.error"), message); //$NON-NLS-1$
 			}
 		});
 	}
@@ -70,7 +71,7 @@ public class ServerUtilities {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = getShell();
-				ErrorDialog.openError(shell, "Error", message, status);
+				ErrorDialog.openError(shell, PHPServerUIMessages.getString("ServerUtilities.error"), message, status); //$NON-NLS-1$
 			}
 		});
 	}
@@ -82,7 +83,7 @@ public class ServerUtilities {
 	 * @param message the message
 	 */
 	public static void openError(Shell shell, String message) {
-		MessageDialog.openError(shell, "Error", message);
+		MessageDialog.openError(shell, PHPServerUIMessages.getString("ServerUtilities.error"), message); //$NON-NLS-1$
 	}
 
 	/**
@@ -93,11 +94,11 @@ public class ServerUtilities {
 	 * @param status a status
 	 */
 	public static void openError(Shell shell, String message, IStatus status) {
-		ErrorDialog.openError(shell, "Error", message, status);
+		ErrorDialog.openError(shell, PHPServerUIMessages.getString("ServerUtilities.error"), message, status); //$NON-NLS-1$
 	}
 	
     public static String getProjectFromDialog(Shell shell, String[] requiredNatures) {
-        ProjectSelectionDialog dialog = new ProjectSelectionDialog(shell, requiredNatures, "Projects", "Select Project");
+        ProjectSelectionDialog dialog = new ProjectSelectionDialog(shell, requiredNatures, PHPServerUIMessages.getString("ServerUtilities.projects"), PHPServerUIMessages.getString("ServerUtilities.selectProject")); //$NON-NLS-1$ //$NON-NLS-2$
         dialog.open();
         Object[] resource = dialog.getResult();
         String text = null;
@@ -119,7 +120,7 @@ public class ServerUtilities {
     public static IResource getFileFromDialog(IProject project, Shell shell, String[] fileExtensions, String[] requiredNatures) {
         ServerUtilities inst = new ServerUtilities();
 
-        ApplicationFileSelectionDialog d = new ApplicationFileSelectionDialog(shell, inst.new WebLaunchLabelProvider(), "Select File", "Select a File from the Project", fileExtensions, requiredNatures, false);
+        ApplicationFileSelectionDialog d = new ApplicationFileSelectionDialog(shell, inst.new WebLaunchLabelProvider(), PHPServerUIMessages.getString("ServerUtilities.selectFile"), PHPServerUIMessages.getString("ServerUtilities.selectProjectFile"), fileExtensions, requiredNatures, false); //$NON-NLS-1$ //$NON-NLS-2$
 
         if (project != null) {
             d.setInput(project);

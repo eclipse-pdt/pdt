@@ -97,7 +97,7 @@ public class ServerLaunchTabsRegistry {
 		ArrayList nonRootFragments = new ArrayList(factories.size());
 		for (int i = 0; i < factories.size(); i++) {
 			TabFactory factory = (TabFactory) factories.get(i);
-			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) {
+			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
 				addAsList(rootsFragments, factory);
 			} else {
 				addAsList(nonRootFragments, factory);
@@ -116,7 +116,7 @@ public class ServerLaunchTabsRegistry {
 			if (!moved) {
 				// move it to the roots anyway, since there is an error in the extention definitions.
 				addAsList(rootsFragments, factory);
-				Logger.log(Logger.WARNING, "Invalid 'placeAfter' id (" + factory.getPlaceAfter() + ')');
+				Logger.log(Logger.WARNING, "Invalid 'placeAfter' id (" + factory.getPlaceAfter() + ')'); //$NON-NLS-1$
 			}
 		}
 
@@ -179,7 +179,7 @@ public class ServerLaunchTabsRegistry {
 		}
 
 		public AbstractLaunchConfigurationTab createFragmentFactory() {
-			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.server.ui.serverTabs") {
+			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.server.ui.serverTabs") { //$NON-NLS-1$
 				public void run() throws Exception {
 					factory = (AbstractLaunchConfigurationTab) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}

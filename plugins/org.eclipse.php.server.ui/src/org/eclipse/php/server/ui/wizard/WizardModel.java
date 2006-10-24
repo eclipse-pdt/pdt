@@ -33,7 +33,7 @@ public class WizardModel {
 	 * @see #getObject(String)
 	 * @see #putObject(String, Object)
 	 */
-	public static final String SERVER = "server";
+	public static final String SERVER = "server"; //$NON-NLS-1$
 
 	private Map map = new HashMap();
 

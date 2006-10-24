@@ -41,13 +41,13 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 		try {
 			comp = fragment.createComposite(parentComp, this);
 		} catch (Exception e) {
-			Logger.log(Logger.WARNING, "Could not create wizard page composite", e);
+			Logger.log(Logger.WARNING, "Could not create wizard page composite", e); //$NON-NLS-1$
 		}
 		if (comp == null) {
 			comp = new Composite(parentComp, SWT.NONE);
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			Label label = new Label(comp, SWT.NONE);
-			label.setText("Internal error");
+			label.setText("Internal error"); //$NON-NLS-1$
 		}
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = convertHorizontalDLUsToPixels(150);
@@ -97,7 +97,7 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 	}
 
 	public void setMessage(String message, int type) {
-		if (type == IMessageProvider.ERROR && "".equals(message)) {
+		if (type == IMessageProvider.ERROR && "".equals(message)) { //$NON-NLS-1$
 			isEmptyError = true;
 			message = null;
 		} else

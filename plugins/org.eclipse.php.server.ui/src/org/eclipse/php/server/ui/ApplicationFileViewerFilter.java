@@ -63,7 +63,7 @@ public class ApplicationFileViewerFilter extends ViewerFilter {
 	 */
 	public boolean isValidDirectory(IContainer container) {
 		try {
-			if (projectHasRequiredNatures(container.getProject()) && !container.getName().startsWith(".")) {
+			if (projectHasRequiredNatures(container.getProject()) && !container.getName().startsWith(".")) { //$NON-NLS-1$
 				return true;
 			}
 			return false;

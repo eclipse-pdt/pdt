@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.server.PHPServerUIMessages;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.ui.util.SWTUtil;
 import org.eclipse.swt.SWT;
@@ -59,7 +60,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 			tabItem.setControl(fragment);
 			runtimeComposites.add(fragment);
 		}
-		getShell().setText("Edit Server");
+		getShell().setText(PHPServerUIMessages.getString("ServerEditDialog.editServer")); //$NON-NLS-1$
 		tabsListener = new TabsSelectionListener();
 		tabs.addSelectionListener(tabsListener);
 		return tabs;

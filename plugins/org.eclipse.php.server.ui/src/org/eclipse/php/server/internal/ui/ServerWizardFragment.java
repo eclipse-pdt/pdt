@@ -55,7 +55,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 				Logger.logException(e);
 			}
 		} else {
-			Logger.log(Logger.ERROR, "Could not display the Servers wizard (component is null).");
+			Logger.log(Logger.ERROR, "Could not display the Servers wizard (component is null)."); //$NON-NLS-1$
 		}
 	}
 

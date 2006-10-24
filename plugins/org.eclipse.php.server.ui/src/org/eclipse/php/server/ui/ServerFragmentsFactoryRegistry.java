@@ -89,7 +89,7 @@ public class ServerFragmentsFactoryRegistry {
 		ArrayList nonRootFragments = new ArrayList(fragments.size());
 		for (int i = 0; i < fragments.size(); i++) {
 			FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
-			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) {
+			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
 				addAsList(rootsFragments, factory);
 			} else {
 				addAsList(nonRootFragments, factory);
@@ -108,7 +108,7 @@ public class ServerFragmentsFactoryRegistry {
 			if (!moved) {
 				// move it to the roots anyway, since there is an error in the extention definitions.
 				addAsList(rootsFragments, factory);
-				Logger.log(Logger.WARNING, "Invalid 'placeAfter' id (" + factory.getPlaceAfter() + ')');
+				Logger.log(Logger.WARNING, "Invalid 'placeAfter' id (" + factory.getPlaceAfter() + ')'); //$NON-NLS-1$
 			}
 		}
 
@@ -171,7 +171,7 @@ public class ServerFragmentsFactoryRegistry {
 		}
 
 		public ICompositeFragmentFactory createFragmentFactory() {
-			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.server.ui.serverWizardFragment") {
+			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.server.ui.serverWizardFragment") { //$NON-NLS-1$
 				public void run() throws Exception {
 					factory = (ICompositeFragmentFactory) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}

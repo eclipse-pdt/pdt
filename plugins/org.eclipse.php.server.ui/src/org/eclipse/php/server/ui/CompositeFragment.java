@@ -89,7 +89,7 @@ public abstract class CompositeFragment extends Composite {
 	 */
 	public String getDisplayName() {
 		if (name == null) {
-			name = "";
+			name = ""; //$NON-NLS-1$
 		}
 		return name;
 	}
@@ -99,7 +99,7 @@ public abstract class CompositeFragment extends Composite {
 	 */
 	public String getTitle() {
 		if (title == null) {
-			 title = "";
+			 title = ""; //$NON-NLS-1$
 		}
 		return title;
 	}
@@ -118,7 +118,7 @@ public abstract class CompositeFragment extends Composite {
 	 */
 	public String getDescription() {
 		if (description == null) {
-			description = "";
+			description = ""; //$NON-NLS-1$
 		}
 		return description;
 	}

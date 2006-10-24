@@ -20,6 +20,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.server.PHPServerUIMessages;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.php.server.ui.ServerEditDialog;
@@ -62,7 +63,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	public Control createControl(Composite parent) {
 
 		ServerAdapter adapter = new ServerAdapter();
-		String buttons[] = new String[] { "New", "Edit", "Remove", null, "Default" };
+		String buttons[] = new String[] { PHPServerUIMessages.getString("PHPServersConfigurationBlock.new"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.edit"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.remove"), null, PHPServerUIMessages.getString("PHPServersConfigurationBlock.default") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		fServersList = new ListDialogField(adapter, buttons, new PHPServersLabelProvider()) {
 			protected boolean managedButtonPressed(int index) {
 				if (index == getRemoveButtonIndex()) {
@@ -74,7 +75,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		fServersList.setDialogFieldListener(adapter);
 		fServersList.setRemoveButtonIndex(IDX_REMOVE);
 
-		String[] columnsHeaders = new String[] { "Name", "URL", "Publish" };
+		String[] columnsHeaders = new String[] { PHPServerUIMessages.getString("PHPServersConfigurationBlock.name"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.url"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.publish") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		ColumnLayoutData[] layoutDatas = new ColumnLayoutData[] { new ColumnWeightData(40), new ColumnWeightData(40), new ColumnWeightData(20) };
 		fServersList.setTableColumns(new ListDialogField.ColumnsDescription(layoutDatas, columnsHeaders, true));
 
@@ -296,7 +297,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 				return server.getHost();
 			} else if (columnIndex == 2) {
 
-				return server.canPublish() ? "Yes" : "No";
+				return server.canPublish() ? PHPServerUIMessages.getString("PHPServersConfigurationBlock.yes") : PHPServerUIMessages.getString("PHPServersConfigurationBlock.no"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return element.toString();
 		}
