@@ -978,7 +978,7 @@ public class DebugConnectionThread implements Runnable {
 						// can assume that the remote debugger protocol has a different version then expected.
 						if (!validProtocol && messageType != startMessageId) {
 							// display an error message that the protocol in used is wrong.
-							final String errorMessage = "Incompatible Debug Server version.\nProbebly the remote debugger protocol does not match the expected protocol version (" + RemoteDebugger.PROTOCOL_ID + ")";
+							final String errorMessage = "Incompatible Debug Server version.\nProbably the remote debugger protocol does not match the expected protocol version (" + RemoteDebugger.PROTOCOL_ID + ")";
 							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
 							DebugPlugin.log(status);
 							Display.getDefault().asyncExec(new Runnable() {
