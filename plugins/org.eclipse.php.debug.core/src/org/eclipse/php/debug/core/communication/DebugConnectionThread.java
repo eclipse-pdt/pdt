@@ -477,9 +477,9 @@ public class DebugConnectionThread implements Runnable {
 			}
 
 			if (launch instanceof PHPServerLaunchDecorator || Boolean.toString(true).equals(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
-				hookServerDebug(launch);
+				hookServerDebug(launch, debugSessionStartedNotification);
 			} else {
-				hookPHPExeDebug(launch);
+				hookPHPExeDebug(launch, debugSessionStartedNotification);
 			}
 			return true;
 		} else {
@@ -509,8 +509,9 @@ public class DebugConnectionThread implements Runnable {
 	 * Hook a server debug session
 	 * 
 	 * @param launch An {@link ILaunch}
+	 * @param startedNotification	A DebugSessionStartedNotification
 	 */
-	protected void hookServerDebug(ILaunch launch) throws CoreException {
+	protected void hookServerDebug(ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		PHPServerLaunchDecorator launchDecorator;
 		if (launch instanceof PHPServerLaunchDecorator) {
@@ -539,8 +540,9 @@ public class DebugConnectionThread implements Runnable {
 	 * Hook a PHP executable debug session
 	 * 
 	 * @param launch An {@link ILaunch}
+	 * @param @param startedNotification	A DebugSessionStartedNotification
 	 */
-	protected void hookPHPExeDebug(ILaunch launch) throws CoreException {
+	protected void hookPHPExeDebug(ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
 		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
@@ -575,8 +577,8 @@ public class DebugConnectionThread implements Runnable {
 		IPath phpExe = new Path(phpExeString);
 		PHPProcess process = new PHPProcess(launch, phpExe.toOSString());
 
-		PHPDebugTarget target = new PHPDebugTarget(this, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
-		launch.addDebugTarget(target);
+		debugTarget = new PHPDebugTarget(this, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
+		launch.addDebugTarget(debugTarget);
 	}
 
 	/**
