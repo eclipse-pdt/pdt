@@ -31,6 +31,7 @@ import org.eclipse.php.debug.core.launching.PHPHyperLink;
 import org.eclipse.php.debug.core.launching.PHPProcess;
 import org.eclipse.php.debug.core.launching.PHPStreamsProxy;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.debug.core.sourcelookup.PHPSourceSearchEngine;
 import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.swt.graphics.Color;
@@ -168,7 +169,10 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 					ILaunchConfiguration configuration = fLaunch.getLaunchConfiguration();
 					String projectName = configuration.getAttribute(IPHPConstants.PHP_Project, (String) null);
 					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-					file = project.getFile(fileName);
+					// Search for a file match.
+					file = PHPSourceSearchEngine.getResource(fileName, project);
+					// Modify the DebugError file name - For now it's disabled.
+					// debugError.setFileName(file.getFullPath().toString());
 				}
 				fileLink = new FileLink(file, EditorID, -1, -1, lineNumber);
 			} catch (CoreException e) {

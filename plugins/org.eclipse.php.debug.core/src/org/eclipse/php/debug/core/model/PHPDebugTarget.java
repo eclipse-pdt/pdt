@@ -549,7 +549,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 								fileName = (String) marker.getAttribute(IPHPConstants.Include_Storage);
 								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
 							} else {
-								fileName = fHTDocs + "/" + (String) marker.getAttribute(IPHPConstants.Include_Storage);
+								fileName = fHTDocs + '/' + (String) marker.getAttribute(IPHPConstants.Include_Storage);
 							}
 						} else {
 							fileName = fHTDocs + fContextRoot + resource.getProjectRelativePath();
