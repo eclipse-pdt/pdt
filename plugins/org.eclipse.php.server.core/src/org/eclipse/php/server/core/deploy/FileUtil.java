@@ -66,7 +66,7 @@ public class FileUtil {
 	 * @param monitor A progress monitor.
 	 */
 	public static boolean publish(Server server, IProject project, ILaunchConfiguration configuration, Map ignoredResources, IProgressMonitor monitor) throws CoreException {
-		String contextRoot = configuration.getAttribute(Server.CONTEXT_ROOT, (String) null);
+		String contextRoot = configuration.getAttribute(Server.PUBLISH_TO, (String) null);
 		IPath to = new Path(server.getDocumentRoot());
 		if (contextRoot != null && !contextRoot.equals("")) { //$NON-NLS-1$
 			to = to.append(contextRoot);

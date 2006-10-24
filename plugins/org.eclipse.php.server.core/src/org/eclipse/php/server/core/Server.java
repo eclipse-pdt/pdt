@@ -33,6 +33,7 @@ public class Server implements IXMLPreferencesStorable {
 	public static final String BASE_URL = "base_url";
 	public static final String DOCUMENT_ROOT = "document_root";
 	public static final String PUBLISH = "publish";
+	public static final String PUBLISH_TO = "publish_to";
 	public static final String PORT = "port";
 	public static final String HOSTNAME = "hostname";
 	public static final String FILE_NAME = "file_name";
