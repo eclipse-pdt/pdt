@@ -20,6 +20,7 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.manager.ServersManager;
@@ -37,7 +38,7 @@ public class PHPDebugPlugin extends Plugin {
 	private static PHPDebugPlugin plugin;
 	private static String fPHPDebugPerspective = "org.eclipse.php.debug.ui.PHPDebugPerspective";
 	private static String fDebugPerspective = "org.eclipse.debug.ui.DebugPerspective";
-	private static boolean fIsSupportingMultipleDebugAllPages = false;
+	private static boolean fIsSupportingMultipleDebugAllPages = RemoteDebugger.shouldSetProtocol; // TODO - Remove when the protocol is stable and turn this flag to 'true'
 	private boolean fInitialAutoRemoveLaunches;
 	private static boolean fLaunchChangedAutoRemoveLaunches;
 
