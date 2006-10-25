@@ -56,7 +56,9 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 			parameters.put(DEBUG_STOP, "1");
 		}
 
-		parameters.put(DEBUG_PROTOCOL, Integer.toString(RemoteDebugger.PROTOCOL_ID));
+		if (!RemoteDebugger.shouldSetProtocol) { // TODO - Remove after the debugger is working well with the new protocol
+			parameters.put(DEBUG_PROTOCOL, Integer.toString(RemoteDebugger.PROTOCOL_ID));
+		}	
 
 		String url = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
 		if (url != null) {

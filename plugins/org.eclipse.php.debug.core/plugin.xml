@@ -145,7 +145,11 @@
             class="org.eclipse.php.debug.core.debugger.messages.StepOverRequest"
             id="org.eclipse.php.debug.core.debugger.messages.StepOverRequest"
 	    name="Step Over Request"/>
-	    
+	  <message
+           class="org.eclipse.php.debug.core.debugger.messages.SetProtocolRequest"
+           id="org.eclipse.php.debug.core.debugger.messages.SetProtocolRequest"
+        name="Set Protocol Request"/>
+        
 	  <!-- Response Messages -->
 
       <message
@@ -217,7 +221,10 @@
             class="org.eclipse.php.debug.core.debugger.messages.StepOverResponse"
             id="org.eclipse.php.debug.core.debugger.messages.StepOverResponse"
 	    name="Step Over Response"/>
-
+	  <message
+           class="org.eclipse.php.debug.core.debugger.messages.SetProtocolResponse"
+           id="org.eclipse.php.debug.core.debugger.messages.SetProtocolResponse"
+        name="Set Protocol Response"/>
 
 	  <!-- Notification Messages -->
 

@@ -34,6 +34,14 @@ public interface Debugger {
     public boolean start();
 
     /**
+     * Sets the protocol to be used.
+     * 
+     * @param protocolID The protocol identification number.
+     * @return True, if the set protocol command was successful; False, otherwise.
+     */
+    public boolean setProtocol(int protocolID);
+    
+    /**
      * Asynchronic addBreakpoint Returns true if successed sending the request,
      * false otherwise.
      */

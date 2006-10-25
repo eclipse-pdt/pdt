@@ -12,6 +12,9 @@ package org.eclipse.php.debug.core.debugger;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.internal.adaptor.EclipseEnvironmentInfo;
+import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.debug.core.communication.DebugConnectionThread;
 import org.eclipse.php.debug.core.communication.ResponseHandler;
 import org.eclipse.php.debug.core.debugger.messages.*;
@@ -22,6 +25,21 @@ import org.eclipse.php.debug.core.debugger.messages.*;
 public class RemoteDebugger implements IRemoteDebugger {
 
 	public static final int PROTOCOL_ID = 2006040701;
+
+	// Debug flag that should be removed when the new debug protocol is stable.
+	public static boolean shouldSetProtocol = false; // TODO - take a system flag.
+	private static final String SET_PROTOCOL_FLAG = "-setProtocol";
+	static {
+		String[] args = EclipseEnvironmentInfo.getDefault().getCommandLineArgs();
+		if (args != null) {
+			for (int i = args.length - 1; !shouldSetProtocol && i >= 0; i--) {
+				if (SET_PROTOCOL_FLAG.equalsIgnoreCase(args[i])) {
+					shouldSetProtocol = true;
+					Logger.log(IStatus.INFO, "Set Protocol message was enabled");
+				}
+			}
+		}
+	}
 
 	private DebugConnectionThread connection;
 	private IDebugHandler debugHandler;
@@ -451,6 +469,13 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (!this.isActive()) {
 			return false;
 		}
+		// TODO - This flag should be removed when the protocol is stable and a 'setProtocol' message
+		// is expected
+		if (shouldSetProtocol) {
+			if (!setProtocol(getProtocolID())) {
+				return false;
+			}
+		}
 		StartRequest request = new StartRequest();
 		try {
 			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
@@ -468,6 +493,13 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (!this.isActive()) {
 			return false;
 		}
+		// TODO - This flag should be removed when the protocol is stable and a 'setProtocol' message
+		// is expected
+		if (shouldSetProtocol) {
+			if (!setProtocol(getProtocolID())) {
+				return false;
+			}
+		}
 		StartRequest request = new StartRequest();
 		try {
 			StartResponse response = (StartResponse) connection.sendRequest(request);
@@ -478,6 +510,33 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.debug.core.debugger.Debugger#setProtocol(int)
+	 */
+	public boolean setProtocol(int protocolID) {
+		SetProtocolRequest request = new SetProtocolRequest();
+		request.setProtocolID(protocolID);
+		IDebugResponseMessage response = sendCustomRequest(request);
+		if (response != null && response instanceof SetProtocolResponse) {
+			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
+			if (responceProtocolID != protocolID) {
+				getDebugHandler().wrongDebugServer();
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the protocol ID that should be used by this debugger.
+	 * @return
+	 */
+	protected int getProtocolID() {
+		return PROTOCOL_ID;
+	}
+	
 	/**
 	 * Asynchronic pause Returns true if successed sending the request, false
 	 * otherwise.
