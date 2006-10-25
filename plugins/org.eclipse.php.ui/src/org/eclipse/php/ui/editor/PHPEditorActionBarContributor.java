@@ -15,20 +15,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
 import org.eclipse.php.internal.ui.actions.PHPActionConstants;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.editors.text.TextEditorActionContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
-import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * A PHPEditorActionBarContributor, which is a simple extention for
@@ -39,21 +35,11 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	private RetargetAction fRetargetShowPHPDoc;
 	private List fPartListeners = new ArrayList();
 	private RetargetTextEditorAction fShowPHPDoc;
-	
-	protected RetargetTextEditorAction fFormatActiveElements = null;
-	protected RetargetTextEditorAction fFormatDocument = null;
-	protected MenuManager fFormatMenu = null;
-	
-	public final static String FORMAT_ACTIVE_ELEMENTS = "org.eclipse.wst.sse.ui.format.active.elements";//$NON-NLS-1$
-	public final static String FORMAT_DOCUMENT = "org.eclipse.wst.sse.ui.format.document";//$NON-NLS-1$
-	
 
 	/** The global actions to be connected with PHP editor actions */
 	private final static String[] PHPEDITOR_ACTIONS = { "org.eclipse.php.ui.actions.RemoveBlockComment", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
-		"org.eclipse.php.ui.actions.AddBlockComment" 
-		,"FormatDocument", "FormatActiveElements"
-		}; //$NON-NLS-1$
+		"org.eclipse.php.ui.actions.AddBlockComment", }; //$NON-NLS-1$
 
 	// private ToggleCommentAction fToggleCommentAction;
 
@@ -68,33 +54,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
 		fShowPHPDoc = new RetargetTextEditorAction(b, "ShowPHPDoc."); //$NON-NLS-1$
 		fShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
-		
 
-		fFormatDocument = new RetargetTextEditorAction(b, "");	//$NON-NLS-1$
-		fFormatDocument.setActionDefinitionId(FORMAT_DOCUMENT);
-
-		fFormatActiveElements = new RetargetTextEditorAction(b, "");	//$NON-NLS-1$
-		fFormatActiveElements.setActionDefinitionId(FORMAT_ACTIVE_ELEMENTS);
-
-		fFormatMenu = new MenuManager("Format");
-		fFormatMenu.add(fFormatDocument);
-		fFormatMenu.add(fFormatActiveElements);	
-
-	}
-
-	public void contributeToMenu(IMenuManager menu) {
-		super.contributeToMenu(menu);
-		
-//		 source commands
-		String sourceMenuLabel = XMLUIMessages.SourceMenu_label;
-		//String sourceMenuId = "sourceMenuId"; //$NON-NLS-1$
-		String sourceMenuId = "org.eclipse.php.ui.source.menu"; //$NON-NLS-1$
-		
-		IMenuManager sourceMenu = new MenuManager(sourceMenuLabel, sourceMenuId);
-		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, sourceMenu);
-		if (sourceMenu != null) {
-			sourceMenu.add(fFormatMenu);
-		}
 	}
 
 	protected final void markAsPartListener(RetargetAction action) {
@@ -125,8 +85,6 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 			editor = (ITextEditor) part;
 
 		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc"));
-		fFormatDocument.setAction(getAction(editor, "FormatDocument"));
-		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements"));
 
 		IActionBars actionBars = getActionBars();
 		if (actionBars == null)
