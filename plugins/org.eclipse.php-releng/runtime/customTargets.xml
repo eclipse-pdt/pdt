@@ -62,7 +62,7 @@
 	<!-- Steps to do after setup but before starting the build proper -->
 	<!-- ===================================================================== -->
 	<target name="postSetup">
-	<!--	<available file="${buildDirectory}/plugins/org.eclipse.platform/plugin.xml" property="baseExists" />
+		<!--	<available file="${buildDirectory}/plugins/org.eclipse.platform/plugin.xml" property="baseExists" />
 		<antcall target="getBaseEclipse" />
 		<available file="${buildDirectory}/plugins/org.eclipse.emf/plugin.xml" property="emfExists" />
 		<antcall target="getEMF" />
@@ -149,7 +149,30 @@
 		<!-- Not in use
                 <antcall target="gatherLogs" />
                 -->
-		<ant antfile="${builder}/../buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages"/>
+		<!-- Create a cvs change log -->
+		<property name="repos" value=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools" />
+		<property name="logDir" value="${buildDirectory}/changelog" />
+		<property name="logTime" value="7" />
+
+		<!-- Must checkout modules in order to generate changes log -->
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php" />
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.core" />
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.debug.core" />
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.debug.daemon" />
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.debug.ui" />
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.help" />
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.server.core" />
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.server.ui" />
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.ui" />
+		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php-feature" />
+
+		<cvschangelog dir="${logDir}" quiet="true" cvsRoot="${repos}" daysinpast="${logTime}" destfile="${buildDirectory}/${buildLabel}/changelog.xml" />
+
+		<style in="${buildDirectory}/${buildLabel}/changelog.xml" out="${buildDirectory}/${buildLabel}/changelog.html" style="${builder}/../changelog.xsl">
+
+		</style>
+
+		<ant antfile="${builder}/../buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages" />
 	</target>
 
 	<!-- ===================================================================== -->
