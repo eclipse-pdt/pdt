@@ -2,9 +2,6 @@
 
 <html>
 
-<!--(==============================================================)-->
-<!--(Document created with RoboEditor. )============================-->
-<!--(==============================================================)-->
 
 <head>
 
@@ -12,7 +9,7 @@
 
 <!--(Meta)==========================================================-->
 
-<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta http-equiv=content-type content="text/html; charset=UTF-8">
 <meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
 <meta name=generator-major-version content=0.1>
 <meta name=generator-minor-version content=1>
@@ -25,7 +22,7 @@
 
 <!--(Links)=========================================================-->
 
-<link rel=StyleSheet href=default.css>
+<link rel=StyleSheet href="default.css">
 
 
 
@@ -36,63 +33,103 @@
 
 <body>
 
-<h1>Tasks</h1>
+<h1>Working with Tasks</h1>
 
-<p>Tasks are reminders by the programmer to him/herself. They have a name 
- and a priority and are associated (by the programmer) with any line in 
- any file (or with the file as a whole) and are automatically synchronized 
- with the Editor. </p>
+<p><b>Tasks</b> are <b>reminders</b> or <b>notes</b> created by the programmer. In general, they refer to a task that must be performed on the code or project. Tasks consist of a <b>name</b> and a <b>priority</b>. 
+<p>They are attached (associated) by the programmer to a specific line of code in a specific file and are automatically synchronized with the Editor. They can be associated with the entire file instead of a specific line if required.</p>
 
-<p>They are used as reminders of actions, work to do or any other action 
+<p>If you double click a Task in the Task View - the Editor will automatically open the file referenced by the task to the specific line of code that the task refers to.</p>
+
+
+<p>Tasks are used as reminders of actions, work to do or any other action 
  required by the programmer and appear in their own <span style="font-weight: bold;">View</span>.</p>
 
-<p>Tasks are used in conjunction with the Editor. Each Task can be associated 
- with a specific line of code. A Task consists of a name and a priority.</p>
+<p>A Task consists of a <b>Description</b>, a <b>Priority</b>, the <b>name</b> 
+ of the file referred to (the Resource), the <b>Folder</b> that the file 
+ is contained in and the <b>line number</b> (the Location).</p>
 
-<p style="margin-left: 25pt;"><img src="add_task.JPG"
-									x-maintain-ratio=TRUE
-									style="border: none;
-											width: 592px;
-											height: 427px;
-											float: none;
-											border-style: none;"
-									width=592
-									height=427
-									border=0></p>
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 50%;">
+<col style="width: 50%;">
 
-<p style="margin-left: 25pt;
-			font-size: 11pt;
-			font-style: italic;">Figure 1 - Adding a Task to Existing</p>
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 50%;
+			padding-right: 5px;
+			padding-left: 5px;
+			border-left-style: none;
+			border-top-style: none;
+			border-bottom-style: none;
+			border-right-style: none;"
+	width=50%>
+<p><img src="task.JPG"
+		x-maintain-ratio=TRUE
+		style="border: none;
+				width: 375px;
+				height: 270px;
+				float: none;
+				border-style: none;"
+		width=375
+		height=270
+		border=0><br><b>Figure 1</b> - Existing Task; <i>Editor View (top) <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;& Task View (bottom)</i>
 
-<p style="margin-bottom: 12px; margin-top: 12px;">The Task View contains 
- the following information: </p>
+<td style="width: 50%;
+			padding-right: 5px;
+			padding-left: 5px;
+			border-top-style: none;
+			border-bottom-style: none;
+			border-right-style: none;"
+	width=50%>
+<p><img src="task_new.JPG"
+		x-maintain-ratio=TRUE
+		style="border: none;
+				width: 416px;
+				height: 255px;
+				float: none;
+				border-style: none;"
+		width=416
+		height=255
+		border=0><p style="font-weight: normal; margin-top: 10pt;"><b>Figure 2</b> - Defining a Task</td></tr>
+</table>
+
+
+
+
+<h2> Task Parameters</h2>
+<p>The Task View contains the following information: </p>
 
 <ul style="list-style: disc;"
 	type=disc>
 	
-	<li class=kadov-p><p style="margin-bottom: 4pt;"><span style="font-weight: bold;">Completion 
- Status</span> check box - indicates the current status of the task.</p></li>
+	<li class=kadov-p><p style="margin-bottom: 4pt;"><span style="font-weight: bold;">Completion Status</span> check box - indicates the current status of the task.</p></li>
 	
 	<li class=kadov-p><p style="margin-bottom: 4pt;"><span style="font-weight: bold;">Priority</span>: 
- <!--kadov_tag{{<spaces>}}-->&nbsp;<span style="font-weight: bold;"><!--kadov_tag{{</spaces>}}-->High 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<span style="font-weight: normal;"><!--kadov_tag{{</spaces>}}--><i>High</i> 
  (<img src="High.JPG"
-		x-maintain-ratio=TRUE
-		style="border: none;
-				width: 20px;
-				height: 23px;
-				float: none;"
-		width=20
-		height=23
-		border=0>),</span> <span style="font-weight: bold;">Normal</span> 
- or <span style="font-weight: bold;">Low(<img src="Low.JPG"
-												x-maintain-ratio=TRUE
-												style="border: none;
-														width: 19px;
-														height: 18px;
-														float: none;"
-												width=19
-												height=18
-												border=0>)</span>.</p></li>
+x-maintain-ratio=TRUE
+style="border: none;
+width: 20px;
+height: 23px;
+float: none;"
+width=20
+height=23
+border=0>),</span> <span style="font-weight: normal;"><i>Normal</i></span> 
+ or <span style="font-weight: normal;"><i>Low</i>&nbsp(<img src="Low.JPG"
+x-maintain-ratio=TRUE
+style="border: none;
+width: 19px;
+height: 18px;
+float: none;"
+width=19
+height=18
+border=0>)</span>.</p></li>
 	
 	<li class=kadov-p><p style="margin-bottom: 4pt;"><span style="font-weight: bold;">Description</span>: 
  The description of the task.</p></li>
@@ -109,10 +146,32 @@
  The line number of the problem is found within the source.</p></li>
 </ul>
 
-<h4>Sorting and Filtering</h4>
+<h2>Opening The Task View</h2>
+<ol style="list-style: decimal;"
+	type=1>
+	<li class=kadov-p><p style="margin-top: 13.5pt;">Click <span style="font-weight: bold;">Window 
+ | Show View | Tasks</span> to open the Task View from any location.</p></li>
+</ol>
 
-<p style="margin-bottom: 12pt;">You can sort Tasks by clicking on the column 
- containing the above information. In addition, you can filter tasks by:</p>
+<p style="margin-left: 25pt;"><img src="task_view.JPG"
+x-maintain-ratio=TRUE
+style="border: none;
+width: 335px;
+height: 318px;float: none;"
+width=335
+height=318
+border=0></p>
+
+<p style="margin-left: 25pt;
+			font-style: italic;
+			font-size: 11pt;
+			font-weight: normal;">Figure 3 - Open Task View</p>
+
+<p></p>
+
+<h3>Sorting and Filtering</h3>
+
+<p style="margin-bottom: 12pt;">You can <i>sort</i> Tasks by clicking on any of the <b>task parameter</b> columns to arrange the Tasks according to that parameter. (See <i>Configuring Task Parameters.</i>) You can filter tasks by:</p>
 
 <ul style="list-style: disc;"
 	type=disc>
@@ -128,27 +187,9 @@
 	<li class=kadov-p><p style="margin-bottom: 4pt;">Status</p></li>
 </ul>
 
-<ol style="list-style: decimal;"
-	type=1>
+
 	
-	<li class=kadov-p><p style="margin-top: 13.5pt;">Click <span style="font-weight: bold;">Window 
- | Show View | Tasks</span> to open the Task View from any location.</p></li>
-</ol>
 
-<p style="margin-left: 25pt;"><img src="view_task.JPG"
-									x-maintain-ratio=TRUE
-									style="border: none;
-											width: 335px;
-											height: 318px;
-											float: none;"
-									width=335
-									height=318
-									border=0></p>
-
-<p style="margin-left: 25pt;
-			font-style: italic;
-			font-size: 11pt;
-			font-weight: normal;">Figure 2 - Open Task View</p>
 
 </body>
 
