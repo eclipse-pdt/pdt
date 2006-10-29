@@ -22,6 +22,7 @@ import org.eclipse.php.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.functions.PHPFunctionsPart;
+import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorPart;
 
 public class FunctionsViewGroup extends ViewActionGroup {
@@ -33,7 +34,6 @@ public class FunctionsViewGroup extends ViewActionGroup {
 	private ViewAction showPHP4FunctionsAction;
 	private ViewAction showPHP5FunctionsAction;
 	private int currentMode;
-	private UpdateViewJob updateViewJob;
 
 	public FunctionsViewGroup(PHPFunctionsPart part) {
 		this.fPart = part;
@@ -89,22 +89,17 @@ public class FunctionsViewGroup extends ViewActionGroup {
 	}
 
 	public void handleUpdateInput(IEditorPart editorPart) {
-		if (editorPart != null && editorPart instanceof PHPStructuredEditor) {
-			PHPStructuredEditor phpEditor = (PHPStructuredEditor) editorPart;
-			IFile file = phpEditor.getFile();
-			String version = PhpVersionProjectPropertyHandler.getVersion(file.getProject());
-			setMode(getVersion(version));
-		} else {
+		if (editorPart == null) {
 			setMode(getVersion(PhpVersionProjectPropertyHandler.getVersion()));
+			return;
 		}
-	}
-
-	private String getVersion(int i) {
-		if (i == PHP4) {
-			return PHPVersion.PHP4;
-		}
-
-		return PHPVersion.PHP5;
+		
+		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
+		if (phpEditor != null) {
+			final IFile file = phpEditor.getFile();
+			final String version = PhpVersionProjectPropertyHandler.getVersion(file.getProject());
+			setMode(getVersion(version));
+		} 
 	}
 
 	private int getVersion(String s) {
@@ -113,24 +108,5 @@ public class FunctionsViewGroup extends ViewActionGroup {
 		}
 
 		return PHP5;
-	}
-
-	class UpdateViewJob extends Job {//implements Runnable {
-
-		public UpdateViewJob() {
-			super("updateViewJob");
-			setSystem(true);
-		}
-
-		protected IStatus run(IProgressMonitor monitor) {
-			//			Display.getDefault().asyncExec(new Runnable() {
-			//				public void run() {
-			fPart.getViewer().setInput(PHPLanguageManagerProvider.instance().getPHPLanguageManager(currentMode == PHP4 ? PHPVersion.PHP4 : PHPVersion.PHP5).getModel());
-			fPart.getViewer().refresh();
-			//				}
-			//			});
-			return Status.OK_STATUS;
-		}
-
 	}
 }

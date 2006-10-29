@@ -43,6 +43,7 @@ import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.explorer.PHPTreeViewer;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.ui.util.DecoratingPHPLabelProvider;
+import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.php.ui.util.PHPElementImageProvider;
 import org.eclipse.php.ui.util.PHPElementLabels;
 import org.eclipse.php.ui.util.PHPManualFactory;
@@ -172,7 +173,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	private void addDoubleClickListener() {
 		fViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				IEditorPart editor = getViewSite().getPage().getActiveEditor();
+				IEditorPart editor =  EditorUtility.getPHPStructuredEditor(getViewSite().getPage().getActiveEditor());
 				StructuredSelection selection = (StructuredSelection) fViewer.getSelection();
 				if (editor != null && editor instanceof ITextEditor && selection != null && !selection.isEmpty()) {
 					if (selection.getFirstElement() instanceof PHPCodeData) {
@@ -266,10 +267,10 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 			updateInputForCurrentEditor(null);
 			setFocus();
 		}
+		part = EditorUtility.getPHPStructuredEditor(part);
 		if (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part instanceof PHPStructuredEditor) {
 			updateInputForCurrentEditor((IEditorPart) part);
 		}
-
 	}
 
 	public void menuAboutToShow(IMenuManager menu) {

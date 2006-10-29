@@ -61,6 +61,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IDE;
@@ -548,5 +549,13 @@ public class EditorUtility {
 		//		}
 		if (offset >= 0)
 			revealInEditor(part, offset, length);
+	}
+
+	/**
+	 * @param editor
+	 * @return the php editor (if exists) from the given editor
+	 */
+	public static final PHPStructuredEditor getPHPStructuredEditor(final IWorkbenchPart editor) {
+		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null; 
 	}
 }
