@@ -21,12 +21,15 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.debug.core.model.DebugOutput;
 import org.eclipse.php.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -36,7 +39,9 @@ import org.eclipse.ui.progress.UIJob;
 
 
 public class DebugBrowserView extends ViewPart implements ISelectionListener{
+	
 	private Browser swtBrowser;
+	
 	private PHPDebugTarget fTarget;
 	private int fUpdateCount;
 	private IDebugEventSetListener terminateListener;
@@ -57,16 +62,27 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 	    GridLayout layout = new GridLayout();
 	    layout.numColumns=1;
 	    layout.makeColumnsEqualWidth=true;
+	    layout.marginHeight = 0;
+	    layout.marginWidth = 0;
 	    container.setLayout(layout);
 	    RowLayout rowLayout =new RowLayout();
 	    rowLayout.spacing=1;
-		swtBrowser=new Browser(container,SWT.NONE);
-		GridData gridData=new GridData();
+	    
+	    GridData gridData=new GridData();
 		gridData.grabExcessHorizontalSpace=true;
 		gridData.grabExcessVerticalSpace=true;
 		gridData.horizontalAlignment=SWT.FILL;
 		gridData.verticalAlignment=SWT.FILL;
-		swtBrowser.setLayoutData(gridData);
+		
+	    try {
+	    	swtBrowser = new Browser(container,SWT.NONE);
+	    	swtBrowser.setLayoutData(gridData);
+	    } catch (SWTError error) {
+	    	swtBrowser = null;
+	    	Label label = new Label(container, SWT.WRAP);
+	    	label.setText(PHPDebugUIMessages.DebugBrowserView_swtBrowserNotAvailable0);
+	    	label.setLayoutData(gridData);
+	    }
 		
 		debugViewHelper = new DebugViewHelper();
 		
@@ -83,7 +99,7 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 					
 						if ( events[i].getKind() == DebugEvent.TERMINATE) {
 							target = (PHPDebugTarget)obj;
-							Job job = new UIJob("debug output") {
+							Job job = new UIJob("debug output") { //$NON-NLS-1$
 								public IStatus runInUIThread(IProgressMonitor monitor) {
 									update(target);
 									return Status.OK_STATUS;
@@ -117,7 +133,9 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
         getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
         DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
         //        fTarget = null;
-//        swtBrowser = null;
+        if (swtBrowser != null && !swtBrowser.isDisposed()) {
+        	swtBrowser.dispose();
+        }
         super.dispose();
     }
     
@@ -133,25 +151,27 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void update(PHPDebugTarget target) {
-        PHPDebugTarget oldTarget = fTarget;
-        int oldcount = fUpdateCount;
-        fTarget = target;
-        String output = "";
-        if (fTarget != null ) {
-           	if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
-           		DebugOutput outputBuffer = fTarget.getOutputBufffer();
-           		fUpdateCount = outputBuffer.getUpdateCount();
- 
-           		// check if output hasn't been updated
-           		if (fTarget == oldTarget && fUpdateCount == oldcount) return;
-        	
-           		output = outputBuffer.toString();
-           	} else {
-           		// Not Suspended or Terminated
-           		return;
-           	}
+    	if (swtBrowser != null) {
+	        PHPDebugTarget oldTarget = fTarget;
+	        int oldcount = fUpdateCount;
+	        fTarget = target;
+	        String output = ""; //$NON-NLS-1$
+	        if (fTarget != null ) {
+	           	if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
+	           		DebugOutput outputBuffer = fTarget.getOutputBufffer();
+	           		fUpdateCount = outputBuffer.getUpdateCount();
+	 
+	           		// check if output hasn't been updated
+	           		if (fTarget == oldTarget && fUpdateCount == oldcount) return;
+	        	
+	           		output = outputBuffer.toString();
+	           	} else {
+	           		// Not Suspended or Terminated
+	           		return;
+	           	}
+	        }
+        	swtBrowser.setText(output);
         }
-        swtBrowser.setText(output);
     }
     
     /**

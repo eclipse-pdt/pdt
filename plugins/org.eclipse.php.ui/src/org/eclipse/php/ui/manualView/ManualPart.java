@@ -11,13 +11,43 @@
 package org.eclipse.php.ui.manualView;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 public class ManualPart extends ViewPart {
 
+	/**
+	 * Availability checking cache.
+	 */
+	private static boolean fgIsAvailable = false;
+	private static boolean fgAvailabilityChecked = false;
+	
 	public ManualPart() {
+	}
+	
+	/**
+	 * Tells whether the SWT Browser widget and hence this information
+	 * control is available.
+	 *
+	 * @param parent the parent component used for checking or <code>null</code> if none
+	 * @return <code>true</code> if this control is available
+	 */
+	public static boolean isAvailable(Composite parent) {
+		if (!fgAvailabilityChecked) {
+			try {
+				Browser browser= new Browser(parent, SWT.NONE);
+				browser.dispose();
+				fgIsAvailable= true;
+			} catch (SWTError er) {
+				fgIsAvailable= false;
+			} finally {
+				fgAvailabilityChecked= true;
+			}
+		}
+
+		return fgIsAvailable;
 	}
 
 	public void createPartControl(Composite parent) {
