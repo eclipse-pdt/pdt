@@ -21,6 +21,7 @@ import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -45,8 +46,9 @@ public class SelectionConverter {
 	 * </ul>
 	 */
 	public static IStructuredSelection getStructuredSelection(IWorkbenchPart part) {
-		if (part instanceof PHPStructuredEditor)
-			return new StructuredSelection(codeResolve((PHPStructuredEditor) part));
+		final PHPStructuredEditor structuredEditor = EditorUtility.getPHPStructuredEditor(part);
+		if (structuredEditor != null)
+			return new StructuredSelection(codeResolve(structuredEditor));
 		ISelectionProvider provider = part.getSite().getSelectionProvider();
 		if (provider != null) {
 			ISelection selection = provider.getSelection();

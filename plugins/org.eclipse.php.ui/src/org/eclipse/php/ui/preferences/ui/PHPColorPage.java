@@ -24,6 +24,7 @@ import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.ui.editor.highlighter.PHPLineStyleProvider;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
+import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -97,8 +98,8 @@ public class PHPColorPage extends AbstractColorPage {
 
 		PHPLineStyleProvider styleProvider = null;
 		IEditorPart editor = PHPUiPlugin.getActivePage().getActiveEditor();
-		if (editor != null && editor instanceof PHPStructuredEditor) {
-			PHPStructuredEditor phpEditor = (PHPStructuredEditor) editor;
+		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editor);
+		if (phpEditor != null) {
 			SourceViewerConfiguration viewerConfig = phpEditor.getSourceViwerConfiguration();
 			if (viewerConfig != null && viewerConfig instanceof PHPStructuredTextViewerConfiguration) {
 				PHPStructuredTextViewerConfiguration phpViewerConfig = (PHPStructuredTextViewerConfiguration) viewerConfig;

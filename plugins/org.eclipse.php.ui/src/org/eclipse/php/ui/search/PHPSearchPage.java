@@ -27,6 +27,7 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.actions.SelectionConverter;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
@@ -548,10 +549,11 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 		SearchPatternData initData = null;
 		if (sel instanceof ITextSelection) {
 			IEditorPart activePart = getActiveEditor();
-			if (activePart instanceof PHPStructuredEditor) {
+			final PHPStructuredEditor structuredEditor = EditorUtility.getPHPStructuredEditor(activePart);
+			if (structuredEditor != null) {
 				try {
 					// TODO - At the time this code was written, the codeResolve always return an empty result. This will probably have to be fixed.
-					PHPCodeData[] elements = SelectionConverter.codeResolve((PHPStructuredEditor) activePart);
+					PHPCodeData[] elements = SelectionConverter.codeResolve(structuredEditor);
 					if (elements != null && elements.length > 0) {
 						initData = determineInitValuesFrom(elements[0]);
 					}

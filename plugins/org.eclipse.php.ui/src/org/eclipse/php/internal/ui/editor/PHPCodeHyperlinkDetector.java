@@ -28,6 +28,7 @@ import org.eclipse.php.internal.ui.util.CodeDataResolver;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.hover.PHPCodeHyperLink;
+import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -76,8 +77,8 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
 							IWorkbenchPage page = PHPUiPlugin.getActivePage();
 							if (page != null) {
 								IEditorPart editor = page.getActiveEditor();
-								if (editor != null && editor instanceof PHPStructuredEditor) {
-									PHPStructuredEditor phpEditor = (PHPStructuredEditor) editor;
+								final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editor);
+								if (phpEditor != null) {
 									IFile currentFile = phpEditor.getFile();
 									IProject currentProject = currentFile.getProject();
 									IFile file = currentProject.getFile(path);

@@ -335,8 +335,9 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	private boolean fLinkingEnabled;
 	private final IPartListener fPartListener = new IPartListener() {
 		public void partActivated(IWorkbenchPart part) {
-			if (getViewer().getTree().getVisible() && part instanceof PHPStructuredEditor)
-				updateInputForCurrentEditor((IEditorPart) part);
+			final PHPStructuredEditor structuredEditor = EditorUtility.getPHPStructuredEditor(part);
+			if (getViewer().getTree().getVisible() && structuredEditor != null)
+				updateInputForCurrentEditor(structuredEditor);
 		}
 
 		public void partBroughtToTop(IWorkbenchPart part) {
@@ -349,8 +350,9 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		}
 
 		public void partOpened(IWorkbenchPart part) {
-			if (getViewer().getTree().getVisible() && part instanceof PHPStructuredEditor)
-				updateInputForCurrentEditor((IEditorPart) part);
+			final PHPStructuredEditor structuredEditor = EditorUtility.getPHPStructuredEditor(part);
+			if (getViewer().getTree().getVisible() && structuredEditor != null)
+				updateInputForCurrentEditor(structuredEditor);
 		}
 	};
 	private ISelectionChangedListener fPostSelectionListener;
@@ -568,9 +570,9 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	public void handleUpdateInput(final IEditorPart editorPart) {
 		IProject project = null;
 
-		if (editorPart != null)
-			if (editorPart instanceof PHPStructuredEditor) {
-				final PHPStructuredEditor phpEditor = (PHPStructuredEditor) editorPart;
+		if (editorPart != null) {
+			final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
+			if (phpEditor != null) {
 				PHPFileData fileData = phpEditor.getPHPFileData();
 				project = PHPWorkspaceModelManager.getInstance().getProjectForFileData(fileData, currentProject);
 			} else {
@@ -580,6 +582,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 					project = fileEditorInput.getFile().getProject();
 				}
 			}
+		}
 		if (project != null)
 			setProject(project);
 	}

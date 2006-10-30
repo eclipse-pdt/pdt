@@ -267,8 +267,9 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 			updateInputForCurrentEditor(null);
 			setFocus();
 		}
+
 		part = EditorUtility.getPHPStructuredEditor(part);
-		if (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part instanceof PHPStructuredEditor) {
+		if (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part != null) {
 			updateInputForCurrentEditor((IEditorPart) part);
 		}
 	}

@@ -25,10 +25,12 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.search.decorators.PHPClassDataDecorator;
 import org.eclipse.php.ui.search.decorators.PHPConstantDataDecorator;
 import org.eclipse.php.ui.search.decorators.PHPDataDecorator;
 import org.eclipse.php.ui.search.decorators.PHPFunctionDataDecorator;
+import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResultListener;
 import org.eclipse.search.ui.SearchResultEvent;
@@ -80,6 +82,10 @@ public class PHPSearchResult extends AbstractTextSearchResult implements IEditor
 	}
 
 	public Match[] computeContainedMatches(AbstractTextSearchResult result, IEditorPart editor) {
+		final PHPStructuredEditor structuredEditor = EditorUtility.getPHPStructuredEditor(editor);
+		if (structuredEditor != null)
+			editor = structuredEditor;
+		
 		IEditorInput editorInput= editor.getEditorInput();
 		if (editorInput instanceof IFileEditorInput)  {
 			IFileEditorInput fileEditorInput= (IFileEditorInput) editorInput;
@@ -165,6 +171,10 @@ public class PHPSearchResult extends AbstractTextSearchResult implements IEditor
 	 *      org.eclipse.ui.IEditorPart)
 	 */
 	public boolean isShownInEditor(Match match, IEditorPart editor) {
+		final PHPStructuredEditor structuredEditor = EditorUtility.getPHPStructuredEditor(editor);
+		if (structuredEditor != null)
+			editor = structuredEditor;
+		
 		IEditorInput editorInput = editor.getEditorInput();
 		if (match.getElement() instanceof PHPCodeData) {
 			PHPCodeData data = (PHPCodeData) match.getElement();
