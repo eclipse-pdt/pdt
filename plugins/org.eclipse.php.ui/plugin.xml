@@ -496,7 +496,22 @@
 				<separator name="generateGroup"></separator>
 				<separator name="codeGroup"></separator>
 				<separator name="convertGroup"></separator>
-			</menu>
+    			<separator name="formatGroup"></separator>
+			</menu>		
+			<action
+				definitionId="org.eclipse.wst.sse.ui.format.active.elements"
+				id="FormatActiveElements"
+				label="Format Active Elements"
+				retarget="true"
+				menubarPath="org.eclipse.php.ui.source.menu/formatGroup">
+			</action>
+			<action
+				definitionId="org.eclipse.wst.sse.ui.format.document"
+				id="FormatDocument"
+				label="Format Document"
+				retarget="true"
+				menubarPath="org.eclipse.php.ui.source.menu/formatGroup">
+			</action>
 			<action
 				definitionId="org.eclipse.php.ui.edit.text.remove.block.comment"
 				label="%RemoveBlockCommentAction.label"
@@ -517,7 +532,7 @@
 				label="%ToggleCommentAction.label"
 				retarget="true"
 				menubarPath="org.eclipse.php.ui.source.menu/editGroup">
-			</action>
+			</action>			
 			<action
 				definitionId="org.eclipse.php.ui.edit.text.uncomment"
 				label="%UncommentAction.label"
@@ -600,7 +615,19 @@
 			description="%ActionDefinition.toggleComment.description"
 			categoryId="org.eclipse.php.ui.category.source"
 			id="org.eclipse.php.ui.edit.text.toggle.comment">
+		</command>	
+		<!--<command
+			name="Format Document"
+			description="Format Document"
+			categoryId="org.eclipse.php.ui.category.source"
+			id="org.eclipse.wst.sse.ui.format.document">
 		</command>
+		<command
+			name="Format Active Elements"
+			description="Format Active Elements"
+			categoryId="org.eclipse.php.ui.category.source"
+			id="org.eclipse.wst.sse.ui.format.active.elements">
+		</command>-->
 		<command
 			name="%ActionDefinition.addBlockComment.name"
 			description="%ActionDefinition.addBlockComment.description"

@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
 import org.eclipse.php.internal.ui.actions.PHPActionConstants;
@@ -36,10 +37,18 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	private List fPartListeners = new ArrayList();
 	private RetargetTextEditorAction fShowPHPDoc;
 
+	protected RetargetTextEditorAction fFormatActiveElements = null;
+	protected RetargetTextEditorAction fFormatDocument = null;
+	protected MenuManager fFormatMenu = null;
+
+	public final static String FORMAT_ACTIVE_ELEMENTS = "org.eclipse.wst.sse.ui.format.active.elements";//$NON-NLS-1$
+	public final static String FORMAT_DOCUMENT = "org.eclipse.wst.sse.ui.format.document";//$NON-NLS-1$
+
 	/** The global actions to be connected with PHP editor actions */
 	private final static String[] PHPEDITOR_ACTIONS = { "org.eclipse.php.ui.actions.RemoveBlockComment", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
-		"org.eclipse.php.ui.actions.AddBlockComment", }; //$NON-NLS-1$
+		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$
+		"FormatActiveElements" }; //$NON-NLS-1$
 
 	// private ToggleCommentAction fToggleCommentAction;
 
@@ -55,7 +64,29 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fShowPHPDoc = new RetargetTextEditorAction(b, "ShowPHPDoc."); //$NON-NLS-1$
 		fShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 
+		fFormatDocument = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
+		fFormatDocument.setActionDefinitionId(FORMAT_DOCUMENT);
+
+		fFormatActiveElements = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
+		fFormatActiveElements.setActionDefinitionId(FORMAT_ACTIVE_ELEMENTS);
+
+		//		fFormatMenu = new MenuManager("Format");
+		//		fFormatMenu.add(fFormatDocument);
+		//		fFormatMenu.add(fFormatActiveElements);
+
 	}
+
+	//	public void contributeToMenu(IMenuManager menu) {
+	//		String sourceMenuId = "org.eclipse.php.ui.source.menu"; //$NON-NLS-1$		
+	//		IMenuManager sourceMenu = menu.findMenuUsingPath(sourceMenuId);
+	//
+	//		if (sourceMenu != null) {
+	//			sourceMenu.add(fFormatMenu);
+	//		}
+	//		
+	//		super.contributeToMenu(menu);
+	//
+	//	}
 
 	protected final void markAsPartListener(RetargetAction action) {
 		fPartListeners.add(action);
@@ -85,6 +116,8 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 			editor = (ITextEditor) part;
 
 		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc"));
+		fFormatDocument.setAction(getAction(editor, "FormatDocument"));
+		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements"));
 
 		IActionBars actionBars = getActionBars();
 		if (actionBars == null)
