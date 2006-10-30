@@ -82,8 +82,16 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 	 * excluding php closing tag (?>) and comments  
 	 */
 	protected boolean shouldAddClosingBracket(final IStructuredDocument document, final int offset, final boolean isQuote) throws BadLocationException {
-		if (document.getLength() == offset)
-			return true;
+		// check the case of the end of the document
+		// if we are after close PHP tag, don't give auto completion
+		// otherwise, we could be typing our code without having a php close tag and we do need completion 
+		// (can't check region type since it is wrong)
+		if (document.getLength() == offset) {
+			if (document.getChar(offset - 2) == '?' && document.getChar(offset - 1) == '>')
+				return false;
+			else
+				return true;
+		}
 
 		final char currChar = document.getChar(offset);
 		if (Character.isWhitespace(currChar) || isClosingBracket(currChar) || isQuote && isQuote(currChar) || currChar == ';')
