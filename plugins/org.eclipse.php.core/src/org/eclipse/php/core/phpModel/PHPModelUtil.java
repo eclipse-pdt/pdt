@@ -29,6 +29,8 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.core.phpModel.parser.IPhpModel;
+import org.eclipse.php.core.phpModel.parser.PHPIncludePathModel;
+import org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
@@ -48,6 +50,7 @@ import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
+import org.eclipse.php.core.project.options.includepath.IncludePathVariableManager;
 
 public class PHPModelUtil {
 
@@ -496,5 +499,38 @@ public class PHPModelUtil {
 
 	public static boolean isReadOnly(final Object target) {
 		return false;
+	}
+
+	public static String getRelativeLocation(IProject project, String location) {
+		PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+		if(model == null) {
+			return location;
+		}
+		PHPFileData fileData = model.getFileData(location);
+		if(fileData != null) {
+			IResource resource = getResource(fileData);
+			if(resource != null && resource.getProject() != null && resource.getProject().isAccessible()) { // file is in a project
+				IProject fileProject = resource.getProject();
+				if(fileProject.isAccessible()) {
+					return new Path(location).removeFirstSegments(1).toString(); 
+				}
+			} else { // file is in an include file
+				IPhpModel[] models = model.getModels();
+				for(int i = 0; i < models.length; ++i) {
+					if(models[i].getFileData(location) != null) {
+						if(models[i] instanceof PHPIncludePathModelManager) {
+							PHPIncludePathModelManager manager = (PHPIncludePathModelManager) models[i];
+							IPhpModel[] includeModels = manager.listModels();
+							for(int j = 0; j < includeModels.length; ++j) {
+								String root = ((PHPIncludePathModel) includeModels[j]).getID();
+								IPath path = IncludePathVariableManager.instance().getIncludePathVariable(root);
+								return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString();
+							}
+						}
+					}
+				}
+			}
+		}
+		return location;
 	}
 }
