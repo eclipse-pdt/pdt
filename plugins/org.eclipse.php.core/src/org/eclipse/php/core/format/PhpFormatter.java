@@ -169,8 +169,7 @@ public class PhpFormatter implements IStructuredFormatter {
 
 			// remove ending spaces.
 			final int formattedLineStart = formattedLineInformation.getOffset();
-			final int formattedLineLength = formattedLineInformation.getLength();
-			final int formattedTextEnd = formattedLineStart + formattedLineLength;
+			final int formattedTextEnd = formattedLineStart + formattedLineInformation.getLength();
 			final int originalTextEnd = orginalLineStart + originalLineLength;
 			if (formattedTextEnd != originalTextEnd) {
 				document.replace(formattedTextEnd, originalTextEnd - formattedTextEnd, "");
@@ -211,7 +210,7 @@ public class PhpFormatter implements IStructuredFormatter {
 			// replace the starting spaces
 			final String newIndentation = resultBuffer.toString();
 			final String oldIndentation = lineText.substring(0, startingWhiteSpaces);
-			if (!newIndentation.equals(oldIndentation))
+			if (newIndentation.length() != oldIndentation.length())
 				document.replaceText(sdRegion, orginalLineStart, startingWhiteSpaces, newIndentation);
 
 		} catch (BadLocationException e) {

@@ -61,7 +61,7 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 			Logger.logException(e);
 			return;
 		}
-		ITextEditor textEditor = (ITextEditor) editorPart;
+		ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 		IEditorInput editorInput = editorPart.getEditorInput();
 		IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
 		if (phpCodeData instanceof PHPFileData) {

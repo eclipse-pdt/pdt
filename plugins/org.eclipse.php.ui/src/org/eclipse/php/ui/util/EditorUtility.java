@@ -555,6 +555,8 @@ public class EditorUtility {
 	/**
 	 * @param editor
 	 * @return the php editor (if exists) from the given editor
+	 * NOTE: editors that wants to work with PHP editor actions must implement the getAdapter() method
+	 *       this way the actions pick the php editor...
 	 */
 	public static final PHPStructuredEditor getPHPStructuredEditor(final IWorkbenchPart editor) {
 		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null; 

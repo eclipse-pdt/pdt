@@ -209,7 +209,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 							command.text = commentStart + command.text;
 							return -1;
 						}
-						ITextEditor textEditor = (ITextEditor) editorPart;
+						ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 						//25 - stands for the shortDescription length
 						//E - stands for the first latter in the shortDescription
 						Display.getDefault().asyncExec(new SelectText(command.offset + command.text.indexOf("E"), 25, textEditor));
