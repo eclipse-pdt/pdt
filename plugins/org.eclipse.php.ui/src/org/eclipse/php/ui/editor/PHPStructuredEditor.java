@@ -64,6 +64,14 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 
 public class PHPStructuredEditor extends StructuredTextEditor {
+
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN = "org.eclipse.php.ui.actions.Open"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT = "org.eclipse.php.ui.actions.Uncomment"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT = "org.eclipse.php.ui.actions.Comment"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT = "org.eclipse.php.ui.actions.RemoveBlockComment"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT = "org.eclipse.php.ui.actions.AddBlockComment"; //$NON-NLS-1$
+
 	/**
 	 * This action behaves in two different ways: If there is no current text
 	 * hover, the javadoc is displayed using information presenter. If there is
@@ -332,16 +340,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			final MenuManager subMenu = new MenuManager(label, "org.eclipse.php.ui.source.menu"); //$NON-NLS-1$
 			subMenu.add(new GroupMarker("editGroup")); //$NON-NLS-1$
 			addAction(subMenu, "org.eclipse.php.ui.actions.ToggleCommentAction"); //$NON-NLS-1$
-			addAction(subMenu, "org.eclipse.php.ui.actions.AddBlockComment"); //$NON-NLS-1$
-			addAction(subMenu, "org.eclipse.php.ui.actions.RemoveBlockComment"); //$NON-NLS-1$
+			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT); //$NON-NLS-1$
+			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT); //$NON-NLS-1$
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, subMenu);
 
 			final String openGroup = "group.open"; //$NON-NLS-1$
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, new Separator(openGroup));
-			IAction action = getAction("org.eclipse.php.ui.actions.Open"); //$NON-NLS-1$
+			IAction action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN); //$NON-NLS-1$
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
-			action = getAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction"); //$NON-NLS-1$
+			action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION); //$NON-NLS-1$
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
 		}
@@ -361,35 +369,35 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		action = new AddBlockCommentAction(resourceBundle, "AddBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.add.block.comment"); //$NON-NLS-1$
-		setAction("org.eclipse.php.ui.actions.AddBlockComment", action); //$NON-NLS-1$
-		markAsSelectionDependentAction("org.eclipse.php.ui.actions.AddBlockComment", true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, action); //$NON-NLS-1$
+		markAsSelectionDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, true); //$NON-NLS-1$
 		((BlockCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new RemoveBlockCommentAction(resourceBundle, "RemoveBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.remove.block.comment"); //$NON-NLS-1$
-		setAction("org.eclipse.php.ui.actions.RemoveBlockComment", action); //$NON-NLS-1$
-		markAsCursorDependentAction("org.eclipse.php.ui.actions.RemoveBlockComment", true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT, action); //$NON-NLS-1$
+		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT, true); //$NON-NLS-1$
 		((BlockCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new TextOperationAction(resourceBundle, "CommentAction_", this, ITextOperationTarget.PREFIX); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.comment"); //$NON-NLS-1$
-		setAction("org.eclipse.php.ui.actions.Comment", action); //$NON-NLS-1$
-		markAsStateDependentAction("org.eclipse.php.ui.actions.Comment", true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT, action); //$NON-NLS-1$
+		markAsStateDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT, true); //$NON-NLS-1$
 
 		action = new TextOperationAction(resourceBundle, "UncommentAction_", this, ITextOperationTarget.PREFIX); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.uncomment"); //$NON-NLS-1$
-		setAction("org.eclipse.php.ui.actions.Uncomment", action); //$NON-NLS-1$
-		markAsStateDependentAction("org.eclipse.php.ui.actions.Uncomment", true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT, action); //$NON-NLS-1$
+		markAsStateDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT, true); //$NON-NLS-1$
 
 		action = new OpenFunctionsManualAction(resourceBundle, this);
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.OpenFunctionsManualAction"); //$NON-NLS-1$
-		setAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction", action); //$NON-NLS-1$
-		markAsCursorDependentAction("org.eclipse.php.ui.actions.OpenFunctionsManualAction", true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, action); //$NON-NLS-1$
+		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, true); //$NON-NLS-1$
 
 		action = new OpenDeclarationAction(resourceBundle, this);
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.open.editor"); //$NON-NLS-1$
-		setAction("org.eclipse.php.ui.actions.Open", action); //$NON-NLS-1$
-		markAsCursorDependentAction("org.eclipse.php.ui.actions.Open", true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN, action); //$NON-NLS-1$
+		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN, true); //$NON-NLS-1$
 
 		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true);
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
