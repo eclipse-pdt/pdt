@@ -12,14 +12,14 @@
 
 <!--(Meta)==========================================================-->
 
-<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta http-equiv=content-type content="text/html; charset=UTF-8">
 <meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
 <meta name=generator-major-version content=0.1>
 <meta name=generator-minor-version content=1>
 <meta name=filetype content=kadov>
 <meta name=filetype-version content=1>
 <meta name=page-count content=1>
-<meta name=layout-height content=2293>
+<meta name=layout-height content=2323>
 <meta name=layout-width content=600>
 
 
@@ -45,14 +45,17 @@
 <table x-use-null-cells
 		style="x-cell-content-align: top;
 				width: 100%;
-				border-spacing: 0;"
+				border-spacing: 0px;
+				border-spacing: 0px;"
 		cellspacing=0
 		width=100%>
 <col style="width: 21.345%;">
 <col style="width: 78.655%;">
 
-<tr valign=top>
-<td style="padding-right: 10px;
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 21.345%;
+			padding-right: 10px;
 			padding-left: 10px;
 			border-bottom-style: none;
 			border-right-style: none;
@@ -60,7 +63,8 @@
 			border-top-style: none;"
 	width=21.345%>
 <p style="font-weight: bold;">Location </td>
-<td style="padding-right: 10px;
+<td style="width: 78.655%;
+			padding-right: 10px;
 			padding-left: 10px;
 			border-bottom-style: none;
 			border-top-style: none;
@@ -68,8 +72,10 @@
 	width=78.655%>
 <p>The file in which the PHP element was declared</td></tr>
 
-<tr valign=top>
-<td style="padding-right: 10px;
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 21.345%;
+			padding-right: 10px;
 			padding-left: 10px;
 			border-bottom-style: none;
 			border-right-style: none;
@@ -78,7 +84,8 @@
 <p style="margin-top: 0px;
 			margin-bottom: 2pt;
 			font-weight: bold;">Short Description</td>
-<td style="padding-right: 10px;
+<td style="width: 78.655%;
+			padding-right: 10px;
 			padding-left: 10px;
 			border-bottom-style: none;
 			border-right-style: none;"
@@ -86,15 +93,18 @@
 <p style="margin-top: 0px; margin-bottom: 2pt;">This is the short description 
  taken from the PHP element's PHPDoc.</td></tr>
 
-<tr valign=top>
-<td style="padding-right: 10px;
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 21.345%;
+			padding-right: 10px;
 			padding-left: 10px;
 			border-right-style: none;
 			border-left-style: none;
 			border-bottom-style: none;"
 	width=21.345%>
 <p style="font-weight: bold;">Signature</td>
-<td style="padding-right: 10px;
+<td style="width: 78.655%;
+			padding-right: 10px;
 			padding-left: 10px;
 			border-bottom-style: none;
 			border-right-style: none;"
@@ -113,7 +123,9 @@
 					style="border: none;
 							width: 201px;
 							height: 86px;
-							float: none;"
+							float: none;
+							border-style: none;
+							border-style: none;"
 					width=201
 					height=86
 					border=0></p>
@@ -124,17 +136,45 @@
  function's location, its signature (including the return type) and the 
  short description.</p>
 
+<ol style="list-style: decimal;"
+	type=1>
+	
+	<li class=kadov-p><p>Hover over the a function. The tooltip will be 
+ displayed and include the following information:</p></li>
+</ol>
+
+<ol style="list-style: disc;"
+	type=disc>
+	
+	<ul style="list-style: disc;"
+		type=disc>
+		
+		<li class=kadov-p><p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Variable 
+ type, name, return type</p></li>
+		
+		<li class=kadov-p><p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Variable's 
+ location path</p></li>
+		
+		<li class=kadov-p><p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Variable's 
+ short description</p></li>
+	</ul>
+</ol>
+
+<p style="margin-top: 0.5pt;">&nbsp;</p>
+
 <p class=Figure><img src="hover_class_var.JPG"
 					x-maintain-ratio=TRUE
 					style="border: none;
 							width: 202px;
 							height: 159px;
-							float: none;"
+							float: none;
+							border-style: none;
+							border-style: none;"
 					width=202
 					height=159
 					border=0></p>
 
-<h2 style="margin-bottom: 0.5pt;">Class variables</h2>
+<h2 style="margin-bottom: 0.5pt;">Class Variables</h2>
 
 <p style="margin-top: 0pt;">Hovering over class variables displays the 
  function's location and the short description.</p>
@@ -143,7 +183,8 @@
 	type=1>
 	
 	<li class=kadov-p><p>Hover over the class reference ($sugar variable 
- in the last line). The tooltip is displayed and includes the following:</p></li>
+ in the last line of code, below). The tooltip is displayed and includes 
+ the following:</p></li>
 </ol>
 
 <ol style="list-style: disc;"
@@ -165,7 +206,9 @@
 					style="border: none;
 							width: 287px;
 							height: 84px;
-							float: none;"
+							float: none;
+							border-style: none;
+							border-style: none;"
 					width=287
 					height=84
 					border=0></p>
@@ -199,36 +242,29 @@ $coffee_type = 'cappuchino'; <br>
 * This class makes coffee preparations <br>
 */ <br>
 class coffee{ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}--><br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->public 
- $sugar; <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->/** <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->* This 
- variable holds sugar portion for teaspoon in grams <br>
+public $sugar; <br>
+/** <br>
+* This variable holds sugar portion for teaspoon in grams <br>
 @var int <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->*/ <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->private 
- $tea_spoon;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->function 
- coffee($sugar){ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--><br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->/* 
+*/ <br>
+private $tea_spoon;<br>
+function coffee($sugar){ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--><br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->/* 
  Cappucino */ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--><br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$this-&gt;sugar 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$this-&gt;sugar 
  = $sugar; <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$this-&gt;tea_spoon 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->$this-&gt;tea_spoon 
  = 20; <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->} <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}--><br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->/** <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}--><br>
+} <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}--><br>
+/** <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}--><br>
 This function returns sugar quantities <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->* @return 
- int <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}--><br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->*/ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}--><br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->function 
- add_sugar(){ <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->return 
+* @return int <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}--><br>
+*/ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}--><br>
+ function add_sugar(){ <br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->return 
  ($this-&gt;sugar &gt; 0) <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->? 
  $this-&gt;sugar * $this-&gt;tea_spoon : 0; <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->} 
- <br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->} <br>
 } <br>
 $coffee_time=1; <br>
 //--- End Include ----&gt; <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--><br>
@@ -252,7 +288,8 @@ echo $coffee_time; <br>
 	<ul style="list-style: disc;"
 		type=disc>
 		
-		<li class=kadov-p>&nbsp;</li>
+		<li class=kadov-p
+			class=kadov-p>&nbsp;</li>
 	</ul>
 </ol>
 
@@ -260,26 +297,7 @@ echo $coffee_time; <br>
 	style="list-style: decimal;"
 	type=1>
 	
-	<li class=kadov-p><p>Hover over the class variable. ($tea_spoon from 
- the previous section example- &quot;$this-&gt;tea_spoon = 20;&quot; ). 
- The tooltip is displayed and includes the following information:</p></li>
-</ol>
-
-<ol style="list-style: disc;"
-	type=disc>
-	
-	<ul style="list-style: disc;"
-		type=disc>
-		
-		<li class=kadov-p><p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Variable 
- type, name, return type</p></li>
-		
-		<li class=kadov-p><p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Variable's 
- location path</p></li>
-		
-		<li class=kadov-p><p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Variable's 
- short description</p></li>
-	</ul>
+	<li class=kadov-p><p>&nbsp;</p></li>
 </ol>
 
 <p class=Figure
@@ -289,6 +307,7 @@ echo $coffee_time; <br>
 											width: 476px;
 											height: 407px;
 											float: none;
+											border-style: none;
 											border-style: none;"
 									width=476
 									height=407
