@@ -11,6 +11,8 @@
 
 package org.eclipse.php.core.format.htmlFormatters;
 
+import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.core.format.PhpFormatter;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.w3c.dom.Node;
@@ -42,6 +44,9 @@ public class HTMLFormatterNoPHPFactory {
 			case Node.TEXT_NODE :
 				if (isEmbeddedCSS(node)) {
 					formatter = new EmbeddedCSSFormatterNoPHP();
+				}
+				else if ((node.getParentNode() != null) && (node.getParentNode() instanceof PHPElementImpl)){
+					formatter = new PhpFormatter();
 				}
 				else {
 					formatter = new HTMLTextFormatterNoPHP();
