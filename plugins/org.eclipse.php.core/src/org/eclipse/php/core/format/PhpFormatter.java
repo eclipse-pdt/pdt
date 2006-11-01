@@ -39,11 +39,16 @@ public class PhpFormatter implements IStructuredFormatter {
 	protected PhpFormatConstraints fFormatContraints = null;
 	protected IStructuredFormatPreferences fFormatPreferences = null;
 	protected IProgressMonitor fProgressMonitor = null;
+	private final int length;
+	private final int start;
 
 	private static final byte CHAR_TAB = '\t';
 	private static final byte CHAR_SPACE = ' ';
 
-	private PhpFormatProcessorImpl fProcessoer = null;
+	public PhpFormatter(int start, int length) {
+		this.start = start;
+		this.length = length;
+	}
 
 	public void format(Node node) {
 		format(node, getFormatContraints());
@@ -100,16 +105,12 @@ public class PhpFormatter implements IStructuredFormatter {
 		this.fProgressMonitor = monitor;
 	}
 
-	public void setProcessor(PhpFormatProcessorImpl processor) {
-		this.fProcessoer = processor;
+	protected final int getStart() {
+		return start;
 	}
 
-	protected int getStart() {
-		return (fProcessoer == null) ? 0 : fProcessoer.getStart();
-	}
-
-	protected int getLength() {
-		return (fProcessoer == null) ? 0 : fProcessoer.getLength();
+	protected final int getLength() {
+		return length;
 	}
 
 	private void format(IStructuredDocumentRegion sdRegionStart, IStructuredDocumentRegion sdRegionEnd) {

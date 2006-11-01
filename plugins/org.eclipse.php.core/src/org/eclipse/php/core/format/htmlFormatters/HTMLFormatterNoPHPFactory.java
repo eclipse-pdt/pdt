@@ -26,27 +26,36 @@ import org.w3c.dom.Node;
 public class HTMLFormatterNoPHPFactory {
 
 	private static HTMLFormatterNoPHPFactory fInstance = null;
-
-	static synchronized HTMLFormatterNoPHPFactory getInstance() {
+	
+	public int start;
+	public int length;
+	
+	public static synchronized HTMLFormatterNoPHPFactory getInstance() {
 		if (fInstance == null) {
 			fInstance = new HTMLFormatterNoPHPFactory();
 		}
 		return fInstance;
 	}
 
-	IStructuredFormatter createFormatter(Node node, IStructuredFormatPreferences formatPreferences) {
+	public IStructuredFormatter createFormatter(Node node, IStructuredFormatPreferences formatPreferences) {
 		IStructuredFormatter formatter = null;
 
 		switch (node.getNodeType()) {
 			case Node.ELEMENT_NODE :
-				formatter = new HTMLElementFormatterNoPHP();
+				if (node instanceof PHPElementImpl) {
+					formatter = new PhpFormatter(start, length);
+					
+				}else {
+					formatter = new HTMLElementFormatterNoPHP();	
+				}
+				
 				break;
 			case Node.TEXT_NODE :
 				if (isEmbeddedCSS(node)) {
 					formatter = new EmbeddedCSSFormatterNoPHP();
 				}
 				else if ((node.getParentNode() != null) && (node.getParentNode() instanceof PHPElementImpl)){
-					formatter = new PhpFormatter();
+					formatter = new PhpFormatter(start, length);
 				}
 				else {
 					formatter = new HTMLTextFormatterNoPHP();
@@ -78,10 +87,4 @@ public class HTMLFormatterNoPHPFactory {
 			return false;
 		return name.equalsIgnoreCase("STYLE");//$NON-NLS-1$
 	}
-
-
-	private HTMLFormatterNoPHPFactory() {
-		super();
-	}
-
 }

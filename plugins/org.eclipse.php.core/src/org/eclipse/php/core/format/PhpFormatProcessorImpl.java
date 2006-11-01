@@ -14,6 +14,8 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.core.format.htmlFormatters.HTMLFormatterNoPHPFactory;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
@@ -28,20 +30,23 @@ public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 	private int start;
 	private int length;
 
-	private IStructuredFormatter fFormatter;
-
 	protected String getFileExtension() {
 		return "php"; //$NON-NLS-1$
 	}
 
+	/**
+	 * Overrites the getFormatter so now the formatter for php is PhpFormatter and 
+	 * the others get the default (html) formatter 
+	 */
 	protected IStructuredFormatter getFormatter(Node node) {
-		if (fFormatter == null) {
-			fFormatter = new PhpFormatter();
-			((PhpFormatter) fFormatter).setProcessor(this);
+		if ((node.getNodeType() == Node.ELEMENT_NODE && node instanceof PHPElementImpl) || (node.getNodeType() == Node.TEXT_NODE && node.getParentNode() instanceof PHPElementImpl)){
+			final PhpFormatter phpFormatter = new PhpFormatter(start, length);
+			return phpFormatter; 
+		} else {
+			return HTMLFormatterNoPHPFactory.getInstance().createFormatter(node, getFormatPreferences()); 
 		}
-		return fFormatter;
 	}
-
+	
 	protected void refreshFormatPreferences() {
 		super.refreshFormatPreferences();
 	}
@@ -87,16 +92,8 @@ public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 	}
 
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {
-		this.start = start;
-		this.length = length;
+		HTMLFormatterNoPHPFactory.getInstance().start = start;
+		HTMLFormatterNoPHPFactory.getInstance().length = length;
 		super.formatModel(structuredModel, start, length);
-	}
-
-	protected int getLength() {
-		return length;
-	}
-
-	protected int getStart() {
-		return start;
 	}
 }

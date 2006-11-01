@@ -31,9 +31,15 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.core.format.PhpFormatProcessorImpl;
-import org.eclipse.php.core.format.htmlFormatters.HTMLFormatProcessorForPhp;
 import org.eclipse.php.core.util.WeakPropertyChangeListener;
-import org.eclipse.php.internal.ui.autoEdit.*;
+import org.eclipse.php.internal.ui.autoEdit.CaseDefaultAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.CurlyCloseAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.CurlyOpenAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.DocBlockAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.IndentLineAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.MatchingBracketAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.QuotesAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.TabAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPCodeHyperlinkDetector;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
@@ -314,12 +320,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IHTMLPartitions.HTML_DEFAULT);
-		formatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorForPhp()));
-		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_DEFAULT );
-		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_DOC );
-		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_MULTI_LINE_COMMENT );
-		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_QUOTED_STRING );
-		formatter.setSlaveStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()), PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT );
+		formatter.setMasterStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()));
 		return formatter;
 	}
 
