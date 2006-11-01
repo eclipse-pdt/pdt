@@ -295,7 +295,7 @@ public class PHPElementLabels {
 	 */
 	public static void getPHPFolderLabel(IContainer folder, long flags, StringBuffer buf) {
 		if (getFlag(flags, P_QUALIFIED)) {
-			getPHPFolderRootLabel((IFolder) folder.getParent(), ROOT_QUALIFIED, buf);
+			getPHPFolderRootLabel(folder.getParent(), ROOT_QUALIFIED, buf);
 			buf.append('/');
 		}
 		if (folder instanceof IProject) {
@@ -327,7 +327,7 @@ public class PHPElementLabels {
 		}
 		if (getFlag(flags, P_POST_QUALIFIED)) {
 			buf.append(CONCAT_STRING);
-			getPHPFolderRootLabel((IFolder) folder.getParent(), ROOT_QUALIFIED, buf);
+			getPHPFolderRootLabel(folder.getParent(), ROOT_QUALIFIED, buf);
 		}
 	}
 
@@ -383,9 +383,9 @@ public class PHPElementLabels {
 				}
 				if (getFlag(flags, M_PARAMETER_TYPES)) {
 					String t = parameters[i].getClassType();
-					if (t == null){
-						t = ""; 
-					} else { 
+					if (t == null) {
+						t = "";
+					} else {
 						t += " ";
 					}
 					buf.append(t);
@@ -544,7 +544,8 @@ public class PHPElementLabels {
 				String name = cu.getName().substring(indexOfZip += 5, cu.getName().length());
 				buf.append(name);
 			} else {
-				buf.append(cu.getName());
+				//				buf.append(cu.getName()); 
+				buf.append(cu.getComparableName());
 			}
 		}
 

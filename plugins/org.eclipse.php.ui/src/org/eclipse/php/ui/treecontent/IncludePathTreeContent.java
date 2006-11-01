@@ -10,10 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.ui.treecontent;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.eclipse.core.internal.resources.Workspace;
+import org.eclipse.core.internal.watson.ElementTree;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -23,8 +31,10 @@ import org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.parser.PhpModelProxy;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.project.options.IPhpProjectOptionChangeListener;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
+import org.eclipse.php.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
@@ -33,6 +43,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	public static final String ID_INCLUDES_NODE = "org.eclipse.php.ui.treecontent.IncludesNode";
 	TreeViewer treeViewer;
 	HashMap projects = new HashMap();
+	ElementTree includePathTree = new ElementTree();
 
 	class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListener {
 		IncludesNode(String text, Image image, String id, Object data, Object[] children) {
@@ -46,6 +57,79 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 				}
 			});
 		}
+	}
+
+	Object[] getPathChildren(IPath parentPath) {
+		IPath modelPath = new Path(parentPath.segment(0));
+		if (!includePathTree.includes(modelPath)) {
+			return NO_CHILDREN;
+		}
+		PHPIncludePathModel includePathModel = (PHPIncludePathModel) includePathTree.getElementData(modelPath);
+		IPath includePath = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
+		File folder = new File(includePath.append(parentPath.removeFirstSegments(1)).toOSString());
+		// remove not existing elements:
+		IPath[] innerFilePaths = includePathTree.getChildren(parentPath);
+		for (int i = 0; i < innerFilePaths.length; ++i) {
+			Object elementData = includePathTree.getElementData(innerFilePaths[i]);
+			boolean toDelete = false;
+			if (elementData instanceof PHPFileData) {
+				PHPFileData realFileData = includePathModel.getFileData(includePath.append(innerFilePaths[i].removeFirstSegments(1)).toOSString());
+				if (realFileData == null) {
+					toDelete = true;
+				}
+			} else {
+				IResource resource = (IResource) elementData;
+				PHPFileData[] fileDatas = includePathModel.getFileDatas();
+				boolean startFound = false;
+				for (int j = 0; j < fileDatas.length; ++j) {
+					if (fileDatas[j].getName().startsWith(includePath.append(resource.getFullPath().removeFirstSegments(1)).toOSString())) {
+						startFound = true;
+						break;
+					}
+				}
+				toDelete = !startFound;
+			}
+			if (toDelete) {
+				includePathTree.deleteElement(innerFilePaths[i]);
+			}
+		}
+		// add missing elements:
+		String[] innerFileNames = folder.list();
+		if (innerFileNames != null) {
+			for (int i = 0; i < innerFileNames.length; ++i) {
+				File innerFile = new File(folder.getPath() + File.separatorChar + innerFileNames[i]);
+				PHPFileData[] fileDatas = includePathModel.getFileDatas();
+
+				boolean startFound = false;
+				PHPFileData exactMatchingFileData = null;
+				for (int j = 0; j < fileDatas.length; ++j) {
+					if (fileDatas[j].getName().startsWith(innerFile.getAbsolutePath())) {
+						startFound = true;
+						if (fileDatas[j].getName().equals(innerFile.getAbsolutePath())) {
+							exactMatchingFileData = fileDatas[j];
+						}
+						break;
+					}
+				}
+				if (startFound) {
+					IPath innerFilePath = parentPath.append(new Path(innerFileNames[i]));
+					if (!includePathTree.includes(innerFilePath)) {
+						if (exactMatchingFileData != null) {
+							includePathTree.createElement(innerFilePath, exactMatchingFileData);
+						} else {
+							includePathTree.createElement(innerFilePath, ((Workspace) ResourcesPlugin.getWorkspace()).newResource(innerFilePath, innerFile.isFile() ? IResource.FILE : IResource.FOLDER));
+						}
+					}
+				}
+			}
+		}
+		// getting the children:
+		IPath[] childrenPaths = includePathTree.getChildren(parentPath);
+		ArrayList childrenElements = new ArrayList(childrenPaths.length);
+		for (int i = 0; i < childrenPaths.length; ++i) {
+			childrenElements.add(includePathTree.getElementData(childrenPaths[i]));
+		}
+		return childrenElements.toArray();
 	}
 
 	public Object[] getChildren(Object parentElement) {
@@ -67,7 +151,17 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			return includeModelManager.listModels();
 		} else if (parentElement instanceof PHPIncludePathModel) {
 			PHPIncludePathModel includePathModel = (PHPIncludePathModel) parentElement;
-			return includePathModel.getFileDatas();
+			String modelRoot = includePathModel.getID().replace(Path.SEPARATOR, '\0'); // in case it's a plain directory, not a variable
+			IPath modelPath = new Path(modelRoot);
+			if (!includePathTree.includes(modelPath)) {
+				includePathTree.createElement(modelPath, includePathModel);
+			}
+			return getPathChildren(modelPath);
+		} else if (parentElement instanceof IResource) {
+			IPath resourcePath = ((IResource) parentElement).getFullPath();
+			if (includePathTree.includes(((IResource) parentElement).getFullPath())) {
+				return getPathChildren(resourcePath);
+			}
 		} else if (parentElement instanceof PhpModelProxy) {
 			PhpModelProxy proxy = (PhpModelProxy) parentElement;
 			return proxy.getPHPFilesData(null);
@@ -132,10 +226,20 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			return treeNode.getText();
 		} else if (element instanceof PHPIncludePathModel) {
 			PHPIncludePathModel includePathModel = (PHPIncludePathModel) element;
-			return includePathModel.getID();
+			return includePathModel.getID() + " (" + IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID()).toOSString() + ")";
 		} else if (element instanceof PhpModelProxy) {
 			PhpModelProxy proxy = (PhpModelProxy) element;
 			return proxy.getID();
+		} else if (element instanceof PHPFileData) {
+			PHPFileData fileData = (PHPFileData) element;
+			IPath[] modelPaths = includePathTree.getChildren(includePathTree.getRoot());
+			for (int i = 0; i < modelPaths.length; ++i) {
+				PHPIncludePathModel includePathModel = (PHPIncludePathModel) includePathTree.getElementData(modelPaths[i]);
+				IPath includePath = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
+				if (fileData.getName().startsWith(includePath.toOSString())) {
+					return new Path(fileData.getName()).lastSegment();
+				}
+			}
 		}
 		return null;
 	}
