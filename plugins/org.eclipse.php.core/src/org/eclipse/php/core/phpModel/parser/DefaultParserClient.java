@@ -10,9 +10,37 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileDataUtilities;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPTask;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableTypeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
+import org.eclipse.php.core.phpModel.phpElementData.UserData;
 
 public abstract class DefaultParserClient extends ContextParserClient {
 
@@ -400,7 +428,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 					UserData phpUserData = (UserData) iterator.next();
 					phpStartPosition = phpUserData.getStartPosition();
 					if (phpStartPosition > elementStartPosition) {
-						return phpStartPosition; 
+						return phpStartPosition;
 					}
 				}
 			}
@@ -453,6 +481,10 @@ public abstract class DefaultParserClient extends ContextParserClient {
 
 		PHPConstantData[] allConstans = new PHPConstantData[constans.size()];
 		constans.toArray(allConstans);
+
+		PHPIncludeFileData[] allIncludes = new PHPIncludeFileData[includeFiles.size()];
+		includeFiles.toArray(allIncludes);
+
 		PHPFileData fileData = PHPCodeDataFactory.createPHPFileData(workingFileName, userData, cls, func, variablesTypeManager, include, allConstans, allMarkers, phpBlocks, firstPHPDocBlock, lastModified);
 		for (int i = 0; i < cls.length; i++) {
 			cls[i].setContainer(fileData);
@@ -464,6 +496,10 @@ public abstract class DefaultParserClient extends ContextParserClient {
 
 		for (int i = 0; i < allConstans.length; i++) {
 			allConstans[i].setContainer(fileData);
+		}
+
+		for (int i = 0; i < allIncludes.length; i++) {
+			allIncludes[i].setContainer(fileData);
 		}
 
 		userModel.insert(fileData);
