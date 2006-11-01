@@ -28,7 +28,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -47,6 +51,7 @@ import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.ui.containers.ZipEntryStorageEditorInput;
@@ -274,7 +279,9 @@ public class EditorUtility {
 
 		if (input == null)
 			return null;
-		return input.getText();
+		PHPIncludePathModel includePathModel = (PHPIncludePathModel) input.getData();
+		IPath includePath = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
+		return includePath.toOSString();
 	}
 
 	/**
@@ -533,7 +540,7 @@ public class EditorUtility {
 		if (element == null)
 			return;
 
-		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(part); 
+		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(part);
 		if (phpEditor != null) {
 			phpEditor.setSelection(element, true);
 			return;
@@ -559,6 +566,6 @@ public class EditorUtility {
 	 *       this way the actions pick the php editor...
 	 */
 	public static final PHPStructuredEditor getPHPStructuredEditor(final IWorkbenchPart editor) {
-		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null; 
+		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null;
 	}
 }
