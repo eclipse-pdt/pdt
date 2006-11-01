@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.php.test_feature"
       label="Testing Feature"
-      version="0.0.1"
+      version="0.7.0.qualifier"
       provider-name="Zend Technologies">
 
    <description url="http://www.example.com/description">
