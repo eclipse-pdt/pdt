@@ -452,7 +452,7 @@ public class PHPModelUtil {
 	 * 
 	 * @param classData
 	 * @param superClassName
-	 * @return
+	 * @return <code>true</code> if the class extends other class 
 	 */
 	public static boolean hasSuperClass(final PHPClassData classData, final String superClassName) {
 		final PHPSuperClassNameData currentSuperClassNameData = classData.getSuperClassData();
@@ -503,28 +503,30 @@ public class PHPModelUtil {
 
 	public static String getRelativeLocation(IProject project, String location) {
 		PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-		if(model == null) {
+		if (model == null) {
 			return location;
 		}
 		PHPFileData fileData = model.getFileData(location);
-		if(fileData != null) {
+		if (fileData != null) {
 			IResource resource = getResource(fileData);
-			if(resource != null && resource.getProject() != null && resource.getProject().isAccessible()) { // file is in a project
+			if (resource != null && resource.exists()) { // file is in a project
 				IProject fileProject = resource.getProject();
-				if(fileProject.isAccessible()) {
-					return new Path(location).removeFirstSegments(1).toString(); 
+				if (fileProject.isAccessible()) {
+					return new Path(location).removeFirstSegments(1).toString();
 				}
 			} else { // file is in an include file
 				IPhpModel[] models = model.getModels();
-				for(int i = 0; i < models.length; ++i) {
-					if(models[i].getFileData(location) != null) {
-						if(models[i] instanceof PHPIncludePathModelManager) {
+				for (int i = 0; i < models.length; ++i) {
+					if (models[i].getFileData(location) == fileData) {
+						if (models[i] instanceof PHPIncludePathModelManager) {
 							PHPIncludePathModelManager manager = (PHPIncludePathModelManager) models[i];
 							IPhpModel[] includeModels = manager.listModels();
-							for(int j = 0; j < includeModels.length; ++j) {
+							for (int j = 0; j < includeModels.length; ++j) {
 								String root = ((PHPIncludePathModel) includeModels[j]).getID();
 								IPath path = IncludePathVariableManager.instance().getIncludePathVariable(root);
-								return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString();
+								if (includeModels[j].getFileData(location) == fileData) {
+									return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString();
+								}
 							}
 						}
 					}
