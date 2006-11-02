@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,7 +26,11 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -78,6 +87,10 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		zips = new ArrayList();
 		variables = new ArrayList();
 		modelsToCache = new HashMap();
+	}
+
+	public PHPIncludePathModel getModel(String id) {
+		return (PHPIncludePathModel) compositePhpModel.getModel(id);
 	}
 
 	public void initialize(IProject project) {
@@ -138,9 +151,8 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 					DefaultCacheManager.instance().load(project, model, true);
 					compositePhpModel.addModel(model);
 					return;
-				} else {
-					modelsToCache.put(model, model);
 				}
+				modelsToCache.put(model, model);
 				parseZip(library, client);
 			} else {
 				// Load the cache for the library
@@ -197,9 +209,6 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		} catch (FileNotFoundException e) {
 			PHPCorePlugin.log(e);
 			return;
-		} catch (IOException e) {
-			PHPCorePlugin.log(e);
-			return;
 		}
 	}
 
@@ -234,26 +243,35 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		}
 	}
 
+	class ZipInputStreamPermanentReader extends InputStreamReader {
+
+		public ZipInputStreamPermanentReader(InputStream in) {
+			super(in);
+		}
+
+		/* (non-Javadoc)
+		 * @see java.io.InputStreamReader#close()
+		 */
+		public void close() {
+			// don't close.
+		}
+	}
+
 	private void parseZip(File zipFile, ParserClient client) {
 		ZipInputStream is = null;
 		try {
 			is = new ZipInputStream(new FileInputStream(zipFile));
-			ZipEntry ze = is.getNextEntry();
-
-			while (ze != null) {
+			ZipEntry ze;
+			while ((ze = is.getNextEntry()) != null) {
 				if (!ze.isDirectory()) {
 					String fileName = ze.getName();
 					if (isPhpFile(fileName)) {
-						int size = (int) ze.getSize();
-						LimitedByteReader byteReader = new LimitedByteReader(is, size);
-			 			ParserExecuter executer = new ParserExecuter(parserManager, null, client, zipFile.getName() + File.separator + fileName, byteReader, new Pattern[0], zipFile.lastModified(), UseAspTagsHandler.useAspTagsAsPhp(project));
+						ParserExecuter executer = new ParserExecuter(parserManager, null, client, zipFile.getName() + File.separator + fileName, new ZipInputStreamPermanentReader(is), new Pattern[0], zipFile.lastModified(), UseAspTagsHandler.useAspTagsAsPhp(project));
 						executer.run();
-					} else {
-						is.skip(ze.getSize());
 					}
 				}
-				ze = is.getNextEntry();
 			}
+			is.close();
 		} catch (FileNotFoundException e) {
 			//handled before
 		} catch (IOException io) {
@@ -601,9 +619,8 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 						// The zip is valid.
 						DefaultCacheManager.instance().load(project, model, true);
 						return;
-					} else {
-						modelsToCache.put(model, model);
 					}
+					modelsToCache.put(model, model);
 					parseZip(file, client);
 				} else if (isPhpFile(fileName)) {
 					PHPIncludePathModel cachedModel = new PHPIncludePathModel(variableName, PHPIncludePathModel.TYPE_VARIABLE);
@@ -729,62 +746,6 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		}
 	}
 
-	/**
-	 * This class intention is to have a reader that can limit the number of bytes been read from the InputStream
-	 * not eliminating the option of continuing reading from the InputStream later.
-	 * NOTICE - the close() function was removed, its the users responsibility to close the InputStream by himself 
-	 *
-	 */
-	private class LimitedByteReader extends Reader {
-
-		public static final int DEFAULT_BUFFER_SIZE = 1024 * 8;
-
-		protected byte[] fBuffer;
-
-		protected InputStream fInputStream;
-
-		public LimitedByteReader(InputStream inputStream, int size) {
-			this.fInputStream = inputStream;
-			this.fBuffer = new byte[size];
-
-		}
-
-		public void close() throws IOException {
-		}
-
-		public int read() throws IOException {
-			int b0 = this.fInputStream.read();
-			return (b0 & 0x00FF);
-		}
-
-		public int read(char ch[], int offset, int length) throws IOException {
-			if (length > this.fBuffer.length) {
-				length = this.fBuffer.length;
-			}
-
-			int count = this.fInputStream.read(this.fBuffer, 0, length);
-
-			for (int i = 0; i < count; i++) {
-				int b0 = this.fBuffer[i];
-				// the 0x00FF is to "lose" the negative bits filled in the byte to
-				// int conversion
-				// (and which would be there if cast directly from byte to char).
-				char c0 = (char) (b0 & 0x00FF);
-				ch[offset + i] = c0;
-			}
-			return count;
-		}
-
-		public boolean ready() throws IOException {
-			return this.fInputStream.available() > 0;
-		}
-
-		public long skip(long n) throws IOException {
-			return this.fInputStream.skip(n);
-		}
-
-	}
-
 	/*
 	 * A listener that handles project deletion.
 	 */
@@ -803,7 +764,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 				includeCacheManager.projectRemoved((IProject) resource);
 			} else {
 				removeProject(resource);
-				
+
 				PHPProjectOptions options = PHPProjectOptions.forProject(project);
 				options.removeResourceFromIncludePath(resource);
 			}
