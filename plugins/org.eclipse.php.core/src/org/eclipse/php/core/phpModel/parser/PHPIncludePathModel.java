@@ -22,19 +22,8 @@ public class PHPIncludePathModel extends PHPUserModel {
 	public static final int TYPE_VARIABLE = 2;
 	public static final int TYPE_UNKNOWN = 3;
 
-	private String id;
-	private int type;
-
-	/**
-	 * Constructs a new PHPIncludePathModel.
-	 * Note that the type of the model is set to TYPE_UNKNOWN.
-	 * 
-	 * @param root
-	 */
-	public PHPIncludePathModel(String root) {
-		this.id = root;
-		this.type = TYPE_UNKNOWN;
-	}
+	private final String id;
+	private final int type;
 
 	/**
 	 * Constructs a new PHPIncludePathModel.
@@ -43,10 +32,20 @@ public class PHPIncludePathModel extends PHPUserModel {
 	 * @param type The type of the model.
 	 */
 	public PHPIncludePathModel(String root, int type) {
-		this(root);
+		this.id = root;
 		this.type = type;
 	}
 
+	/**
+	 * Constructs a new PHPIncludePathModel.
+	 * Note that the type of the model is set to TYPE_UNKNOWN.
+	 * 
+	 * @param root
+	 */
+	public PHPIncludePathModel(String root) {
+		this(root, TYPE_UNKNOWN);
+	}
+	
 	public String getID() {
 		return id;
 	}
