@@ -38,7 +38,7 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 
 public abstract class PHPLanguageModel implements IPHPLanguageModel {
-	
+
 	protected PHPFunctionData[] functions = PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY;
 
 	protected Map functionsHash = new HashMap(3000);
@@ -48,15 +48,15 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	protected Map classesHash = new HashMap(10);
 
 	protected PHPConstantData[] constans = PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY;
-	
+
 	protected IPHPMarker[] markers = PHPCodeDataFactory.EMPTY_MARKERS_DATA_ARRAY;
-	
+
 	protected PHPVariableData[] phpVariables;
 
 	protected PHPVariableData[] serverVariables;
 
 	protected PHPVariableData[] sessionVariables;
-	
+
 	protected PHPVariableData[] classVariables;
 
 	public PHPLanguageModel(PHPLanguageManager languageManager) {
@@ -77,7 +77,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	public PHPVariableData[] getSessionVariables() {
 		return sessionVariables;
 	}
-	
+
 	public PHPVariableData[] getClassVariables() {
 		return classVariables;
 	}
@@ -123,59 +123,60 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	public CodeData[] getPHPFilesData(String startsWith) {
 		return null;
 	}
-	
+
 	public CodeData[] getNonPHPFiles(String startsWith) {
 		return null;
 	}
-	
+
 	public PHPFileData getFileData(String fileName) {
 		return null;
 	}
-	
+
 	public PHPClassData getClass(String fileName, String className) {
 		return null;
 	}
-	
+
 	public CodeData[] getGlobalVariables(String fileName, String startsWith, boolean showVariablesFromOtherFiles) {
 		return phpVariables;
 	}
-	
+
 	public CodeData[] getVariables(String fileName, PHPCodeContext context, String startsWith, boolean showVariablesFromOtherFiles) {
 		String className = context.getContainerClassName();
 		if (className == null || className.equals("")) {
 			return phpVariables;
 		}
-		return ModelSupport.merge(phpVariables,classVariables);
+		return ModelSupport.merge(phpVariables, classVariables);
 	}
-	
+
 	public String getVariableType(String fileName, PHPCodeContext context, String variableName, int line, boolean showObjectsFromOtherFiles) {
 		return null;
 	}
-	
+
 	public PHPConstantData getConstantData(String constantName) {
 		return null;
 	}
-	public IPHPMarker[] getMarkers(){
+
+	public IPHPMarker[] getMarkers() {
 		return markers;
 	}
-	
-	public void clean(){
+
+	public void clean() {
 	}
-	
-	public void dispose(){
+
+	public void dispose() {
 	}
-	
-	public void initialize(IProject project) {		
+
+	public void initialize(IProject project) {
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////////
 
 	private void initVariables() {
-		
+
 		phpVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("_GET", null, null), PHPCodeDataFactory.createPHPVariableData("_POST", null, null), PHPCodeDataFactory.createPHPVariableData("_COOKIE", null, null),
 			PHPCodeDataFactory.createPHPVariableData("_SESSION", null, null), PHPCodeDataFactory.createPHPVariableData("_SERVER", null, null), PHPCodeDataFactory.createPHPVariableData("_ENV", null, null), PHPCodeDataFactory.createPHPVariableData("_REQUEST", null, null),
 			PHPCodeDataFactory.createPHPVariableData("_FILES", null, null), PHPCodeDataFactory.createPHPVariableData("GLOBALS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_GET_VARS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_POST_VARS", null, null),
@@ -191,7 +192,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			PHPCodeDataFactory.createPHPVariableData("SERVER_ADDR", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_ADMIN", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_PORT", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_SIGNATURE", null, null),
 			PHPCodeDataFactory.createPHPVariableData("SERVER_SOFTWARE", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_PROTOCOL", null, null), PHPCodeDataFactory.createPHPVariableData("PATH_TRANSLATED", null, null), };
 		Arrays.sort(serverVariables);
-	
+
 		classVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("this", null, null) };
 		Arrays.sort(classVariables);
 
@@ -206,7 +207,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	protected void loadFile(PHPLanguageManager languageManager) {
 		try {
 			final PHPParserManager phpParserManager = languageManager.createPHPParserManager();
-			
+
 			// parse the specific language model
 			String phpFunctionPath = languageManager.getPHPFunctionPath();
 			Reader reader = new InputStreamReader(FileLocator.openStream(PHPCorePlugin.getDefault().getBundle(), new Path(phpFunctionPath), false));
@@ -214,8 +215,6 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 			ParserExecuter executer = new ParserExecuter(phpParserManager, null, innerParserClient, phpFunctionPath, reader, new Pattern[0], 0, false);
 			executer.run();
-
-			
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -457,8 +456,8 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 		public void handleSyntaxError(int currToken, String currText, short[] rowOfProbe, int startPosition, int endPosition, int lineNumber) {
 		}
-		
-		public void handleTask(String taskName, String description, int startPosition, int endPosition, int lineNumber){
+
+		public void handleTask(String taskName, String description, int startPosition, int endPosition, int lineNumber) {
 		}
 
 		public void handlePHPStart(int startOffset, int endOffset) {
