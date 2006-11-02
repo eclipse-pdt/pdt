@@ -541,8 +541,9 @@ public class PHPElementLabels {
 			int indexOfZip = cu.getName().indexOf(".zip");
 			if (indexOfZip != -1) {
 				// start the file label after the ".zip/" 				
-				String name = cu.getName().substring(indexOfZip += 5, cu.getName().length());
-				buf.append(name);
+				//				String name = cu.getName().substring(indexOfZip += 5, cu.getName().length());
+				//buf.append(name);
+				buf.append(cu.getComparableName());
 			} else {
 				//				buf.append(cu.getName()); 
 				buf.append(cu.getComparableName());

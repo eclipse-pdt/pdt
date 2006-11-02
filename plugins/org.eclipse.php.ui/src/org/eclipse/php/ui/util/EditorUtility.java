@@ -280,8 +280,11 @@ public class EditorUtility {
 		if (input == null)
 			return null;
 		PHPIncludePathModel includePathModel = (PHPIncludePathModel) input.getData();
-		IPath includePath = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
-		return includePath.toOSString();
+		if (includePathModel.getType() == PHPIncludePathModel.TYPE_VARIABLE) {
+			IPath includePath = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
+			return includePath.toOSString();
+		}
+		return new Path(includePathModel.getID()).toOSString();
 	}
 
 	/**
