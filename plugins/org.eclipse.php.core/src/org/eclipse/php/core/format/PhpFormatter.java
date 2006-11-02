@@ -174,6 +174,10 @@ public class PhpFormatter implements IStructuredFormatter {
 			final int originalTextEnd = orginalLineStart + originalLineLength;
 			if (formattedTextEnd != originalTextEnd) {
 				document.replace(formattedTextEnd, originalTextEnd - formattedTextEnd, "");
+				// in case there is no text in the line just quit (since the formatted of empty line is empty line)
+				if (formattedLineStart == formattedTextEnd) {
+					return;
+				}
 			}
 
 			// get regions

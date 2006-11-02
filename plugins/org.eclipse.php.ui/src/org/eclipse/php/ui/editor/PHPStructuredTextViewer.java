@@ -69,7 +69,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
 			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
 			undoManager.beginRecording(this, label, description, cursorPosition, selectionLength);
-			beginBackgroundUpdate();
 		}
 		else {
 			// TODO: how to handle other document types?
@@ -79,7 +78,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private void endRecording(int cursorPosition, int selectionLength) {
 		IDocument doc = getDocument();
 		if (doc instanceof IStructuredDocument) {
-			endBackgroundUpdate();
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
 			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
 			undoManager.endRecording(this, cursorPosition, selectionLength);
