@@ -65,6 +65,10 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		if (!includePathTree.includes(modelPath)) {
 			return NO_CHILDREN;
 		}
+		Object element = includePathTree.getElementData(modelPath);
+		if (!(element instanceof PHPIncludePathModel)) {
+			return NO_CHILDREN;
+		}
 		PHPIncludePathModel includePathModel = (PHPIncludePathModel) includePathTree.getElementData(modelPath);
 		IPath includeLocation = getIncludeModelLocation(includePathModel);
 		// find and add missing elements:

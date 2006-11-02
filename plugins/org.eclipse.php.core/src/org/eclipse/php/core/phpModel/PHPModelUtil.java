@@ -405,6 +405,24 @@ public class PHPModelUtil {
 		return null;
 	}
 
+	public static PHPProjectModel getProjectModelForFile(PHPFileData fileData) {
+		PHPProjectModel model = null;
+		IProject project = (IProject) getPHPFolderRoot(fileData);
+		if (project != null) {
+			model = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+		}
+		if (model == null) {
+			IPhpModel[] models = PHPWorkspaceModelManager.getInstance().listModels();
+			for (int i = 0; i < models.length; ++i) {
+				if (models[i].getFileData(fileData.getName()) == fileData) {
+					model = (PHPProjectModel) models[i];
+					break;
+				}
+			}
+		}
+		return model;
+	}
+
 	public static boolean hasChildren(final PHPCodeData element) {
 		if (element instanceof PHPFunctionData)
 			return false;

@@ -11,6 +11,7 @@
 package org.eclipse.php.core.documentModel;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -18,6 +19,7 @@ import org.eclipse.php.core.documentModel.dom.PHPDOMDocument;
 import org.eclipse.php.core.documentModel.dom.PHPDOMModelParser;
 import org.eclipse.php.core.documentModel.dom.PHPDOMModelUpdater;
 import org.eclipse.php.core.documentModel.dom.PHPModelNotifier;
+import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
@@ -62,7 +64,7 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 	public PHPFileData getFileData() {
 
 		PHPFileData fileData = null;
-
+		
 		IFile file = getIFile();
 
 		if (file != null) {
@@ -73,6 +75,12 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 				fileData = projectModel.getFileData(file.getFullPath().toString());
 			}
 
+		} else {
+			
+		}
+		
+		if(fileData == null) {
+			 fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
 		}
 
 		return fileData;
@@ -81,19 +89,19 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 
 	//	protected PHPBrowserModel cachedBrowserModel = null;
 
+	PHPProjectModel projectModel;
+	
 	public PHPProjectModel getProjectModel() {
-
-		//		if (cachedBrowserModel == null) {
-		IFile file = getIFile();
-
-		if (file != null) {
-			return PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
-
+		if(projectModel != null) {
+			return projectModel;
 		}
-
-		//		}
-
-		return null;
+		
+		PHPFileData fileData = getFileData();
+		if(fileData != null)
+			projectModel = PHPModelUtil.getProjectModelForFile(fileData);
+		else
+			projectModel = null;
+		return projectModel;
 	}
 
 	public void updateFileData() {

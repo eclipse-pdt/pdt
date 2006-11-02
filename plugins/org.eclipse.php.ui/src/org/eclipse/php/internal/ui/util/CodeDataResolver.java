@@ -55,12 +55,12 @@ public class CodeDataResolver {
 	private static final Pattern implementsPattern = Pattern.compile("\\Wimplements", Pattern.CASE_INSENSITIVE);
 	private static final Pattern catchPattern = Pattern.compile("catch\\s[^{]*", Pattern.CASE_INSENSITIVE);
 	private static final boolean CONSTANT_CASE_SENSITIVE = false;
-	
+
 	private static final CodeDataResolver instance = new CodeDataResolver();
-	
+
 	private CodeDataResolver() {
 	}
-	
+
 	/**
 	 * This function tries to search for code data, that corresponds to the specified offset
 	 * 
@@ -69,12 +69,12 @@ public class CodeDataResolver {
 	 * @return CodeData
 	 * @throws BadLocationException
 	 */
-	public static CodeData getCodeData (ITextViewer textViewer, int offset) throws BadLocationException {
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead (textViewer.getDocument());
+	public static CodeData getCodeData(ITextViewer textViewer, int offset) throws BadLocationException {
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
 		if (sModel instanceof PHPEditorModel) {
 			PHPEditorModel editorModel = (PHPEditorModel) sModel;
 			try {
-				return instance.getCodeData (textViewer, editorModel, offset);
+				return instance.getCodeData(textViewer, editorModel, offset);
 			} catch (BadLocationException e) {
 				Logger.logException(e);
 			} finally {
@@ -85,8 +85,8 @@ public class CodeDataResolver {
 		}
 		return null;
 	}
-	
-	private CodeData getCodeData (ITextViewer viewer, PHPEditorModel editorModel, int offset) throws BadLocationException {
+
+	private CodeData getCodeData(ITextViewer viewer, PHPEditorModel editorModel, int offset) throws BadLocationException {
 		PHPFileData fileData = editorModel.getFileData();
 		if (fileData == null) {
 			return null;
@@ -188,7 +188,7 @@ public class CodeDataResolver {
 			PHPCodeContext context = getContext(projectModel, fileName, offset - elementName.length());
 			elementName = elementName.substring(1);
 			CodeData[] variables = projectModel.getVariables(fileName, context, elementName, true);
-			return filterExact (variables, elementName);
+			return filterExact(variables, elementName);
 		}
 
 		if (PhpLexer.isPHPQuotesState(type) || (type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(textRegion) + textRegion.getLength() <= offset)) {
@@ -209,10 +209,10 @@ public class CodeDataResolver {
 			mergeData = ModelSupport.merge(new CodeData[] { constant }, mergeData);
 		}
 		mergeData = ModelSupport.merge(functions, mergeData);
-		
-		return filterExact (mergeData, elementName);
+
+		return filterExact(mergeData, elementName);
 	}
-	
+
 	private boolean isPHPSingleQuote(IStructuredDocumentRegion sdRegion, ITextRegion textRegion) {
 		if (PhpLexer.isPHPQuotesState(textRegion.getType())) {
 			char firstChar = sdRegion.getText(textRegion).charAt(0);
@@ -251,7 +251,7 @@ public class CodeDataResolver {
 		if (variableName.startsWith("$")) {
 			variableName = variableName.substring(1);
 		}
-		return filterExact (projectModel.getArrayVariables(fileName, variableName, elementName, true), elementName);
+		return filterExact(projectModel.getArrayVariables(fileName, variableName, elementName, true), elementName);
 	}
 
 	private CodeData getIfClassFunctionCompletion(PHPProjectModel projectModel, String fileName, TextSequence statmentText, int offset, int line, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd) {
@@ -276,10 +276,10 @@ public class CodeDataResolver {
 
 		if (haveSpacesAtEnd && functionName.length() > 0) {
 			// check if current position is between the end of a function call and open bracket.
-			return filterExact (getIfClassFunctionCall(projectModel, fileName, className, functionName), functionName);
+			return filterExact(getIfClassFunctionCall(projectModel, fileName, className, functionName), functionName);
 		}
 		boolean isInstanceOf = !isClassTriger && !statmentText.toString().trim().equals("$this->");
-		return filterExact (getClassCall(projectModel, fileName, offset, className, functionName, isInstanceOf), functionName);
+		return filterExact(getClassCall(projectModel, fileName, offset, className, functionName, isInstanceOf), functionName);
 	}
 
 	/**
@@ -481,7 +481,7 @@ public class CodeDataResolver {
 			result = ModelSupport.merge(new CodeData[] { constant }, result);
 		}
 		result = ModelSupport.getFilteredCodeData(result, getAccessLevelFilter(projectModel, fileName, className, offset, isInstanceOf));
-		
+
 		return result;
 	}
 
@@ -569,7 +569,7 @@ public class CodeDataResolver {
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(text, text.length());
 		int wordStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(text, wordEnd, false);
 		String functionName = text.subSequence(wordStart, wordEnd).toString();
-		
+
 		PHPClassData classData = getContainerClassData(projectModel, fileName, text.getOriginalOffset(functionStart));
 		// We look for the container class data in function start offset.
 
@@ -583,7 +583,7 @@ public class CodeDataResolver {
 		if (codeData != null) {
 			return codeData;
 		}
-		
+
 		CodeData data[];
 		String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
 		boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
@@ -594,11 +594,11 @@ public class CodeDataResolver {
 		} else {
 			return PHPCodeDataFactory.createPHPFuctionData(classData.getName(), PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null);
 		}
-		for (int i=0; i<data.length; i++) {
-			((PHPFunctionData)data[i]).setContainer(classData);
-			((PHPFunctionDataImp)data[i]).setReturnType(classData.getName());
+		for (int i = 0; i < data.length; i++) {
+			((PHPFunctionData) data[i]).setContainer(classData);
+			((PHPFunctionDataImp) data[i]).setReturnType(classData.getName());
 		}
-		return filterExact (data, functionName);
+		return filterExact(data, functionName);
 	}
 
 	private CodeData getIfInClassDeclaretion(PHPProjectModel projectModel, String fileName, TextSequence text, int offset) {
@@ -636,9 +636,9 @@ public class CodeDataResolver {
 		boolean foundImplements = implementsMatcher.find();
 		if (!foundExtends && !foundImplements) {
 			if (isClassDeclaration) {
-				return filterExact (getExtendsImplementsCodeData(projectModel, elementName, offset), elementName);
+				return filterExact(getExtendsImplementsCodeData(projectModel, elementName, offset), elementName);
 			} else {
-				return filterExact (getExtendsCodeData(projectModel, elementName, offset), elementName);
+				return filterExact(getExtendsCodeData(projectModel, elementName, offset), elementName);
 			}
 		}
 
@@ -647,26 +647,26 @@ public class CodeDataResolver {
 		String firstWord = text.subSequence(startPosition, endPosition).toString();
 
 		if (firstWord.equalsIgnoreCase("extends")) {
-			return filterExact (getBaseClassList(projectModel, elementName, offset, isClassDeclaration), elementName);
+			return filterExact(getBaseClassList(projectModel, elementName, offset, isClassDeclaration), elementName);
 		}
 
 		if (firstWord.equalsIgnoreCase("implements")) {
-			return filterExact (getInterfaceList(projectModel, elementName, offset), elementName);
+			return filterExact(getInterfaceList(projectModel, elementName, offset), elementName);
 		}
 
 		if (foundExtends && foundImplements) {
 			if (extendsMatcher.start() < implementsMatcher.start()) {
-				return filterExact (getInterfaceList(projectModel, elementName, offset), elementName);
+				return filterExact(getInterfaceList(projectModel, elementName, offset), elementName);
 			} else {
-				return filterExact (getBaseClassList(projectModel, elementName, offset, isClassDeclaration), elementName);
+				return filterExact(getBaseClassList(projectModel, elementName, offset, isClassDeclaration), elementName);
 			}
 		}
 
 		if (foundImplements) {
-			return filterExact (getInterfaceList(projectModel, elementName, offset), elementName);
+			return filterExact(getInterfaceList(projectModel, elementName, offset), elementName);
 		}
 		if (isClassDeclaration) {
-			return filterExact (getImplementsCodeData(projectModel, elementName, offset), elementName);
+			return filterExact(getImplementsCodeData(projectModel, elementName, offset), elementName);
 		}
 		return null;
 	}
@@ -689,6 +689,7 @@ public class CodeDataResolver {
 	}
 
 	private CodeData[] extendedImplementCodeData;
+
 	private CodeData[] getExtendsImplementsCodeData(PHPProjectModel projectModel, String startWith, int offset) {
 		if (extendedImplementCodeData == null) {
 			CodeData extendsCodeData = null;
@@ -714,6 +715,7 @@ public class CodeDataResolver {
 	}
 
 	private static CodeData[] implementCodeData;
+
 	private CodeData[] getImplementsCodeData(PHPProjectModel projectModel, String startWith, int offset) {
 		String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
 		boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
@@ -735,6 +737,7 @@ public class CodeDataResolver {
 	}
 
 	private static CodeData[] extendsCodeData;
+
 	private static CodeData[] getExtendsCodeData(PHPProjectModel projectModel, String startWith, int offset) {
 		if (extendsCodeData == null) {
 			CodeData extendCodeData = null;
@@ -811,7 +814,7 @@ public class CodeDataResolver {
 		String className = text.subSequence(startPosition, endPosition).toString();
 
 		if (endPosition == text.length()) {
-			return filterExact (getClassList(projectModel, className, offset, false), className);
+			return filterExact(getClassList(projectModel, className, offset, false), className);
 		}
 		return null;
 	}
@@ -832,11 +835,11 @@ public class CodeDataResolver {
 		}
 
 		if (keyword.equalsIgnoreCase("instanceof")) {
-			return filterExact (getClassList(projectModel, elementName, offset, false), elementName);
+			return filterExact(getClassList(projectModel, elementName, offset, false), elementName);
 		}
 
 		if (keyword.equalsIgnoreCase("new")) {
-			return filterExact (getClassList(projectModel, elementName, offset, true), elementName);
+			return filterExact(getClassList(projectModel, elementName, offset, true), elementName);
 		}
 
 		return null;
@@ -878,10 +881,10 @@ public class CodeDataResolver {
 		if (constant != null) {
 			mergeData = ModelSupport.merge(new CodeData[] { constant }, mergeData);
 		}
-		return filterExact (mergeData, elementName);
+		return filterExact(mergeData, elementName);
 	}
-	
-	private CodeData filterExact (CodeData[] sortedArray, String searchName) {
+
+	private CodeData filterExact(CodeData[] sortedArray, String searchName) {
 		int index = ModelSupport.getFirstMatch(sortedArray, searchName, true);
 		if (index != -1) {
 			return sortedArray[index];
