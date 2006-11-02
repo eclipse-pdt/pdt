@@ -22,13 +22,13 @@ import org.eclipse.php.core.Logger;
  */
 public final class ParserExecuter implements Runnable {
 
-	public  final PHPParserManager parserManager;
-	public  final ParserClient client;
-	public  final String filename;
+	public final PHPParserManager parserManager;
+	public final ParserClient client;
+	public final String filename;
 	private final Reader reader;
-	public  final long lastModified;
-	public  final Pattern[] tasksPatterns;
-	public  final boolean useAspTagsAsPhp;
+	public final long lastModified;
+	public final Pattern[] tasksPatterns;
+	public final boolean useAspTagsAsPhp;
 	private PhpParser phpParser; // maybe we should re-create the parser
 
 	public ParserExecuter(PHPParserManager parserManager, PhpParser phpParser, ParserClient client, String filename, Reader reader, Pattern[] tasksPatterns, long lastModified, boolean useAspTagsAsPhp) {
@@ -41,14 +41,13 @@ public final class ParserExecuter implements Runnable {
 		this.lastModified = lastModified;
 		this.useAspTagsAsPhp = useAspTagsAsPhp;
 	}
-	
+
 	/**
 	 * The parsing action - in a seperate (async) thread 
-	 * @throws InterruptedException 
 	 */
 	public void run() {
 		try {
-			
+
 			final CompletionLexer lexer = parserManager.createCompletionLexer(reader);
 			lexer.setUseAspTagsAsPhp(useAspTagsAsPhp);
 			lexer.setParserClient(client);
@@ -59,7 +58,7 @@ public final class ParserExecuter implements Runnable {
 			}
 			phpParser.setScanner(lexer);
 			phpParser.setParserClient(client);
-			
+
 			client.startParsing(filename);
 
 			phpParser.parse();
@@ -73,17 +72,16 @@ public final class ParserExecuter implements Runnable {
 				if (client != null && phpParser != null) {
 					client.finishParsing(phpParser.getLength(), phpParser.getCurrentLine(), lastModified);
 				}
-				
+
 			} catch (Exception ex) {
 				Logger.logException(ex);
-			
+
 			} finally {
 				try {
 					reader.close();
 				} catch (IOException exception) {
 					Logger.logException(exception);
-				}					
-
+				}
 			}
 		}
 	}
