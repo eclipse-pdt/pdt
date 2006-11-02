@@ -324,8 +324,7 @@ public class PHPModelUtil {
 			final UserData userData = element.getUserData();
 			if (userData != null) {
 				final IPath path = new Path(userData.getFileName());
-				if (ResourcesPlugin.getWorkspace().getRoot().findMember(path) != null)
-					parent = PHPWorkspaceModelManager.getInstance().getModelForFile(path.toString());
+				parent = PHPWorkspaceModelManager.getInstance().getModelForFile(path.toString());
 			}
 		}
 		return (PHPFileData) parent;
