@@ -68,10 +68,7 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 		IFile file = getIFile();
 
 		if (file != null) {
-			PHPProjectModel projectModel = getProjectModel();
-
 			if (projectModel != null) {
-
 				fileData = projectModel.getFileData(file.getFullPath().toString());
 			}
 
