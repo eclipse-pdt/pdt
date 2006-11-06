@@ -25,7 +25,6 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 
-
 public abstract class PHPElementResourceMapping extends ResourceMapping {
 
 	/* package */PHPElementResourceMapping() {
@@ -51,7 +50,7 @@ public abstract class PHPElementResourceMapping extends ResourceMapping {
 
 		return phpElement.hashCode();
 	}
-	
+
 	public String getModelProviderId() {
 		return ""; // TODO - Migration to Eclipse 3.2 (Create org.eclipse.core.resources.modelProviders extention ??)
 	}
@@ -126,11 +125,19 @@ public abstract class PHPElementResourceMapping extends ResourceMapping {
 		}
 
 		public IProject[] getProjects() {
-			return new IProject[] { PHPModelUtil.getResource(fUnit).getProject() };
+			IResource res = PHPModelUtil.getResource(fUnit);
+			if (res != null && res.exists()) {
+				return new IProject[] { res.getProject() };
+			}
+			return new IProject[] {};
 		}
 
 		public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
-			return new ResourceTraversal[] { new ResourceTraversal(new IResource[] { PHPModelUtil.getResource(fUnit) }, IResource.DEPTH_ONE, 0) };
+			IResource res = PHPModelUtil.getResource(fUnit);
+			if (res != null) {
+				return new ResourceTraversal[] { new ResourceTraversal(new IResource[] { PHPModelUtil.getResource(fUnit) }, IResource.DEPTH_ONE, 0) };
+			}
+			return new ResourceTraversal[] {};
 		}
 	}
 
