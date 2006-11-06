@@ -47,7 +47,11 @@ public class PHPProblemsValidator {
 		IMarker[] rullerAddedMarkers = null; // We have to get all the markers, so we wont delete the ruler-added ones (Fix Bug #95)
 		Map[] rullerMarkersAttributes = null;
 		try {
-			TaskListUtility.removeAllTasks(phpFile, owners, phpFile.getFullPath().toString());
+			/* use this function they way it is used 'normally' by validators, send null instead of file name.
+			 * fix bug# 160976
+			 */
+			TaskListUtility.removeAllTasks(phpFile, owners, null);
+			//TaskListUtility.removeAllTasks(phpFile, owners, phpFile.getFullPath().toString());
 		} catch (CoreException e2) {
 			Logger.logException(e2);
 		}
