@@ -156,9 +156,17 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 	}
 
 	public final Object getParent(Object element) {
-		if (!exists(element))
-			return null;
-		return internalGetParent(element);
+		Object parent = null;
+		if (exists(element)) {
+			parent = internalGetParent(element);
+		}
+		if (treeProviders != null) {
+			for (int i = 0; i < treeProviders.length && parent == null; i++) {
+				parent = treeProviders[i].getParent(element);
+			}
+		}
+		return parent;
+
 	}
 
 	final public boolean hasChildren(Object element) {
