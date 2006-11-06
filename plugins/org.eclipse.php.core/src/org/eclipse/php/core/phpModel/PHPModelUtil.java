@@ -294,8 +294,13 @@ public class PHPModelUtil {
 
 			if (parent == null && element instanceof PHPFileData) {
 				final IResource resource = getResource(element);
+				if (resource == null) {
+					return parent;
+				}
 				final IResource parentResource = resource.getParent();
-				return parentResource;
+				if (parentResource.exists()) {
+					return parentResource;
+				}
 			}
 			return parent;
 		} else if (element instanceof PHPProjectModel)
@@ -355,7 +360,7 @@ public class PHPModelUtil {
 			final Path path = new Path(filename);
 			if (path.segmentCount() < 2) // path doesnt include project name, return null
 				return null;
-			final IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
 			return resource;
 		} else if (element instanceof PHPProjectModel) {
 			final PHPProjectModel projectModel = (PHPProjectModel) element;
