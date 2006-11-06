@@ -70,7 +70,7 @@ public class LinkingSelectionListener implements ISelectionListener {
 				if (codeData != null)
 					if (codeData instanceof PHPFileData) {
 						IResource res = PHPModelUtil.getResource(codeData);
-						if (res.getProject() != null && res.getProject().isAccessible())
+						if (res != null && res.getProject() != null && res.getProject().isAccessible())
 							selectedElement = res;
 						else
 							selectedElement = codeData;
