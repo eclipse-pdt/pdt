@@ -31,9 +31,9 @@ import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 
 public class ReorgMoveAction extends SelectionDispatchAction {
-	
+
 	StructuredSelection selectedResources;
-	
+
 	public ReorgMoveAction(IWorkbenchSite site) {
 		super(site);
 		setText(PHPUIMessages.ReorgMoveAction_3);
@@ -43,7 +43,7 @@ public class ReorgMoveAction extends SelectionDispatchAction {
 	}
 
 	public void selectionChanged(IStructuredSelection selection) {
-		selectedResources=null;
+		selectedResources = null;
 		if (!selection.isEmpty()) {
 			if (ActionUtils.containsOnlyProjects(selection.toList())) {
 				setEnabled(createWorkbenchAction(selection).isEnabled());
@@ -52,33 +52,32 @@ public class ReorgMoveAction extends SelectionDispatchAction {
 			List elements = selection.toList();
 			IResource[] resources = ActionUtils.getResources(elements);
 			Object[] phpElements = ActionUtils.getPHPElements(elements);
-			
+
 			if (elements.size() != resources.length + phpElements.length)
 				setEnabled(false);
-			else
-			{
-				boolean enabled=true;
-				if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING)
-				{
+			else {
+				boolean enabled = true;
+				if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING) {
 					for (int i = 0; i < phpElements.length; i++) {
-						if (!(phpElements[i]instanceof PHPFileData))
-							enabled=false;
+						if (!(phpElements[i] instanceof PHPFileData))
+							enabled = false;
 					}
 				}
-				if (enabled)
-				{
-					List list=new ArrayList(Arrays.asList(resources));
+				if (enabled) {
+					List list = new ArrayList(Arrays.asList(resources));
 					for (int i = 0; i < phpElements.length; i++) {
-						if (phpElements[i]instanceof PHPFileData)
-						{
-							list.add(PHPModelUtil.getResource(phpElements[i]));
+						if (phpElements[i] instanceof PHPFileData) {
+							IResource res = PHPModelUtil.getResource(phpElements[i]);
+							if (res != null && res.exists()) {
+								list.add(PHPModelUtil.getResource(phpElements[i]));
+							}
 						}
-						
+
 					}
-					if (list.size()==elements.size())						// only files selected
+					if (list.size() == elements.size()) // only files selected
 					{
-						selectedResources= new StructuredSelection(list);
-						enabled=createWorkbenchAction(selectedResources).isEnabled();
+						selectedResources = new StructuredSelection(list);
+						enabled = createWorkbenchAction(selectedResources).isEnabled();
 					}
 				}
 				setEnabled(enabled);
@@ -92,19 +91,16 @@ public class ReorgMoveAction extends SelectionDispatchAction {
 	}
 
 	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
-		
+
 		List list = selection.toList();
-		SelectionListenerAction action=null;
-		if (list.size()==0 || list.get(0) instanceof IProject)
-		{
-			 action = new MoveProjectAction(getShell());
+		SelectionListenerAction action = null;
+		if (list.size() == 0 || list.get(0) instanceof IProject) {
+			action = new MoveProjectAction(getShell());
 			action.selectionChanged(selection);
-		}
-		else if (selectedResources!=null)
-		{
-			 action = new MoveResourceAction(getShell());
-				action.selectionChanged(selection);
-			
+		} else if (selectedResources != null) {
+			action = new MoveResourceAction(getShell());
+			action.selectionChanged(selection);
+
 		}
 		return action;
 	}
@@ -114,10 +110,9 @@ public class ReorgMoveAction extends SelectionDispatchAction {
 			createWorkbenchAction(selection).run();
 			return;
 		}
-		if (selectedResources!=null)
-		{
+		if (selectedResources != null) {
 			createWorkbenchAction(selectedResources).run();
-			
+
 		}
 	}
 }
