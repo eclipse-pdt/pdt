@@ -14,11 +14,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHoverExtension;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.php.Logger;
+import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
@@ -36,14 +40,14 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 	 * @since 3.2
 	 */
 	private IInformationControlCreator fHoverControlCreator;
-	
+
 	/**
 	 * The presentation control creator.
 	 * 
 	 * @since 3.2
 	 */
 	private IInformationControlCreator fPresenterControlCreator;
-	
+
 	/*
 	 * @see IInformationProviderExtension2#getInformationPresenterControlCreator()
 	 * @since 3.1
@@ -59,7 +63,7 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 				public IInformationControl doCreateInformationControl(Shell parent) {
 					int shellStyle = SWT.RESIZE | SWT.TOOL;
 					int style = SWT.V_SCROLL | SWT.H_SCROLL;
-					return new PHPSourceViewerInformationControl(parent, shellStyle, style); 
+					return new PHPSourceViewerInformationControl(parent, shellStyle, style);
 				}
 			};
 		}
@@ -83,7 +87,7 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 		}
 		return fHoverControlCreator;
 	}
-	
+
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
@@ -96,7 +100,7 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 					if (codeData != null && !(codeData instanceof PHPVariableData)) {
 						UserData userData = codeData.getUserData();
 						if (userData != null) {
-							IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
+							IFile file = (IFile) PHPModelUtil.getResource(codeData);// ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
 							if (file != null) {
 								BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
 								int startPosition = userData.getStartPosition();
@@ -116,15 +120,15 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 		}
 		return null;
 	}
-	
+
 	public String formatHoverInfo(String info) {
 		info = info.trim();
 		String[] lines = info.split("[\r\n]"); //$NON-NLS-1$
 		if (lines.length > 0) {
-			String lastLine = lines[lines.length-1];
+			String lastLine = lines[lines.length - 1];
 			int numCharsToStrip = 0;
 			while (Character.isWhitespace(lastLine.charAt(numCharsToStrip))) {
-				numCharsToStrip ++;
+				numCharsToStrip++;
 			}
 			StringBuffer buf = new StringBuffer();
 			for (int i = 0; i < lines.length; ++i) {
@@ -133,7 +137,7 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 					if (!Character.isWhitespace(lines[i].charAt(actuallyStrip))) {
 						break;
 					}
-					actuallyStrip ++;
+					actuallyStrip++;
 				}
 				buf.append(lines[i].substring(actuallyStrip));
 				buf.append("\n"); //$NON-NLS-1$
