@@ -17,6 +17,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.internal.watson.ElementTree;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -74,7 +75,11 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		// find and add missing elements:
 		PHPFileData[] fileDatas = includePathModel.getFileDatas();
 		for (int i = 0; i < fileDatas.length; ++i) {
-			IPath fileLocation = new Path(fileDatas[i].getName());
+			String fileName = fileDatas[i].getName();
+			if (!fileName.startsWith(includeLocation.toOSString())) {
+				continue;
+			}
+			IPath fileLocation = new Path(fileName);
 			IPath fileTreeLocation = modelPath.append(fileLocation.removeFirstSegments(includeLocation.segmentCount()));
 			if (includePathTree.includes(fileTreeLocation)) {
 				continue;
@@ -196,10 +201,57 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			options.addOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, treeNode);
 
 		}
+		// generate the tree:
+		Object[] models = getChildren(treeNode);
+		if (models.length > 0) {
+			for (int i = 0; i < models.length; ++i) {
+				getChildren(models[i]);
+			}
+		}
 		return treeNode;
 	}
 
 	public Object getParent(Object element) {
+		if (includePathTree == null)
+			return null;
+		if (element instanceof PHPFileData) {
+			PHPFileData fileData = (PHPFileData) element;
+			String fileName = fileData.getName();
+			IPath fileLocation = new Path(fileName);
+			if (!includePathTree.includes(INCLUDE_MODELS_PATH_ROOT)) {
+				return null;
+			}
+			IPath[] modelPaths = includePathTree.getChildren(INCLUDE_MODELS_PATH_ROOT);
+			for (int i = 0; i < modelPaths.length; ++i) {
+				IPath includeLocation = getIncludeModelLocation((PHPIncludePathModel) includePathTree.getElementData(modelPaths[i]));
+				if (!fileName.startsWith(includeLocation.toOSString()))
+					continue;
+				IPath fileTreeLocation = modelPaths[i].append(fileLocation.removeFirstSegments(includeLocation.segmentCount()));
+				if (includePathTree.includes(fileTreeLocation)) {
+					IPath parentTreeLocation = fileTreeLocation.removeLastSegments(1);
+					return includePathTree.getElementData(parentTreeLocation);
+				}
+			}
+		} else if (element instanceof IFolder) {
+			IFolder folder = (IFolder) element;
+			IPath folderPath = folder.getFullPath();
+			if (includePathTree.includes(folderPath)) {
+				return includePathTree.getElementData(folderPath.removeLastSegments(1));
+			}
+		} else if (element instanceof PHPIncludePathModel) {
+			IPath modelPath = INCLUDE_MODELS_PATH_ROOT.append(IncludeModelPathRootConverter.to((PHPIncludePathModel) element));
+			if (includePathTree.includes(modelPath)) {
+				for (Iterator i = projects.values().iterator(); i.hasNext();) {
+					IncludesNode treeNode = (IncludesNode) i.next();
+					Object[] children = getChildren(treeNode);
+					for (int j = 0; j < children.length; ++j) {
+						if (children[j] == element) {
+							return treeNode;
+						}
+					}
+				}
+			}
+		}
 		return null;
 	}
 
