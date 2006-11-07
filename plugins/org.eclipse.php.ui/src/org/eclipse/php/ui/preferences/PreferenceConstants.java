@@ -22,6 +22,8 @@ import org.eclipse.php.ui.util.PHPColorHelper;
 import org.eclipse.php.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 public class PreferenceConstants {
@@ -790,7 +792,15 @@ public class PreferenceConstants {
 	 * Initializes the given preference store with the default values.
 	 */
 	public static void initializeDefaultValues() {
+
+		// override default line highlight color:
+		
+		IPreferenceStore editorStore = EditorsPlugin.getDefault().getPreferenceStore(); 
+		editorStore.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, true);
+		PreferenceConverter.setDefault(editorStore, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE_COLOR, new RGB(255, 255, 206));
+
 		IPreferenceStore store = getPreferenceStore();
+		
 		store.setDefault(DOUBLE_CLICK, DOUBLE_CLICK_EXPANDS);
 
 		store.setDefault(LINK_FOLDERS_TO_EDITOR, false);
