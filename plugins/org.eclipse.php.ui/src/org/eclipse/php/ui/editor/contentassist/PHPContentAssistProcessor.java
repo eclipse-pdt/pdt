@@ -38,13 +38,13 @@ public class PHPContentAssistProcessor implements IContentAssistProcessor {
 
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		if (modelManager == null) {
-			return null;
+			return new ICompletionProposal[0];
 		}
 
 		IStructuredModel structuredModel = null;
 		structuredModel = modelManager.getExistingModelForRead(viewer.getDocument());
 		if (structuredModel == null) {
-			return null;
+			return new ICompletionProposal[0];
 		}
 		ICompletionProposal[] completionProposals;
 		try {
@@ -53,7 +53,7 @@ public class PHPContentAssistProcessor implements IContentAssistProcessor {
 				completionProposals = support.getCompletionOption(viewer, phpEditorModel, offset);
 			} catch (Exception e) {
 				Logger.logException(e);
-				return null;
+				return new ICompletionProposal[0];
 			}
 			if (completionProposals == null) {
 				completionProposals = new ICompletionProposal[0];
