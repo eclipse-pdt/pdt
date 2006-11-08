@@ -603,7 +603,8 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 		// since it relies upon *having* closeTagStringLength amount of input to work as designed.  Must be sure we don't
 		// spill over the end of the buffer while checking.
 		if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_currentPos > 0 && yy_currentPos < yy_buffer.length - 1 &&
-				yy_buffer[yy_currentPos - 1] == '<' && yy_buffer[yy_currentPos] == '?') {
+				yy_buffer[yy_currentPos - 1] == '<' && 
+				(yy_buffer[yy_currentPos] == '?' || (yy_buffer[yy_currentPos] == '%' && UseAspTagsHandler.useAspTagsAsPhp(project)))) {
 			fLastInternalBlockStart = yy_markedPos = yy_currentPos - 1;
 			yy_currentPos = yy_markedPos + 1;
 			int resumeState = yystate();
@@ -1972,3 +1973,4 @@ protected final boolean containsTagName(String markerTagName) {
 
 
 }
+

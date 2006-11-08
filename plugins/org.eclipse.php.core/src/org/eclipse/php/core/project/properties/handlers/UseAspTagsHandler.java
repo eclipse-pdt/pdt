@@ -19,15 +19,15 @@ public class UseAspTagsHandler {
 	
 	private UseAspTagsHandler() {}
 	
-	public static boolean useAspTagsAsPhp(IProject project) {
+	public static final boolean useAspTagsAsPhp(IProject project) {
 		return Boolean.valueOf(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS, null, project)).booleanValue();
 	}
 
-	public static boolean useAspTagsAsPhp(IFile file) {
+	public static final boolean useAspTagsAsPhp(IFile file) {
 		return useAspTagsAsPhp(file.getProject());
 	}
     
-    public static boolean setUseAspTagsAsPhp(boolean value, IProject project) {
+    public static final boolean setUseAspTagsAsPhp(boolean value, IProject project) {
         return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.EDITOR_USE_ASP_TAGS, Boolean.toString(value), project);
     }
 }
