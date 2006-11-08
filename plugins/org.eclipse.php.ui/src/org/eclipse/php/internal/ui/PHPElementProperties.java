@@ -22,7 +22,7 @@ public class PHPElementProperties implements IPropertySource {
 	private PHPCodeData fSource;
 
 	// Property Descriptors
-	static private IPropertyDescriptor[] fgPropertyDescriptors = new IPropertyDescriptor[2];
+	static private IPropertyDescriptor[] fgPropertyDescriptors = new IPropertyDescriptor[1];
 	{
 		PropertyDescriptor descriptor;
 
