@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.ui.treecontent;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.Image;
 
-public class PHPTreeNode {
+public class PHPTreeNode implements IAdaptable {
 
 	String fId;
 	String fText;
@@ -71,4 +73,7 @@ public class PHPTreeNode {
 		fText = text;
 	}
 
+	public Object getAdapter(Class adapter) {
+		return Platform.getAdapterManager().getAdapter(this, adapter);
+	}
 }
