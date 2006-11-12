@@ -39,7 +39,6 @@ public class PHPModelLoader extends HTMLModelLoader {
 
 	//Creating the PHPModel
 	public IStructuredModel newModel() {
-		PHPEditorModel model = new PHPEditorModel();
-		return model;
+		return new PHPEditorModel();
 	}
 }
