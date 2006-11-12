@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
+
 /**
  * A PHPIncludePathModel. 
  * The include path model is a user model for the include path that also holds a type identifier
@@ -45,7 +46,7 @@ public class PHPIncludePathModel extends PHPUserModel {
 	public PHPIncludePathModel(String root) {
 		this(root, TYPE_UNKNOWN);
 	}
-	
+
 	public String getID() {
 		return id;
 	}
