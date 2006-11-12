@@ -192,7 +192,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		fBreakpointSet = new BreakpointSet(project, fIsPHPCGI);
 
 		IDebugHandler debugHandler = null;
-		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
+		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
 		if (parametersInitializer != null) {
 			String debugHandlerID = parametersInitializer.getDebugHandler();
 			if (debugHandlerID != null) {

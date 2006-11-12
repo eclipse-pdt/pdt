@@ -61,7 +61,7 @@ public class PHPExecutableDebuggerInitializer {
 				phpConfigDir = phpIniLocation;
 			}
 
-			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch.getLaunchMode());
+			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
 
 			systemEnvironmentVariables.put("REQUEST_METHOD", "GET");
 			systemEnvironmentVariables.put("SCRIPT_FILENAME", fileName);

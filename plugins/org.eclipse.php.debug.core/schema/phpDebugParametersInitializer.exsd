@@ -97,6 +97,13 @@
                </restriction>
             </simpleType>
          </attribute>
+         <attribute name="launchConfigurationType" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
