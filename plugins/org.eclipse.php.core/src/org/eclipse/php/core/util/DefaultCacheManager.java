@@ -102,9 +102,13 @@ public class DefaultCacheManager {
 	 * @return	The cache directory for the project.
 	 */
 	protected File getCacheDir(IProject project) {
-		File file = (File) projectToCacheDir.get(project);
+  		File file = (File) projectToCacheDir.get(project);
 		if (file == null && project != null) {
-			File path = project.getLocation().toFile();
+			final IPath location = project.getLocation();
+			if (location == null) {
+				return null;
+			}
+			File path = location.toFile();
 			if (path != null) {
 				file = new File(path, CACHE_DIR_NAME);
 

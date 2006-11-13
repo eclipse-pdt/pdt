@@ -72,6 +72,15 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 
 		addModelListenrs();
 	}
+	
+	/**
+	 * Initialize a non-project model 
+	 * this means we initialize the default model
+	 */
+	public void initialize() {
+		languageModel = new PHPLanguageModelManager().setDefaultLanguageModel();
+		addModel(languageModel);
+	}
 
 	public IProject getProject() {
 		return currentProject;

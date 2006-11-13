@@ -68,6 +68,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	protected final static HashMap models = new HashMap();
+	protected static PHPProjectModel defaultModel;
+	
 
 	/**
 	 * Model listeners
@@ -217,6 +219,14 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	}
 
+	public final static PHPProjectModel getDefaultPHPProjectModel() {
+		if (defaultModel  == null) {
+			defaultModel = new PHPProjectModel();
+			defaultModel.initialize();
+		}
+		return defaultModel;
+	}
+	
 	public IProject getProjectForFileData(PHPFileData fileData, IProject defaultProject) {
 		if (fileData == null)
 			return null;

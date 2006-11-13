@@ -82,5 +82,9 @@ public class PHPLanguageModelManager extends PhpModelProxy implements IPHPLangua
 			return PHPLanguageModelManager.this.project;
 		}
 	}
-
+	
+	public IPHPLanguageModel setDefaultLanguageModel() {
+		setVersion(PhpVersionProjectPropertyHandler.getVersion());
+		return this;
+	}
 }

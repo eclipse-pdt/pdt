@@ -428,7 +428,9 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	}
 
 	private void initListeners() {
-		PHPProjectOptions options = PHPProjectOptions.forProject(project);
+		final PHPProjectOptions options = PHPProjectOptions.forProject(project);
+		if (options == null)
+			return;
 
 		includePathListener = new IncludePathListener();
 		options.addOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, includePathListener);

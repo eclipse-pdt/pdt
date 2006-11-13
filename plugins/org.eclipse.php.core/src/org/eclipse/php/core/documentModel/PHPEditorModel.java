@@ -11,7 +11,6 @@
 package org.eclipse.php.core.documentModel;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -24,8 +23,6 @@ import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
-import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.xml.core.internal.document.XMLModelNotifier;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
@@ -62,30 +59,32 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 	 * Always get the latest version of FileData
 	 */
 	public PHPFileData getFileData() {
+		return getFileData(false);
 
+	}
+
+	/**
+	 * 
+	 * @param forceCreation - if we want to create a model project as well
+	 * @return
+	 */
+	public PHPFileData getFileData(boolean forceCreation) {
 		PHPFileData fileData = null;
-		
 		IFile file = getIFile();
 
 		if (file != null) {
 			if (projectModel != null) {
 				fileData = projectModel.getFileData(file.getFullPath().toString());
 			}
-
-		} else {
-			
-		}
+		} 
 		
 		if(fileData == null) {
 			 fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
 		}
-
+		
 		return fileData;
-
 	}
-
-	//	protected PHPBrowserModel cachedBrowserModel = null;
-
+	
 	PHPProjectModel projectModel;
 	
 	public PHPProjectModel getProjectModel() {
@@ -111,9 +110,7 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 			if (projectModel != null) {
 				projectModel.fileWasChanged(file, getStructuredDocument());
 			}
-
 		}
-
 	}
 
 	public void changedModel() {
@@ -134,8 +131,7 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 		}
 		// @GINO: will probably not worked for linked resources
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IFile file = (IFile) root.findMember(new Path(path));
-		return file;
+		return (IFile) root.findMember(new Path(path));
 	}
 
 	public XMLModelNotifier getModelNotifier() {

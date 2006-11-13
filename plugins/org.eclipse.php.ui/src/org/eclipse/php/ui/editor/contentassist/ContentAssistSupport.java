@@ -156,15 +156,23 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		final int originalOffset = viewer.getSelectedRange().x;
 		final boolean isStrict = originalOffset != offset ? true : false;
 
-		PHPFileData fileData = editorModel.getFileData();
-		if (fileData == null) {
-			return;
+		PHPProjectModel projectModel = editorModel.getProjectModel();
+
+		// if there is no project model (the file is not part of a project)
+		// get the default project model
+		if (projectModel == null) {
+			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
-		String fileName = fileData.getName();
+		
+		String fileName = null;
+		PHPFileData fileData = editorModel.getFileData(true);
+		if (fileData != null) {
+			fileName = fileData.getName();
+		}
 		boolean explicit = true;
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
-		PHPProjectModel projectModel = editorModel.getProjectModel();
+		
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
 		ITextRegion textRegion = null;
 		// 	in case we are at the end of the document, asking for completion
@@ -198,6 +206,13 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			startOffset = sdRegion.getStartOffset(textRegion);
 		}
 
+		// if there is no project model (the file is not part of a project)
+		// complete with language model only 
+		if (fileData == null) {
+			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, sdRegion, textRegion, isStrict);
+			return;
+		}
+		
 		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(offset, sdRegion, true);
 		String type = textRegion.getType();
 		if (isInArrayOptionQuotes(projectModel, fileName, type, offset, selectionLength, statmentText)) {

@@ -55,9 +55,6 @@ public class GlobalParsingManager {
 	private ProjectParsingManager getProjectParsingManager(IProject project) {
 		Object object = project2ParsingManagerMap.get(project);
 		if (object == null) {
-			if (!project.isAccessible()) {
-				return null;
-			}
 			ProjectParsingManager projectParsingManager = new ProjectParsingManager(project);
 			project2ParsingManagerMap.put(project, projectParsingManager);
 			register2RemoveManagerWhenProjectCloses(project);
