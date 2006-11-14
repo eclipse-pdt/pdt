@@ -88,6 +88,9 @@ public class LinkingSelectionListener implements ISelectionListener {
 			Object oldSelectedElement = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 			if (selectedElement.equals(oldSelectedElement))
 				return;
+			if(selectedElement instanceof IResource && selectedElement.equals(PHPModelUtil.getResource(oldSelectedElement))) {
+				return;
+			}
 			viewer.setSelection(createSelection(selectedElement), true);
 		} else if (resetEmptySelection && !viewer.getSelection().isEmpty())
 			viewer.setSelection(null);
