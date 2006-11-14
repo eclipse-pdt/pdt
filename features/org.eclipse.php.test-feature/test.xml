@@ -8,13 +8,13 @@
 	<property file="label.properties" />
 
 	<!--default directory where test-eclipse will be installed-->
-	<property name="install" value="${basedir}/test-eclipse" />
+	<property name="install" value="${install-path}" />
 
 	<!--suffix added to report name to identify which platform tests results come from-->
 	<property name="platform" value="${os}.${ws}.${arch}" />
 
 	<!-- The root of the eclipse installation -->
-	<property name="eclipse-home" value="${install}/eclipse" />
+	<property name="eclipse-home" value="${install}" />
 
 	<!-- The directory that will contain the xml and html results from the tests that are run -->
 	<property name="results" value="${basedir}/results" />
@@ -25,6 +25,13 @@
 		<mkdir dir="${results}/html" />
 	</target>
 
+	<target name="junit">
+			<property name="derby" value="" />
+			<ant antfile="${eclipse-dev}/${testPlugin}/test.xml" dir="${eclipse-home}" />
+			<copy file="${eclipse-home}/${report}.xml" tofile="${results}/xml/${report}_${platform}.xml" failonerror="false" />
+			<antcall target="genHtml" />
+	</target>
+	
 	<target name="runtests" depends="init" unless="skip.test">
 		<property name="${testPlugin}.prerequisites" value=""/>
 		<!--override the value of this property with performance if the tests run on performance machine-->
@@ -32,11 +39,11 @@
 		<antcall target="${test.target}"/>
 	</target>
 
-	<target name="ant" description="Runs the org.eclipse.ant.tests.core test.xml">
+	<target name="ant" description="Runs the org.eclipse.php.test test.xml">
 		<antcall target="runtests">
 			<param name="testPlugin" value="${org.eclipse.php.test}" />
 			<param name="report" value="org.eclipse.php.test" />
-			<param name="testPluginsRequired" value="**/${org.eclipse.ant.tests.core}/* ${org.eclipse.ant.tests.core.prerequisite.testplugins}" />
+			<param name="testPluginsRequired" value="" />
 		</antcall>
 	</target>
 
