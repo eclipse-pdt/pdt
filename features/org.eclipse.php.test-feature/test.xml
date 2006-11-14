@@ -1,0 +1,51 @@
+<project name="Automated Eclipse Testing" default="all"  basedir="." >
+
+	<!--properties file containing the plugin directory name including version number,
+	 and list of required test plug-ins expressed as command-line argument to unzip executable.-->
+	<property file="test.properties" />
+
+	<!--properties file containing the build information-->
+	<property file="label.properties" />
+
+	<!--default directory where test-eclipse will be installed-->
+	<property name="install" value="${basedir}/test-eclipse" />
+
+	<!--suffix added to report name to identify which platform tests results come from-->
+	<property name="platform" value="${os}.${ws}.${arch}" />
+
+	<!-- The root of the eclipse installation -->
+	<property name="eclipse-home" value="${install}/eclipse" />
+
+	<!-- The directory that will contain the xml and html results from the tests that are run -->
+	<property name="results" value="${basedir}/results" />
+	<property name="org.eclipse.test" value="org.eclipse.test" />
+
+	<target name="init">
+		<mkdir dir="${results}/xml" />
+		<mkdir dir="${results}/html" />
+	</target>
+
+	<target name="runtests" depends="init" unless="skip.test">
+		<property name="${testPlugin}.prerequisites" value=""/>
+		<!--override the value of this property with performance if the tests run on performance machine-->
+		<property name="test.target" value="junit" />
+		<antcall target="${test.target}"/>
+	</target>
+
+	<target name="ant" description="Runs the org.eclipse.ant.tests.core test.xml">
+		<antcall target="runtests">
+			<param name="testPlugin" value="${org.eclipse.php.test}" />
+			<param name="report" value="org.eclipse.php.test" />
+			<param name="testPluginsRequired" value="**/${org.eclipse.ant.tests.core}/* ${org.eclipse.ant.tests.core.prerequisite.testplugins}" />
+		</antcall>
+	</target>
+
+	<target name="all">
+		<antcall target="ant" />
+	</target>
+
+	<target name="genHtml" description="Generates HTML results with provided JUNIT.XSL provided">
+		<style style="JUNIT.XSL" basedir="${results}/xml" destdir="${results}/html" />
+	</target>
+
+</project>
