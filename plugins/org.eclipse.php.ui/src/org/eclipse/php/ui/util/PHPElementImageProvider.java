@@ -20,6 +20,7 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.php.core.phpModel.parser.PHPIncludePathModel;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.parser.PhpModelProxy;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
@@ -114,7 +115,7 @@ public class PHPElementImageProvider {
 			return getWorkbenchImageDescriptor((IAdaptable) element, flags);
 		} else if (element.equals(PHPFunctionsContentProvider.CONSTANTS_NODE_NAME)) {
 			return PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP;
-		}  else if (element instanceof PHPIncludePathModel) {
+		} else if (element instanceof PHPIncludePathModel) {
 			PHPIncludePathModel model = (PHPIncludePathModel)element;
 			switch (model.getType()) {
 				case PHPIncludePathModel.TYPE_ZIP:
@@ -124,6 +125,8 @@ public class PHPElementImageProvider {
 				default:
 					return PHPPluginImages.DESC_OBJS_LIBRARY;
 			}
+		} else if (element instanceof PhpModelProxy) {
+			return DESC_OBJ_PROJECT;
 		}
 		switch (ProjectOutlineContentProvider.getNodeType(element)) {
 			case ProjectOutlineContentProvider.CLASSES:
