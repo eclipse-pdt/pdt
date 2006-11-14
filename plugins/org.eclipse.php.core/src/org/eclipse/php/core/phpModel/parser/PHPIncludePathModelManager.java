@@ -89,8 +89,8 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		modelsToCache = new HashMap();
 	}
 
-	public PHPIncludePathModel getModel(String id) {
-		return (PHPIncludePathModel) compositePhpModel.getModel(id);
+	public IPhpModel getModel(String id) {
+		return compositePhpModel.getModel(id);
 	}
 
 	public void initialize(IProject project) {
