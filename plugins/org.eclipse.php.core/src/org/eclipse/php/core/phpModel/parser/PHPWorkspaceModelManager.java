@@ -485,7 +485,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		}
 
 		PHPProjectModel projectModel = getModelForProject(file.getProject());
-		projectModel.addFileToModel(file);
+		if(projectModel != null){
+			projectModel.addFileToModel(file);
+		}
 	}
 
 	public void removeFileFromModel(IFile file) {
