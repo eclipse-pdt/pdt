@@ -52,9 +52,11 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		String editorArea = layout.getEditorArea();
 		
 		//	Everything is based off the editor area
-        IFolderLayout outlineFolder= layout.createFolder(ID_Debug_INFO_FOLDER, IPageLayout.RIGHT, (float) 0.75, editorArea);
-        outlineFolder.addView(ID_PHPDebugOutput);
-        outlineFolder.addView(ID_PHPBrowserOutput);
+		
+        // remove debug views from PHP prespective. bug #163653
+		//IFolderLayout outlineFolder= layout.createFolder(ID_Debug_INFO_FOLDER, IPageLayout.RIGHT, (float) 0.75, editorArea);
+        //outlineFolder.addView(ID_PHPDebugOutput);
+        //outlineFolder.addView(ID_PHPBrowserOutput);
 
 		// Top left: Resource Navigator view and PHP Explorer
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION, IPageLayout.LEFT, 0.22f, editorArea);
