@@ -56,6 +56,7 @@ import org.eclipse.php.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
+	public static final String SAVE_AUTOMATICALLY = "save_automatically";
 	protected Map envVariables = null;
 
 	public void debugPHPExecutable(final ILaunch launch, final String phpExe, final String fileToDebug) throws DebugException {
@@ -291,4 +292,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 		});
 	}
+	
+	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
+		if (configuration.getAttribute(PHPExecutableLaunchDelegate.SAVE_AUTOMATICALLY, false)) {
+			return true;
+		}
+		return super.buildForLaunch(configuration, mode, monitor);
+	}
+
 }
