@@ -548,11 +548,15 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			else if (storage instanceof LocalFileStorage)
 				resource = ((LocalFileStorage) storage).getProject();
 		}
-		if(PHPModelUtil.isPhpFile((IFile)resource)) {
-			PhpSourceParser.editFile.set(resource);
-			super.doSetInput(input);
+		if(resource instanceof IFile) {
+			if(PHPModelUtil.isPhpFile((IFile)resource)) {
+				PhpSourceParser.editFile.set(resource);
+				super.doSetInput(input);
+			} else {
+				close(false);
+			}
 		} else {
-			close(false);
+			super.doSetInput(input);			
 		}
 	}
 
