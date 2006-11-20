@@ -70,6 +70,7 @@ import org.eclipse.php.core.containers.LocalFileStorage;
 import org.eclipse.php.core.containers.ZipEntryStorage;
 import org.eclipse.php.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
@@ -547,8 +548,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			else if (storage instanceof LocalFileStorage)
 				resource = ((LocalFileStorage) storage).getProject();
 		}
-		PhpSourceParser.editFile.set(resource);
-		super.doSetInput(input);
+		if(PHPModelUtil.isPhpFile((IFile)resource)) {
+			PhpSourceParser.editFile.set(resource);
+			super.doSetInput(input);
+		} else {
+			close(false);
+		}
 	}
 
 	ISelectionChangedListener selectionListener;
