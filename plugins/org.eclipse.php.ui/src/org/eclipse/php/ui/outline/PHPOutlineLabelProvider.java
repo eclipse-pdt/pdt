@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.ui.outline;
 
-import org.eclipse.php.core.phpModel.PHPModelUtil;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
+import org.eclipse.php.ui.SuperClassLabelProvider;
 import org.eclipse.php.ui.outline.PHPOutlineContentProvider.GroupNode;
 import org.eclipse.php.ui.treecontent.PHPTreeNode;
 import org.eclipse.php.ui.util.PHPElementLabels;
@@ -24,17 +23,13 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 public class PHPOutlineLabelProvider extends JFaceNodeLabelProvider {
 	PHPUILabelProvider phpLabelProvider = new PHPUILabelProvider();
 
+	protected ILabelProvider superClassLabelProviderFragment = new SuperClassLabelProvider(this);
+
 	public Image getImage(Object element) {
 		if (element instanceof PHPCodeData) {
-			if (element instanceof PHPSuperClassNameData) {
-				PHPSuperClassNameData superClassNameData = (PHPSuperClassNameData) element;
-				PHPClassData container = (PHPClassData) superClassNameData.getContainer();
-				if (container != null) {
-					PHPClassData superClassData = PHPModelUtil.discoverSuperClass(container, superClassNameData.getName());
-					if (superClassData != null) {
-						return getImage(superClassData);
-					}
-				}
+			Image image = superClassLabelProviderFragment.getImage(element);
+			if (image != null) {
+				return image;
 			}
 			return phpLabelProvider.getImage(element);
 		} else if (element instanceof GroupNode) {
@@ -47,15 +42,9 @@ public class PHPOutlineLabelProvider extends JFaceNodeLabelProvider {
 
 	public String getText(Object element) {
 		if (element instanceof PHPCodeData) {
-			if (element instanceof PHPSuperClassNameData) {
-				PHPSuperClassNameData superClassNameData = (PHPSuperClassNameData) element;
-				PHPClassData container = (PHPClassData) superClassNameData.getContainer();
-				if (container != null) {
-					PHPClassData superClassData = PHPModelUtil.discoverSuperClass(container, superClassNameData.getName());
-					if (superClassData != null) {
-						return "Extends: " + getText(superClassData);
-					}
-				}
+			String text = superClassLabelProviderFragment.getText(element);
+			if (text != null) {
+				return text;
 			}
 			return phpLabelProvider.getText(element);
 		} else if (element instanceof GroupNode) {

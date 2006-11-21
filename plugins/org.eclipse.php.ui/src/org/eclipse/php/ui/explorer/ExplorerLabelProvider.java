@@ -11,9 +11,12 @@
 package org.eclipse.php.ui.explorer;
 
 import org.eclipse.jface.util.Assert;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.php.ui.SuperClassLabelProvider;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.ui.util.TreeHierarchyLayoutProblemsDecorator;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Provides the labels for the PHP Explorer.
@@ -29,6 +32,8 @@ public class ExplorerLabelProvider extends AppearanceAwareLabelProvider {
 
 	private TreeHierarchyLayoutProblemsDecorator fProblemDecorator;
 
+	ILabelProvider superClassLabelProvider = new SuperClassLabelProvider(this);
+
 	protected ExplorerLabelProvider(int textFlags, int imageFlags, ITreeContentProvider cp) {
 		super(textFlags, imageFlags);
 		fProblemDecorator = new TreeHierarchyLayoutProblemsDecorator();
@@ -37,7 +42,18 @@ public class ExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		fContentProvider = cp;
 	}
 
+	public Image getImage(Object object) {
+		Image image = superClassLabelProvider.getImage(object);
+		if (image != null)
+			return image;
+		return super.getImage(object);
+
+	}
+
 	public String getText(Object element) {
+		String text = superClassLabelProvider.getText(element);
+		if (text != null)
+			return text;
 		String label = super.getText(element);
 		if (label != null && label.startsWith("_lzx_")) {
 			label = label.substring(5);

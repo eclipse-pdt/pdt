@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.ui.explorer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,19 +29,22 @@ import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
+import org.eclipse.php.ui.SuperClassTreeContentProvider;
 import org.eclipse.swt.widgets.Control;
 
 public class ExplorerContentProvider extends StandardPHPElementContentProvider implements ITreeContentProvider, ModelListener, IResourceChangeListener {
 
-	ExplorerPart fPart;
-	private Object fInput;
-	TreeViewer fViewer;
-	private int fPendingChanges;
-
+	protected static final int GRANT_PARENT = 1 << 1;
 	protected static final int ORIGINAL = 0;
 	protected static final int PARENT = 1 << 0;
-	protected static final int GRANT_PARENT = 1 << 1;
 	protected static final int PROJECT = 1 << 2;
+
+	private Object fInput;
+	ExplorerPart fPart;
+	private int fPendingChanges;
+	TreeViewer fViewer;
+
+	ITreeContentProvider superClassTreeContentProvider = new SuperClassTreeContentProvider(this);
 
 	public ExplorerContentProvider(ExplorerPart part, boolean provideMembers) {
 		super(provideMembers);
@@ -47,10 +52,57 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
+	private synchronized void addPendingChange() {
+		fPendingChanges++;
+		// System.out.print(fPendingChanges);
+	}
+
+	public void dataCleared() {
+	}
+
 	public void dispose() {
 		super.dispose();
 		PHPWorkspaceModelManager.getInstance().removeModelListener(this);
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+	}
+
+	public void fileDataAdded(PHPFileData fileData) {
+		IResource res = PHPModelUtil.getResource(fileData);
+		if (res != null)
+			postRefresh(res);
+		else
+			postRefresh(fileData);
+	}
+
+	public void fileDataChanged(PHPFileData fileData) {
+		IResource res = PHPModelUtil.getResource(fileData);
+		if (res == null)
+			return;
+		postRefresh(res, false);
+	}
+
+	public void fileDataRemoved(PHPFileData fileData) {
+	}
+
+	protected Object[] getAllProjects() {
+		return ResourcesPlugin.getWorkspace().getRoot().getProjects();
+	}
+
+	public Object[] getChildrenInternal(Object parentElement) {
+		if (parentElement instanceof PHPWorkspaceModelManager) {
+			return getAllProjects();
+		}
+		ArrayList children = new ArrayList(Arrays.asList(super.getChildrenInternal(parentElement)));
+		children.addAll(Arrays.asList(superClassTreeContentProvider.getChildren(parentElement)));
+		return children.toArray();
+	}
+
+	protected Object getViewerInput() {
+		return fInput;
+	}
+
+	public synchronized boolean hasPendingChanges() {
+		return fPendingChanges > 0;
 	}
 
 	/* (non-Javadoc)
@@ -67,14 +119,14 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		fInput = newInput;
 	}
 
-	public void postRefresh(Object root) {
-		// JFace doesn't refresh when object isn't part of the viewer
-		// Therefore move the refresh start down to the viewer's input
-		if (root instanceof IWorkspaceRoot)
-			root = PHPWorkspaceModelManager.getInstance();
-		if (isParent(root, fInput))
-			root = fInput;
-		postRefresh(root, true);
+	protected Object internalGetParent(final Object element) {
+		final Object parent = super.internalGetParent(element);
+		if (parent instanceof PHPFileData) {
+			final IResource file = PHPModelUtil.getResource(element);
+			if (file != null && file.getProject() != null && file.getProject().isAccessible())
+				return file;
+		}
+		return parent;
 	}
 
 	boolean isParent(Object root, Object child) {
@@ -86,6 +138,48 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		return isParent(root, parent);
 	}
 
+	private void postAdd(final Object parent, final Object element) {
+		postRunnable(new Runnable() {
+			public void run() {
+				if (fViewer == null)
+					return;
+				if (fViewer.testFindItem(element) == null)
+					fViewer.add(parent, element);
+			}
+		});
+	}
+
+	private void postProjectStateChanged(final Object root) {
+		postRunnable(new Runnable() {
+			public void run() {
+				fPart.projectStateChanged(root);
+			}
+		});
+	}
+
+	void postRefresh(final List toRefresh, final boolean updateLabels) {
+		postRunnable(new Runnable() {
+			public void run() {
+				Control ctrl = fViewer.getControl();
+				if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible()) {
+					for (Iterator iter = toRefresh.iterator(); iter.hasNext();) {
+						fViewer.refresh(iter.next(), updateLabels);
+					}
+				}
+			}
+		});
+	}
+
+	public void postRefresh(Object root) {
+		// JFace doesn't refresh when object isn't part of the viewer
+		// Therefore move the refresh start down to the viewer's input
+		if (root instanceof IWorkspaceRoot)
+			root = PHPWorkspaceModelManager.getInstance();
+		if (isParent(root, fInput))
+			root = fInput;
+		postRefresh(root, true);
+	}
+
 	private void postRefresh(final Object root, final boolean updateLabels) {
 		postRunnable(new Runnable() {
 			public void run() {
@@ -94,8 +188,16 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		});
 	}
 
+	private void postRemove(final Object parent, final Object element) {
+		postRunnable(new Runnable() {
+			public void run() {
+				fViewer.remove(parent, new Object[] { element });
+			}
+		});
+	}
+
 	private void postRunnable(final Runnable r) {
-		if(fViewer == null)
+		if (fViewer == null)
 			return;
 		final Control ctrl = fViewer.getControl();
 		final Runnable trackedRunnable = new Runnable() {
@@ -120,36 +222,6 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 				throw e;
 			}
 		}
-	}
-
-	public void resourceChanged(IResourceChangeEvent event) {
-		IResourceDelta delta = event.getDelta();
-		if (delta != null) {
-			IResource resource = delta.getResource();
-			processResourceDeltas(delta.getAffectedChildren(), resource);
-		}
-	}
-
-	private boolean processResourceDeltas(IResourceDelta[] deltas, Object parent) {
-		if (deltas == null)
-			return false;
-
-		if (parent instanceof IWorkspaceRoot) { // the workspaceRoot is not a part of the tree model
-			// it is represnted by the PHPWorkspaceModelManager
-			parent = PHPWorkspaceModelManager.getInstance();
-		}
-
-		if (deltas.length > 1) {
-			// more than one child changed, refresh from here downwards
-			postRefresh(parent);
-			return true;
-		}
-
-		for (int i = 0; i < deltas.length; i++) {
-			if (processResourceDelta(deltas[i], parent))
-				return true;
-		}
-		return false;
 	}
 
 	private boolean processResourceDelta(IResourceDelta delta, Object parent) {
@@ -180,36 +252,26 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		return false;
 	}
 
-	private void postAdd(final Object parent, final Object element) {
-		postRunnable(new Runnable() {
-			public void run() {
-				if (fViewer == null)
-					return;
-				if (fViewer.testFindItem(element) == null)
-					fViewer.add(parent, element);
-			}
-		});
-	}
+	private boolean processResourceDeltas(IResourceDelta[] deltas, Object parent) {
+		if (deltas == null)
+			return false;
 
-	private void postRemove(final Object parent, final Object element) {
-		postRunnable(new Runnable() {
-			public void run() {
-				fViewer.remove(parent, new Object[] { element });
-			}
-		});
-	}
+		if (parent instanceof IWorkspaceRoot) { // the workspaceRoot is not a part of the tree model
+			// it is represnted by the PHPWorkspaceModelManager
+			parent = PHPWorkspaceModelManager.getInstance();
+		}
 
-	private void postProjectStateChanged(final Object root) {
-		postRunnable(new Runnable() {
-			public void run() {
-				fPart.projectStateChanged(root);
-			}
-		});
-	}
+		if (deltas.length > 1) {
+			// more than one child changed, refresh from here downwards
+			postRefresh(parent);
+			return true;
+		}
 
-	private synchronized void addPendingChange() {
-		fPendingChanges++;
-		// System.out.print(fPendingChanges);
+		for (int i = 0; i < deltas.length; i++) {
+			if (processResourceDelta(deltas[i], parent))
+				return true;
+		}
+		return false;
 	}
 
 	synchronized void removePendingChange() {
@@ -219,66 +281,11 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		// System.out.print(fPendingChanges);
 	}
 
-	public synchronized boolean hasPendingChanges() {
-		return fPendingChanges > 0;
-	}
-
-	public void fileDataChanged(PHPFileData fileData) {
-		IResource res = PHPModelUtil.getResource(fileData);
-		if (res == null)
-			return;
-		postRefresh(res, false);
-	}
-
-	public void fileDataAdded(PHPFileData fileData) {
-		IResource res = PHPModelUtil.getResource(fileData);
-		if(res != null)
-			postRefresh(res);
-		else
-			postRefresh(fileData);
-	}
-
-	public void fileDataRemoved(PHPFileData fileData) {
-	}
-
-	public void dataCleared() {
-	}
-
-	void postRefresh(final List toRefresh, final boolean updateLabels) {
-		postRunnable(new Runnable() {
-			public void run() {
-				Control ctrl = fViewer.getControl();
-				if (ctrl != null && !ctrl.isDisposed() && ctrl.isVisible()) {
-					for (Iterator iter = toRefresh.iterator(); iter.hasNext();) {
-						fViewer.refresh(iter.next(), updateLabels);
-					}
-				}
-			}
-		});
-	}
-
-	protected Object getViewerInput() {
-		return fInput;
-	}
-
-	public Object[] getChildrenInternal(Object parentElement) {
-		if (parentElement instanceof PHPWorkspaceModelManager) {
-			return getAllProjects();
+	public void resourceChanged(IResourceChangeEvent event) {
+		IResourceDelta delta = event.getDelta();
+		if (delta != null) {
+			IResource resource = delta.getResource();
+			processResourceDeltas(delta.getAffectedChildren(), resource);
 		}
-		return super.getChildrenInternal(parentElement);
-	}
-
-	protected Object[] getAllProjects() {
-		return ResourcesPlugin.getWorkspace().getRoot().getProjects();
-	}
-
-	protected Object internalGetParent(final Object element) {
-		final Object parent = super.internalGetParent(element);
-		if (parent instanceof PHPFileData) {
-			final IResource file = PHPModelUtil.getResource(element);
-			if (file != null && file.getProject() != null && file.getProject().isAccessible())
-				return file;
-		}
-		return parent;
 	}
 }
