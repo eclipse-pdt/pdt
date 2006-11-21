@@ -48,7 +48,7 @@ public class ShowGroupsAction extends Action {
 			PHPOutlineContentProvider phpContentProvider = (PHPOutlineContentProvider) contentProvider;
 			phpContentProvider.setShowGroups(isChecked());
 			treeViewer.refresh(false);
-			treeViewer.expandAll();
+			treeViewer.expandToLevel(2);
 			PHPUiPlugin.getDefault().getPreferenceStore().setValue(PREF_SHOW_GROUPS, isChecked());
 		}
 	}
