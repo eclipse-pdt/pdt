@@ -55,7 +55,7 @@ public class SortAction extends Action {
 			public void run() {
 				fSorter.setUsingLocation(!on);
 				treeViewer.refresh();
-				treeViewer.expandAll();
+				treeViewer.expandToLevel(2);
 			}
 		});
 
