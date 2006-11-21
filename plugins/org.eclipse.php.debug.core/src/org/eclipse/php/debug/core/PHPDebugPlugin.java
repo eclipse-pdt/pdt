@@ -36,6 +36,7 @@ public class PHPDebugPlugin extends Plugin {
 
 	//The shared instance.
 	private static PHPDebugPlugin plugin;
+	private static final String BASE_URL = "http://localhost";
 	private static String fPHPDebugPerspective = "org.eclipse.php.debug.ui.PHPDebugPerspective";
 	private static String fDebugPerspective = "org.eclipse.debug.ui.DebugPerspective";
 	private static boolean fIsSupportingMultipleDebugAllPages = RemoteDebugger.shouldSetProtocol; // TODO - Remove when the protocol is stable and turn this flag to 'true'
@@ -128,9 +129,9 @@ public class PHPDebugPlugin extends Plugin {
 
 	}
 
-	public static String getWorkspaceURL() {
+	public static String getWorkspaceDefaultServer() {
 		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getString(PHPDebugCorePreferenceNames.DEDAULT_URL);
+		return prefs.getString(PHPDebugCorePreferenceNames.DEFAULT_SERVER);
 
 	}
 
@@ -155,8 +156,7 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public static void createDefaultPHPServer() {
 		if (ServersManager.getServers().length == 0) {
-			String baseURL = getWorkspaceURL();
-			Server server = ServersManager.createServer(IPHPConstants.Default_Server_Name, baseURL);
+			Server server = ServersManager.createServer(IPHPConstants.Default_Server_Name, BASE_URL);
 			ServersManager.save();
 			ServersManager.setDefaultServer(server);
 		}

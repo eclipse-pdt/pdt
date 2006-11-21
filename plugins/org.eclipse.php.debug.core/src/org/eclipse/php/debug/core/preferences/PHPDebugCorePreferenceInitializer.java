@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
+import org.eclipse.php.server.core.manager.ServersManager;
 
 /**
  * Sets default values for PHP Debug preferences
@@ -32,7 +33,7 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 		node.putBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, false);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
 		node.putInt(PHPDebugCorePreferenceNames.DEBUG_PORT, 10000);
-		node.put(PHPDebugCorePreferenceNames.DEDAULT_URL, "http://localhost");
+		node.put(PHPDebugCorePreferenceNames.DEFAULT_SERVER, ServersManager.getDefaultServer().getName());
 		node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "UTF-8");
 
 		PHPDebugPlugin.getDefault().getPluginPreferences().setDefault(IPHPConstants.PHP_DEBUG_PARAMETERS_INITIALIZER, "org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
