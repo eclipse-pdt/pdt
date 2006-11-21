@@ -374,6 +374,9 @@ public class PHPCodeDataFactory {
 			this.vars = vars;
 			this.consts = consts;
 			this.superClass = superClass;
+			if(superClass != null) {
+				this.superClass.setContainer(this);
+			}
 
 			setVars(vars);
 			setFunctions(functions);
