@@ -34,6 +34,7 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPModifier;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.outline.PHPOutlineContentProvider.GroupNode;
@@ -229,6 +230,14 @@ public class PHPElementSorter extends ViewerSorter {
 		if (currentUsingLocation) {
 			return userData1.getStartPosition() - userData2.getStartPosition();
 		}
+		if(e1 instanceof PHPSuperClassNameData) {
+			if(!(e1 instanceof PHPSuperClassNameData)) {
+				return -1;
+			}
+		} else if(e2 instanceof PHPSuperClassNameData) {
+			return +1;
+		}
+
 		String name1 = getElementName(e1);
 		String name2 = getElementName(e2);
 
