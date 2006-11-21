@@ -49,8 +49,10 @@ import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.php.internal.ui.editor.LinkingSelectionListener;
 import org.eclipse.php.internal.ui.util.MultiElementSelection;
@@ -852,6 +854,16 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		 */
 		protected ISelection createSelection(Object element) {
 			if (element instanceof PHPCodeData) {
+				if(element instanceof PHPSuperClassNameData) {
+					PHPSuperClassNameData superClassNameData = (PHPSuperClassNameData)element;
+					PHPClassData classData = (PHPClassData) superClassNameData.getContainer();
+					if(classData != null) {
+						PHPClassData superClassData = PHPModelUtil.discoverSuperClass(classData,superClassNameData.getName());
+						if(superClassData != null) {
+							element = superClassData;
+						}
+					}
+				}
 				PHPFileData fileData = PHPModelUtil.getPHPFileContainer((PHPCodeData) element);
 				IResource res = PHPModelUtil.getResource(fileData);
 				if (res != null && res.getProject().isAccessible()) {
