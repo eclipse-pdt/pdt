@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.ui.outline;
 
+import org.eclipse.php.core.phpModel.PHPModelUtil;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.ui.outline.PHPOutlineContentProvider.GroupNode;
 import org.eclipse.php.ui.treecontent.PHPTreeNode;
 import org.eclipse.php.ui.util.PHPElementLabels;
@@ -23,6 +26,16 @@ public class PHPOutlineLabelProvider extends JFaceNodeLabelProvider {
 
 	public Image getImage(Object element) {
 		if (element instanceof PHPCodeData) {
+			if (element instanceof PHPSuperClassNameData) {
+				PHPSuperClassNameData superClassNameData = (PHPSuperClassNameData) element;
+				PHPClassData container = (PHPClassData) superClassNameData.getContainer();
+				if (container != null) {
+					PHPClassData superClassData = PHPModelUtil.discoverSuperClass(container, superClassNameData.getName());
+					if (superClassData != null) {
+						return getImage(superClassData);
+					}
+				}
+			}
 			return phpLabelProvider.getImage(element);
 		} else if (element instanceof GroupNode) {
 			return ((GroupNode) element).getImage();
@@ -33,9 +46,19 @@ public class PHPOutlineLabelProvider extends JFaceNodeLabelProvider {
 	}
 
 	public String getText(Object element) {
-		if (element instanceof PHPCodeData)
+		if (element instanceof PHPCodeData) {
+			if (element instanceof PHPSuperClassNameData) {
+				PHPSuperClassNameData superClassNameData = (PHPSuperClassNameData) element;
+				PHPClassData container = (PHPClassData) superClassNameData.getContainer();
+				if (container != null) {
+					PHPClassData superClassData = PHPModelUtil.discoverSuperClass(container, superClassNameData.getName());
+					if (superClassData != null) {
+						return "Extends: " + getText(superClassData);
+					}
+				}
+			}
 			return phpLabelProvider.getText(element);
-		else if (element instanceof GroupNode) {
+		} else if (element instanceof GroupNode) {
 			return ((GroupNode) element).getText();
 		} else if (element instanceof PHPTreeNode) {
 			return ((PHPTreeNode) element).getText();
