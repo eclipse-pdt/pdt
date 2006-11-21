@@ -62,14 +62,14 @@ public class PHPProjectPreferences {
 
 	}
 
-	public static String getDefaultServerURL(IProject project) {
+	public static String getDefaultServerName(IProject project) {
 		Preferences prefs = getModelPreferences();
-		String hURL = prefs.getString(PHPDebugCorePreferenceNames.DEDAULT_URL);
+		String serverName = prefs.getString(PHPDebugCorePreferenceNames.DEFAULT_SERVER);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			hURL = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.DEDAULT_URL, hURL);
+			serverName = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.DEFAULT_SERVER, serverName);
 		}
-		return hURL;
+		return serverName;
 	}
 
 	public static String getTransferEncoding(IProject project) {
