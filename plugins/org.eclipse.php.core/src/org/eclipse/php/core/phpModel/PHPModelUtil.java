@@ -477,22 +477,25 @@ public class PHPModelUtil {
 	 * @return <code>true</code> if the class extends other class 
 	 */
 	public static boolean hasSuperClass(final PHPClassData classData, final String superClassName) {
+		return discoverSuperClass(classData, superClassName) != null;
+	}
+	
+	public static PHPClassData discoverSuperClass(final PHPClassData classData, final String superClassName) {
 		final PHPSuperClassNameData currentSuperClassNameData = classData.getSuperClassData();
 		if (currentSuperClassNameData == null)
-			return false;
+			return null;
 		String currentSuperClassName = currentSuperClassNameData.getName();
 		if (currentSuperClassName == null)
-			return false;
-		if (currentSuperClassNameData.getName().compareToIgnoreCase(superClassName) == 0)
-			return true;
+			return null;
 		PHPClassData currentSuperClassData = classData;
 		while ((currentSuperClassData = getSuperClass(currentSuperClassData)) != null) {
 			if ((currentSuperClassName = currentSuperClassData.getName()) == null)
-				return false;
+				return null;
 			if (currentSuperClassName.compareToIgnoreCase(superClassName) == 0)
-				return true;
+				return currentSuperClassData;
 		}
-		return false;
+		return null;
+		
 	}
 
 	public static boolean isExternal(final Object target) {
