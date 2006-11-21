@@ -13,7 +13,9 @@ package org.eclipse.php.ui.outline;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,8 +27,11 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.ui.actions.SortAction;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.php.ui.treecontent.TreeProvider;
+import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.php.ui.util.PHPOutlineElementComparer;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 
@@ -52,6 +57,43 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return items;
 	}
 
+	public static class DoubleClickListener implements IDoubleClickListener {
+
+		private boolean enabled;
+
+		public void doubleClick(DoubleClickEvent event) {
+			ISelection selection = event.getSelection();
+			if (!(selection instanceof IStructuredSelection)) {
+				return;
+			}
+			Object element = ((IStructuredSelection) selection).getFirstElement();
+			if (!(element instanceof PHPCodeData)) {
+				return;
+			}
+			try {
+				IEditorPart editor = EditorUtility.openInEditor(element, true);
+				if (editor != null) {
+					EditorUtility.revealInEditor(editor, (PHPCodeData) element);
+				}
+			} catch (PartInitException e) {
+			}
+		}
+
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
+
+		public boolean isEnabled() {
+			return enabled;
+		}
+	}
+
+	DoubleClickListener doubleClickListener = new DoubleClickListener();
+
+	public DoubleClickListener getDoubleClickListener() {
+		return doubleClickListener;
+	}
+
 	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
 		final IContributionItem showGroupsItem = new ActionContributionItem(new ShowGroupsAction("Show Groups", viewer));
@@ -75,7 +117,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	public IContentProvider getContentProvider(final TreeViewer viewer) {
 		if (fContentProvider == null) {
 			viewer.setComparer(new PHPOutlineElementComparer());
-			fContentProvider = new PHPOutlineContentProvider(viewer, (PHPOutlineLabelProvider)getLabelProvider(viewer));
+			fContentProvider = new PHPOutlineContentProvider(viewer, (PHPOutlineLabelProvider) getLabelProvider(viewer));
 			fContentProvider.phpContentProvider.setTreeProviders(getTreeProviders());
 		}
 		return fContentProvider;
@@ -113,4 +155,5 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			treeProviders = TreeProvider.getTreeProviders(IPageLayout.ID_OUTLINE);
 		return treeProviders;
 	}
+
 }
