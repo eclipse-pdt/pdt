@@ -134,6 +134,10 @@ public class PHPElementSorter extends ViewerSorter {
 				}
 				return getMemberCategory(MembersOrderPreferenceCache.VARS_INDEX);
 			}
+
+			if (element instanceof PHPSuperClassNameData) {
+				return MEMBERSOFFSET;
+			}
 		}
 
 		if (element instanceof PHPProjectModel) {
@@ -230,11 +234,11 @@ public class PHPElementSorter extends ViewerSorter {
 		if (currentUsingLocation) {
 			return userData1.getStartPosition() - userData2.getStartPosition();
 		}
-		if(e1 instanceof PHPSuperClassNameData) {
-			if(!(e1 instanceof PHPSuperClassNameData)) {
+		if (e1 instanceof PHPSuperClassNameData) {
+			if (!(e1 instanceof PHPSuperClassNameData)) {
 				return -1;
 			}
-		} else if(e2 instanceof PHPSuperClassNameData) {
+		} else if (e2 instanceof PHPSuperClassNameData) {
 			return +1;
 		}
 
