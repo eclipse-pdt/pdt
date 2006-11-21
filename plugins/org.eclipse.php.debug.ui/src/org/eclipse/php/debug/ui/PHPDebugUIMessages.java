@@ -133,6 +133,9 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PhpDebugPreferencePage_9;
 	public static String PhpDebugPreferencePage_10;
 	public static String PhpDebugPreferencePage_11;
+	public static String PhpDebugPreferencePage_12;
+	public static String PhpDebugPreferencePage_serversLink;
+	public static String PhpDebugPreferencePage_installedPHPsLink;
 	
 	public static String PHPsComboBlock_NoPHPsTitle;
 	public static String PHPsComboBlock_noPHPsMessage;

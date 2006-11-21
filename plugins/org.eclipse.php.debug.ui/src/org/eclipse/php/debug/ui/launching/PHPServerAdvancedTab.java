@@ -318,6 +318,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		group.setLayout(layout);
 		group.setLayoutData(gridData);
 
+		// TODO - remove the override check-box & use the String externalization
 		overrideBreakpiontSettings = createCheckButton(group, "Override project/workspace 'Break at First Line' setting");
 		breakOnFirstLine = createCheckButton(group, "Break at First Line");
 		GridData data = (GridData) breakOnFirstLine.getLayoutData();

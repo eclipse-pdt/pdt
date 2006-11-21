@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.debug.internal.ui.SWTUtil;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -158,6 +159,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 		if (dialog.open() != Window.OK)
 			return;
 		fPHPExeList.refresh();
+		commitChanges();
 	}
 
 	/* (non-Javadoc)
@@ -351,6 +353,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 		if (dialog.open() != Window.OK)
 			return;
 		fPHPExeList.refresh(phpExe);
+		commitChanges();
 	}
 
 	private void enableButtons() {
@@ -463,6 +466,13 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 			i++;
 		}
 		removePHPs(phpExes);
+		commitChanges();
+	}
+
+	private void commitChanges() {
+		phpExes.setDefaultItem(getCheckedPHP());
+		Preferences prefs = PHPDebugUIPlugin.getDefault().getPluginPreferences();
+		phpExes.store(prefs);
 	}
 
 	public void removePHPs(final PHPexeItem[] phpExes) {

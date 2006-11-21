@@ -102,10 +102,6 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		return ancestor;
 	}
 
-	private PHPexeItem getCurrentDefaultPHP() {
-		return fPHPBlock.getCheckedPHP();
-	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
@@ -116,13 +112,6 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		fPHPBlock.saveColumnSettings(settings, PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
 
 		return super.performOk();
-	}
-
-	protected void storeValues() {
-
-		phpExes.setDefaultItem(fPHPBlock.getCheckedPHP());
-		Preferences prefs = getModelPreferences();
-		phpExes.store(prefs);
 	}
 
 	private void verifyDefaultPHP(PHPexeItem php) {
