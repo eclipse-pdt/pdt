@@ -11,17 +11,21 @@
 package org.eclipse.php.ui.outline;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.documentModel.PHPEditorModel;
 import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.StandardPHPElementContentProvider;
 import org.eclipse.php.ui.treecontent.PHPTreeNode;
@@ -75,7 +79,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	public void fileDataAdded(final PHPFileData fileData) {
 		if (editorModel != null && editorModel.getFileData() != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName()))
 			postRefresh(true);
-		}
+	}
 
 	/** (non-Javadoc)
 	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataChanged(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
@@ -89,7 +93,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 					groupNodes[i].reset(fileData);
 					postRefresh(groupNodes[i], true);
 				}
-		}
+	}
 
 	/** (non-Javadoc)
 	 * @see org.eclipse.php.core.phpModel.parser.ModelListener#fileDataRemoved(org.eclipse.php.core.phpModel.phpElementData.PHPFileData)
@@ -111,8 +115,8 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 				else
 					viewer.refresh(element, updateLabels);
 				if (element instanceof PHPEditorModel) {
-				viewer.expandAll();
-			}
+					viewer.expandToLevel(2);
+				}
 			}
 		};
 		final Control control = viewer.getControl();
@@ -211,8 +215,8 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 				}
 			if (children == null)
 				children = new Object[0];
-			}
 		}
+	}
 	// this class intension is to get the selection event from the editor and then make sure the 
 	// selected elements have the IJFaceNodeAdapter as adapter - this adapter is responsible to refresh the outlineView 
 	private class PostSelectionServiceListener implements ISelectionListener {
@@ -260,7 +264,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	TreeViewer viewer;
 
 	private PHPOutlineLabelProvider labelProvider;
-	
+
 	public PHPOutlineContentProvider(final TreeViewer viewer, PHPOutlineLabelProvider labelProvider) {
 		super();
 
@@ -299,9 +303,27 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	public Object[] getChildren(final Object object) {
 		if (object instanceof PHPElementImpl && mode == MODE_MIXED)
 			return getPHPChildren((PHPElementImpl) object);
-		else if (object instanceof PHPCodeData)
-			return phpContentProvider.getChildren(object);
-		else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
+		else if (object instanceof PHPCodeData) {
+			ArrayList children = new ArrayList(Arrays.asList(phpContentProvider.getChildren(object)));
+			if (object instanceof PHPClassData) {
+				PHPClassData classData = (PHPClassData) object;
+				PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
+				if (superClassNameData != null && PHPModelUtil.discoverSuperClass(classData, superClassNameData.getName()) != null) {
+					children.add(superClassNameData);
+				}
+			}
+			if (object instanceof PHPSuperClassNameData) {
+				PHPSuperClassNameData superClassNameData = (PHPSuperClassNameData) object;
+				PHPClassData classData = (PHPClassData) superClassNameData.getContainer();
+				if (classData != null) {
+					PHPClassData superClassData = PHPModelUtil.discoverSuperClass(classData, superClassNameData.getName());
+					if (superClassData != null) {
+						return getChildren(superClassData);
+					}
+				}
+			}
+			return children.toArray();
+		} else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
 			editorModel = (PHPEditorModel) object;
 			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
 			final PHPFileData fileData = editorModel.getFileData();
@@ -331,7 +353,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 			if (groupNodes != null)
 				return groupNodes;
 			return getElements(fileData);
-			}
+		}
 		return super.getElements(object);
 	}
 
@@ -411,7 +433,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 			final Object[] phpChildren = getPHPChildren((PHPElementImpl) object);
 			return phpChildren.length > 0;
 		} else if (object instanceof PHPCodeData) {
-			final Object[] phpChildren = getPHPChildren((PHPCodeData) object);
+			final Object[] phpChildren = getChildren(object);
 			return phpChildren.length > 0;
 		} else if (object instanceof GroupNode)
 			return ((GroupNode) object).hasChildren();
