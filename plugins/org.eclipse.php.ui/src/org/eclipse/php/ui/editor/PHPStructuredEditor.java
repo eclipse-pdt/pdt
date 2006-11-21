@@ -10,56 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import org.eclipse.core.internal.resources.Workspace;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.link.contentassist.HTMLTextPresenter;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.Assert;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextOperationTarget;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.ITextViewerExtension4;
-import org.eclipse.jface.text.ITextViewerExtension5;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHoverExtension;
-import org.eclipse.jface.text.source.ILineRange;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.ISourceViewerExtension3;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -76,13 +40,8 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.ui.actions.AddBlockCommentAction;
-import org.eclipse.php.internal.ui.actions.BlockCommentAction;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
-import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
-import org.eclipse.php.internal.ui.actions.RemoveBlockCommentAction;
-import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
+import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.php.internal.ui.editor.PHPPairMatcher;
 import org.eclipse.php.ui.containers.StorageEditorInput;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorators;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -97,17 +56,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener2;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.ui.texteditor.ResourceAction;
-import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.*;
+import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -125,6 +75,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT = "org.eclipse.php.ui.actions.RemoveBlockComment"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT = "org.eclipse.php.ui.actions.AddBlockComment"; //$NON-NLS-1$
 
+	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
+	
 	/**
 	 * This action behaves in two different ways: If there is no current text
 	 * hover, the javadoc is displayed using information presenter. If there is
@@ -420,6 +372,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		setAction("org.eclipse.php.ui.actions.ToggleCommentAction", action); //$NON-NLS-1$
 		((ToggleCommentAction) action).configure(sourceViewer, configuration);
 
+		action = new GotoMatchingBracketAction(this);
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET); //$NON-NLS-1$
+		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action); //$NON-NLS-1$
+		
 		action = new AddBlockCommentAction(resourceBundle, "AddBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.add.block.comment"); //$NON-NLS-1$
 		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, action); //$NON-NLS-1$
@@ -457,6 +413,114 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
 
+	}
+
+	/**
+	 * Jumps to the matching bracket.
+	 */
+	public void gotoMatchingBracket() {
+
+		ISourceViewer sourceViewer = getSourceViewer();
+		IDocument document = sourceViewer.getDocument();
+		if (document == null)
+			return;
+
+		IRegion selection = getSignedSelection(sourceViewer);
+
+		int selectionLength = Math.abs(selection.getLength());
+		if (selectionLength > 1) {
+			setStatusLineErrorMessage(PHPUIMessages.GotoMatchingBracket_error_invalidSelection);
+			sourceViewer.getTextWidget().getDisplay().beep();
+			return;
+		}
+
+		// #26314
+		int sourceCaretOffset = selection.getOffset() + selection.getLength();
+		if (isSurroundedByBrackets(document, sourceCaretOffset))
+			sourceCaretOffset -= selection.getLength();
+
+		IRegion region = fBracketMatcher.match(document, sourceCaretOffset);
+		if (region == null) {
+			setStatusLineErrorMessage(PHPUIMessages.GotoMatchingBracket_error_noMatchingBracket);
+			sourceViewer.getTextWidget().getDisplay().beep();
+			return;
+		}
+
+		int offset = region.getOffset();
+		int length = region.getLength();
+
+		if (length < 1)
+			return;
+
+		int anchor = fBracketMatcher.getAnchor();
+		// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
+		int targetOffset = (ICharacterPairMatcher.RIGHT == anchor) ? offset + 1 : offset + length;
+
+		boolean visible = false;
+		if (sourceViewer instanceof ITextViewerExtension5) {
+			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
+			visible = (extension.modelOffset2WidgetOffset(targetOffset) > -1);
+		} else {
+			IRegion visibleRegion = sourceViewer.getVisibleRegion();
+			// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
+			visible = (targetOffset >= visibleRegion.getOffset() && targetOffset <= visibleRegion.getOffset() + visibleRegion.getLength());
+		}
+
+		if (!visible) {
+			setStatusLineErrorMessage(PHPUIMessages.GotoMatchingBracket_error_bracketOutsideSelectedElement);
+			sourceViewer.getTextWidget().getDisplay().beep();
+			return;
+		}
+
+		if (selection.getLength() < 0)
+			targetOffset -= selection.getLength();
+
+		sourceViewer.setSelectedRange(targetOffset, selection.getLength());
+		sourceViewer.revealRange(targetOffset, selection.getLength());
+	}
+
+	private static boolean isSurroundedByBrackets(IDocument document, int offset) {
+		if (offset == 0 || offset == document.getLength())
+			return false;
+
+		try {
+			return isBracket(document.getChar(offset - 1)) && isBracket(document.getChar(offset));
+
+		} catch (BadLocationException e) {
+			return false;
+		}
+	}
+
+	private static boolean isBracket(char character) {
+		for (int i = 0; i != BRACKETS.length; ++i)
+			if (character == BRACKETS[i])
+				return true;
+		return false;
+	}
+
+	/**
+	 * Returns the signed current selection.
+	 * The length will be negative if the resulting selection
+	 * is right-to-left (RtoL).
+	 * <p>
+	 * The selection offset is model based.
+	 * </p>
+	 *
+	 * @param sourceViewer the source viewer
+	 * @return a region denoting the current signed selection, for a resulting RtoL selections length is < 0
+	 */
+	protected IRegion getSignedSelection(ISourceViewer sourceViewer) {
+		StyledText text = sourceViewer.getTextWidget();
+		Point selection = text.getSelectionRange();
+
+		if (text.getCaretOffset() == selection.x) {
+			selection.x = selection.x + selection.y;
+			selection.y = -selection.y;
+		}
+
+		selection.x = widgetOffset2ModelOffset(sourceViewer, selection.x);
+
+		return new Region(selection.x, selection.y);
 	}
 
 	public void createPartControl(final Composite parent) {
@@ -548,15 +612,15 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			else if (storage instanceof LocalFileStorage)
 				resource = ((LocalFileStorage) storage).getProject();
 		}
-		if(resource instanceof IFile) {
-			if(PHPModelUtil.isPhpFile((IFile)resource)) {
+		if (resource instanceof IFile) {
+			if (PHPModelUtil.isPhpFile((IFile) resource)) {
 				PhpSourceParser.editFile.set(resource);
 				super.doSetInput(input);
 			} else {
 				close(false);
 			}
 		} else {
-			super.doSetInput(input);			
+			super.doSetInput(input);
 		}
 	}
 
@@ -605,6 +669,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 										}
 								}
 							}
+						clearStatusLine();
 					}
 
 				};
@@ -612,6 +677,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			outlinePage.addSelectionChangedListener(selectionListener);
 		}
 		return adapter;
+	}
+
+	protected void clearStatusLine() {
+		setStatusLineErrorMessage(null);
+		setStatusLineMessage(null);
 	}
 
 	public IFile getFile() {
@@ -668,7 +738,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	public void setSelection(final PHPCodeData element, boolean reveal) {
 		if (element != null) {
 			final UserData userData = element.getUserData();
-			if(userData == null || !userData.getFileName().equals(getPHPFileData().getUserData().getFileName())) {
+			if (userData == null || !userData.getFileName().equals(getPHPFileData().getUserData().getFileName())) {
 				return;
 			}
 			int start = userData.getStartPosition();

@@ -16,7 +16,7 @@ import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.format.FormatterUtils;
-import org.eclipse.wst.html.ui.internal.text.HTMLDocumentRegionEdgeMatcher;
+import org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -44,7 +44,7 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 	protected static final int MATCHING_BRACKET_NEEDED = 0;
 	protected static final int MATCHING_BRACKET_NOT_NEEDED = 1;
 
-	protected static HTMLDocumentRegionEdgeMatcher matcher = new HTMLDocumentRegionEdgeMatcher();
+	protected static PHPDocumentRegionEdgeMatcher matcher = new PHPDocumentRegionEdgeMatcher();
 
 	protected boolean isClosingBracket(final char c) {
 		return c == ROUND_CLOSE || c == SQUARE_CLOSE || c == CURLY_CLOSE;

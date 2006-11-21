@@ -831,5 +831,10 @@ public class PHPUIMessages {
 	public static String ShowPHPDoc_label;
 	public static String HoverFocus_message;
 	public static String HoverFocus_decoration;
+	
+	public static String GotoMatchingBracket_label;
+	public static String GotoMatchingBracket_error_invalidSelection;
+	public static String GotoMatchingBracket_error_noMatchingBracket;
+	public static String GotoMatchingBracket_error_bracketOutsideSelectedElement;
 
 }

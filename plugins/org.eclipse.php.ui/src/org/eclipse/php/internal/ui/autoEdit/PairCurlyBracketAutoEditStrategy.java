@@ -18,7 +18,7 @@ import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.format.CurlyCloseIndentationStrategy;
 import org.eclipse.php.core.format.FormatPreferencesSupport;
 import org.eclipse.php.core.format.FormatterUtils;
-import org.eclipse.wst.html.ui.internal.text.HTMLDocumentRegionEdgeMatcher;
+import org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -33,7 +33,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 	private static final char CURLY_OPEN = '{';
 	private static final char CURLY_CLOSE = '}';
 
-	private static HTMLDocumentRegionEdgeMatcher matcher = new HTMLDocumentRegionEdgeMatcher();
+	private static PHPDocumentRegionEdgeMatcher matcher = new PHPDocumentRegionEdgeMatcher();
 
 	public int autoEditAfterNewLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) {
 		try {

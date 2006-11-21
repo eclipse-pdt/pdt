@@ -231,7 +231,7 @@
 			target="org.eclipse.php.core.phpsource" />
 		<provisionalConfiguration
 			type="characterpairmatcher"
-			class="org.eclipse.wst.html.ui.internal.text.HTMLDocumentRegionEdgeMatcher"
+			class="org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher"
 			target="org.eclipse.php.core.phpsource" />
 		<provisionalConfiguration
 			type="structuredtextfoldingprovider"
@@ -691,6 +691,11 @@
         description="Show Tooltip Description"
         id="org.eclipse.php.ui.edit.text.show.phpdoc"
         name="Show Tooltip Description"/>
+  <command
+        categoryId="org.eclipse.ui.category.navigate"
+        description="%ActionDefinition.gotoMatchingBracket.description"
+        id="org.eclipse.php.ui.editor.goto.matching.bracket"
+        name="%ActionDefinition.gotoMatchingBracket.name"/>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -805,6 +810,11 @@
             contextId="org.eclipse.php.ui.phpEditorScope"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="F2"/>
+      <key
+            commandId="org.eclipse.php.ui.editor.goto.matching.bracket"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+P"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page

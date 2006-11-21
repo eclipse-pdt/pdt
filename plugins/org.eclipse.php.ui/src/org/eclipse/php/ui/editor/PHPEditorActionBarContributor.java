@@ -15,8 +15,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.php.PHPUIMessages;
+import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
 import org.eclipse.php.internal.ui.actions.PHPActionConstants;
 import org.eclipse.ui.IActionBars;
@@ -29,7 +32,7 @@ import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 
 /**
  * A PHPEditorActionBarContributor, which is a simple extention for
- * TextEditorActionContributor.
+ * BasicTextEditorActionContributor.
  */
 public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
@@ -39,6 +42,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
 	protected RetargetTextEditorAction fFormatActiveElements = null;
 	protected RetargetTextEditorAction fFormatDocument = null;
+	private RetargetTextEditorAction fGotoMatchingBracket;
 	protected MenuManager fFormatMenu = null;
 
 	public final static String FORMAT_ACTIVE_ELEMENTS = "org.eclipse.wst.sse.ui.format.active.elements";//$NON-NLS-1$
@@ -70,23 +74,28 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fFormatActiveElements = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
 		fFormatActiveElements.setActionDefinitionId(FORMAT_ACTIVE_ELEMENTS);
 
+		fGotoMatchingBracket= new RetargetTextEditorAction(b, "GotoMatchingBracket."); //$NON-NLS-1$
+		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
+		
 		//		fFormatMenu = new MenuManager("Format");
 		//		fFormatMenu.add(fFormatDocument);
 		//		fFormatMenu.add(fFormatActiveElements);
 
 	}
 
-	//	public void contributeToMenu(IMenuManager menu) {
-	//		String sourceMenuId = "org.eclipse.php.ui.source.menu"; //$NON-NLS-1$		
-	//		IMenuManager sourceMenu = menu.findMenuUsingPath(sourceMenuId);
-	//
-	//		if (sourceMenu != null) {
-	//			sourceMenu.add(fFormatMenu);
-	//		}
-	//		
-	//		super.contributeToMenu(menu);
-	//
-	//	}
+	/*
+	 * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToMenu(org.eclipse.jface.action.IMenuManager)
+	 */
+	public void contributeToMenu(IMenuManager menu) {
+		super.contributeToMenu(menu);
+
+		IMenuManager gotoMenu= menu.findMenuUsingPath("navigate/goTo"); //$NON-NLS-1$
+		menu.findMenuUsingPath("source");
+		if (gotoMenu != null) {
+			gotoMenu.add(new Separator("additions2"));  //$NON-NLS-1$
+			gotoMenu.appendToGroup("additions2", fGotoMatchingBracket); //$NON-NLS-1$
+		}
+	}
 
 	protected final void markAsPartListener(RetargetAction action) {
 		fPartListeners.add(action);
@@ -116,6 +125,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 			editor = (ITextEditor) part;
 
 		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc"));
+		fGotoMatchingBracket.setAction(getAction(editor, GotoMatchingBracketAction.GOTO_MATCHING_BRACKET));
 		fFormatDocument.setAction(getAction(editor, "FormatDocument"));
 		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements"));
 

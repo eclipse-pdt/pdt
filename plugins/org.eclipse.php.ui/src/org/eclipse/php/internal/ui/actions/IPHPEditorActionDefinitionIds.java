@@ -150,6 +150,12 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	 */
 	public static final String TOGGLE_MARK_OCCURRENCES = "org.eclipse.php.ui.edit.text.toggleMarkOccurrences"; //$NON-NLS-1$
 	
-
+	/**
+	 * Action definition ID of the edit -> go to matching bracket action
+	 * (value <code>"org.eclipse.php.editor.goto.matching.bracket"</code>).
+	 *
+	 * @since 2.1
+	 */
+	public static final String GOTO_MATCHING_BRACKET= "org.eclipse.php.ui.editor.goto.matching.bracket"; //$NON-NLS-1$
 
 }
