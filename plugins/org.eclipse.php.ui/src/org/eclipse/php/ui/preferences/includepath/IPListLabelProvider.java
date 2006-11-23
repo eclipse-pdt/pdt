@@ -105,7 +105,7 @@ public class IPListLabelProvider extends LabelProvider {
 						}
 					}
 					return buf.toString();
-				} else if (ZipFileFilter.isZipPath(path)) {
+				} else if (ArchieveFileFilter.isZipPath(path)) {
 					return getPathString(path, resource == null);
 				}
 				// should not get here
@@ -147,7 +147,7 @@ public class IPListLabelProvider extends LabelProvider {
 	}
 
 	private String getPathString(IPath path, boolean isExternal) {
-		if (ZipFileFilter.isZipPath(path)) {
+		if (ArchieveFileFilter.isZipPath(path)) {
 			IPath appendedPath = path.removeLastSegments(1);
 			String appended = isExternal ? appendedPath.toOSString() : appendedPath.makeRelative().toString();
 			return MessageFormat.format(PHPUIMessages.CPListLabelProvider_twopart, new String[] { path.lastSegment(), appended });

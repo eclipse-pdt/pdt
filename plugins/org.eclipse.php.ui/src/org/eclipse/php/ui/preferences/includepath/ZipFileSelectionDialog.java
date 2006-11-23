@@ -47,7 +47,7 @@ public class ZipFileSelectionDialog extends ElementTreeSelectionDialog {
 	private static boolean isArchive(File file) {
 		String name = file.getName();
 		int detIndex = name.lastIndexOf('.');
-		return (detIndex != -1 && ZipFileFilter.isArchiveFileExtension(name.substring(detIndex + 1)));
+		return (detIndex != -1 && ArchieveFileFilter.isArchiveFileExtension(name.substring(detIndex + 1)));
 	}
 
 	private static class FileLabelProvider extends LabelProvider {

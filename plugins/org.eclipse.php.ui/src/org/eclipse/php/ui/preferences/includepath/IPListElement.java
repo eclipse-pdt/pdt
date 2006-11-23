@@ -338,7 +338,7 @@ public class IPListElement {
 			case IIncludePathEntry.IPE_LIBRARY:
 				res = root.findMember(path);
 				if (res == null) {
-					if (!ZipFileFilter.isZipPath(path)) {
+					if (!ArchieveFileFilter.isZipPath(path)) {
 						if (root.getWorkspace().validatePath(path.toString(), IResource.FOLDER).isOK() && root.getProject(path.segment(0)).exists()) {
 							res = root.getFolder(path);
 						}

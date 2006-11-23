@@ -240,7 +240,7 @@ public class VariableCreationDialog extends StatusDialog {
 			}
 		} else {
 			IPath entryPath = new Path(initPath);
-			if (ZipFileFilter.isZipPath(entryPath)) {
+			if (ArchieveFileFilter.isZipPath(entryPath)) {
 				entryPath.removeLastSegments(1);
 			}
 			initPath = entryPath.toOSString();

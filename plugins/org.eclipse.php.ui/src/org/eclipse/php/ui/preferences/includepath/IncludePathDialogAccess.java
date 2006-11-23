@@ -58,6 +58,9 @@ public final class IncludePathDialogAccess {
 	public static final String DIALOGSTORE_LASTVARIABLE = PHPUiPlugin.ID + ".lastvariable"; //$NON-NLS-1$
 	public static final String DIALOGSTORE_LASTINCLUDEFOLDER = PHPUiPlugin.ID + ".lastincludefolder"; //$NON-NLS-1$
 
+	private static final String[] fgZipExtensions = { "zip" }; //$NON-NLS-1$ //$NON-NLS-2$
+	public static final String[] FILTER_EXTENSIONS = new String[] { "*.zip" }; //$NON-NLS-1$
+	
 	private IncludePathDialogAccess() {
 		// do not instantiate
 	}
@@ -208,7 +211,7 @@ public final class IncludePathDialogAccess {
 		dialog.setValidator(validator);
 		dialog.setTitle(PHPUIMessages.IncludePathDialogAccess_ZIPArchiveDialog_edit_title);
 		dialog.setMessage(PHPUIMessages.IncludePathDialogAccess_ZIPArchiveDialog_edit_description);
-		dialog.addFilter(new ZipFileFilter(usedZips, true));
+		dialog.addFilter(new ArchieveFileFilter(usedZips, true, fgZipExtensions));
 		dialog.setInput(root);
 		dialog.setSorter(new ResourceSorter(ResourceSorter.NAME));
 		dialog.setInitialSelection(existing);
@@ -253,7 +256,7 @@ public final class IncludePathDialogAccess {
 		dialog.setValidator(validator);
 		dialog.setTitle(PHPUIMessages.IncludePathDialogAccess_ZIPArchiveDialog_new_title);
 		dialog.setMessage(PHPUIMessages.IncludePathDialogAccess_ZIPArchiveDialog_new_description);
-		dialog.addFilter(new ZipFileFilter(usedZips, true));
+		dialog.addFilter(new ArchieveFileFilter(usedZips, true, fgZipExtensions));
 		dialog.setInput(root);
 		dialog.setSorter(new ResourceSorter(ResourceSorter.NAME));
 		dialog.setInitialSelection(focus);
@@ -341,7 +344,7 @@ public final class IncludePathDialogAccess {
 
 		FileDialog dialog = new FileDialog(shell, SWT.SINGLE);
 		dialog.setText(PHPUIMessages.IncludePathDialogAccess_ExtZIPArchiveDialog_edit_title);
-		dialog.setFilterExtensions(ZipFileFilter.FILTER_EXTENSIONS);
+		dialog.setFilterExtensions(FILTER_EXTENSIONS);
 		dialog.setFilterPath(lastUsedPath);
 		dialog.setFileName(initialEntry.lastSegment());
 
@@ -370,7 +373,7 @@ public final class IncludePathDialogAccess {
 		}
 		FileDialog dialog = new FileDialog(shell, SWT.MULTI);
 		dialog.setText(PHPUIMessages.IncludePathDialogAccess_ExtZIPArchiveDialog_new_title);
-		dialog.setFilterExtensions(ZipFileFilter.FILTER_EXTENSIONS);
+		dialog.setFilterExtensions(FILTER_EXTENSIONS);
 		dialog.setFilterPath(lastUsedPath);
 
 		String res = dialog.open();

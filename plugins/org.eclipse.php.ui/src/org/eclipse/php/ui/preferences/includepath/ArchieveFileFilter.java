@@ -22,14 +22,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.ui.PHPUiPlugin;
 
-public class ZipFileFilter extends ViewerFilter {
-
-	public static final String[] FILTER_EXTENSIONS = new String[] { "*.zip" }; //$NON-NLS-1$
-
-	private static final String[] fgZipExtensions = { "zip" }; //$NON-NLS-1$ //$NON-NLS-2$
+public class ArchieveFileFilter extends ViewerFilter {
 
 	private List fExcludes;
 	private boolean fRecursive;
+	private static String[] fFilterExtensions = {"*.zip", "*.jar"}; //defaults 
 
 	/**
 	 * @param excludedFiles Excluded files will not pass the filter.
@@ -37,18 +34,20 @@ public class ZipFileFilter extends ViewerFilter {
 	 * @param recusive Folders are only shown if, searched recursively, contain
 	 * an archive
 	 */
-	public ZipFileFilter(IFile[] excludedFiles, boolean recusive) {
+	public ArchieveFileFilter(IFile[] excludedFiles, boolean recusive, String[] filterExtensions) {
 		if (excludedFiles != null) {
 			fExcludes = Arrays.asList(excludedFiles);
 		} else {
 			fExcludes = null;
 		}
 		fRecursive = recusive;
+		fFilterExtensions = filterExtensions;
 	}
 
-	public ZipFileFilter(List excludedFiles, boolean recusive) {
+	public ArchieveFileFilter(List excludedFiles, boolean recusive, String[] filterExtensions) {
 		fExcludes = excludedFiles;
 		fRecursive = recusive;
+		fFilterExtensions = filterExtensions;
 	}
 
 	/*
@@ -88,8 +87,8 @@ public class ZipFileFilter extends ViewerFilter {
 	}
 
 	public static boolean isArchiveFileExtension(String ext) {
-		for (int i = 0; i < fgZipExtensions.length; i++) {
-			if (ext.equalsIgnoreCase(fgZipExtensions[i])) {
+		for (int i = 0; i < fFilterExtensions.length; i++) {
+			if (ext.equalsIgnoreCase(fFilterExtensions[i])) {
 				return true;
 			}
 		}
