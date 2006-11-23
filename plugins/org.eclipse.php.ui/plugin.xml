@@ -12,7 +12,8 @@
 	<extension-point id="hyperlinkDetectorForPHP" name="hyperlinkDetectorForPHP" schema="schema/hyperlinkDetectorForPHP.exsd"/>
 	<extension-point id="phpOutlineElementComparer" name="phpOutlineElementComparer" schema="schema/phpOutlineElementComparer.exsd"/>
 	<extension-point id="actionFilterDelegatorForPHPCodeData" name="actionFilterDelegatorForPHPCodeData" schema="schema/actionFilterDelegatorForPHPCodeData.exsd"/>
- <extension-point id="phpLabelDecorator" name="phpLabelDecorator" schema="schema/org.eclipse.php.ui.phplabeldecorator.exsd"/>
+ 	<extension-point id="phpLabelDecorator" name="phpLabelDecorator" schema="schema/org.eclipse.php.ui.phplabeldecorator.exsd"/>
+ 	<extension-point id="phpWizardPages" name="phpWizardPages" schema="schema/phpWizardPages.exsd"/>
 
 	<!--extension point="org.eclipse.ui.editors.documentProviders"> 
 		<provider 
@@ -431,7 +432,7 @@
 			id="org.eclipse.php.ui.A_OpenActionSet">
 
 			<action
-				definitionId="org.eclipse.php.ui.edit.text.open.editor"
+				definitionId="org.eclipse.php.ui.edit.text.open.editor" 				
 				label="%OpenAction.label"
 				tooltip="%OpenAction.tooltip"
 				retarget="true"
@@ -573,10 +574,8 @@
 			description="%context.editingPhpSource.description"
 			parentId="org.eclipse.ui.textEditorScope"
 			id="org.eclipse.php.ui.phpEditorScope">
-		</context>
+		</context>		
 	</extension>
-
-
 
 	<extension point="org.eclipse.ui.commands">
 		<!-- categories -->
@@ -674,7 +673,12 @@
 			categoryId="org.eclipse.ui.category.navigate"
 			id="org.eclipse.php.ui.edit.text.open.editor">
 		</command>
-
+		<command
+			name="open declaration"
+			description="open declaration"
+			categoryId="org.eclipse.ui.category.navigate"
+			id="org.eclipse.php.ui.edit.text.OpenDeclaration">
+		</command>
 		<command
 			name="%command.openType.name"
 			description="%command.openType.description"
@@ -701,7 +705,7 @@
 	<extension point="org.eclipse.ui.bindings">
 		<!--  win32:  M1=CTRL,    M2=SHIFT, M3=ALT, M4=-
 			carbon: M1=COMMAND, M2=SHIFT, M3=ALT, M4=CTRL -->
-
+	
 		<key
 			sequence="M1+/"
 			contextId="org.eclipse.php.ui.phpEditorScope"
@@ -756,12 +760,21 @@
 			sequence="COMMAND+ALT+V"
 			commandId="org.eclipse.php.ui.edit.text.move.element"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-
+		<!-- 
+		open editor should work with F3 (bug #139443) but it doesn't! it does work with every other key....
+	
+		<key
+			sequence="F3"		
+			commandId="org.eclipse.php.ui.edit.text.open.editor"	
+			contextId="org.eclipse.ui.contexts.dialogAndWindow"		
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+			-->	
 		<key
 			sequence="F3"
-			commandId="org.eclipse.php.ui.edit.text.open.editor"
+			commandId="org.eclipse.php.ui.edit.text.OpenDeclaration"
 			contextId="org.eclipse.php.ui.phpEditorScope"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+
 
 		<!-- project -->
 
