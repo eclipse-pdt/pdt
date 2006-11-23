@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.ui.actions;
+package org.eclipse.php.ui.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
