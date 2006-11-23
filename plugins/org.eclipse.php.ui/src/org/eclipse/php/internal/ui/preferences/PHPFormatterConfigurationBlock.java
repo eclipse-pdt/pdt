@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.preferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.php.core.PHPCoreConstants;
+import org.eclipse.php.core.util.preferences.Key;
 import org.eclipse.php.ui.preferences.IStatusChangeListener;
 import org.eclipse.php.ui.preferences.PHPCoreOptionsConfigurationBlock;
 import org.eclipse.php.ui.util.StatusInfo;

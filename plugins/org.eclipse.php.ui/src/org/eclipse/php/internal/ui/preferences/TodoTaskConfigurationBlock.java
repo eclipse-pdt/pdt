@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.PHPCoreConstants;
+import org.eclipse.php.core.util.preferences.Key;
 import org.eclipse.php.ui.preferences.IStatusChangeListener;
 import org.eclipse.php.ui.preferences.PHPCoreOptionsConfigurationBlock;
 import org.eclipse.php.ui.util.PixelConverter;
