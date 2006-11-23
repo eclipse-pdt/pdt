@@ -2,6 +2,7 @@ package org.eclipse.php.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.core.PHPCorePlugin;
+import org.eclipse.php.core.util.preferences.Key;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;

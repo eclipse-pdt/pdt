@@ -20,13 +20,13 @@ import java.util.StringTokenizer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.php.core.util.preferences.Key;
 import org.eclipse.php.internal.ui.util.CoreUtility;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.util.ScrolledPageContent;
@@ -60,63 +60,6 @@ import org.osgi.service.prefs.BackingStoreException;
  * @since 2.1
  */
 public abstract class OptionsConfigurationBlock {
-
-	public static final class Key {
-
-		private String fQualifier;
-		private String fKey;
-
-		public Key(String qualifier, String key) {
-			fQualifier = qualifier;
-			fKey = key;
-		}
-
-		public String getName() {
-			return fKey;
-		}
-
-		private IEclipsePreferences getNode(IScopeContext context, IWorkingCopyManager manager) {
-			IEclipsePreferences node = context.getNode(fQualifier);
-			if (manager != null) {
-				return manager.getWorkingCopy(node);
-			}
-			return node;
-		}
-
-		public String getStoredValue(IScopeContext context, IWorkingCopyManager manager) {
-			return getNode(context, manager).get(fKey, null);
-		}
-
-		public String getStoredValue(IScopeContext[] lookupOrder, boolean ignoreTopScope, IWorkingCopyManager manager) {
-			for (int i = ignoreTopScope ? 1 : 0; i < lookupOrder.length; i++) {
-				String value = getStoredValue(lookupOrder[i], manager);
-				if (value != null) {
-					return value;
-				}
-			}
-			return null;
-		}
-
-		public void setStoredValue(IScopeContext context, String value, IWorkingCopyManager manager) {
-			if (value != null) {
-				getNode(context, manager).put(fKey, value);
-			} else {
-				getNode(context, manager).remove(fKey);
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		public String toString() {
-			return fQualifier + '/' + fKey;
-		}
-
-		public String getQualifier() {
-			return fQualifier;
-		}
-
-	}
 
 	protected static class ControlData {
 		private Key fKey;
