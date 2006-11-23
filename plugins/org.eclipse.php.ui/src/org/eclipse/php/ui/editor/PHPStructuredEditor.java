@@ -124,6 +124,7 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutline
 public class PHPStructuredEditor extends StructuredTextEditor {
 
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN = "org.eclipse.php.ui.actions.Open"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_DECLARATION = "org.eclipse.php.ui.actions.OpenDeclaration"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT = "org.eclipse.php.ui.actions.Uncomment"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT = "org.eclipse.php.ui.actions.Comment"; //$NON-NLS-1$
@@ -459,9 +460,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, true); //$NON-NLS-1$
 
 		action = new OpenDeclarationAction(resourceBundle, this);
-		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.open.editor"); //$NON-NLS-1$
-		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN, action); //$NON-NLS-1$
-		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN, true); //$NON-NLS-1$
+		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.OpenDeclaration"); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_DECLARATION, action); //$NON-NLS-1$
+		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_DECLARATION, true); //$NON-NLS-1$
 
 		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true);
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
