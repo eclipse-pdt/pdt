@@ -404,6 +404,7 @@ public class PHPUIMessages {
     public static String PHPVersionGroup_EnableProjectSettings;
     public static String PHPVersionGroup_ConfigWorkspaceSettings;
     public static String PHPProjectCreationWizard_PageTile;
+    public static String PHPProjectCreationWizard_LoadPagesFailure;
 	
     //  ----- Folding ------
     
