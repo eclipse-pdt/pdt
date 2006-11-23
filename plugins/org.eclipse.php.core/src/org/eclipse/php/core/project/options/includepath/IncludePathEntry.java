@@ -77,6 +77,8 @@ public class IncludePathEntry implements IIncludePathEntry {
 	public boolean isExported() {
 		return isExported;
 	}
+	
+	
 
 	public static IIncludePathEntry elementDecode(Element element, PHPProjectOptions options) {
 
@@ -86,30 +88,43 @@ public class IncludePathEntry implements IIncludePathEntry {
 		String pathAttr = element.getAttribute(TAG_PATH);
 		String resourceAttr = element.getAttribute(TAG_RESOURCE);
 
-		String createdReferenceAttr = element.getAttribute(TAG_CREATEDREFERENCE);
-		boolean createdReference = "true".equalsIgnoreCase(createdReferenceAttr);
+		// not in use: comment out
+//		String createdReferenceAttr = element.getAttribute(TAG_CREATEDREFERENCE);
+//		boolean createdReference = "true".equalsIgnoreCase(createdReferenceAttr);
 
-		// ensure path is absolute
-		IPath path = new Path(pathAttr);
-		int entryKind = entryKindFromString(entryKindAttr);
+
+		// exported flag (optional)
+		boolean isExported = element.getAttribute(TAG_EXPORTED).equals("true"); //$NON-NLS-1$
+
+		IIncludePathEntry entry = getEntry(pathAttr, entryKindAttr, contentKindAttr, resourceAttr, isExported, projectPath);
+		return entry;
+	}
+	
+	public static IIncludePathEntry elementDecode(IncludePathEntryDescriptor descriptor, IPath projectPath ){
+		
+		IIncludePathEntry entry = getEntry(descriptor.getPath(), descriptor.getEntryKind(), descriptor.getContentKind(), descriptor.getResourceName(),descriptor.isExported(), projectPath);	
+		return entry;
+	}
+	
+	public static IIncludePathEntry getEntry(String sPath, String sEntryKind, String sContentKind, String sResource, boolean isExported, IPath projectPath ){
+//		 ensure path is absolute
+		IPath path = new Path(sPath);
+		int entryKind = entryKindFromString(sEntryKind);
 		if (entryKind != IIncludePathEntry.IPE_VARIABLE && entryKind != IIncludePathEntry.IPE_CONTAINER && !path.isAbsolute()) {
 			path = projectPath.append(path);
 		}
 		IResource resource = null;
-
-		// exported flag (optional)
-		boolean isExported = element.getAttribute(TAG_EXPORTED).equals("true"); //$NON-NLS-1$
 
 		// recreate the CP entry
 		IIncludePathEntry entry = null;
 		switch (entryKind) {
 
 			case IIncludePathEntry.IPE_PROJECT:
-				resource = ResourcesPlugin.getWorkspace().getRoot().getProject(resourceAttr);
+				resource = ResourcesPlugin.getWorkspace().getRoot().getProject(sResource);
 				entry = newProjectEntry(path, resource, isExported);
 				break;
 			case IIncludePathEntry.IPE_LIBRARY:
-				entry = new IncludePathEntry(contentKindFromString(contentKindAttr), IIncludePathEntry.IPE_LIBRARY, path, resource, isExported);
+				entry = new IncludePathEntry(contentKindFromString(sContentKind), IIncludePathEntry.IPE_LIBRARY, path, resource, isExported);
 				break;
 			case IIncludePathEntry.IPE_SOURCE:
 				// must be an entry in this project or specify another project
@@ -122,10 +137,12 @@ public class IncludePathEntry implements IIncludePathEntry {
 				entry = newContainerEntry(path, resource, isExported);
 				break;
 			default:
-				throw new AssertionError(Messages.bind(Messages.includePath_unknownKind, entryKindAttr));
+				throw new AssertionError(Messages.bind(Messages.includePath_unknownKind, sEntryKind));
 		}
 		return entry;
 	}
+	
+	
 
 	public static IIncludePathEntry newProjectEntry(IPath path, IResource resource, boolean isExported) {
 
@@ -196,6 +213,11 @@ public class IncludePathEntry implements IIncludePathEntry {
 
 		writer.printTag(TAG_INCLUDEPATHENTRY, parameters);
 		writer.endTag(TAG_INCLUDEPATHENTRY);
+	}
+	
+	public String elementEncode(IPath projectPath){
+		IncludePathEntryDescriptor descriptor = new IncludePathEntryDescriptor(this,projectPath);
+		return descriptor.toString();
 	}
 
 	public static void updateProjectReferences(IIncludePathEntry[] newEntries, IIncludePathEntry[] oldEntries, IProject project, SubProgressMonitor monitor) {
