@@ -3,10 +3,13 @@ package org.eclipse.php.core.util.preferences;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.core.PHPCorePlugin;
+import org.eclipse.ui.preferences.IWorkingCopyManager;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * XML preferences writer for writing XML structures into the prefernces store.
@@ -71,6 +74,23 @@ public class XMLPreferencesWriter {
 		}
 	}
 
+	
+	/**
+	 * Writes a group of IXMLPreferencesStorables to the given the project properties.
+	 * 
+	 * @param prefsKey The key to store by.
+	 * @param objects The IXMLPreferencesStorables to store.
+	 * @param fScopeContext The context for the project Scope
+	 * @param workingCopyManager
+	 */
+	public static void write(Key prefsKey, IXMLPreferencesStorable[] objects, IScopeContext[] fScopeContext, IWorkingCopyManager workingCopyManager){
+		StringBuffer sb = new StringBuffer();
+		appendDelimitedString(sb, objects);
+		prefsKey.setStoredValue(fScopeContext, sb.toString(), workingCopyManager);
+		
+	}	
+	
+	
 	/**
 	 * Writes an IXMLPreferencesStorables to the given IPreferenceStore.
 	 * 
