@@ -111,7 +111,7 @@ public class DebugSessionStartedNotification extends DebugMessageNotificationImp
 	}
 
 	public int getType() {
-		return 2001;
+		return 2005;
 	}
 
 	public void serialize(DataOutputStream out) throws IOException {

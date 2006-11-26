@@ -679,16 +679,18 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 */
 	public void started() {
 		fSuspended = false;
-		if (!fIsRunAsDebug)
-			installDeferredBreakpoints();
 		fireCreationEvent();
 	}
 
 	/**
 	 * Install breakpoints that are already registered with the breakpoint
 	 * manager.
+	 * In case {@link #isRunWithDebug()} returns true, nothing will happen.
 	 */
-	private void installDeferredBreakpoints() {
+	public void installDeferredBreakpoints() {
+		if (fIsRunAsDebug) {
+			return;
+		}
 		if (!fBreakpointManager.isEnabled())
 			return;
 		IBreakpoint[] breakpoints = fBreakpointManager.getBreakpoints(IPHPConstants.ID_PHP_DEBUG_CORE);

@@ -20,7 +20,6 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.manager.ServersManager;
@@ -39,7 +38,7 @@ public class PHPDebugPlugin extends Plugin {
 	private static final String BASE_URL = "http://localhost";
 	private static String fPHPDebugPerspective = "org.eclipse.php.debug.ui.PHPDebugPerspective";
 	private static String fDebugPerspective = "org.eclipse.debug.ui.DebugPerspective";
-	private static boolean fIsSupportingMultipleDebugAllPages = RemoteDebugger.shouldSetProtocol; // TODO - Remove when the protocol is stable and turn this flag to 'true'
+	private static boolean fIsSupportingMultipleDebugAllPages = true;
 	private boolean fInitialAutoRemoveLaunches;
 	private static boolean fLaunchChangedAutoRemoveLaunches;
 
@@ -54,6 +53,7 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static final boolean DebugPHP;
+
 	static {
 		String value = Platform.getDebugOption("org.eclipse.php.debug.core/debug"); //$NON-NLS-1$
 		DebugPHP = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -234,19 +234,19 @@ public class PHPDebugPlugin extends Plugin {
 	public boolean getInitialAutoRemoveLaunches() {
 		return fInitialAutoRemoveLaunches;
 	}
-	
+
 	// 
 	private class AutoRemoveOldLaunchesListener implements IPropertyChangeListener {
 
 		public void propertyChange(PropertyChangeEvent event) {
 			if (IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES.equals(event.getProperty())) {
-				if (fLaunchChangedAutoRemoveLaunches ) {
+				if (fLaunchChangedAutoRemoveLaunches) {
 					fLaunchChangedAutoRemoveLaunches = false;// We got the event, so reset the flag.
 				} else {
 					// The event was triggered from some other source - e.g. The user changed the preferences manually.
-					fInitialAutoRemoveLaunches = ((Boolean)event.getNewValue()).booleanValue();
+					fInitialAutoRemoveLaunches = ((Boolean) event.getNewValue()).booleanValue();
 				}
-			} 
+			}
 		}
 	}
 }

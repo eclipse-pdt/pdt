@@ -20,7 +20,6 @@ import org.eclipse.php.core.util.HostsCollector;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
-import org.eclipse.php.debug.core.debugger.RemoteDebugger;
 
 /**
  * Default debug parameters initializer.
@@ -55,11 +54,6 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		if (ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode()) && getBooleanValue(launch.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT))) {
 			parameters.put(DEBUG_STOP, "1");
 		}
-
-		if (!RemoteDebugger.shouldSetProtocol) { // TODO - Remove after the debugger is working well with the new protocol
-			parameters.put(DEBUG_PROTOCOL, Integer.toString(RemoteDebugger.PROTOCOL_ID));
-		}	
-
 		String url = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
 		if (url != null) {
 			parameters.put(ORIGINAL_URL, url);

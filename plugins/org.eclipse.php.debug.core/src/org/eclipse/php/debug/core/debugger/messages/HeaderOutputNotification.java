@@ -45,7 +45,7 @@ public class HeaderOutputNotification extends DebugMessageNotificationImpl imple
 	}
 
 	public int getType() {
-		return 2005;
+		return 2008;
 	}
 
 	public void serialize(DataOutputStream out) throws IOException {

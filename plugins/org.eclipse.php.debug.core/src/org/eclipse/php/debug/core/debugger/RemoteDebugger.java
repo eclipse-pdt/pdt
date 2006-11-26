@@ -12,9 +12,6 @@ package org.eclipse.php.debug.core.debugger;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.internal.adaptor.EclipseEnvironmentInfo;
-import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.debug.core.communication.DebugConnectionThread;
 import org.eclipse.php.debug.core.communication.ResponseHandler;
 import org.eclipse.php.debug.core.debugger.messages.*;
@@ -26,20 +23,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public static final int PROTOCOL_ID = 2006040701;
 
-	// Debug flag that should be removed when the new debug protocol is stable.
-	public static boolean shouldSetProtocol = false; // TODO - take a system flag.
-	private static final String SET_PROTOCOL_FLAG = "-setProtocol";
-	static {
-		String[] args = EclipseEnvironmentInfo.getDefault().getCommandLineArgs();
-		if (args != null) {
-			for (int i = args.length - 1; !shouldSetProtocol && i >= 0; i--) {
-				if (SET_PROTOCOL_FLAG.equalsIgnoreCase(args[i])) {
-					shouldSetProtocol = true;
-					Logger.log(IStatus.INFO, "Set Protocol message was enabled");
-				}
-			}
-		}
-	}
+	protected boolean isDebugMode = System.getProperty("loggingDebug") != null;
 
 	private DebugConnectionThread connection;
 	private IDebugHandler debugHandler;
@@ -90,13 +74,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 			debugHandler.ready(convertToSystemDependentFileName(currentFile), currentLine);
 		} else if (msg instanceof DebugSessionStartedNotification) {
 			DebugSessionStartedNotification debugSessionStartedNotification = (DebugSessionStartedNotification) msg;
-
-			int serverProtocol = debugSessionStartedNotification.getServerProtocolID();
-			if (serverProtocol != PROTOCOL_ID) {
-				debugHandler.wrongDebugServer();
-				return;
-			}
-
 			String fileName = debugSessionStartedNotification.getFileName();
 			String uri = debugSessionStartedNotification.getUri();
 			String query = debugSessionStartedNotification.getQuery();
@@ -168,12 +145,18 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @return message response recieved from the debugger
 	 */
 	public IDebugResponseMessage sendCustomRequest(IDebugRequestMessage request) {
+		if (isDebugMode) {
+			System.out.println("Sending custome request: " + request + " (type = " + request.getType() + ')');
+		}
 		IDebugResponseMessage response = null;
 		if (this.isActive()) {
 			try {
 				Object obj = connection.sendRequest(request);
 				if (obj instanceof IDebugResponseMessage) {
 					response = (IDebugResponseMessage) obj;
+				}
+				if (isDebugMode) {
+					System.out.println("Responce to custom request: " + response + " (type = " + response.getType() + ')');
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -223,7 +206,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Ssynchronic addBreakpoint Returns true if successed adding the
+	 * Synchronic addBreakpoint Returns true if successed adding the
 	 * Breakpoint.
 	 */
 	public void addBreakpoint(Breakpoint breakpoint) {
@@ -469,12 +452,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (!this.isActive()) {
 			return false;
 		}
-		// TODO - This flag should be removed when the protocol is stable and a 'setProtocol' message
-		// is expected
-		if (shouldSetProtocol) {
-			if (!setProtocol(getProtocolID())) {
-				return false;
-			}
+		if (!setProtocol(getProtocolID())) {
+			return false;
 		}
 		StartRequest request = new StartRequest();
 		try {
@@ -493,12 +472,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (!this.isActive()) {
 			return false;
 		}
-		// TODO - This flag should be removed when the protocol is stable and a 'setProtocol' message
-		// is expected
-		if (shouldSetProtocol) {
-			if (!setProtocol(getProtocolID())) {
-				return false;
-			}
+		if (!setProtocol(getProtocolID())) {
+			return false;
 		}
 		StartRequest request = new StartRequest();
 		try {
