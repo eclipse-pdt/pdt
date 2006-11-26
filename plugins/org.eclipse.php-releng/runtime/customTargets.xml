@@ -168,9 +168,7 @@
 
 		<cvschangelog dir="${logDir}" quiet="true" cvsRoot="${repos}" daysinpast="${logTime}" destfile="${buildDirectory}/${buildLabel}/changelog.xml" />
 
-		<style in="${buildDirectory}/${buildLabel}/changelog.xml" out="${buildDirectory}/${buildLabel}/changelog.html" style="${builder}/../changelog.xsl">
-
-		</style>
+		<style in="${buildDirectory}/${buildLabel}/changelog.xml" out="${buildDirectory}/${buildLabel}/changelog.html" style="${builder}/../changelog.xsl"/>
 
 		<ant antfile="${builder}/../buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages" />
 	</target>
