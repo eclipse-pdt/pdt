@@ -378,5 +378,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 
 	public abstract int yylength();
 	
-    public abstract String yytext();	
+    public abstract String yytext();
+    
+    public abstract int yystate();
 }
