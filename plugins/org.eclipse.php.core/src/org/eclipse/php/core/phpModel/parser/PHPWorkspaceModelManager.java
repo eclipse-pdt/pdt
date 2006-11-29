@@ -46,6 +46,7 @@ import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.php.core.project.build.PhpIncrementalProjectBuilder;
 import org.eclipse.php.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.core.util.project.observer.ProjectRemovedObserversAttacher;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 
 /*
  * This is a singleton object that contains a MAP of Project to PHPProjectModels. It is bootstrap by the
@@ -278,7 +279,14 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			for (int i = 0; i < projects.length; ++i) {
 				PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(projects[i]);
 				if (model != null) {
-					fileData = model.getFileData(filenameOS);
+					String projectPath = projects[i].getLocation().toOSString();
+					String modelFilename;
+					if(filenameOS.startsWith(projectPath)) {
+						modelFilename = new Path(StringUtils.replace(filenameOS, projectPath, "")).toPortableString();
+					} else {
+						modelFilename = filenameOS;
+					}
+					fileData = model.getFileData(modelFilename);
 					if (fileData != null)
 						break;
 				}
