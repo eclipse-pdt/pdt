@@ -94,11 +94,16 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		}
 
 		final char currChar = document.getChar(offset);
+		final char nextChar = document.getChar(offset + 1);
+		// in case we are opening a double quote in front of an existing string(or letter), we don't want to add an additional quote.
+		if (Character.isLetter(nextChar))
+			return false;
+		
 		if (Character.isWhitespace(currChar) || isClosingBracket(currChar) || isQuote && isQuote(currChar) || currChar == ';')
 			return true;
 		if (offset + 1 >= document.getLength())
 			return false;
-		final char nextChar = document.getChar(offset + 1);
+		
 		final String state = FormatterUtils.getPartitionType(document, offset);
 
 		if (state == PHPPartitionTypes.PHP_DEFAULT || state == PHPRegionTypes.PHP_OPENTAG || state == PHPRegionTypes.PHP_CLOSETAG)
