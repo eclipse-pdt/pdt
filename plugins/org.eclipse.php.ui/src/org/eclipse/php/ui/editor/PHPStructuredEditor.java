@@ -802,7 +802,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	public void setSelection(final PHPCodeData element, boolean reveal) {
 		if (element != null) {
 			final UserData userData = element.getUserData();
-			if (userData == null || !userData.getFileName().equals(getPHPFileData().getUserData().getFileName())) {
+			PHPFileData fileData = getPHPFileData();
+			if (userData == null || fileData == null || !userData.getFileName().equals(fileData.getUserData().getFileName())) {
 				return;
 			}
 			int start = userData.getStartPosition();
