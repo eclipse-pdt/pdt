@@ -62,10 +62,11 @@ public class PHPElementSorter extends ViewerSorter {
 	private static final int PACKAGEFRAGMENTROOTS = 2;
 	private static final int PACKAGEFRAGMENT = 3;
 
-	private static final int COMPILATIONUNITS = 4;
-	private static final int CLASSFILES = 5;
+	private static final int RESOURCEFOLDERS = 4;
 
-	private static final int RESOURCEFOLDERS = 7;
+	private static final int COMPILATIONUNITS = 5;
+	private static final int CLASSFILES = 6;
+
 	private static final int RESOURCES = 8;
 	private static final int STORAGE = 9;
 
