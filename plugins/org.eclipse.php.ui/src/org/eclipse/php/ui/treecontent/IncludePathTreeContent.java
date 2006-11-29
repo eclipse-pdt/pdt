@@ -21,14 +21,15 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.PHPCoreConstants;
+import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.IPhpModel;
+import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPIncludePathModel;
 import org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
@@ -49,18 +50,85 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	HashMap projects = new HashMap();
 	ElementTree includePathTree = new ElementTree();
 
-	class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListener {
+	class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListener, ModelListener {
 		IncludesNode(String text, Image image, String id, Object data, Object[] children) {
 			super(text, image, id, data, children);
 		}
 
-		public void notifyOptionChanged(Object oldOption, Object newOption) {
+		protected void refresh(final Object obj) {
 			treeViewer.getControl().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					treeViewer.refresh(IncludesNode.this);
+					treeViewer.refresh(obj);
 				}
 			});
 		}
+
+		protected void refresh() {
+			refresh(IncludesNode.this);
+		}
+
+		public void notifyOptionChanged(Object oldOption, Object newOption) {
+			refresh();
+		}
+
+		public void dataCleared() {
+		}
+
+		private IPhpModel findModel(PHPFileData fileData) {
+			IPath[] modelPaths = includePathTree.getChildren(INCLUDE_MODELS_PATH_ROOT);
+			IResource res = PHPModelUtil.getResource(fileData);
+			IPath filePath = new Path(fileData.getName());
+			String filePathString = filePath.toOSString();
+			if (res != null) {
+				filePathString = res.getLocation().toOSString();
+			}
+			for (int i = 0; i < modelPaths.length; ++i) {
+				IPhpModel model = IncludeModelPathRootConverter.from(modelPaths[i].segment(1));
+				if (model == null) {
+					continue;
+				}
+				IPath modelLocation = getIncludeModelLocation(model);
+				if (filePathString.startsWith(modelLocation.toOSString()) || (filePath.isAbsolute() && filePath.segment(0).equals(model.getID()))) {
+					return model;
+				}
+			}
+			return null;
+		}
+
+		protected void refresh(PHPFileData fileData, boolean deleted) {
+			IPhpModel model = findModel(fileData);
+			if (model == null) {
+				return;
+			}
+			IPath includeLocation = getIncludeModelLocation(model);
+			String fileName = fileData.getName();
+			IPath fileLocation = new Path(fileName);
+			IPath modelPath = INCLUDE_MODELS_PATH_ROOT.append(IncludeModelPathRootConverter.to(model));
+			IPath fileTreeLocation = modelPath.append(fileLocation.removeFirstSegments(includeLocation.segmentCount()));
+			if (includePathTree.includes(fileTreeLocation)) {
+				if (deleted) {
+					includePathTree.deleteElement(fileTreeLocation);
+					refresh(fileTreeLocation.removeLastSegments(1));
+				} else {
+					refresh(fileTreeLocation);
+				}
+			} else {
+				refresh();
+			}
+		}
+
+		public void fileDataAdded(PHPFileData fileData) {
+			refresh(fileData, false);
+		}
+
+		public void fileDataChanged(PHPFileData fileData) {
+			refresh(fileData, false);
+		}
+
+		public void fileDataRemoved(PHPFileData fileData) {
+			refresh(fileData, true);
+		}
+
 	}
 
 	Object[] getPathChildren(IPath parentPath) {
@@ -111,7 +179,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	static final String INCLUDE_MODEL_MANAGER_ID = "CompositeIncludePathModel";
 
 	static IPath getIncludeModelLocation(IPhpModel model) {
-		if(model instanceof PHPIncludePathModel) {
+		if (model instanceof PHPIncludePathModel) {
 			PHPIncludePathModel includeModel = (PHPIncludePathModel) model;
 			if (includeModel.getType() == PHPIncludePathModel.TYPE_VARIABLE) {
 				return IncludePathVariableManager.instance().getIncludePathVariable(model.getID());
@@ -121,7 +189,10 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 				return locationPath.removeFirstSegments(locationPath.segmentCount() - 1).setDevice("");
 			}
 		}
-		return new Path(model.getID());
+		String id = model.getID();
+		if (id != null)
+			return new Path(id);
+		return null;
 	}
 
 	static class IncludeModelPathRootConverter {
@@ -133,9 +204,13 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			String id = pathRoot.replace('?', Path.SEPARATOR).replace('!', File.separatorChar).replace(';', Path.DEVICE_SEPARATOR);
 			for (int i = 0; i < projectsToFindIn.length; ++i) {
 				PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(projectsToFindIn[i]);
-				Assert.isNotNull(projectModel);
+				if (projectModel == null) {
+					continue;
+				}
 				PHPIncludePathModelManager includeModelManager = (PHPIncludePathModelManager) projectModel.getModel(INCLUDE_MODEL_MANAGER_ID);
-				Assert.isNotNull(includeModelManager);
+				if (includeModelManager == null) {
+					continue;
+				}
 				IPhpModel model = includeModelManager.getModel(id);
 				if (model != null) {
 					return model;
@@ -198,6 +273,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 
 			Image image = PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_OBJS_LIBRARY);
 			treeNode = new IncludesNode("Include Paths", image, ID_INCLUDES_NODE, project, null);
+			PHPWorkspaceModelManager.getInstance().addModelListener(treeNode);
 			projects.put(project, treeNode);
 			PHPProjectOptions options = PHPProjectOptions.forProject(project);
 			options.addOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, treeNode);
@@ -269,6 +345,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		for (Iterator iter = projects.keySet().iterator(); iter.hasNext();) {
 			IProject project = (IProject) iter.next();
 			IncludesNode node = (IncludesNode) projects.get(project);
+			PHPWorkspaceModelManager.getInstance().removeModelListener(node);
 			PHPProjectOptions options = PHPProjectOptions.forProject(project);
 			options.removeOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, node);
 		}
@@ -321,12 +398,12 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	public void addListener(ILabelProviderListener listener) {
 	}
 
-	public boolean isLabelProperty(Object element, String property) {
-		return false;
-	}
-
 	public void removeListener(ILabelProviderListener listener) {
 
+	}
+
+	public boolean isLabelProperty(Object element, String property) {
+		return false;
 	}
 
 }
