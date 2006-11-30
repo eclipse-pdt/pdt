@@ -837,5 +837,10 @@ public class PHPUIMessages {
 	public static String GotoMatchingBracket_error_invalidSelection;
 	public static String GotoMatchingBracket_error_noMatchingBracket;
 	public static String GotoMatchingBracket_error_bracketOutsideSelectedElement;
+	
+	//PHP Editor Preference page
+	public static String PHPEditorPreferencePage_smartCaretPositioning;
+	public static String PHPEditorPreferencePage_prefEditorMessage;
+	public static String PHPEditorPreferencePage_prefEditorTooltip;
 
 }
