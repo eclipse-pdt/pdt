@@ -108,8 +108,8 @@ public class IPListLabelProvider extends LabelProvider {
 				} else if (ArchieveFileFilter.isZipPath(path)) {
 					return getPathString(path, resource == null);
 				}
-				// should not get here
-				return path.makeRelative().toString();
+				// should not get here - BUT IT DOES! (K_SOURCE and IPE_LIBRARY have the same ID)
+				return getPathString(path, resource == null);
 			}
 			case IIncludePathEntry.IPE_VARIABLE: {
 				return getVariableString(path);
