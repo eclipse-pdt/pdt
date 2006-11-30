@@ -11,7 +11,7 @@
 
 package org.eclipse.php.internal.ui.text;
 
-import org.eclipse.php.internal.ui.editor.PHPPairMatcher;
+import org.eclipse.php.ui.editor.PHPPairMatcher;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
