@@ -10,57 +10,21 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import org.eclipse.core.internal.resources.Workspace;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.link.contentassist.HTMLTextPresenter;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.Assert;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextOperationTarget;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.ITextViewerExtension4;
-import org.eclipse.jface.text.ITextViewerExtension5;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHoverExtension;
-import org.eclipse.jface.text.source.ICharacterPairMatcher;
-import org.eclipse.jface.text.source.ILineRange;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.ISourceViewerExtension3;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -77,15 +41,8 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.ui.actions.AddBlockCommentAction;
-import org.eclipse.php.internal.ui.actions.BlockCommentAction;
-import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
-import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
-import org.eclipse.php.internal.ui.actions.RemoveBlockCommentAction;
-import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
-import org.eclipse.php.internal.ui.editor.PHPPairMatcher;
+import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.containers.StorageEditorInput;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorators;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -94,25 +51,13 @@ import org.eclipse.php.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.ui.outline.PHPContentOutlineConfiguration.DoubleClickListener;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.TextChangeListener;
-import org.eclipse.swt.custom.TextChangedEvent;
-import org.eclipse.swt.custom.TextChangingEvent;
+import org.eclipse.swt.custom.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener2;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.ui.texteditor.ResourceAction;
-import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.*;
+import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -132,7 +77,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT = "org.eclipse.php.ui.actions.AddBlockComment"; //$NON-NLS-1$
 
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
-	
+
 	/**
 	 * This action behaves in two different ways: If there is no current text
 	 * hover, the javadoc is displayed using information presenter. If there is
@@ -416,6 +361,273 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 	}
 
+	protected void createNavigationActions() {
+		super.createNavigationActions();
+		final StyledText textWidget = getSourceViewer().getTextWidget();
+
+		IAction action = new SmartLineStartAction(textWidget, false);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.LINE_START);
+		setAction(ITextEditorActionDefinitionIds.LINE_START, action);
+
+		action = new SmartLineStartAction(textWidget, true);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_LINE_START);
+		setAction(ITextEditorActionDefinitionIds.SELECT_LINE_START, action);
+
+		action = new SmartLineEndAction(textWidget, false);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.LINE_END);
+		setAction(ITextEditorActionDefinitionIds.LINE_END, action);
+
+		action = new SmartLineEndAction(textWidget, true);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_LINE_END);
+		setAction(ITextEditorActionDefinitionIds.SELECT_LINE_END, action);
+	}
+
+	/**
+	 * This action implements smart home. (Taken from JDT implementation)
+	 * Instead of going to the start of a line it does the following:
+	 *
+	 * - if smart home/end is enabled and the caret is after the line's first non-whitespace then the caret is moved directly before it, taking PHPDoc and multi-line comments into account.
+	 * - if the caret is before the line's first non-whitespace the caret is moved to the beginning of the line
+	 * - if the caret is at the beginning of the line see first case.
+	 *
+	 */
+	protected class SmartLineStartAction extends LineStartAction {
+
+		private boolean fDoSelect;
+
+		/**
+		 * Creates a new smart line start action
+		 *
+		 * @param textWidget the styled text widget
+		 * @param doSelect a boolean flag which tells if the text up to the beginning of the line should be selected
+		 */
+		public SmartLineStartAction(final StyledText textWidget, final boolean doSelect) {
+			super(textWidget, doSelect);
+			fDoSelect = doSelect;
+		}
+
+		/*
+		 * @see org.eclipse.ui.texteditor.AbstractTextEditor.LineStartAction#getLineStartPosition(java.lang.String, int, java.lang.String)
+		 */
+		protected int getLineStartPosition(final IDocument document, final String line, final int length, final int offset) {
+
+			String type = IDocument.DEFAULT_CONTENT_TYPE;
+			try {
+				type = TextUtilities.getContentType(document, IPhpPartitions.PHP_PARTITIONING, offset, true);
+			} catch (BadLocationException exception) {
+				// Should not happen
+			}
+
+			int index = super.getLineStartPosition(document, line, length, offset);
+			if (type.equals(IPhpPartitions.PHP_DOC) || type.equals(IPhpPartitions.PHP_MULTI_LINE_COMMENT)) {
+				if (index < length - 1 && line.charAt(index) == '*' && line.charAt(index + 1) != '/') {
+					do {
+						++index;
+					} while (index < length && Character.isWhitespace(line.charAt(index)));
+				}
+			} else {
+				if (index < length - 1 && line.charAt(index) == '/' && line.charAt(index + 1) == '/') {
+					index++;
+					do {
+						++index;
+					} while (index < length && Character.isWhitespace(line.charAt(index)));
+				}
+			}
+			return index;
+		}
+
+		private IPreferenceStore getPreferenceStore() {
+			return PHPUiPlugin.getDefault().getPreferenceStore();
+		}
+
+		/*
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
+		public void run() {
+			boolean isSmartHomeEndEnabled = true;
+			IPreferenceStore store = getPreferenceStore();
+			if (store != null) {
+				isSmartHomeEndEnabled = store.getBoolean(PreferenceConstants.USE_SMART_HOME_END);
+			}
+
+			ISourceViewer fSourceViewer = getSourceViewer();
+			StyledText st = fSourceViewer.getTextWidget();
+			if (st == null || st.isDisposed())
+				return;
+
+			int caretOffset = st.getCaretOffset();
+			int lineNumber = st.getLineAtOffset(caretOffset);
+			int lineOffset = st.getOffsetAtLine(lineNumber);
+
+			int lineLength;
+			int caretOffsetInDocument;
+			final IDocument document = fSourceViewer.getDocument();
+
+			try {
+				caretOffsetInDocument = widgetOffset2ModelOffset(fSourceViewer, caretOffset);
+				lineLength = document.getLineInformationOfOffset(caretOffsetInDocument).getLength();
+			} catch (BadLocationException ex) {
+				return;
+			}
+
+			String line = ""; //$NON-NLS-1$
+			if (lineLength > 0) {
+				int end = lineOffset + lineLength - 1;
+				end = Math.min(end, st.getCharCount() - 1);
+				line = st.getText(lineOffset, end);
+			}
+
+			// Compute the line start offset
+			int index = getLineStartPosition(document, line, lineLength, caretOffsetInDocument);
+
+			// Remember current selection
+			Point oldSelection = st.getSelection();
+
+			// Compute new caret position
+			int newCaretOffset = -1;
+			if (isSmartHomeEndEnabled) {
+
+				if (caretOffset - lineOffset == index)
+					// to beginning of line
+					newCaretOffset = lineOffset;
+				else
+					// to beginning of text
+					newCaretOffset = lineOffset + index;
+
+			} else {
+
+				if (caretOffset > lineOffset)
+					// to beginning of line
+					newCaretOffset = lineOffset;
+			}
+
+			if (newCaretOffset == -1)
+				newCaretOffset = caretOffset;
+			else
+				st.setCaretOffset(newCaretOffset);
+
+			if (fDoSelect) {
+				if (caretOffset < oldSelection.y)
+					st.setSelection(oldSelection.y, newCaretOffset);
+				else
+					st.setSelection(oldSelection.x, newCaretOffset);
+			} else
+				st.setSelection(newCaretOffset);
+
+			fireSelectionChanged(oldSelection);
+		}
+	}
+
+	/**
+	 * This action implements smart end. (Taken from org.eclipse.ui.texteditor.AbstractTextEditor.LineEndAction) 
+	 * Instead of going to the end of a line it does the following:
+	 * - if smart home/end is enabled and the caret is before the line's last non-whitespace and then the caret is moved directly after it
+	 * - if the caret is after last non-whitespace the caret is moved at the end of the line
+	 * - if the caret is at the end of the line the caret is moved directly after the line's last non-whitespace character
+	 */
+	protected class SmartLineEndAction extends TextNavigationAction {
+
+		/** boolean flag which tells if the text up to the line end should be selected. */
+		private boolean fDoSelect;
+
+		/**
+		 * Create a new line end action.
+		 *
+		 * @param textWidget the styled text widget
+		 * @param doSelect a boolean flag which tells if the text up to the line end should be selected
+		 */
+		public SmartLineEndAction(StyledText textWidget, boolean doSelect) {
+			super(textWidget, ST.LINE_END);
+			fDoSelect = doSelect;
+		}
+
+		private IPreferenceStore getPreferenceStore() {
+			return PHPUiPlugin.getDefault().getPreferenceStore();
+		}
+
+		/*
+		 * @see org.eclipse.jface.action.IAction#run()
+		 */
+		public void run() {
+			boolean isSmartHomeEndEnabled = true;
+			IPreferenceStore store = getPreferenceStore();
+			if (store != null) {
+				isSmartHomeEndEnabled = store.getBoolean(PreferenceConstants.USE_SMART_HOME_END);
+			}
+
+			ISourceViewer fSourceViewer = getSourceViewer();
+			StyledText st = fSourceViewer.getTextWidget();
+			if (st == null || st.isDisposed())
+				return;
+			int caretOffset = st.getCaretOffset();
+			int lineNumber = st.getLineAtOffset(caretOffset);
+			int lineOffset = st.getOffsetAtLine(lineNumber);
+
+			int lineLength;
+			try {
+				int caretOffsetInDocument = widgetOffset2ModelOffset(fSourceViewer, caretOffset);
+				lineLength = fSourceViewer.getDocument().getLineInformationOfOffset(caretOffsetInDocument).getLength();
+			} catch (BadLocationException ex) {
+				return;
+			}
+			int lineEndOffset = lineOffset + lineLength;
+
+			int delta = lineEndOffset - st.getCharCount();
+			if (delta > 0) {
+				lineEndOffset -= delta;
+				lineLength -= delta;
+			}
+
+			String line = ""; //$NON-NLS-1$
+			if (lineLength > 0)
+				line = st.getText(lineOffset, lineEndOffset - 1);
+			int i = lineLength - 1;
+			while (i > -1 && Character.isWhitespace(line.charAt(i))) {
+				i--;
+			}
+			i++;
+
+			// Remember current selection
+			Point oldSelection = st.getSelection();
+
+			// Compute new caret position
+			int newCaretOffset = -1;
+
+			if (isSmartHomeEndEnabled) {
+
+				if (caretOffset - lineOffset == i)
+					// to end of line
+					newCaretOffset = lineEndOffset;
+				else
+					// to end of text
+					newCaretOffset = lineOffset + i;
+
+			} else {
+
+				if (caretOffset < lineEndOffset)
+					// to end of line
+					newCaretOffset = lineEndOffset;
+
+			}
+
+			if (newCaretOffset == -1)
+				newCaretOffset = caretOffset;
+			else
+				st.setCaretOffset(newCaretOffset);
+
+			st.setCaretOffset(newCaretOffset);
+			if (fDoSelect) {
+				if (caretOffset < oldSelection.y)
+					st.setSelection(oldSelection.y, newCaretOffset);
+				else
+					st.setSelection(oldSelection.x, newCaretOffset);
+			} else
+				st.setSelection(newCaretOffset);
+
+			fireSelectionChanged(oldSelection);
+		}
+	}
+
 	protected void createActions() {
 		super.createActions();
 
@@ -431,7 +643,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		action = new GotoMatchingBracketAction(this);
 		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET); //$NON-NLS-1$
 		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action); //$NON-NLS-1$
-		
+
 		action = new AddBlockCommentAction(resourceBundle, "AddBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.add.block.comment"); //$NON-NLS-1$
 		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, action); //$NON-NLS-1$
@@ -650,7 +862,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				StructuredTextViewer viewer = getTextViewer();
-				if(viewer != null) {
+				if (viewer != null) {
 					viewer.getTextWidget().redraw();
 				}
 			}
@@ -684,7 +896,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	ISelectionChangedListener selectionListener;
-	
+
 	public Object getAdapter(final Class required) {
 		final Object adapter = super.getAdapter(required);
 
@@ -693,7 +905,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (adapter instanceof ConfigurableContentOutlinePage && IContentOutlinePage.class.equals(required)) {
 			final ConfigurableContentOutlinePage outlinePage = (ConfigurableContentOutlinePage) adapter;
 			DoubleClickListener doubleClickListener = ((PHPContentOutlineConfiguration) outlinePage.getConfiguration()).getDoubleClickListener();
-			if(!doubleClickListener.isEnabled()) {
+			if (!doubleClickListener.isEnabled()) {
 				outlinePage.addDoubleClickListener(doubleClickListener);
 				doubleClickListener.setEnabled(true);
 			}
