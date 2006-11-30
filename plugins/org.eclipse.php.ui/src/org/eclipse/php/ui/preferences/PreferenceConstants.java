@@ -709,6 +709,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_FOLDING_CLASSES = "foldClasses"; //$NON-NLS-1$
 	public static final String EDITOR_FOLDING_FUNCTIONS = "foldFunctions"; //$NON-NLS-1$
 	//	public static final String EDITOR_FOLDING_INCLUDES = "foldIncludes"; //$NON-NLS-1$
+	
+	public static final String USE_SMART_HOME_END = "useSmartHomeEnd";
 	/**
 	 * A named preference that controls whether folding is enabled in the PHP editor.
 	 * <p>
@@ -884,12 +886,16 @@ public class PreferenceConstants {
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION, PHPVersion.PHP5);
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_ROOT_CONTEXT, "");
 
+		//Smart home/end
+		store.setDefault(USE_SMART_HOME_END, true);
+		
 		// Folding options
 		store.setDefault(EDITOR_FOLDING_ENABLED, false);
 		store.setDefault(EDITOR_FOLDING_PROVIDER, "org.eclipse.php.ui.defaultFoldingProvider"); //$NON-NLS-1$
 		store.setDefault(EDITOR_FOLDING_PHPDOC, true);
 		store.setDefault(EDITOR_FOLDING_CLASSES, false);
 		store.setDefault(EDITOR_FOLDING_FUNCTIONS, false);
+		
 		//		store.setDefault(EDITOR_FOLDING_INCLUDES, false);
 		store.setDefault(TYPING_AUTO_CLOSE_STRING, true);
 		store.setDefault(TYPING_AUTO_CLOSE_BRACKETS, true);
