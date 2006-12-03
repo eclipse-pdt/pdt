@@ -31,10 +31,11 @@ import org.w3c.dom.Node;
 
 public class PhpFormatter implements IStructuredFormatter {
 
-	private IIndentationStrategy defaultIndentationStrategy = new DefaultIndentationStrategy();;
+	private IIndentationStrategy defaultIndentationStrategy = new DefaultIndentationStrategy();
 	private IIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
 	private IIndentationStrategy caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy();
 	private IIndentationStrategy commentIndentationStrategy = new CommentIndentationStrategy();
+	private IIndentationStrategy phpCloseTagIndentationStrategy = new PHPCloseTagIndentationStrategy();
 
 	protected PhpFormatConstraints fFormatContraints = null;
 	protected IStructuredFormatPreferences fFormatPreferences = null;
@@ -204,6 +205,8 @@ public class PhpFormatter implements IStructuredFormatter {
 				insertionStrategy = caseDefaultIndentationStrategy;
 			} else if (isPHPCommentRegion(firstTokenType)) {
 				insertionStrategy = commentIndentationStrategy;
+			} else if (firstTokenType == PHPRegionTypes.PHP_CLOSETAG) {
+				insertionStrategy = phpCloseTagIndentationStrategy;
 			} else {
 				insertionStrategy = getIndentationStrategy(lineText.charAt(startingWhiteSpaces));
 			}
@@ -222,13 +225,12 @@ public class PhpFormatter implements IStructuredFormatter {
 			Logger.logException(e);
 		}
 	}
-	
+
 	/**
 	 * @return whether we are inside a php comment  
 	 */
-	private boolean isPHPCommentRegion(String tokenType){
-		return (tokenType == PHPRegionTypes.PHP_COMMENT || tokenType == PHPRegionTypes.PHP_COMMENT_END ||
-				tokenType == PHPRegionTypes.PHPDOC_COMMENT || tokenType == PHPRegionTypes.PHPDOC_COMMENT_END);
+	private boolean isPHPCommentRegion(String tokenType) {
+		return (tokenType == PHPRegionTypes.PHP_COMMENT || tokenType == PHPRegionTypes.PHP_COMMENT_END || tokenType == PHPRegionTypes.PHPDOC_COMMENT || tokenType == PHPRegionTypes.PHPDOC_COMMENT_END);
 	}
 
 	/**
