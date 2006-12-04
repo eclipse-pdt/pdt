@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
@@ -27,11 +28,16 @@ import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.ui.util.CodeDataResolver;
+import org.eclipse.php.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 public class PHPSourceTextHover extends AbstractPHPTextHover implements IInformationProviderExtension2, ITextHoverExtension {
 	/**
@@ -96,20 +102,33 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(hoverRegion.getOffset());
 				ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(hoverRegion.getOffset());
 				if (sdRegion.getStartOffset() + textRegion.getTextEnd() >= hoverRegion.getOffset()) {
-					CodeData codeData = CodeDataResolver.getCodeData(textViewer, sdRegion.getStartOffset() + textRegion.getTextEnd());
+					final CodeData codeData = CodeDataResolver.getCodeData(textViewer, sdRegion.getStartOffset() + textRegion.getTextEnd());
 					if (codeData != null && !(codeData instanceof PHPVariableData)) {
 						UserData userData = codeData.getUserData();
 						if (userData != null) {
-							IFile file = (IFile) PHPModelUtil.getResource(codeData);// ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
-							if (file != null) {
-								BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
-								int startPosition = userData.getStartPosition();
-								int len = userData.getEndPosition() - startPosition;
-								char[] buf = new char[len];
-								r.skip(startPosition);
-								r.read(buf, 0, len);
-								r.close();
-								return formatHoverInfo(new String(buf));
+							// if this is an open resource get the data from the document
+							// else get the file from disk
+							// REMARK: since the editor is accessiable ONLY from the Display thread
+							// we need to use Display.sync() to get the actual data from the file
+							final FindText findText = new FindText(codeData);
+							Display.getDefault().syncExec(findText);
+							final String text = findText.getText();
+							
+							// if the text is in one of the editors - fetch it from the editor source
+							if (text != null) {
+								return formatHoverInfo(text);
+							} else { // else just go to the resource and find it
+								IFile file = (IFile) PHPModelUtil.getResource(codeData);// ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
+								if (file != null) {
+									BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
+									int startPosition = userData.getStartPosition();
+									int len = userData.getEndPosition() - startPosition;
+									char[] buf = new char[len];
+									r.skip(startPosition);
+									r.read(buf, 0, len);
+									r.close();
+									return formatHoverInfo(new String(buf));
+								}
 							}
 						}
 					}
@@ -120,6 +139,43 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 		}
 		return null;
 	}
+	
+	
+	private static class FindText implements Runnable {
+
+		final CodeData codeData;
+		private String text = null;
+		
+		public FindText(CodeData codeData) {
+			this.codeData = codeData;
+		}
+		
+		public void run()  {
+			final IEditorPart openInEditor = EditorUtility.isOpenInEditor(codeData);
+			if (openInEditor == null || !(openInEditor instanceof PHPStructuredEditor)) {
+				return;
+			}
+			final StructuredTextViewer textViewer = ((PHPStructuredEditor) openInEditor).getTextViewer();
+			final IDocument document = textViewer.getDocument();
+			final UserData userData = codeData.getUserData();
+			if (userData == null || document == null) {
+				return;
+			}
+			int startPosition = userData.getStartPosition();
+			int len = userData.getEndPosition() - startPosition;
+
+			try {
+				this.text = document.get(startPosition, len);
+			} catch (BadLocationException e) {
+				this.text = null;
+			}
+		}
+
+		public String getText() {
+			return text;
+		}
+	}
+	
 
 	public String formatHoverInfo(String info) {
 		info = info.trim();
