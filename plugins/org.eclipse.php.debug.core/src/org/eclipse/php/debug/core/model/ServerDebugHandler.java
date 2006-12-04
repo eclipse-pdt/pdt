@@ -75,7 +75,6 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				startLock.setStarted(true);
 				fDebugTarget.started();
 				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
-				fDebugTarget.installDeferredBreakpoints();
 				if (!fStatus) {
 					Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.start return false");
 				}

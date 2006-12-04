@@ -455,6 +455,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (!setProtocol(getProtocolID())) {
 			return false;
 		}
+		debugHandler.getDebugTarget().installDeferredBreakpoints();
 		StartRequest request = new StartRequest();
 		try {
 			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
