@@ -149,12 +149,12 @@
 		<!-- Not in use
                 <antcall target="gatherLogs" />
                 -->
-		<!-- Create a cvs change log -->
+		<!-- Create a cvs change log 
 		<property name="repos" value=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools" />
 		<property name="logDir" value="${buildDirectory}/changelog" />
 		<property name="logTime" value="7" />
-
-		<!-- Must checkout modules in order to generate changes log -->
+-->
+		<!-- Must checkout modules in order to generate changes log 
 		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php" />
 		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.core" />
 		<cvs cvsRoot="${repos}" quiet="true" tag="v${buildId}" dest="${logDir}" package="org.eclipse.php.debug.core" />
@@ -169,7 +169,7 @@
 		<cvschangelog dir="${logDir}" quiet="true" cvsRoot="${repos}" daysinpast="${logTime}" destfile="${buildDirectory}/${buildLabel}/changelog.xml" />
 
 		<style in="${buildDirectory}/${buildLabel}/changelog.xml" out="${buildDirectory}/${buildLabel}/changelog.html" style="${builder}/../changelog.xsl"/>
-
+-->
 		<ant antfile="${builder}/../buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages" />
 	</target>
 
