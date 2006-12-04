@@ -11,18 +11,18 @@
 package org.eclipse.php.internal.ui.actions;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import org.eclipse.core.internal.resources.Resource;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.PHPUIMessages;
@@ -33,11 +33,10 @@ import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.util.CollectionUtils;
 import org.eclipse.php.internal.ui.util.ParentChecker;
 import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.dnd.*;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
@@ -45,11 +44,10 @@ import org.eclipse.ui.actions.CopyFilesAndFoldersOperation;
 import org.eclipse.ui.actions.CopyProjectOperation;
 import org.eclipse.ui.part.ResourceTransfer;
 
-;
-
 public class PasteAction extends SelectionDispatchAction {
 
 	private final Clipboard fClipboard;
+	private Text fSelectedText;
 
 	private abstract static class Paster {
 		private final Shell fShell;
@@ -217,6 +215,62 @@ public class PasteAction extends SelectionDispatchAction {
 			return new ParentChecker(resources, (PHPCodeData[]) phpElements).getCommonParent();
 		}
 	}
+
+	private static class ResourceNameTextPaster extends Paster {
+		private final Clipboard fClipboard;
+		private final Text textWidget;
+
+		protected ResourceNameTextPaster(Shell shell, Clipboard clipboard, Text textWidget) {
+			super(shell, clipboard);
+			fClipboard = clipboard;
+			this.textWidget = textWidget;
+		}
+
+		private String replaceFileName(Text text, String pastedString) {
+			String oldText = text.getText();
+			int startPaste = text.getSelection().x;
+			int size = text.getSelectionCount();
+
+			String prefix = oldText.substring(0, startPaste);
+			String postfix = oldText.substring(startPaste + size, oldText.length());
+
+			return prefix + pastedString + postfix;
+		}
+
+		public void paste(Object[] phpElements, IResource[] resources, TransferData[] availableTypes) throws CoreException {
+			try {
+				final IResource[] fResources = resources;
+				final String strToPaste = (String) fClipboard.getContents(TextTransfer.getInstance());
+				final String newResourceName = replaceFileName(textWidget, strToPaste);
+				IRunnableWithProgress progressRunnable = new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) {
+						monitor.beginTask("", IProgressMonitor.UNKNOWN);
+						try {
+							Resource resource = (Resource) fResources[0];
+							resource.move(new Path(resource.getProjectRelativePath().removeLastSegments(1) + newResourceName), true, monitor);
+						} catch (Exception e) {
+							MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), PHPUIMessages.RefactoringAction_refactoring, PHPUIMessages.RefactoringAction_disabled);
+						} finally {
+							monitor.done();
+						}
+					}
+
+				};
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().run(true, false, progressRunnable);
+			} catch (Exception e) {
+			}
+
+		}
+
+		public boolean canPasteOn(Object[] phpElements, IResource[] resources) throws CoreException {
+			return true;
+		}
+
+		public boolean canEnable(TransferData[] availableDataTypes) throws CoreException {
+			return isAvailable(TextTransfer.getInstance(), availableDataTypes);
+		}
+	}
+
 	private static class PHPElementAndResourcePaster extends Paster {
 
 		protected PHPElementAndResourcePaster(Shell shell, Clipboard clipboard) {
@@ -389,6 +443,21 @@ public class PasteAction extends SelectionDispatchAction {
 		if (paster.canEnable(availableDataTypes))
 			result.add(paster);
 
+		paster = new ResourceNameTextPaster(shell, fClipboard, fSelectedText);
+		if (paster.canEnable(availableDataTypes)) {
+			result.add(paster);
+		}
 		return (Paster[]) result.toArray(new Paster[result.size()]);
+	}
+
+	/**
+	 * Override to handle text selections in Tree
+	 */
+	public void runWithEvent(Event event) {
+		if (event.widget instanceof Text) {
+			Text text = (Text) event.widget;
+			fSelectedText = text;
+		}
+		run();
 	}
 }
