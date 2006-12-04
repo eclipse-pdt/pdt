@@ -469,7 +469,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 		commitChanges();
 	}
 
-	private void commitChanges() {
+	public void commitChanges() {
 		phpExes.setDefaultItem(getCheckedPHP());
 		Preferences prefs = PHPDebugUIPlugin.getDefault().getPluginPreferences();
 		phpExes.store(prefs);

@@ -111,6 +111,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		IDialogSettings settings = PHPDebugUIPlugin.getDefault().getDialogSettings();
 		fPHPBlock.saveColumnSettings(settings, PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
 
+		fPHPBlock.commitChanges();
 		return super.performOk();
 	}
 
