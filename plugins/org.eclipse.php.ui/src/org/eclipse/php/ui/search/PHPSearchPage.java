@@ -22,8 +22,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.PHPUIMessages;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.actions.SelectionConverter;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
@@ -109,7 +113,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 				} else {
 					fPhpElement = null;
 				}
-//				setLimitTo(getSearchFor(), ALL_OCCURRENCES);
+				//				setLimitTo(getSearchFor(), ALL_OCCURRENCES);
 				doPatternModified();
 			}
 		};
@@ -155,11 +159,11 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 		public PHPCodeData getPHPElement() {
 			return phpElement;
 		}
-		
+
 		public boolean isCaseSensitive() {
 			return isCaseSensitive;
 		}
-		
+
 		public String getPattern() {
 			return pattern;
 		}
@@ -257,7 +261,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 	private Button fCaseSensitive;
 
 	private Button[] fSearchFor;
-	private String[] fSearchForText = { PHPUIMessages.SearchPage_searchFor_class, PHPUIMessages.SearchPage_searchFor_function, PHPUIMessages.SearchPage_searchFor_constant};
+	private String[] fSearchForText = { PHPUIMessages.SearchPage_searchFor_class, PHPUIMessages.SearchPage_searchFor_function, PHPUIMessages.SearchPage_searchFor_constant };
 
 	//---- Action Handling ------------------------------------------------
 
@@ -299,7 +303,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 				}
 				scopeDescription = Messages.format(PHPUIMessages.WorkingSetScope, SearchUtil.toString(workingSets));
 				scope = factory.createWorkingSetSearchScope(getSearchFor(), getContainer().getSelectedWorkingSets());
-//				SearchUtil.updateLRUWorkingSets(getContainer().getSelectedWorkingSets());
+				//				SearchUtil.updateLRUWorkingSets(getContainer().getSelectedWorkingSets());
 
 		}
 
@@ -356,13 +360,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 		if (match != null) {
 			fPreviousSearchPatterns.remove(match);
 		}
-		match = new SearchPatternData(getSearchFor(), 
-			ALL_OCCURRENCES, 
-			pattern, 
-			fCaseSensitive.getSelection(), 
-			fPhpElement, 
-			getContainer().getSelectedScope(), 
-			getContainer().getSelectedWorkingSets());
+		match = new SearchPatternData(getSearchFor(), ALL_OCCURRENCES, pattern, fCaseSensitive.getSelection(), fPhpElement, getContainer().getSelectedScope(), getContainer().getSelectedWorkingSets());
 
 		fPreviousSearchPatterns.add(0, match); // insert on top
 		return match;
@@ -468,9 +466,9 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 		// fPhpElement == null
 		return true;
 		// TODO
-//		return SearchPattern.createPattern(getPattern(), getSearchFor(), getLimitTo(), SearchPattern.R_EXACT_MATCH) != null;		
+		//		return SearchPattern.createPattern(getPattern(), getSearchFor(), getLimitTo(), SearchPattern.R_EXACT_MATCH) != null;		
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.DialogPage#dispose()
 	 */
@@ -492,28 +490,27 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 	}
 
 	private void handlePatternSelected() {
-		int selectionIndex= fPattern.getSelectionIndex();
+		int selectionIndex = fPattern.getSelectionIndex();
 		if (selectionIndex < 0 || selectionIndex >= fPreviousSearchPatterns.size())
 			return;
-		
-		SearchPatternData initialData= (SearchPatternData) fPreviousSearchPatterns.get(selectionIndex);
+
+		SearchPatternData initialData = (SearchPatternData) fPreviousSearchPatterns.get(selectionIndex);
 
 		setSearchFor(initialData.getSearchFor());
-//		setLimitTo(initialData.getSearchFor(), initialData.getLimitTo());
+		//		setLimitTo(initialData.getSearchFor(), initialData.getLimitTo());
 
 		fPattern.setText(initialData.getPattern());
-		fIsCaseSensitive= initialData.isCaseSensitive();
-		fPhpElement= initialData.getPHPElement();
+		fIsCaseSensitive = initialData.isCaseSensitive();
+		fPhpElement = initialData.getPHPElement();
 		fCaseSensitive.setEnabled(fPhpElement == null);
 		fCaseSensitive.setSelection(initialData.isCaseSensitive());
 
-		
 		if (initialData.getWorkingSets() != null)
 			getContainer().setSelectedWorkingSets(initialData.getWorkingSets());
 		else
 			getContainer().setSelectedScope(initialData.getScope());
-		
-		fInitialData= initialData;
+
+		fInitialData = initialData;
 	}
 
 	private void setSearchFor(int searchFor) {
@@ -564,6 +561,11 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 			if (initData == null) {
 				initData = trySimpleTextSelection((ITextSelection) sel);
 			}
+		} else if (sel instanceof IStructuredSelection) {
+			PHPCodeData[] elements = SelectionConverter.getElements((IStructuredSelection) sel);
+			if (elements != null && elements.length > 0) {
+				initData = determineInitValuesFrom(elements[0]);
+			}
 		}
 		if (initData == null) {
 			initData = getDefaultInitValues();
@@ -580,13 +582,17 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 
 	private SearchPatternData determineInitValuesFrom(PHPCodeData codeData) {
 		// TODO - Once we will get values to this function. For now, the codeResolve always return null and we never get to this point.
-		
-//		if (codeData instanceof PHPClassData) {
-//			return new SearchPatternData(CLASS, ALL_OCCURRENCES, false, codeData.toString(), codeData);
-//		}
-		return null;
+
+		if (codeData instanceof PHPClassData) {
+			return new SearchPatternData(CLASS, ALL_OCCURRENCES, false, codeData.getName(), codeData);
+		} else if (codeData instanceof PHPFunctionData) {
+			return new SearchPatternData(FUNCTION, ALL_OCCURRENCES, false, codeData.getName(), codeData);
+		} if (codeData instanceof PHPConstantData) {
+			return new SearchPatternData(CONSTANT, ALL_OCCURRENCES, true, codeData.getName(), codeData);
+		}
+		return new SearchPatternData(CLASS, ALL_OCCURRENCES, false, codeData.getName(), codeData);
 	}
-	
+
 	private SearchPatternData trySimpleTextSelection(ITextSelection selection) {
 		String selectedText = selection.getText();
 		if (selectedText != null && selectedText.length() > 0) {
