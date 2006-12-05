@@ -183,7 +183,7 @@ public class DebugConnectionThread implements Runnable {
 				int messageSize = byteArrayOutputStream.size();
 
 				if (isDebugMode) {
-					System.out.println("sending message request size=" + messageSize);
+					System.out.println("sending message request size=" + messageSize + " type="+ theMsg.getType());
 				}
 				synchronized (out) {
 					requestsTable.put(theMsg.getID(), theMsg);
@@ -482,9 +482,8 @@ public class DebugConnectionThread implements Runnable {
 				hookPHPExeDebug(launch, debugSessionStartedNotification);
 			}
 			return true;
-		} else {
-			return handleHookError("No session id");
 		}
+		return handleHookError("No session id");
 	}
 
 	/**
@@ -540,7 +539,7 @@ public class DebugConnectionThread implements Runnable {
 	 * Hook a PHP executable debug session
 	 * 
 	 * @param launch An {@link ILaunch}
-	 * @param @param startedNotification	A DebugSessionStartedNotification
+	 * @param startedNotification	A DebugSessionStartedNotification
 	 */
 	protected void hookPHPExeDebug(ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
@@ -744,6 +743,7 @@ public class DebugConnectionThread implements Runnable {
 					//System.out.println("InputMessageHandler handle: " + newInputMessage);
 
 					// do not stop untill the message is processed.
+					
 					synchronized (this) {
 						try {
 							if (newInputMessage instanceof DebugSessionStartedNotification) {
@@ -971,7 +971,6 @@ public class DebugConnectionThread implements Runnable {
 					// This part is synchronized since we do not want the thread to be stoped
 					// when in processing of a message.
 					synchronized (this) {
-
 						int messageType = in.readShort();
 						// If this is the first message, the protocol is still held as invalid. 
 						// Check that the first message hes the DebugSessionStartedNotification type. If not, then we
