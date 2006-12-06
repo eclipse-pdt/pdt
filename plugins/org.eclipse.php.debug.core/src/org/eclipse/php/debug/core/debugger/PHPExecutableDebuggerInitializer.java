@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.debugger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,7 +56,11 @@ public class PHPExecutableDebuggerInitializer {
 			if(phpIniLocation != null && !phpIniLocation.equals("")) {
 				phpConfigDir = phpIniLocation;
 			}
-
+			
+			// Important!!! 
+			// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
+			// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
+			phpConfigDir = (new File(phpConfigDir)).getParentFile().getAbsolutePath();
 			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
 
 			systemEnvironmentVariables.put("REQUEST_METHOD", "GET");
