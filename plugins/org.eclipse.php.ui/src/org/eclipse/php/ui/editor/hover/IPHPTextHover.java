@@ -35,15 +35,9 @@ public interface IPHPTextHover extends ITextHover {
 	public IEditorPart getEditorPart();
 
 	/**
-	 * Sets text hover message decorator.
-	 * @param IHoverMessageDecorators decorator
-	 */
-	public void setMessageDecorator(IHoverMessageDecorators decorator);
-	
-	/**
 	 * Returns the text hover message decorator.
 	 * 
 	 * @return text hover message decorator, or <code>null</code> if not defined
 	 */
-	public IHoverMessageDecorators getMessageDecorator();
+	public IHoverMessageDecorator getMessageDecorator();
 }

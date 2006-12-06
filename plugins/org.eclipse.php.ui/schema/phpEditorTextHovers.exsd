@@ -87,6 +87,13 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="priority" type="string">
+            <annotation>
+               <documentation>
+                  Priority allows to fix the order of how text hovers are processed by PHP editor. First hover which returns non-null value from getHoverInfo method is actually active.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

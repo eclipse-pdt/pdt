@@ -32,6 +32,7 @@ public class ProblemHover extends AbstractPHPTextHover implements IInformationPr
 	 * @since 3.2
 	 */
 	private IInformationControlCreator fHoverControlCreator;
+	
 	/**
 	 * The presentation control creator.
 	 * 
@@ -54,10 +55,7 @@ public class ProblemHover extends AbstractPHPTextHover implements IInformationPr
 				public IInformationControl doCreateInformationControl(Shell parent) {
 					int shellStyle = SWT.RESIZE | SWT.TOOL;
 					int style = SWT.V_SCROLL | SWT.H_SCROLL;
-					if (BrowserInformationControl.isAvailable(parent))
-						return new BrowserInformationControl(parent, shellStyle, style);
-					else
-						return new DefaultInformationControl(parent, shellStyle, style, new HTMLTextPresenter(false));
+					return new DefaultInformationControl(parent, shellStyle, style, new HTMLTextPresenter(false));
 				}
 			};
 		}

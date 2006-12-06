@@ -101,7 +101,7 @@ public class PHPTextHoverProxy extends AbstractPHPTextHover implements ITextHove
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.ui.editor.hover.IPHPTextHover#getMessageDecorator()
 	 */
-	public IHoverMessageDecorators getMessageDecorator() {
+	public IHoverMessageDecorator getMessageDecorator() {
 		return fHover.getMessageDecorator();
 	}
 }

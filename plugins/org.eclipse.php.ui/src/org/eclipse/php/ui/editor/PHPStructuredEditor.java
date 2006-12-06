@@ -44,7 +44,7 @@ import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.containers.StorageEditorInput;
-import org.eclipse.php.ui.editor.hover.IHoverMessageDecorators;
+import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.php.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.ui.outline.PHPContentOutlineConfiguration;
@@ -218,7 +218,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				String hoverInfo = textHover.getHoverInfo(sourceViewer, hoverRegion);
 
 				if (textHover instanceof IPHPTextHover) {
-					final IHoverMessageDecorators decorator = ((IPHPTextHover) textHover).getMessageDecorator();
+					final IHoverMessageDecorator decorator = ((IPHPTextHover) textHover).getMessageDecorator();
 					if (decorator != null) {
 						final String decoratedMessage = decorator.getDecoratedMessage(hoverInfo);
 						if (decoratedMessage != null && decoratedMessage.length() > 0)

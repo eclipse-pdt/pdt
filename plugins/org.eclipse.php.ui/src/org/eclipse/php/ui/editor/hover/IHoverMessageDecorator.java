@@ -1,11 +1,11 @@
 package org.eclipse.php.ui.editor.hover;
 
 /**
- * This interface will be implemented in order to use hoverMessageDecorators extension point. 
+ * Decorates hover message 
  * 
  * @author eden
  */
-public interface IHoverMessageDecorators {
+public interface IHoverMessageDecorator {
 
 	/**
 	 * Gets the hover message and returns the decorated format 

@@ -128,7 +128,7 @@ public class BestMatchHover extends AbstractPHPTextHover implements ITextHoverEx
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.ui.editor.hover.AbstractPHPTextHover#getMessageDecorator()
 	 */
-	public IHoverMessageDecorators getMessageDecorator() {
+	public IHoverMessageDecorator getMessageDecorator() {
 		if (fBestHover instanceof IPHPTextHover) {
 			return ((IPHPTextHover)fBestHover).getMessageDecorator();
 		}

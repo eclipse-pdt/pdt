@@ -11,6 +11,8 @@
 package org.eclipse.php.internal.ui.text.hover;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -20,10 +22,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.Assert;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.Logger;
-import org.eclipse.php.ui.editor.hover.IHoverMessageDecorators;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.util.EditorUtility;
@@ -42,10 +42,7 @@ public class PHPEditorTextHoverDescriptor {
 	private static final String LABEL_ATTRIBUTE = "label"; //$NON-NLS-1$
 	private static final String ACTIVATE_PLUG_IN_ATTRIBUTE = "activate"; //$NON-NLS-1$
 	private static final String DESCRIPTION_ATTRIBUTE = "description"; //$NON-NLS-1$
-
-	private static final String PHP_EDITOR_TEXT_HOVER_DECORATOR_EXTENSION_POINT = "org.eclipse.php.ui.phpEditorTextHoverDecorator"; //$NON-NLS-1$
-	private static final String DECORATOR_TAG = "decorator"; //$NON-NLS-1$
-	private static final String HOVER_ATTRIBUTE = "hover"; //$NON-NLS-1$
+	private static final String PRIORITY_ATTRIBUTE = "priority"; //$NON-NLS-1$
 
 	public static final String NO_MODIFIER = "0"; //$NON-NLS-1$
 	public static final String DISABLED_TAG = "!"; //$NON-NLS-1$
@@ -56,7 +53,6 @@ public class PHPEditorTextHoverDescriptor {
 	private boolean fIsEnabled;
 
 	private IConfigurationElement fElement;
-	private IHoverMessageDecorators fDecorator;
 
 	/**
 	 * Returns all PHP editor text hovers contributed to the workbench.
@@ -64,6 +60,26 @@ public class PHPEditorTextHoverDescriptor {
 	public static PHPEditorTextHoverDescriptor[] getContributedHovers() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHP_EDITOR_TEXT_HOVER_EXTENSION_POINT);
+		
+		Arrays.sort(elements, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				IConfigurationElement e1 = (IConfigurationElement)o1;
+				IConfigurationElement e2 = (IConfigurationElement)o2;
+				
+				int p1 = 0;
+				int p2 = 0;
+				try {
+					p1 = Integer.valueOf(e1.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
+				} catch (NumberFormatException e) {
+				}
+				try {
+					p2 = Integer.valueOf(e2.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
+				} catch (NumberFormatException e) {
+				}
+				return p2 - p1;
+			}
+		});
+		
 		PHPEditorTextHoverDescriptor[] hoverDescs = createDescriptors(elements);
 		initializeFromPreferences(hoverDescs);
 		return hoverDescs;
@@ -109,11 +125,7 @@ public class PHPEditorTextHoverDescriptor {
 		boolean isHoversPlugInActivated = Platform.getBundle(pluginId).getState() == Bundle.ACTIVE;
 		if (isHoversPlugInActivated || canActivatePlugIn()) {
 			try {
-				IPHPTextHover textHover = (IPHPTextHover) fElement.createExecutableExtension(CLASS_ATTRIBUTE);
-				if (textHover != null) {
-					textHover.setMessageDecorator(createMessageDecorator());
-				}
-				return textHover;
+				return(IPHPTextHover) fElement.createExecutableExtension(CLASS_ATTRIBUTE);
 			} catch (CoreException x) {
 				Logger.logException(PHPUIMessages.PHPTextHover_createTextHover, x);
 			}
@@ -281,59 +293,5 @@ public class PHPEditorTextHoverDescriptor {
 	 */
 	public IConfigurationElement getConfigurationElement() {
 		return fElement;
-	}
-
-	/**
-	 * Creates and returns text hover message decorator for this hover
-	 * 
-	 * @return IHoverMessageDecorators hover message decorator
-	 */
-	public IHoverMessageDecorators createMessageDecorator() {
-		if (fDecorator == null) {
-			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHP_EDITOR_TEXT_HOVER_DECORATOR_EXTENSION_POINT);
-			for (int i = 0; i < elements.length; ++i) {
-				if (DECORATOR_TAG.equals(elements[i].getName()) && getId().equals(elements[i].getAttribute(HOVER_ATTRIBUTE))) {
-					if (elements[i].getAttribute(CLASS_ATTRIBUTE) != null) {
-						try {
-							fDecorator = (IHoverMessageDecorators) elements[i].createExecutableExtension(CLASS_ATTRIBUTE);
-						} catch (CoreException e) {
-							Logger.logException(PHPUIMessages.PHPEditorTextHoverDescriptor_cannot_create_message_decorator_error, e);
-						}
-					}
-				}
-			}
-			if (fDecorator == null) {
-				fDecorator = new DefaultTextHoverMessageDecorator();
-			}
-		}
-		return fDecorator;
-	}
-
-	class DefaultTextHoverMessageDecorator implements IHoverMessageDecorators {
-		/* (non-Javadoc)
-		 * @see org.eclipse.php.ui.editor.hover.IHoverMessageDecorators#getDecoratedMessage(java.lang.String)
-		 */
-		public String getDecoratedMessage(String msg) {
-			// handle specific html messages
-			if (msg != null && msg.startsWith("<p>") && msg.endsWith("</p>")) {
-				String hoverMessage = PHPUIMessages.getString("HoverFocus_decoration");
-				hoverMessage = NLS.bind(hoverMessage, msg);
-				return hoverMessage;
-			} else {
-				return msg;
-			}
-
-		}
-	}
-
-	class NullTextHoverMessageDecorator implements IHoverMessageDecorators {
-		/* (non-Javadoc)
-		 * @see org.eclipse.php.ui.editor.hover.IHoverMessageDecorators#getDecoratedMessage(java.lang.String)
-		 */
-		public String getDecoratedMessage(String msg) {
-			return msg;
-
-		}
 	}
 }

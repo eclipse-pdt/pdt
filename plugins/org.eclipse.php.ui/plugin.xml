@@ -1207,28 +1207,32 @@
 	<!-- =========================== -->
 	<extension point="org.eclipse.php.ui.phpEditorTextHovers">
 	    <hover
-          label="%sequentialHover"
-          description="%sequentialHoverDescription"
-          class="org.eclipse.php.ui.editor.hover.BestMatchHover"
-          id="org.eclipse.php.ui.editor.hover.BestMatchHover">
+           class="org.eclipse.php.ui.editor.hover.BestMatchHover"
+           description="%sequentialHoverDescription"
+           id="org.eclipse.php.ui.editor.hover.BestMatchHover"
+           label="%sequentialHover"
+           priority="1000">
     	</hover>
     	<hover
-            label="%problemHover"
-            description="%problemHoverDescription"
-            class="org.eclipse.php.ui.editor.hover.ProblemHover"
-            id="org.eclipse.php.ui.editor.hover.ProblemHover">
+           class="org.eclipse.php.ui.editor.hover.ProblemHover"
+           description="%problemHoverDescription"
+           id="org.eclipse.php.ui.editor.hover.ProblemHover"
+           label="%problemHover"
+           priority="500">
         </hover>
 	    <hover
-            label="%annotationHover"
-            description="%annotationHoverDescription"
-            class="org.eclipse.php.ui.editor.hover.PHPAnnotationTextHover"
-            id="org.eclipse.php.ui.editor.hover.PHPAnnotationTextHover">
+           class="org.eclipse.php.ui.editor.hover.PHPAnnotationTextHover"
+           description="%annotationHoverDescription"
+           id="org.eclipse.php.ui.editor.hover.PHPAnnotationTextHover"
+           label="%annotationHover"
+           priority="400">
         </hover>
         <hover
-          label="%sourceHover"
-          description="%sourceHoverDescription"
-          class="org.eclipse.php.ui.editor.hover.PHPSourceTextHover"
-          id="org.eclipse.php.ui.editor.hover.PHPSourceTextHover">
+              class="org.eclipse.php.ui.editor.hover.PHPSourceTextHover"
+              description="%sourceHoverDescription"
+              id="org.eclipse.php.ui.editor.hover.PHPSourceTextHover"
+              label="%sourceHover"
+              priority="300">
     	</hover>
     </extension>
     

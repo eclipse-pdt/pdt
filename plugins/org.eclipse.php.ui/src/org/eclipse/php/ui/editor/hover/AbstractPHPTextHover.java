@@ -36,11 +36,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 
 	protected Pattern tab = Pattern.compile("\t");
 	protected IEditorPart fEditor;
-	private IBindingService fBindingService;
-	{
-		fBindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
-	}
-	protected IHoverMessageDecorators fDecorator;
+	private IBindingService fBindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 
 	public IEditorPart getEditorPart() {
 		return fEditor;
@@ -98,18 +94,8 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 			}
 		};
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.ui.editor.hover.IPHPTextHover#setMessageDecorator(org.eclipse.php.ui.editor.hover.IHoverMessageDecorators)
-	 */
-	public void setMessageDecorator(IHoverMessageDecorators decorator) {
-		fDecorator = decorator;
-	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.ui.editor.hover.IPHPTextHover#getMessageDecorator()
-	 */
-	public IHoverMessageDecorators getMessageDecorator() {
-		return fDecorator;
+	public IHoverMessageDecorator getMessageDecorator() {
+		return null;
 	}
 }
