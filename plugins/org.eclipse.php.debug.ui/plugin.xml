@@ -215,10 +215,11 @@
 	<!-- =========================== -->
 	<extension point="org.eclipse.php.ui.phpEditorTextHovers">
 	    <hover
-          label="%phpVariableHoverLabel"
-          description="%phpVariableHoverDescription"
-          class="org.eclipse.php.debug.ui.hovers.PHPDebugTextHover"
-          id="org.eclipse.php.debug.ui.hovers.PHPDebugTextHover">
+           class="org.eclipse.php.debug.ui.hovers.PHPDebugTextHover"
+           description="%phpVariableHoverDescription"
+           id="org.eclipse.php.debug.ui.hovers.PHPDebugTextHover"
+           label="%phpVariableHoverLabel"
+           priority="200">
     	</hover>
     </extension>
     
