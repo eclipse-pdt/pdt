@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.project.IIncludePathEntry;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
 import org.ini4j.Ini;
@@ -105,10 +106,15 @@ public class IniModifier {
 
 	static File createTempFile() {
 		try {
-			final File tempFile = File.createTempFile("php.", ".ini");
+			File tempFile = File.createTempFile("php.", ".ini");
+			// Important!!! 
+			// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
+			// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
+			tempFile = (new File(tempFile.getParentFile(), "php.ini"));
 			tempFile.deleteOnExit();
 			return tempFile;
-		} catch (final IOException e) {
+		} catch (IOException e) {
+			Logger.logException(e);
 		}
 		return null;
 	}
