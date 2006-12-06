@@ -28,13 +28,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
-import org.eclipse.php.core.phpModel.parser.IPhpModel;
-import org.eclipse.php.core.phpModel.parser.ModelListener;
-import org.eclipse.php.core.phpModel.parser.PHPIncludePathModel;
-import org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager;
-import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.phpModel.parser.PhpModelProxy;
+import org.eclipse.php.core.phpModel.parser.*;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.project.options.IPhpProjectOptionChangeListener;
@@ -75,6 +69,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		}
 
 		private IPhpModel findModel(PHPFileData fileData) {
+			validateRoot();
 			IPath[] modelPaths = includePathTree.getChildren(INCLUDE_MODELS_PATH_ROOT);
 			IResource res = PHPModelUtil.getResource(fileData);
 			IPath filePath = new Path(fileData.getName());
@@ -249,9 +244,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			return includeModelManager.listModels();
 		} else if (parentElement instanceof PHPIncludePathModel || parentElement instanceof PhpModelProxy) {
 			IPhpModel includePathModel = (IPhpModel) parentElement;
-			if (!includePathTree.includes(INCLUDE_MODELS_PATH_ROOT)) {
-				includePathTree.createElement(INCLUDE_MODELS_PATH_ROOT, INCLUDE_MODELS_PATH_ROOT.segment(1));
-			}
+			validateRoot();
 			IPath modelPath = INCLUDE_MODELS_PATH_ROOT.append(IncludeModelPathRootConverter.to(includePathModel));
 			if (!includePathTree.includes(modelPath)) {
 				includePathTree.createElement(modelPath, includePathModel);
@@ -265,6 +258,12 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		}
 
 		return NO_CHILDREN;
+	}
+
+	private void validateRoot() {
+		if (!includePathTree.includes(INCLUDE_MODELS_PATH_ROOT)) {
+			includePathTree.createElement(INCLUDE_MODELS_PATH_ROOT, INCLUDE_MODELS_PATH_ROOT.segment(1));
+		}
 	}
 
 	IncludesNode getTreeNode(IProject project) {
