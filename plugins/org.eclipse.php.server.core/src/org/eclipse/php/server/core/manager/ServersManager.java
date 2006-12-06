@@ -33,6 +33,8 @@ public class ServersManager implements PropertyChangeListener {
 	private static ServersManager instance;
 	private static final String SERVERS_PREFERENCES_KEY = "phpServers";
 	private static final String DEFAULT_SERVER_PREFERENCES_KEY = "defaultPHPServer";
+	private static final String BASE_URL = "http://localhost";
+	public static final String Default_Server_Name = "Default PHP Web Server";
 
 	public static ServersManager getInstance() {
 		if (instance == null) {
@@ -150,7 +152,12 @@ public class ServersManager implements PropertyChangeListener {
 	 * @return
 	 */
 	public static Server getDefaultServer() {
-		return getInstance().defaultServer;
+		Server server = getInstance().defaultServer;
+		if (server == null) {
+			server = createServer(Default_Server_Name, BASE_URL);
+			getInstance().defaultServer = server;
+		}
+		return server;
 	}
 
 	/**
