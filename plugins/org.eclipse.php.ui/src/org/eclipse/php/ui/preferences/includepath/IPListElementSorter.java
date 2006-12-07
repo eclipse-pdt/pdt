@@ -41,6 +41,7 @@ public class IPListElementSorter extends ViewerSorter {
 			}
 			switch (element.getEntryKind()) {
 				case IIncludePathEntry.IPE_LIBRARY:
+				case IIncludePathEntry.IPE_JRE:
 					return LIBRARY;
 				case IIncludePathEntry.IPE_PROJECT:
 					return PROJECT;

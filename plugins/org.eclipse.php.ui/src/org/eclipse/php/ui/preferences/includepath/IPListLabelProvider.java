@@ -176,6 +176,7 @@ public class IPListLabelProvider extends LabelProvider {
 					return fFolderImage;
 				}
 			case IIncludePathEntry.IPE_LIBRARY:
+			case IIncludePathEntry.IPE_JRE:
 				IResource res = cpentry.getResource();
 				if (res == null) {
 					if(cpentry.getContentKind() == IIncludePathEntry.K_BINARY){

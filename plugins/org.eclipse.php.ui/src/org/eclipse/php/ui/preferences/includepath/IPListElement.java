@@ -60,6 +60,7 @@ public class IPListElement {
 				break;
 			case IIncludePathEntry.IPE_LIBRARY:
 			case IIncludePathEntry.IPE_VARIABLE:
+			case IIncludePathEntry.IPE_JRE:
 				break;
 			case IIncludePathEntry.IPE_PROJECT:
 				break;
@@ -99,8 +100,13 @@ public class IPListElement {
 		switch (fEntryKind) {
 			case IIncludePathEntry.IPE_SOURCE:
 				return IncludePathEntry.newSourceEntry(fPath, fResource);
-			case IIncludePathEntry.IPE_LIBRARY: {
+			case IIncludePathEntry.IPE_LIBRARY: 			
+			{
 				return new IncludePathEntry(fContentKind, IIncludePathEntry.IPE_LIBRARY, fPath, fResource, isExported());
+			}
+			case IIncludePathEntry.IPE_JRE:
+			{
+				return new IncludePathEntry(fContentKind, IIncludePathEntry.IPE_JRE, fPath, fResource, isExported());
 			}
 			case IIncludePathEntry.IPE_PROJECT: {
 				return IncludePathEntry.newProjectEntry(fPath, fResource, isExported());
@@ -336,6 +342,8 @@ public class IPListElement {
 				isMissing = root.findMember(resolvedPath) == null && !resolvedPath.toFile().isFile();
 				break;
 			case IIncludePathEntry.IPE_LIBRARY:
+			case IIncludePathEntry.IPE_JRE:
+				
 				res = root.findMember(path);
 				if (res == null) {
 					if (!ArchieveFileFilter.isZipPath(path)) {
