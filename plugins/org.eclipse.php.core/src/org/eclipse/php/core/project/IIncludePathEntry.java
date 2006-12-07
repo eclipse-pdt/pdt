@@ -52,6 +52,12 @@ public interface IIncludePathEntry {
 	 */
 	int IPE_CONTAINER = 5;
 	
+	/**
+	 * Entry kind constant describing a includepath entry identifying a
+	 * JRE.
+	 */
+	int IPE_JRE = 6;
+	
 	int getContentKind();
 	
 	int getEntryKind();
