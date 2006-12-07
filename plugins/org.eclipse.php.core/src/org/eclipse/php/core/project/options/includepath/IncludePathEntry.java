@@ -15,10 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.eclipse.core.internal.resources.XMLWriter;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -26,6 +23,9 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.php.core.project.IIncludePathEntry;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
 import org.eclipse.php.core.util.Messages;
+import org.eclipse.php.core.util.preferences.Key;
+import org.eclipse.php.core.util.preferences.XMLPreferencesReader;
+import org.eclipse.ui.preferences.IWorkingCopyManager;
 import org.w3c.dom.Element;
 
 public class IncludePathEntry implements IIncludePathEntry {
@@ -56,6 +56,21 @@ public class IncludePathEntry implements IIncludePathEntry {
 		this.path = path;
 		this.resource = resource;
 		this.isExported = isExported;
+	}
+	
+	public static ArrayList getIncludePathEntriesFromPreferences (Key preferenceKey, IProject project, ProjectScope projectScope, IWorkingCopyManager workingCopyManager){
+		
+		final ArrayList entries = new ArrayList();
+		
+		HashMap[] maps = XMLPreferencesReader.read(preferenceKey, projectScope, workingCopyManager);
+		if (maps.length > 0) {
+			for (int entryCount = 0; entryCount < maps.length; ++entryCount) {
+				IncludePathEntryDescriptor descriptor = new IncludePathEntryDescriptor();
+				descriptor.restoreFromMap(maps[entryCount]);
+				entries.add(IncludePathEntry.elementDecode(descriptor, project.getFullPath()));
+			}
+		}	
+		return entries;
 	}
 
 	public int getContentKind() {
@@ -124,6 +139,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 				entry = newProjectEntry(path, resource, isExported);
 				break;
 			case IIncludePathEntry.IPE_LIBRARY:
+			case IIncludePathEntry.IPE_JRE:
 				entry = new IncludePathEntry(contentKindFromString(sContentKind), IIncludePathEntry.IPE_LIBRARY, path, resource, isExported);
 				break;
 			case IIncludePathEntry.IPE_SOURCE:
@@ -297,6 +313,8 @@ public class IncludePathEntry implements IIncludePathEntry {
 			return IIncludePathEntry.IPE_SOURCE;
 		if (kindStr.equalsIgnoreCase("lib")) //$NON-NLS-1$
 			return IIncludePathEntry.IPE_LIBRARY;
+		if (kindStr.equalsIgnoreCase("jre")) //$NON-NLS-1$
+			return IIncludePathEntry.IPE_JRE;
 		return -1;
 	}
 
@@ -312,6 +330,8 @@ public class IncludePathEntry implements IIncludePathEntry {
 				return "src"; //$NON-NLS-1$
 			case IIncludePathEntry.IPE_LIBRARY:
 				return "lib"; //$NON-NLS-1$
+			case IIncludePathEntry.IPE_JRE:
+				return "jre"; //$NON-NLS-1$
 			case IIncludePathEntry.IPE_VARIABLE:
 				return "var"; //$NON-NLS-1$
 			case IIncludePathEntry.IPE_CONTAINER:
@@ -370,6 +390,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 					message = "included project not found: " + path.toOSString();
 				break;
 			case IIncludePathEntry.IPE_LIBRARY:
+			case IIncludePathEntry.IPE_JRE:
 				if (resource == null || !resource.exists()) {
 					File file = new File(path.toOSString());
 					if (!file.exists())
