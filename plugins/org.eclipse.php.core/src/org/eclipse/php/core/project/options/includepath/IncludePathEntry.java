@@ -13,6 +13,7 @@ package org.eclipse.php.core.project.options.includepath;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.core.internal.resources.XMLWriter;
 import org.eclipse.core.resources.*;
@@ -58,7 +59,15 @@ public class IncludePathEntry implements IIncludePathEntry {
 		this.isExported = isExported;
 	}
 	
-	public static ArrayList getIncludePathEntriesFromPreferences (Key preferenceKey, IProject project, ProjectScope projectScope, IWorkingCopyManager workingCopyManager){
+	/**
+	 * This method gets the javabridge entries for a given project
+	 * @param preferenceKey
+	 * @param project
+	 * @param projectScope
+	 * @param workingCopyManager
+	 * @return List of IIncludePathEntrys for a given project
+	 */
+	public static List getIncludePathEntriesFromPreferences (Key preferenceKey, IProject project, ProjectScope projectScope, IWorkingCopyManager workingCopyManager){
 		
 		final ArrayList entries = new ArrayList();
 		
@@ -102,11 +111,6 @@ public class IncludePathEntry implements IIncludePathEntry {
 		String contentKindAttr = element.getAttribute(TAG_CONTENT_KIND);
 		String pathAttr = element.getAttribute(TAG_PATH);
 		String resourceAttr = element.getAttribute(TAG_RESOURCE);
-
-		// not in use: comment out
-//		String createdReferenceAttr = element.getAttribute(TAG_CREATEDREFERENCE);
-//		boolean createdReference = "true".equalsIgnoreCase(createdReferenceAttr);
-
 
 		// exported flag (optional)
 		boolean isExported = element.getAttribute(TAG_EXPORTED).equals("true"); //$NON-NLS-1$
