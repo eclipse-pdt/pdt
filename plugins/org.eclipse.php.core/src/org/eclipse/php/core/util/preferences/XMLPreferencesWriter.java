@@ -3,13 +3,12 @@ package org.eclipse.php.core.util.preferences;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.ui.preferences.IWorkingCopyManager;
-import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * XML preferences writer for writing XML structures into the prefernces store.
@@ -80,13 +79,13 @@ public class XMLPreferencesWriter {
 	 * 
 	 * @param prefsKey The key to store by.
 	 * @param objects The IXMLPreferencesStorables to store.
-	 * @param fScopeContext The context for the project Scope
+	 * @param projectScope The project Scope
 	 * @param workingCopyManager
 	 */
-	public static void write(Key prefsKey, IXMLPreferencesStorable[] objects, IScopeContext[] fScopeContext, IWorkingCopyManager workingCopyManager){
+	public static void write(Key prefsKey, IXMLPreferencesStorable[] objects, ProjectScope projectScope, IWorkingCopyManager workingCopyManager){
 		StringBuffer sb = new StringBuffer();
 		appendDelimitedString(sb, objects);
-		prefsKey.setStoredValue(fScopeContext, sb.toString(), workingCopyManager);
+		prefsKey.setStoredValue(projectScope, sb.toString(), workingCopyManager);
 		
 	}	
 	
@@ -149,10 +148,12 @@ public class XMLPreferencesWriter {
 
 	// Append the elements one by one into the given StringBuffer.
 	private static void appendDelimitedString(StringBuffer buffer, IXMLPreferencesStorable[] elements) {
-		for (int i = 0; i < elements.length; ++i) {
-			write(buffer, elements[i].storeToMap());
-			if (i < elements.length - 1) {
-				buffer.append(DELIMITER);
+		if (elements != null){
+			for (int i = 0; i < elements.length; ++i) {
+				write(buffer, elements[i].storeToMap());
+				if (i < elements.length - 1) {
+					buffer.append(DELIMITER);
+				}
 			}
 		}
 	}

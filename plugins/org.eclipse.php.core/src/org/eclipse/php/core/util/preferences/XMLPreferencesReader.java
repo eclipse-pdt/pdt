@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.core.Logger;
 import org.eclipse.ui.preferences.IWorkingCopyManager;
@@ -103,13 +103,13 @@ public class XMLPreferencesReader {
 	 * Reads a map of elements from the project Properties by a given key.
 	 * 
 	 * @param prefsKey The key to store by.
-	 * @param fScopeContext The context for the project Scope
+	 * @param projectScope The context for the project Scope
 	 * @param workingCopyManager
 	 * @return 
 	 */
-	public static HashMap[] read(Key prefKey, IScopeContext[] fScopeContext, IWorkingCopyManager workingCopyManager){
+	public static HashMap[] read(Key prefKey, ProjectScope projectScope, IWorkingCopyManager workingCopyManager){
 
-		String storedValue = prefKey.getStoredValue(fScopeContext, false, workingCopyManager);
+		String storedValue = prefKey.getStoredValue(projectScope, workingCopyManager);
 		if (storedValue == null)
 			storedValue = STRING_DEFAULT;		
 		return getHashFromStoredValue(storedValue);
