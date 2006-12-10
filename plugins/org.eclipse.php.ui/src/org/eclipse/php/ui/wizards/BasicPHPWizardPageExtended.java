@@ -8,7 +8,7 @@ public abstract class BasicPHPWizardPageExtended extends BasicPHPWizardPage {
 		super(pageName);
 	}
 	
-	public void prePerformFinish(){};
+	public void prePerformFinish(IProject project){};
 	public void performFinish(){};
 	public void postPerformFinish(IProject project){};
 	
