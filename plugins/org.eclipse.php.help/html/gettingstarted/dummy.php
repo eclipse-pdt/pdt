@@ -1,5 +1,5 @@
 <?php
-@ini_set('zend_monitor.enable', 0);
+@ini_set('ide_monitor.enable', 0);
 if(@function_exists('output_cache_disable')) {
 	@output_cache_disable();
 }
