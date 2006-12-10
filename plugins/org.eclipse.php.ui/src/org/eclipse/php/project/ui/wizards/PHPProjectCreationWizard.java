@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.PHPCoreConstants;
@@ -46,12 +45,12 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	private static final String WIZARDNAME_ATTRIBUTE = "wizardName"; //$NON-NLS-1$
 	private static final String WizardName = "PHPProjectCreationWizard"; //$NON-NLS-1$
 	
-	
-	IConfigurationElement configElement;
 	protected PHPIncludePathPage includePathPage;
     protected PHPProjectWizardBasePage basePage;
-    ArrayList wizardPagesList = new ArrayList();
     
+    private final ArrayList wizardPagesList = new ArrayList();
+    private IProject createdProject = null;
+    private IConfigurationElement configElement;
     
 	
 	public PHPProjectCreationWizard(IDataModel model) {
@@ -101,20 +100,23 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 
 	protected boolean prePerformFinish() {
 		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH,includePathPage.getIncludePathsBlock().getIncludepathEntries());
- 		basePage.setProjectOptionInModel(getDataModel());
+		createdProject = (IProject)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
+		
+		// call the prePerformFinish for any page added trough the extention point
+		if (createdProject != null) {
+			for(Iterator it = wizardPagesList.iterator(); it.hasNext();){
+				BasicPHPWizardPageExtended page = (BasicPHPWizardPageExtended) it.next();
+				page.prePerformFinish(createdProject);		
+			}
+		}
+		basePage.setProjectOptionInModel(getDataModel());
         return super.prePerformFinish();
 	}
 	
 	protected void postPerformFinish() throws InvocationTargetException {
 		BasicNewProjectResourceWizard.updatePerspective(configElement);
-		
-		IProject createdProject = (IProject)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
+				
  		if (createdProject != null) {
- 			
-			for(Iterator it = wizardPagesList.iterator(); it.hasNext();){
-				BasicPHPWizardPageExtended page = (BasicPHPWizardPageExtended) it.next();
-				page.postPerformFinish(createdProject);		
-			}
 //			 Save any project-specific data (Fix Bug# 143406)
  			try {
 				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();
@@ -124,5 +126,6 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
  		}
  		
 	}
+	
 
 }
