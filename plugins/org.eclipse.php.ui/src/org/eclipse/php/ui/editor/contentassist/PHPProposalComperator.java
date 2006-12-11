@@ -17,6 +17,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPKeywordData;
 
 /*
  * Compares between two PHP proposal elements - according to the type
@@ -27,10 +28,15 @@ public class PHPProposalComperator implements Comparator {
 	private static final int CLASSES = 1;
 	private static final int FUNCTIONS = 2;
 	private static final int CONSTANTS = 3;
-	private static final int OTHERS = 4;
+	private static final int KEYWORDS = 4;
+	private static final int OTHERS = 5;
 
 	public int compare(Object o1, Object o2) {
-		assert o1 instanceof ICompletionProposal && o2 instanceof ICompletionProposal;
+		// type checking
+		if (!(o1 instanceof ICompletionProposal && o2 instanceof ICompletionProposal)) {
+			throw new IllegalArgumentException("PHPProposalComperator can get only ICompletionProposal");
+		}
+		
 		ICompletionProposal element1 = (ICompletionProposal) o1;
 		ICompletionProposal element2 = (ICompletionProposal) o2;
 		
@@ -44,7 +50,15 @@ public class PHPProposalComperator implements Comparator {
 	private int getType(Object object) {
 		if (object instanceof CodeDataCompletionProposal) {
 			CodeData codeData = ((CodeDataCompletionProposal) object).getCodeData();
-			return codeData instanceof PHPClassData ? CLASSES : codeData instanceof PHPFunctionData ? FUNCTIONS : CONSTANTS;
+			if (codeData instanceof PHPClassData) {
+				return CLASSES;
+			} else if (codeData instanceof PHPFunctionData){
+				return FUNCTIONS;
+			} else if (codeData instanceof PHPKeywordData) {
+				return KEYWORDS;
+			} else {
+				return CONSTANTS;
+			}
 		} 
 		return OTHERS;
 	}
