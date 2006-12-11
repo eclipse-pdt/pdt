@@ -256,7 +256,7 @@ public class VariableCreationDialog extends StatusDialog {
 
 		FileDialog dialog = new FileDialog(getShell());
 		dialog.setText(PHPUIMessages.VariableCreationDialog_extjardialog_text);
-		dialog.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
+		dialog.setFilterExtensions(new String[] { "*.zip", "*.jar" }); //$NON-NLS-1$
 		dialog.setFilterPath(initPath);
 		String res = dialog.open();
 		if (res != null) {
