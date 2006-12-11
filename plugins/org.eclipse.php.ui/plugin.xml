@@ -911,6 +911,11 @@
         class="org.eclipse.php.internal.ui.preferences.PHPFormatterPreferencePage"
         id="org.eclipse.php.internal.ui.preferences.PHPFormatterPreferencePage"
         name="%formatterPreferencePageName"/>
+  <page
+        category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
+        class="org.eclipse.php.internal.ui.preferences.PHPAppearancePreferencePage"
+        id="org.eclipse.php.ui.preferences.ui.PHPAppearancePreferencePage"
+        name="%phpAppearancePageName"/>
 	</extension>
 
 	<extension point="org.eclipse.ui.keywords">
