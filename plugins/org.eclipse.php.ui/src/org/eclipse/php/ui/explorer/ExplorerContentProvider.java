@@ -78,7 +78,7 @@ public class ExplorerContentProvider extends StandardPHPElementContentProvider i
 		IResource res = PHPModelUtil.getResource(fileData);
 		if (res == null)
 			return;
-		postRefresh(res, false);
+		postRefresh(res, true);
 	}
 
 	public void fileDataRemoved(PHPFileData fileData) {
