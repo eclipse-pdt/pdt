@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.internal.core.LaunchManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.util.BlockingQueue;
@@ -510,7 +511,7 @@ public class DebugConnectionThread implements Runnable {
 	 * @param launch An {@link ILaunch}
 	 * @param startedNotification	A DebugSessionStartedNotification
 	 */
-	protected void hookServerDebug(ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
+	protected void hookServerDebug(final ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		PHPServerLaunchDecorator launchDecorator;
 		if (launch instanceof PHPServerLaunchDecorator) {
@@ -533,6 +534,12 @@ public class DebugConnectionThread implements Runnable {
 		PHPProcess process = new PHPProcess(launch, URL);
 		debugTarget = new PHPDebugTarget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
 		launch.addDebugTarget(debugTarget);
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				LaunchManager manager = (LaunchManager)DebugPlugin.getDefault().getLaunchManager();
+				manager.fireUpdate(new ILaunch[] {launch}, LaunchManager.ADDED);
+			}
+		});
 	}
 
 	/**
@@ -541,7 +548,7 @@ public class DebugConnectionThread implements Runnable {
 	 * @param launch An {@link ILaunch}
 	 * @param startedNotification	A DebugSessionStartedNotification
 	 */
-	protected void hookPHPExeDebug(ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
+	protected void hookPHPExeDebug(final ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
 		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
@@ -578,6 +585,12 @@ public class DebugConnectionThread implements Runnable {
 
 		debugTarget = new PHPDebugTarget(this, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
 		launch.addDebugTarget(debugTarget);
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				LaunchManager manager = (LaunchManager)DebugPlugin.getDefault().getLaunchManager();
+				manager.fireUpdate(new ILaunch[] {launch}, LaunchManager.ADDED);
+			}
+		});
 	}
 
 	/**
