@@ -20,7 +20,7 @@ public class UseAspTagsHandler {
 	private UseAspTagsHandler() {}
 	
 	public static final boolean useAspTagsAsPhp(IProject project) {
-		return Boolean.valueOf(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS, null, project)).booleanValue();
+		return project == null ? false : Boolean.valueOf(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS, null, project)).booleanValue();
 	}
 
 	public static final boolean useAspTagsAsPhp(IFile file) {
