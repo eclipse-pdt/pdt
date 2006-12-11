@@ -14,6 +14,7 @@
 	<extension-point id="actionFilterDelegatorForPHPCodeData" name="actionFilterDelegatorForPHPCodeData" schema="schema/actionFilterDelegatorForPHPCodeData.exsd"/>
  	<extension-point id="phpLabelDecorator" name="phpLabelDecorator" schema="schema/org.eclipse.php.ui.phplabeldecorator.exsd"/>
  	<extension-point id="phpWizardPages" name="phpWizardPages" schema="schema/phpWizardPages.exsd"/>
+ 	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlock.exsd"/>
 
 	<!--extension point="org.eclipse.ui.editors.documentProviders"> 
 		<provider 
@@ -392,7 +393,7 @@
 			class="org.eclipse.core.internal.resources.mapping.ResourceAdapterFactory"
 			adaptableType="org.eclipse.core.resources.IResource">
 			<adapter
-				type="org.eclipse.php.core.phpModel.parser.PHPBrowserModel" />
+				type="org.eclipse.php.core.phpModel.parser.PHPBrowserModel"/>
 		</factory>
 
 
