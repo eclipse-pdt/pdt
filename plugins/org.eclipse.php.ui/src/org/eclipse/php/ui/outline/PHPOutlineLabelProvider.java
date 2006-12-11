@@ -15,13 +15,13 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.ui.SuperClassLabelProvider;
 import org.eclipse.php.ui.outline.PHPOutlineContentProvider.GroupNode;
 import org.eclipse.php.ui.treecontent.PHPTreeNode;
+import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.ui.util.PHPElementLabels;
-import org.eclipse.php.ui.util.PHPUILabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 
-public class PHPOutlineLabelProvider extends JFaceNodeLabelProvider {
-	PHPUILabelProvider phpLabelProvider = new PHPUILabelProvider();
+public class PHPOutlineLabelProvider extends AppearanceAwareLabelProvider {
+	JFaceNodeLabelProvider phpLabelProvider = new JFaceNodeLabelProvider();
 
 	protected ILabelProvider superClassLabelProviderFragment = new SuperClassLabelProvider(this);
 
@@ -31,13 +31,13 @@ public class PHPOutlineLabelProvider extends JFaceNodeLabelProvider {
 			if (image != null) {
 				return image;
 			}
-			return phpLabelProvider.getImage(element);
+			return super.getImage(element);
 		} else if (element instanceof GroupNode) {
 			return ((GroupNode) element).getImage();
 		} else if (element instanceof PHPTreeNode) {
 			return ((PHPTreeNode) element).getImage();
 		}
-		return super.getImage(element);
+		return phpLabelProvider.getImage(element);
 	}
 
 	public String getText(Object element) {
@@ -46,14 +46,14 @@ public class PHPOutlineLabelProvider extends JFaceNodeLabelProvider {
 			if (text != null) {
 				return text;
 			}
-			return phpLabelProvider.getText(element);
+			return super.getText(element);
 		} else if (element instanceof GroupNode) {
 			return ((GroupNode) element).getText();
 		} else if (element instanceof PHPTreeNode) {
 			return ((PHPTreeNode) element).getText();
 		}
 
-		return super.getText(element);
+		return phpLabelProvider.getText(element);
 
 	}
 
