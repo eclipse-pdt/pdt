@@ -534,6 +534,8 @@ public class DebugConnectionThread implements Runnable {
 		PHPProcess process = new PHPProcess(launch, URL);
 		debugTarget = new PHPDebugTarget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
 		launch.addDebugTarget(debugTarget);
+		// A fix for Linux display problem.
+		// This code will auto-expand the debugger view tree.
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				LaunchManager manager = (LaunchManager)DebugPlugin.getDefault().getLaunchManager();
@@ -585,6 +587,8 @@ public class DebugConnectionThread implements Runnable {
 
 		debugTarget = new PHPDebugTarget(this, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
 		launch.addDebugTarget(debugTarget);
+		// A fix for Linux display problem.
+		// This code will auto-expand the debugger view tree.
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				LaunchManager manager = (LaunchManager)DebugPlugin.getDefault().getLaunchManager();
