@@ -117,7 +117,8 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	public IContentProvider getContentProvider(final TreeViewer viewer) {
 		if (fContentProvider == null) {
 			viewer.setComparer(new PHPOutlineElementComparer());
-			fContentProvider = new PHPOutlineContentProvider(viewer, (PHPOutlineLabelProvider) getLabelProvider(viewer));
+			PHPOutlineLabelProvider labelProvider = (PHPOutlineLabelProvider) getLabelProvider(viewer);
+			fContentProvider = new PHPOutlineContentProvider(viewer, labelProvider);
 			fContentProvider.phpContentProvider.setTreeProviders(getTreeProviders());
 		}
 		return fContentProvider;
@@ -126,7 +127,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	public ILabelProvider getLabelProvider(final TreeViewer viewer) {
 		if (fLabelProvider == null) {
 			fLabelProvider = new PHPOutlineLabelProvider();
-			fLabelProvider.phpLabelProvider.setTreeProviders(getTreeProviders());
+			fLabelProvider.setTreeProviders(getTreeProviders());
 		}
 		return fLabelProvider;
 	}
