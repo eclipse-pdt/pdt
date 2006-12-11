@@ -15,6 +15,7 @@ import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
+import org.eclipse.php.ui.preferences.AbstractPHPPreferencePageBlock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -30,7 +31,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
  * 
  * @author shalom
  */
-public class PHPDebugPreferencesWorkspaceAddon extends AbstractDebugPreferencesPageAddon {
+public class PHPDebugPreferencesWorkspaceAddon extends AbstractPHPPreferencePageBlock {
 
 	private Text fDebugTextBox;
 	private Button fUsePHPDebugPerspective;

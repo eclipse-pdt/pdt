@@ -12,63 +12,22 @@ package org.eclipse.php.debug.ui.preferences;
 
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
-import org.eclipse.php.ui.preferences.ui.ScrolledCompositeImpl;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.php.ui.preferences.AbstractPHPPropertyPreferencePage;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 
-public class PHPDebugPropertyPreferencePage extends PropertyPreferencePage {
+public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferencePage {
 
 	private static final String PAGE_ID = "org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage";
 
 	protected Label fDefaultURLLabel;
 	protected Text fDefaultURLTextBox;
-	private IPHPDebugPreferencesPageAddon[] projectScopeAddons;
-	private IPHPDebugPreferencesPageAddon[] workspaceAddons;
 
 	public PHPDebugPropertyPreferencePage() {
 		super();
 
-	}
-
-	protected Control createWorkspaceContents(Composite composite) {
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
-		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
-		group.setLayout(new GridLayout());
-		try {
-			workspaceAddons = PHPDebugPreferencesAddonRegistry.getDebugPreferencesWorkspaceAddon(PAGE_ID);
-			for (int i = 0; i < workspaceAddons.length; i++) {
-				workspaceAddons[i].setCompositeAddon(group);
-				workspaceAddons[i].initializeValues(this);
-			}
-			scrolledCompositeImpl.setContent(group);
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return scrolledCompositeImpl;
-	}
-
-	protected Control createProjectContents(Composite composite) {
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
-		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
-		group.setLayout(new GridLayout());
-		try {
-			projectScopeAddons = PHPDebugPreferencesAddonRegistry.getDebugPreferencesProjectAddon(PAGE_ID);
-			for (int i = 0; i < projectScopeAddons.length; i++) {
-				projectScopeAddons[i].setCompositeAddon(group);
-				projectScopeAddons[i].initializeValues(this);
-			}
-			scrolledCompositeImpl.setContent(group);
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return scrolledCompositeImpl;
 	}
 
 	protected String getPreferenceNodeQualifier() {
@@ -92,30 +51,5 @@ public class PHPDebugPropertyPreferencePage extends PropertyPreferencePage {
 
 	public String getTitle() {
 		return PHPDebugUIMessages.PhpDebugPreferencePage_8;
-	}
-
-	public boolean performOk() {
-		boolean result = super.performOk();
-		for (int i = 0; i < projectScopeAddons.length; i++) {
-			projectScopeAddons[i].performOK(isElementSettingsEnabled());
-		}
-		for (int i = 0; i < workspaceAddons.length; i++) {
-			workspaceAddons[i].performOK(false);
-		}
-		return result;
-	}
-
-	public void performApply() {
-		super.performApply(); // Will execute the preformOK()
-	}
-
-	public void performDefaults() {
-		for (int i = 0; i < projectScopeAddons.length; i++) {
-			projectScopeAddons[i].performDefaults();
-		}
-		for (int i = 0; i < workspaceAddons.length; i++) {
-			workspaceAddons[i].performDefaults();
-		}
-		super.performDefaults();
 	}
 }

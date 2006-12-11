@@ -27,6 +27,7 @@ import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.manager.ServersManager;
+import org.eclipse.php.ui.preferences.AbstractPHPPreferencePageBlock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -37,7 +38,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.wst.xml.ui.internal.preferences.EncodingSettings;
 import org.osgi.service.prefs.BackingStoreException;
 
-public class PHPDebugPreferencesProjectAddon extends AbstractDebugPreferencesPageAddon {
+public class PHPDebugPreferencesProjectAddon extends AbstractPHPPreferencePageBlock {
 
 	private static final String SERVERS_PAGE_ID = "org.eclipse.php.server.internal.ui.PHPServersPreferencePage";
 	private static final String PHP_EXE_PAGE_ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage";

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="phpDebugPreferencesAddon" name="PHP Debug Preferences Page Addon" schema="schema/phpDebugPreferencesAddon.exsd"/>
    <extension-point id="phpDebugModelPresentations" name="PHP Debug Model Presentations" schema="schema/phpDebugModelPresentations.exsd"/>
    <extension
          point="org.eclipse.debug.ui.debugModelPresentations">
@@ -435,19 +434,17 @@
    </propertyTester>
  </extension> -->
  <extension
-       point="org.eclipse.php.debug.ui.phpDebugPreferencesAddon">
-    <debugPreferencesAddon
+       point="org.eclipse.php.ui.phpPreferencePageBlocks">
+    <block
           class="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencesWorkspaceAddon"
           id="org.eclipse.php.debug.ui.debugWorkspacePreferencesAddon"
           name="PHP Debug Preferences Workspace Addon"
-          preferencesPageId="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
-          type="Workspace"/>
-    <debugPreferencesAddon
+          pageId="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"/>
+    <block
           class="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencesProjectAddon"
           id="org.eclipse.php.debug.ui.debugProjectPreferencesAddon"
           name="PHP Debug Preferences Project-Specific Addon"
-          preferencesPageId="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
-          type="Project Specific"/>
+          pageId="org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"/>
  </extension>
  <extension
        point="org.eclipse.ui.themes">
