@@ -32,7 +32,7 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 public class StatusBarUpdater implements ISelectionChangedListener {
 
 	private final long LABEL_FLAGS = PHPElementLabels.DEFAULT_QUALIFIED | PHPElementLabels.ROOT_POST_QUALIFIED | PHPElementLabels.APPEND_ROOT_PATH | PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES | PHPElementLabels.M_APP_RETURNTYPE | PHPElementLabels.F_APP_TYPE_SIGNATURE
-		| PHPElementLabels.T_TYPE_PARAMETERS;
+		| PHPElementLabels.T_TYPE_PARAMETERS | PHPElementLabels.M_PRE_RETURNTYPE;
 
 	private IStatusLineManager fStatusLineManager;
 
