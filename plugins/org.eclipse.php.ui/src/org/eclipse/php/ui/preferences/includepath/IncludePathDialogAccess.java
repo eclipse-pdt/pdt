@@ -58,8 +58,8 @@ public final class IncludePathDialogAccess {
 	public static final String DIALOGSTORE_LASTVARIABLE = PHPUiPlugin.ID + ".lastvariable"; //$NON-NLS-1$
 	public static final String DIALOGSTORE_LASTINCLUDEFOLDER = PHPUiPlugin.ID + ".lastincludefolder"; //$NON-NLS-1$
 
-	private static final String[] fgZipExtensions = { "zip" }; //$NON-NLS-1$ //$NON-NLS-2$
-	public static final String[] FILTER_EXTENSIONS = new String[] { "*.zip" }; //$NON-NLS-1$
+	private static final String[] fgZipExtensions = { "zip", "jar" }; //$NON-NLS-1$ //$NON-NLS-2$
+	public static final String[] FILTER_EXTENSIONS = new String[] { "*.zip", "*.jar" }; //$NON-NLS-1$
 	
 	private IncludePathDialogAccess() {
 		// do not instantiate
