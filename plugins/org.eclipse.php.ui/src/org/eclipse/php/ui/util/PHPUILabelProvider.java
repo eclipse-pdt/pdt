@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -40,7 +41,7 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 	 * Creates a new label provider with default flags.
 	 */
 	public PHPUILabelProvider() {
-		this(PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES, PHPElementImageProvider.OVERLAY_ICONS | PHPElementImageProvider.SMALL_ICONS);
+		this(PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES, PHPElementImageProvider.OVERLAY_ICONS | PHPElementImageProvider.SMALL_ICONS |PHPElementLabels.M_APP_RETURNTYPE);
 	}
 
 	/**
