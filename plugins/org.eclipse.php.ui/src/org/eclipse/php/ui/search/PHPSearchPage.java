@@ -56,6 +56,8 @@ import org.eclipse.ui.PlatformUI;
 
 public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearchConstants {
 
+	public static String EXTENSION_POINT_ID = "org.eclipse.php.ui.PHPSearchPage";
+
 	public PHPSearchPage() {
 		super();
 		fPreviousSearchPatterns = new ArrayList();
