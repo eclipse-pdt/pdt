@@ -10,21 +10,27 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
+import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
-
 
 public class SelectionConverter {
 
@@ -168,6 +174,37 @@ public class SelectionConverter {
 	}
 
 	public static PHPCodeData[] codeResolve(PHPCodeData input, ITextSelection selection) {
+		// a workaround:
+		String text = selection.getText();
+		if (text == null) {
+			return EMPTY_RESULT;
+		}
+		text = text.trim();
+		if("".equals(text)) {
+			 return EMPTY_RESULT;
+		}
+
+		ArrayList codeDatas = new ArrayList();
+
+		if (input instanceof PHPFileData && text.matches("^[\\w]+$")) {
+			PHPWorkspaceModelManager modelManager = PHPWorkspaceModelManager.getInstance();
+			IProject project = modelManager.getProjectForFileData((PHPFileData) input, null);
+			PHPProjectModel model = modelManager.getModelForProject(project);
+			PHPClassData classData = model.getClass(input.getName(), text);
+			if (classData != null) {
+				codeDatas.add(classData);
+			}
+			CodeData[] functionDatas = model.getFunctions(text);
+			if (functionDatas != null && functionDatas.length > 0) {
+				codeDatas.addAll(Arrays.asList(functionDatas));
+			}
+			CodeData[] constantDatas = model.getConstants(text, false);
+			if (constantDatas != null && constantDatas.length > 0) {
+				codeDatas.addAll(Arrays.asList(constantDatas));
+			}
+			return (PHPCodeData[]) codeDatas.toArray(new PHPCodeData[codeDatas.size()]);
+			
+		}
 		return EMPTY_RESULT;
 	}
 
