@@ -11,6 +11,7 @@
 package org.eclipse.php.core.project.properties.handlers;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.core.preferences.CorePreferenceConstants.Keys;
 
@@ -19,7 +20,7 @@ public class PhpVersionProjectPropertyHandler {
 	private PhpVersionProjectPropertyHandler() {}
 
 	public static String getVersion(IProject project) {
-		return CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project);
+		return project != null ? CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project) : PHPCoreConstants.PHP5;
 	}
 	
 	public static String getVersion() {
