@@ -382,7 +382,16 @@
 				type="org.eclipse.ui.views.properties.IPropertySource" />
 
 		</factory>
-
+		  <factory
+		        adaptableType="org.eclipse.php.core.documentModel.dom.PHPElementImpl"
+		        class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
+		     <adapter type="org.eclipse.search.ui.ISearchPageScoreComputer"/>
+		  </factory>
+		  <factory
+		        adaptableType="org.eclipse.php.core.documentModel.dom.PHPTextImpl"
+		        class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
+		     <adapter type="org.eclipse.search.ui.ISearchPageScoreComputer"/>
+		  </factory>
 		<factory
 			class="org.eclipse.php.internal.ui.PHPProjectAdapterFactory"
 			adaptableType="org.eclipse.php.core.phpModel.parser.PHPBrowserModel">
