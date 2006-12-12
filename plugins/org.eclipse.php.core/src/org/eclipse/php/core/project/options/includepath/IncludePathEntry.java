@@ -370,19 +370,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 			default:
 				return "unknown"; //$NON-NLS-1$
 		}
-	}
-
-	public boolean equals(Object other) {
-		if (other != null && other.getClass().equals(getClass())) {
-			IncludePathEntry otherEntry = (IncludePathEntry) other;
-			if (otherEntry.entryKind != entryKind || otherEntry.contentKind != contentKind)
-				return false;
-			if (!path.equals(otherEntry.path))
-				return false;
-			return true;
-		}
-		return false;
-	}
+	}	
 
 	public String validate() {
 		String message = null;
@@ -423,6 +411,35 @@ public class IncludePathEntry implements IIncludePathEntry {
 	public void setResource(IResource resource) {
 		this.resource = resource;
 		
+	}
+
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + contentKind;
+		result = PRIME * result + entryKind;
+		result = PRIME * result + ((path == null) ? 0 : path.hashCode());
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final IncludePathEntry other = (IncludePathEntry) obj;
+		if (contentKind != other.contentKind)
+			return false;
+		if (entryKind != other.entryKind)
+			return false;
+		if (path == null) {
+			if (other.path != null)
+				return false;
+		} else if (!path.equals(other.path))
+			return false;
+		return true;
 	}
 
 }
