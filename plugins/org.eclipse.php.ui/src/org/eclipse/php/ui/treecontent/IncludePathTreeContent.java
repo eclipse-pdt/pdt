@@ -333,6 +333,9 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	}
 
 	public boolean hasChildren(Object element) {
+		if(element instanceof PHPTreeNode) {
+			return true;
+		}
 		return false;
 	}
 
