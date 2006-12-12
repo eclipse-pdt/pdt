@@ -16,9 +16,17 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 public class DOMDocumentForPHP extends DocumentStyleImpl {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.xml.core.internal.document.DocumentImpl#createTextNode(java.lang.String)
+	 */
+	public Text createTextNode(String data) {
+		return new PHPTextImpl(this, data);
+	}
+	
 	public DOMDocumentForPHP() {
 		super();
 	}
