@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.documentModel.dom;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.core.documentModel.validate.HTMLElementPropagatingValidator;
 import org.eclipse.php.core.documentModel.validate.HTMLEmptyValidator;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -30,7 +32,7 @@ import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public class PHPElementImpl extends ElementImpl {
+public class PHPElementImpl extends ElementImpl implements IAdaptable {
 
 	static HTMLElementPropagatingValidator pValidator = new HTMLElementPropagatingValidator();
 
@@ -160,6 +162,10 @@ public class PHPElementImpl extends ElementImpl {
 			}
 		}
 		return super.isClosed();
+	}
+
+	public Object getAdapter(Class adapter) {
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
 }
