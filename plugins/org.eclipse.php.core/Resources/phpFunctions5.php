@@ -110,32 +110,14 @@ function acos($number) {}
  */
 function acosh($number) {}
 
-/**
- * Add a file in a Zip archive using its path and the name to use. 
- *
- * @return bool
- * @param  filepath string
- * @param  entryname string
- * @param  start int
- * @param  length int[optional]
- */
-function addFile($filepath, $entryname, $start, $length = null) {}
 
-/**
- * Add a file using content and the entry name 
- *
- * @return resource
- * @param  name string
- * @param  content string
- */
-function addFromString($name, $content) {}
 
 /**
  * Escapes all chars mentioned in charlist with backslash. It creates octal representations if asked to backslash characters with 8th bit set or with ASCII<32 (except '\n', '\r', '\t' etc...) 
  *
  * @return string
- * @param  str binary
- * @param  charlist binary
+ * @param  str string
+ * @param  charlist string
  */
 function addcslashes($str, $charlist) {}
 
@@ -319,9 +301,9 @@ function array_diff_key($arr1, $arr2) {}
  * @param  arr1 array
  * @param  arr2 array
  * @vararg ... array
- * @param  key_comp_func callback
+ * @param  data_comp_func callback
  */
-function array_diff_uassoc($arr1, $arr2, $key_comp_func) {}
+function array_diff_uassoc($arr1, $arr2, $data_comp_func) {}
 
 /**
  * Returns the entries of arr1 that have keys which are not present in any of the others arguments. User supplied function is used for comparing the keys. This function is like array_udiff() but works on the keys instead of the values. The associativity is preserved. 
@@ -610,15 +592,15 @@ function array_sum($input) {}
 function array_udiff($arr1, $arr2, $data_comp_func) {}
 
 /**
- * Returns the entries of arr1 that have values which are not present in any of the others arguments but do additional checks whether the keys are equal. Entries are compared by user supplied function. 
+ * Returns the entries of arr1 that have values which are not present in any of the others arguments but do additional checks whether the keys are equal. Keys are compared by user supplied function. 
  *
  * @return array
  * @param  arr1 array
  * @param  arr2 array
  * @vararg ... array
- * @param  data_comp_func callback
+ * @param  key_comp_func callback
  */
-function array_udiff_assoc($arr1, $arr2, $data_comp_func) {}
+function array_udiff_assoc($arr1, $arr2, $key_comp_func) {}
 
 /**
  * Returns the entries of arr1 that have values which are not present in any of the others arguments but do additional checks whether the keys are equal. Keys and elements are compared by user supplied functions. 
@@ -697,20 +679,20 @@ function array_values($input) {}
  *
  * @return bool
  * @param  input array
- * @param  callback mixed
+ * @param  funcname string
  * @param  userdata mixed[optional]
  */
-function array_walk($input, $callback, $userdata = null) {}
+function array_walk($input, $funcname, $userdata = null) {}
 
 /**
  * Apply a user function recursively to every member of an array 
  *
  * @return bool
  * @param  input array
- * @param  callback mixed
+ * @param  funcname string
  * @param  userdata mixed[optional]
  */
-function array_walk_recursive($input, $callback, $userdata = null) {}
+function array_walk_recursive($input, $funcname, $userdata = null) {}
 
 /**
  * Sort an array in reverse order and maintain index association 
@@ -1293,12 +1275,12 @@ function chop($str, $character_mask = null) {}
 function chown($filename, $user) {}
 
 /**
- * Converts a codepoint number to a character 
+ * Converts ASCII code to a character 
  *
  * @return string
- * @param  codepoint int
+ * @param  ascii int
  */
-function chr($codepoint) {}
+function chr($ascii) {}
 
 /**
  * Change root directory 
@@ -1351,12 +1333,6 @@ function class_parents($instance) {}
  */
 function clearstatcache() {}
 
-/**
- * close the zip archive 
- *
- * @return resource
- */
-function close() {}
 
 /**
  * Close directory connection identified by the dir_handle 
@@ -1372,21 +1348,6 @@ function closedir($dir_handle = null) {}
  * @return bool
  */
 function closelog() {}
-
-/**
- * Returns default collator 
- *
- * @return Collator
- */
-function collator_get_default() {}
-
-/**
- * Returns default collator 
- *
- * @return void
- * @param  coll Collator
- */
-function collator_set_default($coll) {}
 
 /**
  * Generate a globally unique identifier (GUID) 
@@ -1473,7 +1434,7 @@ function connection_aborted() {}
 function connection_status() {}
 
 /**
- * Given the name of a constant this function will return the constant's associated value 
+ * Given the name of a constant this function will return the constants associated value 
  *
  * @return mixed
  * @param  const_name string
@@ -1556,6 +1517,14 @@ function count_chars($input, $mode = null) {}
  * @param  str string
  */
 function crc32($str) {}
+
+/**
+ * Returns the index of the entry named filename in the archive 
+ *
+ * @return bool
+ * @param  dirname string
+ */
+function createEmptyDir($dirname) {}
 
 /**
  * Creates an anonymous function, and returns its name (funny, eh?) 
@@ -1899,7 +1868,7 @@ function date_modify($object, $modify) {}
 /**
  * 
  *
- * @return long
+ * @return int
  * @param  object DateTime
  */
 function date_offset_get($object) {}
@@ -2843,21 +2812,7 @@ function defined($constant_name) {}
  */
 function deg2rad($number) {}
 
-/**
- * Delete a file using its index 
- *
- * @return resource
- * @param  index int
- */
-function deleteIndex($index) {}
 
-/**
- * Delete a file using its index 
- *
- * @return resource
- * @param  name string
- */
-function deleteName($name) {}
 
 /**
  * Return the translation of msgid for domain_name, or msgid unaltered if a translation does not exist 
@@ -5527,12 +5482,12 @@ function file_exists($filename) {}
  *
  * @return string
  * @param  filename string
- * @param  flags long[optional]
+ * @param  use_include_path bool[optional]
  * @param  context resource[optional]
  * @param  offset long[optional]
  * @param  maxlen long[optional]
  */
-function file_get_contents($filename, $flags = null, $context = null, $offset = null, $maxlen = null) {}
+function file_get_contents($filename, $use_include_path = null, $context = null, $offset = null, $maxlen = null) {}
 
 /**
  * Write/Create a file with contents data and return the number of bytes written 
@@ -5620,13 +5575,65 @@ function filetype($filename) {}
 /**
  * 
  *
+ * @return bool
+ * @param  type constant
+ * @param  variable_name string
+ */
+function filter_has_var($type, $variable_name) {}
+
+/**
+ * * Returns the filter ID belonging to a named filter 
+ *
+ * @return int
+ * @param  filtername string
+ */
+function filter_id($filtername) {}
+
+/**
+ * 
+ *
+ * @return mixed
+ * @param  type constant
+ * @param  variable_name string
+ * @param  filter long[optional]
+ * @param  options mixed[optional]
+ */
+function filter_input($type, $variable_name, $filter = null, $options = null) {}
+
+/**
+ * 
+ *
+ * @return mixed
+ * @param  type constant
+ * @param  options mixed[optional]
+ */
+function filter_input_array($type, $options = null) {}
+
+/**
+ * * Returns a list of all supported filters 
+ *
+ * @return array
+ */
+function filter_list() {}
+
+/**
+ * 
+ *
  * @return mixed
  * @param  variable mixed
- * @param  filter int
- * @param  filter_options mixed[optional]
- * @param  charset string[optional]
+ * @param  filter long[optional]
+ * @param  options mixed[optional]
  */
-function filter_data($variable, $filter, $filter_options = null, $charset = null) {}
+function filter_var($variable, $filter = null, $options = null) {}
+
+/**
+ * 
+ *
+ * @return mixed
+ * @param  data array
+ * @param  options mixed[optional]
+ */
+function filter_var_array($data, $options = null) {}
 
 /**
  * Get the float value of a variable 
@@ -6195,57 +6202,11 @@ function fwrite($fp, $str, $length = null) {}
  */
 function gd_info() {}
 
-/**
- * Returns the comment of an entry using its index 
- *
- * @return resource
- */
-function getArchiveComment() {}
 
-/**
- * Returns the comment of an entry using its index 
- *
- * @return resource
- * @param  index int
- */
-function getCommentIndex($index) {}
 
-/**
- * Returns the comment of an entry using its name 
- *
- * @return resource
- * @param  name string
- */
-function getCommentName($name) {}
 
-/**
- * get the contents of an entry using its index 
- *
- * @return resource
- * @param  entryname string
- * @param  len int
- * @param  flags int[optional]
- */
-function getFromIndex($entryname, $len, $flags = null) {}
 
-/**
- * get the contents of an entry using its name 
- *
- * @return resource
- * @param  entryname string
- * @param  len int
- * @param  flags int[optional]
- */
-function getFromName($entryname, $len, $flags = null) {}
 
-/**
- * Returns the name of the file at position index 
- *
- * @return resource
- * @param  index int
- * @param  flags int[optional]
- */
-function getNameIndex($index, $flags = null) {}
 
 /**
  * 
@@ -6264,13 +6225,6 @@ function getNamedItem($name) {}
  */
 function getNamedItemNS($namespaceURI, $localName) {}
 
-/**
- * get a stream for an entry using its name 
- *
- * @return resource
- * @param  entryname string
- */
-function getStream($entryname) {}
 
 /**
  * 
@@ -6408,6 +6362,20 @@ function get_included_files() {}
  * @return array
  */
 function get_loaded_extensions() {}
+
+/**
+ * Get the current active configuration setting of magic_quotes_gpc 
+ *
+ * @return int
+ */
+function get_magic_quotes_gpc() {}
+
+/**
+ * Get the current active configuration setting of magic_quotes_runtime 
+ *
+ * @return int
+ */
+function get_magic_quotes_runtime() {}
 
 /**
  * Extracts all meta tag content attributes from a file and returns an array 
@@ -7052,43 +7020,32 @@ function gregoriantojd($month, $day, $year) {}
 function gzclose($fp) {}
 
 /**
- * Encode data with the zlib encoding 
+ * Gzip-compress a string 
  *
  * @return string
  * @param  data string
  * @param  level int[optional]
- * @param  encoding int[optional]
  */
-function gzcompress($data, $level = -1, $encoding = ZLIB_ENCODING_DEFLATE) {}
+function gzcompress($data, $level = null) {}
 
 /**
- * Decode gzip encoded data 
- *
- * @return string
- * @param  data string
- * @param  max_decoded_len int
- */
-function gzdecode($data, $max_decoded_len) {}
-
-/**
- * Encode data with the raw deflate encoding 
+ * Gzip-compress a string 
  *
  * @return string
  * @param  data string
  * @param  level int[optional]
- * @param  encoding int[optional]
  */
-function gzdeflate($data, $level = -1, $encoding = ZLIB_ENCODING_RAW) {}
+function gzdeflate($data, $level = null) {}
 
 /**
- * Encode data with the gzip encoding 
+ * GZ encode a string 
  *
  * @return string
  * @param  data string
  * @param  level int[optional]
- * @param  encoding int[optional]
+ * @param  encoding_mode int[optional]
  */
-function gzencode($data, $level = -1, $encoding = ZLIB_ENCODING_GZIP) {}
+function gzencode($data, $level = null, $encoding_mode = null) {}
 
 /**
  * Test for end-of-file on a file pointer 
@@ -7099,7 +7056,7 @@ function gzencode($data, $level = -1, $encoding = ZLIB_ENCODING_GZIP) {}
 function gzeof($fp) {}
 
 /**
- * Read and uncompress entire .gz-file into an array 
+ * Read und uncompress entire .gz-file into an array 
  *
  * @return array
  * @param  filename string
@@ -7135,13 +7092,13 @@ function gzgets($fp, $length) {}
 function gzgetss($fp, $length = null, $allowable_tags) {}
 
 /**
- * Decode raw deflate encoded data 
+ * Unzip a gzip-compressed string 
  *
  * @return string
  * @param  data string
- * @param  max_decoded_len int
+ * @param  length int[optional]
  */
-function gzinflate($data, $max_decoded_len) {}
+function gzinflate($data, $length = null) {}
 
 /**
  * Open a .gz-file and return a .gz-file pointer 
@@ -7207,13 +7164,13 @@ function gzseek($fp, $offset, $whence = null) {}
 function gztell($fp) {}
 
 /**
- * Decode zlib encoded data 
+ * Unzip a gzip-compressed string 
  *
  * @return string
  * @param  data string
- * @param  max_decoded_len int
+ * @param  length int[optional]
  */
-function gzuncompress($data, $max_decoded_len) {}
+function gzuncompress($data, $length = null) {}
 
 /**
  * Binary-safe file write 
@@ -7413,13 +7370,23 @@ function html_entity_decode($string, $quote_style = null, $charset = null) {}
 function htmlentities($string, $quote_style = null, $charset = null) {}
 
 /**
+ * Convert special characters to HTML entities 
+ *
+ * @return string
+ * @param  string string
+ * @param  quote_style int[optional]
+ * @param  charset string[optional]
+ */
+function htmlspecialchars($string, $quote_style = null, $charset = null) {}
+
+/**
  * Convert special HTML entities back to characters 
  *
  * @return string
  * @param  string string
  * @param  quote_style int[optional]
  */
-function htmlspecialchars($string, $quote_style = null) {}
+function htmlspecialchars_decode($string, $quote_style = null) {}
 
 /**
  * Generates a form-encoded query string from an associative array or object. 
@@ -8346,9 +8313,9 @@ function ifxus_write_slob($bid, $content) {}
  * Set whether we want to ignore a user abort event or not 
  *
  * @return int
- * @param  value string[optional]
+ * @param  value bool
  */
-function ignore_user_abort($value = null) {}
+function ignore_user_abort($value) {}
 
 /**
  * Output WBMP image to browser or file 
@@ -9074,9 +9041,8 @@ function imagepalettecopy($dst, $src) {}
  * @return bool
  * @param  im resource
  * @param  filename string[optional]
- * @param  quality int[optional]
  */
-function imagepng($im, $filename = null, $quality = null) {}
+function imagepng($im, $filename = null) {}
 
 /**
  * Draw a polygon 
@@ -9770,8 +9736,9 @@ function imap_num_recent($stream_id) {}
  * @param  user string
  * @param  password string
  * @param  options int[optional]
+ * @param  n_retries int[optional]
  */
-function imap_open($mailbox, $user, $password, $options = null) {}
+function imap_open($mailbox, $user, $password, $options = null, $n_retries = null) {}
 
 /**
  * Check if the IMAP stream is still active 
@@ -9816,8 +9783,9 @@ function imap_renamemailbox($stream_id, $old_name, $new_name) {}
  * @param  stream_id resource
  * @param  mailbox string
  * @param  options int[optional]
+ * @param  n_retries int[optional]
  */
-function imap_reopen($stream_id, $mailbox, $options = null) {}
+function imap_reopen($stream_id, $mailbox, $options = null, $n_retries = null) {}
 
 /**
  * Parses an address string 
@@ -10101,61 +10069,6 @@ function ini_restore($varname) {}
 function ini_set($varname, $newvalue) {}
 
 /**
- * Calculate the group access list for the user specified in name. 
- *
- * @return bool
- * @param  name string
- * @param  base_group_id int
- */
-function initgroups($name, $base_group_id) {}
-
-/**
- * * Returns a list of all supported filters 
- *
- * @return array
- */
-function input_filters_list() {}
-
-/**
- * 
- *
- * @return mixed
- * @param  type constant
- * @param  variable_name string
- * @param  filter int[optional]
- * @param  flags mixed[optional]
- * @param  charset string[optional]
- */
-function input_get($type, $variable_name, $filter = null, $flags = null, $charset = null) {}
-
-/**
- * 
- *
- * @return mixed
- * @param  type constant
- * @param  definition array
- * @param  data array[optional]
- */
-function input_get_args($type, $definition, $data = null) {}
-
-/**
- * 
- *
- * @return bool
- * @param  type constant
- * @param  variable_name string
- */
-function input_has_variable($type, $variable_name) {}
-
-/**
- * * Returns the filter ID belonging to a named filter 
- *
- * @return int
- * @param  filtername string
- */
-function input_name_to_filter($filtername) {}
-
-/**
  * Checks if the class exists 
  *
  * @return bool
@@ -10217,28 +10130,12 @@ function is_a($object, $class_name) {}
 function is_array($var) {}
 
 /**
- * Returns true if variable is a native (binary) string 
- *
- * @return bool
- * @param  var mixed
- */
-function is_binary($var) {}
-
-/**
  * Returns true if variable is a boolean 
  *
  * @return bool
  * @param  var mixed
  */
 function is_bool($var) {}
-
-/**
- * Returns true if variable is a native, unicode or binary string 
- *
- * @return bool
- * @param  var mixed
- */
-function is_buffer($var) {}
 
 /**
  * Returns true if var is callable. 
@@ -10403,15 +10300,7 @@ function is_resource($var) {}
 function is_scalar($value) {}
 
 /**
- * Checks if given value is a SoapFault object 
- *
- * @return bool
- * @param  object mixed
- */
-function is_soap_fault($object) {}
-
-/**
- * Returns true if variable is a Unicode or binary string 
+ * Returns true if variable is a string 
  *
  * @return bool
  * @param  var mixed
@@ -10426,14 +10315,6 @@ function is_string($var) {}
  * @param  class_name string
  */
 function is_subclass_of($object, $class_name) {}
-
-/**
- * Returns true if variable is a unicode string 
- *
- * @return bool
- * @param  var mixed
- */
-function is_unicode($var) {}
 
 /**
  * Check if file was created by rfc1867 upload  
@@ -11196,21 +11077,6 @@ function link($target, $link) {}
 function linkinfo($filename) {}
 
 /**
- * Returns default locale 
- *
- * @return string
- */
-function locale_get_default() {}
-
-/**
- * Sets default locale 
- *
- * @return bool
- * @param  locale string
- */
-function locale_set_default($locale) {}
-
-/**
  * Returns numeric formatting information based on the current locale 
  *
  * @return array
@@ -11226,14 +11092,6 @@ function localeconv() {}
  */
 function localtime($timestamp = null, $associative_array = null) {}
 
-/**
- * Returns the index of the entry named filename in the archive 
- *
- * @return resource
- * @param  filename string
- * @param  flags int
- */
-function locateName($filename, $flags) {}
 
 /**
  * Returns the natural logarithm of the number, or the base log if base is specified 
@@ -11284,6 +11142,14 @@ function lstat($filename) {}
  * @param  character_mask string[optional]
  */
 function ltrim($str, $character_mask = null) {}
+
+/**
+ * Set the current active configuration setting of magic_quotes_runtime and return previous 
+ *
+ * @return bool
+ * @param  new_setting int
+ */
+function magic_quotes_runtime($new_setting) {}
 
 /**
  * Send an email message 
@@ -11565,12 +11431,11 @@ function mb_internal_encoding($encoding = null) {}
 function mb_language($language = null) {}
 
 /**
- * Returns an array of all supported entity encodings or Returns the entity encoding as a string 
+ * Returns an array of all supported entity encodings 
  *
  * @return array
- * @param  alias_encoding string[optional]
  */
-function mb_list_encodings($alias_encoding = null) {}
+function mb_list_encodings() {}
 
 /**
  * Returns an array of all supported alias encodings 
@@ -11751,7 +11616,7 @@ function mb_strrichr($haystack, $needle, $part, $encoding) {}
 function mb_strripos($haystack, $needle, $offset = null, $encoding = null) {}
 
 /**
- * Find position of last occurrence of a string within another 
+ * Find the last occurrence of a character in a string within another 
  *
  * @return int
  * @param  haystack string
@@ -14171,7 +14036,7 @@ function mysqli_fetch_lengths($result) {}
 /**
  * Fetch a result row as an object 
  *
- * @return mixed
+ * @return object
  * @param  result object
  * @param  class_name string[optional]
  * @param  ctor_params NULL|array[optional]
@@ -14450,6 +14315,14 @@ function mysqli_real_escape_string($link, $escapestr) {}
 function mysqli_real_query($link, $query) {}
 
 /**
+ * sets report level 
+ *
+ * @return bool
+ * @param  flags int
+ */
+function mysqli_report($flags) {}
+
+/**
  * Undo actions from current transaction 
  *
  * @return bool
@@ -14701,6 +14574,14 @@ function mysqli_stmt_free_result($stmt) {}
 /**
  * 
  *
+ * @return object
+ * @param  link object
+ */
+function mysqli_stmt_get_warnings($link) {}
+
+/**
+ * 
+ *
  * @return mysqli_stmt
  * @param  link object
  */
@@ -14754,6 +14635,16 @@ function mysqli_stmt_reset($stmt) {}
  * @param  stmt object
  */
 function mysqli_stmt_result_metadata($stmt) {}
+
+/**
+ * 
+ *
+ * @return bool
+ * @param  stmt object
+ * @param  param_nr int
+ * @param  data string
+ */
+function mysqli_stmt_send_long_data($stmt, $param_nr, $data) {}
 
 /**
  * 
@@ -14825,6 +14716,1338 @@ function natcasesort(&$array_arg) {}
  * @param  array_arg array
  */
 function natsort(&$array_arg) {}
+
+/**
+ * Adds character at current position and advance cursor 
+ *
+ * @return int
+ * @param  ch int
+ */
+function ncurses_addch($ch) {}
+
+/**
+ * Adds attributed string with specified length at current position 
+ *
+ * @return int
+ * @param  s string
+ * @param  n int
+ */
+function ncurses_addchnstr($s, $n) {}
+
+/**
+ * Adds attributed string at current position 
+ *
+ * @return int
+ * @param  s string
+ */
+function ncurses_addchstr($s) {}
+
+/**
+ * Adds string with specified length at current position 
+ *
+ * @return int
+ * @param  s string
+ * @param  n int
+ */
+function ncurses_addnstr($s, $n) {}
+
+/**
+ * Outputs text at current position 
+ *
+ * @return int
+ * @param  text string
+ */
+function ncurses_addstr($text) {}
+
+/**
+ * Defines default colors for color 0 
+ *
+ * @return int
+ * @param  fg int
+ * @param  bg int
+ */
+function ncurses_assume_default_colors($fg, $bg) {}
+
+/**
+ * Turns off the given attributes 
+ *
+ * @return int
+ * @param  attributes int
+ */
+function ncurses_attroff($attributes) {}
+
+/**
+ * Turns on the given attributes 
+ *
+ * @return int
+ * @param  attributes int
+ */
+function ncurses_attron($attributes) {}
+
+/**
+ * Sets given attributes 
+ *
+ * @return int
+ * @param  attributes int
+ */
+function ncurses_attrset($attributes) {}
+
+/**
+ * Returns baudrate of terminal 
+ *
+ * @return int
+ */
+function ncurses_baudrate() {}
+
+/**
+ * Let the terminal beep 
+ *
+ * @return int
+ */
+function ncurses_beep() {}
+
+/**
+ * Sets background property for terminal screen 
+ *
+ * @return int
+ * @param  attrchar int
+ */
+function ncurses_bkgd($attrchar) {}
+
+/**
+ * Controls screen background 
+ *
+ * @return void
+ * @param  attrchar int
+ */
+function ncurses_bkgdset($attrchar) {}
+
+/**
+ * Draws a border around the screen using attributed characters 
+ *
+ * @return int
+ * @param  left int
+ * @param  right int
+ * @param  top int
+ * @param  bottom int
+ * @param  tl_corner int
+ * @param  tr_corner int
+ * @param  bl_corner int
+ * @param  br_corner int
+ */
+function ncurses_border($left, $right, $top, $bottom, $tl_corner, $tr_corner, $bl_corner, $br_corner) {}
+
+/**
+ * Moves a visible panel to the bottom of the stack 
+ *
+ * @return int
+ * @param  panel resource
+ */
+function ncurses_bottom_panel($panel) {}
+
+/**
+ * Checks if we can change terminals colors 
+ *
+ * @return bool
+ */
+function ncurses_can_change_color() {}
+
+/**
+ * Switches of input buffering 
+ *
+ * @return bool
+ */
+function ncurses_cbreak() {}
+
+/**
+ * Clears screen 
+ *
+ * @return bool
+ */
+function ncurses_clear() {}
+
+/**
+ * Clears screen from current position to bottom 
+ *
+ * @return bool
+ */
+function ncurses_clrtobot() {}
+
+/**
+ * Clears screen from current position to end of line 
+ *
+ * @return bool
+ */
+function ncurses_clrtoeol() {}
+
+/**
+ * Gets the RGB value for color 
+ *
+ * @return int
+ * @param  color int
+ * @param  r int
+ * @param  g int
+ * @param  b int
+ */
+function ncurses_color_content($color, &$r, &$g, &$b) {}
+
+/**
+ * Sets fore- and background color 
+ *
+ * @return int
+ * @param  pair int
+ */
+function ncurses_color_set($pair) {}
+
+/**
+ * Sets cursor state 
+ *
+ * @return int
+ * @param  visibility int
+ */
+function ncurses_curs_set($visibility) {}
+
+/**
+ * Saves terminals (program) mode 
+ *
+ * @return bool
+ */
+function ncurses_def_prog_mode() {}
+
+/**
+ * Saves terminal (shell) mode
+ *
+ * @return bool
+ */
+function ncurses_def_shell_mode() {}
+
+/**
+ * Defines a keycode 
+ *
+ * @return int
+ * @param  definition string
+ * @param  keycode int
+ */
+function ncurses_define_key($definition, $keycode) {}
+
+/**
+ * Remove panel from the stack and delete it (but not the associated window) 
+ *
+ * @return bool
+ * @param  panel resource
+ */
+function ncurses_del_panel($panel) {}
+
+/**
+ * Delays output on terminal using padding characters 
+ *
+ * @return int
+ * @param  milliseconds int
+ */
+function ncurses_delay_output($milliseconds) {}
+
+/**
+ * Deletes character at current position, move rest of line left 
+ *
+ * @return bool
+ */
+function ncurses_delch() {}
+
+/**
+ * Deletes line at current position, move rest of screen up 
+ *
+ * @return bool
+ */
+function ncurses_deleteln() {}
+
+/**
+ * Deletes a ncurses window 
+ *
+ * @return bool
+ * @param  window resource
+ */
+function ncurses_delwin($window) {}
+
+/**
+ * Writes all prepared refreshes to terminal 
+ *
+ * @return bool
+ */
+function ncurses_doupdate() {}
+
+/**
+ * Activates keyboard input echo 
+ *
+ * @return bool
+ */
+function ncurses_echo() {}
+
+/**
+ * Single character output including refresh 
+ *
+ * @return int
+ * @param  character int
+ */
+function ncurses_echochar($character) {}
+
+/**
+ * Stops using ncurses, clean up the screen 
+ *
+ * @return int
+ */
+function ncurses_end() {}
+
+/**
+ * Erases terminal screen 
+ *
+ * @return bool
+ */
+function ncurses_erase() {}
+
+/**
+ * Returns current erase character 
+ *
+ * @return string
+ */
+function ncurses_erasechar() {}
+
+/**
+ * 
+ *
+ * @return void
+ */
+function ncurses_filter() {}
+
+/**
+ * Flashes terminal screen (visual bell) 
+ *
+ * @return bool
+ */
+function ncurses_flash() {}
+
+/**
+ * Flushes keyboard input buffer 
+ *
+ * @return bool
+ */
+function ncurses_flushinp() {}
+
+/**
+ * Reads a character from keyboard 
+ *
+ * @return int
+ */
+function ncurses_getch() {}
+
+/**
+ * Returns the size of a window 
+ *
+ * @return void
+ * @param  window resource
+ * @param  y int
+ * @param  x int
+ */
+function ncurses_getmaxyx($window, &$y, &$x) {}
+
+/**
+ * Reads mouse event from queue. The content of mevent is cleared before new data is added. 
+ *
+ * @return bool
+ * @param  mevent array
+ */
+function ncurses_getmouse(&$mevent) {}
+
+/**
+ * Returns the current cursor position for a window 
+ *
+ * @return void
+ * @param  window resource
+ * @param  y int
+ * @param  x int
+ */
+function ncurses_getyx($window, &$y, &$x) {}
+
+/**
+ * Puts terminal into halfdelay mode 
+ *
+ * @return int
+ * @param  tenth int
+ */
+function ncurses_halfdelay($tenth) {}
+
+/**
+ * Checks if terminal has colors 
+ *
+ * @return bool
+ */
+function ncurses_has_colors() {}
+
+/**
+ * Checks for insert- and delete-capabilities 
+ *
+ * @return bool
+ */
+function ncurses_has_ic() {}
+
+/**
+ * Checks for line insert- and delete-capabilities 
+ *
+ * @return bool
+ */
+function ncurses_has_il() {}
+
+/**
+ * Checks for presence of a function key on terminal keyboard 
+ *
+ * @return int
+ * @param  keycode int
+ */
+function ncurses_has_key($keycode) {}
+
+/**
+ * Remove panel from the stack, making it invisible 
+ *
+ * @return int
+ * @param  panel resource
+ */
+function ncurses_hide_panel($panel) {}
+
+/**
+ * Draws a horizontal line at current position using an attributed character and max. n characters long 
+ *
+ * @return int
+ * @param  charattr int
+ * @param  n int
+ */
+function ncurses_hline($charattr, $n) {}
+
+/**
+ * Gets character and attribute at current position 
+ *
+ * @return string
+ */
+function ncurses_inch() {}
+
+/**
+ * Initializes ncurses 
+ *
+ * @return void
+ */
+function ncurses_init() {}
+
+/**
+ * Sets new RGB value for color 
+ *
+ * @return int
+ * @param  color int
+ * @param  r int
+ * @param  g int
+ * @param  b int
+ */
+function ncurses_init_color($color, $r, $g, $b) {}
+
+/**
+ * Allocates a color pair 
+ *
+ * @return int
+ * @param  pair int
+ * @param  fg int
+ * @param  bg int
+ */
+function ncurses_init_pair($pair, $fg, $bg) {}
+
+/**
+ * Inserts character moving rest of line including character at current position 
+ *
+ * @return int
+ * @param  character int
+ */
+function ncurses_insch($character) {}
+
+/**
+ * Inserts lines before current line scrolling down (negative numbers delete and scroll up) 
+ *
+ * @return int
+ * @param  count int
+ */
+function ncurses_insdelln($count) {}
+
+/**
+ * Inserts a line, move rest of screen down 
+ *
+ * @return bool
+ */
+function ncurses_insertln() {}
+
+/**
+ * Inserts string at current position, moving rest of line right 
+ *
+ * @return int
+ * @param  text string
+ */
+function ncurses_insstr($text) {}
+
+/**
+ * Reads string from terminal screen 
+ *
+ * @return int
+ * @param  buffer string
+ */
+function ncurses_instr(&$buffer) {}
+
+/**
+ * Ncurses is in endwin mode, normal screen output may be performed 
+ *
+ * @return bool
+ */
+function ncurses_isendwin() {}
+
+/**
+ * Enables or disable a keycode 
+ *
+ * @return int
+ * @param  keycode int
+ * @param  enable int
+ */
+function ncurses_keyok($keycode, $enable) {}
+
+/**
+ * Turns keypad on or off 
+ *
+ * @return int
+ * @param  window resource
+ * @param  bf bool
+ */
+function ncurses_keypad($window, $bf) {}
+
+/**
+ * Returns current line kill character 
+ *
+ * @return string
+ */
+function ncurses_killchar() {}
+
+/**
+ * Returns terminal description 
+ *
+ * @return string
+ */
+function ncurses_longname() {}
+
+/**
+ * Enables/Disable 8-bit meta key information 
+ *
+ * @return int
+ * @param  window resource
+ * @param  _8bit bool
+ */
+function ncurses_meta($window, $_8bit) {}
+
+/**
+ * Transforms coordinates 
+ *
+ * @return bool
+ * @param  y int
+ * @param  x int
+ * @param  toscreen bool
+ */
+function ncurses_mouse_trafo(&$y, &$x, $toscreen) {}
+
+/**
+ * Sets timeout for mouse button clicks 
+ *
+ * @return int
+ * @param  milliseconds int
+ */
+function ncurses_mouseinterval($milliseconds) {}
+
+/**
+ * Returns and sets mouse options 
+ *
+ * @return int
+ * @param  newmask int
+ * @param  oldmask int
+ */
+function ncurses_mousemask($newmask, &$oldmask) {}
+
+/**
+ * Moves output position 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ */
+function ncurses_move($y, $x) {}
+
+/**
+ * Moves a panel so that it's upper-left corner is at [startx, starty] 
+ *
+ * @return int
+ * @param  panel resource
+ * @param  startx int
+ * @param  starty int
+ */
+function ncurses_move_panel($panel, $startx, $starty) {}
+
+/**
+ * Moves current position and add character 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ * @param  c int
+ */
+function ncurses_mvaddch($y, $x, $c) {}
+
+/**
+ * Moves position and add attrributed string with specified length 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ * @param  s string
+ * @param  n int
+ */
+function ncurses_mvaddchnstr($y, $x, $s, $n) {}
+
+/**
+ * Moves position and add attributed string 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ * @param  s string
+ */
+function ncurses_mvaddchstr($y, $x, $s) {}
+
+/**
+ * Moves position and add string with specified length 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ * @param  s string
+ * @param  n int
+ */
+function ncurses_mvaddnstr($y, $x, $s, $n) {}
+
+/**
+ * Moves position and add string 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ * @param  s string
+ */
+function ncurses_mvaddstr($y, $x, $s) {}
+
+/**
+ * Moves cursor immediately 
+ *
+ * @return int
+ * @param  old_y int
+ * @param  old_x int
+ * @param  new_y int
+ * @param  new_x int
+ */
+function ncurses_mvcur($old_y, $old_x, $new_y, $new_x) {}
+
+/**
+ * Moves position and delete character, shift rest of line left 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ */
+function ncurses_mvdelch($y, $x) {}
+
+/**
+ * Moves position and get character at new position 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ */
+function ncurses_mvgetch($y, $x) {}
+
+/**
+ * Sets new position and draw a horizontal line using an attributed character and max. n characters long 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ * @param  attrchar int
+ * @param  n int
+ */
+function ncurses_mvhline($y, $x, $attrchar, $n) {}
+
+/**
+ * Moves position and get attributed character at new position 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ */
+function ncurses_mvinch($y, $x) {}
+
+/**
+ * Sets new position and draw a vertical line using an attributed character and max. n characters long 
+ *
+ * @return int
+ * @param  y int
+ * @param  x int
+ * @param  attrchar int
+ * @param  n int
+ */
+function ncurses_mvvline($y, $x, $attrchar, $n) {}
+
+/**
+ * Adds string at new position in window 
+ *
+ * @return int
+ * @param  window resource
+ * @param  y int
+ * @param  x int
+ * @param  text string
+ */
+function ncurses_mvwaddstr($window, $y, $x, $text) {}
+
+/**
+ * Sleep 
+ *
+ * @return int
+ * @param  milliseconds int
+ */
+function ncurses_napms($milliseconds) {}
+
+/**
+ * Create a new panel and associate it with window 
+ *
+ * @return resource
+ * @param  window resource
+ */
+function ncurses_new_panel($window) {}
+
+/**
+ * Creates a new pad (window) 
+ *
+ * @return resource
+ * @param  rows int
+ * @param  cols int
+ */
+function ncurses_newpad($rows, $cols) {}
+
+/**
+ * Creates a new window 
+ *
+ * @return resource
+ * @param  rows int
+ * @param  cols int
+ * @param  y int
+ * @param  x int
+ */
+function ncurses_newwin($rows, $cols, $y, $x) {}
+
+/**
+ * Translates newline and carriage return / line feed 
+ *
+ * @return bool
+ */
+function ncurses_nl() {}
+
+/**
+ * Switches terminal to cooked mode 
+ *
+ * @return bool
+ */
+function ncurses_nocbreak() {}
+
+/**
+ * Switches off keyboard input echo 
+ *
+ * @return bool
+ */
+function ncurses_noecho() {}
+
+/**
+ * Do not ranslate newline and carriage return / line feed 
+ *
+ * @return bool
+ */
+function ncurses_nonl() {}
+
+/**
+ * Do not flush on signal characters
+ *
+ * @return void
+ */
+function ncurses_noqiflush() {}
+
+/**
+ * Switches terminal out of raw mode 
+ *
+ * @return bool
+ */
+function ncurses_noraw() {}
+
+/**
+ * Gets the RGB value for color 
+ *
+ * @return int
+ * @param  pair int
+ * @param  f int
+ * @param  b int
+ */
+function ncurses_pair_content($pair, &$f, &$b) {}
+
+/**
+ * Returns the panel above panel. If panel is null, returns the bottom panel in the stack 
+ *
+ * @return resource
+ * @param  panel resource
+ */
+function ncurses_panel_above($panel) {}
+
+/**
+ * Returns the panel below panel. If panel is null, returns the top panel in the stack 
+ *
+ * @return resource
+ * @param  panel resource
+ */
+function ncurses_panel_below($panel) {}
+
+/**
+ * Returns the window associated with panel 
+ *
+ * @return resource
+ * @param  panel resource
+ */
+function ncurses_panel_window($panel) {}
+
+/**
+ * Copys a region from a pad into the virtual screen 
+ *
+ * @return int
+ * @param  pad resource
+ * @param  pminrow int
+ * @param  pmincol int
+ * @param  sminrow int
+ * @param  smincol int
+ * @param  smaxrow int
+ * @param  smaxcol int
+ */
+function ncurses_pnoutrefresh($pad, $pminrow, $pmincol, $sminrow, $smincol, $smaxrow, $smaxcol) {}
+
+/**
+ * Copys a region from a pad into the virtual screen 
+ *
+ * @return int
+ * @param  pad resource
+ * @param  pminrow int
+ * @param  pmincol int
+ * @param  sminrow int
+ * @param  smincol int
+ * @param  smaxrow int
+ * @param  smaxcol int
+ */
+function ncurses_prefresh($pad, $pminrow, $pmincol, $sminrow, $smincol, $smaxrow, $smaxcol) {}
+
+/**
+ * ??? 
+ *
+ * @return int
+ * @param  text string
+ */
+function ncurses_putp($text) {}
+
+/**
+ * Flushes on signal characters 
+ *
+ * @return void
+ */
+function ncurses_qiflush() {}
+
+/**
+ * Switches terminal into raw mode 
+ *
+ * @return bool
+ */
+function ncurses_raw() {}
+
+/**
+ * Refresh screen 
+ *
+ * @return int
+ * @param  ch int
+ */
+function ncurses_refresh($ch) {}
+
+/**
+ * Replaces the window associated with panel 
+ *
+ * @return int
+ * @param  panel resource
+ * @param  window resource
+ */
+function ncurses_replace_panel($panel, $window) {}
+
+/**
+ * Resets the prog mode saved by def_prog_mode 
+ *
+ * @return int
+ */
+function ncurses_reset_prog_mode() {}
+
+/**
+ * Resets the shell mode saved by def_shell_mode 
+ *
+ * @return int
+ */
+function ncurses_reset_shell_mode() {}
+
+/**
+ * Restores saved terminal state 
+ *
+ * @return bool
+ */
+function ncurses_resetty() {}
+
+/**
+ * Saves terminal state 
+ *
+ * @return bool
+ */
+function ncurses_savetty() {}
+
+/**
+ * Dumps screen content to file 
+ *
+ * @return int
+ * @param  filename string
+ */
+function ncurses_scr_dump($filename) {}
+
+/**
+ * Initializes screen from file dump 
+ *
+ * @return int
+ * @param  filename string
+ */
+function ncurses_scr_init($filename) {}
+
+/**
+ * Restores screen from file dump 
+ *
+ * @return int
+ * @param  filename string
+ */
+function ncurses_scr_restore($filename) {}
+
+/**
+ * Inherits screen from file dump 
+ *
+ * @return int
+ * @param  filename string
+ */
+function ncurses_scr_set($filename) {}
+
+/**
+ * Scrolls window content up or down without changing current position 
+ *
+ * @return int
+ * @param  count int
+ */
+function ncurses_scrl($count) {}
+
+/**
+ * Places an invisible panel on top of the stack, making it visible 
+ *
+ * @return int
+ * @param  panel resource
+ */
+function ncurses_show_panel($panel) {}
+
+/**
+ * Returns current soft label keys attribute 
+ *
+ * @return bool
+ */
+function ncurses_slk_attr() {}
+
+/**
+ * ??? 
+ *
+ * @return int
+ * @param  intarg int
+ */
+function ncurses_slk_attroff($intarg) {}
+
+/**
+ * ??? 
+ *
+ * @return int
+ * @param  intarg int
+ */
+function ncurses_slk_attron($intarg) {}
+
+/**
+ * ??? 
+ *
+ * @return int
+ * @param  intarg int
+ */
+function ncurses_slk_attrset($intarg) {}
+
+/**
+ * Clears soft label keys from screen 
+ *
+ * @return bool
+ */
+function ncurses_slk_clear() {}
+
+/**
+ * Sets color for soft label keys
+ *
+ * @return int
+ * @param  intarg int
+ */
+function ncurses_slk_color($intarg) {}
+
+/**
+ * Inits soft label keys 
+ *
+ * @return bool
+ * @param  intarg int
+ */
+function ncurses_slk_init($intarg) {}
+
+/**
+ * Copies soft label keys to virtual screen 
+ *
+ * @return bool
+ */
+function ncurses_slk_noutrefresh() {}
+
+/**
+ * Copies soft label keys to screen 
+ *
+ * @return bool
+ */
+function ncurses_slk_refresh() {}
+
+/**
+ * Restores soft label keys 
+ *
+ * @return bool
+ */
+function ncurses_slk_restore() {}
+
+/**
+ * Sets function key labels 
+ *
+ * @return bool
+ * @param  labelnr int
+ * @param  label string
+ * @param  format int
+ */
+function ncurses_slk_set($labelnr, $label, $format) {}
+
+/**
+ * Forces output when ncurses_slk_noutrefresh is performed 
+ *
+ * @return bool
+ */
+function ncurses_slk_touch() {}
+
+/**
+ * Stops using 'standout' attribute 
+ *
+ * @return int
+ */
+function ncurses_standend() {}
+
+/**
+ * Starts using 'standout' attribute 
+ *
+ * @return int
+ */
+function ncurses_standout() {}
+
+/**
+ * Starts using colors 
+ *
+ * @return int
+ */
+function ncurses_start_color() {}
+
+/**
+ * Returns a logical OR of all attribute flags supported by terminal 
+ *
+ * @return bool
+ */
+function ncurses_termattrs() {}
+
+/**
+ * Returns terminal name 
+ *
+ * @return string
+ */
+function ncurses_termname() {}
+
+/**
+ * Sets timeout for special key sequences 
+ *
+ * @return void
+ * @param  millisec int
+ */
+function ncurses_timeout($millisec) {}
+
+/**
+ * Moves a visible panel to the top of the stack 
+ *
+ * @return int
+ * @param  panel resource
+ */
+function ncurses_top_panel($panel) {}
+
+/**
+ * Specifys different filedescriptor for typeahead checking 
+ *
+ * @return int
+ * @param  fd int
+ */
+function ncurses_typeahead($fd) {}
+
+/**
+ * Puts a character back into the input stream 
+ *
+ * @return int
+ * @param  keycode int
+ */
+function ncurses_ungetch($keycode) {}
+
+/**
+ * Pushes mouse event to queue 
+ *
+ * @return bool
+ * @param  mevent array
+ */
+function ncurses_ungetmouse($mevent) {}
+
+/**
+ * Refreshes the virtual screen to reflect the relations between panels in the stack. 
+ *
+ * @return void
+ */
+function ncurses_update_panels() {}
+
+/**
+ * Assigns terminal default colors to color id -1 
+ *
+ * @return bool
+ */
+function ncurses_use_default_colors() {}
+
+/**
+ * Controls use of environment information about terminal size 
+ *
+ * @return void
+ * @param  flag int
+ */
+function ncurses_use_env($flag) {}
+
+/**
+ * Controls use of extended names in terminfo descriptions 
+ *
+ * @return int
+ * @param  flag bool
+ */
+function ncurses_use_extended_names($flag) {}
+
+/**
+ * ??? 
+ *
+ * @return int
+ * @param  intarg int
+ */
+function ncurses_vidattr($intarg) {}
+
+/**
+ * Draws a vertical line at current position using an attributed character and max. n characters long 
+ *
+ * @return int
+ * @param  charattr int
+ * @param  n int
+ */
+function ncurses_vline($charattr, $n) {}
+
+/**
+ * Adds character at current position in a window and advance cursor 
+ *
+ * @return int
+ * @param  window resource
+ * @param  ch int
+ */
+function ncurses_waddch($window, $ch) {}
+
+/**
+ * Outputs text at current postion in window 
+ *
+ * @return int
+ * @param  window resource
+ * @param  str string
+ * @param  n int[optional]
+ */
+function ncurses_waddstr($window, $str, $n = null) {}
+
+/**
+ * Turns off attributes for a window 
+ *
+ * @return int
+ * @param  window resource
+ * @param  attrs int
+ */
+function ncurses_wattroff($window, $attrs) {}
+
+/**
+ * Turns on attributes for a window 
+ *
+ * @return int
+ * @param  window resource
+ * @param  attrs int
+ */
+function ncurses_wattron($window, $attrs) {}
+
+/**
+ * Set the attributes for a window 
+ *
+ * @return int
+ * @param  window resource
+ * @param  attrs int
+ */
+function ncurses_wattrset($window, $attrs) {}
+
+/**
+ * Draws a border around the window using attributed characters 
+ *
+ * @return int
+ * @param  window resource
+ * @param  left int
+ * @param  right int
+ * @param  top int
+ * @param  bottom int
+ * @param  tl_corner int
+ * @param  tr_corner int
+ * @param  bl_corner int
+ * @param  br_corner int
+ */
+function ncurses_wborder($window, $left, $right, $top, $bottom, $tl_corner, $tr_corner, $bl_corner, $br_corner) {}
+
+/**
+ * Clears window 
+ *
+ * @return int
+ * @param  window resource
+ */
+function ncurses_wclear($window) {}
+
+/**
+ * Sets windows color pairings 
+ *
+ * @return int
+ * @param  window resource
+ * @param  color_pair int
+ */
+function ncurses_wcolor_set($window, $color_pair) {}
+
+/**
+ * Erase window contents 
+ *
+ * @return int
+ * @param  window resource
+ */
+function ncurses_werase($window) {}
+
+/**
+ * Reads a character from keyboard (window) 
+ *
+ * @return int
+ * @param  window resource
+ */
+function ncurses_wgetch($window) {}
+
+/**
+ * Draws a horizontal line in a window at current position using an attributed character and max. n characters long 
+ *
+ * @return int
+ * @param  window resource
+ * @param  charattr int
+ * @param  n int
+ */
+function ncurses_whline($window, $charattr, $n) {}
+
+/**
+ * Transforms window/stdscr coordinates 
+ *
+ * @return bool
+ * @param  window resource
+ * @param  y int
+ * @param  x int
+ * @param  toscreen bool
+ */
+function ncurses_wmouse_trafo($window, &$y, &$x, $toscreen) {}
+
+/**
+ * Moves windows output position 
+ *
+ * @return int
+ * @param  window resource
+ * @param  y int
+ * @param  x int
+ */
+function ncurses_wmove($window, $y, $x) {}
+
+/**
+ * Copies window to virtual screen 
+ *
+ * @return int
+ * @param  window resource
+ */
+function ncurses_wnoutrefresh($window) {}
+
+/**
+ * Refreshes window on terminal screen 
+ *
+ * @return int
+ * @param  window resource
+ */
+function ncurses_wrefresh($window) {}
+
+/**
+ * End standout mode for a window 
+ *
+ * @return int
+ * @param  window resource
+ */
+function ncurses_wstandend($window) {}
+
+/**
+ * Enter standout mode for a window 
+ *
+ * @return int
+ * @param  window resource
+ */
+function ncurses_wstandout($window) {}
+
+/**
+ * Draws a vertical line in a window at current position using an attributed character and max. n characters long 
+ *
+ * @return int
+ * @param  window resource
+ * @param  charattr int
+ * @param  n int
+ */
+function ncurses_wvline($window, $charattr, $n) {}
 
 /**
  * Move array argument's internal pointer to the next element and return it 
@@ -14965,6 +16188,24 @@ function ob_get_level() {}
 function ob_get_status($full_status = null) {}
 
 /**
+ * Encode str based on accept-encoding setting - designed to be called from ob_start() 
+ *
+ * @return string
+ * @param  str string
+ * @param  mode int
+ */
+function ob_gzhandler($str, $mode) {}
+
+/**
+ * Returns str in output buffer converted to the iconv.output_encoding character set 
+ *
+ * @return string
+ * @param  contents string
+ * @param  status int
+ */
+function ob_iconv_handler($contents, $status) {}
+
+/**
  * Turn implicit flush on/off and is equivalent to calling flush() after every output call 
  *
  * @return void
@@ -14985,9 +16226,9 @@ function ob_list_handlers() {}
  * @return bool
  * @param  user_function string|array[optional]
  * @param  chunk_size int[optional]
- * @param  flags int[optional]
+ * @param  erase bool[optional]
  */
-function ob_start($user_function = null, $chunk_size = null, $flags = null) {}
+function ob_start($user_function = null, $chunk_size = null, $erase = null) {}
 
 /**
  * Bind a PHP array to an Oracle PL/SQL type by name 
@@ -16247,14 +17488,6 @@ function odbc_tableprivileges($connection_id, $qualifier, $owner, $name) {}
  */
 function odbc_tables($connection_id, $qualifier = null, $owner = null, $name = null, $table_types = null) {}
 
-/**
- * Create new zip using source uri for output, return TRUE on success or the error code 
- *
- * @return mixed
- * @param  source string
- * @param  flags int[optional]
- */
-function open($source, $flags = null) {}
 
 /**
  * Open a directory and return a dir_handle 
@@ -16294,6 +17527,22 @@ function openssl_csr_export($csr, &$out, $notext = true) {}
  * @param  notext bool[optional]
  */
 function openssl_csr_export_to_file($csr, $outfilename, $notext = true) {}
+
+/**
+ * Returns the subject of a CERT or FALSE on error 
+ *
+ * @return mixed
+ * @param  csr mixed
+ */
+function openssl_csr_get_public_key($csr) {}
+
+/**
+ * Returns the subject of a CERT or FALSE on error 
+ *
+ * @return mixed
+ * @param  csr mixed
+ */
+function openssl_csr_get_subject($csr) {}
 
 /**
  * Generates a privkey and CSR 
@@ -16442,6 +17691,14 @@ function openssl_pkey_export_to_file($key, $outfilename, $passphrase = null, $co
  * @param  key int
  */
 function openssl_pkey_free($key) {}
+
+/**
+ * returns an array with the key details (bits, pkey, type)
+ *
+ * @return resource
+ * @param  key resource
+ */
+function openssl_pkey_get_details($key) {}
 
 /**
  * Gets private keys 
@@ -16610,7 +17867,7 @@ function openssl_x509_parse($x509, $shortnames = true) {}
 function openssl_x509_read($cert) {}
 
 /**
- * Returns the codepoint value of a character 
+ * Returns ASCII value of character 
  *
  * @return int
  * @param  character string
@@ -16772,7 +18029,7 @@ function parse_str($encoded_string, $result = null) {}
 /**
  * Parse a URL and return its components 
  *
- * @return array
+ * @return mixed
  * @param  url string
  * @param  url_component int[optional]
  */
@@ -17088,17 +18345,19 @@ function pg_errormessage($connection = null) {}
  * Escape binary for bytea type  
  *
  * @return string
+ * @param  connection resource[optional]
  * @param  data string
  */
-function pg_escape_bytea($data) {}
+function pg_escape_bytea($connection = null, $data) {}
 
 /**
  * Escape string for text/char type 
  *
  * @return string
+ * @param  connection resource[optional]
  * @param  data string
  */
-function pg_escape_string($data) {}
+function pg_escape_string($connection = null, $data) {}
 
 /**
  * Execute a query 
@@ -18177,6 +19436,15 @@ function posix_getsid() {}
 function posix_getuid() {}
 
 /**
+ * Calculate the group access list for the user specified in name. 
+ *
+ * @return bool
+ * @param  name string
+ * @param  base_group_id int
+ */
+function posix_initgroups($name, $base_group_id) {}
+
+/**
  * Determine if filedesc is a tty (POSIX.1, 4.7.1) 
  *
  * @return bool
@@ -18736,10 +20004,10 @@ function readdir($dir_handle = null) {}
  *
  * @return int
  * @param  filename string
- * @param  flags int[optional]
+ * @param  use_include_path bool[optional]
  * @param  context resource
  */
-function readfile($filename, $flags = null, $context) {}
+function readfile($filename, $use_include_path = null, $context) {}
 
 /**
  * Output a .gz-file 
@@ -18967,23 +20235,7 @@ function removeNamedItemNS($namespaceURI, $localName) {}
  */
 function rename($old_name, $new_name, $context) {}
 
-/**
- * Rename an entry selected by its index to new_name 
- *
- * @return resource
- * @param  index int
- * @param  new_name string
- */
-function renameIndex($index, $new_name) {}
 
-/**
- * Rename an entry selected by its name to new_name 
- *
- * @return resource
- * @param  name string
- * @param  new_name string
- */
-function renameName($name, $new_name) {}
 
 /**
  * Set array argument's internal pointer to the first element and return it 
@@ -19180,6 +20432,14 @@ function session_get_cookie_params() {}
 function session_id($newid = null) {}
 
 /**
+ * Checks if a variable is registered in session 
+ *
+ * @return bool
+ * @param  varname string
+ */
+function session_is_registered($varname) {}
+
+/**
  * Return the current module name used for accessing session data. If newname is given, the module name is replaced with newname 
  *
  * @return string
@@ -19202,6 +20462,15 @@ function session_name($newname = null) {}
  * @param  delete_old_session bool[optional]
  */
 function session_regenerate_id($delete_old_session = null) {}
+
+/**
+ * Adds varname(s) to the list of variables which are freezed at the session end 
+ *
+ * @return bool
+ * @param  var_names mixed
+ * @vararg ... mixed
+ */
+function session_register($var_names) {}
 
 /**
  * Return the current save path passed to module_name. If newname is given, the save path is replaced with newname 
@@ -19244,6 +20513,14 @@ function session_set_save_handler($open, $close, $read, $write, $destroy, $gc) {
 function session_start() {}
 
 /**
+ * Removes varname from the list of variables which are freezed at the session end 
+ *
+ * @return bool
+ * @param  varname string
+ */
+function session_unregister($varname) {}
+
+/**
  * Unset all registered variables 
  *
  * @return void
@@ -19257,32 +20534,8 @@ function session_unset() {}
  */
 function session_write_close() {}
 
-/**
- * Set or remove (NULL/'') the comment of the archive 
- *
- * @return resource
- * @param  name string
- * @param  comment string
- */
-function setArchiveComment($name, $comment) {}
 
-/**
- * Set or remove (NULL/'') the comment of an entry using its index 
- *
- * @return resource
- * @param  index int
- * @param  comment string
- */
-function setCommentIndex($index, $comment) {}
 
-/**
- * Set or remove (NULL/'') the comment of an entry using its Name 
- *
- * @return resource
- * @param  name string
- * @param  comment string
- */
-function setCommentName($name, $comment) {}
 
 /**
  * 
@@ -19333,6 +20586,14 @@ function set_file_buffer($fp, $buffer) {}
  * @param  new_include_path string
  */
 function set_include_path($new_include_path) {}
+
+/**
+ * Set the current active configuration setting of magic_quotes_runtime and return previous 
+ *
+ * @return bool
+ * @param  new_setting int
+ */
+function set_magic_quotes_runtime($new_setting) {}
 
 /**
  * Set blocking/non-blocking mode on a socket or stream 
@@ -20804,23 +22065,7 @@ function sscanf($str, $format) {}
  */
 function stat($filename) {}
 
-/**
- * Returns the zip entry informations using its index 
- *
- * @return resource
- * @param  index int
- * @param  flags int
- */
-function statIndex($index, $flags) {}
 
-/**
- * Returns the information about a the zip entry filename 
- *
- * @return resource
- * @param  filename string
- * @param  flags int
- */
-function statName($filename, $flags) {}
 
 /**
  * Replaces all occurrences of search in haystack with replace / case-insensitive 
@@ -20914,9 +22159,8 @@ function strcasecmp($str1, $str2) {}
  * @return string
  * @param  haystack string
  * @param  needle string
- * @param  part bool
  */
-function strchr($haystack, $needle, $part) {}
+function strchr($haystack, $needle) {}
 
 /**
  * Binary safe string comparison 
@@ -20987,9 +22231,8 @@ function stream_bucket_prepend($brigade, $bucket) {}
  *
  * @return resource
  * @param  options array[optional]
- * @param  params array
  */
-function stream_context_create($options = null, $params) {}
+function stream_context_create($options = null) {}
 
 /**
  * Get a handle on the default file/stream context and optionally set parameters 
@@ -21037,15 +22280,6 @@ function stream_context_set_params($context, $options) {}
  * @param  pos long[optional]
  */
 function stream_copy_to_stream($source, $dest, $maxlen = null, $pos = null) {}
-
-/**
- * 
- *
- * @return void
- * @param  stream resource
- * @param  encoding string
- */
-function stream_encoding($stream, $encoding) {}
 
 /**
  * Append a filter to a stream 
@@ -21318,7 +22552,7 @@ function strip_tags($str, $allowable_tags = null) {}
  * Strips backslashes from a string. Uses C-style conventions 
  *
  * @return string
- * @param  str binary
+ * @param  str string
  */
 function stripcslashes($str) {}
 
@@ -21346,9 +22580,8 @@ function stripslashes($str) {}
  * @return string
  * @param  haystack string
  * @param  needle string
- * @param  part bool
  */
-function stristr($haystack, $needle, $part) {}
+function stristr($haystack, $needle) {}
 
 /**
  * Get string length 
@@ -21410,7 +22643,7 @@ function strpbrk($haystack, $char_list) {}
  *
  * @return int
  * @param  haystack string
- * @param  needle mixed
+ * @param  needle string
  * @param  offset int[optional]
  */
 function strpos($haystack, $needle, $offset = null) {}
@@ -21478,9 +22711,8 @@ function strspn($str, $mask, $start = null, $len = null) {}
  * @return string
  * @param  haystack string
  * @param  needle string
- * @param  part bool
  */
-function strstr($haystack, $needle, $part) {}
+function strstr($haystack, $needle) {}
 
 /**
  * Tokenize a string 
@@ -21507,14 +22739,6 @@ function strtolower($str) {}
  * @param  now int[optional]
  */
 function strtotime($time, $now = null) {}
-
-/**
- * Makes a string titlecase 
- *
- * @return string
- * @param  str string
- */
-function strtotitle($str) {}
 
 /**
  * Makes a string uppercase 
@@ -21589,7 +22813,7 @@ function substr_replace($str, $repl, $start, $length = null) {}
 /**
  * Returns a SWFPrebuiltClip object 
  *
- * @return void
+ * @return class
  * @param  file unknown[optional]
  */
 function swfprebuiltclip_init($file = null) {}
@@ -21597,7 +22821,7 @@ function swfprebuiltclip_init($file = null) {}
 /**
  * Returns a SWVideoStream object 
  *
- * @return void
+ * @return class
  * @param  file unknown[optional]
  */
 function swfvideostream_init($file = null) {}
@@ -21829,11 +23053,11 @@ function sybase_unbuffered_query($query, $link_id = null) {}
 function symlink($target, $link) {}
 
 /**
- * Returns directory path used for temporary files 
+ * 
  *
- * @return string
+ * @return array
  */
-function sys_get_temp_dir() {}
+function sys_getloadavg() {}
 
 /**
  * Generate a system log message 
@@ -21930,7 +23154,7 @@ function tidy_error_count() {}
 function tidy_get_body($tidy) {}
 
 /**
- * Get current Tidy configuration 
+ * Get current Tidy configuarion 
  *
  * @return array
  */
@@ -22011,11 +23235,18 @@ function tidy_get_status() {}
 function tidy_getopt($option) {}
 
 /**
- * Indicates if the document is a generic (non HTML/XHTML) XML document. 
+ * Indicates if the document is a XHTML document. 
  *
  * @return bool
  */
 function tidy_is_xhtml() {}
+
+/**
+ * Indicates if the document is a generic (non HTML/XHTML) XML document. 
+ *
+ * @return bool
+ */
+function tidy_is_xml() {}
 
 /**
  * Parse markup in file or URI 
@@ -22095,6 +23326,13 @@ function time_sleep_until($timestamp) {}
  *
  * @return array
  */
+function timezone_abbreviations_list() {}
+
+/**
+ * 
+ *
+ * @return array
+ */
 function timezone_identifiers_list() {}
 
 /**
@@ -22118,7 +23356,7 @@ function timezone_name_get($object) {}
 /**
  * 
  *
- * @return long
+ * @return int
  * @param  object DateTimeZone
  * @param  object DateTime
  */
@@ -22196,9 +23434,9 @@ function trim($str, $character_mask = null) {}
  *
  * @return bool
  * @param  array_arg array
- * @param  comparator mixed
+ * @param  cmp_function string
  */
-function uasort($array_arg, $comparator) {}
+function uasort($array_arg, $cmp_function) {}
 
 /**
  * Makes a string's first character uppercase 
@@ -22221,9 +23459,9 @@ function ucwords($str) {}
  *
  * @return bool
  * @param  array_arg array
- * @param  comparator mixed
+ * @param  cmp_function string
  */
-function uksort($array_arg, $comparator) {}
+function uksort($array_arg, $cmp_function) {}
 
 /**
  * Return or change the umask 
@@ -22233,87 +23471,8 @@ function uksort($array_arg, $comparator) {}
  */
 function umask($mask = null) {}
 
-/**
- * Revert all global changes to the archive archive.  For now, this only reverts archive comment changes. 
- *
- * @return resource
- */
-function unchangeAll() {}
 
-/**
- * Changes to the file at position index are reverted 
- *
- * @return resource
- * @param  index int
- */
-function unchangeIndex($index) {}
 
-/**
- * Changes to the file named 'name' are reverted 
- *
- * @return resource
- * @param  name string
- */
-function unchangeName($name) {}
-
-/**
- * Takes a binary string converts it to a Unicode string using the specifed encoding 
- *
- * @return unicode
- * @param  input binary
- * @param  encoding string
- * @param  flags int[optional]
- */
-function unicode_decode($input, $encoding, $flags = null) {}
-
-/**
- * Takes a Unicode string and converts it to a binary string using the specified encoding 
- *
- * @return string
- * @param  input unicode
- * @param  encoding string
- * @param  flags int[optional]
- */
-function unicode_encode($input, $encoding, $flags = null) {}
-
-/**
- * Returns global conversion error mode for the specified conversion direction 
- *
- * @return int
- * @param  direction int
- */
-function unicode_get_error_mode($direction) {}
-
-/**
- * Returns global substitution character for conversion from Unicode to codepage 
- *
- * @return string
- */
-function unicode_get_subst_char() {}
-
-/**
- * Check whether unicode semantics are enabled 
- *
- * @return bool
- */
-function unicode_semantics() {}
-
-/**
- * Sets global conversion error mode for the specified conversion direction 
- *
- * @return bool
- * @param  direction int
- * @param  mode int
- */
-function unicode_set_error_mode($direction, $mode) {}
-
-/**
- * Sets global substitution character for conversion from Unicode to codepage 
- *
- * @return bool
- * @param  character string
- */
-function unicode_set_subst_char($character) {}
 
 /**
  * Generates a unique ID 
@@ -22391,14 +23550,6 @@ function urldecode($str) {}
 function urlencode($str) {}
 
 /**
- * 
- *
- * @return bool
- * @param  on bool[optional]
- */
-function use_soap_error_handler($on = null) {}
-
-/**
  * Generates a user-level error/warning/notice message 
  *
  * @return bool
@@ -22420,9 +23571,9 @@ function usleep($micro_seconds) {}
  *
  * @return bool
  * @param  array_arg array
- * @param  comparator mixed
+ * @param  cmp_function string
  */
-function usort($array_arg, $comparator) {}
+function usort($array_arg, $cmp_function) {}
 
 /**
  * Converts a UTF-8 encoded string to ISO-8859-1 
@@ -22456,14 +23607,6 @@ function var_dump($var) {}
  * @param  return bool[optional]
  */
 function var_export($var, $return = null) {}
-
-/**
- * Dumps a string representation of variable to output (verbose form) 
- *
- * @return void
- * @param  var mixed
- */
-function var_inspect($var) {}
 
 /**
  * Returns the absolute value of a variant 
@@ -22851,7 +23994,7 @@ function vsprintf($format, $args) {}
 function wddx_add_vars($packet_id, $var_names) {}
 
 /**
- * Unserializes given packet and returns a PHP value 
+ * Deserializes given packet and returns a PHP value 
  *
  * @return mixed
  * @param  packet mixed
@@ -22891,14 +24034,6 @@ function wddx_serialize_value($var, $comment = null) {}
  * @vararg ... mixed
  */
 function wddx_serialize_vars($var_name) {}
-
-/**
- * Unserializes given packet and returns a PHP value 
- *
- * @return mixed
- * @param  packet mixed
- */
-function wddx_unserialize($packet) {}
 
 /**
  * Wraps buffer to selected number of characters using string break char 
@@ -23338,9 +24473,10 @@ function xmlwriter_open_memory() {}
  * Create new xmlwriter using source uri for output 
  *
  * @return resource
+ * @param  xmlwriter resource
  * @param  source string
  */
-function xmlwriter_open_uri($source) {}
+function xmlwriter_open_uri($xmlwriter, $source) {}
 
 /**
  * Output current buffer as string 
@@ -23839,7 +24975,7 @@ function zip_close($zip) {}
 /**
  * Close a zip entry 
  *
- * @return void
+ * @return bool
  * @param  zip_ent resource
  */
 function zip_entry_close($zip_ent) {}
@@ -23892,14 +25028,13 @@ function zip_entry_open($zip_dp, $zip_entry, $mode = null) {}
  * @return string
  * @param  zip_entry resource
  * @param  len int[optional]
- * @param  mode int[optional]
  */
-function zip_entry_read($zip_entry, $len = null, $mode = null) {}
+function zip_entry_read($zip_entry, $len = null) {}
 
 /**
  * Create new zip using source uri for output 
  *
- * @return resource
+ * @return mixed
  * @param  filename string
  */
 function zip_open($filename) {}
@@ -23907,30 +25042,10 @@ function zip_open($filename) {}
 /**
  * Returns the next file in the archive 
  *
- * @return resource
+ * @return mixed
  * @param  zip resource
- * @param  flags int[optional]
  */
-function zip_read($zip, $flags = null) {}
-
-/**
- * Uncompress any raw/gzip/zlib encoded data 
- *
- * @return string
- * @param  data string
- * @param  max_decoded_len int
- */
-function zlib_decode($data, $max_decoded_len) {}
-
-/**
- * Compress data with the specified encoding 
- *
- * @return string
- * @param  data string
- * @param  encoding int
- * @param  level int[optional]
- */
-function zlib_encode($data, $encoding, $level = -1) {}
+function zip_read($zip) {}
 
 /**
  * Returns the coding type used for output compression 
@@ -24440,6 +25555,163 @@ class ApacheRequest {
 
 };
 
+class PDO {
+    /**
+     * Creates a new large object, returning its identifier.  Must be called inside a transaction. 
+     *
+     * @return string
+     */
+    function pgsqlLOBCreate() {}
+
+    /**
+     * Opens an existing large object stream.  Must be called inside a transaction. 
+     *
+     * @return resource
+     * @param  oid string
+     * @param  mode string[optional]
+     */
+    function pgsqlLOBOpen($oid, $mode = 'rb') {}
+
+    /**
+     * Deletes the large object identified by oid.  Must be called inside a transaction. 
+     *
+     * @return bool
+     * @param  oid string
+     */
+    function pgsqlLOBUnlink($oid) {}
+
+    /**
+     * 
+     *
+     * @return PDO
+     * @param  dsn string
+     * @param  username string
+     * @param  passwd string
+     * @param  options array[optional]
+     */
+    function __construct($dsn, $username, $passwd, $options = null) {}
+
+    /**
+     * Prepares a statement for execution and returns a statement object 
+     *
+     * @return PDOStatement
+     * @param  statment string
+     * @param  options array[optional]
+     */
+    function prepare($statment, $options = null) {}
+
+    /**
+     * Initiates a transaction 
+     *
+     * @return bool
+     */
+    function beginTransaction() {}
+
+    /**
+     * Commit a transaction 
+     *
+     * @return bool
+     */
+    function commit() {}
+
+    /**
+     * roll back a transaction 
+     *
+     * @return bool
+     */
+    function rollBack() {}
+
+    /**
+     * Set an attribute 
+     *
+     * @return bool
+     * @param  attribute long
+     * @param  value mixed
+     */
+    function setAttribute($attribute, $value) {}
+
+    /**
+     * Get an attribute 
+     *
+     * @return mixed
+     * @param  attribute long
+     */
+    function getAttribute($attribute) {}
+
+    /**
+     * Execute a query that does not return a row set, returning the number of affected rows 
+     *
+     * @return int
+     * @param  query string
+     */
+    function exec($query) {}
+
+    /**
+     * Returns the id of the last row that we affected on this connection.  Some databases require a sequence or table name to be passed in.  Not always meaningful. 
+     *
+     * @return string
+     * @param  seqname string[optional]
+     */
+    function lastInsertId($seqname = null) {}
+
+    /**
+     * Fetch the error code associated with the last operation on the database handle 
+     *
+     * @return string
+     */
+    function errorCode() {}
+
+    /**
+     * Fetch extended error information associated with the last operation on the database handle 
+     *
+     * @return array
+     */
+    function errorInfo() {}
+
+    /**
+     * Prepare and execute $sql; returns the statement object for iteration 
+     *
+     * @return bool
+     * @param  sql string
+     * @param  args PDOStatement::setFetchMode()[optional]
+     */
+    function query($sql, $args = null) {}
+
+    /**
+     * quotes string for use in a query.  The optional paramtype acts as a hint for drivers that have alternate quoting styles.  The default value is PDO_PARAM_STR 
+     *
+     * @return string
+     * @param  string string
+     * @param  paramtype int[optional]
+     */
+    function quote($string, $paramtype = null) {}
+
+    /**
+     * Prevents use of a PDO instance that has been unserialized 
+     *
+     * @return int
+     */
+    function __wakeup() {}
+
+    /**
+     * Prevents serialization of a PDO instance 
+     *
+     * @return int
+     */
+    function __sleep() {}
+
+    /**
+     * Execute an external program 
+     *
+     * @return string
+     * @param  command string
+     * @param  output array[optional]
+     * @param  return_value int[optional]
+     */
+    function exec($command, &$output, &$return_value) {}
+
+};
+
 class DOMAttr {
     /**
      * 
@@ -24495,7 +25767,7 @@ class DOMDocument {
     /**
      * Register extended class used to create base node type 
      *
-     * @return boolean
+     * @return bool
      * @param  baseclass string
      * @param  extendedclass string
      */
@@ -25965,13 +27237,6 @@ class ReflectionProperty {
     function isDefault() {}
 
     /**
-     * Returns the default value of the property. 
-     *
-     * @return mixed
-     */
-    function getDefaultValue() {}
-
-    /**
      * Returns a bitfield of the access modifiers for this property 
      *
      * @return int
@@ -26360,144 +27625,6 @@ class tidyNode {
      */
     function isPhp() {}
 
-    /**
-     * Returns the parent node if available or NULL 
-     *
-     * @return tidyNode
-     */
-    function getParent() {}
-
-};
-
-class TextIterator {
-    /**
-     * TextIterator constructor 
-     *
-     * @return TextIterator
-     * @param  text unicode
-     * @param  flags int[optional]
-     * @param  locale string[optional]
-     */
-    function __construct($text, $flags = TextIterator::CODEPOINT, $locale = null) {}
-
-    /**
-     * Returns the element at the current boundary 
-     *
-     * @return unicode
-     */
-    function current() {}
-
-    /**
-     * Advances to the n'th text boundary following the current one and returns its offset 
-     *
-     * @return int
-     * @param  n int[optional]
-     */
-    function next($n = null) {}
-
-    /**
-     * Returns the number boundaries iterated through 
-     *
-     * @return int
-     */
-    function key() {}
-
-    /**
-     * Determines validity of the iterator 
-     *
-     * @return bool
-     */
-    function valid() {}
-
-    /**
-     * Positions iterator at the first character in the text and returns the offset 
-     *
-     * @return int
-     */
-    function first() {}
-
-    /**
-     * Positions iterator beyond the last character in the text and returns the offset 
-     *
-     * @return int
-     */
-    function last() {}
-
-    /**
-     * Returns the offset of the current text boundary 
-     *
-     * @return int
-     */
-    function offset() {}
-
-    /**
-     * Advances to the n'th text boundary preceding the current one and returns its offset 
-     *
-     * @return int
-     * @param  n int[optional]
-     */
-    function previous($n = null) {}
-
-    /**
-     * Advances to the text boundary following the specified offset and returns its offset 
-     *
-     * @return int
-     * @param  offset int
-     */
-    function following($offset) {}
-
-    /**
-     * Advances to the text boundary preceding the specified offset and returns its offset 
-     *
-     * @return int
-     * @param  offset int
-     */
-    function preceding($offset) {}
-
-    /**
-     * Determines whether specified offset is a text boundary 
-     *
-     * @return bool
-     * @param  offset int
-     */
-    function isBoundary($offset) {}
-
-    /**
-     * Returns locales for which text boundary information is available 
-     *
-     * @return array
-     */
-    function getAvailableLocales() {}
-
-    /**
-     * Return the status from the break rule that determined the most recent boundary 
-     *
-     * @return int
-     */
-    function getRuleStatus() {}
-
-    /**
-     * Return the statuses from the break rules that determined the most recent boundary 
-     *
-     * @return array
-     */
-    function getRuleStatusArray() {}
-
-    /**
-     * Return all text pieces determined by the text boundaries 
-     *
-     * @return array
-     */
-    function getAll() {}
-
-    /**
-     * Rewind the position of a file pointer 
-     *
-     * @return bool
-     * @param  fp resource
-     */
-    function rewind($fp) {}
-
 };
 
 class SplObjectStorage {
@@ -26879,12 +28006,15 @@ class RecursiveDirectoryIterator {
 
 class SplFileObject {
     /**
-     * Construct a new temp file object 
+     * Construct a new file object 
      *
      * @return SplFileObject
-     * @param  max_memory int[optional]
+     * @param  filename string
+     * @param  mode string[optional]
+     * @param  use_include_path bool[optional]
+     * @param  context resource[optional]
      */
-    function __construct($max_memory = null) {}
+    function __construct($filename, $mode = 'r', $use_include_path = null, $context = null) {}
 
     /**
      * Rewind the file and read the first line 
@@ -26892,13 +28022,6 @@ class SplFileObject {
      * @return void
      */
     function rewind() {}
-
-    /**
-     * Return the filename 
-     *
-     * @return string
-     */
-    function getFilename() {}
 
     /**
      * Return whether end of file is reached 
@@ -27109,6 +28232,17 @@ class SplFileObject {
 
 };
 
+class SplTempFileObject {
+    /**
+     * Construct a new temp file object 
+     *
+     * @return SplTempFileObject
+     * @param  max_memory int[optional]
+     */
+    function __construct($max_memory = null) {}
+
+};
+
 class ArrayObject {
     /**
      * 
@@ -27121,7 +28255,7 @@ class ArrayObject {
     /**
      * 
      *
-     * @return bool
+     * @return mixed
      * @param  index mixed
      */
     function offsetGet($index) {}
@@ -27617,12 +28751,20 @@ class RegexIterator {
     function getFlags() {}
 
     /**
-     * Set PREG flags 
+     * Set operation flags 
      *
      * @return bool
      * @param  new_flags int
      */
     function setFlags($new_flags) {}
+
+    /**
+     * Set PREG flags 
+     *
+     * @return bool
+     * @param  new_flags int
+     */
+    function setPregFlags($new_flags) {}
 
 };
 
@@ -27793,8 +28935,9 @@ class CachingIterator {
      * Set the internal flags 
      *
      * @return void
+     * @param  flags int
      */
-    function setFlags() {}
+    function setFlags($flags) {}
 
 };
 
@@ -28046,139 +29189,6 @@ class SimpleXMLIterator {
      * @return int
      */
     function count() {}
-
-};
-
-class PDO {
-    /**
-     * 
-     *
-     * @return PDO
-     * @param  dsn string
-     * @param  username string
-     * @param  passwd string
-     * @param  options array[optional]
-     */
-    function __construct($dsn, $username, $passwd, $options = null) {}
-
-    /**
-     * Prepares a statement for execution and returns a statement object 
-     *
-     * @return PDOStatement
-     * @param  statment string
-     * @param  options array[optional]
-     */
-    function prepare($statment, $options = null) {}
-
-    /**
-     * Initiates a transaction 
-     *
-     * @return bool
-     */
-    function beginTransaction() {}
-
-    /**
-     * Commit a transaction 
-     *
-     * @return bool
-     */
-    function commit() {}
-
-    /**
-     * roll back a transaction 
-     *
-     * @return bool
-     */
-    function rollBack() {}
-
-    /**
-     * Set an attribute 
-     *
-     * @return bool
-     * @param  attribute long
-     * @param  value mixed
-     */
-    function setAttribute($attribute, $value) {}
-
-    /**
-     * Get an attribute 
-     *
-     * @return mixed
-     * @param  attribute long
-     */
-    function getAttribute($attribute) {}
-
-    /**
-     * Execute a query that does not return a row set, returning the number of affected rows 
-     *
-     * @return int
-     * @param  query string
-     */
-    function exec($query) {}
-
-    /**
-     * Returns the id of the last row that we affected on this connection.  Some databases require a sequence or table name to be passed in.  Not always meaningful. 
-     *
-     * @return string
-     * @param  seqname string[optional]
-     */
-    function lastInsertId($seqname = null) {}
-
-    /**
-     * Fetch the error code associated with the last operation on the database handle 
-     *
-     * @return string
-     */
-    function errorCode() {}
-
-    /**
-     * Fetch extended error information associated with the last operation on the database handle 
-     *
-     * @return array
-     */
-    function errorInfo() {}
-
-    /**
-     * Prepare and execute $sql; returns the statement object for iteration 
-     *
-     * @return bool
-     * @param  sql string
-     * @param  args PDOStatement::setFetchMode()[optional]
-     */
-    function query($sql, $args = null) {}
-
-    /**
-     * quotes string for use in a query.  The optional paramtype acts as a hint for drivers that have alternate quoting styles.  The default value is PDO_PARAM_STR 
-     *
-     * @return string
-     * @param  string string
-     * @param  paramtype int[optional]
-     */
-    function quote($string, $paramtype = null) {}
-
-    /**
-     * Prevents use of a PDO instance that has been unserialized 
-     *
-     * @return int
-     */
-    function __wakeup() {}
-
-    /**
-     * Prevents serialization of a PDO instance 
-     *
-     * @return int
-     */
-    function __sleep() {}
-
-    /**
-     * Execute an external program 
-     *
-     * @return string
-     * @param  command string
-     * @param  output array[optional]
-     * @param  return_value int[optional]
-     */
-    function exec($command, &$output, &$return_value) {}
 
 };
 
@@ -28496,14 +29506,6 @@ class SoapServer {
      */
     function fault($code, $string, $actor = null, $details = null, $name = null) {}
 
-    /**
-     * Adds one SOAP header into response 
-     *
-     * @return unknown
-     * @param  header SoapHeader
-     */
-    function addSoapHeader($header) {}
-
 };
 
 class SoapClient {
@@ -28585,13 +29587,6 @@ class SoapClient {
      * @param  value strung[optional]
      */
     function __setCookie($name, $value = null) {}
-
-    /**
-     * Returns array of cookies. 
-     *
-     * @return array
-     */
-    function __getCookies() {}
 
     /**
      * 
@@ -29267,12 +30262,13 @@ class swfmovie {
     function setFrames($frames) {}
 
     /**
-     * Sets sound stream of the SWF movie. The parameter can be stream or string. 
+     * Sets sound stream of the SWF movie. The parameter can be stream or string. Retuens the number of frames. 
      *
-     * @return void
+     * @return int
      * @param  file mixed
+     * @param  skip float[optional]
      */
-    function streamMP3($file) {}
+    function streamMP3($file, $skip = null) {}
 
 };
 
@@ -29733,6 +30729,82 @@ class DateTime {
      */
     function __construct($time = null, $object) {}
 
+    /**
+     * 
+     *
+     * @return string
+     * @param  object DateTime
+     * @param  format string
+     */
+    function format($object, $format) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  modify string
+     */
+    function modify($object, $modify) {}
+
+    /**
+     * 
+     *
+     * @return DateTimeZone
+     * @param  object DateTime
+     */
+    function getTimezone($object) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  object DateTimeZone
+     */
+    function setTimezone($object, $object) {}
+
+    /**
+     * 
+     *
+     * @return int
+     * @param  object DateTime
+     */
+    function getOffset($object) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  hour long
+     * @param  minute long
+     * @param  second long
+     */
+    function setTime($object, $hour, $minute, $second) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  year long
+     * @param  month long
+     * @param  day long
+     */
+    function setDate($object, $year, $month, $day) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  year long
+     * @param  week long
+     * @param  day long
+     */
+    function setISODate($object, $year, $week, $day) {}
+
 };
 
 class DateTimeZone {
@@ -29743,6 +30815,45 @@ class DateTimeZone {
      * @param  timezone string
      */
     function __construct($timezone) {}
+
+    /**
+     * 
+     *
+     * @return string
+     * @param  object DateTimeZone
+     */
+    function getName($object) {}
+
+    /**
+     * 
+     *
+     * @return int
+     * @param  object DateTimeZone
+     * @param  object DateTime
+     */
+    function getOffset($object, $object) {}
+
+    /**
+     * 
+     *
+     * @return array
+     * @param  object DateTimeZone
+     */
+    function getTransitions($object) {}
+
+    /**
+     * 
+     *
+     * @return array
+     */
+    function listAbbreviations() {}
+
+    /**
+     * 
+     *
+     * @return array
+     */
+    function listIdentifiers() {}
 
 };
 
@@ -29847,14 +30958,213 @@ class SimpleXMLElement {
 
 };
 
-class ReverseTextIterator {
+class ZipArchive {
     /**
-     * Rewind the position of a file pointer 
+     * Create new zip using source uri for output, return TRUE on success or the error code 
+     *
+     * @return mixed
+     * @param  source string
+     * @param  flags int[optional]
+     */
+    function open($source, $flags = null) {}
+
+    /**
+     * close the zip archive 
      *
      * @return bool
-     * @param  fp resource
      */
-    function rewind($fp) {}
+    function close() {}
+
+    /**
+     * Add a file using content and the entry name 
+     *
+     * @return bool
+     * @param  name string
+     * @param  content string
+     */
+    function addFromString($name, $content) {}
+
+    /**
+     * Add a file in a Zip archive using its path and the name to use. 
+     *
+     * @return bool
+     * @param  filepath string
+     * @param  entryname string
+     * @param  start int
+     * @param  length int[optional]
+     */
+    function addFile($filepath, $entryname, $start, $length = null) {}
+
+    /**
+     * Rename an entry selected by its index to new_name 
+     *
+     * @return bool
+     * @param  index int
+     * @param  new_name string
+     */
+    function renameIndex($index, $new_name) {}
+
+    /**
+     * Rename an entry selected by its name to new_name 
+     *
+     * @return bool
+     * @param  name string
+     * @param  new_name string
+     */
+    function renameName($name, $new_name) {}
+
+    /**
+     * Set or remove (NULL/'') the comment of the archive 
+     *
+     * @return bool
+     * @param  name string
+     * @param  comment string
+     */
+    function setArchiveComment($name, $comment) {}
+
+    /**
+     * Returns the comment of an entry using its index 
+     *
+     * @return string
+     */
+    function getArchiveComment() {}
+
+    /**
+     * Set or remove (NULL/'') the comment of an entry using its index 
+     *
+     * @return bool
+     * @param  index int
+     * @param  comment string
+     */
+    function setCommentIndex($index, $comment) {}
+
+    /**
+     * Set or remove (NULL/'') the comment of an entry using its Name 
+     *
+     * @return bool
+     * @param  name string
+     * @param  comment string
+     */
+    function setCommentName($name, $comment) {}
+
+    /**
+     * Returns the comment of an entry using its index 
+     *
+     * @return string
+     * @param  index int
+     */
+    function getCommentIndex($index) {}
+
+    /**
+     * Returns the comment of an entry using its name 
+     *
+     * @return string
+     * @param  name string
+     */
+    function getCommentName($name) {}
+
+    /**
+     * Delete a file using its index 
+     *
+     * @return bool
+     * @param  index int
+     */
+    function deleteIndex($index) {}
+
+    /**
+     * Delete a file using its index 
+     *
+     * @return bool
+     * @param  name string
+     */
+    function deleteName($name) {}
+
+    /**
+     * Returns the information about a the zip entry filename 
+     *
+     * @return array
+     * @param  filename string
+     * @param  flags int
+     */
+    function statName($filename, $flags) {}
+
+    /**
+     * Returns the zip entry informations using its index 
+     *
+     * @return resource
+     * @param  index int
+     * @param  flags int
+     */
+    function statIndex($index, $flags) {}
+
+    /**
+     * Returns the index of the entry named filename in the archive 
+     *
+     * @return int
+     * @param  filename string
+     * @param  flags int
+     */
+    function locateName($filename, $flags) {}
+
+    /**
+     * Returns the name of the file at position index 
+     *
+     * @return string
+     * @param  index int
+     * @param  flags int[optional]
+     */
+    function getNameIndex($index, $flags = null) {}
+
+    /**
+     * Revert all global changes to the archive archive.  For now, this only reverts archive comment changes. 
+     *
+     * @return bool
+     */
+    function unchangeAll() {}
+
+    /**
+     * Changes to the file at position index are reverted 
+     *
+     * @return bool
+     * @param  index int
+     */
+    function unchangeIndex($index) {}
+
+    /**
+     * Changes to the file named 'name' are reverted 
+     *
+     * @return bool
+     * @param  name string
+     */
+    function unchangeName($name) {}
+
+    /**
+     * get the contents of an entry using its name 
+     *
+     * @return string
+     * @param  entryname string
+     * @param  len int
+     * @param  flags int[optional]
+     */
+    function getFromName($entryname, $len, $flags = null) {}
+
+    /**
+     * get the contents of an entry using its index 
+     *
+     * @return string
+     * @param  entryname string
+     * @param  len int
+     * @param  flags int[optional]
+     */
+    function getFromIndex($entryname, $len, $flags = null) {}
+
+    /**
+     * get a stream for an entry using its name 
+     *
+     * @return resource
+     * @param  entryname string
+     */
+    function getStream($entryname) {}
 
 };
 
@@ -30108,9 +31418,10 @@ class XMLWriter {
      * Create new xmlwriter using source uri for output 
      *
      * @return resource
+     * @param  xmlwriter resource
      * @param  source string
      */
-    function openUri($source) {}
+    function openUri($xmlwriter, $source) {}
 
     /**
      * Create new xmlwriter using memory for string output 
@@ -31395,7 +32706,7 @@ class mysqli_result {
     /**
      * Fetch a result row as an object 
      *
-     * @return mixed
+     * @return object
      * @param  result object
      * @param  class_name string[optional]
      * @param  ctor_params NULL|array[optional]
@@ -31514,6 +32825,14 @@ class mysqli_stmt {
     function fetch($stmt) {}
 
     /**
+     * 
+     *
+     * @return object
+     * @param  link object
+     */
+    function get_warnings($link) {}
+
+    /**
      * return result set from statement 
      *
      * @return mysqli_result
@@ -31528,6 +32847,16 @@ class mysqli_stmt {
      * @param  stmt object
      */
     function num_rows($stmt) {}
+
+    /**
+     * 
+     *
+     * @return bool
+     * @param  stmt object
+     * @param  param_nr int
+     * @param  data string
+     */
+    function send_long_data($stmt, $param_nr, $data) {}
 
     /**
      * Prepare a SQL statement for execution 
@@ -31894,7 +33223,7 @@ class tidy {
     function getRelease() {}
 
     /**
-     * Get current Tidy configuration 
+     * Get current Tidy configuarion 
      *
      * @return array
      */
@@ -31924,11 +33253,18 @@ class tidy {
     function getOptDoc($resource, $optname) {}
 
     /**
-     * Indicates if the document is a generic (non HTML/XHTML) XML document. 
+     * Indicates if the document is a XHTML document. 
      *
      * @return bool
      */
     function isXhtml() {}
+
+    /**
+     * Indicates if the document is a generic (non HTML/XHTML) XML document. 
+     *
+     * @return bool
+     */
+    function isXml() {}
 
     /**
      * Returns a TidyNode Object representing the root of the tidy parse tree 
@@ -32056,7 +33392,32 @@ define("ASSERT_BAIL", 0);
 define("ASSERT_CALLBACK", 0);
 define("ASSERT_QUIET_EVAL", 0);
 define("ASSERT_WARNING", 0);
+define("ATOM", 0);
+define("ATTRIBUTE", 0);
+define("ATTR_AUTOCOMMIT", 0);
+define("ATTR_CASE", 0);
+define("ATTR_CLIENT_VERSION", 0);
+define("ATTR_CONNECTION_STATUS", 0);
+define("ATTR_CURSOR", 0);
+define("ATTR_CURSOR_NAME", 0);
+define("ATTR_DEFAULT_FETCH_MODE", 0);
+define("ATTR_DRIVER_NAME", 0);
+define("ATTR_EMULATE_PREPARES", 0);
+define("ATTR_ERRMODE", 0);
+define("ATTR_FETCH_CATALOG_NAMES", 0);
+define("ATTR_FETCH_TABLE_NAMES", 0);
+define("ATTR_MAX_COLUMN_LEN", 0);
+define("ATTR_ORACLE_NULLS", 0);
+define("ATTR_PERSISTENT", 0);
+define("ATTR_PREFETCH", 0);
+define("ATTR_SERVER_INFO", 0);
+define("ATTR_SERVER_VERSION", 0);
+define("ATTR_STATEMENT_CLASS", 0);
+define("ATTR_STRINGIFY_FETCHES", 0);
+define("ATTR_TIMEOUT", 0);
 define("AUTH_REQUIRED", 0);
+define("ArrayIterator", 0);
+define("ArrayObject", 0);
 define("BAD_REQUEST", 0);
 define("CAL_DOW_DAYNO", 0);
 define("CAL_DOW_LONG", 0);
@@ -32080,17 +33441,34 @@ define("CAL_MONTH_JULIAN_LONG", 0);
 define("CAL_MONTH_JULIAN_SHORT", 0);
 define("CAL_NUM_CALS", 0);
 define("CASE_LOWER", 0);
+define("CASE_NATURAL", 0);
 define("CASE_UPPER", 0);
+define("CDATA", 0);
 define("CHAR_MAX", 0);
+define("CHECKCONS", 0);
 define("CL_EXPUNGE", 0);
+define("CM_DEFAULT", 0);
+define("CM_DEFLATE", 0);
+define("CM_DEFLATE64", 0);
+define("CM_IMPLODE", 0);
+define("CM_PKWARE_IMPLODE", 0);
+define("CM_REDUCE_1", 0);
+define("CM_REDUCE_2", 0);
+define("CM_REDUCE_3", 0);
+define("CM_REDUCE_4", 0);
+define("CM_SHRINK", 0);
+define("CM_STORE", 0);
 define("CODESET", 0);
+define("COMMENT", 0);
 define("CONNECTION_ABORTED", 0);
 define("CONNECTION_NORMAL", 0);
 define("CONNECTION_TIMEOUT", 0);
+define("COOKIE", 0);
 define("COUNT_NORMAL", 0);
 define("COUNT_RECURSIVE", 0);
 define("CP_MOVE", 0);
 define("CP_UID", 0);
+define("CREATE", 0);
 define("CREDITS_ALL", 0);
 define("CREDITS_DOCS", 0);
 define("CREDITS_FULLPAGE", 0);
@@ -32184,6 +33562,10 @@ define("CURLE_WRITE_ERROR", 0);
 define("CURLFTPAUTH_DEFAULT", 0);
 define("CURLFTPAUTH_SSL", 0);
 define("CURLFTPAUTH_TLS", 0);
+define("CURLFTPSSL_ALL", 0);
+define("CURLFTPSSL_CONTROL", 0);
+define("CURLFTPSSL_NONE", 0);
+define("CURLFTPSSL_TRY", 0);
 define("CURLINFO_CONNECT_TIME", 0);
 define("CURLINFO_CONTENT_LENGTH_DOWNLOAD", 0);
 define("CURLINFO_CONTENT_LENGTH_UPLOAD", 0);
@@ -32240,6 +33622,7 @@ define("CURLOPT_FTPASCII", 0);
 define("CURLOPT_FTPLISTONLY", 0);
 define("CURLOPT_FTPPORT", 0);
 define("CURLOPT_FTPSSLAUTH", 0);
+define("CURLOPT_FTP_SSL", 0);
 define("CURLOPT_FTP_USE_EPRT", 0);
 define("CURLOPT_FTP_USE_EPSV", 0);
 define("CURLOPT_HEADER", 0);
@@ -32324,6 +33707,9 @@ define("CURL_VERSION_KERBEROS4", 0);
 define("CURL_VERSION_LIBZ", 0);
 define("CURL_VERSION_SSL", 0);
 define("CURRENCY_SYMBOL", 0);
+define("CURSOR_FWDONLY", 0);
+define("CURSOR_SCROLL", 0);
+define("CachingIterator", 0);
 define("DATE_ATOM", 0);
 define("DATE_COOKIE", 0);
 define("DATE_ISO8601", 0);
@@ -32363,6 +33749,7 @@ define("DB2_XML", 0);
 define("DEBUGGER_VERSION", 0);
 define("DECIMAL_POINT", 0);
 define("DECLINED", 0);
+define("DEFAULTATTRS", 0);
 define("DEFAULT_INCLUDE_PATH", 0);
 define("DIRECTORY_SEPARATOR", 0);
 define("DNS_A", 0);
@@ -32379,6 +33766,9 @@ define("DNS_PTR", 0);
 define("DNS_SOA", 0);
 define("DNS_SRV", 0);
 define("DNS_TXT", 0);
+define("DOC", 0);
+define("DOC_FRAGMENT", 0);
+define("DOC_TYPE", 0);
 define("DOMSTRING_SIZE_ERR", 0);
 define("DOM_HIERARCHY_REQUEST_ERR", 0);
 define("DOM_INDEX_SIZE_ERR", 0);
@@ -32399,12 +33789,17 @@ define("DOM_WRONG_DOCUMENT_ERR", 0);
 define("DONE", 0);
 define("D_FMT", 0);
 define("D_T_FMT", 0);
+define("ELEMENT", 0);
 define("ENC7BIT", 0);
 define("ENC8BIT", 0);
 define("ENCBASE64", 0);
 define("ENCBINARY", 0);
 define("ENCOTHER", 0);
 define("ENCQUOTEDPRINTABLE", 0);
+define("END_ELEMENT", 0);
+define("END_ENTITY", 0);
+define("ENTITY", 0);
+define("ENTITY_REF", 0);
 define("ENT_COMPAT", 0);
 define("ENT_NOQUOTES", 0);
 define("ENT_QUOTES", 0);
@@ -32413,6 +33808,46 @@ define("ERA_D_FMT", 0);
 define("ERA_D_T_FMT", 0);
 define("ERA_T_FMT", 0);
 define("ERA_YEAR", 0);
+define("ERRMODE_EXCEPTION", 0);
+define("ERRMODE_SILENT", 0);
+define("ERRMODE_WARNING", 0);
+define("ERROR", 0);
+define("ERR_ALREADY_EXISTS", 0);
+define("ERR_CANT_MAP", 0);
+define("ERR_CONSTRAINT", 0);
+define("ERR_DISCONNECTED", 0);
+define("ERR_MISMATCH", 0);
+define("ERR_NONE", 0);
+define("ERR_NOT_FOUND", 0);
+define("ERR_NOT_IMPLEMENTED", 0);
+define("ERR_NO_PERM", 0);
+define("ERR_SYNTAX", 0);
+define("ERR_TRUNCATED", 0);
+define("ER_CHANGED", 0);
+define("ER_CLOSE", 0);
+define("ER_COMPNOTSUPP", 0);
+define("ER_CRC", 0);
+define("ER_DELETED", 0);
+define("ER_EOF", 0);
+define("ER_EXISTS", 0);
+define("ER_INCONS", 0);
+define("ER_INTERNAL", 0);
+define("ER_INVAL", 0);
+define("ER_MEMORY", 0);
+define("ER_MULTIDISK", 0);
+define("ER_NOENT", 0);
+define("ER_NOZIP", 0);
+define("ER_OK", 0);
+define("ER_OPEN", 0);
+define("ER_READ", 0);
+define("ER_REMOVE", 0);
+define("ER_RENAME", 0);
+define("ER_SEEK", 0);
+define("ER_TMPOPEN", 0);
+define("ER_WRITE", 0);
+define("ER_ZIPCLOSED", 0);
+define("ER_ZLIB", 0);
+define("EXCL", 0);
 define("EXIF_USE_MBSTRING", 0);
 define("EXTR_IF_EXISTS", 0);
 define("EXTR_OVERWRITE", 0);
@@ -32484,12 +33919,32 @@ define("FDFStatus", 0);
 define("FDFUp", 0);
 define("FDFValidate", 0);
 define("FDFValue", 0);
+define("FETCH_ASSOC", 0);
+define("FETCH_BOTH", 0);
+define("FETCH_BOUND", 0);
+define("FETCH_CLASS", 0);
+define("FETCH_CLASSTYPE", 0);
+define("FETCH_COLUMN", 0);
+define("FETCH_FUNC", 0);
+define("FETCH_GROUP", 0);
+define("FETCH_INTO", 0);
+define("FETCH_LAZY", 0);
+define("FETCH_NAMED", 0);
+define("FETCH_NUM", 0);
+define("FETCH_OBJ", 0);
+define("FETCH_ORI_ABS", 0);
+define("FETCH_ORI_FIRST", 0);
+define("FETCH_ORI_LAST", 0);
+define("FETCH_ORI_NEXT", 0);
+define("FETCH_ORI_PRIOR", 0);
+define("FETCH_ORI_REL", 0);
+define("FETCH_PROPS_LATE", 0);
+define("FETCH_SERIALIZE", 0);
+define("FETCH_UNIQUE", 0);
 define("FILE_APPEND", 0);
-define("FILE_BINARY", 0);
 define("FILE_IGNORE_NEW_LINES", 0);
 define("FILE_NO_DEFAULT_CONTEXT", 0);
 define("FILE_SKIP_EMPTY_LINES", 0);
-define("FILE_TEXT", 0);
 define("FILE_USE_INCLUDE_PATH", 0);
 define("FILTER_CALLBACK", 0);
 define("FILTER_DEFAULT", 0);
@@ -32498,7 +33953,6 @@ define("FILTER_FLAG_ALLOW_HEX", 0);
 define("FILTER_FLAG_ALLOW_OCTAL", 0);
 define("FILTER_FLAG_ALLOW_SCIENTIFIC", 0);
 define("FILTER_FLAG_ALLOW_THOUSAND", 0);
-define("FILTER_FLAG_ARRAY", 0);
 define("FILTER_FLAG_EMPTY_STRING_NULL", 0);
 define("FILTER_FLAG_ENCODE_AMP", 0);
 define("FILTER_FLAG_ENCODE_HIGH", 0);
@@ -32512,10 +33966,13 @@ define("FILTER_FLAG_NO_PRIV_RANGE", 0);
 define("FILTER_FLAG_NO_RES_RANGE", 0);
 define("FILTER_FLAG_PATH_REQUIRED", 0);
 define("FILTER_FLAG_QUERY_REQUIRED", 0);
-define("FILTER_FLAG_SCALAR", 0);
 define("FILTER_FLAG_SCHEME_REQUIRED", 0);
 define("FILTER_FLAG_STRIP_HIGH", 0);
 define("FILTER_FLAG_STRIP_LOW", 0);
+define("FILTER_FORCE_ARRAY", 0);
+define("FILTER_NULL_ON_FAILURE", 0);
+define("FILTER_REQUIRE_ARRAY", 0);
+define("FILTER_REQUIRE_SCALAR", 0);
 define("FILTER_SANITIZE_EMAIL", 0);
 define("FILTER_SANITIZE_ENCODED", 0);
 define("FILTER_SANITIZE_MAGIC_QUOTES", 0);
@@ -32533,6 +33990,10 @@ define("FILTER_VALIDATE_INT", 0);
 define("FILTER_VALIDATE_IP", 0);
 define("FILTER_VALIDATE_REGEXP", 0);
 define("FILTER_VALIDATE_URL", 0);
+define("FL_COMPRESSED", 0);
+define("FL_NOCASE", 0);
+define("FL_NODIR", 0);
+define("FL_UNCHANGED", 0);
 define("FNM_CASEFOLD", 0);
 define("FNM_NOESCAPE", 0);
 define("FNM_PATHNAME", 0);
@@ -32541,7 +34002,6 @@ define("FORBIDDEN", 0);
 define("FORCE_DEFLATE", 0);
 define("FORCE_GZIP", 0);
 define("FRAC_DIGITS", 0);
-define("FROM_UNICODE", 0);
 define("FTP_ASCII", 0);
 define("FTP_AUTORESUME", 0);
 define("FTP_AUTOSEEK", 0);
@@ -32768,14 +34228,15 @@ define("INI_PERDIR", 0);
 define("INI_SYSTEM", 0);
 define("INI_USER", 0);
 define("INPUT_COOKIE", 0);
-define("INPUT_DATA", 0);
 define("INPUT_ENV", 0);
 define("INPUT_GET", 0);
 define("INPUT_POST", 0);
+define("INPUT_REQUEST", 0);
 define("INPUT_SERVER", 0);
 define("INPUT_SESSION", 0);
 define("INT_CURR_SYMBOL", 0);
 define("INT_FRAC_DIGITS", 0);
+define("ISO8601", 0);
 define("LATT_HASCHILDREN", 0);
 define("LATT_HASNOCHILDREN", 0);
 define("LATT_MARKED", 0);
@@ -32835,6 +34296,7 @@ define("LIBXML_VERSION", 0);
 define("LIBXML_XINCLUDE", 0);
 define("LIBXSLT_DOTTED_VERSION", 0);
 define("LIBXSLT_VERSION", 0);
+define("LOADDTD", 0);
 define("LOCK_EX", 0);
 define("LOCK_NB", 0);
 define("LOCK_SH", 0);
@@ -32999,6 +34461,13 @@ define("MYSQLI_UNSIGNED_FLAG", 0);
 define("MYSQLI_USE_RESULT", 0);
 define("MYSQLI_ZEROFILL_FLAG", 0);
 define("MYSQL_ASSOC", 0);
+define("MYSQL_ATTR_DIRECT_QUERY", 0);
+define("MYSQL_ATTR_INIT_COMMAND", 0);
+define("MYSQL_ATTR_LOCAL_INFILE", 0);
+define("MYSQL_ATTR_MAX_BUFFER_SIZE", 0);
+define("MYSQL_ATTR_READ_DEFAULT_FILE", 0);
+define("MYSQL_ATTR_READ_DEFAULT_GROUP", 0);
+define("MYSQL_ATTR_USE_BUFFERED_QUERY", 0);
 define("MYSQL_BOTH", 0);
 define("MYSQL_CLIENT_COMPRESS", 0);
 define("MYSQL_CLIENT_IGNORE_SPACE", 0);
@@ -33042,8 +34511,13 @@ define("NAN", 0);
 define("NEGATIVE_SIGN", 0);
 define("NIL", 0);
 define("NOEXPR", 0);
+define("NONE", 0);
 define("NOSTR", 0);
+define("NOTATION", 0);
 define("NOT_FOUND", 0);
+define("NULL_EMPTY_STRING", 0);
+define("NULL_NATURAL", 0);
+define("NULL_TO_STRING", 0);
 define("N_CS_PRECEDES", 0);
 define("N_SEP_BY_SPACE", 0);
 define("N_SIGN_POSN", 0);
@@ -33083,9 +34557,13 @@ define("OCI_SYSDBA", 0);
 define("OCI_SYSOPER", 0);
 define("OCI_TEMP_BLOB", 0);
 define("OCI_TEMP_CLOB", 0);
+define("ODBC_ATTR_USE_CURSOR_LIBRARY", 0);
 define("ODBC_BINMODE_CONVERT", 0);
 define("ODBC_BINMODE_PASSTHRU", 0);
 define("ODBC_BINMODE_RETURN", 0);
+define("ODBC_SQL_USE_DRIVER", 0);
+define("ODBC_SQL_USE_IF_NEEDED", 0);
+define("ODBC_SQL_USE_ODBC", 0);
 define("ODBC_TYPE", 0);
 define("OK", 0);
 define("OPENSSL_ALGO_MD2", 0);
@@ -33099,11 +34577,14 @@ define("OPENSSL_CIPHER_RC2_64", 0);
 define("OPENSSL_CIPHER_RC2_128", 0);
 define("OPENSSL_KEYTYPE_DH", 0);
 define("OPENSSL_KEYTYPE_DSA", 0);
+define("OPENSSL_KEYTYPE_EC", 0);
 define("OPENSSL_KEYTYPE_RSA", 0);
 define("OPENSSL_NO_PADDING", 0);
 define("OPENSSL_PKCS1_OAEP_PADDING", 0);
 define("OPENSSL_PKCS1_PADDING", 0);
 define("OPENSSL_SSLV23_PADDING", 0);
+define("OPENSSL_VERSION_NUMBER", 0);
+define("OPENSSL_VERSION_TEXT", 0);
 define("OPTIMIZER_VERSION", 0);
 define("OPT_ALL", 0);
 define("OPT_PASS_1", 0);
@@ -33125,12 +34606,30 @@ define("OP_READONLY", 0);
 define("OP_SECURE", 0);
 define("OP_SHORTCACHE", 0);
 define("OP_SILENT", 0);
+define("OVERWRITE", 0);
+define("PARAM_BOOL", 0);
+define("PARAM_EVT_ALLOC", 0);
+define("PARAM_EVT_EXEC_POST", 0);
+define("PARAM_EVT_EXEC_PRE", 0);
+define("PARAM_EVT_FETCH_POST", 0);
+define("PARAM_EVT_FETCH_PRE", 0);
+define("PARAM_EVT_FREE", 0);
+define("PARAM_EVT_NORMALIZE", 0);
+define("PARAM_INPUT_OUTPUT", 0);
+define("PARAM_INT", 0);
+define("PARAM_LOB", 0);
+define("PARAM_NULL", 0);
+define("PARAM_STMT", 0);
+define("PARAM_STR", 0);
 define("PATHINFO_BASENAME", 0);
 define("PATHINFO_DIRNAME", 0);
 define("PATHINFO_EXTENSION", 0);
 define("PATHINFO_FILENAME", 0);
 define("PATH_SEPARATOR", 0);
+define("PEAR_EXTENSION_DIR", 0);
+define("PEAR_INSTALL_DIR", 0);
 define("PGSQL_ASSOC", 0);
+define("PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT", 0);
 define("PGSQL_BAD_RESPONSE", 0);
 define("PGSQL_BOTH", 0);
 define("PGSQL_COMMAND_OK", 0);
@@ -33189,19 +34688,9 @@ define("PHP_LIBDIR", 0);
 define("PHP_LOCALSTATEDIR", 0);
 define("PHP_NORMAL_READ", 0);
 define("PHP_OS", 0);
-define("PHP_OUTPUT_HANDLER_CLEAN", 0);
-define("PHP_OUTPUT_HANDLER_CLEANABLE", 0);
 define("PHP_OUTPUT_HANDLER_CONT", 0);
-define("PHP_OUTPUT_HANDLER_DISABLED", 0);
 define("PHP_OUTPUT_HANDLER_END", 0);
-define("PHP_OUTPUT_HANDLER_FINAL", 0);
-define("PHP_OUTPUT_HANDLER_FLUSH", 0);
-define("PHP_OUTPUT_HANDLER_FLUSHABLE", 0);
-define("PHP_OUTPUT_HANDLER_REMOVABLE", 0);
 define("PHP_OUTPUT_HANDLER_START", 0);
-define("PHP_OUTPUT_HANDLER_STARTED", 0);
-define("PHP_OUTPUT_HANDLER_STDFLAGS", 0);
-define("PHP_OUTPUT_HANDLER_WRITE", 0);
 define("PHP_PREFIX", 0);
 define("PHP_SAPI", 0);
 define("PHP_SHLIB_SUFFIX", 0);
@@ -33215,6 +34704,7 @@ define("PHP_URL_QUERY", 0);
 define("PHP_URL_SCHEME", 0);
 define("PHP_URL_USER", 0);
 define("PHP_VERSION", 0);
+define("PI", 0);
 define("PKCS7_BINARY", 0);
 define("PKCS7_DETACHED", 0);
 define("PKCS7_NOATTR", 0);
@@ -33281,6 +34771,16 @@ define("REQUEST_CHUNKED_DECHUNK", 0);
 define("REQUEST_CHUNKED_ERROR", 0);
 define("REQUEST_CHUNKED_PASS", 0);
 define("REQUEST_NO_BODY", 0);
+define("RFC822", 0);
+define("RFC850", 0);
+define("RFC1036", 0);
+define("RFC1123", 0);
+define("RFC2822", 0);
+define("RFC3339", 0);
+define("RSS", 0);
+define("RecursiveDirectoryIterator", 0);
+define("RecursiveIteratorIterator", 0);
+define("RegexIterator", 0);
 define("SA_ALL", 0);
 define("SA_MESSAGES", 0);
 define("SA_RECENT", 0);
@@ -33309,6 +34809,7 @@ define("SIGINT", 0);
 define("SIGIO", 0);
 define("SIGIOT", 0);
 define("SIGKILL", 0);
+define("SIGNIFICANT_WHITESPACE", 0);
 define("SIGPIPE", 0);
 define("SIGPOLL", 0);
 define("SIGPROF", 0);
@@ -33704,12 +35205,14 @@ define("STR_PAD_RIGHT", 0);
 define("ST_SET", 0);
 define("ST_SILENT", 0);
 define("ST_UID", 0);
+define("SUBST_ENTITIES", 0);
 define("SUNFUNCS_RET_DOUBLE", 0);
 define("SUNFUNCS_RET_STRING", 0);
 define("SUNFUNCS_RET_TIMESTAMP", 0);
+define("SplFileObject", 0);
+define("TEXT", 0);
 define("THOUSANDS_SEP", 0);
 define("THOUSEP", 0);
-define("TO_UNICODE", 0);
 define("TYPEAPPLICATION", 0);
 define("TYPEAUDIO", 0);
 define("TYPEIMAGE", 0);
@@ -33842,20 +35345,19 @@ define("T_WHITESPACE", 0);
 define("T_XOR_EQUAL", 0);
 define("UNKNOWN_TYPE", 0);
 define("UPLOAD_ERR_CANT_WRITE", 0);
+define("UPLOAD_ERR_EXTENSION", 0);
 define("UPLOAD_ERR_FORM_SIZE", 0);
 define("UPLOAD_ERR_INI_SIZE", 0);
 define("UPLOAD_ERR_NO_FILE", 0);
 define("UPLOAD_ERR_NO_TMP_DIR", 0);
 define("UPLOAD_ERR_OK", 0);
 define("UPLOAD_ERR_PARTIAL", 0);
-define("U_CONV_ERROR_ESCAPE_ICU", 0);
-define("U_CONV_ERROR_ESCAPE_JAVA", 0);
-define("U_CONV_ERROR_ESCAPE_UNICODE", 0);
-define("U_CONV_ERROR_ESCAPE_XML_DEC", 0);
-define("U_CONV_ERROR_ESCAPE_XML_HEX", 0);
-define("U_CONV_ERROR_SKIP", 0);
-define("U_CONV_ERROR_STOP", 0);
-define("U_CONV_ERROR_SUBST", 0);
+define("VALIDATE", 0);
+define("VALIDITY_ERROR", 0);
+define("VALIDITY_WARNING", 0);
+define("W3C", 0);
+define("WARNING", 0);
+define("WHITESPACE", 0);
 define("WNOHANG", 0);
 define("WSDL_CACHE_BOTH", 0);
 define("WSDL_CACHE_DISK", 0);
@@ -33882,6 +35384,7 @@ define("XML_ATTRIBUTE_NODE", 0);
 define("XML_ATTRIBUTE_NOTATION", 0);
 define("XML_CDATA_SECTION_NODE", 0);
 define("XML_COMMENT_NODE", 0);
+define("XML_DECLARATION", 0);
 define("XML_DOCUMENT_FRAG_NODE", 0);
 define("XML_DOCUMENT_NODE", 0);
 define("XML_DOCUMENT_TYPE_NODE", 0);
@@ -33979,9 +35482,6 @@ define("XSL_CLONE_AUTO", 0);
 define("XSL_CLONE_NEVER", 0);
 define("YESEXPR", 0);
 define("YESSTR", 0);
-define("ZLIB_ENCODING_DEFLATE", 0);
-define("ZLIB_ENCODING_GZIP", 0);
-define("ZLIB_ENCODING_RAW", 0);
 define("ZPS_VERSION", 0);
 define("__CLASS__", 0);
 define("__COMPILER_HALT_OFFSET__", 0);
@@ -33989,5 +35489,9 @@ define("__FILE__", 0);
 define("__FUNCTION__", 0);
 define("__LINE__", 0);
 define("__METHOD__", 0);
+define("class", 0);
+define("function", 0);
+define("method", 0);
+define("property", 0);
 
 ?>
