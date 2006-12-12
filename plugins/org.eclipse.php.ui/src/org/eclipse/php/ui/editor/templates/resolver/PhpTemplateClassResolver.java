@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -44,8 +44,8 @@ public class PhpTemplateClassResolver extends TemplateVariableResolver {
 		}
 
 		try {
-			PHPEditorModel phpEditorModel = (PHPEditorModel) structuredModel;
-			CodeData[] codeDatas = phpEditorModel.getProjectModel().getClasses();
+			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
+			CodeData[] codeDatas = phpDOMModel.getProjectModel().getClasses();
 			for (int i = 0; i < codeDatas.length; i++) {
 				CodeData codeData = codeDatas[i];
 				classNames.add(codeData.getName());

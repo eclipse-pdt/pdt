@@ -16,7 +16,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.php.core.Logger;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -38,9 +38,9 @@ public class PHPDocContentAssistProcessor implements IContentAssistProcessor {
 		}
 		ICompletionProposal[] completionProposals;
 		try {
-			PHPEditorModel phpEditorModel = (PHPEditorModel) structuredModel;
+			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
 			try {
-				completionProposals = support.getCompletionOption(viewer, phpEditorModel, offset);
+				completionProposals = support.getCompletionOption(viewer, phpDOMModel, offset);
 			} catch (Exception e) {
 				Logger.logException(e);
 				return null;

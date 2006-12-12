@@ -15,7 +15,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.core.phpModel.parser.PHPDocLanguageModel;
@@ -68,7 +68,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		return autoActivationTriggers;
 	}
 
-	protected void calcCompletionOption(PHPEditorModel editorModel, int offset, ITextViewer viewer) throws BadLocationException {
+	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer) throws BadLocationException {
 		PHPFileData fileData = editorModel.getFileData();
 		if (fileData == null) {
 			return;
@@ -127,7 +127,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		return true;
 	}
 
-	private boolean isVariableCompletion(PHPEditorModel phpEditorModel, PHPFileData fileData, int offset, String tagName, int selectionLength, boolean haveSpacesAtEnd) {
+	private boolean isVariableCompletion(DOMModelForPHP phpDOMModel, PHPFileData fileData, int offset, String tagName, int selectionLength, boolean haveSpacesAtEnd) {
 		if (haveSpacesAtEnd) {
 			return false;
 		}
@@ -135,7 +135,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			tagName = tagName.substring(1);
 
 			PHPCodeContext context = ModelSupport.createContext(fileData, offset);
-			PHPProjectModel projectModel = phpEditorModel.getProjectModel();
+			PHPProjectModel projectModel = phpDOMModel.getProjectModel();
 			String fileName = fileData.getName();
 			CodeData[] variables = projectModel.getVariables(fileName, context, tagName, true);
 

@@ -15,7 +15,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.Logger;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
@@ -69,11 +69,11 @@ public class PHPHTMLValidator extends HTMLValidator {
 			if (structuredModel == null) {
 				return; // error
 			}
-			PHPEditorModel model = (PHPEditorModel) structuredModel;
+			DOMModelForPHP model = (DOMModelForPHP) structuredModel;
 
 			//@GINO: Updata the FileData because the content has changed
 			//this might not be the best way to do this
-			if (!PHPEditorModel.FREQUENT_MODEL_UPDATE)
+			if (!DOMModelForPHP.FREQUENT_MODEL_UPDATE)
 				model.updateFileData();
 
 			PHPFileData fileData = model.getFileData();

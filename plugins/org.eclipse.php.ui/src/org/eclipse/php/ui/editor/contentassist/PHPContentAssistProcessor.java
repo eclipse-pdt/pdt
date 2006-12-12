@@ -20,7 +20,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.php.core.Logger;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.ui.text.PHPCodeReader;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -48,9 +48,9 @@ public class PHPContentAssistProcessor implements IContentAssistProcessor {
 		}
 		ICompletionProposal[] completionProposals;
 		try {
-			PHPEditorModel phpEditorModel = (PHPEditorModel) structuredModel;
+			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
 			try {
-				completionProposals = support.getCompletionOption(viewer, phpEditorModel, offset);
+				completionProposals = support.getCompletionOption(viewer, phpDOMModel, offset);
 			} catch (Exception e) {
 				Logger.logException(e);
 				return new ICompletionProposal[0];

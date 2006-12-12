@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -171,7 +171,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 
 	public static final int MODE_MIXED = 3;
 	public static final int MODE_PHP = 1;
-	PHPEditorModel editorModel;
+	DOMModelForPHP editorModel;
 	private ISelectionListener fSelectionListener = null;
 	GroupNode[] groupNodes;
 	private PHPOutlineLabelProvider labelProvider;
@@ -252,8 +252,8 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 			ArrayList children = new ArrayList(Arrays.asList(phpContentProvider.getChildren(object)));
 			children.addAll(Arrays.asList(superClassContentProvider.getChildren(object)));
 			return children.toArray();
-		} else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
-			editorModel = (PHPEditorModel) object;
+		} else if (object instanceof DOMModelForPHP && mode == MODE_PHP) {
+			editorModel = (DOMModelForPHP) object;
 			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
 			final PHPFileData fileData = editorModel.getFileData();
 			if (fileData != null) {
@@ -274,8 +274,8 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 			return getPHPChildren((PHPElementImpl) object);
 		else if (object instanceof PHPCodeData)
 			return phpContentProvider.getChildren(object);
-		else if (object instanceof PHPEditorModel && mode == MODE_PHP) {
-			editorModel = (PHPEditorModel) object;
+		else if (object instanceof DOMModelForPHP && mode == MODE_PHP) {
+			editorModel = (DOMModelForPHP) object;
 			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
 			final PHPFileData fileData = editorModel.getFileData();
 			final GroupNode[] groupNodes = getGroupNodes(fileData);
@@ -419,7 +419,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 					viewer.refresh(updateLabels);
 				else
 					viewer.refresh(element, updateLabels);
-				if (element instanceof PHPEditorModel) {
+				if (element instanceof DOMModelForPHP) {
 					viewer.expandToLevel(2);
 				}
 			}

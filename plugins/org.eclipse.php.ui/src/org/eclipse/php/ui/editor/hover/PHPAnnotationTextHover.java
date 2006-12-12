@@ -15,7 +15,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.Logger;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.ui.util.CodeDataResolver;
@@ -39,9 +39,9 @@ public class PHPAnnotationTextHover extends AbstractPHPTextHover {
 					CodeData codeData = CodeDataResolver.getCodeData(textViewer, sdRegion.getStartOffset() + textRegion.getTextEnd());
 					if (codeData != null) {
 						IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead (textViewer.getDocument());
-						if (sModel instanceof PHPEditorModel) {
+						if (sModel instanceof DOMModelForPHP) {
 							try {
-								PHPEditorModel editorModel = (PHPEditorModel) sModel;
+								DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
 								PHPProjectModel projectModel = editorModel.getProjectModel();
 								return PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel);
 							} finally {

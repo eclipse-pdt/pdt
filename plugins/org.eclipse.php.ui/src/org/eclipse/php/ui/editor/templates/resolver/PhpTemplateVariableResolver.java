@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
@@ -49,8 +49,8 @@ public class PhpTemplateVariableResolver extends TemplateVariableResolver {
 		}
 
 		try {
-			PHPEditorModel phpEditorModel = (PHPEditorModel) structuredModel;
-			PHPFileData fileData = phpEditorModel.getFileData();
+			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
+			PHPFileData fileData = phpDOMModel.getFileData();
 			if (fileData == null) {
 				return new String[] { DEFAULT_VAR };
 			}

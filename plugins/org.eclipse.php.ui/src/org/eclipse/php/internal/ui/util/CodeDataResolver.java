@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.Logger;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.phpModel.parser.CodeDataFilter;
@@ -71,8 +71,8 @@ public class CodeDataResolver {
 	 */
 	public static CodeData getCodeData(ITextViewer textViewer, int offset) throws BadLocationException {
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
-		if (sModel instanceof PHPEditorModel) {
-			PHPEditorModel editorModel = (PHPEditorModel) sModel;
+		if (sModel instanceof DOMModelForPHP) {
+			DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
 			try {
 				return instance.getCodeData(textViewer, editorModel, offset);
 			} catch (BadLocationException e) {
@@ -86,7 +86,7 @@ public class CodeDataResolver {
 		return null;
 	}
 
-	private CodeData getCodeData(ITextViewer viewer, PHPEditorModel editorModel, int offset) throws BadLocationException {
+	private CodeData getCodeData(ITextViewer viewer, DOMModelForPHP editorModel, int offset) throws BadLocationException {
 		PHPFileData fileData = editorModel.getFileData();
 		if (fileData == null) {
 			return null;

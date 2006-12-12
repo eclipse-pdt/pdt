@@ -12,7 +12,7 @@ package org.eclipse.php.ui.editor.contentassist;
 
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.*;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
@@ -116,8 +116,8 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 			IStructuredModel structuredModel = null;
 			try {
 				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
-				if (structuredModel != null && structuredModel instanceof PHPEditorModel) {
-					projectModel = ((PHPEditorModel) structuredModel).getProjectModel();
+				if (structuredModel != null && structuredModel instanceof DOMModelForPHP) {
+					projectModel = ((DOMModelForPHP) structuredModel).getProjectModel();
 				}
 			} finally {
 				if (structuredModel != null)

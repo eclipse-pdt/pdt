@@ -10,7 +10,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
@@ -58,7 +58,7 @@ public class LinkingSelectionListener implements ISelectionListener {
 					if (doc == null)
 						return null;
 					final IDOMModel model = doc.getModel();
-					if (!(model instanceof PHPEditorModel))
+					if (!(model instanceof DOMModelForPHP))
 						return null;
 					if (selection instanceof TextSelection) {
 						codeData = PHPElementImpl.getPHPCodeData((NodeImpl) firstElement, ((TextSelection) selection).getOffset());

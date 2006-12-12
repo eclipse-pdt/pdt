@@ -23,7 +23,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.php.Logger;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.format.FormatterUtils;
@@ -178,7 +178,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				command.offset = lineStart;
 
 				// making sure the new fileData will be created after the deletion
-				PHPEditorModel editorModel = (PHPEditorModel) StructuredModelManager.getModelManager().getModelForRead(document);
+				DOMModelForPHP editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager().getModelForRead(document);
 				editorModel.updateFileData();
 
 				if (lineContent.equals("")) { //this is a patch in order to make PHPDescriptionTool add a default shortDescription
@@ -282,7 +282,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 	/**
 	 * @return true - if the docBlock was added
 	 */
-	private String getDocBlockStub(PHPEditorModel editorModel, IStructuredDocument document, int offset, String shortDescription) {
+	private String getDocBlockStub(DOMModelForPHP editorModel, IStructuredDocument document, int offset, String shortDescription) {
 
 		PHPFileData fileData = editorModel.getFileData();
 		if (fileData == null) {

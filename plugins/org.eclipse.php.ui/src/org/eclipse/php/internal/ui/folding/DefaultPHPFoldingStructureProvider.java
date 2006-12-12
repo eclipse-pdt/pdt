@@ -21,7 +21,7 @@ import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.phpModel.parser.ModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.*;
@@ -169,8 +169,8 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		PHPFileData fileData = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			if (sModel != null && sModel instanceof PHPEditorModel) {
-				PHPEditorModel editorModel = (PHPEditorModel) sModel;
+			if (sModel != null && sModel instanceof DOMModelForPHP) {
+				DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
 				fileData = editorModel.getFileData();
 				if (fileData == null) {
 					// It's possible that while loading, the model is not yet ready, therefore, we will wait until the 
@@ -581,8 +581,8 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		IStructuredModel sModel = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			if (sModel != null && sModel instanceof PHPEditorModel) {
-				PHPEditorModel editorModel = (PHPEditorModel) sModel;
+			if (sModel != null && sModel instanceof DOMModelForPHP) {
+				DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
 				if (editorModel.getFileData() == fileData) {
 					updateFolds();
 					//					allowCollapsing = true; // TODO - Need a fix!

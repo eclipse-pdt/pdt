@@ -24,7 +24,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.Logger;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.phpModel.parser.*;
@@ -110,15 +110,15 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		PreferenceConstants.getPreferenceStore().addPropertyChangeListener(WeakPropertyChangeListener.create(prefChangeListener, PreferenceConstants.getPreferenceStore()));
 	}
 
-	public ICompletionProposal[] getCompletionOption(ITextViewer viewer, PHPEditorModel phpEditorModel, int offset) throws BadLocationException {
-		ICompletionProposal[] codeCompletionOptions = getCodeCompletionOptions(viewer, phpEditorModel, offset);
+	public ICompletionProposal[] getCompletionOption(ITextViewer viewer, DOMModelForPHP phpDOMModel, int offset) throws BadLocationException {
+		ICompletionProposal[] codeCompletionOptions = getCodeCompletionOptions(viewer, phpDOMModel, offset);
 		if (codeCompletionOptions == null) {
 			return new ICompletionProposal[0];
 		}
 		return codeCompletionOptions;
 	}
 
-	private ICompletionProposal[] getCodeCompletionOptions(ITextViewer viewer, PHPEditorModel phpEditorModel, int offset) throws BadLocationException {
+	private ICompletionProposal[] getCodeCompletionOptions(ITextViewer viewer, DOMModelForPHP phpEditorModel, int offset) throws BadLocationException {
 		completionProposalGroup = null;
 		templateProposals = null;
 		calcCompletionOption(phpEditorModel, offset, viewer);
@@ -151,7 +151,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return autoActivationTriggers;
 	}
 
-	protected void calcCompletionOption(PHPEditorModel editorModel, int offset, ITextViewer viewer) throws BadLocationException {
+	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer) throws BadLocationException {
 
 		final int originalOffset = viewer.getSelectedRange().x;
 		final boolean isStrict = originalOffset != offset ? true : false;

@@ -17,7 +17,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
@@ -41,7 +41,7 @@ public class ReconcileStepForPHP extends StructuredReconcileStep {
 		try {
 			if (sModel != null) {
 
-				PHPEditorModel model = (PHPEditorModel) sModel;
+				DOMModelForPHP model = (DOMModelForPHP) sModel;
 
 				//@GINO: Updata the FileData because the content has changed
 				//this might not be the best way to do this
