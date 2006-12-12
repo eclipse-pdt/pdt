@@ -170,9 +170,17 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 	}
 
 	final public boolean hasChildren(Object element) {
-		boolean areChildren = hasChildrenInternal(element);
-
-		return areChildren;
+		boolean hasChildren = hasChildrenInternal(element);
+		if(hasChildren) return true;
+		if (treeProviders != null) {
+			for (int i = 0; i < treeProviders.length; i++) {
+				hasChildren  = treeProviders[i].hasChildren(element);
+				if(hasChildren) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	protected boolean hasChildrenInternal(Object element) {
