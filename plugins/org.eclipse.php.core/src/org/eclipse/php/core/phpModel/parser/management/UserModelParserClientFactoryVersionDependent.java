@@ -14,11 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.core.phpModel.parser.IParserClientFactory;
-import org.eclipse.php.core.phpModel.parser.PHPLanguageManager;
-import org.eclipse.php.core.phpModel.parser.PHPLanguageManagerProvider;
-import org.eclipse.php.core.phpModel.parser.PHPUserModelManager;
-import org.eclipse.php.core.phpModel.parser.ParserClient;
+import org.eclipse.php.core.phpModel.parser.*;
 import org.eclipse.php.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionChangedHandler;
@@ -64,7 +60,7 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 		Object object = version2ParserClientMap.get(phpVersion);
 		if (object == null) {
 			PHPLanguageManager languageManager = PHPLanguageManagerProvider.instance().getPHPLanguageManager(phpVersion);
-			ParserClient parserClient = languageManager.createParserClient(userModelManager.getUserModel());
+			ParserClient parserClient = languageManager.createParserClient(userModelManager.getUserModel(), userModelManager.getProject());
 			version2ParserClientMap.put(phpVersion, parserClient);
 			return parserClient;
 		}

@@ -10,12 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser.php4;
 
-import org.eclipse.php.core.phpModel.parser.IPhpModel;
-import org.eclipse.php.core.phpModel.parser.PHPLanguageManager;
-import org.eclipse.php.core.phpModel.parser.PHPLanguageModel;
-import org.eclipse.php.core.phpModel.parser.PHPParserManager;
-import org.eclipse.php.core.phpModel.parser.PHPUserModel;
-import org.eclipse.php.core.phpModel.parser.ParserClient;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.php.core.phpModel.parser.*;
 
 public class PHP4LanguageManager implements PHPLanguageManager {
 
@@ -39,8 +35,8 @@ public class PHP4LanguageManager implements PHPLanguageManager {
 		return PHP4_FUNCTIONS_PATH;
 	}
 
-	public ParserClient createParserClient(PHPUserModel userModel) {
-		return new PHP4DefaultParserClient(userModel);
+	public ParserClient createParserClient(PHPUserModel userModel, IProject project) {
+		return new PHP4DefaultParserClient(userModel, project);
 	}
 
 }

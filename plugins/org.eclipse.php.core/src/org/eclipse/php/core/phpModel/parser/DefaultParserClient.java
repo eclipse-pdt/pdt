@@ -10,41 +10,19 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
 
-import org.eclipse.php.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
-import org.eclipse.php.core.phpModel.phpElementData.PHPBlock;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileDataUtilities;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPMarker;
-import org.eclipse.php.core.phpModel.phpElementData.PHPTask;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariableTypeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
-import org.eclipse.php.core.phpModel.phpElementData.UserData;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.php.core.phpModel.phpElementData.*;
 
 public abstract class DefaultParserClient extends ContextParserClient {
 
 	protected PHPUserModel userModel = null;
+	protected PHPProjectModel projectModel;
 	protected String workingFileName;
 	protected List functions;
 	protected List classVars;
@@ -67,7 +45,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 
 	private boolean hadReturnStatement;
 
-	public DefaultParserClient(PHPUserModel userModel) {
+	public DefaultParserClient(PHPUserModel userModel, IProject project) {
 		functions = new ArrayList();
 		classVars = new ArrayList();
 		classConsts = new ArrayList();
@@ -87,7 +65,8 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		variableContextBuilder = new VariableContextBuilder();
 		workingFileName = null;
 
-		this.userModel = userModel;
+		this.projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+		this.userModel = userModel;		
 	}
 
 	public void handleFunctionParameter(String classType, String variableName, boolean isReference, boolean isConst, String defaultValue, int startPosition, int endPosition, int stopPosition, int lineNumber) {
@@ -671,14 +650,14 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		if (className == null) {
 			rv = getFunctionReturnType(propertyName, functions);
 			if (rv == null) {
-				rv = getFunctionReturnType(propertyName, userModel.getFunctions());
+				rv = getFunctionReturnType(propertyName, projectModel.getFunctions());
 			}
 			return rv;
 		}
 		rv = innerGetPropertyType(className, propertyName, classes, functions);
 		if (rv == null) {
 			// maybe the class is not in the current file but in the project
-			rv = innerGetPropertyType(className, propertyName, userModel.getClasses(), userModel.getFunctions());
+			rv = innerGetPropertyType(className, propertyName, projectModel.getClasses(), projectModel.getFunctions());
 		}
 		return rv;
 	}

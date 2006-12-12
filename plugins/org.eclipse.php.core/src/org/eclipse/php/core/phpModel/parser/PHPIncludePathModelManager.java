@@ -139,7 +139,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		PHPIncludePathModel model = new PHPIncludePathModel(library.getPath(), isZip ? PHPIncludePathModel.TYPE_ZIP : PHPIncludePathModel.TYPE_LIBRARY);
 
 		PHPLanguageManager languageManager = PHPLanguageManagerProvider.instance().getPHPLanguageManager(phpVersion);
-		ParserClient client = languageManager.createParserClient(model);
+		ParserClient client = languageManager.createParserClient(model, project);
 
 		updateExtentionList();
 		if (library.exists()) {
@@ -605,7 +605,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		String variableName = variable.toString();
 		PHPIncludePathModel model = new PHPIncludePathModel(variableName, PHPIncludePathModel.TYPE_VARIABLE);
 		PHPLanguageManager languageManager = PHPLanguageManagerProvider.instance().getPHPLanguageManager(phpVersion);
-		ParserClient client = languageManager.createParserClient(model);
+		ParserClient client = languageManager.createParserClient(model, project);
 
 		File file = getVriableFile(variableName);
 

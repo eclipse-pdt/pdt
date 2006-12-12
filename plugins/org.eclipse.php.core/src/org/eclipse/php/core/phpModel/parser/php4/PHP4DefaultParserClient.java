@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser.php4;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.php.core.phpModel.parser.DefaultParserClient;
 import org.eclipse.php.core.phpModel.parser.PHPUserModel;
 import org.eclipse.php.core.util.collections.IntHashtable;
@@ -19,8 +20,8 @@ public class PHP4DefaultParserClient extends DefaultParserClient {
 
 	private static final IntHashtable errorsTable = new IntHashtable();
 
-	public PHP4DefaultParserClient(PHPUserModel userModel) {
-		super(userModel);
+	public PHP4DefaultParserClient(PHPUserModel userModel, IProject project) {
+		super(userModel, project);
 	}
 
 	protected int getStringTag() {

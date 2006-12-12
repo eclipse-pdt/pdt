@@ -10,12 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser.php5;
 
-import org.eclipse.php.core.phpModel.parser.IPhpModel;
-import org.eclipse.php.core.phpModel.parser.PHPLanguageManager;
-import org.eclipse.php.core.phpModel.parser.PHPLanguageModel;
-import org.eclipse.php.core.phpModel.parser.PHPParserManager;
-import org.eclipse.php.core.phpModel.parser.PHPUserModel;
-import org.eclipse.php.core.phpModel.parser.ParserClient;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.php.core.phpModel.parser.*;
 
 
 public class PHP5LanguageManager implements PHPLanguageManager {
@@ -40,8 +36,8 @@ public class PHP5LanguageManager implements PHPLanguageManager {
 		return PHP5_FUNCTIONS_PATH;
 	}
 
-	public ParserClient createParserClient(PHPUserModel userModel) {
-		return new PHP5DefaultParserClient(userModel);
+	public ParserClient createParserClient(PHPUserModel userModel, IProject project) {
+		return new PHP5DefaultParserClient(userModel, project);
 	}
 
 }

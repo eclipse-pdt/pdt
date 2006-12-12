@@ -10,13 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
+import org.eclipse.core.resources.IProject;
+
 public interface PHPLanguageManager {
 
 	public PHPParserManager createPHPParserManager();
 
 	public String getPHPFunctionPath();
 
-	public ParserClient createParserClient(PHPUserModel userModel);
+	public ParserClient createParserClient(PHPUserModel userModel, IProject project);
 	
 	public IPhpModel getModel();
 
