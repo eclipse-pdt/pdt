@@ -16,10 +16,9 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.project.PHPNature;
 
 /**
@@ -38,8 +37,7 @@ public class NonPHPElementFilter extends ViewerFilter {
 			return true;
 
 		if (element instanceof IFile) {
-			PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(((IFile) element).getFullPath().toString());
-			return (fileData != null);
+			return PHPModelUtil.isPhpFile((IFile)element);
 		}
 
 		if (element instanceof IProject) {
