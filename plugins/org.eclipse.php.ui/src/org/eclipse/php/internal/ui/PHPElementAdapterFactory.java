@@ -15,10 +15,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.php.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.core.documentModel.dom.PHPTextImpl;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.ui.search.PHPSearchPage;
+import org.eclipse.php.ui.search.SearchUtil;
+import org.eclipse.search.ui.ISearchPageScoreComputer;
 import org.eclipse.ui.IContainmentAdapter;
 import org.eclipse.ui.IContributorResourceAdapter;
 import org.eclipse.ui.ide.IContributorResourceAdapter2;
@@ -28,12 +33,29 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.ResourcePropertySource;
 import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 
-
 /**
  * Implements basic UI support for Java elements.
  * Implements handle to persistent support for Java elements.
  */
 public class PHPElementAdapterFactory implements IAdapterFactory, IContributorResourceAdapter, IContributorResourceAdapter2 {
+
+	/**
+	 * @author seva
+	 *
+	 */
+	public static class PHPSearchPageScoreComputer implements ISearchPageScoreComputer {
+		public int computeScore(String id, Object element) {
+			if (!PHPSearchPage.EXTENSION_POINT_ID.equals(id))
+				// Can't decide
+				return ISearchPageScoreComputer.UNKNOWN;
+
+			if (element instanceof PHPElementImpl || element instanceof PHPTextImpl)
+				return 90;
+
+			return ISearchPageScoreComputer.LOWEST;
+		}
+
+	}
 
 	private static Class[] PROPERTIES = new Class[] { IPropertySource.class, IResource.class, IWorkbenchAdapter.class, IContributorResourceAdapter.class, IContributorResourceAdapter2.class, ITaskListResourceAdapter.class, IContainmentAdapter.class };
 
@@ -47,10 +69,17 @@ public class PHPElementAdapterFactory implements IAdapterFactory, IContributorRe
 	private static PHPElementContainmentAdapter fgJavaElementContainmentAdapter;
 
 	public Class[] getAdapterList() {
+		updateLazyLoadedAdapters();
 		return PROPERTIES;
 	}
 
 	public Object getAdapter(Object element, Class key) {
+		if ((element instanceof PHPElementImpl || element instanceof PHPTextImpl) && key == ISearchPageScoreComputer.class) {
+			if (fSearchPageScoreComputer == null) {
+				createSearchPageScoreComputer();
+			}
+			return fSearchPageScoreComputer;
+		}
 		Object phpElement = getPHPElement(element);
 
 		if (IPropertySource.class.equals(key)) {
@@ -120,4 +149,14 @@ public class PHPElementAdapterFactory implements IAdapterFactory, IContributorRe
 			fgJavaElementContainmentAdapter = new PHPElementContainmentAdapter();
 		return fgJavaElementContainmentAdapter;
 	}
+
+	private void updateLazyLoadedAdapters() {
+		if (fSearchPageScoreComputer == null && SearchUtil.isSearchPlugInActivated())
+			createSearchPageScoreComputer();
+	}
+
+	private void createSearchPageScoreComputer() {
+		fSearchPageScoreComputer = new PHPSearchPageScoreComputer();
+	}
+
 }
