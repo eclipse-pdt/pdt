@@ -13,16 +13,12 @@ package org.eclipse.php.internal.ui.actions;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import org.eclipse.core.internal.resources.Resource;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.PHPUIMessages;
@@ -217,49 +213,15 @@ public class PasteAction extends SelectionDispatchAction {
 	}
 
 	private static class ResourceNameTextPaster extends Paster {
-		private final Clipboard fClipboard;
 		private final Text textWidget;
 
 		protected ResourceNameTextPaster(Shell shell, Clipboard clipboard, Text textWidget) {
 			super(shell, clipboard);
-			fClipboard = clipboard;
 			this.textWidget = textWidget;
 		}
 
-		private String replaceFileName(Text text, String pastedString) {
-			String oldText = text.getText();
-			int startPaste = text.getSelection().x;
-			int size = text.getSelectionCount();
-
-			String prefix = oldText.substring(0, startPaste);
-			String postfix = oldText.substring(startPaste + size, oldText.length());
-
-			return prefix + pastedString + postfix;
-		}
-
 		public void paste(Object[] phpElements, IResource[] resources, TransferData[] availableTypes) throws CoreException {
-			try {
-				final IResource[] fResources = resources;
-				final String strToPaste = (String) fClipboard.getContents(TextTransfer.getInstance());
-				final String newResourceName = replaceFileName(textWidget, strToPaste);
-				IRunnableWithProgress progressRunnable = new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) {
-						monitor.beginTask("", IProgressMonitor.UNKNOWN);
-						try {
-							Resource resource = (Resource) fResources[0];
-							resource.move(new Path(resource.getProjectRelativePath().removeLastSegments(1) + newResourceName), true, monitor);
-						} catch (Exception e) {
-							MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), PHPUIMessages.RefactoringAction_refactoring, PHPUIMessages.RefactoringAction_disabled);
-						} finally {
-							monitor.done();
-						}
-					}
-
-				};
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().run(true, false, progressRunnable);
-			} catch (Exception e) {
-			}
-
+			textWidget.paste();
 		}
 
 		public boolean canPasteOn(Object[] phpElements, IResource[] resources) throws CoreException {
@@ -300,7 +262,6 @@ public class PasteAction extends SelectionDispatchAction {
 
 		private void pasteToPHP(Object[] clipboardPHPElements, IResource[] clipboardResources, PHPCodeData data) {
 			// TODO Auto-generated method stub
-
 		}
 
 		private Object getTarget(Object[] phpElements, IResource[] resources) {
