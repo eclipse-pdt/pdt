@@ -15,7 +15,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.PHPCorePlugin;
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.preferences.IPreferencesPropagatorListener;
@@ -83,7 +83,7 @@ public class FormatPreferencesSupport {
 
 	private void verifyValidity(IDocument document) {
 		if (fLastDocument != document) {
-			PHPEditorModel editorModel = (PHPEditorModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			DOMModelForPHP editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			PHPProjectModel projectModel = editorModel.getProjectModel();
 
 			IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModel);

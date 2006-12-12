@@ -12,7 +12,7 @@ package org.eclipse.php.core.documentModel.loader;
 
 import java.util.List;
 
-import org.eclipse.php.core.documentModel.PHPEditorModel;
+import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.wst.html.core.internal.encoding.HTMLModelLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
@@ -39,6 +39,6 @@ public class PHPModelLoader extends HTMLModelLoader {
 
 	//Creating the PHPModel
 	public IStructuredModel newModel() {
-		return new PHPEditorModel();
+		return new DOMModelForPHP();
 	}
 }

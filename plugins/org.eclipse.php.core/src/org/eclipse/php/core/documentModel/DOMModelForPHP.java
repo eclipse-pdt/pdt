@@ -14,7 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.php.core.documentModel.dom.PHPDOMDocument;
+import org.eclipse.php.core.documentModel.dom.DOMDocumentForPHP;
 import org.eclipse.php.core.documentModel.dom.PHPDOMModelParser;
 import org.eclipse.php.core.documentModel.dom.PHPDOMModelUpdater;
 import org.eclipse.php.core.documentModel.dom.PHPModelNotifier;
@@ -31,7 +31,7 @@ import org.w3c.dom.Document;
 /*
  * The PHPModel will support both the DOM style interface and PHP specific API's.
  */
-public class PHPEditorModel extends DOMStyleModelImpl {
+public class DOMModelForPHP extends DOMStyleModelImpl {
 
 	public static final boolean FREQUENT_MODEL_UPDATE = true;
 	private XMLModelNotifier notifier;
@@ -40,7 +40,7 @@ public class PHPEditorModel extends DOMStyleModelImpl {
 	 * This is modeled after what is done for JSP
 	 */
 	protected Document internalCreateDocument() {
-		PHPDOMDocument document = new PHPDOMDocument();
+		DOMDocumentForPHP document = new DOMDocumentForPHP();
 		document.setModel(this);
 		return document;
 	}

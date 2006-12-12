@@ -17,18 +17,18 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class PHPDOMDocument extends DocumentStyleImpl {
+public class DOMDocumentForPHP extends DocumentStyleImpl {
 
-	public PHPDOMDocument() {
+	public DOMDocumentForPHP() {
 		super();
 	}
 
-	protected PHPDOMDocument(DocumentImpl that) {
+	protected DOMDocumentForPHP(DocumentImpl that) {
 		super(that);
 	}
 
 	public Node cloneNode(boolean deep) {
-		PHPDOMDocument cloned = new PHPDOMDocument(this);
+		DOMDocumentForPHP cloned = new DOMDocumentForPHP(this);
 		if (deep)
 			cloned.importChildNodes(this, true);
 		return cloned;
