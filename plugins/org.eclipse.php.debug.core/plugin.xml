@@ -5,7 +5,6 @@
    <extension-point 
    		id="phpDebugMessages" 
    		name="PHP Debug Message" schema="schema/phpDebugMessages.exsd"/>
-   <extension-point id="phpDebugActions" name="PHP Debug Action" schema="schema/phpDebugActions.exsd"/>
    <extension-point id="phpDebugHandlers" name="PHP Debug Handler" schema="schema/phpDebugHandlers.exsd"/>
    <extension-point id="phpExe" name="PHP exe" schema="schema/phpExe.exsd"/>
    <extension-point id="phpDebugParametersInitializers" name="phpDebugParametersInitializers" schema="schema/phpDebugParametersInitializer.exsd"/>
