@@ -28,7 +28,13 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
-import org.eclipse.php.core.phpModel.parser.*;
+import org.eclipse.php.core.phpModel.parser.IPhpModel;
+import org.eclipse.php.core.phpModel.parser.ModelListener;
+import org.eclipse.php.core.phpModel.parser.PHPIncludePathModel;
+import org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager;
+import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.parser.PhpModelProxy;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.project.options.IPhpProjectOptionChangeListener;
@@ -83,6 +89,9 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 					continue;
 				}
 				IPath modelLocation = getIncludeModelLocation(model);
+				if (modelLocation == null) {
+					continue;
+				}
 				if (filePathString.startsWith(modelLocation.toOSString()) || (filePath.isAbsolute() && filePath.segment(0).equals(model.getID()))) {
 					return model;
 				}
@@ -241,7 +250,15 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			if (includeModelManager == null) {
 				return new Object[0];
 			}
-			return includeModelManager.listModels();
+			IPhpModel[] models = includeModelManager.listModels();
+			ArrayList filteredModels = new ArrayList(models.length);
+			for (int i = 0; i < models.length; ++i) {
+				IPath modelLocation = getIncludeModelLocation(models[i]);
+				if (modelLocation != null) {
+					filteredModels.add(models[i]);
+				}
+			}
+			return filteredModels.toArray();
 		} else if (parentElement instanceof PHPIncludePathModel || parentElement instanceof PhpModelProxy) {
 			IPhpModel includePathModel = (IPhpModel) parentElement;
 			validateRoot();
@@ -333,7 +350,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	}
 
 	public boolean hasChildren(Object element) {
-		if(element instanceof PHPTreeNode) {
+		if (element instanceof PHPTreeNode) {
 			return true;
 		}
 		return false;
