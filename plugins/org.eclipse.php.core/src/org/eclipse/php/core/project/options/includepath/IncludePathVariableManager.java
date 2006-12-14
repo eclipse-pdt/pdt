@@ -12,6 +12,7 @@ package org.eclipse.php.core.project.options.includepath;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -48,6 +49,7 @@ public class IncludePathVariableManager {
 	}
 
 	HashMap variables = new HashMap();
+	private ArrayList listeners;
 
 	private IncludePathVariableManager() {
 	}
@@ -73,6 +75,33 @@ public class IncludePathVariableManager {
 		}
 		preferenceStore.setValue(PHPCoreConstants.INCLUDE_PATH_VARIABLE_NAMES, namesString.toString());
 		preferenceStore.setValue(PHPCoreConstants.INCLUDE_PATH_VARIABLE_PATHS, pathsString.toString());
+		fireIncludePathVariablesChanged(names, paths);
+	}
+
+	private void fireIncludePathVariablesChanged(String[] names, IPath[] paths) {
+		if (listeners == null || listeners.size() == 0)
+			return;
+		for (Iterator i = listeners.iterator(); i.hasNext();) {
+			((IncludePathVariablesListener) i.next()).includePathVariablesChanged(names, paths);
+		}
+
+	}
+
+	public void addListener(IncludePathVariablesListener listener) {
+		if (listeners == null) {
+			listeners = new ArrayList(1);
+		}
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
+	}
+
+	public void removeListener(IncludePathVariablesListener listener) {
+		if (listeners == null || listeners.size() == 0)
+			return;
+		if (listeners.contains(listener)) {
+			listeners.remove(listener);
+		}
 	}
 
 	public String[] getIncludePathVariableNames() {
@@ -91,10 +120,16 @@ public class IncludePathVariableManager {
 		String[] paths = {};
 		if (pathsString.length() > 0)
 			paths = pathsString.split(",");
-		assert (names.length == paths.length);
+		// Not good since empty paths are allowed!!!
+		// assert (names.length == paths.length); 
 		for (int i = 0; i < names.length; i++) {
-			IPath path = new Path(paths[i]);
-			variables.put(names[i], path);
+			String path;
+			if (i < paths.length) {
+				path = paths[i];
+			} else {
+				path = "";
+			}
+			variables.put(names[i], new Path(path));
 		}
 
 		initExtensionPoints();
