@@ -12,9 +12,49 @@ package org.eclipse.php.debug.core.debugger;
 
 import java.io.File;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.debug.core.communication.DebugConnectionThread;
 import org.eclipse.php.debug.core.communication.ResponseHandler;
-import org.eclipse.php.debug.core.debugger.messages.*;
+import org.eclipse.php.debug.core.debugger.messages.AddBreakpointRequest;
+import org.eclipse.php.debug.core.debugger.messages.AddBreakpointResponse;
+import org.eclipse.php.debug.core.debugger.messages.AssignValueRequest;
+import org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsRequest;
+import org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsResponse;
+import org.eclipse.php.debug.core.debugger.messages.CancelBreakpointRequest;
+import org.eclipse.php.debug.core.debugger.messages.CancelBreakpointResponse;
+import org.eclipse.php.debug.core.debugger.messages.DebugScriptEndedNotification;
+import org.eclipse.php.debug.core.debugger.messages.DebugSessionClosedNotification;
+import org.eclipse.php.debug.core.debugger.messages.DebugSessionStartedNotification;
+import org.eclipse.php.debug.core.debugger.messages.DebuggerErrorNotification;
+import org.eclipse.php.debug.core.debugger.messages.EvalRequest;
+import org.eclipse.php.debug.core.debugger.messages.EvalResponse;
+import org.eclipse.php.debug.core.debugger.messages.GetCallStackRequest;
+import org.eclipse.php.debug.core.debugger.messages.GetCallStackResponse;
+import org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueRequest;
+import org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueResponse;
+import org.eclipse.php.debug.core.debugger.messages.GetVariableValueRequest;
+import org.eclipse.php.debug.core.debugger.messages.GetVariableValueResponse;
+import org.eclipse.php.debug.core.debugger.messages.GoRequest;
+import org.eclipse.php.debug.core.debugger.messages.GoResponse;
+import org.eclipse.php.debug.core.debugger.messages.HeaderOutputNotification;
+import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
+import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
+import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
+import org.eclipse.php.debug.core.debugger.messages.OutputNotification;
+import org.eclipse.php.debug.core.debugger.messages.ParsingErrorNotification;
+import org.eclipse.php.debug.core.debugger.messages.PauseDebuggerRequest;
+import org.eclipse.php.debug.core.debugger.messages.PauseDebuggerResponse;
+import org.eclipse.php.debug.core.debugger.messages.ReadyNotification;
+import org.eclipse.php.debug.core.debugger.messages.SetProtocolRequest;
+import org.eclipse.php.debug.core.debugger.messages.SetProtocolResponse;
+import org.eclipse.php.debug.core.debugger.messages.StartRequest;
+import org.eclipse.php.debug.core.debugger.messages.StartResponse;
+import org.eclipse.php.debug.core.debugger.messages.StepIntoRequest;
+import org.eclipse.php.debug.core.debugger.messages.StepIntoResponse;
+import org.eclipse.php.debug.core.debugger.messages.StepOutRequest;
+import org.eclipse.php.debug.core.debugger.messages.StepOutResponse;
+import org.eclipse.php.debug.core.debugger.messages.StepOverRequest;
+import org.eclipse.php.debug.core.debugger.messages.StepOverResponse;
 
 /**
  * An IRemoteDebugger implementation. 
@@ -121,18 +161,38 @@ public class RemoteDebugger implements IRemoteDebugger {
 		debugHandler.connectionTimedout();
 	}
 
+	/**
+	 * Converts the given file name to a system independent file name. 
+	 * The convertion is platform independent and is similar to calling the convertToSystemIndependentFileName(fileName, true)
+	 * @param fileName
+	 * @return
+	 */
 	public static String convertToSystemIndependentFileName(String fileName) {
-		if (fileName == null)
-			return null;
-		fileName = fileName.replace('\\', '/');
+		return convertToSystemIndependentFileName(fileName, true);
+	}
+	
+	/**
+	 * Converts the given file name to a system independent file name. If the ignoreSystemType is false, the
+	 * convertion will occure only if the current system is Microsoft Windows.
+	 * @param fileName
+	 * @return
+	 */
+	public static String convertToSystemIndependentFileName(String fileName, boolean ignoreSystemType) {
+		if (ignoreSystemType || !ignoreSystemType && Platform.WS_WIN32.equals(Platform.getOS())) {
+			if (fileName == null)
+				return null;
+			fileName = fileName.replace('\\', '/');
+		}
 		return fileName;
 	}
 
 	private static final String convertToSystemDependentFileName(String fileName) {
 		if (fileName == null)
 			return null;
-		fileName = fileName.replace('/', File.separatorChar);
-		fileName = fileName.replace('\\', File.separatorChar);
+		if (Platform.WS_WIN32.equals(Platform.getOS())) {
+			fileName = fileName.replace('/', File.separatorChar);
+			fileName = fileName.replace('\\', File.separatorChar);
+		}
 		return fileName;
 	}
 
@@ -194,7 +254,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			AddBreakpointRequest request = new AddBreakpointRequest();
 			Breakpoint tmpBreakpoint = (Breakpoint) bp.clone();
-			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName());
+			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName(), false);
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
 			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
@@ -216,7 +276,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			AddBreakpointRequest request = new AddBreakpointRequest();
 			Breakpoint tmpBreakpoint = (Breakpoint) breakpoint.clone();
-			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName());
+			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName(), false);
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
 			AddBreakpointResponse response = (AddBreakpointResponse) connection.sendRequest(request);

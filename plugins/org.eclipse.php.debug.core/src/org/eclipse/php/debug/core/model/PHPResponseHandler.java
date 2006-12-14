@@ -30,7 +30,7 @@ public class PHPResponseHandler {
     public class BreakpointAddedResponseHandler implements org.eclipse.php.debug.core.debugger.Debugger.BreakpointAddedResponseHandler {
 
         public void breakpointAdded(String fileName, int lineNumber, int id, boolean success) {
-            fileName = RemoteDebugger.convertToSystemIndependentFileName(fileName);
+            fileName = RemoteDebugger.convertToSystemIndependentFileName(fileName, false);
             String info = "Filename: " + fileName + " lineNumber " + lineNumber + " id: " + id;
             if (success) {
                 IBreakpoint breakpoint = fDebugTarget.findBreakpoint(fileName, lineNumber);
