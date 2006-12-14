@@ -14,8 +14,16 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.dialogs.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.DialogPage;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferencePageContainer;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.PHPCorePlugin;
@@ -38,7 +46,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * Property page for configuring the include path
  */
 public class IncludePathPropertyPage extends PropertyPage implements IStatusChangeListener {
-	
+
 	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.IncludePathPropertyPage"; //$NON-NLS-1$
 
 	private static final String PAGE_SETTINGS = "IncludePathPropertyPage"; //$NON-NLS-1$
@@ -242,6 +250,10 @@ public class IncludePathPropertyPage extends PropertyPage implements IStatusChan
 				}
 			}
 		}
+	}
+
+	public void dispose() {
+		fIncludePathsBlock.dispose();
 	}
 
 }

@@ -621,4 +621,9 @@ public class IncludePathBlock {
 			}
 		}
 	}
+
+	public void dispose() {
+		fLibrariesPage.dispose();
+
+	}
 }
