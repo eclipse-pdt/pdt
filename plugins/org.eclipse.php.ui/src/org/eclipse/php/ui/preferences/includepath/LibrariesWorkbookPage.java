@@ -13,11 +13,18 @@ package org.eclipse.php.ui.preferences.includepath;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -27,20 +34,28 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.project.IIncludePathEntry;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
+import org.eclipse.php.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.php.core.project.options.includepath.IncludePathVariablesListener;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.php.ui.util.ExceptionHandler;
 import org.eclipse.php.ui.util.PixelConverter;
-import org.eclipse.php.ui.wizards.fields.*;
+import org.eclipse.php.ui.wizards.fields.DialogField;
+import org.eclipse.php.ui.wizards.fields.IDialogFieldListener;
+import org.eclipse.php.ui.wizards.fields.ITreeListAdapter;
+import org.eclipse.php.ui.wizards.fields.LayoutUtil;
+import org.eclipse.php.ui.wizards.fields.ListDialogField;
+import org.eclipse.php.ui.wizards.fields.TreeListDialogField;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public class LibrariesWorkbookPage extends IncludePathBasePage {
+public class LibrariesWorkbookPage extends IncludePathBasePage implements IncludePathVariablesListener {
 
 	private ListDialogField fIncludePathList;
 	private IProject fCurrJProject;
@@ -76,6 +91,7 @@ public class LibrariesWorkbookPage extends IncludePathBasePage {
 		fLibrariesList.enableButton(IDX_EDIT, false);
 
 		fLibrariesList.setViewerSorter(new IPListElementSorter());
+		IncludePathVariableManager.instance().addListener(this);
 
 	}
 
@@ -676,6 +692,32 @@ public class LibrariesWorkbookPage extends IncludePathBasePage {
 				fLibrariesList.expandElement(selElements.get(i), 1);
 			}
 		}
+	}
+
+	public void includePathVariablesChanged(String[] names, IPath[] paths) {
+		ArrayList namesList = new ArrayList(Arrays.asList(names));
+		ArrayList pathsList = new ArrayList(Arrays.asList(paths));
+		final ArrayList elementsToRemove = new ArrayList(0);
+		for (Iterator i = fLibrariesList.getElements().iterator(); i.hasNext();) {
+			IPListElement element = (IPListElement) i.next();
+			if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+				String name = element.getPath().toString();
+				if (!namesList.contains(name) || pathsList.get(namesList.indexOf(name)) == null) {
+					elementsToRemove.add(element);
+				}
+			}
+		}
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				//				for (Iterator i = elementsToRemove.iterator(); i.hasNext();) {
+				//					fLibrariesList.removeElement(i.next());
+				//				}
+			}
+		});
+	}
+
+	public void dispose() {
+		IncludePathVariableManager.instance().removeListener(this);
 	}
 
 }
