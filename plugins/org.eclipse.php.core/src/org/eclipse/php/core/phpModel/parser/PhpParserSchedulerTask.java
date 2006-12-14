@@ -27,16 +27,13 @@ public class PhpParserSchedulerTask implements Runnable {
 
 	// variable needed for the stop operation 
 	private volatile boolean threadAlive = true;
-	
+
 	// a limit size for the parser stack 
 	private static final int BUFFER_MAX_SIZE = 100;
-	
+
 	// holds the stack of tasks
 	private final LinkedList buffer = new LinkedList();
 
-	// syncronizer for the buffer
-	private volatile Object bufferSyncronizer = new Object();
-	
 	// this class is singleton - only one instance is allowed  
 	protected static final PhpParserSchedulerTask instance = new PhpParserSchedulerTask();
 
@@ -66,7 +63,7 @@ public class PhpParserSchedulerTask implements Runnable {
 
 				// if release == null something with our stack lock mechanism is wrong!
 				assert release != null;
-				
+
 				// do the job of parsing with the given information
 				release.run();
 
@@ -82,29 +79,25 @@ public class PhpParserSchedulerTask implements Runnable {
 	 * @throws InterruptedException 
 	 * @throws InterruptedException 
 	 */
-	protected ParserExecuter release() throws InterruptedException {
+	protected synchronized ParserExecuter release() throws InterruptedException {
 
-		synchronized (bufferSyncronizer) {
-
-			// pop a new parser task properties from stack
-			while (buffer.size() == 0) {
-				try {
-					bufferSyncronizer.wait();
-				} catch (InterruptedException e) {
-					// process of releasing was canceled
-					// ignore operation
-				}
+		// pop a new parser task properties from stack
+		while (buffer.size() == 0) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// process of releasing was canceled
+				// ignore operation
 			}
-
-			// get the next item
-			final ParserExecuter item = (ParserExecuter) buffer.removeFirst();
-
-			// notify that the stack is not full 
-			bufferSyncronizer.notifyAll();
-
-			return item;
-			
 		}
+
+		// get the next item
+		final ParserExecuter item = (ParserExecuter) buffer.removeFirst();
+
+		// notify that the stack is not full 
+		notifyAll();
+
+		return item;
 
 	}
 
@@ -117,37 +110,33 @@ public class PhpParserSchedulerTask implements Runnable {
 	 */
 	public synchronized void schedule(PHPParserManager parserManager, PhpParser phpParser, ParserClient client, String filename, Reader reader, Pattern[] tasksPatterns, long lastModified, boolean useAspTagsAsPhp) {
 
-		synchronized (bufferSyncronizer) {
-			
-			// check the top of the stack, if it is the file is already 
-			// on stack just ignore the last one
-			if (buffer.size() > 0) {
-				final ParserExecuter top = (ParserExecuter) buffer.getFirst();
-				if (top.filename.equals(filename)) {
-					buffer.removeFirst();
-				}
+		// check the top of the stack, if it is the file is already 
+		// on stack just ignore the last one
+		if (buffer.size() > 0) {
+			final ParserExecuter top = (ParserExecuter) buffer.getFirst();
+			if (top.filename.equals(filename)) {
+				buffer.removeFirst();
 			}
-			
-			// add it (saftly)
-			// if the stack is full - wait() for an empty place 
-			while (buffer.size() >= BUFFER_MAX_SIZE) {
-				try {
-					bufferSyncronizer.wait();
-				} catch (InterruptedException e) {
-					// process of scheduling was canceled
-					// ignore operation
-				}
-			}
-
-			// creates the new task properties
-			final ParserExecuter parserProperties = new ParserExecuter(parserManager, phpParser, client, filename, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
-
-			// adds  the task to the head of the list
-			buffer.addFirst(parserProperties);
-
-			// now you can notify that the stack is not empty
-			bufferSyncronizer.notifyAll();
-			
 		}
+
+		// add it (saftly)
+		// if the stack is full - wait() for an empty place 
+		while (buffer.size() >= BUFFER_MAX_SIZE) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// process of scheduling was canceled
+				// ignore operation
+			}
+		}
+
+		// creates the new task properties
+		final ParserExecuter parserProperties = new ParserExecuter(parserManager, phpParser, client, filename, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
+
+		// adds  the task to the head of the list
+		buffer.addFirst(parserProperties);
+
+		// now you can notify that the stack is not empty
+		notifyAll();
 	}
 }
