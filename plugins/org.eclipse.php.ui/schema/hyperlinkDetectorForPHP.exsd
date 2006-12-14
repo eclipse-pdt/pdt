@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.php.ui" id="hyperlinkDetectorForPHP" name="hyperlinkDetectorForPHP"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         Allows to provide additional PHP entities, so &quot;CTRL + mouse click&quot; feature (Go-to source) will be aware of them.
       </documentation>
    </annotation>
 
@@ -76,7 +76,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         December 2005
       </documentation>
    </annotation>
 
@@ -85,7 +85,14 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.ui.hyperlinkDetectorForPHP&quot;&gt;
+	&lt;HyperlinkDetectorForPHP
+		class=&quot;com.foo.bar.MyCodeHyperlinkDetector&quot;
+		id=&quot;com.foo.bar.MyCodeHyperlinkDetector&quot;
+		name=&quot;My Code Hyperlink Detector&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 
@@ -94,7 +101,10 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         &lt;p&gt;
+Plug-ins that wish to extend this extension point must implement interface:
+&lt;samp&gt;org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP&lt;/samp&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -103,7 +113,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         No default implementation for this extension point.
       </documentation>
    </annotation>
 
