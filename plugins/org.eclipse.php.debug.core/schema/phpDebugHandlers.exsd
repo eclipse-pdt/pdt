@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.php.debug.core" id="phpDebugHandlers" name="PHP Debug Handler"/>
       </appInfo>
       <documentation>
-         This extension point is used for providing new PHP debug handlers.
+         This extension point is used for providing new PHP debug handlers, which provide methods for handling various debug messages that PHP Debug Server sends.
       </documentation>
    </annotation>
 
@@ -54,14 +54,14 @@
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  Name of the debug handler.
+                  Human readable name of the debug handler.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  Debug handler class, which implements &lt;samp&gt;org.eclipse.php.debug.core.IDebugHandler&lt;/samp&gt;.
+                  Debug handler class, which implements &lt;samp&gt;org.eclipse.php.debug.core.debugger.IDebugHandler&lt;/samp&gt;.
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.php.debug.core.debugger.IDebugHandler"/>
@@ -88,7 +88,7 @@
          &lt;p&gt;
 &lt;pre&gt;
    &lt;extension point=&quot;org.eclipse.php.debug.core.phpDebugHandlers&quot;&gt;
-      &lt;message class=&quot;com.zend.php.debug.PHPProfiler&quot; id=&quot;com.zend.php.debug.PHPProfiler&quot; name=&quot;PHP Profiler&quot;/&gt;
+      &lt;message class=&quot;com.foo.bar.PHPProfiler&quot; id=&quot;com.foo.bar.PHPProfiler&quot; name=&quot;PHP Profiler&quot;/&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
@@ -101,7 +101,7 @@
       </appInfo>
       <documentation>
          &lt;p&gt;
-Plugins that want to extend this extension point must implement this interface: &lt;samp&gt;org.eclipse.php.debug.core.debugger.DebugHandler&lt;/samp&gt;.
+Plugins that want to extend this extension point must implement this interface: &lt;samp&gt;org.eclipse.php.debug.core.debugger.IDebugHandler&lt;/samp&gt;.
 &lt;/p&gt;
       </documentation>
    </annotation>
