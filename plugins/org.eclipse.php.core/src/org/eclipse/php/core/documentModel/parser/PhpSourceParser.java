@@ -48,7 +48,7 @@ public class PhpSourceParser extends XMLSourceParser {
 	/*
 	 * Change the Tokenizer used by the XMLSourceParser to make it PHP aware
 	 */
-	protected BlockTokenizer getTokenizer() {
+	public BlockTokenizer getTokenizer() {
 		if (fTokenizer == null) {
 			PHPTokenizer phpTokenizer = new PHPTokenizer();
 			phpTokenizer.setProject(project);
