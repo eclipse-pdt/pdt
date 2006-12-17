@@ -707,11 +707,12 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 				}
 			}
 		}
+		final Object[] elementsToRemoveArray = elementsToRemove.toArray();
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
-				//				for (Iterator i = elementsToRemove.iterator(); i.hasNext();) {
-				//					fLibrariesList.removeElement(i.next());
-				//				}
+				for (int i = 0; i < elementsToRemoveArray.length; ++i) {
+					fLibrariesList.removeElement(elementsToRemoveArray[i]);
+				}
 			}
 		});
 	}
