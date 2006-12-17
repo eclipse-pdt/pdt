@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.php.test_feature"
-      label="Testing Feature"
+      label="%featureName"
       version="0.7.0.qualifier"
-      provider-name="Zend Technologies">
+      provider-name="%providerName">
 
    <description url="http://www.example.com/description">
       %description
