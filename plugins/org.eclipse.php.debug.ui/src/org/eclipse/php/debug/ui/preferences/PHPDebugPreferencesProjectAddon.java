@@ -155,7 +155,7 @@ public class PHPDebugPreferencesProjectAddon extends AbstractPHPPreferencePageBl
 		link.setText(label);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(PHPDebugPreferencesProjectAddon.this.propertyPage.getShell(), propertyPageID, new String[] { propertyPageID }, null);
+				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(PHPDebugPreferencesProjectAddon.this.propertyPage.getShell(), propertyPageID, null, null);
 				dialog.setBlockOnOpen(true);
 				dialog.addPageChangedListener(new IPageChangedListener() {
 					public void pageChanged(PageChangedEvent event) {
