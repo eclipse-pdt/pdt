@@ -38,7 +38,7 @@
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.php"/>
       <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.gtk.linux.x86" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.linux.x86"/>
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.ide"/>
@@ -46,19 +46,19 @@
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.update.configurator"/>
       <plugin id="org.eclipse.update.core"/>
-      <plugin id="org.eclipse.update.core.linux" fragment="true"/>
+      <plugin id="org.eclipse.update.core.linux"/>
       <plugin id="org.eclipse.update.ui"/>
    </plugins>
 
    <features>
       <feature id="org.eclipse.emf" version="2.2.1.v200609210005"/>
-      <feature id="org.eclipse.jem" version="1.2.1.v20060815_M----6zXJJzKIRGVU"/>
+      <feature id="org.eclipse.jem" version="1.2.2.v20061027_M----6zXJJzM1TEVU"/>
       <feature id="org.eclipse.php_feature" version="0.7.0.qualifier"/>
       <feature id="org.eclipse.platform" version="3.2.1.r321_v20060921-b_XVA-INSQSyMtx"/>
       <feature id="org.eclipse.rcp" version="3.2.1.r321_v20060801-2ekW2BxmcpPUOoq"/>
-      <feature id="org.eclipse.wst" version="1.5.1.v200609111500-X3TmmF3AeboB5EW"/>
+      <feature id="org.eclipse.wst" version="1.5.2.v200610070620-X3Tmm8_VLz2EcCH"/>
       <feature id="org.eclipse.xsd" version="2.2.1.v200609210005"/>
-      <feature id="org.zend.php.debug_feature" version="0.1.5"/>
+      <feature id="org.zend.php.debug_feature" version="0.1.6"/>
    </features>
 
 </product>
