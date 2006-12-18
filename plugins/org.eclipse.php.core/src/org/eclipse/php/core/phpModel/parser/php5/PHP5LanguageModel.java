@@ -20,7 +20,7 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPKeywordData;
 
 public class PHP5LanguageModel extends PHPLanguageModel {
 
-	private static String ID = "PHP5LanguageModel";
+	public static String ID = "PHP5LanguageModel";
 
 	protected PHPKeywordData[] keyword;
 
