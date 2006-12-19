@@ -21,8 +21,9 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.debug.ui.console.ConsoleColorProvider;
-import org.eclipse.debug.ui.console.FileLink;
 import org.eclipse.debug.ui.console.IConsole;
+import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.debugger.DebugError;
@@ -173,8 +174,20 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 					file = PHPSourceSearchEngine.getResource(fileName, project);
 					// Modify the DebugError file name - For now it's disabled.
 					// debugError.setFileName(file.getFullPath().toString());
+
+					Object fileObject = null;
+					if (file.exists()) {
+						fileObject = file;
+					} else {
+						PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(fileName);
+						if (file != null) {
+							fileObject = fileData;
+						}
+					}
+					if (fileObject != null) {
+						fileLink = new PHPFileLink(fileObject, -1, -1, lineNumber);
+					}
 				}
-				fileLink = new FileLink(file, EditorID, -1, -1, lineNumber);
 			} catch (CoreException e) {
 				Logger.logException("PHPConsoleListener unexpected error", e);
 			}
