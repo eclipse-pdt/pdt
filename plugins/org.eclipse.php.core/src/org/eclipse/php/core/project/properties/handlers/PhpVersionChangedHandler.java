@@ -15,13 +15,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.preferences.IPreferencesPropagatorListener;
-import org.eclipse.php.core.preferences.PreferencesPropagator;
-import org.eclipse.php.core.preferences.PreferencesPropagatorEvent;
-import org.eclipse.php.core.preferences.PreferencesSupport;
+import org.eclipse.php.core.preferences.*;
 import org.eclipse.php.core.preferences.CorePreferenceConstants.Keys;
 
 public class PhpVersionChangedHandler implements IWorkspaceModelListener{
@@ -30,8 +28,13 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener{
 	private HashMap preferencesPropagatorListeners = new HashMap();
 
 	private static PhpVersionChangedHandler instance = null;
+	private PreferencesPropagator preferencesPropagator;
+	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
+	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+
 	
 	private PhpVersionChangedHandler(){
+		preferencesPropagator = PreferencePropagatorFactory.getInstance().getPreferencePropagator(NODES_QUALIFIER, store);		
 	}
 	
 	public static PhpVersionChangedHandler getInstance(){
@@ -51,13 +54,13 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener{
 		//register as a listener to the PP on this project
 		PreferencesPropagatorListener listener = new PreferencesPropagatorListener(project);
 		preferencesPropagatorListeners.put(project, listener);
-		PreferencesPropagator.getInstance().addPropagatorListener(listener, Keys.PHP_VERSION);
+		preferencesPropagator.addPropagatorListener(listener, Keys.PHP_VERSION);
 	}
 
 	public synchronized void projectModelRemoved(IProject project) {
 		projectListeners.remove(project);
 		PreferencesPropagatorListener listener = (PreferencesPropagatorListener)preferencesPropagatorListeners.get(project);
-		PreferencesPropagator.getInstance().removePropagatorListener(listener, Keys.PHP_VERSION);
+		preferencesPropagator.removePropagatorListener(listener, Keys.PHP_VERSION);
 		preferencesPropagatorListeners.remove(project);
 	}
 
