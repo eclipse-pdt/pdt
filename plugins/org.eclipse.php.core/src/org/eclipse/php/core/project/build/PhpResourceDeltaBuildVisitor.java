@@ -10,15 +10,26 @@
  *******************************************************************************/
 package org.eclipse.php.core.project.build;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.php.core.PHPCorePlugin;
+import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.core.documentModel.validate.PHPProblemsValidator;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.project.PHPNature;
 
 public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 
+	// used to examine if a file is php associated
+	private static final IContentTypeManager CONTENT_TYPE_MANAGER = Platform.getContentTypeManager();
+	
 	private PHPProblemsValidator validator = new PHPProblemsValidator();
 	
 	public boolean visit(IResourceDelta delta) throws CoreException {
@@ -39,6 +50,15 @@ public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 
 	private void processFileDelta(IResourceDelta fileDelta) {
 		IFile file = (IFile) fileDelta.getResource();
+
+		// if it is not an associated php file - don't validate
+		final int numSegments = fileDelta.getFullPath().segmentCount();
+		final String filename = fileDelta.getFullPath().segment(numSegments - 1);
+		final IContentType contentType = CONTENT_TYPE_MANAGER.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+		if (!contentType.isAssociatedWith(filename)) {
+			return;
+		}			
+		
 		switch (fileDelta.getKind()) {
 			case IResourceDelta.ADDED:
 				PHPWorkspaceModelManager.getInstance().addFileToModel(file);
