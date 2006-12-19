@@ -18,10 +18,7 @@ import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.preferences.IPreferencesPropagatorListener;
-import org.eclipse.php.core.preferences.PreferencesPropagator;
-import org.eclipse.php.core.preferences.PreferencesPropagatorEvent;
-import org.eclipse.php.core.preferences.PreferencesSupport;
+import org.eclipse.php.core.preferences.*;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 
 /**
@@ -41,10 +38,15 @@ public class FormatPreferencesSupport {
 	private PreferencesPropagatorListener listener = null;
 
 	private boolean preferencesChanged = false;
+	
+	private PreferencesPropagator preferencesPropagator;
+	
+	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
+	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
 
 	private FormatPreferencesSupport() {
-		IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
 
+		preferencesPropagator = PreferencePropagatorFactory.getInstance().getPreferencePropagator(NODES_QUALIFIER, store);
 		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
 	}
 
@@ -108,13 +110,13 @@ public class FormatPreferencesSupport {
 
 	private void verifyListening() {
 		if(listener != null){
-			PreferencesPropagator.getInstance().removePropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
-			PreferencesPropagator.getInstance().removePropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+			preferencesPropagator.removePropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
+			preferencesPropagator.removePropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 		}
 		
 		listener = new PreferencesPropagatorListener(fLastProject);
-		PreferencesPropagator.getInstance().addPropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
-		PreferencesPropagator.getInstance().addPropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
+		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 	}
 
 	private class PreferencesPropagatorListener implements IPreferencesPropagatorListener {

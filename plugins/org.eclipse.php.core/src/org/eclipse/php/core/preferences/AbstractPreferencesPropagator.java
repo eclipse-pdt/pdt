@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.eclipse.php.core.PHPCorePlugin;
-
 /**
  * A base class for all the preferences propagators.
  *
@@ -23,7 +21,6 @@ import org.eclipse.php.core.PHPCorePlugin;
  */
 public abstract class AbstractPreferencesPropagator {
 
-	protected static final String NODES_QUALIFIER = PHPCorePlugin.ID;
 
 	protected HashMap listenersMap;
 	protected boolean isInstalled;

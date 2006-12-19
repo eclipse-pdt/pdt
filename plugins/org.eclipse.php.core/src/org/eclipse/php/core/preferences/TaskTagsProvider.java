@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
@@ -35,8 +36,11 @@ public class TaskTagsProvider {
 	private HashMap projectToTaskTagListener;
 	private HashMap projectToPropagatorListeners;
 	private boolean isInstalled;
-	private PreferencesPropagator preferencesPropagator;
 	private PreferencesSupport preferencesSupport;
+	private PreferencesPropagator preferencesPropagator;
+	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
+	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+
 
 	/**
 	 * Constructs a new TaskTagsProvider.
@@ -166,7 +170,7 @@ public class TaskTagsProvider {
 		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, PHPCorePlugin.getDefault().getPreferenceStore());
 		projectToTaskTagListener = new HashMap();
 		projectToPropagatorListeners = new HashMap();
-		preferencesPropagator = PreferencesPropagator.getInstance();
+		preferencesPropagator = PreferencePropagatorFactory.getInstance().getPreferencePropagator(NODES_QUALIFIER, store);
 		isInstalled = true;
 	}
 

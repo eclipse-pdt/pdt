@@ -30,14 +30,17 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	private IProject project;
 	private IPreferenceChangeListener preferenceChangeListener;
 	private ProjectScope scope;
+	private String nodeQualifier;
 
 	/**
 	 * Constructs a new ProjectPreferencesPropagator.
 	 * 
 	 * @param project The project to monitor.
+	 * @param nodeQualifier The plugin identifier
 	 */
-	public ProjectPreferencesPropagator(IProject project) {
+	public ProjectPreferencesPropagator(IProject project, String nodeQualifier) {
 		this.project = project;
+		this.nodeQualifier = nodeQualifier;
 		install();
 	}
 
@@ -50,7 +53,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 		}
 		scope = new ProjectScope(project);
 		preferenceChangeListener = new InnerPreferenceChangeListener();
-		scope.getNode(NODES_QUALIFIER).addPreferenceChangeListener(preferenceChangeListener);
+		scope.getNode(nodeQualifier).addPreferenceChangeListener(preferenceChangeListener);
 		super.install();
 	}
 
@@ -62,7 +65,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 			return;
 		}
 		try {
-			IEclipsePreferences prefNode = scope.getNode(NODES_QUALIFIER);
+			IEclipsePreferences prefNode = scope.getNode(nodeQualifier);
 			prefNode.removePreferenceChangeListener(preferenceChangeListener);
 		} catch (Exception e) {
 			// do nothing
