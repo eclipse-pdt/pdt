@@ -479,7 +479,7 @@ public class PHPModelUtil {
 	public static boolean hasSuperClass(final PHPClassData classData, final String superClassName) {
 		return discoverSuperClass(classData, superClassName) != null;
 	}
-	
+
 	public static PHPClassData discoverSuperClass(final PHPClassData classData, final String superClassName) {
 		final PHPSuperClassNameData currentSuperClassNameData = classData.getSuperClassData();
 		if (currentSuperClassNameData == null)
@@ -495,7 +495,7 @@ public class PHPModelUtil {
 				return currentSuperClassData;
 		}
 		return null;
-		
+
 	}
 
 	public static boolean isExternal(final Object target) {
