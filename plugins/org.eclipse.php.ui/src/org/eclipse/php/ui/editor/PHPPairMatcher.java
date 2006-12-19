@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
-
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 
 /**
  * Helper class for match pairs of characters.
@@ -27,16 +31,15 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	private int fStartPos;
 	private int fEndPos;
 	private int fAnchor;
-	
+
 	/**
 	 * Stores the source version state.
 	 * @since 3.1
 	 */
-	private boolean fHighlightAngularBrackets= false;
-
+	private boolean fHighlightAngularBrackets = false;
 
 	public PHPPairMatcher(char[] pairs) {
-		fPairs= pairs;
+		fPairs = pairs;
 	}
 
 	/* (non-Javadoc)
@@ -44,12 +47,12 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	 */
 	public IRegion match(IDocument document, int offset) {
 
-		fOffset= offset;
+		fOffset = offset;
 
 		if (fOffset < 0)
 			return null;
 
-		fDocument= document;
+		fDocument = document;
 
 		if (fDocument != null && matchPairsAt() && fStartPos != fEndPos)
 			return new Region(fStartPos, fEndPos - fStartPos + 1);
@@ -69,7 +72,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	 */
 	public void dispose() {
 		clear();
-		fDocument= null;
+		fDocument = null;
 	}
 
 	/*
@@ -81,46 +84,44 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	private boolean matchPairsAt() {
 
 		int i;
-		int pairIndex1= fPairs.length;
-		int pairIndex2= fPairs.length;
+		int pairIndex1 = fPairs.length;
+		int pairIndex2 = fPairs.length;
 
-		fStartPos= -1;
-		fEndPos= -1;
+		fStartPos = -1;
+		fEndPos = -1;
 
 		// get the char preceding the start position
 		try {
 
-			char prevChar= fDocument.getChar(Math.max(fOffset - 1, 0));
+			char prevChar = fDocument.getChar(Math.max(fOffset - 1, 0));
 			// search for opening peer character next to the activation point
-			for (i= 0; i < fPairs.length; i= i + 2) {
+			for (i = 0; i < fPairs.length; i = i + 2) {
 				if (prevChar == fPairs[i]) {
-					fStartPos= fOffset - 1;
-					pairIndex1= i;
+					fStartPos = fOffset - 1;
+					pairIndex1 = i;
 				}
 			}
 
 			// search for closing peer character next to the activation point
-			for (i= 1; i < fPairs.length; i= i + 2) {
+			for (i = 1; i < fPairs.length; i = i + 2) {
 				if (prevChar == fPairs[i]) {
-					fEndPos= fOffset - 1;
-					pairIndex2= i;
+					fEndPos = fOffset - 1;
+					pairIndex2 = i;
 				}
 			}
 
 			if (fEndPos > -1) {
-				fAnchor= RIGHT;
-				fStartPos= searchForOpeningPeer(fEndPos, fPairs[pairIndex2 - 1], fPairs[pairIndex2], fDocument);
+				fAnchor = RIGHT;
+				fStartPos = searchForOpeningPeer(fEndPos, fPairs[pairIndex2 - 1], fPairs[pairIndex2], fDocument);
 				if (fStartPos > -1)
 					return true;
-				else
-					fEndPos= -1;
-			}	else if (fStartPos > -1) {
-				fAnchor= LEFT;
-				fEndPos= searchForClosingPeer(fStartPos, fPairs[pairIndex1], fPairs[pairIndex1 + 1], fDocument);
+				fEndPos = -1;
+			} else if (fStartPos > -1) {
+				fAnchor = LEFT;
+				fEndPos = searchForClosingPeer(fStartPos, fPairs[pairIndex1], fPairs[pairIndex1 + 1], fDocument);
 				if (fEndPos > -1)
 					return true;
-				else
-					fStartPos= -1;
+				fStartPos = -1;
 			}
 
 		} catch (BadLocationException x) {
@@ -130,24 +131,23 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	}
 
 	private int searchForClosingPeer(int offset, char openingPeer, char closingPeer, IDocument document) throws BadLocationException {
-		boolean useGenericsHeuristic= openingPeer == '<';
+		boolean useGenericsHeuristic = openingPeer == '<';
 		if (useGenericsHeuristic && !fHighlightAngularBrackets)
 			return -1;
-		PHPHeuristicScanner scanner= new PHPHeuristicScanner(document, IPhpPartitions.PHP_PARTITIONING, TextUtilities.getContentType(document, IPhpPartitions.PHP_PARTITIONING, offset, false));
+		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, TextUtilities.getContentType(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, false));
 		if (useGenericsHeuristic && !isTypeParameterBracket(offset, document, scanner))
 			return -1;
 
 		return scanner.findClosingPeer(offset + 1, openingPeer, closingPeer);
 	}
 
-
 	private int searchForOpeningPeer(int offset, char openingPeer, char closingPeer, IDocument document) throws BadLocationException {
-		boolean useGenericsHeuristic= openingPeer == '<';
+		boolean useGenericsHeuristic = openingPeer == '<';
 		if (useGenericsHeuristic && !fHighlightAngularBrackets)
 			return -1;
 
-		PHPHeuristicScanner scanner= new PHPHeuristicScanner(document, IPhpPartitions.PHP_PARTITIONING, TextUtilities.getContentType(document, IPhpPartitions.PHP_PARTITIONING, offset, false));
-		int peer= scanner.findOpeningPeer(offset - 1, openingPeer, closingPeer);
+		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, TextUtilities.getContentType(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, false));
+		int peer = scanner.findOpeningPeer(offset - 1, openingPeer, closingPeer);
 		if (peer == PHPHeuristicScanner.NOT_FOUND)
 			return -1;
 		if (useGenericsHeuristic && !isTypeParameterBracket(peer, document, scanner))
@@ -174,19 +174,14 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 		 */
 
 		try {
-			IRegion line= document.getLineInformationOfOffset(offset);
+			IRegion line = document.getLineInformationOfOffset(offset);
 
-			int prevToken= scanner.previousToken(offset - 1, line.getOffset());
-			int prevTokenOffset= scanner.getPosition() + 1;
-			String previous= prevToken == Symbols.TokenEOF ? null : document.get(prevTokenOffset, offset - prevTokenOffset).trim();
+			int prevToken = scanner.previousToken(offset - 1, line.getOffset());
+			int prevTokenOffset = scanner.getPosition() + 1;
+			String previous = prevToken == Symbols.TokenEOF ? null : document.get(prevTokenOffset, offset - prevTokenOffset).trim();
 
-			if (	   prevToken == Symbols.TokenLBRACE
-					|| prevToken == Symbols.TokenRBRACE
-					|| prevToken == Symbols.TokenSEMICOLON
-					|| prevToken == Symbols.TokenSYNCHRONIZED
-					|| prevToken == Symbols.TokenSTATIC
-					|| (prevToken == Symbols.TokenIDENT && isTypeParameterIntroducer(previous))
-					|| prevToken == Symbols.TokenEOF)
+			if (prevToken == Symbols.TokenLBRACE || prevToken == Symbols.TokenRBRACE || prevToken == Symbols.TokenSEMICOLON || prevToken == Symbols.TokenSYNCHRONIZED || prevToken == Symbols.TokenSTATIC || (prevToken == Symbols.TokenIDENT && isTypeParameterIntroducer(previous))
+				|| prevToken == Symbols.TokenEOF)
 				return true;
 		} catch (BadLocationException e) {
 			return false;
@@ -209,12 +204,10 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	 * @since 3.1
 	 */
 	private boolean isTypeParameterIntroducer(String identifier) {
-		return identifier.length() > 0
-				&& (Character.isUpperCase(identifier.charAt(0))
-						|| identifier.startsWith("final") //$NON-NLS-1$
-						|| identifier.startsWith("public") //$NON-NLS-1$
-						|| identifier.startsWith("public") //$NON-NLS-1$
-						|| identifier.startsWith("protected") //$NON-NLS-1$
-						|| identifier.startsWith("private")); //$NON-NLS-1$
+		return identifier.length() > 0 && (Character.isUpperCase(identifier.charAt(0)) || identifier.startsWith("final") //$NON-NLS-1$
+			|| identifier.startsWith("public") //$NON-NLS-1$
+			|| identifier.startsWith("public") //$NON-NLS-1$
+			|| identifier.startsWith("protected") //$NON-NLS-1$
+		|| identifier.startsWith("private")); //$NON-NLS-1$
 	}
 }

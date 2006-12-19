@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 package org.eclipse.php.ui.editor;
+
 // taken from package org.eclipse.jdt.internal.ui.text;
 
 import java.util.Arrays;
@@ -22,6 +23,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.TypedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 
 /**
  * Utility methods for heuristic based Java manipulations in an incomplete
@@ -46,7 +48,6 @@ final class PHPHeuristicScanner implements Symbols {
 	 * <code>fDocument.getLength()</code> (forward scanning).
 	 */
 	public static final int UNBOUND = -2;
-
 
 	/* character constants */
 	private static final char LBRACE = '{';
@@ -132,8 +133,7 @@ final class PHPHeuristicScanner implements Symbols {
 				int end = partition.getOffset() + partition.getLength();
 				if (position < end)
 					return end;
-			}
-			else {
+			} else {
 				int offset = partition.getOffset();
 				if (position > offset)
 					return offset - 1;
@@ -181,8 +181,7 @@ final class PHPHeuristicScanner implements Symbols {
 				int end = partition.getOffset() + partition.getLength();
 				if (position < end)
 					return end;
-			}
-			else {
+			} else {
 				int offset = partition.getOffset();
 				if (position > offset)
 					return offset - 1;
@@ -205,7 +204,7 @@ final class PHPHeuristicScanner implements Symbols {
 		 *            the single character to match
 		 */
 		public CharacterMatch(char ch) {
-			this(new char[]{ch});
+			this(new char[] { ch });
 		}
 
 		/**
@@ -242,8 +241,7 @@ final class PHPHeuristicScanner implements Symbols {
 				int end = partition.getOffset() + partition.getLength();
 				if (position < end)
 					return end;
-			}
-			else {
+			} else {
 				int offset = partition.getOffset();
 				if (position > offset)
 					return offset - 1;
@@ -298,7 +296,7 @@ final class PHPHeuristicScanner implements Symbols {
 	 *            the document to scan.
 	 */
 	public PHPHeuristicScanner(IDocument document) {
-		this(document, IPhpPartitions.PHP_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE);
+		this(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE);
 	}
 
 	/**
@@ -332,29 +330,29 @@ final class PHPHeuristicScanner implements Symbols {
 		fPos++;
 
 		switch (fChar) {
-			case LBRACE :
+			case LBRACE:
 				return TokenLBRACE;
-			case RBRACE :
+			case RBRACE:
 				return TokenRBRACE;
-			case LBRACKET :
+			case LBRACKET:
 				return TokenLBRACKET;
-			case RBRACKET :
+			case RBRACKET:
 				return TokenRBRACKET;
-			case LPAREN :
+			case LPAREN:
 				return TokenLPAREN;
-			case RPAREN :
+			case RPAREN:
 				return TokenRPAREN;
-			case SEMICOLON :
+			case SEMICOLON:
 				return TokenSEMICOLON;
-			case COMMA :
+			case COMMA:
 				return TokenCOMMA;
-			case QUESTIONMARK :
+			case QUESTIONMARK:
 				return TokenQUESTIONMARK;
-			case EQUAL :
+			case EQUAL:
 				return TokenEQUAL;
-			case LANGLE :
+			case LANGLE:
 				return TokenLESSTHAN;
-			case RANGLE :
+			case RANGLE:
 				return TokenGREATERTHAN;
 		}
 
@@ -371,19 +369,15 @@ final class PHPHeuristicScanner implements Symbols {
 			String identOrKeyword;
 			try {
 				identOrKeyword = fDocument.get(from, to - from);
-			}
-			catch (BadLocationException e) {
+			} catch (BadLocationException e) {
 				return TokenEOF;
 			}
 
 			return getToken(identOrKeyword);
 
-
 		}
-		else {
-			// operators, number literals etc
-			return TokenOTHER;
-		}
+		// operators, number literals etc
+		return TokenOTHER;
 	}
 
 	/**
@@ -408,31 +402,31 @@ final class PHPHeuristicScanner implements Symbols {
 		fPos--;
 
 		switch (fChar) {
-			case LBRACE :
+			case LBRACE:
 				return TokenLBRACE;
-			case RBRACE :
+			case RBRACE:
 				return TokenRBRACE;
-			case LBRACKET :
+			case LBRACKET:
 				return TokenLBRACKET;
-			case RBRACKET :
+			case RBRACKET:
 				return TokenRBRACKET;
-			case LPAREN :
+			case LPAREN:
 				return TokenLPAREN;
-			case RPAREN :
+			case RPAREN:
 				return TokenRPAREN;
-			case SEMICOLON :
+			case SEMICOLON:
 				return TokenSEMICOLON;
-			case COLON :
+			case COLON:
 				return TokenCOLON;
-			case COMMA :
+			case COMMA:
 				return TokenCOMMA;
-			case QUESTIONMARK :
+			case QUESTIONMARK:
 				return TokenQUESTIONMARK;
-			case EQUAL :
+			case EQUAL:
 				return TokenEQUAL;
-			case LANGLE :
+			case LANGLE:
 				return TokenLESSTHAN;
-			case RANGLE :
+			case RANGLE:
 				return TokenGREATERTHAN;
 		}
 
@@ -449,20 +443,15 @@ final class PHPHeuristicScanner implements Symbols {
 			String identOrKeyword;
 			try {
 				identOrKeyword = fDocument.get(from, to - from);
-			}
-			catch (BadLocationException e) {
+			} catch (BadLocationException e) {
 				return TokenEOF;
 			}
 
 			return getToken(identOrKeyword);
 
-
 		}
-		else {
-			// operators, number literals etc
-			return TokenOTHER;
-		}
-
+		// operators, number literals etc
+		return TokenOTHER;
 	}
 
 	/**
@@ -477,13 +466,13 @@ final class PHPHeuristicScanner implements Symbols {
 		Assert.isNotNull(s);
 
 		switch (s.length()) {
-			case 2 :
+			case 2:
 				if ("if".equals(s)) //$NON-NLS-1$
 					return TokenIF;
 				if ("do".equals(s)) //$NON-NLS-1$
 					return TokenDO;
 				break;
-			case 3 :
+			case 3:
 				if ("for".equals(s)) //$NON-NLS-1$
 					return TokenFOR;
 				if ("try".equals(s)) //$NON-NLS-1$
@@ -491,7 +480,7 @@ final class PHPHeuristicScanner implements Symbols {
 				if ("new".equals(s)) //$NON-NLS-1$
 					return TokenNEW;
 				break;
-			case 4 :
+			case 4:
 				if ("case".equals(s)) //$NON-NLS-1$
 					return TokenCASE;
 				if ("else".equals(s)) //$NON-NLS-1$
@@ -501,7 +490,7 @@ final class PHPHeuristicScanner implements Symbols {
 				if ("goto".equals(s)) //$NON-NLS-1$
 					return TokenGOTO;
 				break;
-			case 5 :
+			case 5:
 				if ("break".equals(s)) //$NON-NLS-1$
 					return TokenBREAK;
 				if ("catch".equals(s)) //$NON-NLS-1$
@@ -511,7 +500,7 @@ final class PHPHeuristicScanner implements Symbols {
 				if ("while".equals(s)) //$NON-NLS-1$
 					return TokenWHILE;
 				break;
-			case 6 :
+			case 6:
 				if ("return".equals(s)) //$NON-NLS-1$
 					return TokenRETURN;
 				if ("static".equals(s)) //$NON-NLS-1$
@@ -519,17 +508,17 @@ final class PHPHeuristicScanner implements Symbols {
 				if ("switch".equals(s)) //$NON-NLS-1$
 					return TokenSWITCH;
 				break;
-			case 7 :
+			case 7:
 				if ("default".equals(s)) //$NON-NLS-1$
 					return TokenDEFAULT;
 				if ("finally".equals(s)) //$NON-NLS-1$
 					return TokenFINALLY;
 				break;
-			case 9 :
+			case 9:
 				if ("interface".equals(s)) //$NON-NLS-1$
 					return TokenINTERFACE;
 				break;
-			case 12 :
+			case 12:
 				if ("synchronized".equals(s)) //$NON-NLS-1$
 					return TokenSYNCHRONIZED;
 				break;
@@ -563,7 +552,7 @@ final class PHPHeuristicScanner implements Symbols {
 			int depth = 1;
 			start -= 1;
 			while (true) {
-				start = scanForward(start + 1, UNBOUND, new CharacterMatch(new char[]{openingPeer, closingPeer}));
+				start = scanForward(start + 1, UNBOUND, new CharacterMatch(new char[] { openingPeer, closingPeer }));
 				if (start == NOT_FOUND)
 					return NOT_FOUND;
 
@@ -576,8 +565,7 @@ final class PHPHeuristicScanner implements Symbols {
 					return start;
 			}
 
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			return NOT_FOUND;
 		}
 	}
@@ -607,7 +595,7 @@ final class PHPHeuristicScanner implements Symbols {
 			int depth = 1;
 			start += 1;
 			while (true) {
-				start = scanBackward(start - 1, UNBOUND, new CharacterMatch(new char[]{openingPeer, closingPeer}));
+				start = scanBackward(start - 1, UNBOUND, new CharacterMatch(new char[] { openingPeer, closingPeer }));
 				if (start == NOT_FOUND)
 					return NOT_FOUND;
 
@@ -620,8 +608,7 @@ final class PHPHeuristicScanner implements Symbols {
 					return start;
 			}
 
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			return NOT_FOUND;
 		}
 	}
@@ -750,12 +737,10 @@ final class PHPHeuristicScanner implements Symbols {
 
 				fPos = condition.nextPosition(fPos, true);
 			}
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 		}
 		return NOT_FOUND;
 	}
-
 
 	/**
 	 * Finds the lowest position in <code>fDocument</code> such that the
@@ -841,8 +826,7 @@ final class PHPHeuristicScanner implements Symbols {
 
 				fPos = condition.nextPosition(fPos, false);
 			}
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 		}
 		return NOT_FOUND;
 	}
@@ -911,8 +895,7 @@ final class PHPHeuristicScanner implements Symbols {
 
 		try {
 			return fPartition.equals(TextUtilities.getContentType(fDocument, fPartitioning, position, false));
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			return false;
 		}
 	}
@@ -931,8 +914,7 @@ final class PHPHeuristicScanner implements Symbols {
 
 		try {
 			return TextUtilities.getPartition(fDocument, fPartitioning, position, false);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			return new TypedRegion(position, 0, "__no_partition_at_all"); //$NON-NLS-1$
 		}
 
@@ -966,16 +948,16 @@ final class PHPHeuristicScanner implements Symbols {
 			return false;
 
 		switch (previousToken(position, bound)) {
-			case TokenDO :
-			case TokenELSE :
+			case TokenDO:
+			case TokenELSE:
 				return true;
-			case TokenRPAREN :
+			case TokenRPAREN:
 				position = findOpeningPeer(fPos, LPAREN, RPAREN);
 				if (position > 0) {
 					switch (previousToken(position - 1, bound)) {
-						case TokenIF :
-						case TokenFOR :
-						case TokenWHILE :
+						case TokenIF:
+						case TokenFOR:
+						case TokenWHILE:
 							return true;
 					}
 				}
@@ -984,4 +966,3 @@ final class PHPHeuristicScanner implements Symbols {
 		return false;
 	}
 }
-
