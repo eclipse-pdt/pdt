@@ -32,6 +32,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -62,7 +63,6 @@ import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.php.ui.treecontent.TreeProvider;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
-import org.eclipse.php.ui.util.DecoratingPHPLabelProvider;
 import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.php.ui.util.FilterUpdater;
 import org.eclipse.php.ui.util.PHPElementComparer;
@@ -83,7 +83,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -99,6 +98,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
@@ -114,8 +114,6 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 
 	private PHPTreeViewer fViewer;
 	protected ExplorerContentProvider fContentProvider;
-
-	private Listener dragDetectListener;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
@@ -516,7 +514,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 
 		fLabelProvider = createLabelProvider();
 		fLabelProvider.setTreeProviders(treeProviders);
-		fViewer.setLabelProvider(new DecoratingPHPLabelProvider(fLabelProvider, false));
+		fViewer.setLabelProvider(new DecoratingLabelProvider(fLabelProvider, PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 	}
 
 	void projectStateChanged(Object root) {
@@ -854,12 +852,12 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		 */
 		protected ISelection createSelection(Object element) {
 			if (element instanceof PHPCodeData) {
-				if(element instanceof PHPSuperClassNameData) {
-					PHPSuperClassNameData superClassNameData = (PHPSuperClassNameData)element;
+				if (element instanceof PHPSuperClassNameData) {
+					PHPSuperClassNameData superClassNameData = (PHPSuperClassNameData) element;
 					PHPClassData classData = (PHPClassData) superClassNameData.getContainer();
-					if(classData != null) {
-						PHPClassData superClassData = PHPModelUtil.discoverSuperClass(classData,superClassNameData.getName());
-						if(superClassData != null) {
+					if (classData != null) {
+						PHPClassData superClassData = PHPModelUtil.discoverSuperClass(classData, superClassNameData.getName());
+						if (superClassData != null) {
 							element = superClassData;
 						}
 					}

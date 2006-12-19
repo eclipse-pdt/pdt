@@ -22,7 +22,6 @@ public class PHPFunctionsLabelProvider extends AppearanceAwareLabelProvider {
     PHPFunctionsLabelProvider(int textFlags, int imageFlags, ITreeContentProvider cp) {
         super(textFlags, imageFlags);
         fProblemDecorator = new TreeHierarchyLayoutProblemsDecorator();
-        addLabelDecorator(fProblemDecorator);
     }
 
     public String getText(Object element) {

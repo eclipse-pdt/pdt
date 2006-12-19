@@ -61,7 +61,6 @@ import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.php.ui.treecontent.TreeProvider;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
-import org.eclipse.php.ui.util.DecoratingPHPLabelProvider;
 import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.php.ui.util.PHPElementComparer;
 import org.eclipse.php.ui.util.PHPElementImageProvider;
@@ -682,7 +681,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 
 		fLabelProvider = createLabelProvider();
 		fLabelProvider.setTreeProviders(treeProviders);
-		fViewer.setLabelProvider(new DecoratingPHPLabelProvider(fLabelProvider, false));
+		fViewer.setLabelProvider(fLabelProvider);
 	}
 
 	public void setShowAll(final boolean showAll) {

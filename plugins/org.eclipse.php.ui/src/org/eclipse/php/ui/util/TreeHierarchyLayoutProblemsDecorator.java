@@ -30,7 +30,6 @@ public class TreeHierarchyLayoutProblemsDecorator extends ProblemsLabelDecorator
 	}
 
 	public TreeHierarchyLayoutProblemsDecorator(boolean isFlatLayout) {
-		super(null);
 		fIsFlatLayout = isFlatLayout;
 	}
 

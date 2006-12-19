@@ -39,10 +39,8 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.explorer.PHPTreeViewer;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
-import org.eclipse.php.ui.util.DecoratingPHPLabelProvider;
 import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.php.ui.util.PHPElementImageProvider;
 import org.eclipse.php.ui.util.PHPElementLabels;
@@ -211,7 +209,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		fViewer.setContentProvider(fContentProvider);
 
 		fLabelProvider = createLabelProvider();
-		fViewer.setLabelProvider(new DecoratingPHPLabelProvider(fLabelProvider, false));
+		fViewer.setLabelProvider(fLabelProvider);
 	}
 
 	void projectStateChanged(Object root) {

@@ -10,17 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.ui.util;
 
-import java.util.ArrayList;
-
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IColorProvider;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -29,8 +21,6 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 
 	protected PHPElementImageProvider fImageLabelProvider;
 	protected StorageLabelProvider fStorageLabelProvider;
-
-	private ArrayList fLabelDecorators;
 
 	private int fImageFlags;
 	private int fTextFlags;
@@ -41,7 +31,7 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 	 * Creates a new label provider with default flags.
 	 */
 	public PHPUILabelProvider() {
-		this(PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES, PHPElementImageProvider.OVERLAY_ICONS | PHPElementImageProvider.SMALL_ICONS |PHPElementLabels.M_APP_RETURNTYPE);
+		this(PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES, PHPElementImageProvider.OVERLAY_ICONS | PHPElementImageProvider.SMALL_ICONS | PHPElementLabels.M_APP_RETURNTYPE);
 	}
 
 	/**
@@ -50,42 +40,15 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 	 */
 	public PHPUILabelProvider(int textFlags, int imageFlags) {
 		fImageLabelProvider = new PHPElementImageProvider();
-		fLabelDecorators = null;
 
 		fStorageLabelProvider = new StorageLabelProvider();
 		fImageFlags = imageFlags;
 		fTextFlags = textFlags;
 
-		initExtensions();
-	}
-
-	private void initExtensions() {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpLabelDecorator");
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			if (element.getName().equals("PHPLabelDecorator")) {
-				try {
-					ILabelDecorator decorator = (ILabelDecorator) element.createExecutableExtension("class");
-					addLabelDecorator(decorator);
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
 	public void setTreeProviders(IPHPTreeContentProvider[] providers) {
 		this.treeProviders = providers;
-	}
-
-	/**
-	 * Adds a decorator to the label provider
-	 */
-	public void addLabelDecorator(ILabelDecorator decorator) {
-		if (fLabelDecorators == null) {
-			fLabelDecorators = new ArrayList(2);
-		}
-		fLabelDecorators.add(decorator);
 	}
 
 	/**
@@ -138,16 +101,6 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 		return getTextFlags();
 	}
 
-	protected Image decorateImage(Image image, Object element) {
-		if (fLabelDecorators != null && image != null) {
-			for (int i = 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
-				image = decorator.decorateImage(image, element);
-			}
-		}
-		return image;
-	}
-
 	public Image getImage(Object element) {
 		Image result = fImageLabelProvider.getImageLabel(element, evaluateImageFlags(element));
 		if (result == null && treeProviders != null) {
@@ -159,17 +112,7 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 			result = fStorageLabelProvider.getImage(element);
 		}
 
-		return decorateImage(result, element);
-	}
-
-	protected String decorateText(String text, Object element) {
-		if (fLabelDecorators != null && text.length() > 0) {
-			for (int i = 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
-				text = decorator.decorateText(text, element);
-			}
-		}
-		return text;
+		return result;
 	}
 
 	public String getText(Object element) {
@@ -187,57 +130,16 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 			result = fStorageLabelProvider.getText(element);
 		}
 
-		return decorateText(result, element);
+		return result;
 	}
 
 	public void dispose() {
-		if (fLabelDecorators != null) {
-			for (int i = 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
-				decorator.dispose();
-			}
-			fLabelDecorators = null;
-		}
 		fStorageLabelProvider.dispose();
 		fImageLabelProvider.dispose();
 	}
 
-	public void addListener(ILabelProviderListener listener) {
-		if (fLabelDecorators != null) {
-			for (int i = 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
-				decorator.addListener(listener);
-			}
-		}
-		super.addListener(listener);
-	}
-
 	public boolean isLabelProperty(Object element, String property) {
 		return true;
-	}
-
-	public void removeListener(ILabelProviderListener listener) {
-		if (fLabelDecorators != null) {
-			for (int i = 0; i < fLabelDecorators.size(); i++) {
-				ILabelDecorator decorator = (ILabelDecorator) fLabelDecorators.get(i);
-				decorator.removeListener(listener);
-			}
-		}
-		super.removeListener(listener);
-	}
-
-	public static ILabelDecorator[] getDecorators(boolean errortick, ILabelDecorator extra) {
-		if (errortick) {
-			if (extra == null) {
-				return new ILabelDecorator[] {};
-			} else {
-				return new ILabelDecorator[] { extra };
-			}
-		}
-		if (extra != null) {
-			return new ILabelDecorator[] { extra };
-		}
-		return null;
 	}
 
 	public Color getForeground(Object element) {

@@ -10,21 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.ui.util;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
@@ -32,14 +26,8 @@ import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.MarkerAnnotation;
 
 
 /**
@@ -49,7 +37,7 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
  *
  * @since 2.0
  */
-public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabelDecorator {
+public class ProblemsLabelDecorator implements ILightweightLabelDecorator {
 
 	/**
 	 * This is a special <code>LabelProviderChangedEvent</code> carrying additional
@@ -87,19 +75,8 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 	private static final int ERRORTICK_WARNING = PHPElementImageDescriptor.WARNING;
 	private static final int ERRORTICK_ERROR = PHPElementImageDescriptor.ERROR;
 
-	private ImageDescriptorRegistry fRegistry;
-	private boolean fUseNewRegistry = false;
 	private IProblemChangedListener fProblemChangedListener;
-
-	private ListenerList fListeners;
-
-	/**
-	 * Creates a new <code>ProblemsLabelDecorator</code>.
-	 */
-	public ProblemsLabelDecorator() {
-		this(null);
-		fUseNewRegistry = true;
-	}
+	private Collection fListeners;
 
 	/*
 	 * Creates decorator with a shared image registry.
@@ -107,34 +84,6 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 	 * @param registry The registry to use or <code>null</code> to use the PHP plugin's
 	 * image registry.
 	 */
-	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
-	 */
-	public ProblemsLabelDecorator(ImageDescriptorRegistry registry) {
-		fRegistry = registry;
-		fProblemChangedListener = null;
-	}
-
-	private ImageDescriptorRegistry getRegistry() {
-		if (fRegistry == null) {
-			fRegistry = fUseNewRegistry ? new ImageDescriptorRegistry() : PHPUiPlugin.getImageDescriptorRegistry();
-		}
-		return fRegistry;
-	}
-
-	public String decorateText(String text, Object element) {
-		return text;
-	}
-
-	public Image decorateImage(Image image, Object obj) {
-		int adornmentFlags = computeAdornmentFlags(obj);
-		if (adornmentFlags != 0) {
-			ImageDescriptor baseImage = new ImageImageDescriptor(image);
-			Rectangle bounds = image.getBounds();
-			return getRegistry().get(new PHPElementImageDescriptor(baseImage, adornmentFlags, new Point(bounds.width, bounds.height)));
-		}
-		return image;
-	}
 
 	/**
 	 * Note: This method is for internal use only. Clients should not call this method.
@@ -193,40 +142,6 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 		return false;
 	}
 
-	private int getErrorTicksFromWorkingCopy(PHPFileData original, PHPCodeData sourceElement) throws CoreException {
-		int info = 0;
-		FileEditorInput editorInput = new FileEditorInput((IFile) PHPModelUtil.getResource(original));
-		IAnnotationModel model = null;// PHPUiPlugin.getDefault().getCompilationUnitDocumentProvider().getAnnotationModel(editorInput);
-		if (model != null) {
-			Iterator iter = model.getAnnotationIterator();
-			while ((info != ERRORTICK_ERROR) && iter.hasNext()) {
-				Annotation curr = (Annotation) iter.next();
-				IMarker marker = isAnnotationInRange(model, curr, sourceElement);
-				if (marker != null) {
-					int priority = marker.getAttribute(IMarker.SEVERITY, -1);
-					if (priority == IMarker.SEVERITY_WARNING) {
-						info = ERRORTICK_WARNING;
-					} else if (priority == IMarker.SEVERITY_ERROR) {
-						info = ERRORTICK_ERROR;
-					}
-				}
-			}
-		}
-		return info;
-	}
-
-	private IMarker isAnnotationInRange(IAnnotationModel model, Annotation annot, PHPCodeData sourceElement) throws CoreException {
-		if (annot instanceof MarkerAnnotation) {
-			IMarker marker = ((MarkerAnnotation) annot).getMarker();
-			if (marker.exists() && marker.isSubtypeOf(IMarker.PROBLEM)) {
-				Position pos = model.getPosition(annot);
-				if (pos != null && (sourceElement == null || isInside(pos.getOffset(), sourceElement))) {
-					return marker;
-				}
-			}
-		}
-		return null;
-	}
 
 	/**
 	 * Tests if a position is inside the source range of an element.
@@ -251,9 +166,6 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 			PHPUiPlugin.getDefault().getProblemMarkerManager().removeListener(fProblemChangedListener);
 			fProblemChangedListener = null;
 		}
-		if (fRegistry != null && fUseNewRegistry) {
-			fRegistry.dispose();
-		}
 	}
 
 	public boolean isLabelProperty(Object element, String property) {
@@ -262,7 +174,7 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 
 	public void addListener(ILabelProviderListener listener) {
 		if (fListeners == null) {
-			fListeners = new ListenerList();
+			fListeners = new ArrayList();
 		}
 		fListeners.add(listener);
 		if (fProblemChangedListener == null) {
@@ -288,7 +200,7 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 	private void fireProblemsChanged(IResource[] changedResources, boolean isMarkerChange) {
 		if (fListeners != null && !fListeners.isEmpty()) {
 			LabelProviderChangedEvent event = new ProblemsLabelChangedEvent(this, changedResources, isMarkerChange);
-			Object[] listeners = fListeners.getListeners();
+			Object[] listeners = fListeners.toArray();
 			for (int i = 0; i < listeners.length; i++) {
 				((ILabelProviderListener) listeners[i]).labelProviderChanged(event);
 			}

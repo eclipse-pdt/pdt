@@ -12,7 +12,6 @@
 	<extension-point id="hyperlinkDetectorForPHP" name="hyperlinkDetectorForPHP" schema="schema/hyperlinkDetectorForPHP.exsd"/>
 	<extension-point id="phpOutlineElementComparer" name="phpOutlineElementComparer" schema="schema/phpOutlineElementComparer.exsd"/>
 	<extension-point id="actionFilterDelegatorForPHPCodeData" name="actionFilterDelegatorForPHPCodeData" schema="schema/actionFilterDelegatorForPHPCodeData.exsd"/>
- 	<extension-point id="phpLabelDecorator" name="phpLabelDecorator" schema="schema/org.eclipse.php.ui.phplabeldecorator.exsd"/>
  	<extension-point id="phpWizardPages" name="phpWizardPages" schema="schema/phpWizardPages.exsd"/>
  	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlock.exsd"/>
 
@@ -1335,6 +1334,17 @@
       <themeElementCategory
             id="org.eclipse.php.ui.themePHP"
             label="PHP"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            class="org.eclipse.php.ui.util.ProblemsLabelDecorator"
+            id="org.eclipse.php.ui.problemsDecorator"
+            label="PHP Problem Decorator"
+            lightweight="true"
+            objectClass="org.eclipse.core.resources.IResource"
+            state="true"/>
    </extension>
    
 </plugin>

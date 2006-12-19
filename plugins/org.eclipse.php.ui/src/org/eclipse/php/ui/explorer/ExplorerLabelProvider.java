@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.ui.explorer;
 
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.php.ui.SuperClassLabelProvider;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
-import org.eclipse.php.ui.util.TreeHierarchyLayoutProblemsDecorator;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -28,18 +26,10 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ExplorerLabelProvider extends AppearanceAwareLabelProvider {
 
-	private ITreeContentProvider fContentProvider;
-
-	private TreeHierarchyLayoutProblemsDecorator fProblemDecorator;
-
 	ILabelProvider superClassLabelProvider = new SuperClassLabelProvider(this);
 
 	protected ExplorerLabelProvider(int textFlags, int imageFlags, ITreeContentProvider cp) {
 		super(textFlags, imageFlags);
-		fProblemDecorator = new TreeHierarchyLayoutProblemsDecorator();
-		addLabelDecorator(fProblemDecorator);
-		Assert.isNotNull(cp);
-		fContentProvider = cp;
 	}
 
 	public Image getImage(Object object) {

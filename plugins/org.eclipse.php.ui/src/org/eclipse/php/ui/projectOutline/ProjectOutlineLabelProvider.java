@@ -20,12 +20,12 @@ import org.eclipse.php.ui.util.TreeHierarchyLayoutProblemsDecorator;
 
 public class ProjectOutlineLabelProvider extends AppearanceAwareLabelProvider {
 
-	private TreeHierarchyLayoutProblemsDecorator fProblemDecorator;
+//	private TreeHierarchyLayoutProblemsDecorator fProblemDecorator;
 
 	public ProjectOutlineLabelProvider(int textFlags, int imageFlags, ITreeContentProvider cp) {
 		super(textFlags, imageFlags);
-		fProblemDecorator = new TreeHierarchyLayoutProblemsDecorator();
-		addLabelDecorator(fProblemDecorator);
+//		fProblemDecorator = new TreeHierarchyLayoutProblemsDecorator();
+		//addLabelDecorator(fProblemDecorator);
 	}
 
 	public String getText(Object element) {

@@ -36,7 +36,6 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.actions.SelectionConverter;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.util.AppearanceAwareLabelProvider;
-import org.eclipse.php.ui.util.DecoratingPHPLabelProvider;
 import org.eclipse.php.ui.util.PHPElementImageProvider;
 import org.eclipse.php.ui.util.PHPElementLabels;
 import org.eclipse.php.ui.util.PHPElementSorter;
@@ -132,7 +131,7 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		AppearanceAwareLabelProvider fPHPElementLabelProvider = new AppearanceAwareLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.P_COMPRESSED, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS);
 
-		fTree.setLabelProvider(new DecoratingPHPLabelProvider(fPHPElementLabelProvider));
+		fTree.setLabelProvider(fPHPElementLabelProvider);
 		fTree.setSorter(new PHPElementSorter());
 		fTree.setUseHashlookup(true);
 
