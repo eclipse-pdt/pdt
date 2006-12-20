@@ -99,16 +99,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	protected boolean prePerformFinish() {
-		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH,includePathPage.getIncludePathsBlock().getIncludepathEntries());
-		createdProject = (IProject)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
-		
-		// call the prePerformFinish for any page added trough the extention point
-		if (createdProject != null) {
-			for(Iterator it = wizardPagesList.iterator(); it.hasNext();){
-				BasicPHPWizardPageExtended page = (BasicPHPWizardPageExtended) it.next();
-				page.prePerformFinish(createdProject);		
-			}
-		}
+		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH,includePathPage.getIncludePathsBlock().getIncludepathEntries());	
 		basePage.setProjectOptionInModel(getDataModel());
         return super.prePerformFinish();
 	}
@@ -116,16 +107,22 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	protected void postPerformFinish() throws InvocationTargetException {
 		BasicNewProjectResourceWizard.updatePerspective(configElement);
 				
- 		if (createdProject != null) {
+		createdProject = (IProject)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
+		if (createdProject != null) { 			
 //			 Save any project-specific data (Fix Bug# 143406)
  			try {
-				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();
+				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();				
 			} catch (BackingStoreException e) {
 				Logger.logException(e);
-			}
+			} 			
+ 			// call the postPerformFinish for any page added trough the extention point
+ 			if (createdProject != null) {
+ 				for(Iterator it = wizardPagesList.iterator(); it.hasNext();){
+ 					BasicPHPWizardPageExtended page = (BasicPHPWizardPageExtended) it.next();
+ 					page.postPerformFinish(createdProject);
+ 					page.flushPreferences();		
+ 				}
+ 			}
  		}
- 		
 	}
-	
-
 }
