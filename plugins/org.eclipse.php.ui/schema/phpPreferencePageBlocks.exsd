@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.php.debug.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.debug.ui" id="phpDebugPreferencesAddon" name="PHP Debug Preferences Page Addon"/>
+         <meta.schema plugin="org.eclipse.php.debug.ui" id="phpPreferencePageBlocks" name="PHP Debug Preferences Page Block"/>
       </appInfo>
       <documentation>
          This extentions point enables contribution of Composites for the PHP Debug preferences page.
