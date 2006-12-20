@@ -44,7 +44,7 @@ public class PHPFileLink implements IHyperlink {
 	public void linkActivated() {
 		IEditorPart editorPart;
 		try {
-			editorPart = EditorUtility.openInEditor(fFile, true);
+			editorPart = EditorUtility.openInEditor(fFile, false);
 			if (editorPart != null && fFileLineNumber > 0) {
 				EditorUtility.revealInEditor(editorPart, fFileOffset, fFileLength);
 			}
