@@ -122,7 +122,6 @@
 	<!-- Steps to do after  running assemble. -->
 	<!-- ===================================================================== -->
 	<target name="postAssemble">
-
 	</target>
 
 	<!-- ===================================================================== -->
@@ -165,6 +164,10 @@
 
 		<style in="${buildDirectory}/${buildLabel}/changelog.xml" out="${buildDirectory}/${buildLabel}/changelog.html" style="${builder}/../changelog.xsl"/>
 -->
+		
+		<ant antfile="${builder}/../buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages">
+					<property name="java-home" value="${vm}" />
+		</ant>
 	</target>
 
 	<!-- ===================================================================== -->

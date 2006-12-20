@@ -1,6 +1,6 @@
 <project default="run">
 
-	<target name="init" depends="preinit"/>
+	<target name="init" depends="preinit" />
 
 	<target name="preinit">
 		<property name="buildDirectory" location="${basedir}/../src/eclipse" />
@@ -9,11 +9,11 @@
 		<property file="${buildDirectory}/label.properties" />
 		<condition property="ftppush">
 			<and>
-				<available file="${basedir}/../org.eclipse.releng.basebuilder/plugins/org.eclipse.ant.optional.ftp/plugin.xml"/>
-				<isset property="ftpUser"/>
-				<isset property="ftpPassword"/>
+				<available file="${basedir}/../org.eclipse.releng.basebuilder/plugins/org.eclipse.ant.optional.ftp/plugin.xml" />
+				<isset property="ftpUser" />
+				<isset property="ftpPassword" />
 				<not>
-					<isset property="rsyncPWFile"/>
+					<isset property="rsyncPWFile" />
 				</not>
 			</and>
 		</condition>
@@ -26,16 +26,16 @@
 		<condition property="rsyncpush">
 			<and>
 				<not>
-					<isset property="ftppush"/>
+					<isset property="ftppush" />
 				</not>
-				<isset property="rsyncPWFile"/>
+				<isset property="rsyncPWFile" />
 			</and>
 		</condition>
 	</target>
 
 	<target name="create.label.properties" unless="label.properties.exists">
 		<mkdir dir="${buildDirectory}" />
-		<tstamp/>
+		<tstamp />
 		<property name="date" value="${DSTAMP}" />
 		<property name="time" value="${TSTAMP}" />
 		<property name="timestamp" value="${date}${time}" />
@@ -46,10 +46,10 @@
 
 		<!--store the build label information in a propert file-->
 		<propertyfile file="${buildDirectory}/label.properties">
-			<entry key="buildType" value="${buildType}"/>
-			<entry key="buildId" value="${buildId}"/>
-			<entry key="timestamp" value="${timestamp}"/>
-			<entry key="buildLabel" value="${buildLabel}"/>
+			<entry key="buildType" value="${buildType}" />
+			<entry key="buildId" value="${buildId}" />
+			<entry key="timestamp" value="${timestamp}" />
+			<entry key="buildLabel" value="${buildLabel}" />
 		</propertyfile>
 	</target>
 
@@ -61,29 +61,26 @@
 
 	<target name="buildAll" depends="init,buildSDK,buildRuntime,buildTest">
 	</target>
-	
+
 	<target name="buildSDK" depends="init">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="sdk" />
-		</ant>	
+		</ant>
 	</target>
 
 	<target name="buildRuntime" depends="init">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="runtime" />
-		</ant>	
+		</ant>
 	</target>
-	
+
 	<target name="buildTest" depends="init">
-                <ant antfile="build.xml" target="main">
-                        <property name="component" value="test" />
-                </ant>
-        </target>
+		<ant antfile="build.xml" target="main">
+			<property name="component" value="test" />
+		</ant>
+	</target>
 
 	<target name="package" depends="init">
-                <ant antfile="buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages">
-                        <property name="java-home" value="${vm}"/>
-		</ant>
 	</target>
 
 	<target name="publish" depends="init" description="Publish the results, but don't push.">
@@ -98,171 +95,164 @@
 		</ant>
 
 		<!--  Get the build map over for the results to point to. -->
-		<copy file="${buildDirectory}/maps/org.eclipse.php-releng/maps/php-feature.map" tofile="${result}/directory.txt"/>
+		<copy file="${buildDirectory}/maps/org.eclipse.php-releng/maps/php-feature.map" tofile="${result}/directory.txt" />
 
 		<replace file="${result}/${indexFileName}">
-		 	<!--  Insert url for supported eclipse drop-->
-			<replacefilter token="@eclipseBuildID@" value="${eclipseBuildID}"/>
-			<replacefilter token="@eclipseIndexURL@" value="${eclipseDirectURL}${eclipseFolder}"/>
-			<replacefilter token="@eclipseMirrorURL@" value="${eclipseMirrorURL}"/>			
-			<replacefilter token="@eclipseWin32ZipURL@" value="${eclipseWin32ZipURL}"/>		
-	
-		 	<!--  Insert url for supported EMF -->
-			<replacefilter token="@emfBuildID@" value="${emfBuildID}"/>
-			<replacefilter token="@emfIndexURL@" value="${emfDirectURL}${emfFolder}"/>
-			<replacefilter token="@emfMirrorURL@" value="${emfMirrorURL}"/>
-			<replacefilter token="@emfZipURL@" value="${emfZipURL}"/>		
+			<!--  Insert url for supported eclipse drop-->
+			<replacefilter token="@eclipseBuildID@" value="${eclipseBuildID}" />
+			<replacefilter token="@eclipseIndexURL@" value="${eclipseDirectURL}${eclipseFolder}" />
+			<replacefilter token="@eclipseMirrorURL@" value="${eclipseMirrorURL}" />
+			<replacefilter token="@eclipseWin32ZipURL@" value="${eclipseWin32ZipURL}" />
 
-		 	<!--  Insert url for supported GEF -->
-			<replacefilter token="@gefBuildID@" value="${gefBuildID}"/>
-			<replacefilter token="@gefIndexURL@" value="${gefDirectURL}${gefFolder}"/>
-			<replacefilter token="@gefMirrorURL@" value="${gefMirrorURL}"/>
-			<replacefilter token="@gefZipURL@" value="${gefZipURL}"/>
+			<!--  Insert url for supported EMF -->
+			<replacefilter token="@emfBuildID@" value="${emfBuildID}" />
+			<replacefilter token="@emfIndexURL@" value="${emfDirectURL}${emfFolder}" />
+			<replacefilter token="@emfMirrorURL@" value="${emfMirrorURL}" />
+			<replacefilter token="@emfZipURL@" value="${emfZipURL}" />
 
-                        <!--  Insert url for supported JEM -->
-                        <replacefilter token="@jemBuildID@" value="${jemBuildID}"/>
-                        <replacefilter token="@jemIndexURL@" value="${jemDirectURL}${gemFolder}"/>
-                        <replacefilter token="@jemMirrorURL@" value="${jemMirrorURL}"/>
-                        <replacefilter token="@jemZipURL@" value="${jemZipURL}"/>
+			<!--  Insert url for supported GEF -->
+			<replacefilter token="@gefBuildID@" value="${gefBuildID}" />
+			<replacefilter token="@gefIndexURL@" value="${gefDirectURL}${gefFolder}" />
+			<replacefilter token="@gefMirrorURL@" value="${gefMirrorURL}" />
+			<replacefilter token="@gefZipURL@" value="${gefZipURL}" />
 
-                        <!--  Insert url for supported WTP -->
-                        <replacefilter token="@wstBuildID@" value="${wstBuildID}"/>
-                        <replacefilter token="@wstIndexURL@" value="${wstDirectURL}${wstFolder}"/>
-                        <replacefilter token="@wstMirrorURL@" value="${wstMirrorURL}"/>
-                        <replacefilter token="@wstZipURL@" value="${wstZipURL}"/>
+			<!--  Insert url for supported JEM -->
+			<replacefilter token="@jemBuildID@" value="${jemBuildID}" />
+			<replacefilter token="@jemIndexURL@" value="${jemDirectURL}${gemFolder}" />
+			<replacefilter token="@jemMirrorURL@" value="${jemMirrorURL}" />
+			<replacefilter token="@jemZipURL@" value="${jemZipURL}" />
+
+			<!--  Insert url for supported WTP -->
+			<replacefilter token="@wstBuildID@" value="${wstBuildID}" />
+			<replacefilter token="@wstIndexURL@" value="${wstDirectURL}${wstFolder}" />
+			<replacefilter token="@wstMirrorURL@" value="${wstMirrorURL}" />
+			<replacefilter token="@wstZipURL@" value="${wstZipURL}" />
 
 		</replace>
-		
+
 		<!-- Copy to "bldindex.html". This html will be used to reference locally without download counting. This file will not be pushed to main download site. -->
-		<copy file="${result}/${indexFileName}" tofile="${result}/bld${indexFileName}"/>
-	
+		<copy file="${result}/${indexFileName}" tofile="${result}/bld${indexFileName}" />
+
 		<!-- Replace the base variables to be nothing for bld-index, and the full reroute url for the main index file. -->
-		<replace file="${result}/${indexFileName}" token="@base@" value="http://www.eclipse.org/downloads/download.php?file=/tools/php/downloads/drops/${buildLabel}/"/>
-		<replace file="${result}/bld${indexFileName}" token="@base@" value=""/>	
-		
+		<replace file="${result}/${indexFileName}" token="@base@" value="http://www.eclipse.org/downloads/download.php?file=/tools/php/downloads/drops/${buildLabel}/" />
+		<replace file="${result}/bld${indexFileName}" token="@base@" value="" />
+
 	</target>
-		
+
 	<target name="push" depends="init,pushftp,pushrsync" description="Push the results to the download site.">
 	</target>
-	
+
 	<target name="pushftp" if="ftppush">
-		<property name="remoteDirectory" value="/home/www/tools/php/downloads/drops"/>
-		<echo message="FTP to: ${remoteDirectory}/${buildLabel}"/>	
-	  	<ftp server="download1.eclipse.org"
-       		userid="${ftpUser}"
-		      password="${ftpPassword}"
-			remotedir="${remoteDirectory}">
-		    <fileset dir="${buildDirectory}">
-				<include name="${buildLabel}/**"/>
-				<exclude name="${buildLabel}/bldindex.html"/>
-		    </fileset>
+		<property name="remoteDirectory" value="/home/www/tools/php/downloads/drops" />
+		<echo message="FTP to: ${remoteDirectory}/${buildLabel}" />
+		<ftp server="download1.eclipse.org" userid="${ftpUser}" password="${ftpPassword}" remotedir="${remoteDirectory}">
+			<fileset dir="${buildDirectory}">
+				<include name="${buildLabel}/**" />
+				<exclude name="${buildLabel}/bldindex.html" />
+			</fileset>
 		</ftp>
-		
+
 		<!-- There may not be anything in buildnotes. ftp won't create directory in that case. But we must have one. -->
-	  	<ftp server="download1.eclipse.org"
-       		userid="${ftpUser}"
-		      password="${ftpPassword}"
-			action="mkdir"
-			remotedir="${remoteDirectory}/${buildLabel}/buildnotes">
+		<ftp server="download1.eclipse.org" userid="${ftpUser}" password="${ftpPassword}" action="mkdir" remotedir="${remoteDirectory}/${buildLabel}/buildnotes">
 		</ftp>
-		
+
 	</target>
-		
-	<target name="pushrsync" >
-		<property name="remoteDirectory" value="downloads/drops"/>
-		<echo message="RSYNC to: ${remoteDirectory}/${buildLabel}"/>
+
+	<target name="pushrsync">
+		<property name="remoteDirectory" value="downloads/drops" />
+		<echo message="RSYNC to: ${remoteDirectory}/${buildLabel}" />
 		<!-- Need to get permissions correct so that Webserver will work. -->
-		<chmod dir="${buildDirectory}" type="file" perm="ugo+r" includes="${buildLabel}/**"/>
-		<chmod dir="${buildDirectory}" type="file" perm="ug+rw" includes="${buildLabel}/**"/>		
-		<chmod dir="${buildDirectory}" type="dir" perm="ugo+rx" includes="${buildLabel}*/**"/>
-		<chmod dir="${buildDirectory}" type="dir" perm="ug+rwx" includes="${buildLabel}*/**"/>				
+		<chmod dir="${buildDirectory}" type="file" perm="ugo+r" includes="${buildLabel}/**" />
+		<chmod dir="${buildDirectory}" type="file" perm="ug+rw" includes="${buildLabel}/**" />
+		<chmod dir="${buildDirectory}" type="dir" perm="ugo+rx" includes="${buildLabel}*/**" />
+		<chmod dir="${buildDirectory}" type="dir" perm="ug+rwx" includes="${buildLabel}*/**" />
 		<exec dir="${buildDirectory}" executable="rsync">
 			<arg line="-avz --stats --include *.zip --exclude bldindex.html ${buildLabel} apeled@dev.eclipse.org:~/downloads/tools/php/${remoteDirectory}" />
 		</exec>
 	</target>
-	
-	<target name="publishpushupdate" depends="init,publishpushreleaseupdatesite,publishpushdevupdate"/>
-	
+
+	<target name="publishpushupdate" depends="init,publishpushreleaseupdatesite,publishpushdevupdate" />
+
 	<target name="publishpushdevupdate" depends="init" unless="isReleaseBuild">
-		<property name="updateRemoteDirectory" value="updates/1.0/development"/>
-		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
-		<property name="devtype" value="-cats ${updateLocalDirectory}/catsdev.properties -catxml ${updateLocalDirectory}/catdevxml.xml"/>
-		<antcall target="publishupdatesite"/>
-		<antcall target="pushupdatesite"/>		
+		<property name="updateRemoteDirectory" value="updates/1.0/development" />
+		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}" />
+		<property name="devtype" value="-cats ${updateLocalDirectory}/catsdev.properties -catxml ${updateLocalDirectory}/catdevxml.xml" />
+		<antcall target="publishupdatesite" />
+		<antcall target="pushupdatesite" />
 	</target>
-	
+
 	<target name="publishpushreleaseupdatesite" if="isReleaseBuild" description="Puplish and push the update site for a release. Only available for a release build.">
-		<antcall target="publishupdatesite"/>
-		<antcall target="pushupdatesite"/>
+		<antcall target="publishupdatesite" />
+		<antcall target="pushupdatesite" />
 	</target>
-	
-	<property name="eclipse.version" value="3.2.0"/>
+
+	<property name="eclipse.version" value="3.2.0" />
 	<path id="osgi.jar">
 		<fileset dir="${eclipse.home}/plugins">
-			<include name="org.eclipse.osgi_${eclipse.version}*.jar"/>
+			<include name="org.eclipse.osgi_${eclipse.version}*.jar" />
 		</fileset>
 	</path>
-	
+
 	<target name="publishupdatesite" if="rsyncPWFile" depends="init">
 		<!-- Publish to update site, but not push it. -->
-		<echo message="Publish the update site for the latest build."/>
-		<property name="updateRemoteDirectory" value="updates"/>
-		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
-		<delete dir="${updateLocalDirectory}"/>
-		<mkdir dir="${updateLocalDirectory}"/>
-		
+		<echo message="Publish the update site for the latest build." />
+		<property name="updateRemoteDirectory" value="updates" />
+		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}" />
+		<delete dir="${updateLocalDirectory}" />
+		<mkdir dir="${updateLocalDirectory}" />
+
 		<!-- Now copy the site update tools files into local directory for processing. -->
 		<copy todir="${updateLocalDirectory}">
-			<fileset dir="internalBuildTools/siteUpdateTools"/>
+			<fileset dir="internalBuildTools/siteUpdateTools" />
 		</copy>
-		
+
 		<!-- Now build the update program. -->
-	    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-		<property name="versionFound" refid="osgi.jar"/>
-		<fail unless="versionFound" message="Failed due to ${eclipse.version} Eclipse not being used. If upgraded, need to upgrade this buildAll.xml too."/>
-		<mkdir dir="${updateLocalDirectory}/bin"/>
-	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpathref="osgi.jar"/>
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter" />
+		<property name="versionFound" refid="osgi.jar" />
+		<fail unless="versionFound" message="Failed due to ${eclipse.version} Eclipse not being used. If upgraded, need to upgrade this buildAll.xml too." />
+		<mkdir dir="${updateLocalDirectory}/bin" />
+		<javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpathref="osgi.jar" />
 
 		<!-- Now get the latest build SDK and unzip into the local directory for processing. -->
 		<exec dir="${updateLocalDirectory}" executable="unzip">
-			<arg line="-o -qq ${buildDirectory}/${buildLabel}/org.eclipse.php_feature-*.zip -d ."/>
-	    </exec>
-		
+			<arg line="-o -qq ${buildDirectory}/${buildLabel}/org.eclipse.php_feature-*.zip -d ." />
+		</exec>
+
 		<!-- Now get the current update site.xml from the download site so that we can update it. -->
 		<exec dir="." executable="rsync">
 			<arg line="-avz --stats apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/${updateRemoteDirectory}/site.xml ${updateLocalDirectory}" />
 		</exec>
 
 		<!-- Now run the update process -->
-		<property value="-cats ${updateLocalDirectory}/cats.properties" name="devtype"/>
-	    <java classname="org.eclipse.releng.generators.UpdateBuilder" failonerror="true">
-	         <arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} -size ${devtype}" /> 
-	         <classpath>
-	            	<pathelement path="${updateLocalDirectory}/bin"/>
-	         		<path refid="osgi.jar"/>
-	         </classpath>
-	    </java>
+		<property value="-cats ${updateLocalDirectory}/cats.properties" name="devtype" />
+		<java classname="org.eclipse.releng.generators.UpdateBuilder" failonerror="true">
+			<arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} -size ${devtype}" />
+			<classpath>
+				<pathelement path="${updateLocalDirectory}/bin" />
+				<path refid="osgi.jar" />
+			</classpath>
+		</java>
 
 	</target>
-	
+
 	<target name="pushupdatesite" if="rsyncpush" depends="init">
-		<echo message="Push the update site to the download site."/>
-		<property name="updateRemoteDirectory" value="updates"/>
-		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}"/>
-				
+		<echo message="Push the update site to the download site." />
+		<property name="updateRemoteDirectory" value="updates" />
+		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}" />
+
 		<!-- Now make a backup of the site.xml that we previously updated. -->
-		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site.xml"/>
-		<chmod dir="${updateLocalDirectory}" type="file" perm="ug+rw" includes="site.xml"/>		
+		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site.xml" />
+		<chmod dir="${updateLocalDirectory}" type="file" perm="ug+rw" includes="site.xml" />
 		<exec dir="." executable="rsync">
 			<arg line="-avz --stats ${updateLocalDirectory}/site.xml apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/${updateRemoteDirectory}/site.xml.bak " />
 		</exec>
-		
+
 		<!-- Now push the updates themselves back. -->
-		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site/**"/>
-		<chmod dir="${updateLocalDirectory}" type="file" perm="ug+rw" includes="site/**"/>		
-		<chmod dir="${updateLocalDirectory}" type="dir" perm="ugo+rx" includes="site/**"/>
-		<chmod dir="${updateLocalDirectory}" type="dir" perm="ug+rwx" includes="site/**"/>				
-		
+		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site/**" />
+		<chmod dir="${updateLocalDirectory}" type="file" perm="ug+rw" includes="site/**" />
+		<chmod dir="${updateLocalDirectory}" type="dir" perm="ugo+rx" includes="site/**" />
+		<chmod dir="${updateLocalDirectory}" type="dir" perm="ug+rwx" includes="site/**" />
+
 		<exec dir="." executable="rsync">
 			<arg line="-avz --stats ${updateLocalDirectory}/site/ apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/${updateRemoteDirectory}" />
 		</exec>
