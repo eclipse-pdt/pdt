@@ -1,4 +1,4 @@
-# !/bin/sh
+#!/bin/sh
 
 usage() {
 	echo "usage: buildAll [-mapVersionTag HEAD|<branch name>] [-cvsuser cvsuser] [-vm <url to java executable to run build>] [-bc <bootclasspath>] [-target <buildall target to execute>] [-buildID <buildID, e.g. 2.1.2>]  [-ftp <userid> <password>] [-rsync <rsync password file>] I|M|N"
@@ -117,5 +117,5 @@ if [ ! -r ../org.eclipse.releng.basebuilder ]
     mv org.eclipse.releng.basebuilder ../
 fi
 
-$vm/bin/java -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm -Dbaseos=linux -Dbasews=gtk -Dbasearch=x86
+$vm -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm -Dbaseos=linux -Dbasews=gtk -Dbasearch=x86
 #rm -rf ../org.eclipse.releng.basebuilder
