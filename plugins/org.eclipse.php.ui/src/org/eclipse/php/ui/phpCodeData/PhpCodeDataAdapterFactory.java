@@ -14,13 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.php.internal.ui.actions.filters.GenericActionFilter;
 import org.eclipse.ui.IActionFilter;
 
 public class PhpCodeDataAdapterFactory implements IAdapterFactory {
 
 	private static Map adapterType2Object = new HashMap(4);
 	static {
-		adapterType2Object.put(IActionFilter.class, new PhpCodeDataActionFilter());
+		adapterType2Object.put(IActionFilter.class, new GenericActionFilter());
 	}
 	
 	public PhpCodeDataAdapterFactory() {}

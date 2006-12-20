@@ -11,7 +11,7 @@
 	<extension-point id="contentAssistProccesorForPHP" name="contentAssistProccesorForPHP" schema="schema/contentAssistProccesorForPHP.exsd"/>
 	<extension-point id="hyperlinkDetectorForPHP" name="hyperlinkDetectorForPHP" schema="schema/hyperlinkDetectorForPHP.exsd"/>
 	<extension-point id="phpOutlineElementComparer" name="phpOutlineElementComparer" schema="schema/phpOutlineElementComparer.exsd"/>
-	<extension-point id="actionFilterDelegatorForPHPCodeData" name="actionFilterDelegatorForPHPCodeData" schema="schema/actionFilterDelegatorForPHPCodeData.exsd"/>
+	<extension-point id="actionFilterContributors" name="PHP Action Filter Contributor" schema="schema/actionFilterContributors.exsd"/>
  	<extension-point id="phpWizardPages" name="phpWizardPages" schema="schema/phpWizardPages.exsd"/>
  	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlock.exsd"/>
 
@@ -949,9 +949,6 @@
 			<adapter type="org.eclipse.debug.ui.actions.ILaunchable" />
 		</factory>
 	</extension> -->
-	<extension
-		point="org.eclipse.core.filebuffers.annotationModelCreation">
-	</extension>
 
 	<!-- =========================================================================== -->
 	<!-- History & Others Working Set                                                -->
@@ -1132,6 +1129,7 @@
 				label="%DummyLabel" />
 		</editorContribution>
 	</extension -->
+	
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
 			id="org.eclipse.php.ui.PHPStructuredEditorPopupActions"
@@ -1154,7 +1152,7 @@
 		<objectContribution
 			objectClass="org.eclipse.php.core.phpModel.phpElementData.PHPCodeData"
 			id="org.eclipse.php.ui.codeDataContribution">
-			<filter name="addDescriptionEnabled" value="true"/>
+			<filter name="actionFilterContributorId" value="org.eclipse.php.ui.phpCodeData.CodeDataActionFilterContributor"/>
 			<menu
 				label="%Source"
 				path="additions"
@@ -1168,17 +1166,27 @@
 				enablesFor="1"
 				id="org.eclipse.php.ui.actions.AddDescriptionAction">
 				<enablement>
-					<objectState name="addDescriptionVisible" value="true"/>
+					<objectState name="actionFilterContributorId" value="org.eclipse.php.ui.phpCodeData.AddPHPDocActionFilterContributor"/>
 				</enablement>
 			</action>
 		</objectContribution>
 	</extension>
+
+ <extension
+       point="org.eclipse.php.ui.actionFilterContributors">
+    <contributor
+          class="org.eclipse.php.ui.phpCodeData.AddPHPDocActionFilterContributor"
+          id="org.eclipse.php.ui.phpCodeData.AddPHPDocActionFilterContributor"/>
+    <contributor
+          class="org.eclipse.php.ui.phpCodeData.CodeDataActionFilterContributor"
+          id="org.eclipse.php.ui.phpCodeData.CodeDataActionFilterContributor"/>
+ </extension>
+	
 	<extension point="org.eclipse.core.runtime.adapters">
 		<factory adaptableType="org.eclipse.php.core.phpModel.phpElementData.PHPCodeData" class="org.eclipse.php.ui.phpCodeData.PhpCodeDataAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter"/>
 		</factory>
 	</extension>
-	
 	
 	<extension point="org.eclipse.php.ui.foldingStructureProviders">
 		<provider

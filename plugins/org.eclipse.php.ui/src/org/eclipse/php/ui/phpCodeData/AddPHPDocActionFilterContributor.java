@@ -18,11 +18,11 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.ui.generic.actionFilter.ActionFilterBooleanDelegator;
+import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
-public class AddDescriptionEnablementFilterDelegator extends ActionFilterBooleanDelegator {
+public class AddPHPDocActionFilterContributor implements IActionFilterContributor {
 
-	protected boolean test(Object target) {
+	public boolean testAttribute(Object target, String name, String value) {
 		if (!(target instanceof PHPClassData) && !(target instanceof PHPFileData) && !(target instanceof PHPFunctionData) && !(target instanceof PHPConstantData) && !(target instanceof PHPVariableData) && !(target instanceof PHPClassConstData) && !(target instanceof PHPIncludeFileData)) {
 			return false;
 		}

@@ -8,9 +8,15 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.ui.generic.actionFilter;
+package org.eclipse.php.ui.phpCodeData;
 
-public interface IActionFilterDelegator {
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
-	public boolean test(Object target, String value);
+public class CodeDataActionFilterContributor implements IActionFilterContributor {
+
+	public boolean testAttribute(Object target, String name, String value) {
+		PHPCodeData phpCodeData = (PHPCodeData)target;
+		return phpCodeData.getDocBlock() == null;
+	}
 }

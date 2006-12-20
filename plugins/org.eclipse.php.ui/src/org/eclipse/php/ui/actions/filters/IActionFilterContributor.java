@@ -8,15 +8,13 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.ui.generic.actionFilter;
+package org.eclipse.php.ui.actions.filters;
 
-public abstract class ActionFilterBooleanDelegator implements IActionFilterDelegator {
+import org.eclipse.ui.IActionFilter;
 
-	public boolean test(Object target, String value) {
-		boolean b = Boolean.valueOf(value).booleanValue();
-		boolean result = test(target);
-		return b ?  result : !result;
-	}
-
-	protected abstract boolean test(Object target);
+/**
+ * Contributor to the IActionFilter for more complicated tests  
+ * @author michael
+ */
+public interface IActionFilterContributor extends IActionFilter {
 }

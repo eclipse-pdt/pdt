@@ -8,24 +8,25 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.ui.generic.actionFilter;
+package org.eclipse.php.internal.ui.actions.filters;
 
-import java.util.HashMap;
-import java.util.Map;
 
+import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 import org.eclipse.ui.IActionFilter;
 
 public class GenericActionFilter implements IActionFilter {
 
-	protected Map attributeName2Delegator = new HashMap();
-
+	/** Parameter name that should be specified in Action visibility/enablement */
+	public static final String PN_CONTRIBUTOR_ID = "actionFilterContributorId"; //$NON-NLS-1$
+	
 	public boolean testAttribute(Object target, String name, String value) {
-		Object object = attributeName2Delegator.get(name);
-		if (object == null) {
-			return false;
+		if (PN_CONTRIBUTOR_ID.equals(name)) {
+			// find relevant action filter contributor:
+			IActionFilterContributor actionFilterContributor = ActionFilterContributorsRegistry.getInstance().getContributor(value);
+			if (actionFilterContributor != null) {
+				return actionFilterContributor.testAttribute(target, name, value);
+			}
 		}
-		IActionFilterDelegator actionFilterDelegator = (IActionFilterDelegator)object;
-		return actionFilterDelegator.test(target, value);
+		return false;
 	}
-
 }

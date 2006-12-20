@@ -3,17 +3,17 @@
 <schema targetNamespace="org.eclipse.php.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.ui" id="actionFilterDelegatorForPHPCodeData" name="actionFilterDelegatorForPHPCodeData"/>
+         <meta.schema plugin="org.eclipse.php.ui" id="actionFilterContributors" name="PHP Action Filter Contributor"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows to provide contributors to IActionFilter in order to perform more complicated tests on whether the action should be visible/enabled or not. You must add parameter under the visibility/enablement element of relevant action called &quot;actionFilterContributorId&quot; with value which equals to id of this extension.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="ActionFilterDelegatorForPHPCodeData" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="contributor" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,7 +42,7 @@
       </complexType>
    </element>
 
-   <element name="ActionFilterDelegatorForPHPCodeData">
+   <element name="contributor">
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -51,7 +51,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string" use="required">
+         <attribute name="name" type="string">
             <annotation>
                <documentation>
                   
@@ -68,13 +68,6 @@
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="key" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
       </complexType>
    </element>
 
@@ -83,7 +76,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         20 December 2006
       </documentation>
    </annotation>
 
@@ -92,7 +85,40 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         Definition of our action, for example:
+&lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.ui.popupMenus&quot;&gt;
+ &lt;objectContribution id=&quot;test.MyObjectContribution&quot; objectClass=&quot;org.eclipse.core.resources.IFile&quot;&gt;
+  &lt;visibility&gt;
+   &lt;objectState
+    name=&quot;actionFilterContributorId&quot;
+    value=&quot;test.MyActionFilterContributor&quot;/&gt;
+  &lt;/visibility&gt;
+  &lt;action
+    class=&quot;test.MyAction&quot;
+    id=&quot;test.MyAction&quot;
+    label=&quot;My Action&quot;&gt;
+  &lt;/action&gt;
+ &lt;/objectContribution&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
+ 
+So, the action filter contributor must be defined as follows:
+&lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.ui.actionFilterContributors&quot;&gt;
+ &lt;contributor
+  id=&quot;test.MyActionFilterContributor&quot;
+  class=&quot;test.MyActionFilterContributor&quot;
+  name=&quot;My Action Filter Contributor&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
+
+That means, when testing the visibility of My Action, testAttribute method of &lt;code&gt;test.MyActionFilterContributor&lt;/code&gt;
+will be called for performing custom testing.
       </documentation>
    </annotation>
 
@@ -101,7 +127,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Extensions must implement &lt;code&gt;org.eclipse.php.ui.generic.actionFilter.IActionFilterContributor&lt;/code&gt; interface.
       </documentation>
    </annotation>
 
@@ -110,7 +136,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         Look at: &lt;code&gt;AddPHPDocActionFilterContributor&lt;/code&gt; and &lt;code&gt;CodeDataActionFilterContributor&lt;/code&gt;.
       </documentation>
    </annotation>
 
