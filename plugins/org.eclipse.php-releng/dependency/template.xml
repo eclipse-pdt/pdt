@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+    Sep 8, 2005 4:18:21 PM                                                        
+    
+    test    
+    test dependencies
+    
+    naci                                                                
+    ====================================================================== -->
+<project
+    name="test"
+    default="get">
+    <description>test dependencies</description>
+
+    
+    <!-- Note to be cross-platform, "environment variables" are only appropriate for
+        some variables, e.g. ones we set, since properties are case sensitive, even if
+        the environment variables on your operating system are not, e.g. it will
+        be ${env.Path} not ${env.PATH} on Windows -->
+    <property environment="env" />
+    
+    <!-- 
+    Note: if baseos, basews, and basearch are "passed in" to this 
+    file, then they take priority, and retain their value. Otherwise, 
+    use the current environment. Normally, the current environment is 
+    desired, but sometimes, such as for creating the "all in ones", it may 
+    be desired to "get" packages for other combinations.
+    -->
+    <property name="baseos" value="${env.BASEOS}" />
+    <property name="basews" value="${env.BASEWS}" />
+    <property name="basearch" value="${env.BASEARCH}" />
+    
+    <!-- ================================= 
+        target: get              
+        ================================= -->
+    <property file="@dependencyProperties@" />
+
+
+    <!-- - - - - - - - - - - - - - - - - - 
+        target: init                      
+        - - - - - - - - - - - - - - - - - -->
+    <target name="init">
+        <property
+            name="dependency.name"
+            value="${@dependencyGroupId@name}" />
+        <property
+            name="dependency.description"
+            value="${@dependencyGroupId@url}" />
+        <property
+            name="dependency.url"
+            value="${@dependencyGroupId@url}" />
+        <property
+            name="local.cache.dir"
+            value="." />
+
+        <condition
+            property="dependency.file"
+            value="${@dependencyGroupId@file}">
+            <not>
+                <or>
+                    <isset property="@dependencyGroupId@file.linux-gtk-x86" />
+                    <isset property="@dependencyGroupId@file.linux-gtk-ppc" />
+                    <isset property="@dependencyGroupId@file.win32-win32-x86" />
+                    <isset property="@dependencyGroupId@file.macosx-carbon-ppc" />
+                </or>
+            </not>
+        </condition>
+        <condition
+            property="dependency.file"
+            value="${@dependencyGroupId@file.win32-win32-x86}">
+            <and>
+                <isset property="@dependencyGroupId@file.win32-win32-x86" />
+                <equals
+                    arg1="win32"
+                    arg2="${baseos}" />
+                <equals
+                    arg1="win32"
+                    arg2="${basews}" />
+                <equals
+                    arg1="x86"
+                    arg2="${basearch}" />
+            </and>
+        </condition>
+        <condition
+            property="dependency.file"
+            value="${@dependencyGroupId@file.linux-gtk-x86}">
+            <and>
+                <isset property="@dependencyGroupId@file.linux-gtk-x86" />
+                <equals
+                    arg1="linux"
+                    arg2="${baseos}" />
+                <equals
+                    arg1="gtk"
+                    arg2="${basews}" />
+                <equals
+                    arg1="x86"
+                    arg2="${basearch}" />
+            </and>
+        </condition>
+        <condition
+            property="dependency.file"
+            value="${@dependencyGroupId@file.linux-gtk-ppc}">
+            <and>
+                <isset property="@dependencyGroupId@file.linux-gtk-ppc" />
+                <equals
+                    arg1="linux"
+                    arg2="${baseos}" />
+                <equals
+                    arg1="gtk"
+                    arg2="${basews}" />
+                <equals
+                    arg1="ppc"
+                    arg2="${basearch}" />
+            </and>
+        </condition>
+        <condition
+            property="dependency.file"
+            value="${@dependencyGroupId@file.macosx-carbon-ppc}">
+            <and>
+                <isset property="@dependencyGroupId@file.macosx-carbon-ppc" />
+                <equals
+                    arg1="macosx"
+                    arg2="${baseos}" />
+                <equals
+                    arg1="carbon"
+                    arg2="${basews}" />
+                <equals
+                    arg1="ppc"
+                    arg2="${basearch}" />
+            </and>
+        </condition>
+        <condition
+            property="dependency.autodownload"
+            value="${@dependencyGroupId@autodownload}">
+            <isset property="@dependencyGroupId@autodownload" />
+        </condition>
+        <condition
+            property="dependency.releng.url"
+            value="${@dependencyGroupId@releng.url}">
+            <isset property="@dependencyGroupId@releng.url" />
+        </condition>
+    </target>
+
+
+    <target
+        name="get"
+        depends="init">
+
+        <fail
+            unless="dependency.file"
+            message="The dependent file ${dependency.name} is not a supported os-ws-arch. Did you set baseos, basews,baesarch and make use your dependency.file property matches it." />
+
+        <echo message="Getting ${dependency.file}" />
+        <echo message="Url: ${dependency.url}" />
+
+        <ant
+            antfile="@dependencyDir@/build.xml"
+            target="default" />
+
+    </target>
+
+
+    <!-- ================================= 
+        target: install              
+        ================================= -->
+    <target
+        name="install"
+        depends="init">
+        <echo message="Installing ${dependency.file}" />
+        <echo message="destination: ${install.destination}" />
+        <antcall target="cleanInstall" />
+        <property file="${install.destination}/installmanifest.properties" />
+        <antcall target="callInstall" />
+        <echo message="installmanifest.properties: ${install.destination}/installmanifest.properties" />
+        <echo
+            file="${install.destination}/installmanifest.properties"
+            append="true">
+            @dependencyGroupId@${dependency.file}.installed=true
+            
+            @dependencyGroupId@dir=${local.cache.dir}
+            @dependencyGroupId@file=${dependency.file}
+            
+        </echo>
+    </target>
+
+    <target
+        name="cleanInstall"
+        if="clean">
+        <available
+            file="${install.destination}/installmanifest.properties"
+            property="installmanifest.exists" />
+        <antcall target="cleanInstall2" />
+    </target>
+
+    <target
+        name="cleanInstall2"
+        if="installmanifest.exists">
+        <replace
+            file="${install.destination}/installmanifest.properties"
+            token="@dependencyGroupId@${dependency.file}.installed=true" />
+    </target>
+
+    <target
+        name="callInstall"
+        unless="@dependencyGroupId@${dependency.file}.installed">
+        <ant
+            antfile="@dependencyDir@/build.xml"
+            target="install" />
+    </target>
+
+</project>

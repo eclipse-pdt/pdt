@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+    Properties that must be passed to this script:
+    base.install.dir
+    dependencyTargets
+    local.cache.dir
+    dependency.properties
+
+    
+    ====================================================================== -->
+<project
+    name="test"
+    default="get">
+
+    <target name="get">
+        <antcall target="getAndInstall">
+            <param
+                name="groupId"
+                value="wtp" />
+        </antcall>
+        <antcall target="getAndInstall">
+            <param
+                name="groupId"
+                value="emf" />
+        </antcall>
+        <antcall target="getAndInstall">
+            <param
+                name="groupId"
+                value="gef" />
+        </antcall>
+        <antcall target="getAndInstall">
+            <param
+                name="groupId"
+                value="jem" />
+        </antcall>
+        <antcall target="getAndInstall">
+            <param
+                name="groupId"
+                value="eclipse" />
+        </antcall>
+        <antcall target="getAndInstall">
+            <param
+                name="groupId"
+                value="eclipseTestFramework" />
+        </antcall>
+
+    </target>
+
+    <target name="getAndInstall">
+        <ant
+            antfile="${dependencyTargets}"
+            target="checkDependency">
+            <property
+                name="groupId"
+                value="${groupId}" />
+        </ant>
+        <ant
+            antfile="${dependencyTargets}"
+            target="installDependency">
+            <property
+                name="groupId"
+                value="${groupId}" />
+            <property
+                name="install.destination"
+                value="${base.install.dir}" />
+        </ant>
+    </target>
+
+</project>
+

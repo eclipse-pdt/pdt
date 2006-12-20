@@ -53,26 +53,22 @@
 	<!-- Steps to do before setup -->
 	<!-- ===================================================================== -->
 	<target name="preSetup">
-		<ant antfile="${builder}/../label.xml" />
-		<property file="${buildDirectory}/label.properties" />
-		<mkdir dir="${buildDirectory}/${buildLabel}" />
 	</target>
 
 	<!-- ===================================================================== -->
 	<!-- Steps to do after setup but before starting the build proper -->
 	<!-- ===================================================================== -->
 	<target name="postSetup">
-	<!--	<available file="${buildDirectory}/plugins/org.eclipse.platform/plugin.xml" property="baseExists" />
-		<antcall target="getBaseEclipse" />
-		<available file="${buildDirectory}/plugins/org.eclipse.emf/plugin.xml" property="emfExists" />
-		<antcall target="getEMF" />
-		<available file="${buildDirectory}/plugins/org.eclipse.gef/plugin.xml" property="gefExists" />
-		<antcall target="getGEF" />
-		<available file="${buildDirectory}/plugins/org.eclipse.wst/plugin.xml" property="wstExists" />
-		<antcall target="getWST" />
-		<available file="${buildDirectory}/plugins/org.eclipse.jem/plugin.xml" property="jemExists" />
-		<antcall target="getJEM" />
--->
+		<ant antfile="${builder}/../dependency.xml">
+        	    <property name="dependency.properties"
+                	      value="${buildDirectory}/maps/org.eclipse.php-releng/maps/dependencies.properties" />
+		    <property name="base.install.dir"
+        	              value="${buildDirectory}/../" />
+                    <property name="dependencyTargets"
+                              value="${builder}/../dependency/build.xml" />
+		    <property name="local.cache.dir"
+			      value="${buildDirectory}/../"/>
+	        </ant>
 	</target>
 
 	<!-- ===================================================================== -->
@@ -119,7 +115,6 @@
 	</target>
 
 	<target name="assemble.org.eclipse.php.sdk_feature">
-		<property name="archiveName" value="org.eclipse.php_feature-sdk-${buildLabel}.zip" />
 		<ant antfile="${assembleScriptName}" />
 	</target>
 
@@ -149,7 +144,6 @@
 		<!-- Not in use
                 <antcall target="gatherLogs" />
                 -->
-		<ant antfile="${builder}/../buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages"/>
 	</target>
 
 	<!-- ===================================================================== -->
@@ -164,29 +158,6 @@
 	<target name="publish">
 
 
-	</target>
-
-	<target name="getBaseInit">
-		<dirname property="antfile.dir" file="${ant.file}" />
-	</target>
-
-	<target name="getBaseEclipse" unless="baseExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getBaseEclipse" />
-	</target>
-
-	<target name="getEMF" unless="emfExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getEMF" />
-	</target>
-
-	<target name="getGEF" unless="gefExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getGEF" />
-	</target>
-	<target name="getWST" unless="wstExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getWST" />
-	</target>
-
-	<target name="getJEM" unless="jemExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getJEM" />
 	</target>
 
 	<!-- ===================================================================== -->

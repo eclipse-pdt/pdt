@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    
+    
+    dependency    
+    This script get a library from a remote repository and stores it in a local cache.
+    
+    The following properties are used by this script:
+    
+    local.cache.dir - the absolute path to the local repository for the libraries
+    dependency.url :  Url to a remote repository that will be used to download the library 
+    dependency.file:  Name of the library that is used.  If the library is platform dependent
+    it must have suffixes such as: file.linux.gtk.x86
+    These suffixes are the same as those used by releng baseos,basews,base arch
+    baseos= linux or win32
+    basews= gtk or win32
+    base arch=x86 or ppc
+    dependency.name:  A short user readable name for the library.
+    dependency.description:  One line description for the library.
+    dependency.autodownload: [optional] default true.  Set this to false if the file cannot be
+    downloaded automatically (i.e. requies license accept click through).
+    If autodownload is false, and the library is not avaialbe in the local
+    repository (cache).  User must download the library and copy it into
+    the local repository. 
+    dependency.releng.url: [optional] A mirror of the original repository.  Useful for libraries
+    that can get deleted from their original URLs.  Releng will use
+    the local cache, original url, releng.url in that order to get the
+    the dependency.  If a releng.url is not provided, the library will
+    always be requested from itrs original site.                                                       
+-->
+<project name="dependency" default="default">
+    <description>
+        This script get a library from a remote repository and stores it in a
+        local cache.
+    </description>
+
+
+    <!-- ================================= 
+        target: default              
+        ================================= -->
+    <target name="default"
+            description="This script get a library from a remote repository and stores it in a local cache.">
+        <condition property="dependency.download.file">
+            <or>
+                <not>
+                    <isset property="dependency.autodownload" />
+                </not>
+                <and>
+                    <isset property="dependency.autodownload" />
+                    <equals arg1="${dependency.autodownload}"
+                            arg2="true" />
+                </and>
+            </or>
+        </condition>
+        <antcall target="get" />
+        <antcall target="checkAutoDownload" />
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+        target: sub tasks                      
+        - - - - - - - - - - - - - - - - - -->
+    <target name="get" if="dependency.download.file">
+        <mkdir dir="${local.cache.dir}" />
+        <available file="${local.cache.dir}/${dependency.file}"
+                   property="local.cache.file.exists" />
+        <antcall target="download" />
+    </target>
+
+    <target name="checkAutoDownload"
+            unless="dependency.download.file">
+        <fail unless="local.cache.file.exists"
+              message="The dependent file ${dependency.name}, must be manually downloaded and placed in ${local.cache.dir}." />
+    </target>
+
+    <target name="download"
+            unless="local.cache.file.exists">
+        <get verbose="true"
+             src="${dependency.url}/${dependency.file}"
+             dest="${local.cache.dir}/${dependency.file}"
+             ignoreerrors="true" />
+
+        <condition property="download.from.mirror">
+            <and>
+                <isset property="dependency.releng.url" />
+                <not>
+                    <available file="${local.cache.dir}/${dependency.file}" />
+                </not>
+            </and>
+        </condition>
+        <antcall target="downloadMirror" />
+    </target>
+    <target name="downloadMirror" if="download.from.mirror">
+        <echo message="Using mirror repository: ${main.url.file.exists}" />
+        <echo message="Using mirror repository: ${dependency.releng.url}" />
+        <get verbose="true"
+             src="${dependency.releng.url}/${dependency.file}"
+             dest="${local.cache.dir}/${dependency.file}" />
+    </target>
+
+
+    <!-- ================================= 
+        target: install              
+        ================================= -->
+    <target name="install">
+        <condition property="file.type" value="zip">
+            <isfileselected file="${dependency.file}">
+                <selector>
+                    <filename name="**/*.zip" />
+                </selector>
+            </isfileselected>
+        </condition>
+        <condition property="file.type" value="tgz">
+            <isfileselected file="${dependency.file}">
+                <selector>
+                    <filename name="**/*.tar.gz" />
+                </selector>
+            </isfileselected>
+        </condition>
+        <condition property="file.type" value="tgz">
+            <isfileselected file="${dependency.file}">
+                <selector>
+                    <filename name="**/*.tgz" />
+                </selector>
+            </isfileselected>
+        </condition>
+        <condition property="file.type" value="tar">
+            <isfileselected file="${dependency.file}">
+                <selector>
+                    <filename name="**/*.tar" />
+                </selector>
+            </isfileselected>
+        </condition>
+
+
+        <antcall target="install-${file.type}" />
+    </target>
+
+    <target name="install-tar">
+        <untar dest="${install.destination}"
+               src="${local.cache.dir}/${dependency.file}"
+               overwrite="true" />
+    </target>
+    <target name="install-tgz">
+        <untar dest="${install.destination}"
+               src="${local.cache.dir}/${dependency.file}"
+               compression="gzip"
+               overwrite="true" />
+    </target>
+    <target name="install-zip">
+        <unzip dest="${install.destination}"
+               src="${local.cache.dir}/${dependency.file}"
+               overwrite="true" />
+    </target>
+
+    <target name="checkDependency">
+        <dirname file="${ant.file}"
+                 property="dependency.dir" />
+
+        <copy tofile="${buildDirectory}/dependency.${groupId}.xml"
+              overwrite="true">
+            <fileset dir="${dependency.dir}">
+                <include name="template.xml" />
+            </fileset>
+        </copy>
+        <echo message="Creating dependency script: ${buildDirectory}/dependency.${groupId}.xml " />
+        <replace file="${buildDirectory}/dependency.${groupId}.xml"
+                 value="${groupId}.">
+            <replacetoken>@dependencyGroupId@</replacetoken>
+        </replace>
+        <replace file="${buildDirectory}/dependency.${groupId}.xml"
+                 value="${dependency.dir}">
+            <replacetoken>@dependencyDir@</replacetoken>
+        </replace>
+        <replace file="${buildDirectory}/dependency.${groupId}.xml"
+                 value="${dependency.properties}">
+            <replacetoken>@dependencyProperties@</replacetoken>
+        </replace>
+        <ant antfile="${buildDirectory}/dependency.${groupId}.xml"
+             target="get" />
+
+        <!--
+        <delete failonerror="false">
+            <fileset dir=".">
+                <include name="${buildDirectory}/dependency.${groupId}.xml" />
+            </fileset>
+        </delete>
+		-->
+
+
+    </target>
+
+    <target name="installDependency">
+        <dirname file="${ant.file}"
+                 property="dependency.dir" />
+
+        <copy tofile="${buildDirectory}/dependency.${groupId}.xml">
+            <fileset dir="${dependency.dir}">
+                <include name="template.xml" />
+            </fileset>
+        </copy>
+        <replace file="${buildDirectory}/dependency.${groupId}.xml"
+                 value="${groupId}.">
+            <replacetoken>@dependencyGroupId@</replacetoken>
+        </replace>
+        <replace file="${buildDirectory}/dependency.${groupId}.xml"
+                 value="${dependency.dir}">
+            <replacetoken>@dependencyDir@</replacetoken>
+        </replace>
+        <replace file="${buildDirectory}/dependency.${groupId}.xml"
+                 value="${dependency.properties}">
+            <replacetoken>@dependencyProperties@</replacetoken>
+        </replace>
+        <ant antfile="${buildDirectory}/dependency.${groupId}.xml"
+             target="install">
+            <property name="install.destination"
+                      value="${install.destination}" />
+        </ant>
+
+        <!--
+        <delete failonerror="false">
+            <fileset dir=".">
+                <include name="${buildDirectory}/dependency.${groupId}.xml" />
+            </fileset>
+        </delete>
+        -->
+    </target>
+
+
+</project>
+

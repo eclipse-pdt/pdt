@@ -53,26 +53,22 @@
 	<!-- Steps to do before setup -->
 	<!-- ===================================================================== -->
 	<target name="preSetup">
-		<ant antfile="${builder}/../label.xml" />
-		<property file="${buildDirectory}/label.properties" />
-		<mkdir dir="${buildDirectory}/${buildLabel}" />
 	</target>
 
 	<!-- ===================================================================== -->
 	<!-- Steps to do after setup but before starting the build proper -->
 	<!-- ===================================================================== -->
 	<target name="postSetup">
-		<!--	<available file="${buildDirectory}/plugins/org.eclipse.platform/plugin.xml" property="baseExists" />
-		<antcall target="getBaseEclipse" />
-		<available file="${buildDirectory}/plugins/org.eclipse.emf/plugin.xml" property="emfExists" />
-		<antcall target="getEMF" />
-		<available file="${buildDirectory}/plugins/org.eclipse.gef/plugin.xml" property="gefExists" />
-		<antcall target="getGEF" />
-		<available file="${buildDirectory}/plugins/org.eclipse.wst/plugin.xml" property="wstExists" />
-		<antcall target="getWST" />
-		<available file="${buildDirectory}/plugins/org.eclipse.jem/plugin.xml" property="jemExists" />
-		<antcall target="getJEM" />
--->
+		<ant antfile="${builder}/../dependency.xml">
+                    <property name="dependency.properties"
+                              value="${buildDirectory}/maps/org.eclipse.php-releng/maps/dependencies.properties" />
+                    <property name="base.install.dir"
+                              value="${buildDirectory}/../" />
+                    <property name="dependencyTargets"
+                              value="${builder}/../dependency/build.xml" />
+                    <property name="local.cache.dir"
+                              value="${buildDirectory}/../"/>
+                </ant>
 	</target>
 
 	<!-- ===================================================================== -->
@@ -119,7 +115,6 @@
 	</target>
 
 	<target name="assemble.org.eclipse.php_feature">
-		<property name="archiveName" value="org.eclipse.php_feature-${buildLabel}.zip" />
 		<ant antfile="${assembleScriptName}" />
 	</target>
 
@@ -170,14 +165,102 @@
 
 		<style in="${buildDirectory}/${buildLabel}/changelog.xml" out="${buildDirectory}/${buildLabel}/changelog.html" style="${builder}/../changelog.xsl"/>
 -->
-		<ant antfile="${builder}/../buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages" />
 	</target>
 
 	<!-- ===================================================================== -->
 	<!-- Steps to do to test the build results -->
 	<!-- ===================================================================== -->
 	<target name="test">
-	</target>
+
+<antcall target="runTest" />
+<!--
+
+
+                <mkdir dir="/eclipse-testing" />
+                <copy todir="/eclipse-testing"
+              overwrite="false">
+            <fileset dir="/src/eclipse-SDK.zip" />
+        </copy>
+-->
+        </target>
+
+<target name="runTest">
+
+        <dirname file="${ant.file}" property="test.component.dir" />
+        <ant antfile="${wtp.builder.home}/scripts/build/label.xml" />
+        <property file="${buildDirectory}/label.properties" />
+        <property file="${wtp.builder.home}/build.properties" />
+
+        <mkdir dir="${testRoot}" />
+        <mkdir dir="${testRoot}/results" />
+        <mkdir dir="${testRoot}/results/consolelogs" />
+
+        <copy todir="${testRoot}" overwrite="true">
+            <fileset dir="${test.component.dir}/testScripts">
+            </fileset>
+        </copy>
+
+        <echo message="${baseos} ${basews} ${basearch} " />
+        <ant antfile="${test.component.dir}/testdependency.xml" target="get">
+            <property name="dependency.properties" value="${buildDirectory}/maps/releng/maps/dependencies.properties" />
+            <property name="base.install.dir" value="${testRoot}" />
+        </ant>
+        <unzip dest="${testRoot}" src="${buildDirectory}/${buildLabel}/wtp-${buildLabel}.zip" overwrite="true" />
+        <unzip dest="${testRoot}" src="${buildDirectory}/${buildLabel}/wtp-wst-Automated-Tests-${buildLabel}.zip" overwrite="true" />
+        <unzip dest="${testRoot}" src="${buildDirectory}/${buildLabel}/wtp-jst-Automated-Tests-${buildLabel}.zip" overwrite="true" />
+
+        <unzip dest="${testRoot}" src="${buildDirectory}/${buildLabel}/wtp-jsf-${buildLabel}.zip" overwrite="true" />
+        <unzip dest="${testRoot}" src="${buildDirectory}/${buildLabel}/wtp-jsf-Automated-Tests-${buildLabel}.zip" overwrite="true" />
+
+        <antcall target="runTestEclipse">
+            <param name="testTarget" value="all" />
+        </antcall>
+        <antcall target="postRunTestEclipse">
+            <param name="testTarget" value="all" />
+        </antcall>
+
+    </target>
+
+
+
+    <target name="runTestEclipse">
+        <java taskname="test-wtp-${testTarget}" classpath="${testRoot}/eclipse/startup.jar" fork="true" classname="org.eclipse.core.launcher.Main" failonerror="true" timeout="7200000" output="${testRoot}/results/consolelogs/wtptestlog.txt" dir="${testRoot}">
+            <jvmarg value="-Dosgi.ws=${basews}" />
+            <jvmarg value="-Dosgi.os=${baseos}" />
+            <jvmarg value="-Dosgi.arch=${basearch}" />
+            <jvmarg value="-Dws=${basews}" />
+            <jvmarg value="-Dos=${baseos}" />
+            <jvmarg value="-Darch=${basearch}" />
+            <jvmarg value="-Dnoclean=true" />
+            <jvmarg value="-DbuildBranch=${buildBranch}" />
+            <jvmarg value="-DbuildType=${buildType}" />
+            <jvmarg value="-DbuildId=${buildId}" />
+            <jvmarg value="-DbuildLabel=${buildLabel}" />
+            <arg value="-propertyfile" />
+            <arg value="test.properties" />
+            <arg value="-application" />
+            <arg value="org.eclipse.ant.core.antRunner" />
+            <arg value="-file" />
+            <arg value="test.xml" />
+            <arg value="-logger" />
+            <arg value="org.apache.tools.ant.DefaultLogger" />
+            <arg value="${testTarget}" />
+            <sysproperty key="build.home" value="${build.home}" />
+            <sysproperty key="buildDirectory" value="${buildDirectory}" />
+            <sysproperty key="baseLocation" value="${baseLocation}" />
+            <sysproperty key="testDir" value="${testRoot}" />
+            <sysproperty key="perf.buildId" value="${buildType}${date}-${time}" />
+            <sysproperty key="eclipseBuilderDirectory" value="${pde.builder.path}" />
+        </java>
+    </target>
+
+    <target name="postRunTestEclipse">
+        <copy todir="${buildDirectory}/${buildLabel}/testResults" overwrite="true">
+            <fileset dir="${testRoot}/results">
+                <include name="**/*.*" />
+            </fileset>
+        </copy>
+    </target>
 
 	<!-- ===================================================================== -->
 	<!-- Steps to do to publish the build results -->
@@ -185,29 +268,6 @@
 	<target name="publish">
 
 
-	</target>
-
-	<target name="getBaseInit">
-		<dirname property="antfile.dir" file="${ant.file}" />
-	</target>
-
-	<target name="getBaseEclipse" unless="baseExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getBaseEclipse" />
-	</target>
-
-	<target name="getEMF" unless="emfExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getEMF" />
-	</target>
-
-	<target name="getGEF" unless="gefExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getGEF" />
-	</target>
-	<target name="getWST" unless="wstExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getWST" />
-	</target>
-
-	<target name="getJEM" unless="jemExists" depends="getBaseInit">
-		<ant antfile="${antfile.dir}/../extractRequiredBuilds.xml" target="getJEM" />
 	</target>
 
 	<!-- ===================================================================== -->

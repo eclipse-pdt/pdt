@@ -106,9 +106,9 @@
         <!-- since developers wouldn't normally need it for a quick check of of a build.        -->
         <!--                                                                                    -->
         <!-- ================================================================================== -->
-        <!--  <property
+        <property
             name="doPack"
-            value="true" /> -->
+            value="true" />
         <antcall target="createPackFilesIfDesired" />
 
 
@@ -122,9 +122,9 @@
         <!-- ================================================================================== -->
 
         <!--  use releng task of unpackUpdateJars -->
-       <!-- <unpackUpdateJars site="${tmpsite}/eclipse"
+        <unpackUpdateJars site="${tmpsite}/eclipse"
                           output="${tmpsite}/unpacked/eclipse" />
--->
+
         <!-- add copy of legal doc's here, product.ini, etc., before re-zipping 
         <copy todir="${tmpsite}/unpacked/eclipse"
               overwrite="false">
@@ -140,7 +140,7 @@
 
         <!-- recreate zip file now, same name, traditional content, which is mix of folders and jars -->
         <zip destfile="${buildDirectory}/${buildLabel}/${archiveName}"
-             basedir="${tmpsite}"
+             basedir="${tmpsite}/unpacked"
              update="false"
              duplicate="preserve" />
         
