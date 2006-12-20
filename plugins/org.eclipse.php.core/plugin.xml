@@ -82,7 +82,7 @@
 	</extension>
 
 	<extension point="org.eclipse.core.resources.builders" 
-		id="PHPIncrementalProjectBuilder"
+		id="PhpIncrementalProjectBuilder"
 		name="PHP Project Builder">
 	  <builder>
     	 <run class="org.eclipse.php.core.project.build.PHPIncrementalProjectBuilder"/>
