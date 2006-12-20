@@ -18029,7 +18029,7 @@ function parse_str($encoded_string, $result = null) {}
 /**
  * Parse a URL and return its components 
  *
- * @return array
+ * @return mixed
  * @param  url string
  */
 function parse_url($url) {}
@@ -25914,7 +25914,7 @@ function zip_close($zip) {}
 /**
  * Close a zip entry 
  *
- * @return void
+ * @return bool
  * @param  zip_ent resource
  */
 function zip_entry_close($zip_ent) {}
@@ -25972,7 +25972,7 @@ function zip_entry_read($zip_ent) {}
 /**
  * Open a new zip archive for reading 
  *
- * @return resource
+ * @return mixed
  * @param  filename string
  */
 function zip_open($filename) {}
@@ -25980,7 +25980,7 @@ function zip_open($filename) {}
 /**
  * Returns the next file in the archive 
  *
- * @return resource
+ * @return mixed
  * @param  zip resource
  */
 function zip_read($zip) {}
