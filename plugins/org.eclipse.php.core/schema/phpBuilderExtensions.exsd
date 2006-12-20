@@ -3,17 +3,18 @@
 <schema targetNamespace="org.eclipse.php.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.core" id="buildersInitializer" name="buildersInitializer"/>
+         <meta.schema plugin="org.eclipse.php.core" id="phpBuilderExtensions" name="PHP Builder Extension"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows to provide extensions to PHP builder.
+PHP builder is obliged to run all its extensions when its running on PHP project.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="BuildersInitializer" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="builder" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,20 +43,28 @@
       </complexType>
    </element>
 
-   <element name="BuildersInitializer">
+   <element name="builder">
+      <annotation>
+         <documentation>
+            PHP builder extension element.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  ID of the PHP builder extension.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Class of PHP builder extension which implements &lt;code&gt;org.eclipse.php.core.project.build.IPHPBuilderExtension&lt;/code&gt;.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.core.project.build.IPHPBuilderExtension"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -66,7 +75,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         20 December 2006
       </documentation>
    </annotation>
 
@@ -75,7 +84,15 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+&lt;pre&gt;
+ &lt;extension point=&quot;org.eclipse.php.core.phpBuilderExtensions&quot;&gt;
+     &lt;builder 
+         class=&quot;org.eclipse.php.core.project.build.DefaultPHPBuilderExtension&quot;
+         id=&quot;org.eclipse.php.core.project.build.DefaultPHPBuilderExtension&quot;/&gt;
+ &lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -84,7 +101,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Each extension class must implement &lt;code&gt;org.eclipse.php.core.project.build.IPHPBuilderExtension&lt;/code&gt;.
       </documentation>
    </annotation>
 
@@ -93,7 +110,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         &lt;code&gt;org.eclipse.php.core.project.build.DefaultPHPBuilderExtension&lt;/code&gt;
       </documentation>
    </annotation>
 

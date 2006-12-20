@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
 
 public class PHPProjectOptions {
 
-	public static final String BUILDER_ID = PHPCorePlugin.ID + ".PhpIncrementalProjectBuilder";
+	public static final String BUILDER_ID = PHPCorePlugin.ID + ".PHPIncrementalProjectBuilder";
 	static final IIncludePathEntry[] EMPTY_INCLUDEPATH = {};
 
 	public static final String FILE_NAME = ".projectOptions";

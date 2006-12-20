@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -43,7 +44,6 @@ import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.core.project.PHPNature;
-import org.eclipse.php.core.project.build.PhpIncrementalProjectBuilder;
 import org.eclipse.php.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.core.util.project.observer.ProjectRemovedObserversAttacher;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -158,7 +158,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		WorkspaceJob cleanJob = new WorkspaceJob("Creating php model ...") {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
-					project.build(PhpIncrementalProjectBuilder.CLEAN_BUILD, monitor);
+					project.build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
 					//					ResourcesPlugin.getWorkspace().getRoot().accept(new FullPhpProjectBuildVisitor());
 				} finally {
 					monitor.done();
@@ -189,7 +189,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 							return null;
 						}
 						if (hasNature) {
-							project.build(PhpIncrementalProjectBuilder.FULL_BUILD, monitor);
+							project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
 						}
 					}
 				} finally {

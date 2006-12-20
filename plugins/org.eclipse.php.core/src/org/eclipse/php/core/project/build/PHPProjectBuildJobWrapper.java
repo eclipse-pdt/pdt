@@ -12,6 +12,7 @@ package org.eclipse.php.core.project.build;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -37,7 +38,7 @@ public class PHPProjectBuildJobWrapper {
     	WorkspaceJob cleanJob = new WorkspaceJob("Building after php version changed ...") {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
-					project.build(PhpIncrementalProjectBuilder.CLEAN_BUILD, monitor);
+					project.build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
 //					IWorkbenchWindow[] workbenchWindows = PHPCorePlugin.getDefault().getWorkbench().getWorkbenchWindows();
 //					IWorkbenchPage[] workbenchPages = workbenchWindows[0].getPages();
 //					IEditorReference[] editorReferences = workbenchPages[0].getEditorReferences();

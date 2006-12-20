@@ -22,50 +22,58 @@ import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.project.PHPNature;
 
-public class PhpIncrementalProjectBuilder extends IncrementalProjectBuilder {
+public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 
+	private PHPIncrementalProjectBuilder containingBuilder;
 
-	public PhpIncrementalProjectBuilder() {
-	}
-	
-
-	protected void startupOnInitialize() {
-		super.startupOnInitialize();
+	public DefaultPHPBuilderExtension() {
 	}
 
-	
+	public PHPIncrementalProjectBuilder getContainingBuilder() {
+		return containingBuilder;
+	}
 
-	protected void clean(IProgressMonitor monitor) throws CoreException {
+	public void setContainingBuilder(PHPIncrementalProjectBuilder containingBuilder) {
+		if (containingBuilder == null) {
+			throw new IllegalArgumentException("PHP Incremental Project builder must be non-null value"); //$NON-NLS-1$
+		}
+		this.containingBuilder = containingBuilder;
+	}
+	
+	public boolean isEnabled() {
+		return true;
+	}
+
+	public void startupOnInitialize() {
+	}
+
+	public void clean(IProgressMonitor monitor) throws CoreException {
 		cleanBuild();
 	}
 
-
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
-		if (kind == FULL_BUILD) {
+	public IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
+		if (kind == IncrementalProjectBuilder.FULL_BUILD) {
 			fullBuild();
 			return null;
 		}
 
-		IResourceDelta delta = getDelta(getProject());
+		IResourceDelta delta = containingBuilder.getDelta(containingBuilder.getProject());
 		if (delta == null) {
 			return null;
 		}
 
 		buildDelta(delta, monitor);
-
 		return null;
 	}
 
-
 	private void fullBuild() {
 		try {
-		getProject().accept(new FullPhpProjectBuildVisitor());
-	} catch (CoreException e) {
-		PHPCorePlugin.log(e);
-		return;
+			containingBuilder.getProject().accept(new FullPhpProjectBuildVisitor());
+		} catch (CoreException e) {
+			PHPCorePlugin.log(e);
+			return;
+		}
 	}
-	}
-
 
 	private void buildDelta(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
 		// the visitor does the work.
@@ -87,11 +95,9 @@ public class PhpIncrementalProjectBuilder extends IncrementalProjectBuilder {
 			modelForProject.clean();
 			return;
 		}
-
 	}
 
 	private void cleanBuild() {
-		cleanBuild(getProject());
+		cleanBuild(containingBuilder.getProject());
 	}
-
 }

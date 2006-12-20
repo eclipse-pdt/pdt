@@ -4,7 +4,7 @@
    <extension-point id="phpModel" name="phpModel" schema="schema/phpModel.exsd"/>
    <extension-point id="includePathVariableInitializer" name="Include Path Variable Initializer" schema="schema/includePathVariableInitializer.exsd"/>
    <extension-point id="workspaceModelListener" name="workspaceModelListener" schema="schema/workspaceModelListener.exsd"/>
-   <extension-point id="buildersInitializer" name="buildersInitializer" schema="schema/buildersInitializer.exsd"/>
+   <extension-point id="phpBuilderExtensions" name="PHP Builder Extension" schema="schema/phpBuilderExtensions.exsd"/>
    
 	<!-- PHP Model Handler -->
 	<extension
@@ -81,15 +81,18 @@
 		  </runtime>
 	</extension>
 
-
-	<extension 
-		point="org.eclipse.core.resources.builders" 
-		id="PhpIncrementalProjectBuilder"
-		name="Incremental PHP project builder">
-		<builder>
-			<run class="org.eclipse.php.core.project.build.PhpIncrementalProjectBuilder">
-			</run>
-		</builder>
+	<extension point="org.eclipse.core.resources.builders" 
+		id="PHPIncrementalProjectBuilder"
+		name="PHP Project Builder">
+	  <builder>
+    	 <run class="org.eclipse.php.core.project.build.PHPIncrementalProjectBuilder"/>
+	  </builder>
+	</extension>
+	
+	<extension point="org.eclipse.php.core.phpBuilderExtensions">
+	    <builder 
+	        class="org.eclipse.php.core.project.build.DefaultPHPBuilderExtension"
+    	    id="org.eclipse.php.core.project.build.DefaultPHPBuilderExtension"/>
 	</extension>
 
  <!--  <extension
@@ -121,11 +124,5 @@
 	<extension point="org.eclipse.core.runtime.preferences">
 	   <initializer class="org.eclipse.php.core.preferences.PHPCorePreferenceInitializer"/>
 	</extension>
- <extension
-       point="org.eclipse.php.core.buildersInitializer">
-    <BuildersInitializer
-          id="org.eclipse.php.core.PhpIncrementalProjectBuilder"
-          name="PhpIncrementalProjectBuilder"/>
- </extension>
 
 </plugin>
