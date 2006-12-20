@@ -11,6 +11,6 @@ public abstract class BasicPHPWizardPageExtended extends BasicPHPWizardPage {
 	public void prePerformFinish(IProject project){};
 	public void performFinish(){};
 	public void postPerformFinish(IProject project){};
-	
+	public void flushPreferences(){};
 
 }
