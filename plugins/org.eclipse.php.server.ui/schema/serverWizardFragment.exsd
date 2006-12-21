@@ -85,7 +85,7 @@ Note that the use of this indicator will only ensure that this fragment will be 
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         0.1.3
+         0.7
       </documentation>
    </annotation>
 
