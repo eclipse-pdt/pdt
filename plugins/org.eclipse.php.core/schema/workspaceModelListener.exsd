@@ -77,7 +77,7 @@ See &lt;code&gt;org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager&lt
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         05 June 2006
       </documentation>
    </annotation>
 
@@ -89,10 +89,10 @@ See &lt;code&gt;org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager&lt
          &lt;p&gt;
 &lt;pre&gt;
 &lt;extension point=&quot;org.eclipse.php.core.workspaceModelListener&quot;&gt;
-	&lt;workspaceModelListener
-		class=&quot;test.MyModelListener&quot;
-		id=&quot;test.MyModelListener&quot;
-		name=&quot;My Model Listener&quot;/&gt;
+ &lt;workspaceModelListener
+  class=&quot;test.MyModelListener&quot;
+  id=&quot;test.MyModelListener&quot;
+  name=&quot;My Model Listener&quot;/&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
