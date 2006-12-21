@@ -22,64 +22,72 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
-
 public class PHPEditorPreferencePage extends AbstractPreferencePage {
 
-	private Button useSmartHomeEndCB;
-	
-	protected Control createContents(Composite parent) {
-		// TODO Auto-generated method stub
-		createHeader(parent);
-		createMainComposite(parent);
-		initValues();
-		return super.createContents(parent);
-	}
+    private Button useSmartHomeEndCB;
+    private Button useSmartSubWordNavigation;
 
-	private void createMainComposite(Composite parent) {
-		Composite firstComposite = new Composite(parent,SWT.FILL);
-		firstComposite.setLayout(new GridLayout(1,false));
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		firstComposite.setLayoutData(gd);
-		
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		useSmartHomeEndCB = new Button(firstComposite,SWT.CHECK|SWT.LEFT);
-		useSmartHomeEndCB.setLayoutData(gd);
-		useSmartHomeEndCB.setText(PHPUIMessages.PHPEditorPreferencePage_smartCaretPositioning);
-	}
+    protected Control createContents(Composite parent) {
+        // TODO Auto-generated method stub
+        createHeader(parent);
+        createMainComposite(parent);
+        initValues();
+        return super.createContents(parent);
+    }
 
-	protected void performDefaults() {
-		useSmartHomeEndCB.setSelection(true);
-		super.performDefaults();
-	}
+    private void createMainComposite(Composite parent) {
+        Composite firstComposite = new Composite(parent, SWT.FILL);
+        firstComposite.setLayout(new GridLayout(1, false));
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        firstComposite.setLayoutData(gd);
 
-	public boolean performOk() {
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
-		store.setValue(PreferenceConstants.USE_SMART_HOME_END, useSmartHomeEndCB.getSelection());
-		return super.performOk();
-	}
-	
-	private void createHeader(Composite contents) {
-		final Shell shell= contents.getShell();
-		String text= PHPUIMessages.PHPEditorPreferencePage_prefEditorMessage;
-		Link link= new Link(contents, SWT.NONE);
-		link.setText(text);
-		link.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				PreferencesUtil.createPreferenceDialogOn(shell, "org.eclipse.ui.preferencePages.GeneralTextEditor", null, null); //$NON-NLS-1$
-			}
-		});
-		// TODO replace by link-specific tooltips when
-		// bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=88866 gets fixed
-		link.setToolTipText(PHPUIMessages.PHPEditorPreferencePage_prefEditorTooltip);
-		
-		GridData gridData= new GridData(SWT.FILL, SWT.BEGINNING, true, false);
-		gridData.widthHint= 150; // only expand further if anyone else requires it
-		link.setLayoutData(gridData);
-	}
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        useSmartHomeEndCB = new Button(firstComposite, SWT.CHECK | SWT.LEFT);
+        useSmartHomeEndCB.setLayoutData(gd);
+        useSmartHomeEndCB.setText(PHPUIMessages.PHPEditorPreferencePage_smartCaretPositioning);
 
-	protected void initValues() {
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
-		useSmartHomeEndCB.setSelection(store.getBoolean(PreferenceConstants.USE_SMART_HOME_END));
-		super.initializeValues();
-	}
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        useSmartSubWordNavigation = new Button(firstComposite, SWT.CHECK | SWT.LEFT);
+        useSmartSubWordNavigation.setLayoutData(gd);
+        useSmartSubWordNavigation.setText("Smart caret positioning in PHP names (Overrides basic behavior)");
+    }
+
+    protected void performDefaults() {
+        useSmartHomeEndCB.setSelection(true);
+        useSmartSubWordNavigation.setSelection(true);
+        super.performDefaults();
+    }
+
+    public boolean performOk() {
+        IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+        store.setValue(PreferenceConstants.USE_SMART_HOME_END, useSmartHomeEndCB.getSelection());
+        store.setValue(PreferenceConstants.USE_SUB_WORD_NAVIGATION, useSmartSubWordNavigation.getSelection());
+        return super.performOk();
+    }
+
+    private void createHeader(Composite contents) {
+        final Shell shell = contents.getShell();
+        String text = PHPUIMessages.PHPEditorPreferencePage_prefEditorMessage;
+        Link link = new Link(contents, SWT.NONE);
+        link.setText(text);
+        link.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                PreferencesUtil.createPreferenceDialogOn(shell, "org.eclipse.ui.preferencePages.GeneralTextEditor", null, null); //$NON-NLS-1$
+            }
+        });
+        // TODO replace by link-specific tooltips when
+        // bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=88866 gets fixed
+        link.setToolTipText(PHPUIMessages.PHPEditorPreferencePage_prefEditorTooltip);
+
+        GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+        gridData.widthHint = 150; // only expand further if anyone else requires it
+        link.setLayoutData(gridData);
+    }
+
+    protected void initValues() {
+        IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+        useSmartHomeEndCB.setSelection(store.getBoolean(PreferenceConstants.USE_SMART_HOME_END));
+        useSmartSubWordNavigation.setSelection(store.getBoolean(PreferenceConstants.USE_SUB_WORD_NAVIGATION));
+        super.initializeValues();
+    }
 }
