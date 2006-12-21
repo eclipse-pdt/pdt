@@ -12,7 +12,11 @@
    <license url="%licenseURL">
       %license
    </license>
-   
+
+   <requires>
+      <import feature="org.eclipse.php_feature" version="0.7.0.qualifier"/>
+   </requires>
+
    <plugin
          id="org.eclipse.php.test"
          download-size="0"
