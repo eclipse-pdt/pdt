@@ -62,7 +62,7 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.phpModel");
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("PhpModel")) {
+			if (element.getName().equals("phpModel")) {
 				PhpModelProxy modelManagerProxy = new PhpModelProxy(element);
 				IPhpModel model = modelManagerProxy.getModel();
 				model.initialize(project);

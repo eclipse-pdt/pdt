@@ -112,9 +112,10 @@
             class="org.eclipse.php.core.documentModel.PhpDocumentSetupParticipant">
       </participant>
    </extension>
+   
    <extension
          point="org.eclipse.php.core.phpModel">
-      <PhpModel
+      <phpModel
             class="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"
             id="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"
             name="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"/>

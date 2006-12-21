@@ -6,14 +6,14 @@
          <meta.schema plugin="org.eclipse.php.core" id="phpModel" name="phpModel"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows to contribute additional PHP models (look at &lt;code&gt;org.eclipse.php.core.phpModel.parser.IPhpModel&lt;/code&gt;).
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="PhpModel" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="phpModel" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,7 +42,7 @@
       </complexType>
    </element>
 
-   <element name="PhpModel">
+   <element name="phpModel">
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -76,7 +76,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         05 June 2006
       </documentation>
    </annotation>
 
@@ -85,7 +85,17 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         Here&apos;s an example of PHP model contribution:
+&lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.core.phpModel&quot;&gt;
+	&lt;phpModel
+		class=&quot;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&quot;
+		id=&quot;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&quot;
+		name=&quot;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -94,7 +104,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Contributed PHP model class must implement &lt;code&gt;org.eclipse.php.core.phpModel.parser.IPhpModel&lt;/code&gt;.
       </documentation>
    </annotation>
 
@@ -103,7 +113,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         Look at &lt;code&gt;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&lt;/code&gt; as an example of contributed PHP model.
       </documentation>
    </annotation>
 
