@@ -74,7 +74,7 @@
 		</ant>
 	</target>
 
-	<target name="buildTest" depends="init">
+	<target name="buildTest" depends="init, buildRuntime">
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="test" />
 		</ant>
