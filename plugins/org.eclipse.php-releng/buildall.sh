@@ -117,5 +117,5 @@ if [ ! -r ../org.eclipse.releng.basebuilder ]
     mv org.eclipse.releng.basebuilder ../
 fi
 
-$vm -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm -Dbaseos=linux -Dbasews=gtk -Dbasearch=x86
+$vm/bin/java -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm -Dbaseos=linux -Dbasews=gtk -Dbasearch=x86
 #rm -rf ../org.eclipse.releng.basebuilder

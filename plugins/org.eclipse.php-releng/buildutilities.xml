@@ -54,7 +54,7 @@
         <!-- ================================================================================== -->
         <java jar="${baseLocation}/startup.jar"
               fork="true"
-              jvm="${java-home}"
+              jvm="${java-home}/bin/java"
               failonerror="true"
               maxmemory="256m"
               dir="${buildDirectory}">
@@ -189,7 +189,7 @@
     <target name="createPackFilesIfDesired" if="doPack" depends="init">
         <java jar="${baseLocation}/startup.jar"
               fork="true"
-              jvm="${java-home}"
+              jvm="${java-home}/bin/java"
               failonerror="true"
               maxmemory="256m"
               dir="${buildDirectory}">
