@@ -154,7 +154,8 @@
 		<!-- create top level testing directory-->
 		<mkdir dir="${workingDirectory}/phpide-testing" />
 
-		<!--eclipse.home is relative to the scripts directory in the org.eclipse.pde.build plugin.  Assume the plugins used in the classpath are in the same directory as org.eclipse.pde.build-->
+		<!--eclipse.home is relative to the scripts directory in the org.eclipse.pde.build plugin.  
+		Assume the plugins used in the classpath are in the same directory as org.eclipse.pde.build-->
 		<property name="eclipse.home" value="../../.." />
 
 		<!--copy label.properties file for use in performance testing-->
@@ -163,26 +164,26 @@
 		<property name="test.properties" value="${workingDirectory}/phpide-testing/test.properties" />
 
 		<!--generate test.properties.  Custom Ant task contributed by org.eclipse.build.tools in org.eclipse.releng.basebuilder.-->
-		<generateTestProperties buildDirectory="${buildDirectory}" featureId="org.eclipse.php.test-feature" outputFile="${test.properties}" />
+		<generateTestProperties buildDirectory="${buildDirectory}" featureId="org.eclipse.php.test_feature" outputFile="${test.properties}" />
 
 		<!--load the property file created with the directory names for all test plugins-->
 		<property file="${test.properties}" />
 
 		<!-- Remove the plugin version number appended to the org.eclipse.test plugin directory.
    	     This is so that contributors of test.xml's do not have to update their paths to 
-   	     library.xml in org.eclipse.test whenever its version is updated.
-   	 -->
-		<move todir="${workingDirectory}/eclipse/plugins/org.eclipse.test">
-			<fileset dir="${workingDirectory}/eclipse/plugins/org.eclipse.test_3.1.0" />
-		</move>
+   	     library.xml in org.eclipse.test whenever its version is updated.-->
+		<!--copy eclipse test framework -->
+		<copy todir="${workingDirectory}/eclipse/plugins/org.eclipse.test">
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.test_3.1.0" />
+		</copy>
 
 		<property file="${buildDirectory}/finalPluginsVersions.properties" />
 
-		<!--HACK until https://bugs.eclipse.org/bugs/show_bug.cgi?id=167452 addressed -->
+		<!-- TODO : HACK until https://bugs.eclipse.org/bugs/show_bug.cgi?id=167452 addressed
 		<zip destfile="${workingDirectory}/eclipse/startup.jar">
 			<fileset dir="${buildDirectory}/plugins/org.eclipse.equinox.launcher/@dot" />
 			<fileset dir="${buildDirectory}/plugins/org.eclipse.equinox.launcher" includes="META-INF/" />
-		</zip>
+		</zip> -->
 
 		<!--the Ant move task leaves behind an empty directory-->
 		<delete dir="${workingDirectory}/eclipse/plugins/${org.eclipse.test}" includeEmptyDirs="true" />
@@ -205,7 +206,6 @@
 		<copy todir="${workingDirectory}/phpide-testing">
 			<fileset dir="${buildDirectory}/plugins/org.eclipse.test" includes="testframework.html,JUNIT.XSL" />
 		</copy>
-		<echo> ${builderDirectory}/testScripts </echo>
 		<copy todir="${workingDirectory}/phpide-testing">
 			<fileset dir="${builderDirectory}/testScripts" />
 		</copy>
