@@ -204,17 +204,15 @@
 
 		<!--Copy scripts and doc used in the automated testing to the testing directory-->
 		<copy todir="${workingDirectory}/phpide-testing">
-			<fileset dir="${buildDirectory}/plugins/org.eclipse.test" includes="testframework.html,JUNIT.XSL" />
-		</copy>
-		<copy todir="${workingDirectory}/phpide-testing">
 			<fileset dir="${builderDirectory}/testScripts" />
 		</copy>
 
-		<!--convert .bat files to dos just in case-->
+		<!-- convert runtests.bat files to unix just in case
 		<exec executable="unix2dos" dir="${workingDirectory}/phpide-testing">
 			<arg line="runtests.bat" />
-		</exec>
-		<!--convert runtests files to unix just in case-->
+		</exec> -->
+
+		<!-- convert runtestsfiles to dos just in case -->
 		<exec executable="dos2unix" dir="${workingDirectory}/phpide-testing">
 			<arg line="runtests" />
 		</exec>
