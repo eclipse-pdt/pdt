@@ -79,7 +79,8 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	// after the user requests a launch, they cannot change it
 	private static final String READ_ONLY = "read-only"; //$NON-NLS-1$
 
-	protected static final String AUTO_GENERATED_URL = "auto_generated_url"; //$NON-NLS-1$
+	/**Indicates that the URL field is auto-generated according to the user Server and resource selections.*/
+	public static final String AUTO_GENERATED_URL = "auto_generated_url"; //$NON-NLS-1$
 
 	protected WidgetListener fListener = new WidgetListener();
 	private boolean saveWorkingCopy;
@@ -627,7 +628,12 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			} else {
 				if (serverCombo.getItemCount() > 0) {
 					// Select the default server
-					Server defaultServer = ServersManager.getDefaultServer();
+					String projectName = configuration.getAttribute("org.eclipse.php.debug.core.PHP_Project", (String) null);
+					IProject project = null;
+					if (projectName != null) {
+						project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+					}
+					Server defaultServer = ServersManager.getDefaultServer(project);
 					int nameIndex = serverCombo.indexOf(defaultServer.getName());
 					if (nameIndex > -1) {
 						serverCombo.select(nameIndex);

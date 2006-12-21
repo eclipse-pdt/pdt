@@ -48,7 +48,6 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	private static final int IDX_ADD = 0;
 	private static final int IDX_EDIT = 1;
 	private static final int IDX_REMOVE = 2;
-	private static final int IDX_DEFAULT = 4;
 
 	private IStatus fServersStatus;
 	private ListDialogField fServersList;
@@ -63,7 +62,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	public Control createControl(Composite parent) {
 
 		ServerAdapter adapter = new ServerAdapter();
-		String buttons[] = new String[] { PHPServerUIMessages.getString("PHPServersConfigurationBlock.new"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.edit"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.remove"), null, PHPServerUIMessages.getString("PHPServersConfigurationBlock.default") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		String buttons[] = new String[] {
+			PHPServerUIMessages.getString("PHPServersConfigurationBlock.new"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.edit"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.remove") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		fServersList = new ListDialogField(adapter, buttons, new PHPServersLabelProvider()) {
 			protected boolean managedButtonPressed(int index) {
 				if (index == getRemoveButtonIndex()) {
@@ -83,7 +83,6 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			fServersList.selectFirstElement();
 		} else {
 			fServersList.enableButton(IDX_EDIT, false);
-			fServersList.enableButton(IDX_DEFAULT, false);
 		}
 
 		fServersStatus = new StatusInfo();
@@ -144,8 +143,6 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		} else if (index == IDX_EDIT) {
 			handleEditServerButtonSelected();
 			fServersList.refresh();
-		} else if (index == IDX_DEFAULT) {
-			setToDefault((Server) fServersList.getSelectedElements().get(0));
 		}
 	}
 
@@ -195,10 +192,6 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		List servers = new ArrayList();
 		populateServerList(servers);
 		fServersList.setElements(servers);
-		Server defaultServer = ServersManager.getDefaultServer();
-		if (defaultServer != null) {
-			setToDefault(defaultServer);
-		}
 	}
 
 	public void dispose() {
@@ -229,24 +222,10 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	}
 
 	protected boolean isDefault(Server element) {
-		return ServersManager.getDefaultServer() == element;
-	}
-
-	protected void setToDefault(Server element) {
-		fServersList.enableButton(IDX_DEFAULT, false);
-		ServersManager.setDefaultServer(element);
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				fServersList.refresh();
-			}
-		});
+		return ServersManager.getDefaultServer(null) == element;
 	}
 
 	private class ServerAdapter implements IListAdapter, IDialogFieldListener {
-
-		private boolean canSetToDefault(List selectedElements) {
-			return hasActiveSelection(selectedElements) && !isDefault((Server) selectedElements.get(0));
-		}
 
 		private boolean hasActiveSelection(List selectedElements) {
 			return selectedElements.size() == 1;
@@ -266,8 +245,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		public void selectionChanged(ListDialogField field) {
 			List selectedElements = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, hasActiveSelection(selectedElements));
-			field.enableButton(IDX_REMOVE, hasActiveSelection(selectedElements));
-			field.enableButton(IDX_DEFAULT, canSetToDefault(selectedElements));
+			// Do not allow the removal of the last element
+			field.enableButton(IDX_REMOVE, hasActiveSelection(selectedElements) && field.getElements().size() > 1);
 		}
 	}
 
@@ -292,7 +271,11 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 				return super.getText(element);
 			}
 			if (columnIndex == 0) {
-				return server.getName();
+				String serverName = server.getName();
+				if (isDefault((Server) element)) {
+					serverName += " (Workspace Default)";
+				}
+				return serverName;
 			} else if (columnIndex == 1) {
 				return server.getHost();
 			} else if (columnIndex == 2) {
