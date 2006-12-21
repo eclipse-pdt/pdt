@@ -12,4 +12,8 @@
         delegate="org.eclipse.php.server.core.launch.ServerLaunchConfigurationDelegate"
         modes="run,debug"/>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.eclipse.php.server.core.preferences.ServersPreferencesInitializer"/>
+   </extension>
 </plugin>
