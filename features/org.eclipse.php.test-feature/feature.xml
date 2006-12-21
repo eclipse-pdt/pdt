@@ -15,6 +15,7 @@
 
    <requires>
       <import feature="org.eclipse.php_feature" version="0.7.0.qualifier"/>
+      <import plugin="org.eclipse.test"/>
    </requires>
 
    <plugin
