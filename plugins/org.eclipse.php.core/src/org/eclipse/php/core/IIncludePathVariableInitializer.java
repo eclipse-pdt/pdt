@@ -17,25 +17,18 @@ package org.eclipse.php.core;
  * @author shachar
  *
  */
-public abstract class IncludePathVariableInitializer {
+public interface IIncludePathVariableInitializer {
 
     /**
-     * Creates a new includePath variable initializer.
-     */
-    public IncludePathVariableInitializer() {
-    }
-
-    /**
-     * Binds a value to the workspace includePath variable with the given name,
-     * or fails silently if this cannot be done. 
+     * Returns a value of the variable with the given name, or <code>null</code> if this cannot be done. 
      * <p>
      * A variable initializer is automatically activated whenever a variable value
-     * is needed and none has been recorded so far. The implementation of
-     * the initializer can set the corresponding variable using 
-     * <code>PHPCorePlugin#setIncludePathVariable</code>.
+     * is needed and none has been recorded so far.
      * 
-     * @param variable the name of the workspace includePath variable
+     * @param name the name of the workspace includePath variable
      *    that requires a binding
+     *    
+     * @return variable value if it was resolved successfully, otherwise <code>null</code> 
      */
-    public abstract void initialize(String variable);
+    public String initialize(String name);
 }

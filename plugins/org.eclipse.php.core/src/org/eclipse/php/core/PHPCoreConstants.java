@@ -14,7 +14,7 @@ import org.eclipse.php.core.phpModel.parser.PHPVersion;
 
 public interface PHPCoreConstants {
 	public static final String PLUGIN_ID = PHPCorePlugin.ID;
-	public static final String IP_VARIABLE_INITIALIZER_EXTPOINT_ID = "includePathVariableInitializer"; //$NON-NLS-1$
+	public static final String IP_VARIABLE_INITIALIZER_EXTPOINT_ID = "includePathVariables"; //$NON-NLS-1$
 
 	//
 	// Project Option names

@@ -16,15 +16,13 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.core.IncludePathVariableInitializer;
+import org.eclipse.php.core.IIncludePathVariableInitializer;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.PHPCorePlugin;
 
@@ -140,21 +138,22 @@ public class IncludePathVariableManager {
 		if (phpCorePlugin == null)
 			return;
 
-		IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(PHPCoreConstants.PLUGIN_ID, PHPCoreConstants.IP_VARIABLE_INITIALIZER_EXTPOINT_ID);
-		if (extension != null) {
-			IExtension[] extensions = extension.getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
-				IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-				for (int j = 0; j < configElements.length; j++) {
-					String varAttribute = configElements[j].getAttribute("variable"); //$NON-NLS-1$
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCoreConstants.PLUGIN_ID, PHPCoreConstants.IP_VARIABLE_INITIALIZER_EXTPOINT_ID);
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			if ("variable".equals(element.getName())) { //$NON-NLS-1$
+				String name = element.getAttribute("name"); //$NON-NLS-1$
+				String value = element.getAttribute("value"); //$NON-NLS-1$
+				if (element.getAttribute("initializer") != null) { //$NON-NLS-1$
 					try {
-						Object execExt = configElements[j].createExecutableExtension("class"); //$NON-NLS-1$
-						if (execExt instanceof IncludePathVariableInitializer) {
-							((IncludePathVariableInitializer) execExt).initialize(varAttribute);
-						}
+						IIncludePathVariableInitializer initializer = (IIncludePathVariableInitializer)element.createExecutableExtension("initializer"); //$NON-NLS-1$
+						value = initializer.initialize(name);
 					} catch (CoreException e) {
-						e.printStackTrace();
+						PHPCorePlugin.log(e);
 					}
+				}
+				if (value != null) {
+					PHPCorePlugin.setIncludePathVariable(name, new Path(value), null);
 				}
 			}
 		}

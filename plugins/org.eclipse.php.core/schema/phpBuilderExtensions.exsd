@@ -7,7 +7,7 @@
       </appInfo>
       <documentation>
          This extension point allows to provide extensions to PHP builder.
-PHP builder is obliged to run all its extensions when its running on PHP project.
+PHP builder is obliged to run all its extensions when it&apos;s being running on PHP project.
       </documentation>
    </annotation>
 
@@ -110,7 +110,7 @@ PHP builder is obliged to run all its extensions when its running on PHP project
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         &lt;code&gt;org.eclipse.php.core.project.build.DefaultPHPBuilderExtension&lt;/code&gt;
+         Look at &lt;code&gt;org.eclipse.php.core.project.build.DefaultPHPBuilderExtension&lt;/code&gt;
       </documentation>
    </annotation>
 
@@ -119,7 +119,8 @@ PHP builder is obliged to run all its extensions when its running on PHP project
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         
+         Copyright (c) 2001, 2004 IBM Corporation and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 

@@ -3,17 +3,17 @@
 <schema targetNamespace="org.eclipse.php.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.core" id="includePathContainerInitializers" name="Include Path Container Initializers"/>
+         <meta.schema plugin="org.eclipse.php.core" id="includePathVariables" name="Include Path Variables"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows to provide variables that will appear in an Include Path property page. Variable can be either set to the static value in the extension declaration, or initializer class can be provided in order to allow setting variable value at a runtime. Either static value or initializer class must be provided.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="IncludePathVariableInitializer" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="variable" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,16 +42,23 @@
       </complexType>
    </element>
 
-   <element name="IncludePathVariableInitializer">
+   <element name="variable">
       <complexType>
-         <attribute name="variable" type="string" use="required">
+         <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="class" type="string" use="required">
+         <attribute name="value" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="initializer" type="string">
             <annotation>
                <documentation>
                   
@@ -69,7 +76,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         05 June 2006
       </documentation>
    </annotation>
 
@@ -78,7 +85,21 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.core.includePathVariables&quot;&gt;
+ &lt;variable
+  name=&quot;PEAR_LIBS&quot;
+  initializer=&quot;test.PearLibsVariableInitializer&quot;/&gt;
+ &lt;variable
+  name=&quot;MY_HOME_LIBS&quot;
+  value=&quot;/home/michael/phplibs&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+
+test.PearLibsVariableInitializer must implement org.eclipse.php.core.IIncludePathVariableInitializer, and implement abstract method
+initialize(String variable), where PEAR_LIBS must be resolved.
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -87,7 +108,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Either static value or initializer class that implements &lt;code&gt;org.eclipse.php.core.IIncludePathVariableInitializer&lt;/code&gt; must be provided.
       </documentation>
    </annotation>
 
@@ -96,7 +117,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         No supplied implementation.
       </documentation>
    </annotation>
 
@@ -105,7 +126,8 @@
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         
+         Copyright (c) 2001, 2004 IBM Corporation and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 

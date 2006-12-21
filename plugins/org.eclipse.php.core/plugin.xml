@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="phpModel" name="phpModel" schema="schema/phpModel.exsd"/>
-   <extension-point id="includePathVariableInitializer" name="Include Path Variable Initializer" schema="schema/includePathVariableInitializer.exsd"/>
+   <extension-point id="includePathVariables" name="Include Path Variable" schema="schema/includePathVariables.exsd"/>
    <extension-point id="workspaceModelListener" name="workspaceModelListener" schema="schema/workspaceModelListener.exsd"/>
    <extension-point id="phpBuilderExtensions" name="PHP Builder Extension" schema="schema/phpBuilderExtensions.exsd"/>
    
