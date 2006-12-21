@@ -89,7 +89,7 @@ Note that the name will also effect the location of the addon. The addons will b
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         0.7
       </documentation>
    </annotation>
 

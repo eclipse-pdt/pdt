@@ -97,7 +97,7 @@ Extensions may optionally contribute a preference block which will appear on the
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         3.1
+         0.7
       </documentation>
    </annotation>
 
