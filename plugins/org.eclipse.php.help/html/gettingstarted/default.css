@@ -12,6 +12,7 @@ BODY {
 H1 {
 	font-weight: bold;
 	font-size: 24.0pt;
+	color: #005984;
 }
 
 /*=(Generated Code)=================================================*/
@@ -20,6 +21,7 @@ H1 {
 LI.kadov-H1 {
 	font-weight: bold;
 	font-size: 24.0pt;
+	color: #005984;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -28,6 +30,7 @@ LI.kadov-H1 {
 H2 {
 	font-weight: bold;
 	font-size: 18.0pt;
+	color: #005984;
 }
 
 /*=(Generated Code)=================================================*/
@@ -36,6 +39,7 @@ H2 {
 LI.kadov-H2 {
 	font-weight: bold;
 	font-size: 18.0pt;
+	color: #005984;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -46,6 +50,7 @@ H3 {
 	font-size: 14.0pt;
 	margin-bottom: 5pt;
 	margin-top: 14pt;
+	color: #005682;
 }
 
 /*=(Generated Code)=================================================*/
@@ -54,6 +59,7 @@ H3 {
 LI.kadov-H3 {
 	font-weight: bold;
 	font-size: 14.0pt;
+	color: #005682;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -63,6 +69,7 @@ H4 {
 	font-weight: bold;
 	font-size: 12.0pt;
 	margin-bottom: 5pt;
+	color: #00547f;
 }
 
 /*=(Generated Code)=================================================*/
@@ -71,6 +78,7 @@ H4 {
 LI.kadov-H4 {
 	font-weight: bold;
 	font-size: 12.0pt;
+	color: #00547f;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -95,7 +103,8 @@ LI.kadov-H5 {
 
 H6 {
 	font-weight: bold;
-	font-size: 8.0pt;
+	font-size: 9pt;
+	margin-bottom: 4.5pt;
 }
 
 /*=(Generated Code)=================================================*/
@@ -103,23 +112,23 @@ H6 {
 /*begin!kadov{{=====================================================*/ 
 LI.kadov-H6 {
 	font-weight: bold;
-	font-size: 8.0pt;
+	font-size: 9pt;
 }
 /*}}end!kadov=======================================================*/ 
 
 
 
 P {
-	font-size: 12.0pt;
 	margin-top: 0pt;
 	margin-bottom: 4.5pt;
+	font-size: 11pt;
 }
 
 /*=(Generated Code)=================================================*/
 /*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
 /*begin!kadov{{=====================================================*/ 
 LI.kadov-P {
-	font-size: 12.0pt;
+	font-size: 11pt;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -225,8 +234,10 @@ P.Note {
 	font-weight: normal;
 	text-indent: -0.5in;
 	margin-left: 0.75in;
-	background-color: #9fd0d0;
 	margin-top: 4.5pt;
+	background-color: #b0d9d9;
+	margin-bottom: 13.5pt;
+	line-height: 150%;
 }
 
 /*=(Generated Code)=================================================*/
@@ -236,6 +247,7 @@ LI.kadov-P-CNote {
 	font-style: italic;
 	font-weight: normal;
 	text-indent: -0.5in;
+	line-height: 150%;
 }
 /*}}end!kadov=======================================================*/ 
 

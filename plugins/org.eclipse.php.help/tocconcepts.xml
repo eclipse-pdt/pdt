@@ -2,28 +2,24 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Concepts" link_to="toc.xml#concepts"> 
-	<topic label="PHP Perspectives"  href="html/concepts/php_perspectives.html">
-	</topic>
-	<topic label="Views">
-		<topic label="PHP Views" href="html/concepts/perspectivesandviews.html" /> 
-	</topic>
-<topic label="PHP Projects" href="html/concepts/maintopic.html"></topic>
-<topic label="PHP Perspectives" href="html/concepts/maintopic.html"></topic>
-<topic label="PHP Views" href="html/concepts/maintopic.html"></topic>
-<topic label="Editors" href="html/concepts/maintopic.html "></topic>
-<topic label="Templates" href="html/concepts/maintopic.html"></topic>
-<topic label="Debugger" href="html/concepts/maintopic.html"></topic>
-<topic label="Breakpoints" href="html/concepts/maintopic.html"></topic>
-<topic label="Include Path" href="html/gettingstarted/maintopic.html"></topic>
-<topic label="Local Debugging" href="html/concepts/maintopic.html "></topic>
-<topic label="Remote Debugging" href="html/concepts/maintopic.html"></topic>
-<topic label="Errors" href="html/gettingstarted/maintopic.html"></topic>
-<topic label="Hover" href="html/gettingstarted/maintopic.html"></topic>
-<topic label="Search " href="html/gettingstarted/maintopic.html"></topic>
-<topic label="Exclusion and Inclusion Filters" href="html/gettingstarted/maintopic.html"></topic>
-<topic label="Showing and Hiding Elements" href="html/gettingstarted/maintopic.html"></topic>
-<topic label="Tasks" href="html/gettingstarted/maintopic.html"></topic>
-<topic label="Task references" href="html/gettingstarted/maintopic.html"></topic>
-<topic label="Creating a Task" href="html/gettingstarted/maintopic.html"></topic>
+
+<topic label="Code Assist" href="html/gettingstarted/code_assist.html"></topic>
+<topic label="Code Folding" href="html/gettingstarted/code_folding.htm"></topic>
+<topic label="Creating a File" href="html/gettingstarted/creating_a_file.html"></topic>
+<topic label="Editors" href="html/gettingstarted/editor_functions.html "></topic>
+<topic label="Local History " href="html/gettingstarted/local_history.html"></topic>
+
+<topic label="Hover" href="html/gettingstarted/hover.htm"></topic>
+<topic label="PHP Outline" href="html/gettingstarted/php_proj_outline_view.html"></topic>
+<topic label="PHP Search " href="html/gettingstarted/php_search.htm"></topic>
+<topic label="PHP Perspectives"  href="html/concepts/php_perspectives.html"></topic>
+<topic label="PHP Projects" href="html/gettingstarted/creating_a_project.html"></topic>
+<topic label="PHP Views" href="html/concepts/perspectivesandviews.html" /> </topic>
+<topic label="Preparing the Workbench" href="html/gettingstarted/preparing_the_workbench.html"></topic>
+<topic label="Problems" href="html/gettingstarted/problems_intro.html"></topic>
 <topic label="Setting File Properties" href="html/gettingstarted/maintopic.html"></topic>
+<topic label="Syntax Highlighting" href="html/gettingstarted/syntax_highlighter.htm"></topic>
+<topic label="Tasks" href="html/gettingstarted/tasks.html"></topic>
+<topic label="Templates" href="html/gettingstarted/using_templates.html"></topic>
+<topic label="Working Sets" href="html/gettingstarted/working_sets.html"></topic>
 </toc>

@@ -1,45 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Getting Started" link_to="toc.xml#gettingstarted" href="gettingstarted.html"> 
+<toc label="Getting Started" link_to="toc.xml#gettingstarted" href="html/gettingstarted/gettingstarted.html"> 
 <topic label="System Requirements"  href="html/gettingstarted/systemrequirements.html"></topic>
 <topic label="Perspectives and Views" href="html/gettingstarted/perspectives_and_views.htm"></topic>
 <topic label="Opening the Eclipse PHP IDE" href="html/gettingstarted/opening_the_ide.html"></topic> 
 
 <topic label="Configuring" >
-<topic label="Configuring the PHP Workbench" href="html/gettingstarted/preparing_the_workbench.html"></topic><topic label="Configuring Perspectives" href="html/gettingstarted/configuring_perspectives.html"></topic>
-
+<topic label="Configuring the PHP Workbench" href="html/gettingstarted/preparing_the_workbench.html"></topic>
+<topic label="Configuring Perspectives" href="html/gettingstarted/configuring_perspectives.html"></topic>
+<topic label="Configuring the PHP Interpreter" href="html/gettingstarted/configuring_php_interpreter.html"></topic>
+<topic label="Configuring Location of PHP Manual" href="html/gettingstarted/configuring_location_php_manual.html"></topic>
 <topic label="Configuring Code Assist.html" href="html/gettingstarted/configuring_code_assist.html"></topic>
 <topic label="Configuring Code Formatting" href="configuring_code_formatter.html"></topic>
 <topic label="Configuring Typing Preferences" href="html/gettingstarted/configuring_typing_preferences.html"></topic>
 <topic  label="Configuring Debug Preferences" href="html/gettingstarted/configuring_internal_debug_preferences.html"></topic>
-<topic label="Configuring Search Annotations" href="html/gettingstarted/configuring_search_annotation.html"></topic><topic  label="Configuring Task Tag Preferences" href="html/gettingstarted/configuring_task_preferences.html"></topic>
+<topic label="Configuring Search Annotations" href="html/gettingstarted/configuring_search_annotation.html"></topic>
+<topic label="PHP Manual: Location" href="html/gettingstarted/configuring_location_php_manual.html"></topic>
+<topic  label="Configuring Task Tag Preferences" href="html/gettingstarted/configuring_task_preferences.html"></topic>
 </topic>
 <topic label="Projects" >
 <topic label="Creating a Project" href="html/gettingstarted/creating_a_project.html"></topic>
 <topic label="Creating a Folder" href="html/gettingstarted/creating_a_folder.html"></topic><topic label="Browsing and Navigating" href="html/gettingstarted/package_explorer.html"></topic>
 
 <topic label="Opening PHP Elements in the Project" href="html/gettingstarted/open_php_element.html"></topic>
+<topic label="Editor and Related" href="html/gettingstarted/editor_functions.html">
+<topic label="Editor Functions" href="html/gettingstarted/editing_php_elements.html"></topic>
+<topic label="GoTo" href="html/gettingstarted/goto_php.html"></topic>
+<topic label="Search" href="html/gettingstarted/php_search.html"></topic>
+<topic label="Open PHP Element" href="html/gettingstarted/open_php_element.html"></topic>
+	<topic label="PHP Project Outline View" href="html/gettingstarted/php_outline_view.html"></topic>
+<topic label="Code Formatter" href="html/gettingstarted/code_formatter.html">></topic>
+<topic label="Syntax Highlighting" href="html/gettingstarted/syntax_highlighter.html">                                                               </topic>
+<topic label="Code Folding" href="html/gettingstarted/code_folding.htm"></topic>
+<topic label="Hover Help" href="html/gettingstarted/hover.htm"></topic>
 </topic>
 <topic label="Working with Code" >
 <topic label="Moving and Copying PHP Elements" href="html/gettingstarted/moving_and_copying.html"></topic>
 
-<topic label="Editor and Related" href="html/gettingstarted/editor_functions.html">
-<topic label="Editor Functions" href="html/gettingstarted/editing_php_elements.html"></topic>
-<topic label="GoTo" href="html/gettingstarted/goto_php.html" ></topic>
-	<topic label="Search" href="html/gettingstarted/search.html"></topic>
-<topic label="Code Formatter" href="html/gettingstarted/code_formatter.html">></topic>
-<topic label="Syntax Highlighting" href="html/gettingstarted/syntax_highlighter.html" >                                                               </topic>
-<topic label="Code Folding" href="html/gettingstarted/code_folding.htm"></topic>
-</topic>
 
 
-<topic label="Templates" href="html/gettingstarted/template_intro.html">
+
+<topic label="Intro to Templates" href="html/gettingstarted/template_intro.html">
 <topic label="Templates" href="html/gettingstarted/using_templates.html"></topic>
 <topic label="Exporting Templates" href="html/gettingstarted/exporting_templates.html"></topic>
 </topic><topic label="PHP Code Gallery" href="html/gettingstarted/moving_and_copying.html"></topic>
 
-<topic label="Code Assist" href="html/gettingstarted/using_content_assist.html">
+<topic label="Code and Content Assist" href="html/gettingstarted/using_content_assist.html">
 <topic label="Code Assist and Code Completion" href="html/gettingstarted/code_assist.html"></topic>
 </topic>
 <topic label="Problems View and Filtering" href="html/gettingstarted/problems_intro.html">
@@ -53,10 +60,6 @@
 	
 </topic>
 
-<topic label="Analyzing Code" href="html/gettingstarted/working_sets.html">
-<topic label="Analyzing Code" href="html/gettingstarted/analyzing_code.html"></topic>
-<topic label="Debugging Code" href="html/gettingstarted/debugging.html"></topic>
-</topic>
 <topic label="Working Sets" href="html/gettingstarted/working_sets.html">
 <topic label="Create Working Sets" href="html/gettingstarted/working_sets.html"></topic>
 </topic>
