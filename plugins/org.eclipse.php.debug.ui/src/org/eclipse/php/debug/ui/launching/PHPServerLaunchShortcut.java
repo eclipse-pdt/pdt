@@ -81,10 +81,10 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_target, null));
 				}
 
-				Server defaultServer = ServersManager.getDefaultServer();
+				Server defaultServer = ServersManager.getDefaultServer(project);
 				if (defaultServer == null) {
 					PHPDebugPlugin.createDefaultPHPServer();
-					defaultServer = ServersManager.getDefaultServer();
+					defaultServer = ServersManager.getDefaultServer(project);
 					if (defaultServer == null) {
 						// Sould not happen
 						throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, "Could not create a defualt server for the launch.", null));
@@ -96,8 +96,8 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
-					// Could not find launch configuration
-					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_config, null));
+					// Could not find launch configuration or the user cancelled.
+					// throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_config, null));
 				}
 			} catch (CoreException ce) {
 				final IStatus stat = ce.getStatus();
@@ -133,7 +133,7 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 			}
 
 			if (config == null) {
-				config = createConfiguration(project, fileName, server, configType);
+				config = createConfiguration(project, fileName, server, configType, mode);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -144,7 +144,7 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 	/**
 	 * Create & return a new configuration
 	 */
-	static ILaunchConfiguration createConfiguration(IProject project, String fileName, Server server, ILaunchConfigurationType configType) throws CoreException {
+	static ILaunchConfiguration createConfiguration(IProject project, String fileName, Server server, ILaunchConfigurationType configType, String mode) throws CoreException {
 		ILaunchConfiguration config = null;
 		if (!FileUtils.fileExists(fileName)) {
 			return null;
@@ -161,8 +161,15 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 			wc.setAttribute(Server.PUBLISH, true);
 		}
 
-		config = wc.doSave();
-
-		return config;
+		// Display a dialog for selecting the URL.
+		String title = ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page" : "Run PHP Web Page";
+		ServerURLLaunchDialog launchDialog = new ServerURLLaunchDialog(wc, server, title);
+		launchDialog.setBlockOnOpen(true);
+		if (launchDialog.open() == ServerURLLaunchDialog.OK) {
+			// Save the user-given URL as part of the launch configuration.
+			config = wc.doSave();
+			return config;
+		}
+		return null;
 	}
 }

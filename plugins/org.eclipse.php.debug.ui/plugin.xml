@@ -441,9 +441,9 @@
           name="PHP Debug Preferences Workspace Addon"
           pageId="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"/>
     <block
-          class="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencesProjectAddon"
+          class="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencesAddon"
           id="org.eclipse.php.debug.ui.debugProjectPreferencesAddon"
-          name="PHP Debug Preferences Project-Specific Addon"
+          name="PHP Debug Preferences Addon"
           pageId="org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"/>
  </extension>
  <extension
