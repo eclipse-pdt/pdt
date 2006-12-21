@@ -7,9 +7,9 @@
       </appInfo>
       <documentation>
          This extension point allows providing PHP binaries for internal debugging. PHP executable must be 
-configured to work with Zend Debugger: file &quot;php.ini&quot; must be placed in the same directory where PHP binary resides, which contains at least the following entry:
+configured to work with Zend Debugger, i.e. file &quot;php.ini&quot; must be placed in the same directory where PHP binary resides, and must contain at least the following entry:
 &lt;p&gt;
-zend_extension=&amp;lt;path to the Zend Debugger module&amp;gt;
+zend_extension=&amp;lt;path to the Zend Debugger extension&amp;gt;
 &lt;/p&gt;
       </documentation>
    </annotation>
@@ -100,15 +100,15 @@ This name will appear in the preferences page.
          &lt;p&gt;
 &lt;pre&gt;
 &lt;extension point=&quot;org.eclipse.php.debug.core.phpExe&quot;&gt;
- &lt;phpExe
-  location=&quot;/resources/php4/php&quot;
-  name=&quot;PHP4&quot;
-  version=&quot;4.4.4&quot;/&gt;
- &lt;phpExe
-  default=&quot;true&quot;
-  location=&quot;/resources/php5/php&quot;
-  name=&quot;PHP5&quot;
-  version=&quot;5.2.0&quot;/&gt;
+    &lt;phpExe
+        location=&quot;/resources/php4/php&quot;
+        name=&quot;PHP4&quot;
+        version=&quot;4.4.4&quot;/&gt;
+    &lt;phpExe
+        default=&quot;true&quot;
+        location=&quot;/resources/php5/php&quot;
+        name=&quot;PHP5&quot;
+        version=&quot;5.2.0&quot;/&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;

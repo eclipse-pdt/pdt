@@ -3,10 +3,12 @@
 <schema targetNamespace="org.eclipse.php.debug.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.debug.core" id="phpDebugParametersInitializer" name="phpDebugParametersInitializer"/>
+         <meta.schema plugin="org.eclipse.php.debug.core" id="phpDebugParametersInitializer" name="PHP Debug Parameters Initializer"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         &lt;p&gt;In order to initiate debug session, special parameters are being sent to the PHP Debugger, either via URL or via environment variables (for debugging through PHP CGI binary). Debug session configuration can be changed also using these parameters.
+PHP Debug parameters initializer provides a method for generating request to PHP Debugger. If debug session must be different from the standard one (profile session, for example), most probably different parameters initializer must be used. In addition, PHP Debug Handler can be attached to the initializer in order to maintain mapping between debug session initialization and handling.&lt;/p&gt;
+&lt;p&gt;Correct PHP Debug parameters initializer is chosen by its mode and launch configuration type ID.&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -59,7 +61,7 @@
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  The debug parameters initializer name.
+                  Human readable name of the debug parameters initializer.
                </documentation>
             </annotation>
          </attribute>
@@ -76,14 +78,14 @@
          <attribute name="handler" type="string">
             <annotation>
                <documentation>
-                  ID of the debug handler associated with this parameters initializer.
+                  ID of the debug handler associated with this parameters initializer (see extension point: &lt;code&gt;org.eclipse.php.debug.core.phpDebugHandlers&lt;/code&gt;)
                </documentation>
             </annotation>
          </attribute>
          <attribute name="mode" use="default" value="debug">
             <annotation>
                <documentation>
-                  
+                  Debug mode this parameters initializer should work with.
                </documentation>
             </annotation>
             <simpleType>
@@ -100,7 +102,7 @@
          <attribute name="launchConfigurationType" type="string">
             <annotation>
                <documentation>
-                  
+                  Launch configuration type ID this parameters initializer should work with (see extension point: &lt;code&gt;org.eclipse.debug.core.launchConfigurationTypes&lt;/code&gt;).
                </documentation>
             </annotation>
          </attribute>
@@ -112,7 +114,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         18 December 2005
       </documentation>
    </annotation>
 
@@ -121,7 +123,16 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+&lt;pre&gt;
+  &lt;extension point=&quot;org.eclipse.php.debug.core.phpDebugParametersInitializers&quot;&gt;
+     &lt;initializer
+           class=&quot;org.eclipse.php.debug.core.debugger.parameters.DefaultDebugParametersInitializer&quot;
+           id=&quot;org.eclipse.php.debug.core.defaultInitializer&quot;
+           name=&quot;Default Debug Parameters Initializer&quot;/&gt;
+  &lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -130,7 +141,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Each PHP Debug parameters initializer must implement interface &lt;code&gt;org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer&lt;/code&gt;.
       </documentation>
    </annotation>
 
@@ -139,7 +150,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         Look at &lt;code&gt;org.eclipse.php.debug.core.debugger.parameters.DefaultDebugParametersInitializer&lt;/code&gt;.
       </documentation>
    </annotation>
 
