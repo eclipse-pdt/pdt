@@ -75,7 +75,7 @@ PHP builder is obliged to run all its extensions when it&apos;s being running on
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         20 December 2006
+         0.7
       </documentation>
    </annotation>
 
