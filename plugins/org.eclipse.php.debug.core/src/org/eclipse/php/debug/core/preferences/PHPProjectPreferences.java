@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
+import org.eclipse.php.server.core.manager.ServersManager;
 
 public class PHPProjectPreferences {
 
@@ -64,10 +65,10 @@ public class PHPProjectPreferences {
 
 	public static String getDefaultServerName(IProject project) {
 		Preferences prefs = getModelPreferences();
-		String serverName = prefs.getString(PHPDebugCorePreferenceNames.DEFAULT_SERVER);
+		String serverName = prefs.getString(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			serverName = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.DEFAULT_SERVER, serverName);
+			serverName = projectScope.getNode(getPreferenceNodeQualifier()).get(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY, serverName);
 		}
 		return serverName;
 	}

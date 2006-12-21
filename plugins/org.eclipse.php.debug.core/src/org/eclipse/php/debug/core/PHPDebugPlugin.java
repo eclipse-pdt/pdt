@@ -130,8 +130,8 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static String getWorkspaceDefaultServer() {
-		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getString(PHPDebugCorePreferenceNames.DEFAULT_SERVER);
+		Preferences serverPrefs = org.eclipse.php.server.core.Activator.getDefault().getPluginPreferences();
+		return serverPrefs.getString(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
 
 	}
 
@@ -158,7 +158,7 @@ public class PHPDebugPlugin extends Plugin {
 		if (ServersManager.getServers().length == 0) {
 			Server server = ServersManager.createServer(IPHPConstants.Default_Server_Name, BASE_URL);
 			ServersManager.save();
-			ServersManager.setDefaultServer(server);
+			ServersManager.setDefaultServer(null, server);
 		}
 	}
 
