@@ -47,21 +47,21 @@
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Variable name
                </documentation>
             </annotation>
          </attribute>
          <attribute name="value" type="string">
             <annotation>
                <documentation>
-                  
+                  Variable value (if set statically through extension)
                </documentation>
             </annotation>
          </attribute>
          <attribute name="initializer" type="string">
             <annotation>
                <documentation>
-                  
+                  Variable initializer class (if set dynamically)
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.php.core.IncludePathVariableInitializer"/>

@@ -100,7 +100,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.workspaceModelListener");
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("WorkspaceModelListener")) {
+			if (element.getName().equals("workspaceModelListener")) {
 				WorkspaceModelListenerProxy modelListenerProxy = new WorkspaceModelListenerProxy(element);
 				IWorkspaceModelListener listener = modelListenerProxy.getListener();
 				addWorkspaceModelListener(listener);

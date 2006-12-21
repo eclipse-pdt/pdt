@@ -6,14 +6,15 @@
          <meta.schema plugin="org.eclipse.php.core" id="workspaceModelListener" name="workspaceModelListener"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows to provide listener which will recieve event when PHP workspace model was changed.&lt;br&gt;
+See &lt;code&gt;org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager&lt;/code&gt;.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="WorkspaceModelListener" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="workspaceModelListener" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,26 +43,26 @@
       </complexType>
    </element>
 
-   <element name="WorkspaceModelListener">
+   <element name="workspaceModelListener">
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Id of the workspace model listener
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Human readable name of the workspace model listener
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Workspace model listener class
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.php.core.documentModel.IWorkspaceModelListener"/>
@@ -85,7 +86,16 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.core.workspaceModelListener&quot;&gt;
+	&lt;workspaceModelListener
+		class=&quot;test.MyModelListener&quot;
+		id=&quot;test.MyModelListener&quot;
+		name=&quot;My Model Listener&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -94,7 +104,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Each workspace model listener must implement &lt;code&gt;org.eclipse.php.core.documentModel.IWorkspaceModelListener&lt;/code&gt;.
       </documentation>
    </annotation>
 
@@ -103,7 +113,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         No supplied implementation.
       </documentation>
    </annotation>
 

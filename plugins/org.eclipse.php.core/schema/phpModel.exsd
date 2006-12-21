@@ -47,21 +47,21 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Id of the PHP model
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Human readable name of the PHP model
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  PHP model class
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.php.core.phpModel.parser.IPhpModel"/>
@@ -89,10 +89,10 @@
 &lt;p&gt;
 &lt;pre&gt;
 &lt;extension point=&quot;org.eclipse.php.core.phpModel&quot;&gt;
-	&lt;phpModel
-		class=&quot;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&quot;
-		id=&quot;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&quot;
-		name=&quot;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&quot;/&gt;
+ &lt;phpModel
+  class=&quot;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&quot;
+  id=&quot;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&quot;
+  name=&quot;org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager&quot;/&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
