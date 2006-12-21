@@ -114,7 +114,7 @@ PHP Debug parameters initializer provides a method for generating request to PHP
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         18 December 2005
+         0.7
       </documentation>
    </annotation>
 
