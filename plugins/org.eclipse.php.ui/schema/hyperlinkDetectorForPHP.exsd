@@ -87,10 +87,10 @@
       <documentation>
          &lt;pre&gt;
 &lt;extension point=&quot;org.eclipse.php.ui.hyperlinkDetectorForPHP&quot;&gt;
-	&lt;HyperlinkDetectorForPHP
-		class=&quot;com.foo.bar.MyCodeHyperlinkDetector&quot;
-		id=&quot;com.foo.bar.MyCodeHyperlinkDetector&quot;
-		name=&quot;My Code Hyperlink Detector&quot;/&gt;
+ &lt;HyperlinkDetectorForPHP
+  class=&quot;com.foo.bar.MyCodeHyperlinkDetector&quot;
+  id=&quot;com.foo.bar.MyCodeHyperlinkDetector&quot;
+  name=&quot;My Code Hyperlink Detector&quot;/&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;
       </documentation>
@@ -122,7 +122,8 @@ Plug-ins that wish to extend this extension point must implement interface:
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         
+         Copyright (c) 2001, 2004 IBM Corporation and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 
