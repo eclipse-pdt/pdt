@@ -8,8 +8,8 @@
 	<extension-point id="phpTreeContentProvider" name="PHP Tree Content Provider" schema="schema/phpTreeContentProvider.exsd"/>
 	<extension-point id="phpManualSites" name="PHP Manual URL" schema="schema/phpManualSites.exsd"/>
 	<extension-point id="phpManualDirectors" name="PHP Manual Director" schema="schema/phpManualDirectors.exsd"/>
-	<extension-point id="contentAssistProccesorForPHP" name="contentAssistProccesorForPHP" schema="schema/contentAssistProccesorForPHP.exsd"/>
-	<extension-point id="hyperlinkDetectorForPHP" name="hyperlinkDetectorForPHP" schema="schema/hyperlinkDetectorForPHP.exsd"/>
+	<extension-point id="phpContentAssistProcessor" name="phpContentAssistProcessor" schema="schema/phpContentAssistProcessor.exsd"/>
+	<extension-point id="phpHyperlinkDetector" name="phpHyperlinkDetector" schema="schema/phpHyperlinkDetector.exsd"/>
 	<extension-point id="phpOutlineElementComparer" name="phpOutlineElementComparer" schema="schema/phpOutlineElementComparer.exsd"/>
 	<extension-point id="actionFilterContributors" name="PHP Action Filter Contributor" schema="schema/actionFilterContributors.exsd"/>
  	<extension-point id="phpWizardPages" name="phpWizardPages" schema="schema/phpWizardPages.exsd"/>
@@ -391,9 +391,10 @@
 		        class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
 		     <adapter type="org.eclipse.search.ui.ISearchPageScoreComputer"/>
 		  </factory>
+		  
 		<factory
 			class="org.eclipse.php.internal.ui.PHPProjectAdapterFactory"
-			adaptableType="org.eclipse.php.core.phpModel.parser.PHPBrowserModel">
+			adaptableType="org.eclipse.php.core.phpModel.parser.PHPProjectModel">
 			<adapter type="org.eclipse.core.resources.IProject" />
 		</factory>
 
@@ -401,10 +402,8 @@
 			class="org.eclipse.core.internal.resources.mapping.ResourceAdapterFactory"
 			adaptableType="org.eclipse.core.resources.IResource">
 			<adapter
-				type="org.eclipse.php.core.phpModel.parser.PHPBrowserModel"/>
+				type="org.eclipse.php.core.phpModel.parser.PHPProjectModel"/>
 		</factory>
-
-
 	</extension>
 
 

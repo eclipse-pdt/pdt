@@ -72,10 +72,10 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	public PHPStructuredTextViewerConfiguration() {
 
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.contentAssistProccesorForPHP");
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpContentAssistProcessor");
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("ContentAssistProccesorForPHP")) {
+			if (element.getName().equals("processor")) {
 				ContentAssistProccesorProxy capProxy = new ContentAssistProccesorProxy(element);
 				IContentAssistProccesorForPHP processor = capProxy.getProcessor();
 				if (processor != null) {
@@ -85,10 +85,10 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		}
 
 		detectors.add(new PHPCodeHyperlinkDetector());
-		elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.hyperlinkDetectorForPHP");
+		elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpHyperlinkDetector");
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("HyperlinkDetectorForPHP")) {
+			if (element.getName().equals("detector")) {
 				HyperlinkDetectorProxy hldProxy = new HyperlinkDetectorProxy(element);
 				IHyperlinkDetectorForPHP detector = hldProxy.getDetector();
 				if (detector != null) {
@@ -109,7 +109,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		public IContentAssistProccesorForPHP getProcessor() {
 			if (processor == null) {
-				SafeRunner.run(new SafeRunnable("Error creation contentAssistProccesorForPHP for extension-point org.eclipse.php.ui.contentAssistProccesorForPHP") {
+				SafeRunner.run(new SafeRunnable("Error creation phpContentAssistProcessor for extension-point org.eclipse.php.ui.phpContentAssistProcessor") {
 					public void run() throws Exception {
 						processor = (IContentAssistProccesorForPHP) element.createExecutableExtension("class");
 					}
@@ -129,7 +129,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		public IHyperlinkDetectorForPHP getDetector() {
 			if (detector == null) {
-				SafeRunner.run(new SafeRunnable("Error creation hyperlinkDetectorForPHP for extension-point org.eclipse.php.ui.hyperlinkDetectorForPHP") {
+				SafeRunner.run(new SafeRunnable("Error creation phpHyperlinkDetector for extension-point org.eclipse.php.ui.phpHyperlinkDetector") {
 					public void run() throws Exception {
 						detector = (IHyperlinkDetectorForPHP) element.createExecutableExtension("class");
 					}

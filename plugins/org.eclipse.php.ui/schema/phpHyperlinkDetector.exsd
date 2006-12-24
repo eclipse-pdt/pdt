@@ -3,17 +3,17 @@
 <schema targetNamespace="org.eclipse.php.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.ui" id="contentAssistProccesorForPHP" name="contentAssistProccesorForPHP"/>
+         <meta.schema plugin="org.eclipse.php.ui" id="phpHyperlinkDetector" name="phpHyperlinkDetector"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         Allows to provide additional PHP entities, so &quot;CTRL + mouse click&quot; feature (Go-to source) will be aware of them.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="ContentAssistProccesorForPHP" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="detector" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,7 +42,7 @@
       </complexType>
    </element>
 
-   <element name="ContentAssistProccesorForPHP">
+   <element name="detector">
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -64,7 +64,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.editor.contentassist.IContentAssistProccesorForPHP"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -85,7 +85,14 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.ui.phpHyperlinkDetector&quot;&gt;
+    &lt;detector
+        class=&quot;com.foo.bar.MyCodeHyperlinkDetector&quot;
+        id=&quot;com.foo.bar.MyCodeHyperlinkDetector&quot;
+        name=&quot;My Code Hyperlink Detector&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 
@@ -94,7 +101,10 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         &lt;p&gt;
+Plug-ins that wish to extend this extension point must implement interface:
+&lt;samp&gt;org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP&lt;/samp&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -103,7 +113,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         No default implementation for this extension point.
       </documentation>
    </annotation>
 
