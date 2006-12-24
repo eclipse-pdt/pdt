@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.php.test_feature"
       label="%featureName"
-      version="0.7.0.qualifier"
+      version="0.7.0.qualifier" 
       provider-name="%providerName">
 
    <description>
@@ -15,7 +15,7 @@
 
    <requires>
       <import feature="org.eclipse.php_feature" version="0.7.0.qualifier"/>
-      <import feature="org.eclipse.test" version="3.2.0.v20060220------0842282442"/>
+      <import feature="org.eclipse.test" version="3.2.0"/>
    </requires>
 
    <plugin
