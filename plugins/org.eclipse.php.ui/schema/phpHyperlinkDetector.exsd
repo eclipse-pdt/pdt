@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.php.ui" id="phpHyperlinkDetector" name="phpHyperlinkDetector"/>
       </appInfo>
       <documentation>
-         Allows to provide additional PHP entities, so &quot;CTRL + mouse click&quot; feature (Go-to source) will be aware of them.
+         This extension provides support for detecting and displaying hyperlinks in a PHP text viewer. Contributed hyperlink detectors try to find a hyperlink at a given location in a PHP text viewer, the first of them which succeeds to resolve current element becomes active at that point.
       </documentation>
    </annotation>
 
@@ -47,21 +47,21 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  ID of this PHP hyperlink detector.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Name of this PHP hyperlink detector.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Class of this PHP hyperlink detector.
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP"/>
@@ -113,7 +113,7 @@ Plug-ins that wish to extend this extension point must implement interface:
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         No default implementation for this extension point.
+         Default PHP text viewer hyperlink detector (&lt;code&gt;PHPCodeHyperlinkDetector&lt;/code&gt;) is contributed directly in the PHP structured text viewer configuration class.
       </documentation>
    </annotation>
 
