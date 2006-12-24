@@ -213,14 +213,12 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		IProject project = getProject(propertyPage);
 		if (isProjectSpecific && debugUINode != null && preferenceScopes[0] instanceof ProjectScope && project != null) {
 			debugUINode.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
-//			node.put(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY, fDefaultServer.getText());
 			debugUINode.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, fDefaultPHPExe.getText());
 			debugUINode.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fEncodingSettings.getIANATag());
 			ServersManager.setDefaultServer(project, fDefaultServer.getText());
 		} else {
 			if (project == null) {
 				prefs.setValue(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
-//				serverPrefs.setValue(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY, fDefaultServer.getText());
 				prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP, fDefaultPHPExe.getText());
 				prefs.setValue(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fEncodingSettings.getIANATag());
 				ServersManager.setDefaultServer(null, fDefaultServer.getText());
@@ -228,7 +226,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 				if (debugUINode != null) {
 					debugUINode.remove(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
 					debugUINode.remove(PHPDebugCorePreferenceNames.DEBUG_PORT);
-					ServersManager.setDefaultServer(isProjectSpecific ? project : null, (Server)null);
+					ServersManager.setDefaultServer(project, (Server) null);
 					debugUINode.remove(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 				}
 			}
