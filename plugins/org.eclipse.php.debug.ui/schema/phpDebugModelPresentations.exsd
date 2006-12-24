@@ -3,11 +3,10 @@
 <schema targetNamespace="org.eclipse.php.debug.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.debug.ui" id="phpModelPresentation" name="PHP Model Presentation"/>
+         <meta.schema plugin="org.eclipse.php.debug.ui" id="phpDebugModelPresentations" name="PHP Debug Model Presentation"/>
       </appInfo>
       <documentation>
-         PHP Debug Model Presentation is an exetntion point that allows adding several model presentations for the PHP editors. 
-The PHPModelPresentationRegistry decides which of the registered is the best for use.
+         This exetntion point allows adding new PHP debug model presentations, or extending the default one; only one presentation will be active. The &lt;code&gt;PHPModelPresentationRegistry&lt;/code&gt; class decides which of the registered PHP debug model presentations is the best for use.  A debug model presentation is responsible for providing labels, images, and editors for elements in a specific debug model (see &lt;code&gt;org.eclipse.debug.ui.debugModelPresentations&lt;/code&gt; extension point)
       </documentation>
    </annotation>
 
@@ -86,7 +85,15 @@ The PHPModelPresentationRegistry decides which of the registered is the best for
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.debug.ui.phpDebugModelPresentations&quot;&gt;
+    &lt;phpDebugModelPresentation
+        class=&quot;org.eclipse.php.debug.ui.presentation.PHPModelPresentation&quot;
+        id=&quot;org.eclipse.php.debug.ui.presentation.phpModelPresentation&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -95,7 +102,7 @@ The PHPModelPresentationRegistry decides which of the registered is the best for
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         
+         PHP Debug Model Presentation class must implement &lt;code&gt;org.eclipse.debug.ui.IDebugModelPresentation&lt;/code&gt;.
       </documentation>
    </annotation>
 
@@ -104,7 +111,7 @@ The PHPModelPresentationRegistry decides which of the registered is the best for
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         
+         &lt;code&gt;org.eclipse.php.debug.ui.presentation.PHPModelPresentation&lt;/code&gt;
       </documentation>
    </annotation>
 
