@@ -22,6 +22,7 @@ public class PreferencePropagatorFactory {
 	private PreferencePropagatorFactory(){};
 	
 	/**
+	 * Returns a single instance of the PreferencePropagatorFactory.
 	 * @return the singelton of ProjectPreferencePropagatorFactory
 	 */
 	public static PreferencePropagatorFactory getInstance(){		
@@ -29,16 +30,19 @@ public class PreferencePropagatorFactory {
 	}
 	
 	/**
+	 * Returns a single instance of a {@link PreferencesPropagator} according to the given
+	 * nodeQualifier and the preferences store.
 	 * 
 	 * @param nodeQualifier
 	 * @return the ProjectPreferencesPropagator given a nodeQualifier and a preference store
 	 */
-	public PreferencesPropagator getPreferencePropagator(String nodeQualifier, IPreferenceStore store){
-		if (propagatorsMap.containsKey(nodeQualifier)){
-			return (PreferencesPropagator) propagatorsMap.get(nodeQualifier);
+	public static PreferencesPropagator getPreferencePropagator(String nodeQualifier, IPreferenceStore store){
+		PreferencePropagatorFactory factory = getInstance();
+		if (factory.propagatorsMap.containsKey(nodeQualifier)){
+			return (PreferencesPropagator) factory.propagatorsMap.get(nodeQualifier);
 		} else {
 			PreferencesPropagator propagator = new PreferencesPropagator(nodeQualifier, store);
-			propagatorsMap.put(nodeQualifier, propagator);
+			factory.propagatorsMap.put(nodeQualifier, propagator);
 			return propagator;			
 		}
 	}	
