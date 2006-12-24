@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.php.ui" id="phpEditorTextHovers" name="PHP Editor Text Hover"/>
       </appInfo>
       <documentation>
-         This extension point provides possibility to add new PHP Text Hovers to the editor.
+         This extension point allows to add new PHP Text Hovers to the editor. For more information of what is Text Hover, refer to &lt;code&gt;org.eclipse.jface.text.ITextHover&lt;/code&gt; interface. The most suitable for current context hover will be chosen by &lt;code&gt;org.eclipse.php.ui.editor.hover.BestMatchHover&lt;/code&gt; at runtime.
       </documentation>
    </annotation>
 
@@ -43,11 +43,6 @@
    </element>
 
    <element name="hover">
-      <annotation>
-         <documentation>
-            This extension point provides possibility to add new PHP Editor Text Hovers to the editor.
-         </documentation>
-      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -137,7 +132,12 @@ Plugins that want to extend this extension point must implement this interface: 
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         No default implementation for this extension point.
+         &lt;ul&gt;
+&lt;li&gt;&lt;code&gt;org.eclipse.php.ui.editor.hover.ProblemHover&lt;/code&gt; - used for displaying syntax error information.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;org.eclipse.php.ui.editor.hover.PHPAnnotationTextHover&lt;/code&gt; - used for displaying information on PHP element.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;org.eclipse.php.ui.editor.hover.PHPSourceTextHover&lt;/code&gt; - used for displaying source code of PHP element declaration (active, when CTRL button is pressed).&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;org.eclipse.php.ui.editor.hover.BestMatchHover&lt;/code&gt;, which is a composite of all PHP Text Hovers. It invokes the most suitable for current context text hover each time.&lt;/li&gt;
+&lt;/ul&gt;
       </documentation>
    </annotation>
 
