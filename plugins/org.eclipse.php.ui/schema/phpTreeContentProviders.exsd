@@ -3,17 +3,17 @@
 <schema targetNamespace="org.eclipse.php.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.ui" id="phpTreeContentProvider" name="PHP Tree Content Provider"/>
+         <meta.schema plugin="org.eclipse.php.ui" id="phpTreeContentProviders" name="PHP Tree Content Provider"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension points allows to provide content providers for a Tree Viewer used for displaying PHP elements (PHP Explorer, Outline, Project Outline, etc&apos;). Standard PHP Element Content Provider (the default one) collects all content providers contributed via extension point, and concatenates their contents.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence minOccurs="0" maxOccurs="unbounded">
-            <element ref="phpTreeContentProvider"/>
+            <element ref="provider" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,19 +42,22 @@
       </complexType>
    </element>
 
-   <element name="phpTreeContentProvider">
+   <element name="provider">
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  PHP tree content provider&apos;s class
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.treecontent.IPHPTreeContentProvider"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="targetId" type="string">
             <annotation>
                <documentation>
-                  
+                  A comma-separated list of tree viewers, this content provider is applicable to.
                </documentation>
             </annotation>
          </attribute>
@@ -75,7 +78,15 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+&lt;pre&gt;
+	&lt;extension point=&quot;org.eclipse.php.ui.phpTreeContentProviders&quot;&gt;
+		&lt;provider
+			class=&quot;org.eclipse.php.ui.treecontent.IncludePathTreeContent&quot;
+			targetId=&quot;org.eclipse.php.ui.explorer&quot; /&gt;
+	&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -84,7 +95,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         PHP tree content provider class must implement &lt;code&gt;org.eclipse.php.ui.treecontent.IPHPTreeContentProvider&lt;/code&gt;.
       </documentation>
    </annotation>
 
@@ -93,7 +104,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         Look at &lt;code&gt;org.eclipse.php.ui.treecontent.IncludePathTreeContent&lt;/code&gt;, which is contributed to PHP Explorer.
       </documentation>
    </annotation>
 

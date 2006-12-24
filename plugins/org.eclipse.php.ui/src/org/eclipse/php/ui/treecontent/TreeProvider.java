@@ -17,12 +17,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.ui.PHPUiPlugin;
 
 public class TreeProvider {
-	private static final String EXTENSION_POINT_NAME = "phpTreeContentProvider"; //$NON-NLS-1$
-	private static final String TREE_CONTENT_PROVIDOR_TAG = "phpTreeContentProvider"; //$NON-NLS-1$
+	private static final String EXTENSION_POINT_NAME = "phpTreeContentProviders"; //$NON-NLS-1$
+	private static final String TREE_CONTENT_PROVIDOR_TAG = "provider"; //$NON-NLS-1$
 	private static final String TARGET_ID_ATTRIBUTE = "targetId"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 
@@ -89,7 +90,7 @@ public class TreeProvider {
 			}
 
 		};
-		Platform.run(code);
+		SafeRunner.run(code);
 		return result[0];	
 	}
 
