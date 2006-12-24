@@ -3,10 +3,10 @@
 <schema targetNamespace="org.eclipse.php.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.ui" id="phpContentAssistProcessor" name="phpContentAssistProcessor"/>
+         <meta.schema plugin="org.eclipse.php.ui" id="phpContentAssistProcessor" name="PHP Content Assist Processor"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows to provide additional content assist processors for PHP editor. For more information of what is content assist processor, refer to &lt;code&gt;org.eclipse.jface.text.contentassist.IContentAssistProcessor&lt;/code&gt; interface.
       </documentation>
    </annotation>
 
@@ -47,24 +47,24 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  ID of this PHP content assist processor
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Human readable of this PHP content assist processor
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Class of this PHP content assist processor
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.editor.contentassist.Iprocessor"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.editor.contentassist.IContentAssistProccesorForPHP"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -85,7 +85,16 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.ui.phpContentAssistProcessor&quot;&gt;
+    &lt;processor
+        class=&quot;test.MyContentAssistProcessor&quot;
+        id=&quot;test.MyContentAssistProcessor&quot;
+        name=&quot;My PHP Content Assist Processor&quot;/&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -94,7 +103,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         PHP content assist processor class must implement &lt;code&gt;org.eclipse.php.ui.editor.contentassist.IContentAssistProccesorForPHP&lt;/code&gt;
       </documentation>
    </annotation>
 
@@ -103,7 +112,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         No supplied implementation.
       </documentation>
    </annotation>
 
