@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.php.ui" id="phpManualSites" name="PHP Manual URL"/>
       </appInfo>
       <documentation>
-         This extension point provides possibility to add new PHP Manual sites.
+         This extension point allows to introduce ew site that can be used for accessing PHP manual. A list of PHP manual sites can be seen in the PHP Manual preference page; only one of them is active at a time. Selected PHP manual site will be used when user presses F3 when PHP element is selected, or when he right-clicks it, and selects &quot;Open PHP Manual page&quot;.
       </documentation>
    </annotation>
 
@@ -54,28 +54,28 @@
          <attribute name="director" type="string">
             <annotation>
                <documentation>
-                  ID of the PHP Manual Director.
+                  ID of the PHP Manual Director (see &lt;code&gt;phpManualDirectors&lt;/code&gt; extension point description).
                </documentation>
             </annotation>
          </attribute>
          <attribute name="extension" type="string" use="default" value="php">
             <annotation>
                <documentation>
-                  File extensions on the site.
+                  File extensions on the site (for example: .php, .html)
                </documentation>
             </annotation>
          </attribute>
          <attribute name="label" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Human readable label of this PHP manual site.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  ID of this PHP manual site.
                </documentation>
             </annotation>
          </attribute>
@@ -111,7 +111,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         No API information yet.
+         No API information, this extension point provides only configuration entries.
       </documentation>
    </annotation>
 
@@ -120,7 +120,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         No default implementation for this extension point.
+         &lt;code&gt;org.eclipse.php.ui.phpDotNet&lt;/code&gt; extension is contributed in PHP UI Plug-in, which defines a default PHP site (http://www.php.net).
       </documentation>
    </annotation>
 
