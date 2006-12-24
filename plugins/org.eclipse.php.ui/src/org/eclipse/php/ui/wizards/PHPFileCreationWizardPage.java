@@ -102,6 +102,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		label.setText("File Name");
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
+        fileText.setFocus();
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		//gd.widthHint = 300;
