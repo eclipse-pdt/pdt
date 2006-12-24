@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="phpModel" name="phpModel" schema="schema/phpModel.exsd"/>
+   <!--<extension-point id="phpModel" name="phpModel" schema="schema/phpModel.exsd"/>-->
    <extension-point id="includePathVariables" name="Include Path Variable" schema="schema/includePathVariables.exsd"/>
    <extension-point id="workspaceModelListener" name="workspaceModelListener" schema="schema/workspaceModelListener.exsd"/>
    <extension-point id="phpBuilderExtensions" name="PHP Builder Extension" schema="schema/phpBuilderExtensions.exsd"/>
@@ -113,14 +113,14 @@
       </participant>
    </extension>
    
-   <extension
+<!--   <extension
          point="org.eclipse.php.core.phpModel">
       <phpModel
             class="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"
             id="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"
             name="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"/>
    </extension>
-
+-->
    <!-- initialize php ui preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
 	   <initializer class="org.eclipse.php.core.preferences.PHPCorePreferenceInitializer"/>

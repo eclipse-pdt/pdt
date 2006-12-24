@@ -18,10 +18,7 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.core.phpModel.IPHPLanguageModel;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
@@ -59,16 +56,9 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 		languageModel.initialize(project);
 		addModel(languageModel);
 
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.phpModel");
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			if (element.getName().equals("phpModel")) {
-				PhpModelProxy modelManagerProxy = new PhpModelProxy(element);
-				IPhpModel model = modelManagerProxy.getModel();
-				model.initialize(project);
-				addModel(model);
-			}
-		}
+		PHPIncludePathModelManager includePathModel = new PHPIncludePathModelManager();
+		includePathModel.initialize(project);
+		addModel(includePathModel);
 
 		addModelListenrs();
 	}
@@ -93,26 +83,6 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 			if (phpModel instanceof IProjectModelListener) {
 				addProjectModelListener((IProjectModelListener)phpModel);
 			}
-		}
-	}
-
-	private class PhpModelProxy {
-		IConfigurationElement element;
-		IPhpModel model;
-
-		public PhpModelProxy(IConfigurationElement element) {
-			this.element = element;
-		}
-
-		public IPhpModel getModel() {
-			if (model == null) {
-				SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.core.phpModel") {
-					public void run() throws Exception {
-						model = (IPhpModel) element.createExecutableExtension("class");
-					}
-				});
-			}
-			return model;
 		}
 	}
 
