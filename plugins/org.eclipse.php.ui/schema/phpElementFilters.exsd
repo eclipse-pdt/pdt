@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.php.ui" id="phpElementFilters" name="PHP Element Filter"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows to add new types of PHP view filters. Contributed types of PHP view filters are collected through &lt;code&gt;FilterDescriptor.getFilterDescriptors(String viewId)&lt;/code&gt;. PHP Explorer View provides an ability to select active filters using special dialog, which can be invoked by the menu action &quot;Filters...&quot; (implemented in &lt;code&gt;CustomFiltersDialog&lt;/code&gt;).
       </documentation>
    </annotation>
 
@@ -47,50 +47,53 @@
          <attribute name="id" type="string">
             <annotation>
                <documentation>
-                  
+                  ID of the PHP view filter.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  
+                  Human readable name of the PHP view filter.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="description" type="string">
             <annotation>
                <documentation>
-                  
+                  Human readable description of the PHP view filter.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="targetId" type="string">
             <annotation>
                <documentation>
-                  
+                  ID of a view that this PHP view filter will apply to.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="enabled" type="string">
             <annotation>
                <documentation>
-                  
+                  Whether this filter is enabled by default.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="pattern" type="string">
             <annotation>
                <documentation>
-                  
+                  File name pattern that this filter represents.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string">
             <annotation>
                <documentation>
-                  
+                  A class that implements this PHP view filter.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.jface.viewers.ViewerFilter"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -110,7 +113,29 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.ui.phpElementFilters&quot;&gt;
+    &lt;filter
+        targetId=&quot;org.eclipse.php.ui.explorer&quot;
+        name=&quot;Hide &apos;.*&apos; Resources&quot;
+        enabled=&quot;true&quot;
+        description=&quot;Hides resources whose file name starts with a dot (.*)&quot;
+        pattern=&quot;.*&quot;
+        id=&quot;org.eclipse.php.ui.explorer.dotFilesFilter&quot;&gt;
+    &lt;/filter&gt;
+    
+    &lt;filter
+        targetId=&quot;org.eclipse.php.ui.explorer&quot;
+        name=&quot;Hide Non-PHP Elements&quot;
+        enabled=&quot;false&quot;
+        description=&quot;Hides elements which are not related to the PHP&quot;
+        class=&quot;org.eclipse.php.ui.filters.NonPHPElementFilter&quot;
+        id=&quot;org.eclipse.php.ui.explorer.NonPHPElementFilter&quot;&gt;
+    &lt;/filter&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -119,7 +144,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         PHP view filter can be defined either using class, which extends &lt;code&gt;org.eclipse.jface.viewers.ViewerFilter&lt;/code&gt; or using a pattern string (the filter will try to perform a file name match, using the pattern specified in the extension point declaration; see &lt;code&gt;NamePatternFilter&lt;/code&gt; class).
       </documentation>
    </annotation>
 
@@ -128,7 +153,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         Many basic filters are contributed in PHP UI Plug-in; for the full list refer to the plugin&apos;s manifest file.
       </documentation>
    </annotation>
 
