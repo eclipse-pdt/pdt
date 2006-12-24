@@ -8,13 +8,13 @@
 	<property file="label.properties" />
 
 	<!--default directory where test-eclipse will be installed-->
-	<property name="install" value="${basedir}/test-eclipse" />
+	<property name="install" value="${install-path}" />
 
 	<!--suffix added to report name to identify which platform tests results come from-->
 	<property name="platform" value="${os}.${ws}.${arch}" />
 
 	<!-- The root of the eclipse installation -->
-	<property name="eclipse-home" value="${install}/eclipse" />
+	<property name="eclipse-home" value="${install}" />
 
 	<!-- The directory that will contain the xml and html results from the tests that are run -->
 	<property name="results" value="${basedir}/results" />
@@ -23,138 +23,6 @@
 	<target name="init">
 		<mkdir dir="${results}/xml" />
 		<mkdir dir="${results}/html" />
-		
-		<!--Unlock files on the Mac before starting tests.
-		  Required to delete some workspace directories (org.eclipse.core.filebuffers.tests and Team CVS tests).-->
-		<exec dir="${basedir}" executable="chflags" os="Mac OS X">
-			<arg line="-R nouchg ${install}"/>
-		</exec>
-
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-win32.zip">
-			<and>
-				<equals arg1="${os}" arg2="win32" />
-				<equals arg1="${ws}" arg2="win32" />
-				<equals arg1="${arch}" arg2="x86" />
-			</and>
-		</condition>
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-linux-gtk.tar.gz">
-			<and>
-				<equals arg1="${os}" arg2="linux" />
-				<equals arg1="${ws}" arg2="gtk" />
-				<equals arg1="${arch}" arg2="x86" />
-			</and>
-		</condition>
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-linux-motif.tar.gz">
-			<and>
-				<equals arg1="${os}" arg2="linux" />
-				<equals arg1="${ws}" arg2="motif" />
-				<equals arg1="${arch}" arg2="x86" />
-			</and>
-		</condition>
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-linux-gtk-ppc.tar.gz">
-			<and>
-				<equals arg1="${os}" arg2="linux" />
-				<equals arg1="${ws}" arg2="gtk" />
-				<equals arg1="${arch}" arg2="ppc" />
-			</and>
-		</condition>
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-linux-gtk-x86_64.tar.gz">
-			<and>
-				<equals arg1="${os}" arg2="linux" />
-				<equals arg1="${ws}" arg2="gtk" />
-				<equals arg1="${arch}" arg2="ppc" />
-			</and>
-		</condition>
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-macosx-carbon.tar.gz">
-			<and>
-				<equals arg1="${os}" arg2="macosx" />
-				<equals arg1="${ws}" arg2="carbon" />
-				<equals arg1="${arch}" arg2="ppc" />
-			</and>
-		</condition>
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-hpux-motif.zip">
-			<and>
-				<equals arg1="${os}" arg2="hpux" />
-				<equals arg1="${ws}" arg2="motif" />
-				<equals arg1="${arch}" arg2="PA_RISC" />
-			</and>
-		</condition>
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-solaris-motif.zip">
-			<and>
-				<equals arg1="${os}" arg2="solaris" />
-				<equals arg1="${ws}" arg2="motif" />
-				<equals arg1="${arch}" arg2="sparc" />
-			</and>
-		</condition>
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-solaris-gtk.zip">
-			<and>
-				<equals arg1="${os}" arg2="solaris" />
-				<equals arg1="${ws}" arg2="gtk" />
-				<equals arg1="${arch}" arg2="sparc" />
-			</and>
-		</condition>
-		<condition property="runtimeArchive" value="phpide-${buildId}-all-in-one-aix-motif.zip">
-			<and>
-				<equals arg1="${os}" arg2="aix" />
-				<equals arg1="${ws}" arg2="motif" />
-				<equals arg1="${arch}" arg2="ppc" />
-			</and>
-		</condition>
-	</target>
-
-	<target name="setup" unless="noclean">
-		<condition property="setupTarget" value="setup-zip">
-			<contains string="${runtimeArchive}" substring=".zip" />
-		</condition>
-		<condition property="setupTarget" value="setup-tar.gz">
-			<contains string="${runtimeArchive}" substring=".tar.gz" />
-		</condition>
-		<antcall target="${setupTarget}" />
-		<antcall target="configureTeamTest" />
-	</target>
-
-	<!--setup for zip archives-->
-	<target name="setup-zip" description="Reinstall the test Eclipse installation if specified by user">
-		<delete dir="${install}" />
-		<mkdir dir="${install}" />
-		<exec dir="." executable="unzip">
-			<arg line="-o -qq ${runtimeArchive} -d ${install}"/>
-		</exec>
-		<antcall target="installTestPlugins"/>
-	</target>
-
-	<!--setup for tar.gz archives-->
-	<target name="setup-tar.gz" description="Reinstall the test Eclipse installation if specified by user">
-		<property name="currentDir" value="${basedir}"/>
-		<delete dir="${install}" />
-		<mkdir dir="${install}" />
-		<exec dir="${install}" executable="tar">
-			<arg line="-xzf ${currentDir}/${runtimeArchive}"/>
-		</exec>
-		<antcall target="installTestPlugins"/>
-	</target>
-	
-	<target name="installTestPlugins">
-		<exec dir="." executable="unzip">
-			<arg line="-o -qq phpide-junit-tests-*.zip
-				${derby}
-				eclipse/startup.jar
-				eclipse/plugins/org.eclipse.test/*
-				eclipse/plugins/org.eclipse.test.performance_*/*
-				eclipse/plugins/org.eclipse.test.performance.win32_*/*
-				eclipse/plugins/org.eclipse.ant.optional.junit_*/*
-				${testPluginsRequired}
-				-x eclipse/*/org.eclipse.sdk.tests.source*/* eclipse/*/org.eclipse.test.source*/*
-				-d ${install}"/>
-		</exec>
-	</target>
-
-	<target name="configureTeamTest" if="teamcvs">
-		<!-- Fill in cvs repository information -->
-		<replace file="${eclipse-home}/plugins/${org.eclipse.team.tests.cvs.core}/repository.properties" token="@user@" value="${cvs_user}"/>
-		<replace file="${eclipse-home}/plugins/${org.eclipse.team.tests.cvs.core}/repository.properties" token="@password@" value="${cvs_password}"/>
-		<replace file="${eclipse-home}/plugins/${org.eclipse.team.tests.cvs.core}/repository.properties" token="@host@" value="${cvs_host}"/>
-		<replace file="${eclipse-home}/plugins/${org.eclipse.team.tests.cvs.core}/repository.properties" token="@root@" value="${cvs_root}"/>
 	</target>
 
 	<target name="junit">
@@ -171,18 +39,36 @@
 		<antcall target="${test.target}"/>
 	</target>
 
-	<target name="php.test" description="Runs the org.eclipse.php.test test.xml">
+	<target name="php.test.core" description="Runs core tests">
 		<antcall target="runtests">
-			<param name="testPlugin" value="${org.eclipse.php.test}" />
-			<param name="report" value="org.eclipse.php.test" />
+			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="report" value="org.eclipse.php.test.core" />
 			<param name="testPluginsRequired" value="" />
 		</antcall>
 	</target>
 
-	<target name="all">
-		<antcall target="php.test" />
+	<target name="php.test.ui" description="Runs ui tests">
+		<antcall target="runtests">
+			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="report" value="org.eclipse.php.test.ui" />
+			<param name="testPluginsRequired" value="" />
+		</antcall>
 	</target>
-		
+	
+	<target name="php.test.bare" description="Runs bare tests">
+		<antcall target="runtests">
+			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="report" value="org.eclipse.php.test.bare" />
+			<param name="testPluginsRequired" value="" />
+		</antcall>
+	</target>
+	
+	<target name="all">
+		<antcall target="php.test.core" />
+		<antcall target="php.test.ui" />
+		<antcall target="php.test.bare" />			
+	</target>
+
 	<target name="genHtml" description="Generates HTML results with provided JUNIT.XSL provided">
 		<style style="JUNIT.XSL" basedir="${results}/xml" destdir="${results}/html" />
 	</target>
