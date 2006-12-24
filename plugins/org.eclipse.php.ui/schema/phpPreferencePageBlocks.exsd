@@ -11,11 +11,6 @@
    </annotation>
 
    <element name="extension">
-      <annotation>
-         <documentation>
-            PHP Debug preferences page addon allows contributions to the content of the Debug preferences page.
-         </documentation>
-      </annotation>
       <complexType>
          <sequence>
             <element ref="block" minOccurs="1" maxOccurs="unbounded"/>
@@ -106,6 +101,7 @@ Note that the name will also effect the location of the addon. The addons will b
         id=&quot;test.MyPHPDebugPreferencePageAddon&quot;
         name=&quot;PHP Debug Preference Page Addon&quot;
         pageId=&quot;org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage&quot;/&gt;
+&lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
       </documentation>
