@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.php.debug.daemon" id="debugCommunicationDaemon" name="Debug Communication Daemon"/>
       </appInfo>
       <documentation>
-         Debug communication daemon supplies an extention point for any daemon class that is needed for starting or maintaining debug sessions with a PHP debugger.
+         Debug communication daemon supplies an extention point for any daemon class that is needed for starting or maintaining debug sessions with a PHP debugger. Debug connection daemon listens to incoming connection from PHP debug server, which is a request for starting new debug session.
       </documentation>
    </annotation>
 
@@ -117,7 +117,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         
+         &lt;code&gt;org.eclipse.php.debug.core.communication.DebuggerCommunicationDaemon&lt;/code&gt;
       </documentation>
    </annotation>
 
