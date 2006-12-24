@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.IElementComparer;
 
@@ -30,10 +31,10 @@ public class PHPOutlineElementComparer implements IElementComparer {
 	public PHPOutlineElementComparer() {
 		ArrayList comparers = new ArrayList();
 		comparers.add(new PHPElementComparer());
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpOutlineElementComparer");
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpOutlineElementComparers");
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("PHPOutlineElementComparer")) {
+			if (element.getName().equals("comparer")) {
 				ComparerProxy modelManagerProxy = new ComparerProxy(element);
 				IPHPOutlineElementComparer comparer = modelManagerProxy.getComparer();
 				comparers.add(comparer);
@@ -81,7 +82,7 @@ public class PHPOutlineElementComparer implements IElementComparer {
 
 		public IPHPOutlineElementComparer getComparer() {
 			if (comparer == null) {
-				Platform.run(new SafeRunnable("Error creation PHPOutlineElementComparer for extension-point org.eclipse.php.ui.phpOutlineElementComparer") {
+				SafeRunner.run(new SafeRunnable("Error creation comparer for extension-point org.eclipse.php.ui.phpOutlineElementComparers") {
 					public void run() throws Exception {
 						comparer = (IPHPOutlineElementComparer) element.createExecutableExtension("class");
 					}

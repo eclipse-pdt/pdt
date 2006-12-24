@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.php.debug.ui" id="phpPreferencePageBlocks" name="PHP Debug Preferences Page Block"/>
       </appInfo>
       <documentation>
-         This extentions point enables contribution of Composites for the PHP Debug preferences page.
+         This extentions point allows to contribute parts of PHP preference page. Each part is a composite, that is added to the original page. In order to use this extension, you must make sure that the preference page you are contributing this extension to extends &lt;code&gt;AbstractPHPPropertyPreferencePage&lt;/code&gt;.
       </documentation>
    </annotation>
 
@@ -98,7 +98,16 @@ Note that the name will also effect the location of the addon. The addons will b
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.ui.phpPreferencePageBlocks&quot;&gt;
+    &lt;block
+        class=&quot;test.MyPHPDebugPreferencePageAddon&quot;
+        id=&quot;test.MyPHPDebugPreferencePageAddon&quot;
+        name=&quot;PHP Debug Preference Page Addon&quot;
+        pageId=&quot;org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage&quot;/&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -107,7 +116,8 @@ Note that the name will also effect the location of the addon. The addons will b
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Extensions must implement &lt;code&gt;org.eclipse.php.ui.preferences.IPHPPreferencePageBlock&lt;/code&gt;. Abstract class 
+&lt;code&gt;AbstractPHPPreferencePageBlock&lt;/code&gt; can be used for convenience.
       </documentation>
    </annotation>
 
@@ -116,7 +126,7 @@ Note that the name will also effect the location of the addon. The addons will b
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         No supplied implementation at this point.
       </documentation>
    </annotation>
 
