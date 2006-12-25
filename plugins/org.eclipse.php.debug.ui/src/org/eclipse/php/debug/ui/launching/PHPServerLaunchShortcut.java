@@ -141,6 +141,59 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 		return config;
 	}
 
+	static String computeContextRoot(String url, String fileName, Server server) {
+		String serverBaseURL = server.getBaseURL();
+		if (url.length() > serverBaseURL.length() + 1) {
+			url = url.substring(serverBaseURL.length() + 1);
+		} else if (url.length() == serverBaseURL.length() || url.length() == serverBaseURL.length() + 1) {
+			return ""; //$NON-NLS-1$
+		}
+		// Remove the project name from the file name
+		if (fileName.length() > 0) {
+			fileName = fileName.substring(1);
+			int pathIndex = fileName.indexOf('/');
+			if (pathIndex < 0) {
+				fileName = ""; //$NON-NLS-1$
+			} else {
+				fileName = fileName.substring(pathIndex);
+			}
+		}
+		if (url.length() > fileName.length()) {
+			url = url.substring(0, url.length() - fileName.length());
+		} else {
+			return ""; //$NON-NLS-1$
+		}
+		return url;
+	}
+	
+	/**
+	 * Constructs the URL string according to the given context root and the file name.
+	 * @param publishTo
+	 * @param fileName
+	 * @return
+	 */
+//	private static String computeURL(Server server, String fileName) {
+//		if (server == null) {
+//			return ""; //$NON-NLS-1$
+//		}
+//		String urlString = server.getBaseURL();
+//
+//		if (urlString.equals("")) { //$NON-NLS-1$
+//			urlString = "http://localhost"; //$NON-NLS-1$
+//		}
+//		StringBuffer url = new StringBuffer(urlString);
+//
+//		if (!publishTo.equals("")) { //$NON-NLS-1$
+//			publishTo = publishTo.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+//			url.append("/"); //$NON-NLS-1$
+//			url.append(publishTo);
+//		}
+//		if (!fileName.equals("")) { //$NON-NLS-1$
+//			url.append(formatFileName(fileName));
+//		}
+//		return url.toString();
+//	}
+	
 	/**
 	 * Create & return a new configuration
 	 */
@@ -149,12 +202,13 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 		if (!FileUtils.fileExists(fileName)) {
 			return null;
 		}
+		String URL = server.getBaseURL() + '/' + new Path(fileName).removeFirstSegments(1);
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom("New_configuration"));
 
 		wc.setAttribute(Server.NAME, server.getName());
 		wc.setAttribute(Server.FILE_NAME, fileName);
-		wc.setAttribute(Server.CONTEXT_ROOT, project.getName());
-		wc.setAttribute(Server.BASE_URL, server.getBaseURL() + '/' + project.getName() + '/' + new Path(fileName).lastSegment());
+		wc.setAttribute(Server.CONTEXT_ROOT, computeContextRoot(URL, fileName, server));
+		wc.setAttribute(Server.BASE_URL, URL);
 		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
 		if (server.canPublish()) {
