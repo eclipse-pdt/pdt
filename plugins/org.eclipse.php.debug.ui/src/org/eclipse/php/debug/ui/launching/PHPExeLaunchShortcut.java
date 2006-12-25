@@ -13,16 +13,14 @@ package org.eclipse.php.debug.ui.launching;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -35,6 +33,8 @@ import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.util.FileUtils;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
+import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
@@ -105,10 +105,14 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_target, null));
 				}
 
+				String defaultPHPExe = getDefaultPHPExe(project);
 				PHPexes exes = new PHPexes();
 				exes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
-				PHPexeItem defaultEXE = exes.getDefaultItem();
-				String phpExeName = (defaultEXE != null) ? exes.getDefaultItem().getPhpEXE().getAbsolutePath().toString() : null;
+				PHPexeItem defaultEXE = exes.getItem(defaultPHPExe);
+				if (defaultEXE == null) {
+					defaultEXE = exes.getDefaultItem();
+				}
+				String phpExeName = (defaultEXE != null) ? defaultEXE.getPhpEXE().getAbsolutePath().toString() : null;
 
 				if (phpExeName == null) {
 					ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text, new Status(Status.ERROR, PHPDebugUIPlugin.ID, 0, "", null));
@@ -132,6 +136,34 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				});
 			}
 		}
+	}
+
+	// Returns the default php executable name for the current project. 
+	// In case the project does not have any special settings, return the workspace default.
+	private static String getDefaultPHPExe(IProject project) {
+		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		String phpExe = prefs.getString(PHPDebugCorePreferenceNames.DEFAULT_PHP);
+		if (project != null) {
+			// In case that the project is not null, check that we have project-specific settings for it.
+			// Otherwise, map it to the workspace default server.
+			IScopeContext[] preferenceScopes = createPreferenceScopes(project);
+			if (preferenceScopes[0] instanceof ProjectScope) {
+				IEclipsePreferences node = preferenceScopes[0].getNode(PHPProjectPreferences.getPreferenceNodeQualifier());
+				if (node != null) {
+					phpExe = node.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
+				}
+			}
+		}
+		return phpExe;
+	}
+
+	// Creates a preferences scope for the given project.
+	// This scope will be used to search for preferences values.
+	private static IScopeContext[] createPreferenceScopes(IProject project) {
+		if (project != null) {
+			return new IScopeContext[] { new ProjectScope(project), new InstanceScope(), new DefaultScope() };
+		}
+		return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
 	}
 
 	/**
@@ -170,7 +202,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	 */
 	static protected ILaunchConfiguration createConfiguration(String phpProject, String phpPathString, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
 		ILaunchConfiguration config = null;
-		if(!FileUtils.fileExists(phpPathString)) {
+		if (!FileUtils.fileExists(phpPathString)) {
 			return null;
 		}
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom("New_configuration"));
