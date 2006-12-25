@@ -25,7 +25,7 @@
 	<target name="junit">
 		<property name="derby" value="" />
 		<ant antfile="${eclipse-home}/plugins/${testPlugin}/test.xml" dir="." />
-		<copy file="${eclipse-home}/${report}.xml" tofile="${results}/xml/${report}_${platform}.xml" failonerror="false" />
+		<copy file="${report}.xml" tofile="${results}/xml/${report}_${platform}.xml" failonerror="false" />
 		<antcall target="genHtml" />
 	</target>
 
@@ -40,10 +40,10 @@
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
 			<param name="testClass" value="org.eclipse.php.test.HeadlessTestSuite" />
-			<param name="report" value="org.eclipse.php.test.core" />
+			<param name="report" value="HeadlessTestSuite" />
 			<param name="testPluginsRequired" value="" />
 			<param name="application" value="org.eclipse.test.coretestapplication" />
-			<param name="testTarget" value="core" />
+			<param name="testTarget" value="HeadlessTestSuite" />
 		</antcall>
 	</target>
 
@@ -51,10 +51,10 @@
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
 			<param name="testClass" value="org.eclipse.php.test.GUITestSuite" />
-			<param name="report" value="org.eclipse.php.test.ui" />
+			<param name="report" value="GUITestSuite" />
 			<param name="testPluginsRequired" value="" />
 			<param name="application" value="org.eclipse.test.uitestapplication" />
-			<param name="testTarget" value="ui" />
+			<param name="testTarget" value="GUITestSuite" />
 		</antcall>
 	</target>
 
@@ -62,10 +62,10 @@
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
 			<param name="testClass" value="org.eclipse.php.test.BareTestSuite" />
-			<param name="report" value="org.eclipse.php.test.bare" />
+			<param name="report" value="Bare" />
 			<param name="testPluginsRequired" value="" />
 			<param name="application" value="org.eclipse.test.coretestapplication" />
-			<param name="testTarget" value="bare" />
+			<param name="testTarget" value="BareTestSuite" />
 		</antcall>
 	</target>
 
