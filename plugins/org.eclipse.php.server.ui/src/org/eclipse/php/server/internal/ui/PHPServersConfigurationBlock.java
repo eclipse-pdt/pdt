@@ -273,7 +273,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			if (columnIndex == 0) {
 				String serverName = server.getName();
 				if (isDefault((Server) element)) {
-					serverName += " (Workspace Default)";
+					serverName += PHPServerUIMessages.getString("PHPServersConfigurationBlock.workspaceDefault");
 				}
 				return serverName;
 			} else if (columnIndex == 1) {
