@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Build Utility Tasks"
-         default="nodefault"
-         basedir=".">
+<project name="Build Utility Tasks" default="nodefault" basedir=".">
 
-    <property name="debug" value="true" />
+	<property name="debug" value="true" />
 
 
-    <!-- ================================================================================== -->
-    <!--                                                                                    -->
-    <!-- unpackUpdateJarsAndCreateZippedPackages                                            -->
-    <!--                                                                                    -->
-    <!--   This task takes a zip file of update jars, which is created by PDE build         -->
-    <!--   process, and "converts" it to a traditional zip file, processing the             -->
-    <!--   jars with pack200 for better compression on update sites.                        -->
-    <!--                                                                                    -->
-    <!--                                                                                    -->
-    <!-- ================================================================================== -->
+	<!-- ================================================================================== -->
+	<!--                                                                                    -->
+	<!-- unpackUpdateJarsAndCreateZippedPackages                                            -->
+	<!--                                                                                    -->
+	<!--   This task takes a zip file of update jars, which is created by PDE build         -->
+	<!--   process, and "converts" it to a traditional zip file, processing the             -->
+	<!--   jars with pack200 for better compression on update sites.                        -->
+	<!--                                                                                    -->
+	<!--                                                                                    -->
+	<!-- ================================================================================== -->
 
-    <target name="unpackUpdateJarsAndCreateZippedPackages"
-            depends="init">
+	<target name="unpackUpdateJarsAndCreateZippedPackages" depends="init">
 
 
-        <!--Note: we use this odd "tmpsite-archiveName-temp" to make sure unique directories, 
+		<!--Note: we use this odd "tmpsite-archiveName-temp" to make sure unique directories, 
             since in some cases these directories can not be deleted from ant, see
             https://bugs.eclipse.org/bugs/show_bug.cgi?id=142926, 
             and since directory names ending in .zip are misinterpreted by jarProcessor, see
@@ -31,101 +28,95 @@
             is turnned on, then all the tmpsite directories are left on disk for 
             inspection.
         -->
-        <property name="tmpsite"
-                  value="${buildDirectory}/tmpsite-${archiveName}-temp" />
+		<property name="tmpsite" value="${buildDirectory}/tmpsite-${archiveName}-temp" />
 
-        <!-- ================================================================================== -->
-        <!--                                                                                    -->
-        <!-- 0. make "backup" copy of original zip, if debugging,                               -->
-        <!-- since might be needed for comparison                                               -->
-        <!--                                                                                    -->
-        <!-- ================================================================================== -->
+		<!-- ================================================================================== -->
+		<!--                                                                                    -->
+		<!-- 0. make "backup" copy of original zip, if debugging,                               -->
+		<!-- since might be needed for comparison                                               -->
+		<!--                                                                                    -->
+		<!-- ================================================================================== -->
 
-        <antcall target="makeBackupCopyForDebugging" />
-
+		<antcall target="makeBackupCopyForDebugging" />
 
 
-        <!-- ================================================================================== -->
-        <!--                                                                                    -->
-        <!-- 1. normalize jars here, from a zip file of update jars.                            -->
-        <!-- The normalized jars are put in zip file of same name, in a directory               -->
-        <!-- named normalized                                                                     -->
-        <!--                                                                                    -->
-        <!-- ================================================================================== -->
-        <java jar="${baseLocation}/startup.jar"
-              fork="true"
-              jvm="${java-home}/bin/java"
-              failonerror="true"
-              maxmemory="256m"
-              dir="${buildDirectory}">
-            <arg line="#{logIfDebug}" />
-            <arg line="-application org.eclipse.update.core.siteOptimizer" />
-            <!-- note: this -processAll option is critical in this first step. 
+
+		<!-- ================================================================================== -->
+		<!--                                                                                    -->
+		<!-- 1. normalize jars here, from a zip file of update jars.                            -->
+		<!-- The normalized jars are put in zip file of same name, in a directory               -->
+		<!-- named normalized                                                                     -->
+		<!--                                                                                    -->
+		<!-- ================================================================================== -->
+		<java jar="${baseLocation}/startup.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}">
+			<arg line="#{logIfDebug}" />
+			<arg line="-application org.eclipse.update.core.siteOptimizer" />
+			<!-- note: this -processAll option is critical in this first step. 
             		For various reasons, jarProcessor is written to not act on 
             		any jar if the jar is not "marked", or if not told explicitly to 
                 	to processAll 
             -->
-            <arg line="-jarProcessor ${verboseIfDebug} -processAll -outputDir ${tmpsite}/normalized  -repack ${buildDirectory}/${buildLabel}/${archiveName}" />
-        </java>
+			<arg line="-jarProcessor ${verboseIfDebug} -processAll -outputDir ${tmpsite}/normalized  -repack ${buildDirectory}/${buildLabel}/${archiveName}" />
+		</java>
 
 
-        <!-- ================================================================================== -->
-        <!--                                                                                    -->
-        <!-- 2. unzip the normalized jars in the zip file produced in step 1., to the       -->
-        <!-- directory {tmpsite} for further processing. plugins and features             -->
-        <!-- end up in {tmpsite}/eclipse                                                        -->
-        <!--                                                                                    -->
-        <!-- ================================================================================== -->
-        <unzip dest="${tmpsite}"
-               src="${tmpsite}/normalized/${archiveName}" />
+		<!-- ================================================================================== -->
+		<!--                                                                                    -->
+		<!-- 2. unzip the normalized jars in the zip file produced in step 1., to the       -->
+		<!-- directory {tmpsite} for further processing. plugins and features             -->
+		<!-- end up in {tmpsite}/eclipse                                                        -->
+		<!--                                                                                    -->
+		<!-- ================================================================================== -->
+		<unzip dest="${tmpsite}" src="${tmpsite}/normalized/${archiveName}" />
 
 
-        <!-- ================================================================================== -->
-        <!--                                                                                    -->
-        <!-- 3. copy all update jars to a common update site directory, if desired.             -->
-        <!-- Note: overwite is false to avoid "touching" files already produced and             -->
-        <!-- processed be previous steps in a larger build process. This means the updateSite   -->
-        <!-- *must* be complete clean before the larger process starts.                         -->
-        <!--                                                                                    -->
-        <!-- ================================================================================== -->
-        <mkdir dir="${buildDirectory}/${buildLabel}/updateSite" />
-        <copy todir="${buildDirectory}/${buildLabel}/updateSite"
-              overwrite="false">
-            <fileset dir="${tmpsite}/eclipse" />
-        </copy>
+		<!-- ================================================================================== -->
+		<!--                                                                                    -->
+		<!-- 3. copy all update jars to a common update site directory, if desired.             -->
+		<!-- Note: overwite is false to avoid "touching" files already produced and             -->
+		<!-- processed be previous steps in a larger build process. This means the updateSite   -->
+		<!-- *must* be complete clean before the larger process starts.                         -->
+		<!--                                                                                    -->
+		<!-- ================================================================================== -->
+		<mkdir dir="${buildDirectory}/${buildLabel}/updateSite" />
+		<copy todir="${buildDirectory}/${buildLabel}/updateSite" overwrite="false">
+			<fileset dir="${tmpsite}/eclipse" />
+		</copy>
 
 
-        <!-- ================================================================================== -->
-        <!--                                                                                    -->
-        <!-- 4. for modularity, pack200 is done here, optionally.                               -->
-        <!-- gz files are produced in update site directory.                                    -->
-        <!--                                                                                    -->
-        <!-- This is optional since   -->
-        <!-- processing is expensive to do for every build. Only need when ready to declare     -->
-        <!-- an update site, and, for exmaple, no need to do for "local" or HEAD builds         -->
-        <!-- since developers wouldn't normally need it for a quick check of of a build.        -->
-        <!--                                                                                    -->
-        <!-- ================================================================================== -->
-        <property
-            name="doPack"
-            value="true" />
-        <antcall target="createPackFilesIfDesired" />
+		<!-- ================================================================================== -->
+		<!--                                                                                    -->
+		<!-- 4. for modularity, pack200 is done here, optionally.                               -->
+		<!-- gz files are produced in update site directory.                                    -->
+		<!--                                                                                    -->
+		<!-- This is optional since   -->
+		<!-- processing is expensive to do for every build. Only need when ready to declare     -->
+		<!-- an update site, and, for exmaple, no need to do for "local" or HEAD builds         -->
+		<!-- since developers wouldn't normally need it for a quick check of of a build.        -->
+		<!--                                                                                    -->
+		<!-- ================================================================================== -->
+		<condition property="doPack" value="true">
+			<not>
+				<contains string="${buildType}" substring="N" />
+			</not>
+		</condition>
+
+		<antcall target="createPackFilesIfDesired" />
 
 
-        <!-- ================================================================================== -->
-        <!--                                                                                    -->
-        <!-- 5. now create traditional zip file of unpacked jars. This type of                -->
-        <!-- "unpack" is not related to pack200, but instead means to unpack                    -->
-        <!-- those jars that are supposed to be unpacked based on feature defintion,            -->
-        <!-- if the plugin's unpack attribute is set to true in the feature                     -->
-        <!--                                                                                    -->
-        <!-- ================================================================================== -->
+		<!-- ================================================================================== -->
+		<!--                                                                                    -->
+		<!-- 5. now create traditional zip file of unpacked jars. This type of                -->
+		<!-- "unpack" is not related to pack200, but instead means to unpack                    -->
+		<!-- those jars that are supposed to be unpacked based on feature defintion,            -->
+		<!-- if the plugin's unpack attribute is set to true in the feature                     -->
+		<!--                                                                                    -->
+		<!-- ================================================================================== -->
 
-        <!--  use releng task of unpackUpdateJars -->
-        <unpackUpdateJars site="${tmpsite}/eclipse"
-                          output="${tmpsite}/unpacked/eclipse" />
+		<!--  use releng task of unpackUpdateJars -->
+		<unpackUpdateJars site="${tmpsite}/eclipse" output="${tmpsite}/unpacked/eclipse" />
 
-        <!-- add copy of legal doc's here, product.ini, etc., before re-zipping 
+		<!-- add copy of legal doc's here, product.ini, etc., before re-zipping 
         <copy todir="${tmpsite}/unpacked/eclipse"
               overwrite="false">
             <fileset dir="${wtp.builder.home}/rootfiles">
@@ -133,82 +124,69 @@
         </copy>
 -->
 
-        <!-- delete the zip file of update jars we started with, which we are about to re-create 
+		<!-- delete the zip file of update jars we started with, which we are about to re-create 
             as traditional zip file -->
-        <delete file="${buildDirectory}/${buildLabel}/${archiveName}" />
+		<delete file="${buildDirectory}/${buildLabel}/${archiveName}" />
 
 
-        <!-- recreate zip file now, same name, traditional content, which is mix of folders and jars -->
-        <zip destfile="${buildDirectory}/${buildLabel}/${archiveName}"
-             basedir="${tmpsite}/unpacked"
-             update="false"
-             duplicate="preserve" />
-        
-        <!-- always produce checksum files for any zips produced -->
-        <antcall target="createChecksums" />
+		<!-- recreate zip file now, same name, traditional content, which is mix of folders and jars -->
+		<zip destfile="${buildDirectory}/${buildLabel}/${archiveName}" basedir="${tmpsite}/unpacked" update="false" duplicate="preserve" />
+
+		<!-- always produce checksum files for any zips produced -->
+		<antcall target="createChecksums" />
 
 
-        <!-- ================================================================================== -->
-        <!--                                                                                    -->
-        <!-- 6. can now remove tmpsite as no longer needed, unless debugging                    -->
-        <!--                                                                                    -->
-        <!-- ================================================================================== -->
+		<!-- ================================================================================== -->
+		<!--                                                                                    -->
+		<!-- 6. can now remove tmpsite as no longer needed, unless debugging                    -->
+		<!--                                                                                    -->
+		<!-- ================================================================================== -->
 
-        <antcall target="deleteTmpSite" />
+		<antcall target="deleteTmpSite" />
 
-    </target>
-
-
-    <!-- ============================================================================================== -->
-    <!--                                                                                                -->
-    <!-- Utility and Helper tasks                                                                       -->
-    <!--                                                                                                -->
-    <!-- ============================================================================================== -->
-
-    <target name="init">
-
-        <condition property="verboseIfDebug"
-                   value="-verbose"
-                   else="">
-            <istrue value="${debug}" />
-        </condition>
-
-        <condition property="logIfDebug"
-                   value="-debug -consolelog"
-                   else="">
-            <istrue value="${debug}" />
-        </condition>
-    </target>
+	</target>
 
 
-    <target name="deleteTmpSite" unless="debug">
-        <delete dir="${tmpsite}" />
-    </target>
+	<!-- ============================================================================================== -->
+	<!--                                                                                                -->
+	<!-- Utility and Helper tasks                                                                       -->
+	<!--                                                                                                -->
+	<!-- ============================================================================================== -->
+
+	<target name="init">
+
+		<condition property="verboseIfDebug" value="-verbose" else="">
+			<istrue value="${debug}" />
+		</condition>
+
+		<condition property="logIfDebug" value="-debug -consolelog" else="">
+			<istrue value="${debug}" />
+		</condition>
+	</target>
 
 
-    <target name="createPackFilesIfDesired" if="doPack" depends="init">
-        <java jar="${baseLocation}/startup.jar"
-              fork="true"
-              jvm="${java-home}/bin/java"
-              failonerror="true"
-              maxmemory="256m"
-              dir="${buildDirectory}">
-            <arg line="${logIfDebug}" />
-            <arg line="-application org.eclipse.update.core.siteOptimizer" />
-            <arg line="-jarProcessor  ${verboseIfDebug} -outputDir ${buildDirectory}/${buildLabel}/updateSite -pack ${buildDirectory}/${buildLabel}/updateSite" />
-        </java>
-    </target>
-
-    <target name="makeBackupCopyForDebugging" if="debug">
-        <!-- temporary copy while confirming build to be able to do side-by-side comparisons -->
-        <mkdir dir="${buildDirectory}/backuporiginalzips" />
-        <copy file="${buildDirectory}/${buildLabel}/${archiveName}"
-              todir="${buildDirectory}/backuporiginalzips" />
-    </target>
+	<target name="deleteTmpSite" unless="debug">
+		<delete dir="${tmpsite}" />
+	</target>
 
 
-    <target name="createChecksums">
-        <!-- This createChecksums task creates two files, for use in two contexts. 
+	<target name="createPackFilesIfDesired" if="doPack" depends="init">
+		<java jar="${baseLocation}/startup.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}">
+			<arg line="${logIfDebug}" />
+			<arg line="-application org.eclipse.update.core.siteOptimizer" />
+			<arg line="-jarProcessor  ${verboseIfDebug} -outputDir ${buildDirectory}/${buildLabel}/updateSite -pack ${buildDirectory}/${buildLabel}/updateSite" />
+		</java>
+	</target>
+
+	<target name="makeBackupCopyForDebugging" if="debug">
+		<!-- temporary copy while confirming build to be able to do side-by-side comparisons -->
+		<mkdir dir="${buildDirectory}/backuporiginalzips" />
+		<copy file="${buildDirectory}/${buildLabel}/${archiveName}" todir="${buildDirectory}/backuporiginalzips" />
+	</target>
+
+
+	<target name="createChecksums">
+		<!-- This createChecksums task creates two files, for use in two contexts. 
             a. an x.md5 file, that has the name of the file in the contents. 
             This is good for some "third party" executables, like md5summ, that 
             expects the name in the file.  
@@ -216,19 +194,105 @@
             other than the checksum, we provide same thing in a file with 
             an md5antformat extension, that has only the checksum. 
         -->
-        <mkdir dir="${buildDirectory}/${buildLabel}/checksum" />
-        <checksum file="${buildDirectory}/${buildLabel}/${archiveName}"
-                  property="md5" />
-        <echo message="${md5} *${archiveName}"
-              file="${buildDirectory}/${buildLabel}/checksum/${archiveName}.md5" />
-        <echo message="${md5}"
-              file="${buildDirectory}/${buildLabel}/checksum/${archiveName}.md5antformat" />
-    </target>
+		<mkdir dir="${buildDirectory}/${buildLabel}/checksum" />
+		<checksum file="${buildDirectory}/${buildLabel}/${archiveName}" property="md5" />
+		<echo message="${md5} *${archiveName}" file="${buildDirectory}/${buildLabel}/checksum/${archiveName}.md5" />
+		<echo message="${md5}" file="${buildDirectory}/${buildLabel}/checksum/${archiveName}.md5antformat" />
+	</target>
+
+	<target name="packAllInOne">
+		<!-- Do not create all-in-one for nightly build
+        -->
+		<condition property="pack-all-in-one" value="true">
+			<not>
+				<contains string="${buildType}" substring="N" />
+			</not>
+		</condition>
+		<antcall target="call-all-in-one" />
+	</target>
+
+	<target name="call-all-in-one" if="pack-all-in-one">
+		<delete dir="${buildDirectory}/${buildLabel}/all-in-one" failonerror="false" />
+		<mkdir dir="${buildDirectory}/${buildLabel}/all-in-one" />
+
+		<antcall target="all-in-one">
+			<param name="bos" value="win32" />
+			<param name="bws" value="win32" />
+			<param name="barch" value="x86" />
+			<param name="iszip" value="true" />
+		</antcall>
+
+		<antcall target="all-in-one">
+			<param name="bos" value="linux" />
+			<param name="bws" value="gtk" />
+			<param name="barch" value="x86" />
+			<param name="istar" value="true" />
+		</antcall>
+
+		<antcall target="all-in-one">
+			<param name="bos" value="macosx" />
+			<param name="bws" value="carbon" />
+			<param name="barch" value="ppc" />
+			<param name="istar" value="true" />
+		</antcall>
+
+	</target>
+
+	<target name="all-in-one">
+		<delete dir="${buildDirectory}/${buildLabel}/temp" failonerror="false" />
+		<mkdir dir="${buildDirectory}/${buildLabel}/temp" />
+
+		<echo message="call get - ${barch} ${bos} ${bws}" />
+		<ant antfile="${builder}/../dependency.xml" target="getRuntime">
+			<property name="basearch" value="${barch}" />
+			<property name="baseos" value="${bos}" />
+			<property name="basews" value="${bws}" />
+			<property name="dependency.properties" value="${buildDirectory}/maps/org.eclipse.php-releng/maps/dependencies.properties" />
+			<property name="base.install.dir" value="${buildDirectory}/${buildLabel}/temp" />
+			<property name="dependencyTargets" value="${builder}/../dependency/build.xml" />
+			<property name="local.cache.dir" value="${buildDirectory}/../" />
+
+		</ant>
+		<unzip src="${buildDirectory}/${buildLabel}/${archiveName}" dest="${buildDirectory}/${buildLabel}/temp" />
+		<antcall target="pack-all-in-one-tar">
+		</antcall>
+		<antcall target="pack-all-in-one-zip">
+		</antcall>
+	</target>
+
+	<target name="pack-all-in-one-tar" if="istar">
+		<property name="packName" value="pdt-all-in-one-${buildLabel}-${bos}-${bws}.tar.gz" />
+		<tar longfile="gnu" compression="gzip" destfile="${buildDirectory}/${buildLabel}/all-in-one/${packName}" excludes="installmanifest.properties" basedir="${buildDirectory}/${buildLabel}/temp" />
+		<antcall target="checksum-all-in-one">
+			<param name="packName" value="${packName}" />
+		</antcall>
+	</target>
+	<target name="pack-all-in-one-zip" if="iszip">
+		<property name="packName" value="pdt-all-in-one-${buildLabel}-${bos}.zip" />
+
+		<zip destfile="${buildDirectory}/${buildLabel}/all-in-one/${packName}">
+			<fileset dir="${buildDirectory}/${buildLabel}/temp">
+				<include name="**/*" />
+				<exclude name="installmanifest.properties" />
+			</fileset>
+		</zip>
+		<antcall target="checksum-all-in-one">
+			<param name="packName" value="${packName}" />
+		</antcall>
+	</target>
+
+	<target name="checksum-all-in-one">
+		<mkdir dir="${buildDirectory}/${buildLabel}/all-in-one/checksum" />
+		<checksum file="${buildDirectory}/${buildLabel}/all-in-one/${packName}" property="md5" />
+		<echo message="${md5} *${archiveName}" file="${buildDirectory}/${buildLabel}/all-in-one/checksum/${packName}.md5" />
+		<echo message="${md5}" file="${buildDirectory}/${buildLabel}/all-in-one/checksum/${packName}.md5antformat" />
+
+	</target>
 
 
 
-    <target name="nodefault">
-        <echo message="There is no default target for this buildutililites.xml ant script." />
-    </target>
+	<target name="nodefault">
+		<echo message="There is no default target for this buildutililites.xml ant script." />
+	</target>
 
 </project>

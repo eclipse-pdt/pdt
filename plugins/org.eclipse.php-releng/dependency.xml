@@ -8,63 +8,65 @@
 
     
     ====================================================================== -->
-<project
-    name="test"
-    default="get">
+<project name="test" default="get">
 
-    <target name="get">
-        <antcall target="getAndInstall">
-            <param
-                name="groupId"
-                value="wtp" />
-        </antcall>
-        <antcall target="getAndInstall">
-            <param
-                name="groupId"
-                value="emf" />
-        </antcall>
-        <antcall target="getAndInstall">
-            <param
-                name="groupId"
-                value="gef" />
-        </antcall>
-        <antcall target="getAndInstall">
-            <param
-                name="groupId"
-                value="jem" />
-        </antcall>
-        <antcall target="getAndInstall">
-            <param
-                name="groupId"
-                value="eclipse" />
-        </antcall>
-        <antcall target="getAndInstall">
-            <param
-                name="groupId"
-                value="eclipseTestFramework" />
-        </antcall>
+	<target name="get">
+		<antcall target="getAndInstall">
+			<param name="groupId" value="wtp" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="emf" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="gef" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="jem" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="eclipse" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="eclipseTestFramework" />
+		</antcall>
 
-    </target>
+	</target>
 
-    <target name="getAndInstall">
-        <ant
-            antfile="${dependencyTargets}"
-            target="checkDependency">
-            <property
-                name="groupId"
-                value="${groupId}" />
-        </ant>
-        <ant
-            antfile="${dependencyTargets}"
-            target="installDependency">
-            <property
-                name="groupId"
-                value="${groupId}" />
-            <property
-                name="install.destination"
-                value="${base.install.dir}" />
-        </ant>
-    </target>
+	<target name="getRuntime">
+
+		<antcall target="getAndInstall">
+			<param name="groupId" value="wtpRuntime" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="emfSdoRuntime" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="xsdRuntime" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="gefRuntime" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="jemRuntime" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="eclipseRuntime" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="jdtRuntime" />
+		</antcall>
+
+	</target>
+
+	<target name="getAndInstall">
+		<ant antfile="${dependencyTargets}" target="checkDependency">
+			<property name="groupId" value="${groupId}" />
+		</ant>
+		<ant antfile="${dependencyTargets}" target="installDependency">
+			<property name="groupId" value="${groupId}" />
+			<property name="install.destination" value="${base.install.dir}" />
+		</ant>
+	</target>
 
 </project>
 
