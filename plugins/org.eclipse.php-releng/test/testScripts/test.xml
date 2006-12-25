@@ -1,4 +1,4 @@
-<project name="Automated Eclipse Testing" default="all"  basedir="." >
+<project name="Automated Eclipse Testing" default="all" basedir=".">
 
 	<!--properties file containing the plugin directory name including version number,
 	 and list of required test plug-ins expressed as command-line argument to unzip executable.-->
@@ -7,14 +7,11 @@
 	<!--properties file containing the build information-->
 	<property file="label.properties" />
 
-	<!--default directory where test-eclipse will be installed-->
-	<property name="install" value="${install-path}" />
-
 	<!--suffix added to report name to identify which platform tests results come from-->
 	<property name="platform" value="${os}.${ws}.${arch}" />
 
 	<!-- The root of the eclipse installation -->
-	<property name="eclipse-home" value="${install}" />
+	<property name="eclipse-home" value="eclipse" />
 
 	<!-- The directory that will contain the xml and html results from the tests that are run -->
 	<property name="results" value="${basedir}/results" />
@@ -26,47 +23,53 @@
 	</target>
 
 	<target name="junit">
-			<property name="derby" value="" />
-			<ant antfile="${eclipse-dev}/${testPlugin}/test.xml" dir="${eclipse-home}" />
-			<copy file="${eclipse-home}/${report}.xml" tofile="${results}/xml/${report}_${platform}.xml" failonerror="false" />
-			<antcall target="genHtml" />
+		<property name="derby" value="" />
+		<ant antfile="${eclipse-home}/plugins/${testPlugin}/test.xml" dir="." />
+		<copy file="${eclipse-home}/${report}.xml" tofile="${results}/xml/${report}_${platform}.xml" failonerror="false" />
+		<antcall target="genHtml" />
 	</target>
-	
+
 	<target name="runtests" depends="init" unless="skip.test">
-		<property name="${testPlugin}.prerequisites" value=""/>
+		<property name="${testPlugin}.prerequisites" value="" />
 		<!--override the value of this property with performance if the tests run on performance machine-->
 		<property name="test.target" value="junit" />
-		<antcall target="${test.target}"/>
+		<antcall target="${test.target}" />
 	</target>
 
 	<target name="php.test.core" description="Runs core tests">
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="testClass" value="org.eclipse.php.test.HeadlessTestSuite" />
 			<param name="report" value="org.eclipse.php.test.core" />
 			<param name="testPluginsRequired" value="" />
+			<param name="application" value="org.eclipse.test.coretestapplication" />
 		</antcall>
 	</target>
 
 	<target name="php.test.ui" description="Runs ui tests">
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="testClass" value="org.eclipse.php.test.GUITestSuite" />
 			<param name="report" value="org.eclipse.php.test.ui" />
 			<param name="testPluginsRequired" value="" />
+			<param name="application" value="org.eclipse.test.uitestapplication" />
 		</antcall>
 	</target>
-	
+
 	<target name="php.test.bare" description="Runs bare tests">
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="testClass" value="org.eclipse.php.test.BareTestSuite" />
 			<param name="report" value="org.eclipse.php.test.bare" />
 			<param name="testPluginsRequired" value="" />
+			<param name="application" value="org.eclipse.test.coretestapplication" />
 		</antcall>
 	</target>
-	
+
 	<target name="all">
 		<antcall target="php.test.core" />
 		<antcall target="php.test.ui" />
-		<antcall target="php.test.bare" />			
+		<antcall target="php.test.bare" />
 	</target>
 
 	<target name="genHtml" description="Generates HTML results with provided JUNIT.XSL provided">
