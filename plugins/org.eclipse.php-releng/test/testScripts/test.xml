@@ -43,6 +43,7 @@
 			<param name="report" value="org.eclipse.php.test.core" />
 			<param name="testPluginsRequired" value="" />
 			<param name="application" value="org.eclipse.test.coretestapplication" />
+			<param name="testTarget" value="core" />
 		</antcall>
 	</target>
 
@@ -53,6 +54,7 @@
 			<param name="report" value="org.eclipse.php.test.ui" />
 			<param name="testPluginsRequired" value="" />
 			<param name="application" value="org.eclipse.test.uitestapplication" />
+			<param name="testTarget" value="ui" />
 		</antcall>
 	</target>
 
@@ -63,6 +65,7 @@
 			<param name="report" value="org.eclipse.php.test.bare" />
 			<param name="testPluginsRequired" value="" />
 			<param name="application" value="org.eclipse.test.coretestapplication" />
+			<param name="testTarget" value="bare" />
 		</antcall>
 	</target>
 
