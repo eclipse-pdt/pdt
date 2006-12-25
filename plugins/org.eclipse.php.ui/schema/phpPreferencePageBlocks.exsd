@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.php.debug.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.debug.ui" id="phpPreferencePageBlocks" name="PHP Debug Preferences Page Block"/>
+         <meta.schema plugin="org.eclipse.php.debug.ui" id="phpPreferencePageBlocks" name="PHP Preferences Page Block"/>
       </appInfo>
       <documentation>
          This extentions point allows to contribute parts of PHP preference page. Each part is a composite, that is added to the original page. In order to use this extension, you must make sure that the preference page you are contributing this extension to extends &lt;code&gt;AbstractPHPPropertyPreferencePage&lt;/code&gt;.
