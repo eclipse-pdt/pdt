@@ -167,34 +167,6 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 	}
 	
 	/**
-	 * Constructs the URL string according to the given context root and the file name.
-	 * @param publishTo
-	 * @param fileName
-	 * @return
-	 */
-//	private static String computeURL(Server server, String fileName) {
-//		if (server == null) {
-//			return ""; //$NON-NLS-1$
-//		}
-//		String urlString = server.getBaseURL();
-//
-//		if (urlString.equals("")) { //$NON-NLS-1$
-//			urlString = "http://localhost"; //$NON-NLS-1$
-//		}
-//		StringBuffer url = new StringBuffer(urlString);
-//
-//		if (!publishTo.equals("")) { //$NON-NLS-1$
-//			publishTo = publishTo.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-//			url.append("/"); //$NON-NLS-1$
-//			url.append(publishTo);
-//		}
-//		if (!fileName.equals("")) { //$NON-NLS-1$
-//			url.append(formatFileName(fileName));
-//		}
-//		return url.toString();
-//	}
-	
-	/**
 	 * Create & return a new configuration
 	 */
 	static ILaunchConfiguration createConfiguration(IProject project, String fileName, Server server, ILaunchConfigurationType configType, String mode) throws CoreException {
