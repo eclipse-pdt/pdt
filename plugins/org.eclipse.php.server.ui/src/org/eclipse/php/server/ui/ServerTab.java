@@ -704,7 +704,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		}
 	}
 
-	private String computeContextRoot(String url, String fileName, Server server) {
+	private static String computeContextRoot(String url, String fileName, Server server) {
 		String serverBaseURL = server.getBaseURL();
 		if (url.length() > serverBaseURL.length() + 1) {
 			url = url.substring(serverBaseURL.length() + 1);
