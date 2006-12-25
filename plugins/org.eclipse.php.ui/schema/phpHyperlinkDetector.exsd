@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.php.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.ui" id="phpHyperlinkDetector" name="phpHyperlinkDetector"/>
+         <meta.schema plugin="org.eclipse.php.ui" id="phpHyperlinkDetector" name="PHP Hyperlink Detector"/>
       </appInfo>
       <documentation>
          This extension provides support for detecting and displaying hyperlinks in a PHP text viewer. Contributed hyperlink detectors try to find a hyperlink at a given location in a PHP text viewer, the first of them which succeeds to resolve current element becomes active at that point.

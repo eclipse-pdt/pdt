@@ -19,7 +19,6 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.Logger;
@@ -38,13 +37,9 @@ import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPro
 import org.osgi.service.prefs.BackingStoreException;
 
 public class PHPProjectCreationWizard extends DataModelWizard implements IExecutableExtension, INewWizard {
+	
+	private static final String ID = "org.eclipse.php.project.ui.wizards.PHPProjectCreationWizard"; //$NON-NLS-1$
 
-	
-	private static final String PHP_WIZARD_PAGS_EXTENSION_POINT = "org.eclipse.php.ui.phpWizardPages"; //$NON-NLS-1$
-	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
-	private static final String WIZARDNAME_ATTRIBUTE = "wizardName"; //$NON-NLS-1$
-	private static final String WizardName = "PHPProjectCreationWizard"; //$NON-NLS-1$
-	
 	protected PHPIncludePathPage includePathPage;
     protected PHPProjectWizardBasePage basePage;
     
@@ -73,18 +68,12 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	public void doAddPages() {
 		addPage(basePage = new PHPProjectWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
 		addPage(includePathPage = new PHPIncludePathPage(getDataModel(), "page2")); //$NON-NLS-1$
-
-		//  load all additional pages registered trough the extension point and add them to the wizard
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHP_WIZARD_PAGS_EXTENSION_POINT); //$NON-NLS-1$
-		for (int i = 0; i < elements.length; i++) {			
-			if (elements[i].getAttribute(WIZARDNAME_ATTRIBUTE).equals(WizardName) && elements[i].getAttribute(CLASS_ATTRIBUTE) != null) {
-				try {
-					BasicPHPWizardPageExtended page = (BasicPHPWizardPageExtended) elements[i].createExecutableExtension(CLASS_ATTRIBUTE);
-					addPage(page);
-					wizardPagesList.add(page);
-				} catch (CoreException e) {
-					Logger.logException(PHPUIMessages.PHPProjectCreationWizard_LoadPagesFailure, e);
-				}
+		
+		BasicPHPWizardPageExtended[] pages = PHPWizardPagesRegistry.getPages(ID); 
+		if (pages != null) {
+			for (int i = 0; i < pages.length; ++i) {
+				addPage(pages[i]);
+				wizardPagesList.add(pages[i]);
 			}
 		}
 	}

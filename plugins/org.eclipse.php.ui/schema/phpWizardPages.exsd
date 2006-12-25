@@ -3,10 +3,10 @@
 <schema targetNamespace="org.eclipse.php.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.ui" id="phpWizardPages" name="phpWizardPages"/>
+         <meta.schema plugin="org.eclipse.php.ui" id="phpWizardPages" name="PHP Wizard Page"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point is used for providing additional pages to PHP wizards.
       </documentation>
    </annotation>
 
@@ -47,28 +47,28 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Id of this PHP wizard page.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Human readable name of this PHP Wizard page.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="wizardName" type="string" use="required">
+         <attribute name="targetId" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Wizard ID to whom this page is contributed.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Class of this PHP Wizard Page (must extend &lt;code&gt;org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended&lt;/code&gt;).
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended"/>
@@ -92,7 +92,19 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;p&gt;
+The following example will add &quot;My Wizard Page&quot; to the PHP project creation wizard:
+
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.php.ui.phpWizardPages&quot;&gt;
+    &lt;page
+        class=&quot;test.MyWizardPage&quot;
+        id=&quot;test.MyWizardPage&quot;
+        name=&quot;My Wizard Page&quot;
+        targetId=&quot;org.eclipse.php.project.ui.wizards.PHPProjectCreationWizard&quot;/&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -101,7 +113,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         PHP Wizard page must extend class &lt;code&gt;org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended&lt;/code&gt;. Wizard must use &lt;code&gt;PHPWizardPagesRegistry&lt;/code&gt; in order to retrieve all contributed pages.
       </documentation>
    </annotation>
 
@@ -110,7 +122,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         No supplied implementation at this point.
       </documentation>
    </annotation>
 

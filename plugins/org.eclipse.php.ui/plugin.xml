@@ -8,11 +8,11 @@
 	<extension-point id="phpTreeContentProviders" name="PHP Tree Content Provider" schema="schema/phpTreeContentProviders.exsd"/>
 	<extension-point id="phpManualSites" name="PHP Manual URL" schema="schema/phpManualSites.exsd"/>
 	<extension-point id="phpManualDirectors" name="PHP Manual Director" schema="schema/phpManualDirectors.exsd"/>
-	<extension-point id="phpContentAssistProcessor" name="phpContentAssistProcessor" schema="schema/phpContentAssistProcessor.exsd"/>
-	<extension-point id="phpHyperlinkDetector" name="phpHyperlinkDetector" schema="schema/phpHyperlinkDetector.exsd"/>
+	<extension-point id="phpContentAssistProcessor" name="PHP Content Assist Processor" schema="schema/phpContentAssistProcessor.exsd"/>
+	<extension-point id="phpHyperlinkDetector" name="PHP Hyperlink Detector" schema="schema/phpHyperlinkDetector.exsd"/>
 	<extension-point id="phpOutlineElementComparers" name="PHP Outline Element Comparer" schema="schema/phpOutlineElementComparers.exsd"/>
 	<extension-point id="actionFilterContributors" name="PHP Action Filter Contributor" schema="schema/actionFilterContributors.exsd"/>
- 	<extension-point id="phpWizardPages" name="phpWizardPages" schema="schema/phpWizardPages.exsd"/>
+ 	<extension-point id="phpWizardPages" name="PHP Wizard Page" schema="schema/phpWizardPages.exsd"/>
  	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlock.exsd"/>
 
 	<!--extension point="org.eclipse.ui.editors.documentProviders"> 
