@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.php.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.core" id="workspaceModelListener" name="workspaceModelListener"/>
+         <meta.schema plugin="org.eclipse.php.core" id="workspaceModelListener" name="Workspace Model Listener"/>
       </appInfo>
       <documentation>
          This extension point allows to provide listener which will recieve event when PHP workspace model was changed.&lt;br&gt;

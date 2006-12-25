@@ -97,7 +97,7 @@
 &lt;/extension&gt;
 &lt;/pre&gt;
 
-test.PearLibsVariableInitializer must implement org.eclipse.php.core.IIncludePathVariableInitializer, and implement abstract method
+test.PearLibsVariableInitializer must implement org.eclipse.php.core.IIncludePathVariableInitializer, and override abstract method
 initialize(String variable), where PEAR_LIBS must be resolved.
 &lt;/p&gt;
       </documentation>
