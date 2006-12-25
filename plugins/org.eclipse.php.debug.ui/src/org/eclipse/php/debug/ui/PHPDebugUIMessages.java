@@ -72,6 +72,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPsPreferencePage_10;
 	public static String PHPsPreferencePage_11;
 	public static String PHPsPreferencePage_13;
+	public static String PHPsPreferencePage_WorkspaceDefault;
 
 	public static String InstalledPHPsBlock_0;
 	public static String InstalledPHPsBlock_1;

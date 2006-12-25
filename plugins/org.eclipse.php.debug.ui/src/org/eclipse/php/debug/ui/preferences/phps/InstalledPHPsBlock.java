@@ -25,8 +25,10 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
@@ -49,12 +51,10 @@ import org.eclipse.swt.widgets.*;
  * when the checked PHP in the table changes, or when the "use default" button
  * check state changes.
  * </p>
- */
-/**
- * @author seva
+ * @author seva, shalom
  *
  */
-public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelectionProvider {
+public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 
 	/** 
 	 * Content provider to show a list of PHPs
@@ -76,7 +76,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 	/**
 	 * Label provider for installed PHPs table.
 	 */
-	class VMLabelProvider extends LabelProvider implements ITableLabelProvider {
+	class PHPExeLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
 
 		/**
 		 * @see ITableLabelProvider#getColumnImage(Object, int)
@@ -93,12 +93,26 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 				final PHPexeItem phpExe = (PHPexeItem) element;
 				switch (columnIndex) {
 					case 0:
+						if (isDefault(element)) {
+							return phpExe.getName() + PHPDebugUIMessages.PHPsPreferencePage_WorkspaceDefault;
+						}
 						return phpExe.getName();
 					case 1:
 						return phpExe.getLocation().getAbsolutePath();
 				}
 			}
 			return element.toString();
+		}
+
+		public Font getFont(Object element) {
+			if (isDefault(element)) {
+				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
+			}
+			return null;
+		}
+
+		private boolean isDefault(Object element) {
+			return element == phpExes.getDefaultItem();
 		}
 
 	}
@@ -114,16 +128,12 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 	/**
 	 * The main list control
 	 */
-	private CheckboxTableViewer fPHPExeList;
+	private TableViewer fPHPExeList;
 	/**
 	 * VMs being displayed
 	 */
 	private final List fPHPexes = new ArrayList();
 
-	/**
-	 * Previous selection
-	 */
-	private ISelection fPrevSelection = new StructuredSelection();
 	private Button fRemoveButton;
 
 	// ignore column re-sizing when the table is being resized
@@ -226,7 +236,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 		tableLabel.setLayoutData(data);
 		tableLabel.setFont(font);
 
-		final Table table = new Table(parent, SWT.CHECK | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
+		final Table table = new Table(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 
 		data = new GridData(GridData.FILL_BOTH);
 		table.setLayoutData(data);
@@ -255,7 +265,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 		});
 
 		fPHPExeList = new CheckboxTableViewer(table);
-		fPHPExeList.setLabelProvider(new VMLabelProvider());
+		fPHPExeList.setLabelProvider(new PHPExeLabelProvider());
 		fPHPExeList.setContentProvider(new PHPsContentProvider());
 		// by default, sort by name
 		sortByName();
@@ -263,15 +273,6 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 		fPHPExeList.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(final SelectionChangedEvent evt) {
 				enableButtons();
-			}
-		});
-
-		fPHPExeList.addCheckStateListener(new ICheckStateListener() {
-			public void checkStateChanged(final CheckStateChangedEvent event) {
-				if (event.getChecked())
-					setCheckedPHP((PHPexeItem) event.getElement());
-				else
-					setCheckedPHP(null);
 			}
 		});
 
@@ -372,30 +373,6 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 		setPHPs(items);
 	}
 
-	/**
-	 * Fire current selection
-	 */
-	private void fireSelectionChanged() {
-		final SelectionChangedEvent event = new SelectionChangedEvent(this, getSelection());
-		final Object[] listeners = fSelectionListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			final ISelectionChangedListener listener = (ISelectionChangedListener) listeners[i];
-			listener.selectionChanged(event);
-		}
-	}
-
-	/**
-	 * Returns the checked PHP or <code>null</code> if none.
-	 * 
-	 * @return the checked PHP or <code>null</code> if none
-	 */
-	public PHPexeItem getCheckedPHP() {
-		final Object[] objects = fPHPExeList.getCheckedElements();
-		if (objects.length == 0)
-			return null;
-		return (PHPexeItem) objects[0];
-	}
-
 	private float getColumnWeight(final int col) {
 		final Table table = fPHPExeList.getTable();
 		final int tableWidth = table.getSize().x;
@@ -423,13 +400,6 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 		return (PHPexeItem[]) fPHPexes.toArray(new PHPexeItem[fPHPexes.size()]);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-	 */
-	public ISelection getSelection() {
-		return new StructuredSelection(fPHPExeList.getCheckedElements());
-	}
-
 	protected Shell getShell() {
 		return getControl().getShell();
 	}
@@ -452,8 +422,6 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 	public void phpExeAdded(final PHPexeItem phpExe) {
 		fPHPexes.add(phpExe);
 		fPHPExeList.refresh();
-		if (fPHPexes.size() == 1)
-			setCheckedPHP(phpExe);
 	}
 
 	private void removePHPexes() {
@@ -470,27 +438,16 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 	}
 
 	public void commitChanges() {
-		phpExes.setDefaultItem(getCheckedPHP());
-		Preferences prefs = PHPDebugUIPlugin.getDefault().getPluginPreferences();
+		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		phpExes.store(prefs);
 	}
 
 	public void removePHPs(final PHPexeItem[] phpExes) {
-		final IStructuredSelection prev = (IStructuredSelection) getSelection();
 		for (int i = 0; i < phpExes.length; i++) {
 			fPHPexes.remove(phpExes[i]);
 			this.phpExes.removeItem(phpExes[i]);
 		}
 		fPHPExeList.refresh();
-		final IStructuredSelection curr = (IStructuredSelection) getSelection();
-		if (!curr.equals(prev)) {
-			final PHPexeItem[] installs = getPHPs();
-			if (curr.size() == 0 && installs.length == 1)
-				// pick a default VM automatically
-				setSelection(new StructuredSelection(installs[0]));
-			else
-				fireSelectionChanged();
-		}
 	}
 
 	/* (non-Javadoc)
@@ -712,18 +669,6 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 	}
 
 	/**
-	 * Sets the checked PHP, possible <code>null</code>
-	 * 
-	 * @param vm PHP or <code>null</code>
-	 */
-	public void setCheckedPHP(final PHPexeItem vm) {
-		if (vm == null)
-			setSelection(new StructuredSelection());
-		else
-			setSelection(new StructuredSelection(vm));
-	}
-
-	/**
 	 * Sets the PHPs to be displayed in this block
 	 * 
 	 * @param phpExes PHPs to be displayed
@@ -734,24 +679,6 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor, ISelection
 			fPHPexes.add(phpExes[i]);
 		fPHPExeList.setInput(fPHPexes);
 		fPHPExeList.refresh();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-	 */
-	public void setSelection(final ISelection selection) {
-		if (selection instanceof IStructuredSelection)
-			if (!selection.equals(fPrevSelection)) {
-				fPrevSelection = selection;
-				final Object jre = ((IStructuredSelection) selection).getFirstElement();
-				if (jre == null)
-					fPHPExeList.setCheckedElements(new Object[0]);
-				else {
-					fPHPExeList.setCheckedElements(new Object[] { jre });
-					fPHPExeList.reveal(jre);
-				}
-				fireSelectionChanged();
-			}
 	}
 
 	/**

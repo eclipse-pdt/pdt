@@ -125,7 +125,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	private void loadPHPExes(Combo combo) {
 		combo.removeAll();
 		PHPexes exes = new PHPexes();
-		exes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
+		exes.load(PHPProjectPreferences.getModelPreferences());
 		PHPexeItem[] phps = exes.getItems();
 		if (phps != null) {
 			for (int i = 0; i < phps.length; i++) {
@@ -207,19 +207,32 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	}
 
 	private void savePreferences(boolean isProjectSpecific) {
+		String phpExe = fDefaultPHPExe.getText();
+		// Check if it's still valide, since this method can be called after removing a php executable from another preferences page (PHP Executables)
+		PHPexes exes = new PHPexes();
+		exes.load(PHPProjectPreferences.getModelPreferences());
+		if (exes.getItem(phpExe) == null) {
+			PHPexeItem item = exes.getDefaultItem();
+			if (item != null) {
+				phpExe = item.getName();
+			} else {
+				phpExe = "";
+			}
+		}
+		// TODO - Might do the same for the default server
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		IScopeContext[] preferenceScopes = createPreferenceScopes(propertyPage);
 		IEclipsePreferences debugUINode = preferenceScopes[0].getNode(getPreferenceNodeQualifier());
 		IProject project = getProject(propertyPage);
 		if (isProjectSpecific && debugUINode != null && preferenceScopes[0] instanceof ProjectScope && project != null) {
 			debugUINode.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
-			debugUINode.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, fDefaultPHPExe.getText());
+			debugUINode.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
 			debugUINode.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fEncodingSettings.getIANATag());
 			ServersManager.setDefaultServer(project, fDefaultServer.getText());
 		} else {
 			if (project == null) {
 				prefs.setValue(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
-				prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP, fDefaultPHPExe.getText());
+				prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
 				prefs.setValue(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fEncodingSettings.getIANATag());
 				ServersManager.setDefaultServer(null, fDefaultServer.getText());
 			} else {

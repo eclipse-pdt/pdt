@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
@@ -308,7 +309,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	public PHPexes getPHPs(final boolean load) {
 		if (exes == null || load) {
 			exes = new PHPexes();
-			exes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
+			exes.load(PHPProjectPreferences.getModelPreferences());
 		}
 		return exes;
 	}

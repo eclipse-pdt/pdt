@@ -107,7 +107,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 				String defaultPHPExe = getDefaultPHPExe(project);
 				PHPexes exes = new PHPexes();
-				exes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
+				exes.load(PHPProjectPreferences.getModelPreferences());
 				PHPexeItem defaultEXE = exes.getItem(defaultPHPExe);
 				if (defaultEXE == null) {
 					defaultEXE = exes.getDefaultItem();

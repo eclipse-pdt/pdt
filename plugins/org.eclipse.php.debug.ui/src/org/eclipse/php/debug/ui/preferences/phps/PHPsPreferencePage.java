@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
@@ -35,7 +36,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkbenchPreferencePage {
 
-	public static String ID="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage";
+	public static String ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage";
 	// PHP Block
 	private InstalledPHPsBlock fPHPBlock;
 
@@ -57,9 +58,9 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 	}
 
 	protected Preferences getModelPreferences() {
-		return PHPDebugUIPlugin.getDefault().getPluginPreferences();
+		return PHPProjectPreferences.getModelPreferences();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
@@ -117,26 +118,14 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 
 	private void verifyDefaultPHP(PHPexeItem php) {
 		if (php != null) {
-
 			boolean exist = php.getLocation().exists();
-
 			// If all library locations exist, check the corresponding entry in the list,
-			// otherwise remove the VM
-			if (exist) {
-				fPHPBlock.setCheckedPHP(php);
-			} else {
+			// otherwise remove the PHP setting
+			if (!exist) {
 				fPHPBlock.removePHPs(new PHPexeItem[] { php });
-				PHPexeItem def = phpExes.getDefaultItem();
-				if (def == null) {
-					fPHPBlock.setCheckedPHP(null);
-				} else {
-					fPHPBlock.setCheckedPHP(def);
-				}
 				ErrorDialog.openError(getControl().getShell(), PHPDebugUIMessages.PHPsPreferencePage_1, PHPDebugUIMessages.PHPsPreferencePage_10, new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, PHPDebugUIPlugin.INTERNAL_ERROR, PHPDebugUIMessages.PHPsPreferencePage_11, null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				return;
 			}
-		} else {
-			fPHPBlock.setCheckedPHP(null);
 		}
 	}
 

@@ -29,6 +29,7 @@ import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.Logger;
@@ -420,7 +421,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			String location = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, ""); //$NON-NLS-1$
 			if (location.equals("")) {
 				final PHPexes phpExes = new PHPexes();
-				phpExes.load(PHPDebugUIPlugin.getDefault().getPluginPreferences());
+				phpExes.load(PHPProjectPreferences.getModelPreferences());
 				final PHPexeItem phpExeItem = phpExes.getDefaultItem();
 				if (phpExeItem == null)
 					return;
