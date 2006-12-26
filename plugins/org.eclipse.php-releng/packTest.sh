@@ -1,5 +1,7 @@
 #!/bin/sh
 
+mkdir ../src
+
 #dos2unix 
 dos2unix buildall.sh 
 
@@ -12,4 +14,3 @@ chmod +x ../src/*
 dos2unix ../src/runtests
 
 ../src/runtests -ws gtk -os linux -arch ppc >>../src/log
-
