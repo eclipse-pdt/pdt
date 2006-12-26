@@ -41,6 +41,9 @@ rsyncPWFile=""
 # NOTEST flags
 notest=""
 
+#platform specific parameters
+platformParams=""
+
 # CVS Flags
 cvsuser=
 
@@ -80,6 +83,10 @@ while [ "$#" -gt 0 ] ; do
                		rsyncPWFile="-DrsyncPWFile=$2"
                		shift 1
 	        	;;
+                '-platform')
+               		platformParams="$2"
+               		shift 1
+	        	;;
                 '-notest')
                 		notest="-Dnotest=true"
                 	;;
@@ -117,5 +124,5 @@ if [ ! -r ../org.eclipse.releng.basebuilder ]
     mv org.eclipse.releng.basebuilder ../
 fi
 
-$vm/bin/java -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm
+$vm/bin/java -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm $platformParams
 #rm -rf ../org.eclipse.releng.basebuilder
