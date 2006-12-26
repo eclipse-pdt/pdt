@@ -202,13 +202,6 @@
 
 		<delete dir="${workingDirectory}/eclipse" includeEmptyDirs="true" />
 
-		<!-- TODO Copy javadoc logs to the testing directory for use by relEng tests
-		<copy file="${buildDirectory}/plugins/org.eclipse.platform.doc.isv/doc.bin.log" tofile="${workingDirectory}/phpide-testing/org.eclipse.platform.doc.isv.javadoc.txt" failonerror="false" />
-		<copy file="${buildDirectory}/plugins/org.eclipse.jdt.doc.isv/doc.bin.log" tofile="${workingDirectory}/phpide-testing/org.eclipse.jdt.doc.isv.javadoc.txt" failonerror="false" />
-		<copy file="${buildDirectory}/plugins/org.eclipse.jdt.doc.isv/jdtapt.doc.bin.log" tofile="${workingDirectory}/phpide-testing/org.eclipse.jdt.apt.javadoc.txt" failonerror="false" />
-		<copy file="${buildDirectory}/plugins/org.eclipse.pde.doc.user/doc.bin.log" tofile="${workingDirectory}/phpide-testing/org.eclipse.pde.doc.user.javadoc.txt" failonerror="false" />
-		-->
-
 		<!--Copy scripts and doc used in the automated testing to the testing directory-->
 		<copy todir="${workingDirectory}/phpide-testing">
 			<fileset dir="${builderDirectory}/testScripts" />
@@ -218,11 +211,6 @@
 		<copy todir="${buildDirectory}/../">
 			<fileset dir="${workingDirectory}/phpide-testing" />
 		</copy>
-
-		<!-- convert runtests.bat files to unix just in case
-		<exec executable="unix2dos" dir="${workingDirectory}/phpide-testing">
-			<arg line="runtests.bat" />
-		</exec> -->
 
 		<!-- convert runtestsfiles to dos just in case -->
 		<exec executable="dos2unix" dir="${workingDirectory}/phpide-testing">
@@ -246,6 +234,17 @@
 		<echo message="${md5} *eclipse-Automated-Tests-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/phpide-Automated-Tests-${buildId}.zip.md5" />
 		<echo message="${sha} *eclipse-Automated-Tests-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/phpide-Automated-Tests-${buildId}.zip.sha1" />
 		<delete file="${buildDirectory}/${buildLabel}/phpide-junit-tests-${buildId}.zip" />
+
+		<!-- Create symblink to the @dot package-->
+		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php/bin" />
+		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.core/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.core/bin" />
+		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.daemon/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.daemon/bin" />
+		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.ui/bin" />
+		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.help/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.help/bin" />
+		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.core/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.core/bin" />
+		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.ui/bin" />
+		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.test/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.test/bin" />
+		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.ui/bin" />
 	</target>
 
 	<!-- ===================================================================== -->
