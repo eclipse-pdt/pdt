@@ -34,7 +34,6 @@ import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
-import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.debug.ui.preferences.phps.PHPexeDescriptor;
 import org.eclipse.php.debug.ui.preferences.phps.PHPsComboBlock;
 import org.eclipse.php.server.ui.ServerUtilities;
@@ -49,6 +48,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+/**
+ * PHP executable launch tab is a launch configuration tab for the PHP Script launching. 
+ */
 public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	static private class ControlAccessibleListener extends AccessibleAdapter {
 		private String controlName;
@@ -243,7 +245,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	protected void createLocationComponent(final Composite parent) {
 
 		//		phpsComboBlock.setDefaultPHPexeDescriptor(getDefaultPHPexeDescriptor());
-		phpsComboBlock.setSpecificPHPexeDescriptor(getSpecificPHPexeDescriptor());
+//		phpsComboBlock.setSpecificPHPexeDescriptor(getSpecificPHPexeDescriptor());
 		phpsComboBlock.createControl(parent);
 		final Control control = phpsComboBlock.getControl();
 		phpsComboBlock.addSelectionChangedListener(fCheckListener);

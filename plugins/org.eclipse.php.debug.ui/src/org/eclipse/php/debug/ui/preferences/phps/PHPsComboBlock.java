@@ -10,41 +10,23 @@
  *******************************************************************************/
 package org.eclipse.php.debug.ui.preferences.phps;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.debug.internal.ui.SWTUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.debug.core.preferences.PHPexes;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
-import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
-import org.eclipse.php.debug.ui.actions.ControlAccessibleListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 
 /**
  * A composite that displays installed PHP's in a combo box, with a 'manage...'
@@ -70,17 +52,9 @@ public class PHPsComboBlock implements ISelectionProvider {
 	private Composite fControl;
 
 	/**
-	 * Default PHPexe radio button or <code>null</code> if none
-	 */
-	private Button fDefaultButton = null;
-
-	/**
 	 * Default PHP descriptor or <code>null</code> if none.
 	 */
 	private PHPexeDescriptor fDefaultDescriptor = null;
-
-	// Action buttons
-	private Button fManageButton;
 
 	/**
 	 * Previous selection
@@ -93,16 +67,6 @@ public class PHPsComboBlock implements ISelectionProvider {
 	private final ListenerList fSelectionListeners = new ListenerList();
 
 	/**
-	 * Selected PHPexe radio button
-	 */
-	private Button fSpecificButton = null;
-
-	/**
-	 * Specific PHPexe descriptor or <code>null</code> if none.
-	 */
-	private PHPexeDescriptor fSpecificDescriptor = null;
-
-	/**
 	 * The title used for the PHPexe block
 	 */
 	private String fTitle = null;
@@ -110,16 +74,15 @@ public class PHPsComboBlock implements ISelectionProvider {
 	/**
 	 * VMs being displayed
 	 */
-	private final List fVMs = new ArrayList();
+	private final List phpExecutables = new ArrayList();
 
 	public PHPsComboBlock() {
 		fDefaultDescriptor = new PHPexeDescriptor() {
-
 			public String getDescription() {
 				final PHPexeItem def = getPHPs(true).getDefaultItem();
 				if (def != null)
 					return def.getName() + " (" + def.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-				return "no php exes defined"; //$NON-NLS-1$
+				return "No PHP exes defined"; //$NON-NLS-1$
 			}
 		};
 	}
@@ -138,102 +101,44 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	public void createControl(final Composite ancestor) {
 		final Font font = ancestor.getFont();
-		final Composite comp = new Composite(ancestor, SWT.NONE);
+		final Group group = new Group(ancestor, SWT.NULL);
 		GridLayout layout = new GridLayout();
-		comp.setLayout(new GridLayout());
-		comp.setLayoutData(new GridData(GridData.FILL_BOTH));
-		fControl = comp;
-		comp.setFont(font);
-
-		final Group group = new Group(comp, SWT.NULL);
-		layout = new GridLayout();
 		layout.numColumns = 3;
 		group.setLayout(layout);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		group.setFont(font);
+		fControl = group;
 
 		GridData data;
-
 		if (fTitle == null)
 			fTitle = PHPDebugUIMessages.PHPexesComboBlock_3;
 		group.setText(fTitle);
 
-		// display a 'use default PHPexe' check box
-		if (fDefaultDescriptor != null) {
-			fDefaultButton = new Button(group, SWT.RADIO);
-			fDefaultButton.setText(fDefaultDescriptor.getDescription());
-			fDefaultButton.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(final SelectionEvent e) {
-					if (fDefaultButton.getSelection())
-						setUseDefaultPHPexe();
-				}
-			});
-			data = new GridData(GridData.FILL_HORIZONTAL);
-			data.horizontalSpan = 3;
-			fDefaultButton.setLayoutData(data);
-			fDefaultButton.setFont(font);
-		}
-
-		fSpecificButton = new Button(group, SWT.RADIO);
-		if (fSpecificDescriptor != null)
-			fSpecificButton.setText(fSpecificDescriptor.getDescription());
-		else
-			fSpecificButton.setText(PHPDebugUIMessages.PHPexesComboBlock_1);
-		fSpecificButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent e) {
-				if (fSpecificButton.getSelection()) {
-					fCombo.setEnabled(true);
-					fManageButton.setEnabled(true);
-					if (fCombo.getText().length() == 0 && !fVMs.isEmpty())
-						fCombo.select(0);
-					fireSelectionChanged();
-				}
-			}
-		});
-		fSpecificButton.setFont(font);
-		data = new GridData(GridData.BEGINNING);
-		fSpecificButton.setLayoutData(data);
-
 		fCombo = new Combo(group, SWT.DROP_DOWN | SWT.READ_ONLY);
 		fCombo.setFont(font);
 		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 1;
+		data.horizontalSpan = 2;
 		fCombo.setLayoutData(data);
-		ControlAccessibleListener.addListener(fCombo, fSpecificButton.getText());
-
 		fCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				setPHPexe(getPHPexe());
 			}
 		});
 
-		fManageButton = createPushButton(group, PHPDebugUIMessages.PHPexesComboBlock_2);
-		fManageButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(final Event event) {
-				final PHPexeItem oldSelection = getPHPexe();
-
-				int oldIndex = -1;
-				if (oldSelection != null)
-					oldIndex = fVMs.indexOf(oldSelection);
-				final ShowPHPsPreferences showPrefs = new ShowPHPsPreferences();
-				showPrefs.run(null);
-
+		Link link = new Link(group, SWT.NONE);
+		link.setFont(font);
+		data = new GridData(SWT.BEGINNING, SWT.BOTTOM, true, false);
+		data.horizontalSpan = 1;
+		link.setLayoutData(data);
+		link.setText(PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink);
+		link.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				PHPexeItem selected = getPHPexe();
+				new ShowPHPsPreferences().run(null);
 				fillWithWorkspacePHPexes();
-				int newIndex = -1;
-				if (oldSelection != null)
-					newIndex = fVMs.indexOf(oldSelection);
-				if (newIndex != oldIndex)
-					// clear the old selection so that a selection changed is fired
-					fPrevSelection = null;
-				// update text
-				setDefaultPHPexeDescriptor(fDefaultDescriptor);
-				if (isDefaultPHPexe())
-					// reset in case default has changed
-					setUseDefaultPHPexe();
-				else {
-					if (fCombo != null)
-						fCombo.select(fCombo.indexOf(fDefaultDescriptor.getDescription()));
-					setPHPexe(getPHPexe());
+				if (phpExecutables.contains(selected)) {
+					String name = selected.getName() + " (" + selected.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					fCombo.select(fCombo.indexOf(name));
 				}
 			}
 		});
@@ -243,10 +148,6 @@ public class PHPsComboBlock implements ISelectionProvider {
 			new ShowPHPsPreferences().run(null);
 		}
 		fillWithWorkspacePHPexes();
-	}
-
-	protected Button createPushButton(final Composite parent, final String label) {
-		return SWTUtil.createPushButton(parent, label, null);
 	}
 
 	/**
@@ -293,7 +194,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	public PHPexeItem getPHPexe() {
 		final int index = fCombo.getSelectionIndex();
 		if (index >= 0)
-			return (PHPexeItem) fVMs.get(index);
+			return (PHPexeItem) phpExecutables.get(index);
 		return null;
 	}
 
@@ -303,7 +204,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 * @return PHPexes currently being displayed in this block
 	 */
 	public PHPexeItem[] getPHPexes() {
-		return (PHPexeItem[]) fVMs.toArray(new PHPexeItem[fVMs.size()]);
+		return (PHPexeItem[]) phpExecutables.toArray(new PHPexeItem[phpExecutables.size()]);
 	}
 
 	public PHPexes getPHPs(final boolean load) {
@@ -315,12 +216,6 @@ public class PHPsComboBlock implements ISelectionProvider {
 	}
 
 	public String getSelectedLocation() {
-		if (fDefaultButton.getSelection()) {
-			final PHPexeItem defaultItem = getPHPs(false).getDefaultItem();
-			if (defaultItem == null)
-				return null;
-			return defaultItem.getPhpEXE().toString();
-		}
 		final PHPexeItem item = getPHPexe();
 		if (item != null)
 			return item.getPhpEXE().toString();
@@ -341,24 +236,6 @@ public class PHPsComboBlock implements ISelectionProvider {
 		return getControl().getShell();
 	}
 
-	/**
-	 * Returns whether the 'use default PHPexe' button is checked.
-	 * 
-	 * @return whether the 'use default PHPexe' button is checked
-	 */
-	public boolean isDefaultPHPexe() {
-		if (fDefaultButton != null)
-			return fDefaultButton.getSelection();
-		return false;
-	}
-
-	/**
-	 * Refresh the default PHPexe description.
-	 */
-	public void refresh() {
-		setDefaultPHPexeDescriptor(fDefaultDescriptor);
-	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
 	 */
@@ -366,45 +243,16 @@ public class PHPsComboBlock implements ISelectionProvider {
 		fSelectionListeners.remove(listener);
 	}
 
-	private void setButtonTextFromDescriptor(final Button button, final PHPexeDescriptor descriptor) {
-		if (button != null) {
-			//update the description & PHPexe in case it has changed
-			final String currentText = button.getText();
-			final String newText = descriptor.getDescription();
-			if (!newText.equals(currentText)) {
-				button.setText(newText);
-				fControl.layout();
-			}
-		}
-	}
-
-	/**
-	 * Sets the Default PHPexe Descriptor for this block.
-	 * 
-	 * @param descriptor default PHPexe descriptor
-	 */
-	public void setDefaultPHPexeDescriptor(final PHPexeDescriptor descriptor) {
-		fDefaultDescriptor = descriptor;
-		setButtonTextFromDescriptor(fDefaultButton, descriptor);
-	}
-
 	/**
 	 * Sets the selected PHPexe, or <code>null</code>
 	 * 
 	 * @param vm PHPexe or <code>null</code>
 	 */
-	public void setPHPexe(final PHPexeItem vm) {
-		if (vm == null || vm != getPHPs(false).getDefaultItem()) {
-			fSpecificButton.setSelection(true);
-			fDefaultButton.setSelection(false);
-			fCombo.setEnabled(true);
-			fManageButton.setEnabled(true);
-			if (vm == null)
-				setSelection(new StructuredSelection());
-			else
-				setSelection(new StructuredSelection(vm));
-		} else
-			setUseDefaultPHPexe();
+	public void setPHPexe(final PHPexeItem item) {
+		if (item == null)
+			setSelection(new StructuredSelection());
+		else
+			setSelection(new StructuredSelection(item));
 	}
 
 	/**
@@ -412,11 +260,11 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 * 
 	 * @param vms PHPexes to be displayed
 	 */
-	protected void setPHPexes(final List jres) {
-		fVMs.clear();
-		fVMs.addAll(jres);
+	protected void setPHPexes(final List phps) {
+		phpExecutables.clear();
+		phpExecutables.addAll(phps);
 		// sort by name
-		Collections.sort(fVMs, new Comparator() {
+		Collections.sort(phpExecutables, new Comparator() {
 			public int compare(final Object o1, final Object o2) {
 				final PHPexeItem left = (PHPexeItem) o1;
 				final PHPexeItem right = (PHPexeItem) o2;
@@ -428,15 +276,25 @@ public class PHPsComboBlock implements ISelectionProvider {
 			}
 		});
 		// now make an array of names
-		final String[] names = new String[fVMs.size()];
-		final Iterator iter = fVMs.iterator();
+		final String[] names = new String[phpExecutables.size()];
+		final Iterator iter = phpExecutables.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
-			final PHPexeItem vm = (PHPexeItem) iter.next();
-			names[i] = vm.getName() + " (" + vm.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			final PHPexeItem item = (PHPexeItem) iter.next();
+			names[i] = item.getName() + " (" + item.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+
 			i++;
 		}
 		fCombo.setItems(names);
+		PHPexes exes = getPHPs(false);
+		if (exes == null) {
+			exes = getPHPs(true);
+		}
+		PHPexeItem defaultExe = exes.getDefaultItem();
+		if (defaultExe != null) {
+			String defaultName = defaultExe.getName() + " (" + defaultExe.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			fCombo.select(fCombo.indexOf(defaultName));
+		}
 	}
 
 	/* (non-Javadoc)
@@ -454,22 +312,12 @@ public class PHPsComboBlock implements ISelectionProvider {
 					fillWithWorkspacePHPexes();
 				} else {
 					final Object jre = ((IStructuredSelection) selection).getFirstElement();
-					final int index = fVMs.indexOf(jre);
+					final int index = phpExecutables.indexOf(jre);
 					if (index >= 0)
 						fCombo.select(index);
 				}
 				fireSelectionChanged();
 			}
-	}
-
-	/**
-	 * Sets the specific PHPexe Descriptor for this block.
-	 * 
-	 * @param descriptor specific PHPexe descriptor
-	 */
-	public void setSpecificPHPexeDescriptor(final PHPexeDescriptor descriptor) {
-		fSpecificDescriptor = descriptor;
-		setButtonTextFromDescriptor(fSpecificButton, descriptor);
 	}
 
 	/**
@@ -486,10 +334,6 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	public void setUseDefaultPHPexe() {
 		if (fDefaultDescriptor != null && fControl != null) {
-			fDefaultButton.setSelection(true);
-			fSpecificButton.setSelection(false);
-			fCombo.setEnabled(false);
-			fManageButton.setEnabled(false);
 			fPrevSelection = null;
 			fireSelectionChanged();
 		}
