@@ -236,15 +236,46 @@
 		<delete file="${buildDirectory}/${buildLabel}/phpide-junit-tests-${buildId}.zip" />
 
 		<!-- Create symblink to the @dot package-->
-		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php/bin" />
-		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.core/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.core/bin" />
-		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.daemon/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.daemon/bin" />
-		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.ui/bin" />
-		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.help/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.help/bin" />
-		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.core/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.core/bin" />
-		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.ui/bin" />
-		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.test/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.test/bin" />
-		<exec command="ln -s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.ui/bin" />
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php/bin" />
+		</exec>
+
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.core/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.core/bin" />
+		</exec>
+
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.daemon/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.daemon/bin" />
+		</exec>
+
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.debug.ui/bin" />
+		</exec>
+
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.help/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.help/bin" />
+		</exec>
+
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.core/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.core/bin" />
+		</exec>
+
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.server.ui/bin" />
+		</exec>
+
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.test/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.test/bin" />
+		</exec>
+
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.core/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.core/bin" />
+		</exec>
+		
+		<exec executable="ln">
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.ui/bin" />
+		</exec>
+
 	</target>
 
 	<!-- ===================================================================== -->
