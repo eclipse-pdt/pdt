@@ -6,11 +6,14 @@ mkdir ../src
 dos2unix buildall.sh 
 
 # operate build test target with nightly build 
-./buildall.sh -vm /shared/common/ibm-java2-ppc-50 -target buildTest -platform "-Dbaseos=linux -Dbasews=gtk -Dbasearch=ppc" N >../src/log
+./buildall.sh -vm /shared/common/ibm-java2-ppc-50 -target buildTest -platform "-Dbaseos=linux -Dbasews=gtk -Dbasearch=ppc" N 
 
-chmod +x ../src/*
+cd ../src
+
+chmod +x *
 
 #dos2unix 
-dos2unix ../src/runtests
+dos2unix runtests
 
-../src/runtests -ws gtk -os linux -arch ppc >>../src/log
+./runtests -ws gtk -os linux -arch ppc 
+

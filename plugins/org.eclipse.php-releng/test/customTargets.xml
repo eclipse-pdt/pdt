@@ -188,13 +188,6 @@
 		<!--the Ant move task leaves behind an empty directory-->
 		<delete dir="${workingDirectory}/eclipse/plugins/${org.eclipse.test}" includeEmptyDirs="true" />
 
-		<!--Copy scripts and doc used in the automated testing to the running test env.-->
-		<echo>src should be here- "${buildDirectory}/../"</echo>
-		<echo>working is "${workingDirectory}"</echo>
-		<copy todir="${buildDirectory}/../">
-			<fileset dir="${workingDirectory}" />
-		</copy>
-
 		<!-- rezip the JUnit plugin tests -->
 		<exec dir="${workingDirectory}" executable="zip">
 			<arg line="-r -q pdt-junit-tests-${buildId}.zip eclipse" />
@@ -207,17 +200,17 @@
 			<fileset dir="${builderDirectory}/testScripts" />
 		</copy>
 
-		<!--Copy scripts and doc used in the automated testing to the running test env.-->
-		<copy todir="${buildDirectory}/../">
-			<fileset dir="${workingDirectory}/pdt-testing" />
-		</copy>
-
 		<!-- convert runtestsfiles to dos just in case -->
 		<exec executable="dos2unix" dir="${workingDirectory}/pdt-testing">
 			<arg line="runtests" />
 		</exec>
 
 		<move file="${workingDirectory}/pdt-junit-tests-${buildId}.zip" todir="${workingDirectory}/pdt-testing" />
+
+		<!--Copy scripts and doc used in the automated testing to the running test env.-->
+		<copy todir="${buildDirectory}/../">
+			<fileset dir="${workingDirectory}/pdt-testing" />
+		</copy>
 
 		<!--set execute permission on *nix shell script-->
 		<chmod file="${workingDirectory}/pdt-testing/runtests" perm="755" />
@@ -271,7 +264,7 @@
 		<exec executable="ln">
 			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.core/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.core/bin" />
 		</exec>
-		
+
 		<exec executable="ln">
 			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.ui/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.ui/bin" />
 		</exec>
