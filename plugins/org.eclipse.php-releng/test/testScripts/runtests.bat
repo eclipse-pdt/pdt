@@ -25,7 +25,7 @@ REM
 REM Install Eclipse if it does not exist
 REM
 REM ****************************************************************
-if NOT EXIST eclipse unzip -qq -o -C phpide-*.zip */plugins/org.eclipse.test* */startup.jar
+if NOT EXIST eclipse unzip -qq -o -C pdt-*.zip */plugins/org.eclipse.test* */startup.jar
 
 
 :processcmdlineargs
