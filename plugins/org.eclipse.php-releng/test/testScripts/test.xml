@@ -25,7 +25,7 @@
 	<target name="junit">
 		<property name="derby" value="" />
 		<ant antfile="${eclipse-home}/plugins/${testPlugin}/test.xml" dir="." />
-		<copy file="${report}.xml" tofile="${results}/xml/${report}_${platform}.xml" failonerror="false" />
+		<copy file="TEST-*.xml" tofile="${results}/xml/${report}_${platform}.xml" failonerror="false" />
 		<antcall target="genHtml" />
 	</target>
 
