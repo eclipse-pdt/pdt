@@ -65,6 +65,8 @@ public final class ParserExecuter implements Runnable {
 
 		} catch (Exception e) {
 			Logger.logException(e);
+			System.err.println(filename);
+			System.out.println(filename);			
 
 		} finally {
 
