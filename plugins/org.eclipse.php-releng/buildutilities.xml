@@ -258,6 +258,7 @@
 		</antcall>
 		<antcall target="pack-all-in-one-zip">
 		</antcall>
+		<delete dir="${buildDirectory}/${buildLabel}/temp" failonerror="false" />
 	</target>
 
 	<target name="pack-all-in-one-tar" if="istar">
