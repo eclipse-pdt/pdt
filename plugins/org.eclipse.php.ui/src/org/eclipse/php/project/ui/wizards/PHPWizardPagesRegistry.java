@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended;
+import org.eclipse.jface.wizard.IWizardPage;
 
 public class PHPWizardPagesRegistry {
 
@@ -41,9 +41,9 @@ public class PHPWizardPagesRegistry {
 	/**
 	 * Returns all pages contributed to the Wizard with specified ID through extension point <code>org.eclipse.php.ui.phpWizardPages</code>. 
 	 * @param id Wizard id
-	 * @return Array of {@link BasicPHPWizardPageExtended} pages, or <code>null</code> if no pages where contributed.
+	 * @return Array of {@link IWizardPage} pages, or <code>null</code> if no pages where contributed.
 	 */
-	public static BasicPHPWizardPageExtended[] getPages(String id) {
+	public static IWizardPage[] getPages(String id) {
 		final List elementsList = (List) instance.pages.get(id);
 		if (elementsList != null) {
 			final List pagesList = new LinkedList();
@@ -56,7 +56,7 @@ public class PHPWizardPagesRegistry {
 					}
 				}
 			});
-			return (BasicPHPWizardPageExtended[]) pagesList.toArray(new BasicPHPWizardPageExtended[pagesList.size()]);
+			return (IWizardPage[]) pagesList.toArray(new IWizardPage[pagesList.size()]);
 		}
 		return null;
 	}

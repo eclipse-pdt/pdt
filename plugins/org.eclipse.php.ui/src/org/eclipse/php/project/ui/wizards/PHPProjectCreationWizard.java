@@ -19,13 +19,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.PHPCorePlugin;
 import org.eclipse.php.project.ui.wizards.operations.PHPCreationDataModelProvider;
 import org.eclipse.php.ui.util.PHPPluginImages;
-import org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
@@ -68,7 +68,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 		addPage(basePage = new PHPProjectWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
 		addPage(includePathPage = new PHPIncludePathPage(getDataModel(), "page2")); //$NON-NLS-1$
 		
-		BasicPHPWizardPageExtended[] pages = PHPWizardPagesRegistry.getPages(ID); 
+		IWizardPage[] pages = PHPWizardPagesRegistry.getPages(ID); 
 		if (pages != null) {
 			for (int i = 0; i < pages.length; ++i) {
 				addPage(pages[i]);

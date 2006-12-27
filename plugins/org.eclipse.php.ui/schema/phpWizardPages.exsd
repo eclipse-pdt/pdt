@@ -68,10 +68,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  Class of this PHP Wizard Page (must extend &lt;code&gt;org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended&lt;/code&gt;).
+                  Class of this PHP Wizard Page (must extend &lt;code&gt;org.eclipse.jface.wizard.IWizardPage&lt;/code&gt;).
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.jface.wizard.IWizardPage"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -113,7 +113,7 @@ The following example will add &quot;My Wizard Page&quot; to the PHP project cre
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         PHP Wizard page must extend class &lt;code&gt;org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended&lt;/code&gt;. Wizard must use &lt;code&gt;PHPWizardPagesRegistry&lt;/code&gt; in order to retrieve all contributed pages.
+         PHP Wizard page must extend class &lt;code&gt;org.eclipse.jface.wizard.IWizardPage&lt;/code&gt;. Wizard must use &lt;code&gt;PHPWizardPagesRegistry&lt;/code&gt; in order to retrieve all contributed pages.
       </documentation>
    </annotation>
 
