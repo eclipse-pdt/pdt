@@ -24,7 +24,7 @@ import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.PHPCorePlugin;
-import org.eclipse.php.core.project.operation.PHPCreationDataModelProvider;
+import org.eclipse.php.project.ui.wizards.operations.PHPCreationDataModelProvider;
 import org.eclipse.php.ui.util.PHPPluginImages;
 import org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended;
 import org.eclipse.ui.INewWizard;
@@ -57,7 +57,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	protected IDataModelProvider getDefaultProvider() {
-		return new PHPCreationDataModelProvider();
+		return new PHPCreationDataModelProvider(wizardPagesList);
 	}
 
 	/*
@@ -105,13 +105,13 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 				Logger.logException(e);
 			} 			
  			// call the postPerformFinish for any page added trough the extention point
- 			if (createdProject != null) {
- 				for(Iterator it = wizardPagesList.iterator(); it.hasNext();){
- 					BasicPHPWizardPageExtended page = (BasicPHPWizardPageExtended) it.next();
- 					page.postPerformFinish(createdProject);
- 					page.flushPreferences();		
- 				}
- 			}
+// 			if (createdProject != null) {
+// 				for(Iterator it = wizardPagesList.iterator(); it.hasNext();){
+// 					BasicPHPWizardPageExtended page = (BasicPHPWizardPageExtended) it.next();
+// 					page.postPerformFinish(createdProject);
+// 					page.flushPreferences();		
+// 				}
+// 			}
  		}
 	}
 }
