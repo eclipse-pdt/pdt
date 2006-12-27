@@ -96,7 +96,7 @@
 		</java>
 		<mkdir dir="${buildDirectory}/${buildLabel}/results" />
 		<move todir="${buildDirectory}/${buildLabel}/results">
-			<fileset dir="${buildDirectory}/../results/html" />
+			<fileset dir="${buildDirectory}/../results/html/all" />
 		</move>
 	</target>
 
