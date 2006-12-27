@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.project.ui.wizards.operations;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -30,18 +27,14 @@ import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.core.project.properties.handlers.UseAspTagsHandler;
-import org.eclipse.php.ui.wizards.BasicPHPWizardPageExtended;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 
 public class PHPModuleCreationOperation extends AbstractDataModelOperation implements IProjectCreationPropertiesNew {
 
-	private final List wizardPags;
-	
-	public PHPModuleCreationOperation(IDataModel dataModel, List wizardPages) {
+	public PHPModuleCreationOperation(IDataModel dataModel) {
 		super(dataModel);
-		this.wizardPags = wizardPages;		
 	}
 
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
@@ -53,11 +46,11 @@ public class PHPModuleCreationOperation extends AbstractDataModelOperation imple
 				project.create(desc, subMonitor);
 			}
 
-			for (Iterator iter = wizardPags.iterator(); iter.hasNext();) {
-				BasicPHPWizardPageExtended element = (BasicPHPWizardPageExtended) iter.next();
-				element.postPerformFinish(project);
-				element.flushPreferences();		
-			}
+//			for (Iterator iter = wizardPags.iterator(); iter.hasNext();) {
+//				BasicPHPWizardPageExtended element = (BasicPHPWizardPageExtended) iter.next();
+//				element.postPerformFinish(project);
+//				element.flushPreferences();		
+//			}
 			
 			if (monitor.isCanceled())
 				throw new OperationCanceledException();

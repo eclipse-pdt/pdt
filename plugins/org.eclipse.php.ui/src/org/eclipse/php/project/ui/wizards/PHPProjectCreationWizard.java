@@ -12,7 +12,6 @@ package org.eclipse.php.project.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -43,7 +42,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	protected PHPIncludePathPage includePathPage;
     protected PHPProjectWizardBasePage basePage;
     
-    private final ArrayList wizardPagesList = new ArrayList();
+    protected final ArrayList wizardPagesList = new ArrayList();
     private IProject createdProject = null;
     private IConfigurationElement configElement;
     
@@ -57,7 +56,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	protected IDataModelProvider getDefaultProvider() {
-		return new PHPCreationDataModelProvider(wizardPagesList);
+		return new PHPCreationDataModelProvider();
 	}
 
 	/*

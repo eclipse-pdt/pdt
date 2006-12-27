@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.project.ui.wizards.operations;
 
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -29,11 +28,8 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 
 	public static final String[] PHP_VERSION_DESCRIPTIONS = { "PHP 4", "PHP 5 or greater" };
 	
-	public final List wizardPages;
-
-	public PHPCreationDataModelProvider(List wizardPages) {
+	public PHPCreationDataModelProvider() {
 		super();
-		this.wizardPages = wizardPages;
 	}
 
 	public void init() {
@@ -54,7 +50,7 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 	}
 
 	public IDataModelOperation getDefaultOperation() {
-		return new PHPModuleCreationOperation(getDataModel(), wizardPages);
+		return new PHPModuleCreationOperation(getDataModel());
 	}
 
 	protected final void addPHPNature() {
