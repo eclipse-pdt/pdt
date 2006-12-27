@@ -27,9 +27,11 @@
 		<echo>"results - ${results}"</echo>
 		<echo>"basedir - ${basedir}"</echo>
 		<echo>"testClass - ${testClass}"</echo>
+		<mkdir dir="${results}/xml/all"/>
 		<property name="derby" value="" />
 		<ant antfile="${eclipse-home}/plugins/${testPlugin}/test.xml" dir="." />
 		<copy file="TEST-${testClass}.xml" tofile="${results}/xml/${report}/TEST-${testClass}.xml" failonerror="false" />
+		<copy file="TEST-${testClass}.xml" tofile="${results}/xml/all/TEST-${testClass}.xml" failonerror="false" />		
 		<antcall target="genHtml" />
 	</target>
 
