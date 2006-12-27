@@ -1,4 +1,4 @@
-<project default="run">
+<project default="buildAll">
 
 	<target name="init" depends="preinit" />
 
@@ -60,6 +60,7 @@
 	</target>
 
 	<target name="buildAll" depends="init,buildSDK,buildRuntime,buildTest">
+		<antcall target="runTests" />
 	</target>
 
 	<target name="buildSDK" depends="init">
@@ -81,6 +82,22 @@
 	</target>
 
 	<target name="package" depends="init">
+	</target>
+
+	<target name="runTests" depends="init,buildTest">
+		<property environment="env" />
+		<property name="os" value="${env.BASEOS}" />
+		<property name="ws" value="${env.BASEWS}" />
+		<property name="arch" value="${env.BASEARCH}" />
+		<java jar="${buildDirectory}/startup.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}/../">
+			<arg line="-Dosgi.ws=${ws} -Dosgi.os=${os} -Dosgi.arch=${arch} -data workspace" />
+			<arg line="-application org.eclipse.ant.core.antRunner -file test.xml" />
+			<arg line="-Dws=${ws} -Dos=${os} -Darch=${arch} -logger org.apache.tools.ant.DefaultLogger" />
+		</java>
+		<mkdir dir="${buildDirectory}/${buildLabel}/results" />
+		<move todir="${buildDirectory}/${buildLabel}/results">
+			<fileset dir="${buildDirectory}/../results/html" />
+		</move>
 	</target>
 
 	<target name="publish" depends="init" description="Publish the results, but don't push.">
