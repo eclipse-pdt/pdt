@@ -185,6 +185,11 @@
 			<fileset dir="${buildDirectory}/plugins/org.eclipse.equinox.launcher" includes="META-INF/" />
 		</zip> -->
 
+		<!-- Copy test php plugin to the running test env.-->
+		<copy todir="${buildDirectory}/../">
+			<fileset dir="${workingDirectory}/" />
+		</copy>
+
 		<!--the Ant move task leaves behind an empty directory-->
 		<delete dir="${workingDirectory}/eclipse/plugins/${org.eclipse.test}" includeEmptyDirs="true" />
 
