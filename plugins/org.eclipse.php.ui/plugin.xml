@@ -820,6 +820,11 @@
 			commandId="org.eclipse.wst.sse.ui.format.document"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
+            sequence="M1+I"
+            commandId="org.eclipse.wst.sse.ui.format.active.elements"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
             platform="gtk"
             sequence="ESC CTRL+F"
             contextId="org.eclipse.php.ui.phpEditorScope"
