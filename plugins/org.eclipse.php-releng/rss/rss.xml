@@ -10,9 +10,10 @@
 	<property name="rssCenterName" value="blackboard " />
 	<property name="rssCenterDescription" value="This is a blackboard center to ${rssProjectName}" />
 	<property name="rssCenterAbout" value="" />
-	<property name="rssMessage" value="error! set a message here" />
-	<property name="rssMessageDescription" value="error! set a message here" />
+	<property name="rssTitle" value="error! set a message here" />
+	<property name="rssMessageDescription" value="" />
 	<property name="rssMessageContributor" value="PHP Build Server" />
+	<property name="rssMessageLink" value="http://download.eclipse.org/tools/php/downloads/index.php" />
 	<property name="rssOutputFile" value="../rss/updates.xml" />
 
 	<target name="createProject">
@@ -24,7 +25,7 @@
 	</target>
 
 	<target name="addMessage">
-		<RssSendMessage projectName="${rssProjectName}" centerName="${rssCenterName}" title="${rssMessage}" link="http://download.eclipse.org/tools/php/downloads/index.php" description="${rssMessageDescription}" contibutor="${rssMessageContributor}" />
+		<RssSendMessage projectName="${rssProjectName}" centerName="${rssCenterName}" title="${rssTitle}" link="${rssMessageLink}" description="${rssMessageDescription}" contibutor="${rssMessageContributor}" />
 	</target>
 
 	<target name="generateRss">
@@ -32,7 +33,7 @@
 	</target>
 
 	<target name="uploadRss">
-		<property name="source" value="${buildDirectory}/results/html/all/TEST-php.html" />
+		<property name="source" value="${rssOutputFile}" />
 		<property name="target" value="rss/blackboard.xml" />
 
 		<exec dir="." executable="rsync">

@@ -91,8 +91,8 @@
 		<tstamp />
 		<property name="date" value="${DSTAMP}" />
 		<property name="time" value="${TSTAMP}" />
-		<property name="timestamp" value="${date}${time}" />
-		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="roy@zend.com;" files="${buildDirectory}/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
+		<property name="timestamp" value="${date} ${time}" />
+		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="roy@zend.com;" files="results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
 	</target>
 	
 	
