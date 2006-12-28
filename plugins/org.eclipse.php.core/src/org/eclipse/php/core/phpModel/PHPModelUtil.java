@@ -560,4 +560,20 @@ public class PHPModelUtil {
 		}
 		return location;
 	}
+
+	public static PHPFileData getFileData(Object element) {
+		PHPFileData fileData = null;
+		if (element instanceof IFile) {
+			IFile file = (IFile) element;
+			if (!isPhpFile(file)) {
+				return null;
+			}
+			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(file.getFullPath().toString());
+	
+		}
+		if (element instanceof PHPFileData) {
+			fileData = (PHPFileData) element;
+		}
+		return fileData;
+	}
 }
