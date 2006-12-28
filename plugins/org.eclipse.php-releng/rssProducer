@@ -1,0 +1,7 @@
+#!/bin/sh
+
+JAVA_HOME="/shared/common/ibm-java2-ppc-50/"
+ANT_HOME="$HOME/eclipse/plugins/org.apache.ant_1.6.5/"
+
+ant --noconfig -lib ext-lib addMessage -DrssMessageDescription=$1 -DrssMessageContributor=$2
+ant --noconfig -lib ext-lib generateRss 
