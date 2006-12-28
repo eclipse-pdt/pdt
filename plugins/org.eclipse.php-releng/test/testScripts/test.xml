@@ -80,9 +80,9 @@
 	</target>
 
 	<target name="all">
+		<antcall target="php.test.bare" />
 		<antcall target="php.test.core" />
 		<antcall target="php.test.ui" />
-		<antcall target="php.test.bare" />
 	</target>
 
 	<target name="genHtml" description="Generates HTML results with provided JUNIT.XSL provided">
