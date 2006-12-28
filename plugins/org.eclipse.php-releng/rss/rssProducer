@@ -1,7 +1,7 @@
 #!/bin/sh
 
-JAVA_HOME="/shared/common/ibm-java2-ppc-50/"
-ANT_HOME="$HOME/src/eclipse/plugins/org.apache.ant_1.6.5/"
+export JAVA_HOME="/shared/common/ibm-java2-ppc-50/"
+export ANT_HOME="$HOME/src/eclipse/plugins/org.apache.ant_1.6.5/"
 
 if [ -z "$1" ]; then 
     echo usage: $0 "<Message title> <Message Description> <Message Contributor>"
