@@ -83,18 +83,7 @@
 		<antcall target="php.test.bare" />
 		<antcall target="php.test.core" />
 		<antcall target="php.test.ui" />
-		
-		<antcall target="mailUnitTestResults"/>
 	</target>
-
-	<target name="mailUnitTestResults">
-		<tstamp />
-		<property name="date" value="${DSTAMP}" />
-		<property name="time" value="${TSTAMP}" />
-		<property name="timestamp" value="${date} ${time}" />
-		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="roy@zend.com;" files="results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
-	</target>
-	
 	
 	<target name="genHtml" description="Generates HTML results with provided JUNIT.XSL provided">
 		<style style="JUNIT.XSL" basedir="${results}/xml" destdir="${results}/html" />

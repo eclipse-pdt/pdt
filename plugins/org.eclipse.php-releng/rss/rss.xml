@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RssUtitlities" default="nodefault">
+	<target name="nodefault">
+	</target>
 
 	<taskdef name="RssAddProject" classname="rss2ant.RssAddProject" />
 	<taskdef name="RssAddCenter" classname="rss2ant.RssAddCenter" />
@@ -41,9 +43,20 @@
 		</exec>
 	</target>
 
-	<target name="nodefault">
+	<target name="mailUnitTestResults">
+		<tstamp />
+		<property name="date" value="${DSTAMP}" />
+		<property name="time" value="${TSTAMP}" />
+		<property name="timestamp" value="${date} ${time}" />
+		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="roy@zend.com;" files="results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
+	</target>
+
+	<target name="getTestResults">
+		<xslt in="../src/results/xml/all/TEST-php.xml" out="content" style="style.xsl">
+			<outputproperty name="method" value="xml" />
+			<outputproperty name="standalone" value="yes" />
+			<outputproperty name="encoding" value="iso8859_1" />
+			<outputproperty name="indent" value="yes" />
+		</xslt>
 	</target>
 </project>
-
-
-
