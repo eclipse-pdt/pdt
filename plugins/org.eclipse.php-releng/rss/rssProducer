@@ -16,6 +16,6 @@ if [ -z "$3" ]; then
     exit
 fi
 
-ant --noconfig -lib ext-lib -f rss.xml addMessage -DrssMessage="$1" -DrssMessageDescription="$2" -DrssMessageContributor="$3"
+ant --noconfig -lib ext-lib -f rss.xml addMessage -DrssTitle="$1" -DrssMessageDescription="$2" -DrssMessageContributor="$3"
 ant --noconfig -lib ext-lib -f rss.xml generateRss 
 ant --noconfig -lib ext-lib -f rss.xml uploadRss
