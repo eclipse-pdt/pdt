@@ -36,13 +36,13 @@ REM Process command line arguments
 REM
 REM ****************************************************************
 
-if x%1==x goto run
 if x%1==x-ws set ws=%2 && shift && shift && goto processcmdlineargs
 if x%1==x-os set os =%2 && shift && shift && goto processcmdlineargs
 if x%1==x-arch set arch=%2 && shift && shift && goto processcmdlineargs
 if x%1==x-noclean set installmode=noclean&& shift && goto processcmdlineargs
 if x%1==x-properties set properties=-propertyfile %2&& shift && shift && goto processcmdlineargs
 if x%1==x-vm set vm=%2 && shift && shift && goto processcmdlineargs
+if x%1==x goto run
 
 set tests=%tests% %1 && shift && goto processcmdlineargs
 

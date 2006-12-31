@@ -29,9 +29,9 @@
 		<echo>"testClass - ${testClass}"</echo>
 		<mkdir dir="${results}/xml/all" />
 		<property name="derby" value="" />
-		<ant antfile="${eclipse-home}/plugins/${testPlugin}/test.xml" dir="." />
+		<ant antfile="${eclipse-home}/plugins/${org.eclipse.php.test}/test.xml" dir="." />
 		<copy file="TEST-${testClass}.xml" tofile="${results}/xml/${report}/TEST-${testClass}.xml" failonerror="false" />
-		<ant antfile="${eclipse-home}/plugins/${testPlugin}/test.xml" target="collect-all" dir="." />
+		<ant antfile="${eclipse-home}/plugins/${org.eclipse.php.test}/test.xml" target="collect-all" dir="." />
 		<copy file="TEST-php.xml" tofile="${results}/xml/all/TEST-php.xml" failonerror="false" />
 		<antcall target="genHtml" />
 	</target>

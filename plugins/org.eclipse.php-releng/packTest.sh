@@ -18,7 +18,7 @@ dos2unix runtests
 ./runtests -ws gtk -os linux -arch ppc 
 
 cd ../rss
-./rssProducer "Unit test results available to data $(date +%Y%m%d)" "Success Rate: " "Php Build Server"
+./rssProducer "Unit test results are available for $(date +%Y%m%d)" "" "Php Build Server"
 
 
 
