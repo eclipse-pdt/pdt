@@ -76,9 +76,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	};
 
 	protected void initPreferences(String prefKey) {
-		if (prefKey == null || PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION.equals(prefKey)
-			|| PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE.equals(prefKey) || PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES.equals(prefKey)
-			|| PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP.equals(prefKey)) {
+		if (prefKey == null || PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS.equals(prefKey)
+			|| PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION.equals(prefKey) || PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE.equals(prefKey) || PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES.equals(prefKey)
+			|| PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES.equals(prefKey)
+			|| PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP.equals(prefKey)) {
 
 			showVariablesFromOtherFiles = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES);
 			disableConstants = !PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
@@ -165,7 +166,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (projectModel == null) {
 			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
-		
+
 		String fileName = null;
 		PHPFileData fileData = editorModel.getFileData(true);
 		if (fileData != null) {
@@ -174,7 +175,6 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		boolean explicit = true;
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
-		
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
 		ITextRegion textRegion = null;
 		// 	in case we are at the end of the document, asking for completion
@@ -214,7 +214,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, sdRegion, textRegion, isStrict);
 			return;
 		}
-		
+
 		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(offset, sdRegion, true);
 		String type = textRegion.getType();
 		if (isInArrayOptionQuotes(projectModel, fileName, type, offset, selectionLength, statmentText)) {
@@ -445,10 +445,17 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return false;
 		}
 		boolean isClassTriger = false;
+		boolean isParent = false;
 		String triggerText = statmentText.subSequence(startFunctionPosition - 2, startFunctionPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
 		} else if (triggerText.equals(CLASS_FUNCTIONS_TRIGGER)) {
 			isClassTriger = true;
+			if (startFunctionPosition <= 8) {
+				String parentText = statmentText.subSequence(startFunctionPosition - 8, startFunctionPosition - 2).toString();
+				if (parentText.equals("parent")) {
+					isParent = true;
+				}
+			}
 		} else {
 			return false;
 		}
@@ -465,7 +472,11 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		if (isClassTriger) {
-			showClassStaticCall(projectModel, fileName, offset, className, functionName, selectionLength, explicit);
+			if (isParent) {
+				showParentCall(projectModel, fileName, offset, className, functionName, selectionLength, explicit, isStrict);
+			} else {
+				showClassStaticCall(projectModel, fileName, offset, className, functionName, selectionLength, explicit);
+			}
 		} else {
 			String parent = statmentText.toString().substring(0, statmentText.toString().lastIndexOf(OBJECT_FUNCTIONS_TRIGGER)).trim();
 			boolean isInstanceOf = !parent.equals("$this");
@@ -695,6 +706,52 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		completionProposalGroup.setData(offset, result, startWith, selectionLength);
 	}
 
+	protected void showParentCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean explicit, boolean isStrict) {
+		CodeData[] functions = null;
+		if (explicit || autoShowFunctionsKeywordsConstants) {
+			functions = projectModel.getClassFunctions(fileName, className, startWith.length() == 0 ? "" : startWith);
+		}
+		PHPClassData classData = projectModel.getClass(fileName, className);
+		//adding the default C'tor and D'tor if they don't exist
+		boolean ctorExists = false;
+		boolean dtorExists = false;
+		for (int i = 0; i < functions.length; i++) {
+			CodeData data = functions[i];
+			if (data.getName().equals(PHPClassData.CONSTRUCTOR)) {
+				ctorExists = true;
+			}
+			if (data.getName().equals(PHPClassData.DESCRUCTOR)) {
+				dtorExists = true;
+			}
+		}
+		int addedFunctions = 0;
+		if (!ctorExists) {
+			addedFunctions++;
+		}
+		if (!dtorExists) {
+			addedFunctions++;
+		}
+		CodeData[] result = functions;
+		if (addedFunctions > 0) {
+			result = new CodeData[functions.length + addedFunctions];
+			System.arraycopy(functions, 0, result, 0, functions.length);
+			
+			if (ctorExists) {
+				if (!dtorExists) {
+					result[functions.length] = PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESCRUCTOR, PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null);
+				}
+			} else {
+				result[functions.length] = PHPCodeDataFactory.createPHPFuctionData(PHPClassData.CONSTRUCTOR, PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null);
+				if (!dtorExists) {
+					result[functions.length + 1] = PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESCRUCTOR, PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null);
+				}
+			}
+		}
+		result = ModelSupport.getFilteredCodeData(result, ModelSupport.PROTECTED_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC);
+		completionProposalGroup = phpCompletionProposalGroup;
+		completionProposalGroup.setData(offset, result, startWith, selectionLength, isStrict);
+	}
+
 	protected PHPClassData getContainerClassData(PHPProjectModel projectModel, String fileName, int offset) {
 		PHPFileData fileData = projectModel.getFileData(fileName);
 		return PHPFileDataUtilities.getContainerClassDada(fileData, offset);
@@ -738,17 +795,17 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (contextClassName.equals(className)) {
 			return ModelSupport.PIRVATE_ACCESS_LEVEL_FILTER;
 		}
-		
-//		if this is an instance of a class and not $this
+
+		//		if this is an instance of a class and not $this
 		if (isInstanceOf) {
 			return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER;
 		}
-		
+
 		// if we are out side of a class 
 		if (contextClassName.equals("")) {
 			return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC;
 		}
-		
+
 		PHPClassData classData = projectModel.getClass(fileName, contextClassName);
 		String superClassName = classData.getSuperClassData().getName();
 		while (superClassName != null) {
@@ -761,12 +818,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			}
 			superClassName = classData.getSuperClassData().getName();
 		}
-		
+
 		//inside a class with no inheritence
-		if (superClassName == null && !contextClassName.equals("")){
-			return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC; 
+		if (superClassName == null && !contextClassName.equals("")) {
+			return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC;
 		}
-		
+
 		return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER;
 	}
 
