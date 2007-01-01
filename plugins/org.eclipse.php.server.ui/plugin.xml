@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <!-- TODO <extension-point id="launchConfigurationTabs" name="Launch Configuration Tabs" schema="schema/launchConfigurationTabs.exsd"/> -->
    <extension-point id="serverTab" name="Server Tab" schema="schema/serverTab.exsd"/>
    <extension-point id="serverWizardFragment" name="Server Wizard Fragment" schema="schema/serverWizardFragment.exsd"/>
 
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       id="org.eclipse.php.server.ui.launchConfigurationTypeImage"
-      configTypeID="org.eclipse.php.server.core.launchConfigurationType"
+      configTypeID="org.eclipse.php.debug.core.launching.webPageLaunch"
       icon="icons/full/obj16/server.gif">
     </launchConfigurationTypeImage>
   </extension>
@@ -15,7 +16,7 @@
   <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
     <launchConfigurationTabGroup
       id="org.eclipse.php.server.ui.launchConfigurationTabGroup"
-      type="org.eclipse.php.server.core.launchConfigurationType"
+      type="org.eclipse.php.debug.core.launching.webPageLaunch"
       class="org.eclipse.php.server.ui.ServerLaunchConfigurationTabGroup">
     </launchConfigurationTabGroup>
   </extension>
