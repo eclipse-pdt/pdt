@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="httpServerLaunchDelegate" name="httpServerLaunchDelegate" schema="schema/httpServerLaunchDelegate.exsd"/>
-
-   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
-     <launchConfigurationType
-        id="org.eclipse.php.server.core.launchConfigurationType"
-        name="%serverLaunchConfigurationType"
-        sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
-        sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
-        delegate="org.eclipse.php.server.core.launch.ServerLaunchConfigurationDelegate"
-        modes="run,debug"/>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
+   <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="org.eclipse.php.server.core.preferences.ServersPreferencesInitializer"/>
    </extension>
 </plugin>
