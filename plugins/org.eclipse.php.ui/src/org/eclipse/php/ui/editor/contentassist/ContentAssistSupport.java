@@ -58,6 +58,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	protected boolean determineObjectTypeFromOtherFile;
 	protected boolean disableConstants;
 	protected boolean showClassNamesInGlobalList;
+	protected boolean showNonStrictOptions;
 	protected boolean constantCaseSensitive;
 	protected boolean autoShowVariables;
 	protected boolean autoShowFunctionsKeywordsConstants;
@@ -75,13 +76,14 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	};
 
 	protected void initPreferences(String prefKey) {
-		if (prefKey == null || PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION.equals(prefKey)
+		if (prefKey == null || PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION.equals(prefKey)
 			|| PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE.equals(prefKey) || PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES.equals(prefKey)
 			|| PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP.equals(prefKey)) {
 
 			showVariablesFromOtherFiles = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES);
 			disableConstants = !PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
 			showClassNamesInGlobalList = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
+			showNonStrictOptions = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
 			constantCaseSensitive = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE);
 			determineObjectTypeFromOtherFile = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
 			autoShowClassNames = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
@@ -678,12 +680,11 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] functions = null;
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			functions = projectModel.getClassFunctions(fileName, className, "");
-//			Do not remove the following comments - supposed to ne used with "Strict" checkbox
-//			String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
-//			boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
-//			if (isPHP5) {
-//				functions = ModelSupport.getFilteredCodeData(functions, ModelSupport.STATIC_FUNCTIONS_FILTER);
-//			}
+			String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
+			boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
+			if (isPHP5 && !showNonStrictOptions) {
+				functions = ModelSupport.getFilteredCodeData(functions, ModelSupport.STATIC_FUNCTIONS_FILTER);
+			}
 		}
 		CodeData[] classVariables = null;
 		if (explicit || autoShowVariables) {

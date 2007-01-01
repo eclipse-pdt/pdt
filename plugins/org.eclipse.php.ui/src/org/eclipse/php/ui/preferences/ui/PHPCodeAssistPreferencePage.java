@@ -34,10 +34,11 @@ public class PHPCodeAssistPreferencePage extends AbstractPreferencePage {
 	protected Button showConstantsAssistCheckBox;
 	protected Button caseSensitiveForConstantsCheckBox;
 	protected Button showClassNamesInGlobalListCheckBox;
+	protected Button showNonStrictOptionsCheckBox;
 	protected Button autoActivationCheckBox;
-//	protected Button autoActivationForClassNamesCheckBox;
-//	protected Button autoActivationForVariablesCheckBox;
-//	protected Button autoActivationForFunctionsKeywordsConstantsCheckBox;
+	//	protected Button autoActivationForClassNamesCheckBox;
+	//	protected Button autoActivationForVariablesCheckBox;
+	//	protected Button autoActivationForFunctionsKeywordsConstantsCheckBox;
 	protected Text autoActivationDelay;
 	//protected Text autoActivationSizeLimit;
 	protected Text autoActivationTriggersPHP;
@@ -82,6 +83,7 @@ public class PHPCodeAssistPreferencePage extends AbstractPreferencePage {
 		showConstantsAssistCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_showConstantsAssist, PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, 0);
 		caseSensitiveForConstantsCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_caseSensitiveForConstants, PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, 0);
 		showClassNamesInGlobalListCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_showClassNamesInGlobal, PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, 0);
+		showNonStrictOptionsCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_showNonStrictOptions, PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, 0); //$NON-NLS-1$
 	}
 
 	protected void addAutoActivationSection(Composite composite) {
@@ -102,22 +104,20 @@ public class PHPCodeAssistPreferencePage extends AbstractPreferencePage {
 				setControlsEnabled(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, autoActivateSectionEnabled);
 			}
 		});
-//		autoActivationForClassNamesCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationForClassNames, PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, 20);
-//		autoActivationForVariablesCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationForVariables, PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, 20);
-//		autoActivationForFunctionsKeywordsConstantsCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationForFunctionsKeywordsConstants, PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, 20);
+		//		autoActivationForClassNamesCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationForClassNames, PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, 20);
+		//		autoActivationForVariablesCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationForVariables, PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, 20);
+		//		autoActivationForFunctionsKeywordsConstantsCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationForFunctionsKeywordsConstants, PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, 20);
 
 		autoActivationDelay = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationDelay, PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY, 4, 20, new PositiveIntegerStringValidator(PHPUIMessages.CodeAssistPreferencePage_autoActivationDelayIntValue,
 			PHPUIMessages.CodeAssistPreferencePage_autoActivationDelayIntValue, PHPUIMessages.CodeAssistPreferencePage_autoActivationDelayPositive));
 
 		// temporary disable this feature (since we don't know yet how to implements this in Eclipse)
-//		autoActivationSizeLimit = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationDisableSizeLimitLabel, PreferenceConstants.CODEASSIST_AUTOACTIVATION_SIZE_LIMIT, 4, 0, new PositiveIntegerStringValidator(
-//			PHPUIMessages.CodeAssistPreferencePage_autoActivationLimitNumberIntValue, PHPUIMessages.CodeAssistPreferencePage_autoActivationLimitNumberIntValue, PHPUIMessages.CodeAssistPreferencePage_autoActivationLimitNumberPositive));
+		//		autoActivationSizeLimit = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationDisableSizeLimitLabel, PreferenceConstants.CODEASSIST_AUTOACTIVATION_SIZE_LIMIT, 4, 0, new PositiveIntegerStringValidator(
+		//			PHPUIMessages.CodeAssistPreferencePage_autoActivationLimitNumberIntValue, PHPUIMessages.CodeAssistPreferencePage_autoActivationLimitNumberIntValue, PHPUIMessages.CodeAssistPreferencePage_autoActivationLimitNumberPositive));
 
-		autoActivationTriggersPHP = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationTriggersPHP,
-				PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, 4, 20);
-		
-		autoActivationTriggersPHPDoc = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationTriggersPHPDoc,
-				PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, 4, 20);
+		autoActivationTriggersPHP = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationTriggersPHP, PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, 4, 20);
+
+		autoActivationTriggersPHPDoc = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationTriggersPHPDoc, PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, 4, 20);
 	}
 
 	protected Control createContents(Composite parent) {

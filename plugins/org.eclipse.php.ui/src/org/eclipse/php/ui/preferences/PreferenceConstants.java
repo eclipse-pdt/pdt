@@ -328,6 +328,15 @@ public class PreferenceConstants {
     public final static String CODEASSIST_SHOW_CONSTANTS_ASSIST = "contentAssistShowConstantsAssist"; //$NON-NLS-1$
 
     /**
+     * A named preference that controls whether to show options that are restricted by PHP
+     * <p>
+     * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
+     * <code>false</code> invisible.
+     * </p>
+     */
+    public final static String CODEASSIST_SHOW_NON_STRICT_OPTIONS = "contentAssistShowNonStrictOptions"; //$NON-NLS-1$
+
+    /**
      * A named preference that controls if code assist also contains proposals from other files
      * <p>
      * Value is of type <code>Boolean</code>. if <code>false<code> code assist only contains visible members. If
@@ -869,6 +878,7 @@ public class PreferenceConstants {
         store.setDefault(CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, true);
         store.setDefault(CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, true);
         store.setDefault(CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
+        store.setDefault(CODEASSIST_SHOW_NON_STRICT_OPTIONS, true);
         store.setDefault(CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
         store.setDefault(CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
         store.setDefault(CODEASSIST_AUTOACTIVATION, true);

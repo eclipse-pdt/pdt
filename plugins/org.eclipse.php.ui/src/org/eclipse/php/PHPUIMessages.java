@@ -72,6 +72,7 @@ public class PHPUIMessages {
 	public static String CodeAssistPreferencePage_insertSignleProposals;
 	public static String CodeAssistPreferencePage_optionsSectionLabel;
 	public static String CodeAssistPreferencePage_showClassNamesInGlobal;
+	public static String CodeAssistPreferencePage_showNonStrictOptions;
 	public static String CodeAssistPreferencePage_showConstantsAssist;
 	public static String CodeAssistPreferencePage_showVariablesFromOtherFiles;
 	public static String ColorPage_BoundryMaker;
