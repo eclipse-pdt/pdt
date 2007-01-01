@@ -54,16 +54,30 @@
             modes="run"
             id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
       </launchConfigurationType>
+      <launchConfigurationType
+        id="org.eclipse.php.debug.core.launching.webPageLaunch"
+        name="%webPageLaunchConfigurationType.label"
+        sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+        sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
+        delegate="org.eclipse.php.debug.core.launching.PHPWebPageLaunchDelegate"
+        modes="run,debug"/>
    </extension>
    
    <extension point="org.eclipse.debug.core.launchDelegates">
      <launchDelegate
-        id="org.eclipse.php.debug.core.launching.launchDelegate.debug"
+        id="org.eclipse.php.debug.core.launching.launchDelegate.scriptDebug"
         type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
         sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
         sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
         delegate="org.eclipse.php.debug.core.launching.PHPExecutableLaunchDelegate"
         modes="debug"/>
+     <launchDelegate
+           delegate="org.eclipse.php.debug.core.launching.PHPWebPageLaunchDelegate"
+           id="org.eclipse.php.debug.core.launching.launchDelegate.webPageDebug"
+           modes="debug"
+           sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+           sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
+           type="org.eclipse.php.debug.core.launching.webPageLaunch"/>
   </extension>
  
   <extension point="org.eclipse.core.runtime.preferences">
@@ -287,10 +301,4 @@
            id="org.eclipse.php.debug.core.BasicDebugDaemon"
            name="Basic Debug Daemon"/>
   </extension>
-  <extension
-        point="org.eclipse.php.server.core.httpServerLaunchDelegate">
-     <launchDelegate class="org.eclipse.php.debug.core.launching.PHPServerLaunchDelegate"/>
-  </extension>
-  
-
 </plugin>

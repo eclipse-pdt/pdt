@@ -21,24 +21,23 @@ import org.eclipse.php.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.deploy.DeployFilter;
 import org.eclipse.php.server.core.deploy.FileUtil;
-import org.eclipse.php.server.core.launch.IHTTPServerLaunch;
-import org.eclipse.php.server.core.launch.ServerLaunchConfigurationDelegate;
 import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.swt.widgets.Display;
 
-public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
+/**
+ * A launch configuration delegate class for launching a PHP web page script.
+ * 
+ * @author shalom
+ *
+ */
+public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
-	private ServerLaunchConfigurationDelegate httpServerDelegate = null;
 	private ILaunch launch;
 	private Job runDispatch;
 	protected IDebuggerInitializer debuggerInitializer;
 
-	public PHPServerLaunchDelegate() {
+	public PHPWebPageLaunchDelegate() {
 		debuggerInitializer = createDebuggerInitilizer();
-	}
-
-	public void setHTTPServerDelegate(ServerLaunchConfigurationDelegate delegate) {
-		this.httpServerDelegate = delegate;
 	}
 
 	/*
@@ -55,7 +54,7 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 		boolean runWithDebug = configuration.getAttribute("run_with_debug", true);
 		this.launch = launch;
 		if (mode.equals(ILaunchManager.RUN_MODE) && !runWithDebug) {
-			httpServerDelegate.doLaunch(configuration, mode, launch, monitor);
+			runWithoutDebug(configuration, mode, launch, monitor);
 			return;
 		}
 
@@ -119,6 +118,36 @@ public class PHPServerLaunchDelegate implements IHTTPServerLaunch {
 			// Trigger the debug session by initiating a debug requset to the debug server
 			runDispatch = new RunDispatchJobWebServer(launch);
 			runDispatch.schedule();
+		}
+	}
+
+	public void runWithoutDebug(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+
+		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, ""));
+		if (server == null) {
+			Logger.log(Logger.ERROR, "Launch configuration could not find server");
+			//throw CoreException();
+			return;
+		}
+		String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
+		// Get the project from the file name
+		IPath filePath = new Path(fileName);
+		IProject proj = null;
+		try {
+			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
+		} catch (Throwable t) {
+		}
+		if (proj == null) {
+			Logger.log(Logger.ERROR, "Could not launch (Project is null).");
+			return;
+		}
+
+		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
+		if (publish) {
+			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
+				// Return if the publish failed.
+				return;
+			}
 		}
 	}
 
