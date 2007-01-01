@@ -241,6 +241,7 @@ public class ServersManager implements PropertyChangeListener {
 				server = createServer(Default_Server_Name, BASE_URL);
 				manager.defaultServersMap.put(null, server);
 				manager.defaultServersMap.put(project, server);
+				manager.innerSaveDefaultServer(project, server);
 				manager.save();
 			}
 		} 
