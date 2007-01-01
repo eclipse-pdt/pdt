@@ -22,11 +22,11 @@ set ANT_CMD_LINE_ARGS=
 
 REM ****************************************************************
 REM
-REM Install Eclipse if it does not exist
+REM Install PDT All In One, Eclipse Test Framework and PDT Test 
+REM Framework if it does not exist
 REM
 REM ****************************************************************
-if NOT EXIST eclipse unzip -qq -o -C pdt-*.zip */plugins/org.eclipse.test* */startup.jar
-
+if NOT EXIST eclipse unzip -qq -o pdt-all-in-one-*.zip && unzip -qq -o pdt-junit-tests-*.zip && unzip -qq -o eclipse-test-framework-*.zip
 
 :processcmdlineargs
 
