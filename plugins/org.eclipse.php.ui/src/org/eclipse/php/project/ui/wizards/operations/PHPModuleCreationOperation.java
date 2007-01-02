@@ -10,15 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.project.ui.wizards.operations;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.*;
 import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.preferences.CorePreferenceConstants.Keys;
@@ -27,16 +26,24 @@ import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.php.core.project.options.PHPProjectOptions;
 import org.eclipse.php.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.core.project.properties.handlers.UseAspTagsHandler;
+import org.eclipse.php.project.ui.wizards.WizardPageFactory;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 
 public class PHPModuleCreationOperation extends AbstractDataModelOperation implements IProjectCreationPropertiesNew {
 
-	public PHPModuleCreationOperation(IDataModel dataModel) {
-		super(dataModel);
+	// List of WizardPageFactory(s) added trough the phpWizardPages extention point
+	private List /* WizardPageFactory */ wizardPageFactories = new ArrayList();
+	
+	public PHPModuleCreationOperation(IDataModel dataModel, List wizardPageFactories) {
+		super(dataModel); 
+		this.wizardPageFactories = wizardPageFactories;
 	}
-
+	
+	public PHPModuleCreationOperation(IDataModel dataModel) {
+		super(dataModel); 
+	}
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		try {
 			IProgressMonitor subMonitor = new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN);
@@ -45,18 +52,23 @@ public class PHPModuleCreationOperation extends AbstractDataModelOperation imple
 			if (!project.exists()) {
 				project.create(desc, subMonitor);
 			}
-
-//			for (Iterator iter = wizardPags.iterator(); iter.hasNext();) {
-//				BasicPHPWizardPageExtended element = (BasicPHPWizardPageExtended) iter.next();
-//				element.postPerformFinish(project);
-//				element.flushPreferences();		
-//			}
 			
 			if (monitor.isCanceled())
 				throw new OperationCanceledException();
 			subMonitor = new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN);
 
 			project.open(subMonitor);
+			
+			// For every page added to the projectCreationWizard, call its execute method
+			// Here the project settings should be stored into the preferences 
+			// This action needs to happen here, after the project has been created and opened
+			// and before setNatureIds is called
+			
+			for (Iterator iter = wizardPageFactories.iterator(); iter.hasNext();) {
+				WizardPageFactory pageFactory = (WizardPageFactory) iter.next();
+				pageFactory.execute();
+			}
+			
 
 			String[] natureIds = (String[]) model.getProperty(PROJECT_NATURES);
 			if (null != natureIds) {

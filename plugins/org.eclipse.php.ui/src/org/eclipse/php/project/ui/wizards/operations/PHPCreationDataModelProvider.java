@@ -10,14 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.project.ui.wizards.operations;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.php.core.PHPCoreConstants;
 import org.eclipse.php.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.core.project.PHPNature;
+import org.eclipse.php.project.ui.wizards.PHPWizardPagesRegistry;
+import org.eclipse.php.project.ui.wizards.WizardPageFactory;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelPropertyDescriptor;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationDataModelProviderNew;
@@ -28,8 +34,19 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 
 	public static final String[] PHP_VERSION_DESCRIPTIONS = { "PHP 4", "PHP 5 or greater" };
 	
-	public PHPCreationDataModelProvider() {
+	private static final String ID = "org.eclipse.php.project.ui.wizards.PHPProjectCreationWizard"; //$NON-NLS-1$
+	
+//	 List of WizardPageFactory(s) added trough the phpWizardPages extention point
+	private List /* WizardPageFactory */ wizardPageFactories = new ArrayList();
+
+	
+	public PHPCreationDataModelProvider(List wizardPageFactories) {
 		super();
+		this.wizardPageFactories = wizardPageFactories;
+	}
+	
+	public PHPCreationDataModelProvider() {
+		super();		
 	}
 
 	public void init() {
@@ -44,13 +61,30 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 		propertyNames.add(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
 		propertyNames.add(PHPCoreConstants.PHPOPTION_INCLUDE_PATH);
         propertyNames.add(Keys.EDITOR_USE_ASP_TAGS);
+        
 		//		propertyNames.add(IProjectCreationProperties.PROJECT_DESCRIPTION);
+        
+        // get the specific properties from each page registered for phpProjectCreation 
+        // in the extention point ID (above)
+        // and add them to the model properties
+        
+        IWizardPage[] pageGenerators = PHPWizardPagesRegistry.getPageFactories(ID);
+		if (pageGenerators != null) {
+			for (int i = 0; i < pageGenerators.length; i++) {		
+				WizardPageFactory page = (WizardPageFactory) pageGenerators[i];
+				Set pagePropertieNames = page.getPropertyNames();
+				
+				for (Iterator iter = pagePropertieNames.iterator(); iter.hasNext();) {
+					propertyNames.add((String) iter.next());					
+				}
+			}
+		}       
 		return propertyNames;
 
 	}
 
 	public IDataModelOperation getDefaultOperation() {
-		return new PHPModuleCreationOperation(getDataModel());
+		return new PHPModuleCreationOperation(getDataModel(), wizardPageFactories);
 	}
 
 	protected final void addPHPNature() {
