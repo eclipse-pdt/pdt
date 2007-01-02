@@ -10,14 +10,38 @@
  *******************************************************************************/
 package org.eclipse.php.core.phpModel.parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.php.core.phpModel.phpElementData.*;
+import org.eclipse.php.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.core.phpModel.phpElementData.IPHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFileDataUtilities;
+import org.eclipse.php.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPIncludeFileData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPMarker;
+import org.eclipse.php.core.phpModel.phpElementData.PHPTask;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariableTypeData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPVariablesTypeManager;
+import org.eclipse.php.core.phpModel.phpElementData.UserData;
 
 public abstract class DefaultParserClient extends ContextParserClient {
 
@@ -95,6 +119,18 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	}
 
 	public void handleFunctionDeclaration(String functionName, boolean isClassFunction, int modifier, PHPDocBlock docInfo, int startPosition, int stopPosition, int lineNumber) {
+		
+		/**
+		 * Bugfix: #160672.
+		 * Check whether the function already exists, when parser tries to interpret it in different ways as a cause of parse errors in the file.
+		 */
+		if (!functionsStack.isEmpty()) {
+			PHPFunctionData lastFunction = (PHPFunctionData)functionsStack.peek();
+			if (functionName.equals(lastFunction.getName()) && startPosition == lastFunction.getUserData().getStartPosition()) {
+				return;
+			}
+		}
+		
 		PHPFunctionData.PHPFunctionParameter[] parameters = new PHPFunctionData.PHPFunctionParameter[functionParameters.size()];
 		functionParameters.toArray(parameters);
 		functionParameters.clear();
