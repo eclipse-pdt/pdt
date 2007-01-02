@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PHP Debug Ui Plug-in
+Bundle-Name: PDT Debug UI Plug-in
 Bundle-SymbolicName: org.eclipse.php.debug.ui; singleton:=true
 Bundle-Version: 0.7.0.qualifier
 Bundle-Activator: org.eclipse.php.debug.ui.PHPDebugUIPlugin
