@@ -29,6 +29,7 @@ import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.project.PHPNature;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.dialogs.openType.generic.BasicSelector;
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class OpenPhpTypeDialog extends Dialog {
 
-	private CodeData selectedElement = null;
+	private PHPCodeData selectedElement = null;
 
 	private BasicSelector basicSelector;
 
@@ -153,12 +154,12 @@ public class OpenPhpTypeDialog extends Dialog {
 		newShell.setText(PHPUIMessages.OpenType_DialogTitle);
 	}
 
-	public CodeData getSelectedElement() {
+	public PHPCodeData getSelectedElement() {
 		return selectedElement;
 	}
 
 	protected void okPressed() {
-		selectedElement = (CodeData) basicSelector.getSelectedElement();
+		selectedElement = (PHPCodeData) basicSelector.getSelectedElement();
 		super.okPressed();
 	}
 
