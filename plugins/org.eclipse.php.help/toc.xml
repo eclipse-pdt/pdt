@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="PHP Development User Guide" topic="html/toc.html">
-  <topic label="Getting Started with the PHP Development User Guide" topic="html/gettingstarted.html">
+<toc label="PDT User Guide" topic="html/toc.html">
+  <topic label="Getting Started with the PDT (PHP Integrated Development Tool) User Guide" topic="html/gettingstarted.html">
     <anchor id="gettingstarted"/>
   </topic>
   <topic label="Creating a Project">

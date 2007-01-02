@@ -4,7 +4,7 @@
 <toc label="Getting Started" link_to="toc.xml#gettingstarted" href="html/gettingstarted/gettingstarted.html"> 
 <topic label="System Requirements"  href="html/gettingstarted/systemrequirements.html"></topic>
 <topic label="Perspectives and Views" href="html/gettingstarted/perspectives_and_views.htm"></topic>
-<topic label="Opening the Eclipse PHP IDE" href="html/gettingstarted/opening_the_ide.html"></topic> 
+<topic label="Opening the Eclipse PDT" href="html/gettingstarted/opening_the_ide.html"></topic> 
 
 <topic label="Configuring" >
 <topic label="Configuring the PHP Workbench" href="html/gettingstarted/preparing_the_workbench.html"></topic>
@@ -12,7 +12,7 @@
 <topic label="Configuring the PHP Interpreter" href="html/gettingstarted/configuring_php_interpreter.html"></topic>
 <topic label="Configuring Location of PHP Manual" href="html/gettingstarted/configuring_location_php_manual.html"></topic>
 <topic label="Configuring Code Assist.html" href="html/gettingstarted/configuring_code_assist.html"></topic>
-<topic label="Configuring Code Formatting" href="configuring_code_formatter.html"></topic>
+<topic label="Configuring Code Formatting" href="html/gettingstarted/configuring_code_formatter.html"></topic>
 <topic label="Configuring Typing Preferences" href="html/gettingstarted/configuring_typing_preferences.html"></topic>
 <topic  label="Configuring Debug Preferences" href="html/gettingstarted/configuring_internal_debug_preferences.html"></topic>
 <topic label="Configuring Search Annotations" href="html/gettingstarted/configuring_search_annotation.html"></topic>
@@ -27,9 +27,9 @@
 <topic label="Editor and Related" href="html/gettingstarted/editor_functions.html">
 <topic label="Editor Functions" href="html/gettingstarted/editing_php_elements.html"></topic>
 <topic label="GoTo" href="html/gettingstarted/goto_php.html"></topic>
-<topic label="PHP Search" href="html/gettingstarted/php_search.htms"></topic>
+<topic label="PHP Search" href="html/gettingstarted/php_search.htm"></topic>
 <topic label="Open PHP Element" href="html/gettingstarted/open_php_element.html"></topic>
-<topic label="PHP Project Outline View" href="html/gettingstarted/php_outline_view.html"></topic>
+<topic label="PHP Project Outline View" href="html/gettingstarted/php_proj_outline_view.html"></topic>
 <topic label="Code Formatter" href="html/gettingstarted/code_formatter.html">></topic>
 <topic label="Syntax Highlighting" href="html/gettingstarted/syntax_highlighter.html">                                                               </topic>
 <topic label="Code Folding" href="html/gettingstarted/code_folding.htm"></topic>
