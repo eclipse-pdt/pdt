@@ -44,7 +44,6 @@ public class AddPHPexeDialog extends StatusDialog {
 	private StringDialogField fPHPexeName;
 
 	private IStatus[] fStati;
-	private int fPrevIndex = -1;
 
 	public AddPHPexeDialog(IAddPHPexeDialogRequestor requestor, Shell shell, PHPexes phpexes, PHPexeItem editedPHPexe) {
 		super(shell);
