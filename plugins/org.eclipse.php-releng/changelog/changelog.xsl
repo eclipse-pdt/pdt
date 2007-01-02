@@ -12,7 +12,7 @@
 	<xsl:template match="changelog">
 		<html>
 		<head>
-			<title>PHP IDE ChangeLog</title>
+			<title>PDT ChangeLog</title>
 			<style type="text/css">
 			* {
 				font-family: "Verdana", "Arial", "Helvetica";
