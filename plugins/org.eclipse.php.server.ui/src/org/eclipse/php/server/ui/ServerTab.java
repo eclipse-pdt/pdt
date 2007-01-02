@@ -24,6 +24,7 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.core.util.FileUtils;
+import org.eclipse.php.debug.ui.launching.LaunchUtilities;
 import org.eclipse.php.server.PHPServerUIMessages;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.manager.ServersManager;
@@ -400,7 +401,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	}
 
 	private IResource getFileFromDialog(IProject project) {
-		return ServerUtilities.getFileFromDialog(project, getShell(), getFileExtensions(), getRequiredNatures());
+		return LaunchUtilities.getFileFromDialog(project, getShell(), getFileExtensions(), getRequiredNatures());
 	}
 
 	protected void handleFileButtonSelected() {

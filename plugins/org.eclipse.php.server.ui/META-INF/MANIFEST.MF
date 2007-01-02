@@ -15,7 +15,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.sse.ui,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
- org.eclipse.php.core
+ org.eclipse.php.core,
+ org.eclipse.php.debug.ui,
+ org.eclipse.php.debug.core
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.php.server.ui,
+ org.eclipse.php.server.ui.launching,
  org.eclipse.php.server.ui.wizard

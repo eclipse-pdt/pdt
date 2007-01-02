@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <!-- TODO <extension-point id="launchConfigurationTabs" name="Launch Configuration Tabs" schema="schema/launchConfigurationTabs.exsd"/> -->
-   <extension-point id="serverTab" name="Server Tab" schema="schema/serverTab.exsd"/>
    <extension-point id="serverWizardFragment" name="Server Wizard Fragment" schema="schema/serverWizardFragment.exsd"/>
 
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
@@ -21,6 +19,18 @@
     </launchConfigurationTabGroup>
   </extension>
   
+  <extension
+       point="org.eclipse.php.debug.ui.launchConfigurationTabs">
+    <launchConfigurationTab
+          class="org.eclipse.php.server.ui.launching.PHPServerTab"
+          id="org.eclipse.php.debug.ui.launching.PHPServerTab"
+          launchConfigurationTabGroupId="org.eclipse.php.server.ui.launchConfigurationTabGroup"/>
+    <launchConfigurationTab
+          class="org.eclipse.php.server.ui.launching.PHPServerAdvancedTab"
+          id="org.eclipse.php.debug.ui.launching.PHPServerAdvancedTab"
+          launchConfigurationTabGroupId="org.eclipse.php.server.ui.launchConfigurationTabGroup"
+          placeAfter="org.eclipse.php.debug.ui.launching.PHPServerTab"/>
+ </extension>
   <extension
         point="org.eclipse.php.server.ui.serverWizardFragment">
      <wizardFragment

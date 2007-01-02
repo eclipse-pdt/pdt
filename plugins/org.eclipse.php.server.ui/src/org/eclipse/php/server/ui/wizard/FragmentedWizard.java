@@ -21,10 +21,10 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.php.debug.ui.launching.LaunchUtilities;
 import org.eclipse.php.server.internal.ui.WorkspaceRunnableAdapter;
 import org.eclipse.php.server.ui.Activator;
 import org.eclipse.php.server.ui.Logger;
-import org.eclipse.php.server.ui.ServerUtilities;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
@@ -133,9 +133,9 @@ public class FragmentedWizard implements IWizard {
 		Logger.logException("Error cancelling task wizard", t); //$NON-NLS-1$
 
 		if (t instanceof CoreException) {
-			ServerUtilities.openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
+			LaunchUtilities.openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
 		} else
-			ServerUtilities.openError(t.getLocalizedMessage());
+			LaunchUtilities.openError(t.getLocalizedMessage());
 
 		return false;
 
@@ -215,11 +215,11 @@ public class FragmentedWizard implements IWizard {
 			t = e;
 		}
 		if (t instanceof CoreException) {
-			ServerUtilities.openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
+			LaunchUtilities.openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
 		} else if (t instanceof NullPointerException)
-			ServerUtilities.openError("NullPointerException"); //$NON-NLS-1$
+			LaunchUtilities.openError("NullPointerException"); //$NON-NLS-1$
 		else
-			ServerUtilities.openError(t.getLocalizedMessage());
+			LaunchUtilities.openError(t.getLocalizedMessage());
 
 		return false;
 	}

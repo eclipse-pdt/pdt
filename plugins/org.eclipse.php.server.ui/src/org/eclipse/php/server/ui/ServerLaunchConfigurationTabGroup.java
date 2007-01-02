@@ -3,12 +3,15 @@ package org.eclipse.php.server.ui;
 import java.util.ArrayList;
 
 import org.eclipse.debug.ui.*;
+import org.eclipse.php.debug.ui.launching.LaunchConfigurationsTabsRegistry;
 
 /**
  * A debug tab group for launching debug on server. 
  */
 public class ServerLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup {
 
+	protected final String CONFIGURATION_TAB_GROUP_ID = "org.eclipse.php.server.ui.launchConfigurationTabGroup";
+	
 	public ServerLaunchConfigurationTabGroup() {
 		super();
 
@@ -18,7 +21,7 @@ public class ServerLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 	 * @see ILaunchConfigurationTabGroup#createTabs(ILaunchConfigurationDialog, String)
 	 */
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		AbstractLaunchConfigurationTab[] tabs = ServerLaunchTabsRegistry.getLaunchTabs();
+		AbstractLaunchConfigurationTab[] tabs = LaunchConfigurationsTabsRegistry.getLaunchTabs(CONFIGURATION_TAB_GROUP_ID);
 		ArrayList list = new ArrayList();
 		if (tabs != null) {
 			for (int i = 0; i < tabs.length; i++) {
