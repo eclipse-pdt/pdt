@@ -1,161 +1,232 @@
 <html>
 <head>
 <title>Instructions</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html;">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
-<font size="+2"> Automated Testing of Eclipse Builds</font>
-<p>last updated: May 18, 2006</p><p><font size="+1">Description</font></p><p>This document describes how to run Eclipse JUnit plugin tests from the command 
-  line using Eclipse SDK  JUnit test plugins and a testing framework. This method of running tests is intended 
-  for anyone who wishes to automate their testing process or reproduce the testing 
-  mechanism used in Eclipse builds by the Eclipse Platform  Release Engineering team.</p><p>Click <a href="http://dev.eclipse.org/viewcvs/index.cgi/*checkout*/org.eclipse.test/testframework.html?rev=HEAD&content-type=text/html">here</a> for a description of the testing 
-  framework, and how it can be used outside of the setup described here.</p><p>If you simply wish to write and run JUnit tests interactively from an Eclipse 
-  workbench, try one of the links below:</p><p><a href="http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/jdt-ui-home/plugins/org.eclipse.jdt.junit/index.html">JUnit 
-  Support in Eclipse</a><br>
-<a href="http://dev.eclipse.org:8080/help/content/help:/org.eclipse.jdt.doc.user/tasks/tasks-207.htm?resultof=%6a%75%6e%69%74%20&toc=%2Forg.eclipse.jdt.doc.user%2Ftoc.xml">Using 
-  JUnit</a></p><p><font size="+1">Requirements</font></p><p>1. All test machines will require 1.4 and 1.5 java runtime environments installed to run all tests.  See <A HREF="#testtargets">test targets</A> 
-  for details on which tests require a 1.5 level jre.  All other tests can be executed with either jre levels.<BR>2.  A properties file containing the following   key-value pair: J2SE-5.0=&lt;path to 1.5  java executable&gt;.    On Windows,  the path must be enclosed with double quotes if it contains any space characters, <BR>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i.e.  J2SE-5.0=&quot;c:/program files/jdk1.5.0/jre/bin/java&quot;<br>
-  3. <a href="http://www.info-zip.org/pub/infozip/UnZip.html">Info-ZIP UnZip</a> 
-  version 5.41 or later installed and added to the path.<br>
-  4. The Automated Test feature from an Eclipse build (<a href="http://www.eclipse.org/downloads/index.php">http://www.eclipse.org/downloads/index.php</a>). 
-  This contains scripts to run the tests, the test framework plugins and the JUnit test plugins.<br>
-  5. An Eclipse SDK distribution (<a href="http://www.eclipse.org/downloads/index.php">http://www.eclipse.org/downloads/index.php</a>) 
-  to test. Usually you will want to test a particular Eclipse build using a matching 
-  Automated Tests feature.</p><p>To run the Team CVS tests you will need extssh access to a CVS repository. 
-  The tests create a lot of junk modules and tags so you will want to keep the 
-  test repository seperate from your development repository. While it is not necessary 
-  to clean up the repository between each Team test run you will probably want 
-  to clean it up periodically.</p><p><font size="+1">Setup</font></p><p>1. Extract the eclipse-Automated-Tests-&lt;buildid&gt;.zip or tar.gz. On Window, extract 
-  this file close to the root of the drive to prevent some path names from exceeding 
-  the 255 character limit. This will create a top-level directory &quot;<b>eclipse-testing</b>&quot;.<br>
-  2. Place the Eclipse SDK distribution to test in the eclipse-testing directory. 
-  Do not extract this file as the test scripts will take care of this.<br>
-  3. To run the Team CVS tests, edit the test.xml script to provide connection 
-  information.</p><blockquote> 
-  <p>Replace the following strings in the &quot;teamcvs&quot; target of the test.xml 
-    file with the information described below:</p></blockquote><ul>
-  <li>@cvs_user@ - the account used to connect to the cvs repository</li><li>@cvs_password@- the account password</li><li>@cvs_host@- the name of the cvs server</li><li>@cvs_root@- the repository path 
-    <p>These values are used at test time to automatically replace strings in 
-      org.eclipse.team.tests.cvs.core/repository.properties. For more information 
-      on how this file is used in the team CVS tests, click <a href="http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/org.eclipse.team.tests.cvs.core/readme.html?rev=HEAD&content-type=text/html">here</a>. 
-    </p></li></ul><p><font size="+1">Running Tests</font></p><p>From a command prompt or terminal:</p><p>1. cd to the eclipse-testing directory<br>
-  2. Execute the following script:</p><p><b>runtests -properties &lt;path to properties file&gt; [-os &lt;operating system&gt;] [-ws &lt;windowing system&gt;] [-arch 
-  &lt;architecture&gt;] [-noclean] [-vm 
-  &lt;path to java executable&gt;][-Dtest.target=performance][<I>targetname1 targetname2 targetname3 etc...</I>] </b></p><p>All parameters and targets are optional on windows systems with the exception of  &quot;-properties&quot;.  On *nix systems, the os, ws and arch parameters
-  must be specified in addition to the -properties parameter.</p><p>The JUnit test results are produced in individual xml files for each test plug-in with a test.xml. These 
-  results are copied to the eclipse-testing\results\xml directory. These results 
-  can be converted into html by running the &quot;genHtml&quot; target as described 
-  in the table below. Please be aware that &quot;Build Successful&quot; printed 
-  to the console is NOT indicative of tests passing.</p><p><font size="+1"><a name="vm"></a>Parameters</font></p><table width="90%" border="1">
-  <tr> 
-    <td>Parameter</td><td>Description</td></tr>
-  <tr> 
-    <td>-os &lt;operating system&gt;</td><td>The OS the tests are being run on. One of: aix, hpux, linux, macosx, qnx, solaris, 
-      win32. <b>Default win32</b></td></tr>
-  <tr> 
-    <td>-ws &lt;windowing system&gt;</td><td>The windowing system the tests are being run on. One of: carbon, motif, gtk, photon, 
-      win32. <b>Default win32</b></td></tr>
-  <tr> 
-    <td>-arch &lt;architecture&gt;</td><td>The architecture the tests are being run on. One of: ppc, PA_RISC, x86, 
-      sparc. <b>Default x86</b></td></tr>
-  <tr> 
-    <td>-noclean</td><td>Run tests without installing a clean Eclipse (in &quot;test-eclipse&quot;) between test targets. Default 
-      is to delete an existing test-eclipse directory and re-extract the Eclipse distribution between test targets.</td></tr>
-  <tr> 
-    <td>-properties</td><td><P>As per requirements noted above, this is used to reference a properties file containing additional Ant properties 
-      used in running tests.Can be used to pass additional vm arguments to the 
-      Java virtual machine running the tests by adding the entry &quot;extraVMargs=&lt;the 
-      args to pass to the vm&gt;&quot; to the specified properties file.<BR><BR>At a minimum, the property file must include a &quot;J2SE-5.0&quot; property which specifies a path to a 1.5 java executable, for example:<BR><BR><B>J2SE-5.0=&quot;c:/program files/jdk1.5.0_06/jre/bin/java&quot;</B></P><P>The path must be enclosed in double quotes if it contains spaces.  This key-value pair is required to run JUnit plug-in tests that require a 1.5 level jvm.</P></td></tr>
-  <tr> 
-    <td>-vm</td><td><P>When runtests is executed, two instances of eclipse are started:  one to invoke the org.eclipse.ant.core.antRunner application to run a test.xml script in a test plug-in (outer instance) and another in which the JUnit tests are being executed (inner).  By default, both will use the java executable on the system path.  The -vm property is used to specify an alternate java executable. 
-      For example, &quot;-vm c:\jdk142\jre\bin\java&quot;.<BR><BR>    However, the -vm value is ignored by the inner vm for JUnit plug-in tests requiring a 1.5 JRE to execute (see <A HREF="#testtargets">test targets</A>).  This property must be used in conjunction with the -properties parameter described above at all times.</P></td></tr>
-  <tr>
-    <td>-Dtest.target=performance</td><td>Runs the performance target only in each test plug-in's test.xml. When running tests on Windows, 
-      enclose this parameter in double quotes, ie. runtests &quot;-Dtest.target=performance&quot;.</td></tr><tr><td>targetname1 targetname2 targetname3 etc..</td><td><P>Replace  with a list of <A HREF="#testtargets">test targets</A> to execute (space delineated).  Each corresponds to an Ant target in the eclipse-testing/test.xml script.  <BR><BR>For example, <BR><B>runtests -os linux -ws gtk -arch x86  ant antui -properties vm.properties</B><BR> This will execute the &quot;ant&quot; and &quot;antui&quot; test targets only.  If not specified, the  &quot;all&quot; target will be executed.<BR></P></td></tr>
-</table><p><font size="+1"><A NAME="testtargets"></A>Appendix A - Test Targets</font></p><p>Ant targets in the main test.xml which execute tests. Typically each corresponds
-   to the execution of a test plug-in's test.xml.<BR></p><table width="90%" border="1"><tr><td WIDTH="34%">Target name (special jvm requirements)</td><td WIDTH="66%">Description / test plug-in</td></tr>
-  <tr> 
-    <td WIDTH="34%">all (<B>1.4 and 1.5 JREs required</B>)</td><td WIDTH="66%">Runs all the targets below.  Default.</td></tr>
-  <tr>
-    <td WIDTH="34%">ant</td><td WIDTH="66%">org.eclipse.ant.tests.core</td></tr>
-  <tr> 
-    <td WIDTH="34%">antui</td><td WIDTH="66%">org.eclipse.ant.tests.ui</td></tr>
-  <tr>
-    <td WIDTH="34%">compare</td><td WIDTH="66%">org.eclipse.compare.tests</td></tr>
-  <tr>
-    <td WIDTH="34%">coreexpressions</td><td WIDTH="66%">org.eclipse.core.expressions.tests</td></tr><tr><td WIDTH="34%">coreresources</td><td WIDTH="66%">org.eclipse.core.tests.resources</td></tr><tr><td WIDTH="34%">coreruntime</td><td WIDTH="66%">org.eclipse.core.tests.runtime</td></tr>
-  <tr>
-    <td WIDTH="34%">filebuffers</td><td WIDTH="66%">org.eclipse.core.filebuffers.tests</td></tr>
-  <tr> 
-    <td WIDTH="34%">help</td><td WIDTH="66%">org.eclipse.help.tests</td></tr><TR><TD WIDTH="34%">jdtapt <B>(1.5 JRE required)</B></TD><TD WIDTH="66%">org.eclipse.jdt.apt.tests</TD></TR><TR>
-    <TD WIDTH="34%">jdtcorebuilder (<B>1.5 JRE required</B>)</TD><TD WIDTH="66%">org.eclipse.jdt.core.tests.builder</TD></TR><TR>
-    <TD HEIGHT="20" WIDTH="34%">jdtcorecompiler (<B>1.5 JRE required</B>)</TD><TD HEIGHT="20" WIDTH="66%">org.eclipse.jdt.core.tests.compiler</TD></TR><TR>
-    <TD WIDTH="34%">jdtcoremodel (<B>1.5 JRE required</B>)</TD><TD WIDTH="66%">org.eclipse.jdt.core.tests.model</TD></TR><TR>
-    <TD WIDTH="34%">jdtcoreperf</TD><TD WIDTH="66%">org.eclipse.jdt.core.tests.performance</TD></TR>
-  <tr> 
-    <td WIDTH="34%">jdtdebug</td><td WIDTH="66%">org.eclipse.jdt.debug.tests</td></tr>
-  <tr>
-    <td WIDTH="34%">jdttext</td><td WIDTH="66%">org.eclipse.jdt.text.tests</td></tr>
-  <tr> 
-    <td WIDTH="34%">jdtui</td><td WIDTH="66%">org.eclipse.jdt.ui.tests</td></tr>
-  <tr> 
-    <td height="24" WIDTH="34%">jdtuirefactoring</td><td WIDTH="66%">org.eclipse.jdt.ui.tests.refactoring</td></tr><TR>
-    <TD WIDTH="34%">jface</TD><TD WIDTH="66%">org.eclipse.jface.text.tests</TD></TR><TR>
-    <TD WIDTH="34%">jfacedatabinding</TD><TD WIDTH="66%">org.eclipse.jface.tests.databinding</TD></TR><TR>
-    <TD WIDTH="34%">ltkcorefactoringtests</TD><TD WIDTH="66%">org.eclipse.ltk.core.refactoring.tests</TD></TR>
-  <tr>
-    <td WIDTH="34%" HEIGHT="20">ltkuirefactoringtests</td><td WIDTH="66%" HEIGHT="20">org.eclipse.ltk.ui.refactoring.tests</td></tr><TR>
-    <TD WIDTH="34%">osgi</TD><TD WIDTH="66%">org.eclipse.osgi.tests</TD></TR><TR>
-    <TD WIDTH="34%">pdeui</TD><TD WIDTH="66%">org.eclipse.pde.ui.tests</TD></TR><TR>
-    <TD WIDTH="34%">relEng</TD><TD WIDTH="66%">org.eclipse.releng.tests</TD></TR>
-  <tr> 
-    <td WIDTH="34%">swt</td><td WIDTH="66%">org.eclipse.swt.tests</td></tr>
-  <tr> 
-    <td WIDTH="34%">teamcore</td><td WIDTH="66%">org.eclipse.team.tests.core</td></tr>
-  <tr> 
-    <td WIDTH="34%">teamcvs</td><td WIDTH="66%">org.eclipse.team.tests.cvs.core</td></tr>
-  <tr>
-    <td WIDTH="34%">text</td><td WIDTH="66%">org.eclipse.text.tests</td></tr><TR> 
-    <TD WIDTH="34%">ua</TD><TD WIDTH="66%">org.eclipse.ua.tests</TD></TR>
-  <tr> 
-    <td WIDTH="34%">ui</td><td WIDTH="66%">org.eclipse.ui.tests</td></tr>
-  <tr>
-    <td WIDTH="34%">uieditors</td><td WIDTH="66%">org.eclipse.ui.editors.tests</td></tr><TR>
-    <TD WIDTH="34%">uinavigator</TD><TD WIDTH="66%">org.eclipse.ui.tests.navigator</TD></TR><TR>
-    <TD WIDTH="34%">uiperformance</TD><TD WIDTH="66%">org.eclipse.ui.tests.performance</TD></TR>
-  <tr>
-    <td WIDTH="34%">uircp</td><td WIDTH="66%">org.eclipse.ui.tests.rcp</td></tr><TR>
-    <TD WIDTH="34%">uiviews</TD><TD WIDTH="66%">org.eclipse.ui.tests.views.properties.tabbed</TD></TR><TR>
-    <TD WIDTH="34%">uiworkbenchtexteditor</TD><TD WIDTH="66%">org.eclipse.ui.workbench.texteditor.tests</TD></TR>
-  <tr> 
-    <td WIDTH="34%">update</td><td WIDTH="66%">org.eclipse.update.tests.core</td></tr>
-</table><p><br>
-</p><p><font size="+1"><a name="appendixb"></a>Appendix B- Supported os, ws, and arch 
-  value combinations</font></p><p>The following table contains the values that can be used with the -os, -ws, 
-  and -arch switches.</p><table width="75%" border="1">
-  <tr> 
-    <td>Operating System (os)</td><td>Windowing System (ws)</td><td>Architecture (arch)</td></tr>
-  <tr> 
-    <td>aix</td><td>motif</td><td>ppc</td></tr>
-  <tr> 
-    <td>hpux</td><td>motif</td><td>PA_RISC</td></tr>
-  <tr> 
-    <td>linux</td><td>gtk</td><td>x86</td></tr>
-  <tr>
-    <td>linux</td><td>gtk</td><td>x86_64</td></tr>
-  <tr>
-    <td>linux</td><td>gtk</td><td>ppc</td></tr>
-  <tr> 
-    <td>linux</td><td>motif</td><td>x86</td></tr>
-  <tr>
-    <td>macosx</td><td>carbox</td><td>ppc</td></tr>
-  <tr>
-    <td>solaris</td><td>gtk</td><td>sparc</td></tr>
-  <tr> 
-    <td>solaris</td><td>motif</td><td>sparc</td></tr>
-  <tr> 
-    <td>win32</td><td>win32</td><td>x86</td></tr>
+<font size="+2"> Automated Testing for PHP Development Tools
+Releases</font>
+<p><font size="+1">Description</font></p>
+<p>This document describes how to install and run the PDT JUnit test
+plugins from a command line. This method is intended for anyone who
+wishes to run the test written by the PDT team, and can be used in order
+to automate their testing process.</p>
+<p><font size="+1">Requirements</font></p>
+<p>1. Java runtime environment version 1.4 or 1.5. See <A
+	HREF="#testtargets">test targets</A> for details on which tests require
+the 1.5 version. All other tests can be executed with either JRE levels.<BR>
+2. The Eclipse test framework distribution- this package is supplied
+with each and every one of the eclipse releases (for example - (<a
+	href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.2.1-200609210945/eclipse-test-framework-3.2.1.zip">eclipse-test-framework-3.2.1.zip</a>).<br>
+3. <a href="http://www.info-zip.org/pub/infozip/UnZip.html">Info-ZIP
+UnZip</a> version 5.41 or later<br>
+<p><font size="+1">Setup</font></p>
+<OL>
+	<li>Create a root directory named "tests" directory<br>
+	<li>Extract the
+	pdt-&lt;latest-date&gt;/I&lt;latest-date&gt;/all-in-one/pdt-all-in-one-I&lt;latest-date&gt;-win32/mac/linux.zip
+	(For example:
+	&lt;root&gt;\temp\pdt-20070101\I20070101\all-in-one\pdt-all-in-one-I20070101-win32.zip)
+	to tests/pdt-testing directory.<br>
+	<li>Extract pdt-Automated-Tests-I&lt;latest-date&gt;.zip (For
+	example:
+	&lt;root&gt;/temp/pdt-20070101/I20070101/pdt-Automated-Tests-I20070101.zip)
+	to the tests directory.<br>
+	<li>copy the tests/pdt-testing files to the tests directory.
+	<li>Extract tests/pdt-junit-tests-<lable>.zip (For
+	example: tests/pdt-junit-tests-I20070101.zip)<br>
+	<li>Extract eclipse-test-framework-3.2.1.zip<b> Note:</b> When a
+	Confirmation Dialog appears - Click Overwrite All
+	</p>
+</ol>
+<font size="+1">Running Tests</font>
+</p>
+<p>From a command prompt or terminal:</p>
+<p>1. cd to the pdt-testing directory<br>
+2. Execute the following script:</p>
+<p><b>Windows: runtests [-vm "path/to/java"]</b><br>
+<b>Mac OS: runtests –ws (i.e carbon) –os (macosx) –arch (i.e ppc)</b><br>
+<b>Linux: runtests –ws (i.e gtx) –os (linux) –arch (i.e x86)</b></p>
+<p>All parameters and targets are optional. On *nix systems, the os,
+ws and arch parameters must be specified in addition to the -properties
+parameter.</p>
+<p><font size="+1"><a name="vm"></a>Parameters</font></p>
+<table width="90%" border="1">
+	<tr>
+		<td>Parameter</td>
+		<td>Description</td>
+	</tr>
+	<tr>
+		<td>-os &lt;operating system&gt;</td>
+		<td>The OS the tests are being run on. One of: aix, hpux, linux,
+		macosx, qnx, solaris, win32. <b>Default win32</b></td>
+	</tr>
+	<tr>
+		<td>-ws &lt;windowing system&gt;</td>
+		<td>The windowing system the tests are being run on. One of:
+		carbon, motif, gtk, photon, win32. <b>Default win32</b></td>
+	</tr>
+	<tr>
+		<td>-arch &lt;architecture&gt;</td>
+		<td>The architecture the tests are being run on. One of: ppc,
+		PA_RISC, x86, sparc. <b>Default x86</b></td>
+	</tr>
+	<tr>
+		<td>-noclean</td>
+		<td>Run tests without installing a clean Eclipse (in
+		&quot;test-eclipse&quot;) between test targets. Default is to delete
+		an existing test-eclipse directory and re-extract the Eclipse
+		distribution between test targets.</td>
+	</tr>
+	<tr>
+		<td>-properties</td>
+		<td>
+		<P>As per requirements noted above, this is used to reference a
+		properties file containing additional Ant properties used in running
+		tests.Can be used to pass additional vm arguments to the Java virtual
+		machine running the tests by adding the entry
+		&quot;extraVMargs=&lt;the args to pass to the vm&gt;&quot; to the
+		specified properties file.<BR>
+		<BR>
+		At a minimum, the property file must include a &quot;J2SE-5.0&quot;
+		property which specifies a path to a 1.5 java executable, for example:<BR>
+		<BR>
+		<B>J2SE-5.0=&quot;c:/program files/jdk1.5.0_06/jre/bin/java&quot;</B></P>
+		<P>The path must be enclosed in double quotes if it contains
+		spaces. This key-value pair is required to run JUnit plug-in tests
+		that require a 1.5 level jvm.</P>
+		</td>
+	</tr>
+	<tr>
+		<td>-vm</td>
+		<td>
+		<P>When runtests is executed, two instances of eclipse are
+		started: one to invoke the org.eclipse.ant.core.antRunner application
+		to run a test.xml script in a test plug-in (outer instance) and
+		another in which the JUnit tests are being executed (inner). By
+		default, both will use the java executable on the system path. The -vm
+		property is used to specify an alternate java executable. For example,
+		&quot;-vm c:\jdk142\jre\bin\java&quot;.<BR>
+		<BR>
+		However, the -vm value is ignored by the inner vm for JUnit plug-in
+		tests requiring a 1.5 JRE to execute (see <A HREF="#testtargets">test
+		targets</A>). This property must be used in conjunction with the
+		-properties parameter described above at all times.</P>
+		</td>
+	</tr>
+	<tr>
+		<td>-Dtest.target=performance</td>
+		<td>Runs the performance target only in each test plug-in's
+		test.xml. When running tests on Windows, enclose this parameter in
+		double quotes, ie. runtests &quot;-Dtest.target=performance&quot;.</td>
+	</tr>
+	<tr>
+		<td>targetname1 targetname2 targetname3 etc..</td>
+		<td>
+		<P>Replace with a list of <A HREF="#testtargets">test targets</A>
+		to execute (space delineated). Each corresponds to an Ant target in
+		the eclipse-testing/test.xml script. <BR>
+		<BR>
+		For example, <BR>
+		<B>runtests -os linux -ws gtk -arch x86 ant antui -properties
+		vm.properties</B><BR>
+		This will execute the &quot;ant&quot; and &quot;antui&quot; test
+		targets only. If not specified, the &quot;all&quot; target will be
+		executed.<BR>
+		</P>
+		</td>
+	</tr>
+</table>
+<p><font size="+1"><A NAME="testtargets"></A>Appendix A -
+Test Targets</font></p>
+<p>Ant targets in the main test.xml which execute tests. Typically
+each corresponds to the execution of a test plug-in's test.xml.<BR>
+</p>
+<table width="90%" border="1">
+	<tr>
+		<td WIDTH="34%">Target name (special jvm requirements)</td>
+		<td WIDTH="66%">Description / test plug-in</td>
+	</tr>
+	<tr>
+		<td WIDTH="34%">all (<B>1.4 and 1.5 JREs required</B>)</td>
+		<td WIDTH="66%">Runs all the targets below. Default.</td>
+	</tr>
+	<tr>
+		<td WIDTH="34%">Bare</td>
+		<td WIDTH="66%">org.eclipse.php.test.BareSuiteCase</td>
+	</tr>
+	<tr>
+		<td WIDTH="34%">Headless</td>
+		<td WIDTH="66%">org.eclipse.php.test.HeadlessSuiteCase</td>
+	</tr>
+	<tr>
+		<td WIDTH="34%">GUI</td>
+		<td WIDTH="66%">org.eclipse.php.test.GUISuiteCase</td>
+	</tr>
+</table>
+<p><br>
+</p>
+<p><font size="+1"><a name="appendixb"></a>Appendix B-
+Supported os, ws, and arch value combinations</font></p>
+<p>The following table contains the values that can be used with the
+-os, -ws, and -arch switches.</p>
+<table width="75%" border="1">
+	<tr>
+		<td>Operating System (os)</td>
+		<td>Windowing System (ws)</td>
+		<td>Architecture (arch)</td>
+	</tr>
+	<tr>
+		<td>aix</td>
+		<td>motif</td>
+		<td>ppc</td>
+	</tr>
+	<tr>
+		<td>hpux</td>
+		<td>motif</td>
+		<td>PA_RISC</td>
+	</tr>
+	<tr>
+		<td>linux</td>
+		<td>gtk</td>
+		<td>x86</td>
+	</tr>
+	<tr>
+		<td>linux</td>
+		<td>gtk</td>
+		<td>x86_64</td>
+	</tr>
+	<tr>
+		<td>linux</td>
+		<td>gtk</td>
+		<td>ppc</td>
+	</tr>
+	<tr>
+		<td>linux</td>
+		<td>motif</td>
+		<td>x86</td>
+	</tr>
+	<tr>
+		<td>macosx</td>
+		<td>carbox</td>
+		<td>ppc</td>
+	</tr>
+	<tr>
+		<td>solaris</td>
+		<td>gtk</td>
+		<td>sparc</td>
+	</tr>
+	<tr>
+		<td>solaris</td>
+		<td>motif</td>
+		<td>sparc</td>
+	</tr>
+	<tr>
+		<td>win32</td>
+		<td>win32</td>
+		<td>x86</td>
+	</tr>
 </table>
 </body>
 </html>
