@@ -151,6 +151,12 @@ public class PHPDebugUIMessages extends NLS {
 	public static String SourceNotFoundEditorInput_Source_not_found_for__0__2;
 	public static String SourceNotFoundEditorInput_Source_Not_Found_1;
 
+	public static String LaunchUtilities_error;
+	public static String LaunchUtilities_projects;
+	public static String LaunchUtilities_selectProject;
+	public static String LaunchUtilities_selectFile;
+	public static String LaunchUtilities_selectProjectFile;
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, PHPDebugUIMessages.class);

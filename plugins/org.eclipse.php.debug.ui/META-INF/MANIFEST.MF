@@ -22,7 +22,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.xml.core,
  org.eclipse.php.ui,
- org.eclipse.php.server.ui,
  org.eclipse.php.server.core,
  org.eclipse.core.expressions,
  org.eclipse.wst.xml.ui

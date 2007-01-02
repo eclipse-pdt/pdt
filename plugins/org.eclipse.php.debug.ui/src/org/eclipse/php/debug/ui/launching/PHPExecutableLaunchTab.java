@@ -36,7 +36,6 @@ import org.eclipse.php.debug.ui.Logger;
 import org.eclipse.php.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.debug.ui.preferences.phps.PHPexeDescriptor;
 import org.eclipse.php.debug.ui.preferences.phps.PHPsComboBlock;
-import org.eclipse.php.server.ui.ServerUtilities;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
@@ -325,7 +324,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	private void handleVariablesButtonSelected(final Text textField) {
 		IFile file = null;
-		final IResource resource = ServerUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures());
+		final IResource resource = LaunchUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures());
 		if (resource instanceof IFile)
 			file = (IFile) resource;
 		if (file != null)

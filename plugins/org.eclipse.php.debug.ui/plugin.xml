@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="launchConfigurationTabs" name="Launch Configuration Tabs" schema="schema/launchConfigurationTabs.exsd"/>
    <extension-point id="phpDebugModelPresentations" name="PHP Debug Model Presentations" schema="schema/phpDebugModelPresentations.exsd"/>
    <extension
          point="org.eclipse.debug.ui.debugModelPresentations">
@@ -377,17 +378,6 @@
       </shortcut>
       
       
-   </extension>
-   <extension point="org.eclipse.php.server.ui.serverTab">
-  		<serverTab
-          class="org.eclipse.php.debug.ui.launching.PHPServerTab"
-          id="org.eclipse.php.debug.ui.launching.PHPServerTab"
-          />
-        <serverTab
-          class="org.eclipse.php.debug.ui.launching.PHPServerAdvancedTab"
-          id="org.eclipse.php.debug.ui.launching.PHPServerAdvancedTab"
-          placeAfter="org.eclipse.php.debug.ui.launching.PHPServerTab"
-          />
    </extension>
    
 <!-- Editor -->
