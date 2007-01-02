@@ -157,4 +157,10 @@ public class XMLPreferencesWriter {
 			}
 		}
 	}
+	
+	public static String storableElementsToString(IXMLPreferencesStorable[] elements){
+		StringBuffer sb = new StringBuffer();
+		appendDelimitedString(sb, elements);
+		return sb.toString();
+	}
 }
