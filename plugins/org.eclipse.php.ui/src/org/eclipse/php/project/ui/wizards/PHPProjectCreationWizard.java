@@ -12,6 +12,8 @@ package org.eclipse.php.project.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -44,19 +46,28 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
     
     protected final ArrayList wizardPagesList = new ArrayList();
     private IProject createdProject = null;
-    private IConfigurationElement configElement;
-    
+    private IConfigurationElement configElement; 
+    private List /** WizardPageFactory */ wizardPageFactories = new ArrayList(); 
 	
 	public PHPProjectCreationWizard(IDataModel model) {
 		super(model);
+		populateWizardFactoryList();
 	}
 
-	public PHPProjectCreationWizard() {
-		super();
+	public PHPProjectCreationWizard() {		
+		super();		
+		populateWizardFactoryList();
 	}
+	
 
+	/**
+	 * This operation is called after the Wizard  is created (and before the doAddPages) 
+	 * and it is used to define all the properties that the wizard pages will set
+	 * (not necessarly store as properties).
+	 * All the wizard pages may access these properties.  
+	 */
 	protected IDataModelProvider getDefaultProvider() {
-		return new PHPCreationDataModelProvider();
+		return new PHPCreationDataModelProvider(wizardPageFactories);
 	}
 
 	/*
@@ -68,13 +79,14 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 		addPage(basePage = new PHPProjectWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
 		addPage(includePathPage = new PHPIncludePathPage(getDataModel(), "page2")); //$NON-NLS-1$
 		
-		IWizardPage[] pages = PHPWizardPagesRegistry.getPages(ID); 
-		if (pages != null) {
-			for (int i = 0; i < pages.length; ++i) {
-				addPage(pages[i]);
-				wizardPagesList.add(pages[i]);
-			}
+		// generates the pages added trough the phpWizardPages extention point
+		// and add them to the wizard
+		for (Iterator iter = wizardPageFactories.iterator(); iter.hasNext();) {
+			WizardPageFactory pageFactory = (WizardPageFactory) iter.next();
+			IWizardPage currentPage = pageFactory.createPage(getDataModel());
+			addPage(currentPage);	
 		}
+			
 	}
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
@@ -87,30 +99,34 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	protected boolean prePerformFinish() {
+		createdProject = (IProject)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
+		
 		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH,includePathPage.getIncludePathsBlock().getIncludepathEntries());	
 		basePage.setProjectOptionInModel(getDataModel());
+			
         return super.prePerformFinish();
 	}
 	
 	protected void postPerformFinish() throws InvocationTargetException {
 		BasicNewProjectResourceWizard.updatePerspective(configElement);
 				
-		createdProject = (IProject)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
 		if (createdProject != null) { 			
 //			 Save any project-specific data (Fix Bug# 143406)
  			try {
 				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();				
 			} catch (BackingStoreException e) {
 				Logger.logException(e);
-			} 			
- 			// call the postPerformFinish for any page added trough the extention point
-// 			if (createdProject != null) {
-// 				for(Iterator it = wizardPagesList.iterator(); it.hasNext();){
-// 					BasicPHPWizardPageExtended page = (BasicPHPWizardPageExtended) it.next();
-// 					page.postPerformFinish(createdProject);
-// 					page.flushPreferences();		
-// 				}
-// 			}
+			} 				
  		}
+	}
+	
+	private void populateWizardFactoryList(){
+		IWizardPage[] pageGenerators = PHPWizardPagesRegistry.getPageFactories(ID);
+		if (pageGenerators != null) {
+			for (int i = 0; i < pageGenerators.length; i++) {		
+				WizardPageFactory pageFactory = (WizardPageFactory) pageGenerators[i];
+				wizardPageFactories.add(pageFactory);				
+			}
+		}
 	}
 }
