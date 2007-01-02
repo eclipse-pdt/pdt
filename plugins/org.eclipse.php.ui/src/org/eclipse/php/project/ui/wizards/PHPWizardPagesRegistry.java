@@ -1,10 +1,6 @@
 package org.eclipse.php.project.ui.wizards;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -57,6 +53,29 @@ public class PHPWizardPagesRegistry {
 				}
 			});
 			return (IWizardPage[]) pagesList.toArray(new IWizardPage[pagesList.size()]);
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns all WizardPageFactory(s) contributed to the Wizard with specified ID through extension point <code>org.eclipse.php.ui.phpWizardPages</code>.
+	 * @param id Wizard id
+	 * @return Array of {@link WizardPageFactory} pages, or <code>null</code> if no pages where contributed.
+	 */
+	public static WizardPageFactory[] getPageFactories(String id){
+		final List elementsList = (List) instance.pages.get(id);
+		if (elementsList != null) {
+			final List pagesList = new LinkedList();
+			SafeRunner.run(new SafeRunnable("Error creating pages for extension point " + EXTENSION_POINT) {
+				public void run() throws Exception {
+					Iterator i = elementsList.iterator();
+					while (i.hasNext()) {
+						IConfigurationElement element = (IConfigurationElement)i.next();
+						pagesList.add(element.createExecutableExtension(CLASS_ATTRIBUTE));
+					}
+				}
+			});
+			return (WizardPageFactory[]) pagesList.toArray(new WizardPageFactory[pagesList.size()]);
 		}
 		return null;
 	}
