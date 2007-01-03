@@ -16,10 +16,10 @@ import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.manager.ServersManager;
 import org.eclipse.php.server.ui.Logger;
 import org.eclipse.php.server.ui.ServerCompositeFragment;
-import org.eclipse.php.server.ui.wizard.CompositeWizardFragment;
-import org.eclipse.php.server.ui.wizard.IWizardHandle;
-import org.eclipse.php.server.ui.wizard.WizardControlWrapper;
-import org.eclipse.php.server.ui.wizard.WizardModel;
+import org.eclipse.php.ui.wizards.CompositeWizardFragment;
+import org.eclipse.php.ui.wizards.IWizardHandle;
+import org.eclipse.php.ui.wizards.WizardControlWrapper;
+import org.eclipse.php.ui.wizards.WizardModel;
 import org.eclipse.swt.widgets.Composite;
 
 public class ServerWizardFragment extends CompositeWizardFragment {
@@ -49,7 +49,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 				Server server = (Server) getWizardModel().getObject(WizardModel.SERVER);
 				if (server == null) {
 					server = new Server();
-					comp.setServer(server);
+					comp.setData(server);
 				}
 			} catch (Exception e) {
 				Logger.logException(e);

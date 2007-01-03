@@ -7,6 +7,8 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.server.PHPServerUIMessages;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.server.core.manager.ServersManager;
+import org.eclipse.php.ui.wizards.CompositeFragment;
+import org.eclipse.php.ui.wizards.IControlHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -48,10 +50,22 @@ public class ServerCompositeFragment extends CompositeFragment {
 		createControl();
 	}
 
-	public void setServer(Server server) {
-		super.setServer(server);
+	/**
+	 * Override the super setData to handle only Server types.
+	 * 
+	 * @throws IllegalArgumentException if the given object is not a {@link Server}
+	 */
+	public void setData(Object server) throws IllegalArgumentException {
+		if (server != null && !(server instanceof Server)) {
+			throw new IllegalArgumentException("The given object is not a Server");
+		}
+		super.setData(server);
 		init();
 		validate();
+	}
+
+	public Server getServer() {
+		return (Server) getData();
 	}
 
 	/**
@@ -78,8 +92,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		name.setLayoutData(data);
 		name.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				if (server != null)
-					//					workingCopy.setName(name.getText());
+				if (getServer() != null)
 					modifiedValuesCache.serverName = name.getText();
 				validate();
 			}
@@ -95,6 +108,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 	}
 
 	protected void init() {
+		Server server = getServer();
 		if (name == null || server == null)
 			return;
 
@@ -173,7 +187,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 	}
 
 	protected void validate() {
-		if (server == null) {
+		if (getServer() == null) {
 			setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
@@ -233,7 +247,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		url.setLayoutData(data);
 		url.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				if (server != null) {
+				if (getServer() != null) {
 					String urlStr = url.getText();
 					//					server.setBaseURL(urlStr);
 					modifiedValuesCache.url = urlStr;
@@ -268,7 +282,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 				browseButton.setEnabled(selected);
 				locationLabel.setEnabled(selected);
 
-				if (server != null)
+				if (getServer() != null)
 					//					server.setPublish(selected);
 					modifiedValuesCache.canPublish = selected;
 			}
@@ -296,7 +310,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		publishDir.setFont(font);
 		publishDir.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				if (server != null)
+				if (getServer() != null)
 					//					server.setDocumentRoot(publishDir.getText());
 					modifiedValuesCache.publishDir = publishDir.getText();
 				validate();
@@ -342,6 +356,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 */
 	public boolean performOk() {
 		try {
+			Server server = getServer();
 			// Save any modification logged into the modified value cache object.
 			if (server != null) {
 				server.setPort(String.valueOf(modifiedValuesCache.port));
@@ -352,7 +367,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			server.setHost(modifiedValuesCache.host);
 			server.setName(modifiedValuesCache.serverName);
 			if (originalValuesCache.serverName != null && !originalValuesCache.serverName.equals("") && //$NON-NLS-1$
-					!originalValuesCache.serverName.equals(modifiedValuesCache.serverName)) {
+				!originalValuesCache.serverName.equals(modifiedValuesCache.serverName)) {
 				// Update the ServerManager with the new server name
 				ServersManager.removeServer(originalValuesCache.serverName);
 				ServersManager.addServer(server);
@@ -372,6 +387,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		// Since the performOk might be triggered if this composite is inside a wizard fragment, we have to 
 		// implement the perform cancel to revert any changes made.
 		try {
+			Server server = getServer();
 			if (server != null) {
 				server.setPort(String.valueOf(originalValuesCache.port));
 				server.setBaseURL(originalValuesCache.url);

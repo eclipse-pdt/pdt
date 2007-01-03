@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="serverWizardFragment" name="Server Wizard Fragment" schema="schema/serverWizardFragment.exsd"/>
-
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       id="org.eclipse.php.server.ui.launchConfigurationTypeImage"
@@ -32,8 +30,8 @@
           placeAfter="org.eclipse.php.debug.ui.launching.PHPServerTab"/>
  </extension>
   <extension
-        point="org.eclipse.php.server.ui.serverWizardFragment">
-     <wizardFragment
+        point="org.eclipse.php.ui.wizardAndCompositeFragments">
+     <wizardAndCompositeFragment
            class="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
            id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
            name="Basic Factory"/>

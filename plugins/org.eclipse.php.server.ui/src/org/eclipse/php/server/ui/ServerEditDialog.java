@@ -20,6 +20,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.server.PHPServerUIMessages;
 import org.eclipse.php.server.core.Server;
 import org.eclipse.php.ui.util.SWTUtil;
+import org.eclipse.php.ui.wizards.CompositeFragment;
+import org.eclipse.php.ui.wizards.ICompositeFragmentFactory;
+import org.eclipse.php.ui.wizards.IControlHandler;
+import org.eclipse.php.ui.wizards.WizardFragmentsFactoryRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -51,11 +55,11 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
 		CTabFolder tabs = SWTUtil.createTabFolder(parent);
-		ICompositeFragmentFactory[] factories = ServerFragmentsFactoryRegistry.getFragmentsFactories();
+		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories();
 		for (int i = 0; i < factories.length; i++) {
 			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
 			CompositeFragment fragment = factories[i].createComposite(tabs, this);
-			fragment.setServer(server);
+			fragment.setData(server);
 			tabItem.setText(fragment.getDisplayName());
 			tabItem.setControl(fragment);
 			runtimeComposites.add(fragment);

@@ -14,11 +14,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.server.PHPServerUIMessages;
-import org.eclipse.php.server.ui.ICompositeFragmentFactory;
-import org.eclipse.php.server.ui.ServerFragmentsFactoryRegistry;
-import org.eclipse.php.server.ui.wizard.FragmentedWizard;
-import org.eclipse.php.server.ui.wizard.WizardFragment;
-import org.eclipse.php.server.ui.wizard.WizardModel;
+import org.eclipse.php.ui.wizards.*;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -53,7 +49,7 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 					loadChildren(children, list);
 					return;
 				}
-				ICompositeFragmentFactory[] factories = ServerFragmentsFactoryRegistry.getFragmentsFactories();
+				ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories();
 				children = new WizardFragment[factories.length];
 				for (int i = 0; i < factories.length; i++) {
 					children[i] = factories[i].createWizardFragment();

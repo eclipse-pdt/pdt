@@ -2,6 +2,10 @@ package org.eclipse.php.server.ui.wizard;
 
 import org.eclipse.php.server.internal.ui.ServerWizardFragment;
 import org.eclipse.php.server.ui.*;
+import org.eclipse.php.ui.wizards.CompositeFragment;
+import org.eclipse.php.ui.wizards.ICompositeFragmentFactory;
+import org.eclipse.php.ui.wizards.IControlHandler;
+import org.eclipse.php.ui.wizards.WizardFragment;
 import org.eclipse.swt.widgets.Composite;
 
 /**
