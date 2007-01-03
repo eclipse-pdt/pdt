@@ -33,6 +33,7 @@
         point="org.eclipse.php.ui.wizardAndCompositeFragments">
      <wizardAndCompositeFragment
            class="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
+           fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
            id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
            name="Basic Factory"/>
   </extension>

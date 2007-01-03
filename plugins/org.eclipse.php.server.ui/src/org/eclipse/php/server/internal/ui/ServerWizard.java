@@ -26,6 +26,8 @@ import org.eclipse.ui.IWorkbench;
 
 public class ServerWizard extends FragmentedWizard implements INewWizard {
 
+	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.server.ui.serverWizardAndComposite";
+	
 	public ServerWizard() {
 		this(PHPServerUIMessages.getString("ServerWizard.serverCreation")); //$NON-NLS-1$
 	}
@@ -49,7 +51,7 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 					loadChildren(children, list);
 					return;
 				}
-				ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories();
+				ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories(FRAGMENT_GROUP_ID);
 				children = new WizardFragment[factories.length];
 				for (int i = 0; i < factories.length; i++) {
 					children[i] = factories[i].createWizardFragment();

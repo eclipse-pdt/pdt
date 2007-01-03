@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ServerEditDialog extends TitleAreaDialog implements IControlHandler {
 
+	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.server.ui.serverWizardAndComposite";
 	private Server server;
 	private ArrayList runtimeComposites;
 	private SelectionListener tabsListener;
@@ -55,7 +56,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
 		CTabFolder tabs = SWTUtil.createTabFolder(parent);
-		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories();
+		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories(FRAGMENT_GROUP_ID);
 		for (int i = 0; i < factories.length; i++) {
 			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
 			CompositeFragment fragment = factories[i].createComposite(tabs, this);
