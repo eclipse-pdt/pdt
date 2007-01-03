@@ -16,7 +16,7 @@
 	<property name="rssMessageDescription" value="" />
 	<property name="rssMessageContributor" value="PHP Build Server" />
 	<property name="rssMessageLink" value="http://download.eclipse.org/tools/php/downloads/index.php" />
-	<property name="rssOutputFile" value="../rss/updates.xml" />
+	<property name="rssOutputFile" value="updates.xml" />
 
 	<target name="createProject">
 		<RssAddProject projectName="${rssProjectName}" />
@@ -27,7 +27,8 @@
 	</target>
 
 	<target name="addMessage">
-		<RssSendMessage projectName="${rssProjectName}" centerName="${rssCenterName}" title="${rssTitle}" link="${rssMessageLink}" description="${rssMessageDescription}" contibutor="${rssMessageContributor}" />
+		<loadfile property="description" srcFile="content"/>
+		<RssSendMessage projectName="${rssProjectName}" centerName="${rssCenterName}" title="${rssTitle}" link="${rssMessageLink}" description="${description}" contibutor="${rssMessageContributor}" />
 	</target>
 
 	<target name="generateRss">
@@ -36,7 +37,7 @@
 
 	<target name="uploadRss">
 		<property name="source" value="${rssOutputFile}" />
-		<property name="target" value="rss/blackboard.xml" />
+		<property name="target" value="rss/updates.xml" />
 
 		<exec dir="." executable="rsync">
 			<arg line="-avz --password-file=$HOME/.pass --stats ${source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/downloads/${target}" />
@@ -48,15 +49,14 @@
 		<property name="date" value="${DSTAMP}" />
 		<property name="time" value="${TSTAMP}" />
 		<property name="timestamp" value="${date} ${time}" />
-		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="roy@zend.com;" files="results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
+		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="roy@zend.com;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
 	</target>
 
 	<target name="getTestResults">
 		<xslt in="../src/results/xml/all/TEST-php.xml" out="content" style="style.xsl">
-			<outputproperty name="method" value="xml" />
-			<outputproperty name="standalone" value="yes" />
-			<outputproperty name="encoding" value="iso8859_1" />
-			<outputproperty name="indent" value="yes" />
+			<outputproperty name="method" value="text" />
+			<outputproperty name="omit-xml-declaration" value="yes" />			
+			<outputproperty name="indent" value="no" />
 		</xslt>
 	</target>
 </project>

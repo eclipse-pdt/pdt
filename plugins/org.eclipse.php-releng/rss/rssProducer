@@ -7,15 +7,18 @@ if [ -z "$1" ]; then
     echo usage: $0 "<Message title> <Message Description> <Message Contributor>"
     exit
 fi
-if [ -z "$2" ]; then 
-    echo usage: $0 "<Message title> <Message Description> <Message Contributor>"
-    exit
-fi
-if [ -z "$3" ]; then 
-    echo usage: $0 "<Message title> <Message Description> <Message Contributor>"
-    exit
-fi
 
-ant --noconfig -lib ext-lib -f rss.xml addMessage -DrssTitle="$1" -DrssMessageDescription="$2" -DrssMessageContributor="$3"
+# short summary
+ant --noconfig -lib ext-lib -f rss.xml getTestResults
+
+# mail results
+ant --noconfig -lib ext-lib -f rss.xml mailUnitTestResults
+
+# add message
+ant --noconfig -lib ext-lib -f rss.xml addMessage -DrssTitle="$1" 
+
+# generate the RSS
 ant --noconfig -lib ext-lib -f rss.xml generateRss 
+
+# uploads the RSS
 ant --noconfig -lib ext-lib -f rss.xml uploadRss
