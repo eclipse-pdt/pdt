@@ -1,6 +1,7 @@
 #!/bin/sh
-
-mkdir ../src
+# This file is intend to be executed in the build machine 
+# remove any leftovers
+rm -rf ../src
 
 #dos2unix 
 dos2unix buildall.sh 
@@ -15,10 +16,12 @@ chmod +x *
 #dos2unix 
 dos2unix runtests
 
-./runtests -ws gtk -os linux -arch ppc 
+# runtests
+./runtests -ws gtk -os linux -arch ppc -xserver
 
+# update by rss + mail
 cd ../rss
-./rssProducer "Unit test results are available for $(date +%Y%m%d)" "" "Php Build Server"
+./rssProducer "Unit test results are available for $(date +%Y%m%d)"
 
 
 

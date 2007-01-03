@@ -49,7 +49,7 @@
 		<property name="date" value="${DSTAMP}" />
 		<property name="time" value="${TSTAMP}" />
 		<property name="timestamp" value="${date} ${time}" />
-		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="roy@zend.com;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
+		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="pdt-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
 	</target>
 
 	<target name="getTestResults">
