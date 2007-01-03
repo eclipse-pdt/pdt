@@ -13,7 +13,8 @@
 	<extension-point id="actionFilterContributors" name="PHP Action Filter Contributor" schema="schema/actionFilterContributors.exsd"/>
  	<extension-point id="phpWizardPages" name="PHP Wizard Page" schema="schema/phpWizardPages.exsd"/>
  	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlock.exsd"/>
-
+	<extension-point id="wizardAndCompositeFragments" name="Wizard and Composite Fragments" schema="schema/wizardAndCompositeFragments.exsd"/>
+	
 	<!--extension point="org.eclipse.ui.editors.documentProviders"> 
 		<provider 
 		extensions="php" 
