@@ -8,7 +8,7 @@
       <documentation>
          The wizard and composite fragments extention supplies a unify way to create wizards for creation of instances that
          can later be edited using a different view, such as tabs view or any other view that accepts Composites.
-		 The extention accepts a factory class that can create a WizardFragment or a CompositeFragment when needed.
+   The extention accepts a factory class that can create a WizardFragment or a CompositeFragment when needed.
       </documentation>
    </annotation>
 
@@ -67,6 +67,13 @@
             <annotation>
                <documentation>
                   The ID of this fragment factory.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="fragmentsGroupID" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fragments group that this fragment is associated with.
                </documentation>
             </annotation>
          </attribute>

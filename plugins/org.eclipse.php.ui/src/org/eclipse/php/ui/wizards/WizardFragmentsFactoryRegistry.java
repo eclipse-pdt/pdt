@@ -11,6 +11,8 @@
 package org.eclipse.php.ui.wizards;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.*;
@@ -25,14 +27,18 @@ public class WizardFragmentsFactoryRegistry {
 	private static final String EXTENSION_POINT_NAME = "wizardAndCompositeFragments"; //$NON-NLS-1$
 	private static final String FRAGMENT_TAG = "wizardAndCompositeFragment"; //$NON-NLS-1$
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
+	private static final String FRAGMENTS_GROUP_ID = "fragmentsGroupID"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String PLACE_AFTER_ATTRIBUTE = "placeAfter"; //$NON-NLS-1$
 
 	// Hold a Dictionary of Lists that contains the factories used for the creation of the fragments.
-	private List fragments = new ArrayList(5);
-
+	// This structure will be deleted from the memory once all the factories were created.
+	private HashMap fragments;
+	
 	private static WizardFragmentsFactoryRegistry instance;
-	private ICompositeFragmentFactory[] factories;
+	
+	private HashMap factories;
+//	private ICompositeFragmentFactory[] factories;
 
 	/**
 	 * Returns an array on newly initialized WizardFragments that complies to the given server type 
@@ -43,22 +49,28 @@ public class WizardFragmentsFactoryRegistry {
 	 * @param serverType	The id of the server.
 	 * @return	An array of ICompositeFragmentFactory.
 	 */
-	public static ICompositeFragmentFactory[] getFragmentsFactories() {
+	public static ICompositeFragmentFactory[] getFragmentsFactories(String fragmentsGroupID) {
 		WizardFragmentsFactoryRegistry registry = getInstance();
-		if (registry.factories == null) {
-			List fragments = registry.fragments;
+		ICompositeFragmentFactory[] factories = (ICompositeFragmentFactory[]) registry.factories.get(fragmentsGroupID);
+		if (factories == null) {
+			List fragments = (List) registry.fragments.get(fragmentsGroupID);
 			List factoriesList = new ArrayList();
 			for (int i = 0; i < fragments.size(); i++) {
 				FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
 				factoriesList.add(factory.createFragmentFactory());
 			}
-			registry.factories = new ICompositeFragmentFactory[factoriesList.size()];
-			factoriesList.toArray(registry.factories);
+			factories = new ICompositeFragmentFactory[factoriesList.size()];
+			factoriesList.toArray(factories);
+			registry.factories.put(fragmentsGroupID, factories);
+			// Clear the fragments mapping, since it is no longer needed.
+			registry.fragments.remove(fragmentsGroupID);
 		}
-		return registry.factories;
+		return factories;
 	}
 
 	private WizardFragmentsFactoryRegistry() {
+		factories = new HashMap(4);
+		fragments = new HashMap(5);
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPUiPlugin.ID, EXTENSION_POINT_NAME);
 
@@ -66,21 +78,31 @@ public class WizardFragmentsFactoryRegistry {
 			final IConfigurationElement element = elements[i];
 			if (FRAGMENT_TAG.equals(element.getName())) {
 				String id = element.getAttribute(ID_ATTRIBUTE);
+				String groupID = element.getAttribute(FRAGMENTS_GROUP_ID);
 				String placeAfter = element.getAttribute(PLACE_AFTER_ATTRIBUTE);
+				ArrayList list = (ArrayList) fragments.get(groupID);
+				if (list == null) {
+					list = new ArrayList(5);
+					fragments.put(groupID, list);
+				}
 				if (element.getNamespaceIdentifier().equals(PHPUiPlugin.ID)) {
 					// Make sure that extentions that exists in this plugin will appear ahead of all others
 					// when the user-class calls for getFragmentsFactories().
-					fragments.add(0, new FragmentsFactory(element, id, placeAfter));
+					list.add(0, new FragmentsFactory(element, id, placeAfter));
 				} else {
-					fragments.add(new FragmentsFactory(element, id, placeAfter));
+					list.add(new FragmentsFactory(element, id, placeAfter));
 				}
 			}
 		}
-		sortFragmentsByPlace();
+		// Sort all the fragment groups
+		Iterator keys = fragments.keySet().iterator();
+		while (keys.hasNext()) {
+			sortFragmentsByPlace((ArrayList) fragments.get(keys.next()));
+		}
 	}
 
 	// Sort the fragments according to the 'place-after' attribute
-	private void sortFragmentsByPlace() {
+	private void sortFragmentsByPlace(ArrayList fragments) {
 		// Scan the fragments and separate the fragments that lacks the place-after property from
 		// those that have it.
 		ArrayList rootsFragments = new ArrayList(fragments.size());
