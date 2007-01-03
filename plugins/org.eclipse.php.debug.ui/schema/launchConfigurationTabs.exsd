@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.php.server.ui">
+<schema targetNamespace="org.eclipse.php.debug.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.server.ui" id="launchConfigurationTab" name="Launch Configuration Tab Extension"/>
+         <meta.schema plugin="org.eclipse.php.debug.ui" id="launchConfigurationTab" name="Launch Configuration Tab Extension"/>
       </appInfo>
       <documentation>
          The launchConfigurationTab extention point allows adding tabs to the launch configuration tab groups and giving them some order.
