@@ -60,7 +60,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 	}
 	
 	/**
-	 * This method gets the javabridge entries for a given project
+	 * This method gets the include path entries for a given project
 	 * @param preferenceKey
 	 * @param project
 	 * @param projectScope
@@ -81,6 +81,30 @@ public class IncludePathEntry implements IIncludePathEntry {
 		}	
 		return entries;
 	}
+	
+	/**
+	 * This method gets the include path entries for a given project as a string and returns a "decoded" List of IIncludePathEntrys
+	 * @param String representing the entries they way they are saved into the preferences
+	 * @param project
+	 * @return List of IIncludePathEntrys for a given project
+	 */
+	public static List getIncludePathEntriesFromPreferences (String entriesString, IProject project){
+		
+		final ArrayList entries = new ArrayList();
+		
+		HashMap[] maps = XMLPreferencesReader.getHashFromStoredValue(entriesString);
+		if (maps.length > 0) {
+			for (int entryCount = 0; entryCount < maps.length; ++entryCount) {
+				IncludePathEntryDescriptor descriptor = new IncludePathEntryDescriptor();
+				descriptor.restoreFromMap(maps[entryCount]);
+				entries.add(IncludePathEntry.elementDecode(descriptor, project.getFullPath()));
+			}
+		}	
+		return entries;
+	}
+	
+	
+	
 
 	public int getContentKind() {
 		return contentKind;
