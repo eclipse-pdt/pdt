@@ -70,9 +70,9 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 		Expression expression = expressionManager.buildExpression(variable);
 
 		// Get the value from the debugger
-		String value = debugTarget.getExpressionManager().getExpressionValue(expression, 1);
+		debugTarget.getExpressionManager().getExpressionValue(expression, 1);
 		expressionManager.update(expression, 1);
-		value = expression.getValue().getValueAsString();
+		String value = expression.getValue().getValueAsString();
 
 		if (value != null && value.length() == 0) {
 			value = "Empty";

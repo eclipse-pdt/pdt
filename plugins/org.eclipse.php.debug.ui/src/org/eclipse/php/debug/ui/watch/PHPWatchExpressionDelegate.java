@@ -130,7 +130,7 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
         Expression expression = expressionManager.buildExpression(variable);
 
         // Get the value from the debugger
-        String value = debugTarget.getExpressionManager().getExpressionValue(expression, 1);
+        debugTarget.getExpressionManager().getExpressionValue(expression, 1);
         expressionManager.update(expression, 1);
         return expression;
     }
