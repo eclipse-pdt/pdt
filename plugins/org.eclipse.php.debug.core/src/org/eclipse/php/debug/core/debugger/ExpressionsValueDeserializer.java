@@ -21,21 +21,21 @@ public class ExpressionsValueDeserializer {
 		fEncoding = encoding;
 	}
 
-	public ExpressionValue deserializer(Expression expression, String value) {
+	public ExpressionValue deserializer(Expression expression, byte[] value) {
 		if (value == null) {
 			// the expression is Illeagal.
-			value = "N";
+			value = new byte[] {'N'};
 		}
-		return build(expression, new VariableReader(getBytes(value)));
+		return build(expression, new VariableReader(value));
 	}
 	
-    private byte[] getBytes(String text) {
-    	try {
-    		return text.getBytes(fEncoding);
-    	} catch (UnsupportedEncodingException e) {
-        }
-    	return text.getBytes();
-    }
+//    private byte[] getBytes(String text) {
+//    	try {
+//    		return text.getBytes(fEncoding);
+//    	} catch (UnsupportedEncodingException e) {
+//        }
+//    	return text.getBytes();
+//    }
     
     private String getText(byte[] buf) {
     	try {

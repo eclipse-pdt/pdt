@@ -12,7 +12,7 @@ package org.eclipse.php.debug.core.debugger;
 
 public interface ExpressionsManager {
 
-    public String getExpressionValue(Expression expression, int depth);
+    public byte[] getExpressionValue(Expression expression, int depth);
 
     public boolean assignValue(Expression expression, String value, int depth);
 

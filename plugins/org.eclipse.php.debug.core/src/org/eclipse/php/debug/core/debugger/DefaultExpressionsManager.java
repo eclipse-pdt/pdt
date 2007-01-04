@@ -24,6 +24,7 @@ import java.util.Map;
 public class DefaultExpressionsManager implements ExpressionsManager {
 
     private static final Expression[] EMPTY_VARIABLE_ARRAY = new Expression[0];
+    private static final byte[] ILLEGAL_VAR = {'N'};
 
     private Debugger debugger;
     private Map hashResultDepthOne = new HashMap();
@@ -41,9 +42,9 @@ public class DefaultExpressionsManager implements ExpressionsManager {
         expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
     }
 
-    public String getExpressionValue(Expression expression, int depth) {
+    public byte[] getExpressionValue(Expression expression, int depth) {
         if (!debugger.isActive()) {
-            return "N";
+            return ILLEGAL_VAR;
         }
 
         if (expression instanceof StackVariable) {
@@ -60,7 +61,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
         String[] path = new String[name.length - 1];
         System.arraycopy(name, 1, path, 0, name.length - 1);
         boolean status = debugger.assignValue(name[0], value, depth, path);
-        String eValue = debugger.getVariableValue(name[0], depth, path);
+        byte[] eValue = debugger.getVariableValue(name[0], depth, path);
         if (status) {
             String key = buildKey(name);
             if (depth == 1) {
@@ -72,18 +73,18 @@ public class DefaultExpressionsManager implements ExpressionsManager {
         return status;
     }
 
-    private String getVariableValue(String[] name, int depth) {
+    private byte[] getVariableValue(String[] name, int depth) {
         String key = buildKey(name);
         if (hashResultDepthOne.containsKey(key)) {
-            return (String) hashResultDepthOne.get(key);
+            return (byte[]) hashResultDepthOne.get(key);
         }
         if (depth == 0 && hashResultDepthZero.containsKey(key)) {
-            return (String) hashResultDepthZero.get(key);
+            return (byte[]) hashResultDepthZero.get(key);
         }
 
         String[] path = new String[name.length - 1];
         System.arraycopy(name, 1, path, 0, name.length - 1);
-        String value = debugger.getVariableValue(name[0], depth, path);
+        byte[] value = debugger.getVariableValue(name[0], depth, path);
 
         if (value != null) {
             if (depth == 1) {
@@ -92,7 +93,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
                 hashResultDepthZero.put(key, value);
             }
         } else {
-            value = "N";
+            value = new byte[] {'N'};
         }
         return value;
     }
@@ -140,7 +141,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
     }
 
     public Expression[] getLocalVariables(int depth) {
-        String value = getVariableValue(localsVariablePath, depth);
+        byte[] value = getVariableValue(localsVariablePath, depth);
         ExpressionValue variableValue = expressionValueDeserializer.deserializer(null, value);
 
         Expression[] localVariables = variableValue.getChildren();
@@ -172,7 +173,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
     }
 
     public Expression[] getGlobalVariables(int depth) {
-        String value = getVariableValue(globalVariablePath, depth);
+        byte[] value = getVariableValue(globalVariablePath, depth);
         ExpressionValue variableValue = expressionValueDeserializer.deserializer(null, value);
 
         Expression[] globalVariables = variableValue.getChildren();
@@ -199,7 +200,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
         return globalVariables;
     }
 
-    private String getStackVariableValue(StackVariable variable, int depth) {
+    private byte[] getStackVariableValue(StackVariable variable, int depth) {
         int layer = variable.getStackDepth();
 
         String[] name = variable.getName();
@@ -220,8 +221,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
     }
 
     public void update(Expression expression, int depth) {
-        String value = getExpressionValue(expression, depth);
+        byte[] value = getExpressionValue(expression, depth);
         expression.setValue(expressionValueDeserializer.deserializer(expression, value));
     }
-
 }

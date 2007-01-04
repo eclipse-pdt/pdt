@@ -11,6 +11,7 @@
 package org.eclipse.php.debug.core.debugger;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.debug.core.communication.DebugConnectionThread;
@@ -37,6 +38,7 @@ import org.eclipse.php.debug.core.debugger.messages.GetVariableValueResponse;
 import org.eclipse.php.debug.core.debugger.messages.GoRequest;
 import org.eclipse.php.debug.core.debugger.messages.GoResponse;
 import org.eclipse.php.debug.core.debugger.messages.HeaderOutputNotification;
+import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
@@ -726,7 +728,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic getVariableValue Returns the variable var.
 	 */
-	public String getVariableValue(String var, int depth, String[] path) throws IllegalArgumentException {
+	public byte[] getVariableValue(String var, int depth, String[] path) throws IllegalArgumentException {
 		if (!this.isActive()) {
 			return null;
 		}
@@ -743,8 +745,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (response == null || response.getStatus() != 0) {
 			return null;
 		}
-		String output = response.getVarResult();
-		return output;
+		return response.getVarResult();
 	}
 
 	public boolean getCallStack(GetCallStackResponseHandler responseHandler) {
@@ -817,7 +818,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic getStackVariableValue Returns the variable value.
 	 */
-	public String getStackVariableValue(int stackDepth, String value, int depth, String[] path) {
+	public byte[] getStackVariableValue(int stackDepth, String value, int depth, String[] path) {
 		if (!this.isActive()) {
 			return null;
 		}
@@ -835,8 +836,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (response == null || response.getStatus() != 0) {
 			return null;
 		}
-		String output = response.getVarResult();
-		return output;
+		return response.getVarResult();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -907,7 +907,10 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 				String result = null;
 				if (response != null) {
-					result = ((GetVariableValueResponse) response).getVarResult();
+					try {
+						result = new String(((GetVariableValueResponse) response).getVarResult(), ((IDebugMessage)response).getTransferEncoding());
+					} catch (UnsupportedEncodingException e) {
+					}
 				}
 				((VariableValueResponseHandler) responseHandler).variableValue(value, depth, path, result, success);
 
@@ -929,7 +932,10 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 				String result = null;
 				if (response != null) {
-					result = ((GetStackVariableValueResponse) response).getVarResult();
+					try {
+						result = new String(((GetStackVariableValueResponse) response).getVarResult(), ((IDebugMessage)response).getTransferEncoding());
+					} catch (UnsupportedEncodingException e) {
+					}
 				}
 				((GetStackVariableValueResponseHandler) responseHandler).stackVariableValue(stackDepth, value, depth, path, result, success);
 			}

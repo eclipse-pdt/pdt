@@ -26,26 +26,26 @@ import org.eclipse.php.debug.core.communication.CommunicationUtilities;
  */
 public class GetStackVariableValueResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 
-	private String varResult;
+	private byte[] varResult;
 
 	/**
 	 * Sets the DefaultExpression result.
 	 */
-	public void setVarResult(String varResult) {
+	public void setVarResult(byte[] varResult) {
 		this.varResult = varResult;
 	}
 
 	/**
 	 * Returns the DefaultExpression result.
 	 */
-	public String getVarResult() {
+	public byte[] getVarResult() {
 		return varResult;
 	}
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setStatus(in.readInt());
-		setVarResult(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
+		setVarResult(CommunicationUtilities.readStringAsBytes(in));
 	}
 
 	public int getType() {
@@ -56,6 +56,6 @@ public class GetStackVariableValueResponse extends DebugMessageResponseImpl impl
 		out.writeShort(getType());
 		out.writeInt(getID());
 		out.writeInt(getStatus());
-		CommunicationUtilities.writeEncodedString(out, getVarResult(), getTransferEncoding());
+		CommunicationUtilities.writeStringAsBytes(out, getVarResult());
 	}
 }

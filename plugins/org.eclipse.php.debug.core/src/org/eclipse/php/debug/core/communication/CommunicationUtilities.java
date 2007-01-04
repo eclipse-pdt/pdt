@@ -23,6 +23,11 @@ public class CommunicationUtilities {
 		out.writeInt(byteArray.length);
 		out.write(byteArray);
 	}
+	
+	public static void writeStringAsBytes(DataOutputStream out, byte[] byteArray) throws IOException {
+		out.writeInt(byteArray.length);
+		out.write(byteArray);
+	}
 
 	public static void writeBreakpoint(DataOutputStream out, Breakpoint breakpoint) throws IOException {
 		out.writeShort(breakpoint.getType());

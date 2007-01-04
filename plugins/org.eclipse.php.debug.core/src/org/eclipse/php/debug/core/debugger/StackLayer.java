@@ -114,7 +114,7 @@ public class StackLayer {
         this.calledFunctionName = calledFunctionName;
     }
 
-    public void addVariable(String variableName, String value) {
+    public void addVariable(String variableName, byte[] value) {
         StackVariable variable = new DefaultStackVariable(variableName, getDepth());
         variable.setValue(expressionValueDeserializer.deserializer(variable, value));
 

@@ -176,7 +176,7 @@ public interface Debugger {
     /**
      * Synchronic getVariableValue Returns the variable value.
      */
-    public String getVariableValue(String value, int depth, String[] path);
+    public byte[] getVariableValue(String value, int depth, String[] path);
 
     /**
      * Asynchronic getCallStack Returns true if successed sending the request,
@@ -198,7 +198,7 @@ public interface Debugger {
     /**
      * Synchronic getStackVariableValue Returns the variable value.
      */
-    public String getStackVariableValue(int stackDepth, String value, int depth, String[] path);
+    public byte[] getStackVariableValue(int stackDepth, String value, int depth, String[] path);
 
     /**
      * Finish the debugger running.
