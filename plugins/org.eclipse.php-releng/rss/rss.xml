@@ -8,6 +8,11 @@
 	<taskdef name="RssSendMessage" classname="rss2ant.RssSendMessage" />
 	<taskdef name="RssGenerator" classname="rss2ant.RssGenerator" />
 
+
+	<tstamp />
+	<property name="date" value="${DSTAMP}" />
+	<property name="time" value="${TSTAMP}" />
+	<property name="timestamp" value="${date} ${time}" />
 	<property name="rssProjectName" value="PDT" />
 	<property name="rssCenterName" value="blackboard " />
 	<property name="rssCenterDescription" value="This is a blackboard center to ${rssProjectName}" />
@@ -15,8 +20,8 @@
 	<property name="rssTitle" value="error! set a message here" />
 	<property name="rssMessageDescription" value="" />
 	<property name="rssMessageContributor" value="PHP Build Server" />
-	<property name="rssMessageLink" value="http://download.eclipse.org/tools/php/downloads/index.php" />
-	<property name="rssOutputFile" value="updates.xml" />
+	<property name="rssMessageLink" value="http://download.eclipse.org/tools/php/downloads/reports/TEST-php${date}.html" />
+	<property name="rssOutputFile" value="center.xml" />
 
 	<target name="createProject">
 		<RssAddProject projectName="${rssProjectName}" />
@@ -36,20 +41,25 @@
 	</target>
 
 	<target name="uploadRss">
+
 		<property name="source" value="${rssOutputFile}" />
-		<property name="target" value="rss/updates.xml" />
+		<property name="target" value="rss/${rssOutputFile}" />
 
 		<exec dir="." executable="rsync">
 			<arg line="-avz --password-file=$HOME/.pass --stats ${source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/downloads/${target}" />
 		</exec>
 	</target>
 
+	<target name="uploadReport">
+		<property name="source" value="../src/results/html/all/TEST-php.html" />
+		<property name="target" value="reports/TEST-php${date}.html" />
+		<exec dir="." executable="rsync">
+			<arg line="-avz --password-file=$HOME/.pass --stats ${source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/downloads/${target}" />
+		</exec>
+	</target>
+
 	<target name="mailUnitTestResults">
-		<tstamp />
-		<property name="date" value="${DSTAMP}" />
-		<property name="time" value="${TSTAMP}" />
-		<property name="timestamp" value="${date} ${time}" />
-		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="pdt-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
+		<mail from="php-unit-test@eclipse.org" encoding="uu" tolist="php-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
 	</target>
 
 	<target name="getTestResults">

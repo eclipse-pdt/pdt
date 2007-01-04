@@ -22,3 +22,6 @@ ant --noconfig -lib ext-lib -f rss.xml generateRss
 
 # uploads the RSS
 ant --noconfig -lib ext-lib -f rss.xml uploadRss
+
+# uploads the Report
+ant --noconfig -lib ext-lib -f rss.xml uploadReport
