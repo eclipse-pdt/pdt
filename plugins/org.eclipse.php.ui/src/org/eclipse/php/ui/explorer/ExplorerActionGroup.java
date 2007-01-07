@@ -11,7 +11,6 @@
 package org.eclipse.php.ui.explorer;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -29,14 +28,7 @@ import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.ui.actions.BuildActionGroup;
-import org.eclipse.php.internal.ui.actions.CCPActionGroup;
-import org.eclipse.php.internal.ui.actions.ConfigureIncludePathActionGroup;
-import org.eclipse.php.internal.ui.actions.ImportActionGroup;
-import org.eclipse.php.internal.ui.actions.NavigateActionGroup;
-import org.eclipse.php.internal.ui.actions.NewWizardsActionGroup;
-import org.eclipse.php.internal.ui.actions.ProjectActionGroup;
-import org.eclipse.php.internal.ui.actions.RefactorActionGroup;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.ui.IContextMenuConstants;
 import org.eclipse.php.ui.actions.CompositeActionGroup;
 import org.eclipse.php.ui.actions.CustomFiltersActionGroup;
@@ -44,23 +36,11 @@ import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.workingset.ExplorerViewActionGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.IWorkingSetManager;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.actions.OpenInNewWindowAction;
-import org.eclipse.ui.views.framelist.BackAction;
-import org.eclipse.ui.views.framelist.ForwardAction;
-import org.eclipse.ui.views.framelist.Frame;
-import org.eclipse.ui.views.framelist.FrameAction;
-import org.eclipse.ui.views.framelist.FrameList;
-import org.eclipse.ui.views.framelist.GoIntoAction;
-import org.eclipse.ui.views.framelist.TreeFrame;
-import org.eclipse.ui.views.framelist.UpAction;
+import org.eclipse.ui.views.framelist.*;
 
 public class ExplorerActionGroup extends CompositeActionGroup {
 
@@ -92,8 +72,8 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 		};
 
 		IWorkbenchPartSite site = fPart.getSite();
-		setGroups(new ActionGroup[] { new NewWizardsActionGroup(site), fNavigateActionGroup = new NavigateActionGroup(fPart), new CCPActionGroup(fPart), new ConfigureIncludePathActionGroup(fPart), fRefactorActionGroup = new RefactorActionGroup(fPart), new ImportActionGroup(fPart), new BuildActionGroup(fPart), new ProjectActionGroup(fPart),
-			fViewActionGroup = new ExplorerViewActionGroup(fPart.getRootMode(), workingSetListener, site), fCustomFiltersActionGroup = new CustomFiltersActionGroup(fPart, viewer), });
+		setGroups(new ActionGroup[] { new NewWizardsActionGroup(site), fNavigateActionGroup = new NavigateActionGroup(fPart), new PHPSearchActionGroup(), new CCPActionGroup(fPart), new ConfigureIncludePathActionGroup(fPart), fRefactorActionGroup = new RefactorActionGroup(fPart),
+			new ImportActionGroup(fPart), new BuildActionGroup(fPart), new ProjectActionGroup(fPart), fViewActionGroup = new ExplorerViewActionGroup(fPart.getRootMode(), workingSetListener, site), fCustomFiltersActionGroup = new CustomFiltersActionGroup(fPart, viewer), });
 		fViewActionGroup.fillFilters(viewer);
 
 		ExplorerFrameSource frameSource = new ExplorerFrameSource(fPart);
@@ -122,23 +102,6 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 		fZoomInAction.setEnabled(true);
 		fillActionBars(actionBars);
 		actionBars.updateActionBars();
-	}
-
-	private void addGotoMenu(IMenuManager menu, Object element, int size) {
-		boolean enabled = size == 1 && fPart.getViewer().isExpandable(element) && (isGoIntoTarget(element) || element instanceof IContainer);
-		fZoomInAction.setEnabled(enabled);
-		if (enabled)
-			menu.appendToGroup(IContextMenuConstants.GROUP_GOTO, fZoomInAction);
-	}
-
-	private boolean isGoIntoTarget(Object element) {
-		if (element == null)
-			return false;
-		if (element instanceof PHPProjectModel || element instanceof IFolder) {
-			return true;
-		}
-
-		return false;
 	}
 
 	private void setGlobalActionHandlers(IActionBars actionBars) {
@@ -172,20 +135,16 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 
 	public void fillContextMenu(IMenuManager menu) {
 		IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
-		int size = selection.size();
 		Object element = selection.getFirstElement();
 
-		//		dont support "go into"  addGotoMenu(menu, element, size);
 		addOpenNewWindowAction(menu, element);
 
 		super.fillContextMenu(menu);
 	}
 
 	private void addOpenNewWindowAction(IMenuManager menu, Object element) {
-		if (element instanceof PHPCodeData || element instanceof PHPProjectModel) {
+		if (element instanceof PHPCodeData || element instanceof PHPProjectModel)
 			element = PHPModelUtil.getResource(element);
-
-		}
 		if (element instanceof IProject && !((IProject) element).isOpen())
 			return;
 
@@ -199,21 +158,19 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 	void handleDoubleClick(DoubleClickEvent event) {
 		TreeViewer viewer = fPart.getViewer();
 		Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
-		if (viewer.isExpandable(element)) {
+		if (viewer.isExpandable(element))
 			if (doubleClickGoesInto()) {
 				// don't zoom into compilation units and class files
 				if (element instanceof PHPFileData)
 					return;
-				if (element instanceof IContainer) {
+				if (element instanceof IContainer)
 					fZoomInAction.run();
-				}
 			} else {
 				IAction openAction = fNavigateActionGroup.getOpenAction();
 				if (openAction != null && openAction.isEnabled() && OpenStrategy.getOpenMethod() == OpenStrategy.DOUBLE_CLICK)
 					return;
 				viewer.setExpandedState(element, !viewer.getExpandedState(element));
 			}
-		}
 	}
 
 	void handleOpen(OpenEvent event) {
@@ -228,12 +185,11 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 		if (event.stateMask != 0)
 			return;
 
-		if (event.keyCode == SWT.BS) {
+		if (event.keyCode == SWT.BS)
 			if (fUpAction != null && fUpAction.isEnabled()) {
 				fUpAction.run();
 				event.doit = false;
 			}
-		}
 	}
 
 	private boolean doubleClickGoesInto() {
@@ -270,13 +226,12 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 			}
 			if (oldInput != null && newInput != null) {
 				Frame frame;
-				for (int i = 0; (frame = fFrameList.getFrame(i)) != null; i++) {
+				for (int i = 0; (frame = fFrameList.getFrame(i)) != null; i++)
 					if (frame instanceof TreeFrame) {
 						TreeFrame treeFrame = (TreeFrame) frame;
 						if (oldInput.equals(treeFrame.getInput()))
 							treeFrame.setInput(newInput);
 					}
-				}
 			}
 		} else {
 			IWorkingSet workingSet = (IWorkingSet) event.getNewValue();

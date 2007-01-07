@@ -438,7 +438,6 @@
 			description="%OpenActionSet.description"
 			visible="false"
 			id="org.eclipse.php.ui.A_OpenActionSet">
-
 			<action
 				definitionId="org.eclipse.php.ui.edit.text.open.editor" 				
 				label="%OpenAction.label"
