@@ -22,80 +22,63 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.PHPUIMessages;
-import org.eclipse.php.internal.ui.preferences.PHPManualConfigurationBlock.PHPManualConfig;
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 
 public class NewPHPManualSiteDialog extends StatusDialog {
-	
+
 	protected Text name;
 	protected Text url;
 	protected Text extension;
 	private Button okButton;
-	private Button browseButton; 
+	private Button browseButton;
 	private boolean enableOK = false;
 	private List configs;
 	private PHPManualConfig edited;
 	private PHPManualConfig result;
-	
+
 	public NewPHPManualSiteDialog(Shell parentShell, PHPManualConfig edited, List configs) {
 		super(parentShell);
-		
+
 		this.configs = new ArrayList(configs.size());
 		for (int i = 0; i < configs.size(); i++) {
-			PHPManualConfig config = (PHPManualConfig)configs.get(i);
+			PHPManualConfig config = (PHPManualConfig) configs.get(i);
 			if (!config.equals(edited)) {
-				this.configs.add (config);
+				this.configs.add(config);
 			}
 		}
 		this.edited = edited;
-		
+
 		if (edited != null) {
-			setTitle (PHPUIMessages.NewPHPManualSiteDialog_updateTitle);
+			setTitle(PHPUIMessages.NewPHPManualSiteDialog_updateTitle);
 		} else {
 			setTitle(PHPUIMessages.NewPHPManualSiteDialog_newTitle);
 		}
 	}
-	
+
 	public PHPManualConfig getResult() {
 		return result;
 	}
 
-    protected void setResult(PHPManualConfig result) {
+	protected void setResult(PHPManualConfig result) {
 		this.result = result;
 	}
 
-    protected void createButtonsForButtonBar(Composite parent) {
-		
+	protected void createButtonsForButtonBar(Composite parent) {
+
 		//super.createButtonBar(parent);
-		okButton = createButton(
-				parent,
-				IDialogConstants.OK_ID,
-				IDialogConstants.OK_LABEL,
-				true);
-		createButton(
-			parent,
-			IDialogConstants.CANCEL_ID,
-			IDialogConstants.CANCEL_LABEL,
-			false);
-		
+		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+
 		okButton.setEnabled(enableOK);
-		
+
 	}
-	
+
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -104,10 +87,10 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		GridData data = new GridData();
 		data.widthHint = 400;
 		composite.setLayoutData(data);
-		
+
 		Label label = new Label(composite, SWT.NONE);
 		label.setText(PHPUIMessages.NewPHPManualSiteDialog_name);
-		
+
 		name = new Text(composite, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
@@ -117,10 +100,10 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 				verifyComplete();
 			}
 		});
-		
+
 		label = new Label(composite, SWT.NONE);
 		label.setText(PHPUIMessages.NewPHPManualSiteDialog_url);
-		
+
 		url = new Text(composite, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		url.setLayoutData(data);
@@ -129,23 +112,23 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 				verifyComplete();
 			}
 		});
-		
+
 		browseButton = new Button(composite, SWT.NULL);
-        data = new GridData();
-        data.horizontalAlignment = SWT.END;
-        data.widthHint = 50;
-        browseButton.setLayoutData(data);
-        browseButton.setText("..."); //$NON-NLS-1$
-        browseButton.setAlignment(SWT.CENTER);
-        browseButton.addListener(SWT.Selection, new Listener() {
-                public void handleEvent(Event event) {
-                        choosePHPManualFolder();
-                }
-        });
-		
+		data = new GridData();
+		data.horizontalAlignment = SWT.END;
+		data.widthHint = 50;
+		browseButton.setLayoutData(data);
+		browseButton.setText("..."); //$NON-NLS-1$
+		browseButton.setAlignment(SWT.CENTER);
+		browseButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				choosePHPManualFolder();
+			}
+		});
+
 		label = new Label(composite, SWT.NONE);
 		label.setText(PHPUIMessages.NewPHPManualSiteDialog_fileExtension);
-		
+
 		extension = new Text(composite, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
@@ -155,12 +138,12 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 				verifyComplete();
 			}
 		});
-		
+
 		initializeFields();
 		Dialog.applyDialogFont(composite);
 		return composite;
 	}
-	
+
 	protected void initializeFields() {
 		if (edited != null) {
 			name.setText(edited.getLabel());
@@ -171,72 +154,72 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			extension.setText("php"); //$NON-NLS-1$
 		}
 	}
-	
+
 	private void verifyComplete() {
 		if (okButton == null) {
-			return;		
-		}
-		
-		if (name.getText().trim().length() == 0 || url.getText().trim().length() == 0) {
-			okButton.setEnabled(false);
-			this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.NewPHPManualSiteDialog_siteOrUrlNotSpecified, null)); 
 			return;
 		}
-	
+
+		if (name.getText().trim().length() == 0 || url.getText().trim().length() == 0) {
+			okButton.setEnabled(false);
+			this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.NewPHPManualSiteDialog_siteOrUrlNotSpecified, null));
+			return;
+		}
+
 		try {
 			new URL(URLDecoder.decode(url.getText().trim(), "UTF-8")); //$NON-NLS-1$
 		} catch (Exception e) {
 			okButton.setEnabled(false);
-			this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.NewPHPManualSiteDialog_incorrectUrl, null)); 
+			this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.NewPHPManualSiteDialog_incorrectUrl, null));
 			return;
 		}
-		
+
 		if (isDuplicate()) {
 			return;
 		} else {
 			okButton.setEnabled(true);
-			this.updateStatus( new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK, "", null));  //$NON-NLS-1$
+			this.updateStatus(new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK, "", null)); //$NON-NLS-1$
 		}
-		result = new PHPManualConfig (name.getText(), url.getText(), extension.getText(), false);
+		result = new PHPManualConfig(name.getText(), url.getText(), extension.getText(), false);
 	}
-	
+
 	private boolean isDuplicate() {
 		if (configs == null) {
 			return false;
 		}
-		for( int i = 0; i < configs.size(); i++) {
+		for (int i = 0; i < configs.size(); i++) {
 			if (!isCurrentlyEditedSiteBookmark(i)) {
-				PHPManualConfig config = (PHPManualConfig)configs.get(i);
+				PHPManualConfig config = (PHPManualConfig) configs.get(i);
 				if (config.getLabel().equals(name.getText().trim())) {
 					okButton.setEnabled(false);
-					this.updateStatus( new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.NewPHPManualSiteDialog_nameAlreadyInUse, null)); 
+					this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.NewPHPManualSiteDialog_nameAlreadyInUse, null));
 					return true;
 				} else if (config.getUrl().toString().trim().equals(url.getText().trim())) {
 					okButton.setEnabled(false);
-					this.updateStatus( new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, NLS.bind(PHPUIMessages.NewPHPManualSiteDialog_urlAlreadyInUse, config.getLabel()), null)); 
+					this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, NLS.bind(PHPUIMessages.NewPHPManualSiteDialog_urlAlreadyInUse, config.getLabel()), null));
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-	
-	protected boolean isCurrentlyEditedSiteBookmark (int index) {
+
+	protected boolean isCurrentlyEditedSiteBookmark(int index) {
 		return false;
 	}
-	
+
 	protected void updateButtonsEnableState(IStatus status) {
 		if (okButton != null && !okButton.isDisposed() && name.getText().trim().length() != 0)
 			okButton.setEnabled(!status.matches(IStatus.ERROR));
 	}
-	
+
 	private void choosePHPManualFolder() {
-        DirectoryDialog dialog = new DirectoryDialog(PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
-        dialog.setText(PHPUIMessages.NewPHPManualSiteDialog_chooseDir);
-        String directoryAsString = dialog.open();
-        if (directoryAsString == null) {
-                return;
-        }
-        url.setText("file://" + directoryAsString); //$NON-NLS-1$
+		DirectoryDialog dialog = new DirectoryDialog(PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
+		dialog.setText(PHPUIMessages.NewPHPManualSiteDialog_chooseDir);
+		String directoryAsString = dialog.open();
+		if (directoryAsString == null) {
+			return;
+		}
+		url.setText("file://" + directoryAsString); //$NON-NLS-1$
 	}
 }

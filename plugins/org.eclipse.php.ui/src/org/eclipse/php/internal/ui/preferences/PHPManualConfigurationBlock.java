@@ -10,22 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Assert;
-import org.eclipse.jface.viewers.IFontProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.ui.PHPUiPlugin;
@@ -56,36 +48,6 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 public class PHPManualConfigurationBlock implements IPreferenceConfigurationBlock {
 
-	public static class PHPManualConfig {
-		private String label;
-		private String url;
-		private String extension;
-		private boolean isContributed;
-
-		public PHPManualConfig(String label, String url, String extension, boolean isContributed) {
-			this.label = label;
-			this.url = url;
-			this.isContributed = isContributed;
-			this.extension = extension;
-		}
-
-		public boolean isContributed() {
-			return isContributed;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public String getUrl() {
-			return url;
-		}
-
-		public String getExtension() {
-			return extension;
-		}
-	}
-
 	private class PHPManualLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
 		public Font getFont(Object element) {
 			if (isDefault((PHPManualConfig) element)) {
@@ -100,11 +62,11 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 
 		public String getColumnText(Object element, int columnIndex) {
 			if (columnIndex == 0) {
-				return ((PHPManualConfig) element).label;
+				return ((PHPManualConfig) element).getLabel();
 			} else if (columnIndex == 1) {
-				return ((PHPManualConfig) element).url;
+				return ((PHPManualConfig) element).getUrl();
 			} else if (columnIndex == 2) {
-				return ((PHPManualConfig) element).extension;
+				return ((PHPManualConfig) element).getExtension();
 			}
 			return null;
 		}
@@ -113,20 +75,20 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 	private class PHPManualSorter extends ViewerSorter {
 
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			return collator.compare(((PHPManualConfig) e1).label, ((PHPManualConfig) e2).label);
+			return collator.compare(((PHPManualConfig) e1).getLabel(), ((PHPManualConfig) e2).getLabel());
 		}
 	}
 
 	private class PHPManualAdapter implements IListAdapter, IDialogFieldListener {
 
 		private boolean canEdit(List selectedElements) {
-			return selectedElements.size() == 1 && !((PHPManualConfig) selectedElements.get(0)).isContributed;
+			return selectedElements.size() == 1 && !((PHPManualConfig) selectedElements.get(0)).isContributed();
 		}
 
 		private boolean canRemove(List selectedElements) {
 			Object[] elements = selectedElements.toArray();
 			for (int i = 0; i < elements.length; i++) {
-				if (((PHPManualConfig) elements[i]).isContributed) {
+				if (((PHPManualConfig) elements[i]).isContributed()) {
 					return false;
 				}
 			}
@@ -345,29 +307,25 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 	 * @param configs
 	 */
 	public static void initFromPreferences(IPreferenceStore store, List configs) {
-		String storedSites = store.getString(PreferenceConstants.PHP_MANUAL_SITES);
-		if (storedSites != null) {
-			StringTokenizer sitesTokenizer = new StringTokenizer(storedSites, PREFERENCES_DELIMITER);
-			while (sitesTokenizer.hasMoreTokens()) {
-				String name = sitesTokenizer.nextToken();
-				if (sitesTokenizer.hasMoreTokens()) {
-					String url = sitesTokenizer.nextToken();
-					if (sitesTokenizer.hasMoreTokens()) {
-						String extension = sitesTokenizer.nextToken();
-						PHPManualConfig config = new PHPManualConfig(name, url, extension, false);
-						boolean alreadyExists = false;
-						for (int i = 0; i < configs.size(); ++i) {
-							PHPManualConfig existing = (PHPManualConfig) configs.get(i);
-							if (existing.label.equals(config.label) || existing.url.equals(config.url)) {
-								alreadyExists = true;
-							}
-						}
-						if (!alreadyExists) {
-							configs.add(config);
-						}
+		String storedConfigsString = store.getString(PreferenceConstants.PHP_MANUAL_SITES);
+		if (storedConfigsString != null && !"".equals(storedConfigsString)) {
+			StringTokenizer sitesTokenizer = new StringTokenizer(storedConfigsString, PREFERENCES_DELIMITER);
+			PHPManualConfig config;
+			do {
+				config = PHPManualConfigSerializer.fromStringTokenizer(sitesTokenizer);
+				if (config == null)
+					break;
+				boolean alreadyExists = false;
+				for (int i = 0; i < configs.size(); ++i) {
+					PHPManualConfig existing = (PHPManualConfig) configs.get(i);
+					if (existing.equals(config)) {
+						alreadyExists = true;
 					}
 				}
-			}
+				if (!alreadyExists) {
+					configs.add(config);
+				}
+			} while (config != null);
 		}
 	}
 
@@ -376,12 +334,16 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 	 * @return active PHP manual site config
 	 */
 	public static PHPManualConfig getActiveManualSite(IPreferenceStore store, List configs) {
-		String storedSite = store.getString(PreferenceConstants.PHP_MANUAL_SITE);
-		for (int i = 0; i < configs.size(); ++i) {
-			PHPManualConfig config = (PHPManualConfig) configs.get(i);
-			if (config.url.equals(storedSite)) {
-				return config;
+		String storedConfigString = store.getString(PreferenceConstants.PHP_MANUAL_SITE);
+		if (storedConfigString != null && !"".equals(storedConfigString)) {
+			PHPManualConfig config = PHPManualConfigSerializer.fromString(storedConfigString);
+			for (Iterator i = configs.iterator(); i.hasNext();) {
+				Object next = i.next();
+				if (config.equals(next)) {
+					return (PHPManualConfig) next;
+				}
 			}
+			return config;
 		}
 		return null;
 	}
@@ -401,20 +363,16 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		if (elements != null && elements.length > 0) {
 			for (int i = 0; i < elements.length; ++i) {
 				PHPManualConfig config = (PHPManualConfig) elements[i];
-				if (!config.isContributed) {
+				if (!config.isContributed()) {
 					if (sitesBuffer.length() != 0) {
 						sitesBuffer.append(PREFERENCES_DELIMITER);
 					}
-					sitesBuffer.append(config.label);
-					sitesBuffer.append(PREFERENCES_DELIMITER);
-					sitesBuffer.append(config.url);
-					sitesBuffer.append(PREFERENCES_DELIMITER);
-					sitesBuffer.append(config.extension);
+					sitesBuffer.append(PHPManualConfigSerializer.toString(config));
 				}
 			}
 
 			fStore.setValue(PreferenceConstants.PHP_MANUAL_SITES, sitesBuffer.toString());
-			fStore.setValue(PreferenceConstants.PHP_MANUAL_SITE, ((PHPManualConfig) elements[0]).url);
+			fStore.setValue(PreferenceConstants.PHP_MANUAL_SITE, PHPManualConfigSerializer.toString((PHPManualConfig) elements[0]));
 		}
 	}
 }

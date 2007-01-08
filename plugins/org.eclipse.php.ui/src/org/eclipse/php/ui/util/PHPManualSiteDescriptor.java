@@ -27,8 +27,13 @@ public class PHPManualSiteDescriptor {
 	private static final String LABEL_ATTRIBUTE = "label"; //$NON-NLS-1$
 	private static final String DIRECTOR_ATTRIBUTE = "director"; //$NON-NLS-1$
 	private static final String EXTENSION_ATTRIBUTE = "extension"; //$NON-NLS-1$
-	
+
 	public static final String DEFAULT_PHP_MANUAL_SITE = "http://www.php.net/manual/en/";
+
+	public static final String DEFAULT_PHP_MANUAL_EXTENSION = "php";
+
+	public static final String DEFAULT_PHP_MANUAL_LABEL = "PHP.net";
+
 	public static final String DEFAULT_PHP_MANUAL_DIRECTOR = "org.eclipse.php.ui.phpManualDirector";
 
 	private IConfigurationElement fElement;
@@ -61,7 +66,7 @@ public class PHPManualSiteDescriptor {
 		}
 		return director;
 	}
-	
+
 	public String getLabel() {
 		return fElement.getAttribute(LABEL_ATTRIBUTE);
 	}
