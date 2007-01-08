@@ -15,17 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -155,6 +146,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				String partitionType = null;
 				IRegion line;
 				String linePart;
+				boolean phpPartitionVisited = false;
 
 				do {
 					line = idoc.getLineInformation(editorLineNumber - 1);
@@ -168,16 +160,17 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 					for (int i = 0; i < partitions.length; ++i) {
 						partitionType = partitions[i].getType();
 						if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
+							phpPartitionVisited = true;
 							startOffset = partitions[i].getOffset();
 							linePart = idoc.get(startOffset, partitions[i].getLength()).trim();
-							if (Pattern.matches(".*[a-zA-Z]+.*", linePart) && !linePart.toLowerCase().startsWith("<?php")) {
+							if (Pattern.matches(".*[a-zA-Z0-0_]+.*", linePart) && !linePart.trim().toLowerCase().equals("<?php")) {
 								result = startOffset;
 								break;
 							}
 						}
 					}
 					++editorLineNumber;
-				} while (PHPStructuredTextPartitioner.isPHPPartitionType(partitionType) && result == -1);
+				} while ((!phpPartitionVisited || PHPStructuredTextPartitioner.isPHPPartitionType(partitionType)) && result == -1);
 			} catch (BadLocationException e) {
 				result = -1;
 			}
