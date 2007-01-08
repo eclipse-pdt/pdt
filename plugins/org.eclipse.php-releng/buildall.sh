@@ -28,6 +28,9 @@ vm=java
 # target used if not default (to allow run just a portion of buildAll)
 target=""
 
+# logger
+logger=""
+
 #sets fetchTag="HEAD" for nightly builds if required
 tag=""
 
@@ -87,6 +90,10 @@ while [ "$#" -gt 0 ] ; do
                		platformParams="$2"
                		shift 1
 	        	;;
+                '-loggerfilename')
+               		logger="-logger org.apache.tools.ant.listener.MailLogger -DMailLogger.properties.file=$2"
+               		shift 1
+	        	;;
                 '-notest')
                 		notest="-Dnotest=true"
                 	;;
@@ -124,5 +131,5 @@ if [ ! -r ../org.eclipse.releng.basebuilder ]
     mv org.eclipse.releng.basebuilder ../
 fi
 
-$vm/bin/java -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm $platformParams
+$vm/bin/java -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $logger $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm $platformParams
 #rm -rf ../org.eclipse.releng.basebuilder

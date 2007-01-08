@@ -8,6 +8,12 @@ if [ -z "$1" ]; then
     exit
 fi
 
+#create the bug status
+rm summary
+rm result.html 
+rm bugs 
+php5 fetch_bugs.php
+
 # short summary
 ant --noconfig -lib ext-lib -f rss.xml getTestResults
 
@@ -16,6 +22,9 @@ ant --noconfig -lib ext-lib -f rss.xml mailUnitTestResults
 
 # add message
 ant --noconfig -lib ext-lib -f rss.xml addMessage -DrssTitle="$1" 
+
+# add bugs message
+ant --noconfig -lib ext-lib -f rss.xml addBugsMessage 
 
 # generate the RSS
 ant --noconfig -lib ext-lib -f rss.xml generateRss 

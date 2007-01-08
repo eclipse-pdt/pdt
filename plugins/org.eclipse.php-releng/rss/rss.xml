@@ -22,6 +22,7 @@
 	<property name="rssMessageContributor" value="PHP Build Server" />
 	<property name="rssMessageLink" value="http://download.eclipse.org/tools/php/downloads/reports/TEST-php${date}.html" />
 	<property name="rssOutputFile" value="center.xml" />
+	<property name="bugLink" value="https://bugs.eclipse.org/bugs/"/>
 
 	<target name="createProject">
 		<RssAddProject projectName="${rssProjectName}" />
@@ -34,6 +35,12 @@
 	<target name="addMessage">
 		<loadfile property="description" srcFile="content"/>
 		<RssSendMessage projectName="${rssProjectName}" centerName="${rssCenterName}" title="${rssTitle}" link="${rssMessageLink}" description="${description}" contibutor="${rssMessageContributor}" />
+	</target>
+
+	<target name="addBugsMessage">
+		<loadfile property="title" srcFile="summary"/>
+		<loadfile property="description" srcFile="bugs"/>
+		<RssSendMessage projectName="${rssProjectName}" centerName="${rssCenterName}" title="${title}" link="${bugLink}" description="${description}" contibutor="${rssMessageContributor}" />
 	</target>
 
 	<target name="generateRss">
@@ -59,7 +66,7 @@
 	</target>
 
 	<target name="mailUnitTestResults">
-		<mail from="php-unit-test@eclipse.org" encoding="uu" tolist="php-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
+		<mail from="pdt-unit-test@eclipse.org" encoding="uu" tolist="php-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
 	</target>
 
 	<target name="getTestResults">
