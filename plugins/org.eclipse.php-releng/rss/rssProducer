@@ -29,6 +29,9 @@ ant --noconfig -lib ext-lib -f rss.xml addBugsMessage
 # generate the RSS
 ant --noconfig -lib ext-lib -f rss.xml generateRss 
 
+# replace the &amp char to enable html tags
+php5 replaceAmp.php
+
 # uploads the RSS
 ant --noconfig -lib ext-lib -f rss.xml uploadRss
 

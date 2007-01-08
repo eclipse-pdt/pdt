@@ -1,4 +1,6 @@
 <?
+echo "[BEGIN Bug Report Generation]\n";
+
 $filename_bugs = "bugs";
 $filename_sum = "summary";
 unlink($filename_bugs);
@@ -62,7 +64,8 @@ function writeBugs($pr, $filename_bugs) {
 
 	file_put_contents ($filename_bugs, "&lt;b&gt;$pr bugs ($bugs_number)&lt;/b&gt; $bugs&lt;br&gt;&lt;br&gt;", FILE_APPEND);
 	return (int) $bugs_number;
+       echo "[$pr Bug Report Generation]\n";
 }
 
-
+echo "[END Bug Report Generation]\n";
 ?>
