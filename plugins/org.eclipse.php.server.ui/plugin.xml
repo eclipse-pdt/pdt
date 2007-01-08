@@ -30,6 +30,74 @@
           placeAfter="org.eclipse.php.debug.ui.launching.PHPServerTab"/>
  </extension>
   <extension
+        point="org.eclipse.debug.ui.launchShortcuts">
+     <shortcut
+            class="org.eclipse.php.server.ui.launching.PHPServerLaunchShortcut"
+            icon="icons/full/obj16/server_run.gif"
+            id="org.eclipse.php.server.ui.phpServerShortcut"
+            label="%phpServerShortcut.label"
+            modes="run, debug, profile">
+            <contextualLaunch>
+		 	<contextLabel mode="run" label="%phpServerShortcut.label"/>
+		 	<enablement>
+		 		<count value="1"/>
+     <test
+           property="org.eclipse.php.debug.ui.launchablePHP"
+           value="true"/>
+		 	</enablement>
+		 </contextualLaunch>
+         <contextualLaunch>
+            <contextLabel
+                  label="%phpServerShortcut.label"
+                  mode="debug"/>
+            <enablement>
+               <count value="1"/>
+               <test
+                     property="org.eclipse.php.debug.ui.launchablePHP"
+                     value="true"/>
+            </enablement>
+         </contextualLaunch>
+		 
+         <perspective
+               id="org.eclipse.ui.resourcePerspective">
+         </perspective>
+         <perspective
+         	   id="org.eclipse.php.perspective">
+         </perspective>
+         <perspective
+               id="org.eclipse.debug.ui.DebugPerspective">
+         </perspective>
+      </shortcut>
+  </extension>
+  <extension
+         point="org.eclipse.ui.commands">
+          <command
+            categoryId="org.eclipse.debug.ui.category.debug"
+            description="Debug PHP Web Page"
+            id="org.eclipse.php.server.ui.phpServerShortcut.debug"
+            name="Debug PHP Web Page"/>
+          <command
+            categoryId="org.eclipse.debug.ui.category.run"
+            description="Run PHP Web Page"
+            id="org.eclipse.php.server.ui.phpServerShortcut.run"
+            name="Run PHP Web Page"/>  
+   </extension>
+    <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.php.server.ui.phpServerShortcut.run"
+            contextId="org.eclipse.ui.globalScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+M2+X W"/>
+      <key
+            commandId="org.eclipse.php.server.ui.phpServerShortcut.debug"
+            contextId="org.eclipse.ui.globalScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+M2+D W"/>            
+    </extension>   
+   
+   
+  <extension
         point="org.eclipse.php.ui.wizardAndCompositeFragments">
      <wizardAndCompositeFragment
            class="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
