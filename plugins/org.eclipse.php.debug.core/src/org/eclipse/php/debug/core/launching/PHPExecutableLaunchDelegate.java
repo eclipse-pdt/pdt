@@ -19,20 +19,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
@@ -45,8 +33,10 @@ import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.Logger;
 import org.eclipse.php.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
+import org.eclipse.php.debug.core.debugger.DebugParametersInitializersRegistry;
 import org.eclipse.php.debug.core.debugger.PHPExecutableDebuggerInitializer;
 import org.eclipse.php.debug.core.debugger.PHPSessionLaunchMapper;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.core.model.DebugSessionIdGenerator;
 import org.eclipse.php.debug.core.preferences.PHPDebugCorePreferenceNames;
@@ -57,12 +47,18 @@ import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	public static final String SAVE_AUTOMATICALLY = "save_automatically";
+
+	/** Indicator for an executable ILaunch (inserted into the launch attributes) */
+	public static final String EXECUTABLE_LAUNCH = "executable_launch";
+
 	protected Map envVariables = null;
 
 	public void debugPHPExecutable(final ILaunch launch, final String phpExe, final String fileToDebug) throws DebugException {
 		try {
-			final PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
-			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath(), envVariables);
+			launch.setAttribute(EXECUTABLE_LAUNCH, "true");
+			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
+			final PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer();
+			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath(), parametersInitializer.generateQuery(launch), envVariables, launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION));
 		} catch (final java.io.IOException e1) {
 			Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e1);
 			final String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;
@@ -98,7 +94,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				return;
 			}
 			project = res.getProject();
-			if (project == null){
+			if (project == null) {
 				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));
 				return;
 			}
@@ -180,9 +176,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			IPath projectLocation = project.getRawLocation();
 			if (projectLocation == null)
 				projectLocation = project.getLocation();
-			final String location = projectLocation.toOSString();
-			final IPath p1 = new Path(location);
-			final File projectDir = p1.toFile();
 
 			if (monitor.isCanceled())
 				return;
@@ -283,16 +276,16 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		return true;
 
 	}
-	
-	private void displayErrorMessage(final String message){
+
+	private void displayErrorMessage(final String message) {
 		final Display display = Display.getDefault();
 		display.asyncExec(new Runnable() {
-			public void run() {																	
-				MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, message); 
+			public void run() {
+				MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, message);
 			}
 		});
 	}
-	
+
 	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
 		if (configuration.getAttribute(PHPExecutableLaunchDelegate.SAVE_AUTOMATICALLY, false)) {
 			return true;

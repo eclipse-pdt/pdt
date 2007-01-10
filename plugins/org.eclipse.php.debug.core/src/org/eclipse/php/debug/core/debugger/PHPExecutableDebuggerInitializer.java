@@ -20,55 +20,45 @@ import java.util.Map.Entry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.PHPDebugPlugin;
-import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
-import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableDebuggerInitializer {
 
-	/**Indicator for an executable ILaunch (inserted into the launch attributes)*/
-	public static final String EXECUTABLE_LAUNCH = "executable_launch";
-	
 	private HashMap systemEnvironmentVariables = null;
-	private ILaunch launch;
 
-	public PHPExecutableDebuggerInitializer(ILaunch launch) throws IOException {
-		this.launch = launch;
+	public PHPExecutableDebuggerInitializer() throws IOException {
 		// Set a launch attribute to indicate that this is an executable launch.
-		launch.setAttribute(EXECUTABLE_LAUNCH, "true");
 		initializeSystemEnvironmentVariables();
 	}
 
-	public void initializeDebug(String phpExe, String fileName) {
-		initializeDebug(phpExe, fileName, null);
+	public void initializeDebug(String phpExe, String fileName, String query) {
+
+		initializeDebug(phpExe, fileName, query, null, null);
 	}
 
-	public void initializeDebug(String phpExe, String fileName, Map envVariables) {
+	public void initializeDebug(String phpExe, String fileName, String query, Map envVariables, String phpIniLocation) {
 		try {
 			IPath phpExePath = new Path(phpExe);
 			File workingDir = new File(phpExePath.removeLastSegments(1).toString());
 			String phpConfigDir = workingDir.getAbsolutePath();
-			String phpIniLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
-			if(phpIniLocation != null && !phpIniLocation.equals("")) {
+			if (phpIniLocation != null && !phpIniLocation.equals("")) {
 				phpConfigDir = phpIniLocation;
 			}
-			
+
 			// Important!!! 
 			// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
 			// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
 			phpConfigDir = (new File(phpConfigDir)).getParentFile().getAbsolutePath();
-			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
 
 			systemEnvironmentVariables.put("REQUEST_METHOD", "GET");
 			systemEnvironmentVariables.put("SCRIPT_FILENAME", fileName);
 			systemEnvironmentVariables.put("SCRIPT_NAME", fileName);
 			systemEnvironmentVariables.put("PATH_TRANSLATED", fileName);
 			systemEnvironmentVariables.put("PATH_INFO", fileName);
-			systemEnvironmentVariables.put("QUERY_STRING", parametersInitializer.generateQuery(launch) + "&debug_host=127.0.0.1");
+			systemEnvironmentVariables.put("QUERY_STRING", query + "&debug_host=127.0.0.1");
 			systemEnvironmentVariables.put("REDIRECT_STATUS", "1");
 			systemEnvironmentVariables.put("PHPRC", phpConfigDir);
 			if (envVariables != null) {
