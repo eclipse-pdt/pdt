@@ -921,11 +921,11 @@ public class PreferenceConstants {
 		store.setDefault(USE_SUB_WORD_NAVIGATION, true);
 
 		// Folding options
-		store.setDefault(EDITOR_FOLDING_ENABLED, false);
+		store.setDefault(EDITOR_FOLDING_ENABLED, true);
 		store.setDefault(EDITOR_FOLDING_PROVIDER, "org.eclipse.php.ui.defaultFoldingProvider"); //$NON-NLS-1$
 		store.setDefault(EDITOR_FOLDING_PHPDOC, true);
-		store.setDefault(EDITOR_FOLDING_CLASSES, false);
-		store.setDefault(EDITOR_FOLDING_FUNCTIONS, false);
+		store.setDefault(EDITOR_FOLDING_CLASSES, true);
+		store.setDefault(EDITOR_FOLDING_FUNCTIONS, true);
 
 		//		store.setDefault(EDITOR_FOLDING_INCLUDES, false);
 		store.setDefault(TYPING_AUTO_CLOSE_STRING, true);
