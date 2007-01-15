@@ -13,8 +13,8 @@
 	<property name="date" value="${DSTAMP}" />
 	<property name="time" value="${TSTAMP}" />
 
-	<property file="${buildDirectory}/label.properties"/>
 	<property name="buildDirectory" location="${basedir}/../src/eclipse" />
+	<property file="${buildDirectory}/label.properties"/>
 	<property name="remoteDirectory" value="downloads/drops" />
 
 	<property name="timestamp" value="${date} ${time}" />
