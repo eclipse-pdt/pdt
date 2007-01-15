@@ -3,11 +3,6 @@
 export JAVA_HOME="/shared/common/ibm-java2-ppc-50/"
 export ANT_HOME="$HOME/src/eclipse/plugins/org.apache.ant_1.6.5/"
 
-if [ -z "$1" ]; then 
-    echo usage: $0 "<Message title> <Message Description> <Message Contributor>"
-    exit
-fi
-
 #create the bug status
 rm summary
 rm result.html 
@@ -21,7 +16,7 @@ ant --noconfig -lib ext-lib -f rss.xml getTestResults
 ant --noconfig -lib ext-lib -f rss.xml mailUnitTestResults
 
 # add message
-ant --noconfig -lib ext-lib -f rss.xml addMessage -DrssTitle="$1" 
+ant --noconfig -lib ext-lib -f rss.xml addMessage -DrssTitle="Unit test results are available $(date +%Y%m%d)"
 
 # add bugs message
 ant --noconfig -lib ext-lib -f rss.xml addBugsMessage 
@@ -36,4 +31,4 @@ php5 replaceAmp.php
 ant --noconfig -lib ext-lib -f rss.xml uploadRss
 
 # uploads the Report
-ant --noconfig -lib ext-lib -f rss.xml uploadReport
+ant --noconfig -lib ext-lib -f rss.xml pushNightly

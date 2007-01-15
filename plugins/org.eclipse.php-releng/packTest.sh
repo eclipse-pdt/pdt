@@ -1,6 +1,8 @@
 #!/bin/sh
 # This file is intend to be executed in the build machine 
 # remove any leftovers
+
+cd /opt/users/phpBuild/org.eclipse.php-releng/
 rm -rf ../src
 
 #dos2unix 
@@ -21,7 +23,7 @@ dos2unix runtests
 
 # update by rss + mail
 cd ../rss
-./rssProducer "Unit test results are available for $(date +%Y%m%d)"
+./rssProducer
 
 
 

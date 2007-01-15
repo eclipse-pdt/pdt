@@ -78,6 +78,7 @@ fi
 # UI x server 
 if [ "x$xserver" = "xtrue" ]
 then
+	unlink /tmp/.X3-lock
 	Xvfb :3 -screen 0 1024x768x16 &
 	export DISPLAY=:3
 fi
