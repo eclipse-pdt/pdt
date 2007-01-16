@@ -27,6 +27,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.debug.core.IPHPConstants;
 import org.eclipse.php.debug.core.model.PHPDebugElement;
