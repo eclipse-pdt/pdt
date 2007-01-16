@@ -438,6 +438,7 @@
 			description="%OpenActionSet.description"
 			visible="false"
 			id="org.eclipse.php.ui.A_OpenActionSet">
+
 			<action
 				definitionId="org.eclipse.php.ui.edit.text.open.editor" 				
 				label="%OpenAction.label"
@@ -1189,6 +1190,16 @@
 		<factory adaptableType="org.eclipse.php.core.phpModel.phpElementData.PHPCodeData" class="org.eclipse.php.ui.phpCodeData.PhpCodeDataAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter"/>
 		</factory>
+  <factory
+        adaptableType="org.eclipse.php.core.documentModel.dom.PHPTextImpl"
+        class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+     <adapter type="org.eclipse.ui.IActionFilter"/>
+  </factory>
+  <factory
+        adaptableType="org.eclipse.php.core.documentModel.dom.PHPElementImpl"
+        class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+     <adapter type="org.eclipse.ui.IActionFilter"/>
+  </factory>
 	</extension>
 	
 	<extension point="org.eclipse.php.ui.foldingStructureProviders">
