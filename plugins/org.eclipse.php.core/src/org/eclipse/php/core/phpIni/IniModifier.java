@@ -107,6 +107,7 @@ public class IniModifier {
 	static File createTempFile() {
 		try {
 			File tempFile = File.createTempFile("php.", ".ini");
+			tempFile.delete();
 			// Important!!! 
 			// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
 			// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
