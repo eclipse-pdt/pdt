@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.documentModel.dom;
 
-import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
 
@@ -20,7 +20,6 @@ public class PHPDOMModelUpdater extends XMLModelUpdater {
 	}
 
 	protected boolean isNestedTagClose(String regionType) {
-		return regionType == PHPRegionTypes.PHP_CLOSETAG;
+		return regionType == PHPRegionContext.PHP_CLOSE;
 	}
-
 }

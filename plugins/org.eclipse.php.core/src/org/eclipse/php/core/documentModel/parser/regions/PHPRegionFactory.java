@@ -10,47 +10,31 @@
  *******************************************************************************/
 package org.eclipse.php.core.documentModel.parser.regions;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.php.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 
+/**
+ * Description: Creates XML or PHP text regions
+ * TODO: maybe we can move this small class into the php tokenizer   
+ * @author Roy, 2006
+ */
 public class PHPRegionFactory extends XMLParserRegionFactory {
 
-	private static final PHPRegionFactory instance = new PHPRegionFactory();
-
-	public static PHPRegionFactory getInstance() {
+	private final static PHPRegionFactory instance = new PHPRegionFactory();
+	private PHPRegionFactory() { }
+	
+	public static final PHPRegionFactory getInstance() {
 		return instance;
 	}
 
-	private PHPRegionFactory() {
+	/**
+	 * Creates a PHP content token if needed
+	 * else creates the as XML content
+	 */
+	public ITextRegion createToken(String context, int start, int textLength, int length, IProject project, String script) {
+		assert (context == PHPRegionContext.PHP_CONTENT || context == PHPRegionContext.PHP_ASP_CONTENT);
+		return new PhpScriptRegion(context, start, textLength, length, script, project);
 	}
-
-	public ITextRegion createToken(String context, int start, int textLength, int length, String lang, String surroundingTag, String tokenText) {
-		ITextRegion newRegion = null;
-		if (context == PHPRegionContext.PHP_OPEN) {
-			int trailingWhitespacesSize = this.getTrailingWhitespacesSize(tokenText);
-			newRegion = new OpenPHPRegion(start, textLength - trailingWhitespacesSize, length);
-		} else if (context == PHPRegionContext.PHP_CLOSE) {
-			newRegion = new ClosePHPRegion(start, textLength, length);
-		} else if (context == PHPRegionContext.PHP_CONTENT || context == PHPRegionContext.PHP_ASP_CONTENT) {
-			newRegion = new PHPContentRegion(start, textLength, length);
-		} else
-			newRegion = super.createToken(context, start, textLength, length, lang, surroundingTag);
-
-		return newRegion;
-	}
-
-	private int getTrailingWhitespacesSize(String tokenText) {
-		//assert !tokenText.equals("");
-
-		for (int trailingWhitespacesLocation = tokenText.length() - 1; trailingWhitespacesLocation != -1; --trailingWhitespacesLocation) {
-			char c = tokenText.charAt(trailingWhitespacesLocation);
-			if (!Character.isWhitespace(c)) {
-				return tokenText.length() - trailingWhitespacesLocation - 1;
-			}
-		}
-
-		return 0;
-	}
-
 }

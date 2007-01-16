@@ -10,26 +10,45 @@
  *******************************************************************************/
 package org.eclipse.php.core.documentModel.partitioner;
 
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.IDocumentPartitionerExtension2;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.php.core.documentModel.parser.PhpLexer;
-import org.eclipse.php.core.documentModel.parser.regions.PHPContentRegion;
+import org.eclipse.php.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
-public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHTML implements IDocumentPartitionerExtension2 {
+public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHTML implements PHPRegionTypes {
 
+	public String getContentType(final int offset, final boolean preferOpenPartitions) {
+		final ITypedRegion partition = getPartition(offset);
+		return partition == null ? null : partition.getType();
+	}
+
+	public String getPartitionType(final ITextRegion region, final int offset) {
+		// if php region
+		if (isPhpRegion(region.getType()))
+			return PHPPartitionTypes.PHP_DEFAULT;
+
+		// else do super 
+		return super.getPartitionType(region, offset);
+	}
+
+	/**
+	 * @param regionType
+	 * @return
+	 */
+	private static final boolean isPhpRegion(final String regionType) {
+		return regionType == PHPRegionContext.PHP_OPEN || regionType == PHPRegionContext.PHP_CLOSE || regionType == PHPRegionContext.PHP_CONTENT;
+	}
+	
 	private final static String[] configuredContentTypes = new String[] { PHPPartitionTypes.PHP_DEFAULT, PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT, PHPPartitionTypes.PHP_MULTI_LINE_COMMENT, PHPPartitionTypes.PHP_DOC, PHPPartitionTypes.PHP_QUOTED_STRING };
 
 	public static String[] getConfiguredContentTypes() {
 		return configuredContentTypes;
 	}
-
+	
 	public static boolean isPHPPartitionType(final String type) {
 		for (int i = 0; i < configuredContentTypes.length; i++)
 			if (configuredContentTypes[i].equals(type))
@@ -37,66 +56,26 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 		return false;
 	}
 
-	public ITypedRegion[] computePartitioning(final int offset, final int length, final boolean includeZeroLengthPartitions) {
-		// seva: just to support the interface
-		return computePartitioning(offset, length);
-	}
-
-	public String getContentType(final int offset, final boolean preferOpenPartitions) {
-		return getPartition(offset, preferOpenPartitions).getType();
-	}
-
-	public String[] getManagingPositionCategories() {
-		return null;
-	}
-
-	public ITypedRegion getPartition(final int offset, final boolean preferOpenPartitions) {
-		ITypedRegion region = getPartition(offset);
-		ITypedRegion newRegion;
-		if ((isPHPPartitionType(region.getType()) || offset == fStructuredDocument.getLength()) && preferOpenPartitions) {
-			if (region.getOffset() == offset)
-				if (offset > 0) {
-					IRegion lineInfo = null;
-					try {
-						lineInfo = fStructuredDocument.getLineInformationOfOffset(offset);
-					} catch (BadLocationException e) {
-					}
-					if (lineInfo == null || lineInfo.getOffset() != offset || offset == fStructuredDocument.getLength()) {
-						newRegion = getPartition(offset - 1);
-						final String newRegionType = newRegion.getType();
-						if (newRegionType != PHPPartitionTypes.PHP_MULTI_LINE_COMMENT && newRegionType != PHPPartitionTypes.PHP_QUOTED_STRING && newRegionType != PHPPartitionTypes.PHP_DOC)
-							region = newRegion;
-					}
-				}
-		}
-		return region;
-	}
-
-	public String getPartitionType(final ITextRegion region, final int offset) {
-		String result = null;
-
-		if (region instanceof PHPContentRegion) {
-			if (PhpLexer.isPHPMultiLineCommentState(region.getType()))
-				result = PHPPartitionTypes.PHP_MULTI_LINE_COMMENT;
-			else if (PhpLexer.isPHPLineCommentState(region.getType()))
-				result = PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT;
-			else if (PhpLexer.isPHPDocState(region.getType()))
-				result = PHPPartitionTypes.PHP_DOC;
-			else if (PhpLexer.isPHPQuotesState(region.getType()))
-				result = PHPPartitionTypes.PHP_QUOTED_STRING;
-			else if (PHPRegionTypes.TASK.equals(region.getType())) {
-				// return the previous region type
-				final IStructuredDocumentRegion docRegion = fStructuredDocument.getRegionAtCharacterOffset(offset);
-				final ITextRegion prevRegion = docRegion.getRegionAtCharacterOffset(docRegion.getStartOffset() + region.getStart() - 1);
-				result = getPartitionType(prevRegion, offset);
-			} else
-				result = PHPPartitionTypes.PHP_DEFAULT;
-		} else if (region.getType() == PHPRegionTypes.PHP_OPENTAG || region.getType() == PHPRegionTypes.PHP_CLOSETAG)
-			result = PHPPartitionTypes.PHP_DEFAULT;
-		else
-			result = super.getPartitionType(region, offset);
-
-		return result;
+	public static final void getInternalPartition() {
+		//				} else if (regionType == PHPRegionContext.PHP_CONTENT) {
+		//					// safe cast
+		//					final PhpScriptRegion phpRegion = (PhpScriptRegion) region;
+		//					final String type = phpRegion.getPhpTokenType(offset);
+		//					if (PHPPartitionTypes.isPHPMultiLineCommentState(type))
+		//						return PHPPartitionTypes.PHP_MULTI_LINE_COMMENT;
+		//					else if (PHPPartitionTypes.isPHPLineCommentState(type))
+		//						return PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT;
+		//					else if (PHPPartitionTypes.isPHPDocState(type))
+		//						return PHPPartitionTypes.PHP_DOC;
+		//					else if (PHPPartitionTypes.isPHPQuotesState(type))
+		//						return PHPPartitionTypes.PHP_QUOTED_STRING;
+		//					else if (PHPRegionTypes.TASK == type) {
+		//						// TODO return the previous region type
+		//						return getPartitionType(region, offset - 1);
+		//					} else {
+		//						return PHPPartitionTypes.PHP_DEFAULT;
+		//					}
+		//				} 
 	}
 
 	public IDocumentPartitioner newInstance() {

@@ -172,30 +172,6 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 		return true;
 	}
 
-	public static boolean isPHPCommentState(final String type) {
-		return type == null ? false : isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || isPHPDocState(type);
-	}
-
-	public static boolean isPHPDocState(final String type) {
-		return type == null ? false : type.startsWith("PHPDOC");
-	}
-
-	public static boolean isPHPLineCommentState(final String type) {
-		return type == PHP_LINE_COMMENT;
-	}
-
-	public static boolean isPHPMultiLineCommentState(final String type) {
-		return type == PHP_COMMENT || type == PHPRegionTypes.PHP_COMMENT_START || type == PHPRegionTypes.PHP_COMMENT_END;
-	}
-
-	public static boolean isPHPQuotesState(final String type) {
-		return type == PHP_CONSTANT_ENCAPSED_STRING || type == PHP_HEREDOC_TAG;
-	}
-
-	public static final boolean isPHPRegularState(final String type) {
-		return !isPHPCommentState(type) && !isPHPQuotesState(type);
-	}
-
 	protected boolean asp_tags = true;
 
 	protected int defaultReturnValue = -1;
@@ -379,6 +355,10 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	public abstract int yylength();
 	
     public abstract String yytext();
+    
+    public int yystart() {
+    	return getYy_startRead(); 
+    }   
     
     public abstract int yystate();
 }

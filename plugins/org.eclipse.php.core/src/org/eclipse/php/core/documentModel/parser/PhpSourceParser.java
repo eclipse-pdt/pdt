@@ -16,11 +16,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.php.core.documentModel.parser.Scanner.LexerState;
-import org.eclipse.php.core.documentModel.parser.regions.ClosePHPRegion;
-import org.eclipse.php.core.documentModel.parser.regions.OpenPHPRegion;
-import org.eclipse.php.core.documentModel.parser.regions.PHPContentRegion;
-import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.core.documentModel.parser.structregions.PHPStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -52,7 +47,6 @@ public class PhpSourceParser extends XMLSourceParser {
 		if (fTokenizer == null) {
 			PHPTokenizer phpTokenizer = new PHPTokenizer();
 			phpTokenizer.setProject(project);
-			phpTokenizer.setSourceParser(this);
 			fTokenizer = phpTokenizer;
 		}
 		return fTokenizer;
@@ -62,7 +56,6 @@ public class PhpSourceParser extends XMLSourceParser {
 		PhpSourceParser newInstance = new PhpSourceParser();
 		PHPTokenizer tokenizer = (PHPTokenizer)getTokenizer().newInstance();
 		tokenizer.setProject(project);
-		tokenizer.setSourceParser(this);
 		newInstance.setTokenizer(tokenizer);
 		return newInstance;
 	}
@@ -73,13 +66,6 @@ public class PhpSourceParser extends XMLSourceParser {
 
 	private IStructuredDocumentRegion currentNode = null;
 	
-	/**
-	 * The last lexer and tokenizer states are save so the ReParsers will be
-	 * able to restore them
-	 */
-	private LexerState lastPhpLexerState;
-	private boolean lastPhpTokenizerState;
-
 	protected IStructuredDocumentRegion parseNodes() {
 		// regions are initially reported as complete offsets within the
 		// scanned input
@@ -92,18 +78,9 @@ public class PhpSourceParser extends XMLSourceParser {
 		ITextRegion region = null;
 		String type = null;
 
-		// We want to save the last states of the php lexer / tokenizer
-		// so we can restore them back when need in the reparser stage.
-		updateLastPhpState();
-		
 		while ((region = getNextRegion()) != null) {
 			type = region.getType();
 			
-			// If the type is php close tag we want it to be in a seperate structure document 
-			if (type == PHPRegionTypes.PHP_CLOSETAG && currentNode != null) {
-				currentNode.setEnded(true);
-			}
-
 			// these types (might) demand a IStructuredDocumentRegion for each
 			// of them
 			if (type == DOMRegionContext.BLOCK_TEXT) {
@@ -142,10 +119,13 @@ public class PhpSourceParser extends XMLSourceParser {
 					currentNode.addRegion(region);
 					// DW 4/16/2003 regions no longer have parents
 					// region.setParent(currentNode);
+					if (region instanceof ITextRegionContainer) {
+						((ITextRegionContainer) region).setParent(currentNode);
+					}
 				}
 			}
 			// the following contexts OPEN new StructuredDocumentRegions
-			else if ((currentNode != null && currentNode.isEnded()) || (type == PHPRegionTypes.PHP_OPENTAG) || (type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE)  
+			else if ((currentNode != null && currentNode.isEnded()) || (type == PHPRegionContext.PHP_OPEN) ||(type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE)  
 				|| (type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_COMMENT_OPEN) || (type == DOMRegionContext.XML_CDATA_OPEN) || (type == DOMRegionContext.XML_DECLARATION_OPEN)) {
 				if (currentNode != null) {
 					// ensure that any existing node is at least terminated
@@ -157,8 +137,7 @@ public class PhpSourceParser extends XMLSourceParser {
 					lastNode = currentNode;
 				}
 				fireNodeParsed(currentNode);
-				// TODO: should be fixed so only the PHPRegion test will be performed
-				currentNode = createStructuredDocumentRegion(type, region instanceof PHPContentRegion || region instanceof OpenPHPRegion || region instanceof ClosePHPRegion);
+				currentNode = createStructuredDocumentRegion(type);
 				if (lastNode != null) {
 					lastNode.setNext(currentNode);
 				}
@@ -169,20 +148,26 @@ public class PhpSourceParser extends XMLSourceParser {
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
 				// region.setParent(currentNode);
+				if (region instanceof ITextRegionContainer) {
+					((ITextRegionContainer) region).setParent(currentNode);
+				}
 			}
 			// the following contexts neither open nor close
 			// StructuredDocumentRegions; just add to them
 			else if ((type == DOMRegionContext.XML_TAG_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == DOMRegionContext.XML_COMMENT_TEXT)
-				|| (type == DOMRegionContext.XML_PI_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) ||(currentNode != null && type != PHPRegionContext.PHP_CLOSE && type != PHPRegionTypes.PHP_SEMICOLON && region instanceof PHPContentRegion)) {
+				|| (type == DOMRegionContext.XML_PI_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) || (type == PHPRegionContext.PHP_CONTENT)) {
 				currentNode.addRegion(region);
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
 				// region.setParent(currentNode);
+				if (region instanceof ITextRegionContainer) {
+					((ITextRegionContainer) region).setParent(currentNode);
+				}
 			}
 			// the following contexts close off StructuredDocumentRegions
 			// cleanly
-			else if ((currentNode != null && (type == PHPRegionTypes.PHP_SEMICOLON || type == PHPRegionTypes.PHP_CLOSETAG)) || (type == DOMRegionContext.XML_PI_CLOSE) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE) || (type == DOMRegionContext.XML_COMMENT_CLOSE) || (type == DOMRegionContext.XML_DECLARATION_CLOSE)
+			else if ((type == PHPRegionContext.PHP_CLOSE) || (type == DOMRegionContext.XML_PI_CLOSE) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE) || (type == DOMRegionContext.XML_COMMENT_CLOSE) || (type == DOMRegionContext.XML_DECLARATION_CLOSE)
 				|| (type == DOMRegionContext.XML_CDATA_CLOSE)) {
 				currentNode.setEnded(true);
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
@@ -190,6 +175,9 @@ public class PhpSourceParser extends XMLSourceParser {
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
 				// region.setParent(currentNode);
+				if (region instanceof ITextRegionContainer) {
+					((ITextRegionContainer) region).setParent(currentNode);
+				}
 			}
 			// this is extremely rare, but valid
 			else if (type == DOMRegionContext.WHITE_SPACE) {
@@ -204,6 +192,9 @@ public class PhpSourceParser extends XMLSourceParser {
 					container.setParent(currentNode);
 					// DW 4/16/2003 regions no longer have parents
 					// region.setParent(container);
+					if (region instanceof ITextRegionContainer) {
+						((ITextRegionContainer) region).setParent(currentNode);
+					}
 					region.adjustStart(container.getLength() - region.getStart());
 				}
 				currentNode.getLastRegion().adjustLength(region.getLength());
@@ -226,7 +217,7 @@ public class PhpSourceParser extends XMLSourceParser {
 				// if an unknown type is the first region in the document,
 				// ensure that a node exists
 				if (currentNode == null) {
-					currentNode = createStructuredDocumentRegion(type, region instanceof PHPContentRegion || region instanceof OpenPHPRegion || region instanceof ClosePHPRegion);
+					currentNode = createStructuredDocumentRegion(type);
 					currentNode.setStart(region.getStart());
 				}
 				currentNode.addRegion(region);
@@ -234,6 +225,9 @@ public class PhpSourceParser extends XMLSourceParser {
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
 				// region.setParent(currentNode);
+				if (region instanceof ITextRegionContainer) {
+					((ITextRegionContainer) region).setParent(currentNode);
+				}
 				if (Debug.debugTokenizer)
 					System.out.println(getClass().getName() + " found region of not specifically handled type " + region.getType() + " @ " + region.getStart() + "[" + region.getLength() + "]"); //$NON-NLS-4$//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 				//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
@@ -245,16 +239,12 @@ public class PhpSourceParser extends XMLSourceParser {
 			// be more readable if that is handled here as well, but the
 			// current layout
 			// ensures that they open StructuredDocumentRegions the same way
-			if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == PHPRegionTypes.PHP_CLOSETAG) || (type == PHPRegionTypes.PHP_OPENTAG)) {
+			if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == PHPRegionContext.PHP_CLOSE)) {
 				currentNode.setEnded(true);
 			}
 			if (headNode == null && currentNode != null) {
 				headNode = currentNode;
 			}
-			
-			// We want to save the last states of the php lexer / tokenizer
-			// so we can restore them back when need in the reparser stage.
-			updateLastPhpState();
 		}
 		if (currentNode != null) {
 			fireNodeParsed(currentNode);
@@ -265,64 +255,7 @@ public class PhpSourceParser extends XMLSourceParser {
 		return headNode;
 	}
 
-	private void updateLastPhpState() {
-		final PHPTokenizer phpTokenizer = getPhpTokenizer();
-		lastPhpLexerState = phpTokenizer.getPhpLexerState();
-		lastPhpTokenizerState= phpTokenizer.getInPhpMode();
-	}
-
-	private PHPTokenizer getPhpTokenizer() {
-		final BlockTokenizer tokenizer = getTokenizer();
-		assert tokenizer instanceof PHPTokenizer;
-		return (PHPTokenizer) tokenizer;
-	}
-	
-	/**
-	 * Creates a php or xml StructuredDocument regions  
-	 * @param inPhpMode - true if we need to create a PHP region 
-	 */
-	protected IStructuredDocumentRegion createStructuredDocumentRegion(String type, boolean inPhpMode) {
-		return inPhpMode ?  
-			new PHPStructuredDocumentRegion(lastPhpLexerState, lastPhpTokenizerState) : // if in Php lexer state, save the last php tokenizer / lexer states...
-			super.createStructuredDocumentRegion(type); // else, just create a regular XML region
-	}
-
-	/**
-	 * In case we are doing reparse we should get the last sta 
-	 */
-	public void setLastStates(LexerState lexerState, boolean isInternalPhp) {
-		this.lastPhpLexerState = lexerState;
-		this.lastPhpTokenizerState = isInternalPhp;
-	}
-	
 	public void reset(Reader reader, int position) {
 		super.reset(reader, position);
-		setPhpTokenizerState();
-	}
-
-	/**
-	 * Sets the Tokenizer mode, according to the lexer state,
-	 * if lexer state is null we are in XML region else resume with a php Lexer
-	 * @param lexerState - null if we are in XML state
-	 */
-	private void setPhpTokenizerState() {
-		final PHPTokenizer phpTokenizer = getPhpTokenizer();
-
-		// Set the needed information in php lexer and php tokenizer here: 
-		phpTokenizer.setInPhpMode(lastPhpTokenizerState);
-		if (lastPhpLexerState != null) {
-			phpTokenizer.setPhpLexerState(lastPhpLexerState);
-		}
-	}
-
-	/**
-	 * Getters for the last state of the PHP parsers
-	 * Used by the reparser, to know if we need to resume reparsing  
-	 */
-	public LexerState getLastPhpLexerState() {
-		return lastPhpLexerState;
-	}
-	public boolean isLastPhpTokenizerState() {
-		return lastPhpTokenizerState;
 	}
 }

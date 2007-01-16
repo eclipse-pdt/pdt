@@ -75,7 +75,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				offset = tRegion.getStart() + regionStartOffset - 1;
 				continue;
 			}
-			if (!PhpLexer.isPHPCommentState(tRegion.getType()) && tRegion.getType() != PHPRegionTypes.WHITESPACE)
+			if (!PHPPartitionTypes.isPHPCommentState(tRegion.getType()) && tRegion.getType() != PHPRegionTypes.WHITESPACE)
 				return sdRegion.getStartOffset(tRegion);
 			offset = tRegion.getStart() + regionStartOffset - 1;
 		}

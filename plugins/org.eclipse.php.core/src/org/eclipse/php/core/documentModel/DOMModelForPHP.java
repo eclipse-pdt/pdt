@@ -17,13 +17,11 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.php.core.documentModel.dom.DOMDocumentForPHP;
 import org.eclipse.php.core.documentModel.dom.PHPDOMModelParser;
 import org.eclipse.php.core.documentModel.dom.PHPDOMModelUpdater;
-import org.eclipse.php.core.documentModel.dom.PHPModelNotifier;
 import org.eclipse.php.core.phpModel.PHPModelUtil;
 import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
-import org.eclipse.wst.xml.core.internal.document.XMLModelNotifier;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
 import org.w3c.dom.Document;
@@ -34,7 +32,6 @@ import org.w3c.dom.Document;
 public class DOMModelForPHP extends DOMStyleModelImpl {
 
 	public static final boolean FREQUENT_MODEL_UPDATE = true;
-	private XMLModelNotifier notifier;
 
 	/*
 	 * This is modeled after what is done for JSP
@@ -132,12 +129,5 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		// @GINO: will probably not worked for linked resources
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		return (IFile) root.findMember(new Path(path));
-	}
-
-	public XMLModelNotifier getModelNotifier() {
-		if (this.notifier == null) {
-			this.notifier = new PHPModelNotifier();
-		}
-		return this.notifier;
 	}
 }
