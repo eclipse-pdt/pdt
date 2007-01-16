@@ -20,7 +20,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.ui.editor.highlighter.PHPLineStyleProvider;
+import org.eclipse.php.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -91,7 +91,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 	private Dictionary fContextStyleMap = null;
 	private IStructuredDocumentRegion fNodes = null;
 	private RegionParser fParser = null;
-	private PHPLineStyleProvider styleProvider;
+	private LineStyleProviderForPhp styleProvider;
 	private String fInput = ""; //$NON-NLS-1$
 
 	/**
@@ -162,7 +162,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
-		styleProvider = new PHPLineStyleProvider();
+		styleProvider = new LineStyleProviderForPhp();
 		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
 
 		setContextStyleMap(contextStyleMap);

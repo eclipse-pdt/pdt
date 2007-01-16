@@ -22,7 +22,7 @@ import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdF
 import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
-import org.eclipse.php.ui.editor.highlighter.PHPLineStyleProvider;
+import org.eclipse.php.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.swt.SWT;
@@ -96,18 +96,18 @@ public class PHPColorPage extends AbstractColorPage {
 		ArrayList styleList = new ArrayList();
 		initStyleList(styleList);
 
-		PHPLineStyleProvider styleProvider = null;
+		LineStyleProviderForPhp styleProvider = null;
 		IEditorPart editor = PHPUiPlugin.getActivePage().getActiveEditor();
 		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editor);
 		if (phpEditor != null) {
 			SourceViewerConfiguration viewerConfig = phpEditor.getSourceViwerConfiguration();
 			if (viewerConfig != null && viewerConfig instanceof PHPStructuredTextViewerConfiguration) {
 				PHPStructuredTextViewerConfiguration phpViewerConfig = (PHPStructuredTextViewerConfiguration) viewerConfig;
-				styleProvider = (PHPLineStyleProvider) phpViewerConfig.getLineStyleProvider();
+				styleProvider = (LineStyleProviderForPhp) phpViewerConfig.getLineStyleProvider();
 			}
 		}
 		if (styleProvider == null) {
-			styleProvider = new PHPLineStyleProvider();
+			styleProvider = new LineStyleProviderForPhp();
 		}
 		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
 

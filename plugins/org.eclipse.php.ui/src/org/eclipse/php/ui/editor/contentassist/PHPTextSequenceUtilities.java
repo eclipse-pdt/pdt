@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.ui.editor.util.TextSequence;
 import org.eclipse.php.ui.editor.util.TextSequenceUtilities;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -115,7 +116,7 @@ public class PHPTextSequenceUtilities {
 			String currentType = TextSequenceUtilities.getType(textSequence, commentStartMatcher.start());
 			if (currentType != null && currentType.equals("")) {
 			}
-			if (!PhpLexer.isPHPCommentState(currentType) && !PhpLexer.isPHPQuotesState(currentType)) {
+			if (!PHPPartitionTypes.isPHPCommentState(currentType) && !PHPPartitionTypes.isPHPQuotesState(currentType)) {
 				return commentStartMatcher.start();
 			}
 			start = commentStartMatcher.start() + 2;
@@ -127,7 +128,7 @@ public class PHPTextSequenceUtilities {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset (offset);
 		ITextRegion startRegion = null;
 		try {
-			while (PhpLexer.isPHPMultiLineCommentState(tRegion.getType())) {
+			while (PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
 				if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_START)) {
 					startRegion = tRegion;
 					break;
@@ -144,7 +145,7 @@ public class PHPTextSequenceUtilities {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset (offset);
 		ITextRegion endRegion = null;
 		try {
-			while (PhpLexer.isPHPMultiLineCommentState(tRegion.getType())) {
+			while (PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
 				if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_END)) {
 					endRegion = tRegion;
 					break;
@@ -173,14 +174,14 @@ public class PHPTextSequenceUtilities {
 
 			// verfy state
 			String type = TextSequenceUtilities.getType(textSequence, functionStart + 1);
-			if (PhpLexer.isPHPRegularState(type)) {
+			if (PHPPartitionTypes.isPHPRegularState(type)) {
 				// verify the function is not closed.
 				int offset;
 				for (offset = matcher.end(); offset < textSequence.length(); offset++) {
 					if (textSequence.charAt(offset) == ')') {
 						// verify state
 						type = TextSequenceUtilities.getType(textSequence, offset);
-						if (PhpLexer.isPHPRegularState(type)) {
+						if (PHPPartitionTypes.isPHPRegularState(type)) {
 							break;
 						}
 					}
@@ -204,7 +205,7 @@ public class PHPTextSequenceUtilities {
 			}
 			// verfy state
 			String type = TextSequenceUtilities.getType(textSequence, startOffset + 1);
-			if (PhpLexer.isPHPRegularState(type)) {
+			if (PHPPartitionTypes.isPHPRegularState(type)) {
 				int endOffset = matcher.end();
 				// verify the class is not closed.
 				int offset;
@@ -212,7 +213,7 @@ public class PHPTextSequenceUtilities {
 					if (textSequence.charAt(offset) == '}') {
 						// verify state
 						type = TextSequenceUtilities.getType(textSequence, offset);
-						if (PhpLexer.isPHPRegularState(type)) {
+						if (PHPPartitionTypes.isPHPRegularState(type)) {
 							break;
 						}
 					}

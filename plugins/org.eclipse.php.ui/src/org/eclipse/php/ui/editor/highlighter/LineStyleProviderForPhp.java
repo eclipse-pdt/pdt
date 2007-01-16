@@ -12,40 +12,46 @@ package org.eclipse.php.ui.editor.highlighter;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.core.documentModel.parser.regions.PhpTokenContainer;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.util.PHPColorHelper;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 /**
  */
-public class PHPLineStyleProvider extends AbstractLineStyleProvider implements LineStyleProvider {
+public class LineStyleProviderForPhp implements LineStyleProvider {
+	private IStructuredDocument fDocument;
+	private Highlighter fHighlighter;
+	private boolean fInitialized;
+	private PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
+	private Map fTextAttributes;
+
 	/** Contains region to style mapping */
-	private static Map fColorTypes;
-	
+	private static final Map fColorTypes = new HashMap(); // String (token type), String (color)
 	static {
-		initColorTypes();
-	}
-
-	/**
-	 * Initializes the fColorTypes once.
-	 */
-	private static void initColorTypes() {
-		fColorTypes = new HashMap();
-
 		// Normal text:
 		fColorTypes.put(PHPRegionTypes.PHP_STRING, PreferenceConstants.EDITOR_NORMAL_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_TOKEN, PreferenceConstants.EDITOR_NORMAL_COLOR);
@@ -180,30 +186,63 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT_START, PreferenceConstants.EDITOR_COMMENT_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT_END, PreferenceConstants.EDITOR_COMMENT_COLOR);
 
-		
 		fColorTypes.put(PHPRegionTypes.TASK, PreferenceConstants.EDITOR_TASK_COLOR);
 	}
 
-	public PHPLineStyleProvider() {
-		super();
-		loadColors();
+	public void init(IStructuredDocument structuredDocument, Highlighter highlighter) {
+		commonInit(structuredDocument, highlighter);
+
+		if (isInitialized())
+			return;
+
+		registerPreferenceManager();
+
+		setInitialized(true);
 	}
 
+	public void release() {
+		unRegisterPreferenceManager();
+	}
+
+	/**
+	 * Returns the hashtable containing all the text attributes for this line
+	 * style provider. Lazily creates a hashtable if one has not already been
+	 * created.
+	 * 
+	 * @return
+	 */
+	protected Map getTextAttributes() {
+		if (fTextAttributes == null) {
+			fTextAttributes = new HashMap();
+			loadColors();
+		}
+		return fTextAttributes;
+	}
+
+	/**
+	 * Returns the attribute for simple php regions (open /close)
+	 * not PHP_CONTENT regions 
+	 * @param region
+	 * @return the text attribute 
+	 */
 	protected TextAttribute getAttributeFor(ITextRegion region) {
 		TextAttribute result = null;
 
 		if (region != null) {
-			String type = region.getType();
-			if (type != null) {
-
-				result = getAttributeFor(type);
+			final String type = region.getType();
+			if (type == PHPRegionContext.PHP_OPEN) {
+				result = getAttributeFor(PHPRegionTypes.PHP_OPENTAG);
+			} else if (type == PHPRegionContext.PHP_CLOSE) {
+				result = getAttributeFor(PHPRegionTypes.PHP_CLOSETAG);
+			} else {
+				result = getAttributeFor(region.getType());
 			}
 		}
 
 		//return the defalt attributes if there is not highlight color for the region
-		if (result == null)
+		if (result == null) {
 			result = (TextAttribute) getTextAttributes().get(PreferenceConstants.EDITOR_NORMAL_COLOR);
-
+		}
 		return result;
 	}
 
@@ -239,14 +278,6 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 	}
 
 	/**
-	 * =====================================================================================================================
-	 * Four methods below are just copied from AbstractLineStyleProvider, because StyleRange has a bug in the constructor:
-	 * 
-	 * UNDERLINE flag is not set according to the style !!!!
-	 * 
-	 * =====================================================================================================================
-	 */
-	/**
 	 * this version does "trim" regions to match request
 	 */
 	protected StyleRange createStyleRange(ITextRegionCollection flatNode, ITextRegion region, TextAttribute attr, int startOffset, int length) {
@@ -265,18 +296,15 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 		}
 		return result;
 	}
-	
+
 	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength, Collection holdResults) {
 		final int partitionStartOffset = typedRegion.getOffset();
 		final int partitionLength = typedRegion.getLength();
 		IStructuredDocumentRegion structuredDocumentRegion = getDocument().getRegionAtCharacterOffset(partitionStartOffset);
-		boolean handled = false;
 
-		handled = prepareTextRegions(structuredDocumentRegion, partitionStartOffset, partitionLength, holdResults);
-
-		return handled;
+		return prepareTextRegions(structuredDocumentRegion, partitionStartOffset, partitionLength, holdResults);
 	}
-	
+
 	/**
 	 * @param region
 	 * @param start
@@ -295,7 +323,8 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 			region = regions.get(i);
 			TextAttribute attr = null;
 			TextAttribute previousAttr = null;
-			if (blockedRegion.getStartOffset(region) > partitionEndOffset)
+			final int startOffset = blockedRegion.getStartOffset(region);
+			if (startOffset > partitionEndOffset)
 				break;
 			if (blockedRegion.getEndOffset(region) <= partitionStartOffset)
 				continue;
@@ -304,32 +333,36 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 				handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength, holdResults);
 			} else {
 
-				attr = getAttributeFor(region);
-				if (attr != null) {
-					handled = true;
-					// if this region's attr is the same as previous one, then
-					// just adjust the previous style range
-					// instead of creating a new instance of one
-					// note: to use 'equals' in this case is important, since
-					// sometimes
-					// different instances of attributes are associated with a
-					// region, even the
-					// the attribute has the same values.
-					// TODO: this needs to be improved to handle readonly
-					// regions correctly
-					if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))) {
-						styleRange.length += region.getLength();
-					} else {
-						styleRange = createStyleRange(blockedRegion, region, attr, partitionStartOffset, partitionLength);
-						holdResults.add(styleRange);
-						// technically speaking, we don't need to update
-						// previousAttr
-						// in the other case, because the other case is when
-						// it hasn't changed
-						previousAttr = attr;
-					}
+				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+					handled = preparePphRegions(holdResults, (PhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
 				} else {
-					previousAttr = null;
+					attr = getAttributeFor(region);
+					if (attr != null) {
+						handled = true;
+						// if this region's attr is the same as previous one, then
+						// just adjust the previous style range
+						// instead of creating a new instance of one
+						// note: to use 'equals' in this case is important, since
+						// sometimes
+						// different instances of attributes are associated with a
+						// region, even the
+						// the attribute has the same values.
+						// TODO: this needs to be improved to handle readonly
+						// regions correctly
+						if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))) {
+							styleRange.length += region.getLength();
+						} else {
+							styleRange = createStyleRange(blockedRegion, region, attr, partitionStartOffset, partitionLength);
+							holdResults.add(styleRange);
+							// technically speaking, we don't need to update
+							// previousAttr
+							// in the other case, because the other case is when
+							// it hasn't changed
+							previousAttr = attr;
+						}
+					} else {
+						previousAttr = null;
+					}
 				}
 			}
 		}
@@ -348,7 +381,8 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 				region = regions.get(i);
 				TextAttribute attr = null;
 				TextAttribute previousAttr = null;
-				if (structuredDocumentRegion.getStartOffset(region) > partitionEndOffset)
+				final int startOffset = structuredDocumentRegion.getStartOffset(region);
+				if (startOffset > partitionEndOffset)
 					break;
 				if (structuredDocumentRegion.getEndOffset(region) <= partitionStartOffset)
 					continue;
@@ -357,33 +391,39 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 					handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength, holdResults);
 				} else {
 
-					attr = getAttributeFor(region);
-					if (attr != null) {
-						handled = true;
-						// if this region's attr is the same as previous one,
-						// then just adjust the previous style range
-						// instead of creating a new instance of one
-						// note: to use 'equals' in this case is important,
-						// since sometimes
-						// different instances of attributes are associated
-						// with a region, even the
-						// the attribute has the same values.
-						// TODO: this needs to be improved to handle readonly
-						// regions correctly
-						if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))) {
-							styleRange.length += region.getLength();
-						} else {
-							styleRange = createStyleRange(structuredDocumentRegion, region, attr, partitionStartOffset, partitionLength);
-							holdResults.add(styleRange);
-							// technically speaking, we don't need to update
-							// previousAttr
-							// in the other case, because the other case is
-							// when it hasn't changed
-							previousAttr = attr;
-						}
+					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+						handled = preparePphRegions(holdResults, (PhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
 					} else {
-						previousAttr = null;
+
+						attr = getAttributeFor(region);
+						if (attr != null) {
+							handled = true;
+							// if this region's attr is the same as previous one,
+							// then just adjust the previous style range
+							// instead of creating a new instance of one
+							// note: to use 'equals' in this case is important,
+							// since sometimes
+							// different instances of attributes are associated
+							// with a region, even the
+							// the attribute has the same values.
+							// TODO: this needs to be improved to handle readonly
+							// regions correctly
+							if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))) {
+								styleRange.length += region.getLength();
+							} else {
+								styleRange = createStyleRange(structuredDocumentRegion, region, attr, partitionStartOffset, partitionLength);
+								holdResults.add(styleRange);
+								// technically speaking, we don't need to update
+								// previousAttr
+								// in the other case, because the other case is
+								// when it hasn't changed
+								previousAttr = attr;
+							}
+						} else {
+							previousAttr = null;
+						}
 					}
+
 				}
 
 				if (Debug.syntaxHighlighting && !handled) {
@@ -395,6 +435,53 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 		return handled;
 	}
 
+	/**
+	 * Prepares php regions to the line highliter
+	 * @param holdResults - results
+	 * @param region - php region
+	 * @param partitionLength 
+	 * @param partitionStartOffset 
+	 */
+	private boolean preparePphRegions(Collection holdResults, PhpScriptRegion region, int regionStart, int partitionStartOffset, int partitionLength) {
+		assert region.getType() == PHPRegionContext.PHP_CONTENT;
+
+		StyleRange styleRange = null;
+		TextAttribute attr;
+		TextAttribute previousAttr = null;
+
+		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
+		
+		final PhpTokenContainer phpTokenContainer = region.tokensContaier;
+		final List tokens = phpTokenContainer.getTokens();
+		
+		for (Iterator iter = tokens.iterator(); iter.hasNext();) {
+			ITextRegion element = (ITextRegion) iter.next();
+
+			// check for end of proocess or regions that should not be colored
+			final int startOffset = regionStart + element.getStart();
+			if (startOffset > partitionEndOffset)
+				break;
+			if (startOffset + element.getLength() <= partitionStartOffset)
+				continue;
+			
+			attr = getAttributeFor(element);
+			
+			if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))) {
+				styleRange.length += element.getLength();
+			} else {
+				styleRange = new StyleRange(regionStart + element.getStart(), element.getLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
+				holdResults.add(styleRange);
+				// technically speaking, we don't need to update
+				// previousAttr
+				// in the other case, because the other case is when
+				// it hasn't changed
+				previousAttr = attr;
+			}
+		}
+		return true;
+	}
+	
+	
 	/*
 	 * Returns hash of color attributes
 	 */
@@ -416,15 +503,12 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 		} else {
 			loadColors();
 		}
-		super.handlePropertyChange(event);
-	}
-
-	public void release() {
-		super.release();
+		fHighlighter.refreshDisplay();
 	}
 
 	public void loadColors() {
-		clearColors();
+		assert getTextAttributes() != null && getTextAttributes().size() == 0;
+
 		addTextAttribute(PreferenceConstants.EDITOR_NORMAL_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_KEYWORD_COLOR);
@@ -443,5 +527,69 @@ public class PHPLineStyleProvider extends AbstractLineStyleProvider implements L
 
 	protected IPreferenceStore getColorPreferences() {
 		return PreferenceConstants.getPreferenceStore();
+	}
+
+	private class PropertyChangeListener implements IPropertyChangeListener {
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+		 */
+		public void propertyChange(PropertyChangeEvent event) {
+			// have to do it this way so others can override the method
+			handlePropertyChange(event);
+		}
+	}
+
+	protected void commonInit(IStructuredDocument document, Highlighter highlighter) {
+		fDocument = document;
+		fHighlighter = highlighter;
+	}
+
+	protected TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold) {
+		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
+	}
+
+	protected IStructuredDocument getDocument() {
+		return fDocument;
+	}
+
+	/**
+	 */
+	protected Highlighter getHighlighter() {
+		return fHighlighter;
+	}
+
+	/**
+	 * Returns the initialized.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isInitialized() {
+		return fInitialized;
+	}
+
+	private void registerPreferenceManager() {
+		IPreferenceStore pref = getColorPreferences();
+		if (pref != null) {
+			pref.addPropertyChangeListener(fPreferenceListener);
+		}
+	}
+
+	/**
+	 * Sets the initialized.
+	 * 
+	 * @param initialized
+	 *            The initialized to set
+	 */
+	private void setInitialized(boolean initialized) {
+		this.fInitialized = initialized;
+	}
+
+	private void unRegisterPreferenceManager() {
+		IPreferenceStore pref = getColorPreferences();
+		if (pref != null) {
+			pref.removePropertyChangeListener(fPreferenceListener);
+		}
 	}
 }

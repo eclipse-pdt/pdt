@@ -27,6 +27,7 @@ import org.eclipse.php.Logger;
 import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.phpModel.parser.*;
 import org.eclipse.php.core.phpModel.phpElementData.*;
 import org.eclipse.php.core.util.WeakPropertyChangeListener;
@@ -222,7 +223,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 		}
 
-		if (isPHPSingleQuote(sdRegion, textRegion) || PhpLexer.isPHPCommentState(type)) {
+		if (isPHPSingleQuote(sdRegion, textRegion) || PHPPartitionTypes.isPHPCommentState(type)) {
 			// we dont have code completion inside single quotes.
 			return;
 		}
@@ -294,7 +295,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected boolean isPHPSingleQuote(IStructuredDocumentRegion sdRegion, ITextRegion textRegion) {
-		if (PhpLexer.isPHPQuotesState(textRegion.getType())) {
+		if (PHPPartitionTypes.isPHPQuotesState(textRegion.getType())) {
 			char firstChar = sdRegion.getText(textRegion).charAt(0);
 			return (firstChar == '\'');
 		}
@@ -302,7 +303,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected boolean isInArrayOptionQuotes(PHPProjectModel projectModel, String fileName, String type, int offset, int selectionLength, TextSequence text) {
-		if (!PhpLexer.isPHPQuotesState(type)) {
+		if (!PHPPartitionTypes.isPHPQuotesState(type)) {
 			return false;
 		}
 		int length = text.length();
@@ -349,7 +350,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (startsWith.startsWith("$")) {
 			if (!explicit && !autoShowVariables)
 				return;
-			if (PhpLexer.isPHPQuotesState(type)) {
+			if (PHPPartitionTypes.isPHPQuotesState(type)) {
 				final IStructuredDocument doc = sdRegion.getParentDocument();
 				try {
 					final char charBefore = doc.get(offset - 2, 1).charAt(0);
@@ -368,7 +369,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 		}
 
-		if (PhpLexer.isPHPQuotesState(type) || type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(tRegion) + tRegion.getLength() <= offset) {
+		if (PHPPartitionTypes.isPHPQuotesState(type) || type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(tRegion) + tRegion.getLength() <= offset) {
 			completionProposalGroup = regularPHPCompletionProposalGroup;
 			completionProposalGroup.setData(offset, null, startsWith, selectionLength, isStrict);
 			return;
@@ -1172,7 +1173,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected boolean isNewOrInstanceofStatment(PHPProjectModel projectModel, String keyword, String startWith, int offset, int selectionLength, boolean explicit, String type) {
-		if (PhpLexer.isPHPQuotesState(type)) {
+		if (PHPPartitionTypes.isPHPQuotesState(type)) {
 			return false;
 		}
 

@@ -47,7 +47,7 @@ import org.eclipse.php.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistProccesorForPHP;
 import org.eclipse.php.ui.editor.contentassist.PHPContentAssistProcessor;
 import org.eclipse.php.ui.editor.contentassist.PHPDocContentAssistProcessor;
-import org.eclipse.php.ui.editor.highlighter.PHPLineStyleProvider;
+import org.eclipse.php.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
 import org.eclipse.php.ui.editor.hover.PHPTextHoverProxy;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
@@ -165,15 +165,14 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	public LineStyleProvider getLineStyleProvider() {
 		if (fLineStyleProvider == null) {
-			fLineStyleProvider = new PHPLineStyleProvider();
+			fLineStyleProvider = new LineStyleProviderForPhp();
 		}
 		return fLineStyleProvider;
 	}
 
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
-		if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT) || (partitionType == PHPPartitionTypes.PHP_DOC)) {
-			LineStyleProvider[] phpEnabled = new LineStyleProvider[] { getLineStyleProvider() };
-			return phpEnabled;
+		if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
+			return new LineStyleProvider[] { getLineStyleProvider() };
 		}
 		return super.getLineStyleProviders(sourceViewer, partitionType);
 	}

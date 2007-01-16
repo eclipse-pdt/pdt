@@ -17,7 +17,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.php.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.ui.editor.highlighter.PHPLineStyleProvider;
+import org.eclipse.php.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -52,7 +52,7 @@ public class PHPSourceViewer extends Composite {
 	private RegionParser fParser = null;
 
 	private StyledText fText = null;
-	private PHPLineStyleProvider styleProvider;
+	private LineStyleProviderForPhp styleProvider;
 
 	public PHPSourceViewer(Composite parent, int style) {
 		super(parent, style);
@@ -253,7 +253,7 @@ public class PHPSourceViewer extends Composite {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
-		styleProvider = new PHPLineStyleProvider();
+		styleProvider = new LineStyleProviderForPhp();
 		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
 		setContextStyleMap(contextStyleMap);
 	}

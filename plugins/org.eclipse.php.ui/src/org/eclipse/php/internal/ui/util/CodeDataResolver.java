@@ -21,6 +21,7 @@ import org.eclipse.php.Logger;
 import org.eclipse.php.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.core.phpModel.parser.CodeDataFilter;
 import org.eclipse.php.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.core.phpModel.parser.PHPCodeContext;
@@ -120,7 +121,7 @@ public class CodeDataResolver {
 			return tmp;
 		}
 
-		if (isPHPSingleQuote(sdRegion, textRegion) || PhpLexer.isPHPCommentState(type)) {
+		if (isPHPSingleQuote(sdRegion, textRegion) || PHPPartitionTypes.isPHPCommentState(type)) {
 			// we dont have code completion inside single quotes.
 			return null;
 		}
@@ -174,7 +175,7 @@ public class CodeDataResolver {
 
 		String elementName = lastWord;
 		if (elementName.startsWith("$")) {
-			if (PhpLexer.isPHPQuotesState(type)) {
+			if (PHPPartitionTypes.isPHPQuotesState(type)) {
 				IStructuredDocument doc = sdRegion.getParentDocument();
 				try {
 					char charBefore = doc.get(offset - 2, 1).charAt(0);
@@ -191,7 +192,7 @@ public class CodeDataResolver {
 			return filterExact(variables, elementName);
 		}
 
-		if (PhpLexer.isPHPQuotesState(type) || (type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(textRegion) + textRegion.getLength() <= offset)) {
+		if (PHPPartitionTypes.isPHPQuotesState(type) || (type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(textRegion) + textRegion.getLength() <= offset)) {
 			return null;
 		}
 
@@ -214,7 +215,7 @@ public class CodeDataResolver {
 	}
 
 	private boolean isPHPSingleQuote(IStructuredDocumentRegion sdRegion, ITextRegion textRegion) {
-		if (PhpLexer.isPHPQuotesState(textRegion.getType())) {
+		if (PHPPartitionTypes.isPHPQuotesState(textRegion.getType())) {
 			char firstChar = sdRegion.getText(textRegion).charAt(0);
 			return (firstChar == '\'');
 		}
@@ -222,7 +223,7 @@ public class CodeDataResolver {
 	}
 
 	private CodeData getIfInArrayOptionQuotes(PHPProjectModel projectModel, String fileName, String type, int offset, TextSequence text) {
-		if (!PhpLexer.isPHPQuotesState(type)) {
+		if (!PHPPartitionTypes.isPHPQuotesState(type)) {
 			return null;
 		}
 		int length = text.length();
@@ -830,7 +831,7 @@ public class CodeDataResolver {
 	}
 
 	private CodeData getIfNewOrInstanceofStatment(PHPProjectModel projectModel, String keyword, String elementName, int offset, String type) {
-		if (PhpLexer.isPHPQuotesState(type)) {
+		if (PHPPartitionTypes.isPHPQuotesState(type)) {
 			return null;
 		}
 
