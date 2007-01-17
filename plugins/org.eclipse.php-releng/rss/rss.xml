@@ -13,6 +13,7 @@
 	<property name="date" value="${DSTAMP}" />
 	<property name="time" value="${TSTAMP}" />
 
+
 	<property name="buildDirectory" location="${basedir}/../src/eclipse" />
 	<property file="${buildDirectory}/label.properties"/>
 	<property name="remoteDirectory" value="downloads/drops" />
@@ -63,8 +64,7 @@
 	</target>
 
 	<target name="mailUnitTestResults">
-		<mail from="roy@zend.com" encoding="uu" tolist="php-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
-		<mail from="php-unit-test-owner@eclipse.org" encoding="uu" tolist="php-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
+		<mail from="php-unit-test-daemon@eclipse.org " encoding="uu" tolist="php-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
 	</target>
 
 	<target name="getTestResults">
