@@ -61,13 +61,14 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 			// safe cast
 			RegionChangedEvent event = (RegionChangedEvent) documentEvent;
 			final ITextRegion region = event.getRegion();
+			final int startOffset = event.getStructuredDocumentRegion().getStartOffset();
 
 			// if it is a php script region - reparse the php tokens according to the new text 
 			if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 
 				try {
 					PhpScriptRegion phpRegion = (PhpScriptRegion) region;
-					final String newText = documentEvent.getDocument().get(region.getStart(), region.getLength());
+					final String newText = documentEvent.getDocument().get(startOffset + region.getStart(), region.getLength());
 					phpRegion.reparse(newText);
 
 				} catch (BadLocationException e) {
