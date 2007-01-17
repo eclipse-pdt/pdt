@@ -88,6 +88,7 @@ public class PHPProblemsValidator {
 							marker.setAttribute(IMarker.CHAR_END, userData.getEndPosition() + 1);
 							marker.setAttribute(IMarker.MESSAGE, descr);
 							marker.setAttribute(IMarker.PRIORITY, prio);
+							marker.setAttribute(IMarker.USER_EDITABLE, false);
 						} catch (CoreException e) {
 							// Logger.logException(e);
 						}
