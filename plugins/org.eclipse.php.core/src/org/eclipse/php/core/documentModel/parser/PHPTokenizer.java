@@ -1059,6 +1059,13 @@ public final ITextRegion getNextToken() throws IOException {
 	}
 	else {
 		context = primGetNextToken();
+		if (context == PROXY_CONTEXT) {
+			return fEmbeddedContainer;
+		} else if (context == XML_TAG_OPEN) {
+			fIsBlockingEnabled = true;
+		} else if (context == XML_END_TAG_OPEN) {
+			fIsBlockingEnabled = false;
+		}
 		text = yytext();
 		if (context == XML_TAG_NAME) {
 			if(containsTagName(yy_buffer, yy_startRead, yy_markedPos-yy_startRead))
