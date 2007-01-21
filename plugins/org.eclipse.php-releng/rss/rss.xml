@@ -26,7 +26,7 @@
 	<property name="rssTitle" value="error! set a message here" />
 	<property name="rssMessageDescription" value="" />
 	<property name="rssMessageContributor" value="PHP Build Server" />
-	<property name="rssMessageLink" value="http://download.eclipse.org/tools/php/downloads/${buildLabel}/results/TEST-php.html" />
+	<property name="rssMessageLink" value="http://download.eclipse.org/tools/php/downloads/drops/${buildLabel}/results/TEST-php.html" />
 	<property name="rssOutputFile" value="center.xml" />
 	<property name="bugLink" value="https://bugs.eclipse.org/bugs/"/>
 
