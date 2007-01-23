@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.ui;
+package org.eclipse.php.internal.server.ui;
 
 
 import java.util.StringTokenizer;

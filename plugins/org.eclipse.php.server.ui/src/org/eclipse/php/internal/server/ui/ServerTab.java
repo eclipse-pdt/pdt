@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.ui;
+package org.eclipse.php.internal.server.ui;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,15 +23,13 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.core.util.FileUtils;
-import org.eclipse.php.debug.ui.launching.LaunchUtilities;
-import org.eclipse.php.server.PHPServerUIMessages;
-import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.core.manager.ServersManager;
-import org.eclipse.php.server.internal.ui.ClosableWizardDialog;
-import org.eclipse.php.server.internal.ui.ServerWizard;
-import org.eclipse.php.ui.preferences.ui.ScrolledCompositeImpl;
-import org.eclipse.php.ui.wizards.WizardModel;
+import org.eclipse.php.internal.core.util.FileUtils;
+import org.eclipse.php.internal.debug.ui.launching.LaunchUtilities;
+import org.eclipse.php.internal.server.PHPServerUIMessages;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
+import org.eclipse.php.internal.ui.wizards.WizardModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
@@ -629,7 +627,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			} else {
 				if (serverCombo.getItemCount() > 0) {
 					// Select the default server
-					String projectName = configuration.getAttribute("org.eclipse.php.debug.core.PHP_Project", (String) null);
+					String projectName = configuration.getAttribute("org.eclipse.php.internal.debug.core.PHP_Project", (String) null);
 					IProject project = null;
 					if (projectName != null) {
 						project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);

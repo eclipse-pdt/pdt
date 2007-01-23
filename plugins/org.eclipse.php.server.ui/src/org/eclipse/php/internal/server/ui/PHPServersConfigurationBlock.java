@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.internal.ui;
+package org.eclipse.php.internal.server.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +20,18 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.server.PHPServerUIMessages;
-import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.core.manager.ServersManager;
-import org.eclipse.php.server.ui.ServerEditDialog;
-import org.eclipse.php.ui.preferences.ui.IPreferenceConfigurationBlock;
-import org.eclipse.php.ui.preferences.ui.ScrolledCompositeImpl;
-import org.eclipse.php.ui.util.StatusInfo;
-import org.eclipse.php.ui.util.StatusUtil;
-import org.eclipse.php.ui.wizards.WizardModel;
-import org.eclipse.php.ui.wizards.fields.DialogField;
-import org.eclipse.php.ui.wizards.fields.IDialogFieldListener;
-import org.eclipse.php.ui.wizards.fields.IListAdapter;
-import org.eclipse.php.ui.wizards.fields.ListDialogField;
+import org.eclipse.php.internal.server.PHPServerUIMessages;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.ui.preferences.IPreferenceConfigurationBlock;
+import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
+import org.eclipse.php.internal.ui.util.StatusInfo;
+import org.eclipse.php.internal.ui.util.StatusUtil;
+import org.eclipse.php.internal.ui.wizards.WizardModel;
+import org.eclipse.php.internal.ui.wizards.fields.DialogField;
+import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
+import org.eclipse.php.internal.ui.wizards.fields.IListAdapter;
+import org.eclipse.php.internal.ui.wizards.fields.ListDialogField;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;

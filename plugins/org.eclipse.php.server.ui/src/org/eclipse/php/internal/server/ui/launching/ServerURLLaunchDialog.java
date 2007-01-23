@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.ui.launching;
+package org.eclipse.php.internal.server.ui.launching;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.php.debug.ui.Logger;
-import org.eclipse.php.debug.ui.PHPDebugUIPlugin;
-import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.ui.ServerTab;
+import org.eclipse.php.internal.debug.ui.Logger;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.ui.ServerTab;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

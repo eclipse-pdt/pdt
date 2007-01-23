@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.ui;
+package org.eclipse.php.internal.server.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,13 +17,13 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.php.server.PHPServerUIMessages;
-import org.eclipse.php.server.core.Server;
-import org.eclipse.php.ui.util.SWTUtil;
-import org.eclipse.php.ui.wizards.CompositeFragment;
+import org.eclipse.php.internal.server.PHPServerUIMessages;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.ui.util.SWTUtil;
+import org.eclipse.php.internal.ui.wizards.CompositeFragment;
+import org.eclipse.php.internal.ui.wizards.IControlHandler;
+import org.eclipse.php.internal.ui.wizards.WizardFragmentsFactoryRegistry;
 import org.eclipse.php.ui.wizards.ICompositeFragmentFactory;
-import org.eclipse.php.ui.wizards.IControlHandler;
-import org.eclipse.php.ui.wizards.WizardFragmentsFactoryRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -95,7 +95,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.server.apache.ui.IControlHandler#setDescription(java.lang.String)
+	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#setDescription(java.lang.String)
 	 */
 	public void setDescription(String desc) {
 		super.setMessage(desc);
@@ -103,7 +103,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.server.apache.ui.IControlHandler#setImageDescriptor(org.eclipse.jface.resource.ImageDescriptor)
+	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#setImageDescriptor(org.eclipse.jface.resource.ImageDescriptor)
 	 */
 	public void setImageDescriptor(ImageDescriptor image) {
 		super.setTitleImage(image.createImage());
@@ -111,7 +111,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.server.apache.ui.IControlHandler#update()
+	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#update()
 	 */
 	public void update() {
 		Button button = getButton(IDialogConstants.OK_ID);
@@ -143,7 +143,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.server.apache.ui.IControlHandler#getServer()
+	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#getServer()
 	 */
 	public Server getServer() {
 		return server;
@@ -151,7 +151,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.server.apache.ui.IControlHandler#setServer(org.eclipse.wst.server.core.IServer)
+	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#setServer(org.eclipse.wst.server.core.IServer)
 	 */
 	public void setServer(Server server) {
 		this.server = server;

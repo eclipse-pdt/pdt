@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: PDT Server UI Plug-in
 Bundle-SymbolicName: org.eclipse.php.server.ui;singleton:=true
 Bundle-Version: 0.7.0.qualifier
-Bundle-Activator: org.eclipse.php.server.ui.Activator
+Bundle-Activator: org.eclipse.php.internal.server.ui.Activator
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -19,6 +19,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.php.debug.ui,
  org.eclipse.php.debug.core
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.php.server.ui,
- org.eclipse.php.server.ui.launching,
- org.eclipse.php.server.ui.wizard
+Export-Package: org.eclipse.php.internal.server.ui,
+ org.eclipse.php.internal.server.ui.launching,
+ org.eclipse.php.internal.server.ui.wizard

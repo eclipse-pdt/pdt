@@ -1,9 +1,9 @@
-package org.eclipse.php.server.ui;
+package org.eclipse.php.internal.server.ui;
 
 import java.util.ArrayList;
 
 import org.eclipse.debug.ui.*;
-import org.eclipse.php.debug.ui.launching.LaunchConfigurationsTabsRegistry;
+import org.eclipse.php.internal.debug.ui.launching.LaunchConfigurationsTabsRegistry;
 
 /**
  * A debug tab group for launching debug on server. 

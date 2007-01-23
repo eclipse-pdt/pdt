@@ -1,14 +1,14 @@
-package org.eclipse.php.server.ui;
+package org.eclipse.php.internal.server.ui;
 
 import java.net.URL;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.php.server.PHPServerUIMessages;
-import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.core.manager.ServersManager;
-import org.eclipse.php.ui.wizards.CompositeFragment;
-import org.eclipse.php.ui.wizards.IControlHandler;
+import org.eclipse.php.internal.server.PHPServerUIMessages;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.ui.wizards.CompositeFragment;
+import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -381,7 +381,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.server.ui.CompositeFragment#performCancel()
+	 * @see org.eclipse.php.internal.server.ui.CompositeFragment#performCancel()
 	 */
 	public boolean performCancel() {
 		// Since the performOk might be triggered if this composite is inside a wizard fragment, we have to 

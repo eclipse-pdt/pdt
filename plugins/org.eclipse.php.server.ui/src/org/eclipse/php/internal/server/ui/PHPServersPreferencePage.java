@@ -8,12 +8,12 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.internal.ui;
+package org.eclipse.php.internal.server.ui;
 
-import org.eclipse.php.server.PHPServerUIMessages;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.preferences.ui.AbstractConfigurationBlockPreferencePage;
-import org.eclipse.php.ui.preferences.ui.IPreferenceConfigurationBlock;
+import org.eclipse.php.internal.server.PHPServerUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.AbstractConfigurationBlockPreferencePage;
+import org.eclipse.php.internal.ui.preferences.IPreferenceConfigurationBlock;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 public class PHPServersPreferencePage extends AbstractConfigurationBlockPreferencePage {

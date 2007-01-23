@@ -13,18 +13,18 @@
     <launchConfigurationTabGroup
       id="org.eclipse.php.server.ui.launchConfigurationTabGroup"
       type="org.eclipse.php.debug.core.launching.webPageLaunch"
-      class="org.eclipse.php.server.ui.ServerLaunchConfigurationTabGroup">
+      class="org.eclipse.php.internal.server.ui.ServerLaunchConfigurationTabGroup">
     </launchConfigurationTabGroup>
   </extension>
   
   <extension
        point="org.eclipse.php.debug.ui.launchConfigurationTabs">
     <launchConfigurationTab
-          class="org.eclipse.php.server.ui.launching.PHPServerTab"
+          class="org.eclipse.php.internal.server.ui.launching.PHPServerTab"
           id="org.eclipse.php.debug.ui.launching.PHPServerTab"
           launchConfigurationTabGroupId="org.eclipse.php.server.ui.launchConfigurationTabGroup"/>
     <launchConfigurationTab
-          class="org.eclipse.php.server.ui.launching.PHPServerAdvancedTab"
+          class="org.eclipse.php.internal.server.ui.launching.PHPServerAdvancedTab"
           id="org.eclipse.php.debug.ui.launching.PHPServerAdvancedTab"
           launchConfigurationTabGroupId="org.eclipse.php.server.ui.launchConfigurationTabGroup"
           placeAfter="org.eclipse.php.debug.ui.launching.PHPServerTab"/>
@@ -32,7 +32,7 @@
   <extension
         point="org.eclipse.debug.ui.launchShortcuts">
      <shortcut
-            class="org.eclipse.php.server.ui.launching.PHPServerLaunchShortcut"
+            class="org.eclipse.php.internal.server.ui.launching.PHPServerLaunchShortcut"
             icon="icons/full/obj16/server_run.gif"
             id="org.eclipse.php.server.ui.phpServerShortcut"
             label="%phpServerShortcut.label"
@@ -100,7 +100,7 @@
   <extension
         point="org.eclipse.php.ui.wizardAndCompositeFragments">
      <wizardAndCompositeFragment
-           class="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
+           class="org.eclipse.php.internal.server.ui.wizard.BasicCompositeFragmentFactory"
            fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
            id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
            name="Basic Factory"/>
@@ -108,8 +108,8 @@
   <extension
         point="org.eclipse.ui.preferencePages">
      <page
-           category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
-           class="org.eclipse.php.server.internal.ui.PHPServersPreferencePage"
+           category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+           class="org.eclipse.php.internal.server.ui.PHPServersPreferencePage"
            id="org.eclipse.php.server.internal.ui.PHPServersPreferencePage"
            name="%serversPreferencesPageName"/>
   </extension>

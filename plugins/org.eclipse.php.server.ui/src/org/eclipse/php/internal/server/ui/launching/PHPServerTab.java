@@ -8,14 +8,14 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.ui.launching;
+package org.eclipse.php.internal.server.ui.launching;
 
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.php.debug.core.IPHPConstants;
-import org.eclipse.php.debug.core.PHPDebugPlugin;
-import org.eclipse.php.debug.ui.launching.LaunchUtil;
-import org.eclipse.php.server.ui.ServerTab;
+import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.ui.launching.LaunchUtil;
+import org.eclipse.php.internal.server.ui.ServerTab;
 import org.eclipse.swt.widgets.Composite;
 
 /**

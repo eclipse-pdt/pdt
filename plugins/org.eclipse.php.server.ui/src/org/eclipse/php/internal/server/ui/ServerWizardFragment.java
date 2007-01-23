@@ -8,18 +8,16 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.internal.ui;
+package org.eclipse.php.internal.server.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.php.server.core.Server;
-import org.eclipse.php.server.core.manager.ServersManager;
-import org.eclipse.php.server.ui.Logger;
-import org.eclipse.php.server.ui.ServerCompositeFragment;
-import org.eclipse.php.ui.wizards.CompositeWizardFragment;
-import org.eclipse.php.ui.wizards.IWizardHandle;
-import org.eclipse.php.ui.wizards.WizardControlWrapper;
-import org.eclipse.php.ui.wizards.WizardModel;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.ui.wizards.CompositeWizardFragment;
+import org.eclipse.php.internal.ui.wizards.IWizardHandle;
+import org.eclipse.php.internal.ui.wizards.WizardControlWrapper;
+import org.eclipse.php.internal.ui.wizards.WizardModel;
 import org.eclipse.swt.widgets.Composite;
 
 public class ServerWizardFragment extends CompositeWizardFragment {
@@ -83,7 +81,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.server.ui.wizard.WizardFragment#performFinish(org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.php.internal.server.ui.wizard.WizardFragment#performFinish(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void performFinish(IProgressMonitor monitor) throws CoreException {
 		super.performFinish(monitor);
@@ -94,7 +92,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.server.ui.wizard.WizardFragment#performCancel(org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.php.internal.server.ui.wizard.WizardFragment#performCancel(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void performCancel(IProgressMonitor monitor) throws CoreException {
 		super.performCancel(monitor);

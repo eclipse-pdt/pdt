@@ -8,13 +8,13 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server;
+package org.eclipse.php.internal.server;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class PHPServerUIMessages {
-	private static final String BUNDLE_NAME = "org.eclipse.php.server.PHPServerUIMessages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.server.PHPServerUIMessages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

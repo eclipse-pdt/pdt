@@ -8,13 +8,17 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.internal.ui;
+package org.eclipse.php.internal.server.ui;
 
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.server.PHPServerUIMessages;
-import org.eclipse.php.ui.wizards.*;
+import org.eclipse.php.internal.server.PHPServerUIMessages;
+import org.eclipse.php.internal.ui.wizards.FragmentedWizard;
+import org.eclipse.php.internal.ui.wizards.WizardFragment;
+import org.eclipse.php.internal.ui.wizards.WizardFragmentsFactoryRegistry;
+import org.eclipse.php.internal.ui.wizards.WizardModel;
+import org.eclipse.php.ui.wizards.ICompositeFragmentFactory;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 

@@ -1,4 +1,4 @@
-package org.eclipse.php.server.ui;
+package org.eclipse.php.internal.server.ui;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelection;
