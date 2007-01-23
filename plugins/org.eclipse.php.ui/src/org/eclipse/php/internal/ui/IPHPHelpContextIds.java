@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui;
 
-import org.eclipse.php.ui.PHPUiPlugin;
 
 public interface IPHPHelpContextIds {
 	public static final String PREFIX = PHPUiPlugin.ID + '.';

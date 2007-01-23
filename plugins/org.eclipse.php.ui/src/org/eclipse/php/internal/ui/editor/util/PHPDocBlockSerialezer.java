@@ -17,9 +17,9 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.Logger;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**

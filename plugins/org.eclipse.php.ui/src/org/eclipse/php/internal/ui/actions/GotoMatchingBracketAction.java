@@ -12,8 +12,8 @@ package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.Assert;
-import org.eclipse.php.PHPUIMessages;
-import org.eclipse.php.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 
 /**
  * This Action is in charge of activating the Goto Mathing Bracket function

@@ -49,10 +49,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  An implementation of org.eclipse.php.server.ui.ICompositeFragmentFactory
+                  An implementation of org.eclipse.php.ui.wizards.ICompositeFragmentFactory
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.server.ui.ICompositeFragmentFactory"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.wizards.ICompositeFragmentFactory"/>
                </appInfo>
             </annotation>
          </attribute>

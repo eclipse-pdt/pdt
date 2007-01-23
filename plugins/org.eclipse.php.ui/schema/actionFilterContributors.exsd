@@ -64,7 +64,7 @@
                   Class of this PHP action filter contributor
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.generic.actionFilter.IActionFilterDelegator"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.actions.filters.IActionFilterContributor"/>
                </appInfo>
             </annotation>
          </attribute>

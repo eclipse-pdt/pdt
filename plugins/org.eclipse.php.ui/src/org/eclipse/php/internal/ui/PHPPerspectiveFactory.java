@@ -1,0 +1,79 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.ui;
+
+import org.eclipse.ui.IFolderLayout;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.console.IConsoleConstants;
+
+/**
+
+ * This class sets the Layout for the Rich Client Perspective. The perspective will
+ * contain an editor area, property page, outline view, resource navigator, and palette.
+ */
+public class PHPPerspectiveFactory implements IPerspectiveFactory {
+
+	static final String TOP_LEFT_LOCATION = "topLeft";
+	static final String BOTTOM_LEFT_LOCATION = "bottomLeft";
+	static final String TOP_RIGHT_LOCATION = "topRight";
+	static final String BOTTOM_LOCATION = "bottom";
+
+	//other view id's
+	static final String ID_EXPLORER = "org.eclipse.php.ui.explorer";
+	static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions";
+	static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline";
+    static final String ID_Debug_INFO_FOLDER = "org.eclipse.php.debug.ui.debugInfoFolder"; //$NON-NLS-1$
+    static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
+    static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
+    
+    
+	public void createInitialLayout(IPageLayout layout) {
+
+		//Adding the default views for the perspective
+		addViews(layout);
+
+	}
+
+	/*
+	 * This method add the default views that are part of the perspective and lays them
+	 * out in relation to each other and the editor area.
+	 */
+	protected void addViews(IPageLayout layout) {
+		
+		String editorArea = layout.getEditorArea();
+		
+		//	Everything is based off the editor area
+		
+        // remove debug views from PHP prespective. bug #163653
+		//IFolderLayout outlineFolder= layout.createFolder(ID_Debug_INFO_FOLDER, IPageLayout.RIGHT, (float) 0.75, editorArea);
+        //outlineFolder.addView(ID_PHPDebugOutput);
+        //outlineFolder.addView(ID_PHPBrowserOutput);
+
+		// Top left: Resource Navigator view and PHP Explorer
+		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION, IPageLayout.LEFT, 0.22f, editorArea);
+		topLeft.addView(ID_EXPLORER);
+		topLeft.addView(IPageLayout.ID_RES_NAV);
+
+		// Bottom left: Outline view
+		IFolderLayout bottomLeft = layout.createFolder(BOTTOM_LEFT_LOCATION, IPageLayout.BOTTOM, 0.50f, TOP_LEFT_LOCATION);
+		bottomLeft.addView(IPageLayout.ID_OUTLINE);
+		bottomLeft.addView(ID_PROJECT_OUTLINE);
+		bottomLeft.addView(ID_FUNCTIONS);
+		
+		// Bottom: Attributes view, Problem View, Task List, placeholder for Design View Log
+		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION, IPageLayout.BOTTOM, 0.75f, editorArea);
+		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
+		bottom.addView(IPageLayout.ID_TASK_LIST);
+        bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
+        bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
+	}
+}

@@ -13,8 +13,8 @@ package org.eclipse.php.internal.ui.autoEdit;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 
 /**
  * @author guy.g

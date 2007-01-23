@@ -12,7 +12,7 @@ package org.eclipse.php.internal.ui.folding;
 
 import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.php.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 /**

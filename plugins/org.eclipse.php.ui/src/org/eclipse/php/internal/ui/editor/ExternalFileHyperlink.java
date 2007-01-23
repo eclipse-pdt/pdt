@@ -14,9 +14,9 @@ import java.io.File;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.php.core.containers.LocalFileStorage;
-import org.eclipse.php.ui.containers.LocalFileStorageEditorInput;
-import org.eclipse.php.ui.util.EditorUtility;
+import org.eclipse.php.internal.core.containers.LocalFileStorage;
+import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
+import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 

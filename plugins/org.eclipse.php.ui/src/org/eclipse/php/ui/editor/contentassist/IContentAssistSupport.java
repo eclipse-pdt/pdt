@@ -3,7 +3,7 @@ package org.eclipse.php.ui.editor.contentassist;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.php.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 
 public interface IContentAssistSupport {
 

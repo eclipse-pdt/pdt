@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.ui.wizards;
 
+import org.eclipse.php.internal.ui.wizards.CompositeFragment;
+import org.eclipse.php.internal.ui.wizards.IControlHandler;
+import org.eclipse.php.internal.ui.wizards.WizardFragment;
 import org.eclipse.swt.widgets.Composite;
 
 /**

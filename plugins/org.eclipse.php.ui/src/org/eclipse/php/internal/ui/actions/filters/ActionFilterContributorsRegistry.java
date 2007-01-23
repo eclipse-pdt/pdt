@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.php.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
 class ActionFilterContributorsRegistry {

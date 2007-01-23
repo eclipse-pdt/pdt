@@ -4,7 +4,7 @@
  */
 package org.eclipse.php.internal.ui.preferences;
 
-import org.eclipse.php.ui.util.PHPManualSite;
+import org.eclipse.php.internal.ui.util.PHPManualSite;
 
 /**
  * @author seva

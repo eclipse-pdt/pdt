@@ -12,10 +12,8 @@ package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.PHPUIMessages;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.preferences.PreferenceConstants;
-import org.eclipse.php.ui.preferences.ui.AbstractPreferencePage;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

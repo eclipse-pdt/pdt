@@ -22,11 +22,11 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.Assert;
-import org.eclipse.php.PHPUIMessages;
-import org.eclipse.php.core.Logger;
+import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
-import org.eclipse.php.ui.preferences.PreferenceConstants;
-import org.eclipse.php.ui.util.EditorUtility;
 import org.eclipse.swt.SWT;
 import org.osgi.framework.Bundle;
 

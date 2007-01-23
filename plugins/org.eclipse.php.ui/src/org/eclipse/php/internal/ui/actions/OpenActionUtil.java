@@ -11,9 +11,9 @@
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.ui.PHPElementLabelProvider;
-import org.eclipse.php.ui.util.EditorUtility;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.ui.PHPElementLabelProvider;
+import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;

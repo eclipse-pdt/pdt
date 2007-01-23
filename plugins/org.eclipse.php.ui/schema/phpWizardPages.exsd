@@ -101,7 +101,7 @@ The following example will add &quot;My Wizard Page&quot; to the PHP project cre
         class=&quot;test.MyWizardPage&quot;
         id=&quot;test.MyWizardPage&quot;
         name=&quot;My Wizard Page&quot;
-        targetId=&quot;org.eclipse.php.project.ui.wizards.PHPProjectCreationWizard&quot;/&gt;
+        targetId=&quot;org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard&quot;/&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;

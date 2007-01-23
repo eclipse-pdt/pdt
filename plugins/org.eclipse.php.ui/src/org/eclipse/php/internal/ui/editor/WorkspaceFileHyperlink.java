@@ -3,8 +3,8 @@ package org.eclipse.php.internal.ui.editor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.util.EditorUtility;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.PartInitException;
 
 /**

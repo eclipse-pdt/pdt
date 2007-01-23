@@ -15,8 +15,8 @@ import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.Logger;
-import org.eclipse.php.core.format.CurlyCloseIndentationStrategy;
+import org.eclipse.php.internal.core.format.CurlyCloseIndentationStrategy;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**

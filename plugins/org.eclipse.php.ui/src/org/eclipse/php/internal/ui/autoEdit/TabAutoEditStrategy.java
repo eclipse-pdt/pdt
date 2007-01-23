@@ -12,10 +12,10 @@
 package org.eclipse.php.internal.ui.autoEdit;
 
 import org.eclipse.jface.text.*;
-import org.eclipse.php.Logger;
-import org.eclipse.php.core.format.FormatPreferencesSupport;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
+import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**

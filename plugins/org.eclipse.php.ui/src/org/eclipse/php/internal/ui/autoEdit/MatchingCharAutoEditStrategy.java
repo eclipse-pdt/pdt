@@ -13,9 +13,9 @@ package org.eclipse.php.internal.ui.autoEdit;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.core.format.FormatterUtils;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;

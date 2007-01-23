@@ -16,11 +16,11 @@ import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
-import org.eclipse.php.Logger;
-import org.eclipse.php.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.core.format.DefaultIndentationStrategy;
-import org.eclipse.php.core.format.FormatterUtils;
-import org.eclipse.php.core.format.IIndentationStrategy;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
+import org.eclipse.php.internal.core.format.FormatterUtils;
+import org.eclipse.php.internal.core.format.IIndentationStrategy;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**

@@ -14,11 +14,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.PHPUIMessages;
-import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.ui.PHPUiPlugin;
-import org.eclipse.php.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.ui.util.ExceptionHandler;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.ui.IWorkbenchSite;
 
 

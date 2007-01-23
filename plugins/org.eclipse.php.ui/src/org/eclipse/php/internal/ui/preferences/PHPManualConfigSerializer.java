@@ -6,7 +6,7 @@ package org.eclipse.php.internal.ui.preferences;
 
 import java.util.StringTokenizer;
 
-import org.eclipse.php.ui.util.PHPManualSiteDescriptor;
+import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 
 /**
  * @author seva

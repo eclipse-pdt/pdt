@@ -16,9 +16,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
-import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;

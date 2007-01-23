@@ -11,9 +11,9 @@
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.php.PHPUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.ui.util.PHPPluginImages;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.ui.PlatformUI;
 
 public abstract class AbstractToggleLinkingAction extends Action {

@@ -11,13 +11,12 @@
 package org.eclipse.php.internal.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.php.core.phpModel.PHPModelUtil;
-import org.eclipse.php.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.ui.StandardPHPElementContentProvider;
-import org.eclipse.php.ui.util.PHPElementImageProvider;
-import org.eclipse.php.ui.util.PHPElementLabels;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.ui.util.PHPElementImageProvider;
+import org.eclipse.php.internal.ui.util.PHPElementLabels;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 
