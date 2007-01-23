@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.core;
+package org.eclipse.php.internal.server.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

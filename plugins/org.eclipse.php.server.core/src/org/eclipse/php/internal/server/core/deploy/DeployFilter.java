@@ -1,4 +1,4 @@
-package org.eclipse.php.server.core.deploy;
+package org.eclipse.php.internal.server.core.deploy;
 
 import java.util.HashMap;
 import java.util.Map;

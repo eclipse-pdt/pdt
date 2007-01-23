@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.core.deploy;
+package org.eclipse.php.internal.server.core.deploy;
 
 import java.io.*;
 import java.net.URL;
@@ -20,10 +20,10 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.server.core.Activator;
-import org.eclipse.php.server.core.Logger;
-import org.eclipse.php.server.core.PHPServerCoreMessages;
-import org.eclipse.php.server.core.Server;
+import org.eclipse.php.internal.server.core.Activator;
+import org.eclipse.php.internal.server.core.Logger;
+import org.eclipse.php.internal.server.core.PHPServerCoreMessages;
+import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 
 /**

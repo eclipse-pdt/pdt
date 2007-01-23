@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.core.manager;
+package org.eclipse.php.internal.server.core.manager;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -24,11 +24,11 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.php.core.util.preferences.XMLPreferencesReader;
-import org.eclipse.php.core.util.preferences.XMLPreferencesWriter;
-import org.eclipse.php.server.core.Activator;
-import org.eclipse.php.server.core.Logger;
-import org.eclipse.php.server.core.Server;
+import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
+import org.eclipse.php.internal.core.util.preferences.XMLPreferencesWriter;
+import org.eclipse.php.internal.server.core.Activator;
+import org.eclipse.php.internal.server.core.Logger;
+import org.eclipse.php.internal.server.core.Server;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**

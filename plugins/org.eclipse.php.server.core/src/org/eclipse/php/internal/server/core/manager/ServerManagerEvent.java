@@ -8,11 +8,11 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.core.manager;
+package org.eclipse.php.internal.server.core.manager;
 
 import java.util.EventObject;
 
-import org.eclipse.php.server.core.Server;
+import org.eclipse.php.internal.server.core.Server;
 
 /**
  * A server manager event is triggered when a server is added, removed or modified.

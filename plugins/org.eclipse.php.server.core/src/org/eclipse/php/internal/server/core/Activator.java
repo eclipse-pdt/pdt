@@ -1,4 +1,4 @@
-package org.eclipse.php.server.core;
+package org.eclipse.php.internal.server.core;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;

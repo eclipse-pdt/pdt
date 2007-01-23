@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.core.manager;
+package org.eclipse.php.internal.server.core.manager;
 
 /**
  * A server manager listener interfaces for any listener that needs notifications about servers additions, 

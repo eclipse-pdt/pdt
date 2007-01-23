@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.core;
+package org.eclipse.php.internal.server.core;
 
 import java.beans.PropertyChangeListener;
 import java.net.URL;
@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.core.PHPCoreConstants;
-import org.eclipse.php.core.project.options.PHPProjectOptions;
-import org.eclipse.php.core.util.preferences.IXMLPreferencesStorable;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
+import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
 /**
  * A generic server implementation.
@@ -241,7 +241,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.core.util.preferences.IXMLPreferencesStorable#restoreFromMap(java.util.HashMap)
+	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#restoreFromMap(java.util.HashMap)
 	 */
 	public void restoreFromMap(HashMap map) {
 		HashMap properties = (HashMap) map.get(SERVER_ELEMENT);
@@ -255,7 +255,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.core.util.preferences.IXMLPreferencesStorable#storeToMap()
+	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#storeToMap()
 	 */
 	public HashMap storeToMap() {
 		HashMap properties = new HashMap(helper.map);

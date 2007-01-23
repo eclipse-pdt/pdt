@@ -2,6 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.php.server.core.preferences.ServersPreferencesInitializer"/>
+      <initializer class="org.eclipse.php.internal.server.core.preferences.ServersPreferencesInitializer"/>
    </extension>
 </plugin>

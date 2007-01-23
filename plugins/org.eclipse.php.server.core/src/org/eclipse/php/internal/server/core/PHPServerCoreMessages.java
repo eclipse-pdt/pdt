@@ -8,13 +8,13 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.core;
+package org.eclipse.php.internal.server.core;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class PHPServerCoreMessages {
-	private static final String BUNDLE_NAME = "org.eclipse.php.server.core.PHPServerCoreMessages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.server.core.PHPServerCoreMessages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

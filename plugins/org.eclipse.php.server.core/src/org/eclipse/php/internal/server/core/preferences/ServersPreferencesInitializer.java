@@ -8,13 +8,13 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.server.core.preferences;
+package org.eclipse.php.internal.server.core.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.php.server.core.Activator;
-import org.eclipse.php.server.core.manager.ServersManager;
+import org.eclipse.php.internal.server.core.Activator;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 
 /**
  * Initialize the servers default preferences.
