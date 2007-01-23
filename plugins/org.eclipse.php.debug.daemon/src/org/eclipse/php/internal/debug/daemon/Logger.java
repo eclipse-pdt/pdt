@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.debug.daemon;
+package org.eclipse.php.internal.debug.daemon;
 
 import java.util.StringTokenizer;
 

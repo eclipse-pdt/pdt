@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.debug.daemon.startup;
+package org.eclipse.php.internal.debug.daemon.startup;
 
 import org.eclipse.ui.IStartup;
 

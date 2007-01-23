@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.debug.daemon.communication;
+package org.eclipse.php.internal.debug.daemon.communication;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -20,7 +20,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.php.debug.daemon.DaemonPlugin;
+import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
+import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 
 /**
  * Registry class for the ICommunicationDaemon extentions.
@@ -126,7 +127,7 @@ public class CommunicationDaemonRegistry {
 
 		public ICommunicationDaemon createDaemon() {
 			if (daemon == null) {
-				SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.debug.daemon.communication") {
+				SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.internal.debug.daemon.communication") {
 					public void run() throws Exception {
 						daemon = (ICommunicationDaemon) element.createExecutableExtension(CLASS_ATTRIBUTE);
 					}

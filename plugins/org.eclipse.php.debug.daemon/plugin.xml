@@ -4,7 +4,7 @@
    <extension-point id="debugCommunicationDaemon" name="Debug Communication Daemon" schema="schema/debugCommunicationDaemon.exsd"/>
    <extension
          point="org.eclipse.ui.startup">
-      <startup class="org.eclipse.php.debug.daemon.startup.DaemonStartup"/>
+      <startup class="org.eclipse.php.internal.debug.daemon.startup.DaemonStartup"/>
    </extension>
 
 </plugin>

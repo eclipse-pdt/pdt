@@ -1,11 +1,11 @@
-package org.eclipse.php.debug.daemon;
+package org.eclipse.php.internal.debug.daemon;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.php.debug.daemon.communication.CommunicationDaemonRegistry;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
+import org.eclipse.php.internal.debug.daemon.communication.CommunicationDaemonRegistry;
 import org.osgi.framework.BundleContext;
 
 /**
