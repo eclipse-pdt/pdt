@@ -294,18 +294,10 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	}
 
 	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength, Collection holdResults) {
-		final long currentTimeMillis = System.currentTimeMillis();
 		final int partitionStartOffset = typedRegion.getOffset();
 		final int partitionLength = typedRegion.getLength();
 		IStructuredDocumentRegion structuredDocumentRegion = getDocument().getRegionAtCharacterOffset(partitionStartOffset);
-		
-		long delta2 = System.currentTimeMillis() - currentTimeMillis;
-		final boolean prepareTextRegions = prepareTextRegions(structuredDocumentRegion, partitionStartOffset, partitionLength, holdResults);
-		long delta = System.currentTimeMillis() - currentTimeMillis; 
-		System.out.println("prepare regions " + delta + "(" + delta2 + ")");
-		
-		
-		return prepareTextRegions;
+		return prepareTextRegions(structuredDocumentRegion, partitionStartOffset, partitionLength, holdResults);
 	}
 
 	/**
