@@ -13,28 +13,24 @@ package org.eclipse.php.ui.editor.highlighter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.core.Logger;
 import org.eclipse.php.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.core.documentModel.parser.regions.PhpScriptRegion;
-import org.eclipse.php.core.documentModel.parser.regions.PhpTokenContainer;
 import org.eclipse.php.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.util.PHPColorHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
@@ -298,11 +294,18 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	}
 
 	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength, Collection holdResults) {
+		final long currentTimeMillis = System.currentTimeMillis();
 		final int partitionStartOffset = typedRegion.getOffset();
 		final int partitionLength = typedRegion.getLength();
 		IStructuredDocumentRegion structuredDocumentRegion = getDocument().getRegionAtCharacterOffset(partitionStartOffset);
-
-		return prepareTextRegions(structuredDocumentRegion, partitionStartOffset, partitionLength, holdResults);
+		
+		long delta2 = System.currentTimeMillis() - currentTimeMillis;
+		final boolean prepareTextRegions = prepareTextRegions(structuredDocumentRegion, partitionStartOffset, partitionLength, holdResults);
+		long delta = System.currentTimeMillis() - currentTimeMillis; 
+		System.out.println("prepare regions " + delta + "(" + delta2 + ")");
+		
+		
+		return prepareTextRegions;
 	}
 
 	/**
@@ -334,7 +337,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 			} else {
 
 				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-					handled = preparePphRegions(holdResults, (PhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
+					handled = preparePhpRegions(holdResults, (PhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
 				} else {
 					attr = getAttributeFor(region);
 					if (attr != null) {
@@ -392,7 +395,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 				} else {
 
 					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-						handled = preparePphRegions(holdResults, (PhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
+						handled = preparePhpRegions(holdResults, (PhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
 					} else {
 
 						attr = getAttributeFor(region);
@@ -442,43 +445,36 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	 * @param partitionLength 
 	 * @param partitionStartOffset 
 	 */
-	private boolean preparePphRegions(Collection holdResults, PhpScriptRegion region, int regionStart, int partitionStartOffset, int partitionLength) {
+	private boolean preparePhpRegions(Collection holdResults, PhpScriptRegion region, int regionStart, int partitionStartOffset, int partitionLength) {
 		assert region.getType() == PHPRegionContext.PHP_CONTENT;
 
 		StyleRange styleRange = null;
 		TextAttribute attr;
 		TextAttribute previousAttr = null;
 
-		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
-		
-		final PhpTokenContainer phpTokenContainer = region.tokensContaier;
-		final List tokens = phpTokenContainer.getTokens();
-		
-		for (Iterator iter = tokens.iterator(); iter.hasNext();) {
-			ITextRegion element = (ITextRegion) iter.next();
-
-			// check for end of proocess or regions that should not be colored
-			final int startOffset = regionStart + element.getStart();
-			if (startOffset > partitionEndOffset)
-				break;
-			if (startOffset + element.getLength() <= partitionStartOffset)
-				continue;
-			
-			attr = getAttributeFor(element);
-			
-			if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))) {
-				styleRange.length += element.getLength();
-			} else {
-				styleRange = new StyleRange(regionStart + element.getStart(), element.getLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
-				holdResults.add(styleRange);
-				// technically speaking, we don't need to update
-				// previousAttr
-				// in the other case, because the other case is when
-				// it hasn't changed
-				previousAttr = attr;
+		ITextRegion[] phpTokens = null;
+		try {
+			phpTokens = region.getPhpTokens(partitionStartOffset - regionStart, partitionLength);
+			for (int i = 0; i < phpTokens.length; i++) {
+				ITextRegion element = phpTokens[i];
+				attr = getAttributeFor(element);
+				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))) {
+					styleRange.length += element.getLength();
+				} else {
+					styleRange =new StyleRange(regionStart + element.getStart(), element.getLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
+					holdResults.add(styleRange);
+					// technically speaking, we don't need to update
+					// previousAttr
+					// in the other case, because the other case is when
+					// it hasn't changed
+					previousAttr = attr;
+				}
 			}
-		}
-		return true;
+			return true;
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+			return false;			
+		}		
 	}
 	
 	
