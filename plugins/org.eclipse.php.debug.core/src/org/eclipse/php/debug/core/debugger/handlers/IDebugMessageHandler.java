@@ -11,7 +11,7 @@
 package org.eclipse.php.debug.core.debugger.handlers;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
-import org.eclipse.php.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 
 public interface IDebugMessageHandler {
 	/**

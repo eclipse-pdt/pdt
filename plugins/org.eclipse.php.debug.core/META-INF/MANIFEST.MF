@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: PDT Core Plug-in
 Bundle-SymbolicName: org.eclipse.php.debug.core; singleton:=true
 Bundle-Version: 0.7.0.qualifier
-Bundle-Activator: org.eclipse.php.debug.core.PHPDebugPlugin
+Bundle-Activator: org.eclipse.php.internal.debug.core.PHPDebugPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -18,15 +18,18 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.php.ui,
  org.eclipse.ui.workbench
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.php.debug.core,
- org.eclipse.php.debug.core.communication,
- org.eclipse.php.debug.core.debugger,
+Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.debug.core.debugger.handlers,
  org.eclipse.php.debug.core.debugger.messages,
  org.eclipse.php.debug.core.debugger.parameters,
- org.eclipse.php.debug.core.launching,
- org.eclipse.php.debug.core.model,
- org.eclipse.php.debug.core.preferences,
- org.eclipse.php.debug.core.sourcelookup,
- org.eclipse.php.debug.core.sourcelookup.containers
+ org.eclipse.php.internal.debug.core,
+ org.eclipse.php.internal.debug.core.communication,
+ org.eclipse.php.internal.debug.core.debugger,
+ org.eclipse.php.internal.debug.core.debugger.messages,
+ org.eclipse.php.internal.debug.core.debugger.parameters,
+ org.eclipse.php.internal.debug.core.launching,
+ org.eclipse.php.internal.debug.core.model,
+ org.eclipse.php.internal.debug.core.preferences,
+ org.eclipse.php.internal.debug.core.sourcelookup,
+ org.eclipse.php.internal.debug.core.sourcelookup.containers
 Bundle-Vendor: Eclipse.org

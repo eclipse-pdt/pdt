@@ -78,7 +78,7 @@ PHP Debug parameters initializer provides a method for generating request to PHP
          <attribute name="handler" type="string">
             <annotation>
                <documentation>
-                  ID of the debug handler associated with this parameters initializer (see extension point: &lt;code&gt;org.eclipse.php.debug.core.phpDebugHandlers&lt;/code&gt;)
+                  ID of the debug handler associated with this parameters initializer (see extension point: &lt;code&gt;org.eclipse.php.internal.debug.core.phpDebugHandlers&lt;/code&gt;)
                </documentation>
             </annotation>
          </attribute>
@@ -125,10 +125,10 @@ PHP Debug parameters initializer provides a method for generating request to PHP
       <documentation>
          &lt;p&gt;
 &lt;pre&gt;
-  &lt;extension point=&quot;org.eclipse.php.debug.core.phpDebugParametersInitializers&quot;&gt;
+  &lt;extension point=&quot;org.eclipse.php.internal.debug.core.phpDebugParametersInitializers&quot;&gt;
      &lt;initializer
-           class=&quot;org.eclipse.php.debug.core.debugger.parameters.DefaultDebugParametersInitializer&quot;
-           id=&quot;org.eclipse.php.debug.core.defaultInitializer&quot;
+           class=&quot;org.eclipse.php.internal.debug.core.debugger.parameters.DefaultDebugParametersInitializer&quot;
+           id=&quot;org.eclipse.php.internal.debug.core.defaultInitializer&quot;
            name=&quot;Default Debug Parameters Initializer&quot;/&gt;
   &lt;/extension&gt;
 &lt;/pre&gt;
@@ -150,7 +150,7 @@ PHP Debug parameters initializer provides a method for generating request to PHP
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         Look at &lt;code&gt;org.eclipse.php.debug.core.debugger.parameters.DefaultDebugParametersInitializer&lt;/code&gt;.
+         Look at &lt;code&gt;org.eclipse.php.internal.debug.core.debugger.parameters.DefaultDebugParametersInitializer&lt;/code&gt;.
       </documentation>
    </annotation>
 

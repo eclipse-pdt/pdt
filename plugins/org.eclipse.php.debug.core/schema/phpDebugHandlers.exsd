@@ -88,7 +88,7 @@
          This debug handler adds functionality of PHP profiler to the basic PHP debug handler:
 &lt;p&gt;
 &lt;pre&gt;
-   &lt;extension point=&quot;org.eclipse.php.debug.core.phpDebugHandlers&quot;&gt;
+   &lt;extension point=&quot;org.eclipse.php.internal.debug.core.phpDebugHandlers&quot;&gt;
       &lt;message class=&quot;test.PHPProfiler&quot; id=&quot;test.PHPProfiler&quot; name=&quot;PHP Profiler&quot;/&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;

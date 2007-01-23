@@ -1,0 +1,379 @@
+package org.eclipse.php.internal.debug.core.launching;
+
+import org.eclipse.core.resources.IMarkerDelta;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.*;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerInitializer;
+import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
+import org.eclipse.php.internal.debug.core.debugger.PHPWebServerDebuggerInitializer;
+import org.eclipse.php.internal.debug.core.model.DebugSessionIdGenerator;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.deploy.DeployFilter;
+import org.eclipse.php.internal.server.core.deploy.FileUtil;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.swt.widgets.Display;
+
+/**
+ * A launch configuration delegate class for launching a PHP web page script.
+ * 
+ * @author shalom
+ *
+ */
+public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
+
+	private ILaunch launch;
+	private Job runDispatch;
+	protected IDebuggerInitializer debuggerInitializer;
+
+	public PHPWebPageLaunchDelegate() {
+		debuggerInitializer = createDebuggerInitilizer();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.internal.server.core.launch.IHTTPServerLaunch#launch(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+		PHPLaunchUtilities.showDebugView();
+		if (!PHPLaunchUtilities.checkDebugAllPages(configuration, launch)) {
+			monitor.setCanceled(true);
+			monitor.done();
+			return;
+		}
+		boolean runWithDebug = configuration.getAttribute("run_with_debug", true);
+		this.launch = launch;
+		if (mode.equals(ILaunchManager.RUN_MODE) && !runWithDebug) {
+			runWithoutDebug(configuration, mode, launch, monitor);
+			return;
+		}
+
+		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, ""));
+		if (server == null) {
+			Logger.log(Logger.ERROR, "Launch configuration could not find server");
+			terminated();
+			// throw CoreException();
+			return;
+		}
+		String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
+		// Get the project from the file name
+		IPath filePath = new Path(fileName);
+		IProject proj = null;
+		try {
+			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
+		} catch (Throwable t) {
+		}
+		if (proj == null) {
+			Logger.log(Logger.ERROR, "Could not execute the debug (Project is null).");
+			return;
+		}
+
+		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
+		if (publish) {
+			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
+				// Return if the publish failed.
+				terminated();
+				return;
+			}
+		}
+		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
+		String project = proj.getFullPath().toString();
+		wc.setAttribute(IPHPConstants.PHP_Project, project);
+
+		// Set transfer encoding:
+		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
+		wc.doSave();
+
+		String URL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
+		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebug == true) {
+			boolean stopAtFirstLine = false;
+			if (wc.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false)) {
+				stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
+			} else {
+				stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(proj);
+			}
+			int requestPort = PHPProjectPreferences.getDebugPort(proj);
+
+			// Generate a session id for this launch and put it in the map
+			int sessionID = DebugSessionIdGenerator.generateSessionID();
+			PHPSessionLaunchMapper.put(sessionID, new PHPServerLaunchDecorator(launch, proj));
+
+			// Fill all debug attributes:
+			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
+			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
+			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
+			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
+			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
+
+			// Trigger the debug session by initiating a debug requset to the debug server
+			runDispatch = new RunDispatchJobWebServer(launch);
+			runDispatch.schedule();
+		}
+	}
+
+	public void runWithoutDebug(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+
+		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, ""));
+		if (server == null) {
+			Logger.log(Logger.ERROR, "Launch configuration could not find server");
+			//throw CoreException();
+			return;
+		}
+		String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
+		// Get the project from the file name
+		IPath filePath = new Path(fileName);
+		IProject proj = null;
+		try {
+			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
+		} catch (Throwable t) {
+		}
+		if (proj == null) {
+			Logger.log(Logger.ERROR, "Could not launch (Project is null).");
+			return;
+		}
+
+		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
+		if (publish) {
+			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
+				// Return if the publish failed.
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Initiate a debug session.
+	 * 
+	 * @param launch
+	 */
+	protected void initiateDebug(ILaunch launch) {
+		try {
+			debuggerInitializer.debug(launch);
+		} catch (DebugException e) {
+			IStatus status = e.getStatus();
+			String errorMessage = null;
+			if (status == null) {
+				Logger.traceException("Unexpected Error return from debuggerInitializer ", e);
+				fireError(PHPDebugCoreMessages.Debugger_Unexpected_Error_1, e);
+				errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
+			} else {
+				fireError(status);
+				errorMessage = status.getMessage();
+			}
+			displayErrorMessage(errorMessage);
+		}
+	}
+
+	/**
+	 * Create an {@link IDebuggerInitializer}.
+	 * 
+	 * @return An {@link IDebuggerInitializer} instance.
+	 */
+	protected IDebuggerInitializer createDebuggerInitilizer() {
+		return new PHPWebServerDebuggerInitializer();
+	}
+
+	/**
+	 * Displays a dialod with an error message.
+	 * 
+	 * @param message The error to display.
+	 */
+	protected void displayErrorMessage(final String message) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				MessageDialog.openError(Display.getDefault().getActiveShell(), "Debug Error", message);
+			}
+		});
+	}
+
+	/**
+	 * Throws a IStatus in a Debug Event
+	 * 
+	 */
+	public void fireError(IStatus status) {
+		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
+		event.setData(status);
+		fireEvent(event);
+	}
+
+	/**
+	 * Throws a IStatus in a Debug Event
+	 * 
+	 */
+	public void fireError(String errorMessage, Exception e) {
+		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e);
+		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
+		event.setData(status);
+		fireEvent(event);
+	}
+
+	/**
+	 * Called when the debug session was terminated. 
+	 */
+	public void terminated() {
+		DebugEvent event = null;
+		if (launch.getDebugTarget() == null) {
+			// We have to force the termination of the ILaunch because at this stage there is no
+			// PHPDebugTarget, thus we create a dummy debug target to overcome this issue and terminate the launch.
+			IDebugTarget dummyDebugTarget = new DummyDebugTarget(launch);
+			event = new DebugEvent(dummyDebugTarget, DebugEvent.TERMINATE);
+			if (launch != null) {
+				launch.addDebugTarget(dummyDebugTarget);
+				IDebugEventSetListener launchListener = (IDebugEventSetListener) launch;
+				launchListener.handleDebugEvents(new DebugEvent[] { event });
+			}
+		}
+		event = new DebugEvent(this, DebugEvent.TERMINATE);
+		fireEvent(event);
+	}
+
+	/**
+	 * Fires a debug event
+	 * 
+	 * @param event 	The event to be fired
+	 */
+	public void fireEvent(DebugEvent event) {
+		DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[] { event });
+	}
+
+	/*
+	 * Run is seperate thread so launch doesn't hang.
+	 */
+	class RunDispatchJobWebServer extends Job {
+		private ILaunch launch;
+
+		public RunDispatchJobWebServer(ILaunch launch) {
+			super("runPHPWebServer");
+			this.launch = launch;
+			setSystem(true);
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			initiateDebug(launch);
+			Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling Terminated()");
+			terminated();
+			return Status.OK_STATUS;
+		}
+
+		public String toString() {
+			String className = getClass().getName();
+			className = className.substring(className.lastIndexOf('.') + 1);
+			return className + "@" + Integer.toHexString(hashCode());
+		}
+	}
+
+	/*
+	 * A dummy debug target for the termination of the ILaunch.
+	 */
+	private class DummyDebugTarget implements IDebugTarget {
+
+		private ILaunch launch;
+
+		public DummyDebugTarget(ILaunch launch) {
+			this.launch = launch;
+		}
+
+		public String getName() throws DebugException {
+			return "Session Terminated";
+		}
+
+		public IProcess getProcess() {
+			return null;
+		}
+
+		public IThread[] getThreads() throws DebugException {
+			return null;
+		}
+
+		public boolean hasThreads() throws DebugException {
+			return false;
+		}
+
+		public boolean supportsBreakpoint(IBreakpoint breakpoint) {
+			return false;
+		}
+
+		public IDebugTarget getDebugTarget() {
+			return this;
+		}
+
+		public ILaunch getLaunch() {
+			return launch;
+		}
+
+		public String getModelIdentifier() {
+			return "";
+		}
+
+		public Object getAdapter(Class adapter) {
+			return null;
+		}
+
+		public boolean canTerminate() {
+			return true;
+		}
+
+		public boolean isTerminated() {
+			return true;
+		}
+
+		public void terminate() throws DebugException {
+		}
+
+		public boolean canResume() {
+			return false;
+		}
+
+		public boolean canSuspend() {
+			return false;
+		}
+
+		public boolean isSuspended() {
+			return false;
+		}
+
+		public void resume() throws DebugException {
+		}
+
+		public void suspend() throws DebugException {
+		}
+
+		public void breakpointAdded(IBreakpoint breakpoint) {
+		}
+
+		public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
+		}
+
+		public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
+		}
+
+		public boolean canDisconnect() {
+			return false;
+		}
+
+		public void disconnect() throws DebugException {
+		}
+
+		public boolean isDisconnected() {
+			return false;
+		}
+
+		public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
+			return null;
+		}
+
+		public boolean supportsStorageRetrieval() {
+			return false;
+		}
+	}
+}

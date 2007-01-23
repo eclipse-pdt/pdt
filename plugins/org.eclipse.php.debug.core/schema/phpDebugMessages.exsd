@@ -99,10 +99,10 @@
       <documentation>
          &lt;p&gt;
 &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.php.debug.core.phpDebugMessages&quot;&gt;
+&lt;extension point=&quot;org.eclipse.php.internal.debug.core.phpDebugMessages&quot;&gt;
     &lt;message
-        class=&quot;org.eclipse.php.debug.core.debugger.messages.AddBreakpointRequest&quot;
-        id=&quot;org.eclipse.php.debug.core.debugger.messages.AddBreakpointRequest&quot;
+        class=&quot;org.eclipse.php.internal.debug.core.debugger.messages.AddBreakpointRequest&quot;
+        id=&quot;org.eclipse.php.internal.debug.core.debugger.messages.AddBreakpointRequest&quot;
         name=&quot;Add Breakpoint Request&quot;/&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;
@@ -126,7 +126,7 @@ Plugins that want to extend this extension point must implement this interface: 
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         See &lt;code&gt;org.eclipse.php.debug.core&lt;/code&gt; plug-in&apos;s plugin.xml.
+         See &lt;code&gt;org.eclipse.php.internal.debug.core&lt;/code&gt; plug-in&apos;s plugin.xml.
       </documentation>
    </annotation>
 
