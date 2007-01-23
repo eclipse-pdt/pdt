@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.php.internal.core.project.build.PHPIncrementalProjectBuilder;
 
 /**
  * This interface is used for defining PHP builder extensions. All of its methods where taken
