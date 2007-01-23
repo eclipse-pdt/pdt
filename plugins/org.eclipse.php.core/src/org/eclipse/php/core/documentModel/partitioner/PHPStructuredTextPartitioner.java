@@ -56,28 +56,6 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 		return false;
 	}
 
-	public static final void getInternalPartition() {
-		//				} else if (regionType == PHPRegionContext.PHP_CONTENT) {
-		//					// safe cast
-		//					final PhpScriptRegion phpRegion = (PhpScriptRegion) region;
-		//					final String type = phpRegion.getPhpTokenType(offset);
-		//					if (PHPPartitionTypes.isPHPMultiLineCommentState(type))
-		//						return PHPPartitionTypes.PHP_MULTI_LINE_COMMENT;
-		//					else if (PHPPartitionTypes.isPHPLineCommentState(type))
-		//						return PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT;
-		//					else if (PHPPartitionTypes.isPHPDocState(type))
-		//						return PHPPartitionTypes.PHP_DOC;
-		//					else if (PHPPartitionTypes.isPHPQuotesState(type))
-		//						return PHPPartitionTypes.PHP_QUOTED_STRING;
-		//					else if (PHPRegionTypes.TASK == type) {
-		//						// TODO return the previous region type
-		//						return getPartitionType(region, offset - 1);
-		//					} else {
-		//						return PHPPartitionTypes.PHP_DEFAULT;
-		//					}
-		//				} 
-	}
-
 	public IDocumentPartitioner newInstance() {
 		return new PHPStructuredTextPartitioner();
 	}
