@@ -6,7 +6,7 @@
    <extension
          point="org.eclipse.debug.ui.debugModelPresentations">
       <debugModelPresentation
-            class="org.eclipse.php.debug.ui.presentation.PHPModelPresentationDelegate"
+            class="org.eclipse.php.internal.debug.ui.presentation.PHPModelPresentationDelegate"
             id="org.eclipse.php.debug.core">
       </debugModelPresentation>
    </extension>
@@ -39,7 +39,7 @@
       <launchConfigurationTabGroup
             type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
             description="%runPHPExecutable.description"
-            class="org.eclipse.php.debug.ui.launching.PHPExeLaunchConfigurationTabGroup"
+            class="org.eclipse.php.internal.debug.ui.launching.PHPExeLaunchConfigurationTabGroup"
             id="org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe">
       </launchConfigurationTabGroup>
      </extension>
@@ -50,8 +50,8 @@
 		<breakpointContribution id="org.eclipse.php.debug.ui.providers">
 			<provider
 				contentTypes="org.eclipse.php.core.phpsource"
-				class="org.eclipse.php.debug.ui.breakpoint.provider.PHPBreakpointProvider:*php"
-				id="org.eclipse.php.debug.ui.breakpoint.provider.PHPBreakpointProvider" />
+				class="org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider:*php"
+				id="org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider" />
 		</breakpointContribution>
 	</extension> 
 
@@ -69,7 +69,7 @@
                label="%runToLine.label"
                menubarPath="additions"/>
          <action
-               class="org.eclipse.php.debug.ui.actions.PHPWatchAction"
+               class="org.eclipse.php.internal.debug.ui.actions.PHPWatchAction"
                enablesFor="+"
                icon="icon/full/etool16/watch_exp.gif"
                id="org.eclipse.php.debug.ui.popup.WatchAction"
@@ -86,11 +86,11 @@
          </visibility>
       </viewerContribution>
       <objectContribution
-            objectClass="org.eclipse.php.debug.core.model.PHPConditionalBreakpoint"
+            objectClass="org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint"
             id="org.eclipse.php.debug.PHPBreakpointActions">
          <action
                label="%setCondition.label"
-               class="org.eclipse.php.debug.ui.actions.BreakpointSetConditionAction"
+               class="org.eclipse.php.internal.debug.ui.actions.BreakpointSetConditionAction"
                menubarPath="emptyBreakpointGroup"
                enablesFor="1"
                id="org.eclipse.php.debug.ui.actions.BreakpointSetCondition">
@@ -100,8 +100,8 @@
       <extension
          	point="org.eclipse.core.runtime.adapters">
 	      <factory
-	            class="org.eclipse.php.debug.ui.breakpoint.adapter.PHPEditorAdapterFactory"
-	            adaptableType="org.eclipse.php.ui.editor.PHPStructuredEditor">
+	            class="org.eclipse.php.internal.debug.ui.breakpoint.adapter.PHPEditorAdapterFactory"
+	            adaptableType="org.eclipse.php.internal.ui.editor.PHPStructuredEditor">
 				<adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget"/>
 	      </factory>
       </extension>
@@ -114,7 +114,7 @@
  	<extension
          point="org.eclipse.debug.ui.consoleColorProviders">
       <consoleColorProvider
-            class="org.eclipse.php.debug.ui.console.PHPConsoleColorProvider"
+            class="org.eclipse.php.internal.debug.ui.console.PHPConsoleColorProvider"
             processType="org.eclipse.php.debug.core.launching.PHPProcess"
             id="org.eclipse.php.debug.ui.consoleColorProvider">
       </consoleColorProvider>
@@ -122,7 +122,7 @@
    <extension
          point="org.eclipse.debug.ui.consoleLineTrackers">
       <consoleLineTracker
-            class="org.eclipse.php.debug.ui.console.PHPLineTracker"
+            class="org.eclipse.php.internal.debug.ui.console.PHPLineTracker"
             processType="org.eclipse.php.debug.core.launching.PHPProcess"
             id="org.eclipse.php.debug.ui.console.PHPLineTracker">
       </consoleLineTracker>
@@ -131,13 +131,13 @@
          point="org.eclipse.debug.core.watchExpressionDelegates">
          <watchExpressionDelegate
          	debugModel="org.eclipse.php.debug.core"
-         	delegateClass="org.eclipse.php.debug.ui.watch.PHPWatchExpressionDelegate"/>
+         	delegateClass="org.eclipse.php.internal.debug.ui.watch.PHPWatchExpressionDelegate"/>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <!--  Add ICON icon="icons/full/obj16/xxx.gif" -->
       <view
-            class="org.eclipse.php.debug.ui.views.PHPStackView"
+            class="org.eclipse.php.internal.debug.ui.views.PHPStackView"
             category="org.eclipse.php.ui.views"
             icon="platform:/plugin/org.eclipse.php.ui/icons/full/obj16/phpfile.gif"
             name="%parameterStack.name"
@@ -165,7 +165,7 @@
     <extension
          point="org.eclipse.ui.views">
       <view
-            class="org.eclipse.php.debug.ui.views.DebugOutputView"
+            class="org.eclipse.php.internal.debug.ui.views.DebugOutputView"
             category="org.eclipse.php.ui.views"
             icon="platform:/plugin/org.eclipse.php.ui/icons/full/obj16/phpfile.gif"
             name="%debugOutput.name"
@@ -193,7 +193,7 @@
     <extension
          point="org.eclipse.ui.views">
       <view
-            class="org.eclipse.php.debug.ui.views.DebugBrowserView"
+            class="org.eclipse.php.internal.debug.ui.views.DebugBrowserView"
             category="org.eclipse.php.ui.views"
             icon="platform:/plugin/org.eclipse.php.ui/icons/full/obj16/phpfile.gif"
             name="%browserOutput.name"
@@ -215,7 +215,7 @@
 	<!-- =========================== -->
 	<extension point="org.eclipse.php.ui.phpEditorTextHovers">
 	    <hover
-           class="org.eclipse.php.debug.ui.hovers.PHPDebugTextHover"
+           class="org.eclipse.php.internal.debug.ui.hovers.PHPDebugTextHover"
            description="%phpVariableHoverDescription"
            id="org.eclipse.php.debug.ui.hovers.PHPDebugTextHover"
            label="%phpVariableHoverLabel"
@@ -225,30 +225,30 @@
     
     <extension point="org.eclipse.ui.preferencePages">
 <!--		<page
-			category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
+			category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
 			id="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
 			name="%debugPreferencePageName">
 			<keywordReference id="org.eclipse.php.debug.ui.debug" />
 		</page> -->
 		<page
-			category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
-			class="org.eclipse.php.debug.ui.preferences.PHPDebugPropertyPreferencePage"
+			category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+			class="org.eclipse.php.internal.debug.ui.preferences.PHPDebugPropertyPreferencePage"
 			id="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
 			name="%debugPreferencePageName">
 			<keywordReference id="org.eclipse.php.debug.ui.debug" />
 		</page>
       <page
             name="%installPHPPageName"
-            category="org.eclipse.php.ui.preferences.ui.PHPBasePreferencePage"
-            class="org.eclipse.php.debug.ui.preferences.phps.PHPsPreferencePage"
+            category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+            class="org.eclipse.php.internal.debug.ui.preferences.phps.PHPsPreferencePage"
             id="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage">
          <keywordReference id="org.eclipse.php.debug.ui.debug"/>
       </page>	
     </extension>
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
-        class="org.eclipse.php.debug.ui.preferences.PHPDebugPropertyPreferencePage"
+        class="org.eclipse.php.internal.debug.ui.preferences.PHPDebugPropertyPreferencePage"
         id="org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"
         name="%ProjectPage.name"
         objectClass="org.eclipse.core.resources.IProject">
@@ -257,17 +257,17 @@
            value="org.eclipse.php.core.PHPNature"/>
   </page>
   <page
-        class="org.eclipse.php.debug.ui.breakpoint.property.PHPBreakpointPropertyPage"
+        class="org.eclipse.php.internal.debug.ui.breakpoint.property.PHPBreakpointPropertyPage"
         id="org.eclipse.php.debug.ui.property.PHPConditionalBreakpointPropertyPage"
         name="%PHPConditionalBreakpointPage.name"
-        objectClass="org.eclipse.php.debug.core.model.PHPConditionalBreakpoint"/>
+        objectClass="org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint"/>
 	</extension>	
 	<extension
          point="org.eclipse.ui.perspectives">
       <perspective
             name="%DebugPerspective.name"
             icon="icon/full/obj16/debug_persp.gif" 
-            class="org.eclipse.php.debug.ui.PHPDebugPerspectiveFactory"
+            class="org.eclipse.php.internal.debug.ui.PHPDebugPerspectiveFactory"
             id="org.eclipse.php.debug.ui.PHPDebugPerspective">
       </perspective>
    </extension>
@@ -306,7 +306,7 @@
             label="%phpexeApplicationShortcut.label"
             modes="run, debug, profile"
             icon="icon/full/obj16/php_exec.gif"
-            class="org.eclipse.php.debug.ui.launching.PHPExeLaunchShortcut"
+            class="org.eclipse.php.internal.debug.ui.launching.PHPExeLaunchShortcut"
             id="org.eclipse.php.deubg.ui.phpexeShortcut">
 		 
 		 <contextualLaunch>
@@ -373,13 +373,13 @@
       <editor
             name="%sourceNotFoundEditorName"
            icon="platform:/plugin/org.eclipse.debug.ui/icons/full/obj16/stckframe_obj.gif" 
-            class="org.eclipse.php.debug.ui.sourcelookup.PHPSourceNotFoundEditor"
+            class="org.eclipse.php.internal.debug.ui.sourcelookup.PHPSourceNotFoundEditor"
             id="org.eclipse.php.debug.SourceNotFoundEditor">
       </editor>
    </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
-            class="org.eclipse.php.debug.ui.PropertyTesters.PHPLaunchPropertyTester"
+            class="org.eclipse.php.internal.debug.ui.PropertyTesters.PHPLaunchPropertyTester"
             id="org.eclipse.php.debug.ui.launchPropertyTester"
             namespace="org.eclipse.php.debug.ui"
             properties="launchablePHP"
@@ -392,7 +392,7 @@
       id="org.eclipse.wst.server.ui.propertyTester"
       namespace="org.eclipse.wst.server.ui"
       properties="isRunnable"
-      type="org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"
+      type="org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"
       class="org.eclipse.php.debug.ui.PropertyTesters.RunnablePropertyTester">
    </propertyTester>
       <propertyTester
@@ -406,19 +406,19 @@
       id="org.eclipse.wst.server.ui.propertyTester"
       namespace="org.eclipse.wst.server.ui"
       properties="isRunnable"
-      type="org.eclipse.php.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"
+      type="org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"
       class="org.eclipse.core.resources.IFolder">
    </propertyTester>
  </extension> -->
  <extension
        point="org.eclipse.php.ui.phpPreferencePageBlocks">
     <block
-          class="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencesWorkspaceAddon"
+          class="org.eclipse.php.internal.debug.ui.preferences.PHPDebugPreferencesWorkspaceAddon"
           id="org.eclipse.php.debug.ui.debugWorkspacePreferencesAddon"
           name="PHP Debug Preferences Workspace Addon"
           pageId="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"/>
     <block
-          class="org.eclipse.php.debug.ui.preferences.PHPDebugPreferencesAddon"
+          class="org.eclipse.php.internal.debug.ui.preferences.PHPDebugPreferencesAddon"
           id="org.eclipse.php.debug.ui.debugProjectPreferencesAddon"
           name="PHP Debug Preferences Addon"
           pageId="org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"/>
@@ -432,7 +432,7 @@
  <extension
        point="org.eclipse.php.debug.ui.phpDebugModelPresentations">
     <phpDebugModelPresentation
-          class="org.eclipse.php.debug.ui.presentation.PHPModelPresentation"
+          class="org.eclipse.php.internal.debug.ui.presentation.PHPModelPresentation"
           id="org.eclipse.php.debug.ui.presentation.phpModelPresentation"/>
  </extension>
  <extension
@@ -450,7 +450,7 @@
             	</separator>
           </menu>
        <action
-             class="org.eclipse.php.debug.ui.actions.PHPWatchAction"
+             class="org.eclipse.php.internal.debug.ui.actions.PHPWatchAction"
              disabledIcon="icon/full/dtool16/watch_exp.gif"
              enablesFor="+"
              helpContextId="watch_action_context"

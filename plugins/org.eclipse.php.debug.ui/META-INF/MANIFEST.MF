@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: PDT Debug UI Plug-in
 Bundle-SymbolicName: org.eclipse.php.debug.ui; singleton:=true
 Bundle-Version: 0.7.0.qualifier
-Bundle-Activator: org.eclipse.php.debug.ui.PHPDebugUIPlugin
+Bundle-Activator: org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -12,10 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.debug.core,
  org.eclipse.jface.text,
- org.eclipse.php.debug.core,
  org.eclipse.ui.ide,
  org.eclipse.wst.sse.ui,
- org.eclipse.php.core,
  org.eclipse.ui.console,
  org.eclipse.wst.html.core,
  org.eclipse.wst.html.ui,
@@ -24,14 +22,24 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.php.ui,
  org.eclipse.php.server.core,
  org.eclipse.core.expressions,
- org.eclipse.wst.xml.ui
+ org.eclipse.wst.xml.ui,
+ org.eclipse.php.debug.core,
+ org.eclipse.php.core
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.php.debug.ui,
- org.eclipse.php.debug.ui.actions,
- org.eclipse.php.debug.ui.breakpoint.adapter,
- org.eclipse.php.debug.ui.breakpoint.provider,
- org.eclipse.php.debug.ui.launching,
- org.eclipse.php.debug.ui.preferences,
- org.eclipse.php.debug.ui.presentation,
- org.eclipse.php.debug.ui.sourcelookup
+Export-Package: org.eclipse.php.internal.debug.ui,
+ org.eclipse.php.internal.debug.ui.PropertyTesters,
+ org.eclipse.php.internal.debug.ui.actions,
+ org.eclipse.php.internal.debug.ui.breakpoint,
+ org.eclipse.php.internal.debug.ui.breakpoint.adapter,
+ org.eclipse.php.internal.debug.ui.breakpoint.property,
+ org.eclipse.php.internal.debug.ui.breakpoint.provider,
+ org.eclipse.php.internal.debug.ui.console,
+ org.eclipse.php.internal.debug.ui.hovers,
+ org.eclipse.php.internal.debug.ui.launching,
+ org.eclipse.php.internal.debug.ui.preferences,
+ org.eclipse.php.internal.debug.ui.preferences.phps,
+ org.eclipse.php.internal.debug.ui.presentation,
+ org.eclipse.php.internal.debug.ui.sourcelookup,
+ org.eclipse.php.internal.debug.ui.views,
+ org.eclipse.php.internal.debug.ui.watch
 Bundle-Vendor: Eclipse.org
