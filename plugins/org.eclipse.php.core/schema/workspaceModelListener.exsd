@@ -7,7 +7,7 @@
       </appInfo>
       <documentation>
          This extension point allows to provide listener which will recieve event when PHP workspace model was changed.&lt;br&gt;
-See &lt;code&gt;org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager&lt;/code&gt;.
+See &lt;code&gt;org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager&lt;/code&gt;.
       </documentation>
    </annotation>
 
@@ -88,7 +88,7 @@ See &lt;code&gt;org.eclipse.php.core.phpModel.parser.PHPWorkspaceModelManager&lt
       <documentation>
          &lt;p&gt;
 &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.php.core.workspaceModelListener&quot;&gt;
+&lt;extension point=&quot;org.eclipse.php.internal.core.workspaceModelListener&quot;&gt;
  &lt;workspaceModelListener
   class=&quot;test.MyModelListener&quot;
   id=&quot;test.MyModelListener&quot;

@@ -86,10 +86,10 @@ PHP builder is obliged to run all its extensions when it&apos;s being running on
       <documentation>
          &lt;p&gt;
 &lt;pre&gt;
- &lt;extension point=&quot;org.eclipse.php.core.phpBuilderExtensions&quot;&gt;
+ &lt;extension point=&quot;org.eclipse.php.internal.core.phpBuilderExtensions&quot;&gt;
      &lt;builder 
-         class=&quot;org.eclipse.php.core.project.build.DefaultPHPBuilderExtension&quot;
-         id=&quot;org.eclipse.php.core.project.build.DefaultPHPBuilderExtension&quot;/&gt;
+         class=&quot;org.eclipse.php.internal.core.project.build.DefaultPHPBuilderExtension&quot;
+         id=&quot;org.eclipse.php.internal.core.project.build.DefaultPHPBuilderExtension&quot;/&gt;
  &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
@@ -110,7 +110,7 @@ PHP builder is obliged to run all its extensions when it&apos;s being running on
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         Look at &lt;code&gt;org.eclipse.php.core.project.build.DefaultPHPBuilderExtension&lt;/code&gt;
+         Look at &lt;code&gt;org.eclipse.php.internal.core.project.build.DefaultPHPBuilderExtension&lt;/code&gt;
       </documentation>
    </annotation>
 

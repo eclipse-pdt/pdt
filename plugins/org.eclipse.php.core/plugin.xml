@@ -11,7 +11,7 @@
          point="org.eclipse.wst.sse.core.modelHandler">
       <modelHandler
             default="yes"
-            class="org.eclipse.php.core.documentModel.handler.PHPModelHandler"
+            class="org.eclipse.php.internal.core.documentModel.handler.PHPModelHandler"
             associatedContentTypeId="org.eclipse.php.core.phpsource"
             id="org.eclipse.php.core.documentModel.handler">
       </modelHandler>
@@ -40,7 +40,7 @@
 			
 			<!-- Not used for now -->
 			<!--
-			<describer class="org.eclipse.php.core.documentModel.ContentDescriberForPHP"/>
+			<describer class="org.eclipse.php.internal.core.documentModel.ContentDescriberForPHP"/>
 			-->
 		</content-type>
    </extension>  
@@ -62,7 +62,7 @@
 			</helper>
 			<run
 				enabled="true"
-				class="org.eclipse.php.core.project.options.includepath.IncludePathValidator">
+				class="org.eclipse.php.internal.core.project.options.includepath.IncludePathValidator">
 			</run>
 			<dependentValidator
                depValValue="true">
@@ -76,7 +76,7 @@
 		 point="org.eclipse.core.resources.natures">
 		  <runtime>
 			 <run
-			   class="org.eclipse.php.core.project.PHPNature">
+			   class="org.eclipse.php.internal.core.project.PHPNature">
 			 </run>
 		  </runtime>
 	</extension>
@@ -85,13 +85,13 @@
 		id="PhpIncrementalProjectBuilder"
 		name="PHP Project Builder">
 	  <builder>
-    	 <run class="org.eclipse.php.core.project.build.PHPIncrementalProjectBuilder"/>
+    	 <run class="org.eclipse.php.internal.core.project.build.PHPIncrementalProjectBuilder"/>
 	  </builder>
 	</extension>
 	
 	<extension point="org.eclipse.php.core.phpBuilderExtensions">
 	    <builder 
-	        class="org.eclipse.php.core.project.build.DefaultPHPBuilderExtension"
+	        class="org.eclipse.php.internal.core.project.build.DefaultPHPBuilderExtension"
     	    id="org.eclipse.php.core.project.build.DefaultPHPBuilderExtension"/>
 	</extension>
 
@@ -109,21 +109,21 @@
          point="org.eclipse.core.filebuffers.documentSetup">
       <participant
             contentTypeId="org.eclipse.php.core.phpsource"
-            class="org.eclipse.php.core.documentModel.PhpDocumentSetupParticipant">
+            class="org.eclipse.php.internal.core.documentModel.PhpDocumentSetupParticipant">
       </participant>
    </extension>
    
 <!--   <extension
          point="org.eclipse.php.core.phpModel">
       <phpModel
-            class="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"
+            class="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModelManager"
             id="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"
-            name="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"/>
+            name="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModelManager"/>
    </extension>
 -->
    <!-- initialize php ui preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
-	   <initializer class="org.eclipse.php.core.preferences.PHPCorePreferenceInitializer"/>
+	   <initializer class="org.eclipse.php.internal.core.preferences.PHPCorePreferenceInitializer"/>
 	</extension>
 
 </plugin>

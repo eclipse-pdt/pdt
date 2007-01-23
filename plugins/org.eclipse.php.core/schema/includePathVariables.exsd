@@ -64,7 +64,7 @@
                   Variable initializer class (if set dynamically)
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.core.IncludePathVariableInitializer"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.core.IIncludePathVariableInitializer"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -87,7 +87,7 @@
       <documentation>
          &lt;p&gt;
 &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.php.core.includePathVariables&quot;&gt;
+&lt;extension point=&quot;org.eclipse.php.internal.core.includePathVariables&quot;&gt;
  &lt;variable
   name=&quot;PEAR_LIBS&quot;
   initializer=&quot;test.PearLibsVariableInitializer&quot;/&gt;
