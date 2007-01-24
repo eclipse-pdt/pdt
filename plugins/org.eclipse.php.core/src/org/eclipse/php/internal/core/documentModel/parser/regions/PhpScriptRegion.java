@@ -40,7 +40,6 @@ import org.eclipse.wst.xml.core.internal.Logger;
 public class PhpScriptRegion extends ForeignRegion {
 
 	private final PhpTokenContainer tokensContaier = new PhpTokenContainer();
-	private PhpLexer lexer;
 	private final IProject project;
 
 	public PhpScriptRegion(String newContext, int newStart, int newTextLength, int newLength, final String initialScript, IProject project) {
@@ -150,8 +149,8 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * @param newText
 	 */
 	private void completeReparse(String newText) {
-		this.lexer = getPhpLexer(project, getStream(newText));
-		setPhpTokens();
+		final PhpLexer phpLexer = getPhpLexer(project, getStream(newText));
+		setPhpTokens(phpLexer);
 	}
 
 	/**
@@ -185,7 +184,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * @param script 
 	 * @return a list of php tokens
 	 */
-	private void setPhpTokens() {
+	private void setPhpTokens(PhpLexer lexer) {
 		assert lexer != null;
 
 		int start = 0;

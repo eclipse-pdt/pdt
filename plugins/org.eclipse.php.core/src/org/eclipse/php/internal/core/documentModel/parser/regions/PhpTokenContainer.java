@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
@@ -83,11 +84,11 @@ public class PhpTokenContainer {
 
 		ITextRegion token = getToken(offset);
 		result.add(token);
-		
+
 		while (tokensIterator.hasNext() && token.getEnd() <= offset + length) {
 			token = (ITextRegion) tokensIterator.next();
 			result.add(token);
-		} 
+		}
 
 		return (ITextRegion[]) result.toArray(new ITextRegion[result.size()]);
 	}
@@ -236,6 +237,12 @@ public class PhpTokenContainer {
 	 */
 	public void addLast(String yylex, int start, int yylengthLength, int yylength, Object lexerState) {
 		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
+
+		if (yylex == PhpLexer.WHITESPACE && phpTokens.size() != 0) {
+			final ITextRegion last = (ITextRegion) phpTokens.getLast();
+			last.adjustLength(yylength);
+			return;
+		}
 
 		final ContextRegion contextRegion = new ContextRegion(yylex, start, yylengthLength, yylength);
 
