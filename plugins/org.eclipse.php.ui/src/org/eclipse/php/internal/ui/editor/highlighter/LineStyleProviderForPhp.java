@@ -310,7 +310,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	 * @param holdResults
 	 * @return
 	 */
-	protected boolean prepareTextRegion(ITextRegionCollection blockedRegion, int partitionStartOffset, int partitionLength, Collection holdResults) {
+	public boolean prepareTextRegion(ITextRegionCollection blockedRegion, int partitionStartOffset, int partitionLength, Collection holdResults) {
 		boolean handled = false;
 		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
 		ITextRegion region = null;
@@ -367,7 +367,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		return handled;
 	}
 
-	protected boolean prepareTextRegions(IStructuredDocumentRegion structuredDocumentRegion, int partitionStartOffset, int partitionLength, Collection holdResults) {
+	public boolean prepareTextRegions(IStructuredDocumentRegion structuredDocumentRegion, int partitionStartOffset, int partitionLength, Collection holdResults) {
 		boolean handled = false;
 		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
 		while (structuredDocumentRegion != null && structuredDocumentRegion.getStartOffset() <= partitionEndOffset) {

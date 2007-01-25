@@ -10,10 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.util.PHPColorHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -28,7 +36,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.StyledTextColorPicker;
 
@@ -255,30 +262,13 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 			return;
 		}
 		IStructuredDocumentRegion node = fNodes;
-		while (node != null) {
-			ITextRegionList regions = node.getRegions();
-			for (int i = 0; i < regions.size(); i++) {
-				ITextRegion currentRegion = regions.get(i);
-				// lookup the local coloring type and apply it
-				String namedStyle = (String) getContextStyleMap().get(currentRegion.getType());
-				if (namedStyle == null) {
-					continue;
-				}
-				TextAttribute attribute = getAttribute(namedStyle);
-				if (attribute == null) {
-					continue;
-				}
-
-				StyleRange style = new StyleRange(node.getStartOffset(currentRegion), currentRegion.getLength(), attribute.getForeground(), attribute.getBackground(), attribute.getStyle());
-
-				if ((attribute.getStyle() & TextAttribute.UNDERLINE) != 0) {
-					style.underline = true;
-					style.fontStyle &= ~TextAttribute.UNDERLINE;
-				}
-
-				fText.setStyleRange(style);
-			}
-			node = node.getNext();
+		final LineStyleProviderForPhp styler = new LineStyleProviderForPhp();
+		final Collection holdResults = new ArrayList();
+		styler.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
+		
+		for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
+			StyleRange element = (StyleRange) iter.next();
+			fText.setStyleRange(element);			
 		}
 	}
 
@@ -293,31 +283,25 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 		if (fNodes == null) {
 			return null;
 		}
-		IStructuredDocumentRegion aNode = fNodes;
-		while (aNode != null && !aNode.containsOffset(offset)) {
-			aNode = aNode.getNext();
+
+		String regionContext;
+		ITextRegion interest = fNodes.getRegionAtCharacterOffset(offset);
+		if (interest.getType() == PHPRegionContext.PHP_CONTENT) {
+			PhpScriptRegion phpScript = (PhpScriptRegion) interest;
+			try {
+				regionContext = phpScript.getPhpTokenType(offset - phpScript.getStart());
+			} catch (BadLocationException e) {
+				assert false;
+				return null;
+			}
+		} else {
+			regionContext = interest.getType();
 		}
-		if (aNode != null) {
-			// find the ITextRegion's Context at this offset
-			ITextRegion interest = aNode.getRegionAtCharacterOffset(offset);
-			if (interest == null) {
-				return null;
-			}
-			if (offset > aNode.getTextEndOffset(interest)) {
-				return null;
-			}
-			String regionContext = interest.getType();
-			if (regionContext == null) {
-				return null;
-			}
-			// find the named style (internal/selectable name) for that
-			// context
-			String namedStyle = (String) getContextStyleMap().get(regionContext);
-			if (namedStyle != null) {
-				return namedStyle;
-			}
-		}
-		return null;
+
+		// find the named style (internal/selectable name) for that
+		// context
+		String namedStyle = (String) getContextStyleMap().get(regionContext);
+		return namedStyle;
 	}
 
 	/*
