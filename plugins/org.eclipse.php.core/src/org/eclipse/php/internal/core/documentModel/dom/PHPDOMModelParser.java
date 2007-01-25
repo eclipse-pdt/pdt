@@ -18,7 +18,7 @@ import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 
 public class PHPDOMModelParser extends XMLModelParser {
 
-	private static final String PHP = "PHP";
+	public static final String PHP_TAG_NAME = "PHP";
 
 	public PHPDOMModelParser(DOMModelImpl model) {
 		super(model);
@@ -37,7 +37,7 @@ public class PHPDOMModelParser extends XMLModelParser {
 	}
 
 	protected String computeNestedTag(String regionType, String tagName, IStructuredDocumentRegion structuredDocumentRegion, ITextRegion region) {
-		return PHPDOMModelParser.PHP;
+		return PHPDOMModelParser.PHP_TAG_NAME;
 	}
 
 	protected boolean isNestedTagClose(String regionType) {

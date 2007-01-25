@@ -50,5 +50,17 @@ public class ElementImplForPhp extends ElementStyleImpl {
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
 	}
-	
+
+	/**
+	 */
+	public boolean isGlobalTag() {
+		return isPhpTag() ? false : super.isGlobalTag();
+	}
+
+	/**
+	 * @return true if it is a php element
+	 */
+	public boolean isPhpTag() {
+		return getNodeName() == PHPDOMModelParser.PHP_TAG_NAME;
+	}	
 }
