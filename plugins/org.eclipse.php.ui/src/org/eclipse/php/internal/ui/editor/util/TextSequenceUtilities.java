@@ -12,6 +12,10 @@ package org.eclipse.php.internal.ui.editor.util;
 
 import javax.swing.text.Segment;
 
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
@@ -36,6 +40,14 @@ public final class TextSequenceUtilities {
 		IStructuredDocumentRegion source = textSequence.getSource();
 		int sourceOffset = textSequence.getOriginalOffset(index);
 		ITextRegion tRegion = source.getRegionAtCharacterOffset(sourceOffset);
+		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			try {
+				return ((PhpScriptRegion) tRegion).getPhpTokenType(sourceOffset - source.getStart() - tRegion.getStart());
+			} catch (BadLocationException e) {
+				assert false;
+				return null;
+			} 
+		}
 		if (tRegion != null) {
 			return tRegion.getType();
 		}

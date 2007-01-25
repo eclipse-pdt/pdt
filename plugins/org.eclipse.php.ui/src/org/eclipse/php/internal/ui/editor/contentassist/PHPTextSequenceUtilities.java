@@ -60,16 +60,6 @@ public class PHPTextSequenceUtilities {
 			}
 		}
 		
-		IStructuredDocument document = sdRegion.getParentDocument();
-		while (tRegion != null && tRegion.getType() != PHPRegionTypes.PHP_OPENTAG) {
-			String type = tRegion.getType();
-			int textStart = sdRegion.getStartOffset(tRegion);
-			if (type == PHPRegionTypes.PHP_SEMICOLON || type == PHPRegionTypes.PHP_CURLY_OPEN || type == PHPRegionTypes.PHP_CURLY_CLOSE) {
-				startPosition = textStart + 1;
-				break;
-			}
-			tRegion = sdRegion.getRegionAtCharacterOffset(textStart - 1);
-		}
 		TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startPosition, offset - startPosition);
 
 		if (removeComments) {
@@ -114,8 +104,6 @@ public class PHPTextSequenceUtilities {
 		int start = 0;
 		while (commentStartMatcher.find(start)) {
 			String currentType = TextSequenceUtilities.getType(textSequence, commentStartMatcher.start());
-			if (currentType != null && currentType.equals("")) {
-			}
 			if (!PHPPartitionTypes.isPHPCommentState(currentType) && !PHPPartitionTypes.isPHPQuotesState(currentType)) {
 				return commentStartMatcher.start();
 			}
