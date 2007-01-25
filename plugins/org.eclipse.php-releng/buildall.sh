@@ -132,4 +132,10 @@ if [ ! -r ../org.eclipse.releng.basebuilder ]
 fi
 
 $vm/bin/java -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $logger $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm $platformParams
+
+if [ "$buildType" -ne "N" ]
+then
+        changelog/changelog.sh -ant ../apache-ant-1.7.0
+fi
+
 #rm -rf ../org.eclipse.releng.basebuilder
