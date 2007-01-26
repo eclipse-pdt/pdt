@@ -70,8 +70,7 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 					PhpScriptRegion phpRegion = (PhpScriptRegion) region;
 					final int phpRegionStart = startOffset + region.getStart();
 					final String newText = documentEvent.getDocument().get(phpRegionStart, region.getLength());
-					phpRegion.reparse(newText, event.fOffset - phpRegionStart , event.fText.length(), event.getDeletedText());
-
+					final boolean reparse = phpRegion.reparse(newText, event.fOffset - phpRegionStart , event.fText.length(), event.getDeletedText());
 				} catch (BadLocationException e) {
 					Logger.logException(e);
 				}

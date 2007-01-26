@@ -76,16 +76,17 @@ public class PhpScriptRegion extends ForeignRegion {
 	public final ITextRegion[] getPhpTokens(int offset, int length) throws BadLocationException {
 		return tokensContaier.getTokens(offset, length);
 	}
-	
+
 	/**
 	 * Reparse the PHP editor model
 	 * @param newText
 	 * @param offset
 	 * @param length
 	 * @param deletedText
+	 * @return true - if short reparse is done
 	 * @throws BadLocationException 
 	 */
-	public void reparse(String newText, final int offset, final int length, String deletedText) throws BadLocationException {
+	public boolean reparse(String newText, final int offset, final int length, String deletedText) throws BadLocationException {
 		assert newText.length() > offset - 1;
 
 		// get the region to re-parse
@@ -138,10 +139,11 @@ public class PhpScriptRegion extends ForeignRegion {
 
 			// 3. update state changes
 			tokensContaier.updateStateChanges(newContainer, tokenStart.getStart(), oldEndOffset);
-
-		} else {
-			completeReparse(newText);
+			return true;
 		}
+		completeReparse(newText);
+		return false;
+
 	}
 
 	/**
@@ -167,7 +169,7 @@ public class PhpScriptRegion extends ForeignRegion {
 			lexer = new PhpLexer4(stream);
 		}
 		lexer.initialize(PhpLexer.ST_PHP_IN_SCRIPTING);
-		
+
 		// set the wanted state
 		if (startState != null) {
 			startState.restoreState(lexer);
@@ -204,7 +206,7 @@ public class PhpScriptRegion extends ForeignRegion {
 		} catch (IOException e) {
 			Logger.logException(e);
 		} finally {
-			this.tokensContaier.releaseModelFromCreation(); 
+			this.tokensContaier.releaseModelFromCreation();
 		}
 	}
 

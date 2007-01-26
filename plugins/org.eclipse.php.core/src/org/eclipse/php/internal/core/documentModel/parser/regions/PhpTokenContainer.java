@@ -238,18 +238,23 @@ public class PhpTokenContainer {
 	public void addLast(String yylex, int start, int yylengthLength, int yylength, Object lexerState) {
 		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
 
+		// if state was change 
+		if (lexerStateChanges.size() == 0 || !getLastChange().state.equals(lexerState)) {
+			final ContextRegion contextRegion = new ContextRegion(yylex, start, yylengthLength, yylength);
+			phpTokens.addLast(contextRegion);
+			lexerStateChanges.addLast(new LexerStateChange((LexerState) lexerState, contextRegion));
+			return;
+		}
+		
+		// if whitespace then only adjust the state
 		if (yylex == PhpLexer.WHITESPACE && phpTokens.size() != 0) {
 			final ITextRegion last = (ITextRegion) phpTokens.getLast();
 			last.adjustLength(yylength);
-			return;
+		} else { // else - add a new token
+			final ContextRegion contextRegion = new ContextRegion(yylex, start, yylengthLength, yylength);
+			phpTokens.addLast(contextRegion);
 		}
 
-		final ContextRegion contextRegion = new ContextRegion(yylex, start, yylengthLength, yylength);
-
-		if (lexerStateChanges.size() == 0 || !getLastChange().state.equals(lexerState)) {
-			lexerStateChanges.addLast(new LexerStateChange((LexerState) lexerState, contextRegion));
-		}
-		phpTokens.addLast(contextRegion);
 	}
 
 	/**
