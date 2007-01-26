@@ -78,13 +78,23 @@ public class PhpScriptRegion extends ForeignRegion {
 	}
 
 	/**
-	 * Return the internal partition of the given offset
 	 * @param offset
-	 * @return
+	 * @return the internal partition of the given offset
 	 * @throws BadLocationException
 	 */
 	public String getPartition(int offset) throws BadLocationException {
 		return tokensContaier.getPartitionType(offset);
+	}
+
+	/**
+	 *  
+	 * @param offset
+	 * @return true if the given offset is in line comment
+	 * @throws BadLocationException
+	 */
+	public boolean isLineComment(int offset) throws BadLocationException {
+		final LexerState lexState = tokensContaier.getState(offset);
+		return lexState != null && lexState.getTopState() == PhpLexer.ST_PHP_LINE_COMMENT;	
 	}
 
 	/**
