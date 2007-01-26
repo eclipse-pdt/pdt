@@ -13,9 +13,11 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.editor.util.TextSequence;
 import org.eclipse.php.internal.ui.editor.util.TextSequenceUtilities;
@@ -23,9 +25,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
-
 public class PHPTextSequenceUtilities {
-	
+
 	private static final Pattern COMMENT_START_PATTERN = Pattern.compile("(/[*])|(//)");
 	private static final Pattern COMMENT_END_PATTERN = Pattern.compile("[*]/");
 	private static final String START_COMMENT = "/*";
@@ -38,36 +39,60 @@ public class PHPTextSequenceUtilities {
 	}
 
 	/**
-	 * Returns the statment start.
-	 * the statment start is: Math.max(position of the last ';', position of php start tag)
+	 * This function returns statement text depending on the current offset.
+	 * It searches backwards until it finds ';', '{' or '}'.
+	 * 
+	 * @param offset The absolute offset in the document
+	 * @param sdRegion Structured document region of the offset
+	 * @param removeComments Flag determining whether to remove comments in the resulted text sequence
+	 * 
+	 * @return text sequence of the statement
 	 */
 	public static TextSequence getStatment(int offset, IStructuredDocumentRegion sdRegion, boolean removeComments) {
-		int startPosition = sdRegion.getStartOffset();
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		if (tRegion == null){
-			tRegion = sdRegion.getLastRegion();
-		}
-		// if we are standing at the beginning of a word and asking for completion 
-		if (tRegion.getType() != PHPRegionTypes.PHP_OPENTAG && sdRegion.getStartOffset(tRegion) == offset) {
-			tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
-			if (tRegion == null) {
-				sdRegion = sdRegion.getPrevious();
-				if (sdRegion == null)
-					return null;
-				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
-				if (tRegion == null)
-					return null;
+
+		// This text region must be of type PhpScriptRegion:
+		if (tRegion.getType() == PHPRegionTypes.PHP_CONTENT) {
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
+
+			try {
+				// Get the PHP token region corresponding to the offset:
+				ITextRegion tokenRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+
+				
+				// Now, search backwards for the statement start (in this PhpScriptRegion):
+				ITextRegion startTokenRegion = tokenRegion;
+				while (startTokenRegion != null
+						&& startTokenRegion.getType() != PHPRegionTypes.PHP_CURLY_CLOSE
+						&& startTokenRegion.getType() != PHPRegionTypes.PHP_CURLY_OPEN
+						&& startTokenRegion.getType() != PHPRegionTypes.PHP_SEMICOLON) {
+					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
+				}
+
+				// Caclulate the start position of the statement:
+
+				// Set default starting position to the beginning of the PhpScriptRegion:
+				int startOffset = sdRegion.getStartOffset() + phpScriptRegion.getStart();
+
+				// If there is a start statement "delimiter", we should consider statement is starting after this token:
+				if (tokenRegion != null) {
+					startOffset += startTokenRegion.getEnd();
+				}
+
+				TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startOffset, offset - startOffset);
+
+				if (removeComments) {
+					textSequence = removeComments(textSequence);
+				}
+				// remove spaces from start.
+				textSequence = textSequence.subTextSequence(readForwardSpaces(textSequence, 0), textSequence.length());
+				return textSequence;
+
+			} catch (BadLocationException e) {
 			}
 		}
-		
-		TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startPosition, offset - startPosition);
 
-		if (removeComments) {
-			textSequence = removeComments(textSequence);
-		}
-		// remove spaces from start.
-		textSequence = textSequence.subTextSequence(readForwardSpaces(textSequence, 0), textSequence.length());
-		return textSequence;
+		return null;
 	}
 
 	private static TextSequence removeComments(TextSequence textSequence) {
@@ -111,9 +136,9 @@ public class PHPTextSequenceUtilities {
 		}
 		return -1;
 	}
-	
-	public static ITextRegion getMultilineCommentStartRegion (IStructuredDocumentRegion sdRegion, int offset) {
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset (offset);
+
+	public static ITextRegion getMultilineCommentStartRegion(IStructuredDocumentRegion sdRegion, int offset) {
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		ITextRegion startRegion = null;
 		try {
 			while (PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
@@ -128,9 +153,9 @@ public class PHPTextSequenceUtilities {
 		}
 		return startRegion;
 	}
-	
-	public static ITextRegion getMultilineCommentEndRegion (IStructuredDocumentRegion sdRegion, int offset) {
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset (offset);
+
+	public static ITextRegion getMultilineCommentEndRegion(IStructuredDocumentRegion sdRegion, int offset) {
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		ITextRegion endRegion = null;
 		try {
 			while (PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
