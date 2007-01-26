@@ -57,26 +57,20 @@ public class PHPTextSequenceUtilities {
 			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
 
 			try {
-				// Get the PHP token region corresponding to the offset:
-				ITextRegion tokenRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
-				
-				// Now, search backwards for the statement start (in this PhpScriptRegion):
-				ITextRegion startTokenRegion = tokenRegion;
-				while (startTokenRegion.getStart() > 0
-						&& startTokenRegion.getType() != PHPRegionTypes.PHP_CURLY_CLOSE
-						&& startTokenRegion.getType() != PHPRegionTypes.PHP_CURLY_OPEN
-						&& startTokenRegion.getType() != PHPRegionTypes.PHP_SEMICOLON) {
-					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
-				}
-
-				// Caclulate the start position of the statement:
-
-				// Set default starting position to the beginning of the PhpScriptRegion:
+				//	Set default starting position to the beginning of the PhpScriptRegion:
 				int startOffset = sdRegion.getStartOffset() + phpScriptRegion.getStart();
 
-				// If there is a start statement "delimiter", we should consider statement is starting after this token:
-				if (tokenRegion != null) {
-					startOffset += startTokenRegion.getEnd();
+				// Now, search backwards for the statement start (in this PhpScriptRegion):
+				ITextRegion startTokenRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart() - 1);
+				while (true) {
+					if (startTokenRegion.getStart() == 0) {
+						break;
+					}
+					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE || startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN || startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON) {
+						startOffset += startTokenRegion.getEnd();
+						break;
+					}
+					startTokenRegion = phpScriptRegion.getPhpToken(startTokenRegion.getStart() - 1);
 				}
 
 				TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startOffset, offset - startOffset);
