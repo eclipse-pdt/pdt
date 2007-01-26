@@ -78,6 +78,16 @@ public class PhpScriptRegion extends ForeignRegion {
 	}
 
 	/**
+	 * Return the internal partition of the given offset
+	 * @param offset
+	 * @return
+	 * @throws BadLocationException
+	 */
+	public String getPartition(int offset) throws BadLocationException {
+		return tokensContaier.getPartitionType(offset);
+	}
+
+	/**
 	 * Reparse the PHP editor model
 	 * @param newText
 	 * @param offset
