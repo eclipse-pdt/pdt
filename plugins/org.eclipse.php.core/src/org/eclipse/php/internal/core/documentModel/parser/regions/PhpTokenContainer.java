@@ -314,7 +314,7 @@ public class PhpTokenContainer {
 	 */
 	protected final void checkBadLocation(int offset) throws BadLocationException {
 		ITextRegion lastRegion = getLastToken();
-		if (lastRegion.getEnd() < offset) {
+		if (offset < 0 || lastRegion.getEnd() < offset) {
 			throw new BadLocationException();
 		}
 	}
