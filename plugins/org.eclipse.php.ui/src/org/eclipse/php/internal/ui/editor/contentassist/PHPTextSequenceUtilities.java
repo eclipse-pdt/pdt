@@ -63,10 +63,12 @@ public class PHPTextSequenceUtilities {
 				// Now, search backwards for the statement start (in this PhpScriptRegion):
 				ITextRegion startTokenRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart() - 1);
 				while (true) {
+					// If statement start is at the beginning of the PHP script region: 
 					if (startTokenRegion.getStart() == 0) {
 						break;
 					}
 					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE || startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN || startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON) {
+						// Calculate starting position of the statement (it should go right after this startTokenRegion):
 						startOffset += startTokenRegion.getEnd();
 						break;
 					}
