@@ -4,9 +4,10 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 
 /**
@@ -61,16 +62,22 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 			// safe cast
 			RegionChangedEvent event = (RegionChangedEvent) documentEvent;
 			final ITextRegion region = event.getRegion();
-			final int startOffset = event.getStructuredDocumentRegion().getStartOffset();
 
 			// if it is a php script region - reparse the php tokens according to the new text 
 			if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-
+				final int startOffset = event.getStructuredDocumentRegion().getStartOffset();
 				try {
 					PhpScriptRegion phpRegion = (PhpScriptRegion) region;
 					final int phpRegionStart = startOffset + region.getStart();
 					final String newText = documentEvent.getDocument().get(phpRegionStart, region.getLength());
 					final boolean reparse = phpRegion.reparse(newText, event.fOffset - phpRegionStart , event.fText.length(), event.getDeletedText());
+					if (!reparse) {
+						// if the reparse is complete reparse then 
+						final TextRegionListImpl oldList = new TextRegionListImpl();
+						final TextRegionListImpl newList = new TextRegionListImpl();
+						newList.add(region);
+						return new RegionsReplacedEvent((IStructuredDocument) event.getDocument(), event.getOriginalRequester(), event.getStructuredDocumentRegion(), oldList, newList, event.fText, region.getStart(), region.getLength());
+					}
 				} catch (BadLocationException e) {
 					Logger.logException(e);
 				}

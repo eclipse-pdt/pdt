@@ -143,7 +143,6 @@ public class PhpScriptRegion extends ForeignRegion {
 		}
 		completeReparse(newText);
 		return false;
-
 	}
 
 	/**
