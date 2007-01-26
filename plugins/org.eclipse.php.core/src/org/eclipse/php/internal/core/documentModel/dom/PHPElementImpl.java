@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.documentModel.dom;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.validate.HTMLElementPropagatingValidator;
 import org.eclipse.php.internal.core.documentModel.validate.HTMLEmptyValidator;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -32,6 +33,11 @@ import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+/**
+ * Representing elements in the dom model {@link DOMModelForPHP}
+ * @author 
+ * @deprecated use {@link ElementImplForPhp} instead
+ */
 public class PHPElementImpl extends ElementImpl implements IAdaptable {
 
 	static HTMLElementPropagatingValidator pValidator = new HTMLElementPropagatingValidator();

@@ -12,6 +12,7 @@
 
 package org.eclipse.php.internal.core.documentModel.dom;
 
+import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
@@ -19,7 +20,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * Represents the element implementation in php dom model
+ * Represents elements in the dom model {@link DOMModelForPHP}
  * @author Roy, 2007
  */
 public class ElementImplForPhp extends ElementStyleImpl {
