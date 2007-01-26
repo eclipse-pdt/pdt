@@ -12,19 +12,30 @@ package org.eclipse.php.internal.ui.editor.hover;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlExtension;
+import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -368,18 +379,20 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 		DocumentReader docReader = new DocumentReader(doc);
 		getParser().reset(docReader);
 		IStructuredDocumentRegion sdRegion = getParser().getDocumentRegions();
-
+		
 		// This hack is needed in order to remove the open and close PHP tags we added before.
 		// We were forced to add these tags, in order to enable PHP parser.
-		sdRegion = sdRegion.getNext(); // skip open PHP tag region
-		if (sdRegion.getNext() != null) {
-			fNodes = sdRegion;
-			do {
-				sdRegion.adjustStart(-2);
-				sdRegion = sdRegion.getNext();
-			} while (sdRegion.getNext() != null);
-			sdRegion.getPrevious().setNext(null); // remove close PHP tag region
+		ITextRegionList phpRegionsList = sdRegion.getRegions();
+		Iterator i = phpRegionsList.iterator();
+		while (i.hasNext()) {
+			ITextRegion region = (ITextRegion)i.next();
+			if (region.getType() == PHPRegionContext.PHP_OPEN) {
+				sdRegion.adjustStart(region.getEnd() * -1); // remove open PHP tag
+			} else if (region.getType() == PHPRegionContext.PHP_CLOSE) {
+				sdRegion.adjustLength(sdRegion.getLength() - region.getLength()); // remove close PHP tag
+			}
 		}
+		fNodes = sdRegion;
 
 		doc = new Document(fInput);
 		doc.setDocumentPartitioner(new PHPStructuredTextPartitioner());

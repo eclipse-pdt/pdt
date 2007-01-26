@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
@@ -52,17 +53,16 @@ public class PHPTextSequenceUtilities {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 
 		// This text region must be of type PhpScriptRegion:
-		if (tRegion.getType() == PHPRegionTypes.PHP_CONTENT) {
+		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
 
 			try {
 				// Get the PHP token region corresponding to the offset:
 				ITextRegion tokenRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
-
 				
 				// Now, search backwards for the statement start (in this PhpScriptRegion):
 				ITextRegion startTokenRegion = tokenRegion;
-				while (startTokenRegion != null
+				while (startTokenRegion.getStart() > 0
 						&& startTokenRegion.getType() != PHPRegionTypes.PHP_CURLY_CLOSE
 						&& startTokenRegion.getType() != PHPRegionTypes.PHP_CURLY_OPEN
 						&& startTokenRegion.getType() != PHPRegionTypes.PHP_SEMICOLON) {

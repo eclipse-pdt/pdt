@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.editor.hover;
 
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
@@ -20,6 +21,9 @@ import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
@@ -62,8 +66,16 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 			region = flatNode.getRegionAtCharacterOffset(offset);
 		}
 
-		if (region != null) {
-			return new Region(flatNode.getStartOffset(region), region.getLength());
+		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
+			try {
+				region = phpScriptRegion.getPhpToken(offset - flatNode.getStartOffset() - region.getStart());
+			} catch (BadLocationException e) {
+				region = null;
+			}
+			if (region != null) {
+				return new Region(flatNode.getStartOffset() + phpScriptRegion.getStart() + region.getStart() , region.getLength());
+			}
 		}
 		return null;
 	}

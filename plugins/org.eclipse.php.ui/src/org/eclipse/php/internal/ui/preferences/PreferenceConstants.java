@@ -933,8 +933,8 @@ public class PreferenceConstants {
 		store.setDefault(NEW_PHP_FILE_TEMPLATE, "New simple PHP file"); //$NON-NLS-1$
 
 		String mod1Name = Action.findModifierString(SWT.MOD1); // SWT.COMMAND on Mac; SWT.CONTROL elsewhere
-		store.setDefault(EDITOR_TEXT_HOVER_MODIFIERS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.internal.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
-		store.setDefault(EDITOR_TEXT_HOVER_MODIFIER_MASKS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.internal.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$
+		store.setDefault(EDITOR_TEXT_HOVER_MODIFIERS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
+		store.setDefault(EDITOR_TEXT_HOVER_MODIFIER_MASKS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$
 		store.setDefault(EDITOR_SHOW_TEXT_HOVER_AFFORDANCE, true);
 
 		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer.toString(new PHPManualConfig(PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION, false)));

@@ -18,8 +18,10 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.CodeDataFilter;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
@@ -101,19 +103,16 @@ public class CodeDataResolver {
 		if (textRegion == null) {
 			return null;
 		}
-		// find the start String for completion
-		int startOffset = sdRegion.getStartOffset(textRegion);
-		//should not take into account the found region
-		//find the previous region and update the start offset
-		if (startOffset == offset) {
-			textRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
-			if (textRegion == null) {
-				return null;
-			}
-			startOffset = sdRegion.getStartOffset(textRegion);
+		
+		PhpScriptRegion phpScriptRegion;
+		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			phpScriptRegion = (PhpScriptRegion)textRegion;
+			textRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart()); 
+		} else {
+			return null;
 		}
-
-		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(offset, sdRegion, true);
+		
+		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(sdRegion.getStartOffset() + phpScriptRegion.getStart() + textRegion.getEnd(), sdRegion, true);
 		String type = textRegion.getType();
 		CodeData tmp;
 		if ((tmp = getIfInArrayOptionQuotes(projectModel, fileName, type, offset, statmentText)) != null) {

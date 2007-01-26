@@ -105,11 +105,9 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
 						}
 					}
 				} else {
-					if (sdRegion.getStartOffset() + textRegion.getTextEnd() >= region.getOffset()) {
-						CodeData codeData = CodeDataResolver.getCodeData(textViewer, sdRegion.getStartOffset() + textRegion.getTextEnd());
-						if (codeData != null && codeData.isUserCode()) {
-							return new IHyperlink[] { new PHPCodeHyperLink(selectWord(document, region.getOffset()), codeData) };
-						}
+					CodeData codeData = CodeDataResolver.getCodeData(textViewer, region.getOffset());
+					if (codeData != null && codeData.isUserCode()) {
+						return new IHyperlink[] { new PHPCodeHyperLink(selectWord(document, region.getOffset()), codeData) };
 					}
 				}
 			}

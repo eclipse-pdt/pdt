@@ -17,14 +17,11 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.util.CodeDataResolver;
 import org.eclipse.php.internal.ui.util.PHPCodeDataHTMLDescriptionUtilities;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class PHPAnnotationTextHover extends AbstractPHPTextHover {
 
@@ -32,26 +29,20 @@ public class PHPAnnotationTextHover extends AbstractPHPTextHover {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
 			try {
-				IStructuredDocument sDoc = (IStructuredDocument) document;
-				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(hoverRegion.getOffset());
-				ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(hoverRegion.getOffset());
-				if (sdRegion.getStartOffset() + textRegion.getTextEnd() >= hoverRegion.getOffset()) {
-					CodeData codeData = CodeDataResolver.getCodeData(textViewer, sdRegion.getStartOffset() + textRegion.getTextEnd());
-					if (codeData != null) {
-						IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead (textViewer.getDocument());
-						if (sModel instanceof DOMModelForPHP) {
-							try {
-								DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
-								PHPProjectModel projectModel = editorModel.getProjectModel();
-								return PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel);
-							} finally {
-								sModel.releaseFromRead();
-							}
+				CodeData codeData = CodeDataResolver.getCodeData(textViewer, hoverRegion.getOffset());
+				if (codeData != null) {
+					IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
+					if (sModel instanceof DOMModelForPHP) {
+						try {
+							DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
+							PHPProjectModel projectModel = editorModel.getProjectModel();
+							return PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel);
+						} finally {
+							sModel.releaseFromRead();
 						}
 					}
 				}
 			} catch (BadLocationException e) {
-				Logger.logException(e);
 			}
 		}
 		return null;
