@@ -457,6 +457,10 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 					styleRange.length += element.getLength();
 				} else {
 					styleRange =new StyleRange(regionStart + element.getStart(), element.getLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
+					if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
+						styleRange.underline = true;
+						styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
+					}
 					holdResults.add(styleRange);
 					// technically speaking, we don't need to update
 					// previousAttr
