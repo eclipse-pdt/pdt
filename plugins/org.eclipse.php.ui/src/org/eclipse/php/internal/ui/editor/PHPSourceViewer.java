@@ -10,12 +10,19 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.swt.SWT;
@@ -37,6 +44,7 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
@@ -211,30 +219,13 @@ public class PHPSourceViewer extends Composite {
 			return;
 		}
 		IStructuredDocumentRegion node = fNodes;
-		while (node != null) {
-			ITextRegionList regions = node.getRegions();
-			for (int i = 0; i < regions.size(); i++) {
-				ITextRegion currentRegion = regions.get(i);
-				// lookup the local coloring type and apply it
-				String namedStyle = (String) getContextStyleMap().get(currentRegion.getType());
-				if (namedStyle == null) {
-					continue;
-				}
-				TextAttribute attribute = getAttribute(namedStyle);
-				if (attribute == null) {
-					continue;
-				}
-
-				StyleRange style = new StyleRange(node.getStartOffset(currentRegion), currentRegion.getLength(), attribute.getForeground(), attribute.getBackground(), attribute.getStyle());
-
-				if ((attribute.getStyle() & TextAttribute.UNDERLINE) != 0) {
-					style.underline = true;
-					style.fontStyle &= ~TextAttribute.UNDERLINE;
-				}
-
-				fText.setStyleRange(style);
-			}
-			node = node.getNext();
+		final LineStyleProviderForPhp styler = new LineStyleProviderForPhp();
+		final Collection holdResults = new ArrayList();
+		styler.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
+		
+		for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
+			StyleRange element = (StyleRange) iter.next();
+			fText.setStyleRange(element);			
 		}
 	}
 

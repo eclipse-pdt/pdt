@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -144,28 +146,13 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 			return;
 		}
 		IStructuredDocumentRegion node = fNodes;
-		while (node != null) {
-			ITextRegionList regions = node.getRegions();
-			for (int i = 0; i < regions.size(); i++) {
-				ITextRegion currentRegion = regions.get(i);
-				// lookup the local coloring type and apply it
-				String namedStyle = (String) getContextStyleMap().get(currentRegion.getType());
-				if (namedStyle == null) {
-					continue;
-				}
-				TextAttribute attribute = getAttribute(namedStyle);
-				if (attribute == null) {
-					continue;
-				}
-
-				StyleRange style = new StyleRange(node.getStartOffset(currentRegion), currentRegion.getLength(), attribute.getForeground(), attribute.getBackground(), attribute.getStyle());
-				if ((attribute.getStyle() & TextAttribute.UNDERLINE) != 0) {
-					style.underline = true;
-					style.fontStyle &= ~TextAttribute.UNDERLINE;
-				}
-				fText.setStyleRange(style);
-			}
-			node = node.getNext();
+		final LineStyleProviderForPhp styler = new LineStyleProviderForPhp();
+		final Collection holdResults = new ArrayList();
+		styler.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
+		
+		for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
+			StyleRange element = (StyleRange) iter.next();
+			fText.setStyleRange(element);
 		}
 	}
 
@@ -368,30 +355,31 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 			return;
 		}
 
-		fInput = content;
-
+		// Add open and close PHP tags in order to enable PHP parser on content:
 		StringBuffer buf = new StringBuffer();
 		buf.append("<?"); //$NON-NLS-1$
 		buf.append(content);
 		buf.append("?>"); //$NON-NLS-1$
-
+		
 		IDocument doc = new Document(buf.toString());
 		DocumentReader docReader = new DocumentReader(doc);
 		getParser().reset(docReader);
 		IStructuredDocumentRegion sdRegion = getParser().getDocumentRegions();
 		
 		// This hack is needed in order to remove the open and close PHP tags we added before.
-		// We were forced to add these tags, in order to enable PHP parser.
 		ITextRegionList phpRegionsList = sdRegion.getRegions();
+		phpRegionsList.remove(0); // remove open PHP tag
+		phpRegionsList.remove(phpRegionsList.size() - 1); // remove close PHP tag
+		
+		// Update starting location of PHP token regions:
 		Iterator i = phpRegionsList.iterator();
 		while (i.hasNext()) {
-			ITextRegion region = (ITextRegion)i.next();
-			if (region.getType() == PHPRegionContext.PHP_OPEN) {
-				sdRegion.adjustStart(region.getEnd() * -1); // remove open PHP tag
-			} else if (region.getType() == PHPRegionContext.PHP_CLOSE) {
-				sdRegion.adjustLength(sdRegion.getLength() - region.getLength()); // remove close PHP tag
-			}
+			ITextRegion tokenRegion = (ITextRegion)i.next();
+			tokenRegion.adjustStart(-2);
 		}
+		sdRegion.setRegions(phpRegionsList);
+		
+		fInput = content;
 		fNodes = sdRegion;
 
 		doc = new Document(fInput);

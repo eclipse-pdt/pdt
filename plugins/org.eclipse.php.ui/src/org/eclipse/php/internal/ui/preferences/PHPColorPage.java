@@ -16,18 +16,13 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
-import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
@@ -95,19 +90,7 @@ public class PHPColorPage extends AbstractColorPage {
 		ArrayList styleList = new ArrayList();
 		initStyleList(styleList);
 
-		LineStyleProviderForPhp styleProvider = null;
-		IEditorPart editor = PHPUiPlugin.getActivePage().getActiveEditor();
-		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editor);
-		if (phpEditor != null) {
-			SourceViewerConfiguration viewerConfig = phpEditor.getSourceViwerConfiguration();
-			if (viewerConfig != null && viewerConfig instanceof PHPStructuredTextViewerConfiguration) {
-				PHPStructuredTextViewerConfiguration phpViewerConfig = (PHPStructuredTextViewerConfiguration) viewerConfig;
-				styleProvider = (LineStyleProviderForPhp) phpViewerConfig.getLineStyleProvider();
-			}
-		}
-		if (styleProvider == null) {
-			styleProvider = new LineStyleProviderForPhp();
-		}
+		LineStyleProviderForPhp styleProvider = new LineStyleProviderForPhp();
 		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
 
 		picker.setDescriptions(descriptions);
