@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.partitioner;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public abstract class PHPPartitionTypes {
 
@@ -42,5 +45,37 @@ public abstract class PHPPartitionTypes {
 
 	public static final boolean isPHPRegularState(final String type) {
 		return !isPHPCommentState(type) && !isPHPQuotesState(type);
+	}
+
+	/**
+	 * Returns offset where the current partition starts
+	 * @param region Region containing current offset
+	 * @param offset Current position relative to the containing region
+	 * @return Starting offset of the current partition
+	 * @throws BadLocationException
+	 */
+	public static final int getPartitionStart(PhpScriptRegion region, int offset) throws BadLocationException {
+		String partitionType = region.getPartition(offset);
+		ITextRegion internalRegion = region.getPhpToken(offset);
+		while (internalRegion.getStart() > 0 && region.getPartition(internalRegion.getStart()) == partitionType) {
+			internalRegion = region.getPhpToken(internalRegion.getStart() - 1);
+		}
+		return internalRegion.getStart();
+	}
+	
+	/**
+	 * Returns offset where the current partition ends
+	 * @param region Region containing current offset
+	 * @param offset Current position relative to the containing region
+	 * @return Ending offset of the current partition
+	 * @throws BadLocationException
+	 */
+	public static final int getPartitionEnd(PhpScriptRegion region, int offset) throws BadLocationException {
+		String partitionType = region.getPartition(offset);
+		ITextRegion internalRegion = region.getPhpToken(offset);
+		while (internalRegion.getEnd() != region.getEnd() && region.getPartition(internalRegion.getStart()) == partitionType) {
+			internalRegion = region.getPhpToken(region.getEnd());
+		}
+		return internalRegion.getEnd();
 	}
 }
