@@ -17,7 +17,9 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.debugger.DefaultExpressionsManager;
 import org.eclipse.php.internal.debug.core.debugger.Expression;
@@ -31,7 +33,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class PHPDebugTextHover extends AbstractPHPTextHover {
-	
+
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		PHPDebugTarget debugTarget = getDebugTarget();
 		if (debugTarget == null || textViewer == null || textViewer.getDocument() == null) {
@@ -43,17 +45,27 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 		if (flatNode != null) {
 			region = flatNode.getRegionAtCharacterOffset(offset);
 		}
-		if (region != null) {
-			String regionType = region.getType();
-			if (regionType.equalsIgnoreCase(PHPRegionTypes.PHP_VARIABLE)) {
-				String variable = null;
-				try {
-					variable = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
-					variable = "<B>" + variable + " = </B>" + getValue(debugTarget, variable);
-				} catch (BadLocationException e) {
-					Logger.logException("Error retrieving the value\n", e);
+
+		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
+			try {
+				region = phpScriptRegion.getPhpToken(offset - flatNode.getStartOffset() - region.getStart());
+			} catch (BadLocationException e) {
+				region = null;
+			}
+
+			if (region != null) {
+				String regionType = region.getType();
+				if (regionType == PHPRegionTypes.PHP_VARIABLE) {
+					String variable = null;
+					try {
+						variable = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
+						variable = "<B>" + variable + " = </B>" + getValue(debugTarget, variable);
+					} catch (BadLocationException e) {
+						Logger.logException("Error retrieving the value\n", e);
+					}
+					return variable;
 				}
-				return variable;
 			}
 		}
 		return null;
@@ -85,7 +97,7 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 
 		return value;
 	}
-	
+
 	// Returns the php debug target that is in contex. 
 	// In case that 
 	protected PHPDebugTarget getDebugTarget() {
@@ -93,29 +105,29 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 			IAdaptable adaptable = DebugUITools.getDebugContext();
 			if (adaptable instanceof PHPStackFrame) {
 				PHPStackFrame stackFrame = (PHPStackFrame) adaptable;
-                IEditorInput ei = getEditorPart().getEditorInput();
-                if (ei instanceof FileEditorInput){
-    				FileEditorInput fi = (FileEditorInput) getEditorPart().getEditorInput();
-    				String launchProjectName = stackFrame.getLaunch().getLaunchConfiguration().getAttribute(IPHPConstants.PHP_Project, (String) null);
-    				String fileProjectName = '/' + fi.getFile().getProject().getName();
-    
-    				// First, check if the project name is the same.
-    				if (!launchProjectName.equals(fileProjectName)) {
-    					return null;
-    				}
-    				// Check for the file path within the project
-    				String fileInDebug = stackFrame.getSourceName();
-    				String fileInProject = fi.getFile().getProjectRelativePath().toString();
-    				if (fileInDebug != null && fileInDebug.endsWith('/' + fileInProject) || fileInDebug.equals(fileInProject)) {
-    					PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
-    					return debugTarget;
-    				}
-                } else {
-                    // File on the include Path
-                    PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
-                    return debugTarget;
-                }
-                    
+				IEditorInput ei = getEditorPart().getEditorInput();
+				if (ei instanceof FileEditorInput) {
+					FileEditorInput fi = (FileEditorInput) getEditorPart().getEditorInput();
+					String launchProjectName = stackFrame.getLaunch().getLaunchConfiguration().getAttribute(IPHPConstants.PHP_Project, (String) null);
+					String fileProjectName = '/' + fi.getFile().getProject().getName();
+
+					// First, check if the project name is the same.
+					if (!launchProjectName.equals(fileProjectName)) {
+						return null;
+					}
+					// Check for the file path within the project
+					String fileInDebug = stackFrame.getSourceName();
+					String fileInProject = fi.getFile().getProjectRelativePath().toString();
+					if (fileInDebug != null && fileInDebug.endsWith('/' + fileInProject) || fileInDebug.equals(fileInProject)) {
+						PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
+						return debugTarget;
+					}
+				} else {
+					// File on the include Path
+					PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
+					return debugTarget;
+				}
+
 			}
 		} catch (CoreException e) {
 			Logger.logException("Error retrieving the PHPDebugTarget.\n", e);
