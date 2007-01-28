@@ -70,9 +70,12 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 					PhpScriptRegion phpRegion = (PhpScriptRegion) region;
 					final int phpRegionStart = startOffset + region.getStart();
 					final String newText = documentEvent.getDocument().get(phpRegionStart, region.getLength());
-					final boolean reparse = phpRegion.reparse(newText, event.fOffset - phpRegionStart , event.fText.length(), event.getDeletedText());
+					final boolean reparse = phpRegion.reparse(event.fText, newText, event.fOffset - phpRegionStart , event.getDeletedText());
 					if (!reparse) {
-						// if the reparse is complete reparse then 
+						// complete reparsing for the php script
+						phpRegion.completeReparse(newText);
+
+						// update the region
 						final TextRegionListImpl oldList = new TextRegionListImpl();
 						final TextRegionListImpl newList = new TextRegionListImpl();
 						newList.add(region);

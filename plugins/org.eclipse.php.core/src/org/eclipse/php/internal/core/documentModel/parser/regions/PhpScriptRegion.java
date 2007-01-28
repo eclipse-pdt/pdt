@@ -94,7 +94,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	 */
 	public boolean isLineComment(int offset) throws BadLocationException {
 		final LexerState lexState = tokensContaier.getState(offset);
-		return lexState != null && lexState.getTopState() == PhpLexer.ST_PHP_LINE_COMMENT;	
+		return lexState != null && lexState.getTopState() == PhpLexer.ST_PHP_LINE_COMMENT;
 	}
 
 	/**
@@ -103,11 +103,16 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * @param offset
 	 * @param length
 	 * @param deletedText
-	 * @return true - if short reparse is done
+	 * @return true - if short reparse is done, else return false
 	 * @throws BadLocationException 
 	 */
-	public boolean reparse(String newText, final int offset, final int length, String deletedText) throws BadLocationException {
+	public boolean reparse(String change, String newText, final int offset, String deletedText) throws BadLocationException {
 		assert newText.length() > offset - 1;
+
+		final int length = change.length();
+		if (startQuoted(deletedText) || startQuoted(change)) {
+			return false;
+		}
 
 		// get the region to re-parse
 		final int deletedLength = deletedText.length();
@@ -143,7 +148,7 @@ public class PhpScriptRegion extends ForeignRegion {
 		// 2. adjust next regions start location
 		// 3. update state changes
 		final int size = length - deletedLength;
-		if (phpLexer.yystate() == endState.getTopState() && newContainer.getLastToken().getEnd() <= tokenEnd.getEnd() + size) {
+		if (phpLexer.yystate() == endState.getTopState()) {
 			// 1. replace the regions
 			final ListIterator oldIterator = tokensContaier.removeSubList(tokenStart, tokenEnd);
 			ITextRegion[] newTokens = newContainer.getPhpTokens(); // now, add the new ones
@@ -161,15 +166,29 @@ public class PhpScriptRegion extends ForeignRegion {
 			tokensContaier.updateStateChanges(newContainer, tokenStart.getStart(), oldEndOffset);
 			return true;
 		}
-		completeReparse(newText);
 		return false;
+	}
+
+	private boolean startQuoted(final String text) {
+		final int length = text.length();
+		if (length == 0) {
+			return false;
+		}
+
+		boolean isOdd = false;
+		for (int index = 0; index < length; index++) {
+			if (text.charAt(index) == '"') {
+				isOdd = !isOdd;
+			}
+		}
+		return isOdd;
 	}
 
 	/**
 	 * Performing a fully parse process to php script
 	 * @param newText
 	 */
-	private void completeReparse(String newText) {
+	public void completeReparse(String newText) {
 		final PhpLexer phpLexer = getPhpLexer(project, getStream(newText));
 		setPhpTokens(phpLexer);
 	}
