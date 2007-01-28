@@ -96,6 +96,10 @@ public class PHPColorPage extends AbstractColorPage {
 		picker.setDescriptions(descriptions);
 		picker.setStyleList(styleList);
 		picker.setContextStyleMap(contextStyleMap);
+		
+		if (picker instanceof PHPStyledTextColorPicker) {
+			((PHPStyledTextColorPicker)picker).setLineStyleProvider(styleProvider);
+		}
 	}
 
 	protected void createContentsForPicker(Composite parent) {

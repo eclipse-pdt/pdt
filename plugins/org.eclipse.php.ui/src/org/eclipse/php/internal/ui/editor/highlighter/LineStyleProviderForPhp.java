@@ -47,6 +47,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	private boolean fInitialized;
 	private PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
 	private Map fTextAttributes;
+	private IPreferenceStore fColorPreferences;
 
 	/** Contains region to style mapping */
 	private static final Map fColorTypes = new HashMap(); // String (token type), String (color)
@@ -520,7 +521,14 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		getTextAttributes().clear();
 	}
 
-	protected IPreferenceStore getColorPreferences() {
+	public void setColorPreferences(IPreferenceStore preferenceStore) {
+		fColorPreferences = preferenceStore;
+	}
+	
+	public IPreferenceStore getColorPreferences() {
+		if (fColorPreferences != null) {
+			return fColorPreferences;
+		}
 		return PreferenceConstants.getPreferenceStore();
 	}
 

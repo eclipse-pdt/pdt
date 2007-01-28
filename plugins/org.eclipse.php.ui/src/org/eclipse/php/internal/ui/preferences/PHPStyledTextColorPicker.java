@@ -45,11 +45,23 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 	protected IPreferenceStore fPreferenceStore;
 	protected Button fUnderline;
 	protected SelectionListener buttonListener;
+	protected LineStyleProviderForPhp fStyleProvider;
 
 	public PHPStyledTextColorPicker(Composite parent, int style) {
 		super(parent, style);
 	}
 
+	public void setLineStyleProvider(LineStyleProviderForPhp styleProvider) {
+		fStyleProvider = styleProvider;
+		if (fPreferenceStore != null) {
+			fStyleProvider.setColorPreferences(fPreferenceStore);
+		}
+	}
+	
+	public LineStyleProviderForPhp getLineStyleProvider() {
+		return fStyleProvider;
+	}
+	
 	protected RGB changeColor(RGB startValue) {
 		ColorDialog colorDlg = new ColorDialog(getShell());
 		if (startValue != null) {
@@ -261,10 +273,12 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 		if (fText == null || fText.isDisposed() || fInput == null || fInput.length() == 0) {
 			return;
 		}
+		
+		fStyleProvider.loadColors();
+		
 		IStructuredDocumentRegion node = fNodes;
-		final LineStyleProviderForPhp styler = new LineStyleProviderForPhp();
 		final Collection holdResults = new ArrayList();
-		styler.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
+		fStyleProvider.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
 		
 		for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
 			StyleRange element = (StyleRange) iter.next();
@@ -325,6 +339,9 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 
 	public void setPreferenceStore(IPreferenceStore preferenceStore) {
 		fPreferenceStore = preferenceStore;
+		if (fStyleProvider != null) {
+			fStyleProvider.setColorPreferences(preferenceStore);
+		}
 		super.setPreferenceStore(preferenceStore);
 	}
 }
