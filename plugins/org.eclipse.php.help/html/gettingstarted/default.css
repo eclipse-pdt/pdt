@@ -1,8 +1,6 @@
 /*=(===============================================================)*/
 
-/*=(===============================================================)*/
-/*=(Created with RoboEditor.)=======================================*/
-/*=(===============================================================)*/
+
 
 BODY {
 	font-family: Arial;
@@ -11,8 +9,8 @@ BODY {
 
 H1 {
 	font-weight: bold;
-	font-size: 24.0pt;
-	color: #005984;
+	font-size: 18.0pt;
+	color: #193535;
 }
 
 /*=(Generated Code)=================================================*/
@@ -20,8 +18,8 @@ H1 {
 /*begin!kadov{{=====================================================*/ 
 LI.kadov-H1 {
 	font-weight: bold;
-	font-size: 24.0pt;
-	color: #005984;
+	font-size: 18.0pt;
+	color: #193535;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -29,8 +27,8 @@ LI.kadov-H1 {
 
 H2 {
 	font-weight: bold;
-	font-size: 18.0pt;
-	color: #005984;
+	font-size: 14.0pt;
+	color: #193535;
 }
 
 /*=(Generated Code)=================================================*/
@@ -38,8 +36,8 @@ H2 {
 /*begin!kadov{{=====================================================*/ 
 LI.kadov-H2 {
 	font-weight: bold;
-	font-size: 18.0pt;
-	color: #005984;
+	font-size: 14.0pt;
+	color: #193535;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -47,10 +45,10 @@ LI.kadov-H2 {
 
 H3 {
 	font-weight: bold;
-	font-size: 14.0pt;
+	font-size: 13.0pt;
 	margin-bottom: 5pt;
 	margin-top: 14pt;
-	color: #005682;
+	color: #193535;
 }
 
 /*=(Generated Code)=================================================*/
@@ -58,8 +56,8 @@ H3 {
 /*begin!kadov{{=====================================================*/ 
 LI.kadov-H3 {
 	font-weight: bold;
-	font-size: 14.0pt;
-	color: #005682;
+	font-size: 13.0pt;
+	color: #193535;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -69,7 +67,7 @@ H4 {
 	font-weight: bold;
 	font-size: 12.0pt;
 	margin-bottom: 5pt;
-	color: #00547f;
+	color:#193535;
 }
 
 /*=(Generated Code)=================================================*/
@@ -78,7 +76,7 @@ H4 {
 LI.kadov-H4 {
 	font-weight: bold;
 	font-size: 12.0pt;
-	color: #00547f;
+	color: #193535;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -103,7 +101,7 @@ LI.kadov-H5 {
 
 H6 {
 	font-weight: bold;
-	font-size: 9pt;
+	font-size: 10pt;
 	margin-bottom: 4.5pt;
 }
 
@@ -112,7 +110,7 @@ H6 {
 /*begin!kadov{{=====================================================*/ 
 LI.kadov-H6 {
 	font-weight: bold;
-	font-size: 9pt;
+	font-size: 10pt;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -121,14 +119,14 @@ LI.kadov-H6 {
 P {
 	margin-top: 0pt;
 	margin-bottom: 4.5pt;
-	font-size: 11pt;
+	font-size: 10pt;
 }
 
 /*=(Generated Code)=================================================*/
 /*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
 /*begin!kadov{{=====================================================*/ 
 LI.kadov-P {
-	font-size: 11pt;
+	font-size: 10pt;
 }
 /*}}end!kadov=======================================================*/ 
 
@@ -184,7 +182,7 @@ UL {
 
 P.Caption {
 	margin-top: 1pt;
-	font-size: 11pt;
+	font-size: 10pt;
 	font-style: italic;
 	font-weight: normal;
 	margin-bottom: 8.5pt;
@@ -198,7 +196,7 @@ P.Caption {
 /*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
 /*begin!kadov{{=====================================================*/ 
 LI.kadov-P-CCaption {
-	font-size: 11pt;
+	font-size: 10pt;
 	font-style: italic;
 	font-weight: normal;
 	text-align: Left;
