@@ -67,9 +67,9 @@ public class CodeDataResolver {
 	/**
 	 * This function tries to search for code data, that corresponds to the specified offset
 	 * 
-	 * @param textViewer
-	 * @param offset
-	 * @return CodeData
+	 * @param textViewer Text viewer
+	 * @param offset Real offset of in the document
+	 * @return CodeData Code data according to the selected PHP element
 	 * @throws BadLocationException
 	 */
 	public static CodeData getCodeData(ITextViewer textViewer, int offset) throws BadLocationException {
