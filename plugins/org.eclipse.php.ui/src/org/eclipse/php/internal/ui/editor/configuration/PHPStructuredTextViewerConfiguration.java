@@ -182,10 +182,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		ArrayList processorsList = getProcessorsForPartition(partitionType);
 
-		if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
-			processorsList.add(0, new PHPContentAssistProcessor());
-		} else if (partitionType == PHPPartitionTypes.PHP_DOC) {
-			processorsList.add(0, new PHPDocContentAssistProcessor());
+		if (partitionType == PHPPartitionTypes.PHP_DEFAULT){
+			processorsList.add(new PHPContentAssistProcessor());
+			processorsList.add(new PHPDocContentAssistProcessor());
 		} else {
 			processors = super.getContentAssistProcessors(sourceViewer, partitionType);
 		}
