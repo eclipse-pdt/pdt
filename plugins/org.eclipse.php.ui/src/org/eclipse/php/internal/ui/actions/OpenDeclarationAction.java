@@ -7,6 +7,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.ui.Logger;
@@ -81,15 +83,18 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 		if (editor == null) {
 			return false;
 		}
+		
 		IDocumentProvider docProvider= editor.getDocumentProvider();
 		IEditorInput input= editor.getEditorInput();
 		if (docProvider == null || input == null) {
 			return false;
 		}
+		
 		IDocument document= docProvider.getDocument(input);
 		if (document == null) {
 			return false;
 		}
+		
 		if (!(document instanceof IStructuredDocument)) {
 			return false;
 		}
@@ -109,13 +114,23 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 		}
 		
 		IStructuredDocumentRegion structuredDocumentRegion = structuredDocument.getRegionAtCharacterOffset(offset);
-		
 		ITextRegion textRegion = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
 		if (textRegion == null) {
 			return false;
 		}
 		
-		offset = textRegion.getEnd() + structuredDocumentRegion.getStartOffset();
+		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
+			try {
+				textRegion = phpScriptRegion.getPhpToken(offset - structuredDocumentRegion.getStartOffset() - phpScriptRegion.getStart());
+			} catch (BadLocationException e) {
+				textRegion = null;
+			}
+			//offset = structuredDocumentRegion.getStartOffset() + phpScriptRegion.getStart() + textRegion.getEnd();
+		}
+		if (textRegion == null) {
+			return false;
+		}
 		
 		StructuredTextEditor structuredTextEditor = (StructuredTextEditor)editor;
 		try {
