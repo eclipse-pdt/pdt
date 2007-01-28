@@ -17,6 +17,7 @@ import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
@@ -208,5 +209,35 @@ public class PHPLaunchUtilities {
 				lManager.removeLaunch(launch);
 			}
 		}
+	}
+	
+	/**
+	 * Display a wait window, indicating the user that the debug session is in progress and the
+	 * PDT is waiting for the debugger's response.
+	 * Once a responce arrives, the {@link #hideWaitForDebuggerMessage()} should be called to remove 
+	 * the window.
+	 * In case a response does not arrive, there is a good chance that the {@link #showDebuggerErrorMessage()} should
+	 * be called.
+	 * @see #hideWaitForDebuggerMessage()
+	 * @see #showDebuggerErrorMessage()
+	 */
+	public static void showWaitForDebuggerMessage() {
+		// TODO
+	}
+	
+	public static void hideWaitForDebuggerMessage() {
+		// TODO
+	}
+	
+	/**
+	 * Display an error message to indicating an fatal error detected while staring a debug session.
+	 * A fatal error occures when the remote debugger does not exist or has a different version.
+	 */
+	public static void showDebuggerErrorMessage() {
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Error, PHPDebugCoreMessages.Debugger_Error_Message);
+			}
+		});
 	}
 }

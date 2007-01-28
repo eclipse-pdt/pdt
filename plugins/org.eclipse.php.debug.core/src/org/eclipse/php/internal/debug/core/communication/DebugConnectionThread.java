@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.core.communication;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Hashtable;
@@ -23,6 +24,7 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.internal.core.LaunchManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugRequestHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
@@ -41,12 +43,14 @@ import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.debugger.parameters.AbstractDebugParametersInitializer;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.launching.PHPServerLaunchDecorator;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.internal.operations.TimeTriggeredProgressMonitorDialog;
 
 /**
  * The debug connection thread is responsible of initilizing and handle a single debug session that was
@@ -74,7 +78,7 @@ public class DebugConnectionThread implements Runnable {
 	private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	private DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
 	private int lastRequestID = 1000;
-	protected int peerResponseTimeout = 10000; // 10 seconds.
+	protected int peerResponseTimeout = 3300; // 3.3 seconds.
 	private Thread theThread;
 	private PHPDebugTarget debugTarget;
 
@@ -200,10 +204,15 @@ public class DebugConnectionThread implements Runnable {
 			}
 
 			IDebugResponseMessage response = null;
+			int timeoutCount = 3;
 			while (response == null && isConnected()) {
 				synchronized (request) {
 					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 					if (response == null) {
+						// TODO - Display a message that we are waiting for the server response.
+						// In case that the responce finally arrives, remove the message.
+						// In case we have a timeout, close the connection and display a different message.
+						
 						request.wait(peerResponseTimeout);
 					} else if (isDebugMode) {
 						System.out.println("waiting for response " + response.getID());
@@ -221,7 +230,14 @@ public class DebugConnectionThread implements Runnable {
 					}
 					// Handle time out will stop the communication if need to stop.
 					//System.out.println("handleto");
-					handlePeerResponseTimeout();
+					
+					if(timeoutCount > 0) {
+						timeoutCount--;
+						handlePeerResponseTimeout();
+					} else {
+						closeConnection();
+						PHPLaunchUtilities.showDebuggerErrorMessage();
+					}
 					if (!isConnected())
 						break;
 					//System.out.println("rewaiting");

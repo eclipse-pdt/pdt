@@ -77,6 +77,11 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
 				if (!fStatus) {
 					Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.start return false");
+					try {
+						fDebugTarget.disconnect();
+					} catch (DebugException e) {
+						Logger.logException(e);
+					}
 				}
 				fDebugTarget.setLastCommand("start");
 			} else {
