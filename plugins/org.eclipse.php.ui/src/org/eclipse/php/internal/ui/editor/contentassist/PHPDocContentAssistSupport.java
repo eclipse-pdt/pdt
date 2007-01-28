@@ -16,6 +16,9 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.parser.PHPDocLanguageModel;
@@ -31,6 +34,7 @@ import org.eclipse.php.internal.ui.editor.util.TextSequence;
 import org.eclipse.php.internal.ui.editor.util.TextSequenceUtilities;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
@@ -76,6 +80,30 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
 		int lineStartOffset = editorModel.getStructuredDocument().getLineInformationOfOffset(offset).getOffset();
 
+		ITextRegion textRegion = null;
+		// 	in case we are at the end of the document, asking for completion
+		if (offset == editorModel.getStructuredDocument().getLength()) {
+			textRegion = sdRegion.getLastRegion();
+		} else {
+			textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		}
+
+		if (textRegion == null)
+			return;
+
+		if (textRegion.getType() == PHPRegionTypes.PHP_CLOSETAG) { // dont provide completion if staying after PHP close tag.
+			return;
+		}
+		
+		PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
+		int internalOffset = offset-sdRegion.getStartOffset()-phpScriptRegion.getStart();
+		
+		String partitionType = phpScriptRegion.getPartition(internalOffset);
+		if (partitionType == PHPPartitionTypes.PHP_DOC){
+		}else {
+			return;
+		}
+		
 		TextSequence statmentText = TextSequenceUtilities.createTextSequence(sdRegion, lineStartOffset, offset - lineStartOffset);
 		int totalLength = statmentText.length();
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statmentText, totalLength); // read whitespace

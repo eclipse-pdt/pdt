@@ -24,8 +24,8 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
@@ -36,6 +36,7 @@ import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
 import org.eclipse.php.internal.ui.editor.util.TextSequence;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -210,21 +211,33 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			startOffset = sdRegion.getStartOffset(textRegion);
 		}
 
+		PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+		int internalOffset = offset - sdRegion.getStartOffset() - phpScriptRegion.getStart();
+
+		String partitionType = phpScriptRegion.getPartition(internalOffset);
+		if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
+		} else {
+			return;
+		}
+
+		ContextRegion internalPHPRegion = (ContextRegion) phpScriptRegion.getPhpToken(internalOffset);
+
 		// if there is no project model (the file is not part of a project)
 		// complete with language model only 
 		if (fileData == null) {
-			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, sdRegion, textRegion, isStrict);
+			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, sdRegion, phpScriptRegion, internalPHPRegion, isStrict);
 			return;
 		}
 
 		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(offset, sdRegion, true);
-		String type = textRegion.getType();
+
+		String type = internalPHPRegion.getType();
 		if (isInArrayOptionQuotes(projectModel, fileName, type, offset, selectionLength, statmentText)) {
 			// the current position is inside quotes as a parameter for an array.
 			return;
 		}
 
-		if (isPHPSingleQuote(sdRegion, textRegion) || PHPPartitionTypes.isPHPCommentState(type)) {
+		if (isPHPSingleQuote(sdRegion, phpScriptRegion, internalPHPRegion, offset) || isLineComment(sdRegion, phpScriptRegion, offset)) {
 			// we dont have code completion inside single quotes.
 			return;
 		}
@@ -282,9 +295,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		if (haveSpacesAtEnd) {
-			getRegularCompletion(viewer, projectModel, fileName, "", offset, selectionLength, explicit, sdRegion, textRegion, isStrict);
+			getRegularCompletion(viewer, projectModel, fileName, "", offset, selectionLength, explicit, sdRegion, phpScriptRegion, internalPHPRegion, isStrict);
 		} else {
-			getRegularCompletion(viewer, projectModel, fileName, lastWord, offset, selectionLength, explicit, sdRegion, textRegion, isStrict);
+			getRegularCompletion(viewer, projectModel, fileName, lastWord, offset, selectionLength, explicit, sdRegion, phpScriptRegion, internalPHPRegion, isStrict);
 		}
 
 		return;
@@ -295,10 +308,30 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return functionsData != null && functionsData.length > 0;
 	}
 
-	protected boolean isPHPSingleQuote(IStructuredDocumentRegion sdRegion, ITextRegion textRegion) {
-		if (PHPPartitionTypes.isPHPQuotesState(textRegion.getType())) {
-			char firstChar = sdRegion.getText(textRegion).charAt(0);
-			return (firstChar == '\'');
+	protected boolean isLineComment(IStructuredDocumentRegion sdRegion, PhpScriptRegion phpScriptRegion, int offset) {
+		int relativeOffset = offset - sdRegion.getStartOffset(phpScriptRegion);
+		try {
+			return phpScriptRegion.isLineComment(relativeOffset);
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+			return false;
+		}
+	}
+
+	protected boolean isPHPSingleQuote(IStructuredDocumentRegion sdRegion, PhpScriptRegion phpScriptRegion, ContextRegion internalRegion, int documentOffset) {
+		if (PHPPartitionTypes.isPHPQuotesState(internalRegion.getType())) {
+			char firstChar;
+			int startOffset;
+			int endOffset;
+			try {
+				startOffset = internalRegion.getStart() + sdRegion.getStartOffset(phpScriptRegion);
+				endOffset = startOffset + internalRegion.getTextLength();
+				firstChar = sdRegion.getParentDocument().get(startOffset, internalRegion.getTextLength()).charAt(0);
+			} catch (BadLocationException e) {
+				Logger.logException(e);
+				return false;
+			}
+			return (firstChar == '\'') && (documentOffset <= endOffset - 1) && (startOffset < documentOffset);
 		}
 		return false;
 	}
@@ -340,13 +373,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return true;
 	}
 
-	protected void getRegularCompletion(final ITextViewer viewer, final PHPProjectModel projectModel, final String fileName, String startsWith, final int offset, final int selectionLength, boolean explicit, final IStructuredDocumentRegion sdRegion, final ITextRegion tRegion, boolean isStrict) {
+	protected void getRegularCompletion(final ITextViewer viewer, final PHPProjectModel projectModel, final String fileName, String startsWith, final int offset, final int selectionLength, boolean explicit, final IStructuredDocumentRegion sdRegion, final ITextRegion tRegion,
+			final ContextRegion internalPhpRegion, boolean isStrict) {
 		if (!explicit && startsWith.length() == 0)
 			return;
 
-		final String type = tRegion.getType();
-
-		ArrayList strictCodes;
+		final String type = internalPhpRegion.getType();
 
 		if (startsWith.startsWith("$")) {
 			if (!explicit && !autoShowVariables)
@@ -452,7 +484,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
 		} else if (triggerText.equals(CLASS_FUNCTIONS_TRIGGER)) {
 			isClassTriger = true;
-			if (startFunctionPosition <= 8) {
+			if (startFunctionPosition >= 8) {
 				String parentText = statmentText.subSequence(startFunctionPosition - 8, startFunctionPosition - 2).toString();
 				if (parentText.equals("parent")) {
 					isParent = true;
@@ -737,7 +769,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (addedFunctions > 0) {
 			result = new CodeData[functions.length + addedFunctions];
 			System.arraycopy(functions, 0, result, 0, functions.length);
-			
+
 			if (ctorExists) {
 				if (!dtorExists) {
 					result[functions.length] = PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESCRUCTOR, PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null);
