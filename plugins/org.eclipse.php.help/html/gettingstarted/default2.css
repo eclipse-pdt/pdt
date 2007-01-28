@@ -1,0 +1,266 @@
+/*=(===============================================================)*/
+
+/*=(===============================================================)*/
+/*=(Created with RoboEditor.)=======================================*/
+/*=(===============================================================)*/
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+table,
+td,
+caption,
+th,
+ul,
+ol,
+dl,
+li,
+dd,
+dt {
+	font-family: sans-serif;
+	font-size: 9pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-h1,
+LI.kadov-h2,
+LI.kadov-h3,
+LI.kadov-h4,
+LI.kadov-h5,
+LI.kadov-h6,
+LI.kadov-p {
+	font-family: sans-serif;
+	font-size: 9pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+body {
+	overflow: auto;
+	margin-top: 0;
+	margin-bottom: 4;
+	margin-left: 3;
+	margin-right: 0;
+}
+
+h1 {
+	margin-top: 5;
+	margin-bottom: 1;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-h1 {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+h2 {
+	margin-top: 25;
+	margin-bottom: 3;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-h2 {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+h3 {
+	margin-top: 20;
+	margin-bottom: 3;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-h3 {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+h4 {
+	margin-top: 20;
+	margin-bottom: 3;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-h4 {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+h5 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-h5 {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+p {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-p {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+ul {
+	margin-top: 0;
+	margin-bottom: 10;
+}
+
+li {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+li p {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+li LI.kadov-p {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+ol {
+	margin-top: 0;
+	margin-bottom: 10;
+}
+
+dl {
+	margin-top: 0;
+	margin-bottom: 10;
+}
+
+dt {
+	margin-top: 0;
+	margin-bottom: 0;
+	font-weight: bold;
+}
+
+dd {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+a:link {
+	color: #0000ff;
+}
+
+a:hover {
+	color: #000080;
+}
+
+a:visited {
+	x-text-underline: normal;
+	/*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ 
+}
+
+h4 {
+	font-style: italic;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-h4 {
+	font-style: italic;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+th {
+	font-weight: bold;
+}
+
+P.Preformatted {
+	line-height: normal;
+	margin-bottom: 14pt;
+	margin-top: 14pt;
+	x-text-tab-stops: repeat 1in;
+	white-space: nowrap;
+	margin-left: 6;
+	font-size: 9pt;
+	font-family: monospace;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CPreformatted {
+	line-height: normal;
+	x-text-tab-stops: repeat 1in;
+	white-space: nowrap;
+	font-size: 9pt;
+	font-family: monospace;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+SPAN.Strong {
+	font-weight: bold;
+}
+
+SPAN.Emphasize {
+	font-style: italic;
+}
+
+SPAN.Var {
+	font-style: italic;
+}
+
+P.figure {
+	margin-bottom: 0px;
+	margin-left: 32pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-Cfigure {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+
+/*=(===============================================================)*/
