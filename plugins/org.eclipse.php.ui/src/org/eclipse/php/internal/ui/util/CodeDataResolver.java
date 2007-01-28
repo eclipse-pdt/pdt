@@ -113,6 +113,10 @@ public class CodeDataResolver {
 		}
 		
 		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(sdRegion.getStartOffset() + phpScriptRegion.getStart() + textRegion.getEnd(), sdRegion, true);
+		if (statmentText == null) {
+			return null;
+		}
+		
 		String type = textRegion.getType();
 		CodeData tmp;
 		if ((tmp = getIfInArrayOptionQuotes(projectModel, fileName, type, offset, statmentText)) != null) {
