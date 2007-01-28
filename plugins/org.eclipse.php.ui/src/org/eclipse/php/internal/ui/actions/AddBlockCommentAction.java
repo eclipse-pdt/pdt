@@ -21,8 +21,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 
 /**
@@ -203,10 +208,20 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	protected boolean isValidSelection(ITextSelection selection, IDocumentExtension3 docExtension) {
 		int offset = selection.getOffset();
 		try {
-			ITypedRegion partition = docExtension.getPartition(fDocumentPartitioning, offset, false);
-			return (partition.getType() != PHPPartitionTypes.PHP_MULTI_LINE_COMMENT);
+			if (docExtension instanceof IStructuredDocument) {
+				IStructuredDocument sDoc = (IStructuredDocument)docExtension;
+				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(offset);
+				ITextRegion region = sdRegion.getRegionAtCharacterOffset(offset);
+				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+					PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
+					region = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+					if (!PHPPartitionTypes.isPHPMultiLineCommentState(region.getType())) {
+						return true;
+					}
+				}
+			}
 		} catch (Exception e) {
 		}
-		return true;
+		return false;
 	}
 }

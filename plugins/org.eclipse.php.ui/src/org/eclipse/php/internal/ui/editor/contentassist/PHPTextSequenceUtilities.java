@@ -16,13 +16,11 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.editor.util.TextSequence;
 import org.eclipse.php.internal.ui.editor.util.TextSequenceUtilities;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
@@ -133,36 +131,44 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
-	public static ITextRegion getMultilineCommentStartRegion(IStructuredDocumentRegion sdRegion, int offset) {
+	public static ITextRegion getMultilineCommentStartRegion(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		ITextRegion startRegion = null;
-		try {
-			while (PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
-				if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_START)) {
-					startRegion = tRegion;
-					break;
+		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)tRegion;
+			tRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+			try {
+				while (tRegion.getStart() > 0 && PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
+					if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_START)) {
+						startRegion = tRegion;
+						break;
+					}
+					tRegion = phpScriptRegion.getPhpToken(tRegion.getStart()-1);
 				}
-				tRegion = sdRegion.getRegionAtCharacterOffset(sdRegion.getStartOffset(tRegion) - 1);
+			} catch (Exception e) {
+				Logger.logException(e);
 			}
-		} catch (Exception e) {
-			Logger.logException(e);
 		}
 		return startRegion;
 	}
 
-	public static ITextRegion getMultilineCommentEndRegion(IStructuredDocumentRegion sdRegion, int offset) {
+	public static ITextRegion getMultilineCommentEndRegion(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		ITextRegion endRegion = null;
-		try {
-			while (PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
-				if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_END)) {
-					endRegion = tRegion;
-					break;
+		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)tRegion;
+			tRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+			try {
+				while (tRegion.getEnd() != phpScriptRegion.getEnd() && PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
+					if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_END)) {
+						endRegion = tRegion;
+						break;
+					}
+					tRegion = phpScriptRegion.getPhpToken(tRegion.getEnd());
 				}
-				tRegion = sdRegion.getRegionAtCharacterOffset(sdRegion.getEndOffset(tRegion) + 1);
+			} catch (Exception e) {
+				Logger.logException(e);
 			}
-		} catch (Exception e) {
-			Logger.logException(e);
 		}
 		return endRegion;
 	}
