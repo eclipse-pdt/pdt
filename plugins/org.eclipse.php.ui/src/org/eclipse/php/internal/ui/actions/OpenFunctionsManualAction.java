@@ -17,6 +17,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
@@ -84,12 +86,10 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 	}
 	
 	private boolean validAction() {
-			
 		ITextEditor editor= getTextEditor();
 		if (editor == null) {
 			return false;
 		}
-			
 		
 		IDocumentProvider docProvider= editor.getDocumentProvider();
 		IEditorInput input= editor.getEditorInput();
@@ -101,7 +101,7 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 		if (document == null) {
 			return false;
 		}
-
+		
 		if (!(document instanceof IStructuredDocument)) {
 			return false;
 		}
@@ -121,13 +121,22 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 		}
 		
 		IStructuredDocumentRegion structuredDocumentRegion = structuredDocument.getRegionAtCharacterOffset(offset);
-		
 		ITextRegion textRegion = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
 		if (textRegion == null) {
 			return false;
 		}
 		
-		offset = textRegion.getEnd() + structuredDocumentRegion.getStartOffset();
+		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
+			try {
+				textRegion = phpScriptRegion.getPhpToken(offset - structuredDocumentRegion.getStartOffset() - phpScriptRegion.getStart());
+			} catch (BadLocationException e) {
+				textRegion = null;
+			}
+		}
+		if (textRegion == null) {
+			return false;
+		}
 		
 		StructuredTextEditor structuredTextEditor = (StructuredTextEditor)editor;
 		CodeData codeData;

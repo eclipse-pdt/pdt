@@ -126,7 +126,6 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 			} catch (BadLocationException e) {
 				textRegion = null;
 			}
-			//offset = structuredDocumentRegion.getStartOffset() + phpScriptRegion.getStart() + textRegion.getEnd();
 		}
 		if (textRegion == null) {
 			return false;
