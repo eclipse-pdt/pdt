@@ -52,7 +52,7 @@ public class PHPFileLink implements IHyperlink {
 	 * @see org.eclipse.debug.ui.console.IConsoleHyperlink#linkActivated()
 	 */
 	public void linkActivated() {
-		IEditorPart editorPart;
+		IEditorPart editorPart = null;
 		try {
 			editorPart = EditorUtility.openInEditor(fFile, false);
 			if (editorPart != null && fFileLineNumber > 0) {
@@ -63,7 +63,6 @@ public class PHPFileLink implements IHyperlink {
 					fFileOffset = region.getOffset();
 					fFileLength = region.getLength();
 				}
-				EditorUtility.revealInEditor(editorPart, fFileOffset, fFileLength);
 			}
 		} catch (PartInitException e) {
 			Logger.logException(e);
@@ -75,6 +74,10 @@ public class PHPFileLink implements IHyperlink {
 			Logger.logException(e);
 		} catch (NullPointerException npe) {
 			Logger.logException(npe);
+		} finally {
+			if (editorPart != null) {
+				EditorUtility.revealInEditor(editorPart, fFileOffset, fFileLength);
+			}
 		}
 	}
 
