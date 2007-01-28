@@ -17,7 +17,9 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPBlock;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
@@ -97,7 +99,7 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 		this.phpCodeData = (PHPCodeData) structuredSelection.getFirstElement();
 	}
 
-	/*
+	/**
 	 * Handle a situation where a file DocBlock is requested and there is an undocumented
 	 * class, function or define at the beginning of the document. 
 	 * In this case we auto-document the undocumented element to comply the DocBlock rules.
@@ -106,26 +108,36 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 	 * @param document The IStructuredDocument that we are working on
 	 */
 	private void handleFileDocBlock(PHPFileData data, IStructuredDocument document) {
+		
+		// Find the first PHP script region:
 		IStructuredDocumentRegion sdRegion = document.getFirstStructuredDocumentRegion();
-		while (sdRegion != null && sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
+		PhpScriptRegion phpScriptRegion = null;
+		while (sdRegion != null) {
+			ITextRegion region = sdRegion.getFirstRegion();
+			if (region.getType() == PHPRegionContext.PHP_OPEN) {
+				region = sdRegion.getRegionAtCharacterOffset(region.getEnd());
+				if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
+					phpScriptRegion = (PhpScriptRegion)region;
+					break;
+				}
+			}
 			sdRegion = sdRegion.getNext();
 		}
-		if (sdRegion == null) {
-			return;
-		}
-		ITextRegion textRegion = sdRegion.getFirstRegion();
-		int regionEnd = textRegion.getEnd();
-		textRegion = sdRegion.getRegionAtCharacterOffset(sdRegion.getStartOffset() + regionEnd + 1);
-		if (textRegion == null) {
-			return;
-		}
-		if (textRegion.getType() == PHPRegionTypes.PHP_CLASS) {
-			// add a class doc at textRegion.getStart() + sdRegion.getStartOffset()
-			addClassBlock(document, data, textRegion.getStart() + sdRegion.getStartOffset());
-		} else if (textRegion.getType() == PHPRegionTypes.PHP_FUNCTION){
-			addFunctionBlock(document, data, textRegion.getStart() + sdRegion.getStartOffset());
-		} else if (textRegion.getType() == PHPRegionTypes.PHP_STRING && sdRegion.getFullText(textRegion).trim().equalsIgnoreCase("define")) { //$NON-NLS-1$
-			addConstantBlock(document, data, textRegion.getStart() + sdRegion.getStartOffset());
+		
+		if (phpScriptRegion != null) {
+			try {
+				ITextRegion textRegion = phpScriptRegion.getPhpToken(0);
+				int offset = textRegion.getStart() + sdRegion.getStartOffset() + phpScriptRegion.getStart();
+				if (textRegion.getType() == PHPRegionTypes.PHP_CLASS) {
+					// add a class doc at textRegion.getStart() + sdRegion.getStartOffset()
+					addClassBlock(document, data, offset);
+				} else if (textRegion.getType() == PHPRegionTypes.PHP_FUNCTION){
+					addFunctionBlock(document, data, offset);
+				} else if (textRegion.getType() == PHPRegionTypes.PHP_STRING && document.get(offset, textRegion.getLength()).trim().equalsIgnoreCase("define")) { //$NON-NLS-1$
+					addConstantBlock(document, data, offset);
+				}
+			} catch (BadLocationException e) {
+			}
 		}
 	}
 
