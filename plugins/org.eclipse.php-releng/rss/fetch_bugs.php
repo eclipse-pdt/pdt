@@ -13,6 +13,25 @@ $today = date('d F Y');
 $sum = $p1 + $p2 +$p3;
 file_put_contents ("$filename_sum", "Bug status $today - $sum ($p1, $p2, $p3)");
 
+getCVS();
+
+function getCVS() {
+	// create a new curl resource
+	$ch = curl_init();
+
+	// set URL and other appropriate options
+	curl_setopt($ch, CURLOPT_URL, "https://bugs.eclipse.org/bugs/report.cgi?bug_file_loc=&bug_file_loc_type=allwordssubstr&bug_id=&bug_severity=blocker&bug_severity=critical&bug_severity=major&bug_severity=normal&bug_severity=minor&bug_severity=trivial&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&bugidtype=include&chfieldfrom=&chfieldto=Now&chfieldvalue=&classification=Tools&email1=&email2=&emailtype1=substring&emailtype2=substring&field0-0-0=noop&keywords=&keywords_type=allwords&long_desc=&long_desc_type=allwordssubstr&product=PHP&short_desc=&short_desc_type=allwordssubstr&status_whiteboard=&status_whiteboard_type=allwordssubstr&type0-0-0=noop&value0-0-0=&votes=&x_axis_field=component&y_axis_field=priority&z_axis_field=&width=1080&height=350&action=wrap&ctype=csv&format=table");
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	$handle = fopen("bug_distribution.csv", "w");
+	curl_setopt($ch, CURLOPT_FILE, $handle);
+
+	// grab URL and pass it to the browser
+	curl_exec($ch);
+
+	// close curl resource, and free up system resources
+	curl_close($ch);
+}
+
 function writeBugs($pr, $filename_bugs) {
 
 	// create a new curl resource

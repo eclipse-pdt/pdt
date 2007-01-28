@@ -12,6 +12,9 @@
 	<tstamp />
 	<property name="date" value="${DSTAMP}" />
 	<property name="time" value="${TSTAMP}" />
+	<tstamp>
+	    <format property="bugFormat" pattern="yyyy-M-d" locale="en,UK"/>
+	</tstamp>
 
 
 	<property name="buildDirectory" location="${basedir}/../src/eclipse" />
@@ -28,7 +31,7 @@
 	<property name="rssMessageContributor" value="PHP Build Server" />
 	<property name="rssMessageLink" value="http://download.eclipse.org/tools/php/downloads/drops/${buildLabel}/results/TEST-php.html" />
 	<property name="rssOutputFile" value="center.xml" />
-	<property name="bugLink" value="https://bugs.eclipse.org/bugs/"/>
+	<property file="link.properties" />
 
 	<target name="createProject">
 		<RssAddProject projectName="${rssProjectName}" />
@@ -64,7 +67,7 @@
 	</target>
 
 	<target name="mailUnitTestResults">
-		<mail from="php-unit-test-daemon@eclipse.org " encoding="uu" tolist="php-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html" subject="[Unit-Test Results] Build ${timestamp}" />
+		<mail from="php-unit-test-daemon@eclipse.org " encoding="uu" tolist="php-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html bug_distribution.csv" subject="Nightly build results ${timestamp}" />
 	</target>
 
 	<target name="getTestResults">
