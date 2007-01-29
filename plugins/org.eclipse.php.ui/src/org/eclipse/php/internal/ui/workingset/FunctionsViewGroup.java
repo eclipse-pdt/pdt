@@ -11,10 +11,6 @@
 package org.eclipse.php.internal.ui.workingset;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManagerProvider;
@@ -29,6 +25,9 @@ public class FunctionsViewGroup extends ViewActionGroup {
 
 	public static final int PHP4 = 1;
 	public static final int PHP5 = 2;
+
+	public static final IPhpModel php4Model = PHPLanguageManagerProvider.instance().getPHPLanguageManager(PHPVersion.PHP4).getModel();
+	public static final IPhpModel php5Model = PHPLanguageManagerProvider.instance().getPHPLanguageManager(PHPVersion.PHP5).getModel();
 
 	private PHPFunctionsPart fPart;
 	private ViewAction showPHP4FunctionsAction;
@@ -59,22 +58,8 @@ public class FunctionsViewGroup extends ViewActionGroup {
 		if (mode == currentMode) {
 			return;
 		}
-		//		BusyIndicator.showWhile(fPart.getSite().getShell().getDisplay(), new Runnable() {
-		//
-		//			public void run() {
-		//				((PHPFunctionsContentProvider) fPart.getViewer().getContentProvider()).setRoot(PHPLanguageManagerProvider.instance().getPHPLanguageManager(currentMode == PHP4 ? PHPVersion.PHP4 : PHPVersion.PHP5).getModel());
-		IPhpModel model = PHPLanguageManagerProvider.instance().getPHPLanguageManager(currentMode == PHP4 ? PHPVersion.PHP4 : PHPVersion.PHP5).getModel();
-		fPart.getViewer().setInput(model);
-		//				fPart.getViewer().refresh();
-		//				fPart.getViewer().getControl().redraw();
-		//			}
-		//			
-		//		});
+		fPart.getViewer().setInput(mode == PHP4 ? php4Model : php5Model);
 		currentMode = mode;
-		//		if (updateViewJob == null) {
-		//			updateViewJob = new UpdateViewJob();
-		//		}
-		//		updateViewJob.schedule();
 		updateActions();
 	}
 
@@ -93,13 +78,13 @@ public class FunctionsViewGroup extends ViewActionGroup {
 			setMode(getVersion(PhpVersionProjectPropertyHandler.getVersion()));
 			return;
 		}
-		
+
 		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 		if (phpEditor != null) {
 			final IFile file = phpEditor.getFile();
 			final String version = PhpVersionProjectPropertyHandler.getVersion(file.getProject());
 			setMode(getVersion(version));
-		} 
+		}
 	}
 
 	private int getVersion(String s) {

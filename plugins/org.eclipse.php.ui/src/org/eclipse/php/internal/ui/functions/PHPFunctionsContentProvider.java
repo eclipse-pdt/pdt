@@ -12,22 +12,13 @@ package org.eclipse.php.internal.ui.functions;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class PHPFunctionsContentProvider implements ITreeContentProvider {
 
@@ -48,11 +39,7 @@ public class PHPFunctionsContentProvider implements ITreeContentProvider {
 			return true;
 		}
 		if (element instanceof PHPProjectModel) {
-			PHPProjectModel sp = (PHPProjectModel) element;
-			IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(sp);
-			if (!project.isOpen()) {
-				return false;
-			} else return true;
+			return true;
 		}
 
 		if (element instanceof PHPCodeData) {
@@ -64,9 +51,7 @@ public class PHPFunctionsContentProvider implements ITreeContentProvider {
 	}
 
 	public Object getParent(Object element) {
-		if (!exists(element))
-			return null;
-		return internalGetParent(element);
+		return null;
 	}
 
 	protected boolean exists(Object element) {
@@ -104,10 +89,10 @@ public class PHPFunctionsContentProvider implements ITreeContentProvider {
 			return NO_CHILDREN;
 		}
 		if (parentElement instanceof PHPLanguageModel) {
-			PHPLanguageModel model = (PHPLanguageModel) parentElement;
+			//			PHPLanguageModel model = (PHPLanguageModel) parentElement;
 			CodeData[] functions = model.getFunctions();
 			CodeData[] classes = model.getClasses();
-//			CodeData[] constants = model.getConstants();
+			//			CodeData[] constants = model.getConstants();
 			Object[] rootsChildren = NO_CHILDREN;
 			if (functions.length > 0 && classes.length > 0 /*&& constants.length > 0*/) {
 				rootsChildren = new Object[classes.length + functions.length + 1];
