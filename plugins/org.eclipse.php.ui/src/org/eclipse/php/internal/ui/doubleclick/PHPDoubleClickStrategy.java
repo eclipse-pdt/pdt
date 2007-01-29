@@ -16,6 +16,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -27,6 +28,7 @@ import org.w3c.dom.Node;
 /**
  * This class was added in order to solve the problem of selecting variable name in the editor.
  * The default behaviour when double-clicking a variable, for instance $myVar, is to make only myVar selected - without the dollar sign.
+ * This class also fixes selection of PHPdoc tags.
  * This class fixes this behaviour.
  * 
  * @author guy.g
@@ -54,8 +56,8 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 									PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
 									tRegion = phpScriptRegion.getPhpToken(caretPosition - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 
-									// Handle double-click on variable:
-									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
+									// Handle double-click on variable or PHPDoc parameters:
+									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE || PHPPartitionTypes.isPHPDocTagState(tRegion.getType())) {
 										structuredTextViewer.setSelectedRange(sdRegion.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart(), tRegion.getTextLength());
 										return; // Stop processing
 									}
