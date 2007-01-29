@@ -72,7 +72,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -1410,17 +1412,28 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					final int sdRegionStart = sdRegion.getStartOffset();
 
 					ITextRegion region = sdRegion.getRegionAtCharacterOffset(start);
-					String elementName = element.getName();
-					if (element instanceof PHPVariableData)
-						elementName = "$" + elementName; //$NON-NLS-1$
-					while (region != null && region.getEnd() + sdRegionStart < start + length) {
-						final String text = sdRegion.getText(region).trim().replaceAll("[\"']+", "");
-						if (elementName.equals(text)) {
-							start = region.getStart() + sdRegionStart;
-							length = region.getTextLength();
-							break;
+					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+						PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
+						try {
+							region = phpScriptRegion.getPhpToken(start - sdRegionStart - phpScriptRegion.getStart());
+							
+							String elementName = element.getName();
+							if (element instanceof PHPVariableData) {
+								elementName = "$" + elementName; //$NON-NLS-1$
+							}
+							
+							while (region.getEnd() != phpScriptRegion.getLength()) {
+								final String text = document.get(sdRegionStart + phpScriptRegion.getStart() + region.getStart(), region.getTextLength()).trim().replaceAll("[\"']+", "");
+								if (elementName.equals(text)) {
+									start = sdRegionStart + phpScriptRegion.getStart() + region.getStart();
+									length = region.getTextLength();
+									break;
+								}
+								region = phpScriptRegion.getPhpToken(region.getEnd());
+							}
+						} catch (BadLocationException e) {
+							PHPUiPlugin.log(e);
 						}
-						region = sdRegion.getRegionAtCharacterOffset(region.getEnd() + sdRegionStart);
 					}
 				}
 			}
