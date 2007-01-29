@@ -17,6 +17,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 import org.w3c.dom.Document;
@@ -69,7 +70,8 @@ public class ElementImplForPhp extends ElementStyleImpl {
 	}
 	
 	public INodeAdapter getExistingAdapter(Object type) {
-		if(((Class)type).getName().equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator") && isPhpTag()){
+		String className = ((Class)type).getName();
+		if((className.equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator") || type == ValidationAdapter.class) && isPhpTag()){
 			return validator;
 		}
 		return super.getExistingAdapter(type);
