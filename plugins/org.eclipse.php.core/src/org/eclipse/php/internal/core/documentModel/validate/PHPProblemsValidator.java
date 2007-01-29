@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
@@ -32,6 +33,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 public class PHPProblemsValidator {
 
 	private static String ID = "org.eclipse.php.core.documentModel.validate.PHPProblemsValidator";
+	private static String PHP_PROBLEM_MARKER_TYPE = PHPCorePlugin.ID + ".phpproblemmarker";
 
 	private static String[] owners = new String[] { ID };
 
@@ -64,6 +66,7 @@ public class PHPProblemsValidator {
 				rullerMarkersAttributes[i] = rullerAddedMarkers[i].getAttributes();
 			}
 			phpFile.deleteMarkers(IMarker.TASK, false, IResource.DEPTH_INFINITE);
+			phpFile.deleteMarkers(PHP_PROBLEM_MARKER_TYPE, false, IResource.DEPTH_INFINITE);
 		} catch (CoreException e1) {
 		}
 		if (markers != null) {
@@ -82,13 +85,7 @@ public class PHPProblemsValidator {
 						UserData userData = task.getUserData();
 						int prio = getPriority(task.getTaskName(), tags, caseSensitive);
 						try {
-							IMarker marker = phpFile.createMarker(IMarker.TASK);
-							marker.setAttribute(IMarker.LINE_NUMBER, userData.getStopLine() + 1);
-							marker.setAttribute(IMarker.CHAR_START, userData.getStartPosition());
-							marker.setAttribute(IMarker.CHAR_END, userData.getEndPosition() + 1);
-							marker.setAttribute(IMarker.MESSAGE, descr);
-							marker.setAttribute(IMarker.PRIORITY, prio);
-							marker.setAttribute(IMarker.USER_EDITABLE, false);
+							createMarker(phpFile, userData, IMarker.TASK, descr, prio);
 						} catch (CoreException e) {
 							// Logger.logException(e);
 						}
@@ -103,7 +100,8 @@ public class PHPProblemsValidator {
 					int lineNo = userData.getStopLine() + 1;
 					mess.setLineNo(lineNo);
 
-					TaskListUtility.addTask(ID, phpFile, String.valueOf(lineNo), null, descr, IMessage.HIGH_SEVERITY, phpFile.getFullPath().toString(), null, -1, -1);
+					int prio = IMarker.PRIORITY_HIGH;
+					createMarker(phpFile, userData, PHP_PROBLEM_MARKER_TYPE, descr, prio);
 				}
 			} catch (CoreException e) {
 				Logger.logException(e);
@@ -123,6 +121,19 @@ public class PHPProblemsValidator {
 					}
 				}
 			}
+		}
+	}
+	
+	private void createMarker(IFile phpFile, UserData userData, String markerType, String descr, int prio) throws CoreException{
+		IMarker marker = phpFile.createMarker(markerType);
+		marker.setAttribute(IMarker.LINE_NUMBER, userData.getStopLine() + 1);
+		marker.setAttribute(IMarker.CHAR_START, userData.getStartPosition());
+		marker.setAttribute(IMarker.CHAR_END, userData.getEndPosition() + 1);
+		marker.setAttribute(IMarker.MESSAGE, descr);
+		marker.setAttribute(IMarker.PRIORITY, prio);
+		marker.setAttribute(IMarker.USER_EDITABLE, false);
+		if (markerType == PHP_PROBLEM_MARKER_TYPE){
+			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 		}
 	}
 
