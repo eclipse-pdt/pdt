@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.core.debugger;
 
 import java.io.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,14 +21,23 @@ import java.util.Map.Entry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableDebuggerInitializer {
 
 	private HashMap systemEnvironmentVariables = null;
+	private ILaunch launch;
+
+	public PHPExecutableDebuggerInitializer(ILaunch launch) throws IOException {
+		this.launch = launch;
+		// Set a launch attribute to indicate that this is an executable launch.
+		initializeSystemEnvironmentVariables();
+	}
 
 	public PHPExecutableDebuggerInitializer() throws IOException {
 		// Set a launch attribute to indicate that this is an executable launch.
@@ -147,7 +157,7 @@ public class PHPExecutableDebuggerInitializer {
 	}
 
 	// the reader reads the output of the process
-	private static class ProcessOutputReader implements Runnable {
+	private class ProcessOutputReader implements Runnable {
 		Process p;
 
 		ProcessOutputReader(Process p) {
@@ -170,7 +180,19 @@ public class PHPExecutableDebuggerInitializer {
 			} catch (IOException exc) {
 				PHPDebugPlugin.log(exc);
 			}
+			// In case this thread ended and we do not have any IDebugTarget (PHPDebugTarget) hooked in the 
+			// launch that was created, we can tell that there is something wrong, and probably there is no debugger
+			// installed (e.g. the deubgger dll/so is not properly configured in the php.ini).
+			if (launch != null && launch.getDebugTarget() == null) {
+				String launchName = launch.getLaunchConfiguration().getName();
+				final String message = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2, new String[] { launchName });
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Error, message);
+						DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+					}
+				});
+			}
 		}
 	}
-
 }

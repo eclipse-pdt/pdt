@@ -57,7 +57,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		try {
 			launch.setAttribute(EXECUTABLE_LAUNCH, "true");
 			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
-			final PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer();
+			final PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
 			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath(), parametersInitializer.generateQuery(launch), envVariables, launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION));
 		} catch (final java.io.IOException e1) {
 			Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e1);

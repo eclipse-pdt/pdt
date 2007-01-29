@@ -35,6 +35,7 @@ public class PHPDebugCoreMessages extends NLS {
     public static String Debugger_InvalidDebugResource;
     public static String Debugger_Error;
     public static String Debugger_Error_Message;
+    public static String Debugger_Error_Message_2;
     
     public static String configurationError;
 
