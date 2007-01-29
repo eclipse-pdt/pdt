@@ -73,8 +73,11 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 					indentationBase = document.getLineInformationOfOffset(tRegion.getStart() + regionStart);
 					break;
 				}
-
-				tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+				if (tRegion.getStart() > 0) {
+					tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+				} else {
+					break;
+				}
 			}
 		}
 
