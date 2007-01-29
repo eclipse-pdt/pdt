@@ -29,9 +29,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
-
 /**
- * Action that encloses the editor's current selection with Java block comment terminators
+ * Action that encloses the editor's current selection with PHP block comment terminators
  * (<code>&#47;&#42;</code> and <code>&#42;&#47;</code>).
  */
 public class AddBlockCommentAction extends BlockCommentAction {
@@ -48,25 +47,36 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	public AddBlockCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);
 	}
-	
+
 	/*
 	 * @see org.eclipse.jdt.internal.ui.actions.BlockCommentAction#runInternal(org.eclipse.jface.text.ITextSelection, org.eclipse.jface.text.IDocumentExtension3, org.eclipse.jdt.internal.ui.actions.BlockCommentAction.Edit.EditFactory)
 	 */
 	protected void runInternal(ITextSelection selection, IDocumentExtension3 docExtension, Edit.EditFactory factory) throws BadLocationException, BadPartitioningException {
-	    int selectionOffset = selection.getOffset();
-	    int selectionEndOffset = selectionOffset + selection.getLength();
-	    List edits = new LinkedList();
-	    ITypedRegion partition = docExtension.getPartition(fDocumentPartitioning, selectionOffset, false);
+		int selectionOffset = selection.getOffset();
+		int selectionEndOffset = selectionOffset + selection.getLength();
+		List edits = new LinkedList();
 
-	    handleFirstPartition(partition, edits, factory, selectionOffset);
+		if (docExtension instanceof IStructuredDocument) {
+			IStructuredDocument sDoc = (IStructuredDocument) docExtension;
+			IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
+			ITextRegion region = sdRegion.getRegionAtCharacterOffset(selectionOffset);
 
-	    while (partition.getOffset() + partition.getLength() < selectionEndOffset) {
-	      partition = handleInteriorPartition(partition, edits, factory, docExtension);
-	    }
+			if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+				PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
+				ITypedRegion partition = PHPPartitionTypes.getPartition(phpScriptRegion, selectionOffset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 
-	    handleLastPartition(partition, edits, factory, selectionEndOffset);
+				int phpRegionStart = sdRegion.getStartOffset() + phpScriptRegion.getStart();
 
-	    executeEdits(edits);
+				handleFirstPartition(partition, edits, factory, selectionOffset, phpRegionStart);
+
+				while (phpRegionStart + partition.getOffset() + partition.getLength() < selectionEndOffset) {
+					partition = handleInteriorPartition(partition, edits, factory, docExtension, phpRegionStart);
+				}
+				handleLastPartition(partition, edits, factory, selectionEndOffset, phpRegionStart);
+			}
+		}
+
+		executeEdits(edits);
 	}
 
 	/**
@@ -75,24 +85,24 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	 * @param partition the partition under the start of the selection
 	 * @param edits the list of edits to later execute
 	 * @param factory the factory for edits
-	 * @param offset the start of the selection, which must lie inside
-	 *        <code>partition</code>
+	 * @param offset the start of the selection, which must lie inside <code>partition</code>
+	 * @param offset where the PHP script region starts
 	 */
-	private void handleFirstPartition(ITypedRegion partition, List edits, Edit.EditFactory factory, int offset) throws BadLocationException {
-		
-	    int partOffset = partition.getOffset();
-	    String partType = partition.getType();
+	private void handleFirstPartition(ITypedRegion partition, List edits, Edit.EditFactory factory, int offset, int phpRegionStart) throws BadLocationException {
 
-	    Assert.isTrue(partOffset <= offset, "illegal partition"); //$NON-NLS-1$
+		int partOffset = partition.getOffset() + phpRegionStart;
+		String partType = partition.getType();
 
-	    // first partition: mark start of comment
-	    if (partType == IDocument.DEFAULT_CONTENT_TYPE || partType == PHPPartitionTypes.PHP_DEFAULT) {
-	      // Java code: right where selection starts
-	      edits.add(factory.createEdit(offset, 0, getCommentStart()));
-	    } else if (isSpecialPartition(partType)) {
-	      // special types: include the entire partition
-	      edits.add(factory.createEdit(partOffset, 0, getCommentStart()));
-	    } // javadoc: no mark, will only start after comment
+		Assert.isTrue(partOffset <= offset, "illegal partition"); //$NON-NLS-1$
+
+		// first partition: mark start of comment
+		if (partType == PHPPartitionTypes.PHP_DEFAULT) {
+			// PHP code: right where selection starts
+			edits.add(factory.createEdit(offset, 0, getCommentStart()));
+		} else if (isSpecialPartition(partType)) {
+			// special types: include the entire partition
+			edits.add(factory.createEdit(partOffset, 0, getCommentStart()));
+		} // PHPDoc: no mark, will only start after comment
 	}
 
 	/**
@@ -114,55 +124,53 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	 * @param factory the edit factory
 	 * @param docExtension the document to get the partitions from
 	 * @return the next partition after the current
-	 * @throws BadLocationException if accessing the document fails - this can
-	 *         only happen if the document gets modified concurrently
-	 * @throws BadPartitioningException if the document does not have a Java
-	 *         partitioning
+	 * @param offset where the PHP script region starts
+	 * @throws BadLocationException if accessing the document fails - this can only happen if the document gets modified concurrently
+	 * @throws BadPartitioningException if the document does not have a PHP partitioning
 	 */
-	private ITypedRegion handleInteriorPartition(ITypedRegion partition, List edits, Edit.EditFactory factory, IDocumentExtension3 docExtension) throws BadPartitioningException, BadLocationException {
+	private ITypedRegion handleInteriorPartition(ITypedRegion partition, List edits, Edit.EditFactory factory, IDocumentExtension3 docExtension, int phpRegionStart) throws BadPartitioningException, BadLocationException {
 
-	    // end of previous partition
-	    String partType = partition.getType();
-	    int partEndOffset = partition.getOffset() + partition.getLength();
-	    int tokenLength = getCommentStart().length();
+		// end of previous partition
+		String partType = partition.getType();
+		int partEndOffset = phpRegionStart + partition.getOffset() + partition.getLength();
+		int tokenLength = getCommentStart().length();
 
-	    boolean wasJavadoc = false; // true if the previous partition is javadoc
+		boolean wasPHPDoc = false; // true if the previous partition is PHPDoc
 
-	    if (partType == PHPPartitionTypes.PHP_DOC) {
+		if (partType == PHPPartitionTypes.PHP_DOC) {
+			wasPHPDoc = true;
+		} else if (partType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
+			// already in a comment - remove ending mark
+			edits.add(factory.createEdit(partEndOffset - tokenLength, tokenLength, "")); //$NON-NLS-1$
+		}
 
-	      wasJavadoc = true;
+		// advance to next partition
+		IStructuredDocument sDoc = (IStructuredDocument) docExtension;
+		IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(partEndOffset);
+		ITextRegion region = sdRegion.getRegionAtCharacterOffset(partEndOffset);
+		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
+			partition = PHPPartitionTypes.getPartition(phpScriptRegion, partEndOffset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+			partType = partition.getType();
+			phpRegionStart = sdRegion.getStartOffset() + phpScriptRegion.getStart();
+		}
 
-	    } else if (partType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
-
-	      // already in a comment - remove ending mark
-	      edits.add(factory.createEdit(partEndOffset - tokenLength, tokenLength, "")); //$NON-NLS-1$
-
-	    }
-
-	    // advance to next partition
-	    partition = docExtension.getPartition(fDocumentPartitioning, partEndOffset, false);
-	    partType = partition.getType();
-
-	    // start of next partition
-	    if (wasJavadoc) {
-
-	      // if previous was javadoc, and the current one is not, then add block comment start
-	      if (partType == IDocument.DEFAULT_CONTENT_TYPE || partType == PHPPartitionTypes.PHP_DEFAULT || isSpecialPartition(partType)) {
-	        edits.add(factory.createEdit(partition.getOffset(), 0, getCommentStart()));
-	      }
-
-	    } else { // !wasJavadoc
-
-	      if (partType == PHPPartitionTypes.PHP_DOC) {
-	        // if next is javadoc, end block comment before
-	        edits.add(factory.createEdit(partition.getOffset(), 0, getCommentEnd()));
-	      } else if (partType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
-	        // already in a comment - remove startToken
-	        edits.add(factory.createEdit(partition.getOffset(), getCommentStart().length(), "")); //$NON-NLS-1$
-	      }
-	    }
-
-	    return partition;
+		// start of next partition
+		if (wasPHPDoc) {
+			// if previous was PHPDoc, and the current one is not, then add block comment start
+			if (partType == PHPPartitionTypes.PHP_DEFAULT || isSpecialPartition(partType)) {
+				edits.add(factory.createEdit(phpRegionStart + partition.getOffset(), 0, getCommentStart()));
+			}
+		} else { // !wasPHPDoc
+			if (partType == PHPPartitionTypes.PHP_DOC) {
+				// if next is PHPDoc, end block comment before
+				edits.add(factory.createEdit(phpRegionStart + partition.getOffset(), 0, getCommentEnd()));
+			} else if (partType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
+				// already in a comment - remove startToken
+				edits.add(factory.createEdit(phpRegionStart + partition.getOffset(), getCommentStart().length(), "")); //$NON-NLS-1$
+			}
+		}
+		return partition;
 	}
 
 	/**
@@ -175,18 +183,18 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	 * @param edits the list of edits to add to
 	 * @param factory the edit factory
 	 * @param endOffset the end offset of the selection
+	 * @param offset where the PHP script region starts
 	 */
-	private void handleLastPartition(ITypedRegion partition, List edits, Edit.EditFactory factory, int endOffset) throws BadLocationException {
+	private void handleLastPartition(ITypedRegion partition, List edits, Edit.EditFactory factory, int endOffset, int phpRegionStart) throws BadLocationException {
+		String partType = partition.getType();
 
-	    String partType = partition.getType();
-
-	    if (partType == IDocument.DEFAULT_CONTENT_TYPE  || partType == PHPPartitionTypes.PHP_DEFAULT) {
-	      // normal java: end comment where selection ends
-	      edits.add(factory.createEdit(endOffset, 0, getCommentEnd()));
-	    } else if (isSpecialPartition(partType)) {
-	      // special types: consume entire partition
-	      edits.add(factory.createEdit(partition.getOffset() + partition.getLength(), 0, getCommentEnd()));
-	    }
+		if (partType == PHPPartitionTypes.PHP_DEFAULT) {
+			// normal PHP: end comment where selection ends
+			edits.add(factory.createEdit(endOffset, 0, getCommentEnd()));
+		} else if (isSpecialPartition(partType)) {
+			// special types: consume entire partition
+			edits.add(factory.createEdit(phpRegionStart + partition.getOffset() + partition.getLength(), 0, getCommentEnd()));
+		}
 	}
 
 	/**
@@ -198,22 +206,22 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	 * @return <code>true</code> if <code>partType</code> is special,
 	 *         <code>false</code> otherwise
 	 */
-	private boolean isSpecialPartition (String partType) {
-	    return partType == PHPPartitionTypes.PHP_QUOTED_STRING || partType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT;
+	private boolean isSpecialPartition(String partType) {
+		return partType == PHPPartitionTypes.PHP_QUOTED_STRING || partType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT;
 	}
 
-	/* (non-Javadoc)
+	/* (non-javadoc)
 	 * @see org.eclipse.php.internal.ui.actions.BlockCommentAction#isValidSelection(org.eclipse.jface.text.ITextSelection, org.eclipse.jface.text.IDocumentExtension3)
 	 */
 	protected boolean isValidSelection(ITextSelection selection, IDocumentExtension3 docExtension) {
 		int offset = selection.getOffset();
 		try {
 			if (docExtension instanceof IStructuredDocument) {
-				IStructuredDocument sDoc = (IStructuredDocument)docExtension;
+				IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(offset);
 				ITextRegion region = sdRegion.getRegionAtCharacterOffset(offset);
 				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-					PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
+					PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
 					region = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 					if (!PHPPartitionTypes.isPHPMultiLineCommentState(region.getType())) {
 						return true;

@@ -48,10 +48,13 @@ public class PHPTextSequenceUtilities {
 	 * @return text sequence of the statement
 	 */
 	public static TextSequence getStatment(int offset, IStructuredDocumentRegion sdRegion, boolean removeComments) {
+		if (offset == sdRegion.getEndOffset()) {
+			offset -= 1;
+		}
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 
 		// This text region must be of type PhpScriptRegion:
-		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
 
 			try {
@@ -138,9 +141,12 @@ public class PHPTextSequenceUtilities {
 			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)tRegion;
 			tRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 			try {
-				while (tRegion.getStart() > 0 && PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
+				while (PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
 					if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_START)) {
 						startRegion = tRegion;
+						break;
+					}
+					if (tRegion.getStart() == 0) {
 						break;
 					}
 					tRegion = phpScriptRegion.getPhpToken(tRegion.getStart()-1);
@@ -159,7 +165,7 @@ public class PHPTextSequenceUtilities {
 			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)tRegion;
 			tRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 			try {
-				while (tRegion.getEnd() != phpScriptRegion.getEnd() && PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
+				while (tRegion.getEnd() != phpScriptRegion.getLength() && PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
 					if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_END)) {
 						endRegion = tRegion;
 						break;
