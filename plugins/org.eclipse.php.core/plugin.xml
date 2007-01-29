@@ -125,5 +125,20 @@
 	<extension point="org.eclipse.core.runtime.preferences">
 	   <initializer class="org.eclipse.php.internal.core.preferences.PHPCorePreferenceInitializer"/>
 	</extension>
+ <extension
+       id="phpproblemmarker"
+       name="PHP Syntax Error"
+       point="org.eclipse.core.resources.markers">
+    <super type="org.eclipse.core.resources.problemmarker"/>
+    <persistent value="true"/>
+    <attribute name="lineNumber"/>
+    <attribute name="charStart"/>
+    <attribute name="charEnd"/>
+    <attribute name="message"/>
+    <attribute name="priority"/>
+    <attribute name="severity"/>
+    <attribute name="userEditable"/>
+    <super type="org.eclipse.core.resources.textmarker"/>
+ </extension>
 
 </plugin>
