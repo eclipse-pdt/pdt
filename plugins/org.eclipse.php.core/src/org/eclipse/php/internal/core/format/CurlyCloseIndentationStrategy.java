@@ -45,8 +45,7 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 		}
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		if (tRegion == null && offset == document.getLength()) {
-			offset -= 1;
-			tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
 		}
 		int regionStart = sdRegion.getStartOffset(tRegion);
 
@@ -74,7 +73,11 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 				} else if (token == PHPRegionTypes.PHP_CURLY_CLOSE) {
 					curlyCount++;
 				}
-				tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+				if (tRegion.getStart() > 0) {
+					tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+				} else {
+					break;
+				}
 			}
 		}
 
