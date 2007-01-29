@@ -51,6 +51,10 @@ public class PHPTextSequenceUtilities {
 			offset -= 1;
 		}
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
+			tRegion = sdRegion.getRegionAtCharacterOffset(sdRegion.getStart() + tRegion.getStart() - 1);
+		}
 
 		// This text region must be of type PhpScriptRegion:
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
