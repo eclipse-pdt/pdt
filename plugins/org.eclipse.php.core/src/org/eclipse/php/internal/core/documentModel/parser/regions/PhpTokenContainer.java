@@ -310,7 +310,7 @@ public class PhpTokenContainer {
 	protected final void checkBadLocation(int offset) throws BadLocationException {
 		ITextRegion lastRegion = getLastToken();
 		if (offset < 0 || lastRegion.getEnd() < offset) {
-			throw new BadLocationException();
+			throw new BadLocationException("offset " + offset + " is out of [0, " + lastRegion.getEnd() + "]");
 		}
 	}
 
@@ -326,7 +326,7 @@ public class PhpTokenContainer {
 		final ListIterator iterator = (ListIterator) lexerStateChanges.iterator();
 
 		LexerStateChange element = (LexerStateChange) iterator.next();
-		while (element.getOffset() <= toOffset) {
+		while (element.getOffset() < toOffset) {
 			if (element.getOffset() > fromOffset && element.getOffset() <= toOffset) {
 				iterator.remove();
 			}

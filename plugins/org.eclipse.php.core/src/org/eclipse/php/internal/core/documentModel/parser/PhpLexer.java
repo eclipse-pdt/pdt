@@ -119,9 +119,24 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 			theState = state;
 			myHeredoc = heredoc;
 		}
-
-		public boolean equals(final Object obj) {
-			return obj != null && obj instanceof HeredocState && ((HeredocState) obj).theState.equals(theState) && ((HeredocState) obj).myHeredoc.equals(myHeredoc);
+		
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (getClass() != obj.getClass())
+				return false;
+			final HeredocState other = (HeredocState) obj;
+			if (myHeredoc == null) {
+				if (other.myHeredoc != null)
+					return false;
+			} else if (!myHeredoc.equals(other.myHeredoc))
+				return false;
+			if (theState == null) {
+				if (other.theState != null)
+					return false;
+			} else if (!theState.equals(other.theState))
+				return false;
+			return true;
 		}
 
 		public boolean equalsCurrentStack(final LexerState obj) {
