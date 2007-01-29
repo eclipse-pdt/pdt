@@ -50,28 +50,30 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	// go backward and look for any region except comment region or white space region 
 	// in the given line
 	private ITextRegion getLastTokenRegion(final IStructuredDocument document, final IRegion line, final int forOffset) throws BadLocationException {
-
+		int offset = forOffset;
 		int lineStartOffset = line.getOffset();
-		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(forOffset);
+		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 		if (sdRegion == null) {
 			return null;
 		}
 
-		// in 'case default' indentation case we move one char back to avoid 
-		// the first 'case' or 'default' region 
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(forOffset);
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		if (tRegion == null && offset == document.getLength()) {
+			offset -= 1;
+			tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		}
 		int regionStart = sdRegion.getStartOffset(tRegion);
 
 		// in case of container we have the extract the PhpScriptRegion
 		if (tRegion instanceof ITextRegionContainer) {
 			ITextRegionContainer container = (ITextRegionContainer) tRegion;
-			tRegion = container.getRegionAtCharacterOffset(forOffset);
+			tRegion = container.getRegionAtCharacterOffset(offset);
 			regionStart += tRegion.getStart();
 		}
 
 		if (tRegion instanceof PhpScriptRegion) {
 			PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
-			tRegion = scriptRegion.getPhpToken(forOffset - regionStart);
+			tRegion = scriptRegion.getPhpToken(offset - regionStart);
 
 			if (tRegion == null)
 				return null;
@@ -143,7 +145,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		}
 	}
 
-	boolean shouldIndent(final IStructuredDocument document, final int offset, final int lineNumber) {
+	boolean shouldIndent(final IStructuredDocument document, int offset, final int lineNumber) {
 		try {
 			final IRegion lineInfo = document.getLineInformation(lineNumber);
 
@@ -157,6 +159,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return true;
 
 			ITextRegion scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			if (scriptRegion == null && offset == document.getLength()) {
+				offset -= 1;
+				scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			}
 			int regionStart = sdRegion.getStartOffset(scriptRegion);
 			// in case of container we have the extract the PhpScriptRegion
 			if (scriptRegion instanceof ITextRegionContainer) {

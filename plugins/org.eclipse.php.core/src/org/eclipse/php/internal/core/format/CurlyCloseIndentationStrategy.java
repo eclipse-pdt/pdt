@@ -44,6 +44,10 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 			return null;
 		}
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		if (tRegion == null && offset == document.getLength()) {
+			offset -= 1;
+			tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		}
 		int regionStart = sdRegion.getStartOffset(tRegion);
 
 		// in case of container we have the extract the PhpScriptRegion

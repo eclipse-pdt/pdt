@@ -29,9 +29,18 @@ public class FormatterUtils {
 			if (sdRegion == null) {
 				return null;
 			}
-			// in 'case default' indentation case we move one char back to avoid 
-			// the first 'case' or 'default' region 
+
 			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			if (tRegion == null && offset == document.getLength()) {
+				offset -= 1;
+				tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			}
+			// in case the cursor on the beginning of '?>' tag
+			// we decrease the offset to get the PhpScriptRegion 
+			if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
+				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
+			}
+			
 			int regionStart = sdRegion.getStartOffset(tRegion);
 
 			// in case of container we have the extract the PhpScriptRegion
