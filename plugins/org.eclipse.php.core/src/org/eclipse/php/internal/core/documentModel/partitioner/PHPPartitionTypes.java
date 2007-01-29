@@ -54,6 +54,27 @@ public abstract class PHPPartitionTypes {
 	}
 
 	/**
+	 * Returns starting region of the current partition
+	 * @param region Region containing current offset
+	 * @param offset Current position relative to the containing region
+	 * @return Starting region of the current partition
+	 * @throws BadLocationException
+	 */	
+	public static final ITextRegion getPartitionStartRegion(PhpScriptRegion region, int offset) throws BadLocationException {
+		String partitionType = region.getPartition(offset);
+		ITextRegion internalRegion = region.getPhpToken(offset);
+		ITextRegion startRegion = internalRegion;
+		while (internalRegion.getStart() != 0) {
+			internalRegion = region.getPhpToken(internalRegion.getStart() - 1);
+			if (region.getPartition(internalRegion.getStart()) != partitionType) {
+				break;
+			}
+			startRegion = internalRegion;
+		}
+		return startRegion;
+	}
+	
+	/**
 	 * Returns offset where the current partition starts
 	 * @param region Region containing current offset
 	 * @param offset Current position relative to the containing region
@@ -61,21 +82,29 @@ public abstract class PHPPartitionTypes {
 	 * @throws BadLocationException
 	 */
 	public static final int getPartitionStart(PhpScriptRegion region, int offset) throws BadLocationException {
+		ITextRegion startRegion = getPartitionStartRegion(region, offset);
+		return startRegion.getStart();
+	}
+	
+	/**
+	 * Returns region current partition ends on
+	 * @param region Region containing current offset
+	 * @param offset Current position relative to the containing region
+	 * @return Ending region of the current partition
+	 * @throws BadLocationException
+	 */
+	public static final ITextRegion getPartitionEndRegion(PhpScriptRegion region, int offset) throws BadLocationException {
 		String partitionType = region.getPartition(offset);
 		ITextRegion internalRegion = region.getPhpToken(offset);
-		ITextRegion startRegion;
-		do {
-			startRegion = internalRegion;
-			internalRegion = region.getPhpToken(internalRegion.getStart() - 1);
+		ITextRegion endRegion = internalRegion;
+		while (internalRegion.getEnd() != region.getLength()) {
+			internalRegion = region.getPhpToken(internalRegion.getEnd());
 			if (region.getPartition(internalRegion.getStart()) != partitionType) {
 				break;
 			}
-			if (internalRegion.getStart() == 0) {
-				startRegion = internalRegion;
-				break;
-			}
-		} while (true);
-		return startRegion.getStart();
+			endRegion = internalRegion;
+		}
+		return endRegion;
 	}
 	
 	/**
@@ -86,20 +115,7 @@ public abstract class PHPPartitionTypes {
 	 * @throws BadLocationException
 	 */
 	public static final int getPartitionEnd(PhpScriptRegion region, int offset) throws BadLocationException {
-		String partitionType = region.getPartition(offset);
-		ITextRegion internalRegion = region.getPhpToken(offset);
-		ITextRegion endRegion;
-		do {
-			endRegion = internalRegion;
-			internalRegion = region.getPhpToken(internalRegion.getEnd());
-			if (region.getPartition(internalRegion.getStart()) != partitionType) {
-				break;
-			}
-			if (internalRegion.getEnd() == region.getLength()) {
-				endRegion = internalRegion;
-				break;
-			}
-		} while (true);
+		ITextRegion endRegion = getPartitionEndRegion(region, offset);
 		return endRegion.getEnd();
 	}
 	
