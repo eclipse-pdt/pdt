@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.parser.regions;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
@@ -39,7 +35,7 @@ public class PhpTokenContainer {
 	// this iterator follows the localization principle 
 	// i.e. the user usually works in the same area of the document 
 	protected ListIterator tokensIterator = null;
-
+	
 	/**
 	 * find token for a given location 
 	 * @param offset
@@ -229,6 +225,20 @@ public class PhpTokenContainer {
 
 		return tokensIterator;
 	}
+	/**
+	 * @return the whole tokens as an array 
+	 */
+	public ITextRegion[] getPhpTokens() {
+		return (ITextRegion[]) phpTokens.toArray(new ITextRegion[phpTokens.size()]);
+	}
+
+	/**
+	 * Clears the containers
+	 */
+	public void reset() {
+		this.phpTokens.clear();
+		this.lexerStateChanges.clear();
+	}
 
 	/**
 	 * Push region to the end of the tokens list
@@ -255,22 +265,6 @@ public class PhpTokenContainer {
 			final ContextRegion contextRegion = new ContextRegion(yylex, start, yylengthLength, yylength);
 			phpTokens.addLast(contextRegion);
 		}
-
-	}
-
-	/**
-	 * @return the whole tokens as an array 
-	 */
-	public ITextRegion[] getPhpTokens() {
-		return (ITextRegion[]) phpTokens.toArray(new ITextRegion[phpTokens.size()]);
-	}
-
-	/**
-	 * Clears the containers
-	 */
-	public void reset() {
-		this.phpTokens.clear();
-		this.lexerStateChanges.clear();
 	}
 
 	/**

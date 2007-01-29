@@ -12,10 +12,7 @@ package org.eclipse.php.internal.core.documentModel.parser.regions;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.ListIterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.BadLocationException;
@@ -26,7 +23,6 @@ import org.eclipse.php.internal.core.documentModel.parser.PhpLexer5;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
-import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.Logger;
@@ -41,7 +37,7 @@ public class PhpScriptRegion extends ForeignRegion {
 
 	private final PhpTokenContainer tokensContaier = new PhpTokenContainer();
 	private final IProject project;
-
+	
 	public PhpScriptRegion(String newContext, int newStart, int newTextLength, int newLength, final String initialScript, IProject project) {
 		super(newContext, newStart, newTextLength, newLength, "PHP Script");
 
@@ -127,17 +123,18 @@ public class PhpScriptRegion extends ForeignRegion {
 
 		final PhpTokenContainer newContainer = new PhpTokenContainer();
 		final PhpLexer phpLexer = getPhpLexer(project, getStream(newText, newTokenOffset), startState);
+
+		Object state = startState;
 		try {
-			Object state = startState;
-			String yylex = phpLexer.yylex();
+			String yylex = phpLexer.getNextToken();
 			int yylength;
-			final int toOffset = Math.max(offset + length, tokenEnd.getEnd());
-			while (yylex != null && newTokenOffset <= toOffset) {
-				yylength = phpLexer.yylength();
+			final int toOffset = offset + length;
+			while (yylex != null && (newTokenOffset <= toOffset || yylex == PHPRegionTypes.WHITESPACE)) {
+				yylength = phpLexer.getLength();
 				newContainer.addLast(yylex, newTokenOffset, yylength, yylength, state);
 				newTokenOffset += yylength;
 				state = phpLexer.createLexicalStateMemento();
-				yylex = phpLexer.yylex();
+				yylex = phpLexer.getNextToken();
 			}
 		} catch (IOException e) {
 			Logger.logException(e);
@@ -148,7 +145,7 @@ public class PhpScriptRegion extends ForeignRegion {
 		// 2. adjust next regions start location
 		// 3. update state changes
 		final int size = length - deletedLength;
-		if (phpLexer.yystate() == endState.getTopState()) {
+		if (state.equals(endState)) {
 			// 1. replace the regions
 			final ListIterator oldIterator = tokensContaier.removeSubList(tokenStart, tokenEnd);
 			ITextRegion[] newTokens = newContainer.getPhpTokens(); // now, add the new ones
@@ -168,7 +165,7 @@ public class PhpScriptRegion extends ForeignRegion {
 		}
 		return false;
 	}
-
+	
 	private boolean startQuoted(final String text) {
 		final int length = text.length();
 		if (length == 0) {
@@ -177,7 +174,8 @@ public class PhpScriptRegion extends ForeignRegion {
 
 		boolean isOdd = false;
 		for (int index = 0; index < length; index++) {
-			if (text.charAt(index) == '"') {
+			final char charAt = text.charAt(index);
+			if (charAt == '"' || charAt == '\'') {
 				isOdd = !isOdd;
 			}
 		}
@@ -207,6 +205,7 @@ public class PhpScriptRegion extends ForeignRegion {
 			lexer = new PhpLexer4(stream);
 		}
 		lexer.initialize(PhpLexer.ST_PHP_IN_SCRIPTING);
+		lexer.setPatterns(project);
 
 		// set the wanted state
 		if (startState != null) {
@@ -232,14 +231,14 @@ public class PhpScriptRegion extends ForeignRegion {
 		this.tokensContaier.reset();
 		try {
 			Object state = lexer.createLexicalStateMemento();
-			String yylex = lexer.yylex();
+			String yylex = lexer.getNextToken();
 			int yylength;
 			while (yylex != null) {
-				yylength = lexer.yylength();
+				yylength = lexer.getLength();
 				this.tokensContaier.addLast(yylex, start, yylength, yylength, state);
 				start += yylength;
 				state = lexer.createLexicalStateMemento();
-				yylex = lexer.yylex();
+				yylex = lexer.getNextToken();
 			}
 		} catch (IOException e) {
 			Logger.logException(e);
@@ -265,67 +264,5 @@ public class PhpScriptRegion extends ForeignRegion {
 
 	private final InputStream getStream(final String initialScript) {
 		return getStream(initialScript, 0);
-	}
-
-	/**
-	 *
-	 * TODO: shold be re-write to find todo list
-	 * 
-	 * 
-	 * 
-	 */
-
-	private void checkForTodo(String token, int commentStart, int commentLength, String comment) {
-		ArrayList matchers = createMatcherList(comment);
-		int startPosition = 0;
-
-		Matcher matcher = getMinimalMatcher(matchers, startPosition);
-		ITextRegion tRegion = null;
-		while (matcher != null) {
-			int startIndex = matcher.start();
-			int endIndex = matcher.end();
-			if (startIndex != startPosition) {
-				tRegion = null; // new PHPContentRegion(commentStart + startPosition, startIndex - startPosition, startIndex - startPosition, token);
-				// storedPhpTokens.add(tRegion);
-			}
-			tRegion = new ContextRegion(PHPRegionTypes.TASK, commentStart + startIndex, endIndex - startIndex, endIndex - startIndex);
-			//			storedPhpTokens.add(tRegion);
-			startPosition = endIndex;
-			matcher = getMinimalMatcher(matchers, startPosition);
-		}
-		tRegion = new ContextRegion(token, commentStart + startPosition, commentLength - startPosition, commentLength - startPosition);
-		//		storedPhpTokens.add(tRegion);
-	}
-
-	private ArrayList createMatcherList(String content) {
-		Pattern[] todos = null;
-		//		if (project != null) {
-		//			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
-		//		} else {
-		//			todos = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
-		//		}
-		ArrayList list = new ArrayList(todos.length);
-		for (int i = 0; i < todos.length; i++) {
-			list.add(i, todos[i].matcher(content));
-		}
-		return list;
-	}
-
-	private Matcher getMinimalMatcher(ArrayList matchers, int startPosition) {
-		Matcher minimal = null;
-		int size = matchers.size();
-		for (int i = 0; i < size;) {
-			Matcher tmp = (Matcher) matchers.get(i);
-			if (tmp.find(startPosition)) {
-				if (minimal == null || tmp.start() < minimal.start()) {
-					minimal = tmp;
-				}
-				i++;
-			} else {
-				matchers.remove(i);
-				size--;
-			}
-		}
-		return minimal;
 	}
 }

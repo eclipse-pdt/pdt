@@ -78,4 +78,8 @@ public abstract class PHPPartitionTypes {
 		}
 		return internalRegion.getEnd();
 	}
+
+	public static boolean isPHPDocCommentState(String type) {
+		return type == PHPRegionTypes.PHPDOC_COMMENT;
+	}	
 }

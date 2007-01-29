@@ -12,11 +12,21 @@ package org.eclipse.php.internal.core.documentModel.parser;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.text.Segment;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	private class BasicLexerState implements LexerState {
@@ -353,12 +363,131 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	public abstract void yybegin(int newState);
 
 	public abstract int yylength();
-	
-    public abstract String yytext();
-    
-    public int yystart() {
-    	return getYy_startRead(); 
-    }   
-    
-    public abstract int yystate();
+
+	public abstract String yytext();
+
+	public int yystart() {
+		return getYy_startRead();
+	}
+
+	public abstract int yystate();
+
+	public LinkedList bufferedTokens = null;
+	public int bufferedLength;
+
+	/**
+	 * @return the next token from the php lexer
+	 * @throws IOException
+	 */
+	public String getNextToken() throws IOException {
+		if (bufferedTokens != null) {
+			if (bufferedTokens.isEmpty()) {
+				bufferedTokens = null;
+			} else {
+				return removeFromBuffer();
+			}			
+		}
+
+		String yylex;
+		yylex = yylex();
+		final int start = yystart();
+		if (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
+			final StringBuffer buffer = new StringBuffer();
+			int length = 0;
+			while (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
+				buffer.append(yytext());
+				yylex = yylex();
+				length++; 
+			}
+			bufferedTokens = new LinkedList();
+			checkForTodo(bufferedTokens, PHPRegionTypes.PHPDOC_COMMENT, start, length, buffer.toString());
+			bufferedTokens.add(new ContextRegion(yylex, start + length, yylength(), yylength()));
+			yylex = removeFromBuffer();
+		}
+		else if (PHPPartitionTypes.isPHPCommentState(yylex)) {
+			bufferedTokens = new LinkedList();
+			checkForTodo(bufferedTokens, yylex, start, yylength(), yytext());
+			yylex = removeFromBuffer();
+		}
+		return yylex;
+	}
+
+	/**
+	 * @return the last token from buffer
+	 */
+	private String removeFromBuffer() {
+		ITextRegion region = (ITextRegion) bufferedTokens.removeFirst();
+		bufferedLength = region.getLength();
+		return region.getType();
+	}
+
+	public int getLength() {
+		return bufferedTokens == null ? yylength() : bufferedLength;
+	}
+
+	private Pattern[] todos;
+
+	public void setPatterns(IProject project) {
+		if (project != null) {
+			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
+		} else {
+			todos = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
+		}
+	}
+
+	/**
+	 * @param bufferedTokens2 
+	 * @param token
+	 * @param commentStart
+	 * @param commentLength
+	 * @param comment
+	 * @return a list of todo ITextRegion
+	 */
+	private void checkForTodo(List result, String token, int commentStart, int commentLength, String comment) {
+		ArrayList matchers = createMatcherList(comment);
+		int startPosition = 0;
+
+		Matcher matcher = getMinimalMatcher(matchers, startPosition);
+		ITextRegion tRegion = null;
+		while (matcher != null) {
+			int startIndex = matcher.start();
+			int endIndex = matcher.end();
+			if (startIndex != startPosition) {
+				tRegion = new ContextRegion(token, commentStart + startPosition, startIndex - startPosition, startIndex - startPosition);
+				result.add(tRegion);
+			}
+			tRegion = new ContextRegion(PHPRegionTypes.TASK, commentStart + startIndex, endIndex - startIndex, endIndex - startIndex);
+			result.add(tRegion);
+			startPosition = endIndex;
+			matcher = getMinimalMatcher(matchers, startPosition);
+		}
+		final int length = commentLength - startPosition;
+		result.add(new ContextRegion(token, commentStart + startPosition, length, length));
+	}
+
+	private ArrayList createMatcherList(String content) {
+		ArrayList list = new ArrayList(todos.length);
+		for (int i = 0; i < todos.length; i++) {
+			list.add(i, todos[i].matcher(content));
+		}
+		return list;
+	}
+
+	private Matcher getMinimalMatcher(ArrayList matchers, int startPosition) {
+		Matcher minimal = null;
+		int size = matchers.size();
+		for (int i = 0; i < size;) {
+			Matcher tmp = (Matcher) matchers.get(i);
+			if (tmp.find(startPosition)) {
+				if (minimal == null || tmp.start() < minimal.start()) {
+					minimal = tmp;
+				}
+				i++;
+			} else {
+				matchers.remove(i);
+				size--;
+			}
+		}
+		return minimal;
+	}
 }
