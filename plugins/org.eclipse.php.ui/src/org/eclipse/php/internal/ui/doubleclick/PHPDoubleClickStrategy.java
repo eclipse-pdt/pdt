@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.doubleclick;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -31,51 +35,45 @@ import org.w3c.dom.Node;
 public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 
 	public void doubleClicked(ITextViewer textViewer) {
-		IStructuredModel structuredModel = null;
-		if (!(textViewer instanceof StructuredTextViewer)) {
-			super.doubleClicked(textViewer);
-			return;
-		}
-		StructuredTextViewer structuredTextViewer = (StructuredTextViewer) textViewer;
-		try {
-			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(structuredTextViewer.getDocument());
+		if (textViewer instanceof StructuredTextViewer) {
+			StructuredTextViewer structuredTextViewer = (StructuredTextViewer) textViewer;
+			IStructuredModel structuredModel = null;
+			try {
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(structuredTextViewer.getDocument());
+				if (structuredModel != null) {
+					int caretPosition = textViewer.getSelectedRange().x;
+					if (caretPosition > 0) {
+						Node node = (Node) structuredModel.getIndexedRegion(caretPosition);
+						if (node != null) {
+							IStructuredDocumentRegion sdRegion = structuredModel.getStructuredDocument().getRegionAtCharacterOffset(caretPosition);
+							if (sdRegion != null) {
+								ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(caretPosition);
 
-			if (structuredModel == null) {
-				super.doubleClicked(textViewer);
-				return;
-			}
-			int caretPosition = textViewer.getSelectedRange().x;
-			if (caretPosition < 0) {
-				super.doubleClicked(textViewer);
-				return;
-			}
+								// We should always hit the PhpScriptRegion:
+								if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+									PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
+									tRegion = phpScriptRegion.getPhpToken(caretPosition - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 
-			Node node = (Node) structuredModel.getIndexedRegion(caretPosition);
-			if (node == null) {
-				super.doubleClicked(textViewer);
-				return;
+									// Handle double-click on variable:
+									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
+										structuredTextViewer.setSelectedRange(sdRegion.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart(), tRegion.getTextLength());
+										return; // Stop processing
+									}
+								}
+							}
+						}
+					}
+				}
+			} catch (BadLocationException e) {
+				PHPUiPlugin.log(e);
+			} finally {
+				if (structuredModel != null) {
+					structuredModel.releaseFromRead();
+				}
 			}
-
-			IStructuredDocumentRegion sdRegion = structuredModel.getStructuredDocument().getRegionAtCharacterOffset(caretPosition);
-			if (sdRegion == null) {
-				super.doubleClicked(textViewer);
-				return;
-			}
-			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(caretPosition);
-			if (tRegion == null) {
-				super.doubleClicked(textViewer);
-				return;
-			}
-			if(tRegion.getType() == PHPRegionTypes.PHP_VARIABLE){
-				structuredTextViewer.setSelectedRange(sdRegion.getStartOffset() + tRegion.getStart(), tRegion.getTextLength());
-			} else {
-				super.doubleClicked(textViewer);				
-			}
-		} finally {
-			if (structuredModel != null)
-				structuredModel.releaseFromRead();
 		}
 
+		// We reach here only if there was an error or one of conditions hasn't met our requirements:
+		super.doubleClicked(textViewer);
 	}
-
 }
