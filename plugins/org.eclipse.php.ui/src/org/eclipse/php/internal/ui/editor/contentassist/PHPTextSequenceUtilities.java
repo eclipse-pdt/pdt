@@ -22,6 +22,8 @@ import org.eclipse.php.internal.ui.editor.util.TextSequence;
 import org.eclipse.php.internal.ui.editor.util.TextSequenceUtilities;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPTextSequenceUtilities {
 
@@ -53,8 +55,14 @@ public class PHPTextSequenceUtilities {
 		}
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(documentOffset);
 		
+		ITextRegionCollection container = sdRegion;
+		
+		if(tRegion instanceof ITextRegionContainer){
+			container = (ITextRegionContainer)tRegion;
+			tRegion = container.getRegionAtCharacterOffset(offset);
+		}
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-			tRegion = sdRegion.getRegionAtCharacterOffset(sdRegion.getStart() + tRegion.getStart() - 1);
+			tRegion = container.getRegionAtCharacterOffset(container.getStartOffset() + tRegion.getStart() - 1);
 		}
 
 		// This text region must be of type PhpScriptRegion:
@@ -63,10 +71,10 @@ public class PHPTextSequenceUtilities {
 
 			try {
 				//	Set default starting position to the beginning of the PhpScriptRegion:
-				int startOffset = sdRegion.getStartOffset() + phpScriptRegion.getStart();
+				int startOffset = container.getStartOffset() + phpScriptRegion.getStart();
 
 				// Now, search backwards for the statement start (in this PhpScriptRegion):
-				ITextRegion startTokenRegion = phpScriptRegion.getPhpToken(documentOffset - sdRegion.getStartOffset() - phpScriptRegion.getStart() - 1);
+				ITextRegion startTokenRegion = phpScriptRegion.getPhpToken(documentOffset - startOffset - 1);
 				while (true) {
 					// If statement start is at the beginning of the PHP script region: 
 					if (startTokenRegion.getStart() == 0) {

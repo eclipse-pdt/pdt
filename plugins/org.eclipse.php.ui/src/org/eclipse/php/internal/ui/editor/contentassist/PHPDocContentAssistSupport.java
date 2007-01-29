@@ -36,6 +36,8 @@ import org.eclipse.php.internal.ui.editor.util.TextSequenceUtilities;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
@@ -89,6 +91,12 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			textRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		}
 
+		ITextRegionCollection container = sdRegion;
+		if (textRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) textRegion;
+			textRegion = container.getRegionAtCharacterOffset(offset - sdRegion.getStartOffset(textRegion));
+		}
+		
 		if (textRegion == null)
 			return;
 
@@ -97,7 +105,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		}
 		
 		PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
-		int internalOffset = offset-sdRegion.getStartOffset()-phpScriptRegion.getStart();
+		int internalOffset = offset-container.getStartOffset()-phpScriptRegion.getStart();
 		
 		String partitionType = phpScriptRegion.getPartition(internalOffset);
 		if (partitionType == PHPPartitionTypes.PHP_DOC){

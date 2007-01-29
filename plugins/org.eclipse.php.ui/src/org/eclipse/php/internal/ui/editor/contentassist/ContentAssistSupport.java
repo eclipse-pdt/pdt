@@ -41,6 +41,8 @@ import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
@@ -191,6 +193,13 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (textRegion == null)
 			return;
 
+		ITextRegionCollection container = sdRegion;
+		
+		if(textRegion instanceof ITextRegionContainer){
+			container = (ITextRegionContainer)textRegion;
+			textRegion = container.getRegionAtCharacterOffset(offset);
+		}
+		
 		if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
 			return;
 		}
@@ -206,13 +215,13 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		// find the start String for completion
-		int startOffset = sdRegion.getStartOffset(textRegion);
+		int startOffset = container.getStartOffset(textRegion);
 
 		//in case we are standing at the beginning of a word and asking for completion 
 		//should not take into account the found region
 		//find the previous region and update the start offset
 		if (startOffset == offset) {
-			ITextRegion preTextRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
+			ITextRegion preTextRegion = container.getRegionAtCharacterOffset(offset - 1);
 			IStructuredDocumentRegion preSdRegion = null;
 			if (preTextRegion != null || ((preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null)) {
 				if (preTextRegion.getType() == "") {
@@ -228,7 +237,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		ContextRegion internalPHPRegion = null;
 		if (textRegion instanceof PhpScriptRegion) {
 			phpScriptRegion = (PhpScriptRegion) textRegion;
-			internalOffset = offset - sdRegion.getStartOffset() - phpScriptRegion.getStart();
+			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
 			//if we are at the begining of multi-line comment or docBlock then we should get completion.
@@ -247,10 +256,11 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			internalPHPRegion = (ContextRegion) phpScriptRegion.getPhpToken(internalOffset);
 		}
 
+		IStructuredDocument document = sdRegion.getParentDocument();
 		// if there is no project model (the file is not part of a project)
 		// complete with language model only 
 		if (fileData == null || phpScriptRegion == null) {
-			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, sdRegion, phpScriptRegion, internalPHPRegion, isStrict);
+			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, container, phpScriptRegion, internalPHPRegion, document, isStrict);
 			return;
 		}
 
@@ -262,7 +272,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 		}
 
-		if (isPHPSingleQuote(sdRegion, phpScriptRegion, internalPHPRegion, offset) || isLineComment(sdRegion, phpScriptRegion, offset)) {
+		if (isPHPSingleQuote(container, phpScriptRegion, internalPHPRegion, document, offset) || isLineComment(container, phpScriptRegion, offset)) {
 			// we dont have code completion inside single quotes.
 			return;
 		}
@@ -294,7 +304,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 		}
 
-		int line = sdRegion.getParentDocument().getLineOfOffset(offset);
+		int line = document.getLineOfOffset(offset);
 		if (isClassFunctionCompletion(projectModel, fileName, statmentText, offset, line, selectionLength, lastWord, startPosition, haveSpacesAtEnd, explicit, isStrict)) {
 			// the current position is in class function.
 			return;
@@ -320,9 +330,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		if (haveSpacesAtEnd) {
-			getRegularCompletion(viewer, projectModel, fileName, "", offset, selectionLength, explicit, sdRegion, phpScriptRegion, internalPHPRegion, isStrict);
+			getRegularCompletion(viewer, projectModel, fileName, "", offset, selectionLength, explicit, container, phpScriptRegion, internalPHPRegion, document, isStrict);
 		} else {
-			getRegularCompletion(viewer, projectModel, fileName, lastWord, offset, selectionLength, explicit, sdRegion, phpScriptRegion, internalPHPRegion, isStrict);
+			getRegularCompletion(viewer, projectModel, fileName, lastWord, offset, selectionLength, explicit, container, phpScriptRegion, internalPHPRegion, document, isStrict);
 		}
 
 		return;
@@ -333,7 +343,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return functionsData != null && functionsData.length > 0;
 	}
 
-	protected boolean isLineComment(IStructuredDocumentRegion sdRegion, PhpScriptRegion phpScriptRegion, int offset) {
+	protected boolean isLineComment(ITextRegionCollection sdRegion, PhpScriptRegion phpScriptRegion, int offset) {
 		int relativeOffset = offset - sdRegion.getStartOffset(phpScriptRegion);
 		try {
 			return phpScriptRegion.isLineComment(relativeOffset);
@@ -343,7 +353,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 	}
 
-	protected boolean isPHPSingleQuote(IStructuredDocumentRegion sdRegion, PhpScriptRegion phpScriptRegion, ContextRegion internalRegion, int documentOffset) {
+	protected boolean isPHPSingleQuote(ITextRegionCollection sdRegion, PhpScriptRegion phpScriptRegion, ContextRegion internalRegion, IStructuredDocument document, int documentOffset) {
 		if (PHPPartitionTypes.isPHPQuotesState(internalRegion.getType())) {
 			char firstChar;
 			int startOffset;
@@ -351,7 +361,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			try {
 				startOffset = internalRegion.getStart() + sdRegion.getStartOffset(phpScriptRegion);
 				endOffset = startOffset + internalRegion.getTextLength();
-				firstChar = sdRegion.getParentDocument().get(startOffset, internalRegion.getTextLength()).charAt(0);
+				firstChar = document.get(startOffset, internalRegion.getTextLength()).charAt(0);
 			} catch (BadLocationException e) {
 				Logger.logException(e);
 				return false;
@@ -398,8 +408,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return true;
 	}
 
-	protected void getRegularCompletion(final ITextViewer viewer, final PHPProjectModel projectModel, final String fileName, String startsWith, final int offset, final int selectionLength, boolean explicit, final IStructuredDocumentRegion sdRegion, final ITextRegion tRegion,
-			final ContextRegion internalPhpRegion, boolean isStrict) {
+	protected void getRegularCompletion(final ITextViewer viewer, final PHPProjectModel projectModel, final String fileName, String startsWith, final int offset, final int selectionLength, boolean explicit, final ITextRegionCollection sdRegion, final ITextRegion tRegion,
+			final ContextRegion internalPhpRegion, IStructuredDocument document, boolean isStrict) {
 		if (!explicit && startsWith.length() == 0)
 			return;
 
@@ -410,7 +420,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				if (!explicit && !autoShowVariables)
 					return;
 				if (PHPPartitionTypes.isPHPQuotesState(type)) {
-					final IStructuredDocument doc = sdRegion.getParentDocument();
+					final IStructuredDocument doc = document;
 					try {
 						final char charBefore = doc.get(offset - 2, 1).charAt(0);
 						if (charBefore == '\\')
@@ -462,7 +472,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				classes = projectModel.getClasses();
 
 		CodeData[] mergeData = null;
-		if (shouldAddPHPTag(sdRegion.getParentDocument(), offset, startsWith))
+		if (shouldAddPHPTag(document, offset, startsWith))
 			mergeData = phpTagDataArray;
 
 		mergeData = ModelSupport.merge(keywords, mergeData);
