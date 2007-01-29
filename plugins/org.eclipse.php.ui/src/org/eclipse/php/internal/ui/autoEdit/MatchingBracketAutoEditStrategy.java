@@ -179,8 +179,11 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 						} else if (regionType == PHPRegionTypes.PHP_CURLY_OPEN || regionType == PHPRegionTypes.PHP_CURLY_CLOSE) {
 							return MATCHING_BRACKET_NOT_NEEDED;
 						}
-
-						tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+						if (tRegion.getStart() > 0) {
+							tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+						} else {
+							break;
+						}
 					}
 				}
 
