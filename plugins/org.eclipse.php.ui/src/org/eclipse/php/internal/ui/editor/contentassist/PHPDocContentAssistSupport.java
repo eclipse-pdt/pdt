@@ -16,6 +16,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -91,7 +92,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		if (textRegion == null)
 			return;
 
-		if (textRegion.getType() == PHPRegionTypes.PHP_CLOSETAG) { // dont provide completion if staying after PHP close tag.
+		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) { // dont provide completion if staying after PHP close tag.
 			return;
 		}
 		
