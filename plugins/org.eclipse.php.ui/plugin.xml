@@ -1368,5 +1368,11 @@
             objectClass="org.eclipse.core.resources.IResource"
             state="true"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.ide.markerSupport">
+      <markerTypeCategory name="%PhpProblemFilterCategory.name">
+         <markerTypeReference id="org.eclipse.php.core.phpproblemmarker"/>
+      </markerTypeCategory>
+   </extension>
    
 </plugin>
