@@ -13,49 +13,47 @@ package org.eclipse.php.internal.core.format;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class FormatterUtils {
 	private static PHPStructuredTextPartitioner partitioner = new PHPStructuredTextPartitioner();
 
 	public static String getPartitionType(IStructuredDocument document, int offset, boolean perferOpenPartitions) {
+		try {
+			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+			if (sdRegion == null) {
+				return null;
+			}
+			// in 'case default' indentation case we move one char back to avoid 
+			// the first 'case' or 'default' region 
+			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			int regionStart = sdRegion.getStartOffset(tRegion);
+
+			// in case of container we have the extract the PhpScriptRegion
+			if (tRegion != null && tRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) tRegion;
+				tRegion = container.getRegionAtCharacterOffset(offset);
+				regionStart += tRegion.getStart();
+			}
+
+			if (tRegion != null && tRegion instanceof PhpScriptRegion) {
+				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+				return scriptRegion.getPartition(offset - regionStart);
+			}
+		} catch (final BadLocationException e) {
+		}
 		partitioner.connect(document);
+
 		return partitioner.getContentType(offset, perferOpenPartitions);
 	}
 
 	public static String getPartitionType(IStructuredDocument document, int offset) {
 		return getPartitionType(document, offset, false);
-	}
-
-	/**
-	 * This functions checks if an offset is right before/next a partition, if so then the offset bellongs to the before/next partition
-	 */
-	private static String checkBounds(IStructuredDocumentRegion sdRegion, ITextRegion tRegion, int offset, String defaultPartitionType) {
-		if (sdRegion.getStartOffset() + tRegion.getStart() == offset) {
-			tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
-			if (tRegion == null) {
-				return defaultPartitionType;
-			}
-			if (tRegion.getType() == PHPRegionTypes.PHP_OPENTAG) {
-				return PHPRegionTypes.PHP_OPENTAG;
-			}
-			return tRegion.getType(); // PHPPartitionTypes.PHP_DEFAULT;
-		}
-		if (sdRegion.getStartOffset() + tRegion.getTextEnd() == offset) {
-			tRegion = sdRegion.getRegionAtCharacterOffset(offset + 1);
-			if (tRegion == null) {
-				return defaultPartitionType;
-			}
-			if (tRegion.getType() == PHPRegionTypes.PHP_CLOSETAG) {
-				return PHPRegionTypes.PHP_CLOSETAG;
-			}
-			return tRegion.getType();
-		}
-		return defaultPartitionType;
 	}
 
 	private static StringBuffer helpBuffer = new StringBuffer(50);

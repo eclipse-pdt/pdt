@@ -12,12 +12,13 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class DefaultIndentationStrategy implements IIndentationStrategy {
 
@@ -46,40 +47,48 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return 0;
 	}
 
-	protected int getLastTokenOffset(final IStructuredDocument document, final IRegion line, final int forOffset) {
+	// go backward and look for any region except comment region or white space region 
+	// in the given line
+	private ITextRegion getLastTokenRegion(final IStructuredDocument document, final IRegion line, final int forOffset) throws BadLocationException {
 
-		final int startOffset = line.getOffset();
+		int lineStartOffset = line.getOffset();
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(forOffset);
-		int regionStartOffset = sdRegion.getStartOffset();
-		int offset = forOffset;
-		while (startOffset <= offset) {
-			if (document.getLength() == offset) {//if we are at the end of the document then we need to check one step before
-				offset--;
-				continue;
-			}
-			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-			if (tRegion == null) {
-				sdRegion = sdRegion.getPrevious();
-				if (sdRegion != null) {
-					regionStartOffset = sdRegion.getStartOffset();
-					tRegion = sdRegion.getLastRegion();
-					offset = tRegion.getStart() + regionStartOffset - 1;
-					continue;
-				}
-				return -1;
-			}
-			if (tRegion.getStart() + regionStartOffset < startOffset)
-				//if the tRegion started before the line was then the first char in this line was a whitespace 
-				return -1;
-			if (tRegion.getTextEnd() + regionStartOffset > forOffset) {
-				offset = tRegion.getStart() + regionStartOffset - 1;
-				continue;
-			}
-			if (!PHPPartitionTypes.isPHPCommentState(tRegion.getType()) && tRegion.getType() != PHPRegionTypes.WHITESPACE)
-				return sdRegion.getStartOffset(tRegion);
-			offset = tRegion.getStart() + regionStartOffset - 1;
+		if (sdRegion == null) {
+			return null;
 		}
-		return -1;
+
+		// in 'case default' indentation case we move one char back to avoid 
+		// the first 'case' or 'default' region 
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(forOffset);
+		int regionStart = sdRegion.getStartOffset(tRegion);
+
+		// in case of container we have the extract the PhpScriptRegion
+		if (tRegion instanceof ITextRegionContainer) {
+			ITextRegionContainer container = (ITextRegionContainer) tRegion;
+			tRegion = container.getRegionAtCharacterOffset(forOffset);
+			regionStart += tRegion.getStart();
+		}
+
+		if (tRegion instanceof PhpScriptRegion) {
+			PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+			tRegion = scriptRegion.getPhpToken(forOffset - regionStart);
+
+			if (tRegion == null)
+				return null;
+
+			// go backward over the region to find a region (not comment nor whitespace)
+			// in the same line
+			do {
+				String token = tRegion.getType();
+				if (!PHPPartitionTypes.isPHPCommentState(token) && token != PHPRegionTypes.WHITESPACE) {
+					// not comment nor white space
+					return tRegion;
+				}
+				tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+			} while (tRegion != null && tRegion.getStart() + regionStart > lineStartOffset);
+		}
+
+		return null;
 	}
 
 	private boolean isIndentationBase(final IStructuredDocument document, final int checkedOffset, final int forOffset) throws BadLocationException {
@@ -137,28 +146,36 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	boolean shouldIndent(final IStructuredDocument document, final int offset, final int lineNumber) {
 		try {
 			final IRegion lineInfo = document.getLineInformation(lineNumber);
-			final int lastTokenOffset = getLastTokenOffset(document, lineInfo, offset);
-			if (lastTokenOffset == -1)
-				return false;
 
-			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lastTokenOffset);
-			ITextRegion token = sdRegion.getRegionAtCharacterOffset(lastTokenOffset);
+			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+			ITextRegion token = getLastTokenRegion(document, lineInfo, offset);
+			if (token == null)
+				return false;
 			String tokenType = token.getType();
 
 			if (tokenType == PHPRegionTypes.PHP_CURLY_OPEN)
 				return true;
 
-			if (tokenType == PHPRegionTypes.PHP_TOKEN && document.getChar(sdRegion.getStartOffset() + token.getStart()) == ':') {
-				//checking if the line starts with "case" or "default"
-				int currentOffset = sdRegion.getStartOffset() + token.getStart() - 1;
-				while (currentOffset >= lineInfo.getOffset()) {
-					token = sdRegion.getRegionAtCharacterOffset(currentOffset);
-					tokenType = token.getType();
-					if (tokenType == PHPRegionTypes.PHP_CASE || tokenType == PHPRegionTypes.PHP_DEFAULT)
-						return true;
-					currentOffset = sdRegion.getStartOffset() + token.getStart() - 1;
+			ITextRegion scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			int regionStart = sdRegion.getStartOffset(scriptRegion);
+			// in case of container we have the extract the PhpScriptRegion
+			if (scriptRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) scriptRegion;
+				scriptRegion = container.getRegionAtCharacterOffset(offset);
+				regionStart += scriptRegion.getStart();
+			}
+			if (scriptRegion instanceof PhpScriptRegion) {
+				if (tokenType == PHPRegionTypes.PHP_TOKEN && document.getChar(regionStart + token.getStart()) == ':') {
+					//checking if the line starts with "case" or "default"
+					int currentOffset = regionStart + token.getStart() - 1;
+					while (currentOffset >= lineInfo.getOffset()) {
+						token = ((PhpScriptRegion) scriptRegion).getPhpToken(token.getStart() - 1);
+						tokenType = token.getType();
+						if (tokenType == PHPRegionTypes.PHP_CASE || tokenType == PHPRegionTypes.PHP_DEFAULT)
+							return true;
+						currentOffset = regionStart + token.getStart() - 1;
+					}
 				}
-
 			}
 		} catch (final BadLocationException e) {
 		}

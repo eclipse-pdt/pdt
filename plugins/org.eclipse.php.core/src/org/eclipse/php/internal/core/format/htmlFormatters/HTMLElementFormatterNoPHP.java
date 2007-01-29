@@ -11,12 +11,17 @@
 
 package org.eclipse.php.internal.core.format.htmlFormatters;
 
+import org.eclipse.php.internal.core.documentModel.dom.AttrImplForPhp;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.format.PhpFormatter;
 import org.eclipse.wst.html.core.internal.format.HTMLElementFormatter;
 import org.eclipse.wst.html.core.internal.format.HTMLTextFormatter;
 import org.eclipse.wst.html.core.internal.provisional.HTMLFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -25,7 +30,7 @@ import org.w3c.dom.Node;
  * @author guy.g
  *
  */
-public class HTMLElementFormatterNoPHP extends HTMLElementFormatter  {
+public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 
 	/**
 	 */
@@ -61,8 +66,7 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter  {
 				if (formatter instanceof HTMLFormatterNoPHP) {
 					HTMLFormatterNoPHP htmlFormatter = (HTMLFormatterNoPHP) formatter;
 					htmlFormatter.formatNode(child, contraints);
-				}
-				else {
+				} else {
 					formatter.format(child);
 				}
 			}
@@ -70,8 +74,7 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter  {
 			if (canInsertBreakAfter(child)) {
 				insertBreakAfter(child, contraints);
 				insertBreak = false; // not to insert twice
-			}
-			else {
+			} else {
 				insertBreak = true;
 			}
 
@@ -98,8 +101,7 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter  {
 		if (next == null) { // last spaces
 			// use parent indent for the end tag
 			spaces = getBreakSpaces(parent);
-		}
-		else if (next.getNodeType() == Node.TEXT_NODE) {
+		} else if (next.getNodeType() == Node.TEXT_NODE) {
 			if (contraints != null && contraints.getFormatWithSiblingIndent()) {
 				IDOMNode text = (IDOMNode) next;
 				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory.getInstance().createFormatter(text, getFormatPreferences());
@@ -109,8 +111,7 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter  {
 				}
 			}
 			return;
-		}
-		else {
+		} else {
 			spaces = getBreakSpaces(node);
 		}
 		if (spaces == null || spaces.length() == 0)
@@ -146,8 +147,7 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter  {
 
 					if (node.hasChildNodes()) { // container
 						formatChildNodes(node, contraints);
-					}
-					else { // leaf
+					} else { // leaf
 						IStructuredDocumentRegion flatNode = node.getStartStructuredDocumentRegion();
 						if (flatNode != null) {
 							String source = flatNode.getText();
@@ -156,13 +156,11 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter  {
 							}
 						}
 					}
-					
-				
+
 				}
 			}
 			return;
-		}
-		else {
+		} else {
 			spaces = getBreakSpaces(node);
 		}
 		if (spaces == null || spaces.length() == 0)
@@ -170,6 +168,31 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter  {
 
 		replaceSource(node.getModel(), node.getStartOffset(), 0, spaces);
 		setWidth(contraints, spaces);
+	}
+
+	protected void formatNode(IDOMNode node, HTMLFormatContraints contraints) {
+		super.formatNode(node, contraints);
+
+		// get over the attribute and look for php attributes
+
+		NamedNodeMap attributes = node.getAttributes();
+		for (int i = 0; i < attributes.getLength(); i++) {
+			AttrImplForPhp attribute = (AttrImplForPhp) attributes.item(i);
+			ITextRegionContainer container = null;
+			if (attribute.getNameRegion() instanceof ITextRegionContainer) {
+				container = (ITextRegionContainer) attribute.getNameRegion();
+			}
+
+			if (attribute.getValueRegion() instanceof ITextRegionContainer) {
+				container = (ITextRegionContainer) attribute.getValueRegion();
+			}
+
+			if (container != null && container.getFirstRegion().getType().equals(PHPRegionContext.PHP_OPEN)) {
+				PhpFormatter phpFormatter = new PhpFormatter(attribute.getStartOffset(), attribute.getEndOffset());
+				phpFormatter.format(attribute, contraints);
+			}
+		}
+
 	}
 
 }

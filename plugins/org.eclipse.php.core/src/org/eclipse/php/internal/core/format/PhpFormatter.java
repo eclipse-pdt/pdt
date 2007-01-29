@@ -14,9 +14,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.internal.core.documentModel.dom.AttrImplForPhp;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.structregions.PHPStructuredDocumentRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
@@ -24,8 +25,8 @@ import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.text.rules.SimpleStructuredRegion;
-import org.eclipse.wst.xml.core.internal.document.TextImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
@@ -70,12 +71,23 @@ public class PhpFormatter implements IStructuredFormatter {
 	private void formatNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 
 		// if it is php node - format
-		if (node instanceof PHPElementImpl || (node instanceof TextImpl && node.getFirstStructuredDocumentRegion() instanceof PHPStructuredDocumentRegion)) {
-
+		if (node instanceof ElementImplForPhp && ((ElementImplForPhp) node).isPhpTag()) {
 			IStructuredDocumentRegion sdRegionStart = node.getStartStructuredDocumentRegion();
-			IStructuredDocumentRegion sdRegionEnd = node.getLastStructuredDocumentRegion();
-			sdRegionEnd = sdRegionEnd == null ? sdRegionStart : sdRegionEnd;
-			format(sdRegionStart, sdRegionEnd);
+			//IStructuredDocumentRegion sdRegionEnd = node.getLastStructuredDocumentRegion();
+			//sdRegionEnd = sdRegionEnd == null ? sdRegionStart : sdRegionEnd;
+			format(sdRegionStart);
+		}
+
+		if (node instanceof AttrImplForPhp) {
+			// calculate lines
+			IStructuredDocument document = node.getStructuredDocument();
+			int lineIndex = document.getLineOfOffset(node.getStartOffset());
+			int endLineIndex = document.getLineOfOffset(node.getEndOffset());
+
+			// format each line
+			for (; lineIndex <= endLineIndex; lineIndex++) {
+				formatLine(document, lineIndex);
+			}
 		}
 
 		if (node.hasChildNodes()) { // container
@@ -114,12 +126,12 @@ public class PhpFormatter implements IStructuredFormatter {
 		return length;
 	}
 
-	private void format(IStructuredDocumentRegion sdRegionStart, IStructuredDocumentRegion sdRegionEnd) {
-		assert sdRegionEnd != null && sdRegionStart != null;
+	private void format(IStructuredDocumentRegion sdRegion) {
+		assert sdRegion != null;
 
 		// resolce formatter range 
-		int regionStart = sdRegionStart.getStartOffset();
-		int regionEnd = sdRegionEnd.getEnd();
+		int regionStart = sdRegion.getStartOffset();
+		int regionEnd = sdRegion.getEnd();
 
 		int formatRequestStart = getStart();
 		int formatRequestEnd = formatRequestStart + getLength();
@@ -128,7 +140,7 @@ public class PhpFormatter implements IStructuredFormatter {
 		int endFormat = Math.min(formatRequestEnd, regionEnd);
 
 		// calculate lines
-		IStructuredDocument document = sdRegionStart.getParentDocument();
+		IStructuredDocument document = sdRegion.getParentDocument();
 		int lineIndex = document.getLineOfOffset(startFormat);
 		int endLineIndex = document.getLineOfOffset(endFormat);
 
@@ -186,15 +198,29 @@ public class PhpFormatter implements IStructuredFormatter {
 			final IIndentationStrategy insertionStrategy;
 			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(formattedLineStart);
 			ITextRegion firstTokenInLine = sdRegion.getRegionAtCharacterOffset(formattedLineStart);
+			int regionStart = sdRegion.getStartOffset(firstTokenInLine);
+			if (firstTokenInLine instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) firstTokenInLine;
+				firstTokenInLine = container.getRegionAtCharacterOffset(formattedLineStart);
+				regionStart += firstTokenInLine.getStart();
+			}
+
+			if (firstTokenInLine instanceof PhpScriptRegion) {
+				PhpScriptRegion scriptRegion = (PhpScriptRegion) firstTokenInLine;
+				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart - regionStart);
+				if (firstTokenInLine != null && firstTokenInLine.getStart() + sdRegion.getStartOffset() < orginalLineStart && firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
+					firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart - regionStart + firstTokenInLine.getLength());
+				}
+			}
 
 			// if the first char is not from this line
 			if (firstTokenInLine == null)
 				return;
 
-			if (firstTokenInLine.getStart() + sdRegion.getStartOffset() < originalLineInfo.getOffset() || firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
-				//meaning we got previos line last token
-				firstTokenInLine = sdRegion.getRegionAtCharacterOffset(sdRegion.getStartOffset() + firstTokenInLine.getEnd());
-			}
+			/*if (firstTokenInLine.getStart() + sdRegion.getStartOffset() < originalLineInfo.getOffset() || firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
+			 //meaning we got previos line last token
+			 firstTokenInLine = sdRegion.getRegionAtCharacterOffset(sdRegion.getStartOffset() + firstTokenInLine.getEnd());
+			 }*/
 
 			// if the next char is not from this line
 			if (firstTokenInLine == null)

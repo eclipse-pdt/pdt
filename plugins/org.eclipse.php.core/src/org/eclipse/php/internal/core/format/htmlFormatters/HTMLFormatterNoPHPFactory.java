@@ -11,7 +11,7 @@
 
 package org.eclipse.php.internal.core.format.htmlFormatters;
 
-import org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.core.format.PhpFormatter;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
@@ -26,10 +26,10 @@ import org.w3c.dom.Node;
 public class HTMLFormatterNoPHPFactory {
 
 	private static HTMLFormatterNoPHPFactory fInstance = null;
-	
+
 	public int start;
 	public int length;
-	
+
 	public static synchronized HTMLFormatterNoPHPFactory getInstance() {
 		if (fInstance == null) {
 			fInstance = new HTMLFormatterNoPHPFactory();
@@ -41,27 +41,23 @@ public class HTMLFormatterNoPHPFactory {
 		IStructuredFormatter formatter = null;
 
 		switch (node.getNodeType()) {
-			case Node.ELEMENT_NODE :
-				if (node instanceof PHPElementImpl) {
+			case Node.ELEMENT_NODE:
+				if (node instanceof ElementImplForPhp && ((ElementImplForPhp) node).isPhpTag()) {
 					formatter = new PhpFormatter(start, length);
-					
-				}else {
-					formatter = new HTMLElementFormatterNoPHP();	
+
+				} else {
+					formatter = new HTMLElementFormatterNoPHP();
 				}
-				
+
 				break;
-			case Node.TEXT_NODE :
+			case Node.TEXT_NODE:
 				if (isEmbeddedCSS(node)) {
 					formatter = new EmbeddedCSSFormatterNoPHP();
-				}
-				else if ((node.getParentNode() != null) && (node.getParentNode() instanceof PHPElementImpl)){
-					formatter = new PhpFormatter(start, length);
-				}
-				else {
+				} else {
 					formatter = new HTMLTextFormatterNoPHP();
 				}
 				break;
-			default :
+			default:
 				formatter = new HTMLFormatterNoPHP();
 				break;
 		}

@@ -14,7 +14,6 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.internal.core.format.htmlFormatters.HTMLFormatterNoPHPFactory;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -27,8 +26,6 @@ public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 	// saving the paramenters of the formatting areas 
 	//so that if we are required to format only part of the php - we'll have the data.
 
-	private int start;
-	private int length;
 
 	protected String getFileExtension() {
 		return "php"; //$NON-NLS-1$
@@ -39,14 +36,9 @@ public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 	 * the others get the default (html) formatter 
 	 */
 	protected IStructuredFormatter getFormatter(Node node) {
-		if ((node.getNodeType() == Node.ELEMENT_NODE && node instanceof PHPElementImpl) || (node.getNodeType() == Node.TEXT_NODE && node.getParentNode() instanceof PHPElementImpl)){
-			final PhpFormatter phpFormatter = new PhpFormatter(start, length);
-			return phpFormatter; 
-		} else {
-			return HTMLFormatterNoPHPFactory.getInstance().createFormatter(node, getFormatPreferences()); 
-		}
+		return HTMLFormatterNoPHPFactory.getInstance().createFormatter(node, getFormatPreferences());
 	}
-	
+
 	protected void refreshFormatPreferences() {
 		super.refreshFormatPreferences();
 	}
@@ -66,8 +58,7 @@ public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 				}
 				length = document.getLength() - start;
 			}
-			this.start = start;
-			this.length = length;
+
 			IStructuredModel structuredModel = null;
 			// OutputStream outputStream = null;
 			try {

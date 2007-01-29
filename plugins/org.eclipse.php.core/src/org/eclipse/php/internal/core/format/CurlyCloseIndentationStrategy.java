@@ -13,9 +13,11 @@ package org.eclipse.php.internal.core.format;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 
@@ -35,33 +37,43 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 	 */
 	protected IRegion getCurlyOpenLineInformation(IStructuredDocument document, int forOffset) throws BadLocationException {
 		int offset = forOffset;
-		int curlyCounter = 0;
-		while (offset >= 0) {
-			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
-			if (sdRegion == null) {
-				return null;
-			}
-			if (sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
-				offset = sdRegion.getStartOffset() - 1;
-				continue;
-			}
-			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
+		int curlyCount = 0;
 
+		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+		if (sdRegion == null) {
+			return null;
+		}
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		int regionStart = sdRegion.getStartOffset(tRegion);
+
+		// in case of container we have the extract the PhpScriptRegion
+		if (tRegion instanceof ITextRegionContainer) {
+			ITextRegionContainer container = (ITextRegionContainer) tRegion;
+			tRegion = container.getRegionAtCharacterOffset(offset);
+			regionStart += tRegion.getStart();
+		}
+
+		if (tRegion instanceof PhpScriptRegion) {
+			PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+			tRegion = scriptRegion.getPhpToken(offset - regionStart - 1);
+
+			// go backward over the region to find a 'case' or 'default' region
+			// in this case is the same indentation
+			// other case if look for the '{' of the 'switch' region
 			while (tRegion != null) {
 				String token = tRegion.getType();
 				if (token == PHPRegionTypes.PHP_CURLY_OPEN) {
-					curlyCounter--;
-					if (curlyCounter < 0) {
-						return document.getLineInformationOfOffset(tRegion.getStart() + sdRegion.getStartOffset());
+					curlyCount--;
+					if (curlyCount < 0) {
+						return document.getLineInformationOfOffset(tRegion.getStart() + regionStart);
 					}
 				} else if (token == PHPRegionTypes.PHP_CURLY_CLOSE) {
-					curlyCounter++;
+					curlyCount++;
 				}
-
-				tRegion = sdRegion.getRegionAtCharacterOffset(tRegion.getStart() + sdRegion.getStartOffset() - 1);
+				tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
 			}
-			offset = sdRegion.getStartOffset() - 1;
 		}
+
 		return null;
 
 	}

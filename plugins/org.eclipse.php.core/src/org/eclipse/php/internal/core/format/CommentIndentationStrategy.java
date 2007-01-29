@@ -3,9 +3,11 @@ package org.eclipse.php.internal.core.format;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 
@@ -19,24 +21,36 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 			return;
 		}
 		IRegion previousLine = document.getLineInformation(lineNumber - 1);
-		
+
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(previousLine.getOffset());
 		if (sdRegion == null)
 			return;
-		
+
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(previousLine.getOffset());
 		if (tRegion == null)
 			return;
-		
-		if (tRegion.getStart() + sdRegion.getStartOffset() < previousLine.getOffset()){
-			tRegion = sdRegion.getRegionAtCharacterOffset(tRegion.getEnd() + sdRegion.getStartOffset());
-		}		
-		
+
+		int regionStart = sdRegion.getStartOffset(tRegion);
+		// in case of container we have the extract the PhpScriptRegion
+		if (tRegion instanceof ITextRegionContainer) {
+			ITextRegionContainer container = (ITextRegionContainer) tRegion;
+			tRegion = container.getRegionAtCharacterOffset(previousLine.getOffset());
+			regionStart += tRegion.getStart();
+		}
+
+		if (tRegion instanceof PhpScriptRegion) {
+			PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+			tRegion = scriptRegion.getPhpToken(previousLine.getOffset() - regionStart);
+			if (tRegion.getStart() + regionStart < previousLine.getOffset()) {
+				tRegion = scriptRegion.getPhpToken(tRegion.getEnd());
+			}
+		}
+
 		// Check if the previous line is the start of the comment.
 		if (tRegion.getType() == PHPRegionTypes.PHP_COMMENT_START || tRegion.getType() == PHPRegionTypes.PHPDOC_COMMENT_START) {
 			final String blanks = FormatterUtils.getLineBlanks(document, previousLine);
 			// add the indentation of jthe previous line and a single space in addition
-			result.append(blanks); 
+			result.append(blanks);
 			result.append(" ");
 		} else {
 			super.placeMatchingBlanks(document, result, lineNumber, forOffset);
