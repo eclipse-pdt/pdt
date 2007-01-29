@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
@@ -35,8 +36,7 @@ import org.eclipse.php.internal.ui.util.PHPManualDirectorDescriptor;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.php.internal.ui.util.ProblemMarkerManager;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.*;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ConfigurationElementSorter;
@@ -82,6 +82,32 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		// patch for PDT RC2. Due to major API changes, 
+		// the first time this version of tghe application runs the PHP perspective is "resetted"
+		// to its defaults
+		
+		getActiveWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
+            public static final String RESET_PERSPECTIVE_PROP = "perspective_was_resetted";
+            IPreferenceStore store = getPreferenceStore();
+ 
+            public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
+            }
+
+            public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+            	if(!perspective.getId().equals("org.eclipse.php.perspective"))
+            		return;
+            	boolean perspectiveWasResetted = store.getBoolean(RESET_PERSPECTIVE_PROP);  
+            	if (!perspectiveWasResetted) {
+            		store.setValue(RESET_PERSPECTIVE_PROP, true);
+                    page.resetPerspective();                    
+                }
+            }
+
+            public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
+            }
+      });
+				
 	}
 
 	/**
