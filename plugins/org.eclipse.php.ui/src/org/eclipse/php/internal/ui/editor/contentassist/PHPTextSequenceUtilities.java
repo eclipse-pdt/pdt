@@ -47,10 +47,11 @@ public class PHPTextSequenceUtilities {
 	 * @return text sequence of the statement
 	 */
 	public static TextSequence getStatment(int offset, IStructuredDocumentRegion sdRegion, boolean removeComments) {
-		if (offset == sdRegion.getEndOffset()) {
-			offset -= 1;
+		int documentOffset = offset;
+		if (documentOffset == sdRegion.getEndOffset()) {
+			documentOffset -= 1;
 		}
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(documentOffset);
 		
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
 			tRegion = sdRegion.getRegionAtCharacterOffset(sdRegion.getStart() + tRegion.getStart() - 1);
@@ -65,7 +66,7 @@ public class PHPTextSequenceUtilities {
 				int startOffset = sdRegion.getStartOffset() + phpScriptRegion.getStart();
 
 				// Now, search backwards for the statement start (in this PhpScriptRegion):
-				ITextRegion startTokenRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart() - 1);
+				ITextRegion startTokenRegion = phpScriptRegion.getPhpToken(documentOffset - sdRegion.getStartOffset() - phpScriptRegion.getStart() - 1);
 				while (true) {
 					// If statement start is at the beginning of the PHP script region: 
 					if (startTokenRegion.getStart() == 0) {
