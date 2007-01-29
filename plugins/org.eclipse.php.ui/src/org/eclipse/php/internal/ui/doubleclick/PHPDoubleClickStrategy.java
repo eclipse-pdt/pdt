@@ -56,10 +56,42 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 									PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
 									tRegion = phpScriptRegion.getPhpToken(caretPosition - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 
-									// Handle double-click on variable or PHPDoc parameters:
-									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE || PHPPartitionTypes.isPHPDocTagState(tRegion.getType())) {
+									// Handle double-click on PHPDoc tags:
+									if (PHPPartitionTypes.isPHPDocTagState(tRegion.getType())) {
 										structuredTextViewer.setSelectedRange(sdRegion.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart(), tRegion.getTextLength());
 										return; // Stop processing
+									}
+									
+									
+									// Handle double-click on variable:
+									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
+										int varStart = sdRegion.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
+										int varLength = tRegion.getTextLength();
+										
+										// Check whether the variable is of kind "$var->name":
+										ITextRegion nextRegion = phpScriptRegion.getPhpToken(tRegion.getEnd());
+										if (nextRegion != null && nextRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR) {
+											nextRegion = phpScriptRegion.getPhpToken(nextRegion.getEnd());
+											if (nextRegion != null && nextRegion.getType() == PHPRegionTypes.PHP_STRING) {
+												varLength = nextRegion.getEnd() - tRegion.getStart();
+											}
+										}
+										structuredTextViewer.setSelectedRange(varStart, varLength);
+										return; // Stop processing
+									}
+									
+									// Handle double-click on the name of variable construction of type "$var->name":
+									if (tRegion.getType() == PHPRegionTypes.PHP_STRING) {
+										tRegion = phpScriptRegion.getPhpToken(tRegion.getStart() - 1);
+									}
+									// Handle double-click on the operator of variable construction of type "$var->name":
+									if (tRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR) {
+										ITextRegion prevRegion = phpScriptRegion.getPhpToken(tRegion.getStart() - 1);
+										ITextRegion nextRegion = phpScriptRegion.getPhpToken(tRegion.getEnd());
+										if (prevRegion != null && prevRegion.getType() == PHPRegionTypes.PHP_VARIABLE && nextRegion != null && nextRegion.getType() == PHPRegionTypes.PHP_STRING) {
+											structuredTextViewer.setSelectedRange(sdRegion.getStartOffset() + phpScriptRegion.getStart() + prevRegion.getStart(), nextRegion.getEnd() - prevRegion.getStart());
+											return; // Stop processing
+										}
 									}
 								}
 							}
