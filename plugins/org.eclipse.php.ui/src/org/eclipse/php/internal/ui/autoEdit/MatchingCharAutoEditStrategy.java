@@ -91,7 +91,10 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 			else
 				return true;
 		}
-
+		if (document.getLength() == offset + 1) {
+			return true;
+		}
+		
 		final char currChar = document.getChar(offset);
 		final char nextChar = document.getChar(offset + 1);
 
