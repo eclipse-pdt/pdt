@@ -24,6 +24,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -190,8 +191,18 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (textRegion == null)
 			return;
 
-		if (textRegion.getType() == PHPRegionTypes.PHP_CLOSETAG) { // dont provide completion if staying after PHP close tag.
+		if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
 			return;
+		}
+		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
+			if (sdRegion.getStartOffset(textRegion) == offset) {
+				ITextRegion regionBefore = sdRegion.getRegionAtCharacterOffset(offset - 1);
+				if (regionBefore instanceof PhpScriptRegion) {
+					textRegion = regionBefore;
+				}
+			} else {
+				return;
+			}
 		}
 
 		// find the start String for completion
@@ -211,20 +222,25 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			startOffset = sdRegion.getStartOffset(textRegion);
 		}
 
-		PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
-		int internalOffset = offset - sdRegion.getStartOffset() - phpScriptRegion.getStart();
+		PhpScriptRegion phpScriptRegion = null;
+		String partitionType = null;
+		int internalOffset = 0;
+		ContextRegion internalPHPRegion = null;
+		if (textRegion instanceof PhpScriptRegion) {
+			phpScriptRegion = (PhpScriptRegion) textRegion;
+			internalOffset = offset - sdRegion.getStartOffset() - phpScriptRegion.getStart();
 
-		String partitionType = phpScriptRegion.getPartition(internalOffset);
-		if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
-		} else {
-			return;
+			partitionType = phpScriptRegion.getPartition(internalOffset);
+			if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
+			} else {
+				return;
+			}
+			internalPHPRegion = (ContextRegion) phpScriptRegion.getPhpToken(internalOffset);
 		}
-
-		ContextRegion internalPHPRegion = (ContextRegion) phpScriptRegion.getPhpToken(internalOffset);
 
 		// if there is no project model (the file is not part of a project)
 		// complete with language model only 
-		if (fileData == null) {
+		if (fileData == null || phpScriptRegion == null) {
 			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, sdRegion, phpScriptRegion, internalPHPRegion, isStrict);
 			return;
 		}
@@ -378,34 +394,36 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (!explicit && startsWith.length() == 0)
 			return;
 
-		final String type = internalPhpRegion.getType();
+		if (internalPhpRegion != null) {
+			final String type = internalPhpRegion.getType();
 
-		if (startsWith.startsWith("$")) {
-			if (!explicit && !autoShowVariables)
-				return;
-			if (PHPPartitionTypes.isPHPQuotesState(type)) {
-				final IStructuredDocument doc = sdRegion.getParentDocument();
-				try {
-					final char charBefore = doc.get(offset - 2, 1).charAt(0);
-					if (charBefore == '\\')
-						return;
-				} catch (final BadLocationException badLocationException) {
-					Logger.logException(badLocationException);
+			if (startsWith.startsWith("$")) {
+				if (!explicit && !autoShowVariables)
+					return;
+				if (PHPPartitionTypes.isPHPQuotesState(type)) {
+					final IStructuredDocument doc = sdRegion.getParentDocument();
+					try {
+						final char charBefore = doc.get(offset - 2, 1).charAt(0);
+						if (charBefore == '\\')
+							return;
+					} catch (final BadLocationException badLocationException) {
+						Logger.logException(badLocationException);
+					}
 				}
+				final PHPCodeContext context = getContext(projectModel, fileName, offset - startsWith.length());
+
+				startsWith = startsWith.substring(1);
+				CodeData[] variables = projectModel.getVariables(fileName, context, startsWith, showVariablesFromOtherFiles);
+				completionProposalGroup = phpCompletionProposalGroup;
+				completionProposalGroup.setData(offset, variables, startsWith, selectionLength, isStrict);
+				return;
 			}
-			final PHPCodeContext context = getContext(projectModel, fileName, offset - startsWith.length());
 
-			startsWith = startsWith.substring(1);
-			CodeData[] variables = projectModel.getVariables(fileName, context, startsWith, showVariablesFromOtherFiles);
-			completionProposalGroup = phpCompletionProposalGroup;
-			completionProposalGroup.setData(offset, variables, startsWith, selectionLength, isStrict);
-			return;
-		}
-
-		if (PHPPartitionTypes.isPHPQuotesState(type) || type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(tRegion) + tRegion.getLength() <= offset) {
-			completionProposalGroup = regularPHPCompletionProposalGroup;
-			completionProposalGroup.setData(offset, null, startsWith, selectionLength, isStrict);
-			return;
+			if (PHPPartitionTypes.isPHPQuotesState(type) || type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(tRegion) + tRegion.getLength() <= offset) {
+				completionProposalGroup = regularPHPCompletionProposalGroup;
+				completionProposalGroup.setData(offset, null, startsWith, selectionLength, isStrict);
+				return;
+			}
 		}
 
 		CodeData[] functions = null;
