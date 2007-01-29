@@ -2187,6 +2187,12 @@ protected final boolean containsTagName(String markerTagName) {
           { 
     if (UseAspTagsHandler.useAspTagsAsPhp(project) ||yytext().charAt(1) != '%') {
 
+		//removeing trailing whitespaces for the php open
+		String phpStart = yytext();
+		int i = phpStart.length() - 1;
+		while(i >= 0 && Character.isWhitespace(phpStart.charAt(i--))){
+			yypushback(1);
+		}
 		fStateStack.push(yystate());
 		if(fStateStack.peek()==YYINITIAL) {
 			// the simple case, just a regular scriptlet out in content
