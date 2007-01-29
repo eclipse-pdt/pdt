@@ -9,11 +9,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.html.core,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.validation,
- org.eclipse.wst.common.frameworks,
  org.eclipse.core.filebuffers,
- org.eclipse.ui.ide,
- org.eclipse.wst.common.environment,
- org.apache.xerces
+ org.eclipse.ui.ide
 Eclipse-LazyStart: true
 Provide-Package: org.eclipse.php.core,
  org.eclipse.php.core.documentModel,

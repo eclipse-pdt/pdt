@@ -4,10 +4,9 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
-import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
-import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 
 /**
@@ -74,12 +73,9 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 					if (!reparse) {
 						// complete reparsing for the php script
 						phpRegion.completeReparse(newText);
-
-						// update the region
-						final TextRegionListImpl oldList = new TextRegionListImpl();
-						final TextRegionListImpl newList = new TextRegionListImpl();
-						newList.add(region);
-						return new RegionsReplacedEvent((IStructuredDocument) event.getDocument(), event.getOriginalRequester(), event.getStructuredDocumentRegion(), oldList, newList, event.fText, region.getStart(), region.getLength());
+						
+						// update the event
+						return event; 
 					}
 				} catch (BadLocationException e) {
 					Logger.logException(e);

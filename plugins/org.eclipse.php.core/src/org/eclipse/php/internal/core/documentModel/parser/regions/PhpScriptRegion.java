@@ -38,6 +38,9 @@ public class PhpScriptRegion extends ForeignRegion {
 	private final PhpTokenContainer tokensContaier = new PhpTokenContainer();
 	private final IProject project;
 	
+	// true when the last reparse action is full reparse
+	public boolean isFullReparsed;
+	
 	public PhpScriptRegion(String newContext, int newStart, int newTextLength, int newLength, final String initialScript, IProject project) {
 		super(newContext, newStart, newTextLength, newLength, "PHP Script");
 
@@ -107,7 +110,7 @@ public class PhpScriptRegion extends ForeignRegion {
 
 		// checks for odd quotes
 		final int length = change.length();
-		if (startQuoted(deletedText) || startQuoted(change)) {
+		if (startQuoted(deletedText) || startQuoted(change) || isHereDoc(newText, offset)) {
 			return false;
 		}
 
@@ -166,11 +169,19 @@ public class PhpScriptRegion extends ForeignRegion {
 
 			// 3. update state changes
 			tokensContaier.updateStateChanges(newContainer, tokenStart.getStart(), newContainer.getLastToken().getEnd());
+			isFullReparsed = false;
 			return true;
 		}
 		return false;
 	}
 	
+	private boolean isHereDoc(final String change, int offset) {
+		if (offset == 0) {
+			return false;
+		}
+		return change.charAt(offset - 1) == '<';
+	}
+
 	private boolean startQuoted(final String text) {
 		final int length = text.length();
 		if (length == 0) {
@@ -192,6 +203,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * @param newText
 	 */
 	public void completeReparse(String newText) {
+		isFullReparsed = true;
 		final PhpLexer phpLexer = getPhpLexer(project, getStream(newText));
 		setPhpTokens(phpLexer);
 	}
