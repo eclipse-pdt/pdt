@@ -243,6 +243,11 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	}
 
 	public Object createLexicalStateMemento() {
+		// buffered token state
+		if (bufferedTokens != null && !bufferedTokens.isEmpty()) {
+			return bufferedState;
+		}
+		
 		//System.out.println("lexerStates size:" + lexerStates.size());
 		final int key = buildStateKey();
 		Object state = lexerStates.get(key);
@@ -389,6 +394,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 
 	public LinkedList bufferedTokens = null;
 	public int bufferedLength;
+	public Object bufferedState;
 
 	/**
 	 * @return the next token from the php lexer
@@ -407,13 +413,14 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 		yylex = yylex();
 		final int start = yystart();
 		if (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
+			bufferedState = createLexicalStateMemento();
 			final StringBuffer buffer = new StringBuffer();
 			int length = 0;
 			while (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
 				buffer.append(yytext());
 				yylex = yylex();
 				length++; 
-			}
+			}			
 			bufferedTokens = new LinkedList();
 			checkForTodo(bufferedTokens, PHPRegionTypes.PHPDOC_COMMENT, start, length, buffer.toString());
 			bufferedTokens.add(new ContextRegion(yylex, start + length, yylength(), yylength()));
@@ -439,7 +446,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	public int getLength() {
 		return bufferedTokens == null ? yylength() : bufferedLength;
 	}
-
+	
 	private Pattern[] todos;
 
 	public void setPatterns(IProject project) {

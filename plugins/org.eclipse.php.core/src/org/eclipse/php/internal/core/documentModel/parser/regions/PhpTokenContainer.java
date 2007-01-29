@@ -164,7 +164,7 @@ public class PhpTokenContainer {
 		}
 	}
 
-	public ListIterator removeSubList(ITextRegion tokenStart, ITextRegion tokenEnd) {
+	public ListIterator removeTokensSubList(ITextRegion tokenStart, ITextRegion tokenEnd) {
 		assert tokenStart != null;
 
 		// go to the start region
@@ -268,6 +268,25 @@ public class PhpTokenContainer {
 	}
 
 	/**
+	 * Adjust the length of the last token for whitespace tokens 
+	 * @param yylex
+	 * @param start
+	 * @param yylengthLength
+	 * @param yylength
+	 * @param lexerState
+	 */
+	public void adjustWhitespace(String yylex, int start, int yylengthLength, int yylength, Object lexerState) {
+		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
+
+		// if state was change - we add a new token and add state 
+		if (lexerStateChanges.size() != 0 && getLastChange().state.equals(lexerState)) {
+			final ITextRegion last = (ITextRegion) phpTokens.getLast();
+			last.adjustLength(yylength);
+		}
+	}
+	
+
+	/**
 	 * This node represent a change in the lexer state during lexical analysis
 	 */
 	protected static final class LexerStateChange {
@@ -326,7 +345,7 @@ public class PhpTokenContainer {
 		final ListIterator iterator = (ListIterator) lexerStateChanges.iterator();
 
 		LexerStateChange element = (LexerStateChange) iterator.next();
-		while (element.getOffset() < toOffset) {
+		while (element.getOffset() <= toOffset) {
 			if (element.getOffset() > fromOffset && element.getOffset() <= toOffset) {
 				iterator.remove();
 			}

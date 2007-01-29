@@ -105,6 +105,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	public boolean reparse(String change, String newText, final int offset, String deletedText) throws BadLocationException {
 		assert newText.length() > offset - 1;
 
+		// checks for odd quotes
 		final int length = change.length();
 		if (startQuoted(deletedText) || startQuoted(change)) {
 			return false;
@@ -119,7 +120,7 @@ public class PhpScriptRegion extends ForeignRegion {
 
 		// get start and end states
 		final LexerState startState = tokensContaier.getState(newTokenOffset);
-		final LexerState endState = tokensContaier.getState(tokenEnd.getEnd());
+		final LexerState endState = tokensContaier.getState(tokenEnd.getEnd() + 1);
 
 		final PhpTokenContainer newContainer = new PhpTokenContainer();
 		final PhpLexer phpLexer = getPhpLexer(project, getStream(newText, newTokenOffset), startState);
@@ -129,12 +130,16 @@ public class PhpScriptRegion extends ForeignRegion {
 			String yylex = phpLexer.getNextToken();
 			int yylength;
 			final int toOffset = offset + length;
-			while (yylex != null && (newTokenOffset <= toOffset || yylex == PHPRegionTypes.WHITESPACE)) {
+			while (yylex != null && newTokenOffset <= toOffset) {
 				yylength = phpLexer.getLength();
 				newContainer.addLast(yylex, newTokenOffset, yylength, yylength, state);
 				newTokenOffset += yylength;
 				state = phpLexer.createLexicalStateMemento();
 				yylex = phpLexer.getNextToken();
+			}			
+			if (yylex == PHPRegionTypes.WHITESPACE) {
+				yylength = phpLexer.getLength();
+				newContainer.adjustWhitespace(yylex, newTokenOffset, yylength, yylength, state);
 			}
 		} catch (IOException e) {
 			Logger.logException(e);
@@ -144,23 +149,23 @@ public class PhpScriptRegion extends ForeignRegion {
 		// 1. replace the regions
 		// 2. adjust next regions start location
 		// 3. update state changes
-		final int size = length - deletedLength;
 		if (state.equals(endState)) {
 			// 1. replace the regions
-			final ListIterator oldIterator = tokensContaier.removeSubList(tokenStart, tokenEnd);
+			final ListIterator oldIterator = tokensContaier.removeTokensSubList(tokenStart, tokenEnd);
 			ITextRegion[] newTokens = newContainer.getPhpTokens(); // now, add the new ones
 			for (int i = 0; i < newTokens.length; i++) {
 				oldIterator.add(newTokens[i]);
 			}
 
 			// 2. adjust next regions start location
+			final int size = length - deletedLength;			
 			while (oldIterator.hasNext()) {
 				ITextRegion adjust = (ITextRegion) oldIterator.next();
 				adjust.adjustStart(size);
 			}
 
 			// 3. update state changes
-			tokensContaier.updateStateChanges(newContainer, tokenStart.getStart(), oldEndOffset);
+			tokensContaier.updateStateChanges(newContainer, tokenStart.getStart(), newContainer.getLastToken().getEnd());
 			return true;
 		}
 		return false;
