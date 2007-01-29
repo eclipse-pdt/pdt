@@ -15,7 +15,10 @@ package org.eclipse.php.internal.core.documentModel.dom;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
+import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -63,5 +66,19 @@ public class ElementImplForPhp extends ElementStyleImpl {
 	 */
 	public boolean isPhpTag() {
 		return getNodeName() == PHPDOMModelParser.PHP_TAG_NAME;
-	}	
+	}
+	
+	public INodeAdapter getExistingAdapter(Object type) {
+		if(((Class)type).getName().equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator") && isPhpTag()){
+			return validator;
+		}
+		return super.getExistingAdapter(type);
+	}
+	
+	private ValidationComponent validator = new PHPValidationComponent();
+	
+	private class PHPValidationComponent extends ValidationComponent{
+		public void validate(IndexedRegion node) {	
+		}
+	}
 }
