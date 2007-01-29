@@ -185,6 +185,10 @@ public abstract class DefaultParserClient extends ContextParserClient {
 			} else {
 				returnType = "void";
 			}
+		} else {
+			// cut the return type after the whitespace
+			// The return type should ignore the description of the return type
+			returnType = returnType.split("\\s")[0];
 		}
 
 		UserData userData = PHPCodeDataFactory.createUserData(workingFileName, startPosition, stopPosition, stopPosition, lineNumber);
