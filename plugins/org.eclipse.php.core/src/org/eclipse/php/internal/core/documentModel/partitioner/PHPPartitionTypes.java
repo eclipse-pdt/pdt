@@ -30,6 +30,10 @@ public abstract class PHPPartitionTypes {
 	public static boolean isPHPDocState(final String type) {
 		return type == null ? false : type.startsWith("PHPDOC");
 	}
+	
+	public static boolean isPHPDocTagState(final String type) {
+		return isPHPDocState(type) && !type.startsWith("PHPDOC_COMMENT"); 
+	}
 
 	public static boolean isPHPLineCommentState(final String type) {
 		return type == PHPRegionTypes.PHP_LINE_COMMENT;
