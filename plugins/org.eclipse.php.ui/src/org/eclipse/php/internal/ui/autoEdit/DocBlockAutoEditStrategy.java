@@ -23,6 +23,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -443,6 +444,11 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(index);
 
 			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(index);
+			// in case the cursor on the beginning of '?>' tag
+			// we decrease the offset to get the PhpScriptRegion 
+			if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
+				tRegion = sdRegion.getRegionAtCharacterOffset(index - 1);
+			}
 			int regionStart = sdRegion.getStartOffset(tRegion);
 
 			if (tRegion instanceof ITextRegionContainer) {

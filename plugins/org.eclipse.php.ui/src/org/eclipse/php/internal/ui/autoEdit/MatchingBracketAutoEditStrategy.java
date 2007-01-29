@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.autoEdit;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -145,6 +146,13 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 				}
 
 				ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(currOffset);
+				
+				// in case the cursor on the beginning of '?>' tag
+				// we decrease the offset to get the PhpScriptRegion 
+				if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
+					tRegion = sdRegion.getRegionAtCharacterOffset(currOffset - 1);
+				}
+				
 				int regionStart = sdRegion.getStartOffset(tRegion);
 				// in case of container we have the extract the PhpScriptRegion
 				if (tRegion instanceof ITextRegionContainer) {
