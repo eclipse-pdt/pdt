@@ -19,9 +19,9 @@ import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.ui.editor.contentassist.PHPTextSequenceUtilities;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -64,9 +64,9 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 					PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
 					region = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 					if (PHPPartitionTypes.isPHPMultiLineCommentState(region.getType())) {
-						ITextRegion startRegion = PHPTextSequenceUtilities.getMultilineCommentStartRegion(sdRegion, offset);
-						ITextRegion endRegion = PHPTextSequenceUtilities.getMultilineCommentEndRegion(sdRegion, offset);
-						if (startRegion != null && endRegion != null) {
+						ITextRegion startRegion = PHPPartitionTypes.getPartitionStartRegion(phpScriptRegion, region.getStart());
+						ITextRegion endRegion = PHPPartitionTypes.getPartitionEndRegion(phpScriptRegion, region.getStart());
+						if (startRegion.getType() == PHPRegionTypes.PHP_COMMENT_START && endRegion.getType() == PHPRegionTypes.PHP_COMMENT_END) {
 							int startCommentOffset = sdRegion.getStart() + phpScriptRegion.getStart() + startRegion.getStart();
 							int endCommentOffset = sdRegion.getStart() + phpScriptRegion.getStart() + endRegion.getStart();
 							edits.add(factory.createEdit(startCommentOffset, startRegion.getLength(), "")); //$NON-NLS-1$

@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
@@ -132,51 +131,6 @@ public class PHPTextSequenceUtilities {
 			start = commentStartMatcher.start() + 2;
 		}
 		return -1;
-	}
-
-	public static ITextRegion getMultilineCommentStartRegion(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		ITextRegion startRegion = null;
-		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)tRegion;
-			tRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
-			try {
-				while (PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
-					if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_START)) {
-						startRegion = tRegion;
-						break;
-					}
-					if (tRegion.getStart() == 0) {
-						break;
-					}
-					tRegion = phpScriptRegion.getPhpToken(tRegion.getStart()-1);
-				}
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
-		}
-		return startRegion;
-	}
-
-	public static ITextRegion getMultilineCommentEndRegion(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		ITextRegion endRegion = null;
-		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)tRegion;
-			tRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
-			try {
-				while (tRegion.getEnd() != phpScriptRegion.getLength() && PHPPartitionTypes.isPHPMultiLineCommentState(tRegion.getType())) {
-					if (tRegion.getType().equals(PHPRegionTypes.PHP_COMMENT_END)) {
-						endRegion = tRegion;
-						break;
-					}
-					tRegion = phpScriptRegion.getPhpToken(tRegion.getEnd());
-				}
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
-		}
-		return endRegion;
 	}
 
 	/**
