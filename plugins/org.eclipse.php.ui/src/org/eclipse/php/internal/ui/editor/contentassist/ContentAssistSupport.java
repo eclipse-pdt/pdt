@@ -231,7 +231,16 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			internalOffset = offset - sdRegion.getStartOffset() - phpScriptRegion.getStart();
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
-			if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
+			//if we are at the begining of multi-line comment or docBlock then we should get completion.
+			if(partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC){
+				String regionType = phpScriptRegion.getPhpToken(internalOffset).getType();
+				if(regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START ){
+					if(phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset){
+						partitionType = phpScriptRegion.getPartition(internalOffset - 1);
+					}
+				}
+			}
+			if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
 			} else {
 				return;
 			}

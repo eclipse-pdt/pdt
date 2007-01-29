@@ -101,6 +101,18 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		
 		String partitionType = phpScriptRegion.getPartition(internalOffset);
 		if (partitionType == PHPPartitionTypes.PHP_DOC){
+			//if we are before the php doc start then we shouldn't get comletion.
+			if(phpScriptRegion.getPhpToken(internalOffset).getType() == PHPRegionTypes.PHPDOC_COMMENT_START){
+				if(phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset){
+					partitionType = phpScriptRegion.getPartition(internalOffset - 1);
+					if(partitionType != PHPPartitionTypes.PHP_DOC){
+						return;
+					}
+				} else{
+					// if we are inside the doc start then we shouldn't get completion
+					return;
+				}
+			}
 		}else {
 			return;
 		}
