@@ -24,6 +24,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
@@ -47,6 +48,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
  * 
@@ -99,7 +101,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				if (partitionType == PHPPartitionTypes.PHP_DEFAULT || partitionType == PHPPartitionTypes.PHP_DOC || partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
 					int placeCaretAt = handleDocBlockStart(document, command, blanks, isDocBlock);
 					if (placeCaretAt != -1) {
-						document.replace(command.offset, command.length, command.text);					
+						document.replace(command.offset, command.length, command.text);
 						command.offset = placeCaretAt;
 						command.length = 0;
 						command.text = "";
@@ -188,7 +190,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				String stub = getDocBlockStub(editorModel, document, lineStart, lineContent);
 
 				editorModel.releaseFromRead();
-				
+
 				// putting back the /** that was taken off
 				command.offset += commentStart.length();
 				document.replace(lineStart, 0, commentStart);
@@ -436,19 +438,36 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 	private boolean isNoCodeBetween(IStructuredDocument document, int offset, int endOffset) {
 		int index = offset;
-		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(index);
 
-		while (sdRegion != null && index < endOffset) {
+		try {
+			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(index);
+
 			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(index);
-			String regionType = tRegion.getType();
-			if (regionType == PHPRegionTypes.PHP_LINE_COMMENT || sdRegion.getStartOffset() + tRegion.getTextEnd() < index) {
-				index = sdRegion.getStartOffset() + tRegion.getEnd() + 1;
-				if (sdRegion.getEndOffset() < index) {
-					sdRegion = sdRegion.getNext();
-				}
-			} else {
-				return false;
+			int regionStart = sdRegion.getStartOffset(tRegion);
+
+			if (tRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) tRegion;
+				tRegion = container.getRegionAtCharacterOffset(index);
+				regionStart += tRegion.getStart();
 			}
+
+			// find the specified php token in the PhpScriptRegion
+			if (tRegion instanceof PhpScriptRegion) {
+				while (tRegion != null && index < endOffset) {
+					PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+					tRegion = scriptRegion.getPhpToken(index - regionStart);
+
+					if (tRegion != null) {
+						String regionType = tRegion.getType();
+						if (regionType == PHPRegionTypes.PHP_LINE_COMMENT || regionStart + tRegion.getTextEnd() < index) {
+							index = regionStart + tRegion.getEnd() + 1;
+						} else {
+							return false;
+						}
+					}
+				}
+			}
+		} catch (BadLocationException e) {
 		}
 
 		return true;

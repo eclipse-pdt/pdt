@@ -1,0 +1,57 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.ui.autoEdit;
+
+import org.eclipse.jface.text.DocumentCommand;
+import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.format.FormatterUtils;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+
+/**
+ *
+ */
+public class MainAutoEditStrategy implements IAutoEditStrategy {
+
+	private static IAutoEditStrategy indentLineAutoEditStrategy = new IndentLineAutoEditStrategy();
+	private static IAutoEditStrategy curlyOpenAutoEditStrategy = new CurlyOpenAutoEditStrategy();
+	private static IAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
+	private static IAutoEditStrategy matchingBracketAutoEditStrategy = new MatchingBracketAutoEditStrategy();
+	private static IAutoEditStrategy quotesAutoEditStrategy = new QuotesAutoEditStrategy();
+	private static IAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
+	private static IAutoEditStrategy docBlockAutoEditStrategy = new DocBlockAutoEditStrategy();
+	private static IAutoEditStrategy tabAutoEditStrategy = new TabAutoEditStrategy();
+
+	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
+		if (command.text == null) {
+			return;
+		}
+		String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset);
+
+		if (partitionType.equals(PHPPartitionTypes.PHP_DOC) || partitionType.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)) {
+			// case of multi line comment or php doc
+			docBlockAutoEditStrategy.customizeDocumentCommand(document, command);
+		} else if (partitionType.equals(PHPPartitionTypes.PHP_QUOTED_STRING)) {
+			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
+		} else if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
+			caseDefaultAutoEditStrategy.customizeDocumentCommand(document, command);
+			matchingBracketAutoEditStrategy.customizeDocumentCommand(document, command);
+			curlyOpenAutoEditStrategy.customizeDocumentCommand(document, command);
+			curlyCloseAutoEditStrategy.customizeDocumentCommand(document, command);
+			indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
+			tabAutoEditStrategy.customizeDocumentCommand(document, command);
+			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
+		}
+
+	}
+
+}

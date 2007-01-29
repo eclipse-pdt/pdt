@@ -15,12 +15,14 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
  * 
@@ -141,27 +143,37 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 					sdRegion = document.getRegionAtCharacterOffset(currOffset);
 					continue;
 				}
-				int regionStart = sdRegion.getStart();
 
 				ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(currOffset);
-				while (tRegion != null) {
-					String regionType = tRegion.getType();
-					if (regionType == PHPRegionTypes.PHP_TOKEN) {
-						char token = sdRegion.getText(tRegion).charAt(0);
-						if (token == ROUND_OPEN || token == SQUARE_OPEN) {
-							if (token == bracketChar) {
-								if (matcher.match(document, regionStart + tRegion.getStart() + 1) == null) {
-									return MATCHING_BRACKET_NEEDED;
+				int regionStart = sdRegion.getStartOffset(tRegion);
+				// in case of container we have the extract the PhpScriptRegion
+				if (tRegion instanceof ITextRegionContainer) {
+					ITextRegionContainer container = (ITextRegionContainer) tRegion;
+					tRegion = container.getRegionAtCharacterOffset(currOffset);
+					regionStart += tRegion.getStart();
+				}
+
+				if (tRegion instanceof PhpScriptRegion) {
+					PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+					tRegion = scriptRegion.getPhpToken(currOffset - regionStart);
+
+					while (tRegion != null) {
+						String regionType = tRegion.getType();
+						if (regionType == PHPRegionTypes.PHP_TOKEN) {
+							char token = document.getChar(regionStart + tRegion.getStart());
+							if (token == ROUND_OPEN || token == SQUARE_OPEN) {
+								if (token == bracketChar) {
+									if (matcher.match(document, regionStart + tRegion.getStart() + 1) == null) {
+										return MATCHING_BRACKET_NEEDED;
+									}
 								}
 							}
+						} else if (regionType == PHPRegionTypes.PHP_CURLY_OPEN || regionType == PHPRegionTypes.PHP_CURLY_CLOSE) {
+							return MATCHING_BRACKET_NOT_NEEDED;
 						}
 
-					} else if (regionType == PHPRegionTypes.PHP_CURLY_OPEN || regionType == PHPRegionTypes.PHP_CURLY_CLOSE) {
-						return MATCHING_BRACKET_NOT_NEEDED;
+						tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
 					}
-
-					currOffset = regionStart + tRegion.getStart() - 1;
-					tRegion = sdRegion.getRegionAtCharacterOffset(currOffset);
 				}
 
 				currOffset = sdRegion.getStartOffset() - 1;
@@ -210,27 +222,35 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 		if (sdRegion == null || sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
 			return;
 		}
-
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		if (tRegion == null) {
-			return;
-		}
-		String regionType = tRegion.getType();
-		if (regionType != PHPRegionTypes.PHP_TOKEN) {
-			return;
-		}
-
 		try {
-			char nextChar = document.getChar(offset + 1);
-			char matchingChar = getMatchingChar(deletedChar);
-			if (matchingChar == '-' || nextChar != matchingChar) {
-				return;
+			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+
+			// in case of container we have the extract the PhpScriptRegion
+			if (tRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) tRegion;
+				tRegion = container.getRegionAtCharacterOffset(offset);
 			}
 
-			boolean removeBoth = (isMatchingCharNeeded(document, offset, deletedChar) == MATCHING_BRACKET_NOT_NEEDED);
+			if (tRegion instanceof PhpScriptRegion) {
+				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+				tRegion = scriptRegion.getPhpToken(offset - sdRegion.getStartOffset(scriptRegion));
 
-			if (removeBoth) {
-				command.length = 2;
+				if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_TOKEN) {
+					return;
+				}
+
+				char nextChar = document.getChar(offset + 1);
+				char matchingChar = getMatchingChar(deletedChar);
+				if (matchingChar == '-' || nextChar != matchingChar) {
+					return;
+				}
+
+				boolean removeBoth = (isMatchingCharNeeded(document, offset, deletedChar) == MATCHING_BRACKET_NOT_NEEDED);
+
+				if (removeBoth) {
+					command.length = 2;
+				}
+
 			}
 		} catch (BadLocationException e) {
 		}

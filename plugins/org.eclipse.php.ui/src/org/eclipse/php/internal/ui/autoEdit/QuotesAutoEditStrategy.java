@@ -15,12 +15,14 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
  * 
@@ -136,29 +138,40 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 
 	private void deleteQuote(IStructuredDocument document, DocumentCommand command, char removedChar) {
 		int offset = command.offset;
+
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 		if (sdRegion == null || sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
 			return;
 		}
-
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		if (tRegion == null) {
-			return;
-		}
-		String regionType = tRegion.getType();
-		if (regionType != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
-			return;
-		}
-		if (offset != tRegion.getStart() + sdRegion.getStartOffset() || (tRegion.getTextLength() != 2 && !isBetweenBackquotes(sdRegion, offset))) {
-			//looking only for the cases where the user is trying to remove the first quote out of two coupled ones.
-			return;
-		}
 		try {
-			char nextChar = document.getChar(offset + 1);
-			if (nextChar != removedChar) {
-				return;
+			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			int regionStart = sdRegion.getStartOffset(tRegion);
+			// in case of container we have the extract the PhpScriptRegion
+			if (tRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) tRegion;
+				tRegion = container.getRegionAtCharacterOffset(offset);
+				regionStart += tRegion.getStart();
 			}
-			command.length = 2;
+
+			if (tRegion instanceof PhpScriptRegion) {
+				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+				tRegion = scriptRegion.getPhpToken(offset - regionStart);
+
+				if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+					return;
+				}
+
+				if (offset != tRegion.getStart() + regionStart || (tRegion.getTextLength() != 2 && !isBetweenBackquotes(sdRegion, offset))) {
+					//looking only for the cases where the user is trying to remove the first quote out of two coupled ones.
+					return;
+				}
+
+				char nextChar = document.getChar(offset + 1);
+				if (nextChar != removedChar) {
+					return;
+				}
+				command.length = 2;
+			}
 		} catch (BadLocationException e) {
 		}
 	}

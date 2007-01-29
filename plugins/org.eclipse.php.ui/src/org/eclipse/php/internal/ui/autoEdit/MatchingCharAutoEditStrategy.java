@@ -14,7 +14,6 @@ package org.eclipse.php.internal.ui.autoEdit;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -95,21 +94,21 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 
 		final char currChar = document.getChar(offset);
 		final char nextChar = document.getChar(offset + 1);
-				
+
 		if (Character.isWhitespace(currChar) || isClosingBracket(currChar) || isQuote && isQuote(currChar) || currChar == ';')
 			return true;
 		if (offset + 1 >= document.getLength())
 			return false;
-		
+
 		final String state = FormatterUtils.getPartitionType(document, offset);
-		
+
 		if (state == PHPRegionTypes.PHP_OPENTAG)
 			return true;
 		if (currChar == '/' && (nextChar == '/' || nextChar == '*'))
 			return true;
 		if (currChar == '?' && nextChar == '>')
 			return true;
-		
+
 		return false;
 	}
 

@@ -14,6 +14,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.format.CurlyCloseIndentationStrategy;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -22,6 +23,7 @@ import org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
  * 
@@ -35,6 +37,37 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 
 	private static PHPDocumentRegionEdgeMatcher matcher = new PHPDocumentRegionEdgeMatcher();
 
+	/**
+	 * get the php token according to the given sdRegion and offset.
+	 * @param sdRegion
+	 * @param offset
+	 * @return
+	 */
+	private ITextRegion getPhpToken(IStructuredDocumentRegion sdRegion, int offset) {
+		try {
+			// get the ITextRegionContainer region or PhpScriptRegion region
+			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			int regionStart = sdRegion.getStartOffset(tRegion);
+
+			// in case of container we have the extract the PhpScriptRegion
+			if (tRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) tRegion;
+				tRegion = container.getRegionAtCharacterOffset(offset);
+				regionStart += tRegion.getStart();
+			}
+
+			// find the specified php token in the PhpScriptRegion
+			if (tRegion instanceof PhpScriptRegion) {
+				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+				tRegion = scriptRegion.getPhpToken(offset - regionStart);
+
+				return tRegion;
+			}
+		} catch (BadLocationException e) {
+		}
+		return null;
+	}
+
 	public int autoEditAfterNewLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) {
 		try {
 
@@ -47,48 +80,35 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			int curlyCloseCounter = 0;
 			int currOffset = offset;
 			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(currOffset);
-			while (currOffset >= 0 && sdRegion != null) {
-				if (sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
-					currOffset = sdRegion.getStartOffset() - 1;
-					sdRegion = sdRegion.getPrevious();
-					continue;
-				}
-				int regionStart = sdRegion.getStart();
-				String text = sdRegion.getFullText();
 
-				ITextRegion tRegion = null;
-				int indexInText = text.length() - 1;
-				while (indexInText >= 0) {
-					char currChar = text.charAt(indexInText);
-					if (currChar == CURLY_CLOSE) {
-						tRegion = sdRegion.getRegionAtCharacterOffset(regionStart + indexInText);
-						if (tRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
-							curlyCloseCounter++;
-						}
-					} else if (currChar == CURLY_OPEN) {
-						tRegion = sdRegion.getRegionAtCharacterOffset(regionStart + indexInText);
-						String regionType = tRegion.getType();
-						if (regionType != PHPRegionTypes.PHP_CURLY_OPEN) {
-							indexInText--;
-							continue;
-						}
-						curlyCloseCounter--;
-						if (curlyCloseCounter < 0) {
-							if (matcher.match(document, regionStart + indexInText + 1) == null) {
-								addCurlyClose = true;
-								break;
-							}
-							curlyCloseCounter++;
-						}
+			int regionStart = sdRegion.getStart();
+			String text = sdRegion.getFullText();
+
+			ITextRegion tRegion = null;
+			int indexInText = text.length() - 1;
+			while (indexInText >= 0) {
+				char currChar = text.charAt(indexInText);
+				if (currChar == CURLY_CLOSE) {
+					tRegion = getPhpToken(sdRegion, regionStart + indexInText);
+					if (tRegion == null || tRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
+						curlyCloseCounter++;
 					}
-					indexInText--;
+				} else if (currChar == CURLY_OPEN) {
+					tRegion = getPhpToken(sdRegion, regionStart + indexInText);
+					if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_CURLY_OPEN) {
+						indexInText--;
+						continue;
+					}
+					curlyCloseCounter--;
+					if (curlyCloseCounter < 0) {
+						if (matcher.match(document, regionStart + indexInText + 1) == null) {
+							addCurlyClose = true;
+							break;
+						}
+						curlyCloseCounter++;
+					}
 				}
-				if (addCurlyClose) {
-					break;
-				}
-
-				currOffset = sdRegion.getStartOffset() - 1;
-				sdRegion = sdRegion.getPrevious();
+				indexInText--;
 			}
 
 			if (addCurlyClose) {
@@ -107,7 +127,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 	 */
 	private int copyRestOfLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) throws BadLocationException {
 
-		if(command.offset + command.length == document.getLength()){ // if we're at the end of the document then nothing to copy
+		if (command.offset + command.length == document.getLength()) { // if we're at the end of the document then nothing to copy
 			return 0;
 		}
 		int offset = command.offset;

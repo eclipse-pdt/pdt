@@ -33,14 +33,7 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredText
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.autoEdit.CaseDefaultAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.CurlyCloseAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.CurlyOpenAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.DocBlockAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.IndentLineAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.MatchingBracketAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.QuotesAutoEditStrategy;
-import org.eclipse.php.internal.ui.autoEdit.TabAutoEditStrategy;
+import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPCodeHyperlinkDetector;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistProcessor;
@@ -322,38 +315,22 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return formatter;
 	}
 
-	private static IAutoEditStrategy indentLineAutoEditStrategy = new IndentLineAutoEditStrategy();
-	private static IAutoEditStrategy curlyOpenAutoEditStrategy = new CurlyOpenAutoEditStrategy();
-	private static IAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
-	private static IAutoEditStrategy matchingBAutoEditStrategy = new MatchingBracketAutoEditStrategy();
-	private static IAutoEditStrategy quotesAutoEditStrategy = new QuotesAutoEditStrategy();
-	private static IAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
-	private static IAutoEditStrategy docBlockAutoEditStrategy = new DocBlockAutoEditStrategy();
-	private static IAutoEditStrategy tabAutoEditStrategy = new TabAutoEditStrategy();
+	private static IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
 
-	private static IAutoEditStrategy[] defaultStrategies = new IAutoEditStrategy[] { indentLineAutoEditStrategy, curlyOpenAutoEditStrategy, curlyCloseAutoEditStrategy, matchingBAutoEditStrategy, quotesAutoEditStrategy, caseDefaultAutoEditStrategy , tabAutoEditStrategy};
-	private static IAutoEditStrategy[] quotesStrategies = new IAutoEditStrategy[] { quotesAutoEditStrategy };
-	private static IAutoEditStrategy[] docBlockStrategies = new IAutoEditStrategy[] { docBlockAutoEditStrategy };
+	private static IAutoEditStrategy[] phpStrategies = new IAutoEditStrategy[] { mainAutoEditStrategy };
 
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		if (contentType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
-			return defaultStrategies;
-		}
-		if (contentType.equals(PHPPartitionTypes.PHP_QUOTED_STRING)) {
-			return quotesStrategies;
-		}
-		if (contentType.equals(PHPPartitionTypes.PHP_DOC) || contentType.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)) {
-			return docBlockStrategies;
+			return phpStrategies;
 		}
 		return super.getAutoEditStrategies(sourceViewer, contentType);
 	}
-	
+
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
 		if (contentType == PHPPartitionTypes.PHP_DEFAULT) {
 			// use php's doubleclick strategy
 			return new PHPDoubleClickStrategy();
-		}
-		else
+		} else
 			return super.getDoubleClickStrategy(sourceViewer, contentType);
 	}
 }
