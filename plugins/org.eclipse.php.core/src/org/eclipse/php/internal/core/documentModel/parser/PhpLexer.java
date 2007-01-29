@@ -427,6 +427,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 			yylex = removeFromBuffer();
 		}
 		else if (PHPPartitionTypes.isPHPCommentState(yylex)) {
+			bufferedState = createLexicalStateMemento();
 			bufferedTokens = new LinkedList();
 			checkForTodo(bufferedTokens, yylex, start, yylength(), yytext());
 			yylex = removeFromBuffer();
