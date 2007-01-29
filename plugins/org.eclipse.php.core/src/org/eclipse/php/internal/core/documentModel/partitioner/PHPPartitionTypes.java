@@ -63,10 +63,19 @@ public abstract class PHPPartitionTypes {
 	public static final int getPartitionStart(PhpScriptRegion region, int offset) throws BadLocationException {
 		String partitionType = region.getPartition(offset);
 		ITextRegion internalRegion = region.getPhpToken(offset);
-		while (internalRegion.getStart() > 0 && region.getPartition(internalRegion.getStart()) == partitionType) {
+		ITextRegion startRegion;
+		do {
+			startRegion = internalRegion;
 			internalRegion = region.getPhpToken(internalRegion.getStart() - 1);
-		}
-		return internalRegion.getStart();
+			if (region.getPartition(internalRegion.getStart()) != partitionType) {
+				break;
+			}
+			if (internalRegion.getStart() == 0) {
+				startRegion = internalRegion;
+				break;
+			}
+		} while (true);
+		return startRegion.getStart();
 	}
 	
 	/**
@@ -79,10 +88,19 @@ public abstract class PHPPartitionTypes {
 	public static final int getPartitionEnd(PhpScriptRegion region, int offset) throws BadLocationException {
 		String partitionType = region.getPartition(offset);
 		ITextRegion internalRegion = region.getPhpToken(offset);
-		while (internalRegion.getEnd() != region.getEnd() && region.getPartition(internalRegion.getStart()) == partitionType) {
-			internalRegion = region.getPhpToken(region.getEnd());
-		}
-		return internalRegion.getEnd();
+		ITextRegion endRegion;
+		do {
+			endRegion = internalRegion;
+			internalRegion = region.getPhpToken(internalRegion.getEnd());
+			if (region.getPartition(internalRegion.getStart()) != partitionType) {
+				break;
+			}
+			if (internalRegion.getEnd() == region.getLength()) {
+				endRegion = internalRegion;
+				break;
+			}
+		} while (true);
+		return endRegion.getEnd();
 	}
 	
 	/**
