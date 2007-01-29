@@ -11,6 +11,8 @@
 package org.eclipse.php.internal.core.documentModel.partitioner;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -81,6 +83,20 @@ public abstract class PHPPartitionTypes {
 			internalRegion = region.getPhpToken(region.getEnd());
 		}
 		return internalRegion.getEnd();
+	}
+	
+	/**
+	 * Returns partition which corresponds to the provided offset
+	 * @param region Region containing current offset
+	 * @param offset Current position relative to the containing region
+	 * @return typed region containing partition 
+	 * @throws BadLocationException
+	 */
+	public static final ITypedRegion getPartition(PhpScriptRegion region, int offset) throws BadLocationException {
+		String partitionType = region.getPartition(offset);
+		int startOffset = getPartitionStart(region, offset);
+		int endOffset = getPartitionEnd(region, offset);
+		return new TypedRegion(startOffset, endOffset - startOffset, partitionType);
 	}
 
 	public static boolean isPHPDocCommentState(String type) {
