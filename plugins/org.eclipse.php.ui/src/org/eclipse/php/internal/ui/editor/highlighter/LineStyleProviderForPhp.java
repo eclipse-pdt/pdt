@@ -450,7 +450,17 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 
 		ITextRegion[] phpTokens = null;
 		try {
-			phpTokens = region.getPhpTokens(partitionStartOffset - regionStart, partitionLength);
+			
+			int from;
+			int length;
+			if (partitionStartOffset < regionStart) {
+				from = 0;
+				length = partitionLength - (partitionStartOffset - regionStart);  
+			} else {
+				from = partitionStartOffset - regionStart;
+				length = partitionLength;
+			}
+			phpTokens = region.getPhpTokens(from, Math.min(length, region.getLength()));
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
 				attr = getAttributeFor(element);
