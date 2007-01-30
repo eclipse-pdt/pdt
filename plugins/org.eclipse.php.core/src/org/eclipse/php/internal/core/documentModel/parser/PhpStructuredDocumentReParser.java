@@ -50,6 +50,8 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 		}
 		return result;
 	}
+	
+	
 
 	/**
 	 * This implementation updates the php tokens model after updating WST editor model

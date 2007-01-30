@@ -152,7 +152,9 @@ public class PhpScriptRegion extends ForeignRegion {
 		// 1. replace the regions
 		// 2. adjust next regions start location
 		// 3. update state changes
-		if (state.equals(endState)) {
+		final int size = length - deletedLength;			
+		final int end = newContainer.getLastToken().getEnd();
+		if (state.equals(endState) && tokenEnd.getEnd() + size == end) {
 			// 1. replace the regions
 			final ListIterator oldIterator = tokensContaier.removeTokensSubList(tokenStart, tokenEnd);
 			ITextRegion[] newTokens = newContainer.getPhpTokens(); // now, add the new ones
@@ -161,14 +163,13 @@ public class PhpScriptRegion extends ForeignRegion {
 			}
 
 			// 2. adjust next regions start location
-			final int size = length - deletedLength;			
 			while (oldIterator.hasNext()) {
 				ITextRegion adjust = (ITextRegion) oldIterator.next();
 				adjust.adjustStart(size);
 			}
 
 			// 3. update state changes
-			tokensContaier.updateStateChanges(newContainer, tokenStart.getStart(), newContainer.getLastToken().getEnd());
+			tokensContaier.updateStateChanges(newContainer, tokenStart.getStart(), end);
 			isFullReparsed = false;
 			return true;
 		}
