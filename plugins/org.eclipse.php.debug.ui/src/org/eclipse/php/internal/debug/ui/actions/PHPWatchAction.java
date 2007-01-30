@@ -24,7 +24,7 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
  * An action for adding a new PHP watch expressions.
@@ -51,10 +51,10 @@ public class PHPWatchAction extends WatchExpressionAction implements IWorkbenchW
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection;
 			IExpressionManager expressionManager = DebugPlugin.getDefault().getExpressionManager();
-			IDOMText domText = (IDOMText) selection.getFirstElement();
+			IDOMNode domNode = (IDOMNode) selection.getFirstElement();
 			String expression;
 			try {
-				expression = domText.getFirstStructuredDocumentRegion().getParentDocument().get(textSelection.getOffset(), textSelection.getLength());
+				expression = domNode.getFirstStructuredDocumentRegion().getParentDocument().get(textSelection.getOffset(), textSelection.getLength());
 				//	create the new watch expression
 				IWatchExpression watchExpression = expressionManager.newWatchExpression(expression.trim());
 				expressionManager.addExpression(watchExpression);
