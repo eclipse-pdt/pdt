@@ -748,6 +748,7 @@ private final String doScan(String searchString1, String searchString2, boolean 
 	char lastCheckChar;
 	int i;
 	boolean same = false;
+	char quoteChar = 0;
 	while (stillSearching) {
 		n = 0;
 	
@@ -765,6 +766,23 @@ private final String doScan(String searchString1, String searchString2, boolean 
 			// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
 			// Check the characters in the target versus the last targetLength characters read from the buffer
 			// and see if it matches
+			
+			// ignores the "?>" case i.e php end tags in a string
+			if (quoteChar != 0) {
+				continue;
+			}		
+			final char current = yy_buffer[yy_currentPos];
+			if (current == '"' || current == '\'') {
+				if (quoteChar == 0) {
+					quoteChar = current;
+				} else {
+					if (quoteChar == current) {
+						quoteChar = 0;
+						continue;
+					}					
+				}				
+			} 			
+			///////////////////////////
 			
 			// safety check for array accesses (yy_currentPos is the *last* character we can check against)
 			if(yy_currentPos >= searchStringLength &&  yy_currentPos <= yy_buffer.length) {
