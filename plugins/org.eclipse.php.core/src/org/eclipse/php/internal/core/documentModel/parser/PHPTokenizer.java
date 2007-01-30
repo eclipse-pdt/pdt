@@ -721,29 +721,25 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 }
 
 /**
- * Method doScan.
+ * Method doScanEndPhp
  * 
  * @see doScan(searchString, req...) 
  * this version can handle two strings as options to search string
  * it originally written to support ?> or %> close tags to php
  * The two strings must be on the same length
  *
- * @param searchString1 - target string to search for ex.: "-->", "</tagname"
- * @param searchString2 - target string to search for ex.: "-->", "</tagname" (maybe null)
- * @param requireTailSeparator - whether the target must be immediately followed by whitespace or '>'
+ * @param isAsp - whether the asp %> close is premited
  * @param context - the context of the scanned region if non-zero length
  * @param exitState - the state to go to if the region was of non-zero length
  * @param abortState - the state to go to if the searchString was found immediately
  * @return String - the context found: the desired context on a non-zero length match, the abortContext on immediate success
  * @throws IOException
  */
-private final String doScan(String searchString1, String searchString2, boolean requireTailSeparator, String searchContext, int exitState, int immediateFallbackState) throws IOException {
+private final String doScanEndPhp(boolean isAsp, String searchContext, int exitState, int immediateFallbackState) throws IOException {
 	boolean stillSearching = true;
 	// Disable further block (probably)
 	fIsBlockingEnabled = false;
-	int searchStringLength = searchString1.length();
 	int n = 0;
-	char lastCheckChar;
 	int i;
 	boolean same = false;
 	char quoteChar = 0;
@@ -752,7 +748,7 @@ private final String doScan(String searchString1, String searchString2, boolean 
 	
 		// Ensure that enough data from the input exists to compare against the search String.
 		n = yy_advance();
-		while(n != YYEOF && yy_currentPos < searchStringLength)
+		while(n != YYEOF && yy_currentPos < 2)
 			n = yy_advance();
 		// If the input was too short or we've exhausted the input, stop immediately.
 		if (n == YYEOF) {
@@ -766,30 +762,39 @@ private final String doScan(String searchString1, String searchString2, boolean 
 			// and see if it matches
 			
 			// ignores the "?>" case i.e php end tags in a string
-			final char current = yy_buffer[yy_currentPos - searchStringLength];
-			if (current == '"' || current == '\'') {
+			final char current = yy_buffer[yy_currentPos - 2];
+			if (current == '"' || current == '\'' || current == '`') { // start-end blockers
 				if (quoteChar == 0) {
-					quoteChar = current; // but resume to check previous locations
+					quoteChar = current; 
 				} else {
 					if (quoteChar == current) {
 						quoteChar = 0;
 					}
-					continue;					
-				}				
+				}
+				continue;					
 			} else {
-				if (quoteChar != 0) {
+				final char next = yy_buffer[yy_currentPos - 1];
+				if (current == '/' && next == '*') { // start blocker
+					if (quoteChar == 0) {
+						quoteChar = current; 
+					} 
 					continue;
-				}		
+				} else if (current == '*' && next == '/' && quoteChar == next) { // end blocker
+					quoteChar = 0;
+				}				
 			}
+			if (quoteChar != 0) {
+				continue;
+			}		
 			///////////////////////////
 			
 			// safety check for array accesses (yy_currentPos is the *last* character we can check against)
-			if(yy_currentPos >= searchStringLength &&  yy_currentPos <= yy_buffer.length) {
-				for(i = 0; i < searchStringLength; i++) {
-					final char c = yy_buffer[i + yy_currentPos - searchStringLength];
+			if(yy_currentPos >= 2 &&  yy_currentPos <= yy_buffer.length) {
+				for(i = 0; i < 2; i++) {
+					final char c = yy_buffer[i + yy_currentPos - 2];
 					// to enable search of ?> or %> 
 					if(same) {
-						same = c == searchString1.charAt(i) || (searchString2 != null && c == searchString2.charAt(i));
+						same = c == "?>".charAt(i) || (isAsp && c == "%>".charAt(i));
 					}
 				}
 			}
@@ -797,22 +802,12 @@ private final String doScan(String searchString1, String searchString2, boolean 
 			else {
 				same = false;
 			}
-			if (same && requireTailSeparator && yy_currentPos < yy_buffer.length) {
-				// Additional check for close tags to ensure that targetString="</script" doesn't match
-				// "</scriptS"
-				lastCheckChar = yy_buffer[yy_currentPos];
-				// Succeed on "</script>" and "</script "
-				if(lastCheckChar == '>' || Character.isWhitespace(lastCheckChar))
-					stillSearching = false;
-			}
-			else {
-				stillSearching = !same || (yy_currentPos < yy_startRead + searchStringLength);
-			}
+			stillSearching = !same || (yy_currentPos < yy_startRead + 2);
 		}
 	}
 	if (n != YYEOF || same) {
 		// We've stopped short of the end or definitely found a match
-		yy_markedPos = yy_currentPos - searchStringLength;
+		yy_markedPos = yy_currentPos - 2;
 		yy_currentPos = yy_markedPos + 1;
 		// If the searchString occurs at the very beginning of what would have
 		// been a Block, resume scanning normally immediately
@@ -833,8 +828,6 @@ private final String doScan(String searchString1, String searchString2, boolean 
 		return primGetNextToken();
 	return searchContext;
 }
-
-
 
 // call the doScan without searching for PHP internal code
 private final String doScan(String searchString, boolean requireTailSeparator, String searchContext, int exitState, int immediateFallbackState) throws IOException {
@@ -2154,9 +2147,7 @@ protected final boolean containsTagName(String markerTagName) {
         case 88: 
         case 89: 
           { 
-	return UseAspTagsHandler.useAspTagsAsPhp(project) ?  
-		doScan("?>", "%>", false, PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT) : 
-		doScan("?>", null, false, PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
+	return doScanEndPhp(UseAspTagsHandler.useAspTagsAsPhp(project), PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
  }
         case 285: break;
         case 90: 
