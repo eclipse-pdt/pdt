@@ -11,20 +11,22 @@
 package org.eclipse.php.internal.debug.core.communication;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.internal.core.LaunchManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugRequestHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
@@ -37,11 +39,12 @@ import org.eclipse.php.internal.core.util.BlockingQueue;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
-import org.eclipse.php.internal.debug.core.debugger.messages.*;
+import org.eclipse.php.internal.debug.core.debugger.messages.DebugSessionStartedNotification;
 import org.eclipse.php.internal.debug.core.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
@@ -50,7 +53,6 @@ import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.internal.operations.TimeTriggeredProgressMonitorDialog;
 
 /**
  * The debug connection thread is responsible of initilizing and handle a single debug session that was
@@ -210,7 +212,7 @@ public class DebugConnectionThread implements Runnable {
 					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 					if (response == null) {
 						// TODO - Display a message that we are waiting for the server response.
-						// In case that the responce finally arrives, remove the message.
+						// In case that the response finally arrives, remove the message.
 						// In case we have a timeout, close the connection and display a different message.
 						
 						request.wait(peerResponseTimeout);
@@ -1014,7 +1016,7 @@ public class DebugConnectionThread implements Runnable {
 						// can assume that the remote debugger protocol has a different version then expected.
 						if (!validProtocol && messageType != startMessageId) {
 							// display an error message that the protocol in used is wrong.
-							final String errorMessage = "Incompatible Debug Server version.\nProbably the remote debugger protocol does not match the expected protocol version (" + RemoteDebugger.PROTOCOL_ID + ")";
+							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new String[] {String.valueOf(RemoteDebugger.PROTOCOL_ID)});
 							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
 							DebugPlugin.log(status);
 							Display.getDefault().asyncExec(new Runnable() {
