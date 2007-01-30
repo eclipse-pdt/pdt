@@ -768,9 +768,6 @@ private final String doScan(String searchString1, String searchString2, boolean 
 			// and see if it matches
 			
 			// ignores the "?>" case i.e php end tags in a string
-			if (quoteChar != 0) {
-				continue;
-			}		
 			final char current = yy_buffer[yy_currentPos];
 			if (current == '"' || current == '\'') {
 				if (quoteChar == 0) {
@@ -782,6 +779,9 @@ private final String doScan(String searchString1, String searchString2, boolean 
 					}					
 				}				
 			} 			
+			if (quoteChar != 0) {
+				continue;
+			}		
 			///////////////////////////
 			
 			// safety check for array accesses (yy_currentPos is the *last* character we can check against)
