@@ -22,6 +22,8 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.w3c.dom.Node;
 
@@ -50,15 +52,21 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 							IStructuredDocumentRegion sdRegion = structuredModel.getStructuredDocument().getRegionAtCharacterOffset(caretPosition);
 							if (sdRegion != null) {
 								ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(caretPosition);
+								
+								ITextRegionCollection container = sdRegion;
+								if(tRegion instanceof ITextRegionContainer){
+									container = (ITextRegionContainer)tRegion;
+									tRegion = container.getRegionAtCharacterOffset(caretPosition);
+								}
 
 								// We should always hit the PhpScriptRegion:
 								if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 									PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
-									tRegion = phpScriptRegion.getPhpToken(caretPosition - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+									tRegion = phpScriptRegion.getPhpToken(caretPosition - container.getStartOffset() - phpScriptRegion.getStart());
 
 									// Handle double-click on PHPDoc tags:
 									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE || PHPPartitionTypes.isPHPDocTagState(tRegion.getType())) {
-										structuredTextViewer.setSelectedRange(sdRegion.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart(), tRegion.getTextLength());
+										structuredTextViewer.setSelectedRange(container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart(), tRegion.getTextLength());
 										return; // Stop processing
 									}
 								}
