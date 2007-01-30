@@ -31,6 +31,8 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPDebugTextHover extends AbstractPHPTextHover {
 
@@ -45,11 +47,17 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 		if (flatNode != null) {
 			region = flatNode.getRegionAtCharacterOffset(offset);
 		}
+		
+		ITextRegionCollection container = flatNode;
+		if(region instanceof ITextRegionContainer){
+			container = (ITextRegionContainer)region;
+			region = container.getRegionAtCharacterOffset(offset);
+		}
 
 		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
 			try {
-				region = phpScriptRegion.getPhpToken(offset - flatNode.getStartOffset() - region.getStart());
+				region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
 			} catch (BadLocationException e) {
 				region = null;
 			}
