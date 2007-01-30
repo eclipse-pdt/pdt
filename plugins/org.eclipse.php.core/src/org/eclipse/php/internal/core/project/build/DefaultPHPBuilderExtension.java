@@ -32,7 +32,7 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 		return true;
 	}
 
-	public void startupOnInitialize() {
+	public void startupOnInitialize(IncrementalProjectBuilder builder) {
 	}
 
 	public void clean(IncrementalProjectBuilder builder, IProgressMonitor monitor) throws CoreException {

@@ -58,7 +58,7 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 		super.startupOnInitialize();
 		
 		for (int i = 0; i < extensions.length; ++i) {
-			extensions[i].startupOnInitialize();
+			extensions[i].startupOnInitialize(this);
 		}
 	}
 }

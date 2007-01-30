@@ -40,7 +40,7 @@ public interface IPHPBuilderExtension {
 	/**
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#startupOnInitialize()
 	 */
-	public void startupOnInitialize();
+	public void startupOnInitialize(IncrementalProjectBuilder builder);
 		
 	/**
 	 * Returns whether this PHP builder extension is enabled
