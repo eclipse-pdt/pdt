@@ -790,7 +790,7 @@ private final String doScan(String searchString1, String searchString2, boolean 
 				for(i = 0; i < searchStringLength; i++) {
 					final char c = yy_buffer[i + yy_currentPos - searchStringLength];
 					// to enable search of ?> or %> 
-					if(same && fIsCaseSensitiveBlocking) {
+					if(same) {
 						same = c == searchString1.charAt(i) || c == searchString2.charAt(i) ;
 					}
 				}
