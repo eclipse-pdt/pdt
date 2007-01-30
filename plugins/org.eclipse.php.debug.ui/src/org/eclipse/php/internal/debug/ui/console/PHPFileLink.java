@@ -53,12 +53,13 @@ public class PHPFileLink implements IHyperlink {
 	 */
 	public void linkActivated() {
 		IEditorPart editorPart = null;
+		DOMModelForPHP domModel = null;
 		try {
 			editorPart = EditorUtility.openInEditor(fFile, false);
 			if (editorPart != null && fFileLineNumber > 0) {
 				if (fFileOffset < 0) {
 					PHPStructuredEditor e = (PHPStructuredEditor) editorPart;
-					DOMModelForPHP domModel = ((DOMModelForPHP) StructuredModelManager.getModelManager().getModelForRead((IFile) fFile));
+					domModel = ((DOMModelForPHP) StructuredModelManager.getModelManager().getModelForRead((IFile) fFile));
 					IRegion region = domModel.getDocument().getStructuredDocument().getLineInformation(fFileLineNumber - 1);
 					fFileOffset = region.getOffset();
 					fFileLength = region.getLength();
@@ -77,6 +78,9 @@ public class PHPFileLink implements IHyperlink {
 		} finally {
 			if (editorPart != null) {
 				EditorUtility.revealInEditor(editorPart, fFileOffset, fFileLength);
+				if(domModel != null) {
+					domModel.releaseFromRead();
+				}
 			}
 		}
 	}
