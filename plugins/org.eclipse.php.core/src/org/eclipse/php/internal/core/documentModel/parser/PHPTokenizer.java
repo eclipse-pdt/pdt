@@ -729,7 +729,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
  * The two strings must be on the same length
  *
  * @param searchString1 - target string to search for ex.: "-->", "</tagname"
- * @param searchString2 - target string to search for ex.: "-->", "</tagname"
+ * @param searchString2 - target string to search for ex.: "-->", "</tagname" (maybe null)
  * @param requireTailSeparator - whether the target must be immediately followed by whitespace or '>'
  * @param context - the context of the scanned region if non-zero length
  * @param exitState - the state to go to if the region was of non-zero length
@@ -738,8 +738,6 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
  * @throws IOException
  */
 private final String doScan(String searchString1, String searchString2, boolean requireTailSeparator, String searchContext, int exitState, int immediateFallbackState) throws IOException {
-	assert searchString1.length() == searchString2.length();
-	
 	boolean stillSearching = true;
 	// Disable further block (probably)
 	fIsBlockingEnabled = false;
@@ -768,7 +766,7 @@ private final String doScan(String searchString1, String searchString2, boolean 
 			// and see if it matches
 			
 			// ignores the "?>" case i.e php end tags in a string
-			final char current = yy_buffer[yy_currentPos];
+			final char current = yy_buffer[yy_currentPos - searchStringLength];
 			if (current == '"' || current == '\'') {
 				if (quoteChar == 0) {
 					quoteChar = current; // but resume to check previous locations
@@ -791,7 +789,7 @@ private final String doScan(String searchString1, String searchString2, boolean 
 					final char c = yy_buffer[i + yy_currentPos - searchStringLength];
 					// to enable search of ?> or %> 
 					if(same) {
-						same = c == searchString1.charAt(i) || c == searchString2.charAt(i) ;
+						same = c == searchString1.charAt(i) || (searchString2 != null && c == searchString2.charAt(i));
 					}
 				}
 			}
@@ -2158,7 +2156,7 @@ protected final boolean containsTagName(String markerTagName) {
           { 
 	return UseAspTagsHandler.useAspTagsAsPhp(project) ?  
 		doScan("?>", "%>", false, PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT) : 
-		doScan("?>", false, false, PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
+		doScan("?>", null, false, PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
  }
         case 285: break;
         case 90: 
