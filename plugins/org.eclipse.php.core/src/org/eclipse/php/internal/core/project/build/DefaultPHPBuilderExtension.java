@@ -25,20 +25,7 @@ import org.eclipse.php.core.project.build.IPHPBuilderExtension;
 
 public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 
-	private PHPIncrementalProjectBuilder containingBuilder;
-
 	public DefaultPHPBuilderExtension() {
-	}
-
-	public PHPIncrementalProjectBuilder getContainingBuilder() {
-		return containingBuilder;
-	}
-
-	public void setContainingBuilder(PHPIncrementalProjectBuilder containingBuilder) {
-		if (containingBuilder == null) {
-			throw new IllegalArgumentException("PHP Incremental Project builder must be non-null value"); //$NON-NLS-1$
-		}
-		this.containingBuilder = containingBuilder;
 	}
 	
 	public boolean isEnabled() {
@@ -48,28 +35,29 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 	public void startupOnInitialize() {
 	}
 
-	public void clean(IProgressMonitor monitor) throws CoreException {
-		cleanBuild();
+	public void clean(IncrementalProjectBuilder builder, IProgressMonitor monitor) throws CoreException {
+		cleanBuild(builder.getProject());
 	}
 
-	public IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
+	public IProject[] build(IncrementalProjectBuilder builder, int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		if (kind == IncrementalProjectBuilder.FULL_BUILD) {
-			fullBuild();
+			fullBuild(builder);
 			return null;
 		}
-
-		IResourceDelta delta = containingBuilder.getDelta(containingBuilder.getProject());
+		
+		IResourceDelta delta = builder.getDelta(builder.getProject());
 		if (delta == null) {
 			return null;
 		}
 
 		buildDelta(delta, monitor);
+		
 		return null;
 	}
 
-	private void fullBuild() {
+	private void fullBuild(IncrementalProjectBuilder builder) {
 		try {
-			containingBuilder.getProject().accept(new FullPhpProjectBuildVisitor());
+			builder.getProject().accept(new FullPhpProjectBuildVisitor());
 		} catch (CoreException e) {
 			PHPCorePlugin.log(e);
 			return;
@@ -96,9 +84,5 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 			modelForProject.clean();
 			return;
 		}
-	}
-
-	private void cleanBuild() {
-		cleanBuild(containingBuilder.getProject());
 	}
 }

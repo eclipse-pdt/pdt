@@ -30,10 +30,6 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
 	public PHPIncrementalProjectBuilder() {
 		extensions = PHPBuilderExtensionsRegistry.getInstance().getExtensions();
-		
-		for (int i = 0; i < extensions.length; ++i) {
-			extensions[i].setContainingBuilder(this);
-		}
 	}
 
 	/**
@@ -44,7 +40,7 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		for (int i = 0; i < extensions.length; ++i) {
 			if (extensions[i].isEnabled()) {
-				extensions[i].build(kind, args, monitor);
+				extensions[i].build(this, kind, args, monitor);
 			}
 		}
 		return null;
@@ -53,7 +49,7 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 	protected void clean(IProgressMonitor monitor) throws CoreException {
 		for (int i = 0; i < extensions.length; ++i) {
 			if (extensions[i].isEnabled()) {
-				extensions[i].clean(monitor);
+				extensions[i].clean(this, monitor);
 			}
 		}
 	}

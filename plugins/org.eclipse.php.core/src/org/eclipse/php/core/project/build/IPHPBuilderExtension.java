@@ -30,29 +30,18 @@ public interface IPHPBuilderExtension {
 	/**
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException;
-
+	public IProject[] build(IncrementalProjectBuilder builder, int kind, Map args, IProgressMonitor monitor) throws CoreException;
+	
 	/**
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#clean(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void clean(IProgressMonitor monitor) throws CoreException;
+	public void clean(IncrementalProjectBuilder builder, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#startupOnInitialize()
 	 */
 	public void startupOnInitialize();
-	
-	/**
-	 * Sets containing PHP incremental project builder
-	 */
-	public void setContainingBuilder(PHPIncrementalProjectBuilder containingBuilder);
-	
-	/**
-	 * Returns containing PHP incremental project builder
-	 * @return containing builder
-	 */
-	public PHPIncrementalProjectBuilder getContainingBuilder();
-	
+		
 	/**
 	 * Returns whether this PHP builder extension is enabled
 	 */
