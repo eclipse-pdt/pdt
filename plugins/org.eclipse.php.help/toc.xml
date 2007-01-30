@@ -2,7 +2,7 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="PDT User Guide" topic="html/toc.html">
-  <topic label="Getting Started with the PDT (PHP Integrated Development Tool) User Guide" topic="html/gettingstarted.html">
+  <topic label="Getting Started" topic="html/gettingstarted.html">
     <anchor id="gettingstarted"/>
   </topic>
   <topic label="Creating a Project">
