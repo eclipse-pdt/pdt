@@ -771,17 +771,18 @@ private final String doScan(String searchString1, String searchString2, boolean 
 			final char current = yy_buffer[yy_currentPos];
 			if (current == '"' || current == '\'') {
 				if (quoteChar == 0) {
-					quoteChar = current;
+					quoteChar = current; // but resume to check previous locations
 				} else {
 					if (quoteChar == current) {
 						quoteChar = 0;
-						continue;
-					}					
+					}
+					continue;					
 				}				
-			} 			
-			if (quoteChar != 0) {
-				continue;
-			}		
+			} else {
+				if (quoteChar != 0) {
+					continue;
+				}		
+			}
 			///////////////////////////
 			
 			// safety check for array accesses (yy_currentPos is the *last* character we can check against)
