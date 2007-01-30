@@ -291,7 +291,7 @@ public class PhpFormatter implements IStructuredFormatter {
 
 	private boolean shouldReformat(IStructuredDocument document, IRegion lineInfo) {
 		final String checkedLineBeginState = FormatterUtils.getPartitionType(document, lineInfo.getOffset());
-		return ((checkedLineBeginState == PHPPartitionTypes.PHP_DEFAULT) || (checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (checkedLineBeginState == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT));
+		return ((checkedLineBeginState == PHPPartitionTypes.PHP_DEFAULT) || (checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (checkedLineBeginState == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT) || (checkedLineBeginState == PHPPartitionTypes.PHP_DOC));
 	}
 
 	protected IIndentationStrategy getIndentationStrategy(char c) {
