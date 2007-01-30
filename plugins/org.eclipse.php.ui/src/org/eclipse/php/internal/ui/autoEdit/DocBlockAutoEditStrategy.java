@@ -459,8 +459,8 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 			// find the specified php token in the PhpScriptRegion
 			if (tRegion instanceof PhpScriptRegion) {
-				while (tRegion != null && index < endOffset) {
-					PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+				while (tRegion != null && index < endOffset && index - regionStart > 0) {
 					tRegion = scriptRegion.getPhpToken(index - regionStart);
 
 					if (tRegion != null) {
