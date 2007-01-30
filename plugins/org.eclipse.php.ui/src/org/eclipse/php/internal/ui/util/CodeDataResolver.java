@@ -45,6 +45,8 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
@@ -104,15 +106,21 @@ public class CodeDataResolver {
 			return null;
 		}
 		
+		ITextRegionCollection container = sdRegion;
+		if(textRegion instanceof ITextRegionContainer){
+			container = (ITextRegionContainer)textRegion;
+			textRegion = container.getRegionAtCharacterOffset(offset);
+		}
+		
 		PhpScriptRegion phpScriptRegion;
 		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			phpScriptRegion = (PhpScriptRegion)textRegion;
-			textRegion = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart()); 
+			textRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart()); 
 		} else {
 			return null;
 		}
 		
-		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(sdRegion.getStartOffset() + phpScriptRegion.getStart() + textRegion.getEnd(), sdRegion, true);
+		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(container.getStartOffset() + phpScriptRegion.getStart() + textRegion.getEnd(), sdRegion, true);
 		if (statmentText == null) {
 			return null;
 		}

@@ -43,6 +43,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 
 public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
@@ -77,9 +79,15 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
 				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(region.getOffset());
 				ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(region.getOffset());
 				
+				ITextRegionCollection container = sdRegion;
+				if(textRegion instanceof ITextRegionContainer){
+					container = (ITextRegionContainer)textRegion;
+					textRegion = container.getRegionAtCharacterOffset(region.getOffset());
+				}
+				
 				if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 					PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
-					ITextRegion phpToken = phpScriptRegion.getPhpToken(region.getOffset() - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+					ITextRegion phpToken = phpScriptRegion.getPhpToken(region.getOffset() - container.getStartOffset() - phpScriptRegion.getStart());
 					
 					// Check whether the current token is string, if it is - try to resolve file name from this string:
 					if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
@@ -92,7 +100,7 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
 							prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart() - 1);
 							if (prevRegion != null && isIncludeType(prevRegion.getType())) {
 								
-								int startOffset = sdRegion.getStartOffset() + phpScriptRegion.getStart() + phpToken.getStart();
+								int startOffset = container.getStartOffset() + phpScriptRegion.getStart() + phpToken.getStart();
 								int offsetLength = phpToken.getLength();
 								
 								// Get the string contents - it's an included file name:

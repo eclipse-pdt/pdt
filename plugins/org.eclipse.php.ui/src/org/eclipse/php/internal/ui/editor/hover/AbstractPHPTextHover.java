@@ -36,6 +36,8 @@ import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 
 public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverExtension {
@@ -65,16 +67,22 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 		if (flatNode != null) {
 			region = flatNode.getRegionAtCharacterOffset(offset);
 		}
+		
+		ITextRegionCollection container = flatNode;
+		if(region instanceof ITextRegionContainer){
+			container = (ITextRegionContainer)region;
+			region = container.getRegionAtCharacterOffset(offset);
+		}
 
 		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
 			try {
-				region = phpScriptRegion.getPhpToken(offset - flatNode.getStartOffset() - region.getStart());
+				region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
 			} catch (BadLocationException e) {
 				region = null;
 			}
 			if (region != null) {
-				return new Region(flatNode.getStartOffset() + phpScriptRegion.getStart() + region.getStart() , region.getLength());
+				return new Region(container.getStartOffset() + phpScriptRegion.getStart() + region.getStart() , region.getLength());
 			}
 		}
 		return null;
