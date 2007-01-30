@@ -35,11 +35,12 @@ public class WizardFragmentsFactoryRegistry {
 	// Hold a Dictionary of Lists that contains the factories used for the creation of the fragments.
 	// This structure will be deleted from the memory once all the factories were created.
 	private HashMap fragments;
-	
+
 	private static WizardFragmentsFactoryRegistry instance;
-	
+
 	private HashMap factories;
-//	private ICompositeFragmentFactory[] factories;
+
+	//	private ICompositeFragmentFactory[] factories;
 
 	/**
 	 * Returns an array on newly initialized WizardFragments that complies to the given server type 
@@ -119,17 +120,18 @@ public class WizardFragmentsFactoryRegistry {
 
 		// Traverse over the non-root fragments and position them.
 		for (int i = 0; i < nonRootFragments.size(); i++) {
-			FragmentsFactory factory = getFactory(nonRootFragments, i);
+			ArrayList fragmentsGroup = (ArrayList) nonRootFragments.get(i);
 			// try to move it to the roots fragments first (order is important).
-			boolean moved = placeFragment(rootsFragments, factory);
+			boolean moved = placeFragment(rootsFragments, fragmentsGroup);
 			if (!moved) {
 				// in case we can't find it there, try to move it inside the non-roots fragments.
-				moved = placeFragment(nonRootFragments, factory);
+				moved = placeFragment(nonRootFragments, fragmentsGroup);
 			}
 			if (!moved) {
 				// move it to the roots anyway, since there is an error in the extention definitions.
-				addAsList(rootsFragments, factory);
-				PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.ID, 0, "Invalid 'placeAfter' id (" + factory.getPlaceAfter() + ')', null)); //$NON-NLS-1$
+				FragmentsFactory invalidFactory = getFactory(nonRootFragments, i);
+				addAsList(rootsFragments, invalidFactory);
+				PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.ID, 0, "Invalid 'placeAfter' id (" + invalidFactory.getPlaceAfter() + ')', null)); //$NON-NLS-1$
 			}
 		}
 
@@ -143,15 +145,24 @@ public class WizardFragmentsFactoryRegistry {
 		}
 	}
 
-	private boolean placeFragment(List factories, FragmentsFactory factory) {
+	private boolean placeFragment(List targetFactories, ArrayList factoriesGroup) {
+		if (factoriesGroup == null || factoriesGroup.size() == 0) {
+			return true;
+		}
+		FragmentsFactory factory = (FragmentsFactory) factoriesGroup.get(0);
 		String placeAfter = factory.getPlaceAfter();
-		for (int i = 0; i < factories.size(); i++) {
-			List list = (List) factories.get(i);
+		for (int i = 0; i < targetFactories.size(); i++) {
+			List list = (List) targetFactories.get(i);
 			for (int j = 0; j < list.size(); j++) {
 				FragmentsFactory nextFactory = (FragmentsFactory) list.get(j);
 				if (nextFactory.getID().equals(placeAfter)) {
 					// This list is the list we should add to
-					list.add(factory);
+					if (list.size() > j + 1){
+						list.addAll(j + 1, factoriesGroup);
+					} else {
+						// add it to the end
+						list.addAll(factoriesGroup);
+					}
 					return true;
 				}
 			}
