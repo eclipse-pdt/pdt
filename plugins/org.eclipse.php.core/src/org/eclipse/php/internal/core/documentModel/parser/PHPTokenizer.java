@@ -755,12 +755,6 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
 			stillSearching = false;
 		}
 		else {
-			same = true;
-			// Ensure that we've not encountered a complete block (<%%>) that was *shorter* than the closeTagString and
-			// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
-			// Check the characters in the target versus the last targetLength characters read from the buffer
-			// and see if it matches
-			
 			// ignores the "?>" case i.e php end tags in a string
 			final char current = yy_buffer[yy_currentPos - 2];
 			if (current == '"' || current == '\'' || current == '`') { // start-end blockers
@@ -787,7 +781,13 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
 				continue;
 			}		
 			///////////////////////////
-			
+
+			same = true;
+			// Ensure that we've not encountered a complete block (<%%>) that was *shorter* than the closeTagString and
+			// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
+			// Check the characters in the target versus the last targetLength characters read from the buffer
+			// and see if it matches
+
 			// safety check for array accesses (yy_currentPos is the *last* character we can check against)
 			if(yy_currentPos >= 2 &&  yy_currentPos <= yy_buffer.length) {
 				for(i = 0; i < 2; i++) {

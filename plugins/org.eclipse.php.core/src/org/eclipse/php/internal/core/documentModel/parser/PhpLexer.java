@@ -306,7 +306,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	protected abstract int getYy_pushBackPosition();
 
 	protected abstract int getYy_startRead();
-
+	
 	public void initialize(final int state) {
 		phpStack = new StateStack();
 		beginState(state);
@@ -409,11 +409,9 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 			}			
 		}
 
-		String yylex;
-		yylex = yylex();
-		final int start = yystart();
+		bufferedState = createLexicalStateMemento();
+		String yylex = yylex();
 		if (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
-			bufferedState = createLexicalStateMemento();
 			final StringBuffer buffer = new StringBuffer();
 			int length = 0;
 			while (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
@@ -422,14 +420,13 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 				length++; 
 			}			
 			bufferedTokens = new LinkedList();
-			checkForTodo(bufferedTokens, PHPRegionTypes.PHPDOC_COMMENT, start, length, buffer.toString());
-			bufferedTokens.add(new ContextRegion(yylex, start + length, yylength(), yylength()));
+			checkForTodo(bufferedTokens, PHPRegionTypes.PHPDOC_COMMENT, 0, length, buffer.toString());
+			bufferedTokens.add(new ContextRegion(yylex, 0, yylength(), yylength()));
 			yylex = removeFromBuffer();
 		}
 		else if (PHPPartitionTypes.isPHPCommentState(yylex)) {
-			bufferedState = createLexicalStateMemento();
 			bufferedTokens = new LinkedList();
-			checkForTodo(bufferedTokens, yylex, start, yylength(), yytext());
+			checkForTodo(bufferedTokens, yylex, 0, yylength(), yytext());
 			yylex = removeFromBuffer();
 		}
 		return yylex;
