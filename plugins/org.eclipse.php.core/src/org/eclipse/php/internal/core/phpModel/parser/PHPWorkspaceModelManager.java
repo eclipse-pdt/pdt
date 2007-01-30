@@ -324,21 +324,26 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public PHPProjectModel getModelForProject(final IProject project, boolean forceCreation) {
 		PHPProjectModel projectModel = (PHPProjectModel) models.get(project);
 		if (projectModel == null && forceCreation) {
-			if (project.isOpen() && project.exists() && project.isAccessible()) {
-				boolean hasNature;
-				try {
-					hasNature = project.hasNature(PHPNature.ID);
-				} catch (CoreException e) {
-					PHPCorePlugin.log(e);
-					return null;
-				}
-				if (hasNature) {
-					projectModel = new PHPProjectModel();
-					putModel(project, projectModel);
-					attachProjectCloseObserver(project);
+			synchronized (project) {
+				projectModel = (PHPProjectModel) models.get(project);
+				if (projectModel == null) {
+
+					if (project.isOpen() && project.exists() && project.isAccessible()) {
+						boolean hasNature;
+						try {
+							hasNature = project.hasNature(PHPNature.ID);
+						} catch (CoreException e) {
+							PHPCorePlugin.log(e);
+							return null;
+						}
+						if (hasNature) {
+							projectModel = new PHPProjectModel();
+							putModel(project, projectModel);
+							attachProjectCloseObserver(project);
+						}
+					}
 				}
 			}
-
 		}
 		return projectModel;
 	}
