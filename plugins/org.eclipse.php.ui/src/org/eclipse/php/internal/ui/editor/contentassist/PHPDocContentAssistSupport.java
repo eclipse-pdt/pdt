@@ -20,10 +20,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
-import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
-import org.eclipse.php.internal.core.phpModel.parser.PHPDocLanguageModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
@@ -34,10 +31,8 @@ import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
 import org.eclipse.php.internal.ui.editor.util.TextSequence;
 import org.eclipse.php.internal.ui.editor.util.TextSequenceUtilities;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
@@ -76,13 +71,26 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 	}
 
 	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer) throws BadLocationException {
-		PHPFileData fileData = editorModel.getFileData();
-		if (fileData == null) {
-			return;
-		}
-		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
-		int lineStartOffset = editorModel.getStructuredDocument().getLineInformationOfOffset(offset).getOffset();
+		final int originalOffset = viewer.getSelectedRange().x;
+		final boolean isStrict = originalOffset != offset ? true : false;
 
+		PHPProjectModel projectModel = editorModel.getProjectModel();
+
+		// if there is no project model (the file is not part of a project)
+		// get the default project model
+		if (projectModel == null) {
+			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
+		}
+
+		String fileName = null;
+		PHPFileData fileData = editorModel.getFileData(true);
+		if (fileData != null) {
+			fileName = fileData.getName();
+		}
+		boolean explicit = true;
+		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
+
+		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
 		ITextRegion textRegion = null;
 		// 	in case we are at the end of the document, asking for completion
 		if (offset == editorModel.getStructuredDocument().getLength()) {
@@ -91,47 +99,139 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			textRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		}
 
-		ITextRegionCollection container = sdRegion;
-		if (textRegion instanceof ITextRegionContainer) {
-			container = (ITextRegionContainer) textRegion;
-			textRegion = container.getRegionAtCharacterOffset(offset - sdRegion.getStartOffset(textRegion));
-		}
-		
 		if (textRegion == null)
 			return;
 
-		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) { // dont provide completion if staying after PHP close tag.
-			return;
+		ITextRegionCollection container = sdRegion;
+		
+		if(textRegion instanceof ITextRegionContainer){
+			container = (ITextRegionContainer)textRegion;
+			textRegion = container.getRegionAtCharacterOffset(offset);
 		}
 		
-		PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
-		int internalOffset = offset-container.getStartOffset()-phpScriptRegion.getStart();
-		
-		String partitionType = phpScriptRegion.getPartition(internalOffset);
-		if (partitionType == PHPPartitionTypes.PHP_DOC){
-			//if we are before the php doc start then we shouldn't get comletion.
-			if(phpScriptRegion.getPhpToken(internalOffset).getType() == PHPRegionTypes.PHPDOC_COMMENT_START){
-				if(phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset){
-					partitionType = phpScriptRegion.getPartition(internalOffset - 1);
-					if(partitionType != PHPPartitionTypes.PHP_DOC){
-						return;
-					}
-				} else{
-					// if we are inside the doc start then we shouldn't get completion
-					return;
+		if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
+			return;
+		}
+		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
+			if (sdRegion.getStartOffset(textRegion) == offset) {
+				ITextRegion regionBefore = sdRegion.getRegionAtCharacterOffset(offset - 1);
+				if (regionBefore instanceof PhpScriptRegion) {
+					textRegion = regionBefore;
+				}
+			} else {
+				return;
+			}
+		}
+
+		// find the start String for completion
+		int startOffset = container.getStartOffset(textRegion);
+
+		//in case we are standing at the beginning of a word and asking for completion 
+		//should not take into account the found region
+		//find the previous region and update the start offset
+		if (startOffset == offset) {
+			ITextRegion preTextRegion = container.getRegionAtCharacterOffset(offset - 1);
+			IStructuredDocumentRegion preSdRegion = null;
+			if (preTextRegion != null || ((preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null)) {
+				if (preTextRegion.getType() == "") {
+					// TODO needs to be fixed. The problem is what to do if the cursor is exatly between problematic regions, e.g. single line comment and quoted string?? 
 				}
 			}
-		}else {
+			startOffset = sdRegion.getStartOffset(textRegion);
+		}
+
+		PhpScriptRegion phpScriptRegion = null;
+		String partitionType = null;
+		int internalOffset = 0;
+		ContextRegion internalPHPRegion = null;
+		if (textRegion instanceof PhpScriptRegion) {
+			phpScriptRegion = (PhpScriptRegion) textRegion;
+			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
+
+			partitionType = phpScriptRegion.getPartition(internalOffset);
+			//if we are at the begining of multi-line comment or docBlock then we should get completion.
+			if(partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC){
+				String regionType = phpScriptRegion.getPhpToken(internalOffset).getType();
+				if(regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START ){
+					if(phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset){
+						partitionType = phpScriptRegion.getPartition(internalOffset - 1);
+					}
+				}
+			}
+			if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
+			} else {
+				return;
+			}
+			internalPHPRegion = (ContextRegion) phpScriptRegion.getPhpToken(internalOffset);
+		}
+
+		IStructuredDocument document = sdRegion.getParentDocument();
+		// if there is no project model (the file is not part of a project)
+		// complete with language model only 
+		if (fileData == null || phpScriptRegion == null) {
+//			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, container, phpScriptRegion, internalPHPRegion, document, isStrict);
 			return;
 		}
+
+		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(offset, sdRegion, true);
 		
-		TextSequence statmentText = TextSequenceUtilities.createTextSequence(sdRegion, lineStartOffset, offset - lineStartOffset);
+//		PHPFileData fileData = editorModel.getFileData();
+//		if (fileData == null) {
+//			return;
+//		}
+//		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
+//		int lineStartOffset = editorModel.getStructuredDocument().getLineInformationOfOffset(offset).getOffset();
+//
+//		ITextRegion textRegion = null;
+//		// 	in case we are at the end of the document, asking for completion
+//		if (offset == editorModel.getStructuredDocument().getLength()) {
+//			textRegion = sdRegion.getLastRegion();
+//		} else {
+//			textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+//		}
+//
+//		ITextRegionCollection container = sdRegion;
+//		if (textRegion instanceof ITextRegionContainer) {
+//			container = (ITextRegionContainer) textRegion;
+//			textRegion = container.getRegionAtCharacterOffset(offset - sdRegion.getStartOffset(textRegion));
+//		}
+//		
+//		if (textRegion == null)
+//			return;
+//
+//		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) { // dont provide completion if staying after PHP close tag.
+//			return;
+//		}
+//		
+//		PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
+//		int internalOffset = offset-container.getStartOffset()-phpScriptRegion.getStart();
+//		
+//		String partitionType = phpScriptRegion.getPartition(internalOffset);
+//		if (partitionType == PHPPartitionTypes.PHP_DOC){
+//			//if we are before the php doc start then we shouldn't get comletion.
+//			if(phpScriptRegion.getPhpToken(internalOffset).getType() == PHPRegionTypes.PHPDOC_COMMENT_START){
+//				if(phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset){
+//					partitionType = phpScriptRegion.getPartition(internalOffset - 1);
+//					if(partitionType != PHPPartitionTypes.PHP_DOC){
+//						return;
+//					}
+//				} else{
+//					// if we are inside the doc start then we shouldn't get completion
+//					return;
+//				}
+//			}
+//		}else {
+//			return;
+//		}
+		
+//		TextSequence statmentText = TextSequenceUtilities.createTextSequence(sdRegion, lineStartOffset, offset - lineStartOffset);
+		
 		int totalLength = statmentText.length();
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statmentText, totalLength); // read whitespace
 		int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, endPosition, true);
 		String lastWord = statmentText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
-		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
+//		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
 		if (isInPhpDocCompletion(viewer, statmentText, offset, lastWord, selectionLength, haveSpacesAtEnd)) {
 			// the current position is php doc block.

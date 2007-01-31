@@ -204,8 +204,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 		}
 		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-			if (sdRegion.getStartOffset(textRegion) == offset) {
-				ITextRegion regionBefore = sdRegion.getRegionAtCharacterOffset(offset - 1);
+			if (container.getStartOffset(textRegion) == offset) {
+				ITextRegion regionBefore = container.getRegionAtCharacterOffset(offset - 1);
 				if (regionBefore instanceof PhpScriptRegion) {
 					textRegion = regionBefore;
 				}
