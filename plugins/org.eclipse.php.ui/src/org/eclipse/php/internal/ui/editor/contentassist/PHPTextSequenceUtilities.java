@@ -54,11 +54,11 @@ public class PHPTextSequenceUtilities {
 			documentOffset -= 1;
 		}
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(documentOffset);
-		
+
 		ITextRegionCollection container = sdRegion;
-		
-		if(tRegion instanceof ITextRegionContainer){
-			container = (ITextRegionContainer)tRegion;
+
+		if (tRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) tRegion;
 			tRegion = container.getRegionAtCharacterOffset(offset);
 		}
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
@@ -74,7 +74,12 @@ public class PHPTextSequenceUtilities {
 				int startOffset = container.getStartOffset() + phpScriptRegion.getStart();
 
 				// Now, search backwards for the statement start (in this PhpScriptRegion):
-				ITextRegion startTokenRegion = phpScriptRegion.getPhpToken(documentOffset - startOffset - 1);
+				ITextRegion startTokenRegion;
+				if (documentOffset == startOffset) {
+					startTokenRegion = phpScriptRegion.getPhpToken(0);
+				} else {
+					startTokenRegion = phpScriptRegion.getPhpToken(documentOffset - startOffset - 1);
+				}
 				while (true) {
 					// If statement start is at the beginning of the PHP script region: 
 					if (startTokenRegion.getStart() == 0) {
