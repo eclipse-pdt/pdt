@@ -158,80 +158,26 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 					}
 				}
 			}
-			if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
-			} else {
+			if ((!partitionType.equals(PHPPartitionTypes.PHP_DOC))) {
 				return;
 			}
 			internalPHPRegion = (ContextRegion) phpScriptRegion.getPhpToken(internalOffset);
 		}
-
+		
 		IStructuredDocument document = sdRegion.getParentDocument();
 		// if there is no project model (the file is not part of a project)
 		// complete with language model only 
 		if (fileData == null || phpScriptRegion == null) {
-//			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, container, phpScriptRegion, internalPHPRegion, document, isStrict);
 			return;
 		}
 
-		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(offset, sdRegion, true);
-		
-//		PHPFileData fileData = editorModel.getFileData();
-//		if (fileData == null) {
-//			return;
-//		}
-//		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
-//		int lineStartOffset = editorModel.getStructuredDocument().getLineInformationOfOffset(offset).getOffset();
-//
-//		ITextRegion textRegion = null;
-//		// 	in case we are at the end of the document, asking for completion
-//		if (offset == editorModel.getStructuredDocument().getLength()) {
-//			textRegion = sdRegion.getLastRegion();
-//		} else {
-//			textRegion = sdRegion.getRegionAtCharacterOffset(offset);
-//		}
-//
-//		ITextRegionCollection container = sdRegion;
-//		if (textRegion instanceof ITextRegionContainer) {
-//			container = (ITextRegionContainer) textRegion;
-//			textRegion = container.getRegionAtCharacterOffset(offset - sdRegion.getStartOffset(textRegion));
-//		}
-//		
-//		if (textRegion == null)
-//			return;
-//
-//		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) { // dont provide completion if staying after PHP close tag.
-//			return;
-//		}
-//		
-//		PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
-//		int internalOffset = offset-container.getStartOffset()-phpScriptRegion.getStart();
-//		
-//		String partitionType = phpScriptRegion.getPartition(internalOffset);
-//		if (partitionType == PHPPartitionTypes.PHP_DOC){
-//			//if we are before the php doc start then we shouldn't get comletion.
-//			if(phpScriptRegion.getPhpToken(internalOffset).getType() == PHPRegionTypes.PHPDOC_COMMENT_START){
-//				if(phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset){
-//					partitionType = phpScriptRegion.getPartition(internalOffset - 1);
-//					if(partitionType != PHPPartitionTypes.PHP_DOC){
-//						return;
-//					}
-//				} else{
-//					// if we are inside the doc start then we shouldn't get completion
-//					return;
-//				}
-//			}
-//		}else {
-//			return;
-//		}
-		
-//		TextSequence statmentText = TextSequenceUtilities.createTextSequence(sdRegion, lineStartOffset, offset - lineStartOffset);
+		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(offset, sdRegion, false);
 		
 		int totalLength = statmentText.length();
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statmentText, totalLength); // read whitespace
 		int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, endPosition, true);
 		String lastWord = statmentText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
-//		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
 		if (isInPhpDocCompletion(viewer, statmentText, offset, lastWord, selectionLength, haveSpacesAtEnd)) {
 			// the current position is php doc block.
@@ -263,10 +209,6 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 				}
 				founeX = true;
 			}
-		}
-
-		if (startPosition != 0) {
-			return true; // this is not the start of the line
 		}
 
 		CodeData[] tags = PHPDocLanguageModel.getPHPDocTags(tagName);
