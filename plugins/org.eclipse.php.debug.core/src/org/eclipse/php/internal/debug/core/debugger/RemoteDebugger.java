@@ -218,7 +218,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				if (obj instanceof IDebugResponseMessage) {
 					response = (IDebugResponseMessage) obj;
 				}
-				if (isDebugMode) {
+				if (isDebugMode && response != null) {
 					System.out.println("Responce to custom request: " + response + " (type = " + response.getType() + ')');
 				}
 			} catch (Exception e) {

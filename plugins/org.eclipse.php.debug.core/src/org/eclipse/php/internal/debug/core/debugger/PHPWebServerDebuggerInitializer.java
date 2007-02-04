@@ -33,6 +33,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 	private DebugException exception;
+	private static boolean isDebugMode = System.getProperty("loggingDebug") != null;
 	
 	public void debug(ILaunch launch) throws DebugException {
 		exception = null;
@@ -40,6 +41,9 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		String encodedURL = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL).trim();
 		encodedURL = encodedURL.replaceAll(" ", "%20");
 		final String debugQuery = encodedURL + '?' + parametersInitializer.generateQuery(launch);
+		if (isDebugMode) {
+			System.out.println("debugQuery = " + debugQuery);
+		}
 		boolean openInBrowser = false;
 		try {
 			openInBrowser = launch.getLaunchConfiguration().getAttribute(IPHPConstants.OPEN_IN_BROWSER, false);
