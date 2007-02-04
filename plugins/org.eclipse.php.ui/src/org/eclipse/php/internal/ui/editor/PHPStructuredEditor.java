@@ -133,6 +133,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
@@ -403,14 +404,49 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	private IPreferencesPropagatorListener phpVersionListener = new IPreferencesPropagatorListener() {
-		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-			// XXX: Initiate re-parsing of current file for updating colors
-		}
+			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
+				try {
+					// get the structured document and go over its regions
+					// in case of PhpScriptRegion reparse the region text
+					IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+					if (doc instanceof IStructuredDocument) {
+						IStructuredDocumentRegion[] sdRegions = ((IStructuredDocument) doc).getStructuredDocumentRegions();
+						for (int i = 0; i < sdRegions.length; i++) {
+							Iterator regionsIt = sdRegions[i].getRegions().iterator();
+							reparseRegion(doc, regionsIt, sdRegions[i].getStartOffset());
+						}
+					}
+				} catch (BadLocationException e) {
+				}
+			}
 
-		public IProject getProject() {
-			return getFile().getProject();
+			public IProject getProject() {
+				return getFile().getProject();
+			}
+		};
+
+		/**
+		 * iterate over regions 
+		 * in case of PhpScriptRegion reparse the region.
+		 * in case of region contaioner iterate over the container regions. 
+		 * @param doc structured document
+		 * @param regionsIt regions iterator
+		 * @param offset the container region start offset
+		 * @throws BadLocationException
+		 */
+		private void reparseRegion(IDocument doc, Iterator regionsIt, int offset) throws BadLocationException {
+			while (regionsIt.hasNext()) {
+				ITextRegion region = (ITextRegion) regionsIt.next();
+				if (region instanceof ITextRegionContainer) {
+					reparseRegion(doc, ((ITextRegionContainer)region).getRegions().iterator(), offset + region.getStart());
+				}
+				if (region instanceof PhpScriptRegion) {
+					int length = region.getLength();
+					String newText = doc.get(offset + region.getStart(), length);
+					((PhpScriptRegion) region).completeReparse(newText);
+				}
+			}
 		}
-	};
 
 	/** Cursor dependent actions. */
 	private final List fCursorActions = new ArrayList(5);
