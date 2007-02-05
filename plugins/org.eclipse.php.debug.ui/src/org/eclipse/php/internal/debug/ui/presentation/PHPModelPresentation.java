@@ -170,7 +170,13 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 
 	private String getStackFrameText(PHPStackFrame frame) {
 		try {
-			StringBuffer buffer = new StringBuffer(PHPDebugUIMessages.MPresentation_File_1 + frame.getSourceName());
+			StringBuffer buffer = new StringBuffer();
+			String frameName = frame.getName();
+			if (frameName != null && frameName.length() > 0) {
+				buffer.append(frame.getName());
+				buffer.append("() ");
+			}
+			buffer.append(frame.getSourceName());
 			buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1 + (frame.getLineNumber()));
 			return buffer.toString();
 
