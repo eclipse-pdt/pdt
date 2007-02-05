@@ -111,7 +111,9 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 			return true;
 		if (currChar == '?' && nextChar == '>')
 			return true;
-
+		// in case of <<<
+		if (currChar == '<' && nextChar == '<' && offset + 2 < document.getLength() && document.getChar(offset + 2) == '<')
+		    return true;
 		return false;
 	}
 
