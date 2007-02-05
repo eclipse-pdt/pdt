@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.autoEdit;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -74,6 +75,26 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 							} else {
 								command.length++;
 							}
+						}						
+					} else {
+						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(startOffset);
+						ITextRegion tRegion = getPhpRegion(sdRegion, startOffset);
+						// adding a specific char to close the qoute in case the 2 following conditions fulfilled:
+						// 1. The region ends with whitespace.
+						// 2. The command offest is located at the end of the region(include the region whitespace)
+						int regionLength = tRegion.getLength();						
+						int regionTextLength = tRegion.getTextLength();
+						if (regionTextLength != regionLength && startOffset > getRegionStart(sdRegion, startOffset) + regionTextLength &&
+								shouldAddClosingBracket(document, endOffset, true)) {
+							command.text = command.text + insertedChar;
+							//making the change in the documet ourselfs and consuming the original command
+							document.replace(command.offset, command.length, command.text);
+							document.getUndoManager().disableUndoManagement();
+							document.replace(command.offset + 1, 0, "");
+							document.getUndoManager().enableUndoManagement();
+							command.offset++; //this will cause the caret to be set between the quotes.
+							command.length = 0;
+							command.text = "";
 						}
 					}
 				}
@@ -100,6 +121,55 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			Logger.logException(e);
 			document.getUndoManager().enableUndoManagement();
 		}
+	}
+	
+	/*
+	 * get php region by given IStructuredDocumentRegion and offset
+	 */
+	private ITextRegion getPhpRegion(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		
+		if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
+			offset --;
+			tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		}
+		
+		int regionStart = sdRegion.getStartOffset(tRegion);
+		// in case of container we have the extract the PhpScriptRegion
+		if (tRegion instanceof ITextRegionContainer) {
+			ITextRegionContainer container = (ITextRegionContainer) tRegion;
+			tRegion = container.getRegionAtCharacterOffset(offset);
+			regionStart += tRegion.getStart();
+		}
+
+		if (tRegion instanceof PhpScriptRegion) {
+			PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+			tRegion = scriptRegion.getPhpToken(offset - regionStart);
+			return tRegion;
+		}
+		return null;
+	}
+	
+	/*
+	 * get php region by given IStructuredDocumentRegion and offset
+	 */
+	private int getRegionStart(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
+		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		
+		if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
+			offset --;
+			tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+		}
+		
+		int regionStart = sdRegion.getStartOffset(tRegion);
+		// in case of container we have the extract the PhpScriptRegion
+		if (tRegion instanceof ITextRegionContainer) {
+			ITextRegionContainer container = (ITextRegionContainer) tRegion;
+			tRegion = container.getRegionAtCharacterOffset(offset);
+			regionStart += tRegion.getStart();
+		}
+		
+		return regionStart;
 	}
 
 	/**
