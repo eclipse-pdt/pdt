@@ -12,6 +12,8 @@
 
 package org.eclipse.php.internal.core.documentModel.dom;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
@@ -27,8 +29,8 @@ import org.w3c.dom.Node;
  * Represents elements in the dom model {@link DOMModelForPHP}
  * @author Roy, 2007
  */
-public class ElementImplForPhp extends ElementStyleImpl {
-	
+public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
+
 	public ElementImplForPhp() {
 		super();
 	}
@@ -51,7 +53,7 @@ public class ElementImplForPhp extends ElementStyleImpl {
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
-	
+
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
 	}
@@ -68,19 +70,24 @@ public class ElementImplForPhp extends ElementStyleImpl {
 	public boolean isPhpTag() {
 		return getNodeName() == PHPDOMModelParser.PHP_TAG_NAME;
 	}
-	
+
 	public INodeAdapter getExistingAdapter(Object type) {
-		String className = ((Class)type).getName();
-		if((className.equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator") || type == ValidationAdapter.class) && isPhpTag()){
+		String className = ((Class) type).getName();
+		if ((className.equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator") || type == ValidationAdapter.class) && isPhpTag()) {
 			return validator;
 		}
 		return super.getExistingAdapter(type);
 	}
-	
+
 	private ValidationComponent validator = new PHPValidationComponent();
-	
-	private class PHPValidationComponent extends ValidationComponent{
-		public void validate(IndexedRegion node) {	
+
+	private class PHPValidationComponent extends ValidationComponent {
+		public void validate(IndexedRegion node) {
 		}
 	}
+
+	public Object getAdapter(Class adapter) {
+		return Platform.getAdapterManager().getAdapter(this, adapter);
+	}
+
 }
