@@ -14,6 +14,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -52,7 +53,11 @@ public class FormatterUtils {
 
 			if (tRegion != null && tRegion instanceof PhpScriptRegion) {
 				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
-				return scriptRegion.getPartition(offset - regionStart);
+				int regionOffset = offset - regionStart;
+				if (PHPPartitionTypes.getPartitionStart(scriptRegion, regionOffset) == regionOffset && regionOffset > 0) {
+					regionOffset = regionOffset - 1;
+				}
+				return scriptRegion.getPartition(regionOffset); 
 			}
 		} catch (final BadLocationException e) {
 		}
