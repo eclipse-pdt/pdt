@@ -467,6 +467,9 @@ public class DebugConnectionThread implements Runnable {
 	protected boolean hookDebugSession(DebugSessionStartedNotification debugSessionStartedNotification) throws CoreException {
 		String query = debugSessionStartedNotification.getQuery();
 		int sessionID = getSessionID(query);
+		if (sessionID == 0) {
+			sessionID = getSessionID(debugSessionStartedNotification.getOptions());
+		}
 		// Get the launch, but keep it in the mapper for any other debug requests that are 
 		// related to the debug session id.
 		// The launch is mapped until the launches are cleared.
