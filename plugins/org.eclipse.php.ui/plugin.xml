@@ -382,7 +382,7 @@
 
 		</factory>
 		  <factory
-		        adaptableType="org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl"
+		        adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
 		        class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
 		     <adapter type="org.eclipse.search.ui.ISearchPageScoreComputer"/>
 		  </factory>
@@ -1196,7 +1196,7 @@
      <adapter type="org.eclipse.ui.IActionFilter"/>
   </factory>
   <factory
-        adaptableType="org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl"
+        adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
         class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
      <adapter type="org.eclipse.ui.IActionFilter"/>
   </factory>

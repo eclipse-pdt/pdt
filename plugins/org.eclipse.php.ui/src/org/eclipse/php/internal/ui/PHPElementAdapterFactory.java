@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
@@ -49,7 +49,7 @@ public class PHPElementAdapterFactory implements IAdapterFactory, IContributorRe
 				// Can't decide
 				return ISearchPageScoreComputer.UNKNOWN;
 
-			if (element instanceof PHPElementImpl || element instanceof TextImplForPhp)
+			if (element instanceof ElementImplForPhp || element instanceof TextImplForPhp)
 				return 90;
 
 			return ISearchPageScoreComputer.LOWEST;
@@ -74,7 +74,7 @@ public class PHPElementAdapterFactory implements IAdapterFactory, IContributorRe
 	}
 
 	public Object getAdapter(Object element, Class key) {
-		if ((element instanceof PHPElementImpl || element instanceof TextImplForPhp) && key == ISearchPageScoreComputer.class) {
+		if ((element instanceof ElementImplForPhp || element instanceof TextImplForPhp) && key == ISearchPageScoreComputer.class) {
 			if (fSearchPageScoreComputer == null) {
 				createSearchPageScoreComputer();
 			}
