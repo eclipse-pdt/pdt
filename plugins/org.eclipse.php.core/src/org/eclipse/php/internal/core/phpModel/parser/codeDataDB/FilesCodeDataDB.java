@@ -10,38 +10,34 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser.codeDataDB;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 
 public class FilesCodeDataDB implements CodeDataDB {
 
-	private Hashtable hashtable;
-	private ArrayList sortedData;
-	private boolean needToSort;
+	private Map files;
+	private List sortedFiles;
+	private boolean needsResort;
 	private Comparator comparator;
 
 	public FilesCodeDataDB() {
-		hashtable = new Hashtable(1000);
-		sortedData = new ArrayList(1000);
+		files = new Hashtable(1000);
+		sortedFiles = new ArrayList(1000);
 		comparator = new Comparator() {
 			public int compare(Object o, Object o1) {
-				String name1 = new File(((CodeData) o).getName()).getName();
-				String name2 = new File(((CodeData) o1).getName()).getName();
+				String name1 = new Path(((CodeData) o).getName()).lastSegment();
+				String name2 = new Path(((CodeData) o1).getName()).lastSegment();
 				return name1.compareToIgnoreCase(name2);
 			}
 		};
 	}
 
 	public synchronized void clear() {
-		hashtable.clear();
-		sortedData.clear();
-		needToSort = false;
+		files.clear();
+		sortedFiles.clear();
+		needsResort = false;
 	}
 
 	public synchronized List getCodeData(String name) {
@@ -52,28 +48,28 @@ public class FilesCodeDataDB implements CodeDataDB {
 		if (name == null) {
 			return null;
 		}
-		return (CodeData) hashtable.get(name);
+		return (CodeData) files.get(name);
 	}
 
 	public synchronized void addCodeData(CodeData codeData) {
 		String name = codeData.getName();
-		hashtable.put(name, codeData);
-		sortedData.add(codeData);
-		needToSort = true;
+		files.put(name, codeData);
+		sortedFiles.add(codeData);
+		needsResort = true;
 	}
 
 	public synchronized void removeCodeData(CodeData codeData) {
 		String name = codeData.getName();
-		hashtable.remove(name);
-		sortedData.remove(codeData);
+		files.remove(name);
+		sortedFiles.remove(codeData);
 	}
 
 	public synchronized List asList() {
-		if (needToSort) {
-			Collections.sort(sortedData, comparator);
-			needToSort = false;
+		if (needsResort) {
+			Collections.sort(sortedFiles, comparator);
+			needsResort = false;
 		}
-		return sortedData;
+		return sortedFiles;
 	}
 
 }
