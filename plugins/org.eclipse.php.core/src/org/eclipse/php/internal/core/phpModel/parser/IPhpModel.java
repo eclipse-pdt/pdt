@@ -23,8 +23,6 @@ public interface IPhpModel  {
 	
 	public CodeData[] getPHPFilesData(String startsWith);
 	
-	public CodeData[] getNonPHPFiles(String startsWith);
-	
 	public PHPFileData getFileData(String fileName);
 
 	public CodeData[] getFunctions();
