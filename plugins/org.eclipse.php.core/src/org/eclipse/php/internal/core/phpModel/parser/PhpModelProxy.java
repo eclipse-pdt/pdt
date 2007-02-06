@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public abstract class PhpModelProxy implements IPhpModel {
 
@@ -26,10 +22,6 @@ public abstract class PhpModelProxy implements IPhpModel {
 
 	public CodeData[] getPHPFilesData(String startsWith) {
 		return model.getPHPFilesData(startsWith);
-	}
-
-	public CodeData[] getNonPHPFiles(String startsWith) {
-		return model.getNonPHPFiles(startsWith);
 	}
 
 	public PHPFileData getFileData(String fileName) {
@@ -91,8 +83,8 @@ public abstract class PhpModelProxy implements IPhpModel {
 	public void clean() {
 		model.clean();
 	}
-	
+
 	public void dispose() {
-		model.dispose();		
+		model.dispose();
 	}
 }
