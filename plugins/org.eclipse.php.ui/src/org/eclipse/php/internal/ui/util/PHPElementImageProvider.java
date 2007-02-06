@@ -118,8 +118,6 @@ public class PHPElementImageProvider {
 		} else if (element instanceof PHPIncludePathModel) {
 			PHPIncludePathModel model = (PHPIncludePathModel)element;
 			switch (model.getType()) {
-				case PHPIncludePathModel.TYPE_ZIP:
-					return PHPPluginImages.DESC_OBJS_EXTZIP;
 				case PHPIncludePathModel.TYPE_VARIABLE:
 					return PHPPluginImages.DESC_OBJS_ENV_VAR;
 				default:

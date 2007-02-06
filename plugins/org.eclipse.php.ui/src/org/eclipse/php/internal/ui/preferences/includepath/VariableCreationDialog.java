@@ -47,7 +47,7 @@ public class VariableCreationDialog extends StatusDialog {
 
 	private StringButtonDialogField fPathField;
 	private StatusInfo fPathStatus;
-	private SelectionButtonDialogField fDirButton;
+//	private SelectionButtonDialogField fDirButton;
 
 	private IPVariableElement fElement;
 
@@ -76,11 +76,11 @@ public class VariableCreationDialog extends StatusDialog {
 		fPathField = new StringButtonDialogField(adapter);
 		fPathField.setDialogFieldListener(adapter);
 		fPathField.setLabelText(PHPUIMessages.VariableCreationDialog_path_label);
-		fPathField.setButtonLabel(PHPUIMessages.VariableCreationDialog_path_file_button);
+		fPathField.setButtonLabel(PHPUIMessages.VariableCreationDialog_path_dir_button);
 
-		fDirButton = new SelectionButtonDialogField(SWT.PUSH);
-		fDirButton.setDialogFieldListener(adapter);
-		fDirButton.setLabelText(PHPUIMessages.VariableCreationDialog_path_dir_button);
+//		fDirButton = new SelectionButtonDialogField(SWT.PUSH);
+//		fDirButton.setDialogFieldListener(adapter);
+//		fDirButton.setLabelText(PHPUIMessages.VariableCreationDialog_path_dir_button);
 
 		fExistingNames = existingNames;
 
@@ -132,8 +132,8 @@ public class VariableCreationDialog extends StatusDialog {
 		fPathField.doFillIntoGrid(inner, 3);
 		LayoutUtil.setWidthHint(fPathField.getTextControl(null), fieldWidthHint);
 
-		DialogField.createEmptySpace(inner, 2);
-		fDirButton.doFillIntoGrid(inner, 1);
+//		DialogField.createEmptySpace(inner, 2);
+//		fDirButton.doFillIntoGrid(inner, 1);
 
 		DialogField focusField = (fElement == null) ? fNameField : fPathField;
 		focusField.postSetFocusOnDialogField(parent.getDisplay());
@@ -158,7 +158,7 @@ public class VariableCreationDialog extends StatusDialog {
 
 	private void doChangeControlPressed(DialogField field) {
 		if (field == fPathField) {
-			IPath path = chooseExtZipFile();
+			IPath path = chooseExtDirectory();
 			if (path != null) {
 				fPathField.setText(path.toString());
 			}
@@ -170,11 +170,6 @@ public class VariableCreationDialog extends StatusDialog {
 			fNameStatus = nameUpdated();
 		} else if (field == fPathField) {
 			fPathStatus = pathUpdated();
-		} else if (field == fDirButton) {
-			IPath path = chooseExtDirectory();
-			if (path != null) {
-				fPathField.setText(path.toString());
-			}
 		}
 		updateStatus(getMoreSevere(fPathStatus, fNameStatus));
 	}
@@ -234,10 +229,7 @@ public class VariableCreationDialog extends StatusDialog {
 	private String getInitPath() {
 		String initPath = fPathField.getText();
 		if (initPath.length() == 0) {
-			initPath = fDialogSettings.get(IncludePathDialogAccess.DIALOGSTORE_LASTEXTZIP);
-			if (initPath == null) {
-				initPath = ""; //$NON-NLS-1$
-			}
+			initPath = ""; //$NON-NLS-1$
 		} else {
 			IPath entryPath = new Path(initPath);
 			if (ArchieveFileFilter.isZipPath(entryPath)) {
@@ -248,34 +240,34 @@ public class VariableCreationDialog extends StatusDialog {
 		return initPath;
 	}
 
-	/*
-	 * Open a dialog to choose a jar from the file system
-	 */
-	private IPath chooseExtZipFile() {
-		String initPath = getInitPath();
-
-		FileDialog dialog = new FileDialog(getShell());
-		dialog.setText(PHPUIMessages.VariableCreationDialog_extjardialog_text);
-		dialog.setFilterExtensions(new String[] { "*.zip", "*.jar" }); //$NON-NLS-1$
-		dialog.setFilterPath(initPath);
-		String res = dialog.open();
-		if (res != null) {
-			fDialogSettings.put(IncludePathDialogAccess.DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
-			return Path.fromOSString(res).makeAbsolute();
-		}
-		return null;
-	}
+//	/*
+//	 * Open a dialog to choose a jar from the file system
+//	 */
+//	private IPath chooseExtZipFile() {
+//		String initPath = getInitPath();
+//
+//		FileDialog dialog = new FileDialog(getShell());
+//		dialog.setText(PHPUIMessages.VariableCreationDialog_extjardialog_text);
+//		dialog.setFilterExtensions(new String[] { "*.zip", "*.jar" }); //$NON-NLS-1$
+//		dialog.setFilterPath(initPath);
+//		String res = dialog.open();
+//		if (res != null) {
+////			fDialogSettings.put(IncludePathDialogAccess.DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
+//			return Path.fromOSString(res).makeAbsolute();
+//		}
+//		return null;
+//	}
 
 	private IPath chooseExtDirectory() {
 		String initPath = getInitPath();
 
-		DirectoryDialog dialog = new DirectoryDialog(getShell());
+		DirectoryDialog dialog = new DirectoryDialog(getParentShell());
 		dialog.setText(PHPUIMessages.VariableCreationDialog_extdirdialog_text);
 		dialog.setMessage(PHPUIMessages.VariableCreationDialog_extdirdialog_message);
 		dialog.setFilterPath(initPath);
 		String res = dialog.open();
 		if (res != null) {
-			fDialogSettings.put(IncludePathDialogAccess.DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
+//			fDialogSettings.put(IncludePathDialogAccess.DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
 			return Path.fromOSString(res);
 		}
 		return null;

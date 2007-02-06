@@ -66,20 +66,17 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 	private final IWorkbenchPreferenceContainer fPageContainer;
 
 	private final int IDX_ADDVAR = 0;
-	private final int IDX_ADDZIP = 1;
-	private final int IDX_ADDEXT = 2;
-	private final int IDX_ADDFOL = 3;
+	private final int IDX_ADDFOL = 1;
 
-	private final int IDX_EDIT = 4;
-	private final int IDX_REMOVE = 5;
+	private final int IDX_EDIT = 2;
+	private final int IDX_REMOVE = 3;
 
 	public LibrariesWorkbookPage(ListDialogField includePathList, IWorkbenchPreferenceContainer pageContainer) {
 		fIncludePathList = includePathList;
 		fPageContainer = pageContainer;
 		fSWTControl = null;
 
-		String[] buttonLabels = new String[] { PHPUIMessages.LibrariesWorkbookPage_libraries_addvariable_button, PHPUIMessages.LibrariesWorkbookPage_libraries_addzip_button, PHPUIMessages.LibrariesWorkbookPage_libraries_addextzip_button,
-			PHPUIMessages.LibrariesWorkbookPage_libraries_addincludepathfolder_button, PHPUIMessages.LibrariesWorkbookPage_libraries_edit_button, PHPUIMessages.LibrariesWorkbookPage_libraries_remove_button };
+		String[] buttonLabels = new String[] { PHPUIMessages.LibrariesWorkbookPage_libraries_addvariable_button, PHPUIMessages.LibrariesWorkbookPage_libraries_addincludepathfolder_button, PHPUIMessages.LibrariesWorkbookPage_libraries_edit_button, PHPUIMessages.LibrariesWorkbookPage_libraries_remove_button };
 
 		LibrariesAdapter adapter = new LibrariesAdapter();
 
@@ -193,12 +190,6 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 	private void libaryPageCustomButtonPressed(DialogField field, int index) {
 		IPListElement[] libentries = null;
 		switch (index) {
-			case IDX_ADDZIP: /* add Zip */
-				libentries = openZipFileDialog(null);
-				break;
-			case IDX_ADDEXT: /* add external Zip */
-				libentries = openExtZIPFileDialog(null);
-				break;
 			case IDX_ADDVAR: /* add variable */
 				libentries = openVariableSelectionDialog(null);
 				break;
@@ -376,19 +367,13 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 			case IIncludePathEntry.IPE_LIBRARY:
 				IResource resource = elem.getResource();
 				if (resource == null) {
-					if (elem.getContentKind() == IIncludePathEntry.K_BINARY) {
-						res = openExtZIPFileDialog(elem);
-					} else {
-						res = openIncludeFolderDialog(elem);
-					}
+					res = openIncludeFolderDialog(elem);
 				} else if (resource.getType() == IResource.FOLDER) {
 					if (resource.exists()) {
 						res = openFolderDialog(elem);
 					} else {
 						res = openNewFolderDialog(elem);
 					}
-				} else if (resource.getType() == IResource.FILE) {
-					res = openZipFileDialog(elem);
 				}
 				break;
 			case IIncludePathEntry.IPE_VARIABLE:
@@ -409,9 +394,7 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 		fLibrariesList.enableButton(IDX_REMOVE, canRemove(selElements));
 
 		boolean noAttributes = containsOnlyTopLevelEntries(selElements);
-		fLibrariesList.enableButton(IDX_ADDEXT, noAttributes);
 		fLibrariesList.enableButton(IDX_ADDFOL, noAttributes);
-		fLibrariesList.enableButton(IDX_ADDZIP, noAttributes);
 		fLibrariesList.enableButton(IDX_ADDVAR, noAttributes);
 	}
 
@@ -524,35 +507,6 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 		return null;
 	}
 
-	private IPListElement[] openZipFileDialog(IPListElement existing) {
-		IWorkspaceRoot root = fCurrJProject.getProject().getWorkspace().getRoot();
-
-		if (existing == null) {
-			IPath[] selected = IncludePathDialogAccess.chooseZIPEntries(getShell(), fCurrJProject.getLocation(), getUsedZipFiles(existing));
-			if (selected != null) {
-				ArrayList res = new ArrayList();
-
-				for (int i = 0; i < selected.length; i++) {
-					IPath curr = selected[i];
-					IResource resource = root.findMember(curr);
-					if (resource instanceof IFile) {
-						res.add(newCPLibraryElement(resource));
-					}
-				}
-				return (IPListElement[]) res.toArray(new IPListElement[res.size()]);
-			}
-		} else {
-			IPath configured = IncludePathDialogAccess.configureZIPEntry(getShell(), existing.getPath(), getUsedZipFiles(existing));
-			if (configured != null) {
-				IResource resource = root.findMember(configured);
-				if (resource instanceof IFile) {
-					return new IPListElement[] { newCPLibraryElement(resource) };
-				}
-			}
-		}
-		return null;
-	}
-
 	private IPath[] getUsedContainers(IPListElement existing) {
 		ArrayList res = new ArrayList();
 
@@ -569,42 +523,8 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 		return (IPath[]) res.toArray(new IPath[res.size()]);
 	}
 
-	private IPath[] getUsedZipFiles(IPListElement existing) {
-		List res = new ArrayList();
-		List cplist = fLibrariesList.getElements();
-		for (int i = 0; i < cplist.size(); i++) {
-			IPListElement elem = (IPListElement) cplist.get(i);
-			if (elem.getEntryKind() == IIncludePathEntry.IPE_LIBRARY && (elem != existing)) {
-				IResource resource = elem.getResource();
-				if (resource instanceof IFile) {
-					res.add(resource.getFullPath());
-				}
-			}
-		}
-		return (IPath[]) res.toArray(new IPath[res.size()]);
-	}
-
 	private IPListElement newCPLibraryElement(IResource res) {
 		return new IPListElement(fCurrJProject, IIncludePathEntry.IPE_LIBRARY, IIncludePathEntry.K_BINARY, res.getFullPath(), res);
-	}
-
-	private IPListElement[] openExtZIPFileDialog(IPListElement existing) {
-		if (existing == null) {
-			IPath[] selected = IncludePathDialogAccess.chooseExternalZIPEntries(getShell());
-			if (selected != null) {
-				ArrayList res = new ArrayList();
-				for (int i = 0; i < selected.length; i++) {
-					res.add(new IPListElement(fCurrJProject, IIncludePathEntry.IPE_LIBRARY, IIncludePathEntry.K_BINARY, selected[i], null));
-				}
-				return (IPListElement[]) res.toArray(new IPListElement[res.size()]);
-			}
-		} else {
-			IPath configured = IncludePathDialogAccess.configureExternalZIPEntry(getShell(), existing.getPath());
-			if (configured != null) {
-				return new IPListElement[] { new IPListElement(fCurrJProject, IIncludePathEntry.IPE_LIBRARY, IIncludePathEntry.K_BINARY, configured, null) };
-			}
-		}
-		return null;
 	}
 
 	private IPListElement[] openVariableSelectionDialog(IPListElement existing) {

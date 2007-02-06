@@ -44,7 +44,6 @@ import org.eclipse.ui.views.navigator.ResourceSorter;
  *  <li> configuration of Javadoc locations</li>
  *  <li> configuration and selection of include path variable entries</li>
  *  <li> configuration and selection of include path container entries</li>
- *  <li> configuration and selection of ZIP and external ZIP entries</li>
  *  <li> selection of class and source folders</li>
  * </ul>
  * <p>
@@ -53,14 +52,9 @@ import org.eclipse.ui.views.navigator.ResourceSorter;
  * @since 3.0
  */
 public final class IncludePathDialogAccess {
-	public static final String DIALOGSTORE_LASTEXTZIP = PHPUiPlugin.ID + ".lastextzip"; //$NON-NLS-1$
-	public static final String DIALOGSTORE_LASTZIPATTACH = PHPUiPlugin.ID + ".lastzipattach"; //$NON-NLS-1$
 	public static final String DIALOGSTORE_LASTVARIABLE = PHPUiPlugin.ID + ".lastvariable"; //$NON-NLS-1$
 	public static final String DIALOGSTORE_LASTINCLUDEFOLDER = PHPUiPlugin.ID + ".lastincludefolder"; //$NON-NLS-1$
 
-	private static final String[] fgZipExtensions = { "zip", "jar" }; //$NON-NLS-1$ //$NON-NLS-2$
-	public static final String[] FILTER_EXTENSIONS = new String[] { "*.zip", "*.jar" }; //$NON-NLS-1$
-	
 	private IncludePathDialogAccess() {
 		// do not instantiate
 	}
@@ -173,106 +167,6 @@ public final class IncludePathDialogAccess {
 		return null;
 	}
 
-	/**
-	 * Shows the UI to configure a ZIP or ZIP archive located in the workspace.
-	 * The dialog returns the configured include path entry path or <code>null</code> if the dialog has
-	 * been canceled. The dialog does not apply any changes.
-	 * 
-	 * @param shell The parent shell for the dialog.
-	 * @param initialEntry The path of the initial archive entry 
-	 * @param usedEntries An array of paths that are already on the include path and therefore should not be
-	 * selected again.
-	 * @return Returns the configured include path container entry path or <code>null</code> if the dialog has
-	 * been canceled by the user.
-	 */
-	public static IPath configureZIPEntry(Shell shell, IPath initialEntry, IPath[] usedEntries) {
-		if (initialEntry == null || usedEntries == null) {
-			throw new IllegalArgumentException();
-		}
-
-		Class[] acceptedClasses = new Class[] { IFile.class };
-		TypedElementSelectionValidator validator = new TypedElementSelectionValidator(acceptedClasses, false);
-
-		ArrayList usedZips = new ArrayList(usedEntries.length);
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		for (int i = 0; i < usedEntries.length; i++) {
-			IPath curr = usedEntries[i];
-			if (!curr.equals(initialEntry)) {
-				IResource resource = root.findMember(usedEntries[i]);
-				if (resource instanceof IFile) {
-					usedZips.add(resource);
-				}
-			}
-		}
-
-		IResource existing = root.findMember(initialEntry);
-
-		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(shell, new WorkbenchLabelProvider(), new WorkbenchContentProvider());
-		dialog.setValidator(validator);
-		dialog.setTitle(PHPUIMessages.IncludePathDialogAccess_ZIPArchiveDialog_edit_title);
-		dialog.setMessage(PHPUIMessages.IncludePathDialogAccess_ZIPArchiveDialog_edit_description);
-		dialog.addFilter(new ArchieveFileFilter(usedZips, true, fgZipExtensions));
-		dialog.setInput(root);
-		dialog.setSorter(new ResourceSorter(ResourceSorter.NAME));
-		dialog.setInitialSelection(existing);
-
-		if (dialog.open() == Window.OK) {
-			IResource element = (IResource) dialog.getFirstResult();
-			return element.getFullPath();
-		}
-		return null;
-	}
-
-	/**
-	 * Shows the UI to select new ZIP or ZIP archive entries located in the workspace.
-	 * The dialog returns the selected entries or <code>null</code> if the dialog has
-	 * been canceled. The dialog does not apply any changes.
-	 * 
-	 * @param shell The parent shell for the dialog.
-	 * @param initialSelection The path of the element (container or archive) to initially select or <code>null</code> to not select an entry. 
-	 * @param usedEntries An array of paths that are already on the include path and therefore should not be
-	 * selected again.
-	 * @return Returns the new include path container entry paths or <code>null</code> if the dialog has
-	 * been canceled by the user.
-	 */
-	public static IPath[] chooseZIPEntries(Shell shell, IPath initialSelection, IPath[] usedEntries) {
-		if (usedEntries == null) {
-			throw new IllegalArgumentException();
-		}
-
-		Class[] acceptedClasses = new Class[] { IFile.class };
-		TypedElementSelectionValidator validator = new TypedElementSelectionValidator(acceptedClasses, true);
-		ArrayList usedZips = new ArrayList(usedEntries.length);
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		for (int i = 0; i < usedEntries.length; i++) {
-			IResource resource = root.findMember(usedEntries[i]);
-			if (resource instanceof IFile) {
-				usedZips.add(resource);
-			}
-		}
-		IResource focus = initialSelection != null ? root.findMember(initialSelection) : null;
-
-		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(shell, new WorkbenchLabelProvider(), new WorkbenchContentProvider());
-		dialog.setValidator(validator);
-		dialog.setTitle(PHPUIMessages.IncludePathDialogAccess_ZIPArchiveDialog_new_title);
-		dialog.setMessage(PHPUIMessages.IncludePathDialogAccess_ZIPArchiveDialog_new_description);
-		dialog.addFilter(new ArchieveFileFilter(usedZips, true, fgZipExtensions));
-		dialog.setInput(root);
-		dialog.setSorter(new ResourceSorter(ResourceSorter.NAME));
-		dialog.setInitialSelection(focus);
-
-		if (dialog.open() == Window.OK) {
-			Object[] elements = dialog.getResult();
-			IPath[] res = new IPath[elements.length];
-			for (int i = 0; i < res.length; i++) {
-				IResource elem = (IResource) elements[i];
-				res[i] = elem.getFullPath();
-			}
-			return res;
-		}
-		return null;
-	}
-	
 	public static IPath[] chooseIncludePathFoldersEntries(Shell shell) {
 		String lastUsedPath = PHPUiPlugin.getDefault().getDialogSettings().get(DIALOGSTORE_LASTINCLUDEFOLDER);
 		
@@ -323,74 +217,6 @@ public final class IncludePathDialogAccess {
 		IPath path = new Path(res).makeAbsolute();
 		PHPUiPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTINCLUDEFOLDER, path.removeLastSegments(1).toOSString());
 		return path;
-	}
-
-	/**
-	 * Shows the UI to configure an external ZIP or ZIP archive.
-	 * The dialog returns the configured or <code>null</code> if the dialog has
-	 * been canceled. The dialog does not apply any changes.
-	 * 
-	 * @param shell The parent shell for the dialog.
-	 * @param initialEntry The path of the initial archive entry.
-	 * @return Returns the configured include path container entry path or <code>null</code> if the dialog has
-	 * been canceled by the user.
-	 */
-	public static IPath configureExternalZIPEntry(Shell shell, IPath initialEntry) {
-		if (initialEntry == null) {
-			throw new IllegalArgumentException();
-		}
-
-		String lastUsedPath = initialEntry.removeLastSegments(1).toOSString();
-
-		FileDialog dialog = new FileDialog(shell, SWT.SINGLE);
-		dialog.setText(PHPUIMessages.IncludePathDialogAccess_ExtZIPArchiveDialog_edit_title);
-		dialog.setFilterExtensions(FILTER_EXTENSIONS);
-		dialog.setFilterPath(lastUsedPath);
-		dialog.setFileName(initialEntry.lastSegment());
-
-		String res = dialog.open();
-		if (res == null) {
-			return null;
-		}
-		PHPUiPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
-
-		return Path.fromOSString(res).makeAbsolute();
-	}
-
-	/**
-	 * Shows the UI to select new external ZIP or ZIP archive entries.
-	 * The dialog returns the selected entry paths or <code>null</code> if the dialog has
-	 * been canceled. The dialog does not apply any changes.
-	 * 
-	 * @param shell The parent shell for the dialog.
-	 * @return Returns the new include path container entry paths or <code>null</code> if the dialog has
-	 * been canceled by the user.
-	 */
-	public static IPath[] chooseExternalZIPEntries(Shell shell) {
-		String lastUsedPath = PHPUiPlugin.getDefault().getDialogSettings().get(DIALOGSTORE_LASTEXTZIP);
-		if (lastUsedPath == null) {
-			lastUsedPath = ""; //$NON-NLS-1$
-		}
-		FileDialog dialog = new FileDialog(shell, SWT.MULTI);
-		dialog.setText(PHPUIMessages.IncludePathDialogAccess_ExtZIPArchiveDialog_new_title);
-		dialog.setFilterExtensions(FILTER_EXTENSIONS);
-		dialog.setFilterPath(lastUsedPath);
-
-		String res = dialog.open();
-		if (res == null) {
-			return null;
-		}
-		String[] fileNames = dialog.getFileNames();
-		int nChosen = fileNames.length;
-
-		IPath filterPath = Path.fromOSString(dialog.getFilterPath());
-		IPath[] elems = new IPath[nChosen];
-		for (int i = 0; i < nChosen; i++) {
-			elems[i] = filterPath.append(fileNames[i]).makeAbsolute();
-		}
-		PHPUiPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
-
-		return elems;
 	}
 
 	/**

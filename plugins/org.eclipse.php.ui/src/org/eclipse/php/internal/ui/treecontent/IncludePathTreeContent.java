@@ -189,10 +189,6 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			if (includeModel.getType() == PHPIncludePathModel.TYPE_VARIABLE) {
 				return IncludePathVariableManager.instance().getIncludePathVariable(model.getID());
 			}
-			if (includeModel.getType() == PHPIncludePathModel.TYPE_ZIP) {
-				IPath locationPath = new Path(model.getID());
-				return locationPath.removeFirstSegments(locationPath.segmentCount() - 1).setDevice("");
-			}
 		}
 		String id = model.getID();
 		if (id != null)
