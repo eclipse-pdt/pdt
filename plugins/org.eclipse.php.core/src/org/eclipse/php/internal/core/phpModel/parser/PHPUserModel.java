@@ -37,10 +37,9 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	public static String ID = "PHPUserModel";
 
 	private FilesCodeDataDB phpFileDataDB;
-	private FilesCodeDataDB nonPhpFileDataDB;
 	private CodeDataDB classesDB;
 	private CodeDataDB functionsDB;
-	private CodeDataDB constansDB;
+	private CodeDataDB constantsDB;
 	private CodeDataDB globalsVariablesDB;
 
 	private List listeners = Collections.synchronizedList(new ArrayList(2));
@@ -48,11 +47,10 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	private PHPUserModelManager manager;
 
 	public PHPUserModel() {
-		phpFileDataDB = new FilesCodeDataDB();//new HashMap();
-		nonPhpFileDataDB = new FilesCodeDataDB();
+		phpFileDataDB = new FilesCodeDataDB();
 		classesDB = new TreeCodeDataDB();
 		functionsDB = new TreeCodeDataDB();
-		constansDB = new TreeCodeDataDB();
+		constantsDB = new TreeCodeDataDB();
 		globalsVariablesDB = new GlobalVariablesCodeDataDB();
 	}
 
@@ -64,7 +62,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		phpFileDataDB.clear();
 		classesDB.clear();
 		functionsDB.clear();
-		constansDB.clear();
+		constantsDB.clear();
 		globalsVariablesDB.clear();
 		fireDataCleared();
 	}
@@ -78,36 +76,10 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	 * @return the file data who's
 	 */
 	public CodeData[] getPHPFilesData(String startsWith) {
-		//        PHPFileData[] all = new PHPFileData[phpFileDataDB.size()];
-		//        phpFileDataDB.values().toArray(all);
-		//        Arrays.sort(all, new Comparator() {
-		//            public int compare(Object o, Object o1) {
-		//                String name1 = new File(((PHPFileData) o).getName()).getName();
-		//                String name2 = new File(((PHPFileData) o1).getName()).getName();
-		//                return name1.compareToIgnoreCase(name2);
-		//            }
-		//        });
-
 		List list = phpFileDataDB.asList();
 		PHPFileData[] all = new PHPFileData[list.size()];
 		list.toArray(all);
 		return ModelSupport.getFileDataStartingWith(all, startsWith);
-	}
-
-	public CodeData[] getNonPHPFiles(String startsWith) {
-		//        File[] all = new File[nonPhpFileDataDB.size()];
-		//        nonPhpFileDataDB.values().toArray(all);
-		//        Arrays.sort(all, new Comparator() {
-		//            public int compare(Object o, Object o1) {
-		//                String name1 = ((File) o).getName();
-		//                String name2 = ((File) o1).getName();
-		//                return name1.compareToIgnoreCase(name2);
-		//            }
-		//        });
-		List list = nonPhpFileDataDB.asList();
-		ProjectFileCodeData[] all = new ProjectFileCodeData[list.size()];
-		list.toArray(all);
-		return ModelSupport.getFileDataStartingWith(all, startsWith);//FileSStartingWith(all, startsWith);
 	}
 
 	public PHPFileData getFileData(String fileName) {
@@ -145,7 +117,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 
 		PHPConstantData[] constans = fileData.getConstants();
 		for (int i = 0; i < constans.length; i++) {
-			constansDB.addCodeData(constans[i]);
+			constantsDB.addCodeData(constans[i]);
 		}
 
 		// add global variables
@@ -161,10 +133,6 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		} else {
 			fireFileDataAdded(fileData);
 		}
-	}
-
-	public synchronized void insert(File file) {
-		nonPhpFileDataDB.addCodeData(new ProjectFileCodeData(file.getPath(), ""));
 	}
 
 	class ProjectFileCodeData extends AbstractCodeData implements ComparableName {
@@ -192,31 +160,9 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		PHPFileData fileData = (PHPFileData) phpFileDataDB.getUniqCodeData(fileName);
 		if (fileData != null) {
 			delete(fileData);
-			nonPhpFileDataDB.removeCodeData(fileData);
 			fireFileDataRemoved(fileData);
 		}
 	}
-
-	/*private synchronized void deleteDirectory(File file) {
-	 String fileName = file.getPath();
-	 String dName = fileName + VirtualFileSystem.instance.getFileSystem(file).getSeparator();
-
-	 CodeData[] allFilesData = getPHPFilesData();
-	 Arrays.sort(allFilesData);
-
-	 CodeData[] filesDataToDelete = ModelSupport.getCodeDataStartingWith(allFilesData, dName);
-	 for (int i = 0; i < filesDataToDelete.length; i++) {
-	 deleteFile(filesDataToDelete[i].getName());
-	 }
-	 }
-
-	 private synchronized void deleteFile(String fileName) {
-	 PHPFileData fileData = (PHPFileData) phpFileDataDB.get(fileName);
-	 if (fileData != null) {
-	 delete(fileData);
-	 fireFileDataRemoved(fileData);
-	 }
-	 }*/
 
 	protected synchronized void delete(PHPFileData fileData) {
 		// remove classes
@@ -234,7 +180,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		// remove functions
 		PHPConstantData[] constans = fileData.getConstants();
 		for (int i = 0; i < constans.length; i++) {
-			constansDB.removeCodeData(constans[i]);
+			constantsDB.removeCodeData(constans[i]);
 		}
 
 		// remove globalVariables
@@ -426,7 +372,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	}
 
 	public PHPConstantData getConstantData(String constantName) {
-		List list = constansDB.getCodeData(constantName);
+		List list = constantsDB.getCodeData(constantName);
 		if (list != null && list.size() > 0) {
 			return (PHPConstantData) list.get(0);
 		}
@@ -434,7 +380,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	}
 
 	public CodeData[] getConstants() {
-		List list = constansDB.asList();
+		List list = constantsDB.asList();
 		PHPConstantData[] rv = new PHPConstantData[list.size()];
 		list.toArray(rv);
 		return rv;
