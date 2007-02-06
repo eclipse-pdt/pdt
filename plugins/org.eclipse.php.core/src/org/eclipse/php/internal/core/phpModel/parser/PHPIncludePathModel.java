@@ -14,14 +14,13 @@ package org.eclipse.php.internal.core.phpModel.parser;
 /**
  * A PHPIncludePathModel. 
  * The include path model is a user model for the include path that also holds a type identifier
- * for its source (e.g. Zip, library or variable).
+ * for its source (e.g. library or variable).
  */
 public class PHPIncludePathModel extends PHPUserModel {
 
-	public static final int TYPE_ZIP = 0;
-	public static final int TYPE_LIBRARY = 1;
-	public static final int TYPE_VARIABLE = 2;
-	public static final int TYPE_UNKNOWN = 3;
+	public static final int TYPE_LIBRARY = 0;
+	public static final int TYPE_VARIABLE = 1;
+	public static final int TYPE_UNKNOWN = 2;
 
 	private final String id;
 	private final int type;

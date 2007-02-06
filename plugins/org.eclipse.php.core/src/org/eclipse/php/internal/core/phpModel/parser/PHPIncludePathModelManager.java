@@ -13,32 +13,20 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
@@ -61,7 +49,6 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 
 	private ArrayList libraries;
 	private ArrayList projects;
-	private ArrayList zips;
 	private ArrayList variables;
 	private String[] validExtensions;
 	private IncludePathListener includePathListener;
@@ -84,7 +71,6 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		model = compositePhpModel;
 		libraries = new ArrayList();
 		projects = new ArrayList();
-		zips = new ArrayList();
 		variables = new ArrayList();
 		modelsToCache = new HashMap();
 	}
@@ -116,7 +102,6 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		// Update the XML mapping for this project.
 		List list = new ArrayList(variables);
 		list.addAll(libraries);
-		list.addAll(zips);
 		includeCacheManager.includePathChanged(project, getAsCachedNames(list));
 
 		initialized = true;
@@ -126,40 +111,26 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		return compositePhpModel.getModels();
 	}
 
-	private void addLibrary(File library, boolean isZip) {
-		ArrayList list = (isZip) ? zips : libraries;
-		if (getIndexOf(library, list) != -1) {
+	private void addLibrary(File library) {
+		if (getIndexOf(library) != -1) {
 			return;
 		}
-		list.add(library);
-		innerAddLibrary(library, isZip);
+		libraries.add(library);
+		innerAddLibrary(library);
 	}
 
-	private void innerAddLibrary(File library, boolean isZip) {
-		PHPIncludePathModel model = new PHPIncludePathModel(library.getPath(), isZip ? PHPIncludePathModel.TYPE_ZIP : PHPIncludePathModel.TYPE_LIBRARY);
+	private void innerAddLibrary(File library) {
+		PHPIncludePathModel model = new PHPIncludePathModel(library.getPath(), PHPIncludePathModel.TYPE_LIBRARY);
 
 		PHPLanguageManager languageManager = PHPLanguageManagerProvider.instance().getPHPLanguageManager(phpVersion);
 		ParserClient client = languageManager.createParserClient(model, project);
 
 		updateExtentionList();
 		if (library.exists()) {
-			if (isZip) {
-				// Check if the zip file is newer then the cached file. If so, the zip was modified and we would like to re-parse it.
-				// Also, when the zip is un-cached or modified, add it to the list of libraries that we need to cache in the dispose. 
-				if (library.lastModified() < DefaultCacheManager.instance().getSharedCacheModificationTime(project, model)) {
-					// The zip is valid.
-					DefaultCacheManager.instance().load(project, model, true);
-					compositePhpModel.addModel(model);
-					return;
-				}
-				modelsToCache.put(model, model);
-				parseZip(library, client);
-			} else {
-				// Load the cache for the library
-				PHPIncludePathModel cacheModel = new PHPIncludePathModel(library.getPath(), PHPIncludePathModel.TYPE_LIBRARY);
-				DefaultCacheManager.instance().load(project, cacheModel, true);
-				recursiveParse(library, client, model, cacheModel);
-			}
+			// Load the cache for the library
+			PHPIncludePathModel cacheModel = new PHPIncludePathModel(library.getPath(), PHPIncludePathModel.TYPE_LIBRARY);
+			DefaultCacheManager.instance().load(project, cacheModel, true);
+			recursiveParse(library, client, model, cacheModel);
 		}
 		compositePhpModel.addModel(model);
 	}
@@ -226,13 +197,12 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		return false;
 	}
 
-	private void removeLibrary(File library, boolean isZip) {
-		ArrayList list = (isZip) ? zips : libraries;
-		int index = getIndexOf(library, list);
+	private void removeLibrary(File library) {
+		int index = getIndexOf(library);
 		if (index == -1) {
 			return;
 		}
-		list.remove(index);
+		libraries.remove(index);
 		innerRemoveLibrary(library);
 	}
 
@@ -243,47 +213,47 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		}
 	}
 
-	class ZipInputStreamPermanentReader extends InputStreamReader {
+//	class ZipInputStreamPermanentReader extends InputStreamReader {
+//
+//		public ZipInputStreamPermanentReader(InputStream in) {
+//			super(in);
+//		}
+//
+//		/* (non-Javadoc)
+//		 * @see java.io.InputStreamReader#close()
+//		 */
+//		public void close() {
+//			// don't close.
+//		}
+//	}
 
-		public ZipInputStreamPermanentReader(InputStream in) {
-			super(in);
-		}
-
-		/* (non-Javadoc)
-		 * @see java.io.InputStreamReader#close()
-		 */
-		public void close() {
-			// don't close.
-		}
-	}
-
-	private void parseZip(File zipFile, ParserClient client) {
-		ZipInputStream is = null;
-		try {
-			is = new ZipInputStream(new FileInputStream(zipFile));
-			ZipEntry ze;
-			while ((ze = is.getNextEntry()) != null) {
-				if (!ze.isDirectory()) {
-					String fileName = ze.getName();
-					if (isPhpFile(fileName)) {
-						ParserExecuter executer = new ParserExecuter(parserManager, null, client, zipFile.getName() + File.separator + fileName, new ZipInputStreamPermanentReader(is), new Pattern[0], zipFile.lastModified(), UseAspTagsHandler.useAspTagsAsPhp(project));
-						executer.run();
-					}
-				}
-			}
-			is.close();
-		} catch (FileNotFoundException e) {
-			//handled before
-		} catch (IOException io) {
-			Logger.logException(io);
-		}
-		if (is != null) {
-			try {
-				is.close();
-			} catch (IOException e) {
-			}
-		}
-	}
+	//	private void parseZip(File zipFile, ParserClient client) {
+//		ZipInputStream is = null;
+//		try {
+//			is = new ZipInputStream(new FileInputStream(zipFile));
+//			ZipEntry ze;
+//			while ((ze = is.getNextEntry()) != null) {
+//				if (!ze.isDirectory()) {
+//					String fileName = ze.getName();
+//					if (isPhpFile(fileName)) {
+//						ParserExecuter executer = new ParserExecuter(parserManager, null, client, zipFile.getName() + File.separator + fileName, new ZipInputStreamPermanentReader(is), new Pattern[0], zipFile.lastModified(), UseAspTagsHandler.useAspTagsAsPhp(project));
+//						executer.run();
+//					}
+//				}
+//			}
+//			is.close();
+//		} catch (FileNotFoundException e) {
+//			//handled before
+//		} catch (IOException io) {
+//			Logger.logException(io);
+//		}
+//		if (is != null) {
+//			try {
+//				is.close();
+//			} catch (IOException e) {
+//			}
+//		}
+//	}
 
 	private void updatePHPVersion(String oldVersion, String newVersion) {
 		setPHPVersion(newVersion);
@@ -308,7 +278,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		parserManager = languageManager.createPHPParserManager();
 	}
 
-	private int getIndexOf(File library, ArrayList libraries) {
+	private int getIndexOf(File library) {
 		int index = 0;
 		String libraryName = library.getPath();
 		Iterator iter = libraries.iterator();
@@ -323,14 +293,14 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		return -1;
 	}
 
-	public void includePathChanged(IPath[] paths, boolean isZip) {
+	public void includePathChanged(IPath[] paths) {
 		File[] newLibrariesList = new File[paths.length];
 
 		for (int i = 0; i < paths.length; i++) {
 			newLibrariesList[i] = new File(paths[i].toString());
-			addLibrary(newLibrariesList[i], isZip);
+			addLibrary(newLibrariesList[i]);
 		}
-		ArrayList olds = (isZip) ? zips : libraries;
+		ArrayList olds = libraries;
 		File[] oldLibrariesList = new File[olds.size()];
 		olds.toArray(oldLibrariesList);
 
@@ -344,7 +314,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 				}
 			}
 			if (!found) {
-				removeLibrary(oldLibrariesList[i], isZip);
+				removeLibrary(oldLibrariesList[i]);
 			}
 		}
 	}
@@ -468,18 +438,17 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	}
 
 	private void rebuild() {
-		rebuildList(libraries, false);
-		rebuildList(zips, true);
+		rebuildList(libraries);
 		rebuildVariablesList();
 	}
 
-	private void rebuildList(ArrayList list, boolean isZip) {
+	private void rebuildList(ArrayList list) {
 		Iterator iter = list.iterator();
 
 		while (iter.hasNext()) {
 			File library = (File) iter.next();
 			innerRemoveLibrary(library);
-			innerAddLibrary(library, isZip);
+			innerAddLibrary(library);
 		}
 	}
 
@@ -496,13 +465,12 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	private void loadChanges(IIncludePathEntry[] entries) {
 		ArrayList liberaries = new ArrayList();
 		ArrayList projectsList = new ArrayList();
-		ArrayList zipsList = new ArrayList();
 		ArrayList variablesList = new ArrayList();
 
 		for (int i = 0; i < entries.length; i++) {
 			if (entries[i].getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
 				if (entries[i].getContentKind() == IIncludePathEntry.K_BINARY) {
-					zipsList.add(entries[i]);
+					// do nothing, support for zips was removed
 				} else {
 					liberaries.add(entries[i]);
 				}
@@ -517,7 +485,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 			paths[i] = ((IIncludePathEntry) liberaries.get(i)).getPath();
 		}
 
-		includePathChanged(paths, false);
+		includePathChanged(paths);
 
 		IResource[] projects = new IResource[projectsList.size()];
 		for (int i = 0; i < projectsList.size(); i++) {
@@ -525,13 +493,6 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		}
 
 		projectListChanged(projects);
-
-		IPath[] zippaths = new IPath[zipsList.size()];
-		for (int i = 0; i < zipsList.size(); i++) {
-			zippaths[i] = ((IIncludePathEntry) zipsList.get(i)).getPath();
-		}
-
-		includePathChanged(zippaths, true);
 
 		IPath[] variablespaths = new IPath[variablesList.size()];
 		for (int i = 0; i < variablesList.size(); i++) {
@@ -567,7 +528,6 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 			// Update the XML mapping for this project cache.
 			List list = new ArrayList(variables);
 			list.addAll(libraries);
-			list.addAll(zips);
 			includeCacheManager.includePathChanged(project, getAsCachedNames(list));
 		}
 
@@ -616,15 +576,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 				recursiveParse(file, client, model, cachedModel);
 			} else {
 				String fileName = file.getName();
-				if (fileName.toLowerCase().endsWith(".zip")) { //$NON-NLS-1$
-					if (file.lastModified() < DefaultCacheManager.instance().getSharedCacheModificationTime(project, model)) {
-						// The zip is valid.
-						DefaultCacheManager.instance().load(project, model, true);
-						return;
-					}
-					modelsToCache.put(model, model);
-					parseZip(file, client);
-				} else if (isPhpFile(fileName)) {
+				if (isPhpFile(fileName)) {
 					PHPIncludePathModel cachedModel = new PHPIncludePathModel(variableName, PHPIncludePathModel.TYPE_VARIABLE);
 					DefaultCacheManager.instance().load(project, cachedModel, true);
 					PHPFileData fileData = cachedModel.getFileData(fileName);
@@ -787,29 +739,29 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 					if (variableFile.isDirectory()) {
 						return file;
 					}
-					if (variableFile.getName().endsWith(".zip")) {
-						try {
-							return new ZipFile(variableFile);
-						} catch (ZipException e) {
-							Logger.logException(e);
-						} catch (IOException e) {
-							Logger.logException(e);
-						}
-					}
+//					if (variableFile.getName().endsWith(".zip")) {
+//						try {
+//							return new ZipFile(variableFile);
+//						} catch (ZipException e) {
+//							Logger.logException(e);
+//						} catch (IOException e) {
+//							Logger.logException(e);
+//						}
+//					}
 				}
 				File file = new File(resourceName);
-				if (getIndexOf(file, libraries) != -1) {
+				if (getIndexOf(file) != -1) {
 					return new File(fileData.getName());
 				}
-				if (getIndexOf(file, zips) != -1) {
-					try {
-						return new ZipFile(file);
-					} catch (ZipException e) {
-						Logger.logException(e);
-					} catch (IOException e) {
-						Logger.logException(e);
-					}
-				}
+//				if (getIndexOf(file, zips) != -1) {
+//					try {
+//						return new ZipFile(file);
+//					} catch (ZipException e) {
+//						Logger.logException(e);
+//					} catch (IOException e) {
+//						Logger.logException(e);
+//					}
+//				}
 				return null;
 			}
 		}
