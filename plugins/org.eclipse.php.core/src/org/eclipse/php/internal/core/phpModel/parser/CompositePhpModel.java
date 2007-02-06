@@ -87,18 +87,6 @@ public abstract class CompositePhpModel implements IPhpModel {
 		return mergResults(tempResultList);
 	}
 
-	public CodeData[] getNonPHPFiles(String startsWith) {
-		ArrayList tempResultList = new ArrayList();
-
-		for (int i = 0; i < models.length; i++) {
-			CodeData[] res = models[i].getNonPHPFiles(startsWith);
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
-			}
-		}
-		return mergResults(tempResultList);
-	}
-
 	public PHPFileData getFileData(String fileName) {
 		for (int i = 0; i < models.length; i++) {
 			PHPFileData res = models[i].getFileData(fileName);
