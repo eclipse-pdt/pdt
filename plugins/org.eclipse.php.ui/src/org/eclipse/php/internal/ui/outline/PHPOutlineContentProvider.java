@@ -18,7 +18,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
@@ -246,9 +245,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	}
 
 	public Object[] getChildren(final Object object) {
-		if (object instanceof PHPElementImpl && mode == MODE_MIXED)
-			return getPHPChildren((PHPElementImpl) object);
-		else if (object instanceof PHPCodeData) {
+		if (object instanceof PHPCodeData) {
 			ArrayList children = new ArrayList(Arrays.asList(phpContentProvider.getChildren(object)));
 			children.addAll(Arrays.asList(superClassContentProvider.getChildren(object)));
 			return children.toArray();
@@ -270,9 +267,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	}
 
 	public Object[] getElements(final Object object) {
-		if (object instanceof PHPElementImpl && mode == MODE_MIXED)
-			return getPHPChildren((PHPElementImpl) object);
-		else if (object instanceof PHPCodeData)
+		if (object instanceof PHPCodeData)
 			return phpContentProvider.getChildren(object);
 		else if (object instanceof DOMModelForPHP && mode == MODE_PHP) {
 			editorModel = (DOMModelForPHP) object;
@@ -325,32 +320,6 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 		return super.getParent(object);
 	}
 
-	private Object[] getPHPChildren(final PHPCodeData fileData) {
-		return phpContentProvider.getChildren(fileData); // gets includes, constants, classes and functions
-	}
-
-	private Object[] getPHPChildren(final PHPCodeData codeData, final int start, final int end) {
-		final ArrayList list = new ArrayList();
-
-		if (codeData == null)
-			return new Object[0];
-		final Object[] children = getPHPChildren(codeData);
-		for (int i = 0; i < children.length; ++i)
-			if (children[i] instanceof PHPCodeData)
-				if (isInside(start, end, (PHPCodeData) children[i]))
-					list.add(children[i]);
-		return list.toArray();
-	}
-
-	private Object[] getPHPChildren(final PHPElementImpl phpElement) {
-		final String location = phpElement.getModel().getBaseLocation();
-		final int start = phpElement.getStartOffset();
-		final int end = phpElement.getEndOffset();
-
-		final PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(location);
-		return getPHPChildren(fileData, start, end);
-	}
-
 	private ISelectionListener getSelectionServiceListener() {
 		if (fSelectionListener == null)
 			fSelectionListener = new PostSelectionServiceListener();
@@ -362,10 +331,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 	}
 
 	public boolean hasChildren(final Object object) {
-		if (object instanceof PHPElementImpl) {
-			final Object[] phpChildren = getPHPChildren((PHPElementImpl) object);
-			return phpChildren.length > 0;
-		} else if (object instanceof PHPCodeData) {
+		if (object instanceof PHPCodeData) {
 			if (superClassContentProvider.hasChildren(object)) {
 				return true;
 			}

@@ -11,7 +11,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.internal.core.documentModel.dom.Utils;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
@@ -49,10 +49,7 @@ public class LinkingSelectionListener implements ISelectionListener {
 			if (structuredSelection.size() > 0) {
 				final Object firstElement = structuredSelection.getFirstElement();
 				PHPCodeData codeData = null;
-				if (firstElement instanceof PHPElementImpl && part instanceof PHPStructuredEditor) {
-					final PHPElementImpl phpElement = (PHPElementImpl) firstElement;
-					codeData = phpElement.getPHPCodeData(((TextSelection) selection).getOffset());
-				} else if (firstElement instanceof NodeImpl) {
+				if (firstElement instanceof NodeImpl) {
 					final IDOMDocument doc = (IDOMDocument) ((NodeImpl) firstElement).getOwnerDocument();
 					if (doc == null)
 						return null;
@@ -60,7 +57,7 @@ public class LinkingSelectionListener implements ISelectionListener {
 					if (!(model instanceof DOMModelForPHP))
 						return null;
 					if (selection instanceof TextSelection) {
-						codeData = PHPElementImpl.getPHPCodeData((NodeImpl) firstElement, ((TextSelection) selection).getOffset());
+						codeData = Utils.getPHPCodeData((NodeImpl) firstElement, ((TextSelection) selection).getOffset());
 					}
 				} else if (firstElement instanceof PHPCodeData) {
 					codeData = (PHPCodeData) firstElement;
@@ -87,7 +84,7 @@ public class LinkingSelectionListener implements ISelectionListener {
 			Object oldSelectedElement = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 			if (selectedElement.equals(oldSelectedElement))
 				return;
-			if(selectedElement instanceof IResource && selectedElement.equals(PHPModelUtil.getResource(oldSelectedElement))) {
+			if (selectedElement instanceof IResource && selectedElement.equals(PHPModelUtil.getResource(oldSelectedElement))) {
 				return;
 			}
 			viewer.setSelection(createSelection(selectedElement), true);

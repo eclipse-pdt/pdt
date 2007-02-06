@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-import org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.ui.util.IPHPOutlineElementComparer;
 
@@ -48,11 +47,6 @@ public class PHPElementComparer implements IPHPOutlineElementComparer {
 			}
 
 			return true;
-		} else if (a instanceof PHPElementImpl) {
-			//			PHPElementImpl phpElement = (PHPElementImpl) a;
-			//			PHPElementImpl phpElement2= (PHPElementImpl)b;
-			//			phpElement.getNodeValue().equals(phpElement2.getNodeValue());
-
 		}
 		return false;
 	}
@@ -73,7 +67,7 @@ public class PHPElementComparer implements IPHPOutlineElementComparer {
 	}
 
 	public boolean supports(Object o) {
-		return (o instanceof PHPCodeData) || (o instanceof PHPElementImpl);
+		return (o instanceof PHPCodeData);
 	}
 
 }

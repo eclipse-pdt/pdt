@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl;
+import org.eclipse.php.internal.core.documentModel.dom.Utils;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.SortAction;
@@ -142,7 +142,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 					final Object obj = structuredSelection.getFirstElement();
 
 					if (obj instanceof NodeImpl) {
-						final PHPCodeData codeData = PHPElementImpl.getPHPCodeData((NodeImpl) obj, ((TextSelection) selection).getOffset());
+						final PHPCodeData codeData = Utils.getPHPCodeData((NodeImpl) obj, ((TextSelection) selection).getOffset());
 						if (codeData != null)
 							return new StructuredSelection(codeData);
 					}

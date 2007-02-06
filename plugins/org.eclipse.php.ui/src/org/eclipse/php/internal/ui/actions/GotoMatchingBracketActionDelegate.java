@@ -11,20 +11,14 @@
 
 package org.eclipse.php.internal.ui.actions;
 
-import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.documentModel.dom.PHPElementImpl;
 import org.eclipse.php.internal.core.documentModel.parser.structregions.PHPStructuredDocumentRegion;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.wst.xml.core.internal.document.TextImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
@@ -57,7 +51,7 @@ public class GotoMatchingBracketActionDelegate implements IWorkbenchWindowAction
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sSelection = (IStructuredSelection) selection;
 			Object element = sSelection.getFirstElement();
-			if (element instanceof PHPElementImpl || (element instanceof TextImpl && ((IDOMNode) element).getFirstStructuredDocumentRegion() instanceof PHPStructuredDocumentRegion)) {
+			if ((element instanceof TextImpl && ((IDOMNode) element).getFirstStructuredDocumentRegion() instanceof PHPStructuredDocumentRegion)) {
 				action.setEnabled(true);
 			} else {
 				action.setEnabled(false);
