@@ -719,7 +719,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 			} else {
 				removeProject(resource);
 
-				PHPProjectOptions options = PHPProjectOptions.forProject(project);
+				PHPProjectOptions options = PHPProjectOptions.forProject(resource.getProject());
 				options.removeResourceFromIncludePath(resource);
 			}
 		}
