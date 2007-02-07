@@ -148,7 +148,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		IPhpModel includePathModel = (IPhpModel) includePathTree.getElementData(modelPath);
 		IPath includeLocation = getIncludeModelLocation(includePathModel);
 		// find and add missing elements:
-		CodeData[] fileDatas = includePathModel.getPHPFilesData(null);
+		CodeData[] fileDatas = includePathModel.getFileDatas();
 		for (int i = 0; i < fileDatas.length; ++i) {
 			String fileName = fileDatas[i].getName();
 			if (!fileName.startsWith(includeLocation.toOSString()) && !fileName.startsWith(includeLocation.makeAbsolute().toString())) {
