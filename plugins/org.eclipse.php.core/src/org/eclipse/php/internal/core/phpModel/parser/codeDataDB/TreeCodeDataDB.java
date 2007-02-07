@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser.codeDataDB;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.util.collections.BucketMap;
@@ -51,7 +48,7 @@ public class TreeCodeDataDB implements CodeDataDB {
 	public synchronized List getCodeData(final String name) {
 		if (name == null)
 			return null;
-		return (List) elements.get(getCodeDataIdentifier(name));
+		return Arrays.asList(elements.get(getCodeDataIdentifier(name)).toArray());
 	}
 
 	private String getCodeDataIdentifier(final String name) {
