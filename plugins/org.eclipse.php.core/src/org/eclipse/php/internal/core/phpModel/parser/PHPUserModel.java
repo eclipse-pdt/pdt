@@ -19,18 +19,8 @@ import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.CodeDataDB;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.FilesCodeDataDB;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.GlobalVariablesCodeDataDB;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.TreeCodeDataDB;
-import org.eclipse.php.internal.core.phpModel.phpElementData.AbstractCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableTypeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariablesTypeManager;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.util.ICachable;
-import org.eclipse.php.internal.core.util.IncludeCacheManager;
 import org.eclipse.php.internal.core.util.Visitor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
@@ -213,6 +203,20 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		return rv;
 	}
 
+	public PHPFunctionData getFunction(String fileName, String functionName) {
+		Collection functions = constantsDB.getCodeData(functionName);
+		if (functions == null || functions.size() == 0) {
+			return null;
+		}
+		for (Iterator i = functions.iterator(); i.hasNext();) {
+			PHPFunctionData curr = (PHPFunctionData) i.next();
+			if (curr.getUserData().getFileName().equals(fileName)) {
+				return curr;
+			}
+		}
+		return (PHPFunctionData) functions.iterator().next();
+	}
+
 	public CodeData[] getFunctions(String startsWith) {
 		return ModelSupport.getCodeDataStartingWith(getFunctions(), startsWith);
 	}
@@ -379,6 +383,20 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		return null;
 	}
 
+	public PHPConstantData getConstant(String fileName, String constantName) {
+		Collection constants = constantsDB.getCodeData(constantName);
+		if (constants == null || constants.size() == 0) {
+			return null;
+		}
+		for (Iterator i = constants.iterator(); i.hasNext();) {
+			PHPConstantData curr = (PHPConstantData) i.next();
+			if (curr.getUserData().getFileName().equals(fileName)) {
+				return curr;
+			}
+		}
+		return (PHPConstantData) constants.iterator().next();
+	}
+
 	public CodeData[] getConstants() {
 		List list = constantsDB.asList();
 		PHPConstantData[] rv = new PHPConstantData[list.size()];
@@ -466,4 +484,5 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 
 	public void fileChanged(IFile file, IStructuredDocument sDocument) {
 	}
+
 }

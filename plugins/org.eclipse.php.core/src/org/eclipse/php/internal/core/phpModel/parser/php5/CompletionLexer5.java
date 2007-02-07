@@ -2988,7 +2988,7 @@ appendTextToComment();
         case 755: break;
         case 431: 
           { 
-    /* not a keyword, hust for recognize constans.*/
+    /* not a keyword, hust for recognize constants.*/
     return createFullSymbol(ParserConstants5.T_DEFINE);
  }
         case 756: break;

@@ -40,6 +40,10 @@ public abstract class PhpModelProxy implements IPhpModel {
 		return model.getFunctions(startsWith);
 	}
 
+	public PHPFunctionData getFunction(String fileName, String functionName) {
+		return model.getFunction(fileName, functionName);
+	}
+
 	public CodeData[] getClasses() {
 		return model.getClasses();
 	}
@@ -76,6 +80,10 @@ public abstract class PhpModelProxy implements IPhpModel {
 		return model.getConstants(startsWith, caseSensitive);
 	}
 
+	public PHPConstantData getConstant(String fileName, String constantName) {
+		return model.getConstant(fileName, constantName);
+	}
+
 	public IPHPMarker[] getMarkers() {
 		return model.getMarkers();
 	}
@@ -87,4 +95,5 @@ public abstract class PhpModelProxy implements IPhpModel {
 	public void dispose() {
 		model.dispose();
 	}
+
 }

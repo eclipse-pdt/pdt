@@ -34,11 +34,9 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 	private IPHPLanguageModel languageModel;
 	private Collection listeners = Collections.synchronizedCollection(new HashSet(2));
 	private IProject currentProject;
-	
 
 	public PHPProjectModel() {
 		super();
-//		initialize(project);
 	}
 
 	public String getID() {
@@ -47,7 +45,7 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 
 	public void initialize(IProject project) {
 		currentProject = project;
-		
+
 		userModel = new PHPUserModel();
 		userModel.initialize(project);
 		addModel(userModel);
@@ -62,7 +60,7 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 
 		addModelListenrs();
 	}
-	
+
 	/**
 	 * Initialize a non-project model 
 	 * this means we initialize the default model
@@ -75,13 +73,13 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 	public IProject getProject() {
 		return currentProject;
 	}
-	
+
 	private void addModelListenrs() {
 		IPhpModel[] models = getModels();
 		for (int i = 0; i < models.length; i++) {
 			IPhpModel phpModel = models[i];
 			if (phpModel instanceof IProjectModelListener) {
-				addProjectModelListener((IProjectModelListener)phpModel);
+				addProjectModelListener((IProjectModelListener) phpModel);
 			}
 		}
 	}
@@ -96,20 +94,19 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 		return languageModel;
 	}
 
-
 	public Object getExternalResource(PHPFileData fileData) {
 		IPhpModel[] models = getModels();
 		for (int i = 0; i < models.length; i++) {
-			if(models[i] instanceof ExternalFilesModel){
-				Object rv = ((ExternalFilesModel)models[i]).getExternalResource(fileData);
-				if(rv != null){
+			if (models[i] instanceof ExternalFilesModel) {
+				Object rv = ((ExternalFilesModel) models[i]).getExternalResource(fileData);
+				if (rv != null) {
 					return rv;
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public CodeData getActiveConstructor(String className, String fileName) {
@@ -142,12 +139,12 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 
 	public PHPClassData getClass(String fileName, String className) {
 		PHPClassData classData = super.getClass(fileName, className);
-		if(classData == null){
+		if (classData == null) {
 			return languageModel.getClass(className);
 		}
 		return classData;
 	}
-	
+
 	public CodeData getClassFunctionData(String fileName, String className, String functionName) {
 		PHPClassData classData = getClass(fileName, className);
 		if (classData == null) {
@@ -323,7 +320,7 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 	}
 
 	public void addFileToModel(IFile file) {
-		fireFileDataAdded(file);		
+		fireFileDataAdded(file);
 	}
 
 	public void removeFileFromModel(IFile file) {

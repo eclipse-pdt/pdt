@@ -13,12 +13,7 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
@@ -26,16 +21,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
@@ -47,7 +33,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 	protected Map classesHash = new HashMap(10);
 
-	protected PHPConstantData[] constans = PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY;
+	protected PHPConstantData[] constants = PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY;
 
 	protected IPHPMarker[] markers = PHPCodeDataFactory.EMPTY_MARKERS_DATA_ARRAY;
 
@@ -89,11 +75,15 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	}
 
 	public CodeData[] getFunction(String functionName) {
-		Object obj = functionsHash.get(functionName);
-		if (obj == null) {
+		PHPFunctionData function = getFunction(null, functionName);
+		if (function == null) {
 			return PHPCodeDataFactory.EMPTY_CODE_DATA_ARRAY;
 		}
-		return new PHPFunctionData[] { (PHPFunctionData) obj };
+		return new PHPFunctionData[] { function };
+	}
+
+	public PHPFunctionData getFunction(String fileName, String functionName) {
+		return (PHPFunctionData) functionsHash.get(functionName);
 	}
 
 	public CodeData[] getFunctions(String startsWith) {
@@ -115,11 +105,15 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	}
 
 	public CodeData[] getConstants() {
-		return constans;
+		return constants;
 	}
 
 	public CodeData[] getConstants(String startsWith, boolean caseSensitive) {
 		return caseSensitive ? ModelSupport.getCodeDataStartingWithCS(getConstants(), startsWith) : ModelSupport.getCodeDataStartingWith(getConstants(), startsWith);
+	}
+
+	public PHPConstantData getConstant(String fileName, String constantName) {
+		return null;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////
@@ -437,7 +431,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			PHPConstantData[] arratConstans = new PHPConstantData[constansList.size()];
 			constansList.toArray(arratConstans);
 			Arrays.sort(arratConstans);
-			constans = arratConstans;
+			constants = arratConstans;
 		}
 
 		public void handleDefine(String name, String value, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {

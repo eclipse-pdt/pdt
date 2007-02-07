@@ -28,7 +28,9 @@ import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
@@ -771,4 +773,5 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	private boolean contains(IPhpModel model, PHPFileData fileData) {
 		return (model.getFileData(fileData.getName()) != null);
 	}
+
 }

@@ -13,11 +13,7 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public abstract class CompositePhpModel implements IPhpModel {
 
@@ -119,6 +115,16 @@ public abstract class CompositePhpModel implements IPhpModel {
 			}
 		}
 		return mergResults(tempResultList);
+	}
+
+	public PHPFunctionData getFunction(String fileName, String functionName) {
+		for (int i = 0; i < models.length; i++) {
+			PHPFunctionData function = models[i].getFunction(fileName, functionName);
+			if (function != null) {
+				return function;
+			}
+		}
+		return null;
 	}
 
 	public CodeData[] getFunctions(String startsWith) {
@@ -235,6 +241,16 @@ public abstract class CompositePhpModel implements IPhpModel {
 		return mergResults(tempResultList);
 	}
 
+	public PHPConstantData getConstant(String fileName, String constantName) {
+		for (int i = 0; i < models.length; i++) {
+			PHPConstantData constant = models[i].getConstant(fileName, constantName);
+			if (constant != null) {
+				return constant;
+			}
+		}
+		return null;
+	}
+
 	public IPHPMarker[] getMarkers() {
 		ArrayList tempResultList = new ArrayList();
 		int length = 0;
@@ -243,16 +259,16 @@ public abstract class CompositePhpModel implements IPhpModel {
 			IPHPMarker[] res = models[i].getMarkers();
 			if (res != null && res.length > 0) {
 				tempResultList.add(res);
-				length +=res.length;
+				length += res.length;
 			}
 		}
-		
+
 		IPHPMarker[] res = new IPHPMarker[length];
 		int index = 0;
-		for(int i= 0 ; i < tempResultList.size() ; i++){
-			IPHPMarker[] currArray = (IPHPMarker[])tempResultList.get(i);
+		for (int i = 0; i < tempResultList.size(); i++) {
+			IPHPMarker[] currArray = (IPHPMarker[]) tempResultList.get(i);
 			System.arraycopy(currArray, 0, res, index, currArray.length);
-			index+=currArray.length;
+			index += currArray.length;
 		}
 		return res;
 	}
