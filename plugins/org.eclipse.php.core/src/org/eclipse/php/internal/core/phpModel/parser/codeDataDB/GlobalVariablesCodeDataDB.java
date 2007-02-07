@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser.codeDataDB;
 
-
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 
@@ -35,7 +31,7 @@ public class GlobalVariablesCodeDataDB implements CodeDataDB {
 		sortedData.clear();
 	}
 
-	public synchronized List getCodeData(String name) {
+	public synchronized Collection getCodeData(String name) {
 		return null;
 	}
 

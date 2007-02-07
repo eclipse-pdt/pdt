@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser.codeDataDB;
 
-
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
@@ -19,7 +19,7 @@ public interface CodeDataDB {
 
 	public void clear();
 
-	public List getCodeData(String name);
+	public Collection getCodeData(String name);
 
 	public void addCodeData(CodeData codeData);
 

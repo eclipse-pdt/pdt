@@ -75,11 +75,11 @@ public abstract class CompositePhpModel implements IPhpModel {
 		return -1;
 	}
 
-	public CodeData[] getPHPFilesData(String startsWith) {
+	public CodeData[] getFileDatas() {
 		ArrayList tempResultList = new ArrayList();
 
 		for (int i = 0; i < models.length; i++) {
-			CodeData[] res = models[i].getPHPFilesData(startsWith);
+			CodeData[] res = models[i].getFileDatas();
 			if (res != null && res.length > 0) {
 				tempResultList.add(res);
 			}

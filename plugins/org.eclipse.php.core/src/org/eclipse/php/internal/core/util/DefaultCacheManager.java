@@ -10,15 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
@@ -102,7 +94,7 @@ public class DefaultCacheManager {
 	 * @return	The cache directory for the project.
 	 */
 	protected File getCacheDir(IProject project) {
-  		File file = (File) projectToCacheDir.get(project);
+		File file = (File) projectToCacheDir.get(project);
 		if (file == null && project != null) {
 			final IPath location = project.getLocation();
 			if (location == null) {
@@ -290,7 +282,7 @@ public class DefaultCacheManager {
 		BufferedOutputStream bufout = null;
 		DataOutputStream dout = null;
 		try {
-			ICachable[] toSave = userModel.getFileDatas();
+			ICachable[] toSave = userModel.getCachableFiles();
 			out = new FileOutputStream(cacheFile);
 			bufout = new BufferedOutputStream(out, 2048);
 			dout = new DataOutputStream(bufout);

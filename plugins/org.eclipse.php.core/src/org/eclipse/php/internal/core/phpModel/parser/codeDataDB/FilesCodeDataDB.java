@@ -40,7 +40,7 @@ public class FilesCodeDataDB implements CodeDataDB {
 		needsResort = false;
 	}
 
-	public synchronized List getCodeData(String name) {
+	public synchronized Collection getCodeData(String name) {
 		return null;
 	}
 

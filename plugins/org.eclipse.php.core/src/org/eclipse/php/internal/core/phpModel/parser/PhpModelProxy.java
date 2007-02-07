@@ -20,8 +20,8 @@ public abstract class PhpModelProxy implements IPhpModel {
 		return model.getID();
 	}
 
-	public CodeData[] getPHPFilesData(String startsWith) {
-		return model.getPHPFilesData(startsWith);
+	public CodeData[] getFileDatas() {
+		return model.getFileDatas();
 	}
 
 	public PHPFileData getFileData(String fileName) {

@@ -29,6 +29,8 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableTypeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariablesTypeManager;
+import org.eclipse.php.internal.core.util.ICachable;
+import org.eclipse.php.internal.core.util.IncludeCacheManager;
 import org.eclipse.php.internal.core.util.Visitor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
@@ -75,22 +77,20 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	 * @param startsWith
 	 * @return the file data who's
 	 */
-	public CodeData[] getPHPFilesData(String startsWith) {
-		List list = phpFileDataDB.asList();
-		PHPFileData[] all = new PHPFileData[list.size()];
-		list.toArray(all);
-		return ModelSupport.getFileDataStartingWith(all, startsWith);
-	}
-
-	public PHPFileData getFileData(String fileName) {
-		return (PHPFileData) phpFileDataDB.getUniqCodeData(fileName);
-	}
-
-	public PHPFileData[] getFileDatas() {
+	public CodeData[] getFileDatas() {
 		List list = phpFileDataDB.asList();
 		PHPFileData[] allFileData = new PHPFileData[list.size()];
 		list.toArray(allFileData);
 		return allFileData;
+	}
+
+	public ICachable[] getCachableFiles() {
+		CodeData[] files = getFileDatas();
+		return (ICachable[]) Arrays.asList(files).toArray(new ICachable[files.length]);
+	}
+
+	public PHPFileData getFileData(String fileName) {
+		return (PHPFileData) phpFileDataDB.getUniqCodeData(fileName);
 	}
 
 	public synchronized void insert(PHPFileData fileData) {
@@ -204,12 +204,12 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	}
 
 	public CodeData[] getFunction(String functionName) {
-		List list = functionsDB.getCodeData(functionName);
-		if (list == null || list.size() == 0) {
+		Collection functions = functionsDB.getCodeData(functionName);
+		if (functions == null || functions.size() == 0) {
 			return PHPCodeDataFactory.EMPTY_CODE_DATA_ARRAY;
 		}
-		PHPFunctionData[] rv = new PHPFunctionData[list.size()];
-		list.toArray(rv);
+		PHPFunctionData[] rv = new PHPFunctionData[functions.size()];
+		functions.toArray(rv);
 		return rv;
 	}
 
@@ -226,17 +226,17 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	}
 
 	public PHPClassData getClass(String fileName, String className) {
-		List classes = classesDB.getCodeData(className);
+		Collection classes = classesDB.getCodeData(className);
 		if (classes == null || classes.size() == 0) {
 			return null;
 		}
-		for (int i = 0; i < classes.size(); i++) {
-			PHPClassData curr = (PHPClassData) classes.get(i);
+		for (Iterator i = classes.iterator(); i.hasNext();) {
+			PHPClassData curr = (PHPClassData) i.next();
 			if (curr.getUserData().getFileName().equals(fileName)) {
 				return curr;
 			}
 		}
-		return (PHPClassData) classes.get(0);
+		return (PHPClassData) classes.iterator().next();
 	}
 
 	public CodeData[] getClasses(String startsWith) {
@@ -372,9 +372,9 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	}
 
 	public PHPConstantData getConstantData(String constantName) {
-		List list = constantsDB.getCodeData(constantName);
-		if (list != null && list.size() > 0) {
-			return (PHPConstantData) list.get(0);
+		Collection constants = constantsDB.getCodeData(constantName);
+		if (constants != null && constants.size() > 0) {
+			return (PHPConstantData) constants.iterator().next();
 		}
 		return null;
 	}

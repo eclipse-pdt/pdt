@@ -45,10 +45,10 @@ public class TreeCodeDataDB implements CodeDataDB {
 		sortedData.clear();
 	}
 
-	public synchronized List getCodeData(final String name) {
+	public synchronized Collection getCodeData(final String name) {
 		if (name == null)
 			return null;
-		return Arrays.asList(elements.get(getCodeDataIdentifier(name)).toArray());
+		return elements.get(getCodeDataIdentifier(name));
 	}
 
 	private String getCodeDataIdentifier(final String name) {

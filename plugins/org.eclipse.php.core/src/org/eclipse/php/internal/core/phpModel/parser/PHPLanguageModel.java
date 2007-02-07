@@ -124,7 +124,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 	// ////////////////////////////////////////////////////////////////////////////////////////
 
-	public CodeData[] getPHPFilesData(String startsWith) {
+	public CodeData[] getFileDatas() {
 		return null;
 	}
 

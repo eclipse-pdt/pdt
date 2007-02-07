@@ -21,7 +21,7 @@ public interface IPhpModel  {
 	
 	public String getID();
 	
-	public CodeData[] getPHPFilesData(String startsWith);
+	public CodeData[] getFileDatas();
 	
 	public PHPFileData getFileData(String fileName);
 
