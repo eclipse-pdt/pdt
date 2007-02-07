@@ -10,23 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileDataUtilities;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class ModelSupport {
 
@@ -34,7 +23,7 @@ public class ModelSupport {
 	public static final CodeDataFilter NOT_STATIC_VARIABLES_FILTER = new StaticVariablesFilter(false);
 	public static final CodeDataFilter STATIC_FUNCTIONS_FILTER = new StaticFunctionsFilter(true);
 	public static final CodeDataFilter INTERNAL_CODEDATA_FILTER = new InternalPhpCodeData();
-	
+
 	public static final CodeDataFilter PIRVATE_ACCESS_LEVEL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
 			return true;
@@ -50,31 +39,31 @@ public class ModelSupport {
 			return (!PHPModifier.isPrivate(modifier) && !PHPModifier.isProtected(modifier));
 		}
 	};
-	
+
 	public static final CodeDataFilter PROTECTED_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC = new AccessLevelFilter() {
 		//implements stub with no usage
 		public boolean verify(int modifier) {
 			return true;
 		}
-		
+
 		public boolean accept(CodeData codeData) {
 			if (codeData instanceof PHPClassVarData) {
 				return PROTECTED_ACCESS_LEVEL_FILTER.accept(codeData) && STATIC_VARIABLES_FILTER.accept(codeData);
 			}
-			if (codeData instanceof PHPFunctionData){
+			if (codeData instanceof PHPFunctionData) {
 				return PROTECTED_ACCESS_LEVEL_FILTER.accept(codeData);
 			}
-				
+
 			return true;
 		}
 	};
-	
+
 	public static final CodeDataFilter PUBLIC_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC = new AccessLevelFilter() {
 		//implements the stub with no usage
 		public boolean verify(int modifier) {
 			return true;
 		}
-		
+
 		public boolean accept(CodeData codeData) {
 			if (codeData instanceof PHPClassVarData) {
 				return PUBLIC_ACCESS_LEVEL_FILTER.accept(codeData) && STATIC_VARIABLES_FILTER.accept(codeData);
@@ -145,16 +134,8 @@ public class ModelSupport {
 		return getFirstMatch(sortedArray, searchName, exactName, false, false);
 	}
 
-	private static int getFirstMatch(CodeData[] sortedArray, String searchName, boolean exactName, boolean useComparableName) {
-		return getFirstMatch(sortedArray, searchName, exactName, useComparableName, false);
-	}
-
 	public static int getFirstMatchCS(CodeData[] sortedArray, String searchName, boolean exactName) {
 		return getFirstMatch(sortedArray, searchName, exactName, false, true);
-	}
-
-	private static int getFirstMatchCS(CodeData[] sortedArray, String searchName, boolean exactName, boolean useComparableName) {
-		return getFirstMatch(sortedArray, searchName, exactName, useComparableName, true);
 	}
 
 	//Binary search for the search start position
@@ -239,14 +220,6 @@ public class ModelSupport {
 			}
 		}
 		return start + 1;
-	}
-
-	private static int getFirstMatch(File[] sortedArray, String searchName) {
-		return getFirstMatch(sortedArray, searchName, false);
-	}
-
-	private static int getFirstMatchCS(File[] sortedArray, String searchName) {
-		return getFirstMatch(sortedArray, searchName, true);
 	}
 
 	//Binary search for the search start position
@@ -535,20 +508,20 @@ public class ModelSupport {
 
 	private static class PHPCodeContextImp implements PHPCodeContext, Serializable {
 
-//		private final String fileName;
+		//		private final String fileName;
 		private final String className;
 		private final String functionName;
 		private int hash;
 
 		PHPCodeContextImp(String fileName, String className, String functionName) {
-//			this.fileName = fileName;
+			//			this.fileName = fileName;
 			this.className = className;
 			this.functionName = functionName;
 		}
 
-//		public final String getContainerFileName() {
-//			return fileName;
-//		}
+		//		public final String getContainerFileName() {
+		//			return fileName;
+		//		}
 
 		public final String getContainerClassName() {
 			return className;
@@ -566,7 +539,7 @@ public class ModelSupport {
 				return false;
 			}
 			PHPCodeContextImp other = (PHPCodeContextImp) obj;
-//			return fileName.equals(other.fileName) && className.equals(other.className) && functionName.equals(other.functionName);
+			//			return fileName.equals(other.fileName) && className.equals(other.className) && functionName.equals(other.functionName);
 			return className.equals(other.className) && functionName.equals(other.functionName);
 		}
 
@@ -601,7 +574,6 @@ public class ModelSupport {
 		}
 
 	}
-	
 
 	private static class StaticFunctionsFilter implements CodeDataFilter {
 
@@ -636,19 +608,17 @@ public class ModelSupport {
 
 		public abstract boolean verify(int modifier);
 	}
-	
+
 	private static final class InternalPhpCodeData implements CodeDataFilter {
-		
+
 		public boolean accept(CodeData codeData) {
 			if (codeData == null || !(codeData instanceof PHPCodeData))
 				return false;
-			else {
-				// safe cast
-				PHPCodeData phpData = (PHPCodeData) codeData;
-				PHPDocBlock docBlock = phpData.getDocBlock();
-				return docBlock != null && docBlock.hasTagOf(PHPDocTag.INTERNAL);
-			}
+			// safe cast
+			PHPCodeData phpData = (PHPCodeData) codeData;
+			PHPDocBlock docBlock = phpData.getDocBlock();
+			return docBlock != null && docBlock.hasTagOf(PHPDocTag.INTERNAL);
 		}
 	}
-	
+
 }
