@@ -20,13 +20,11 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPUserModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.search.decorators.PHPClassConstantDataDecorator;
 import org.eclipse.php.internal.ui.search.decorators.PHPClassDataDecorator;
 import org.eclipse.php.internal.ui.search.decorators.PHPConstantDataDecorator;
 import org.eclipse.php.internal.ui.search.decorators.PHPFunctionDataDecorator;
@@ -112,20 +110,24 @@ public class PHPSearchEngine {
 				return;
 			}
 			PHPUserModel userModel = projectModel.getPHPUserModel();
+			PHPClassData[] fClasses = (PHPClassData[]) userModel.getClasses();
 			switch (scope.getSearchFor()) {
 				case IPHPSearchConstants.CLASS:
 					addResultsFor(projectsInScope[i], (PHPClassData[]) userModel.getClasses(), stringPattern, caseSensitive, scope, textResult, monitor);
 					break;
 				case IPHPSearchConstants.FUNCTION:
 					addResultsFor(projectsInScope[i], (PHPFunctionData[]) userModel.getFunctions(), stringPattern, caseSensitive, scope, textResult, monitor);
-					// Add matches from the classes functions
-					PHPClassData[] fClasses = (PHPClassData[]) userModel.getClasses();
+					// Add matches from the classes functions					
 					for (int j = 0; j < fClasses.length; j++) {
 						addResultsFor(projectsInScope[i], fClasses[j].getFunctions(), stringPattern, caseSensitive, scope, textResult, monitor);
 					}
 					break;
-				case IPHPSearchConstants.CONSTANT:
+				case IPHPSearchConstants.CONSTANT:					
 					addResultsFor(projectsInScope[i], (PHPConstantData[]) userModel.getConstants(), stringPattern, caseSensitive, scope, textResult, monitor);
+//					 Add matches from the classes constants
+					for (int j = 0; j < fClasses.length; j++) {
+						addResultsFor(projectsInScope[i], fClasses[j].getConsts(), stringPattern, caseSensitive, scope, textResult, monitor);
+					}
 					break;
 				default:
 			// DO NOTHING
@@ -149,20 +151,24 @@ public class PHPSearchEngine {
 				if (fileData == null) {
 					continue;
 				}
+				PHPClassData[] fClasses = fileData.getClasses();
 				switch (scope.getSearchFor()) {
 					case IPHPSearchConstants.CLASS:
 						addResultsFor(partialProjects[i], fileData.getClasses(), stringPattern, caseSensitive, scope, textResult, monitor);
 						break;
 					case IPHPSearchConstants.FUNCTION:
 						addResultsFor(partialProjects[i], fileData.getFunctions(), stringPattern, caseSensitive, scope, textResult, monitor);
-						// Add matches from the classes functions
-						PHPClassData[] fClasses = fileData.getClasses();
+						// Add matches from the classes functions						
 						for (int k = 0; k < fClasses.length; k++) {
 							addResultsFor(partialProjects[i], fClasses[k].getFunctions(), stringPattern, caseSensitive, scope, textResult, monitor);
 						}
 						break;
 					case IPHPSearchConstants.CONSTANT:
 						addResultsFor(partialProjects[i], fileData.getConstants(), stringPattern, caseSensitive, scope, textResult, monitor);
+//						 Add matches from the classes constants
+						for (int z = 0; z < fClasses.length; z++) {
+							addResultsFor(partialProjects[i], fClasses[z].getConsts(), stringPattern, caseSensitive, scope, textResult, monitor);							
+						}
 						break;
 					default:
 				// DO NOTHING
@@ -220,6 +226,23 @@ public class PHPSearchEngine {
 			if (SearchPattern.match(stringPattern, constantData.getName(), caseSensitive, true)) {
 				int start = constantData.getUserData().getStopPosition() + 1; // Shift by 1 (fixed bug #141302)
 				textResult.addMatch(new Match(new PHPConstantDataDecorator(constantData, project), start, constantData.getName().length()));
+			}
+			monitor.worked(1);
+		}
+	}
+	
+	private void addResultsFor(IProject project, PHPClassConstData[] constants, String stringPattern, boolean caseSensitive, IPHPSearchScope scope, PHPSearchResult textResult, IProgressMonitor monitor) {
+		for (int i = 0; i < constants.length; i++) {
+			if (i % 100 == 0) {
+				// Check for monitor cancellation every 100 ticks
+				if (monitor != null && monitor.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+			}
+			PHPClassConstData constantData = constants[i];
+			if (SearchPattern.match(stringPattern, constantData.getName(), caseSensitive, true)) {
+				int start = constantData.getUserData().getStopPosition();
+				textResult.addMatch(new Match(new PHPClassConstantDataDecorator(constantData, project), start, constantData.getName().length()));
 			}
 			monitor.worked(1);
 		}

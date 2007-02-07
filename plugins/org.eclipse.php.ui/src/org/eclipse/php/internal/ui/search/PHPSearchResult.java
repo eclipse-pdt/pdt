@@ -19,17 +19,9 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.search.decorators.PHPClassDataDecorator;
-import org.eclipse.php.internal.ui.search.decorators.PHPConstantDataDecorator;
-import org.eclipse.php.internal.ui.search.decorators.PHPDataDecorator;
-import org.eclipse.php.internal.ui.search.decorators.PHPFunctionDataDecorator;
+import org.eclipse.php.internal.ui.search.decorators.*;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResultListener;
@@ -107,6 +99,7 @@ public class PHPSearchResult extends AbstractTextSearchResult implements IEditor
 		if (fileData == null) {
 			return;
 		}
+		PHPClassData[] classes = fileData.getClasses();
 		switch (fQuery.getSpecification().getScope().getSearchFor()) {
 			case IPHPSearchConstants.CLASS:
 				PHPClassData[] classData = fileData.getClasses();
@@ -120,8 +113,7 @@ public class PHPSearchResult extends AbstractTextSearchResult implements IEditor
 				for (int i = 0; i < functions.length; i++) {
 					// no need to pass the IProject since it is not count in the hash function...
 					addToMatches(matches, new PHPFunctionDataDecorator(functions[i], null));
-				}
-				PHPClassData[] classes = fileData.getClasses();
+				}				
 				for (int i = 0; i < classes.length; i++) {
 					functions = classes[i].getFunctions();
 					for (int j = 0; j < functions.length; j++) {
@@ -136,6 +128,15 @@ public class PHPSearchResult extends AbstractTextSearchResult implements IEditor
 					// no need to pass the IProject since it is not count in the hash function...
 					addToMatches(matches, new PHPConstantDataDecorator(constants[i], null));
 				}
+				
+				for (int i = 0; i < classes.length; i++) {
+					PHPClassConstData classConsts[] = classes[i].getConsts();
+					for (int j = 0; j < classConsts.length; j++) {
+						// no need to pass the IProject since it is not count in the hash function...
+						addToMatches(matches, new PHPClassConstantDataDecorator(classConsts[j], null));
+					}
+				}
+				
 				break;
 		}
 	}
