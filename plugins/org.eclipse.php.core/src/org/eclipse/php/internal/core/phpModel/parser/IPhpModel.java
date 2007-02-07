@@ -23,7 +23,7 @@ public interface IPhpModel {
 
 	public CodeData[] getFunctions();
 
-	/** @deprecated */
+	/** @deprecated - not really, but should not be used mostly */
 	public CodeData[] getFunction(String functionName);
 
 	public PHPFunctionData getFunction(String fileName, String functionName);
@@ -42,7 +42,7 @@ public interface IPhpModel {
 
 	public String getVariableType(String fileName, PHPCodeContext context, String variableName, int line, boolean showObjectsFromOtherFiles);
 
-	/** @deprecated */
+	/** @deprecated - not really, but should not be used mostly */
 	public PHPConstantData getConstantData(String constantName);
 
 	public PHPConstantData getConstant(String fileName, String constantName);
