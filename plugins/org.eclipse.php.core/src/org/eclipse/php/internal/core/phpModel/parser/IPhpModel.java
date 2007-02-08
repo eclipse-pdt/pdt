@@ -33,6 +33,8 @@ public interface IPhpModel {
 	public CodeData[] getClasses();
 
 	public PHPClassData getClass(String fileName, String className);
+	
+	public CodeData[] getClass(String className);
 
 	public CodeData[] getClasses(String startsWith);
 
@@ -42,7 +44,7 @@ public interface IPhpModel {
 
 	public String getVariableType(String fileName, PHPCodeContext context, String variableName, int line, boolean showObjectsFromOtherFiles);
 
-	/** not used currently */
+	/** used only for code completion */
 	public PHPConstantData getConstantData(String constantName);
 
 	public PHPConstantData getConstant(String fileName, String constantName);

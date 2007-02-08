@@ -28,9 +28,7 @@ import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
@@ -215,47 +213,47 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		}
 	}
 
-//	class ZipInputStreamPermanentReader extends InputStreamReader {
-//
-//		public ZipInputStreamPermanentReader(InputStream in) {
-//			super(in);
-//		}
-//
-//		/* (non-Javadoc)
-//		 * @see java.io.InputStreamReader#close()
-//		 */
-//		public void close() {
-//			// don't close.
-//		}
-//	}
+	//	class ZipInputStreamPermanentReader extends InputStreamReader {
+	//
+	//		public ZipInputStreamPermanentReader(InputStream in) {
+	//			super(in);
+	//		}
+	//
+	//		/* (non-Javadoc)
+	//		 * @see java.io.InputStreamReader#close()
+	//		 */
+	//		public void close() {
+	//			// don't close.
+	//		}
+	//	}
 
 	//	private void parseZip(File zipFile, ParserClient client) {
-//		ZipInputStream is = null;
-//		try {
-//			is = new ZipInputStream(new FileInputStream(zipFile));
-//			ZipEntry ze;
-//			while ((ze = is.getNextEntry()) != null) {
-//				if (!ze.isDirectory()) {
-//					String fileName = ze.getName();
-//					if (isPhpFile(fileName)) {
-//						ParserExecuter executer = new ParserExecuter(parserManager, null, client, zipFile.getName() + File.separator + fileName, new ZipInputStreamPermanentReader(is), new Pattern[0], zipFile.lastModified(), UseAspTagsHandler.useAspTagsAsPhp(project));
-//						executer.run();
-//					}
-//				}
-//			}
-//			is.close();
-//		} catch (FileNotFoundException e) {
-//			//handled before
-//		} catch (IOException io) {
-//			Logger.logException(io);
-//		}
-//		if (is != null) {
-//			try {
-//				is.close();
-//			} catch (IOException e) {
-//			}
-//		}
-//	}
+	//		ZipInputStream is = null;
+	//		try {
+	//			is = new ZipInputStream(new FileInputStream(zipFile));
+	//			ZipEntry ze;
+	//			while ((ze = is.getNextEntry()) != null) {
+	//				if (!ze.isDirectory()) {
+	//					String fileName = ze.getName();
+	//					if (isPhpFile(fileName)) {
+	//						ParserExecuter executer = new ParserExecuter(parserManager, null, client, zipFile.getName() + File.separator + fileName, new ZipInputStreamPermanentReader(is), new Pattern[0], zipFile.lastModified(), UseAspTagsHandler.useAspTagsAsPhp(project));
+	//						executer.run();
+	//					}
+	//				}
+	//			}
+	//			is.close();
+	//		} catch (FileNotFoundException e) {
+	//			//handled before
+	//		} catch (IOException io) {
+	//			Logger.logException(io);
+	//		}
+	//		if (is != null) {
+	//			try {
+	//				is.close();
+	//			} catch (IOException e) {
+	//			}
+	//		}
+	//	}
 
 	private void updatePHPVersion(String oldVersion, String newVersion) {
 		setPHPVersion(newVersion);
@@ -741,29 +739,29 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 					if (variableFile.isDirectory()) {
 						return file;
 					}
-//					if (variableFile.getName().endsWith(".zip")) {
-//						try {
-//							return new ZipFile(variableFile);
-//						} catch (ZipException e) {
-//							Logger.logException(e);
-//						} catch (IOException e) {
-//							Logger.logException(e);
-//						}
-//					}
+					//					if (variableFile.getName().endsWith(".zip")) {
+					//						try {
+					//							return new ZipFile(variableFile);
+					//						} catch (ZipException e) {
+					//							Logger.logException(e);
+					//						} catch (IOException e) {
+					//							Logger.logException(e);
+					//						}
+					//					}
 				}
 				File file = new File(resourceName);
 				if (getIndexOf(file) != -1) {
 					return new File(fileData.getName());
 				}
-//				if (getIndexOf(file, zips) != -1) {
-//					try {
-//						return new ZipFile(file);
-//					} catch (ZipException e) {
-//						Logger.logException(e);
-//					} catch (IOException e) {
-//						Logger.logException(e);
-//					}
-//				}
+				//				if (getIndexOf(file, zips) != -1) {
+				//					try {
+				//						return new ZipFile(file);
+				//					} catch (ZipException e) {
+				//						Logger.logException(e);
+				//					} catch (IOException e) {
+				//						Logger.logException(e);
+				//					}
+				//				}
 				return null;
 			}
 		}
@@ -773,5 +771,4 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	private boolean contains(IPhpModel model, PHPFileData fileData) {
 		return (model.getFileData(fileData.getName()) != null);
 	}
-
 }

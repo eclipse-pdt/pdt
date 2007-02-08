@@ -12,10 +12,21 @@ package org.eclipse.php.internal.core.phpModel.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
-public abstract class CompositePhpModel implements IPhpModel {
+public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterable {
+
+	IPhpModelFilter filter;
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.phpModel.parser.IPhpModelFilterable#setFilter(org.eclipse.php.internal.core.phpModel.parser.IPhpModelFilterable.IPhpModelFilter)
+	 */
+	public void setFilter(IPhpModelFilter filter) {
+		this.filter = filter;
+	}
 
 	private IPhpModel[] models = new IPhpModel[0];
 
@@ -152,11 +163,35 @@ public abstract class CompositePhpModel implements IPhpModel {
 	}
 
 	public PHPClassData getClass(String fileName, String className) {
+
+		List classes = new ArrayList();
 		for (int i = 0; i < models.length; i++) {
-			PHPClassData res = models[i].getClass(fileName, className);
-			if (res != null) {
-				return res;
+			PHPClassData exactClass = models[i].getClass(fileName, className);
+			// if filename is matching - just return the file.
+			if (exactClass != null && exactClass.getUserData() != null && exactClass.getUserData().getFileName().equals(fileName)) {
+				return exactClass;
 			}
+			// else collect all the classes to apply filter
+			CodeData[] modelClasses = models[i].getClass(className);
+			if (modelClasses != null && modelClasses.length > 0) {
+				classes.addAll(Arrays.asList(modelClasses));
+			}
+		}
+		switch (classes.size()) {
+			case 0:
+				return null;
+			case 1:
+				return (PHPClassData) classes.get(0);
+		}
+		if (filter != null) {
+			for (Iterator i = classes.iterator(); i.hasNext();) {
+				PHPClassData classs = (PHPClassData) i.next();
+				if (filter.select(this, classs, fileName)) {
+					return classs;
+				}
+			}
+		} else {
+			return (PHPClassData) classes.get(0);
 		}
 		return null;
 	}
@@ -300,4 +335,16 @@ public abstract class CompositePhpModel implements IPhpModel {
 		return res;
 
 	}
+
+	public CodeData[] getClass(String className) {
+		List result = new ArrayList();
+		for (int i = 0; i < models.length; i++) {
+			CodeData[] classes = models[i].getClass(className);
+			if (classes != null && classes.length > 0) {
+				result.addAll(Arrays.asList(classes));
+			}
+		}
+		return (CodeData[]) result.toArray(new CodeData[result.size()]);
+	}
+
 }

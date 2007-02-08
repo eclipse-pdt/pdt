@@ -10,38 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.IPhpModelFilterable.IPhpModelFilter;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
@@ -70,7 +47,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	protected final static HashMap models = new HashMap();
 	protected static PHPProjectModel defaultModel;
-	
 
 	/**
 	 * Model listeners
@@ -90,6 +66,28 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		attachProjectOpenObserver();
 
 		initLanguageModels();
+
+		initModelFilter();
+	}
+
+	private IPhpModelFilter filter;
+
+	private void initModelFilter() {
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.modelFilter");
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			if (element.getName().equals("filter")) {
+				initModelFilter(element);
+			}
+		}
+	}
+
+	private void initModelFilter(final IConfigurationElement element) {
+		SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.core.modelFilter") {
+			public void run() throws Exception {
+				filter = (IPhpModelFilter) element.createExecutableExtension("class");
+			}
+		});
 	}
 
 	private void initLanguageModels() {
@@ -106,7 +104,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				addWorkspaceModelListener(listener);
 			}
 		}
-
 	}
 
 	private class WorkspaceModelListenerProxy {
@@ -221,13 +218,13 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public final static PHPProjectModel getDefaultPHPProjectModel() {
-		if (defaultModel  == null) {
+		if (defaultModel == null) {
 			defaultModel = new PHPProjectModel();
 			defaultModel.initialize();
 		}
 		return defaultModel;
 	}
-	
+
 	public IProject getProjectForFileData(PHPFileData fileData, IProject defaultProject) {
 		if (fileData == null)
 			return null;
@@ -281,7 +278,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				if (model != null) {
 					String projectPath = projects[i].getLocation().toOSString();
 					String modelFilename;
-					if(filenameOS.startsWith(projectPath)) {
+					if (filenameOS.startsWith(projectPath)) {
 						modelFilename = new Path(StringUtils.replace(filenameOS, projectPath, "")).toPortableString();
 					} else {
 						modelFilename = filenameOS;
@@ -498,7 +495,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		}
 
 		PHPProjectModel projectModel = getModelForProject(file.getProject());
-		if(projectModel != null){
+		if (projectModel != null) {
 			projectModel.addFileToModel(file);
 		}
 	}

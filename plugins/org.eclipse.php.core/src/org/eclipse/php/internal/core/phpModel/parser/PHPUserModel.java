@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.util.ICachable;
 import org.eclipse.php.internal.core.util.Visitor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
-public class PHPUserModel implements IPhpModel, IProjectModelListener {
+public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModelFilterable {
 
 	public static String ID = "PHPUserModel";
 
@@ -44,6 +44,11 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		functionsDB = new TreeCodeDataDB();
 		constantsDB = new TreeCodeDataDB();
 		globalsVariablesDB = new GlobalVariablesCodeDataDB();
+	}
+
+	public PHPUserModel(IPhpModelFilter filter) {
+		this();
+		setFilter(filter);
 	}
 
 	public String getID() {
@@ -214,6 +219,12 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 				return curr;
 			}
 		}
+		for (Iterator i = functions.iterator(); i.hasNext();) {
+			PHPFunctionData curr = (PHPFunctionData) i.next();
+			if (filter != null && filter.select(this, curr, fileName)) {
+				return curr;
+			}
+		}
 		return (PHPFunctionData) functions.iterator().next();
 	}
 
@@ -240,7 +251,18 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 				return curr;
 			}
 		}
+		for (Iterator i = classes.iterator(); i.hasNext();) {
+			PHPClassData curr = (PHPClassData) i.next();
+			if (filter != null && filter.select(this, curr, fileName)) {
+				return curr;
+			}
+		}
 		return (PHPClassData) classes.iterator().next();
+	}
+
+	public CodeData[] getClass(String className) {
+		Collection classes = classesDB.getCodeData(className);
+		return (CodeData[]) classes.toArray(new CodeData[classes.size()]);
 	}
 
 	public CodeData[] getClasses(String startsWith) {
@@ -394,6 +416,12 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 				return curr;
 			}
 		}
+		for (Iterator i = constants.iterator(); i.hasNext();) {
+			PHPConstantData curr = (PHPConstantData) i.next();
+			if (filter != null && filter.select(this, curr, fileName)) {
+				return curr;
+			}
+		}
 		return (PHPConstantData) constants.iterator().next();
 	}
 
@@ -483,6 +511,12 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	}
 
 	public void fileChanged(IFile file, IStructuredDocument sDocument) {
+	}
+
+	IPhpModelFilter filter = null;
+
+	public void setFilter(IPhpModelFilter filter) {
+		this.filter = filter;
 	}
 
 }

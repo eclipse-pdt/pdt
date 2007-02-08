@@ -92,10 +92,6 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public PHPClassData getClass(String className) {
-		return (PHPClassData) classesHash.get(className);
-	}
-
 	public CodeData[] getClasses() {
 		return classes;
 	}
@@ -131,7 +127,15 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	}
 
 	public PHPClassData getClass(String fileName, String className) {
-		return null;
+		return (PHPClassData) classesHash.get(className);
+	}
+
+	public CodeData[] getClass(String className) {
+		PHPClassData classs = getClass(null, className);
+		if (classs == null) {
+			return PHPCodeDataFactory.EMPTY_CODE_DATA_ARRAY;
+		}
+		return new CodeData[] { getClass(null, className) };
 	}
 
 	public CodeData[] getGlobalVariables(String fileName, String startsWith, boolean showVariablesFromOtherFiles) {

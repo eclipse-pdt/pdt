@@ -5,6 +5,7 @@
    <extension-point id="includePathVariables" name="Include Path Variable" schema="schema/includePathVariables.exsd"/>
    <extension-point id="workspaceModelListener" name="workspaceModelListener" schema="schema/workspaceModelListener.exsd"/>
    <extension-point id="phpBuilderExtensions" name="PHP Builder Extension" schema="schema/phpBuilderExtensions.exsd"/>
+   <extension-point id="modelFilter" name="PHP Model Filter" schema="schema/modelFilter.exsd"/>
    
 	<!-- PHP Model Handler -->
 	<extension

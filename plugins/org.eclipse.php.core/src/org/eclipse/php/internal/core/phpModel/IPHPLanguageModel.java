@@ -19,8 +19,6 @@ public interface IPHPLanguageModel extends IPhpModel {
 
 	public String getPHPVersion();
 	
-	public PHPClassData getClass(String className);
-
 	public PHPKeywordData[] getKeywordData();
 
 	public PHPVariableData[] getServerVariables();

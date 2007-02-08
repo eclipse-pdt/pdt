@@ -52,6 +52,10 @@ public abstract class PhpModelProxy implements IPhpModel {
 		return model.getClass(fileName, className);
 	}
 
+	public CodeData[] getClass(String className) {
+		return model.getClass(className);
+	}
+
 	public CodeData[] getClasses(String startsWith) {
 		return model.getClasses(startsWith);
 	}

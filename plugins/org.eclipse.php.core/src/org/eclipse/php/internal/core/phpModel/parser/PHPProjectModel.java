@@ -34,7 +34,7 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 	private IPHPLanguageModel languageModel;
 	private Collection listeners = Collections.synchronizedCollection(new HashSet(2));
 	private IProject currentProject;
-
+	
 	public PHPProjectModel() {
 		super();
 	}
@@ -135,14 +135,6 @@ public class PHPProjectModel extends CompositePhpModel implements IPhpProjectMod
 			return getUserActiveConstructor(getClass(fileName, superClass));
 		}
 		return null;
-	}
-
-	public PHPClassData getClass(String fileName, String className) {
-		PHPClassData classData = super.getClass(fileName, className);
-		if (classData == null) {
-			return languageModel.getClass(className);
-		}
-		return classData;
 	}
 
 	public CodeData getClassFunctionData(String fileName, String className, String functionName) {
