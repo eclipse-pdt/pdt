@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
@@ -23,10 +22,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
@@ -180,8 +176,8 @@ public class SelectionConverter {
 			return EMPTY_RESULT;
 		}
 		text = text.trim();
-		if("".equals(text)) {
-			 return EMPTY_RESULT;
+		if ("".equals(text)) {
+			return EMPTY_RESULT;
 		}
 
 		ArrayList codeDatas = new ArrayList();
@@ -194,16 +190,16 @@ public class SelectionConverter {
 			if (classData != null) {
 				codeDatas.add(classData);
 			}
-			CodeData[] functionDatas = model.getFunctions(text);
-			if (functionDatas != null && functionDatas.length > 0) {
-				codeDatas.addAll(Arrays.asList(functionDatas));
+			PHPFunctionData functionData = model.getFunction(input.getName(), text);
+			if (functionData != null) {
+				codeDatas.add(functionData);
 			}
-			CodeData[] constantDatas = model.getConstants(text, false);
-			if (constantDatas != null && constantDatas.length > 0) {
-				codeDatas.addAll(Arrays.asList(constantDatas));
+			PHPConstantData constantData = model.getConstant(input.getName(), text);
+			if (constantData != null) {
+				codeDatas.add(constantData);
 			}
 			return (PHPCodeData[]) codeDatas.toArray(new PHPCodeData[codeDatas.size()]);
-			
+
 		}
 		return EMPTY_RESULT;
 	}

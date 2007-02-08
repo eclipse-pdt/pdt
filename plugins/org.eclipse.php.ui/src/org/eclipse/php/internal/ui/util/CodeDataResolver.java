@@ -105,26 +105,26 @@ public class CodeDataResolver {
 		if (textRegion == null) {
 			return null;
 		}
-		
+
 		ITextRegionCollection container = sdRegion;
-		if(textRegion instanceof ITextRegionContainer){
-			container = (ITextRegionContainer)textRegion;
+		if (textRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) textRegion;
 			textRegion = container.getRegionAtCharacterOffset(offset);
 		}
-		
+
 		PhpScriptRegion phpScriptRegion;
 		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			phpScriptRegion = (PhpScriptRegion)textRegion;
-			textRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart()); 
+			phpScriptRegion = (PhpScriptRegion) textRegion;
+			textRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 		} else {
 			return null;
 		}
-		
+
 		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(container.getStartOffset() + phpScriptRegion.getStart() + textRegion.getEnd(), sdRegion, true);
 		if (statmentText == null) {
 			return null;
 		}
-		
+
 		String type = textRegion.getType();
 		CodeData tmp;
 		if ((tmp = getIfInArrayOptionQuotes(projectModel, fileName, type, offset, statmentText)) != null) {
@@ -208,19 +208,23 @@ public class CodeDataResolver {
 		}
 
 		CodeData[] functions = projectModel.getFunction(elementName);
-		CodeData constant = projectModel.getConstantData(elementName, CONSTANT_CASE_SENSITIVE);
-		CodeData classes = projectModel.getClass(fileName, elementName);
+		CodeData[] constants = projectModel.getConstants(elementName, CONSTANT_CASE_SENSITIVE);
+		CodeData[] classes = projectModel.getClass(elementName);
 		CodeData[] keywords = projectModel.getKeywordData(elementName);
 
 		CodeData[] mergeData = null;
-		mergeData = ModelSupport.merge(keywords, mergeData);
-		if (classes != null) {
-			mergeData = ModelSupport.merge(new CodeData[] { classes }, mergeData);
+		if (keywords != null && keywords.length > 0) {
+			mergeData = ModelSupport.merge(keywords, mergeData);
 		}
-		if (constant != null) {
-			mergeData = ModelSupport.merge(new CodeData[] { constant }, mergeData);
+		if (classes != null && classes.length > 0) {
+			mergeData = ModelSupport.merge(classes, mergeData);
 		}
-		mergeData = ModelSupport.merge(functions, mergeData);
+		if (constants != null && constants.length > 0) {
+			mergeData = ModelSupport.merge(constants, mergeData);
+		}
+		if (functions != null && functions.length > 0) {
+			mergeData = ModelSupport.merge(functions, mergeData);
+		}
 
 		return filterExact(mergeData, elementName);
 	}
@@ -888,12 +892,14 @@ public class CodeDataResolver {
 		}
 		CodeData[] arrayResult = projectModel.getArrayVariables(fileName, variableName, elementName, true);
 		CodeData[] functions = projectModel.getFunction(elementName);
-		CodeData[] mergeData = ModelSupport.merge(functions, arrayResult);
-		CodeData constant = projectModel.getConstantData(elementName, CONSTANT_CASE_SENSITIVE);
-		if (constant != null) {
-			mergeData = ModelSupport.merge(new CodeData[] { constant }, mergeData);
+		if (functions != null && functions.length > 0) {
+			arrayResult = ModelSupport.merge(functions, arrayResult);
 		}
-		return filterExact(mergeData, elementName);
+		CodeData[] constants = projectModel.getConstants(elementName, CONSTANT_CASE_SENSITIVE);
+		if (constants != null && constants.length > 0) {
+			arrayResult = ModelSupport.merge(constants, arrayResult);
+		}
+		return filterExact(arrayResult, elementName);
 	}
 
 	private CodeData filterExact(CodeData[] sortedArray, String searchName) {
