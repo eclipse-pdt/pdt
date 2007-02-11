@@ -35,17 +35,18 @@ import org.eclipse.wst.xml.core.internal.Logger;
  */
 public class PhpScriptRegion extends ForeignRegion {
 
+	private static final String PHP_SCRIPT = "PHP Script";
 	private final PhpTokenContainer tokensContaier = new PhpTokenContainer();
 	private final IProject project;
 	
 	// true when the last reparse action is full reparse
 	public boolean isFullReparsed;
 	
-	public PhpScriptRegion(String newContext, int newStart, int newTextLength, int newLength, final String initialScript, IProject project) {
-		super(newContext, newStart, newTextLength, newLength, "PHP Script");
+	public PhpScriptRegion(String newContext, int startOffset, IProject project, PhpLexer phpLexer) {
+		super(newContext, startOffset, 0, 0, PhpScriptRegion.PHP_SCRIPT);
 
 		this.project = project;
-		completeReparse(initialScript);
+		completeReparse(phpLexer);
 	}
 
 	/**
@@ -203,18 +204,24 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * Performing a fully parse process to php script
 	 * @param newText
 	 */
-	public void completeReparse(String newText) {
-		isFullReparsed = true;
-		final PhpLexer phpLexer = getPhpLexer(project, getStream(newText));
-		setPhpTokens(phpLexer);
+	public void completeReparse(PhpLexer lexer) {
+		setPhpTokens(lexer);
 	}
 
+	/**
+	 * Performing a fully parse process to php script
+	 * @param newText
+	 */
+	public void completeReparse(String text) {
+		setPhpTokens(getPhpLexer(text));
+	}
+	
 	/**
 	 * @param project
 	 * @param stream
 	 * @return a new lexer for the given project with the given stream
 	 */
-	private PhpLexer getPhpLexer(IProject project, InputStream stream, LexerState startState) {
+	private static PhpLexer getPhpLexer(IProject project, InputStream stream, LexerState startState) {
 		PhpLexer lexer;
 		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
 		if (phpVersion.equals(PHPCoreConstants.PHP5)) {
@@ -232,8 +239,30 @@ public class PhpScriptRegion extends ForeignRegion {
 		lexer.setAspTags(UseAspTagsHandler.useAspTagsAsPhp(project));
 		return lexer;
 	}
+	
+	/**
+	 * @param project
+	 * @param stream
+	 * @return a new lexer for the given project with the given stream
+	 */
+	public static PhpLexer getPhpLexer(IProject project, java.io.Reader  reader, char[] buffer, int[] parameters) {
+		PhpLexer lexer;
+		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
+		if (phpVersion.equals(PHPCoreConstants.PHP5)) {
+			lexer = new PhpLexer5(reader);
+		} else {
+			lexer = new PhpLexer4(reader);
+		}
+		lexer.initialize(parameters[6]);
+		lexer.reset(reader, buffer, parameters);
+		lexer.setPatterns(project);
 
-	private PhpLexer getPhpLexer(IProject project, InputStream stream) {
+		lexer.setAspTags(UseAspTagsHandler.useAspTagsAsPhp(project));
+		return lexer;
+	}
+	
+
+	public static PhpLexer getPhpLexer(IProject project, InputStream stream) {
 		return getPhpLexer(project, stream, null);
 	}
 
@@ -242,6 +271,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * @return a list of php tokens
 	 */
 	private void setPhpTokens(PhpLexer lexer) {
+		isFullReparsed = true;		
 		assert lexer != null;
 
 		int start = 0;
@@ -250,14 +280,17 @@ public class PhpScriptRegion extends ForeignRegion {
 		try {
 			Object state = lexer.createLexicalStateMemento();
 			String yylex = lexer.getNextToken();
-			int yylength;
-			while (yylex != null) {
+			int yylength = 0;
+			while (yylex != null && yylex != PHPRegionTypes.PHP_CLOSETAG) {
 				yylength = lexer.getLength();
 				this.tokensContaier.addLast(yylex, start, yylength, yylength, state);
 				start += yylength;
 				state = lexer.createLexicalStateMemento();
 				yylex = lexer.getNextToken();
 			}
+			adjustLength(start);
+			adjustTextLength(start);
+
 		} catch (IOException e) {
 			Logger.logException(e);
 		} finally {
@@ -269,7 +302,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * Converts the streing to stream that at the end we have EOF (-1)
 	 * @param initialScript
 	 */
-	private final InputStream getStream(final String text, final int start) {
+	private final static InputStream getStream(final String text, final int start) {
 		return new InputStream() {
 			private int index = start;
 			private final int length = text.length();
@@ -279,8 +312,9 @@ public class PhpScriptRegion extends ForeignRegion {
 			}
 		};
 	}
-
-	private final InputStream getStream(final String initialScript) {
-		return getStream(initialScript, 0);
+	
+	public PhpLexer getPhpLexer(final String text) {
+		return getPhpLexer(project, getStream(text, 0), null);
 	}
+	
 }

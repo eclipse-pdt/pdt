@@ -1052,6 +1052,10 @@ public class PhpLexer5 extends PhpLexer {
     	return this.yy_pushbackPos;
     }
 
+    protected void pushBack(int i) {
+		yypushback(i);
+	}
+    
  // End user code
 
 

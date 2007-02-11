@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionFactory;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
@@ -31,6 +31,7 @@ import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 import org.eclipse.wst.xml.core.internal.parser.IntStack;
+import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
@@ -495,7 +496,7 @@ public class PHPTokenizer implements BlockTokenizer, PHPRegionContext, DOMRegion
 	private String internalTagName = null;
 	private String internalContext = null;
 	
-	private final PHPRegionFactory fRegionFactory = PHPRegionFactory.getInstance();
+	private final XMLParserRegionFactory fRegionFactory = new XMLParserRegionFactory();
 
 /**
  * user method 
@@ -735,97 +736,20 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
  * @return String - the context found: the desired context on a non-zero length match, the abortContext on immediate success
  * @throws IOException
  */
+private ITextRegion bufferedTextRegion = null;
 private final String doScanEndPhp(boolean isAsp, String searchContext, int exitState, int immediateFallbackState) throws IOException {
-	boolean stillSearching = true;
-	// Disable further block (probably)
-	fIsBlockingEnabled = false;
-	int n = 0;
-	int i;
-	boolean same = false;
-	char quoteChar = 0;
-	while (stillSearching) {
-		n = 0;
+	yypushback(1); // begin with the last char
 	
-		// Ensure that enough data from the input exists to compare against the search String.
-		n = yy_advance();
-		while(n != YYEOF && yy_currentPos < 2)
-			n = yy_advance();
-		// If the input was too short or we've exhausted the input, stop immediately.
-		if (n == YYEOF) {
-			stillSearching = false;
-		}
-		else {
-			// ignores the "?>" case i.e php end tags in a string
-			final char current = yy_buffer[yy_currentPos - 2];
-			if (current == '"' || current == '\'' || current == '`') { // start-end blockers
-				if (quoteChar == 0) {
-					quoteChar = current; 
-				} else {
-					if (quoteChar == current) {
-						quoteChar = 0;
-					}
-				}
-				continue;					
-			} else {
-				final char next = yy_buffer[yy_currentPos - 1];
-				if (current == '/' && next == '*') { // start blocker
-					if (quoteChar == 0) {
-						quoteChar = current; 
-					} 
-					continue;
-				} else if (current == '*' && next == '/' && quoteChar == next) { // end blocker
-					quoteChar = 0;
-				}				
-			}
-			if (quoteChar != 0) {
-				continue;
-			}		
-			///////////////////////////
+	int[] currentParameters = getParamenters();
+	currentParameters[6] = PhpLexer.ST_PHP_IN_SCRIPTING;
+	
+	final PhpLexer phpLexer = PhpScriptRegion.getPhpLexer(project, yy_reader, yy_buffer, currentParameters); 
+	bufferedTextRegion = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
 
-			same = true;
-			// Ensure that we've not encountered a complete block (<%%>) that was *shorter* than the closeTagString and
-			// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
-			// Check the characters in the target versus the last targetLength characters read from the buffer
-			// and see if it matches
-
-			// safety check for array accesses (yy_currentPos is the *last* character we can check against)
-			if(yy_currentPos >= 2 &&  yy_currentPos <= yy_buffer.length) {
-				for(i = 0; i < 2; i++) {
-					final char c = yy_buffer[i + yy_currentPos - 2];
-					// to enable search of ?> or %> 
-					if(same) {
-						same = c == "?>".charAt(i) || (isAsp && c == "%>".charAt(i));
-					}
-				}
-			}
-			// safety check failed; no match is possible right now
-			else {
-				same = false;
-			}
-			stillSearching = !same || (yy_currentPos < yy_startRead + 2);
-		}
-	}
-	if (n != YYEOF || same) {
-		// We've stopped short of the end or definitely found a match
-		yy_markedPos = yy_currentPos - 2;
-		yy_currentPos = yy_markedPos + 1;
-		// If the searchString occurs at the very beginning of what would have
-		// been a Block, resume scanning normally immediately
-		if (yy_markedPos == yy_startRead) {
-			yybegin(immediateFallbackState);
-			return primGetNextToken();
-		}
-	}
-	else {
-		// We ran through the rest of the input
-		yy_markedPos = yy_currentPos;
-		yy_currentPos++;
-	}
+	// restore the locations / states
+	reset(yy_reader, phpLexer.getYy_buffer(), phpLexer.getParamenters());
+	
 	yybegin(exitState);
-	// If the ending occurs at the very beginning of what would have
-	// been a Block, resume scanning normally immediately
-	if(yy_markedPos == yy_startRead)
-		return primGetNextToken();
 	return searchContext;
 }
 
@@ -882,7 +806,8 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 				ITextRegion newToken;
 				// if it is php content we extract the tokens
 				if (internalContext == PHP_CONTENT) {
-					newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength(), project, yytext()); 
+					newToken = bufferedTextRegion; 
+					bufferedTextRegion.adjustStart(-containerStart);
 				} else {
 					newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength());
 				}
@@ -939,7 +864,8 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 					ITextRegion newToken;
 					// if it is php content we extract the tokens
 					if (internalContext == PHP_CONTENT) {
-						newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength(), project, yytext()); 
+						newToken = bufferedTextRegion; 
+						bufferedTextRegion.adjustStart(-containerStart);
 					} else {
 						newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength());
 					}
@@ -1031,7 +957,6 @@ public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){
 	this.yy_endRead = parameters[4];
 	this.yyline = parameters[5];  
 	this.yychar = this.yy_startRead - this.yy_pushbackPos;
-	fShouldLoadBuffered = false;
 }
 
 public int[] getParamenters(){
@@ -1145,7 +1070,7 @@ public final ITextRegion getNextToken() throws IOException {
 
 	// if it is php content we extract the tokens
 	if (context == PHP_CONTENT) {
-		return fRegionFactory.createToken(context, start, textLength, length, project, text); 
+		return bufferedTextRegion; 
 	} else {
 		return fRegionFactory.createToken(context, start, textLength, length);
 	}
@@ -2196,11 +2121,11 @@ protected final boolean containsTagName(String markerTagName) {
     if (UseAspTagsHandler.useAspTagsAsPhp(project) ||yytext().charAt(1) != '%') {
 
 		//removeing trailing whitespaces for the php open
-		String phpStart = yytext();
-		int i = phpStart.length() - 1;
-		while(i >= 0 && Character.isWhitespace(phpStart.charAt(i--))){
-			yypushback(1);
-		}
+		final String phpStart = yytext();
+		int i = 1;
+		while(Character.isWhitespace(phpStart.charAt(phpStart.length() - i))) { i++; };
+		yypushback(i - 1);		
+		
 		fStateStack.push(yystate());
 		if(fStateStack.peek()==YYINITIAL) {
 			// the simple case, just a regular scriptlet out in content

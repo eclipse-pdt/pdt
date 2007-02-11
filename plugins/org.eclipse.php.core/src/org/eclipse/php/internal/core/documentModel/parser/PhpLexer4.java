@@ -904,7 +904,11 @@ public class PhpLexer4 extends PhpLexer {
     protected int getYy_pushBackPosition() {
     	return this.yy_pushbackPos;
     }
-
+    
+    protected void pushBack(int i) {
+		yypushback(i);
+	}
+    
  // End user code
 
 
