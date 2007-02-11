@@ -134,7 +134,7 @@ public class PhpScriptRegion extends ForeignRegion {
 			String yylex = phpLexer.getNextToken();
 			int yylength;
 			final int toOffset = offset + length;
-			while (yylex != null && newTokenOffset <= toOffset) {
+			while (yylex != null && newTokenOffset <= toOffset && yylex != PHPRegionTypes.PHP_CLOSETAG) {
 				yylength = phpLexer.getLength();
 				newContainer.addLast(yylex, newTokenOffset, yylength, yylength, state);
 				newTokenOffset += yylength;
