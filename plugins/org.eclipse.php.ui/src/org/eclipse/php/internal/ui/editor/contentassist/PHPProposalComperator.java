@@ -29,7 +29,7 @@ public class PHPProposalComperator implements Comparator {
 	private static final int FUNCTIONS = 2;
 	private static final int CONSTANTS = 3;
 	private static final int KEYWORDS = 4;
-	private static final int OTHERS = 5;
+	private static final int OTHERS = 0;
 
 	public int compare(Object o1, Object o2) {
 		// type checking
