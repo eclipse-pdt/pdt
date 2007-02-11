@@ -443,7 +443,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				if (region instanceof PhpScriptRegion) {
 					int length = region.getLength();
 					String newText = doc.get(offset + region.getStart(), length);
-					((PhpScriptRegion) region).completeReparse(newText);
+					// ((PhpScriptRegion) region).completeReparse(newText);
 				}
 			}
 		}
