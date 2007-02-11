@@ -190,10 +190,8 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 					return classs;
 				}
 			}
-		} else {
-			return (PHPClassData) classes.get(0);
 		}
-		return null;
+		return (PHPClassData) classes.get(0);
 	}
 
 	public CodeData[] getClasses(String startsWith) {
