@@ -79,9 +79,8 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 		return super.getExistingAdapter(type);
 	}
 
-	private ValidationComponent validator = new PHPValidationComponent();
-
-	private class PHPValidationComponent extends ValidationComponent {
+	private final static ValidationComponent validator = new PHPValidationComponent();
+	private static class PHPValidationComponent extends ValidationComponent {
 		public void validate(IndexedRegion node) {
 		}
 	}
