@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -28,21 +27,18 @@ public class PHPAnnotationTextHover extends AbstractPHPTextHover {
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
-			try {
-				CodeData codeData = CodeDataResolver.getCodeData(textViewer, hoverRegion.getOffset());
-				if (codeData != null) {
-					IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
-					if (sModel instanceof DOMModelForPHP) {
-						try {
-							DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
-							PHPProjectModel projectModel = editorModel.getProjectModel();
-							return PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel);
-						} finally {
-							sModel.releaseFromRead();
-						}
+			CodeData codeData = CodeDataResolver.getCodeData(textViewer, hoverRegion.getOffset());
+			if (codeData != null) {
+				IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
+				if (sModel instanceof DOMModelForPHP) {
+					try {
+						DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
+						PHPProjectModel projectModel = editorModel.getProjectModel();
+						return PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel);
+					} finally {
+						sModel.releaseFromRead();
 					}
 				}
-			} catch (BadLocationException e) {
 			}
 		}
 		return null;

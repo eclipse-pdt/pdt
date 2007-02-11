@@ -56,59 +56,59 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 	}
 
 	protected ITextSelection getCurrentSelection() {
-		ITextEditor editor= getTextEditor();
+		ITextEditor editor = getTextEditor();
 		if (editor == null) {
 			return null;
 		}
-		ISelectionProvider provider= editor.getSelectionProvider();
+		ISelectionProvider provider = editor.getSelectionProvider();
 		if (provider == null) {
 			return null;
 		}
-		ISelection selection= provider.getSelection();
+		ISelection selection = provider.getSelection();
 		if (selection instanceof ITextSelection) {
 			return (ITextSelection) selection;
 		}
-		
+
 		return null;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.TextEditorAction#update()
 	 */
 	public void update() {
 		super.update();
-		
+
 		if (validAction()) {
 			setEnabled(true);
-		}else {
+		} else {
 			setEnabled(false);
 		}
 	}
-	
+
 	private boolean validAction() {
-		ITextEditor editor= getTextEditor();
+		ITextEditor editor = getTextEditor();
 		if (editor == null) {
 			return false;
 		}
-		
-		IDocumentProvider docProvider= editor.getDocumentProvider();
-		IEditorInput input= editor.getEditorInput();
+
+		IDocumentProvider docProvider = editor.getDocumentProvider();
+		IEditorInput input = editor.getEditorInput();
 		if (docProvider == null || input == null) {
 			return false;
 		}
-		
-		IDocument document= docProvider.getDocument(input);
+
+		IDocument document = docProvider.getDocument(input);
 		if (document == null) {
 			return false;
 		}
-		
+
 		if (!(document instanceof IStructuredDocument)) {
 			return false;
 		}
-		
+
 		ITextSelection currentSelection = getCurrentSelection();
 		int offset = currentSelection.getOffset();
-		IStructuredDocument structuredDocument = (IStructuredDocument)document;
+		IStructuredDocument structuredDocument = (IStructuredDocument) document;
 		String partitionType;
 		try {
 			partitionType = structuredDocument.getPartition(offset).getType();
@@ -119,15 +119,15 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 		if (!partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
 			return false;
 		}
-		
+
 		IStructuredDocumentRegion structuredDocumentRegion = structuredDocument.getRegionAtCharacterOffset(offset);
 		ITextRegion textRegion = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
 		if (textRegion == null) {
 			return false;
 		}
-		
+
 		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
 			try {
 				textRegion = phpScriptRegion.getPhpToken(offset - structuredDocumentRegion.getStartOffset() - phpScriptRegion.getStart());
 			} catch (BadLocationException e) {
@@ -137,15 +137,10 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 		if (textRegion == null) {
 			return false;
 		}
-		
-		StructuredTextEditor structuredTextEditor = (StructuredTextEditor)editor;
+
+		StructuredTextEditor structuredTextEditor = (StructuredTextEditor) editor;
 		CodeData codeData;
-		try {
-			codeData = CodeDataResolver.getCodeData(structuredTextEditor.getTextViewer(), offset);
-		} catch (BadLocationException e) {
-			Logger.logException(e);
-			return false;
-		}
+		codeData = CodeDataResolver.getCodeData(structuredTextEditor.getTextViewer(), offset);
 		if (codeData == null) {
 			return false;
 		}
@@ -160,8 +155,8 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 		if (!(codeData instanceof PHPFunctionData)) {
 			return false;
 		}
-		
-		functionData = (PHPFunctionData)codeData;
+
+		functionData = (PHPFunctionData) codeData;
 		return true;
 	}
 

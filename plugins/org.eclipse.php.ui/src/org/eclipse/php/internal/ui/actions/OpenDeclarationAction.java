@@ -26,14 +26,14 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
-	
+
 	private CodeData fCodeData;
-	
+
 	public OpenDeclarationAction(ResourceBundle resourceBundle, PHPStructuredEditor editor) {
 		super(resourceBundle, "OpenAction_declaration_", editor);
 		this.setEnabled(true);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IAction#run()
 	 */
@@ -47,61 +47,61 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 			return;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.IUpdate#update()
 	 */
 	public void update() {
 		super.update();
-		
+
 		if (validAction()) {
 			setEnabled(true);
-		}else {
+		} else {
 			setEnabled(false);
 		}
 	}
-	
+
 	protected ITextSelection getCurrentSelection() {
-		ITextEditor editor= getTextEditor();
+		ITextEditor editor = getTextEditor();
 		if (editor == null) {
 			return null;
 		}
-		ISelectionProvider provider= editor.getSelectionProvider();
+		ISelectionProvider provider = editor.getSelectionProvider();
 		if (provider == null) {
 			return null;
 		}
-		ISelection selection= provider.getSelection();
+		ISelection selection = provider.getSelection();
 		if (selection instanceof ITextSelection) {
 			return (ITextSelection) selection;
 		}
-		
+
 		return null;
 	}
-	
+
 	private boolean validAction() {
-		ITextEditor editor= getTextEditor();
+		ITextEditor editor = getTextEditor();
 		if (editor == null) {
 			return false;
 		}
-		
-		IDocumentProvider docProvider= editor.getDocumentProvider();
-		IEditorInput input= editor.getEditorInput();
+
+		IDocumentProvider docProvider = editor.getDocumentProvider();
+		IEditorInput input = editor.getEditorInput();
 		if (docProvider == null || input == null) {
 			return false;
 		}
-		
-		IDocument document= docProvider.getDocument(input);
+
+		IDocument document = docProvider.getDocument(input);
 		if (document == null) {
 			return false;
 		}
-		
+
 		if (!(document instanceof IStructuredDocument)) {
 			return false;
 		}
-		
+
 		ITextSelection currentSelection = getCurrentSelection();
 		int offset = currentSelection.getOffset();
-		IStructuredDocument structuredDocument = (IStructuredDocument)document;
+		IStructuredDocument structuredDocument = (IStructuredDocument) document;
 		String partitionType;
 		try {
 			partitionType = structuredDocument.getPartition(offset).getType();
@@ -112,15 +112,15 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 		if (!partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
 			return false;
 		}
-		
+
 		IStructuredDocumentRegion structuredDocumentRegion = structuredDocument.getRegionAtCharacterOffset(offset);
 		ITextRegion textRegion = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
 		if (textRegion == null) {
 			return false;
 		}
-		
+
 		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
 			try {
 				textRegion = phpScriptRegion.getPhpToken(offset - structuredDocumentRegion.getStartOffset() - phpScriptRegion.getStart());
 			} catch (BadLocationException e) {
@@ -130,14 +130,9 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 		if (textRegion == null) {
 			return false;
 		}
-		
-		StructuredTextEditor structuredTextEditor = (StructuredTextEditor)editor;
-		try {
-			fCodeData = CodeDataResolver.getCodeData(structuredTextEditor.getTextViewer(), offset);
-		} catch (BadLocationException e) {
-			Logger.logException(e);
-			return false;
-		}
+
+		StructuredTextEditor structuredTextEditor = (StructuredTextEditor) editor;
+		fCodeData = CodeDataResolver.getCodeData(structuredTextEditor.getTextViewer(), offset);
 		if (fCodeData == null) {
 			return false;
 		}

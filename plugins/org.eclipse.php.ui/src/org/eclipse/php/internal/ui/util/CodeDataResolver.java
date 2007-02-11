@@ -19,34 +19,18 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.phpModel.parser.CodeDataFilter;
-import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
-import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
-import org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory.PHPFunctionDataImp;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileDataUtilities;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.ui.editor.util.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
@@ -72,9 +56,8 @@ public class CodeDataResolver {
 	 * @param textViewer Text viewer
 	 * @param offset Real offset of in the document
 	 * @return CodeData Code data according to the selected PHP element
-	 * @throws BadLocationException
 	 */
-	public static CodeData getCodeData(ITextViewer textViewer, int offset) throws BadLocationException {
+	public static CodeData getCodeData(ITextViewer textViewer, int offset) {
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
 		if (sModel instanceof DOMModelForPHP) {
 			DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
@@ -207,23 +190,23 @@ public class CodeDataResolver {
 			return null;
 		}
 
-		CodeData[] functions = projectModel.getFunction(elementName);
-		CodeData[] constants = projectModel.getConstants(elementName, CONSTANT_CASE_SENSITIVE);
-		CodeData[] classes = projectModel.getClass(elementName);
+		CodeData function = projectModel.getFunction(fileName, elementName);
+		CodeData constant = projectModel.getConstant(fileName, elementName);
+		CodeData classs = projectModel.getClass(fileName, elementName);
 		CodeData[] keywords = projectModel.getKeywordData(elementName);
 
 		CodeData[] mergeData = null;
 		if (keywords != null && keywords.length > 0) {
 			mergeData = ModelSupport.merge(keywords, mergeData);
 		}
-		if (classes != null && classes.length > 0) {
-			mergeData = ModelSupport.merge(classes, mergeData);
+		if (classs != null) {
+			mergeData = ModelSupport.merge(new CodeData[] { classs }, mergeData);
 		}
-		if (constants != null && constants.length > 0) {
-			mergeData = ModelSupport.merge(constants, mergeData);
+		if (constant != null) {
+			mergeData = ModelSupport.merge(new CodeData[] { classs }, mergeData);
 		}
-		if (functions != null && functions.length > 0) {
-			mergeData = ModelSupport.merge(functions, mergeData);
+		if (function != null) {
+			mergeData = ModelSupport.merge(new CodeData[] { function }, mergeData);
 		}
 
 		return filterExact(mergeData, elementName);
@@ -653,9 +636,8 @@ public class CodeDataResolver {
 		if (!foundExtends && !foundImplements) {
 			if (isClassDeclaration) {
 				return filterExact(getExtendsImplementsCodeData(projectModel, elementName, offset), elementName);
-			} else {
-				return filterExact(getExtendsCodeData(projectModel, elementName, offset), elementName);
 			}
+			return filterExact(getExtendsCodeData(projectModel, elementName, offset), elementName);
 		}
 
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, startPosition);
@@ -673,9 +655,8 @@ public class CodeDataResolver {
 		if (foundExtends && foundImplements) {
 			if (extendsMatcher.start() < implementsMatcher.start()) {
 				return filterExact(getInterfaceList(projectModel, elementName, offset), elementName);
-			} else {
-				return filterExact(getBaseClassList(projectModel, elementName, offset, isClassDeclaration), elementName);
 			}
+			return filterExact(getBaseClassList(projectModel, elementName, offset, isClassDeclaration), elementName);
 		}
 
 		if (foundImplements) {
