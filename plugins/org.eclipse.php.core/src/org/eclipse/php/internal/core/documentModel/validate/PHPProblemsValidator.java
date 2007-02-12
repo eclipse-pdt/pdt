@@ -39,58 +39,31 @@ public class PHPProblemsValidator {
 
 	private TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();
 
-	public void validateFile(IFile phpFile) {
-
+	public void validateFile(IFile phpFile, boolean validateTasks) {
 		PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(phpFile.getFullPath().toString(), true);
 		if (fileData == null) {
 			return;
 		}
 		IPHPMarker[] markers = fileData.getMarkers();
-		IMarker[] rullerAddedMarkers = null; // We have to get all the markers, so we wont delete the ruler-added ones (Fix Bug #95)
-		Map[] rullerMarkersAttributes = null;
 		try {
-			/* use this function they way it is used 'normally' by validators, send null instead of file name.
-			 * fix bug# 160976
-			 */
-			TaskListUtility.removeAllTasks(phpFile, owners, null);
-			//TaskListUtility.removeAllTasks(phpFile, owners, phpFile.getFullPath().toString());
-		} catch (CoreException e2) {
-			Logger.logException(e2);
-		}
-
-		try {
-			rullerAddedMarkers = phpFile.findMarkers(IMarker.TASK, false, IResource.DEPTH_INFINITE);
-			rullerMarkersAttributes = new Map[rullerAddedMarkers.length];
-			// Get the attributes before we delete the marker.
-			for (int i = 0; i < rullerMarkersAttributes.length; i++) {
-				rullerMarkersAttributes[i] = rullerAddedMarkers[i].getAttributes();
-			}
-			phpFile.deleteMarkers(IMarker.TASK, false, IResource.DEPTH_INFINITE);
 			phpFile.deleteMarkers(PHP_PROBLEM_MARKER_TYPE, false, IResource.DEPTH_INFINITE);
-		} catch (CoreException e1) {
+		} catch (CoreException e) {
 		}
-		if (markers != null) {
-			TaskTag[] tags = taskTagsProvider.getProjectTaskTags(phpFile.getProject());
-			if (tags == null) {
-				tags = taskTagsProvider.getWorkspaceTaskTags();
-			}
-			boolean caseSensitive = taskTagsProvider.getProjectTagsCaseSensitive(phpFile.getProject());
+		if (validateTasks) {
+			validateTasks(phpFile, markers);
+		}
+		validateErrors(phpFile, markers);
+	}
 
+	/**
+	 * @param phpFile
+	 * @param markers
+	 */
+	private void validateErrors(IFile phpFile, IPHPMarker[] markers) {
+		if (markers != null) {
 			try {
 				for (int i = 0; markers.length > i; i++) {
 					String type = markers[i].getType();
-					if (type.equals(IPHPMarker.TASK)) {
-						PHPTask task = (PHPTask) markers[i];
-						String descr = task.getTaskName() + " " + task.getDescription();
-						UserData userData = task.getUserData();
-						int prio = getPriority(task.getTaskName(), tags, caseSensitive);
-						try {
-							createMarker(phpFile, userData, IMarker.TASK, descr, prio);
-						} catch (CoreException e) {
-							// Logger.logException(e);
-						}
-						continue;
-					}
 					if (!type.equals(IPHPMarker.ERROR) && !type.equals(IPHPMarker.WARNING) && !type.equals(IPHPMarker.INFO)) {
 						continue;
 					}
@@ -106,7 +79,56 @@ public class PHPProblemsValidator {
 			} catch (CoreException e) {
 				Logger.logException(e);
 			}
+		}
+	}
 
+	/**
+	 * @param phpFile
+	 * @param markers
+	 */
+	private void validateTasks(IFile phpFile, IPHPMarker[] markers) {
+		IMarker[] rullerAddedMarkers = null; // We have to get all the markers, so we wont delete the ruler-added ones (Fix Bug #95)
+		Map[] rullerMarkersAttributes = null;
+		try {
+			/* use this function they way it is used 'normally' by validators, send null instead of file name.
+			 * fix bug# 160976
+			 */
+			TaskListUtility.removeAllTasks(phpFile, owners, null);
+			//TaskListUtility.removeAllTasks(phpFile, owners, phpFile.getFullPath().toString());
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+
+		try {
+			rullerAddedMarkers = phpFile.findMarkers(IMarker.TASK, false, IResource.DEPTH_INFINITE);
+			rullerMarkersAttributes = new Map[rullerAddedMarkers.length];
+			// Get the attributes before we delete the marker.
+			for (int i = 0; i < rullerMarkersAttributes.length; i++) {
+				rullerMarkersAttributes[i] = rullerAddedMarkers[i].getAttributes();
+			}
+			phpFile.deleteMarkers(IMarker.TASK, false, IResource.DEPTH_INFINITE);
+		} catch (CoreException e) {
+		}
+		if (markers != null) {
+			TaskTag[] tags = taskTagsProvider.getProjectTaskTags(phpFile.getProject());
+			if (tags == null) {
+				tags = taskTagsProvider.getWorkspaceTaskTags();
+			}
+			boolean caseSensitive = taskTagsProvider.getProjectTagsCaseSensitive(phpFile.getProject());
+			for (int i = 0; markers.length > i; i++) {
+				String type = markers[i].getType();
+				if (type.equals(IPHPMarker.TASK)) {
+					PHPTask task = (PHPTask) markers[i];
+					String descr = task.getTaskName() + " " + task.getDescription();
+					UserData userData = task.getUserData();
+					int prio = getPriority(task.getTaskName(), tags, caseSensitive);
+					try {
+						createMarker(phpFile, userData, IMarker.TASK, descr, prio);
+					} catch (CoreException e) {
+					}
+					continue;
+				}
+			}
 			// Add the non-IPHPMarkers (ruler-added markers).
 			if (rullerAddedMarkers != null) {
 				for (int i = 0; i < rullerAddedMarkers.length; i++) {
@@ -123,8 +145,12 @@ public class PHPProblemsValidator {
 			}
 		}
 	}
-	
-	private void createMarker(IFile phpFile, UserData userData, String markerType, String descr, int prio) throws CoreException{
+
+	public void validateFile(IFile phpFile) {
+		validateFile(phpFile, true);
+	}
+
+	private void createMarker(IFile phpFile, UserData userData, String markerType, String descr, int prio) throws CoreException {
 		IMarker marker = phpFile.createMarker(markerType);
 		marker.setAttribute(IMarker.LINE_NUMBER, userData.getStopLine() + 1);
 		marker.setAttribute(IMarker.CHAR_START, userData.getStartPosition());
@@ -132,7 +158,7 @@ public class PHPProblemsValidator {
 		marker.setAttribute(IMarker.MESSAGE, descr);
 		marker.setAttribute(IMarker.PRIORITY, prio);
 		marker.setAttribute(IMarker.USER_EDITABLE, false);
-		if (markerType == PHP_PROBLEM_MARKER_TYPE){
+		if (markerType == PHP_PROBLEM_MARKER_TYPE) {
 			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 		}
 	}
