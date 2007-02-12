@@ -762,6 +762,8 @@ public class PreferenceConstants {
 
 	public static final String NEW_PHP_FILE_TEMPLATE = "newFileTemplateName"; //$NON-NLS-1$
 
+	public static final String ALLOW_MULTIPLE_LAUNCHES = "allowMultipleLaunches"; //$NON-NLS-1$
+
 	/**
 	 * The id of the best match hover contributed for extension point
 	 * <code>javaEditorTextHovers</code>.
@@ -931,6 +933,8 @@ public class PreferenceConstants {
 		store.setDefault(TYPING_AUTO_CLOSE_BRACES, true);
 
 		store.setDefault(NEW_PHP_FILE_TEMPLATE, "New simple PHP file"); //$NON-NLS-1$
+
+		store.setDefault(ALLOW_MULTIPLE_LAUNCHES, "ask"); //$NON-NLS-1$
 
 		String mod1Name = Action.findModifierString(SWT.MOD1); // SWT.COMMAND on Mac; SWT.CONTROL elsewhere
 		store.setDefault(EDITOR_TEXT_HOVER_MODIFIERS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
