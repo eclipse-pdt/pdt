@@ -74,7 +74,8 @@ function writeBugs($pr, $filename_bugs) {
 			$pattern = '/>.*</';
 			preg_match($pattern, $line, $matches, PREG_OFFSET_CAPTURE, 3);
 			if (@$matches[0][0] != "") {
-				$bugs .= str_replace($red, "", $matches[0][0]) . " ";
+				$bugname = str_replace($red, "", $matches[0][0]);
+				$bugs .= "&lt;A href=\"https://bugs.eclipse.org/bugs/show_bug.cgi?id=" . $bugname . "\"&gt;" . $bugname . "&lt;/A&gt; ";
 			}
 		}
 
