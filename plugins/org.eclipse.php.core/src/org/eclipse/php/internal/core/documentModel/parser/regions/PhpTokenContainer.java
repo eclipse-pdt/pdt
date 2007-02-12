@@ -159,6 +159,11 @@ public class PhpTokenContainer {
 		// add
 		final Iterator newIterator = newContainer.lexerStateChanges.iterator();
 		newIterator.next(); // ignore the first state change (it is identical to the original one)
+		
+		// goto the previous before adding
+		if (newIterator.hasNext()) {
+			oldIterator.previous();
+		}
 		while (newIterator.hasNext()) {
 			oldIterator.add(newIterator.next());
 		}
@@ -238,6 +243,13 @@ public class PhpTokenContainer {
 	public void reset() {
 		this.phpTokens.clear();
 		this.lexerStateChanges.clear();
+	}
+
+	/**
+	 * @return true for empty container
+	 */
+	public boolean isEmpty() {
+		return this.phpTokens.isEmpty();
 	}
 
 	/**

@@ -1,12 +1,9 @@
 package org.eclipse.php.internal.core.documentModel.parser;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 
 /**
@@ -50,41 +47,28 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 		}
 		return result;
 	}
-	
-	
+
+	/**
+	 * Change PHP Script Regions nodes...
+	 */
+	protected StructuredDocumentEvent regionCheck(IStructuredDocumentRegion oldNode, IStructuredDocumentRegion newNode) {
+		final StructuredDocumentEvent event = super.regionCheck(oldNode, newNode);
+		
+		if (event instanceof RegionChangedEvent) {
+			RegionChangedEvent changedEvent = (RegionChangedEvent) event;
+			
+			if (changedEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
+				oldNode.setRegions(newNode.getRegions());
+			}
+		}		
+		return event;
+	}
 
 	/**
 	 * This implementation updates the php tokens model after updating WST editor model
 	 */
 	public StructuredDocumentEvent reparse() {
 		final StructuredDocumentEvent documentEvent = super.reparse();
-		
-		if (documentEvent instanceof RegionChangedEvent) {
-			// safe cast
-			RegionChangedEvent event = (RegionChangedEvent) documentEvent;
-			final ITextRegion region = event.getRegion();
-
-			// if it is a php script region - reparse the php tokens according to the new text 
-			if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-				final int startOffset = event.getStructuredDocumentRegion().getStartOffset();
-				try {
-					PhpScriptRegion phpRegion = (PhpScriptRegion) region;
-					final int phpRegionStart = startOffset + region.getStart();
-					final String newText = documentEvent.getDocument().get(phpRegionStart, region.getLength());
-					final boolean reparse = phpRegion.reparse(event.fText, newText, event.fOffset - phpRegionStart , event.getDeletedText());
-					if (!reparse) {
-						// complete reparsing for the php script
-						phpRegion.completeReparse(newText);
-						
-						// update the event
-						return event; 
-					}
-				} catch (BadLocationException e) {
-					Logger.logException(e);
-				}
-			}
-		}
-
 		return documentEvent;
 	}
 }
