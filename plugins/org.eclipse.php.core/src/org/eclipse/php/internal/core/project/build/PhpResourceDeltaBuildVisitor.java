@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.project.build;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
@@ -29,17 +25,17 @@ public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 
 	// used to examine if a file is php associated
 	private static final IContentTypeManager CONTENT_TYPE_MANAGER = Platform.getContentTypeManager();
-	
-	private PHPProblemsValidator validator = new PHPProblemsValidator();
-	
-	public boolean visit(IResourceDelta delta) throws CoreException {
+
+	private PHPProblemsValidator validator = PHPProblemsValidator.getInstance();
+
+	public boolean visit(IResourceDelta delta) {
 		switch (delta.getResource().getType()) {
 			//only process files with PHP content type
 			case IResource.FILE:
 				processFileDelta(delta);
 				return false;
 
-			//only process projects with PHP nature
+				//only process projects with PHP nature
 			case IResource.PROJECT:
 				return processProjectDelta(delta);
 
@@ -57,8 +53,8 @@ public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 		final IContentType contentType = CONTENT_TYPE_MANAGER.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 		if (!contentType.isAssociatedWith(filename)) {
 			return;
-		}			
-		
+		}
+
 		switch (fileDelta.getKind()) {
 			case IResourceDelta.ADDED:
 				PHPWorkspaceModelManager.getInstance().addFileToModel(file);

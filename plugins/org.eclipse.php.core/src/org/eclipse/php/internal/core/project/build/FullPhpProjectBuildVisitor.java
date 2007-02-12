@@ -19,7 +19,7 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 
 public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 
-	private PHPProblemsValidator validator = new PHPProblemsValidator();
+	private PHPProblemsValidator validator = PHPProblemsValidator.getInstance();
 
 	public boolean visit(IResource resource) {
 		// parse each PHP file with the parserFacade which adds it to

@@ -32,6 +32,17 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 
 public class PHPProblemsValidator {
 
+	private static PHPProblemsValidator instance;
+
+	public static PHPProblemsValidator getInstance() {
+		if (instance == null)
+			instance = new PHPProblemsValidator();
+		return instance;
+	}
+
+	private PHPProblemsValidator() {
+	}
+
 	private static String ID = "org.eclipse.php.core.documentModel.validate.PHPProblemsValidator";
 	private static String PHP_PROBLEM_MARKER_TYPE = PHPCorePlugin.ID + ".phpproblemmarker";
 
