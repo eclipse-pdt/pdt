@@ -1,7 +1,6 @@
 package org.eclipse.php.internal.ui.editor;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.formatter.FormattingContext;
@@ -10,19 +9,11 @@ import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
-import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
@@ -95,35 +86,4 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// TODO: how to handle other document types?
 		}
 	}
-	
-	protected IDocumentAdapter createDocumentAdapter() {
-		return new StructuredDocumentToTextAdapterForPhp(getTextWidget());
-	}
-
-	public class StructuredDocumentToTextAdapterForPhp extends StructuredDocumentToTextAdapter {
-
-		public StructuredDocumentToTextAdapterForPhp() {
-			super();
-		}
-		
-		public StructuredDocumentToTextAdapterForPhp(StyledText styledTextWidget) {
-			super(styledTextWidget);
-		}		
-		
-		protected void redrawRegionChanged(RegionChangedEvent structuredDocumentEvent) {
-			if (structuredDocumentEvent != null && structuredDocumentEvent.getRegion() != null && structuredDocumentEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
-				final PhpScriptRegion region = (PhpScriptRegion) structuredDocumentEvent.getRegion();
-				if (region.isFullReparsed) {
-					final TextRegionListImpl newList = new TextRegionListImpl();
-					newList.add(region);
-					final IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentEvent.getStructuredDocumentRegion();
-					final IStructuredDocument structuredDocument = structuredDocumentEvent.getStructuredDocument();
-					final RegionsReplacedEvent regionsReplacedEvent = new RegionsReplacedEvent(structuredDocument, structuredDocumentRegion, structuredDocumentRegion, null, newList, null, 0, 0);
-					redrawRegionsReplaced(regionsReplacedEvent);
-				}
-			}
-			super.redrawRegionChanged(structuredDocumentEvent);
-		}
-	}
-	
 }
