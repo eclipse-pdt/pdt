@@ -244,7 +244,12 @@
             class="org.eclipse.php.internal.debug.ui.preferences.phps.PHPsPreferencePage"
             id="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage">
          <keywordReference id="org.eclipse.php.debug.ui.debug"/>
-      </page>	
+      </page>
+      <page
+            category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+            class="org.eclipse.php.internal.debug.ui.preferences.PHPLaunchingPreferencePage"
+            id="org.eclipse.php.debug.ui.page1"
+            name="%launchingPreferencePageName"/>	
     </extension>
 	<extension point="org.eclipse.ui.propertyPages">
 		<page

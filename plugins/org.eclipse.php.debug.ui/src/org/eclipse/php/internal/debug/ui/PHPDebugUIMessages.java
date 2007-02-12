@@ -25,6 +25,12 @@ public class PHPDebugUIMessages extends NLS {
 	public static String EnterCondition_1;
 
 	public static String InstalledPHPsBlock_16;
+
+	public static String PHPLaunchingPreferencePage_Always;
+	public static String PHPLaunchingPreferencePage_message;
+	public static String PHPLaunchingPreferencePage_Never;
+
+	public static String PHPLaunchingPreferencePage_Prompt;
 	public static String SetCondition_1;
 	public static String ErrorCreatingBreakpoint_1;
 	public static String CannotRunToLine;
