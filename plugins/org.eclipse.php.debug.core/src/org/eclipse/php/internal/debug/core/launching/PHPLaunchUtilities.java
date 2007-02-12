@@ -14,13 +14,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -56,8 +62,8 @@ public class PHPLaunchUtilities {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				if (page != null) {
 					try {
-						IViewPart debugOutputPart = page.findView("org.eclipse.debug.ui.PHPDebugOutput");
-						IViewPart browserOutputPart = page.findView("org.eclipse.debug.ui.PHPBrowserOutput");
+						IViewPart debugOutputPart = page.findView("org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
+						IViewPart browserOutputPart = page.findView("org.eclipse.debug.ui.PHPBrowserOutput"); //$NON-NLS-1$
 
 						// Test if the Debug Output view is alive and visible.
 						boolean shouldShowDebug = false;
@@ -71,23 +77,82 @@ public class PHPLaunchUtilities {
 						}
 
 						if (shouldShowDebug) {
-							page.showView("org.eclipse.debug.ui.PHPDebugOutput");
+							page.showView("org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
 						}
 					} catch (Exception e) {
-						Logger.logException("Error switching to the Debug Output view", e);
+						Logger.logException("Error switching to the Debug Output view", e); //$NON-NLS-1$
 					}
 				}
 			}
 		});
 	}
 
-	private static boolean confirm;
+	/**
+	 * Notify the existance of a previous PHP debug session in case the user launched a new session.
+	 *
+	 * @param newLaunchConfiguration
+	 * @param newLaunch
+	 * @return True, if the launch can be continued; False, otherwise. 
+	 * @throws CoreException
+	 */
+	public static boolean notifyPreviousLaunches() throws CoreException {
+		ILaunch[] launches = DebugPlugin.getDefault().getLaunchManager().getLaunches();
+		boolean hasActiveLaunch = false;
+		for (int i = 0; !hasActiveLaunch && i < launches.length; i++) {
+			if (!launches[i].isTerminated() && launches[i].getDebugTarget() instanceof PHPDebugTarget) {
+				hasActiveLaunch = true;
+			}
+		}
+		if (!hasActiveLaunch) {
+			return true;
+		}
+
+		// Check whether we should ask the user.
+		final IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+		String option = store.getString(PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES);
+		if (MessageDialogWithToggle.ALWAYS.equals(option)) {
+			// If always, then we should always allow the launch
+			return true;
+		}
+		if (MessageDialogWithToggle.NEVER.equals(option)) {
+			// We should never allow the launch, so display a message describing the situation.
+			final Display disp = Display.getDefault();
+			disp.syncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(disp.getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle, PHPDebugCoreMessages.PHPLaunchUtilities_activeLaunchDetected);
+				}
+			});
+			return false;
+		}
+
+		final DialogResultHolder resultHolder = new DialogResultHolder();
+		final Display disp = Display.getDefault();
+		disp.syncExec(new Runnable() {
+			public void run() {
+				// Display a dialog to notify the existance of a previous active launch.
+				MessageDialogWithToggle m = MessageDialogWithToggle.openYesNoQuestion(
+					disp.getActiveShell(), 
+					PHPDebugCoreMessages.PHPLaunchUtilities_confirmation, 
+					PHPDebugCoreMessages.PHPLaunchUtilities_multipleLaunchesPrompt, PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision, 
+					false, 
+					store,
+					PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES);
+				resultHolder.setReturnCode(m.getReturnCode());
+			}
+		});
+		switch (resultHolder.getReturnCode()) {
+			case IDialogConstants.YES_ID:
+			case IDialogConstants.OK_ID :
+				return true;
+			case IDialogConstants.NO_ID :
+				return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Make all the necessary checks to see if the current launch can be launched with regards to the previous
 	 * launches that has 'debug all pages' attribute. 
-	 * @throws CoreException 
-	 * 
 	 * @throws CoreException 
 	 */
 	public static boolean checkDebugAllPages(final ILaunchConfiguration newLaunchConfiguration, final ILaunch newLaunch) throws CoreException {
@@ -119,24 +184,26 @@ public class PHPLaunchUtilities {
 		final boolean fHasContiniousLaunch = hasContiniousLaunch;
 
 		if ((fHasContiniousLaunch || newIsDebugAllPages || newIsStartDebugFrom) && launches.length > 1) {
+			final DialogResultHolder resultHolder = new DialogResultHolder();
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					// TODO - Advanced message dialog with 'don't show this again' check.
 					if (fHasContiniousLaunch) {
-						confirm = MessageDialog
-							.openConfirm(Display.getDefault().getActiveShell(), "Launch Confirmation",
-								"A previous launch with 'Debug All Pages' or 'Start Debug From' attribute was identifed.\nLaunching a new session will terminate and remove the old launch, directing all future debug requests associated with it to the new launch.\nDo you wish to continue and launch a new session?");
+						resultHolder
+							.setResult(MessageDialog
+								.openConfirm(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+									"A previous launch with 'Debug All Pages' or 'Start Debug From' attribute was identifed.\nLaunching a new session will terminate and remove the old launch, directing all future debug requests associated with it to the new launch.\nDo you wish to continue and launch a new session?")); //$NON-NLS-1$
 					} else {
 						if (newIsDebugAllPages) {
-							confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), "Launch Confirmation",
-								"The requested launch has a 'Debug All Pages' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?");
+							resultHolder.setResult(MessageDialog.openConfirm(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+								"The requested launch has a 'Debug All Pages' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?")); //$NON-NLS-1$
 						} else {
 							// newIsStartDebugFrom == true
-							confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), "Launch Confirmation",
-								"The requested launch has a 'Start Debug From' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?");
+							resultHolder.setResult(MessageDialog.openConfirm(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+								"The requested launch has a 'Start Debug From' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?")); //$NON-NLS-1$
 						}
 					}
-					if (confirm) {
+					if (resultHolder.getResult()) {
 						// disable the auto remove launches for the next launch
 						PHPDebugPlugin.setDisableAutoRemoveLaunches(true);
 						// manually remove the old launches and continue this launch
@@ -147,7 +214,7 @@ public class PHPLaunchUtilities {
 					}
 				}
 			});
-			return confirm;
+			return resultHolder.getResult();
 		} else {
 			if (newIsDebugAllPages || newIsStartDebugFrom) {
 				PHPDebugPlugin.setDisableAutoRemoveLaunches(true);
@@ -210,7 +277,7 @@ public class PHPLaunchUtilities {
 			}
 		}
 	}
-	
+
 	/**
 	 * Display a wait window, indicating the user that the debug session is in progress and the
 	 * PDT is waiting for the debugger's response.
@@ -224,11 +291,11 @@ public class PHPLaunchUtilities {
 	public static void showWaitForDebuggerMessage() {
 		// TODO
 	}
-	
+
 	public static void hideWaitForDebuggerMessage() {
 		// TODO
 	}
-	
+
 	/**
 	 * Display an error message to indicating an fatal error detected while staring a debug session.
 	 * A fatal error occures when the remote debugger does not exist or has a different version.
@@ -239,5 +306,29 @@ public class PHPLaunchUtilities {
 				MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Error, PHPDebugCoreMessages.Debugger_Error_Message);
 			}
 		});
+	}
+
+	/*
+	 * A class used to hold the message dialog results 
+	 */
+	private static class DialogResultHolder {
+		private int returnCode;
+		private boolean result;
+
+		public boolean getResult() {
+			return result;
+		}
+
+		public void setResult(boolean result) {
+			this.result = result;
+		}
+
+		public int getReturnCode() {
+			return returnCode;
+		}
+
+		public void setReturnCode(int returnCode) {
+			this.returnCode = returnCode;
+		}
 	}
 }

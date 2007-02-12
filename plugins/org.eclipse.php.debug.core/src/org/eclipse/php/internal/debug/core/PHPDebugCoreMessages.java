@@ -40,6 +40,12 @@ public class PHPDebugCoreMessages extends NLS {
     
     public static String configurationError;
 
+	public static String PHPLaunchUtilities_activeLaunchDetected;
+	public static String PHPLaunchUtilities_confirmation;
+	public static String PHPLaunchUtilities_multipleLaunchesPrompt;
+	public static String PHPLaunchUtilities_phpLaunchTitle;
+	public static String PHPLaunchUtilities_rememberDecision;
+
     static {
         // load message values from bundle file
         NLS.initializeMessages(BUNDLE_NAME, PHPDebugCoreMessages.class);
