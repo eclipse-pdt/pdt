@@ -68,6 +68,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				selectionLength = selection.y - selection.x;
 				endRecording(cursorPosition, selectionLength);
 			}
+		} else if (operation == PASTE) {
+			super.doOperation(operation);
+			doOperation(FORMAT_ACTIVE_ELEMENTS);
 		} else {
 			super.doOperation(operation);
 		}
