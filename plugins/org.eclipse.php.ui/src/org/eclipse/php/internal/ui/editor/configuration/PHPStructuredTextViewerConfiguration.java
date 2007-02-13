@@ -148,8 +148,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			processorsList.toArray(processors);
 		}
 
-		configureContentAssistant(sourceViewer);
-
 		return processors;
 	}
 

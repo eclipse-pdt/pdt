@@ -138,7 +138,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
 		IContentAssistant newAssistant = configuration.getContentAssistant(this);
-		((ContentAssistant) newAssistant).enableAutoActivation(false);
+		newAssistant.uninstall();
 		newAssistant = phpConfiguration.getPHPContentAssistant(this);
 		if (newAssistant != oldContentAssistant || newAssistant == null || oldContentAssistant == null) {
 			if (fContentAssistant != null)
