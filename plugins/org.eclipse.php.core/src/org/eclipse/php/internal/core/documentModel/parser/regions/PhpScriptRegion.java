@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.parser.regions;
 
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.ListIterator;
 
 import org.eclipse.core.resources.IProject;
@@ -110,7 +109,6 @@ public class PhpScriptRegion extends ForeignRegion {
 			if (offset < 3) {
 				return null;
 			}
-
 			// checks for odd quotes
 			final String deletedText = lengthToReplace == 0 ? "" : flatnode.getParentDocument().get(requestStart, lengthToReplace);
 			final int length = changes.length();
@@ -129,7 +127,7 @@ public class PhpScriptRegion extends ForeignRegion {
 			final LexerState endState = tokensContaier.getState(tokenEnd.getEnd() + 1);
 
 			final PhpTokenContainer newContainer = new PhpTokenContainer();
-			final PhpLexer phpLexer = getPhpLexer(project, getStream(flatnode, changes, requestStart, lengthToReplace, newTokenOffset), startState);
+			final PhpLexer phpLexer = getPhpLexer(project, new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset), startState);
 
 			Object state = startState;
 			try {
@@ -225,7 +223,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * @param stream
 	 * @return a new lexer for the given project with the given stream
 	 */
-	private static PhpLexer getPhpLexer(IProject project, InputStream stream, LexerState startState) {
+	private static PhpLexer getPhpLexer(IProject project, Reader stream, LexerState startState) {
 		PhpLexer lexer;
 		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
 		if (phpVersion.equals(PHPCoreConstants.PHP5)) {
@@ -265,10 +263,6 @@ public class PhpScriptRegion extends ForeignRegion {
 		return lexer;
 	}
 
-	public static PhpLexer getPhpLexer(IProject project, InputStream stream) {
-		return getPhpLexer(project, stream, null);
-	}
-
 	/**
 	 * @param script 
 	 * @return a list of php tokens
@@ -301,6 +295,7 @@ public class PhpScriptRegion extends ForeignRegion {
 		}
 	}
 
+
 	/**
 	 * Returns a stream that represents the new text
 	 * We have three regions:
@@ -313,37 +308,86 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * @param lengthToReplace
 	 * @param newTokenOffset
 	 */
-	private final InputStream getStream(final IStructuredDocumentRegion flatnode, final String change, final int requestStart, final int lengthToReplace, final int newTokenOffset) {
-		// DataInputStream to enable multi-byte storage 
-		return new DataInputStream(new InputStream() {
-			final private IStructuredDocument parent = flatnode.getParentDocument();
-			final private int startPhpRegion = flatnode.getStart() + getStart();
-			final private int endPhpRegion = startPhpRegion + getLength();
-			final private int changeLength = change.length();
-			
-			private int index = startPhpRegion + newTokenOffset;
-			private int internalIndex = 0;
+	private class DocumentReader extends Reader {
 
-			public int read() throws IOException {
-				try {
-					// state 1) 
-					if (index < requestStart) {
-						return parent.getChar(index++);
-					} // state 2)
-					if (internalIndex < changeLength) {
-						return change.charAt(internalIndex++);
-					} 
-					// skip the delted text
-					if (index < requestStart + lengthToReplace) {
-						index = requestStart + lengthToReplace;
-					}
-					// state 3)
-					return index < endPhpRegion ? parent.getChar(index++) : -1;
+		private static final String BAD_LOCATION_ERROR = "Bad location error ";
+		
+		final private IStructuredDocument parent;
+		final private int startPhpRegion;
+		final private int endPhpRegion;
+		final private int changeLength;
+		final private String change;
+		final private int requestStart;
+		final private int lengthToReplace;
+		
+		private int index;
+		private int internalIndex = 0;
+		
+		public DocumentReader(final IStructuredDocumentRegion flatnode, final String change, final int requestStart, final int lengthToReplace, final int newTokenOffset) {
+			this.parent = flatnode.getParentDocument();
+			this.startPhpRegion = flatnode.getStart() + getStart();
+			this.endPhpRegion = startPhpRegion + getLength();
+			this.changeLength = change.length();
+			this.index = startPhpRegion + newTokenOffset;
+			this.change = change; 
+			this.requestStart = requestStart;
+			this.lengthToReplace = lengthToReplace;
+		}
 
-				} catch (BadLocationException e) {
-					throw new IOException("Bad location error");
+		public int read() throws IOException {
+			try {
+				// state 1) 
+				if (index < requestStart) {
+					return parent.getChar(index++);
+				} // state 2)
+				if (internalIndex < changeLength) {
+					return change.charAt(internalIndex++);
+				} 
+				// skip the delted text
+				if (index < requestStart + lengthToReplace) {
+					index = requestStart + lengthToReplace;
 				}
+				// state 3)
+				return index < endPhpRegion ? parent.getChar(index++) : -1;
+
+			} catch (BadLocationException e) {
+				throw new IOException(DocumentReader.BAD_LOCATION_ERROR);
 			}
-		});
+		}
+
+		public int read(char[] b, int off, int len) throws IOException {
+			if (b == null) {
+			    throw new NullPointerException();
+			} else if ((off < 0) || (off > b.length) || (len < 0) ||
+				   ((off + len) > b.length) || ((off + len) < 0)) {
+			    throw new IndexOutOfBoundsException();
+			} else if (len == 0) {
+			    return 0;
+			}
+
+			int c = read();
+			if (c == -1) {
+			    return -1;
+			}
+			b[off] = (char)c;
+
+			int i = 1;
+			try {
+			    for (; i < len ; i++) {
+				c = read();
+				if (c == -1) {
+				    break;
+				}
+				if (b != null) {
+				    b[off + i] = (char)c;
+				}
+			    }
+			} catch (IOException ee) {
+			}
+			return i;
+		}
+
+		public void close() throws IOException {
+		}
 	}
 }
