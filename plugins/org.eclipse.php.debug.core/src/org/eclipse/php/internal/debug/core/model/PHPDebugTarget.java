@@ -783,13 +783,14 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	protected void stepReturn() throws DebugException {
 		fLastcmd = "stepReturn";
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: stepReturn ");
+		// Fix for bug #163780 - Debugger irregular state control
+		// Call for the resumed before the debugger.stepOut
+		int detail = DebugEvent.STEP_RETURN;
+		resumed(detail);
 		fStatus = debugger.stepOut(fStepOutResponseHandler);
 		if (!fStatus) {
 			Logger.log(Logger.ERROR_DEBUG, "PHPDebugTarget: debugger.stepOut return false");
 		}
-		int detail = DebugEvent.STEP_RETURN;
-		resumed(detail);
-
 	}
 
 	/**
@@ -801,14 +802,14 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	protected void stepOver() throws DebugException {
 		fLastcmd = "stepOver";
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: stepOver");
+		// Fix for bug #163780 - Debugger irregular state control
+		// Call for the resumed before the debugger.stepOver
+		int detail = DebugEvent.STEP_OVER;
+		resumed(detail);
 		fStatus = debugger.stepOver(fStepOverResponseHandler);
 		if (!fStatus) {
 			Logger.log(Logger.ERROR_DEBUG, "PHPDebugTarget: debugger.stepOver return false");
 		}
-		// Fix the 'suspend' state that was lost during stepping.
-		// Removed these 2 lines.
-//		int detail = DebugEvent.STEP_OVER;
-//		resumed(detail);
 	}
 
 	/**
@@ -820,12 +821,14 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	protected void stepInto() throws DebugException {
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: stepInto ");
 		fLastcmd = "stepInto";
+		// Fix for bug #163780 - Debugger irregular state control
+		// Call for the resumed before the debugger.stepInto
+		int detail = DebugEvent.STEP_INTO;
+		resumed(detail);
 		fStatus = debugger.stepInto(fStepIntoResponseHandler);
 		if (!fStatus) {
 			Logger.log(Logger.ERROR_DEBUG, "PHPDebugTarget: debugger.stepInto return false");
 		}
-		int detail = DebugEvent.STEP_INTO;
-		resumed(detail);
 	}
 
 	/**
