@@ -174,7 +174,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 		}
 
 		PHPValue otherValue = (PHPValue) obj;
-		System.out.println("Compare " + fVariable.getFullName() + " with " + otherValue.fVariable.getFullName());
+		// System.out.println("Compare " + fVariable.getFullName() + " with " + otherValue.fVariable.getFullName());
 
 		// the "other" values were NOT necessarily loaded yet (if that is the case then we have to load them - other.getVariables) 
 		boolean otherValueNull = otherValue.fValue.getValue() == null;
