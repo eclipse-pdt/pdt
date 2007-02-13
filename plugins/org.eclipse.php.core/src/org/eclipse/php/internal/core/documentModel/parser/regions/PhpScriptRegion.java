@@ -103,11 +103,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	}
 
 	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int requestStart, int lengthToReplace) {
-		final long currentTimeMillis = System.currentTimeMillis();
 		try {
-
-			System.out.println("update 1:" + (System.currentTimeMillis() - currentTimeMillis));
-
 			final int offset = requestStart - flatnode.getStartOffset() - getStart();
 
 			// support the <?php case
@@ -193,9 +189,7 @@ public class PhpScriptRegion extends ForeignRegion {
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 			return null; // causes to full reparse in this case
-		} finally {
-			System.out.println("update 2:" + (System.currentTimeMillis() - currentTimeMillis));
-		}
+		} 
 	}
 
 	private boolean isHereDoc(final String change, final int offset) {

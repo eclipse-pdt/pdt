@@ -68,11 +68,7 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	 * This implementation updates the php tokens model after updating WST editor model
 	 */
 	public StructuredDocumentEvent reparse() {
-		final long currentTimeMillis = System.currentTimeMillis();
-		
 		final StructuredDocumentEvent documentEvent = super.reparse();
-		
-		System.out.println("reparse:" + (System.currentTimeMillis() - currentTimeMillis));		
 		return documentEvent;
 	}
 }
