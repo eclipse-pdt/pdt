@@ -812,8 +812,8 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 					newToken = fRegionFactory.createToken(internalContext, yychar - containerStart, yylength(), yylength());
 				}
 				fEmbeddedContainer.getRegions().add(newToken);
-				fEmbeddedContainer.setLength(fEmbeddedContainer.getLength() + yylength());
-				fEmbeddedContainer.setTextLength(fEmbeddedContainer.getTextLength() + yylength());
+				fEmbeddedContainer.setLength(fEmbeddedContainer.getLength() + newToken.getLength() );
+				fEmbeddedContainer.setTextLength(fEmbeddedContainer.getTextLength() + newToken.getLength());
 				// DW, 4/16/2003 token regions no longer have parents
 				//newToken.setParent(fEmbeddedContainer);
 			}
@@ -871,8 +871,8 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 					}
 
 					fEmbeddedContainer.getRegions().add(newToken);
-					fEmbeddedContainer.setLength(fEmbeddedContainer.getLength() + yylength());
-					fEmbeddedContainer.setTextLength(fEmbeddedContainer.getTextLength() + yylength());
+					fEmbeddedContainer.setLength(fEmbeddedContainer.getLength() + newToken.getLength());
+					fEmbeddedContainer.setTextLength(fEmbeddedContainer.getTextLength() + newToken.getLength());
 					// DW, 4/16/2003 token regions no longer have parents
 					// newToken.setParent(fEmbeddedContainer);
 					longscan = false;
