@@ -12,7 +12,7 @@
 	<extension-point id="phpOutlineElementComparers" name="PHP Outline Element Comparer" schema="schema/phpOutlineElementComparers.exsd"/>
 	<extension-point id="actionFilterContributors" name="PHP Action Filter Contributor" schema="schema/actionFilterContributors.exsd"/>
  	<extension-point id="phpWizardPages" name="PHP Wizard Page" schema="schema/phpWizardPages.exsd"/>
- 	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlock.exsd"/>
+ 	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlocks.exsd"/>
 	<extension-point id="wizardAndCompositeFragments" name="Wizard and Composite Fragments" schema="schema/wizardAndCompositeFragments.exsd"/>
  	<extension-point id="phpContentAssistant" name="phpContentAssistant" schema="schema/phpContentAssistant.exsd"/>
 	
