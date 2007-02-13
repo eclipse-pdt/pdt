@@ -45,7 +45,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 * @see org.eclipse.php.internal.server.core.launch.IHTTPServerLaunch#launch(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		if (!PHPLaunchUtilities.notifyPreviousLaunches()) {
+		if (!PHPLaunchUtilities.notifyPreviousLaunches(launch)) {
 			monitor.setCanceled(true);
 			monitor.done();
 			return;

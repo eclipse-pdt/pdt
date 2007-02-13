@@ -67,7 +67,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
-		if (!PHPLaunchUtilities.notifyPreviousLaunches()) {
+		if (!PHPLaunchUtilities.notifyPreviousLaunches(launch)) {
 			monitor.setCanceled(true);
 			monitor.done();
 			return;

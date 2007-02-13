@@ -88,6 +88,21 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
+	 * Returns true if the is at least one active PHP debug session.
+	 * 
+	 * @return True, if there is an active debug session; False, otherwise.
+	 */
+	public static boolean hasPHPDebugLaunch() {
+		ILaunch[] launches = DebugPlugin.getDefault().getLaunchManager().getLaunches();
+		for (int i = 0; i < launches.length; i++) {
+			if (!launches[i].isTerminated() && ILaunchManager.DEBUG_MODE.equals(launches[i].getLaunchMode()) && launches[i].getDebugTarget() instanceof PHPDebugTarget) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Notify the existance of a previous PHP debug session in case the user launched a new session.
 	 *
 	 * @param newLaunchConfiguration
@@ -95,15 +110,13 @@ public class PHPLaunchUtilities {
 	 * @return True, if the launch can be continued; False, otherwise. 
 	 * @throws CoreException
 	 */
-	public static boolean notifyPreviousLaunches() throws CoreException {
-		ILaunch[] launches = DebugPlugin.getDefault().getLaunchManager().getLaunches();
-		boolean hasActiveLaunch = false;
-		for (int i = 0; !hasActiveLaunch && i < launches.length; i++) {
-			if (!launches[i].isTerminated() && launches[i].getDebugTarget() instanceof PHPDebugTarget) {
-				hasActiveLaunch = true;
-			}
+	public static boolean notifyPreviousLaunches(ILaunch newLaunch) throws CoreException {
+		// In case the new launch is not a debug launch, we have no problem.
+		if (!ILaunchManager.DEBUG_MODE.equals(newLaunch.getLaunchMode())) {
+			return true;
 		}
-		if (!hasActiveLaunch) {
+		// If there are no active debug launches, return true and continue with the new launch.
+		if (!hasPHPDebugLaunch()) {
 			return true;
 		}
 
