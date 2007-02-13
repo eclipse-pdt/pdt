@@ -70,7 +70,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		return autoActivationTriggers;
 	}
 
-	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer) throws BadLocationException {
+	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer, boolean explicit) throws BadLocationException {
 		final int originalOffset = viewer.getSelectedRange().x;
 		final boolean isStrict = originalOffset != offset ? true : false;
 
@@ -87,7 +87,6 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		if (fileData != null) {
 			fileName = fileData.getName();
 		}
-		boolean explicit = true;
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
@@ -179,7 +178,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		String lastWord = statmentText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
 
-		if (isInPhpDocCompletion(viewer, statmentText, offset, lastWord, selectionLength, haveSpacesAtEnd)) {
+		if (isInPhpDocCompletion(viewer, statmentText, offset, lastWord, selectionLength, haveSpacesAtEnd, explicit)) {
 			// the current position is php doc block.
 			return;
 		}
@@ -187,10 +186,12 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			// the current position is a variable in a php doc block.
 			return;
 		}
-		templateProposals = getTemplates(viewer, offset);
+		if(explicit){
+			templateProposals = getTemplates(viewer, offset);
+		}
 	}
 
-	private boolean isInPhpDocCompletion( ITextViewer viewer, CharSequence statmentText, int offset, String tagName, int selectionLength, boolean hasSpacesAtEnd) {
+	private boolean isInPhpDocCompletion( ITextViewer viewer, CharSequence statmentText, int offset, String tagName, int selectionLength, boolean hasSpacesAtEnd, boolean explicit) {
 		if (hasSpacesAtEnd) {
 			return false;
 		}
@@ -214,7 +215,9 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		CodeData[] tags = PHPDocLanguageModel.getPHPDocTags(tagName);
 		phpDocCompletionProposalGroup.setData(offset, tags, tagName, selectionLength);
 		completionProposalGroup = phpDocCompletionProposalGroup;
-		templateProposals = getTemplates(viewer, offset);
+		if(explicit){
+			templateProposals = getTemplates(viewer, offset);
+		}
 		return true;
 	}
 

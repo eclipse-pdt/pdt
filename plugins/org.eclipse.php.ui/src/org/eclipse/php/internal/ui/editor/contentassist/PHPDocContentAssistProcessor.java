@@ -12,16 +12,16 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
-public class PHPDocContentAssistProcessor implements IContentAssistProcessor {
+public class PHPDocContentAssistProcessor implements IContentAssistProcessorForPHP {
 
 	private PHPDocContentAssistSupport support = new PHPDocContentAssistSupport();
 
@@ -40,7 +40,7 @@ public class PHPDocContentAssistProcessor implements IContentAssistProcessor {
 		try {
 			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
 			try {
-				completionProposals = support.getCompletionOption(viewer, phpDOMModel, offset);
+				completionProposals = support.getCompletionOption(viewer, phpDOMModel, offset, isExplicitRequest);
 			} catch (Exception e) {
 				Logger.logException(e);
 				return null;
@@ -50,6 +50,7 @@ public class PHPDocContentAssistProcessor implements IContentAssistProcessor {
 			}
 		} finally {
 			structuredModel.releaseFromRead();
+			isExplicitRequest = true;
 		}
 		return completionProposals;
 	}
@@ -72,6 +73,13 @@ public class PHPDocContentAssistProcessor implements IContentAssistProcessor {
 
 	public IContextInformationValidator getContextInformationValidator() {
 		return null;
+	}
+
+	private boolean isExplicitRequest = true;
+
+	public void setAutoActivationRequest(boolean b) {
+		//this is a bit confusing here but if this is an auto activation then it is not an explicit request.
+		isExplicitRequest = !b;
 	}
 
 }

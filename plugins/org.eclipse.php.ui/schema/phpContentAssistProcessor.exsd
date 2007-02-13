@@ -64,7 +64,7 @@
                   Class of this PHP content assist processor
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.editor.contentassist.IContentAssistProccesorForPHP"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.jface.text.contentassist.IContentAssistProcessor"/>
                </appInfo>
             </annotation>
          </attribute>

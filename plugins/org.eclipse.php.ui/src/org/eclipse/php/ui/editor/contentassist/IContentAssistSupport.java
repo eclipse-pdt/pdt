@@ -7,7 +7,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 
 public interface IContentAssistSupport {
 
-	public ICompletionProposal[] getCompletionOption(ITextViewer viewer, DOMModelForPHP phpDOMModel, int offset) throws BadLocationException;
+	public ICompletionProposal[] getCompletionOption(ITextViewer viewer, DOMModelForPHP phpDOMModel, int offset, boolean explicit) throws BadLocationException;
 
 	public char[] getAutoactivationTriggers();
 

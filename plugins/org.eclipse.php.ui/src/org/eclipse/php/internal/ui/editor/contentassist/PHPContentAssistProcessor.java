@@ -16,18 +16,18 @@ import java.util.ArrayList;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.ui.text.PHPCodeReader;
+import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
-public class PHPContentAssistProcessor implements IContentAssistProcessor {
+public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP {
 
 	// This is the resource that it's being edited in the Editor
 	protected IContentAssistSupport support = new ContentAssistSupport();
@@ -51,7 +51,7 @@ public class PHPContentAssistProcessor implements IContentAssistProcessor {
 		try {
 			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
 			try {
-				completionProposals = support.getCompletionOption(viewer, phpDOMModel, offset);
+				completionProposals = support.getCompletionOption(viewer, phpDOMModel, offset, isExplicitRequest);
 			} catch (Exception e) {
 				Logger.logException(e);
 				return new ICompletionProposal[0];
@@ -61,6 +61,7 @@ public class PHPContentAssistProcessor implements IContentAssistProcessor {
 			}
 		} finally {
 			structuredModel.releaseFromRead();
+			isExplicitRequest = true;
 		}
 		return completionProposals;
 	}
@@ -144,5 +145,17 @@ public class PHPContentAssistProcessor implements IContentAssistProcessor {
 			return false;
 
 		return Character.isJavaIdentifierPart((char) curr) || Character.isJavaIdentifierStart((char) curr);
+	}
+	/**
+	 * The protocol here is that we know when it is an implicit request - since we ask for it in {@link PHPContentAssistant}
+	 * The explicit request comes fromn the editor and we don't control it.
+	 * 
+	 *  so we set it as implicit when we are asked for by PHPContentAssistant and unset it after the first request. 
+	 */
+	private boolean isExplicitRequest = true;
+	
+	public void setAutoActivationRequest(boolean b) {
+		//this is a bit confusing here but if this is an auto activation then it is not an explicit request.
+		isExplicitRequest = !b;
 	}
 }

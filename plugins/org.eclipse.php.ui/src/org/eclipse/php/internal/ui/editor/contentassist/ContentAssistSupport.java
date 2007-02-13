@@ -119,18 +119,18 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		PreferenceConstants.getPreferenceStore().addPropertyChangeListener(WeakPropertyChangeListener.create(prefChangeListener, PreferenceConstants.getPreferenceStore()));
 	}
 
-	public ICompletionProposal[] getCompletionOption(ITextViewer viewer, DOMModelForPHP phpDOMModel, int offset) throws BadLocationException {
-		ICompletionProposal[] codeCompletionOptions = getCodeCompletionOptions(viewer, phpDOMModel, offset);
+	public ICompletionProposal[] getCompletionOption(ITextViewer viewer, DOMModelForPHP phpDOMModel, int offset, boolean explicit) throws BadLocationException {
+		ICompletionProposal[] codeCompletionOptions = getCodeCompletionOptions(viewer, phpDOMModel, offset, explicit);
 		if (codeCompletionOptions == null) {
 			return new ICompletionProposal[0];
 		}
 		return codeCompletionOptions;
 	}
 
-	private ICompletionProposal[] getCodeCompletionOptions(ITextViewer viewer, DOMModelForPHP phpEditorModel, int offset) throws BadLocationException {
+	private ICompletionProposal[] getCodeCompletionOptions(ITextViewer viewer, DOMModelForPHP phpEditorModel, int offset, boolean explicit) throws BadLocationException {
 		completionProposalGroup = null;
 		templateProposals = null;
-		calcCompletionOption(phpEditorModel, offset, viewer);
+		calcCompletionOption(phpEditorModel, offset, viewer, explicit);
 		if (completionProposalGroup == null) {
 			return templateProposals;
 		}
@@ -160,7 +160,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return autoActivationTriggers;
 	}
 
-	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer) throws BadLocationException {
+	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer, boolean explicit) throws BadLocationException {
 
 		final int originalOffset = viewer.getSelectedRange().x;
 		final boolean isStrict = originalOffset != offset ? true : false;
@@ -178,7 +178,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (fileData != null) {
 			fileName = fileData.getName();
 		}
-		boolean explicit = true;
+
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
