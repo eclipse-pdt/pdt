@@ -109,7 +109,7 @@
        	point="org.eclipse.debug.ui.variableValueEditors">
     	<variableValueEditor
           modelId="org.eclipse.php.debug.core"
-          class="org.eclipse.php.debug.ui.actions.PHPVariableValueEditor"/>
+          class="org.eclipse.php.internal.debug.ui.actions.PHPVariableValueEditor"/>
  	</extension>
  	<extension
          point="org.eclipse.debug.ui.consoleColorProviders">
