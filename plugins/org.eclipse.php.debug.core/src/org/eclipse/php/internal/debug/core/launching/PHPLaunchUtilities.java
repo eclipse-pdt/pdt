@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -28,9 +29,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 
 /**
  * Utilities that are shared to all the PHP launches.
@@ -101,7 +100,7 @@ public class PHPLaunchUtilities {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Notify the existance of a previous PHP debug session in case the user launched a new session.
 	 *
@@ -143,24 +142,88 @@ public class PHPLaunchUtilities {
 		disp.syncExec(new Runnable() {
 			public void run() {
 				// Display a dialog to notify the existance of a previous active launch.
-				MessageDialogWithToggle m = MessageDialogWithToggle.openYesNoQuestion(
-					disp.getActiveShell(), 
-					PHPDebugCoreMessages.PHPLaunchUtilities_confirmation, 
-					PHPDebugCoreMessages.PHPLaunchUtilities_multipleLaunchesPrompt, PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision, 
-					false, 
-					store,
+				MessageDialogWithToggle m = MessageDialogWithToggle.openYesNoQuestion(disp.getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_confirmation, PHPDebugCoreMessages.PHPLaunchUtilities_multipleLaunchesPrompt, PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision, false, store,
 					PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES);
 				resultHolder.setReturnCode(m.getReturnCode());
 			}
 		});
 		switch (resultHolder.getReturnCode()) {
 			case IDialogConstants.YES_ID:
-			case IDialogConstants.OK_ID :
+			case IDialogConstants.OK_ID:
 				return true;
-			case IDialogConstants.NO_ID :
+			case IDialogConstants.NO_ID:
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Switch from the PHP debug perspective to the PHP perspective (in case we are not using
+	 * it already).
+	 * This method is called when the last active PHP debug session was terminated.
+	 */
+	public static void switchToPHPPerspective() {
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		display.asyncExec(new Runnable() {
+			public void run() {
+				String perspectiveID = PHPUiPlugin.PERSPECTIVE_ID;
+				IWorkbench workbench = PlatformUI.getWorkbench();
+				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+
+				if (shouldSwitchToPHPPerspective(perspectiveID)) {
+					try {
+						workbench.showPerspective(perspectiveID, window);
+					} catch (WorkbenchException e) {
+						PHPUiPlugin.log(e);
+					}
+				}
+			}
+		});
+	}
+
+	// Returns true iff the PHP perspective should be displayed.
+	private static boolean shouldSwitchToPHPPerspective(String perspectiveID) {
+		// check whether we should ask the user.
+		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+		String option = store.getString(PreferenceConstants.SWITCH_BACK_TO_PHP_PERSPECTIVE);
+		if (MessageDialogWithToggle.ALWAYS.equals(option)) {
+			return true;
+		}
+		if (MessageDialogWithToggle.NEVER.equals(option)) {
+			return false;
+		}
+
+		// Check whether the desired perspective is already active.
+		IPerspectiveRegistry registry = PlatformUI.getWorkbench().getPerspectiveRegistry();
+		IPerspectiveDescriptor perspective = registry.findPerspectiveWithId(perspectiveID);
+		if (perspective == null) {
+			return false;
+		}
+
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				IPerspectiveDescriptor current = page.getPerspective();
+				if (current != null && current.getId().equals(perspectiveID)) {
+					return false;
+				}
+			}
+
+			// Ask the user whether to switch
+			MessageDialogWithToggle m = MessageDialogWithToggle.openYesNoQuestion(window.getShell(), PHPDebugCoreMessages.PHPLaunchUtilities_PHPPerspectiveSwitchTitle, NLS.bind(PHPDebugCoreMessages.PHPLaunchUtilities_PHPPerspectiveSwitchMessage, new String[] { perspective.getLabel() }),
+				PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision, false, store, PreferenceConstants.SWITCH_BACK_TO_PHP_PERSPECTIVE);
+
+			int result = m.getReturnCode();
+			switch (result) {
+				case IDialogConstants.YES_ID:
+				case IDialogConstants.OK_ID:
+					return true;
+				case IDialogConstants.NO_ID:
+					return false;
+			}
+		}
+		return false;
 	}
 
 	/**
