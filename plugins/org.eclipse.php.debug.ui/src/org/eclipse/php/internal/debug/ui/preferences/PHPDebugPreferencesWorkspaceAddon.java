@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.ui.preferences;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
@@ -39,14 +40,14 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractPHPPreferencePage
 	private Button fOpenInBrowser;
 	private Button fOpenDebugViews;
 	private Button fAutoSaveDirty;
-	private PropertyPage propertyPage;
+	private PreferencePage propertyPage;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = addPageContents(parent);
 		addWorkspacePreferenceSubsection(createSubsection(composite, PHPDebugUIMessages.PhpDebugPreferencePage_0));
 	}
 
-	public void initializeValues(PropertyPage propertyPage) {
+	public void initializeValues(PreferencePage propertyPage) {
 		this.propertyPage = propertyPage;
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		fUsePHPDebugPerspective.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE));

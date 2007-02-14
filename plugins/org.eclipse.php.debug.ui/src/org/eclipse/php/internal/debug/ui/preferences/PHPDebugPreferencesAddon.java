@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
@@ -47,14 +48,14 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	private Combo fDefaultServer;
 	private Combo fDefaultPHPExe;
 	private EncodingSettings fEncodingSettings;
-	private PropertyPage propertyPage;
+	private PreferencePage propertyPage;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = addPageContents(parent);
 		addProjectPreferenceSubsection(createSubsection(composite, PHPDebugUIMessages.PhpDebugPreferencePage_6));
 	}
 
-	public void initializeValues(PropertyPage propertyPage) {
+	public void initializeValues(PreferencePage propertyPage) {
 		this.propertyPage = propertyPage;
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		IScopeContext[] preferenceScopes = createPreferenceScopes(propertyPage);
