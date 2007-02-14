@@ -17,21 +17,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IDebugEventSetListener;
+import org.eclipse.debug.core.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.*;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -49,6 +44,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
     public static final String ID="org.eclipse.php.debug.ui";
 	public static final int INTERNAL_ERROR = 10001;
     private ShowViewListener showViewListener;
+    private TerminateDebugLaunchListener finishDebugLaunchListener;
     /**
      * The constructor.
      */
@@ -63,6 +59,11 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
         super.start(context);
         showViewListener = new ShowViewListener();
         DebugPlugin.getDefault().addDebugEventListener(showViewListener);
+        
+        // Install the TerminateDebugLaunchListener, which is responsible of asking
+        // the user to return to the PHP perspective when all the debug sessions where terminated.
+        finishDebugLaunchListener = new TerminateDebugLaunchListener();
+        DebugPlugin.getDefault().getLaunchManager().addLaunchListener(finishDebugLaunchListener);
     }
 
     /**
@@ -73,6 +74,12 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
         if (showViewListener != null) {
         	DebugPlugin.getDefault().removeDebugEventListener(showViewListener);
         }
+        
+        // Uninstall the debug event listener.
+        if (finishDebugLaunchListener != null) {
+        	DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(finishDebugLaunchListener);
+        }
+        
         plugin = null;
     }
 
@@ -193,13 +200,12 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
         return project;
     }
     
-    private class ShowViewListener implements IDebugEventSetListener {
+    private static class ShowViewListener implements IDebugEventSetListener {
         public void handleDebugEvents(DebugEvent[] events) {
             if (events != null) {
                 int size = events.length;
                 for (int i = 0; i < size; i++) {
                     DebugEvent event = (DebugEvent)events[i];
-                    int kind = event.getKind();
                     if (event.getKind() == DebugEvent.CREATE) {
                         Object obj = events[i].getSource();
                     
@@ -241,4 +247,34 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
         }
     };
 
+    /*
+	 * A class that is responsible of asking the user to return to the PHP perspective 
+	 * when all the debug sessions where terminated.
+	 */
+	private static class TerminateDebugLaunchListener implements ILaunchesListener2 {
+
+		/**
+		 * Handle only the termination events.
+		 */
+		public void launchesTerminated(ILaunch[] launches) {
+			// In case we have an active debug launches, we can terminate the
+			// event handling because there is no need to switch perspective.
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					if (!PHPLaunchUtilities.hasPHPDebugLaunch()) {
+						PHPLaunchUtilities.switchToPHPPerspective();
+					}
+				}
+			});
+		}
+
+		public void launchesAdded(ILaunch[] launches) {
+		}
+
+		public void launchesChanged(ILaunch[] launches) {
+		}
+
+		public void launchesRemoved(ILaunch[] launches) {
+		}
+	}
 }

@@ -27,7 +27,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String InstalledPHPsBlock_16;
 
 	public static String PHPLaunchingPreferencePage_Always;
-	public static String PHPLaunchingPreferencePage_message;
+	public static String PHPLaunchingPreferencePage_multipleMessage;
+	public static String PHPLaunchingPreferencePage_switchToPHPMessage;
 	public static String PHPLaunchingPreferencePage_Never;
 
 	public static String PHPLaunchingPreferencePage_Prompt;

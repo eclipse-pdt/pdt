@@ -44,6 +44,7 @@ public class PHPLaunchingPreferencePage extends PreferencePage implements IWorkb
 	 */
 	public PHPLaunchingPreferencePage() {
 		super();
+		// Take the PHPUiPlugin for compatability with other plugins that are not exposed to this debug-ui plugin.
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 	}
 
@@ -77,11 +78,16 @@ public class PHPLaunchingPreferencePage extends PreferencePage implements IWorkb
 	protected Control createContents(Composite parent) {
 		fFieldEditors = new ArrayList();
 		Composite comp = createComposite(parent);
-		//save dirty editors
-		FieldEditor edit = new RadioGroupFieldEditor(PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES, PHPDebugUIMessages.PHPLaunchingPreferencePage_message, 3, new String[][] { { PHPDebugUIMessages.PHPLaunchingPreferencePage_Always, MessageDialogWithToggle.ALWAYS }, { PHPDebugUIMessages.PHPLaunchingPreferencePage_Never, MessageDialogWithToggle.NEVER }, { PHPDebugUIMessages.PHPLaunchingPreferencePage_Prompt, MessageDialogWithToggle.PROMPT } }, comp, true);
+		
+		// Save dirty editors...
+		// Allow multiple debug sessions
+		FieldEditor edit = new RadioGroupFieldEditor(PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES, PHPDebugUIMessages.PHPLaunchingPreferencePage_multipleMessage, 3, new String[][] { { PHPDebugUIMessages.PHPLaunchingPreferencePage_Always, MessageDialogWithToggle.ALWAYS }, { PHPDebugUIMessages.PHPLaunchingPreferencePage_Never, MessageDialogWithToggle.NEVER }, { PHPDebugUIMessages.PHPLaunchingPreferencePage_Prompt, MessageDialogWithToggle.PROMPT } }, comp, true);
 		fFieldEditors.add(edit);
-
-		//init the field editors
+		
+		// Switch back to PHP prespective when the debug is terminated
+		edit = new RadioGroupFieldEditor(PreferenceConstants.SWITCH_BACK_TO_PHP_PERSPECTIVE, PHPDebugUIMessages.PHPLaunchingPreferencePage_switchToPHPMessage, 3, new String[][] { { PHPDebugUIMessages.PHPLaunchingPreferencePage_Always, MessageDialogWithToggle.ALWAYS }, { PHPDebugUIMessages.PHPLaunchingPreferencePage_Never, MessageDialogWithToggle.NEVER }, { PHPDebugUIMessages.PHPLaunchingPreferencePage_Prompt, MessageDialogWithToggle.PROMPT } }, comp, true);
+		fFieldEditors.add(edit);
+		
 		initFieldEditors();
 		return comp;
 	}
