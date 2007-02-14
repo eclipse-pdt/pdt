@@ -55,6 +55,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public static final int INTERNAL_ERROR = 10001;
 
 	public static final boolean isDebugMode;
+
+	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective";
+	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.php.ui/debug");
 		isDebugMode = value != null && value.equalsIgnoreCase("true");
@@ -95,7 +98,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
             }
 
             public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-            	if(!perspective.getId().equals("org.eclipse.php.perspective"))
+            	if(!perspective.getId().equals(PERSPECTIVE_ID))
             		return;
             	boolean perspectiveWasResetted = store.getBoolean(RESET_PERSPECTIVE_PROP);  
             	if (!perspectiveWasResetted) {

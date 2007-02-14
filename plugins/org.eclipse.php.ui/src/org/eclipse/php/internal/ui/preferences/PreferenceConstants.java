@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.preferences;
 import java.util.Locale;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -792,15 +793,16 @@ public class PreferenceConstants {
 	/**
 	 * A named preference that defines the key for the default PHP Manual site.
 	 */
-	public static final String PHP_MANUAL_SITE = "phpManualSite";
+	public static final String PHP_MANUAL_SITE = "phpManualSite"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that defines the key for the stored PHP Manual sites 
 	 */
-	public static final String PHP_MANUAL_SITES = "phpManualSites";
+	public static final String PHP_MANUAL_SITES = "phpManualSites"; //$NON-NLS-1$
 
 	public static final String PHP_MANUAL_OPEN_IN_NEW_BROWSER = "phpManualOpenInNewBrowser"; //$NON-NLS-1$
 
+	public static final String SWITCH_BACK_TO_PHP_PERSPECTIVE = "switchBackToPHPPerspective"; //$NON-NLS-1$
 	/**
 	 * some constants for auto-ident Smart Tab
 	 */
@@ -934,7 +936,7 @@ public class PreferenceConstants {
 
 		store.setDefault(NEW_PHP_FILE_TEMPLATE, "New simple PHP file"); //$NON-NLS-1$
 
-		store.setDefault(ALLOW_MULTIPLE_LAUNCHES, "ask"); //$NON-NLS-1$
+		store.setDefault(ALLOW_MULTIPLE_LAUNCHES, MessageDialogWithToggle.PROMPT);
 
 		String mod1Name = Action.findModifierString(SWT.MOD1); // SWT.COMMAND on Mac; SWT.CONTROL elsewhere
 		store.setDefault(EDITOR_TEXT_HOVER_MODIFIERS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
@@ -943,6 +945,8 @@ public class PreferenceConstants {
 
 		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer.toString(new PHPManualConfig(PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION, false)));
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
+		
+		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.PROMPT);
 
 		// default locale
 		if ((store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE)).equals("")) {
