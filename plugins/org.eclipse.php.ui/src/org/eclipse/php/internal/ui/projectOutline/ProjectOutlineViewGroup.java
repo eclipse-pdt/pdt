@@ -15,7 +15,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.php.internal.ui.actions.OpenEditorActionGroup;
-import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.workingset.ViewActionGroup;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionContext;
@@ -27,7 +26,6 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 
 	protected ProjectOutlinePart fPart;
 	//private ToggleAllAction toggleAllAction;
-	private SortAction sortAction;
 	private ToggleLinkingAction toggleLinking;
 	private CollapseAllAction collapseAllAction;
 	private OpenEditorActionGroup fOpenEditorActionGroup;
@@ -52,8 +50,6 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 
 //		toggleAllAction = new ToggleAllAction(this); //$NON-NLS-1$
 //		toggleAllAction.setText("Show All");
-
-		sortAction = new SortAction(part.getViewer());
 
 		collapseAllAction = new CollapseAllAction(part);
 
@@ -86,7 +82,6 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 
 	void fillToolBar(IToolBarManager toolBar) {
 		toolBar.add(collapseAllAction);
-		toolBar.add(sortAction);
 		toolBar.add(toggleLinking);
 	}
 
