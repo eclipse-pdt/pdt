@@ -8,13 +8,27 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.ui;
+package org.eclipse.php.internal.ui.preferences;
 
-public interface PHPUiConstants {
-	public static final int INTERNAL_ERROR = 10001;
-	public static final String PHP_EDITOR_ID = "org.eclipse.php.editor";
-	
-			// disable cut/copy/paste/rename etc on php elements within file
-	public static final boolean DISABLE_ELEMENT_REFACTORING=true;
-	public static final String CONTENT_ASSIST_PROFERENCE_PAGE = "org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage";
+import org.eclipse.php.internal.ui.PHPUiConstants;
+
+/**
+ * 
+ * @author guy.g
+ *
+ */
+public class PHPContentAssistPreferencePage extends AbstractMultiBlockPreferencePage {
+
+	protected void setDescription() {
+		setDescription("");
+	}
+
+	protected void setPreferenceStore() {
+		setPreferenceStore(PreferenceConstants.getPreferenceStore());
+	}
+
+	protected String getPreferencePageID() {
+		return PHPUiConstants.CONTENT_ASSIST_PROFERENCE_PAGE;
+	}
+
 }

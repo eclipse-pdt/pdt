@@ -878,8 +878,8 @@
 			name="%syntaxColoringPreferencePageName" />
 		<page
 			category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
-			class="org.eclipse.php.internal.ui.preferences.PHPCodeAssistPreferencePage"
-			id="org.eclipse.php.ui.preferences.PHPCodeAssistPreferencePage"
+			class="org.eclipse.php.internal.ui.preferences.PHPContentAssistPreferencePage"
+			id="org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"
 			name="%codeAssistPreferencePageName" />
 		<page
 			category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
@@ -1374,6 +1374,31 @@
       <markerTypeCategory name="%PhpProblemFilterCategory.name">
          <markerTypeReference id="org.eclipse.php.core.phpproblemmarker"/>
       </markerTypeCategory>
+   </extension>
+	<extension
+         point="org.eclipse.php.ui.phpPreferencePageBlocks">
+      <block
+            class="org.eclipse.php.internal.ui.preferences.PHPContentAssistFiltersConfigurationBlock"
+            id="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistFilters"
+            name="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistFilters"
+            pageId="org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"/>
+   </extension>
+   <extension
+         point="org.eclipse.php.ui.phpPreferencePageBlocks">
+      <block
+            class="org.eclipse.php.internal.ui.preferences.PHPContentAssistOptionsConfigurationBlock"
+            id="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistOptions"
+            name="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistOptions"
+            pageId="org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.php.ui.phpPreferencePageBlocks">
+      <block
+            class="org.eclipse.php.internal.ui.preferences.PHPContentAssistAutoActivationConfigurationBlock"
+            id="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistAutoActivation"
+            name="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistAutoActivation"
+            pageId="org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"/>
    </extension>
    
 </plugin>
