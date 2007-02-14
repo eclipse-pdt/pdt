@@ -15,6 +15,7 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.php.ui.preferences.IPHPPreferencePageBlock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -78,7 +79,7 @@ public abstract class AbstractPHPPreferencePageBlock implements IPHPPreferencePa
     }
 	
 
-	protected IScopeContext[] createPreferenceScopes(PropertyPage propertyPage) {
+	protected IScopeContext[] createPreferenceScopes(PreferencePage propertyPage) {
 		IProject project = getProject(propertyPage);
         if (project != null) {
             return new IScopeContext[] { new ProjectScope(project), new InstanceScope(), new DefaultScope() };
@@ -86,10 +87,11 @@ public abstract class AbstractPHPPreferencePageBlock implements IPHPPreferencePa
         return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
 	}
 	
-	protected IProject getProject(PropertyPage propertyPage) {
-		if (propertyPage == null) {
+	protected IProject getProject(PreferencePage preferencePage) {
+		if (preferencePage == null) {
 			return null;
 		}
+		PropertyPage propertyPage = (PropertyPage)preferencePage;
         if (propertyPage.getElement() != null && propertyPage.getElement() instanceof IProject) {
             return (IProject) propertyPage.getElement();
         }

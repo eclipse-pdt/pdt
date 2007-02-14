@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.ui.preferences;
 
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
  * A PHP debug preferences page addon definition interface for any extension point
@@ -31,7 +31,7 @@ public interface IPHPPreferencePageBlock {
 	 * 
 	 * @param propertyPage The PropertyPage that this addon connected to.
 	 */
-	public void initializeValues(PropertyPage propertyPage);
+	public void initializeValues(PreferencePage propertyPage);
 
 	/**
 	 * Perform any operation needed when a OK is pressed.
