@@ -209,7 +209,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 	}
 
 	public PHPFunctionData getFunction(String fileName, String functionName) {
-		Collection functions = constantsDB.getCodeData(functionName);
+		Collection functions = functionsDB.getCodeData(functionName);
 		if (functions == null || functions.size() == 0) {
 			return null;
 		}
