@@ -121,6 +121,10 @@ public class PhpScriptRegion extends ForeignRegion {
 			final int oldEndOffset = offset + lengthToReplace;
 			final ITextRegion tokenEnd = tokensContaier.getToken(oldEndOffset);
 			int newTokenOffset = tokenStart.getStart();
+			
+			if (isHereDoc(tokenStart)) {
+				return null;
+			}
 
 			// get start and end states
 			final LexerState startState = tokensContaier.getState(newTokenOffset);
@@ -190,8 +194,17 @@ public class PhpScriptRegion extends ForeignRegion {
 		} 
 	}
 
-	private boolean isHereDoc(final String change, final int offset) {
-		return offset > 2 ? change.charAt(offset - 1) == '<' : false;
+	private final boolean isHereDoc(final ITextRegion tokenStart) {
+		if (tokenStart.getType() == PHPRegionTypes.PHP_TOKEN) {
+			try {
+				final ITextRegion token = tokensContaier.getToken(tokenStart.getStart() - 1);
+				return (token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2);
+			} catch (BadLocationException e) {
+				// never happens
+				assert false;
+			}
+		}
+		return false;
 	}
 
 	private boolean startQuoted(final String text) {
