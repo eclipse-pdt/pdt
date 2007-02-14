@@ -16,6 +16,7 @@ import java.util.ListIterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
@@ -195,6 +196,17 @@ public class PhpScriptRegion extends ForeignRegion {
 		} 
 	}
 
+	/**
+	 * Reparses the region given the 
+	 * @param doc
+	 * @param start
+	 * @param length
+	 */
+	public void completeReparse(IDocument doc, int start, int length) {
+		PhpLexer lexer = getPhpLexer(project, new BlockDocumentReader(doc, start, length), null);
+		completeReparse(lexer);
+	}
+
 	private final boolean isHereDoc(final ITextRegion tokenStart) {
 		if (tokenStart.getType() == PHPRegionTypes.PHP_TOKEN) {
 			try {
@@ -282,6 +294,9 @@ public class PhpScriptRegion extends ForeignRegion {
 	 * @return a list of php tokens
 	 */
 	private void setPhpTokens(PhpLexer lexer) {
+		setLength(0);
+		setTextLength(0);
+		
 		isFullReparsed = true;
 		assert lexer != null;
 
@@ -366,6 +381,70 @@ public class PhpScriptRegion extends ForeignRegion {
 
 			} catch (BadLocationException e) {
 				throw new IOException(DocumentReader.BAD_LOCATION_ERROR);
+			}
+		}
+
+		public int read(char[] b, int off, int len) throws IOException {
+			if (b == null) {
+			    throw new NullPointerException();
+			} else if ((off < 0) || (off > b.length) || (len < 0) ||
+				   ((off + len) > b.length) || ((off + len) < 0)) {
+			    throw new IndexOutOfBoundsException();
+			} else if (len == 0) {
+			    return 0;
+			}
+
+			int c = read();
+			if (c == -1) {
+			    return -1;
+			}
+			b[off] = (char)c;
+
+			int i = 1;
+			try {
+			    for (; i < len ; i++) {
+				c = read();
+				if (c == -1) {
+				    break;
+				}
+				if (b != null) {
+				    b[off + i] = (char)c;
+				}
+			    }
+			} catch (IOException ee) {
+			}
+			return i;
+		}
+
+		public void close() throws IOException {
+		}
+	}
+
+	/**
+	 * Returns a stream that represents the document
+	 * @param StructuredDocument
+	 * @param start
+	 * @param length
+	 */
+	public class BlockDocumentReader extends Reader {
+
+		private static final String BAD_LOCATION_ERROR = "Bad location error ";
+		
+		final private IDocument parent;
+		private int startPhpRegion;
+		final private int endPhpRegion;
+	
+		public BlockDocumentReader(final IDocument parent, final int startPhpRegion, final int length) {
+			this.parent = parent;
+			this.startPhpRegion = startPhpRegion;
+			this.endPhpRegion = startPhpRegion + length;
+		}
+
+		public int read() throws IOException {
+			try {
+				return startPhpRegion < endPhpRegion ? parent.getChar(startPhpRegion++) : -1;
+			} catch (BadLocationException e) {
+				throw new IOException(BAD_LOCATION_ERROR + startPhpRegion);
 			}
 		}
 
