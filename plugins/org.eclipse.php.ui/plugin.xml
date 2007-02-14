@@ -1380,7 +1380,7 @@
       <block
             class="org.eclipse.php.internal.ui.preferences.PHPContentAssistFiltersConfigurationBlock"
             id="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistFilters"
-            name="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistFilters"
+            name="org.eclipse.php.ui.PHPContentAssistPreferencePage.200_contentAssistFilters"
             pageId="org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"/>
    </extension>
    <extension
@@ -1388,7 +1388,7 @@
       <block
             class="org.eclipse.php.internal.ui.preferences.PHPContentAssistOptionsConfigurationBlock"
             id="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistOptions"
-            name="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistOptions"
+            name="org.eclipse.php.ui.PHPContentAssistPreferencePage.100_contentAssistOptions"
             pageId="org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"/>
    </extension>
 
@@ -1397,7 +1397,7 @@
       <block
             class="org.eclipse.php.internal.ui.preferences.PHPContentAssistAutoActivationConfigurationBlock"
             id="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistAutoActivation"
-            name="org.eclipse.php.ui.PHPContentAssistPreferencePage.contentAssistAutoActivation"
+            name="org.eclipse.php.ui.PHPContentAssistPreferencePage.300_contentAssistAutoActivation"
             pageId="org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"/>
    </extension>
    

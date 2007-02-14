@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -56,8 +58,14 @@ public abstract class AbstractMultiBlockPreferencePage extends PreferencePage im
 		Set keys = map.keySet();
 
 		fConfigurationBlocks = new IPHPPreferencePageBlock[keys.size()];
+		ArrayList keysList = new ArrayList();
+		for (Iterator iter = keys.iterator(); iter.hasNext();) {
+			String comperableName = (String) iter.next();
+			keysList.add(comperableName);
+		}
+		Collections.sort(keysList);
 		int i = 0;
-		for (Iterator iter = keys.iterator(); iter.hasNext(); i++) {
+		for (Iterator iter = keysList.iterator(); iter.hasNext(); i++) {
 			String comperableName = (String) iter.next();
 			fConfigurationBlocks[i] = (IPHPPreferencePageBlock) map.get(comperableName);
 		}
