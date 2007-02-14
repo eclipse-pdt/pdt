@@ -102,6 +102,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	}
 
 	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int requestStart, int lengthToReplace) {
+		isFullReparsed = true;
 		try {
 			final int offset = requestStart - flatnode.getStartOffset() - getStart();
 
