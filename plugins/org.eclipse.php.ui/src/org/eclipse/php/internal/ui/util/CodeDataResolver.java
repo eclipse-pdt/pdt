@@ -15,6 +15,9 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
@@ -80,7 +83,6 @@ public class CodeDataResolver {
 			return null;
 		}
 		String fileName = fileData.getName();
-
 		PHPProjectModel projectModel = editorModel.getProjectModel();
 
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
@@ -109,6 +111,7 @@ public class CodeDataResolver {
 		}
 
 		String type = textRegion.getType();
+
 		CodeData tmp;
 		if ((tmp = getIfInArrayOptionQuotes(projectModel, fileName, type, offset, statmentText)) != null) {
 			// the current position is inside quotes as a parameter for an array.
@@ -142,7 +145,7 @@ public class CodeDataResolver {
 		String lastWord = statmentText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
 
-		if (haveSpacesAtEnd && (tmp = getIfNewOrInstanceofStatment(projectModel, lastWord, "", offset, type)) != null) {
+		if (haveSpacesAtEnd && (tmp = getIfNewOrInstanceofStatment(fileName, projectModel, lastWord, "", offset, type)) != null) {
 			// the current position is inside new or instanceof statment.
 			return tmp;
 		}
@@ -157,7 +160,7 @@ public class CodeDataResolver {
 		startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, endPosition, true);
 		String firstWord = statmentText.subSequence(startPosition, endPosition).toString();
 
-		if (!haveSpacesAtEnd && (tmp = getIfNewOrInstanceofStatment(projectModel, firstWord, lastWord, offset, type)) != null) {
+		if (!haveSpacesAtEnd && (tmp = getIfNewOrInstanceofStatment(fileName, projectModel, firstWord, lastWord, offset, type)) != null) {
 			// the current position is inside new or instanceof statment.
 			return tmp;
 		}
@@ -189,7 +192,9 @@ public class CodeDataResolver {
 		if (PHPPartitionTypes.isPHPQuotesState(type) || (type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(textRegion) + textRegion.getLength() <= offset)) {
 			return null;
 		}
-
+		if ("".equals(elementName)) {
+			return null;
+		}
 		CodeData function = projectModel.getFunction(fileName, elementName);
 		CodeData constant = projectModel.getConstant(fileName, elementName);
 		CodeData classs = projectModel.getClass(fileName, elementName);
@@ -826,17 +831,13 @@ public class CodeDataResolver {
 		return classes;
 	}
 
-	private CodeData getIfNewOrInstanceofStatment(PHPProjectModel projectModel, String keyword, String elementName, int offset, String type) {
+	private CodeData getIfNewOrInstanceofStatment(String fileName, PHPProjectModel projectModel, String keyword, String elementName, int offset, String type) {
 		if (PHPPartitionTypes.isPHPQuotesState(type)) {
 			return null;
 		}
 
-		if (keyword.equalsIgnoreCase("instanceof")) {
-			return filterExact(getClassList(projectModel, elementName, offset, false), elementName);
-		}
-
-		if (keyword.equalsIgnoreCase("new")) {
-			return filterExact(getClassList(projectModel, elementName, offset, true), elementName);
+		if (keyword.equalsIgnoreCase("instanceof") || keyword.equalsIgnoreCase("new")) {
+			return projectModel.getClass(fileName, elementName);
 		}
 
 		return null;
