@@ -80,9 +80,6 @@ public class PHPProblemsValidator {
 					}
 					String descr = markers[i].getDescription();
 					UserData userData = markers[i].getUserData();
-					Message mess = new LocalizedMessage(IMessage.HIGH_SEVERITY, descr, phpFile);
-					int lineNo = userData.getStopLine() + 1;
-					mess.setLineNo(lineNo);
 
 					int prio = IMarker.PRIORITY_HIGH;
 					createMarker(phpFile, userData, PHP_PROBLEM_MARKER_TYPE, descr, prio);
