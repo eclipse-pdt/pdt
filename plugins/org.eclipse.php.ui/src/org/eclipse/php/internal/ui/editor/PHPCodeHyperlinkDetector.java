@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
@@ -30,12 +29,13 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.hover.PHPCodeHyperLink;
 import org.eclipse.php.internal.ui.util.CodeDataResolver;
 import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 
-public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
+public class PHPCodeHyperlinkDetector implements IHyperlinkDetectorForPHP {
 
 	private static final Pattern QUOTES_PATTERN = Pattern.compile("^[\"\']|[\"\']$");
 	private StructuredTextPartitioner fTextPartitioner;
