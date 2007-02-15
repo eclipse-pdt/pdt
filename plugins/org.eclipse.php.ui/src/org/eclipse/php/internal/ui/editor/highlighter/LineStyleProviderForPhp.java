@@ -513,8 +513,6 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	}
 
 	public void loadColors() {
-		assert getTextAttributes() != null && getTextAttributes().size() == 0;
-
 		addTextAttribute(PreferenceConstants.EDITOR_NORMAL_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_KEYWORD_COLOR);
