@@ -14,18 +14,10 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -40,11 +32,7 @@ import org.eclipse.php.internal.ui.util.CodeDataResolver;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 
 public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
@@ -73,44 +61,44 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
 		try {
 			IDocument document = textViewer.getDocument();
 			if (document instanceof IStructuredDocument) {
-				
+
 				// Find the PHP token region:
 				IStructuredDocument sDoc = (IStructuredDocument) document;
 				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(region.getOffset());
 				ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(region.getOffset());
-				
+
 				ITextRegionCollection container = sdRegion;
-				if(textRegion instanceof ITextRegionContainer){
-					container = (ITextRegionContainer)textRegion;
+				if (textRegion instanceof ITextRegionContainer) {
+					container = (ITextRegionContainer) textRegion;
 					textRegion = container.getRegionAtCharacterOffset(region.getOffset());
 				}
-				
+
 				if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-					PhpScriptRegion phpScriptRegion = (PhpScriptRegion)textRegion;
+					PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
 					ITextRegion phpToken = phpScriptRegion.getPhpToken(region.getOffset() - container.getStartOffset() - phpScriptRegion.getStart());
-					
+
 					// Check whether the current token is string, if it is - try to resolve file name from this string:
 					if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
-						
+
 						// Skip left parenthesis:
 						ITextRegion prevRegion = phpScriptRegion.getPhpToken(phpToken.getStart() - 1);
 						if (prevRegion != null) {
-							
+
 							// Check whether this string belongs to some kind of include/require structure:
 							prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart() - 1);
 							if (prevRegion != null && isIncludeType(prevRegion.getType())) {
-								
+
 								int startOffset = container.getStartOffset() + phpScriptRegion.getStart() + phpToken.getStart();
 								int offsetLength = phpToken.getLength();
-								
+
 								// Get the string contents - it's an included file name:
 								String fileName = sDoc.get(startOffset, offsetLength);
-								
+
 								// Trim quotes around the filename:
 								Matcher quotesMatcher = QUOTES_PATTERN.matcher(fileName);
 								fileName = quotesMatcher.replaceAll("");
-								
-								// Find the file in already opened editors:
+
+								// Find the file in the same project:
 								IPath path = new Path(fileName);
 								IWorkbenchPage page = PHPUiPlugin.getActivePage();
 								if (page != null) {
@@ -125,7 +113,7 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
 										}
 									}
 								}
-								
+
 								// Look for the file in other projects:
 								IWorkspace workspace = ResourcesPlugin.getWorkspace();
 								IWorkspaceRoot root = workspace.getRoot();
@@ -136,7 +124,7 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetector {
 										return new IHyperlink[] { new WorkspaceFileHyperlink(new Region(startOffset, offsetLength), file) };
 									}
 								}
-								
+
 								// Try to open external file:
 								File file = new File(fileName);
 								if (file.exists()) {
