@@ -41,5 +41,6 @@ Export-Package: org.eclipse.php.internal.debug.ui,
  org.eclipse.php.internal.debug.ui.presentation,
  org.eclipse.php.internal.debug.ui.sourcelookup,
  org.eclipse.php.internal.debug.ui.views,
+ org.eclipse.php.internal.debug.ui.views.variables,
  org.eclipse.php.internal.debug.ui.watch
 Bundle-Vendor: Eclipse.org

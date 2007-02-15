@@ -10,19 +10,25 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui;
 
+import java.util.List;
+
+import org.eclipse.core.internal.runtime.AdapterManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.ui.views.variables.PHPDebugElementAdapterFactory;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -64,6 +70,19 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
         // the user to return to the PHP perspective when all the debug sessions where terminated.
         finishDebugLaunchListener = new TerminateDebugLaunchListener();
         DebugPlugin.getDefault().getLaunchManager().addLaunchListener(finishDebugLaunchListener);
+        
+        // Register the PHPDebugElementAdapterFactory. 
+		// To make sure we are the first adapter factory for the IVariable class, we insert the
+		// factory before any other factory. 
+		AdapterManager manager = (AdapterManager) Platform.getAdapterManager();
+		List list = (List) manager.getFactories().get(IVariable.class.getName());
+		PHPDebugElementAdapterFactory propertiesFactory = new PHPDebugElementAdapterFactory();
+		manager.registerAdapters(propertiesFactory, IVariable.class);
+		// In case the list had some factories, make sure our factory is the first in the list.
+		if (list != null && list.size() > 1) {
+			list.remove(propertiesFactory);
+			list.add(0, propertiesFactory);
+		}
     }
 
     /**
