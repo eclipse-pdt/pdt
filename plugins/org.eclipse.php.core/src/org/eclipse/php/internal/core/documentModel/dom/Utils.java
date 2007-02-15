@@ -22,6 +22,16 @@ public class Utils {
 		if (fileData == null)
 			return null;
 
+		return getCodeData(fileData, offset);
+
+	}
+
+	/**
+	 * @param fileData
+	 * @param offset
+	 * @return
+	 */
+	public static PHPCodeData getCodeData(PHPFileData fileData, int offset) {
 		PHPConstantData[] constants = fileData.getConstants();
 		if (constants != null)
 			for (int i = 0; i < constants.length; i++)
@@ -53,7 +63,6 @@ public class Utils {
 					return classes[i];
 				}
 		return fileData;
-
 	}
 
 	public static boolean isInside(int offset, PHPCodeData codeData) {
