@@ -58,33 +58,18 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private LineStyleProvider fLineStyleProvider;
 	private IPropertyChangeListener propertyChangeListener;
 
-	private ArrayList processors = new ArrayList();
-	private ArrayList detectors = new ArrayList();
+	private ArrayList detectors;
 
 	public PHPStructuredTextViewerConfiguration() {
-
-		String processorsExtensionName = "org.eclipse.php.ui.phpContentAssistProcessor";
-		
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(processorsExtensionName);
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			if (element.getName().equals("processor")) {
-				ElementCreationProxy ecProxy = new ElementCreationProxy(element, processorsExtensionName);
-				IContentAssistProcessor processor = (IContentAssistProcessor)ecProxy.getObject();
-				if (processor != null) {
-					processors.add(processor);
-				}
-			}
-		}
-
+		detectors = new ArrayList();
 		detectors.add(new PHPCodeHyperlinkDetector());
 		String detectorsExtensionName = "org.eclipse.php.ui.phpHyperlinkDetector";
-		elements = Platform.getExtensionRegistry().getConfigurationElementsFor(detectorsExtensionName);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(detectorsExtensionName);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals("detector")) {
 				ElementCreationProxy ecProxy = new ElementCreationProxy(element, detectorsExtensionName);
-				IHyperlinkDetectorForPHP detector = (IHyperlinkDetectorForPHP)ecProxy.getObject();
+				IHyperlinkDetectorForPHP detector = (IHyperlinkDetectorForPHP) ecProxy.getObject();
 				if (detector != null) {
 					detectors.add(detector);
 				}
@@ -134,28 +119,40 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 		IContentAssistProcessor[] processors = null;
 
-		ArrayList processorsList = getProcessorsForPartition(partitionType);
-
-		if (partitionType == PHPPartitionTypes.PHP_DEFAULT){
-			processorsList.add(new PHPContentAssistProcessor());
-			processorsList.add(new PHPDocContentAssistProcessor());
+		if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
+			ArrayList processorsList = getPHPDefaultProcessors();
+			processors = new IContentAssistProcessor[processorsList.size()];
+			processorsList.toArray(processors);
 		} else {
 			processors = super.getContentAssistProcessors(sourceViewer, partitionType);
 		}
-
-		if (processors == null) {
-			processors = new IContentAssistProcessor[processorsList.size()];
-			processorsList.toArray(processors);
-		}
-
 		return processors;
 	}
 
-	private ArrayList getProcessorsForPartition(String partitionType) {
-		if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
+	private ArrayList processors = null;
+
+	private ArrayList getPHPDefaultProcessors() {
+		if (processors != null) {
 			return processors;
 		}
-		return new ArrayList(0);
+		processors = new ArrayList();
+		processors.add(new PHPContentAssistProcessor());
+		processors.add(new PHPDocContentAssistProcessor());
+		String processorsExtensionName = "org.eclipse.php.ui.phpContentAssistProcessor";
+
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(processorsExtensionName);
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			if (element.getName().equals("processor")) {
+				ElementCreationProxy ecProxy = new ElementCreationProxy(element, processorsExtensionName);
+				IContentAssistProcessor processor = (IContentAssistProcessor) ecProxy.getObject();
+				if (processor != null) {
+					processors.add(processor);
+				}
+			}
+		}
+
+		return processors;
 	}
 
 	protected void setupPropertyChangeListener(final ISourceViewer sourceViewer) {
@@ -184,58 +181,57 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		}
 	}
 
-	
 	private StructuredContentAssistant fContentAssistant = null;
-	
-	   public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
+
+	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
+		if (fContentAssistant == null) {
+			fContentAssistant = getPHPContentAssistantExtension();
 			if (fContentAssistant == null) {
-				fContentAssistant = getPHPContentAssistantExtension();
-				if(fContentAssistant == null){
-					fContentAssistant = new StructuredContentAssistant();
-				}
-				// content assistant configurations
-				fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-				fContentAssistant.enableAutoActivation(true);
-				fContentAssistant.setAutoActivationDelay(500);
-				fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
-				fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
-				fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+				fContentAssistant = new StructuredContentAssistant();
+			}
+			// content assistant configurations
+			fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+			fContentAssistant.enableAutoActivation(true);
+			fContentAssistant.setAutoActivationDelay(500);
+			fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
+			fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
+			fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
 
-				// add content assist processors for each partition type
-				String[] types = getConfiguredContentTypes(sourceViewer);
-				for (int i = 0; i < types.length; i++) {
-					String type = types[i];
+			// add content assist processors for each partition type
+			String[] types = getConfiguredContentTypes(sourceViewer);
+			for (int i = 0; i < types.length; i++) {
+				String type = types[i];
 
-					// add all content assist processors for current partiton type
-					IContentAssistProcessor[] processors = getContentAssistProcessors(sourceViewer, type);
-					if (processors != null) {
-						for (int j = 0; j < processors.length; j++) {
-							fContentAssistant.setContentAssistProcessor(processors[j], type);
-						}
+				// add all content assist processors for current partiton type
+				IContentAssistProcessor[] processors = getContentAssistProcessors(sourceViewer, type);
+				if (processors != null) {
+					for (int j = 0; j < processors.length; j++) {
+						fContentAssistant.setContentAssistProcessor(processors[j], type);
 					}
 				}
 			}
-			return fContentAssistant;
 		}
-	   
-	   private StructuredContentAssistant getPHPContentAssistantExtension(){
-		   StructuredContentAssistant rv = null;
-			String extensionName = "org.eclipse.php.ui.phpContentAssistant";
-			IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionName);
-			for (int i = 0; i < elements.length; i++) {
-				IConfigurationElement element = elements[i];
-				if (element.getName().equals("contentAssistant")) {
-					ElementCreationProxy ecProxy = new ElementCreationProxy(element, extensionName);
-					StructuredContentAssistant contentAssistant = (StructuredContentAssistant)ecProxy.getObject();
-					if (contentAssistant != null) {
-						rv  = contentAssistant;
-					}
+		return fContentAssistant;
+	}
+
+	private StructuredContentAssistant getPHPContentAssistantExtension() {
+		StructuredContentAssistant rv = null;
+		String extensionName = "org.eclipse.php.ui.phpContentAssistant";
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionName);
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			if (element.getName().equals("contentAssistant")) {
+				ElementCreationProxy ecProxy = new ElementCreationProxy(element, extensionName);
+				StructuredContentAssistant contentAssistant = (StructuredContentAssistant) ecProxy.getObject();
+				if (contentAssistant != null) {
+					rv = contentAssistant;
 				}
 			}
-		   return rv;
-	   }
-	   
-		public String[] getDefaultPrefixes(ISourceViewer sourceViewer, String contentType) {
+		}
+		return rv;
+	}
+
+	public String[] getDefaultPrefixes(ISourceViewer sourceViewer, String contentType) {
 		return new String[] { "//", "#", "" }; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
