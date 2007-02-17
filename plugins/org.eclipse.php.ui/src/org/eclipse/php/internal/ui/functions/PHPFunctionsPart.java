@@ -11,8 +11,6 @@
 package org.eclipse.php.internal.ui.functions;
 
 import java.text.MessageFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -33,7 +31,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.Logger;
@@ -348,8 +345,6 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	}
 
 	class ShowFunctionHelpAction extends Action {
-		private final Pattern METHOD_PATTERN = Pattern.compile("([A-Z])");
-
 		public ShowFunctionHelpAction() {
 			super("Open Manual");
 		}
@@ -359,16 +354,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 			if (!selection.isEmpty()) {
 				IStructuredSelection s = (IStructuredSelection) selection;
 				if (s.getFirstElement() instanceof PHPFunctionData) {
-					PHPFunctionData funcData = (PHPFunctionData) s.getFirstElement();
-					PHPCodeData container = funcData.getContainer();
-					String functionName = "";
-					if (container instanceof PHPClassData) {
-						Matcher m = METHOD_PATTERN.matcher(funcData.getName());
-						functionName = container.getName() + "-" + m.replaceAll("-$1");
-					} else {
-						functionName = funcData.getName();
-					}
-					PHPManualFactory.getManual().showFunctionHelp(functionName);
+					PHPManualFactory.getManual().showFunctionHelp((PHPFunctionData)s.getFirstElement());
 				}
 			}
 		}

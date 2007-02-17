@@ -50,7 +50,7 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 			return;
 		}
 		if (validAction()) {
-			PHPManualFactory.getManual().showFunctionHelp(functionData.getName());
+			PHPManualFactory.getManual().showFunctionHelp(functionData);
 			return;
 		}
 	}
