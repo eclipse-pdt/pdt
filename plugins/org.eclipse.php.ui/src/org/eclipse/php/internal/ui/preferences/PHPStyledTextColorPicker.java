@@ -19,6 +19,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
@@ -36,6 +37,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.StyledTextColorPicker;
 
@@ -300,14 +303,25 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 
 		String regionContext;
 		ITextRegion interest = fNodes.getRegionAtCharacterOffset(offset);
+		
+		ITextRegionCollection container = fNodes;
+		if (interest instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) interest;
+			interest = container.getRegionAtCharacterOffset(offset);
+		}
+		
 		if (interest.getType() == PHPRegionContext.PHP_CONTENT) {
 			PhpScriptRegion phpScript = (PhpScriptRegion) interest;
 			try {
-				regionContext = phpScript.getPhpTokenType(offset - phpScript.getStart());
+				regionContext = phpScript.getPhpTokenType(offset - container.getStartOffset() - phpScript.getStart());
 			} catch (BadLocationException e) {
 				assert false;
 				return null;
 			}
+		} else if (interest.getType() == PHPRegionContext.PHP_OPEN) {
+			regionContext = PHPRegionTypes.PHP_OPENTAG;
+		} else if (interest.getType() == PHPRegionContext.PHP_CLOSE) {
+			regionContext = PHPRegionTypes.PHP_CLOSETAG;
 		} else {
 			regionContext = interest.getType();
 		}
