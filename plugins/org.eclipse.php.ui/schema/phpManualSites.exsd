@@ -51,13 +51,6 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="director" type="string">
-            <annotation>
-               <documentation>
-                  ID of the PHP Manual Director (see &lt;code&gt;phpManualDirectors&lt;/code&gt; extension point description).
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="extension" type="string" use="default" value="php">
             <annotation>
                <documentation>

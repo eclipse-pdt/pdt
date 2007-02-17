@@ -28,6 +28,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -137,6 +138,8 @@ public class PHPManual implements IPropertyChangeListener {
 					path = buildPathForMethod(null,funcData.getName());
 				}
 			}
+		} else if (codeData instanceof PHPKeywordData) {
+			path = (String)getPHPEntityPathMap().get(codeData.getName().toLowerCase());
 		}
 		
 		StringBuffer url = new StringBuffer();

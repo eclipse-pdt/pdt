@@ -13,20 +13,11 @@ package org.eclipse.php.internal.ui.util;
 public class PHPManualSite {
 
 	protected String url;
-	protected PHPManualDirector director;
 	protected String extension;
 
 	public PHPManualSite(String url, String extension) {
 		this.url = url;
 		this.extension = extension;
-	}
-
-	public PHPManualDirector getDirector() {
-		return director;
-	}
-
-	public void setDirector(PHPManualDirector director) {
-		this.director = director;
 	}
 
 	public String getExtension() {

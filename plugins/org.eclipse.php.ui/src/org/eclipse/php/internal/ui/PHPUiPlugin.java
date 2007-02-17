@@ -32,11 +32,14 @@ import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
-import org.eclipse.php.internal.ui.util.PHPManualDirectorDescriptor;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.php.internal.ui.util.ProblemMarkerManager;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener2;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ConfigurationElementSorter;
@@ -71,7 +74,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private PHPFoldingStructureProviderRegistry fFoldingStructureProviderRegistry;
 	private PHPEditorTextHoverDescriptor[] fPHPEditorTextHoverDescriptors;
 	private PHPManualSiteDescriptor[] fPHPManualSiteDescriptors;
-	private PHPManualDirectorDescriptor[] fPHPManualDirectorDescriptors;
 
 	/**
 	 * The constructor.
@@ -322,15 +324,5 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			fPHPManualSiteDescriptors = PHPManualSiteDescriptor.getContributedSites();
 		}
 		return fPHPManualSiteDescriptors;
-	}
-	
-	/**
-	 * Returns all PHP manual directors contributed to the workbench.
-	 */
-	public PHPManualDirectorDescriptor[] getPHPManualDirectorDescriptors() {
-		if (fPHPManualDirectorDescriptors == null) {
-			fPHPManualDirectorDescriptors = PHPManualDirectorDescriptor.getContributedDirectors();
-		}
-		return fPHPManualDirectorDescriptors;
 	}
 }

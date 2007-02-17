@@ -27,13 +27,11 @@ public class PHPManualFactory {
 
 	private static PHPManual createManual(PHPManualSiteDescriptor desc) {
 		PHPManualSite site = desc.createSite();
-		site.setDirector(getDirector(desc.getDirectorID()));
 		return new PHPManual(site);
 	}
 
 	private static PHPManual createManual(PHPManualConfig config) {
 		PHPManualSite site = new PHPManualSite(config.getUrl(), config.getExtension());
-		site.setDirector(getDirector(PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_DIRECTOR));
 		return new PHPManual(site);
 	}
 
@@ -70,17 +68,5 @@ public class PHPManualFactory {
 		}
 		Assert.isNotNull(manual);
 		return manual;
-	}
-
-	private static PHPManualDirector getDirector(String id) {
-		PHPManualDirector director = null;
-		PHPManualDirectorDescriptor[] descs = PHPUiPlugin.getDefault().getPHPManualDirectorDescriptors();
-		for (int i = 0; i < descs.length; ++i) {
-			if (descs[i].getID().equals(id)) {
-				director = descs[i].createDirector();
-			}
-		}
-		Assert.isNotNull(director);
-		return director;
 	}
 }

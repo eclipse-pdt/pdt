@@ -6,7 +6,6 @@
 	<extension-point id="phpEditorTextHovers" name="PHP Editor Text Hover" schema="schema/phpEditorTextHovers.exsd"/>
 	<extension-point id="phpTreeContentProviders" name="PHP Tree Content Provider" schema="schema/phpTreeContentProviders.exsd"/>
 	<extension-point id="phpManualSites" name="PHP Manual URL" schema="schema/phpManualSites.exsd"/>
-	<extension-point id="phpManualDirectors" name="PHP Manual Director" schema="schema/phpManualDirectors.exsd"/>
 	<extension-point id="phpContentAssistProcessor" name="PHP Content Assist Processor" schema="schema/phpContentAssistProcessor.exsd"/>
 	<extension-point id="phpHyperlinkDetector" name="PHP Hyperlink Detector" schema="schema/phpHyperlinkDetector.exsd"/>
 	<extension-point id="phpOutlineElementComparers" name="PHP Outline Element Comparer" schema="schema/phpOutlineElementComparers.exsd"/>
@@ -1295,57 +1294,18 @@
    </extension>
    
    <!-- ========================================================= //-->
-   <!-- PHP Manual Directors                                      //-->
+   <!-- PHP Manual Sites                                          //-->
    <!-- ========================================================= //-->
-   <extension point="org.eclipse.php.ui.phpManualDirectors">
-        <director id="org.eclipse.php.ui.phpManualDirector" label="Default PHP Manual Director">
-                <element name="else" path="control-structures.%NAME.%EXT"/>
-                <element name="elseif" path="control-structures.%NAME.%EXT"/>
-                <element name="while" path="control-structures.%NAME.%EXT"/>
-                <element name="do-while" path="control-structures.%NAME.%EXT"/>
-                <element name="for" path="control-structures.%NAME.%EXT"/>
-                <element name="foreach" path="control-structures.%NAME.%EXT"/>
-                <element name="break" path="control-structures.%NAME.%EXT"/>
-                <element name="continue" path="control-structures.%NAME.%EXT"/>
-                <element name="switch" path="control-structures.%NAME.%EXT"/>
-                <element name="declare" path="control-structures.%NAME.%EXT"/>
-                <element name="__line__" path="language.constants.predefined.%EXT"/>
-                <element name="__file__" path="language.constants.predefined.%EXT"/>
-                <element name="__function__" path="language.constants.predefined.%EXT"/>
-                <element name="__class__" path="language.constants.predefined.%EXT"/>
-                <element name="__method__" path="language.constants.predefined.%EXT"/>
-                <element name="final" path="language.oop5.final.%EXT"/>
-                <element name="abstract" path="language.oop5.abstract.%EXT"/>
-                <element name="extends" path="keyword.extends.%EXT"/>
-                <element name="clone" path="language.oop5.cloning.%EXT"/>
-                <element name="global" path="language.variables.scope.%EXT"/>
-                <element name="if" path="language.control-structures.%EXT#control-structures.if"/>
-                <element name="class" path="language.oop.%EXT#keyword.class"/>
-                <element name="parent" path="keyword.parent.%EXT"/>
-                <element name="function" path="language.functions.%EXT"/>
-                <element name="_" path="function.gettext.%EXT"/>
-                <element name="interface" path="language.oop5.interfaces.%EXT"/>
-                <element name="implements" path="language.oop5.interfaces.%EXT"/>
-                <element name="public" path="language.oop5.visibility.%EXT"/>
-                <element name="private" path="language.oop5.visibility.%EXT"/>
-                <element name="protected" path="language.oop5.visibility.%EXT"/>
-                <element name="try" path="language.exceptions.%EXT"/>
-                <element name="catch" path="language.exceptions.%EXT"/>
-                <element name="throw" path="language.exceptions.%EXT"/>
-                <element name="old_function" path="migration.old-function.%EXT"/>
-                <element name="cfunction" path="migration.old-function.%EXT"/>
-                <element name="*" path="function.%NAME.%EXT"/>
-        </director>
-	</extension>
    <extension
          point="org.eclipse.php.ui.phpManualSites">
       <site
-            director="org.eclipse.php.ui.phpManualDirector"
             extension="php"
             id="org.eclipse.php.ui.phpDotNet"
             label="PHP.net"
             url="http://www.php.net/manual/en/"/>
    </extension>
+   
+   
    <extension
          point="org.eclipse.ui.exportWizards">
       <category

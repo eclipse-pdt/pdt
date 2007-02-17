@@ -21,7 +21,9 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.CodeDataResolver;
@@ -38,7 +40,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class OpenFunctionsManualAction extends TextEditorAction implements IUpdate {
 
-	private PHPFunctionData functionData;
+	private PHPCodeData codeData;
 
 	public OpenFunctionsManualAction(ResourceBundle resourceBundle, PHPStructuredEditor editor) {
 		super(resourceBundle, "OpenFunctionsManualAction_", editor);
@@ -50,7 +52,7 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 			return;
 		}
 		if (validAction()) {
-			PHPManualFactory.getManual().showFunctionHelp(functionData);
+			PHPManualFactory.getManual().showFunctionHelp(codeData);
 			return;
 		}
 	}
@@ -152,11 +154,11 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 			return false;
 		}
 
-		if (!(codeData instanceof PHPFunctionData)) {
+		if (!(codeData instanceof PHPFunctionData) && !(codeData instanceof PHPKeywordData)) {
 			return false;
 		}
 
-		functionData = (PHPFunctionData) codeData;
+		this.codeData = (PHPCodeData)codeData;
 		return true;
 	}
 
