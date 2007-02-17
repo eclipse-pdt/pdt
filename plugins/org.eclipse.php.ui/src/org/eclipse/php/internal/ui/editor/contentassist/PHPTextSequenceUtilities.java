@@ -143,7 +143,7 @@ public class PHPTextSequenceUtilities {
 		int start = 0;
 		while (commentStartMatcher.find(start)) {
 			String currentType = TextSequenceUtilities.getType(textSequence, commentStartMatcher.start());
-			if (!PHPPartitionTypes.isPHPCommentState(currentType) && !PHPPartitionTypes.isPHPQuotesState(currentType)) {
+			if (PHPPartitionTypes.isPHPCommentState(currentType) && !PHPPartitionTypes.isPHPQuotesState(currentType)) {
 				return commentStartMatcher.start();
 			}
 			start = commentStartMatcher.start() + 2;
