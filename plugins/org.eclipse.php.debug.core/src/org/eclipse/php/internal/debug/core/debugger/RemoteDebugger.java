@@ -13,6 +13,8 @@ package org.eclipse.php.internal.debug.core.debugger;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
@@ -21,43 +23,8 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 import org.eclipse.php.internal.debug.core.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.communication.ResponseHandler;
-import org.eclipse.php.internal.debug.core.debugger.messages.AddBreakpointRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.AddBreakpointResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.AssignValueRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.CancelAllBreakpointsRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.CancelAllBreakpointsResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.CancelBreakpointRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.CancelBreakpointResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.DebugScriptEndedNotification;
-import org.eclipse.php.internal.debug.core.debugger.messages.DebugSessionClosedNotification;
-import org.eclipse.php.internal.debug.core.debugger.messages.DebugSessionStartedNotification;
-import org.eclipse.php.internal.debug.core.debugger.messages.DebuggerErrorNotification;
-import org.eclipse.php.internal.debug.core.debugger.messages.EvalRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.EvalResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.GetCallStackRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.GetCallStackResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.GetStackVariableValueRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.GetStackVariableValueResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.GetVariableValueRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.GetVariableValueResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.GoRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.GoResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.HeaderOutputNotification;
-import org.eclipse.php.internal.debug.core.debugger.messages.OutputNotification;
-import org.eclipse.php.internal.debug.core.debugger.messages.ParsingErrorNotification;
-import org.eclipse.php.internal.debug.core.debugger.messages.PauseDebuggerRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.PauseDebuggerResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.ReadyNotification;
-import org.eclipse.php.internal.debug.core.debugger.messages.SetProtocolRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.SetProtocolResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.StartRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.StartResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.StepIntoRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.StepIntoResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.StepOutRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.StepOutResponse;
-import org.eclipse.php.internal.debug.core.debugger.messages.StepOverRequest;
-import org.eclipse.php.internal.debug.core.debugger.messages.StepOverResponse;
+import org.eclipse.php.internal.debug.core.debugger.messages.*;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 
 /**
  * An IRemoteDebugger implementation. 
@@ -639,6 +606,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setValue(value);
 		request.setDepth(depth);
 		request.setPath(path);
+		request.setTransferEncoding(getTransferEncoding());
 		try {
 			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
@@ -648,6 +616,15 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return false;
 	}
 
+	/*
+	 * Returns the transfer encoding for the current project.
+	 */
+	private String getTransferEncoding() {
+		String projectName = debugHandler.getDebugTarget().getProjectName();
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		return PHPProjectPreferences.getTransferEncoding(project);
+	}
+	
 	/**
 	 * aSynchronic assigned value
 	 */
@@ -660,6 +637,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setValue(value);
 		request.setDepth(depth);
 		request.setPath(path);
+		request.setTransferEncoding(getTransferEncoding());
 		try {
 			connection.sendRequest(request);
 			return true;
