@@ -141,8 +141,6 @@ public class ModelSupport {
 	//Binary search for the search start position
 	private static int getFirstMatch(CodeData[] sortedArray, String searchName, boolean exactName, boolean useComparableName, boolean caseSensitive) {
 		// if the searched name is empty.
-		if(searchName == null)
-			return -1;
 		int searchNameLength = searchName.length();
 		if (searchNameLength == 0) {
 			if (exactName) {
