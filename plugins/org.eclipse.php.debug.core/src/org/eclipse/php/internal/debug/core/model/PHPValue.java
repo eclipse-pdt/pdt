@@ -82,10 +82,6 @@ public class PHPValue extends PHPDebugElement implements IValue {
 		String rString = string.toString();
 		return rString;
 	}
-
-	public Object getEditingValueString() {
-		return "WooHoo";
-	}
 	
 	public String getValue() throws DebugException {
 		return (String) (fValue.getValue());
