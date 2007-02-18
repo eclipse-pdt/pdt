@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.text.BadLocationException;
@@ -22,6 +20,8 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.text.edits.DeleteEdit;
+import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -49,19 +49,16 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 		super(bundle, prefix, editor);
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.actions.AddBlockCommentAction#runInternal(org.eclipse.jface.text.ITextSelection, org.eclipse.jface.text.IDocumentExtension3, org.eclipse.jdt.internal.ui.actions.AddBlockCommentAction.Edit.EditFactory)
-	 */
-	protected void runInternal(ITextSelection selection, IDocumentExtension3 docExtension, Edit.EditFactory factory) throws BadPartitioningException, BadLocationException {
-		List edits = new LinkedList();
+	protected void runInternal(ITextSelection selection, IDocumentExtension3 docExtension) throws BadPartitioningException, BadLocationException {
 		int offset = selection.getOffset();
 		int endOffset = offset + selection.getLength();
 		if (!(docExtension instanceof IStructuredDocument)) {
 			return;
 		}
+		
+		MultiTextEdit multiEdit = new MultiTextEdit();
+		IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 		do {
-
-			IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 			IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(offset);
 			ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
 
@@ -81,8 +78,10 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 					if (startRegion.getType() == PHPRegionTypes.PHP_COMMENT_START && endRegion.getType() == PHPRegionTypes.PHP_COMMENT_END) {
 						int startCommentOffset = container.getStart() + phpScriptRegion.getStart() + startRegion.getStart();
 						int endCommentOffset = container.getStart() + phpScriptRegion.getStart() + endRegion.getStart();
-						edits.add(factory.createEdit(startCommentOffset, startRegion.getLength(), "")); //$NON-NLS-1$
-						edits.add(factory.createEdit(endCommentOffset, getCommentEnd().length(), "")); //$NON-NLS-1$
+						
+						multiEdit.addChild(new DeleteEdit(startCommentOffset, startRegion.getLength()));
+						multiEdit.addChild(new DeleteEdit(endCommentOffset, getCommentEnd().length()));
+						
 						offset = endCommentOffset + endRegion.getLength();
 					} else {
 						break; // comment is not opened or not closed
@@ -96,7 +95,7 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 			}
 		} while (offset < endOffset);
 
-		executeEdits(edits);
+		multiEdit.apply(sDoc);
 	}
 
 	/* (non-Javadoc)

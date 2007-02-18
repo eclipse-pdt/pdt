@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.text.Assert;
@@ -23,6 +21,9 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.text.edits.DeleteEdit;
+import org.eclipse.text.edits.InsertEdit;
+import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -49,13 +50,12 @@ public class AddBlockCommentAction extends BlockCommentAction {
 		super(bundle, prefix, editor);
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.actions.BlockCommentAction#runInternal(org.eclipse.jface.text.ITextSelection, org.eclipse.jface.text.IDocumentExtension3, org.eclipse.jdt.internal.ui.actions.BlockCommentAction.Edit.EditFactory)
-	 */
-	protected void runInternal(ITextSelection selection, IDocumentExtension3 docExtension, Edit.EditFactory factory) throws BadLocationException, BadPartitioningException {
+	protected void runInternal(ITextSelection selection, IDocumentExtension3 docExtension) throws BadLocationException, BadPartitioningException {
+		
+		MultiTextEdit multiEdit = new MultiTextEdit();
+		
 		int selectionOffset = selection.getOffset();
 		int selectionEndOffset = selectionOffset + selection.getLength();
-		List edits = new LinkedList();
 
 		if (docExtension instanceof IStructuredDocument) {
 			IStructuredDocument sDoc = (IStructuredDocument) docExtension;
@@ -75,21 +75,21 @@ public class AddBlockCommentAction extends BlockCommentAction {
 
 				int phpRegionStart = container.getStartOffset(phpScriptRegion);
 
-				handleFirstPartition(partition, edits, factory, selectionOffset, phpRegionStart);
+				handleFirstPartition(partition, multiEdit, selectionOffset, phpRegionStart);
 
 				ITypedRegion lastPartition = partition;
 				while (partition != null && phpRegionStart + partition.getOffset() + partition.getLength() < selectionEndOffset) {
 					lastPartition = partition;
-					partition = handleInteriorPartition(partition, edits, factory, docExtension, phpRegionStart);
+					partition = handleInteriorPartition(partition, multiEdit, docExtension, phpRegionStart);
 				}
 				if(partition == null){
 					partition = lastPartition;
 				}
-				handleLastPartition(partition, edits, factory, selectionEndOffset, phpRegionStart);
+				handleLastPartition(partition, multiEdit, selectionEndOffset, phpRegionStart);
 			}
+			
+			multiEdit.apply(sDoc);
 		}
-
-		executeEdits(edits);
 	}
 
 	/**
@@ -97,11 +97,11 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	 * 
 	 * @param partition the partition under the start of the selection
 	 * @param edits the list of edits to later execute
-	 * @param factory the factory for edits
+	 * @param multiEdit container of edits
 	 * @param offset the start of the selection, which must lie inside <code>partition</code>
 	 * @param offset where the PHP script region starts
 	 */
-	private void handleFirstPartition(ITypedRegion partition, List edits, Edit.EditFactory factory, int offset, int phpRegionStart) throws BadLocationException {
+	private void handleFirstPartition(ITypedRegion partition, MultiTextEdit multiEdit, int offset, int phpRegionStart) throws BadLocationException {
 
 		int partOffset = partition.getOffset() + phpRegionStart;
 		String partType = partition.getType();
@@ -111,10 +111,10 @@ public class AddBlockCommentAction extends BlockCommentAction {
 		// first partition: mark start of comment
 		if (partType == PHPPartitionTypes.PHP_DEFAULT) {
 			// PHP code: right where selection starts
-			edits.add(factory.createEdit(offset, 0, getCommentStart()));
+			multiEdit.addChild(new InsertEdit(offset, getCommentStart()));
 		} else if (isSpecialPartition(partType)) {
 			// special types: include the entire partition
-			edits.add(factory.createEdit(partOffset, 0, getCommentStart()));
+			multiEdit.addChild(new InsertEdit(partOffset, getCommentStart()));
 		} // PHPDoc: no mark, will only start after comment
 	}
 
@@ -133,15 +133,14 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	 * </p>
 	 * 
 	 * @param partition the current partition
-	 * @param edits the list of edits to add to
-	 * @param factory the edit factory
+	 * @param multiEdit container of edits
 	 * @param docExtension the document to get the partitions from
 	 * @return the next partition after the current
 	 * @param offset where the PHP script region starts
 	 * @throws BadLocationException if accessing the document fails - this can only happen if the document gets modified concurrently
 	 * @throws BadPartitioningException if the document does not have a PHP partitioning
 	 */
-	private ITypedRegion handleInteriorPartition(ITypedRegion partition, List edits, Edit.EditFactory factory, IDocumentExtension3 docExtension, int phpRegionStart) throws BadPartitioningException, BadLocationException {
+	private ITypedRegion handleInteriorPartition(ITypedRegion partition, MultiTextEdit multiEdit, IDocumentExtension3 docExtension, int phpRegionStart) throws BadPartitioningException, BadLocationException {
 
 		// end of previous partition
 		String partType = partition.getType();
@@ -154,7 +153,7 @@ public class AddBlockCommentAction extends BlockCommentAction {
 			wasPHPDoc = true;
 		} else if (partType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
 			// already in a comment - remove ending mark
-			edits.add(factory.createEdit(partEndOffset - tokenLength, tokenLength, "")); //$NON-NLS-1$
+			multiEdit.addChild(new DeleteEdit(partEndOffset - tokenLength, tokenLength));
 		}
 
 		// advance to next partition
@@ -183,15 +182,15 @@ public class AddBlockCommentAction extends BlockCommentAction {
 		if (wasPHPDoc) {
 			// if previous was PHPDoc, and the current one is not, then add block comment start
 			if (partType == PHPPartitionTypes.PHP_DEFAULT || isSpecialPartition(partType)) {
-				edits.add(factory.createEdit(phpRegionStart + partition.getOffset(), 0, getCommentStart()));
+				multiEdit.addChild(new InsertEdit(phpRegionStart + partition.getOffset(), getCommentStart()));
 			}
 		} else { // !wasPHPDoc
 			if (partType == PHPPartitionTypes.PHP_DOC) {
 				// if next is PHPDoc, end block comment before
-				edits.add(factory.createEdit(phpRegionStart + partition.getOffset(), 0, getCommentEnd()));
+				multiEdit.addChild(new InsertEdit(phpRegionStart + partition.getOffset(), getCommentEnd()));
 			} else if (partType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
 				// already in a comment - remove startToken
-				edits.add(factory.createEdit(phpRegionStart + partition.getOffset(), getCommentStart().length(), "")); //$NON-NLS-1$
+				multiEdit.addChild(new DeleteEdit(phpRegionStart + partition.getOffset(), getCommentStart().length()));
 			}
 		}
 		return partition;
@@ -204,20 +203,20 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	 * partition, the entire partition is included inside the comment.
 	 * 
 	 * @param partition the partition under the selection end offset
-	 * @param edits the list of edits to add to
+	 * @param multiEdit container of edits
 	 * @param factory the edit factory
 	 * @param endOffset the end offset of the selection
 	 * @param offset where the PHP script region starts
 	 */
-	private void handleLastPartition(ITypedRegion partition, List edits, Edit.EditFactory factory, int endOffset, int phpRegionStart) throws BadLocationException {
+	private void handleLastPartition(ITypedRegion partition, MultiTextEdit multiEdit, int endOffset, int phpRegionStart) throws BadLocationException {
 		String partType = partition.getType();
 
 		if (partType == PHPPartitionTypes.PHP_DEFAULT) {
 			// normal PHP: end comment where selection ends
-			edits.add(factory.createEdit(endOffset, 0, getCommentEnd()));
+			multiEdit.addChild(new InsertEdit(endOffset, getCommentEnd()));
 		} else if (isSpecialPartition(partType)) {
 			// special types: consume entire partition
-			edits.add(factory.createEdit(phpRegionStart + partition.getOffset() + partition.getLength(), 0, getCommentEnd()));
+			multiEdit.addChild(new InsertEdit(phpRegionStart + partition.getOffset() + partition.getLength(), getCommentEnd()));
 		}
 	}
 

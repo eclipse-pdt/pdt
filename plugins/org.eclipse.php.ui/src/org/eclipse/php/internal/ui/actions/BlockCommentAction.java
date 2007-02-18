@@ -30,6 +30,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -55,121 +56,6 @@ public abstract class BlockCommentAction extends TextEditorAction {
 	 */
 	public BlockCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);
-	}
-
-	/**
-	 * An edit is a kind of <code>DocumentEvent</code>, in this case an edit instruction, that is 
-	 * affiliated with a <code>Position</code> on a document. The offset of the document event is 
-	 * not stored statically, but taken from the affiliated <code>Position</code>, which gets 
-	 * updated when other edits occur.
-	 */
-	static class Edit extends DocumentEvent {
-		
-		/**
-		 * Factory for edits which manages the creation, installation and destruction of 
-		 * position categories, position updaters etc. on a certain document. Once a factory has
-		 * been obtained, <code>Edit</code> objects can be obtained from it which will be linked to
-		 * the document by positions of one position category.
-		 * <p>Clients are required to call <code>release</code> once the <code>Edit</code>s are not
-		 * used any more, so the positions can be discarded.</p>
-		 */
-		public static class EditFactory {
-	
-			/** The position category basename for this edits. */
-			private static final String CATEGORY= "__positionalEditPositionCategory"; //$NON-NLS-1$
-			
-			/** The count of factories. */
-			private static int fgCount= 0;
-		
-			/** This factory's category. */
-			private final String fCategory;
-			private IDocument fDocument;
-			private IPositionUpdater fUpdater;
-			
-			/**
-			 * Creates a new <code>EditFactory</code> with an unambiguous position category name.
-			 * @param document the document that is being edited.
-			 */
-			public EditFactory(IDocument document) {
-				fCategory= CATEGORY + fgCount++;
-				fDocument= document;
-			}
-			
-			/**
-			 * Creates a new edition on the document of this factory.
-			 * 
-			 * @param offset the offset of the edition at the point when is created.
-			 * @param length the length of the edition (not updated via the position update mechanism)
-			 * @param text the text to be replaced on the document
-			 * @return an <code>Edit</code> reflecting the edition on the document
-			 */
-			public Edit createEdit(int offset, int length, String text) throws BadLocationException {
-				
-				if (!fDocument.containsPositionCategory(fCategory)) {
-					fDocument.addPositionCategory(fCategory);
-					fUpdater= new DefaultPositionUpdater(fCategory);
-					fDocument.addPositionUpdater(fUpdater);
-				}
-				
-				Position position= new Position(offset);
-				try {
-					fDocument.addPosition(fCategory, position);
-				} catch (BadPositionCategoryException e) {
-					Assert.isTrue(false);
-				}
-				return new Edit(fDocument, length, text, position);
-			}
-			
-			/**
-			 * Releases the position category on the document and uninstalls the position updater. 
-			 * <code>Edit</code>s managed by this factory are not updated after this call.
-			 */
-			public void release() {
-				if (fDocument != null && fDocument.containsPositionCategory(fCategory)) {
-					fDocument.removePositionUpdater(fUpdater);
-					try {
-						fDocument.removePositionCategory(fCategory);
-					} catch (BadPositionCategoryException e) {
-						Assert.isTrue(false);
-					}
-					fDocument= null;
-					fUpdater= null;
-				}
-			}
-		}
-		
-		/** The position in the document where this edit be executed. */
-		private Position fPosition;
-		
-		/**
-		 * Creates a new edition on <code>document</code>, taking its offset from <code>position</code>.
-		 * 
-		 * @param document the document being edited
-		 * @param length the length of the edition
-		 * @param text the replacement text of the edition
-		 * @param position the position keeping the edition's offset
-		 */
-		protected Edit(IDocument document, int length, String text, Position position) {
-			super(document, 0, length, text);
-			fPosition= position;
-		}
-		
-		/*
-		 * @see org.eclipse.jface.text.DocumentEvent#getOffset()
-		 */
-		public int getOffset() {
-			return fPosition.getOffset();
-		}
-		
-		/**
-		 * Executes the edition on document. The offset is taken from the position.
-		 * 
-		 * @throws BadLocationException if the execution of the document fails.
-		 */
-		public void perform() throws BadLocationException {
-			getDocument().replace(getOffset(), getLength(), getText());
-		}
-		
 	}
 
 	public void run() {
@@ -207,10 +93,8 @@ public abstract class BlockCommentAction extends TextEditorAction {
 			target.beginCompoundChange();
 		}
 		
-		Edit.EditFactory factory= new Edit.EditFactory(document);
-		
 		try {
-			runInternal(selection, docExtension, factory);
+			runInternal(selection, docExtension);
 	
 		} catch (BadLocationException e) {
 			// can happen on concurrent modification, deletion etc. of the document 
@@ -219,24 +103,9 @@ public abstract class BlockCommentAction extends TextEditorAction {
 			// should not happen
 			Assert.isTrue(false, "bad partitioning");  //$NON-NLS-1$
 		} finally {
-			factory.release();
-			
 			if (target != null) {
 				target.endCompoundChange();
 			}
-		}
-	}
-
-	/**
-	 * Calls <code>perform</code> on all <code>Edit</code>s in <code>edits</code>.
-	 * 
-	 * @param edits a list of <code>Edit</code>s
-	 * @throws BadLocationException if an <code>Edit</code> threw such an exception.
-	 */
-	protected void executeEdits(List edits) throws BadLocationException {
-		for (Iterator it= edits.iterator(); it.hasNext();) {
-			Edit edit= (Edit) it.next();
-			edit.perform();
 		}
 	}
 
@@ -316,11 +185,10 @@ public abstract class BlockCommentAction extends TextEditorAction {
 	 * 
 	 * @param selection the current selection we are being called for
 	 * @param docExtension the document extension where we get the partitioning from
-	 * @param factory the edit factory we can use to create <code>Edit</code>s 
 	 * @throws BadLocationException if an edition fails
 	 * @throws BadPartitioningException if a partitioning call fails
 	 */
-	protected abstract void runInternal(ITextSelection selection, IDocumentExtension3 docExtension, Edit.EditFactory factory) throws BadLocationException, BadPartitioningException;
+	protected abstract void runInternal(ITextSelection selection, IDocumentExtension3 docExtension) throws BadLocationException, BadPartitioningException;
 
 	/**
 	 * Checks whether <code>selection</code> is valid.
