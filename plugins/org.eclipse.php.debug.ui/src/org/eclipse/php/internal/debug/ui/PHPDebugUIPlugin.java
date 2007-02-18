@@ -336,20 +336,22 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 						
 						try {
 							// build the tree path LaunchManager->Launch->DebugTarget->PHPThread->PHPStackFrame
-							PHPDebugTarget target = (PHPDebugTarget)currentLaunches[0].getDebugTarget();
+							PHPDebugTarget target = (PHPDebugTarget) currentLaunches[0].getDebugTarget();
 							if (target != null) {
 								IThread thread = target.getThreads()[0];
 								PHPStackFrame frame = (PHPStackFrame) thread.getTopStackFrame();
-								Object[] segments = new Object[5]; 
-								segments[0] = DebugPlugin.getDefault().getLaunchManager();
-								segments[1] = currentLaunches[0];
-								segments[2] = target;
-								segments[3] = thread;
-								segments[4] = frame;
-								TreePath treePath = new TreePath(segments);
-								// set the current launch as the LaunchViewer selection.
-								((AsynchronousViewer)view.getViewer()).setSelection(new TreeSelection(treePath), true, true);
-							}							
+								if (thread != null && frame != null) {
+									Object[] segments = new Object[5];
+									segments[0] = DebugPlugin.getDefault().getLaunchManager();
+									segments[1] = currentLaunches[0];
+									segments[2] = target;
+									segments[3] = thread;
+									segments[4] = frame;
+									TreePath treePath = new TreePath(segments);
+									// set the current launch as the LaunchViewer selection.
+									((AsynchronousViewer) view.getViewer()).setSelection(new TreeSelection(treePath), true, true);
+								}
+							}
 						} catch (DebugException e) {
 						}	
 					}
