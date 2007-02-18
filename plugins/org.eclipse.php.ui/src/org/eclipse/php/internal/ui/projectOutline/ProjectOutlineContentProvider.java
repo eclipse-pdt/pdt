@@ -24,168 +24,30 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.StandardPHPElementContentProvider;
 import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
 import org.eclipse.swt.widgets.Control;
 
 public class ProjectOutlineContentProvider extends StandardPHPElementContentProvider implements ModelListener, IWorkspaceModelListener {
-	public static class OutlineNode implements Comparable {
-		HashMap children;
-		PHPProjectModel model;
-		ProjectOutlinePart part;
-		String text;
-		int type;
-		Boolean b = new Boolean(true);
 
-		public OutlineNode(final int type, final String text, final PHPProjectModel model, final ProjectOutlinePart part) {
-			this.type = type;
-			this.text = text;
-			this.model = model;
-			this.part = part;
-		}
+	private final ProjectOutlinePart fPart;
+	private IProject fStoredProject;
+	private PHPTreeViewer fViewer;
+	private OutlineNode[] groupNodes;
+	private OutlineNode[] nodes;
 
-		public int compareTo(final Object other) {
-			//this optimization is usually worthwhile, and can always be added
-			if (this == other)
-				return 0;
-
-			// compares the type field
-			if (other instanceof OutlineNode) {
-				final OutlineNode otherNode = (OutlineNode) other;
-				return type - otherNode.type;
-			}
-			return 0;
-		}
-
-		public Object[] getChildren() {
-			if (model == null)
-				return new Object[0];
-			if (children == null)
-				loadChildren();
-			return children.keySet().toArray();
-		}
-
-		public PHPProjectModel getModel() {
-			return model;
-		}
-
-		public String getText() {
-			return text;
-		}
-
-		public int getType() {
-			return type;
-		}
-
-		public boolean hasChildren() {
-			if (model == null)
-				return false;
-			if (children == null)
-				loadChildren();
-			return children.size() > 0;
-		}
-
-		PHPCodeData[] addChildren(PHPFileData newData) {
-			PHPCodeData[] newChildren = new PHPCodeData[0];
-			if (newData != null) {
-				switch (type) {
-					case CLASSES:
-						newChildren = newData.getClasses();
-						break;
-					case FUNCTIONS:
-						newChildren = newData.getFunctions();
-						break;
-					case CONSTANTS:
-						newChildren = newData.getConstants();
-						break;
-				}
-			}
-			if (children == null) {
-				children = new HashMap(newChildren.length);
-			}
-			for (int i = 0; i < newChildren.length; ++i) {
-				children.put(newChildren[i], b);
-			}
-
-			return newChildren;
-
-		}
-
-		PHPCodeData[] removeChildren(PHPFileData oldData) {
-			PHPCodeData[] oldChildren = new PHPCodeData[0];
-			if (oldData != null) {
-				switch (type) {
-					case CLASSES:
-						oldChildren = oldData.getClasses();
-						break;
-					case FUNCTIONS:
-						oldChildren = oldData.getFunctions();
-						break;
-					case CONSTANTS:
-						oldChildren = oldData.getConstants();
-						break;
-				}
-			}
-			for (int i = 0; i < oldChildren.length; ++i) {
-				children.remove(oldChildren[i]);
-			}
-
-			return oldChildren;
-
-		}
-
-		void loadChildren() {
-			if (model == null)
-				return;
-			children = new HashMap(1);
-			Object[] aChildren = new Object[0];
-			switch (type) {
-				case CLASSES:
-					if (part.isShowAll())
-						aChildren = model.getClasses();
-					else
-						aChildren = model.getPHPUserModel().getClasses();
-					break;
-
-				case FUNCTIONS:
-					if (part.isShowAll())
-						aChildren = model.getFunctions();
-					else
-						aChildren = model.getPHPUserModel().getFunctions();
-					break;
-
-				case CONSTANTS:
-					if (part.isShowAll())
-						aChildren = model.getConstants();
-					else
-						aChildren = model.getPHPUserModel().getConstants();
-					break;
-
-			}
-			for (int i = 0; i < aChildren.length; ++i) {
-				children.put(aChildren[i], b);
-			}
-		}
-
-		public void resetChildren() {
-			children = null;
-		}
-
-		public void setModel(final PHPProjectModel model) {
-			this.model = model;
-		}
-	}
-
+	
 	public static final int INCLUDES = 1;
 	public static final int CONSTANTS = 2;
 	public static final int CLASSES = 3;
 	public static final int FUNCTIONS = 4;
 
+	public ProjectOutlineContentProvider(final ProjectOutlinePart part, final boolean provideMembers) {
+		fPart = part;
+		fViewer = part.getViewer();
+	}
+	
 	/**
 	 * Retunrs the node type or -1 if the given object is not an OutlineNode.
 	 * 
@@ -205,25 +67,11 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	 * @see org.eclipse.php.ui.StandardPHPElementContentProvider#dispose()
 	 */
 	public void dispose() {
-		// TODO Auto-generated method stub
 		PHPWorkspaceModelManager.getInstance().removeWorkspaceModelListener(this);
 		PHPWorkspaceModelManager.getInstance().removeModelListener(this);
 		if (timer != null)
 			timer.cancel();
 		super.dispose();
-	}
-
-	private ProjectOutlinePart fPart;
-	IProject fStoredProject;
-
-	private PHPTreeViewer fViewer;
-
-	OutlineNode[] groupNodes;
-
-	public ProjectOutlineContentProvider(final ProjectOutlinePart part, final boolean provideMembers) {
-		fPart = part;
-		fViewer = part.getViewer();
-
 	}
 
 	public void dataCleared() {
@@ -256,8 +104,6 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		}
 		return super.getChildrenInternal(parentElement);
 	}
-
-	OutlineNode[] nodes;
 
 	private OutlineNode[] getOutlineChildren(final IProject project) {
 		final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
@@ -457,4 +303,154 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 			postRefresh(project, true);
 	}
 
+	
+	public static class OutlineNode implements Comparable {
+		HashMap children;
+		PHPProjectModel model;
+		final private ProjectOutlinePart part;
+		final private String text;
+		final private int type;
+		final private static Boolean b = new Boolean(true);
+
+		public OutlineNode(final int type, final String text, final PHPProjectModel model, final ProjectOutlinePart part) {
+			this.type = type;
+			this.text = text;
+			this.model = model;
+			this.part = part;
+		}
+
+		public int compareTo(final Object other) {
+			//this optimization is usually worthwhile, and can always be added
+			if (this == other)
+				return 0;
+
+			// compares the type field
+			if (other instanceof OutlineNode) {
+				final OutlineNode otherNode = (OutlineNode) other;
+				return type - otherNode.type;
+			}
+			return 0;
+		}
+
+		public Object[] getChildren() {
+			if (model == null)
+				return new Object[0];
+			if (children == null)
+				loadChildren();
+			return children.keySet().toArray();
+		}
+
+		public PHPProjectModel getModel() {
+			return model;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public int getType() {
+			return type;
+		}
+
+		public boolean hasChildren() {
+			if (model == null)
+				return false;
+			if (children == null)
+				loadChildren();
+			return children.size() > 0;
+		}
+
+		PHPCodeData[] addChildren(PHPFileData newData) {
+			PHPCodeData[] newChildren = new PHPCodeData[0];
+			if (newData != null) {
+				switch (type) {
+					case CLASSES:
+						newChildren = newData.getClasses();
+						break;
+					case FUNCTIONS:
+						newChildren = newData.getFunctions();
+						break;
+					case CONSTANTS:
+						newChildren = newData.getConstants();
+						break;
+				}
+			}
+			if (children == null) {
+				children = new HashMap(newChildren.length);
+			}
+			for (int i = 0; i < newChildren.length; ++i) {
+				children.put(newChildren[i], b);
+			}
+
+			return newChildren;
+
+		}
+
+		PHPCodeData[] removeChildren(PHPFileData oldData) {
+			PHPCodeData[] oldChildren = new PHPCodeData[0];
+			if (oldData != null) {
+				switch (type) {
+					case CLASSES:
+						oldChildren = oldData.getClasses();
+						break;
+					case FUNCTIONS:
+						oldChildren = oldData.getFunctions();
+						break;
+					case CONSTANTS:
+						oldChildren = oldData.getConstants();
+						break;
+				}
+			}
+			for (int i = 0; i < oldChildren.length; ++i) {
+				children.remove(oldChildren[i]);
+			}
+
+			return oldChildren;
+
+		}
+
+		void loadChildren() {
+			if (model == null)
+				return;
+			children = new HashMap(1);
+			Object[] aChildren = new Object[0];
+			switch (type) {
+				case CLASSES:
+					if (part.isShowAll())
+						aChildren = model.getClasses();
+					else
+						aChildren = model.getPHPUserModel().getClasses();
+					break;
+
+				case FUNCTIONS:
+					if (part.isShowAll())
+						aChildren = model.getFunctions();
+					else
+						aChildren = model.getPHPUserModel().getFunctions();
+					break;
+
+				case CONSTANTS:
+					if (part.isShowAll())
+						aChildren = model.getConstants();
+					else
+						aChildren = model.getPHPUserModel().getConstants();
+					break;
+
+			}
+			for (int i = 0; i < aChildren.length; ++i) {
+				children.put(aChildren[i], b);
+			}
+		}
+
+		public void resetChildren() {
+			children = null;
+		}
+
+		public void setModel(final PHPProjectModel model) {
+			this.model = model;
+		}
+	}
+
+	
+	
 }
