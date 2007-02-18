@@ -330,7 +330,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
-        return getSourceName().hashCode() + fId;
+        return getSourceName().hashCode() + fThread.hashCode();
     }
 
     /**
