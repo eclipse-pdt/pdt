@@ -13,6 +13,8 @@ package org.eclipse.php.internal.ui.outline;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -43,7 +45,21 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	protected IContributionItem[] createMenuContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
 		final IContributionItem showPHPItem = new ActionContributionItem(new ChangeOutlineModeAction(PHPUIMessages.PHPOutlinePage_mode_php, PHPOutlineContentProvider.MODE_PHP, viewer));
-		final IContributionItem showHTMLItem = new ActionContributionItem(new ChangeOutlineModeAction(PHPUIMessages.PHPOutlinePage_mode_html, PHPOutlineContentProvider.MODE_HTML, viewer));
+		ChangeOutlineModeAction action = new ChangeOutlineModeAction(PHPUIMessages.PHPOutlinePage_mode_html, PHPOutlineContentProvider.MODE_HTML, viewer);
+		action.addPropertyChangeListener(new IPropertyChangeListener() {
+
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().equals("checked")) {
+					boolean checked = ((Boolean) event.getNewValue()).booleanValue();
+					if (sortAction != null) {
+						sortAction.setEnabled(!checked);
+					}
+				}
+
+			}
+
+		});
+		final IContributionItem showHTMLItem = new ActionContributionItem(action);
 		items = super.createMenuContributions(viewer);
 		if (items == null)
 			items = new IContributionItem[] { showPHPItem, showHTMLItem };
@@ -53,6 +69,9 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			combinedItems[items.length] = showPHPItem;
 			combinedItems[items.length + 1] = showHTMLItem;
 			items = combinedItems;
+		}
+		if (action.isChecked()) {
+			sortAction.setEnabled(false);
 		}
 		return items;
 	}
@@ -89,6 +108,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	}
 
 	DoubleClickListener doubleClickListener = new DoubleClickListener();
+	private SortAction sortAction;
 
 	public DoubleClickListener getDoubleClickListener() {
 		return doubleClickListener;
@@ -98,7 +118,9 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		IContributionItem[] items;
 		final IContributionItem showGroupsItem = new ActionContributionItem(new ShowGroupsAction("Show Groups", viewer));
 		final IContributionItem toggleLinking = super.createMenuContributions(viewer)[0];
-		final IContributionItem sortItem = new ActionContributionItem(new SortAction(viewer));
+		sortAction = new SortAction(viewer);
+		final IContributionItem sortItem = new ActionContributionItem(sortAction);
+
 		items = super.createToolbarContributions(viewer);
 		if (items == null)
 			items = new IContributionItem[] { sortItem, showGroupsItem };
