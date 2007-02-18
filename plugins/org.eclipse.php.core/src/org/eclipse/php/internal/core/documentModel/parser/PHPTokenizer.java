@@ -635,27 +635,6 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 	boolean same = false;
 	while (stillSearching) {
 		n = 0;
-		/**
-		 * Look for starting PHPs "<?"
-		 */
-		// Look for a PHP beginning at the current position; this case wouldn't be handled by the preceding section
-		// since it relies upon *having* closeTagStringLength amount of input to work as designed.  Must be sure we don't
-		// spill over the end of the buffer while checking.
-		if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_currentPos > 0 && yy_currentPos < yy_buffer.length - 1 &&
-				yy_buffer[yy_currentPos - 1] == '<' && 
-				(yy_buffer[yy_currentPos] == '?' || (yy_buffer[yy_currentPos] == '%' && UseAspTagsHandler.useAspTagsAsPhp(project)))) {
-			fLastInternalBlockStart = yy_markedPos = yy_currentPos - 1;
-			yy_currentPos = yy_markedPos + 1;
-			int resumeState = yystate();
-			yybegin(resumeState);
-			if(yy_markedPos == yy_startRead) {
-				String jspContext = primGetNextToken();
-				yybegin(resumeState);
-				return jspContext;
-			}
-			return searchContext;
-		}
-		
 		// Ensure that enough data from the input exists to compare against the search String.
 		n = yy_advance();
 		while(n != YYEOF && yy_currentPos < searchStringLength)
@@ -665,24 +644,89 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			stillSearching = false;
 		}
 		else {
-			same = true;
-			// Ensure that we've not encountered a complete block (<%%>) that was *shorter* than the closeTagString and
-			// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
+			
+			/**
+			 * Look for starting PHPs "<?"
+			 */
+			// Look for a PHP beginning at the current position; this case wouldn't be handled by the preceding section
+			// since it relies upon *having* closeTagStringLength amount of input to work as designed.  Must be sure we don't
+			// spill over the end of the buffer while checking.
+			if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_currentPos > 0 && yy_currentPos < yy_buffer.length - 1 &&
+					yy_buffer[yy_currentPos - 1] == '<' && 
+					(yy_buffer[yy_currentPos] == '?' || (yy_buffer[yy_currentPos] == '%' && UseAspTagsHandler.useAspTagsAsPhp(project)))) {
+				fLastInternalBlockStart = yy_markedPos = yy_currentPos - 1;
+				yy_currentPos = yy_markedPos + 1;
+				int resumeState = yystate();
+				yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
+				if(yy_markedPos == yy_startRead) {
+					String jspContext = primGetNextToken();
+					yybegin(resumeState);
+					return jspContext;
+				}
+				return searchContext;
+			}
+			
+			// 2) yy_currentPos - jspstarter.length : There's not searchStringLength of input available; check for a JSP 2 spots back in what we could read
+			// ---
+			// Look for a JSP beginning at the current position; this case wouldn't be handled by the preceding section
+			// since it relies upon *having* closeTagStringLength amount of input to work as designed.  Must be sure we don't
+			// spill over the end of the buffer while checking.
+			else if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_currentPos > 0 && yy_currentPos < yy_buffer.length - 1 &&
+					yy_buffer[yy_currentPos - 1] == '<' && yy_buffer[yy_currentPos] == '?') {
+				fLastInternalBlockStart = yy_markedPos = yy_currentPos - 1;
+				yy_currentPos = yy_markedPos + 1;
+				int resumeState = yystate();
+				yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
+				if(yy_markedPos == yy_startRead) {
+					String jspContext = primGetNextToken();
+					yybegin(resumeState);
+					return jspContext;
+				}
+				return searchContext;
+			}
+			// 3) yy_currentPos..(yy_currentPos+jspStartlength-1) : Check at the start of the block one time
+			// ---
+			// Look for a JSP beginning immediately in the block area; this case wouldn't be handled by the preceding section
+			// since it relies upon yy_currentPos equaling exactly the previous end +1 to work as designed.
+			else if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_startRead > 0 &&
+					yy_startRead < yy_buffer.length - 1 && yy_buffer[yy_startRead] == '<' && yy_buffer[yy_startRead + 1] == '?') {
+				fLastInternalBlockStart = yy_markedPos = yy_startRead;
+				yy_currentPos = yy_markedPos + 1;
+				int resumeState = yystate();
+				yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
+				if(yy_markedPos == yy_startRead) {
+					String jspContext = primGetNextToken();
+					yybegin(resumeState);
+					return jspContext;
+				}
+				return searchContext;
+			}
+
 			// Check the characters in the target versus the last targetLength characters read from the buffer
 			// and see if it matches
-			
-			// safety check for array accesses (yy_currentPos is the *last* character we can check against)
-			if(yy_currentPos >= searchStringLength && yy_currentPos <= yy_buffer.length) {
-				for(i = 0; i < searchStringLength; i++) {
-					if(same && fIsCaseSensitiveBlocking)
-						same = yy_buffer[i + yy_currentPos - searchStringLength] == searchString.charAt(i);
-					else if(same && !fIsCaseSensitiveBlocking)
-						same = Character.toLowerCase(yy_buffer[i + yy_currentPos - searchStringLength]) == Character.toLowerCase(searchString.charAt(i));
-				}
+			if (n == YYEOF) {
+				stillSearching = false;
 			}
-			// safety check failed; no match is possible right now
 			else {
-				same = false;
+				same = true;
+				// Ensure that we've not encountered a complete block (<%%>) that was *shorter* than the closeTagString and
+				// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
+				// Check the characters in the target versus the last targetLength characters read from the buffer
+				// and see if it matches
+				
+				// safety check for array accesses (yy_currentPos is the *last* character we can check against)
+				if(yy_currentPos >= searchStringLength && yy_currentPos <= yy_buffer.length) {
+					for(i = 0; i < searchStringLength; i++) {
+						if(same && fIsCaseSensitiveBlocking)
+							same = yy_buffer[i + yy_currentPos - searchStringLength] == searchString.charAt(i);
+						else if(same && !fIsCaseSensitiveBlocking)
+							same = Character.toLowerCase(yy_buffer[i + yy_currentPos - searchStringLength]) == Character.toLowerCase(searchString.charAt(i));
+					}
+				}
+				// safety check failed; no match is possible right now
+				else {
+					same = false;
+				}
 			}
 			if (same && requireTailSeparator && yy_currentPos < yy_buffer.length) {
 				// Additional check for close tags to ensure that targetString="</script" doesn't match

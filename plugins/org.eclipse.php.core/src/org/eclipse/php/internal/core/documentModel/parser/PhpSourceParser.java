@@ -91,6 +91,9 @@ public class PhpSourceParser extends XMLSourceParser {
 					region.adjustStart(-currentNode.getStart());
 					// DW 4/16/2003 regions no longer have parents
 					// region.setParent(currentNode);
+					if (region instanceof ITextRegionContainer) {
+						((ITextRegionContainer) region).setParent(currentNode);
+					}
 				} else {
 					// not continuing a IStructuredDocumentRegion
 					if (currentNode != null) {
