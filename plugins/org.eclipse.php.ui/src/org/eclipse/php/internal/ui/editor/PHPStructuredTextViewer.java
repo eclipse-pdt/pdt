@@ -1,10 +1,12 @@
 package org.eclipse.php.internal.ui.editor;
 
+import org.eclipse.jface.bindings.TriggerSequence;
+import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.FormattingContext;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
@@ -15,10 +17,19 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
+import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.VerifyKeyListener;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -28,10 +39,12 @@ import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_; //$NON-NLS-1$
+	private SourceViewerConfiguration config;
 
 	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
@@ -71,6 +84,24 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		} else if (operation == PASTE) {
 			super.doOperation(operation);
 			doOperation(FORMAT_ACTIVE_ELEMENTS);
+		} else if (operation == CONTENTASSIST_PROPOSALS) {
+			// notifing the processors that the next request for completion is an explicit request
+			if (config != null) {
+				IContentAssistProcessor[] all = ((PHPStructuredTextViewerConfiguration) config).getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
+				for (int i = 0; i < all.length; i++) {
+					if (all[i] instanceof IContentAssistProcessorForPHP) {
+						((IContentAssistProcessorForPHP) all[i]).explicitActivationRequest();
+					}
+				}
+			}
+			super.doOperation(operation);
+//		} 
+//		else if (operation == CONTENTASSIST_CONTEXT_INFORMATION) {
+//			if (fContentAssistant != null) {
+//				String err = fContentAssistant.showContextInformation();
+//				PlatformStatusLineUtil.displayErrorMessage(err);
+//				PlatformStatusLineUtil.addOneTimeClearListener();
+//			}
 		} else {
 			super.doOperation(operation);
 		}
@@ -124,7 +155,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 					redrawRegionsReplaced(regionsReplacedEvent);
 				} else {
 					region.isFullReparsed = true;
-				}				
+				}
 			}
 			super.redrawRegionChanged(structuredDocumentEvent);
 		}
@@ -141,6 +172,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		if (!(configuration instanceof PHPStructuredTextViewerConfiguration)) {
 			return;
 		}
+		config = configuration;
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
 		IContentAssistant newAssistant = configuration.getContentAssistant(this);
 		newAssistant.uninstall();

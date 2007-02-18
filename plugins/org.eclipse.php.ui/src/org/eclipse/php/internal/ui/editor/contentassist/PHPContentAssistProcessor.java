@@ -61,7 +61,7 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 			}
 		} finally {
 			structuredModel.releaseFromRead();
-			isExplicitRequest = true;
+			isExplicitRequest = false;
 		}
 		return completionProposals;
 	}
@@ -152,10 +152,9 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 	 * 
 	 *  so we set it as implicit when we are asked for by PHPContentAssistant and unset it after the first request. 
 	 */
-	private boolean isExplicitRequest = true;
+	private boolean isExplicitRequest = false;
 	
-	public void setAutoActivationRequest(boolean b) {
-		//this is a bit confusing here but if this is an auto activation then it is not an explicit request.
-		isExplicitRequest = !b;
+	public void explicitActivationRequest() {
+		isExplicitRequest = true;
 	}
 }

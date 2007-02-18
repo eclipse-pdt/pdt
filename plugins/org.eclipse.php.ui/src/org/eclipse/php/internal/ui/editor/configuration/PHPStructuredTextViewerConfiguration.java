@@ -116,7 +116,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return super.getLineStyleProviders(sourceViewer, partitionType);
 	}
 
-	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
+	public IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 		IContentAssistProcessor[] processors = null;
 
 		if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {

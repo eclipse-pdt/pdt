@@ -50,7 +50,7 @@ public class PHPDocContentAssistProcessor implements IContentAssistProcessorForP
 			}
 		} finally {
 			structuredModel.releaseFromRead();
-			isExplicitRequest = true;
+			isExplicitRequest = false;
 		}
 		return completionProposals;
 	}
@@ -75,11 +75,10 @@ public class PHPDocContentAssistProcessor implements IContentAssistProcessorForP
 		return null;
 	}
 
-	private boolean isExplicitRequest = true;
+	private boolean isExplicitRequest = false;
 
-	public void setAutoActivationRequest(boolean b) {
-		//this is a bit confusing here but if this is an auto activation then it is not an explicit request.
-		isExplicitRequest = !b;
+	public void explicitActivationRequest() {
+		isExplicitRequest = true;
 	}
 
 }

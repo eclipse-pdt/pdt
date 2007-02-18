@@ -6,7 +6,8 @@
          <meta.schema plugin="org.eclipse.php.ui" id="phpContentAssistProcessor" name="PHP Content Assist Processor"/>
       </appInfo>
       <documentation>
-         This extension point allows to provide additional content assist processors for PHP editor. For more information of what is content assist processor, refer to &lt;code&gt;org.eclipse.jface.text.contentassist.IContentAssistProcessor&lt;/code&gt; interface.
+         This extension point allows to provide additional content assist processors for PHP editor, extenders must implement &lt;code&gt;org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP&lt;/code&gt;
+For more information of what is content assist processor, refer to &lt;code&gt;org.eclipse.jface.text.contentassist.IContentAssistProcessor&lt;/code&gt; interface.
       </documentation>
    </annotation>
 
@@ -64,7 +65,7 @@
                   Class of this PHP content assist processor
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.jface.text.contentassist.IContentAssistProcessor"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP"/>
                </appInfo>
             </annotation>
          </attribute>
