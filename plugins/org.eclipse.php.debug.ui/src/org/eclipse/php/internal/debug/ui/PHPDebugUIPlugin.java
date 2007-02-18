@@ -22,12 +22,19 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.debug.internal.ui.viewers.AsynchronousViewer;
+import org.eclipse.debug.internal.ui.views.launch.LaunchView;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.model.PHPStackFrame;
 import org.eclipse.php.internal.debug.ui.views.variables.PHPDebugElementAdapterFactory;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.widgets.Display;
@@ -51,6 +58,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	public static final int INTERNAL_ERROR = 10001;
     private ShowViewListener showViewListener;
     private TerminateDebugLaunchListener finishDebugLaunchListener;
+    private FirstSelectionDebugLaunchListener firstSelectionDebugLaunchListener;
     /**
      * The constructor.
      */
@@ -71,6 +79,11 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
         finishDebugLaunchListener = new TerminateDebugLaunchListener();
         DebugPlugin.getDefault().getLaunchManager().addLaunchListener(finishDebugLaunchListener);
         
+        // Install the FirstSelectionDebugLaunchListener, which is responsible of selecting the
+        // new launch in the LaunchView.
+        firstSelectionDebugLaunchListener = new FirstSelectionDebugLaunchListener();
+        DebugPlugin.getDefault().getLaunchManager().addLaunchListener(firstSelectionDebugLaunchListener);
+
         // Register the PHPDebugElementAdapterFactory. 
 		// To make sure we are the first adapter factory for the IVariable class, we insert the
 		// factory before any other factory. 
@@ -97,6 +110,10 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
         // Uninstall the debug event listener.
         if (finishDebugLaunchListener != null) {
         	DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(finishDebugLaunchListener);
+        }
+        // Uninstall the debug event listener.
+        if (firstSelectionDebugLaunchListener != null) {
+        	DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(firstSelectionDebugLaunchListener);
         }
         
         plugin = null;
@@ -288,6 +305,56 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		}
 
 		public void launchesAdded(ILaunch[] launches) {
+		}
+
+		public void launchesChanged(ILaunch[] launches) {
+		}
+
+		public void launchesRemoved(ILaunch[] launches) {
+		}
+	}
+	
+    /*
+	 * A class that is responsible of selecting the new launch in the LaunchView.
+	 */
+	private static class FirstSelectionDebugLaunchListener implements ILaunchesListener2 {
+
+		public void launchesTerminated(ILaunch[] launches) {
+		}
+
+		/**
+		 * handle only add new launch event
+		 */
+		public void launchesAdded(ILaunch[] launches) {
+			if (launches != null && launches.length > 0) {			
+				final ILaunch[] currentLaunches = launches;
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						// get the LaunchView
+						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+						LaunchView view =  (LaunchView) page.findView(IDebugUIConstants.ID_DEBUG_VIEW);
+						
+						try {
+							// build the tree path LaunchManager->Launch->DebugTarget->PHPThread->PHPStackFrame
+							PHPDebugTarget target = (PHPDebugTarget)currentLaunches[0].getDebugTarget();
+							if (target != null) {
+								IThread thread = target.getThreads()[0];
+								PHPStackFrame frame = (PHPStackFrame) thread.getTopStackFrame();
+								Object[] segments = new Object[5]; 
+								segments[0] = DebugPlugin.getDefault().getLaunchManager();
+								segments[1] = currentLaunches[0];
+								segments[2] = target;
+								segments[3] = thread;
+								segments[4] = frame;
+								TreePath treePath = new TreePath(segments);
+								// set the current launch as the LaunchViewer selection.
+								((AsynchronousViewer)view.getViewer()).setSelection(new TreeSelection(treePath), true, true);
+							}							
+						} catch (DebugException e) {
+						}	
+					}
+				});	
+			}
 		}
 
 		public void launchesChanged(ILaunch[] launches) {
