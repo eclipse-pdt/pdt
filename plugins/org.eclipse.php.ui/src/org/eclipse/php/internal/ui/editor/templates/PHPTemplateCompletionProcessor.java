@@ -41,6 +41,9 @@ public class PHPTemplateCompletionProcessor extends TemplateCompletionProcessor 
 	}
 	
 	private ICompletionProposal[] filterUsingPrefix(ICompletionProposal[] completionProposals, String prefix) {
+		if (prefix.length() == 0) { // no templats should be offered if there is no prefix.
+			return new ICompletionProposal[0];
+		}
 		List matches= new ArrayList();
 		for (int i= 0; i < completionProposals.length; i++) {
 			PhpTemplateProposal phpTemplateProposal = (PhpTemplateProposal)completionProposals[i];
