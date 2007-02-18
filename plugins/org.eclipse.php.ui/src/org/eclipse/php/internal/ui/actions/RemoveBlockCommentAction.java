@@ -26,6 +26,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
  * Action that removes the enclosing comment marks from a Java block comment.
@@ -54,32 +56,43 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 		List edits = new LinkedList();
 		int offset = selection.getOffset();
 		int endOffset = offset + selection.getLength();
-
+		if (!(docExtension instanceof IStructuredDocument)) {
+			return;
+		}
 		do {
-			if (docExtension instanceof IStructuredDocument) {
-				IStructuredDocument sDoc = (IStructuredDocument)docExtension;
-				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(offset);
-				ITextRegion region = sdRegion.getRegionAtCharacterOffset(offset);
-				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-					PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
-					region = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
-					if (PHPPartitionTypes.isPHPMultiLineCommentState(region.getType())) {
-						ITextRegion startRegion = PHPPartitionTypes.getPartitionStartRegion(phpScriptRegion, region.getStart());
-						ITextRegion endRegion = PHPPartitionTypes.getPartitionEndRegion(phpScriptRegion, region.getStart());
-						if (startRegion.getType() == PHPRegionTypes.PHP_COMMENT_START && endRegion.getType() == PHPRegionTypes.PHP_COMMENT_END) {
-							int startCommentOffset = sdRegion.getStart() + phpScriptRegion.getStart() + startRegion.getStart();
-							int endCommentOffset = sdRegion.getStart() + phpScriptRegion.getStart() + endRegion.getStart();
-							edits.add(factory.createEdit(startCommentOffset, startRegion.getLength(), "")); //$NON-NLS-1$
-							edits.add(factory.createEdit(endCommentOffset, getCommentEnd().length(), "")); //$NON-NLS-1$
-							offset = endCommentOffset + endRegion.getLength();
-						} else {
-							break; // comment is not opened or not closed
-						}
+
+			IStructuredDocument sDoc = (IStructuredDocument) docExtension;
+			IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(offset);
+			ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+
+			ITextRegionCollection container = sdRegion;
+
+			if (textRegion instanceof ITextRegionContainer) {
+				container = (ITextRegionContainer) textRegion;
+				textRegion = container.getRegionAtCharacterOffset(offset);
+			}
+
+			if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+				PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+				textRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+				if (PHPPartitionTypes.isPHPMultiLineCommentState(textRegion.getType())) {
+					ITextRegion startRegion = PHPPartitionTypes.getPartitionStartRegion(phpScriptRegion, textRegion.getStart());
+					ITextRegion endRegion = PHPPartitionTypes.getPartitionEndRegion(phpScriptRegion, textRegion.getStart());
+					if (startRegion.getType() == PHPRegionTypes.PHP_COMMENT_START && endRegion.getType() == PHPRegionTypes.PHP_COMMENT_END) {
+						int startCommentOffset = container.getStart() + phpScriptRegion.getStart() + startRegion.getStart();
+						int endCommentOffset = container.getStart() + phpScriptRegion.getStart() + endRegion.getStart();
+						edits.add(factory.createEdit(startCommentOffset, startRegion.getLength(), "")); //$NON-NLS-1$
+						edits.add(factory.createEdit(endCommentOffset, getCommentEnd().length(), "")); //$NON-NLS-1$
+						offset = endCommentOffset + endRegion.getLength();
 					} else {
-						int endPartitionOffset = PHPPartitionTypes.getPartitionStart(phpScriptRegion, offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
-						offset = sdRegion.getStart() + phpScriptRegion.getStart() + endPartitionOffset;
+						break; // comment is not opened or not closed
 					}
+				} else {
+					int endPartitionOffset = PHPPartitionTypes.getPartitionStart(phpScriptRegion, offset - container.getStartOffset() - phpScriptRegion.getStart());
+					offset = container.getStart() + phpScriptRegion.getStart() + endPartitionOffset;
 				}
+			} else {
+				break;
 			}
 		} while (offset < endOffset);
 
@@ -93,11 +106,11 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 		int offset = selection.getOffset();
 		try {
 			if (docExtension instanceof IStructuredDocument) {
-				IStructuredDocument sDoc = (IStructuredDocument)docExtension;
+				IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(offset);
 				ITextRegion region = sdRegion.getRegionAtCharacterOffset(offset);
 				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-					PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
+					PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
 					region = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 					if (PHPPartitionTypes.isPHPMultiLineCommentState(region.getType())) {
 						return true;

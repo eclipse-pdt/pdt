@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.text.Assert;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPartitioningException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITypedRegion;
@@ -28,6 +27,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
  * Action that encloses the editor's current selection with PHP block comment terminators
@@ -59,18 +60,30 @@ public class AddBlockCommentAction extends BlockCommentAction {
 		if (docExtension instanceof IStructuredDocument) {
 			IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 			IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
-			ITextRegion region = sdRegion.getRegionAtCharacterOffset(selectionOffset);
+			ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
+			
+			ITextRegionCollection container = sdRegion;
+			
+			if(textRegion instanceof ITextRegionContainer){
+				container = (ITextRegionContainer)textRegion;
+				textRegion = container.getRegionAtCharacterOffset(selectionOffset);
+			}
 
-			if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-				PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
-				ITypedRegion partition = PHPPartitionTypes.getPartition(phpScriptRegion, selectionOffset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+			if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+				PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+				ITypedRegion partition = PHPPartitionTypes.getPartition(phpScriptRegion, selectionOffset - container.getStartOffset() - phpScriptRegion.getStart());
 
-				int phpRegionStart = sdRegion.getStartOffset() + phpScriptRegion.getStart();
+				int phpRegionStart = container.getStartOffset(phpScriptRegion);
 
 				handleFirstPartition(partition, edits, factory, selectionOffset, phpRegionStart);
 
-				while (phpRegionStart + partition.getOffset() + partition.getLength() < selectionEndOffset) {
+				ITypedRegion lastPartition = partition;
+				while (partition != null && phpRegionStart + partition.getOffset() + partition.getLength() < selectionEndOffset) {
+					lastPartition = partition;
 					partition = handleInteriorPartition(partition, edits, factory, docExtension, phpRegionStart);
+				}
+				if(partition == null){
+					partition = lastPartition;
 				}
 				handleLastPartition(partition, edits, factory, selectionEndOffset, phpRegionStart);
 			}
@@ -147,12 +160,23 @@ public class AddBlockCommentAction extends BlockCommentAction {
 		// advance to next partition
 		IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 		IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(partEndOffset);
-		ITextRegion region = sdRegion.getRegionAtCharacterOffset(partEndOffset);
-		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
-			partition = PHPPartitionTypes.getPartition(phpScriptRegion, partEndOffset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+		ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(partEndOffset);
+		
+		ITextRegionCollection container = sdRegion;
+		
+		if(textRegion instanceof ITextRegionContainer){
+			container = (ITextRegionContainer)textRegion;
+			textRegion = container.getRegionAtCharacterOffset(partEndOffset);
+		}
+
+		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+			partition = PHPPartitionTypes.getPartition(phpScriptRegion, partEndOffset - container.getStartOffset() - phpScriptRegion.getStart());
 			partType = partition.getType();
-			phpRegionStart = sdRegion.getStartOffset() + phpScriptRegion.getStart();
+			phpRegionStart = container.getStartOffset() + phpScriptRegion.getStart();
+		}
+		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
+			return null;
 		}
 
 		// start of next partition
