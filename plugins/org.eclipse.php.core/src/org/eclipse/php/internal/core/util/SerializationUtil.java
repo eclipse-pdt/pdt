@@ -384,14 +384,23 @@ public class SerializationUtil {
 		PHPFunctionData[] functions = deserializeFunctionDataArray(inputStream);
 		PHPVariablesTypeManager variablesTypeManager = deserializeVariableTypeManager(inputStream);
 		PHPIncludeFileData[] includeFiles = deserializeIncludeDataArray(inputStream);
-		PHPConstantData[] constans = deserializeConstantDataArray(inputStream);
+		PHPConstantData[] constants = deserializeConstantDataArray(inputStream);
 		IPHPMarker[] markers = deserializeMarkersDataArray(inputStream);
 		PHPBlock[] phpBlocks = deserializeBlockArray(inputStream);
 		PHPDocBlock docBlock = deserializeDocBlock(inputStream);
 		long lastModified = inputStream.readLong();
-		PHPFileData data = PHPCodeDataFactory.createPHPFileData(fileName, userData, classes, functions, variablesTypeManager, includeFiles, constans, markers, phpBlocks, docBlock, lastModified);
+		PHPFileData data = PHPCodeDataFactory.createPHPFileData(fileName, userData, classes, functions, variablesTypeManager, includeFiles, constants, markers, phpBlocks, docBlock, lastModified);
 		for (int i = 0; i < classes.length; i++) {
 			classes[i].setContainer(data);
+		}
+		for (int i = 0; i < functions.length; i++) {
+			functions[i].setContainer(data);
+		}
+		for (int i = 0; i < includeFiles.length; i++) {
+			includeFiles[i].setContainer(data);
+		}
+		for (int i = 0; i < constants.length; i++) {
+			constants[i].setContainer(data);
 		}
 
 		return data;
