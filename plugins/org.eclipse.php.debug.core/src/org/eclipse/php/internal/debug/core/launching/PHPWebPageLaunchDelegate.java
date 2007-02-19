@@ -97,6 +97,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 		// Set transfer encoding:
 		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
+		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(proj));
 		wc.doSave();
 
 		String URL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());

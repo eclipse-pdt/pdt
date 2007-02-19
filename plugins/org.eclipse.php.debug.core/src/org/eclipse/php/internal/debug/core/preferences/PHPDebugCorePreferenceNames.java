@@ -38,5 +38,6 @@ public class PHPDebugCorePreferenceNames {
 	public static final String AUTO_SAVE_DIRTY = Debug_ID + "auto_save_dirty";//$NON-NLS-1$
 	public static final String OPEN_DEBUG_VIEWS = Debug_ID + "open_debug_views";//$NON-NLS-1$
 	public static final String TRANSFER_ENCODING = Debug_ID + "transfer_encoding";//$NON-NLS-1$
+	public static final String OUTPUT_ENCODING = Debug_ID + "output_encoding";//$NON-NLS-1$
 
 }

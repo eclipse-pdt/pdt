@@ -45,6 +45,7 @@ import org.eclipse.php.internal.debug.core.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.debugger.messages.DebugSessionStartedNotification;
+import org.eclipse.php.internal.debug.core.debugger.messages.OutputNotification;
 import org.eclipse.php.internal.debug.core.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
@@ -548,6 +549,7 @@ public class DebugConnectionThread implements Runnable {
 			launchDecorator = new PHPServerLaunchDecorator(launch, project);
 		}
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
+		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, ""));
 		String URL = launchConfiguration.getAttribute(Server.BASE_URL, "");
 		String contextRoot = launchConfiguration.getAttribute(Server.CONTEXT_ROOT, "");
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(launchDecorator.getProject());
@@ -578,6 +580,7 @@ public class DebugConnectionThread implements Runnable {
 	protected void hookPHPExeDebug(final ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
+		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, ""));
 		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
 		String fileNameString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
@@ -895,11 +898,27 @@ public class DebugConnectionThread implements Runnable {
 		private Thread theThread;
 		private Object READY_FOR_RESTART_LOCK = new Object();
 		private String transferEncoding;
+		private String outputEncoding;
 
+		/**
+		 * Sets the transfer encoding.
+		 * 
+		 * @param transferEncoding
+		 */
 		public void setTransferEncoding(String transferEncoding) {
 			this.transferEncoding = transferEncoding;
 		}
 
+		/**
+		 * Set the debug output enconding. 
+		 * The output encoding effects the {@link OutputNotification} strings encoding.
+		 * 
+		 * @param outputEncoding
+		 */
+		public void setOutputEncoding(String outputEncoding) {
+			this.outputEncoding = outputEncoding;
+		}
+		
 		/**
 		 * Create an InputManager in a separate thread.
 		 */
@@ -1037,7 +1056,11 @@ public class DebugConnectionThread implements Runnable {
 
 						IDebugMessage message = DebugMessagesRegistry.getMessage(messageType);
 						if (message != null) {
-							message.setTransferEncoding(transferEncoding);
+							if (message instanceof OutputNotification) {
+								message.setTransferEncoding(outputEncoding);
+							} else {
+								message.setTransferEncoding(transferEncoding);
+							}
 						}
 
 						// handle the message

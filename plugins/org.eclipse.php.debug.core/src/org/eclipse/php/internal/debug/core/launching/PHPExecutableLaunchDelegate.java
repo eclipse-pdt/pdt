@@ -152,6 +152,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 			// Set transfer encoding:
 			wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
+			wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(project));
 			wc.doSave();
 
 			if (monitor.isCanceled())

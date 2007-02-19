@@ -82,4 +82,14 @@ public class PHPProjectPreferences {
 		}
 		return encoding;
 	}
+	
+	public static String getOutputEncoding(IProject project) {
+		Preferences prefs = getModelPreferences();
+		String encoding = prefs.getString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
+		if (project != null && getElementSettingsForProject(project)) {
+			IScopeContext projectScope = getProjectScope(project);
+			encoding = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, encoding);
+		}
+		return encoding;
+	}
 }
