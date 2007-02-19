@@ -205,7 +205,7 @@ public class CodeDataResolver {
 			mergeData = ModelSupport.merge(new CodeData[] { classs }, mergeData);
 		}
 		if (constant != null) {
-			mergeData = ModelSupport.merge(new CodeData[] { classs }, mergeData);
+			mergeData = ModelSupport.merge(new CodeData[] { constant }, mergeData);
 		}
 		if (function != null) {
 			mergeData = ModelSupport.merge(new CodeData[] { function }, mergeData);
