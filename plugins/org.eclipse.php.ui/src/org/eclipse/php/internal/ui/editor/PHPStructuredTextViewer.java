@@ -23,6 +23,9 @@ import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -83,7 +86,12 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			}
 		} else if (operation == PASTE) {
 			super.doOperation(operation);
-			doOperation(FORMAT_ACTIVE_ELEMENTS);
+			TextTransfer plainTextTransfer = TextTransfer.getInstance();
+			String text = (String) new Clipboard(getTextWidget().getDisplay()).getContents(plainTextTransfer, DND.CLIPBOARD);
+			IRegion region = new Region(selection.x, selection.x + text.length());
+			((IStructuredDocument) getDocument()).getUndoManager().disableUndoManagement();
+			fContentFormatter.format(getDocument(), region);
+			((IStructuredDocument) getDocument()).getUndoManager().enableUndoManagement();
 		} else if (operation == CONTENTASSIST_PROPOSALS) {
 			// notifing the processors that the next request for completion is an explicit request
 			if (config != null) {
@@ -95,13 +103,13 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				}
 			}
 			super.doOperation(operation);
-//		} 
-//		else if (operation == CONTENTASSIST_CONTEXT_INFORMATION) {
-//			if (fContentAssistant != null) {
-//				String err = fContentAssistant.showContextInformation();
-//				PlatformStatusLineUtil.displayErrorMessage(err);
-//				PlatformStatusLineUtil.addOneTimeClearListener();
-//			}
+			//		} 
+			//		else if (operation == CONTENTASSIST_CONTEXT_INFORMATION) {
+			//			if (fContentAssistant != null) {
+			//				String err = fContentAssistant.showContextInformation();
+			//				PlatformStatusLineUtil.displayErrorMessage(err);
+			//				PlatformStatusLineUtil.addOneTimeClearListener();
+			//			}
 		} else {
 			super.doOperation(operation);
 		}
