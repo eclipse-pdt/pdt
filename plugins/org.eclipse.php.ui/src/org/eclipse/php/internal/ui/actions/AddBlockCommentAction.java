@@ -24,12 +24,15 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
+import org.eclipse.text.undo.DocumentUndoManagerRegistry;
+import org.eclipse.text.undo.IDocumentUndoManager;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 
 /**
  * Action that encloses the editor's current selection with PHP block comment terminators
@@ -88,7 +91,10 @@ public class AddBlockCommentAction extends BlockCommentAction {
 				handleLastPartition(partition, multiEdit, selectionEndOffset, phpRegionStart);
 			}
 			
+			IStructuredTextUndoManager undoManager = sDoc.getUndoManager();
+			undoManager.beginRecording(this);
 			multiEdit.apply(sDoc);
+			undoManager.endRecording(this);
 		}
 	}
 

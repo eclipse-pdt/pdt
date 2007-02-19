@@ -28,6 +28,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 
 /**
  * Action that removes the enclosing comment marks from a Java block comment.
@@ -95,7 +96,10 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 			}
 		} while (offset < endOffset);
 
+		IStructuredTextUndoManager undoManager = sDoc.getUndoManager();
+		undoManager.beginRecording(this);
 		multiEdit.apply(sDoc);
+		undoManager.endRecording(this);
 	}
 
 	/* (non-Javadoc)
