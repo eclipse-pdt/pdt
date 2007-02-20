@@ -80,7 +80,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					doFinish(containerName, fileName, monitor, contents);
+					FileCreator.createFile(PHPFileCreationWizard.this, containerName, fileName, monitor, contents);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -100,74 +100,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		return true;
 	}
 
-	/**
-	 * The worker method. It will find the container, create the
-	 * file if missing or just replace its contents, and open
-	 * the editor on the newly created file.
-	 * @param contents 
-	 */
-	protected void doFinish(String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
-		// create a sample file
-		monitor.beginTask(NLS.bind(PHPUIMessages.newPhpFile_create, fileName), 2);
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IResource resource = root.findMember(new Path(containerName));
-		if (!resource.exists() || !(resource instanceof IContainer)) {
-			throwCoreException("Container \"" + containerName + "\" does not exist.");
-		}
-		IContainer container = (IContainer) resource;
-		final IFile file = container.getFile(new Path(fileName));
-		try {
-			InputStream stream = openContentStream(contents);
-			if (file.exists()) {
-				file.setContents(stream, true, true, monitor);
-			} else {
-				file.create(stream, true, monitor);
-			}
-			stream.close();
-		} catch (IOException e) {
-		}
-		
-		// Change file encoding:
-		if (container instanceof IProject) {
-			PHPProjectOptions options = PHPProjectOptions.forProject((IProject)container);
-			if (options != null) {
-				String defaultEncoding = (String) options.getOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
-				if (defaultEncoding == null || defaultEncoding.length() == 0) {
-					defaultEncoding = container.getDefaultCharset();
-				}
-				file.setCharset(defaultEncoding, monitor);
-			}
-		}
-		
-		monitor.worked(1);
-		monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning, fileName));
-		getShell().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					IDE.openEditor(page, file, true);
-				} catch (PartInitException e) {
-				}
-			}
-		});
-		monitor.worked(1);
-	}
-
-	/**
-	 * We will initialize file contents with a sample text.
-	 */
-	private InputStream openContentStream(String contents) {
-		if (contents == null) {
-			contents = "";
-		}
-			
-		return new ByteArrayInputStream(contents.getBytes());
-	}
-
-	private void throwCoreException(String message) throws CoreException {
-		IStatus status = new Status(IStatus.ERROR, "TestProject", IStatus.OK, message, null);
-		throw new CoreException(status);
-	}
+	
 
 	/**
 	 * We will accept the selection in the workbench to see if
@@ -176,6 +109,83 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
+	}
+	
+	/**
+	 * A static nested class for the creation of a new PHP File.
+	 * @author yaronm
+	 *
+	 */
+	public static class FileCreator {
+			
+		/**
+		 * The worker method. It will find the container, create the
+		 * file if missing or just replace its contents, and open
+		 * the editor on the newly created file.
+		 * @param contents 
+		 */
+		public static void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
+			// create a sample file
+			monitor.beginTask(NLS.bind(PHPUIMessages.newPhpFile_create, fileName), 2);
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IResource resource = root.findMember(new Path(containerName));
+			if (!resource.exists() || !(resource instanceof IContainer)) {
+				throwCoreException("Container \"" + containerName + "\" does not exist.");
+			}
+			IContainer container = (IContainer) resource;
+			final IFile file = container.getFile(new Path(fileName));
+			try {
+				InputStream stream = openContentStream(contents);
+				if (file.exists()) {
+					file.setContents(stream, true, true, monitor);
+				} else {
+					file.create(stream, true, monitor);
+				}
+				stream.close();
+			} catch (IOException e) {
+			}
+			
+			// Change file encoding:
+			if (container instanceof IProject) {
+				PHPProjectOptions options = PHPProjectOptions.forProject((IProject)container);
+				if (options != null) {
+					String defaultEncoding = (String) options.getOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
+					if (defaultEncoding == null || defaultEncoding.length() == 0) {
+						defaultEncoding = container.getDefaultCharset();
+					}
+					file.setCharset(defaultEncoding, monitor);
+				}
+			}
+			
+			monitor.worked(1);
+			monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning, fileName));
+			wizard.getShell().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					try {
+						IDE.openEditor(page, file, true);
+					} catch (PartInitException e) {
+					}
+				}
+			});
+			monitor.worked(1);
+		}
+
+		/**
+		 * We will initialize file contents with a sample text.
+		 */
+		private static InputStream openContentStream(String contents) {
+			if (contents == null) {
+				contents = "";
+			}
+				
+			return new ByteArrayInputStream(contents.getBytes());
+		}
+
+		private static void throwCoreException(String message) throws CoreException {
+			IStatus status = new Status(IStatus.ERROR, "TestProject", IStatus.OK, message, null);
+			throw new CoreException(status);
+		}
 	}
 	
 }
