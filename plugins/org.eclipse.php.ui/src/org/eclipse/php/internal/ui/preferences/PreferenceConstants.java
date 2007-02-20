@@ -946,7 +946,7 @@ public class PreferenceConstants {
 		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer.toString(new PHPManualConfig(PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION, false)));
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
 		
-		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.PROMPT);
+		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.NEVER);
 
 		// default locale
 		if ((store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE)).equals("")) {
