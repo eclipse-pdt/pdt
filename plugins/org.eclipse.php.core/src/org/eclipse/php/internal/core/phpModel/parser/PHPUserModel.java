@@ -263,7 +263,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 	public CodeData[] getClass(String className) {
 		Collection classes = classesDB.getCodeData(className);
 		if (classes == null)
-			return PHPCodeDataFactory.EMPTY_CODE_DATA_ARRAY;
+			return PHPCodeDataFactory.EMPTY_CLASS_DATA_ARRAY;
 		return (CodeData[]) classes.toArray(new CodeData[classes.size()]);
 	}
 
