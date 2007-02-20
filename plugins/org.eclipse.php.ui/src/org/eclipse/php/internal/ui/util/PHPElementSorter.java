@@ -41,6 +41,7 @@ import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.GroupNode;
 import org.eclipse.php.internal.ui.preferences.MembersOrderPreferenceCache;
 import org.eclipse.php.internal.ui.projectOutline.ProjectOutlineContentProvider.OutlineNode;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.w3c.dom.Node;
 
 /**
  * Sorter for PHP elements. Ordered by element category, then by element name. 
@@ -78,6 +79,7 @@ public class PHPElementSorter extends ViewerSorter {
 	// types, initializers, methods & fields
 	private static final int MEMBERSOFFSET = 16;
 	private static final int OUTLINE_NODES = 15;
+	private static final int DOM_NODES = 17;
 
 	private static final int JAVAELEMENTS = 50;
 	private static final int OTHERS = 51;
@@ -162,6 +164,9 @@ public class PHPElementSorter extends ViewerSorter {
 		if (element instanceof OutlineNode || element instanceof GroupNode) {
 			return OUTLINE_NODES;
 		}
+		if (element instanceof Node) {
+			return DOM_NODES; 
+		}
 		return OTHERS;
 	}
 
@@ -183,6 +188,10 @@ public class PHPElementSorter extends ViewerSorter {
 				return cat1 - cat2;
 		}
 
+		// if we are dealing with dom nodes then the shouldn't be any sort at all (wst outline viewer doesn't have any sorter).
+		if(cat1 == DOM_NODES){
+			return -1;
+		}
 		if (cat1 == PROJECTS || cat1 == RESOURCES || cat1 == RESOURCEFOLDERS || cat1 == STORAGE || cat1 == OTHERS) {
 			String name1 = getNonPHPElementLabel(viewer, e1);
 			String name2 = getNonPHPElementLabel(viewer, e2);
