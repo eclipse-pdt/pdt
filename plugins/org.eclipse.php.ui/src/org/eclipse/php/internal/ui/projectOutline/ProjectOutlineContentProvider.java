@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.ui.projectOutline;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,17 +30,18 @@ import org.eclipse.swt.widgets.Control;
 
 public class ProjectOutlineContentProvider extends StandardPHPElementContentProvider implements ModelListener, IWorkspaceModelListener {
 
+	public static final int INCLUDES = 1;
+	public static final int CONSTANTS = 2;
+	public static final int CLASSES = 3;
+	public static final int FUNCTIONS = 4;
+
 	private final ProjectOutlinePart fPart;
 	private IProject fStoredProject;
 	private PHPTreeViewer fViewer;
 	private OutlineNode[] groupNodes;
 	private OutlineNode[] nodes;
 
-	
-	public static final int INCLUDES = 1;
-	public static final int CONSTANTS = 2;
-	public static final int CLASSES = 3;
-	public static final int FUNCTIONS = 4;
+	private Timer timer;
 
 	public ProjectOutlineContentProvider(final ProjectOutlinePart part, final boolean provideMembers) {
 		fPart = part;
@@ -235,12 +235,6 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		};
 		fViewer.getControl().getDisplay().asyncExec(runnable);
 	}
-
-	PHPFileData fStoredFileData;
-	int inProgress = 0;
-	LinkedList toAdd = new LinkedList();
-	LinkedList toRemove = new LinkedList();
-	Timer timer;
 
 	public void postRefresh(final Object root, final boolean updateLabels) {
 		if (fViewer == null || fViewer.getControl() == null)
