@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.ui.IContextMenuConstants;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchSite;
@@ -45,19 +44,6 @@ public class OpenEditorActionGroup extends ActionGroup {
 		fSite = part.getSite();
 		fOpen = new OpenAction(fSite);
 		fOpen.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_EDITOR);
-		initialize(fSite.getSelectionProvider());
-	}
-
-	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
-	 * @param editor the PHP editor
-	 */
-	public OpenEditorActionGroup(PHPStructuredEditor editor) {
-		fIsEditorOwner = true;
-		fOpen = new OpenAction(editor);
-		fOpen.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_EDITOR);
-		editor.setAction("OpenEditor", fOpen); //$NON-NLS-1$
-		fSite = editor.getEditorSite();
 		initialize(fSite.getSelectionProvider());
 	}
 
@@ -92,6 +78,8 @@ public class OpenEditorActionGroup extends ActionGroup {
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
+		fOpen = new OpenAction(fSite);        
+		fOpen.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_EDITOR);
 		appendToGroup(menu, fOpen);
 		if (!fIsEditorOwner) {
 			addOpenWithMenu(menu);

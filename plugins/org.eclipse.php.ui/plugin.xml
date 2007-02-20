@@ -587,7 +587,13 @@
 			description="%context.editingPhpSource.description"
 			parentId="org.eclipse.ui.textEditorScope"
 			id="org.eclipse.php.ui.phpEditorScope">
-		</context>		
+		</context>	
+		<context
+			name="Open PHP File"
+			description="Open PHP File"
+			parentId="org.eclipse.ui.contexts.window"
+			id="org.eclipse.php.ui.contexts.window">
+		</context>  	
 	</extension>
 
 	<extension point="org.eclipse.ui.commands">
@@ -773,15 +779,13 @@
 			sequence="COMMAND+ALT+V"
 			commandId="org.eclipse.php.ui.edit.text.move.element"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<!-- 
-		open editor should work with F3 (bug #139443) but it doesn't! it does work with every other key....
-	
+
 		<key
-			sequence="F3"		
-			commandId="org.eclipse.php.ui.edit.text.open.editor"	
-			contextId="org.eclipse.ui.contexts.dialogAndWindow"		
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-			-->	
+            sequence="F3"           
+            commandId="org.eclipse.php.ui.edit.text.open.editor"    
+            contextId="org.eclipse.php.ui.contexts.window"          
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+
 		<key
 			sequence="F3"
 			commandId="org.eclipse.php.ui.edit.text.OpenDeclaration"

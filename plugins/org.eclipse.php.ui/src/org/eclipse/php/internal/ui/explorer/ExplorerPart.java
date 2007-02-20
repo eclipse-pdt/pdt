@@ -16,12 +16,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -31,21 +26,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.AbstractTreeViewer;
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -59,15 +40,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.LinkingSelectionListener;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.treecontent.TreeProvider;
-import org.eclipse.php.internal.ui.util.AppearanceAwareLabelProvider;
-import org.eclipse.php.internal.ui.util.EditorUtility;
-import org.eclipse.php.internal.ui.util.FilterUpdater;
-import org.eclipse.php.internal.ui.util.MultiElementSelection;
-import org.eclipse.php.internal.ui.util.PHPElementComparer;
-import org.eclipse.php.internal.ui.util.PHPElementImageProvider;
-import org.eclipse.php.internal.ui.util.PHPElementLabels;
-import org.eclipse.php.internal.ui.util.PHPElementSorter;
-import org.eclipse.php.internal.ui.util.StatusBarUpdater;
+import org.eclipse.php.internal.ui.util.*;
 import org.eclipse.php.internal.ui.util.TreePath;
 import org.eclipse.php.internal.ui.workingset.ConfigureWorkingSetAction;
 import org.eclipse.php.internal.ui.workingset.ExplorerViewActionGroup;
@@ -81,25 +54,11 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
@@ -114,18 +73,32 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 
 	private PHPTreeViewer fViewer;
 	protected ExplorerContentProvider fContentProvider;
+	private IContextActivation contextActivation;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
 	 */
 	public void focusGained(FocusEvent e) {
 		fContentProvider.postRefresh(fViewer.getInput());
+		// activate the org.eclipse.php.ui.contexts.window context 
+		// only for this view the allow the F3 shortcut which conflict with JDT
+		IContextService service = (IContextService) PHPUiPlugin.getDefault().getWorkbench().getService(IContextService.class);
+		if (service != null) {
+			contextActivation = service.activateContext("org.eclipse.php.ui.contexts.window");
+		}
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
+	 * @see
+	 org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
 	 */
 	public void focusLost(FocusEvent e) {
+		// deactivate the org.eclipse.php.ui.contexts.window context
+		// the context used only for this view menu
+		IContextService service = (IContextService) PHPUiPlugin.getDefault().getWorkbench().getService(IContextService.class);
+		if (service != null && contextActivation != null) {
+			service.deactivateContext(contextActivation);
+		}
 	}
 
 	protected ExplorerLabelProvider fLabelProvider;

@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.OpenStrategy;
@@ -24,7 +23,6 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
-import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -47,17 +45,6 @@ public class OpenAction extends SelectionDispatchAction {
 		setToolTipText(PHPUIMessages.OpenAction_tooltip);
 		setDescription(PHPUIMessages.OpenAction_description);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_ACTION);
-	}
-
-	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
-	 * @param editor the PHP editor
-	 */
-	public OpenAction(PHPStructuredEditor editor) {
-		this(editor.getEditorSite());
-		fEditor = editor;
-		setText(PHPUIMessages.OpenAction_declaration_label);
-		setEnabled(SelectionConverter.canOperateOn(fEditor));
 	}
 
 	/* (non-Javadoc)
@@ -153,9 +140,5 @@ public class OpenAction extends SelectionDispatchAction {
 
 	private String getDialogTitle() {
 		return PHPUIMessages.OpenAction_error_title;
-	}
-
-	private void showError(CoreException e) {
-		ExceptionHandler.handle(e, getShell(), getDialogTitle(), PHPUIMessages.OpenAction_error_message);
 	}
 }
