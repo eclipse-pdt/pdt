@@ -15,15 +15,19 @@ import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * The debugger communication receiver holds a ServerSocket that remains open for the entire
@@ -119,8 +123,15 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	}
 
 	public void handleMultipleBindingError() {
-		int port = getReceiverPort();
+		final int port = getReceiverPort();
 		Logger.log(Logger.ERROR, "Port " + port + " is in use. Please select a different port for the debugger.");
+		final Display display = Display.getDefault();
+		display.asyncExec(new Runnable() {
+			public void run() {
+				final String message = MessageFormat.format(PHPDebugCoreMessages.Port_Error_Message_Message, new String[] { String.valueOf(port) });
+				MessageDialog.openWarning(display.getActiveShell(), PHPDebugCoreMessages.Port_Error_Message_Title, message);
+			}
+		});
 	}
 
 	/**
