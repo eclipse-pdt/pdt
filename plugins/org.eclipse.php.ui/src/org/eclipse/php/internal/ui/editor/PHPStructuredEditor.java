@@ -12,59 +12,21 @@ package org.eclipse.php.internal.ui.editor;
 
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import org.eclipse.core.internal.resources.Workspace;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.link.contentassist.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.Assert;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextOperationTarget;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.ITextViewerExtension4;
-import org.eclipse.jface.text.ITextViewerExtension5;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHoverExtension;
-import org.eclipse.jface.text.source.ICharacterPairMatcher;
-import org.eclipse.jface.text.source.ILineRange;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.ISourceViewerExtension3;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -87,14 +49,7 @@ import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.actions.AddBlockCommentAction;
-import org.eclipse.php.internal.ui.actions.BlockCommentAction;
-import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
-import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
-import org.eclipse.php.internal.ui.actions.RemoveBlockCommentAction;
-import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.containers.StorageEditorInput;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
@@ -105,30 +60,13 @@ import org.eclipse.php.internal.ui.text.PHPWordIterator;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ST;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.TextChangeListener;
-import org.eclipse.swt.custom.TextChangedEvent;
-import org.eclipse.swt.custom.TextChangingEvent;
+import org.eclipse.swt.custom.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener2;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.ui.texteditor.ResourceAction;
-import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.ui.texteditor.TextNavigationAction;
-import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.*;
+import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -143,7 +81,6 @@ import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider
 public class PHPStructuredEditor extends StructuredTextEditor {
 
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN = "org.eclipse.php.ui.actions.Open"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_DECLARATION = "org.eclipse.php.ui.actions.OpenDeclaration"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT = "org.eclipse.php.ui.actions.Uncomment"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT = "org.eclipse.php.ui.actions.Comment"; //$NON-NLS-1$
@@ -404,48 +341,48 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	private IPreferencesPropagatorListener phpVersionListener = new IPreferencesPropagatorListener() {
-			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-				try {
-					// get the structured document and go over its regions
-					// in case of PhpScriptRegion reparse the region text
-					IDocument doc = getDocumentProvider().getDocument(getEditorInput());
-					if (doc instanceof IStructuredDocument) {
-						IStructuredDocumentRegion[] sdRegions = ((IStructuredDocument) doc).getStructuredDocumentRegions();
-						for (int i = 0; i < sdRegions.length; i++) {
-							Iterator regionsIt = sdRegions[i].getRegions().iterator();
-							reparseRegion(doc, regionsIt, sdRegions[i].getStartOffset());
-						}
+		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
+			try {
+				// get the structured document and go over its regions
+				// in case of PhpScriptRegion reparse the region text
+				IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+				if (doc instanceof IStructuredDocument) {
+					IStructuredDocumentRegion[] sdRegions = ((IStructuredDocument) doc).getStructuredDocumentRegions();
+					for (int i = 0; i < sdRegions.length; i++) {
+						Iterator regionsIt = sdRegions[i].getRegions().iterator();
+						reparseRegion(doc, regionsIt, sdRegions[i].getStartOffset());
 					}
-				} catch (BadLocationException e) {
 				}
-			}
-
-			public IProject getProject() {
-				return getFile().getProject();
-			}
-		};
-
-		/**
-		 * iterate over regions 
-		 * in case of PhpScriptRegion reparse the region.
-		 * in case of region contaioner iterate over the container regions. 
-		 * @param doc structured document
-		 * @param regionsIt regions iterator
-		 * @param offset the container region start offset
-		 * @throws BadLocationException
-		 */
-		private void reparseRegion(IDocument doc, Iterator regionsIt, int offset) throws BadLocationException {
-			while (regionsIt.hasNext()) {
-				ITextRegion region = (ITextRegion) regionsIt.next();
-				if (region instanceof ITextRegionContainer) {
-					reparseRegion(doc, ((ITextRegionContainer)region).getRegions().iterator(), offset + region.getStart());
-				}
-				if (region instanceof PhpScriptRegion) {
-					final PhpScriptRegion phpRegion = (PhpScriptRegion) region;
-					phpRegion.completeReparse(doc, offset + region.getStart(), region.getLength());
-				}
+			} catch (BadLocationException e) {
 			}
 		}
+
+		public IProject getProject() {
+			return getFile().getProject();
+		}
+	};
+
+	/**
+	 * iterate over regions 
+	 * in case of PhpScriptRegion reparse the region.
+	 * in case of region contaioner iterate over the container regions. 
+	 * @param doc structured document
+	 * @param regionsIt regions iterator
+	 * @param offset the container region start offset
+	 * @throws BadLocationException
+	 */
+	private void reparseRegion(IDocument doc, Iterator regionsIt, int offset) throws BadLocationException {
+		while (regionsIt.hasNext()) {
+			ITextRegion region = (ITextRegion) regionsIt.next();
+			if (region instanceof ITextRegionContainer) {
+				reparseRegion(doc, ((ITextRegionContainer) region).getRegions().iterator(), offset + region.getStart());
+			}
+			if (region instanceof PhpScriptRegion) {
+				final PhpScriptRegion phpRegion = (PhpScriptRegion) region;
+				phpRegion.completeReparse(doc, offset + region.getStart(), region.getLength());
+			}
+		}
+	}
 
 	/** Cursor dependent actions. */
 	private final List fCursorActions = new ArrayList(5);
@@ -493,6 +430,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION); //$NON-NLS-1$
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
+			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); //$NON-NLS-1$
+			if (action != null)
+				menu.appendToGroup(openGroup, action);
+
 		}
 	}
 
@@ -1089,8 +1030,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		action = new OpenDeclarationAction(resourceBundle, this);
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.OpenDeclaration"); //$NON-NLS-1$
-		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_DECLARATION, action); //$NON-NLS-1$
-		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_DECLARATION, true); //$NON-NLS-1$
+		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action); //$NON-NLS-1$
+		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true); //$NON-NLS-1$
 
 		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true);
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
@@ -1448,15 +1389,15 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 					ITextRegion region = sdRegion.getRegionAtCharacterOffset(start);
 					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-						PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
+						PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
 						try {
 							region = phpScriptRegion.getPhpToken(start - sdRegionStart - phpScriptRegion.getStart());
-							
+
 							String elementName = element.getName();
 							if (element instanceof PHPVariableData) {
 								elementName = "$" + elementName; //$NON-NLS-1$
 							}
-							
+
 							while (region.getEnd() != phpScriptRegion.getLength()) {
 								final String text = document.get(sdRegionStart + phpScriptRegion.getStart() + region.getStart(), region.getTextLength()).trim().replaceAll("[\"']+", "");
 								if (elementName.equals(text)) {

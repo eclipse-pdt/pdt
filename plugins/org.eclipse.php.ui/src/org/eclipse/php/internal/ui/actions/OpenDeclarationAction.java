@@ -27,6 +27,13 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 
+	/** (non-Javadoc)
+	 * @see org.eclipse.jface.action.Action#setEnabled(boolean)
+	 */
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+	}
+
 	private CodeData fCodeData;
 
 	public OpenDeclarationAction(ResourceBundle resourceBundle, PHPStructuredEditor editor) {

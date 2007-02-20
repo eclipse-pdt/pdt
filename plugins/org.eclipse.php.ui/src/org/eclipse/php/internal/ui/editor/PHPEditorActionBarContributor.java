@@ -43,6 +43,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	protected RetargetTextEditorAction fFormatActiveElements = null;
 	protected RetargetTextEditorAction fFormatDocument = null;
 	private RetargetTextEditorAction fGotoMatchingBracket;
+	private RetargetTextEditorAction fOpenDeclaration;
 	protected MenuManager fFormatMenu = null;
 
 	public final static String FORMAT_ACTIVE_ELEMENTS = "org.eclipse.wst.sse.ui.format.active.elements";//$NON-NLS-1$
@@ -52,7 +53,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	private final static String[] PHPEDITOR_ACTIONS = { "org.eclipse.php.ui.actions.RemoveBlockComment", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$
-		"FormatActiveElements" }; //$NON-NLS-1$
+		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, "FormatActiveElements" }; //$NON-NLS-1$
 
 	// private ToggleCommentAction fToggleCommentAction;
 
@@ -74,9 +75,12 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fFormatActiveElements = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
 		fFormatActiveElements.setActionDefinitionId(FORMAT_ACTIVE_ELEMENTS);
 
-		fGotoMatchingBracket= new RetargetTextEditorAction(b, "GotoMatchingBracket."); //$NON-NLS-1$
+		fGotoMatchingBracket = new RetargetTextEditorAction(b, "GotoMatchingBracket."); //$NON-NLS-1$
 		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
-		
+
+		fOpenDeclaration = new RetargetTextEditorAction(b, "OpenAction_declaration_"); //$NON-NLS-1$
+		fOpenDeclaration.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
+
 		//		fFormatMenu = new MenuManager("Format");
 		//		fFormatMenu.add(fFormatDocument);
 		//		fFormatMenu.add(fFormatActiveElements);
@@ -89,10 +93,10 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	public void contributeToMenu(IMenuManager menu) {
 		super.contributeToMenu(menu);
 
-		IMenuManager gotoMenu= menu.findMenuUsingPath("navigate/goTo"); //$NON-NLS-1$
+		IMenuManager gotoMenu = menu.findMenuUsingPath("navigate/goTo"); //$NON-NLS-1$
 		menu.findMenuUsingPath("source");
 		if (gotoMenu != null) {
-			gotoMenu.add(new Separator("additions2"));  //$NON-NLS-1$
+			gotoMenu.add(new Separator("additions2")); //$NON-NLS-1$
 			gotoMenu.appendToGroup("additions2", fGotoMatchingBracket); //$NON-NLS-1$
 		}
 	}
@@ -128,6 +132,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fGotoMatchingBracket.setAction(getAction(editor, GotoMatchingBracketAction.GOTO_MATCHING_BRACKET));
 		fFormatDocument.setAction(getAction(editor, "FormatDocument"));
 		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements"));
+		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
 
 		IActionBars actionBars = getActionBars();
 		if (actionBars == null)

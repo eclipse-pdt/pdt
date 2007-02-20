@@ -419,16 +419,22 @@
 			visible="false"
 			id="org.eclipse.php.ui.PHPActionSet">
 			<action
-         class="org.eclipse.php.internal.ui.actions.OpenTypeAction"
-         definitionId="org.eclipse.php.ui.navigate.open.type"
-         disabledIcon="icons/full/dtool16/opentype.gif"
-         icon="icons/full/etool16/opentype.gif"
-         id="openType"
+		         class="org.eclipse.php.internal.ui.actions.OpenTypeAction"
+        		 definitionId="org.eclipse.php.ui.navigate.open.type"
+		         disabledIcon="icons/full/dtool16/opentype.gif"
+		         icon="icons/full/etool16/opentype.gif"
+		         id="openType"
+		         label="%OpenTypeAction.label"
+		         menubarPath="navigate/open.ext2"
+		         toolbarPath="org.eclipse.search.searchActionSet/Search"
+		         tooltip="%OpenTypeAction.tooltip"/>
+			<action
+         allowLabelUpdate="true"
+         definitionId="org.eclipse.php.ui.edit.text.OpenDeclaration"
+         id="org.eclipse.php.ui.actions.OpenDeclaration"
          label="%OpenTypeAction.label"
          menubarPath="navigate/open.ext2"
-         toolbarPath="org.eclipse.search.searchActionSet/Search"
-         tooltip="%OpenTypeAction.tooltip"/>
-
+         retarget="true"/>
 		</actionSet>
 	</extension>
 
@@ -438,7 +444,6 @@
 			description="%OpenActionSet.description"
 			visible="false"
 			id="org.eclipse.php.ui.A_OpenActionSet">
-
 			<action
 				definitionId="org.eclipse.php.ui.edit.text.open.editor" 				
 				label="%OpenAction.label"
@@ -454,7 +459,7 @@
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
 		<actionSetPartAssociation
 			targetID="org.eclipse.php.ui.A_OpenActionSet">
-			<part id="org.eclipse.php.ui.explorer"></part>
+			<part id="org.eclipse.php.ui.explorer"/>
 		</actionSetPartAssociation>
 	</extension>
 
@@ -566,7 +571,7 @@
 		<actionSetPartAssociation
 			targetID="org.eclipse.php.ui.CodingActionSet">
 			<part id="org.eclipse.php.ui.explorer"></part>
-			<part id="org.eclipse.php.editor"></part>			
+			<part id="org.eclipse.php.editor"></part>
 		</actionSetPartAssociation>
 	</extension>
 
