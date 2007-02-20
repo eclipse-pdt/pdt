@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
@@ -34,6 +35,8 @@ import org.eclipse.php.internal.ui.util.ScrolledPageContent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -41,6 +44,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.internal.forms.widgets.FormUtil;
 import org.eclipse.wst.xml.ui.internal.preferences.EncodingSettings;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -151,6 +155,11 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	}
 
 	private void addProjectPreferenceSubsection(Composite composite) {
+		// Set a height hint for the group.
+		GridData gd = (GridData) composite.getLayoutData();
+		gd.heightHint = 200;
+		composite.setLayoutData(gd);
+		
 		addLabelControl(composite, PHPDebugUIMessages.PhpDebugPreferencePage_9, ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
 		fDefaultServer = addCombo(composite, 2);
 		addLink(composite, PHPDebugUIMessages.PhpDebugPreferencePage_serversLink, SERVERS_PAGE_ID);
@@ -165,7 +174,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		layout.marginWidth = 0;
 		comp.setLayout(layout);
 
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 3;
 		sc1.setLayoutData(gd);
 
@@ -175,7 +184,6 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		inner.setLayout(new GridLayout(3, false));
 		expandbleDebugEncoding.setClient(inner);
 		fDebugEncodingSettings = addEncodingSettings(inner, PHPDebugUIMessages.PHPDebugPreferencesAddon_selectedEncoding);
-		expandbleDebugEncoding.setExpanded(true);
 		
 		expandbleOutputEncoding = createStyleSection(comp, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding, 3);
 		inner = new Composite(expandbleOutputEncoding, SWT.NONE);
@@ -184,8 +192,20 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		expandbleOutputEncoding.setClient(inner);
 		fOutputEncodingSettings = addEncodingSettings(inner, PHPDebugUIMessages.PHPDebugPreferencesAddon_selectedEncoding);
 		expandbleOutputEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding + " (" + fOutputEncodingSettings.getIANATag() + ")");
-		
 		fStopAtFirstLine = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_1, PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, 0);
+		
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				// Expand the debug encoding after the component is layout.
+				// This code fixes an issue that caused the top encoding combo to scroll automatically
+				// without any reasonable cause.
+				expandbleDebugEncoding.setExpanded(true);
+				ScrolledPageContent spc = (ScrolledPageContent)FormUtil.getScrolledComposite(expandbleDebugEncoding);
+				Point p = spc.getSize();
+				spc.setSize(p.x, 70);
+				spc.getParent().layout();
+			}
+		});
 	}
 
 	private ExpandableComposite createStyleSection(Composite parent, String label, int nColumns) {
