@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.projectOutline;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -40,7 +38,6 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	private PHPTreeViewer fViewer;
 	private OutlineNode[] groupNodes;
 	private OutlineNode[] nodes;
-
 	private Timer timer;
 
 	public ProjectOutlineContentProvider(final ProjectOutlinePart part, final boolean provideMembers) {
@@ -108,7 +105,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	private OutlineNode[] getOutlineChildren(final IProject project) {
 		final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
 		if (nodes == null) {
-			nodes = new OutlineNode[] { new OutlineNode(CONSTANTS, "constants", projectModel, fPart), new OutlineNode(CLASSES, "classes", projectModel, fPart), new OutlineNode(FUNCTIONS, "functions", projectModel, fPart) };
+			nodes = new OutlineNode[] { new OutlineNode(CONSTANTS, "Constants", projectModel, fPart), new OutlineNode(CLASSES, "Classes", projectModel, fPart), new OutlineNode(FUNCTIONS, "Functions", projectModel, fPart) };
 		} else {
 			for (int i = 0; i < nodes.length; ++i) {
 				nodes[i].setModel(projectModel);
@@ -299,13 +296,12 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 
 	
 	public static class OutlineNode implements Comparable {
-		HashMap children;
-		PHPProjectModel model;
+		final private Set children = new HashSet();
 		final private ProjectOutlinePart part;
 		final private String text;
 		final private int type;
-		final private static Boolean b = new Boolean(true);
-
+		private PHPProjectModel model;
+		
 		public OutlineNode(final int type, final String text, final PHPProjectModel model, final ProjectOutlinePart part) {
 			this.type = type;
 			this.text = text;
@@ -328,10 +324,10 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 
 		public Object[] getChildren() {
 			if (model == null)
-				return new Object[0];
+				return NO_CHILDREN;
 			if (children == null)
 				loadChildren();
-			return children.keySet().toArray();
+			return children.toArray();
 		}
 
 		public PHPProjectModel getModel() {
@@ -370,10 +366,10 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				}
 			}
 			if (children == null) {
-				children = new HashMap(newChildren.length);
+				children.clear();
 			}
 			for (int i = 0; i < newChildren.length; ++i) {
-				children.put(newChildren[i], b);
+				children.add(newChildren[i]);
 			}
 
 			return newChildren;
@@ -406,8 +402,8 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		void loadChildren() {
 			if (model == null)
 				return;
-			children = new HashMap(1);
-			Object[] aChildren = new Object[0];
+			children.clear();
+			Object[] aChildren = NO_CHILDREN;
 			switch (type) {
 				case CLASSES:
 					if (part.isShowAll())
@@ -432,19 +428,16 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 
 			}
 			for (int i = 0; i < aChildren.length; ++i) {
-				children.put(aChildren[i], b);
+				children.add(aChildren[i]);
 			}
 		}
 
 		public void resetChildren() {
-			children = null;
+			children.clear();
 		}
 
 		public void setModel(final PHPProjectModel model) {
 			this.model = model;
 		}
-	}
-
-	
-	
+	}	
 }
