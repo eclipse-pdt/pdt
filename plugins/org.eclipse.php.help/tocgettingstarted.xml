@@ -21,7 +21,8 @@
 </topic>
 <topic label="Projects" >
 <topic label="Creating a Project" href="html/gettingstarted/creating_a_project.html"></topic>
-<topic label="Creating a Folder" href="html/gettingstarted/creating_a_folder.html"></topic><topic label="Browsing and Navigating" href="html/gettingstarted/package_explorer.html"></topic>
+<topic label="Creating a Folder" href="html/gettingstarted/creating_a_folder.html"></topic>
+<topic label="Browsing and Navigating" href="html/gettingstarted/package_explorer.html"></topic>
 <topic label="Opening PHP Elements in the Project" href="html/gettingstarted/open_php_element.html"></topic>
 </topic>
 <topic label="Editor and Related" href="html/gettingstarted/editor_functions.html">
