@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-import java.io.File;
 import java.util.*;
 
 import org.eclipse.core.resources.IFile;
@@ -20,8 +19,6 @@ import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.FilesCodeDataDB;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.GlobalVariablesCodeDataDB;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.TreeCodeDataDB;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
-import org.eclipse.php.internal.core.util.ICachable;
-import org.eclipse.php.internal.core.util.Visitor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModelFilterable {
@@ -66,22 +63,11 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * NOTE ! this method should get the file name and not the full path !!!
-	 *
-	 * @param startsWith
-	 * @return the file data who's
-	 */
 	public CodeData[] getFileDatas() {
 		List list = phpFileDataDB.asList();
 		PHPFileData[] allFileData = new PHPFileData[list.size()];
 		list.toArray(allFileData);
 		return allFileData;
-	}
-
-	public ICachable[] getCachableFiles() {
-		CodeData[] files = getFileDatas();
-		return (ICachable[]) Arrays.asList(files).toArray(new ICachable[files.length]);
 	}
 
 	public PHPFileData getFileData(String fileName) {
@@ -127,27 +113,6 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 			fireFileDataChanged(fileData);
 		} else {
 			fireFileDataAdded(fileData);
-		}
-	}
-
-	class ProjectFileCodeData extends AbstractCodeData implements ComparableName {
-
-		private String comparableName;
-
-		public ProjectFileCodeData(String name, String description) {
-			super(name, description);
-			comparableName = new File(name).getName();
-		}
-
-		public void accept(Visitor v) {
-		}
-
-		public int compareTo(Object o) {
-			return comparableName.compareToIgnoreCase(((ComparableName) o).getComparableName());
-		}
-
-		public String getComparableName() {
-			return comparableName;
 		}
 	}
 
@@ -219,10 +184,12 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 				return curr;
 			}
 		}
-		for (Iterator i = functions.iterator(); i.hasNext();) {
-			PHPFunctionData curr = (PHPFunctionData) i.next();
-			if (filter != null && filter.select(this, curr, fileName)) {
-				return curr;
+		if (filter != null) {
+			for (Iterator i = functions.iterator(); i.hasNext();) {
+				PHPFunctionData curr = (PHPFunctionData) i.next();
+				if (filter.select(this, curr, fileName)) {
+					return curr;
+				}
 			}
 		}
 		return (PHPFunctionData) functions.iterator().next();
@@ -251,10 +218,12 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 				return curr;
 			}
 		}
-		for (Iterator i = classes.iterator(); i.hasNext();) {
-			PHPClassData curr = (PHPClassData) i.next();
-			if (filter != null && filter.select(this, curr, fileName)) {
-				return curr;
+		if (filter != null) {
+			for (Iterator i = classes.iterator(); i.hasNext();) {
+				PHPClassData curr = (PHPClassData) i.next();
+				if (filter.select(this, curr, fileName)) {
+					return curr;
+				}
 			}
 		}
 		return (PHPClassData) classes.iterator().next();
@@ -418,10 +387,12 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 				return curr;
 			}
 		}
-		for (Iterator i = constants.iterator(); i.hasNext();) {
-			PHPConstantData curr = (PHPConstantData) i.next();
-			if (filter != null && filter.select(this, curr, fileName)) {
-				return curr;
+		if (filter != null) {
+			for (Iterator i = constants.iterator(); i.hasNext();) {
+				PHPConstantData curr = (PHPConstantData) i.next();
+				if (filter.select(this, curr, fileName)) {
+					return curr;
+				}
 			}
 		}
 		return (PHPConstantData) constants.iterator().next();

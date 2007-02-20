@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.util;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
@@ -19,6 +20,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPUserModel;
+import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 
@@ -282,7 +284,8 @@ public class DefaultCacheManager {
 		BufferedOutputStream bufout = null;
 		DataOutputStream dout = null;
 		try {
-			ICachable[] toSave = userModel.getCachableFiles();
+			CodeData[] files = userModel.getFileDatas();
+			ICachable[] toSave = (ICachable[]) Arrays.asList(files).toArray(new ICachable[files.length]);
 			out = new FileOutputStream(cacheFile);
 			bufout = new BufferedOutputStream(out, 2048);
 			dout = new DataOutputStream(bufout);
