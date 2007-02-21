@@ -13,13 +13,9 @@ package org.eclipse.php.internal.core.phpModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -28,25 +24,8 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModelManager;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTagData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPIncludeFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPProjectModelVisitor;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.phpModel.parser.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
@@ -410,6 +389,69 @@ public class PHPModelUtil {
 		return null;
 	}
 
+	/**
+	 * This method returns all the interface that the given class data implements.
+	 * Note : This method returns only the interfaces 1 level above. (Not recursively)
+	 * @param classData
+	 * @return
+	 */
+	public static PHPClassData[] getInterfaces(final PHPClassData classData) {
+		final PHPInterfaceNameData[] interfaceNameDatas = classData.getInterfacesNamesData();
+		int numOfInterfaces = interfaceNameDatas.length;
+		ArrayList interfacesList = new ArrayList();
+		for (int i = 0; i < numOfInterfaces; i++) {
+			if (interfaceNameDatas[i] == null)
+				continue;
+			final String interfaceName = interfaceNameDatas[i].getName();
+			if (interfaceName == null)
+				continue;
+			final PHPFileData fileData = getPHPFileContainer(classData);
+			String fileName = null;
+			if (fileData != null)
+				fileName = fileData.getName();
+			if (fileName.equals(""))
+				fileName = null;
+			PHPClassData interfaceClassData = null;
+			IPhpModel model = null;
+			IProject project = null;
+			// first try to find in the same user model:
+			final IResource resource = getResource(classData);
+			if (resource != null) {
+				project = resource.getProject();
+				model = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+				if (model != null) {
+					interfaceClassData = model.getClass(resource.getName(), interfaceName);
+					if (interfaceClassData != null) {
+						interfacesList.add(interfaceClassData);
+					}
+				}
+			} else {
+				// then look up in other models by file:
+				final PHPProjectModel[] models = PHPWorkspaceModelManager.getInstance().listModels();
+				boolean foundInModeByFile = false;
+				for (int j = 0; j < models.length; j++) {
+					if (models[j].getFileData(fileName) == fileData && (interfaceClassData = models[j].getClass(fileName, interfaceName)) != null) {
+						interfacesList.add(interfaceClassData);
+						foundInModeByFile = true;
+						break;
+					}
+				}
+				if (foundInModeByFile) {
+					continue;
+				}
+				// an then just all the models:
+				for (int j = 0; j < models.length; j++) {
+					if ((interfaceClassData = models[j].getClass(fileName, interfaceName)) != null) {
+						interfacesList.add(interfaceClassData);
+					}
+				}
+			}
+		}
+		PHPClassData[] interfacesResult = new PHPClassData[interfacesList.size()];
+		interfacesList.toArray(interfacesResult);
+		return interfacesResult;
+	}
+
 	public static PHPProjectModel getProjectModelForFile(PHPFileData fileData) {
 		PHPProjectModel model = null;
 		IProject project = (IProject) getPHPFolderRoot(fileData);
@@ -569,11 +611,83 @@ public class PHPModelUtil {
 				return null;
 			}
 			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(file.getFullPath().toString());
-	
+
 		}
 		if (element instanceof PHPFileData) {
 			fileData = (PHPFileData) element;
 		}
 		return fileData;
+	}
+
+	//	public static ArrayList getFunctionsToOverride(IProject project, PHPClassData classData, ArrayList requiredToAdd) {
+	//		ArrayList overridenMethodsNamesList = new ArrayList();
+	//		ArrayList existingRequired = new ArrayList();
+	//		ArrayList temp = getFunctionsToOverride( project,  classData,  overridenMethodsNamesList,  existingRequired,  requiredToAdd);
+	//		
+	//		return temp;
+	//	}
+
+	/**
+	 * This method creates an ArrayList of all the functions to override from the given class.
+	 * The method runs recursively on the hierarchy tree until the given class has no parents to extend/interfaces to implement.
+	 * In addition , the method populates the given required PHP files list during its execution.
+	 * @param project - The origin project
+	 * @param classData - The given class/interface
+	 * @param requiredToAdd - The required php files to be added
+	 * @return The list of all the functions to be overriden (abstract or interface's functions)
+	 */
+	public static ArrayList getFunctionsToOverride(IProject project, PHPClassData classData, ArrayList overridenMethodsNamesList, ArrayList existingRequiredNamesList, ArrayList requiredToAdd) {
+		ArrayList temp = new ArrayList();
+		PHPFunctionData[] functions = classData.getFunctions();
+		String phpFileName = classData.getUserData().getFileName();
+		phpFileName = PHPModelUtil.getRelativeLocation(project, phpFileName);
+		if (!existingRequiredNamesList.contains(phpFileName)) {
+			existingRequiredNamesList.add(phpFileName);
+			requiredToAdd.add(phpFileName);
+		}
+		int numOfFunctions = functions.length;
+		//an interface   
+		if (PHPModifier.isInterface(classData.getModifiers())) {
+			for (int i = 0; i < numOfFunctions; i++) {
+				if (!overridenMethodsNamesList.contains(functions[i].getName())) {
+					temp.add(functions[i]);
+					overridenMethodsNamesList.add(functions[i].getName());
+				}
+			}
+		}
+		//an abstract class
+		else if (PHPModifier.isAbstract(classData.getModifiers())) {
+			for (int i = 0; i < numOfFunctions; i++) {
+				if (!PHPModifier.isAbstract(functions[i].getModifiers())) {
+					overridenMethodsNamesList.add(functions[i].getName());
+				}
+
+				else if (!overridenMethodsNamesList.contains(functions[i].getName())) {
+					temp.add(functions[i]);
+					overridenMethodsNamesList.add(functions[i].getName());
+				}
+			}
+		}
+
+		//this class has a superclass
+		if (classData.getSuperClassData() != null && classData.getSuperClassData().getName() != null) {
+			PHPClassData superClass = PHPModelUtil.getSuperClass(classData);
+			ArrayList superClassMethodsList = getFunctionsToOverride(project, superClass, overridenMethodsNamesList, existingRequiredNamesList, requiredToAdd);
+			temp.addAll(superClassMethodsList);
+			Iterator iter = superClassMethodsList.iterator();
+			while (iter.hasNext()) {
+				temp.add(iter.next());
+			}
+		}
+		//this class has interfaces
+		if ((classData.getInterfacesNamesData() != null) && (classData.getInterfacesNamesData().length > 0)) {
+			PHPClassData[] interfaces = PHPModelUtil.getInterfaces(classData);
+			int numOfInterfaces = interfaces.length;
+			for (int i = 0; i < numOfInterfaces; i++) {
+				ArrayList interfaceMethodsList = getFunctionsToOverride(project, interfaces[i], overridenMethodsNamesList, existingRequiredNamesList, requiredToAdd);
+				temp.addAll(interfaceMethodsList);
+			}
+		}
+		return temp;
 	}
 }
