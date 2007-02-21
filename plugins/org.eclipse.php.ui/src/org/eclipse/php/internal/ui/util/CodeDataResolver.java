@@ -235,6 +235,9 @@ public class CodeDataResolver {
 
 		String elementName = text.subSequence(startPosition, endPosition).toString();
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, startPosition);
+		if(endPosition == 0){
+			return null;
+		}
 		char c = text.charAt(endPosition - 1);
 		if (c != '\"' && c != '\'') {
 			return null;
