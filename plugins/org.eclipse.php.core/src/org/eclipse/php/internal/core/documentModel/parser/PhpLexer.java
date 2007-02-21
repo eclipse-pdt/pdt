@@ -116,9 +116,9 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 		final int key = buildStateKey();
 		Object state = lexerStates.get(key);
 		if (state == null) {
-			state = new BasicLexerState();
+			state = new BasicLexerState(this);
 			if (getYy_lexical_state() == PhpLexer.ST_PHP_HEREDOC)
-				state = new HeredocState((BasicLexerState) state);
+				state = new HeredocState((BasicLexerState) state, this);
 			lexerStates.put(key, state);
 		}
 		return state;
@@ -340,14 +340,16 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 		return minimal;
 	}
 
-	private class BasicLexerState implements LexerState {
+	private static class BasicLexerState implements LexerState {
 
-		private final byte lexicalState = (byte) getYy_lexical_state();
+		private final byte lexicalState;
 		private StateStack phpStack;
 
-		public BasicLexerState() {
-			if (!PhpLexer.this.phpStack.isEmpty())
-				phpStack = PhpLexer.this.phpStack.createClone();
+		public BasicLexerState(PhpLexer lexer) {
+			if (!lexer.phpStack.isEmpty()) {
+				phpStack = lexer.phpStack.createClone();
+			}
+			lexicalState = (byte) lexer.getYy_lexical_state();	
 		}
 
 		public boolean equals(final Object o) {
@@ -422,13 +424,13 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 
 	}
 
-	private class HeredocState implements LexerState {
+	private static class HeredocState implements LexerState {
 		private String myHeredoc;
 		private BasicLexerState theState;
 
-		public HeredocState(final BasicLexerState state) {
+		public HeredocState(final BasicLexerState state, PhpLexer lexer) {
 			theState = state;
-			myHeredoc = heredoc;
+			myHeredoc = lexer.heredoc;
 		}
 
 		public boolean equals(Object obj) {
