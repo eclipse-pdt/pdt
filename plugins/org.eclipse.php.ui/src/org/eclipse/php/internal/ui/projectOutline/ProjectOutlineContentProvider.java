@@ -296,7 +296,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 
 	
 	public static class OutlineNode implements Comparable {
-		final private List children = new ArrayList();
+		final private Set children = new TreeSet(); //we choose TreeSet since it is an ordered Collection with O(1) for add/remove actions
 		final private ProjectOutlinePart part;
 		final private String text;
 		final private int type;
