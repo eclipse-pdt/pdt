@@ -78,7 +78,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			super.doOperation(operation);
 			TextTransfer plainTextTransfer = TextTransfer.getInstance();
 			String text = (String) new Clipboard(getTextWidget().getDisplay()).getContents(plainTextTransfer, DND.CLIPBOARD);
-			IRegion region = new Region(selection.x, selection.x + text.length());
+			IRegion region = new Region(selection.x, text.length());
 			((IStructuredDocument) getDocument()).getUndoManager().disableUndoManagement();
 			fContentFormatter.format(getDocument(), region);
 			((IStructuredDocument) getDocument()).getUndoManager().enableUndoManagement();
