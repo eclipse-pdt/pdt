@@ -16,7 +16,7 @@
 <topic label="PHP Views" href="html/gettingstarted/perspectivesandviews.html"></topic>
 <topic label="Preparing the Workbench" href="html/gettingstarted/preparing_the_workbench.html"></topic>
 <topic label="Problems" href="html/gettingstarted/problems_intro.html"></topic>
-<topic label="Setting File Properties" href="html/gettingstarted/file_properties.html"></topic>
+<topic label="Setting File Properties" href="html/concepts/file_properties.html"></topic>
 <topic label="Syntax Highlighting" href="html/gettingstarted/syntax_highlighter.htm"></topic>
 <topic label="Tasks" href="html/gettingstarted/tasks.html"></topic>
 <topic label="Templates" href="html/gettingstarted/using_templates.html"></topic>
