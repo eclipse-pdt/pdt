@@ -15,49 +15,48 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public interface IPhpModel {
 
-	public String getID();
+	void initialize(IProject project);
 
-	public CodeData[] getFileDatas();
+	void clear();
 
-	public PHPFileData getFileData(String fileName);
+	void dispose();
 
-	public CodeData[] getFunctions();
+	String getID();
 
-	/** used only for code completion */
-	public CodeData[] getFunction(String functionName);
+	CodeData[] getFileDatas();
 
-	public PHPFunctionData getFunction(String fileName, String functionName);
+	PHPFileData getFileData(String fileName);
 
-	public CodeData[] getFunctions(String startsWith);
+	CodeData[] getClasses();
 
-	public CodeData[] getClasses();
+	CodeData[] getClasses(String startsWith);
 
-	public PHPClassData getClass(String fileName, String className);
-	
-	public CodeData[] getClass(String className);
+	CodeData[] getClass(String className);
 
-	public CodeData[] getClasses(String startsWith);
+	PHPClassData getClass(String fileName, String className);
 
-	public CodeData[] getGlobalVariables(String fileName, String startsWith, boolean showVariablesFromOtherFiles);
+	CodeData[] getConstants();
 
-	public CodeData[] getVariables(String fileName, PHPCodeContext context, String startsWith, boolean showVariablesFromOtherFiles);
+	CodeData[] getConstants(String startsWith, boolean caseSensitive);
 
-	public String getVariableType(String fileName, PHPCodeContext context, String variableName, int line, boolean showObjectsFromOtherFiles);
+	CodeData[] getConstant(String constantName);
 
-	/** used only for code completion */
-	public PHPConstantData getConstantData(String constantName);
+	PHPConstantData getConstant(String fileName, String constantName);
 
-	public PHPConstantData getConstant(String fileName, String constantName);
+	CodeData[] getFunctions();
 
-	public CodeData[] getConstants();
+	CodeData[] getFunctions(String startsWith);
 
-	public CodeData[] getConstants(String startsWith, boolean caseSensitive);
+	CodeData[] getFunction(String functionName);
 
-	public IPHPMarker[] getMarkers();
+	PHPFunctionData getFunction(String fileName, String functionName);
 
-	public void clean();
+	CodeData[] getGlobalVariables(String fileName, String startsWith, boolean showVariablesFromOtherFiles);
 
-	public void dispose();
+	CodeData[] getVariables(String fileName, PHPCodeContext context, String startsWith, boolean showVariablesFromOtherFiles);
 
-	public void initialize(IProject project);
+	String getVariableType(String fileName, PHPCodeContext context, String variableName, int line, boolean showObjectsFromOtherFiles);
+
+	IPHPMarker[] getMarkers();
+
 }

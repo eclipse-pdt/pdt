@@ -91,7 +91,7 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 				tempResultList.add(res);
 			}
 		}
-		return mergResults(tempResultList);
+		return mergeResults(tempResultList);
 	}
 
 	public PHPFileData getFileData(String fileName) {
@@ -104,52 +104,6 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 		return null;
 	}
 
-	public CodeData[] getFunctions() {
-		ArrayList tempResultList = new ArrayList();
-
-		for (int i = 0; i < models.length; i++) {
-			CodeData[] res = models[i].getFunctions();
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
-			}
-		}
-		return mergResults(tempResultList);
-	}
-
-	public CodeData[] getFunction(String functionName) {
-		ArrayList tempResultList = new ArrayList();
-
-		for (int i = 0; i < models.length; i++) {
-			CodeData[] res = models[i].getFunction(functionName);
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
-			}
-		}
-		return mergResults(tempResultList);
-	}
-
-	public PHPFunctionData getFunction(String fileName, String functionName) {
-		for (int i = 0; i < models.length; i++) {
-			PHPFunctionData function = models[i].getFunction(fileName, functionName);
-			if (function != null) {
-				return function;
-			}
-		}
-		return null;
-	}
-
-	public CodeData[] getFunctions(String startsWith) {
-		ArrayList tempResultList = new ArrayList();
-
-		for (int i = 0; i < models.length; i++) {
-			CodeData[] res = models[i].getFunctions(startsWith);
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
-			}
-		}
-		return mergResults(tempResultList);
-	}
-
 	public CodeData[] getClasses() {
 		ArrayList tempResultList = new ArrayList();
 
@@ -159,7 +113,30 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 				tempResultList.add(res);
 			}
 		}
-		return mergResults(tempResultList);
+		return mergeResults(tempResultList);
+	}
+
+	public CodeData[] getClasses(String startsWith) {
+		ArrayList tempResultList = new ArrayList();
+
+		for (int i = 0; i < models.length; i++) {
+			CodeData[] res = models[i].getClasses(startsWith);
+			if (res != null && res.length > 0) {
+				tempResultList.add(res);
+			}
+		}
+		return mergeResults(tempResultList);
+	}
+
+	public CodeData[] getClass(String className) {
+		List result = new ArrayList();
+		for (int i = 0; i < models.length; i++) {
+			CodeData[] classes = models[i].getClass(className);
+			if (classes != null && classes.length > 0) {
+				result.addAll(Arrays.asList(classes));
+			}
+		}
+		return (CodeData[]) result.toArray(new CodeData[result.size()]);
 	}
 
 	public PHPClassData getClass(String fileName, String className) {
@@ -167,7 +144,7 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 		List classes = new ArrayList();
 		for (int i = 0; i < models.length; i++) {
 			PHPClassData exactClass = models[i].getClass(fileName, className);
-			// if filename is matching - just return the file.
+			// if filename is matching - just return the class.
 			if (exactClass != null && exactClass.getUserData() != null && exactClass.getUserData().getFileName().equals(fileName)) {
 				return exactClass;
 			}
@@ -194,60 +171,71 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 		return (PHPClassData) classes.get(0);
 	}
 
-	public CodeData[] getClasses(String startsWith) {
+	public CodeData[] getFunctions() {
 		ArrayList tempResultList = new ArrayList();
 
 		for (int i = 0; i < models.length; i++) {
-			CodeData[] res = models[i].getClasses(startsWith);
+			CodeData[] res = models[i].getFunctions();
 			if (res != null && res.length > 0) {
 				tempResultList.add(res);
 			}
 		}
-		return mergResults(tempResultList);
+		return mergeResults(tempResultList);
 	}
 
-	public CodeData[] getGlobalVariables(String fileName, String startsWith, boolean showVariablesFromOtherFiles) {
+	public CodeData[] getFunctions(String startsWith) {
 		ArrayList tempResultList = new ArrayList();
 
 		for (int i = 0; i < models.length; i++) {
-			CodeData[] res = models[i].getGlobalVariables(fileName, startsWith, showVariablesFromOtherFiles);
+			CodeData[] res = models[i].getFunctions(startsWith);
 			if (res != null && res.length > 0) {
 				tempResultList.add(res);
 			}
 		}
-		return mergResults(tempResultList);
+		return mergeResults(tempResultList);
 	}
 
-	public CodeData[] getVariables(String fileName, PHPCodeContext context, String startsWith, boolean showVariablesFromOtherFiles) {
+	public CodeData[] getFunction(String functionName) {
 		ArrayList tempResultList = new ArrayList();
 
 		for (int i = 0; i < models.length; i++) {
-			CodeData[] res = models[i].getVariables(fileName, context, startsWith, showVariablesFromOtherFiles);
+			CodeData[] res = models[i].getFunction(functionName);
 			if (res != null && res.length > 0) {
 				tempResultList.add(res);
 			}
 		}
-		return mergResults(tempResultList);
+		return mergeResults(tempResultList);
 	}
 
-	public String getVariableType(String fileName, PHPCodeContext context, String variableName, int line, boolean showObjectsFromOtherFiles) {
+	public PHPFunctionData getFunction(String fileName, String functionName) {
+		List functions = new ArrayList();
 		for (int i = 0; i < models.length; i++) {
-			String res = models[i].getVariableType(fileName, context, variableName, line, showObjectsFromOtherFiles);
-			if (res != null && !res.equals("")) {
-				return res;
+			PHPFunctionData exactFunction = models[i].getFunction(fileName, functionName);
+			// if filename is matching - just return the function.
+			if (exactFunction != null && exactFunction.getUserData() != null && exactFunction.getUserData().getFileName().equals(fileName)) {
+				return exactFunction;
+			}
+			// else collect all the functions to apply filter
+			CodeData[] modelFunctions = models[i].getFunction(functionName);
+			if (modelFunctions != null && modelFunctions.length > 0) {
+				functions.addAll(Arrays.asList(modelFunctions));
 			}
 		}
-		return null;
-	}
-
-	public PHPConstantData getConstantData(String constantName) {
-		for (int i = 0; i < models.length; i++) {
-			PHPConstantData res = models[i].getConstantData(constantName);
-			if (res != null) {
-				return res;
+		switch (functions.size()) {
+			case 0:
+				return null;
+			case 1:
+				return (PHPFunctionData) functions.get(0);
+		}
+		if (filter != null) {
+			for (Iterator i = functions.iterator(); i.hasNext();) {
+				PHPFunctionData function = (PHPFunctionData) i.next();
+				if (filter.select(this, function, fileName)) {
+					return function;
+				}
 			}
 		}
-		return null;
+		return (PHPFunctionData) functions.get(0);
 	}
 
 	public CodeData[] getConstants() {
@@ -259,7 +247,7 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 				tempResultList.add(res);
 			}
 		}
-		return mergResults(tempResultList);
+		return mergeResults(tempResultList);
 	}
 
 	public CodeData[] getConstants(String startsWith, boolean caseSensitive) {
@@ -271,14 +259,80 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 				tempResultList.add(res);
 			}
 		}
-		return mergResults(tempResultList);
+		return mergeResults(tempResultList);
+	}
+
+	public CodeData[] getConstant(String className) {
+		List result = new ArrayList();
+		for (int i = 0; i < models.length; i++) {
+			CodeData[] classes = models[i].getConstant(className);
+			if (classes != null && classes.length > 0) {
+				result.addAll(Arrays.asList(classes));
+			}
+		}
+		return (CodeData[]) result.toArray(new CodeData[result.size()]);
 	}
 
 	public PHPConstantData getConstant(String fileName, String constantName) {
+		List constants = new ArrayList();
 		for (int i = 0; i < models.length; i++) {
-			PHPConstantData constant = models[i].getConstant(fileName, constantName);
-			if (constant != null) {
-				return constant;
+			PHPConstantData exactConstant = models[i].getConstant(fileName, constantName);
+			// if filename is matching - just return the function.
+			if (exactConstant != null && exactConstant.getUserData() != null && exactConstant.getUserData().getFileName().equals(fileName)) {
+				return exactConstant;
+			}
+			// else collect all the functions to apply filter
+			CodeData[] modelConstants = models[i].getConstant(constantName);
+			if (modelConstants != null && modelConstants.length > 0) {
+				constants.addAll(Arrays.asList(modelConstants));
+			}
+		}
+		switch (constants.size()) {
+			case 0:
+				return null;
+			case 1:
+				return (PHPConstantData) constants.get(0);
+		}
+		if (filter != null) {
+			for (Iterator i = constants.iterator(); i.hasNext();) {
+				PHPConstantData constant = (PHPConstantData) i.next();
+				if (filter.select(this, constant, fileName)) {
+					return constant;
+				}
+			}
+		}
+		return (PHPConstantData) constants.get(0);
+	}
+
+	public CodeData[] getGlobalVariables(String fileName, String startsWith, boolean showVariablesFromOtherFiles) {
+		ArrayList tempResultList = new ArrayList();
+
+		for (int i = 0; i < models.length; i++) {
+			CodeData[] res = models[i].getGlobalVariables(fileName, startsWith, showVariablesFromOtherFiles);
+			if (res != null && res.length > 0) {
+				tempResultList.add(res);
+			}
+		}
+		return mergeResults(tempResultList);
+	}
+
+	public CodeData[] getVariables(String fileName, PHPCodeContext context, String startsWith, boolean showVariablesFromOtherFiles) {
+		ArrayList tempResultList = new ArrayList();
+
+		for (int i = 0; i < models.length; i++) {
+			CodeData[] res = models[i].getVariables(fileName, context, startsWith, showVariablesFromOtherFiles);
+			if (res != null && res.length > 0) {
+				tempResultList.add(res);
+			}
+		}
+		return mergeResults(tempResultList);
+	}
+
+	public String getVariableType(String fileName, PHPCodeContext context, String variableName, int line, boolean showObjectsFromOtherFiles) {
+		for (int i = 0; i < models.length; i++) {
+			String res = models[i].getVariableType(fileName, context, variableName, line, showObjectsFromOtherFiles);
+			if (res != null && !res.equals("")) {
+				return res;
 			}
 		}
 		return null;
@@ -306,9 +360,9 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 		return res;
 	}
 
-	public void clean() {
+	public void clear() {
 		for (int i = 0; i < models.length; i++) {
-			models[i].clean();
+			models[i].clear();
 		}
 	}
 
@@ -318,7 +372,7 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 		}
 	}
 
-	private CodeData[] mergResults(ArrayList results) {
+	private static CodeData[] mergeResults(ArrayList results) {
 		if (results.size() == 0) {
 			return new CodeData[0];
 		}
@@ -331,18 +385,5 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 			res = ModelSupport.merge(res, res1);
 		}
 		return res;
-
 	}
-
-	public CodeData[] getClass(String className) {
-		List result = new ArrayList();
-		for (int i = 0; i < models.length; i++) {
-			CodeData[] classes = models[i].getClass(className);
-			if (classes != null && classes.length > 0) {
-				result.addAll(Arrays.asList(classes));
-			}
-		}
-		return (CodeData[]) result.toArray(new CodeData[result.size()]);
-	}
-
 }

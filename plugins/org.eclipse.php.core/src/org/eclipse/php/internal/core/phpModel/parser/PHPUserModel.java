@@ -368,10 +368,10 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 		return null;
 	}
 
-	public PHPConstantData getConstantData(String constantName) {
+	public CodeData[] getConstant(String constantName) {
 		Collection constants = constantsDB.getCodeData(constantName);
 		if (constants != null && constants.size() > 0) {
-			return (PHPConstantData) constants.iterator().next();
+			return (CodeData[]) constants.toArray(new CodeData[constants.size()]);
 		}
 		return null;
 	}
@@ -461,10 +461,6 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 			ModelListener curr = (ModelListener) listeners.get(i);
 			curr.dataCleared();
 		}
-	}
-
-	public void clean() {
-		this.clear();
 	}
 
 	public void dispose() {

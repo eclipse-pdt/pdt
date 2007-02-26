@@ -81,7 +81,7 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 
 		PHPProjectModel modelForProject = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
 		if (modelForProject != null) {
-			modelForProject.clean();
+			modelForProject.clear();
 			return;
 		}
 	}

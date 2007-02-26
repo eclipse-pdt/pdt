@@ -135,7 +135,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		if (classs == null) {
 			return PHPCodeDataFactory.EMPTY_CODE_DATA_ARRAY;
 		}
-		return new CodeData[] { getClass(null, className) };
+		return new CodeData[] { classs };
 	}
 
 	public CodeData[] getGlobalVariables(String fileName, String startsWith, boolean showVariablesFromOtherFiles) {
@@ -154,7 +154,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		return null;
 	}
 
-	public PHPConstantData getConstantData(String constantName) {
+	public CodeData[] getConstant(String constantName) {
 		return null;
 	}
 
@@ -162,7 +162,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		return markers;
 	}
 
-	public void clean() {
+	public void clear() {
 	}
 
 	public void dispose() {

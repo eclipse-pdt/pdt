@@ -72,8 +72,8 @@ public abstract class PhpModelProxy implements IPhpModel {
 		return model.getVariableType(fileName, context, variableName, line, showObjectsFromOtherFiles);
 	}
 
-	public PHPConstantData getConstantData(String constantName) {
-		return model.getConstantData(constantName);
+	public CodeData[] getConstant(String constantName) {
+		return model.getConstant(constantName);
 	}
 
 	public CodeData[] getConstants() {
@@ -92,8 +92,8 @@ public abstract class PhpModelProxy implements IPhpModel {
 		return model.getMarkers();
 	}
 
-	public void clean() {
-		model.clean();
+	public void clear() {
+		model.clear();
 	}
 
 	public void dispose() {
