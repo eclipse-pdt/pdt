@@ -16,16 +16,7 @@ import java.util.regex.Pattern;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class PHPCodeDataHTMLDescriptionUtilities {
 
@@ -213,43 +204,37 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		helpBuffer.delete(0, helpBuffer.length());
 		helpBuffer.append("<br><dt>See Also</dt>");
 		helpBuffer.append("<dd>");
+
+		UserData userData = phpCodeData.getUserData();
+		String fileName = userData != null ? userData.getFileName() : null;
+
 		PHPDocTag see = (PHPDocTag) it.next();
-		String arg = (String) see.getValue();
+		String arg = see.getValue();
 		String[] args = arg.split(",");
+
 		for (int i = 0; i < args.length; i++) {
 			String ref = args[i];
-			CodeData[] data = projectModel.getClasses(ref);
-			boolean shouldBreak = false;
-			// look it up in all classes
-			for (int j = 0; j < data.length; j++) {
-				CodeData codeData = data[j];
-				if (data.equals(codeData.getName())) {
-					helpBuffer.append(codeData.getName());
-					shouldBreak = true;
-					break;
-				}
-			}
-			// found it look no more !
-			if (shouldBreak) {
-				break;
-			}
-			// it's a file append it and look no more !
+			// find a file:
 			if (projectModel.getFileData(ref) != null) {
 				helpBuffer.append(ref);
 				break;
 			}
-			// it's a constant append it and look no more !
-			CodeData codeData = projectModel.getConstantData(ref, false);
-			if (codeData != null) {
-				helpBuffer.append(codeData.getName());
+			// find a class:
+			if (projectModel.getClasses(ref) != null) {
+				helpBuffer.append(ref);
 				break;
 			}
+			// find a constant:
+			if (projectModel.getConstants(ref, true) != null) {
+				helpBuffer.append(ref);
+				break;
+			}
+			boolean shouldBreak = false;
 			if (phpCodeData instanceof PHPFunctionData && phpCodeData.getContainer() != null && phpCodeData.getContainer() instanceof PHPClassData) {
 				String ref_orig = ref;
 				if (ref.indexOf('(') != -1) {
 					ref_orig = ref.substring(0, ref.indexOf('('));
 				}
-				String fileName = phpCodeData.isUserCode() ? phpCodeData.getUserData().getFileName() : null;
 				if (fileName != null && projectModel.getClassFunctionData(fileName, phpCodeData.getContainer().getName(), ref_orig) != null) {
 					helpBuffer.append(ref);
 					break;
@@ -260,9 +245,9 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 					if (ref.startsWith("$")) {
 						ref_orig = ref.substring(1);
 					}
-					data = projectModel.getVariables(fileName, context, ref_orig, true);
+					CodeData[] data = projectModel.getVariables(fileName, context, ref_orig, true);
 					for (int j = 0; j < data.length; j++) {
-						codeData = data[j];
+						CodeData codeData = data[j];
 						if (((PHPCodeData) codeData).getName().equals(ref_orig)) {
 							helpBuffer.append(ref);
 							shouldBreak = true;

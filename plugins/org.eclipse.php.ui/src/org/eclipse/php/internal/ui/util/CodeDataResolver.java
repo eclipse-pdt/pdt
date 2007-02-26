@@ -79,8 +79,6 @@ public class CodeDataResolver {
 		if (fileData == null) {
 			return null;
 		}
-		String fileName = fileData.getName();
-		PHPProjectModel projectModel = editorModel.getProjectModel();
 
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
 		ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
@@ -107,12 +105,13 @@ public class CodeDataResolver {
 			return null;
 		}
 
+		String fileName = fileData.getName();
+		PHPProjectModel projectModel = editorModel.getProjectModel();
+		CodeData resultCandidate;
 		String type = textRegion.getType();
-
-		CodeData tmp;
-		if ((tmp = getIfInArrayOptionQuotes(projectModel, fileName, type, offset, statmentText)) != null) {
+		if ((resultCandidate = getIfInArrayOptionQuotes(projectModel, fileName, type, offset, statmentText)) != null) {
 			// the current position is inside quotes as a parameter for an array.
-			return tmp;
+			return resultCandidate;
 		}
 
 		if (isPHPSingleQuote(sdRegion, textRegion) || PHPPartitionTypes.isPHPCommentState(type)) {
@@ -120,19 +119,19 @@ public class CodeDataResolver {
 			return null;
 		}
 
-		if ((tmp = getIfInFunctionDeclaretion(projectModel, fileName, statmentText, offset)) != null) {
+		if ((resultCandidate = getIfInFunctionDeclaretion(projectModel, fileName, statmentText, offset)) != null) {
 			// the current position is inside function declaretion.
-			return tmp;
+			return resultCandidate;
 		}
 
-		if ((tmp = getIfInClassDeclaretion(projectModel, fileName, statmentText, offset)) != null) {
+		if ((resultCandidate = getIfInClassDeclaretion(projectModel, fileName, statmentText, offset)) != null) {
 			// the current position is inside class declaretion.
-			return tmp;
+			return resultCandidate;
 		}
 
-		if ((tmp = getIfInCatchStatment(projectModel, statmentText, offset)) != null) {
+		if ((resultCandidate = getIfInCatchStatment(projectModel, statmentText, offset)) != null) {
 			// the current position is inside catch statment.
-			return tmp;
+			return resultCandidate;
 		}
 
 		int totalLength = statmentText.length();
@@ -142,29 +141,29 @@ public class CodeDataResolver {
 		String lastWord = statmentText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
 
-		if (haveSpacesAtEnd && (tmp = getIfNewOrInstanceofStatment(fileName, projectModel, lastWord, "", offset, type)) != null) {
+		if (haveSpacesAtEnd && (resultCandidate = getIfNewOrInstanceofStatment(fileName, projectModel, lastWord, "", offset, type)) != null) {
 			// the current position is inside new or instanceof statment.
-			return tmp;
+			return resultCandidate;
 		}
 
 		int line = sdRegion.getParentDocument().getLineOfOffset(offset);
-		if ((tmp = getIfClassFunctionCompletion(projectModel, fileName, statmentText, offset, line, lastWord, startPosition, haveSpacesAtEnd)) != null) {
+		if ((resultCandidate = getIfClassFunctionCompletion(projectModel, fileName, statmentText, offset, line, lastWord, startPosition, haveSpacesAtEnd)) != null) {
 			// the current position is in class function.
-			return tmp;
+			return resultCandidate;
 		}
 
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statmentText, startPosition); // read whitespace
 		startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, endPosition, true);
 		String firstWord = statmentText.subSequence(startPosition, endPosition).toString();
 
-		if (!haveSpacesAtEnd && (tmp = getIfNewOrInstanceofStatment(fileName, projectModel, firstWord, lastWord, offset, type)) != null) {
+		if (!haveSpacesAtEnd && (resultCandidate = getIfNewOrInstanceofStatment(fileName, projectModel, firstWord, lastWord, offset, type)) != null) {
 			// the current position is inside new or instanceof statment.
-			return tmp;
+			return resultCandidate;
 		}
 
-		if ((tmp = getIfInArrayOption(projectModel, fileName, haveSpacesAtEnd, firstWord, lastWord, startPosition, offset, statmentText)) != null) {
+		if ((resultCandidate = getIfInArrayOption(projectModel, fileName, haveSpacesAtEnd, firstWord, lastWord, startPosition, offset, statmentText)) != null) {
 			// the current position is after '[' sign show special completion.
-			return tmp;
+			return resultCandidate;
 		}
 
 		String elementName = lastWord;
@@ -235,7 +234,7 @@ public class CodeDataResolver {
 
 		String elementName = text.subSequence(startPosition, endPosition).toString();
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, startPosition);
-		if(endPosition == 0){
+		if (endPosition == 0) {
 			return null;
 		}
 		char c = text.charAt(endPosition - 1);
