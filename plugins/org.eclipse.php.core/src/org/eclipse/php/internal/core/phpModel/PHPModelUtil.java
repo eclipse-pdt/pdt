@@ -198,20 +198,12 @@ public class PHPModelUtil {
 		return projectModel.getExternalResource(fileData);
 	}
 
-	public static PHPClassData[] getMatchingClasses(final IPhpModel model, final String className) {
-		final CodeData[] classes = model.getClasses(className);
-		PHPClassData aClass;
-		final ArrayList matchingClasses = new ArrayList(1);
-		for (int i = 0; i < classes.length; ++i) {
-			aClass = (PHPClassData) classes[i];
-			if (className.equalsIgnoreCase(aClass.getName()))
-				matchingClasses.add(aClass);
-		}
-		return (PHPClassData[]) matchingClasses.toArray(new PHPClassData[] {});
+	public static CodeData[] getMatchingClasses(final IPhpModel model, final String className) {
+		return model.getClass(className.toLowerCase());
 	}
 
 	public static PHPCodeData[] getMatchingElements(final IPhpModel model, final String elementName) {
-		final PHPClassData[] matchingClasses = getMatchingClasses(model, elementName);
+		final CodeData[] matchingClasses = getMatchingClasses(model, elementName);
 		final PHPFunctionData[] matchingFunctions = getMatchingFunctions(model, elementName);
 		final int nMatchingClasses = matchingClasses.length;
 		final int nMatchingFunctions = matchingFunctions.length;
