@@ -763,7 +763,7 @@ public class CodeDataResolver {
 	}
 
 	private CodeData[] getOnlyClasses(PHPProjectModel projectModel) {
-		CodeData[] classes = projectModel.getClasses("");
+		CodeData[] classes = projectModel.getClasses();
 		int numOfInterfaces = 0;
 		for (int i = 0; i < classes.length; i++) {
 			if (PHPModifier.isInterface(((PHPClassData) classes[i]).getModifiers())) {

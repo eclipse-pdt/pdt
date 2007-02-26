@@ -38,11 +38,7 @@ import org.eclipse.php.internal.ui.editor.util.TextSequence;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
@@ -194,12 +190,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 
 		ITextRegionCollection container = sdRegion;
-		
-		if(textRegion instanceof ITextRegionContainer){
-			container = (ITextRegionContainer)textRegion;
+
+		if (textRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) textRegion;
 			textRegion = container.getRegionAtCharacterOffset(offset);
 		}
-		
+
 		if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
 			return;
 		}
@@ -241,10 +237,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
 			//if we are at the begining of multi-line comment or docBlock then we should get completion.
-			if(partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC){
+			if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC) {
 				String regionType = phpScriptRegion.getPhpToken(internalOffset).getType();
-				if(regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START ){
-					if(phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset){
+				if (regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START) {
+					if (phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset) {
 						partitionType = phpScriptRegion.getPartition(internalOffset - 1);
 					}
 				}
@@ -446,7 +442,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		CodeData[] functions = null;
-		CodeData[] constans = null;
+		CodeData[] constants = null;
 		CodeData[] keywords = null;
 
 		if (explicit || autoShowFunctionsKeywordsConstants) {
@@ -458,9 +454,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 			if (!disableConstants)
 				if (startsWith.length() == 0)
-					constans = projectModel.getConstants();
+					constants = projectModel.getConstants();
 				else {
-					constans = projectModel.getConstants(startsWith, constantCaseSensitive);
+					constants = projectModel.getConstants(startsWith, constantCaseSensitive);
 				}
 
 			keywords = projectModel.getKeywordData();
@@ -477,7 +473,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		mergeData = ModelSupport.merge(keywords, mergeData);
 		mergeData = ModelSupport.merge(classes, mergeData);
-		mergeData = ModelSupport.merge(constans, mergeData);
+		mergeData = ModelSupport.merge(constants, mergeData);
 		mergeData = ModelSupport.merge(functions, mergeData);
 
 		completionProposalGroup = regularPHPCompletionProposalGroup;
@@ -1041,7 +1037,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
-		CodeData[] classes = projectModel.getClasses("");
+		CodeData[] classes = projectModel.getClasses();
 		ArrayList interfaces = new ArrayList(classes.length / 10);
 
 		for (int i = 0; i < classes.length; i++) {
@@ -1168,7 +1164,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	private CodeData[] getOnlyClasses(PHPProjectModel projectModel) {
-		CodeData[] classes = projectModel.getClasses("");
+		CodeData[] classes = projectModel.getClasses();
 		int numOfInterfaces = 0;
 		for (int i = 0; i < classes.length; i++) {
 			if (PHPModifier.isInterface(((PHPClassData) classes[i]).getModifiers())) {
@@ -1236,7 +1232,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			classes = getOnlyClasses(projectModel);
 		} else {
 			completionProposalGroup = phpCompletionProposalGroup;
-			classes = projectModel.getClasses("");
+			classes = projectModel.getClasses();
 		}
 
 		completionProposalGroup.setData(offset, classes, startWith, selectionLength);

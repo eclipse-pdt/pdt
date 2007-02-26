@@ -220,12 +220,12 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 				break;
 			}
 			// find a class:
-			if (projectModel.getClasses(ref) != null) {
+			if (projectModel.getClass(ref).length > 0) {
 				helpBuffer.append(ref);
 				break;
 			}
 			// find a constant:
-			if (projectModel.getConstants(ref, true) != null) {
+			if (projectModel.getConstant(ref).length > 0) {
 				helpBuffer.append(ref);
 				break;
 			}
@@ -275,7 +275,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		helpBuffer.append("<br><dt>Deprecated</dt>");
 		helpBuffer.append("<dd>");
 		PHPDocTag deprecated = (PHPDocTag) it.next();
-		helpBuffer.append((String) deprecated.getValue());
+		helpBuffer.append(deprecated.getValue());
 		helpBuffer.append("</dd>");
 		return helpBuffer.toString();
 	}
@@ -284,7 +284,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		helpBuffer.delete(0, helpBuffer.length());
 		helpBuffer.append("<br><dt>Returns</dt>");
 		PHPDocTag returns = (PHPDocTag) it.next();
-		String arg = (String) returns.getValue();
+		String arg = returns.getValue();
 		helpBuffer.append("<dd>");
 		helpBuffer.append(arg);
 		helpBuffer.append("</dd>");
@@ -295,7 +295,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		helpBuffer.delete(0, helpBuffer.length());
 		while (it.hasNext()) {
 			PHPDocTag param = (PHPDocTag) it.next();
-			String arg = (String) param.getValue();
+			String arg = param.getValue();
 			arg = dolar_pattern.matcher(arg).replaceAll("");
 			arg = unknown_type_pattern.matcher(arg).replaceAll("");
 			if (arg.split(" ").length > 1) {
