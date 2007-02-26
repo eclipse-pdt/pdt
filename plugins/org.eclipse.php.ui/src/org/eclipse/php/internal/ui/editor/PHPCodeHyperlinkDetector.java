@@ -11,13 +11,23 @@
 package org.eclipse.php.internal.ui.editor;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -32,7 +42,11 @@ import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 
 public class PHPCodeHyperlinkDetector implements IHyperlinkDetectorForPHP {
@@ -133,9 +147,15 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetectorForPHP {
 							}
 						}
 					} else { // The current token is not a string - resolve this PHP element
-						CodeData codeData = CodeDataResolver.getCodeData(textViewer, region.getOffset());
-						if (codeData != null && codeData.isUserCode()) {
-							return new IHyperlink[] { new PHPCodeHyperLink(selectWord(document, region.getOffset()), codeData) };
+						CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(sDoc, region.getOffset());
+						List userCodeData = new LinkedList();
+						for (int i = 0; i < codeDatas.length; ++i) {
+							if (codeDatas[i].isUserCode()) {
+								userCodeData.add(codeDatas[i]);
+							}
+						}
+						if (userCodeData.size() > 0) {
+							return new IHyperlink[] { new PHPCodeHyperLink(selectWord(document, region.getOffset()), (CodeData[]) userCodeData.toArray(new CodeData[userCodeData.size()])) };
 						}
 					}
 				}

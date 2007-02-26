@@ -52,6 +52,10 @@ public class BasicSelector extends Composite {
 		this.contentAreaCompositeFactory = new CompositeFactoryAsserter(contentAreaCompositeFactory);
 		initialize();
 	}
+	
+	public void setInitFilterText(String initFilterText) {
+		filterText.setText(initFilterText);
+	}
 
 	private void initialize() {
 		FormLayout formLayout = new FormLayout();

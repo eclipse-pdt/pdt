@@ -27,17 +27,21 @@ public class PHPAnnotationTextHover extends AbstractPHPTextHover {
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
-			CodeData codeData = CodeDataResolver.getCodeData(textViewer, hoverRegion.getOffset());
-			if (codeData != null) {
-				IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
+			IStructuredDocument sDoc = (IStructuredDocument) document;
+			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			try {
 				if (sModel instanceof DOMModelForPHP) {
-					try {
-						DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
+					DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
+					CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(sDoc, hoverRegion.getOffset(), editorModel);
+					if (codeDatas.length != 0) {
+						CodeData codeData = codeDatas[0]; // XXX: handle multiple code data!
 						PHPProjectModel projectModel = editorModel.getProjectModel();
 						return PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel);
-					} finally {
-						sModel.releaseFromRead();
 					}
+				}
+			} finally {
+				if (sModel != null) {
+					sModel.releaseFromRead();
 				}
 			}
 		}

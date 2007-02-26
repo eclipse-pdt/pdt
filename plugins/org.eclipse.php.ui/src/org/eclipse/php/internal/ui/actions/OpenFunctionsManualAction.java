@@ -141,11 +141,11 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 		}
 
 		StructuredTextEditor structuredTextEditor = (StructuredTextEditor) editor;
-		CodeData codeData;
-		codeData = CodeDataResolver.getCodeData(structuredTextEditor.getTextViewer(), offset);
-		if (codeData == null) {
+		CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(structuredDocument, offset);
+		if (codeDatas.length == 0) {
 			return false;
 		}
+		CodeData codeData = codeDatas[0]; // XXX: handle multiple data!
 		if (codeData.getUserData() != null) {
 			return false;
 		}

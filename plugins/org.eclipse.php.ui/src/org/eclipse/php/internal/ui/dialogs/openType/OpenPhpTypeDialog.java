@@ -44,8 +44,9 @@ import org.eclipse.swt.widgets.Shell;
 public class OpenPhpTypeDialog extends Dialog {
 
 	private PHPCodeData selectedElement = null;
-
 	private BasicSelector basicSelector;
+	private CodeData[] initialElements;
+	private String initFilterText;
 
 	public OpenPhpTypeDialog(Shell parentShell) {
 		super(parentShell);
@@ -54,6 +55,14 @@ public class OpenPhpTypeDialog extends Dialog {
 
 	protected Point getInitialSize() {
 		return getShell().computeSize(500, 400, true);
+	}
+	
+	public void setInitialElements(CodeData[] initialElements) {
+		this.initialElements = initialElements;
+	}
+	
+	public void setInitFilterText(String initFilterText) {
+		this.initFilterText = initFilterText;
 	}
 
 	protected Control createDialogArea(Composite parent) {
@@ -67,6 +76,7 @@ public class OpenPhpTypeDialog extends Dialog {
 
 		};
 		basicSelector = new BasicSelector(composite, phpTypeFilterCompositeFactory);
+		basicSelector.setInitFilterText(initFilterText);
 		basicSelector.setLayoutData(new GridData(GridData.FILL_BOTH));
 		//		basicSelector.setContentProvider(new PhpTypeContentProvider());
 		basicSelector.addFilter(phpTypeFilter);
@@ -97,33 +107,38 @@ public class OpenPhpTypeDialog extends Dialog {
 	}
 
 	private Object[] getElements() {
-		ArrayList arrayList = new ArrayList();
-		//traverse over all the php projects and get the model for each one.
-		IProject[] projects = PHPUiPlugin.getWorkspace().getRoot().getProjects();
-		for (int i = 0; i < projects.length; i++) {
-			IProject project = projects[i];
-			try {
-				if (!project.exists() || !project.isOpen() || !project.hasNature(PHPNature.ID)) {
+
+		Object[] elements = initialElements;
+		
+		if (elements == null) {
+			ArrayList arrayList = new ArrayList();
+			//traverse over all the php projects and get the model for each one.
+			IProject[] projects = PHPUiPlugin.getWorkspace().getRoot().getProjects();
+			for (int i = 0; i < projects.length; i++) {
+				IProject project = projects[i];
+				try {
+					if (!project.exists() || !project.isOpen() || !project.hasNature(PHPNature.ID)) {
+						continue;
+					}
+				} catch (CoreException ce) {
+					ce.printStackTrace();
 					continue;
 				}
-			} catch (CoreException ce) {
-				ce.printStackTrace();
-				continue;
-			}
-			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-			IPhpModel[] models = projectModel.getModels();
-			IPHPLanguageModel languageModel = projectModel.getPHPLanguageModel();
-			for (int j = 0; j < models.length; ++j) {
-				IPhpModel model = models[j];
-				if (model != languageModel) {
-					addClassesData(model.getClasses(), arrayList);
-					addData(model.getFunctions(), arrayList);
-					addData(model.getConstants(), arrayList);
+				PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+				IPhpModel[] models = projectModel.getModels();
+				IPHPLanguageModel languageModel = projectModel.getPHPLanguageModel();
+				for (int j = 0; j < models.length; ++j) {
+					IPhpModel model = models[j];
+					if (model != languageModel) {
+						addClassesData(model.getClasses(), arrayList);
+						addData(model.getFunctions(), arrayList);
+						addData(model.getConstants(), arrayList);
+					}
 				}
 			}
+			elements = arrayList.toArray();
 		}
-
-		Object[] elements = arrayList.toArray();
+		
 		Arrays.sort(elements, new Comparator() {
 			public int compare(Object arg0, Object arg1) {
 				return arg0.toString().compareToIgnoreCase(arg1.toString());

@@ -1,5 +1,7 @@
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.text.BadLocationException;
@@ -34,7 +36,7 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 		super.setEnabled(enabled);
 	}
 
-	private CodeData fCodeData;
+	private CodeData[] fCodeDatas;
 
 	public OpenDeclarationAction(ResourceBundle resourceBundle, PHPStructuredEditor editor) {
 		super(resourceBundle, "OpenAction_declaration_", editor);
@@ -49,7 +51,7 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 			return;
 		}
 		if (validAction()) {
-			PHPCodeHyperLink link = new PHPCodeHyperLink(null, fCodeData);
+			PHPCodeHyperLink link = new PHPCodeHyperLink(null, fCodeDatas);
 			link.open();
 			return;
 		}
@@ -139,13 +141,19 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 		}
 
 		StructuredTextEditor structuredTextEditor = (StructuredTextEditor) editor;
-		fCodeData = CodeDataResolver.getCodeData(structuredTextEditor.getTextViewer(), offset);
-		if (fCodeData == null) {
-			return false;
+		CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(structuredDocument, offset);
+		
+		List userCodeData = new LinkedList();
+		for (int i = 0; i < codeDatas.length; ++i) {
+			if (codeDatas[i].isUserCode()) {
+				userCodeData.add(codeDatas[i]);
+			}
 		}
-		if (fCodeData.getUserData() == null) {
-			return false;
+		
+		if (userCodeData.size() > 0) {
+			fCodeDatas = (CodeData[]) userCodeData.toArray(new CodeData[userCodeData.size()]); 
 		}
+		
 		return true;
 	}
 }

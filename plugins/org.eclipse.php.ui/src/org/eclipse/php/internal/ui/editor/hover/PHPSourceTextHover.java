@@ -95,33 +95,37 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
+			IStructuredDocument sDoc = (IStructuredDocument) document;
 			try {
-				final CodeData codeData = CodeDataResolver.getCodeData(textViewer, hoverRegion.getOffset());
-				if (codeData != null && !(codeData instanceof PHPVariableData)) {
-					UserData userData = codeData.getUserData();
-					if (userData != null) {
-						// if this is an open resource get the data from the document
-						// else get the file from disk
-						// REMARK: since the editor is accessiable ONLY from the Display thread
-						// we need to use Display.sync() to get the actual data from the file
-						final FindText findText = new FindText(codeData);
-						Display.getDefault().syncExec(findText);
-						final String text = findText.getText();
+				final CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(sDoc, hoverRegion.getOffset());
+				if (codeDatas.length != 0) {
+					CodeData codeData = codeDatas[0]; // XXX: handle multiple data!
+					if (!(codeData instanceof PHPVariableData)) {
+						UserData userData = codeData.getUserData();
+						if (userData != null) {
+							// if this is an open resource get the data from the document
+							// else get the file from disk
+							// REMARK: since the editor is accessiable ONLY from the Display thread
+							// we need to use Display.sync() to get the actual data from the file
+							final FindText findText = new FindText(codeData);
+							Display.getDefault().syncExec(findText);
+							final String text = findText.getText();
 
-						// if the text is in one of the editors - fetch it from the editor source
-						if (text != null) {
-							return formatHoverInfo(text);
-						} else { // else just go to the resource and find it
-							IFile file = (IFile) PHPModelUtil.getResource(codeData);// ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
-							if (file != null) {
-								BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
-								int startPosition = userData.getStartPosition();
-								int len = userData.getEndPosition() - startPosition;
-								char[] buf = new char[len];
-								r.skip(startPosition);
-								r.read(buf, 0, len);
-								r.close();
-								return formatHoverInfo(new String(buf));
+							// if the text is in one of the editors - fetch it from the editor source
+							if (text != null) {
+								return formatHoverInfo(text);
+							} else { // else just go to the resource and find it
+								IFile file = (IFile) PHPModelUtil.getResource(codeData);// ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
+								if (file != null) {
+									BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
+									int startPosition = userData.getStartPosition();
+									int len = userData.getEndPosition() - startPosition;
+									char[] buf = new char[len];
+									r.skip(startPosition);
+									r.read(buf, 0, len);
+									r.close();
+									return formatHoverInfo(new String(buf));
+								}
 							}
 						}
 					}

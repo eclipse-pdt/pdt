@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.dialogs.openType.OpenPhpTypeDialog;
 import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -24,11 +27,11 @@ import org.eclipse.ui.PartInitException;
 public class PHPCodeHyperLink implements IHyperlink {
 
 	private IRegion fRegion;
-	private CodeData codeData;
+	private CodeData[] codeDatas;
 	
-	public PHPCodeHyperLink(IRegion region, CodeData codeData) {
+	public PHPCodeHyperLink(IRegion region, CodeData[] codeDatas) {
 		fRegion = region;
-		this.codeData = codeData;
+		this.codeDatas = codeDatas;
 	}
 	
 	public IRegion getHyperlinkRegion() {
@@ -44,6 +47,19 @@ public class PHPCodeHyperLink implements IHyperlink {
 	}
 
 	public void open() {
+		CodeData codeData;
+		if (codeDatas.length > 1) {
+			OpenPhpTypeDialog dialog = new OpenPhpTypeDialog(Display.getDefault().getActiveShell());
+			dialog.setInitialElements(codeDatas);
+			dialog.setInitFilterText(codeDatas[0].getName());
+			if (dialog.open() == Dialog.CANCEL) {
+				return;
+			}
+			codeData = dialog.getSelectedElement();
+		} else {
+			codeData = codeDatas[0];
+		}
+		
 		IEditorPart part = EditorUtility.isOpenInEditor(codeData);
 		if (part != null) {
 			IWorkbenchPage page = PHPUiPlugin.getActivePage();
