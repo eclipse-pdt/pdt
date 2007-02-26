@@ -1,34 +1,29 @@
-/*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *   Zend and IBM - Initial implementation
- *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
-public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterable {
-
-	IPhpModelFilter filter;
-
-	/** (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.phpModel.parser.IPhpModelFilterable#setFilter(org.eclipse.php.internal.core.phpModel.parser.IPhpModelFilterable.IPhpModelFilter)
-	 */
-	public void setFilter(IPhpModelFilter filter) {
-		this.filter = filter;
-	}
+public abstract class CompositePhpModel implements IPhpModel {
 
 	private IPhpModel[] models = new IPhpModel[0];
+
+	private static CodeData[] mergeResults(ArrayList results) {
+		if (results.size() == 0) {
+			return new CodeData[0];
+		}
+		CodeData[] res = (CodeData[]) results.get(0);
+		Arrays.sort(res);
+
+		for (int i = 1; i < results.size(); i++) {
+			CodeData[] res1 = (CodeData[]) results.get(i);
+			Arrays.sort(res1);
+			res = ModelSupport.merge(res, res1);
+		}
+		return res;
+	}
 
 	public void addModel(IPhpModel newModel) {
 		if (indexOf(newModel.getID()) != -1) {
@@ -141,34 +136,14 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 
 	public PHPClassData getClass(String fileName, String className) {
 
-		List classes = new ArrayList();
 		for (int i = 0; i < models.length; i++) {
 			PHPClassData exactClass = models[i].getClass(fileName, className);
 			// if filename is matching - just return the class.
 			if (exactClass != null && exactClass.getUserData() != null && exactClass.getUserData().getFileName().equals(fileName)) {
 				return exactClass;
 			}
-			// else collect all the classes to apply filter
-			CodeData[] modelClasses = models[i].getClass(className);
-			if (modelClasses != null && modelClasses.length > 0) {
-				classes.addAll(Arrays.asList(modelClasses));
-			}
 		}
-		switch (classes.size()) {
-			case 0:
-				return null;
-			case 1:
-				return (PHPClassData) classes.get(0);
-		}
-		if (filter != null) {
-			for (Iterator i = classes.iterator(); i.hasNext();) {
-				PHPClassData classs = (PHPClassData) i.next();
-				if (filter.select(this, classs, fileName)) {
-					return classs;
-				}
-			}
-		}
-		return (PHPClassData) classes.get(0);
+		return null;
 	}
 
 	public CodeData[] getFunctions() {
@@ -208,34 +183,14 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 	}
 
 	public PHPFunctionData getFunction(String fileName, String functionName) {
-		List functions = new ArrayList();
 		for (int i = 0; i < models.length; i++) {
 			PHPFunctionData exactFunction = models[i].getFunction(fileName, functionName);
 			// if filename is matching - just return the function.
 			if (exactFunction != null && exactFunction.getUserData() != null && exactFunction.getUserData().getFileName().equals(fileName)) {
 				return exactFunction;
 			}
-			// else collect all the functions to apply filter
-			CodeData[] modelFunctions = models[i].getFunction(functionName);
-			if (modelFunctions != null && modelFunctions.length > 0) {
-				functions.addAll(Arrays.asList(modelFunctions));
-			}
 		}
-		switch (functions.size()) {
-			case 0:
-				return null;
-			case 1:
-				return (PHPFunctionData) functions.get(0);
-		}
-		if (filter != null) {
-			for (Iterator i = functions.iterator(); i.hasNext();) {
-				PHPFunctionData function = (PHPFunctionData) i.next();
-				if (filter.select(this, function, fileName)) {
-					return function;
-				}
-			}
-		}
-		return (PHPFunctionData) functions.get(0);
+		return null;
 	}
 
 	public CodeData[] getConstants() {
@@ -274,34 +229,14 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 	}
 
 	public PHPConstantData getConstant(String fileName, String constantName) {
-		List constants = new ArrayList();
 		for (int i = 0; i < models.length; i++) {
 			PHPConstantData exactConstant = models[i].getConstant(fileName, constantName);
 			// if filename is matching - just return the function.
 			if (exactConstant != null && exactConstant.getUserData() != null && exactConstant.getUserData().getFileName().equals(fileName)) {
 				return exactConstant;
 			}
-			// else collect all the functions to apply filter
-			CodeData[] modelConstants = models[i].getConstant(constantName);
-			if (modelConstants != null && modelConstants.length > 0) {
-				constants.addAll(Arrays.asList(modelConstants));
-			}
 		}
-		switch (constants.size()) {
-			case 0:
-				return null;
-			case 1:
-				return (PHPConstantData) constants.get(0);
-		}
-		if (filter != null) {
-			for (Iterator i = constants.iterator(); i.hasNext();) {
-				PHPConstantData constant = (PHPConstantData) i.next();
-				if (filter.select(this, constant, fileName)) {
-					return constant;
-				}
-			}
-		}
-		return (PHPConstantData) constants.get(0);
+		return null;
 	}
 
 	public CodeData[] getGlobalVariables(String fileName, String startsWith, boolean showVariablesFromOtherFiles) {
@@ -372,18 +307,8 @@ public abstract class CompositePhpModel implements IPhpModel, IPhpModelFilterabl
 		}
 	}
 
-	private static CodeData[] mergeResults(ArrayList results) {
-		if (results.size() == 0) {
-			return new CodeData[0];
-		}
-		CodeData[] res = (CodeData[]) results.get(0);
-		Arrays.sort(res);
-
-		for (int i = 1; i < results.size(); i++) {
-			CodeData[] res1 = (CodeData[]) results.get(i);
-			Arrays.sort(res1);
-			res = ModelSupport.merge(res, res1);
-		}
-		return res;
+	public CompositePhpModel() {
+		super();
 	}
+
 }

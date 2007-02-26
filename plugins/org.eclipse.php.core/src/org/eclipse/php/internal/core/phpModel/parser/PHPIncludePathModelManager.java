@@ -739,29 +739,11 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 					if (variableFile.isDirectory()) {
 						return file;
 					}
-					//					if (variableFile.getName().endsWith(".zip")) {
-					//						try {
-					//							return new ZipFile(variableFile);
-					//						} catch (ZipException e) {
-					//							Logger.logException(e);
-					//						} catch (IOException e) {
-					//							Logger.logException(e);
-					//						}
-					//					}
 				}
 				File file = new File(resourceName);
 				if (getIndexOf(file) != -1) {
 					return new File(fileData.getName());
 				}
-				//				if (getIndexOf(file, zips) != -1) {
-				//					try {
-				//						return new ZipFile(file);
-				//					} catch (ZipException e) {
-				//						Logger.logException(e);
-				//					} catch (IOException e) {
-				//						Logger.logException(e);
-				//					}
-				//				}
 				return null;
 			}
 		}

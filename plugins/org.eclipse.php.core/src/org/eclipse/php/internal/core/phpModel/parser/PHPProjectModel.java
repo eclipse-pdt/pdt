@@ -22,11 +22,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
-public class PHPProjectModel extends CompositePhpModel implements IPhpProjectModel, IAdaptable {
+public class PHPProjectModel extends FilterableCompositePhpModel implements IPhpProjectModel, IAdaptable {
 
 	private static String ID = "PHPProjectModel";
 
