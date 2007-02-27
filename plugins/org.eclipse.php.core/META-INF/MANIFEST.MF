@@ -51,5 +51,6 @@ Provide-Package: org.eclipse.php.core,
  org.eclipse.php.internal.core.util.collections,
  org.eclipse.php.internal.core.util.preferences,
  org.eclipse.php.internal.core.util.project.observer,
+ org.eclipse.php.internal.core.util.text,
  org.ini4j
 Bundle-Vendor: Eclipse.org
