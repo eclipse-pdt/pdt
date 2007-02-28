@@ -12,15 +12,12 @@ package org.eclipse.php.internal.ui.editor.hover;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHoverExtension;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
@@ -99,42 +96,64 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 			try {
 				final CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(sDoc, hoverRegion.getOffset());
 				if (codeDatas.length != 0) {
-					CodeData codeData = codeDatas[0]; // XXX: handle multiple data!
-					if (!(codeData instanceof PHPVariableData)) {
-						UserData userData = codeData.getUserData();
-						if (userData != null) {
-							// if this is an open resource get the data from the document
-							// else get the file from disk
-							// REMARK: since the editor is accessiable ONLY from the Display thread
-							// we need to use Display.sync() to get the actual data from the file
-							final FindText findText = new FindText(codeData);
-							Display.getDefault().syncExec(findText);
-							final String text = findText.getText();
+					List hoverInfos = new ArrayList(codeDatas.length);
+					for (int i = 0; i < codeDatas.length; ++i) {
+						CodeData codeData = codeDatas[i]; // XXX: handle multiple data!
+						String hoverInfo = "";
+						if (!(codeData instanceof PHPVariableData)) {
+							UserData userData = codeData.getUserData();
+							if (userData != null) {
+								// if this is an open resource get the data from the document
+								// else get the file from disk
+								// REMARK: since the editor is accessiable ONLY from the Display thread
+								// we need to use Display.sync() to get the actual data from the file
+								final FindText findText = new FindText(codeData);
+								Display.getDefault().syncExec(findText);
+								final String text = findText.getText();
 
-							// if the text is in one of the editors - fetch it from the editor source
-							if (text != null) {
-								return formatHoverInfo(text);
-							} else { // else just go to the resource and find it
-								IFile file = (IFile) PHPModelUtil.getResource(codeData);// ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
-								if (file != null) {
-									BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
-									int startPosition = userData.getStartPosition();
-									int len = userData.getEndPosition() - startPosition;
-									char[] buf = new char[len];
-									r.skip(startPosition);
-									r.read(buf, 0, len);
-									r.close();
-									return formatHoverInfo(new String(buf));
+								// if the text is in one of the editors - fetch it from the editor source
+								if (text != null) {
+									hoverInfo = formatHoverInfo(text);
+								} else { // else just go to the resource and find it
+									IFile file = (IFile) PHPModelUtil.getResource(codeData);// ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
+									if (file != null) {
+										BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
+										int startPosition = userData.getStartPosition();
+										int len = userData.getEndPosition() - startPosition;
+										char[] buf = new char[len];
+										r.skip(startPosition);
+										r.read(buf, 0, len);
+										r.close();
+										hoverInfo = formatHoverInfo(new String(buf));
+									}
 								}
 							}
 						}
+						if (hoverInfo.length() != 0) {
+							hoverInfos.add(hoverInfo);
+						}
 					}
+					return concatenateHoverInfos(hoverInfos);
 				}
 			} catch (Exception e) {
 				Logger.logException(e);
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param hoverInfos
+	 * @return concatenated infos
+	 */
+	private String concatenateHoverInfos(List/*<String>*/hoverInfos) {
+		StringBuffer concatenatedInfo = new StringBuffer();
+		for (Iterator i = hoverInfos.iterator(); i.hasNext();) {
+			concatenatedInfo.append(i.next());
+			if (i.hasNext())
+				concatenatedInfo.append("\n");
+		}
+		return concatenatedInfo.toString();
 	}
 
 	private static class FindText implements Runnable {
@@ -174,7 +193,7 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 
 	public String formatHoverInfo(String info) {
 		info = info.trim();
-		String[] lines = info.split("[\r\n]"); //$NON-NLS-1$
+		String[] lines = info.split("[\r\n]+"); //$NON-NLS-1$
 		if (lines.length > 0) {
 			String lastLine = lines[lines.length - 1];
 			int numCharsToStrip = 0;
@@ -191,7 +210,8 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 					actuallyStrip++;
 				}
 				buf.append(lines[i].substring(actuallyStrip));
-				buf.append("\n"); //$NON-NLS-1$
+				if (lines[i] != lastLine)
+					buf.append("\n"); //$NON-NLS-1$
 			}
 			info = buf.toString();
 		}
