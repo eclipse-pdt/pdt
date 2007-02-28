@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.generic;
 
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.ElementSpecificFilter;
 import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.IFilter;
@@ -43,16 +39,15 @@ public class BasicSelector extends Composite {
 	private Composite tableViewerComposite;
 	private CompositeFactory contentAreaCompositeFactory;
 	private ViewerElementFilter phpTypeViewerFilter;
-//	private IFilterChangeListener filterChangeListener;
 	private IBasicSelectorLabelProvider basicSelectorLabelProvider;
 
 	public BasicSelector(Composite parent, CompositeFactory contentAreaCompositeFactory) {
 		super(parent, SWT.NONE);
-		
+
 		this.contentAreaCompositeFactory = new CompositeFactoryAsserter(contentAreaCompositeFactory);
 		initialize();
 	}
-	
+
 	public void setInitFilterText(String initFilterText) {
 		filterText.setText(initFilterText);
 	}
@@ -120,16 +115,17 @@ public class BasicSelector extends Composite {
 		//Functionality to go to the text when pressing the up arrow and found in the first element
 		tableViewer.getControl().addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				StructuredSelection structuredSelection = (StructuredSelection)tableViewer.getSelection();
+				StructuredSelection structuredSelection = (StructuredSelection) tableViewer.getSelection();
 				if (structuredSelection.getFirstElement() == tableViewer.getElementAt(0) && SWT.ARROW_UP == e.keyCode) {
 					filterText.setFocus();
 				}
 			}
+
 			public void keyReleased(KeyEvent e) {
 			}
-			
+
 		});
-		
+
 		tableViewer.getControl().addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if ((e.keyCode & SWT.KEYCODE_BIT) == 0) {
@@ -137,20 +133,21 @@ public class BasicSelector extends Composite {
 						filterText.setFocus();
 						filterText.setText(filterText.getText() + e.character);
 						filterText.setSelection(filterText.getText().length());
-					}else if (e.keyCode == SWT.BS) {
+					} else if (e.keyCode == SWT.BS) {
 						filterText.setFocus();
 						String text = filterText.getText();
 						if (text.length() == 0) {
 							return;
 						}
-						filterText.setText(text.substring(0, text.length()-1));
-						filterText.setSelection(text.length()-1);
+						filterText.setText(text.substring(0, text.length() - 1));
+						filterText.setSelection(text.length() - 1);
 					}
 				}
 			}
+
 			public void keyReleased(KeyEvent e) {
 			}
-			
+
 		});
 	}
 
@@ -174,6 +171,7 @@ public class BasicSelector extends Composite {
 					tableViewer.getControl().setFocus();
 				}
 			}
+
 			public void keyReleased(KeyEvent e) {
 			}
 		});
@@ -184,10 +182,6 @@ public class BasicSelector extends Composite {
 		instructionLabel.setText(PHPUIMessages.OpenType_instructionText);
 	}
 
-//	public void setContentProvider(IStructuredContentProvider structuredContentProvider) {
-//		this.tableViewer.setContentProvider(structuredContentProvider);
-//	}
-	
 	public void setElements(Object[] elements) {
 		tableViewer.setElements(elements);
 	}
@@ -216,24 +210,12 @@ public class BasicSelector extends Composite {
 
 			public void removeListener(ILabelProviderListener listener) {
 			}
-			
+
 		});
 	}
 
-//	public void setInput(Object object) {
-//		tableViewer.setInput(object);
-//	}
-	
-
 	public void addFilter(final IFilter filter) {
 		tableViewer.addFilter(filter);
-//		tableViewer.addFilter(new ViewerFilter() {
-//			public boolean select(Viewer viewer, Object parentElement, Object element) {
-//				return basicSelectorFilter.select(element);
-//			}
-//		});
-//		
-//		basicSelectorFilter.addFilterChangeListener(getFilterChangeListener());
 	}
 
 	private class ViewerElementFilter extends ElementSpecificFilter {
@@ -244,13 +226,8 @@ public class BasicSelector extends Composite {
 			if (textFilter.equals("")) { //$NON-NLS-1$
 				return false;
 			}
-			
+
 			String elementText = BasicSelector.this.basicSelectorLabelProvider.getElementName(element).toLowerCase();
-//			if (elementText.startsWith(textFilter)) {
-//				return true;
-//			}else if (textFilter.indexOf('?') == -1 && textFilter.indexOf('*') == -1) {
-//				return false;
-//			}
 			return SearchPattern.match(textFilter, elementText);
 		}
 
@@ -258,31 +235,10 @@ public class BasicSelector extends Composite {
 			this.textFilter = textFilter.toLowerCase();
 			notifyFilterChanged();
 		}
-
 	}
 
-
-
-
-//	private IFilterChangeListener getFilterChangeListener() {
-//		if (filterChangeListener == null) {
-//			filterChangeListener = new IFilterChangeListener() {
-//				public void notifyFilterChanged() {
-////					tableViewer.
-//					tableViewer.refresh(false);
-//					Object object = tableViewer.getElementAt(0);
-//					if (object != null) {
-//						tableViewer.setSelection(new StructuredSelection(object));
-//					}
-//				}
-//			};
-//		}
-//
-//		return filterChangeListener;
-//	}
-
 	public Object getSelectedElement() {
-		return ((StructuredSelection)tableViewer.getSelection()).getFirstElement();
+		return ((StructuredSelection) tableViewer.getSelection()).getFirstElement();
 	}
 
 	public void addDoubleClickListener(IDoubleClickListener listener) {
@@ -291,7 +247,7 @@ public class BasicSelector extends Composite {
 
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		tableViewer.addSelectionChangedListener(listener);
-    }
+	}
 
 	public void setDefaultElementSelection(boolean defaultElementSelection) {
 		tableViewer.setDefaultElementSelection(defaultElementSelection);

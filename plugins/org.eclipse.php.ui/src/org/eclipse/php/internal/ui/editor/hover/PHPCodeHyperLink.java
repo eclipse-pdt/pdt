@@ -13,8 +13,7 @@ package org.eclipse.php.internal.ui.editor.hover;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.dialogs.openType.OpenPhpTypeDialog;
@@ -50,6 +49,18 @@ public class PHPCodeHyperLink implements IHyperlink {
 		CodeData codeData;
 		if (codeDatas.length > 1) {
 			OpenPhpTypeDialog dialog = new OpenPhpTypeDialog(Display.getDefault().getActiveShell());
+			dialog.getFilter().setSelectClasses(false);
+			dialog.getFilter().setSelectFunctions(false);
+			dialog.getFilter().setSelectConstants(false);
+			if (codeDatas[0] instanceof PHPClassData) {
+				dialog.getFilter().setSelectClasses(true);
+			} else if (codeDatas[0] instanceof PHPConstantData) {
+				dialog.getFilter().setSelectConstants(true);
+			} else if (codeDatas[0] instanceof PHPFunctionData) {
+				dialog.getFilter().setSelectFunctions(true);
+			} else {
+				return; // duh
+			}
 			dialog.setInitialElements(codeDatas);
 			dialog.setInitFilterText(codeDatas[0].getName());
 			if (dialog.open() == Dialog.CANCEL) {

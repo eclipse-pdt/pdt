@@ -47,6 +47,7 @@ public class OpenPhpTypeDialog extends Dialog {
 	private BasicSelector basicSelector;
 	private CodeData[] initialElements;
 	private String initFilterText;
+	private PhpTypeFilter phpTypeFilter = new PhpTypeFilter();
 
 	public OpenPhpTypeDialog(Shell parentShell) {
 		super(parentShell);
@@ -56,18 +57,21 @@ public class OpenPhpTypeDialog extends Dialog {
 	protected Point getInitialSize() {
 		return getShell().computeSize(500, 400, true);
 	}
-	
+
 	public void setInitialElements(CodeData[] initialElements) {
 		this.initialElements = initialElements;
 	}
-	
+
 	public void setInitFilterText(String initFilterText) {
 		this.initFilterText = initFilterText;
+	}
+	
+	public PhpTypeFilter getFilter() {
+		return phpTypeFilter;
 	}
 
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
-		final PhpTypeFilter phpTypeFilter = new PhpTypeFilter();
 		CompositeFactory phpTypeFilterCompositeFactory = new CompositeFactory() {
 
 			public Composite createComposite(Composite parent) {
@@ -78,7 +82,6 @@ public class OpenPhpTypeDialog extends Dialog {
 		basicSelector = new BasicSelector(composite, phpTypeFilterCompositeFactory);
 		basicSelector.setInitFilterText(initFilterText);
 		basicSelector.setLayoutData(new GridData(GridData.FILL_BOTH));
-		//		basicSelector.setContentProvider(new PhpTypeContentProvider());
 		basicSelector.addFilter(phpTypeFilter);
 		basicSelector.setLabelProvider(new PhpTypeTableLabelProvider());
 		basicSelector.setElements(getElements());
@@ -96,20 +99,13 @@ public class OpenPhpTypeDialog extends Dialog {
 				OpenPhpTypeDialog.this.getButton(IDialogConstants.OK_ID).setEnabled(true);
 			}
 		});
-		//		basicSelector.setInput(new Object());
-		//		basicSelector.setOkHandler(new IOkHandler() {
-		//			public void okPressed(Object element) {
-		//				openEditor((CodeData)element);
-		//			}
-		//		});
-
 		return composite;
 	}
 
 	private Object[] getElements() {
 
 		Object[] elements = initialElements;
-		
+
 		if (elements == null) {
 			ArrayList arrayList = new ArrayList();
 			//traverse over all the php projects and get the model for each one.
@@ -138,7 +134,7 @@ public class OpenPhpTypeDialog extends Dialog {
 			}
 			elements = arrayList.toArray();
 		}
-		
+
 		Arrays.sort(elements, new Comparator() {
 			public int compare(Object arg0, Object arg1) {
 				return arg0.toString().compareToIgnoreCase(arg1.toString());
