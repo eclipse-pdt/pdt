@@ -66,6 +66,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
+import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -88,6 +90,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT = "org.eclipse.php.ui.actions.AddBlockComment"; //$NON-NLS-1$
 
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
+	private CompositeActionGroup fContextMenuGroup;
 
 	/**
 	 * This action behaves in two different ways: If there is no current text
@@ -409,6 +412,18 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
 		super.dispose();
 	}
+	
+	/*
+	 * @see AbstractTextEditor#editorContextMenuAboutToShow(IMenuManager)
+	 */
+	public void editorContextMenuAboutToShow(IMenuManager menu) {
+		super.editorContextMenuAboutToShow(menu);
+
+		ActionContext context= new ActionContext(getSelectionProvider().getSelection());
+		fContextMenuGroup.setContext(context);
+		fContextMenuGroup.fillContextMenu(menu);
+		fContextMenuGroup.setContext(null);
+	}
 
 	protected void addContextMenuActions(final IMenuManager menu) {
 		super.addContextMenuActions(menu);
@@ -433,6 +448,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); //$NON-NLS-1$
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
+			
+			ActionGroup rg  = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+			// We have to keep the context menu group separate to have better control over positioning
+			fContextMenuGroup= new CompositeActionGroup(new ActionGroup[] {
+				rg
+			});
 
 		}
 	}
