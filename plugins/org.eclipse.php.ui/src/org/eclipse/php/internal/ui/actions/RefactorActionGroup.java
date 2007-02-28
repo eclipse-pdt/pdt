@@ -16,12 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -135,12 +130,14 @@ public class RefactorActionGroup extends ActionGroup {
 		fRenameAction = new RenameAction(editor);
 		fRenameAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
 		fRenameAction.update(selection);
-		editor.setAction("RenameElement", fRenameAction); //$NON-NLS-1$
+		initAction(fRenameAction, provider, selection);
+		editor.setAction("RenameElement", fRenameAction); //$NON-NLS-1$		
 		fEditorActions.add(fRenameAction);
 
 		fMoveAction = new MoveAction(editor);
 		fMoveAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		fMoveAction.update(selection);
+		initAction(fMoveAction, provider, selection);
 		editor.setAction("MoveElement", fMoveAction); //$NON-NLS-1$
 		fEditorActions.add(fMoveAction);
 

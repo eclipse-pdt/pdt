@@ -24,7 +24,8 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.MoveProjectAction;
 import org.eclipse.ui.actions.MoveResourceAction;
@@ -32,19 +33,29 @@ import org.eclipse.ui.actions.SelectionListenerAction;
 
 public class ReorgMoveAction extends SelectionDispatchAction {
 
-	StructuredSelection selectedResources;
+	private StructuredSelection selectedResources; 
 
-	public ReorgMoveAction(IWorkbenchSite site) {
-		super(site);
+	public ReorgMoveAction() {
+		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite());
+		initMoveAction();
+	}	
+
+	private void initMoveAction() {
 		setText(PHPUIMessages.ReorgMoveAction_3);
 		setDescription(PHPUIMessages.ReorgMoveAction_4);
 		update(getSelection());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
 	}
-
+	
 	public void selectionChanged(IStructuredSelection selection) {
 		selectedResources = null;
-		if (!selection.isEmpty()) {
+	
+		if(selection != null && selection instanceof ITextSelection){			
+			selectionChanged((ITextSelection)selection);
+			return;
+		}
+					
+		if (!selection.isEmpty()) {			
 			if (ActionUtils.containsOnlyProjects(selection.toList())) {
 				setEnabled(createWorkbenchAction(selection).isEnabled());
 				return;
@@ -84,9 +95,15 @@ public class ReorgMoveAction extends SelectionDispatchAction {
 			}
 		} else
 			setEnabled(false);
+			
 	}
 
+	// we will get to this method only in case this is an editor selection
 	public void selectionChanged(ITextSelection selection) {
+		// get the current file 
+		PHPStructuredEditor editor = EditorUtility.getPHPStructuredEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart());
+		IResource[] resources = {(IResource)editor.getFile()};
+		selectedResources = new StructuredSelection(resources);
 		setEnabled(true);
 	}
 

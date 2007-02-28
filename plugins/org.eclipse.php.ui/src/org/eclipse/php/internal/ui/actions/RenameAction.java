@@ -61,6 +61,9 @@ public class RenameAction extends SelectionDispatchAction {
 		this(editor.getEditorSite());
 		fEditor = editor;
 		fRenamePHPElement = new RenamePHPElementAction(editor);
+		fRenamePHPElement.setText(getText());
+		fRenameResource = new RenameResourceAction(editor.getSite());
+		fRenameResource.setText(getText());
 	}
 
 	/*
