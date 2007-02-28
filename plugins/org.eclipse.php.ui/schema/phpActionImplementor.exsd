@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.php.ui">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.php.ui" id="phpActionImplementor" name="PHP Action Implementor"/>
+      </appInfo>
+      <documentation>
+         This extention point provides a mechanism for associating a class to an action. There will be only one action class that will eventually implement the action, and it&apos;s the one that is loaded last from the extention point. Classes extending this extention point need to provide the action id they intent to implement and they need to extend SelectionDispatchAction. Actions that want to enable the mechanism of getting their implementation through this extention point, need to implement the  IPHPActionImplementor interface. 
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="action" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="action">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Id of the class that is extending this extention
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="actionId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The action id of the action that the class means to implement
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The class that is extending this extention. (Must extend &lt;code&gt;org.eclipse.php.internal.ui.actions.SelectionDispatchAction&lt;/code&gt;)
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.internal.ui.actions.SelectionDispatchAction"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>
