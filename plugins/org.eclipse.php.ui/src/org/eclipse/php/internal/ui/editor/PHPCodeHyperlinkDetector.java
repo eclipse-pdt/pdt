@@ -11,8 +11,6 @@
 package org.eclipse.php.internal.ui.editor;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -132,14 +130,8 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetectorForPHP {
 						}
 					} else { // The current token is not a string - resolve this PHP element
 						CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(sDoc, region.getOffset());
-						List userCodeData = new LinkedList();
-						for (int i = 0; i < codeDatas.length; ++i) {
-							if (codeDatas[i].isUserCode()) {
-								userCodeData.add(codeDatas[i]);
-							}
-						}
-						if (userCodeData.size() > 0) {
-							return new IHyperlink[] { new PHPCodeHyperLink(selectWord(document, region.getOffset()), (CodeData[]) userCodeData.toArray(new CodeData[userCodeData.size()])) };
+						if (codeDatas != null && codeDatas.length != 0) {
+							return new IHyperlink[] { new PHPCodeHyperLink(selectWord(document, region.getOffset()), codeDatas) };
 						}
 					}
 				}

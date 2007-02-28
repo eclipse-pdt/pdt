@@ -131,9 +131,7 @@ public class CodeDataResolver {
 							return toArray(projectModel.getClass(fileData.getName(), elementName));
 						}
 
-						CodeData[] matchingClasses = projectModel.getFilteredClasses(fileData.getName(), elementName);
-						if (matchingClasses == null || matchingClasses.length == 0)
-							matchingClasses = projectModel.getClass(elementName);
+						CodeData[] matchingClasses = getMatchingClasses(elementName, projectModel, fileData);
 
 						// Class instantiation:
 						if ("new".equalsIgnoreCase(prevWord) || "extends".equalsIgnoreCase(prevWord) || "implements".equalsIgnoreCase(prevWord)) {
@@ -176,7 +174,7 @@ public class CodeDataResolver {
 						}
 
 						String className = getClassName(projectModel, fileData, statement, startPosition, offset, sDoc.getLineOfOffset(offset));
-						CodeData[] classDatas = matchingClasses;
+						CodeData[] classDatas = getMatchingClasses(className, projectModel, fileData);
 
 						// Is it function or method:
 						if ("(".equals(nextWord)) {
@@ -211,8 +209,8 @@ public class CodeDataResolver {
 							// What can it be? Only class variables:
 							CodeData[] result = null;
 							for (int i = 0; i < classDatas.length; ++i) {
-								String fileName = classDatas[i].isUserCode() ? classDatas[i].getUserData().getFileName() : "";
-								result = ModelSupport.merge(result, toArray(projectModel.getClassVariablesData(fileName, className, elementName)));
+								//								String fileName = classDatas[i].isUserCode() ? classDatas[i].getUserData().getFileName() : "";
+								result = ModelSupport.merge(result, toArray(projectModel.getClassVariablesData(fileData.getName(), className, elementName)));
 							}
 							return result == null ? EMPTY : result;
 						}
@@ -229,6 +227,19 @@ public class CodeDataResolver {
 			PHPUiPlugin.log(e);
 		}
 		return EMPTY;
+	}
+
+	/**
+	 * @param className
+	 * @param projectModel
+	 * @param fileData
+	 * @return matching classes
+	 */
+	private CodeData[] getMatchingClasses(String className, PHPProjectModel projectModel, PHPFileData fileData) {
+		CodeData[] matchingClasses = projectModel.getFilteredClasses(fileData.getName(), className);
+		if (matchingClasses == null || matchingClasses.length == 0)
+			matchingClasses = projectModel.getClass(className);
+		return matchingClasses;
 	}
 
 	private CodeData[] filterExact(CodeData[] result, String searchName) {
