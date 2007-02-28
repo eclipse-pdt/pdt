@@ -34,9 +34,15 @@ public class PHPAnnotationTextHover extends AbstractPHPTextHover {
 					DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
 					CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(sDoc, hoverRegion.getOffset(), editorModel);
 					if (codeDatas.length != 0) {
-						CodeData codeData = codeDatas[0]; // XXX: handle multiple code data!
-						PHPProjectModel projectModel = editorModel.getProjectModel();
-						return PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel);
+						StringBuffer concatenatedInfo = new StringBuffer();
+						for (int i = 0; i < codeDatas.length; ++i) {
+							CodeData codeData = codeDatas[i];
+							PHPProjectModel projectModel = editorModel.getProjectModel();
+							concatenatedInfo.append(PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel));
+							if (i + 1 != codeDatas.length)
+								concatenatedInfo.append("\n");
+						}
+						return concatenatedInfo.toString();
 					}
 				}
 			} finally {
