@@ -7,6 +7,12 @@ public interface IPhpModelFilterable extends IPhpModel {
 
 	void setFilter(IPhpModelFilter filter);
 
+	CodeData[] getFilteredClasses(String fileName, String className);
+
+	CodeData[] getFilteredFunctions(String fileName, String className);
+
+	CodeData[] getFilteredConstants(String fileName, String className);
+
 	public interface IPhpModelFilter extends IWorkspaceModelListener {
 		boolean select(IPhpModelFilterable model, CodeData element, Object data);
 	}

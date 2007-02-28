@@ -1,8 +1,6 @@
 package org.eclipse.php.internal.core.phpModel.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
@@ -10,20 +8,20 @@ public abstract class CompositePhpModel implements IPhpModel {
 
 	private IPhpModel[] models = new IPhpModel[0];
 
-	private static CodeData[] mergeResults(ArrayList results) {
-		if (results.size() == 0) {
-			return new CodeData[0];
-		}
-		CodeData[] res = (CodeData[]) results.get(0);
-		Arrays.sort(res);
-
-		for (int i = 1; i < results.size(); i++) {
-			CodeData[] res1 = (CodeData[]) results.get(i);
-			Arrays.sort(res1);
-			res = ModelSupport.merge(res, res1);
-		}
-		return res;
-	}
+	//	private static CodeData[] mergeResults(List results) {
+	//		if (results.size() == 0) {
+	//			return new CodeData[0];
+	//		}
+	//		Set mergedResults = new TreeSet();
+	//
+	//		for (Iterator i = results.iterator(); i.hasNext();) {
+	//			CodeData[] result = (CodeData[]) i.next();
+	//			for (int j = 0; j < result.length; ++j) {
+	//				mergedResults.add(result[j]);
+	//			}
+	//		}
+	//		return (CodeData[]) mergedResults.toArray(new CodeData[mergedResults.size()]);
+	//	}
 
 	public void addModel(IPhpModel newModel) {
 		if (indexOf(newModel.getID()) != -1) {
@@ -78,15 +76,16 @@ public abstract class CompositePhpModel implements IPhpModel {
 	}
 
 	public CodeData[] getFileDatas() {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getFileDatas();
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public PHPFileData getFileData(String fileName) {
@@ -100,42 +99,45 @@ public abstract class CompositePhpModel implements IPhpModel {
 	}
 
 	public CodeData[] getClasses() {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getClasses();
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public CodeData[] getClasses(String startsWith) {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getClasses(startsWith);
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public CodeData[] getClass(String className) {
-		List result = new ArrayList();
+		Set tempResult = new TreeSet();
+
 		for (int i = 0; i < models.length; i++) {
-			CodeData[] classes = models[i].getClass(className);
-			if (classes != null && classes.length > 0) {
-				result.addAll(Arrays.asList(classes));
+			CodeData[] res = models[i].getClass(className);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return (CodeData[]) result.toArray(new CodeData[result.size()]);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public PHPClassData getClass(String fileName, String className) {
-
 		for (int i = 0; i < models.length; i++) {
 			PHPClassData exactClass = models[i].getClass(fileName, className);
 			// if filename is matching - just return the class.
@@ -147,39 +149,42 @@ public abstract class CompositePhpModel implements IPhpModel {
 	}
 
 	public CodeData[] getFunctions() {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getFunctions();
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public CodeData[] getFunctions(String startsWith) {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getFunctions(startsWith);
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public CodeData[] getFunction(String functionName) {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getFunction(functionName);
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public PHPFunctionData getFunction(String fileName, String functionName) {
@@ -194,44 +199,48 @@ public abstract class CompositePhpModel implements IPhpModel {
 	}
 
 	public CodeData[] getConstants() {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getConstants();
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public CodeData[] getConstants(String startsWith, boolean caseSensitive) {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getConstants(startsWith, caseSensitive);
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
-	public CodeData[] getConstant(String className) {
-		List result = new ArrayList();
+	public CodeData[] getConstant(String constantName) {
+		Set tempResult = new TreeSet();
+
 		for (int i = 0; i < models.length; i++) {
-			CodeData[] classes = models[i].getConstant(className);
-			if (classes != null && classes.length > 0) {
-				result.addAll(Arrays.asList(classes));
+			CodeData[] res = models[i].getConstant(constantName);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return (CodeData[]) result.toArray(new CodeData[result.size()]);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public PHPConstantData getConstant(String fileName, String constantName) {
 		for (int i = 0; i < models.length; i++) {
 			PHPConstantData exactConstant = models[i].getConstant(fileName, constantName);
-			// if filename is matching - just return the function.
+			// if filename is matching - just return the constant.
 			if (exactConstant != null && exactConstant.getUserData() != null && exactConstant.getUserData().getFileName().equals(fileName)) {
 				return exactConstant;
 			}
@@ -240,27 +249,29 @@ public abstract class CompositePhpModel implements IPhpModel {
 	}
 
 	public CodeData[] getGlobalVariables(String fileName, String startsWith, boolean showVariablesFromOtherFiles) {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getGlobalVariables(fileName, startsWith, showVariablesFromOtherFiles);
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public CodeData[] getVariables(String fileName, PHPCodeContext context, String startsWith, boolean showVariablesFromOtherFiles) {
-		ArrayList tempResultList = new ArrayList();
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			CodeData[] res = models[i].getVariables(fileName, context, startsWith, showVariablesFromOtherFiles);
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-		return mergeResults(tempResultList);
+		return (CodeData[]) tempResult.toArray(new CodeData[tempResult.size()]);
 	}
 
 	public String getVariableType(String fileName, PHPCodeContext context, String variableName, int line, boolean showObjectsFromOtherFiles) {
@@ -274,25 +285,16 @@ public abstract class CompositePhpModel implements IPhpModel {
 	}
 
 	public IPHPMarker[] getMarkers() {
-		ArrayList tempResultList = new ArrayList();
-		int length = 0;
+		Set tempResult = new TreeSet();
 
 		for (int i = 0; i < models.length; i++) {
 			IPHPMarker[] res = models[i].getMarkers();
-			if (res != null && res.length > 0) {
-				tempResultList.add(res);
-				length += res.length;
+			if (res != null) {
+				for (int j = 0; j < res.length; ++j)
+					tempResult.add(res[j]);
 			}
 		}
-
-		IPHPMarker[] res = new IPHPMarker[length];
-		int index = 0;
-		for (int i = 0; i < tempResultList.size(); i++) {
-			IPHPMarker[] currArray = (IPHPMarker[]) tempResultList.get(i);
-			System.arraycopy(currArray, 0, res, index, currArray.length);
-			index += currArray.length;
-		}
-		return res;
+		return (IPHPMarker[]) tempResult.toArray(new IPHPMarker[tempResult.size()]);
 	}
 
 	public void clear() {

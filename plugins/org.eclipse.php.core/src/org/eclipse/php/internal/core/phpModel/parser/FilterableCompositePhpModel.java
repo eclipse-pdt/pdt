@@ -11,8 +11,6 @@
 package org.eclipse.php.internal.core.phpModel.parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
@@ -33,99 +31,54 @@ public abstract class FilterableCompositePhpModel extends CompositePhpModel impl
 	 * @see org.eclipse.php.internal.core.phpModel.parser.CompositePhpModel#getClass(java.lang.String, java.lang.String)
 	 */
 	public PHPClassData getClass(String fileName, String className) {
-		IPhpModel[] models = getModels();
 		PHPClassData exactClass = super.getClass(fileName, className);
-		if (exactClass != null)
+		if (exactClass != null || filter == null)
 			return exactClass;
-		List classes = new ArrayList();
-		for (int i = 0; i < models.length; i++) {
-			// else collect all the classes to apply filter
-			CodeData[] modelClasses = models[i].getClass(className);
-			if (modelClasses != null && modelClasses.length > 0) {
-				classes.addAll(Arrays.asList(modelClasses));
-			}
-		}
-		switch (classes.size()) {
-			case 0:
-				return null;
-			case 1:
-				return (PHPClassData) classes.get(0);
-		}
-		if (filter != null) {
-			for (Iterator i = classes.iterator(); i.hasNext();) {
-				PHPClassData classs = (PHPClassData) i.next();
-				if (filter.select(this, classs, fileName)) {
-					return classs;
+		CodeData[] allClasses = getClass(className);
+		if (allClasses != null) {
+			for (int j = 0; j < allClasses.length; ++j) {
+				if (filter.select(this, allClasses[j], fileName)) {
+					return (PHPClassData) allClasses[j];
 				}
 			}
 		}
-		return (PHPClassData) classes.get(0);
+		return null;
 	}
 
 	/** (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.phpModel.parser.CompositePhpModel#getConstant(java.lang.String, java.lang.String)
 	 */
 	public PHPConstantData getConstant(String fileName, String constantName) {
-		IPhpModel[] models = getModels();
 		PHPConstantData exactConstant = super.getConstant(fileName, constantName);
-		if (exactConstant != null)
+		if (exactConstant != null || filter == null)
 			return exactConstant;
-		List constants = new ArrayList();
-		for (int i = 0; i < models.length; i++) {
-			// else collect all the constants to apply filter
-			CodeData[] modelConstants = models[i].getConstant(constantName);
-			if (modelConstants != null && modelConstants.length > 0) {
-				constants.addAll(Arrays.asList(modelConstants));
-			}
-		}
-		switch (constants.size()) {
-			case 0:
-				return null;
-			case 1:
-				return (PHPConstantData) constants.get(0);
-		}
-		if (filter != null) {
-			for (Iterator i = constants.iterator(); i.hasNext();) {
-				PHPConstantData constant = (PHPConstantData) i.next();
-				if (filter.select(this, constant, fileName)) {
-					return constant;
+		CodeData[] allConstants = getConstant(constantName);
+		if (allConstants != null) {
+			for (int j = 0; j < allConstants.length; ++j) {
+				if (filter.select(this, allConstants[j], fileName)) {
+					return (PHPConstantData) allConstants[j];
 				}
 			}
 		}
-		return (PHPConstantData) constants.get(0);
+		return null;
 	}
 
 	/** (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.phpModel.parser.CompositePhpModel#getFunction(java.lang.String, java.lang.String)
 	 */
 	public PHPFunctionData getFunction(String fileName, String functionName) {
-		IPhpModel[] models = getModels();
 		PHPFunctionData exactFunction = super.getFunction(fileName, functionName);
-		if (exactFunction != null)
+		if (exactFunction != null || filter == null)
 			return exactFunction;
-		List functions = new ArrayList();
-		for (int i = 0; i < models.length; i++) {
-			// else collect all the functions to apply filter
-			CodeData[] modelFunctions = models[i].getFunction(functionName);
-			if (modelFunctions != null && modelFunctions.length > 0) {
-				functions.addAll(Arrays.asList(modelFunctions));
-			}
-		}
-		switch (functions.size()) {
-			case 0:
-				return null;
-			case 1:
-				return (PHPFunctionData) functions.get(0);
-		}
-		if (filter != null) {
-			for (Iterator i = functions.iterator(); i.hasNext();) {
-				PHPFunctionData function = (PHPFunctionData) i.next();
-				if (filter.select(this, function, fileName)) {
-					return function;
+		CodeData[] allFunctions = getFunction(functionName);
+		if (allFunctions != null) {
+			for (int j = 0; j < allFunctions.length; ++j) {
+				if (filter.select(this, allFunctions[j], fileName)) {
+					return (PHPFunctionData) allFunctions[j];
 				}
 			}
 		}
-		return (PHPFunctionData) functions.get(0);
+		return null;
 	}
 
 	IPhpModelFilter filter;
@@ -135,5 +88,44 @@ public abstract class FilterableCompositePhpModel extends CompositePhpModel impl
 	 */
 	public void setFilter(IPhpModelFilter filter) {
 		this.filter = filter;
+	}
+
+	public CodeData[] getFilteredClasses(String fileName, String className) {
+		CodeData[] allClasses = getClass(className);
+		List filteredClasses = new ArrayList();
+		if (allClasses != null) {
+			for (int j = 0; j < allClasses.length; ++j) {
+				if (filter.select(this, allClasses[j], fileName)) {
+					filteredClasses.add(allClasses[j]);
+				}
+			}
+		}
+		return (CodeData[]) filteredClasses.toArray(new CodeData[filteredClasses.size()]);
+	}
+
+	public CodeData[] getFilteredConstants(String fileName, String constantName) {
+		CodeData[] allConstants = getConstant(constantName);
+		List filteredConstants = new ArrayList();
+		if (allConstants != null) {
+			for (int j = 0; j < allConstants.length; ++j) {
+				if (filter.select(this, allConstants[j], fileName)) {
+					filteredConstants.add(allConstants[j]);
+				}
+			}
+		}
+		return (CodeData[]) filteredConstants.toArray(new CodeData[filteredConstants.size()]);
+	}
+
+	public CodeData[] getFilteredFunctions(String fileName, String functionName) {
+		CodeData[] allFunctions = getFunction(functionName);
+		List filteredFunctions = new ArrayList();
+		if (allFunctions != null) {
+			for (int j = 0; j < allFunctions.length; ++j) {
+				if (filter.select(this, allFunctions[j], fileName)) {
+					filteredFunctions.add(allFunctions[j]);
+				}
+			}
+		}
+		return (CodeData[]) filteredFunctions.toArray(new CodeData[filteredFunctions.size()]);
 	}
 }

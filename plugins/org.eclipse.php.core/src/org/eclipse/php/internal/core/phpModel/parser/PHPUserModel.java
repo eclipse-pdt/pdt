@@ -488,4 +488,43 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 		this.filter = filter;
 	}
 
+	public CodeData[] getFilteredClasses(String fileName, String className) {
+		CodeData[] allClasses = getClass(className);
+		List filteredClasses = new ArrayList();
+		if (allClasses != null) {
+			for (int j = 0; j < allClasses.length; ++j) {
+				if (filter.select(this, allClasses[j], fileName)) {
+					filteredClasses.add(allClasses[j]);
+				}
+			}
+		}
+		return (CodeData[]) filteredClasses.toArray(new CodeData[filteredClasses.size()]);
+	}
+
+	public CodeData[] getFilteredConstants(String fileName, String constantName) {
+		CodeData[] allConstants = getConstant(constantName);
+		List filteredConstants = new ArrayList();
+		if (allConstants != null) {
+			for (int j = 0; j < allConstants.length; ++j) {
+				if (filter.select(this, allConstants[j], fileName)) {
+					filteredConstants.add(allConstants[j]);
+				}
+			}
+		}
+		return (CodeData[]) filteredConstants.toArray(new CodeData[filteredConstants.size()]);
+	}
+
+	public CodeData[] getFilteredFunctions(String fileName, String functionName) {
+		CodeData[] allFunctions = getFunction(functionName);
+		List filteredFunctions = new ArrayList();
+		if (allFunctions != null) {
+			for (int j = 0; j < allFunctions.length; ++j) {
+				if (filter.select(this, allFunctions[j], fileName)) {
+					filteredFunctions.add(allFunctions[j]);
+				}
+			}
+		}
+		return (CodeData[]) filteredFunctions.toArray(new CodeData[filteredFunctions.size()]);
+	}
+
 }
