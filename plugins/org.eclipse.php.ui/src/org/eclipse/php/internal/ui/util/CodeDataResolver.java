@@ -131,9 +131,13 @@ public class CodeDataResolver {
 							return toArray(projectModel.getClass(fileData.getName(), elementName));
 						}
 
+						CodeData[] matchingClasses = projectModel.getFilteredClasses(fileData.getName(), elementName);
+						if (matchingClasses == null || matchingClasses.length == 0)
+							matchingClasses = projectModel.getClass(elementName);
+
 						// Class instantiation:
 						if ("new".equalsIgnoreCase(prevWord) || "extends".equalsIgnoreCase(prevWord) || "implements".equalsIgnoreCase(prevWord)) {
-							return projectModel.getClass(elementName);
+							return matchingClasses;
 						}
 
 						// If this is variable:
@@ -168,11 +172,11 @@ public class CodeDataResolver {
 
 						// We are at class trigger:
 						if ("::".equals(nextWord)) {
-							return projectModel.getClass(elementName);
+							return matchingClasses;
 						}
 
 						String className = getClassName(projectModel, fileData, statement, startPosition, offset, sDoc.getLineOfOffset(offset));
-						CodeData[] classDatas = projectModel.getClass(className);
+						CodeData[] classDatas = matchingClasses;
 
 						// Is it function or method:
 						if ("(".equals(nextWord)) {
@@ -183,7 +187,9 @@ public class CodeDataResolver {
 									result = ModelSupport.merge(result, toArray(projectModel.getClassFunctionData(fileName, className, elementName)));
 								}
 							} else {
-								result = projectModel.getFunction(elementName);
+								result = projectModel.getFilteredFunctions(fileData.getName(), elementName);
+								if (result == null || result.length == 0)
+									result = projectModel.getFunction(elementName);
 							}
 							return result == null ? EMPTY : result;
 						}
@@ -212,7 +218,10 @@ public class CodeDataResolver {
 						}
 
 						// This can be only global constant, if we've reached here:
-						return filterExact(projectModel.getConstants(elementName, false), elementName);
+						CodeData[] result = projectModel.getFilteredConstants(fileData.getName(), elementName);
+						if (result == null || result.length == 0)
+							result = projectModel.getConstant(elementName);
+						return result == null ? EMPTY : result;
 					}
 				}
 			}

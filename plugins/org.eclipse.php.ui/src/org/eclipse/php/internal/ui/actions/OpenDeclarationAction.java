@@ -25,7 +25,6 @@ import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 
@@ -140,20 +139,19 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 			return false;
 		}
 
-		StructuredTextEditor structuredTextEditor = (StructuredTextEditor) editor;
 		CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(structuredDocument, offset);
-		
+
 		List userCodeData = new LinkedList();
 		for (int i = 0; i < codeDatas.length; ++i) {
 			if (codeDatas[i].isUserCode()) {
 				userCodeData.add(codeDatas[i]);
 			}
 		}
-		
+
 		if (userCodeData.size() > 0) {
-			fCodeDatas = (CodeData[]) userCodeData.toArray(new CodeData[userCodeData.size()]); 
+			fCodeDatas = (CodeData[]) userCodeData.toArray(new CodeData[userCodeData.size()]);
 		}
-		
+
 		return true;
 	}
 }

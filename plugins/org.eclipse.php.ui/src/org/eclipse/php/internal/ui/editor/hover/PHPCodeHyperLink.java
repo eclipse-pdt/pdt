@@ -28,12 +28,12 @@ public class PHPCodeHyperLink implements IHyperlink {
 
 	private IRegion fRegion;
 	private CodeData[] codeDatas;
-	
+
 	public PHPCodeHyperLink(IRegion region, CodeData[] codeDatas) {
 		fRegion = region;
 		this.codeDatas = codeDatas;
 	}
-	
+
 	public IRegion getHyperlinkRegion() {
 		return fRegion;
 	}
@@ -59,12 +59,12 @@ public class PHPCodeHyperLink implements IHyperlink {
 		} else {
 			codeData = codeDatas[0];
 		}
-		
+
 		IEditorPart part = EditorUtility.isOpenInEditor(codeData);
 		if (part != null) {
 			IWorkbenchPage page = PHPUiPlugin.getActivePage();
 			if (page != null) {
-				page.bringToTop (part);
+				page.bringToTop(part);
 			}
 			EditorUtility.revealInEditor(part, (PHPCodeData) codeData);
 		} else {

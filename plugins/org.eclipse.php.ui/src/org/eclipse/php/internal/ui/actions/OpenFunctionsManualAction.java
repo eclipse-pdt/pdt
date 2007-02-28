@@ -36,7 +36,6 @@ import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class OpenFunctionsManualAction extends TextEditorAction implements IUpdate {
 
@@ -140,7 +139,6 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 			return false;
 		}
 
-		StructuredTextEditor structuredTextEditor = (StructuredTextEditor) editor;
 		CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(structuredDocument, offset);
 		if (codeDatas.length == 0) {
 			return false;
@@ -158,7 +156,7 @@ public class OpenFunctionsManualAction extends TextEditorAction implements IUpda
 			return false;
 		}
 
-		this.codeData = (PHPCodeData)codeData;
+		this.codeData = (PHPCodeData) codeData;
 		return true;
 	}
 
