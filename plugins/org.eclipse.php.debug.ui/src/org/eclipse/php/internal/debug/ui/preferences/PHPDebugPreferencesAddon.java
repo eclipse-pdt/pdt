@@ -155,7 +155,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	private void addProjectPreferenceSubsection(Composite composite) {
 		// Set a height hint for the group.
 		GridData gd = (GridData) composite.getLayoutData();
-		gd.heightHint = 200;
+		gd.heightHint = 220;
 		composite.setLayoutData(gd);
 
 		addLabelControl(composite, PHPDebugUIMessages.PhpDebugPreferencePage_9, ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
