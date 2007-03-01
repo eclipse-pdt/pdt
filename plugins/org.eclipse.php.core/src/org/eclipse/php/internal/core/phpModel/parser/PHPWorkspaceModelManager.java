@@ -274,6 +274,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			IProject[] projects = root.getProjects();
 			String filenameOS = new Path(filename).toOSString();
 			for (int i = 0; i < projects.length; ++i) {
+				if (!project.exists() || project.isAccessible())
+					continue;
 				PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(projects[i]);
 				if (model != null) {
 					String projectPath = projects[i].getLocation().toOSString();
@@ -293,8 +295,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		}
 		if (fileData == null && forceCreation) {
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-			addFileToModel(file);
-			fileData = projModel.getFileData(filename);
+			if (file.exists()) {
+				addFileToModel(file);
+				fileData = projModel.getFileData(filename);
+			}
 		}
 		return fileData;
 	}
