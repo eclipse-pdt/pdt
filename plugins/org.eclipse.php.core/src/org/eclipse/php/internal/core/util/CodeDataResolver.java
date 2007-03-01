@@ -133,7 +133,7 @@ public class CodeDataResolver {
 					if (elementName.length() > 0) {
 
 						PHPProjectModel projectModel = phpModel.getProjectModel();
-						PHPFileData fileData = phpModel.getFileData();
+						PHPFileData fileData = phpModel.getFileData(true);
 						PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset);
 
 						// If we are in function declaration:

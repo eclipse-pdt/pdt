@@ -63,7 +63,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 	/**
 	 * 
 	 * @param forceCreation - if we want to create a model project as well
-	 * @return
+	 * @return fileData
 	 */
 	public PHPFileData getFileData(boolean forceCreation) {
 		PHPFileData fileData = null;
@@ -73,24 +73,24 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 			if (projectModel != null) {
 				fileData = projectModel.getFileData(file.getFullPath().toString());
 			}
-		} 
-		
-		if(fileData == null) {
-			 fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
 		}
-		
+
+		if (fileData == null) {
+			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation(), forceCreation);
+		}
+
 		return fileData;
 	}
-	
+
 	PHPProjectModel projectModel;
-	
+
 	public PHPProjectModel getProjectModel() {
-		if(projectModel != null) {
+		if (projectModel != null) {
 			return projectModel;
 		}
-		
+
 		PHPFileData fileData = getFileData();
-		if(fileData != null)
+		if (fileData != null)
 			projectModel = PHPModelUtil.getProjectModelForFile(fileData);
 		else
 			projectModel = null;
