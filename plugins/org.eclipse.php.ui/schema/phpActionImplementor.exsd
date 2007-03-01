@@ -6,14 +6,14 @@
          <meta.schema plugin="org.eclipse.php.ui" id="phpActionImplementor" name="PHP Action Implementor"/>
       </appInfo>
       <documentation>
-         This extention point provides a mechanism for associating a class to an action. There will be only one action class that will eventually implement the action, and it&apos;s the one that is loaded last from the extention point. Classes extending this extention point need to provide the action id they intent to implement and they need to extend SelectionDispatchAction. Actions that want to enable the mechanism of getting their implementation through this extention point, need to implement the  IPHPActionImplementor interface. 
+         This extention point provides a mechanism for associating a class to an action. There will be only one action class that will eventually implement the action, and it&apos;s the one that is loaded last from the extention point. Classes extending this extention point need to provide the action id they intent to implement and they need to extend SelectionDispatchAction. Actions that want to enable the mechanism of getting their implementation through this extention point, need to implement the  IPHPActionImplementor interface.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
-         <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="action" minOccurs="1" maxOccurs="unbounded"/>
+         <sequence>
+            <element ref="action" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
