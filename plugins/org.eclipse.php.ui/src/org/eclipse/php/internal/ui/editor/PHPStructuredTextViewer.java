@@ -26,8 +26,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
@@ -76,12 +75,29 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			}
 		} else if (operation == PASTE) {
 			super.doOperation(operation);
-			TextTransfer plainTextTransfer = TextTransfer.getInstance();
-			String text = (String) new Clipboard(getTextWidget().getDisplay()).getContents(plainTextTransfer, DND.CLIPBOARD);
-			IRegion region = new Region(selection.x, text.length());
-			((IStructuredDocument) getDocument()).getUndoManager().disableUndoManagement();
-			fContentFormatter.format(getDocument(), region);
-			((IStructuredDocument) getDocument()).getUndoManager().enableUndoManagement();
+			
+			IStructuredDocument sDoc = (IStructuredDocument) getDocument();
+			IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selection.x);
+			ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selection.x);
+			
+			boolean shouldFormat = false;
+
+			if (textRegion instanceof ITextRegionContainer) {
+				textRegion = ((ITextRegionContainer) textRegion).getRegionAtCharacterOffset(selection.x);
+				if (textRegion.getType() == PHPRegionContext.PHP_OPEN || textRegion.getType() == PHPRegionContext.PHP_CLOSE || textRegion instanceof PhpScriptRegion) {
+					shouldFormat = true;
+				}
+			} else if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+				shouldFormat = true;
+			}
+			if(shouldFormat) {
+				TextTransfer plainTextTransfer = TextTransfer.getInstance();
+				String text = (String) new Clipboard(getTextWidget().getDisplay()).getContents(plainTextTransfer, DND.CLIPBOARD);
+				IRegion region = new Region(selection.x, text.length());
+				((IStructuredDocument) getDocument()).getUndoManager().disableUndoManagement();
+				fContentFormatter.format(getDocument(), region);
+				((IStructuredDocument) getDocument()).getUndoManager().enableUndoManagement();
+			}
 		} else if (operation == CONTENTASSIST_PROPOSALS) {
 			// notifing the processors that the next request for completion is an explicit request
 			if (config != null) {
