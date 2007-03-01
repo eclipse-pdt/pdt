@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.core.util.text.TextSequenceUtilities;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;

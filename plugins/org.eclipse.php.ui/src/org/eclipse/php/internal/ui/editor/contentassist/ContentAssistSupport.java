@@ -31,6 +31,7 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateCompletionProcessor;

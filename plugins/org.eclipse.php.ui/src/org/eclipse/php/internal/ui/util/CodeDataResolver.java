@@ -23,10 +23,9 @@ import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
-import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.contentassist.PHPTextSequenceUtilities;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
@@ -149,8 +148,8 @@ public class CodeDataResolver {
 									if (charBefore == '\\') {
 										return EMPTY;
 									}
-								} catch (BadLocationException badLocationException) {
-									Logger.logException(badLocationException);
+								} catch (BadLocationException e) {
+									PHPUiPlugin.log(e);
 								}
 							}
 
