@@ -10,9 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
@@ -29,6 +35,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.util.ProjectResolver;
 
 public class CodeDataResolver {
 
@@ -43,6 +50,16 @@ public class CodeDataResolver {
 		if (instance == null)
 			instance = new CodeDataResolver();
 		return instance;
+	}
+
+	public CodeData[] resolve(IFile file, int offset) throws IOException, CoreException {
+		IStructuredDocument document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
+		return resolve(document, offset);
+	}
+
+	public CodeData[] resolve(IProject project, File file, int offset) throws IOException, CoreException {
+		IStructuredDocument document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file.getAbsolutePath(), new FileInputStream(file), new ProjectResolver(project));
+		return resolve(document, offset);
 	}
 
 	/**
