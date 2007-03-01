@@ -55,8 +55,8 @@ public class CodeDataResolver {
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(sDoc);
 		try {
 			if (sModel instanceof DOMModelForPHP) {
-				DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
-				return resolve(sDoc, offset, editorModel);
+				DOMModelForPHP phpModel = (DOMModelForPHP) sModel;
+				return resolve(sDoc, offset, phpModel);
 			}
 		} finally {
 			if (sModel != null) {
