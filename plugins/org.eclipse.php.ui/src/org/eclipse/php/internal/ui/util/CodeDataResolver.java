@@ -35,12 +35,14 @@ public class CodeDataResolver {
 
 	private static final CodeData[] EMPTY = {};
 
-	private static final CodeDataResolver instance = new CodeDataResolver();
+	private static CodeDataResolver instance;
 
 	private CodeDataResolver() {
 	}
 
 	public static CodeDataResolver getInstance() {
+		if (instance == null)
+			instance = new CodeDataResolver();
 		return instance;
 	}
 
