@@ -23,9 +23,9 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.util.CodeDataResolver;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.util.CodeDataResolver;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -98,7 +98,7 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 				if (codeDatas.length != 0) {
 					List hoverInfos = new ArrayList(codeDatas.length);
 					for (int i = 0; i < codeDatas.length; ++i) {
-						CodeData codeData = codeDatas[i]; // XXX: handle multiple data!
+						CodeData codeData = codeDatas[i];
 						String hoverInfo = "";
 						if (!(codeData instanceof PHPVariableData)) {
 							UserData userData = codeData.getUserData();

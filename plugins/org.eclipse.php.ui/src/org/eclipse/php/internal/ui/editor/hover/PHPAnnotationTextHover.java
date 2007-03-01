@@ -16,7 +16,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.ui.util.CodeDataResolver;
+import org.eclipse.php.internal.core.util.CodeDataResolver;
 import org.eclipse.php.internal.ui.util.PHPCodeDataHTMLDescriptionUtilities;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;

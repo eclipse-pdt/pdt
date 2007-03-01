@@ -24,9 +24,9 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.core.util.CodeDataResolver;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.hover.PHPCodeHyperLink;
-import org.eclipse.php.internal.ui.util.CodeDataResolver;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
 import org.eclipse.ui.IEditorPart;
