@@ -29,7 +29,7 @@
 	<property name="rssTitle" value="error! set a message here" />
 	<property name="rssMessageDescription" value="" />
 	<property name="rssMessageContributor" value="PHP Build Server" />
-	<property name="rssMessageLink" value="http://download.eclipse.org/tools/php/downloads/drops/${buildLabel}/results/TEST-php.html" />
+	<property name="rssMessageLink" value="http://download.eclipse.org/tools/pdt/downloads/drops/${buildLabel}/results/TEST-php.html" />
 	<property name="rssOutputFile" value="center.xml" />
 	<property file="link.properties" />
 
@@ -38,7 +38,7 @@
 	</target>
 
 	<target name="createCenter">
-		<RssAddCenter projectName="${rssProjectName}" centerName="${rssCenterName}" description="${rssCenterDescription}" about="${rssCenterAbout}" link="http://www.eclipse.org/php" />
+		<RssAddCenter projectName="${rssProjectName}" centerName="${rssCenterName}" description="${rssCenterDescription}" about="${rssCenterAbout}" link="http://www.eclipse.org/pdt" />
 	</target>
 
 	<target name="addMessage">
@@ -62,7 +62,7 @@
 		<property name="target" value="rss/${rssOutputFile}" />
 
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=$HOME/.pass --stats ${source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/downloads/${target}" />
+			<arg line="-avz --password-file=$HOME/.pass --stats ${source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/${target}" />
 		</exec>
 	</target>
 
@@ -87,13 +87,13 @@
 		<chmod dir="${buildDirectory}" type="dir" perm="ugo+rx" includes="${buildLabel}*/**" />
 		<chmod dir="${buildDirectory}" type="dir" perm="ug+rwx" includes="${buildLabel}*/**" />
 		<exec dir="${buildDirectory}" executable="rsync">
-			<arg line="-avz --password-file=$HOME/.pass --stats --include *.zip --exclude bldindex.html ${buildLabel} apeled@dev.eclipse.org:~/downloads/tools/php/${remoteDirectory}" />
+			<arg line="-avz --password-file=$HOME/.pass --stats --include *.zip --exclude bldindex.html ${buildLabel} apeled@dev.eclipse.org:~/downloads/tools/pdt/${remoteDirectory}" />
 		</exec>
 
 		<property name="source" value="../src/results/html/all/TEST-php.html" />
 		<property name="target" value="reports/TEST-php${date}.html" />
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=$HOME/.pass --stats ${source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/${remoteDirectory}/${buildLabel}/results/"/>
+			<arg line="-avz --password-file=$HOME/.pass --stats ${source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/results/"/>
 		</exec>
 
 
