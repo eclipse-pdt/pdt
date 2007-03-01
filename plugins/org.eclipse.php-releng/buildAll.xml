@@ -112,7 +112,7 @@
 		</ant>
 
 		<!--  Get the build map over for the results to point to. -->
-		<copy file="${buildDirectory}/maps/org.eclipse.php-releng/maps/php-feature.map" tofile="${result}/directory.txt" />
+		<copy file="${buildDirectory}/maps/org.eclipse.pdt-releng/maps/php-feature.map" tofile="${result}/directory.txt" />
 
 		<replace file="${result}/${indexFileName}">
 			<!--  Insert url for supported eclipse drop-->
@@ -160,7 +160,7 @@
 	</target>
 
 	<target name="pushftp" if="ftppush">
-		<property name="remoteDirectory" value="/home/www/tools/php/downloads/drops" />
+		<property name="remoteDirectory" value="/home/www/tools/pdt/downloads/drops" />
 		<echo message="FTP to: ${remoteDirectory}/${buildLabel}" />
 		<ftp server="download1.eclipse.org" userid="${ftpUser}" password="${ftpPassword}" remotedir="${remoteDirectory}">
 			<fileset dir="${buildDirectory}">
@@ -184,7 +184,7 @@
 		<chmod dir="${buildDirectory}" type="dir" perm="ugo+rx" includes="${buildLabel}*/**" />
 		<chmod dir="${buildDirectory}" type="dir" perm="ug+rwx" includes="${buildLabel}*/**" />
 		<exec dir="${buildDirectory}" executable="rsync">
-			<arg line="-avz --stats --include *.zip --exclude bldindex.html ${buildLabel} apeled@dev.eclipse.org:~/downloads/tools/php/${remoteDirectory}" />
+			<arg line="-avz --stats --include *.zip --exclude bldindex.html ${buildLabel} apeled@dev.eclipse.org:~/downloads/tools/pdt/${remoteDirectory}" />
 		</exec>
 	</target>
 
@@ -237,7 +237,7 @@
 
 		<!-- Now get the current update site.xml from the download site so that we can update it. -->
 		<exec dir="." executable="rsync">
-			<arg line="-avz --stats apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/${updateRemoteDirectory}/site.xml ${updateLocalDirectory}" />
+			<arg line="-avz --stats apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${updateRemoteDirectory}/site.xml ${updateLocalDirectory}" />
 		</exec>
 
 		<!-- Now run the update process -->
@@ -261,7 +261,7 @@
 		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site.xml" />
 		<chmod dir="${updateLocalDirectory}" type="file" perm="ug+rw" includes="site.xml" />
 		<exec dir="." executable="rsync">
-			<arg line="-avz --stats ${updateLocalDirectory}/site.xml apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/${updateRemoteDirectory}/site.xml.bak " />
+			<arg line="-avz --stats ${updateLocalDirectory}/site.xml apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${updateRemoteDirectory}/site.xml.bak " />
 		</exec>
 
 		<!-- Now push the updates themselves back. -->
@@ -271,7 +271,7 @@
 		<chmod dir="${updateLocalDirectory}" type="dir" perm="ug+rwx" includes="site/**" />
 
 		<exec dir="." executable="rsync">
-			<arg line="-avz --stats ${updateLocalDirectory}/site/ apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/php/${updateRemoteDirectory}" />
+			<arg line="-avz --stats ${updateLocalDirectory}/site/ apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${updateRemoteDirectory}" />
 		</exec>
 
 	</target>
