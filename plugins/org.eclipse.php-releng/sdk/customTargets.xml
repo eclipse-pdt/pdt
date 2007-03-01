@@ -61,7 +61,7 @@
 	<target name="postSetup">
 		<ant antfile="${builder}/../dependency.xml">
         	    <property name="dependency.properties"
-                	      value="${buildDirectory}/maps/org.eclipse.php-releng/maps/dependencies.properties" />
+                	      value="${buildDirectory}/maps/org.eclipse.pdt-releng/maps/dependencies.properties" />
 		    <property name="base.install.dir"
         	              value="${buildDirectory}/../" />
                     <property name="dependencyTargets"
