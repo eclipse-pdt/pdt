@@ -247,7 +247,7 @@
 			<property name="basearch" value="${barch}" />
 			<property name="baseos" value="${bos}" />
 			<property name="basews" value="${bws}" />
-			<property name="dependency.properties" value="${buildDirectory}/maps/org.eclipse.php-releng/maps/dependencies.properties" />
+			<property name="dependency.properties" value="${buildDirectory}/maps/org.eclipse.pdt-releng/maps/dependencies.properties" />
 			<property name="base.install.dir" value="${buildDirectory}/${buildLabel}/temp" />
 			<property name="dependencyTargets" value="${builder}/../dependency/build.xml" />
 			<property name="local.cache.dir" value="${buildDirectory}/../" />
