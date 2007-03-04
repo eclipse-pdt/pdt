@@ -134,6 +134,7 @@ public class CodeDataResolver {
 
 						PHPProjectModel projectModel = phpModel.getProjectModel();
 						PHPFileData fileData = phpModel.getFileData(true);
+						// XXX handle empty fileData!!!
 						PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset);
 
 						// If we are in function declaration:
@@ -290,7 +291,7 @@ public class CodeDataResolver {
 
 		boolean isClassTriger = false;
 
-		String triggerText = statement.subSequence(startPosition - 2, startPosition).toString();
+		String triggerText = statement.subSequence(startPosition, startPosition + 2).toString();
 		if ("->".equals(triggerText)) {
 		} else if ("::".equals(triggerText)) {
 			isClassTriger = true;
