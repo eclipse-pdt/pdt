@@ -385,7 +385,7 @@ public class PHPModelUtil {
 	 * This method returns all the interface that the given class data implements.
 	 * Note : This method returns only the interfaces 1 level above. (Not recursively)
 	 * @param classData
-	 * @return
+	 * @return the interfaces
 	 */
 	public static PHPClassData[] getInterfaces(final PHPClassData classData) {
 		final PHPInterfaceNameData[] interfaceNameDatas = classData.getInterfacesNamesData();
