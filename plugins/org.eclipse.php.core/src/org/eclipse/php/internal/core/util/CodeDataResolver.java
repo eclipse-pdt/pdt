@@ -124,10 +124,11 @@ public class CodeDataResolver {
 					ITextRegion nextRegion = tRegion;
 					do {
 						nextRegion = phpScriptRegion.getPhpToken(nextRegion.getEnd());
+
 						if (!PHPPartitionTypes.isPHPCommentState(nextRegion.getType()) && nextRegion.getType() != PHPRegionTypes.WHITESPACE) {
 							break;
 						}
-					} while (tRegion.getEnd() < phpScriptRegion.getLength());
+					} while (nextRegion.getEnd() < phpScriptRegion.getLength());
 					String nextWord = sDoc.get(container.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
 
 					if (elementName.length() > 0) {
@@ -289,9 +290,13 @@ public class CodeDataResolver {
 
 		startPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, startPosition); // read whitespace
 
+		if (startPosition < 2) {
+			return null;
+		}
+
 		boolean isClassTriger = false;
 
-		String triggerText = statement.subSequence(startPosition, startPosition + 2).toString();
+		String triggerText = statement.subSequence(startPosition - 2, startPosition).toString();
 		if ("->".equals(triggerText)) {
 		} else if ("::".equals(triggerText)) {
 			isClassTriger = true;
