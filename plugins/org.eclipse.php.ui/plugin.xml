@@ -1375,7 +1375,8 @@
       <action
             actionId="org.eclipse.php.ui.actions.Move"
             class="org.eclipse.php.internal.ui.actions.ReorgMoveAction"
-            id="org.eclipse.php.ui.reorgMoveAction"/>
+            id="org.eclipse.php.ui.reorgMoveAction"
+            priority="10"/>
    </extension>
    
 </plugin>

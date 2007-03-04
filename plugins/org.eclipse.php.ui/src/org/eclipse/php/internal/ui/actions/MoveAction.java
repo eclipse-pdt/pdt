@@ -33,6 +33,8 @@ public class MoveAction extends SelectionDispatchAction implements IPHPActionImp
 	private static final String EXTENSION_POINT = "org.eclipse.php.ui.phpActionImplementor"; //$NON-NLS-1$
 	private static final String ACTION_ID_ATTRIBUTE = "actionId"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
+	private static final String PRIORITY_ATTRIBUTE = "priority"; //$NON-NLS-1$
+	
 	
 	private static final String MOVE_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$
 	
@@ -126,17 +128,24 @@ public class MoveAction extends SelectionDispatchAction implements IPHPActionImp
 	
 	/**
 	 * Gets the relevant reorg move actions from the extention point
-	 *
+	 * The final action will be the one with the highest priority
 	 */
 	public void instantiateActionFromExtentionPoint(){		
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_POINT); //$NON-NLS-1$
+		int topPriority = 0;
+		
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (MOVE_ACTION_ID.equals(element.getAttribute(ACTION_ID_ATTRIBUTE))) {
-				try {
-					fReorgMoveAction = (SelectionDispatchAction) element.createExecutableExtension(CLASS_ATTRIBUTE);
-				} catch (CoreException e) {
-					Logger.logException("Failed instantiating Move action class " + element.getAttribute(ACTION_ID_ATTRIBUTE), e);
+				int currentPriority = Integer.valueOf(element.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
+				// the final action should be the one with the highest priority 
+				if(currentPriority > topPriority){
+					try {
+						fReorgMoveAction = (SelectionDispatchAction) element.createExecutableExtension(CLASS_ATTRIBUTE);
+						topPriority = currentPriority;
+					} catch (CoreException e) {
+						Logger.logException("Failed instantiating Move action class " + element.getAttribute(ACTION_ID_ATTRIBUTE), e);
+					}
 				}
 			}
 		}
