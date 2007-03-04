@@ -2,7 +2,7 @@
 # This file is intend to be executed in the build machine 
 # remove any leftovers
 
-cd /opt/users/phpBuild/org.eclipse.pdt-releng/
+cd /opt/users/phpBuild/org.eclipse.php-releng/
 rm -rf ../src
 
 #dos2unix 
