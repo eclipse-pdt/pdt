@@ -57,7 +57,7 @@ public class CodeDataResolver {
 		return resolve(document, offset);
 	}
 
-	public CodeData[] resolve(IProject project, File file, int offset) throws IOException, CoreException {
+	public CodeData[] resolve(IProject project, File file, int offset) throws IOException {
 		IStructuredDocument document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file.getAbsolutePath(), new FileInputStream(file), new ProjectResolver(project));
 		return resolve(document, offset);
 	}
