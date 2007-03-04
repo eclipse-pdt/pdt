@@ -61,6 +61,7 @@
 
 	<target name="buildAll" depends="init,buildSDK">
 		<antcall target="runTests" />
+		<antcall target="publishpushupdate" />
 	</target>
 
 	<target name="buildSDK" depends="init">
@@ -151,7 +152,7 @@
 		<copy file="${result}/${indexFileName}" tofile="${result}/bld${indexFileName}" />
 
 		<!-- Replace the base variables to be nothing for bld-index, and the full reroute url for the main index file. -->
-		<replace file="${result}/${indexFileName}" token="@base@" value="http://www.eclipse.org/downloads/download.php?file=/tools/php/downloads/drops/${buildLabel}/" />
+		<replace file="${result}/${indexFileName}" token="@base@" value="http://www.eclipse.org/downloads/download.php?file=/tools/pdt/downloads/drops/${buildLabel}/" />
 		<replace file="${result}/bld${indexFileName}" token="@base@" value="" />
 
 	</target>
@@ -184,7 +185,7 @@
 		<chmod dir="${buildDirectory}" type="dir" perm="ugo+rx" includes="${buildLabel}*/**" />
 		<chmod dir="${buildDirectory}" type="dir" perm="ug+rwx" includes="${buildLabel}*/**" />
 		<exec dir="${buildDirectory}" executable="rsync">
-			<arg line="-avz --stats --include *.zip --exclude bldindex.html ${buildLabel} apeled@dev.eclipse.org:~/downloads/tools/pdt/${remoteDirectory}" />
+			<arg line="-avz --stats --include *.zip --exclude bldindex.html --exclude updateSite ${buildLabel} apeled@dev.eclipse.org:~/downloads/tools/pdt/${remoteDirectory}" />
 		</exec>
 	</target>
 
@@ -192,7 +193,7 @@
 
 	<target name="publishpushdevupdate" depends="init" unless="isReleaseBuild">
 		<property name="updateRemoteDirectory" value="updates/1.0/development" />
-		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}" />
+		<property name="updateLocalDirectory" value="${buildDirectory}/${buildLabel}/updateSite" />
 		<property name="devtype" value="-cats ${updateLocalDirectory}/catsdev.properties -catxml ${updateLocalDirectory}/catdevxml.xml" />
 		<antcall target="publishupdatesite" />
 		<antcall target="pushupdatesite" />
@@ -210,17 +211,18 @@
 		</fileset>
 	</path>
 
-	<target name="publishupdatesite" if="rsyncPWFile" depends="init">
+	<target name="publishupdatesite" depends="init">
+
 		<!-- Publish to update site, but not push it. -->
 		<echo message="Publish the update site for the latest build." />
 		<property name="updateRemoteDirectory" value="updates" />
-		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}" />
+		<property name="updateLocalDirectory" value="${buildDirectory}/${buildLabel}/updateSite" />
 		<delete dir="${updateLocalDirectory}" />
 		<mkdir dir="${updateLocalDirectory}" />
 
 		<!-- Now copy the site update tools files into local directory for processing. -->
 		<copy todir="${updateLocalDirectory}">
-			<fileset dir="internalBuildTools/siteUpdateTools" />
+			<fileset dir="siteUpdateTools" />
 		</copy>
 
 		<!-- Now build the update program. -->
@@ -232,7 +234,7 @@
 
 		<!-- Now get the latest build SDK and unzip into the local directory for processing. -->
 		<exec dir="${updateLocalDirectory}" executable="unzip">
-			<arg line="-o -qq ${buildDirectory}/${buildLabel}/org.eclipse.php_feature-*.zip -d ." />
+			<arg line="-o -qq ${buildDirectory}/${buildLabel}/org.eclipse.php_feature-sdk-${buildLabel}.zip -d ." />
 		</exec>
 
 		<!-- Now get the current update site.xml from the download site so that we can update it. -->
@@ -252,10 +254,10 @@
 
 	</target>
 
-	<target name="pushupdatesite" if="rsyncpush" depends="init">
+	<target name="pushupdatesite" depends="init">
 		<echo message="Push the update site to the download site." />
 		<property name="updateRemoteDirectory" value="updates" />
-		<property name="updateLocalDirectory" value="${buildDirectory}/update/${buildLabel}" />
+		<property name="updateLocalDirectory" value="${buildDirectory}/${buildLabel}/updateSite" />
 
 		<!-- Now make a backup of the site.xml that we previously updated. -->
 		<chmod dir="${updateLocalDirectory}" type="file" perm="ugo+r" includes="site.xml" />
