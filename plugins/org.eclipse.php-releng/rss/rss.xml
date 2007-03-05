@@ -22,7 +22,7 @@
 	<property name="remoteDirectory" value="downloads/drops" />
 
 	<property name="timestamp" value="${date} ${time}" />
-	<property name="rssProjectName" value="PDT" />
+	<property name="rssProjectName" value="PHP" />
 	<property name="rssCenterName" value="blackboard " />
 	<property name="rssCenterDescription" value="This is a blackboard center to ${rssProjectName}" />
 	<property name="rssCenterAbout" value="" />
@@ -67,7 +67,7 @@
 	</target>
 
 	<target name="mailUnitTestResults">
-		<mail from="php-unit-test-daemon@eclipse.org " encoding="uu" tolist="php-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html bug_distribution.csv" subject="Nightly build results ${timestamp}" />
+		<mail from="php-unit-test-daemon@eclipse.org " encoding="uu" tolist="pdt-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html bug_distribution.csv" subject="Nightly build results ${timestamp}" />
 	</target>
 
 	<target name="getTestResults">
