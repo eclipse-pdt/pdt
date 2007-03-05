@@ -57,6 +57,11 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 			if (it.hasNext()) {
 				descriptionText.append(getReturnTagTableRows(it));
 			}
+			// append return type
+			it = phpCodeData.getDocBlock().getTags(PHPDocTag.THROWS);
+			if (it.hasNext()) {
+				descriptionText.append(getThrowTagTableRows(it));
+			}			
 			// append see also information
 			it = phpCodeData.getDocBlock().getTags(PHPDocTag.SEE);
 			if (it.hasNext()) {
@@ -285,6 +290,17 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		helpBuffer.append("<br><dt>Returns</dt>");
 		PHPDocTag returns = (PHPDocTag) it.next();
 		String arg = returns.getValue();
+		helpBuffer.append("<dd>");
+		helpBuffer.append(arg);
+		helpBuffer.append("</dd>");
+		return helpBuffer.toString();
+	}
+	
+	private static String getThrowTagTableRows(Iterator it) {
+		helpBuffer.delete(0, helpBuffer.length());
+		helpBuffer.append("<br><dt>Throws</dt>");
+		PHPDocTag throwTag = (PHPDocTag) it.next();
+		String arg = throwTag.getValue();
 		helpBuffer.append("<dd>");
 		helpBuffer.append(arg);
 		helpBuffer.append("</dd>");
