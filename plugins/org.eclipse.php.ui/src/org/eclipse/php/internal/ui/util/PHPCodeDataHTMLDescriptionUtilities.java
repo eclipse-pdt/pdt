@@ -57,7 +57,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 			if (it.hasNext()) {
 				descriptionText.append(getReturnTagTableRows(it));
 			}
-			// append return type
+			// append throw info
 			it = phpCodeData.getDocBlock().getTags(PHPDocTag.THROWS);
 			if (it.hasNext()) {
 				descriptionText.append(getThrowTagTableRows(it));
