@@ -140,6 +140,9 @@
 		<!-- Not in use
                 <antcall target="gatherLogs" />
                 -->
+		<ant antfile="${builder}/../buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages">
+			<property name="java-home" value="${vm}" />
+		</ant>
 	</target>
 
 	<!-- ===================================================================== -->

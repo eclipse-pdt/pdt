@@ -252,27 +252,22 @@
 			</classpath>
 		</java>
 
-		<!-- Unpack jars and optimize site for SDK package -->
-		<condition property="sdkArchiveName" value="org.eclipse.php_feature-sdk-${buildLabel}.zip">
-			<available file="${buildDirectory}/${buildLabel}/org.eclipse.php_feature-sdk-${buildLabel}.zip" />
+		<condition property="doPack" value="true">
+			<not>
+				<contains string="${buildType}" substring="N" />
+			</not>
 		</condition>
-		<ant antfile="buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages">
-			<property name="java-home" value="${vm}" />
-			<property name="archiveName" value="${sdkArchiveName}" />
-			<property name="baseLocation" value="../org.eclipse.releng.basebuilder" />
-		</ant>
 
-		
-		<!-- Unpack jars and optimize site for Runtime package -->
-		<condition property="runtimeArchiveName" value="org.eclipse.php_feature-${buildLabel}.zip">
-			<available file="${buildDirectory}/${buildLabel}/org.eclipse.php_feature-${buildLabel}.zip" />
-		</condition>
-		<ant antfile="buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages">
-			<property name="java-home" value="${vm}" />
-			<property name="archiveName" value="${runtimeArchiveName}" />
-			<property name="baseLocation" value="../org.eclipse.releng.basebuilder" />
-		</ant>
+		<antcall target="createPackFilesIfDesired" />
 
+	</target>
+
+	<target name="createPackFilesIfDesired" if="doPack" depends="init">
+		<java jar="${baseLocation}/startup.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}">
+			<arg line="${logIfDebug}" />
+			<arg line="-application org.eclipse.update.core.siteOptimizer" />
+			<arg line="-jarProcessor  ${verboseIfDebug} -outputDir ${buildDirectory}/${buildLabel}/updateSite -pack ${buildDirectory}/${buildLabel}/updateSite" />
+		</java>
 	</target>
 
 	<target name="pushupdatesite" depends="init">

@@ -95,13 +95,13 @@
 		<!-- since developers wouldn't normally need it for a quick check of of a build.        -->
 		<!--                                                                                    -->
 		<!-- ================================================================================== -->
-		<condition property="doPack" value="true">
+		<!--<condition property="doPack" value="true">
 			<not>
 				<contains string="${buildType}" substring="N" />
 			</not>
 		</condition>
 
-		<antcall target="createPackFilesIfDesired" />
+		<antcall target="createPackFilesIfDesired" />-->
 
 
 		<!-- ================================================================================== -->
@@ -265,7 +265,7 @@
 		<property name="packName" value="pdt-all-in-one-${buildLabel}-${bos}-${bws}" />
 
 		<exec dir="${buildDirectory}/${buildLabel}/temp" executable="tar" failonerror="true">
-			<arg line="-cf ${buildDirectory}/${buildLabel}/all-in-one/${packName}.tar eclipse -X installmanifest.properties" />
+			<arg line="-cf ${buildDirectory}/${buildLabel}/all-in-one/${packName}.tar eclipse " />
 		</exec>
 		<exec dir="${buildDirectory}/${buildLabel}/temp" executable="gzip" failonerror="true">
 			<arg line="${buildDirectory}/${buildLabel}/all-in-one/${packName}.tar" />
