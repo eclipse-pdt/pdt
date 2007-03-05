@@ -263,7 +263,7 @@
 	</target>
 
 	<target name="createPackFilesIfDesired" if="doPack" depends="init">
-		<java jar="${baseLocation}/startup.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}">
+		<java jar="${buildDirectory}/startup.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}">
 			<arg line="${logIfDebug}" />
 			<arg line="-application org.eclipse.update.core.siteOptimizer" />
 			<arg line="-jarProcessor  ${verboseIfDebug} -outputDir ${buildDirectory}/${buildLabel}/updateSite -pack ${buildDirectory}/${buildLabel}/updateSite" />
