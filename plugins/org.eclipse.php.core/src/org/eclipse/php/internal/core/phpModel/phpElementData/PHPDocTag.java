@@ -71,6 +71,8 @@ public interface PHPDocTag extends Serializable {
 	public static final int USES = 27;
 
 	public static final int VERSION = 28;
+	
+	public static final int THROWS  = 29;
 
 	public int getID();
 

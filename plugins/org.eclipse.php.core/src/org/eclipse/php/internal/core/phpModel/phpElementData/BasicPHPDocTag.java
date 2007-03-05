@@ -79,6 +79,8 @@ public class BasicPHPDocTag implements PHPDocTag {
 				return "staticvar";
 			case SUBPACKAGE:
 				return "subpackage";
+			case THROWS:
+				return "throws";
 			case TODO:
 				return "todo";
 			case TUTORIAL:
@@ -130,6 +132,7 @@ public class BasicPHPDocTag implements PHPDocTag {
 			nameToID.put("static", new Integer(STATIC));
 			nameToID.put("staticvar", new Integer(STATICVAR));
 			nameToID.put("subpackage", new Integer(SUBPACKAGE));
+			nameToID.put("throws", new Integer(THROWS));
 			nameToID.put("todo", new Integer(TODO));
 			nameToID.put("tutorial", new Integer(TUTORIAL));
 			nameToID.put("uses", new Integer(USES));
