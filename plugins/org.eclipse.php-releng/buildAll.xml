@@ -61,7 +61,7 @@
 
 	<target name="buildAll" depends="init,buildSDK">
 		<antcall target="runTests" />
-		<antcall target="publishpushupdate" />
+		<antcall target="publishupdatesite" />
 	</target>
 
 	<target name="buildSDK" depends="init">
@@ -189,7 +189,7 @@
 		</exec>
 	</target>
 
-	<target name="publishpushupdate" depends="init,publishpushreleaseupdatesite,publishpushdevupdate" />
+	<target name="publishpushupdate" depends="init,publishpushreleaseupdatesite" />
 
 	<target name="publishpushdevupdate" depends="init" unless="isReleaseBuild">
 		<property name="updateRemoteDirectory" value="updates/1.0/development" />
@@ -199,7 +199,7 @@
 		<antcall target="pushupdatesite" />
 	</target>
 
-	<target name="publishpushreleaseupdatesite" if="isReleaseBuild" description="Puplish and push the update site for a release. Only available for a release build.">
+	<target name="publishpushreleaseupdatesite" description="Publish and push the update site for a release. Only available for a release build.">
 		<antcall target="publishupdatesite" />
 		<antcall target="pushupdatesite" />
 	</target>
@@ -251,6 +251,27 @@
 				<path refid="osgi.jar" />
 			</classpath>
 		</java>
+
+		<!-- Unpack jars and optimize site for SDK package -->
+		<condition property="sdkArchiveName" value="org.eclipse.php_feature-sdk-${buildLabel}.zip">
+			<available file="${buildDirectory}/${buildLabel}/org.eclipse.php_feature-sdk-${buildLabel}.zip" />
+		</condition>
+		<ant antfile="buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages">
+			<property name="java-home" value="${vm}" />
+			<property name="archiveName" value="${sdkArchiveName}" />
+			<property name="baseLocation" value="../org.eclipse.releng.basebuilder" />
+		</ant>
+
+		
+		<!-- Unpack jars and optimize site for Runtime package -->
+		<condition property="runtimeArchiveName" value="org.eclipse.php_feature-${buildLabel}.zip">
+			<available file="${buildDirectory}/${buildLabel}/org.eclipse.php_feature-${buildLabel}.zip" />
+		</condition>
+		<ant antfile="buildutilities.xml" target="unpackUpdateJarsAndCreateZippedPackages">
+			<property name="java-home" value="${vm}" />
+			<property name="archiveName" value="${runtimeArchiveName}" />
+			<property name="baseLocation" value="../org.eclipse.releng.basebuilder" />
+		</ant>
 
 	</target>
 
