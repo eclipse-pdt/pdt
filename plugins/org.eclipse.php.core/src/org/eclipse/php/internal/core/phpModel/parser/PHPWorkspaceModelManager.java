@@ -275,7 +275,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			String filenameOS = new Path(filename).toOSString();
 			for (int i = 0; i < projects.length; ++i) {
 				project = projects[i];
-				if (!project.exists() || project.isAccessible())
+				if (!project.exists() || !project.isAccessible())
 					continue;
 				PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(projects[i]);
 				if (model != null) {
