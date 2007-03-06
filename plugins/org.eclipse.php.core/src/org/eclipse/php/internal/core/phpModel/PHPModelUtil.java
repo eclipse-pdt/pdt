@@ -630,56 +630,58 @@ public class PHPModelUtil {
 	 */
 	public static ArrayList getFunctionsToOverride(IProject project, PHPClassData classData, ArrayList overridenMethodsNamesList, ArrayList existingRequiredNamesList, ArrayList requiredToAdd) {
 		ArrayList temp = new ArrayList();
-		PHPFunctionData[] functions = classData.getFunctions();
-		if (classData.getUserData() != null) {//add required files, check if not null since PHP Language file will give NULL
-			String phpFileName = classData.getUserData().getFileName();
-			phpFileName = PHPModelUtil.getRelativeLocation(project, phpFileName);
-			if (!existingRequiredNamesList.contains(phpFileName)) {
-				existingRequiredNamesList.add(phpFileName);
-				requiredToAdd.add(phpFileName);
-			}
-		}
-		int numOfFunctions = functions.length;
-		//an interface   
-		if (PHPModifier.isInterface(classData.getModifiers())) {
-			for (int i = 0; i < numOfFunctions; i++) {
-				if (!overridenMethodsNamesList.contains(functions[i].getName())) {
-					temp.add(functions[i]);
-					overridenMethodsNamesList.add(functions[i].getName());
+		if (classData != null) {
+			PHPFunctionData[] functions = classData.getFunctions();
+			if (classData.getUserData() != null) {//add required files, check if not null since PHP Language file will give NULL
+				String phpFileName = classData.getUserData().getFileName();
+				phpFileName = PHPModelUtil.getRelativeLocation(project, phpFileName);
+				if (!existingRequiredNamesList.contains(phpFileName)) {
+					existingRequiredNamesList.add(phpFileName);
+					requiredToAdd.add(phpFileName);
 				}
 			}
-		}
-		//an abstract class
-		else if (PHPModifier.isAbstract(classData.getModifiers())) {
-			for (int i = 0; i < numOfFunctions; i++) {
-				if (!PHPModifier.isAbstract(functions[i].getModifiers())) {
-					overridenMethodsNamesList.add(functions[i].getName());
+			int numOfFunctions = functions.length;
+			//an interface   
+			if (PHPModifier.isInterface(classData.getModifiers())) {
+				for (int i = 0; i < numOfFunctions; i++) {
+					if (!overridenMethodsNamesList.contains(functions[i].getName())) {
+						temp.add(functions[i]);
+						overridenMethodsNamesList.add(functions[i].getName());
+					}
 				}
+			}
+			//an abstract class
+			else if (PHPModifier.isAbstract(classData.getModifiers())) {
+				for (int i = 0; i < numOfFunctions; i++) {
+					if (!PHPModifier.isAbstract(functions[i].getModifiers())) {
+						overridenMethodsNamesList.add(functions[i].getName());
+					}
 
-				else if (!overridenMethodsNamesList.contains(functions[i].getName())) {
-					temp.add(functions[i]);
-					overridenMethodsNamesList.add(functions[i].getName());
+					else if (!overridenMethodsNamesList.contains(functions[i].getName())) {
+						temp.add(functions[i]);
+						overridenMethodsNamesList.add(functions[i].getName());
+					}
 				}
 			}
-		}
 
-		//this class has a superclass
-		if (classData.getSuperClassData() != null && classData.getSuperClassData().getName() != null) {
-			PHPClassData superClass = PHPModelUtil.getSuperClass(classData);
-			ArrayList superClassMethodsList = getFunctionsToOverride(project, superClass, overridenMethodsNamesList, existingRequiredNamesList, requiredToAdd);
-			temp.addAll(superClassMethodsList);
-			Iterator iter = superClassMethodsList.iterator();
-			while (iter.hasNext()) {
-				temp.add(iter.next());
+			//this class has a superclass
+			if (classData.getSuperClassData() != null && classData.getSuperClassData().getName() != null) {
+				PHPClassData superClass = PHPModelUtil.getSuperClass(classData);
+				ArrayList superClassMethodsList = getFunctionsToOverride(project, superClass, overridenMethodsNamesList, existingRequiredNamesList, requiredToAdd);
+				temp.addAll(superClassMethodsList);
+				Iterator iter = superClassMethodsList.iterator();
+				while (iter.hasNext()) {
+					temp.add(iter.next());
+				}
 			}
-		}
-		//this class has interfaces
-		if ((classData.getInterfacesNamesData() != null) && (classData.getInterfacesNamesData().length > 0)) {
-			PHPClassData[] interfaces = PHPModelUtil.getInterfaces(classData);
-			int numOfInterfaces = interfaces.length;
-			for (int i = 0; i < numOfInterfaces; i++) {
-				ArrayList interfaceMethodsList = getFunctionsToOverride(project, interfaces[i], overridenMethodsNamesList, existingRequiredNamesList, requiredToAdd);
-				temp.addAll(interfaceMethodsList);
+			//this class has interfaces
+			if ((classData.getInterfacesNamesData() != null) && (classData.getInterfacesNamesData().length > 0)) {
+				PHPClassData[] interfaces = PHPModelUtil.getInterfaces(classData);
+				int numOfInterfaces = interfaces.length;
+				for (int i = 0; i < numOfInterfaces; i++) {
+					ArrayList interfaceMethodsList = getFunctionsToOverride(project, interfaces[i], overridenMethodsNamesList, existingRequiredNamesList, requiredToAdd);
+					temp.addAll(interfaceMethodsList);
+				}
 			}
 		}
 		return temp;
