@@ -14,7 +14,7 @@
  	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlocks.exsd"/>
 	<extension-point id="wizardAndCompositeFragments" name="Wizard and Composite Fragments" schema="schema/wizardAndCompositeFragments.exsd"/>
  	<extension-point id="phpContentAssistant" name="phpContentAssistant" schema="schema/phpContentAssistant.exsd"/>
-    <extension-point id="phpActionImplementor" name="PHP Action Implementor" schema="schema/phpActionImplementor.exsd"/>
+    <extension-point id="phpActionDelegator" name="PHP Action Delegator" schema="schema/phpActionDelegator.exsd"/>
 	  
 	<!--extension point="org.eclipse.ui.editors.documentProviders"> 
 		<provider 
@@ -1371,7 +1371,7 @@
             pageId="org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"/>
    </extension>
    <extension
-         point="org.eclipse.php.ui.phpActionImplementor">
+         point="org.eclipse.php.ui.phpActionDelegator">
       <action
             actionId="org.eclipse.php.ui.actions.Move"
             class="org.eclipse.php.internal.ui.actions.ReorgMoveAction"

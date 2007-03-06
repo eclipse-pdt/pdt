@@ -10,36 +10,40 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.MoveProjectAction;
+import org.eclipse.ui.actions.MoveResourceAction;
+import org.eclipse.ui.actions.SelectionListenerAction;
 
 
-public class MoveAction extends SelectionDispatchAction implements IPHPActionImplementor {
-
-	private static final String EXTENSION_POINT = "org.eclipse.php.ui.phpActionImplementor"; //$NON-NLS-1$
-	private static final String ACTION_ID_ATTRIBUTE = "actionId"; //$NON-NLS-1$
-	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
-	private static final String PRIORITY_ATTRIBUTE = "priority"; //$NON-NLS-1$
-	
-	
+public class MoveAction extends SelectionDispatchAction  {
+		
 	private static final String MOVE_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$
 	
 	private PHPStructuredEditor fEditor;
-	private SelectionDispatchAction fReorgMoveAction;
+	private IPHPActionDelegator fReorgMoveAction;
+	private StructuredSelection selectedResources; 
 	
 
 	/**
@@ -69,8 +73,9 @@ public class MoveAction extends SelectionDispatchAction implements IPHPActionImp
 	 *
 	 */
 	private void initMoveAction() {
-		setText(PHPUIMessages.MoveAction_text);		
-		instantiateActionFromExtentionPoint();
+		fReorgMoveAction = PHPActionDelegatorRegistry.getActionDelegator(MOVE_ACTION_ID);		
+		setText(PHPUIMessages.MoveAction_text);
+		update(getSelection());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
 	}
 
@@ -79,12 +84,94 @@ public class MoveAction extends SelectionDispatchAction implements IPHPActionImp
 	 * @see ISelectionChangedListener#selectionChanged(SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
-		fReorgMoveAction.selectionChanged(event);
+		super.selectionChanged(event);
 		setEnabled(computeEnableState());
+	}
+	
+	public void selectionChanged(IStructuredSelection selection) {	
+		
+		selectedResources = null;
+		
+		if(selection != null && selection instanceof ITextSelection){			
+			selectionChanged((ITextSelection)selection);
+			return;
+		}
+					
+		if (!selection.isEmpty()) {			
+			if (ActionUtils.containsOnlyProjects(selection.toList())) {
+				setEnabled(createWorkbenchAction(selection).isEnabled());
+				return;
+			}
+			List elements = selection.toList();
+			IResource[] resources = ActionUtils.getResources(elements);
+			Object[] phpElements = ActionUtils.getPHPElements(elements);
+
+			if (elements.size() != resources.length + phpElements.length)
+				setEnabled(false);
+			else {
+				boolean enabled = true;
+				if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING) {
+					for (int i = 0; i < phpElements.length; i++) {
+						if (!(phpElements[i] instanceof PHPFileData))
+							enabled = false;
+					}
+				}
+				if (enabled) {
+					List list = new ArrayList(Arrays.asList(resources));
+					for (int i = 0; i < phpElements.length; i++) {
+						if (phpElements[i] instanceof PHPFileData) {
+							IResource res = PHPModelUtil.getResource(phpElements[i]);
+							if (res != null && res.exists()) {
+								list.add(PHPModelUtil.getResource(phpElements[i]));
+							}
+						}
+
+					}
+					if (list.size() == elements.size()) // only files selected
+					{
+						selectedResources = new StructuredSelection(list);
+						enabled = createWorkbenchAction(selectedResources).isEnabled();
+					}
+				}
+				setEnabled(enabled);
+			}
+		} else
+			setEnabled(false);
+			
+
+		setEnabled(computeEnableState());
+		fReorgMoveAction.setSelection(selectedResources);
+	}
+	
+	
+
+	// we will get to this method only in case this is an editor selection
+	public void selectionChanged(ITextSelection selection) {
+		// get the current file 
+		PHPStructuredEditor editor = EditorUtility.getPHPStructuredEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart());
+		IResource[] resources = {(IResource)editor.getFile()};
+		selectedResources = new StructuredSelection(resources);
+		setEnabled(true);
+		fReorgMoveAction.setSelection(selectedResources);
+	}
+	
+	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
+
+		List list = selection.toList();
+		SelectionListenerAction action = null;
+		if (list.size() == 0 || list.get(0) instanceof IProject) {
+			action = new MoveProjectAction(getShell());
+			action.selectionChanged(selection);
+		} else if (selectedResources != null) {
+			action = new MoveResourceAction(getShell());
+			action.selectionChanged(selection);
+
+		}
+		return action;
 	}
 
 	public void run(IStructuredSelection selection) {
-		if (fReorgMoveAction.isEnabled())
+		if (isEnabled())
 			fReorgMoveAction.run(selection);
 
 	}
@@ -104,8 +191,8 @@ public class MoveAction extends SelectionDispatchAction implements IPHPActionImp
 		if (element == null)
 			return false;
 		StructuredSelection mockStructuredSelection = new StructuredSelection(element);
-		fReorgMoveAction.selectionChanged(mockStructuredSelection);
-		if (!fReorgMoveAction.isEnabled())
+		selectionChanged(mockStructuredSelection);
+		if (!isEnabled())
 			return false;
 
 		fReorgMoveAction.run(mockStructuredSelection);
@@ -116,38 +203,13 @@ public class MoveAction extends SelectionDispatchAction implements IPHPActionImp
 	 * @see SelectionDispatchAction#update(ISelection)
 	 */
 	public void update(ISelection selection) {
-		if(fReorgMoveAction != null){
-			fReorgMoveAction.update(selection);		
-			setEnabled(computeEnableState());
-		}
+		super.update(selection);	
+		setEnabled(computeEnableState());
+		
 	}
 
 	private boolean computeEnableState() {
-		return fReorgMoveAction.isEnabled();
+		return isEnabled();
 	}
 	
-	/**
-	 * Gets the relevant reorg move actions from the extention point
-	 * The final action will be the one with the highest priority
-	 */
-	public void instantiateActionFromExtentionPoint(){		
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_POINT); //$NON-NLS-1$
-		int topPriority = 0;
-		
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			if (MOVE_ACTION_ID.equals(element.getAttribute(ACTION_ID_ATTRIBUTE))) {
-				int currentPriority = Integer.valueOf(element.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
-				// the final action should be the one with the highest priority 
-				if(currentPriority > topPriority){
-					try {
-						fReorgMoveAction = (SelectionDispatchAction) element.createExecutableExtension(CLASS_ATTRIBUTE);
-						topPriority = currentPriority;
-					} catch (CoreException e) {
-						Logger.logException("Failed instantiating Move action class " + element.getAttribute(ACTION_ID_ATTRIBUTE), e);
-					}
-				}
-			}
-		}
-	}
 }
