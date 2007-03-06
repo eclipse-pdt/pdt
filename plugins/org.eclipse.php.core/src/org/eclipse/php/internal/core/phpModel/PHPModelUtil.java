@@ -631,11 +631,13 @@ public class PHPModelUtil {
 	public static ArrayList getFunctionsToOverride(IProject project, PHPClassData classData, ArrayList overridenMethodsNamesList, ArrayList existingRequiredNamesList, ArrayList requiredToAdd) {
 		ArrayList temp = new ArrayList();
 		PHPFunctionData[] functions = classData.getFunctions();
-		String phpFileName = classData.getUserData().getFileName();
-		phpFileName = PHPModelUtil.getRelativeLocation(project, phpFileName);
-		if (!existingRequiredNamesList.contains(phpFileName)) {
-			existingRequiredNamesList.add(phpFileName);
-			requiredToAdd.add(phpFileName);
+		if (classData.getUserData() != null) {//add required files, check if not null since PHP Language file will give NULL
+			String phpFileName = classData.getUserData().getFileName();
+			phpFileName = PHPModelUtil.getRelativeLocation(project, phpFileName);
+			if (!existingRequiredNamesList.contains(phpFileName)) {
+				existingRequiredNamesList.add(phpFileName);
+				requiredToAdd.add(phpFileName);
+			}
 		}
 		int numOfFunctions = functions.length;
 		//an interface   
