@@ -87,32 +87,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
-		// patch for PDT RC2. Due to major API changes, 
-		// the first time this version of tghe application runs the PHP perspective is "resetted"
-		// to its defaults
-		
-		getActiveWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
-            public static final String RESET_PERSPECTIVE_PROP = "perspective_was_resetted";
-            IPreferenceStore store = getPreferenceStore();
- 
-            public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
-            }
-
-            public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-            	if(!perspective.getId().equals(PERSPECTIVE_ID))
-            		return;
-            	boolean perspectiveWasResetted = store.getBoolean(RESET_PERSPECTIVE_PROP);  
-            	if (!perspectiveWasResetted) {
-            		store.setValue(RESET_PERSPECTIVE_PROP, true);
-                    page.resetPerspective();                    
-                }
-            }
-
-            public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
-            }
-      });
-				
 	}
 
 	/**
