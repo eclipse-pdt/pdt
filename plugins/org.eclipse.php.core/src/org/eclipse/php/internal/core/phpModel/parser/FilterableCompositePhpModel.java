@@ -20,6 +20,8 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 
 public abstract class FilterableCompositePhpModel extends CompositePhpModel implements IPhpModelFilterable {
 
+	private static final CodeData[] EMPTY = new CodeData[0];
+
 	/** (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.phpModel.parser.CompositePhpModel#addModel(org.eclipse.php.internal.core.phpModel.parser.IPhpModel)
 	 */
@@ -31,54 +33,63 @@ public abstract class FilterableCompositePhpModel extends CompositePhpModel impl
 	 * @see org.eclipse.php.internal.core.phpModel.parser.CompositePhpModel#getClass(java.lang.String, java.lang.String)
 	 */
 	public PHPClassData getClass(String fileName, String className) {
-		PHPClassData exactClass = super.getClass(fileName, className);
-		if (exactClass != null || filter == null)
-			return exactClass;
-		CodeData[] allClasses = getClass(className);
-		if (allClasses != null) {
-			for (int j = 0; j < allClasses.length; ++j) {
-				if (filter.select(this, allClasses[j], fileName)) {
-					return (PHPClassData) allClasses[j];
+		PHPClassData exactElement = super.getClass(fileName, className);
+		if (exactElement != null)
+			return exactElement;
+		CodeData[] allElements = getClass(className);
+		if (allElements.length == 0 || allElements == null) {
+			return null;
+		}
+		if (filter != null) {
+			for (int j = 0; j < allElements.length; ++j) {
+				if (filter.select(this, allElements[j], fileName)) {
+					return (PHPClassData) allElements[j];
 				}
 			}
 		}
-		return null;
+		return (PHPClassData) allElements[0];
 	}
 
 	/** (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.phpModel.parser.CompositePhpModel#getConstant(java.lang.String, java.lang.String)
 	 */
 	public PHPConstantData getConstant(String fileName, String constantName) {
-		PHPConstantData exactConstant = super.getConstant(fileName, constantName);
-		if (exactConstant != null || filter == null)
-			return exactConstant;
-		CodeData[] allConstants = getConstant(constantName);
-		if (allConstants != null) {
-			for (int j = 0; j < allConstants.length; ++j) {
-				if (filter.select(this, allConstants[j], fileName)) {
-					return (PHPConstantData) allConstants[j];
+		PHPConstantData exactElement = super.getConstant(fileName, constantName);
+		if (exactElement != null)
+			return exactElement;
+		CodeData[] allElements = getConstant(constantName);
+		if (allElements.length == 0 || allElements == null) {
+			return null;
+		}
+		if (filter != null) {
+			for (int j = 0; j < allElements.length; ++j) {
+				if (filter.select(this, allElements[j], fileName)) {
+					return (PHPConstantData) allElements[j];
 				}
 			}
 		}
-		return null;
+		return (PHPConstantData) allElements[0];
 	}
 
 	/** (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.phpModel.parser.CompositePhpModel#getFunction(java.lang.String, java.lang.String)
 	 */
 	public PHPFunctionData getFunction(String fileName, String functionName) {
-		PHPFunctionData exactFunction = super.getFunction(fileName, functionName);
-		if (exactFunction != null || filter == null)
-			return exactFunction;
-		CodeData[] allFunctions = getFunction(functionName);
-		if (allFunctions != null) {
-			for (int j = 0; j < allFunctions.length; ++j) {
-				if (filter.select(this, allFunctions[j], fileName)) {
-					return (PHPFunctionData) allFunctions[j];
+		PHPFunctionData exactElement = super.getFunction(fileName, functionName);
+		if (exactElement != null)
+			return exactElement;
+		CodeData[] allElements = getFunction(functionName);
+		if (allElements.length == 0 || allElements == null) {
+			return null;
+		}
+		if (filter != null) {
+			for (int j = 0; j < allElements.length; ++j) {
+				if (filter.select(this, allElements[j], fileName)) {
+					return (PHPFunctionData) allElements[j];
 				}
 			}
 		}
-		return null;
+		return (PHPFunctionData) allElements[0];
 	}
 
 	IPhpModelFilter filter;
@@ -91,41 +102,42 @@ public abstract class FilterableCompositePhpModel extends CompositePhpModel impl
 	}
 
 	public CodeData[] getFilteredClasses(String fileName, String className) {
-		CodeData[] allClasses = getClass(className);
-		List filteredClasses = new ArrayList();
-		if (allClasses != null) {
-			for (int j = 0; j < allClasses.length; ++j) {
-				if (filter.select(this, allClasses[j], fileName)) {
-					filteredClasses.add(allClasses[j]);
-				}
-			}
-		}
-		return (CodeData[]) filteredClasses.toArray(new CodeData[filteredClasses.size()]);
+		CodeData[] allElements = getClass(className);
+		return selectElements(fileName, allElements);
 	}
 
 	public CodeData[] getFilteredConstants(String fileName, String constantName) {
-		CodeData[] allConstants = getConstant(constantName);
-		List filteredConstants = new ArrayList();
-		if (allConstants != null) {
-			for (int j = 0; j < allConstants.length; ++j) {
-				if (filter.select(this, allConstants[j], fileName)) {
-					filteredConstants.add(allConstants[j]);
-				}
-			}
-		}
-		return (CodeData[]) filteredConstants.toArray(new CodeData[filteredConstants.size()]);
+		CodeData[] allElements = getConstant(constantName);
+		return selectElements(fileName, allElements);
 	}
 
 	public CodeData[] getFilteredFunctions(String fileName, String functionName) {
-		CodeData[] allFunctions = getFunction(functionName);
-		List filteredFunctions = new ArrayList();
-		if (allFunctions != null) {
-			for (int j = 0; j < allFunctions.length; ++j) {
-				if (filter.select(this, allFunctions[j], fileName)) {
-					filteredFunctions.add(allFunctions[j]);
+		CodeData[] allElements = getFunction(functionName);
+		return selectElements(fileName, allElements);
+	}
+
+	/**
+	 * @param fileName
+	 * @param allElements
+	 * @return selected elements
+	 */
+	private CodeData[] selectElements(String fileName, CodeData[] allElements) {
+		if (allElements == null || allElements.length == 0)
+			return EMPTY;
+		if (filter == null)
+			return allElements;
+
+		List filteredElements = new ArrayList();
+		if (allElements != null && filter != null) {
+			for (int j = 0; j < allElements.length; ++j) {
+				if (filter.select(this, allElements[j], fileName)) {
+					filteredElements.add(allElements[j]);
 				}
 			}
 		}
-		return (CodeData[]) filteredFunctions.toArray(new CodeData[filteredFunctions.size()]);
+		if (filteredElements.size() != 0)
+			return (CodeData[]) filteredElements.toArray(new CodeData[filteredElements.size()]);
+		return allElements;
 	}
+
 }

@@ -23,6 +23,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModelFilterable {
 
+	private static final CodeData[] EMPTY = new CodeData[0];
+
 	public static String ID = "PHPUserModel";
 
 	private FilesCodeDataDB phpFileDataDB;
@@ -489,42 +491,42 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 	}
 
 	public CodeData[] getFilteredClasses(String fileName, String className) {
-		CodeData[] allClasses = getClass(className);
-		List filteredClasses = new ArrayList();
-		if (allClasses != null) {
-			for (int j = 0; j < allClasses.length; ++j) {
-				if (filter.select(this, allClasses[j], fileName)) {
-					filteredClasses.add(allClasses[j]);
-				}
-			}
-		}
-		return (CodeData[]) filteredClasses.toArray(new CodeData[filteredClasses.size()]);
+		CodeData[] allElements = getClass(className);
+		return selectElements(fileName, allElements);
 	}
 
 	public CodeData[] getFilteredConstants(String fileName, String constantName) {
-		CodeData[] allConstants = getConstant(constantName);
-		List filteredConstants = new ArrayList();
-		if (allConstants != null) {
-			for (int j = 0; j < allConstants.length; ++j) {
-				if (filter.select(this, allConstants[j], fileName)) {
-					filteredConstants.add(allConstants[j]);
-				}
-			}
-		}
-		return (CodeData[]) filteredConstants.toArray(new CodeData[filteredConstants.size()]);
+		CodeData[] allElements = getConstant(constantName);
+		return selectElements(fileName, allElements);
 	}
 
 	public CodeData[] getFilteredFunctions(String fileName, String functionName) {
-		CodeData[] allFunctions = getFunction(functionName);
-		List filteredFunctions = new ArrayList();
-		if (allFunctions != null) {
-			for (int j = 0; j < allFunctions.length; ++j) {
-				if (filter.select(this, allFunctions[j], fileName)) {
-					filteredFunctions.add(allFunctions[j]);
+		CodeData[] allElements = getFunction(functionName);
+		return selectElements(fileName, allElements);
+	}
+
+	/**
+	 * @param fileName
+	 * @param allElements
+	 * @return selected elements
+	 */
+	private CodeData[] selectElements(String fileName, CodeData[] allElements) {
+		if (allElements == null || allElements.length == 0)
+			return EMPTY;
+		if (filter == null)
+			return allElements;
+
+		List filteredElements = new ArrayList();
+		if (allElements != null && filter != null) {
+			for (int j = 0; j < allElements.length; ++j) {
+				if (filter.select(this, allElements[j], fileName)) {
+					filteredElements.add(allElements[j]);
 				}
 			}
 		}
-		return (CodeData[]) filteredFunctions.toArray(new CodeData[filteredFunctions.size()]);
+		if (filteredElements.size() != 0)
+			return (CodeData[]) filteredElements.toArray(new CodeData[filteredElements.size()]);
+		return allElements;
 	}
 
 }
