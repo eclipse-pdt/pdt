@@ -906,19 +906,35 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (functionStart == -1) {
 			return false;
 		}
-		PHPClassData classData = getContainerClassData(projectModel, fileName, text.getOriginalOffset(functionStart));
-		// We look for the container class data in function start offset.
-
-		if (classData == null) {
-			// We are not inside class function.
-			return true;
-		}
-
+		
 		// are we inside parameters part in function declaretion statment
 		for (int i = text.length() - 1; i >= functionStart; i--) {
 			if (text.charAt(i) == '(') {
+				boolean showClassCompletion = true;
+				for (int j = text.length() - 1; j > i; j--) {
+					if (text.charAt(j) != ',' && !Character.isWhitespace(text.charAt(j))) {
+						showClassCompletion = false;
+						break;
+					}
+					if (text.charAt(j) == ',') {
+						break;
+					}
+				}
+				if (showClassCompletion) {
+					CodeData[] classes = projectModel.getClasses();
+					completionProposalGroup = phpCompletionProposalGroup;
+					completionProposalGroup.setData(offset, classes, "", selectionLength, false);
+				}
 				return true;
 			}
+		}
+		
+		PHPClassData classData = getContainerClassData(projectModel, fileName, text.getOriginalOffset(functionStart));
+		// We look for the container class data in function start offset.
+		
+		if (classData == null) {
+			// We are not inside class function.
+			return true;
 		}
 
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(text, text.length());
