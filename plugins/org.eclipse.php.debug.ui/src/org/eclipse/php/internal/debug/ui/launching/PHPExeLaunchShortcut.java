@@ -24,6 +24,7 @@ import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -42,6 +43,7 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
@@ -115,7 +117,8 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				String phpExeName = (defaultEXE != null) ? defaultEXE.getPhpEXE().getAbsolutePath().toString() : null;
 
 				if (phpExeName == null) {
-					ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text, new Status(Status.ERROR, PHPDebugUIPlugin.ID, 0, "", null));
+					MessageDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text);
+					PreferencesUtil.createPreferenceDialogOn(PHPDebugUIPlugin.getActiveWorkbenchShell(), "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage", null, null).open();
 					return;
 				}
 
