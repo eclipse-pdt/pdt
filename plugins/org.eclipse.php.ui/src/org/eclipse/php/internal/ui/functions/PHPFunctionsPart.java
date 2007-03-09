@@ -142,7 +142,11 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	}
 
 	private void updateInputForCurrentEditor(final IEditorPart editorPart) {
-		actionGroup.handleUpdateInput(editorPart);
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				actionGroup.handleUpdateInput(editorPart);
+			}
+		});
 	}
 
 	private PHPTreeViewer createViewer(Composite composite) {
@@ -246,6 +250,11 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 
 			});
 		}
+		
+		part = EditorUtility.getPHPStructuredEditor(part);
+		if (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part != null) {
+			updateInputForCurrentEditor((IEditorPart) part);
+		}
 	}
 
 	public void partBroughtToTop(IWorkbenchPart part) {
@@ -263,10 +272,10 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 			setFocus();
 		}
 
-		part = EditorUtility.getPHPStructuredEditor(part);
+		/*part = EditorUtility.getPHPStructuredEditor(part);
 		if (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part != null) {
 			updateInputForCurrentEditor((IEditorPart) part);
-		}
+		}*/
 	}
 
 	public void menuAboutToShow(IMenuManager menu) {
