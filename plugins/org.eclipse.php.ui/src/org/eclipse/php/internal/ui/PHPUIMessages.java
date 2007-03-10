@@ -386,12 +386,9 @@ public class PHPUIMessages {
 	public static String PHPManualConfigurationBlock_fileExtension;
 	public static String PHPManualConfigurationBlock_openInNewBrowser;
 	public static String NewPHPManualSiteDialog_name;
-	public static String NewPHPManualSiteDialog_url;
-	public static String NewPHPManualSiteDialog_fileExtension;
-	public static String NewPHPManualSiteDialog_siteOrUrlNotSpecified;
+	public static String NewPHPManualSiteDialog_siteNotSpecified;
 	public static String NewPHPManualSiteDialog_incorrectUrl;
 	public static String NewPHPManualSiteDialog_nameAlreadyInUse;
-	public static String NewPHPManualSiteDialog_urlAlreadyInUse;
 	public static String NewPHPManualSiteDialog_updateTitle;
 	public static String NewPHPManualSiteDialog_newTitle;
 	public static String NewPHPManualSiteDialog_chooseDir;
