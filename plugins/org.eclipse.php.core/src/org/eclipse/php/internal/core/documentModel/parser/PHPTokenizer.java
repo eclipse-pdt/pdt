@@ -1116,7 +1116,7 @@ public final ITextRegion getNextToken() throws IOException {
 	if (context == PHP_CONTENT) {
 		return bufferedTextRegion; 
 	} else {
-		return fRegionFactory.createToken(context, start, textLength, length);
+		return fRegionFactory.createToken(context, start, textLength, length, null, fCurrentTagName);
 	}
 }
 
