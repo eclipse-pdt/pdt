@@ -65,7 +65,7 @@ public class OpenPhpTypeDialog extends Dialog {
 	public void setInitFilterText(String initFilterText) {
 		this.initFilterText = initFilterText;
 	}
-	
+
 	public PhpTypeFilter getFilter() {
 		return phpTypeFilter;
 	}
@@ -80,7 +80,8 @@ public class OpenPhpTypeDialog extends Dialog {
 
 		};
 		basicSelector = new BasicSelector(composite, phpTypeFilterCompositeFactory);
-		basicSelector.setInitFilterText(initFilterText);
+		if (initFilterText != null)
+			basicSelector.setInitFilterText(initFilterText);
 		basicSelector.setLayoutData(new GridData(GridData.FILL_BOTH));
 		basicSelector.addFilter(phpTypeFilter);
 		basicSelector.setLabelProvider(new PhpTypeTableLabelProvider());
