@@ -30,21 +30,21 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.MoveProjectAction;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 
+public class MoveAction extends SelectionDispatchAction {
 
-public class MoveAction extends SelectionDispatchAction  {
-		
 	private static final String MOVE_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$
-	
+
 	private PHPStructuredEditor fEditor;
 	private IPHPActionDelegator fReorgMoveAction;
-	private StructuredSelection selectedResources; 
-	
+	private StructuredSelection selectedResources;
 
 	/**
 	 * Creates a new <code>MoveAction</code>. The action requires
@@ -54,8 +54,8 @@ public class MoveAction extends SelectionDispatchAction  {
 	 * @param site the site providing context information for this action
 	 */
 	public MoveAction(IWorkbenchSite site) {
-		super(site);		
-		initMoveAction();		
+		super(site);
+		initMoveAction();
 	}
 
 	/**
@@ -65,20 +65,19 @@ public class MoveAction extends SelectionDispatchAction  {
 	public MoveAction(PHPStructuredEditor editor) {
 		super(editor.getEditorSite());
 		fEditor = editor;
-		initMoveAction();		
+		initMoveAction();
 	}
-	
+
 	/**
 	 * Initialize the action
 	 *
 	 */
 	private void initMoveAction() {
-		fReorgMoveAction = PHPActionDelegatorRegistry.getActionDelegator(MOVE_ACTION_ID);		
+		fReorgMoveAction = PHPActionDelegatorRegistry.getActionDelegator(MOVE_ACTION_ID);
 		setText(PHPUIMessages.MoveAction_text);
 		update(getSelection());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
 	}
-
 
 	/*
 	 * @see ISelectionChangedListener#selectionChanged(SelectionChangedEvent)
@@ -87,17 +86,17 @@ public class MoveAction extends SelectionDispatchAction  {
 		super.selectionChanged(event);
 		setEnabled(computeEnableState());
 	}
-	
-	public void selectionChanged(IStructuredSelection selection) {	
-		
+
+	public void selectionChanged(IStructuredSelection selection) {
+
 		selectedResources = null;
-		
-		if(selection != null && selection instanceof ITextSelection){			
-			selectionChanged((ITextSelection)selection);
+
+		if (selection != null && selection instanceof ITextSelection) {
+			selectionChanged((ITextSelection) selection);
 			return;
 		}
-					
-		if (!selection.isEmpty()) {			
+
+		if (!selection.isEmpty()) {
 			if (ActionUtils.containsOnlyProjects(selection.toList())) {
 				setEnabled(createWorkbenchAction(selection).isEnabled());
 				return;
@@ -137,24 +136,29 @@ public class MoveAction extends SelectionDispatchAction  {
 			}
 		} else
 			setEnabled(false);
-			
 
 		setEnabled(computeEnableState());
 		fReorgMoveAction.setSelection(selectedResources);
 	}
-	
-	
 
 	// we will get to this method only in case this is an editor selection
 	public void selectionChanged(ITextSelection selection) {
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (activePage == null)
+			return;
+		IWorkbenchPart activePart = activePage.getActivePart();
+		if (activePage == null)
+			return;
 		// get the current file 
-		PHPStructuredEditor editor = EditorUtility.getPHPStructuredEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart());
-		IResource[] resources = {(IResource)editor.getFile()};
+		PHPStructuredEditor editor = EditorUtility.getPHPStructuredEditor(activePart);
+		if (editor == null)
+			return;
+		IResource[] resources = { editor.getFile() };
 		selectedResources = new StructuredSelection(resources);
 		setEnabled(true);
 		fReorgMoveAction.setSelection(selectedResources);
 	}
-	
+
 	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
 
 		List list = selection.toList();
@@ -203,13 +207,13 @@ public class MoveAction extends SelectionDispatchAction  {
 	 * @see SelectionDispatchAction#update(ISelection)
 	 */
 	public void update(ISelection selection) {
-		super.update(selection);	
+		super.update(selection);
 		setEnabled(computeEnableState());
-		
+
 	}
 
 	private boolean computeEnableState() {
 		return isEnabled();
 	}
-	
+
 }
