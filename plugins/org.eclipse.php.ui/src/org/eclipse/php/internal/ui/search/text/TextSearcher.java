@@ -10,17 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.search.text;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.search.core.text.TextSearchEngine;
-import org.eclipse.search.core.text.TextSearchMatchAccess;
-import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.eclipse.search.internal.ui.text.FileMatch;
 
@@ -113,67 +108,5 @@ public class TextSearcher {
 	public List getResults() {
 		assert done;
 		return visitor.getResult();
-	}
-	
-	public static class ResultVisitor extends TextSearchRequestor {
-
-		private final List fResult = new ArrayList(1);
-		private final boolean fIsFileSearchOnly;
-		private final boolean fSearchInBinaries;
-		private final List fCachedMatches = new ArrayList();
-
-		public ResultVisitor(boolean isFileSearchOnly, boolean searchInBinaries) {
-			fIsFileSearchOnly = isFileSearchOnly;
-			fSearchInBinaries = searchInBinaries;
-		}
-
-		public ResultVisitor() {
-			this (false, false);
-		}
-
-		public boolean acceptFile(IFile file) throws CoreException {
-			if (fIsFileSearchOnly) {
-				fResult.add(new FileMatch(file, 0, 0));
-			}
-			flushMatches();
-			return true;
-		}
-
-		public boolean reportBinaryFile(IFile file) {
-			return fSearchInBinaries;
-		}
-
-		public boolean acceptPatternMatch(TextSearchMatchAccess matchRequestor) throws CoreException {
-			fCachedMatches.add(new FileMatch(matchRequestor.getFile(), matchRequestor.getMatchOffset(), matchRequestor.getMatchLength()));
-			return true;
-		}
-
-		public void beginReporting() {
-			fCachedMatches.clear();
-		}
-
-		public void endReporting() {
-			flushMatches();
-		}
-		
-		/**
-		 * @return a list of {@link FileMatch}
-		 */
-		public List getResult() {
-			return fResult;
-		}
-		
-		/**
-		 * Clears resuls 
-		 */
-		public void clear() {
-			fResult.clear();
-		}
-		
-		private void flushMatches() {
-			if (!fCachedMatches.isEmpty()) {
-				fResult.addAll(fCachedMatches);
-			}
-		}
 	}
 }

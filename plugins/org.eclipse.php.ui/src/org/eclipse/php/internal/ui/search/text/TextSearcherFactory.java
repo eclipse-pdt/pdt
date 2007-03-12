@@ -13,7 +13,6 @@ package org.eclipse.php.internal.ui.search.text;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.php.internal.ui.search.text.TextSearcher.ResultVisitor;
 import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.search.core.text.TextSearchScope;
 
