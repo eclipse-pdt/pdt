@@ -134,6 +134,8 @@ public class CodeDataResolver {
 					if (elementName.length() > 0) {
 
 						PHPProjectModel projectModel = phpModel.getProjectModel();
+						if (projectModel == null)
+							return EMPTY;
 						PHPFileData fileData = phpModel.getFileData(true);
 						String fileName = fileData != null ? fileData.getName() : null;
 
