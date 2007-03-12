@@ -135,23 +135,24 @@ public class CodeDataResolver {
 
 						PHPProjectModel projectModel = phpModel.getProjectModel();
 						PHPFileData fileData = phpModel.getFileData(true);
-						// XXX handle empty fileData!!!
-						PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset);
+						String fileName = fileData != null ? fileData.getName() : null;
+
+						PHPClassData classData = fileData != null ? PHPFileDataUtilities.getContainerClassDada(fileData, offset) : null;
 
 						// If we are in function declaration:
 						if ("function".equalsIgnoreCase(prevWord)) {
 							if (classData != null) {
-								return toArray(projectModel.getClassFunctionData(fileData.getName(), classData.getName(), elementName));
+								return toArray(projectModel.getClassFunctionData(fileName, classData.getName(), elementName));
 							}
-							return toArray(projectModel.getFunction(fileData.getName(), elementName));
+							return toArray(projectModel.getFunction(fileName, elementName));
 						}
 
 						// If we are in class declaration:
 						if ("class".equalsIgnoreCase(prevWord) || "interface".equalsIgnoreCase(prevWord)) {
-							return toArray(projectModel.getClass(fileData.getName(), elementName));
+							return toArray(projectModel.getClass(fileName, elementName));
 						}
 
-						CodeData[] matchingClasses = getMatchingClasses(elementName, projectModel, fileData);
+						CodeData[] matchingClasses = getMatchingClasses(elementName, projectModel, fileName);
 
 						// Class instantiation:
 						if ("new".equalsIgnoreCase(prevWord) || "extends".equalsIgnoreCase(prevWord) || "implements".equalsIgnoreCase(prevWord)) {
@@ -185,7 +186,7 @@ public class CodeDataResolver {
 							}
 
 							PHPCodeContext context = ModelSupport.createContext(fileData, elementStart);
-							return filterExact(projectModel.getVariables(fileData.getName(), context, elementName, true), elementName);
+							return filterExact(projectModel.getVariables(fileName, context, elementName, true), elementName);
 						}
 
 						// We are at class trigger:
@@ -194,18 +195,17 @@ public class CodeDataResolver {
 						}
 
 						String className = getClassName(projectModel, fileData, statement, startPosition, offset, sDoc.getLineOfOffset(offset));
-						CodeData[] classDatas = getMatchingClasses(className, projectModel, fileData);
+						CodeData[] classDatas = getMatchingClasses(className, projectModel, fileName);
 
 						// Is it function or method:
 						if ("(".equals(nextWord)) {
 							CodeData[] result = null;
 							if (classDatas.length > 0) {
 								for (int i = 0; i < classDatas.length; ++i) {
-									String fileName = classDatas[i].isUserCode() ? classDatas[i].getUserData().getFileName() : "";
 									result = ModelSupport.merge(result, toArray(projectModel.getClassFunctionData(fileName, className, elementName)));
 								}
 							} else {
-								result = projectModel.getFilteredFunctions(fileData.getName(), elementName);
+								result = projectModel.getFilteredFunctions(fileName, elementName);
 								if (result == null || result.length == 0)
 									result = projectModel.getFunction(elementName);
 							}
@@ -219,7 +219,6 @@ public class CodeDataResolver {
 								if ("::".equals(trigger)) {
 									CodeData[] result = null;
 									for (int i = 0; i < classDatas.length; ++i) {
-										String fileName = classDatas[i].isUserCode() ? classDatas[i].getUserData().getFileName() : "";
 										result = ModelSupport.merge(result, toArray(projectModel.getClassConstsData(fileName, className, elementName)));
 									}
 									return result == null ? EMPTY : result;
@@ -230,13 +229,13 @@ public class CodeDataResolver {
 							CodeData[] result = null;
 							for (int i = 0; i < classDatas.length; ++i) {
 								//								String fileName = classDatas[i].isUserCode() ? classDatas[i].getUserData().getFileName() : "";
-								result = ModelSupport.merge(result, toArray(projectModel.getClassVariablesData(fileData.getName(), className, elementName)));
+								result = ModelSupport.merge(result, toArray(projectModel.getClassVariablesData(fileName, className, elementName)));
 							}
 							return result == null ? EMPTY : result;
 						}
 
 						// This can be only global constant, if we've reached here:
-						CodeData[] result = projectModel.getFilteredConstants(fileData.getName(), elementName);
+						CodeData[] result = projectModel.getFilteredConstants(fileName, elementName);
 						if (result == null || result.length == 0)
 							result = projectModel.getConstant(elementName);
 						return result == null ? EMPTY : result;
@@ -255,8 +254,8 @@ public class CodeDataResolver {
 	 * @param fileData
 	 * @return matching classes
 	 */
-	private CodeData[] getMatchingClasses(String className, PHPProjectModel projectModel, PHPFileData fileData) {
-		CodeData[] matchingClasses = projectModel.getFilteredClasses(fileData.getName(), className);
+	private CodeData[] getMatchingClasses(String className, PHPProjectModel projectModel, String fileName) {
+		CodeData[] matchingClasses = projectModel.getFilteredClasses(fileName, className);
 		if (matchingClasses == null || matchingClasses.length == 0)
 			matchingClasses = projectModel.getClass(className);
 		return matchingClasses;
@@ -331,7 +330,9 @@ public class CodeDataResolver {
 	 * getting an instance and finding its type.
 	 */
 	private String innerGetClassName(PHPProjectModel projectModel, PHPFileData fileData, TextSequence statmentText, int propertyEndPosition, boolean isClassTriger, int offset, int line) {
-
+		if (fileData == null) {
+			return null;
+		}
 		int classNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, propertyEndPosition, true);
 		String className = statmentText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
