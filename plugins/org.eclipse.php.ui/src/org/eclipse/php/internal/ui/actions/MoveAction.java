@@ -44,7 +44,7 @@ public class MoveAction extends SelectionDispatchAction {
 
 	private PHPStructuredEditor fEditor;
 	private IPHPActionDelegator fReorgMoveAction;
-	private StructuredSelection selectedResources;
+	private IStructuredSelection selectedResources;
 
 	/**
 	 * Creates a new <code>MoveAction</code>. The action requires
@@ -194,7 +194,7 @@ public class MoveAction extends SelectionDispatchAction {
 		PHPCodeData element = SelectionConverter.getElementAtOffset(fEditor);
 		if (element == null)
 			return false;
-		StructuredSelection mockStructuredSelection = new StructuredSelection(element);
+		IStructuredSelection mockStructuredSelection = new StructuredSelection(element);
 		selectionChanged(mockStructuredSelection);
 		if (!isEnabled())
 			return false;

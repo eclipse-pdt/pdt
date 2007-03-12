@@ -12,21 +12,26 @@ package org.eclipse.php.internal.ui.actions;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.MoveFilesAndFoldersOperation;
 import org.eclipse.ui.actions.MoveProjectAction;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 
-public class ReorgMoveAction extends Action implements IPHPActionDelegator {
+public class ReorgMoveAction extends Action implements IPHPMoveActionDelegator {
 
-	private StructuredSelection selectedResources; 
+	private IStructuredSelection selectedResources; 
 	private Shell fShell;
+	private IContainer fTarget;
+	private IResource[] fSources;
+	
 
 	public ReorgMoveAction() {
 		init();
@@ -39,7 +44,7 @@ public class ReorgMoveAction extends Action implements IPHPActionDelegator {
 		
 	}
 
-	public void setSelection(StructuredSelection selection) {
+	public void setSelection(IStructuredSelection selection) {
 		selectedResources = selection;
 		
 	}
@@ -69,5 +74,21 @@ public class ReorgMoveAction extends Action implements IPHPActionDelegator {
 		}
 		return action;
 	}
+
+	public void runDrop(IStructuredSelection selection) {			
+		MoveFilesAndFoldersOperation operation = new MoveFilesAndFoldersOperation(fShell);
+    	operation.copyResources(fSources, fTarget);
+	}
+
+
+	public void setSources(IResource[] resources) {		
+		fSources = resources;
+	}
+
+	public void setTarget(IContainer target) {
+		fTarget = target;
+	}
+	
+	
 
 }

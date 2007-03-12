@@ -430,7 +430,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), ResourceTransfer.getInstance(), FileTransfer.getInstance(), PluginTransfer.getInstance() };
 		TreeViewer viewer = getViewer();
 		viewer.addDragSupport(ops, transfers, new NavigatorDragAdapter(viewer));
-		NavigatorDropAdapter adapter = new NavigatorDropAdapter(viewer);
+		NavigatorDropAdapter adapter = new PHPNavigatorDropAdapter(viewer);
 		adapter.setFeedbackEnabled(false);
 		viewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, adapter);
 		//        dragDetectListener = new Listener() {
