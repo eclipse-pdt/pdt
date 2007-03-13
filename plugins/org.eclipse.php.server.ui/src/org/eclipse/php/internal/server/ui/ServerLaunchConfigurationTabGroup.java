@@ -21,7 +21,7 @@ public class ServerLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 	 * @see ILaunchConfigurationTabGroup#createTabs(ILaunchConfigurationDialog, String)
 	 */
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		AbstractLaunchConfigurationTab[] tabs = LaunchConfigurationsTabsRegistry.getLaunchTabs(CONFIGURATION_TAB_GROUP_ID);
+		AbstractLaunchConfigurationTab[] tabs = LaunchConfigurationsTabsRegistry.getLaunchTabs(CONFIGURATION_TAB_GROUP_ID, mode);
 		ArrayList list = new ArrayList();
 		if (tabs != null) {
 			for (int i = 0; i < tabs.length; i++) {
