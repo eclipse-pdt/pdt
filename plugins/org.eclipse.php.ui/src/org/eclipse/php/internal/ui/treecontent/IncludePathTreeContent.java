@@ -89,7 +89,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 				if (model == null) {
 					continue;
 				}
-				IPath modelLocation = getIncludeModelLocation(model);
+				IPath modelLocation = PHPModelUtil.getIncludeModelLocation(model);
 				if (modelLocation == null) {
 					continue;
 				}
@@ -105,7 +105,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			if (model == null) {
 				return;
 			}
-			IPath includeLocation = getIncludeModelLocation(model);
+			IPath includeLocation = PHPModelUtil.getIncludeModelLocation(model);
 			String fileName = fileData.getName();
 			IPath fileLocation = new Path(fileName);
 			IPath modelPath = INCLUDE_MODELS_PATH_ROOT.append(IncludeModelPathRootConverter.to(model));
@@ -146,7 +146,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			return NO_CHILDREN;
 		}
 		IPhpModel includePathModel = (IPhpModel) includePathTree.getElementData(modelPath);
-		IPath includeLocation = getIncludeModelLocation(includePathModel);
+		IPath includeLocation = PHPModelUtil.getIncludeModelLocation(includePathModel);
 		// find and add missing elements:
 		CodeData[] fileDatas = includePathModel.getFileDatas();
 		for (int i = 0; i < fileDatas.length; ++i) {
@@ -182,19 +182,6 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	}
 
 	static final String INCLUDE_MODEL_MANAGER_ID = "CompositeIncludePathModel";
-
-	static IPath getIncludeModelLocation(IPhpModel model) {
-		if (model instanceof PHPIncludePathModel) {
-			PHPIncludePathModel includeModel = (PHPIncludePathModel) model;
-			if (includeModel.getType() == PHPIncludePathModel.TYPE_VARIABLE) {
-				return IncludePathVariableManager.instance().getIncludePathVariable(model.getID());
-			}
-		}
-		String id = model.getID();
-		if (id != null)
-			return new Path(id);
-		return null;
-	}
 
 	static class IncludeModelPathRootConverter {
 		static public String to(IPhpModel model) {
@@ -250,7 +237,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			IPhpModel[] models = includeModelManager.listModels();
 			ArrayList filteredModels = new ArrayList(models.length);
 			for (int i = 0; i < models.length; ++i) {
-				IPath modelLocation = getIncludeModelLocation(models[i]);
+				IPath modelLocation = PHPModelUtil.getIncludeModelLocation(models[i]);
 				if (modelLocation != null) {
 					filteredModels.add(models[i]);
 				}
@@ -314,7 +301,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			}
 			IPath[] modelPaths = includePathTree.getChildren(INCLUDE_MODELS_PATH_ROOT);
 			for (int i = 0; i < modelPaths.length; ++i) {
-				IPath includeLocation = getIncludeModelLocation((PHPIncludePathModel) includePathTree.getElementData(modelPaths[i]));
+				IPath includeLocation = PHPModelUtil.getIncludeModelLocation((PHPIncludePathModel) includePathTree.getElementData(modelPaths[i]));
 				if (!fileName.startsWith(includeLocation.toOSString()))
 					continue;
 				IPath fileTreeLocation = modelPaths[i].append(fileLocation.removeFirstSegments(includeLocation.segmentCount()));
@@ -402,7 +389,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			IPath[] modelPaths = includePathTree.getChildren(includePathTree.getRoot());
 			for (int i = 0; i < modelPaths.length; ++i) {
 				PHPIncludePathModel includePathModel = (PHPIncludePathModel) includePathTree.getElementData(modelPaths[i]);
-				IPath includePath = getIncludeModelLocation(includePathModel);
+				IPath includePath = PHPModelUtil.getIncludeModelLocation(includePathModel);
 				if (fileData.getName().startsWith(includePath.toOSString())) {
 					return new Path(fileData.getName()).lastSegment();
 				}
