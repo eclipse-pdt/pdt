@@ -18,17 +18,43 @@ import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 
+/**
+ * A PHP executable launch configuration tab group that loads all of its tabs
+ * from the launch configuration tabs which extends
+ * org.eclipse.php.debug.ui.launchConfigurationTabs.
+ * 
+ * @author shalom
+ * 
+ */
 public class PHPExeLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup {
 
-	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		ArrayList tabs = new ArrayList(2);
-		
-		tabs.add(new PHPExecutableLaunchTab());
-		tabs.add(new CommonTab());
+	protected final String CONFIGURATION_TAB_GROUP_ID = "org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe";
 
-		AbstractLaunchConfigurationTab[] array = new AbstractLaunchConfigurationTab[tabs.size()];
-		tabs.toArray(array);
-		setTabs(array);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTabGroup#createTabs(org.eclipse.debug.ui.ILaunchConfigurationDialog,
+	 *      java.lang.String)
+	 */
+	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
+		AbstractLaunchConfigurationTab[] tabs = LaunchConfigurationsTabsRegistry.getLaunchTabs(CONFIGURATION_TAB_GROUP_ID, mode);
+		ArrayList list = new ArrayList();
+		if (tabs != null) {
+			for (int i = 0; i < tabs.length; i++) {
+				list.add(tabs[i]);
+				tabs[i].setLaunchConfigurationDialog(dialog);
+			}
+		}
+		if (list.isEmpty()) {
+			PHPExecutableLaunchTab aTab = new PHPExecutableLaunchTab();
+			aTab.setLaunchConfigurationDialog(dialog);
+			list.add(aTab);
+		}
+		CommonTab newTab = new CommonTab();
+		newTab.setLaunchConfigurationDialog(dialog);
+		list.add(newTab);
+		ILaunchConfigurationTab[] allTabs = (ILaunchConfigurationTab[]) list.toArray(new ILaunchConfigurationTab[list.size()]);
+		setTabs(allTabs);
 	}
 
 }

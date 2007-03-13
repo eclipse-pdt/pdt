@@ -78,6 +78,14 @@ This does not mean that the tab will appear right after the given id. It only sp
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="modes" type="string">
+            <annotation>
+               <documentation>
+                  The modes that this configuration tab will be visible (comma separated attributes - run, debug, profile).
+The tab will appear in every mode in case this attribute is empty.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

@@ -42,7 +42,13 @@
             class="org.eclipse.php.internal.debug.ui.launching.PHPExeLaunchConfigurationTabGroup"
             id="org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe">
       </launchConfigurationTabGroup>
-     </extension>
+    </extension>
+    <extension point="org.eclipse.php.debug.ui.launchConfigurationTabs">
+       <launchConfigurationTab
+          class="org.eclipse.php.internal.debug.ui.launching.PHPExecutableLaunchTab"
+          id="org.eclipse.php.debug.ui.launching.exeLaunchConfigurationTab"
+          launchConfigurationTabGroupId="org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe"/>
+ 	</extension>
 	<!--======================================================================================-->
 	<!-- for breakpoint                                                                       -->
 	<!--======================================================================================-->

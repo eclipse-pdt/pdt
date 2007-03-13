@@ -30,6 +30,7 @@ public class LaunchConfigurationsTabsRegistry {
 	private static final String GROUP_ID_ATTRIBUTE = "launchConfigurationTabGroupId"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String PLACE_AFTER_ATTRIBUTE = "placeAfter"; //$NON-NLS-1$
+	private static final String MODES_ATTRIBUTE = "modes"; //$NON-NLS-1$
 
 	// Hold a Dictionary of Lists that contains the factories used for the creation of the tabs.
 	private List factories = new ArrayList(5);
@@ -41,16 +42,18 @@ public class LaunchConfigurationsTabsRegistry {
 	 * for the requested configuration tab group.
 	 * 
 	 * @param launchConfigurationTabGroupId The group id for the requested launch configuration tabs.
+	 * @param mode The launch mode requested.
 	 * @return	An array of AbstractLaunchConfigurationTab.
 	 */
-	public static AbstractLaunchConfigurationTab[] getLaunchTabs(String launchConfigurationTabGroupId) {
+	public static AbstractLaunchConfigurationTab[] getLaunchTabs(String launchConfigurationTabGroupId, String mode) {
 		LaunchConfigurationsTabsRegistry registry = getInstance();
 		List fragments = registry.factories;
 		List factoriesList = new ArrayList();
 		for (int i = 0; i < fragments.size(); i++) {
 			TabFactory factory = (TabFactory) fragments.get(i);
-			// Sort out only the tabs that are related to the requested configuration tab group.
-			if (factory.getGroupID().equals(launchConfigurationTabGroupId)) {
+			boolean modeOK = factory.getModes().length() == 0 || factory.getModes().indexOf(mode) > -1;
+			// Sort out only the tabs that are related to the requested configuration tab group and launch mode.
+			if (factory.getGroupID().equals(launchConfigurationTabGroupId) && modeOK) {
 				factoriesList.add(factory.createFragmentFactory());
 			}
 		}
@@ -70,11 +73,12 @@ public class LaunchConfigurationsTabsRegistry {
 				String id = element.getAttribute(ID_ATTRIBUTE);
 				String groupId = element.getAttribute(GROUP_ID_ATTRIBUTE);
 				String placeAfter = element.getAttribute(PLACE_AFTER_ATTRIBUTE);
+				String modes = element.getAttribute(MODES_ATTRIBUTE);
 				if (element.getNamespaceIdentifier().equals(PHPDebugUIPlugin.ID) ||
 						element.getNamespaceIdentifier().startsWith("org.eclipse.php.server.")) { //$NON-NLS-1$
 					// Make sure that extentions that exists in this plugin will appear ahead of all others
 					// when the user-class calls for getLaunchTabs().
-					factories.add(0, new TabFactory(element, groupId, id, placeAfter));
+					factories.add(0, new TabFactory(element, groupId, id, placeAfter, modes));
 				} else {
 					boolean override = false;
 					for (int j = 0; !override && j < factories.size(); j++) {
@@ -86,13 +90,13 @@ public class LaunchConfigurationsTabsRegistry {
 							override = true;
 							if (!element.getNamespaceIdentifier().startsWith("org.eclipse.php.")) { //$NON-NLS-1$
 								factories.remove(j);
-								factories.add(new TabFactory(element, groupId, id, placeAfter));
+								factories.add(new TabFactory(element, groupId, id, placeAfter, modes));
 								break;
 							}
 						}
 					}
 					if (!override) {
-						mightOverride.add(new TabFactory(element, groupId, id, placeAfter));
+						mightOverride.add(new TabFactory(element, groupId, id, placeAfter, modes));
 					}
 				}
 			}
@@ -197,12 +201,14 @@ public class LaunchConfigurationsTabsRegistry {
 		private String id;
 		private String groupId;
 		private String placeAfter;
+		private String modes;
 
-		public TabFactory(IConfigurationElement element, String groupId, String id, String placeAfter) {
+		public TabFactory(IConfigurationElement element, String groupId, String id, String placeAfter, String modes) {
 			this.element = element;
 			this.groupId = groupId;
 			this.id = id;
 			this.placeAfter = placeAfter;
+			this.modes = modes;
 		}
 
 		public AbstractLaunchConfigurationTab createFragmentFactory() {
@@ -224,6 +230,13 @@ public class LaunchConfigurationsTabsRegistry {
 
 		public String getGroupID() {
 			return groupId;
+		}
+		
+		public String getModes() {
+			if (modes == null) {
+				modes = "";
+			}
+			return modes;
 		}
 		
 		public boolean equals(Object other) {
