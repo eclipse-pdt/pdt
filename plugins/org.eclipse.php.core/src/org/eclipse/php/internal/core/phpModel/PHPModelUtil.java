@@ -573,7 +573,7 @@ public class PHPModelUtil {
 				if (fileProject.isAccessible()) {
 					return new Path(location).removeFirstSegments(1).toString();
 				}
-			} else { // file is in an include file
+			} else { // file is in an include path
 				IPhpModel[] models = model.getModels();
 				for (int i = 0; i < models.length; ++i) {
 					if (models[i].getFileData(location) == fileData) {
@@ -685,5 +685,18 @@ public class PHPModelUtil {
 			}
 		}
 		return temp;
+	}
+
+	public static IPath getIncludeModelLocation(IPhpModel model) {
+		if (model instanceof PHPIncludePathModel) {
+			PHPIncludePathModel includeModel = (PHPIncludePathModel) model;
+			if (includeModel.getType() == PHPIncludePathModel.TYPE_VARIABLE) {
+				return IncludePathVariableManager.instance().getIncludePathVariable(model.getID());
+			}
+		}
+		String id = model.getID();
+		if (id != null)
+			return new Path(id);
+		return null;
 	}
 }
