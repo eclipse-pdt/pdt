@@ -57,7 +57,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	protected List markers;
 	protected List functionParameters;
 	protected List phpTags;
-	protected List constans;
+	protected List constants;
 	protected PHPDocBlock firstPHPDocBlock;
 	protected Stack functionsStack;
 	protected Stack classesStack;
@@ -79,7 +79,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		markers = new ArrayList();
 		functionParameters = new ArrayList();
 		phpTags = new ArrayList();
-		constans = new ArrayList();
+		constants = new ArrayList();
 		functionsStack = new Stack();
 		classesStack = new Stack();
 		classVarsStack = new Stack();
@@ -90,7 +90,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		workingFileName = null;
 
 		this.projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-		this.userModel = userModel;		
+		this.userModel = userModel;
 	}
 
 	public void handleFunctionParameter(String classType, String variableName, boolean isReference, boolean isConst, String defaultValue, int startPosition, int endPosition, int stopPosition, int lineNumber) {
@@ -119,18 +119,18 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	}
 
 	public void handleFunctionDeclaration(String functionName, boolean isClassFunction, int modifier, PHPDocBlock docInfo, int startPosition, int stopPosition, int lineNumber) {
-		
+
 		/**
 		 * Bugfix: #160672.
 		 * Check whether the function already exists, when parser tries to interpret it in different ways as a cause of parse errors in the file.
 		 */
 		if (!functionsStack.isEmpty()) {
-			PHPFunctionData lastFunction = (PHPFunctionData)functionsStack.peek();
+			PHPFunctionData lastFunction = (PHPFunctionData) functionsStack.peek();
 			if (functionName.equals(lastFunction.getName()) && startPosition == lastFunction.getUserData().getStartPosition()) {
 				return;
 			}
 		}
-		
+
 		PHPFunctionData.PHPFunctionParameter[] parameters = new PHPFunctionData.PHPFunctionParameter[functionParameters.size()];
 		functionParameters.toArray(parameters);
 		functionParameters.clear();
@@ -409,7 +409,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		includeFiles.clear();
 		markers.clear();
 		phpTags.clear();
-		constans.clear();
+		constants.clear();
 		functionParameters.clear();
 		functionsStack.clear();
 		classesStack.clear();
@@ -458,14 +458,17 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	public void finishParsing(int lastPosition, int lastLine, long lastModified) {
 		restoreToDefaultContext(lastPosition);
 
-		PHPClassData[] cls = new PHPClassData[classes.size()];
-		classes.toArray(cls);
+		PHPClassData[] allClasses = new PHPClassData[classes.size()];
+		classes.toArray(allClasses);
 
-		PHPFunctionData[] func = new PHPFunctionData[functions.size()];
-		functions.toArray(func);
+		PHPFunctionData[] allFunctions = new PHPFunctionData[functions.size()];
+		functions.toArray(allFunctions);
 
-		PHPIncludeFileData[] include = new PHPIncludeFileData[includeFiles.size()];
-		includeFiles.toArray(include);
+		PHPIncludeFileData[] allIncludes = new PHPIncludeFileData[includeFiles.size()];
+		includeFiles.toArray(allIncludes);
+
+		PHPConstantData[] allConstants = new PHPConstantData[constants.size()];
+		constants.toArray(allConstants);
 
 		IPHPMarker[] allMarkers = new IPHPMarker[markers.size()];
 		markers.toArray(allMarkers);
@@ -493,28 +496,23 @@ public abstract class DefaultParserClient extends ContextParserClient {
 			phpBlocks[i] = new PHPBlock(startTag, endTag);
 		}
 
-		fixObjectInstantiation(cls, func);
+		fixObjectInstantiation(allClasses, allFunctions);
 		PHPVariablesTypeManager variablesTypeManager = variableContextBuilder.getPHPVariablesTypeManager();
 
 		UserData userData = PHPCodeDataFactory.createUserData(workingFileName, 0, 0, 0, lastLine);
 
-		PHPConstantData[] allConstans = new PHPConstantData[constans.size()];
-		constans.toArray(allConstans);
+		PHPFileData fileData = PHPCodeDataFactory.createPHPFileData(workingFileName, userData, allClasses, allFunctions, variablesTypeManager, allIncludes, allConstants, allMarkers, phpBlocks, firstPHPDocBlock, lastModified);
 
-		PHPIncludeFileData[] allIncludes = new PHPIncludeFileData[includeFiles.size()];
-		includeFiles.toArray(allIncludes);
-
-		PHPFileData fileData = PHPCodeDataFactory.createPHPFileData(workingFileName, userData, cls, func, variablesTypeManager, include, allConstans, allMarkers, phpBlocks, firstPHPDocBlock, lastModified);
-		for (int i = 0; i < cls.length; i++) {
-			cls[i].setContainer(fileData);
+		for (int i = 0; i < allClasses.length; i++) {
+			allClasses[i].setContainer(fileData);
 		}
 
-		for (int i = 0; i < func.length; i++) {
-			func[i].setContainer(fileData);
+		for (int i = 0; i < allFunctions.length; i++) {
+			allFunctions[i].setContainer(fileData);
 		}
 
-		for (int i = 0; i < allConstans.length; i++) {
-			allConstans[i].setContainer(fileData);
+		for (int i = 0; i < allConstants.length; i++) {
+			allConstants[i].setContainer(fileData);
 		}
 
 		for (int i = 0; i < allIncludes.length; i++) {
@@ -783,7 +781,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 
 		UserData userData = PHPCodeDataFactory.createUserData(workingFileName, startPosition, endPosition, stopPosition, 0);
-		constans.add(PHPCodeDataFactory.createPHPConstantData(name, value, userData, docInfo));
+		constants.add(PHPCodeDataFactory.createPHPConstantData(name, value, userData, docInfo));
 	}
 
 	public void handleSyntaxError(int currToken, String currText, short[] rowOfProbe, int startPosition, int endPosition, int lineNumber) {

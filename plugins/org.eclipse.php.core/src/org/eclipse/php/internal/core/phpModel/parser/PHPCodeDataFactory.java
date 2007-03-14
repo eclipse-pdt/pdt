@@ -585,7 +585,7 @@ public class PHPCodeDataFactory {
 		private PHPVariablesTypeManager variablesTypeManager;
 		private IPHPMarker[] markers;
 		private PHPBlock[] phpBlocks;
-		private PHPConstantData[] constans;
+		private PHPConstantData[] constants;
 		private long lastModified;
 		private String comparableName;
 
@@ -598,7 +598,7 @@ public class PHPCodeDataFactory {
 			this.includeFiles = includeFiles;
 			this.markers = markers;
 			this.phpBlocks = phpBlocks;
-			this.constans = constans;
+			this.constants = constans;
 			this.lastModified = lastModified;
 			this.comparableName = new File(name).getName();
 		}
@@ -628,7 +628,7 @@ public class PHPCodeDataFactory {
 		}
 
 		public PHPConstantData[] getConstants() {
-			return constans;
+			return constants;
 		}
 
 		public void accept(Visitor v) {
