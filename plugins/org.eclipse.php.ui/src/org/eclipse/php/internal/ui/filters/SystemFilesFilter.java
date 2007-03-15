@@ -1,0 +1,41 @@
+/**
+ * Copyright (c) 2007 Zend Technologies
+ * 
+ */
+package org.eclipse.php.internal.ui.filters;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+
+/**
+ * @author seva
+ *
+ */
+public class SystemFilesFilter extends ViewerFilter {
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	 */
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		if (element instanceof IFile) {
+			IFile file = (IFile) element;
+			if (!PHPModelUtil.isPhpFile(file)) {
+				if (file.getName().startsWith(".")) {
+					return false;
+				}
+			}
+		}
+		if (element instanceof IFolder) {
+			IFolder folder = (IFolder) element;
+			if (folder.getName().startsWith(".")) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+}

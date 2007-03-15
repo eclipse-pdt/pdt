@@ -992,7 +992,8 @@
 			name="%HideSystemFiles.label"
 			enabled="true"
 			description="%HideSystemFiles.description"
-			pattern=".*">
+			class="org.eclipse.php.internal.ui.filters.SystemFilesFilter"
+			id="org.eclipse.php.ui.explorer.SystemFilesFilter">
 		</filter>
 		<filter
 			targetId="org.eclipse.php.ui.explorer"
