@@ -76,28 +76,28 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		} else if (operation == PASTE) {
 			super.doOperation(operation);
 			
-			IStructuredDocument sDoc = (IStructuredDocument) getDocument();
-			IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selection.x);
-			ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selection.x);
-			
-			boolean shouldFormat = false;
-
-			if (textRegion instanceof ITextRegionContainer) {
-				textRegion = ((ITextRegionContainer) textRegion).getRegionAtCharacterOffset(selection.x);
-				if (textRegion.getType() == PHPRegionContext.PHP_OPEN || textRegion.getType() == PHPRegionContext.PHP_CLOSE || textRegion instanceof PhpScriptRegion) {
-					shouldFormat = true;
-				}
-			} else if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-				shouldFormat = true;
-			}
-			if(shouldFormat) {
-				TextTransfer plainTextTransfer = TextTransfer.getInstance();
-				String text = (String) new Clipboard(getTextWidget().getDisplay()).getContents(plainTextTransfer, DND.CLIPBOARD);
-				IRegion region = new Region(selection.x, text.length());
-				((IStructuredDocument) getDocument()).getUndoManager().disableUndoManagement();
-				fContentFormatter.format(getDocument(), region);
-				((IStructuredDocument) getDocument()).getUndoManager().enableUndoManagement();
-			}
+//			IStructuredDocument sDoc = (IStructuredDocument) getDocument();
+//			IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selection.x);
+//			ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selection.x);
+//			
+//			boolean shouldFormat = false;
+//
+//			if (textRegion instanceof ITextRegionContainer) {
+//				textRegion = ((ITextRegionContainer) textRegion).getRegionAtCharacterOffset(selection.x);
+//				if (textRegion.getType() == PHPRegionContext.PHP_OPEN || textRegion.getType() == PHPRegionContext.PHP_CLOSE || textRegion instanceof PhpScriptRegion) {
+//					shouldFormat = true;
+//				}
+//			} else if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+//				shouldFormat = true;
+//			}
+//			if(shouldFormat) {
+//				TextTransfer plainTextTransfer = TextTransfer.getInstance();
+//				String text = (String) new Clipboard(getTextWidget().getDisplay()).getContents(plainTextTransfer, DND.CLIPBOARD);
+//				IRegion region = new Region(selection.x, text.length());
+//				((IStructuredDocument) getDocument()).getUndoManager().disableUndoManagement();
+//				fContentFormatter.format(getDocument(), region);
+//				((IStructuredDocument) getDocument()).getUndoManager().enableUndoManagement();
+//			}
 		} else if (operation == CONTENTASSIST_PROPOSALS) {
 			// notifing the processors that the next request for completion is an explicit request
 			if (config != null) {
