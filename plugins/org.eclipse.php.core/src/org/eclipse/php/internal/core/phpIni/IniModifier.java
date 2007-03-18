@@ -27,9 +27,9 @@ import org.ini4j.IniParser;
  *
  */
 public class IniModifier {
-	static final String PARAM_INCLUDE_PATH = "include_path";
-	static final String PATH_SEPARATOR = System.getProperty("os.name").toLowerCase().startsWith("windows") ? ";" : ":";
-	static final String PHP_SECTION_NAME = "PHP";
+	static final String PARAM_INCLUDE_PATH = "include_path"; //$NON-NLS-1$
+	static final String PATH_SEPARATOR = System.getProperty("os.name").toLowerCase().startsWith("windows") ? ";" : ":"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	static final String PHP_SECTION_NAME = "PHP"; //$NON-NLS-1$
 
 	private static String getParameter(Ini parameters, String sectionName, String parameterName) {
 		Ini.Section section = (Ini.Section) parameters.get(sectionName);
@@ -48,7 +48,7 @@ public class IniModifier {
 			section = (Ini.Section) parameters.get(sectionName);
 		}
 		List values = (List) section.get(parameterName);
-		if(values == null) {
+		if (values == null) {
 			values = new ArrayList(1);
 			section.put(parameterName, values);
 		}
@@ -83,19 +83,20 @@ public class IniModifier {
 			final StringBuffer includePathBuffer;
 
 			if (includePath != null) {
-				includePathBuffer = new StringBuffer(includePath.replaceAll("\"", ""));
+				includePathBuffer = new StringBuffer(includePath.replaceAll("\"", "")); //$NON-NLS-1$ //$NON-NLS-2$
 				includePathBuffer.append(PATH_SEPARATOR);
 			} else
 				includePathBuffer = new StringBuffer();
 
 			for (int i = 0; i < includePaths.length; ++i)
 				includePathBuffer.append(includePaths[i].toOSString()).append(PATH_SEPARATOR);
-			includePathBuffer.insert(0, "\"");
-			includePathBuffer.append("\"");
+			includePathBuffer.insert(0, "\""); //$NON-NLS-1$
+			includePathBuffer.append("\""); //$NON-NLS-1$
 			setParameter(parameters, sectionName, PARAM_INCLUDE_PATH, includePathBuffer.toString());
 			parameters.store(new FileOutputStream(tempFile), Ini.IGNORE_ESCAPE);
 			return tempFile;
 		} catch (final IOException e) {
+			// do nothing
 		}
 		return null;
 	}
@@ -106,12 +107,12 @@ public class IniModifier {
 
 	static File createTempFile() {
 		try {
-			File tempFile = File.createTempFile("php.", ".ini");
+			File tempFile = File.createTempFile("php.", ".ini"); //$NON-NLS-1$ //$NON-NLS-2$
 			tempFile.delete();
 			// Important!!! 
 			// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
 			// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
-			tempFile = (new File(tempFile.getParentFile(), "php.ini"));
+			tempFile = (new File(tempFile.getParentFile(), "php.ini")); //$NON-NLS-1$
 			tempFile.deleteOnExit();
 			return tempFile;
 		} catch (IOException e) {
@@ -122,7 +123,7 @@ public class IniModifier {
 
 	public static File findPHPIni(final String phpExe) {
 		// for now we'll use only the simpliest check - if the file is placed in the same dir.
-		final IPath phpIniPath = new Path(phpExe).removeLastSegments(1).append("php.ini");
+		final IPath phpIniPath = new Path(phpExe).removeLastSegments(1).append("php.ini"); //$NON-NLS-1$
 		final File phpIniFile = new File(phpIniPath.toOSString());
 		if (!phpIniFile.canRead())
 			return null;
@@ -132,17 +133,14 @@ public class IniModifier {
 	static IPath[] projectGetIncludePaths(final IProject project) {
 		final PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		final IIncludePathEntry[] entries = options.readRawIncludePath();
-		final List paths = new /*<IPath>*/ArrayList(entries.length);
+		final List/*<IPath>*/paths = new ArrayList(entries.length);
 		for (int i = 0; i < entries.length; ++i) {
 			final IPath path = entries[i].getPath();
 			if (entries[i].getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-				if (entries[i].getContentKind() == IIncludePathEntry.K_BINARY) {
-					// not implemented
-				} else
-					paths.add(path);
+				paths.add(path);
 			} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
 				final IResource includeResource = entries[i].getResource();
-				if (includeResource instanceof IProject)
+				if (includeResource != null && includeResource instanceof IProject)
 					paths.add(includeResource.getLocation());
 			} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 				String variableName = path.toString();
@@ -153,16 +151,14 @@ public class IniModifier {
 						extension = variableName.substring(index + 1);
 					variableName = variableName.substring(0, index);
 				}
-				if (extension != "") {
-
+				if (extension != "") { //$NON-NLS-1$
 				}
 				IPath includePath = PHPProjectOptions.getIncludePathVariable(variableName);
-				includePath = includePath.append(extension);
-				extension = includePath.getFileExtension();
-				if (extension != null && extension.equalsIgnoreCase("zip")) {
-					// not implemented
-				} else
+				if (includePath != null) {
+					includePath = includePath.append(extension);
+					extension = includePath.getFileExtension();
 					paths.add(includePath);
+				}
 			}
 		}
 		return (IPath[]) paths.toArray(new IPath[paths.size()]);
