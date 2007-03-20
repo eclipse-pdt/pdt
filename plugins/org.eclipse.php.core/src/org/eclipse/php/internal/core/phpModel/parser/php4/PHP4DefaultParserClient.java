@@ -18,7 +18,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 public class PHP4DefaultParserClient extends DefaultParserClient {
 
-	private static final IntHashtable errorsTable = new IntHashtable();
+	private static IntHashtable errorsTable;
 
 	public PHP4DefaultParserClient(PHPUserModel userModel, IProject project) {
 		super(userModel, project);
@@ -42,6 +42,7 @@ public class PHP4DefaultParserClient extends DefaultParserClient {
 
 	protected String getError(int tag) {
 		if (errorsTable == null) {
+			errorsTable = new IntHashtable();
 			initErrorsTable();
 		}
 		return (String) errorsTable.get(tag);
