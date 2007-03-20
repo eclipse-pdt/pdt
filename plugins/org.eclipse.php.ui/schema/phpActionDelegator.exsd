@@ -47,21 +47,28 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  Id of the class that is extending this extention
+                  Id of the action delegation
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  Human readable name of this action delegation
                </documentation>
             </annotation>
          </attribute>
          <attribute name="actionId" type="string" use="required">
             <annotation>
                <documentation>
-                  The action id of the action that the class means to implement
+                  The action id of the action that will be delegated
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The class that is extending this extention. (Must implement &lt;code&gt;org.eclipse.php.internal.ui.actions.IPHPActionDelegator&lt;/code&gt;)
+                  The class of this action delegation. (Must implement &lt;code&gt;org.eclipse.php.internal.ui.actions.IPHPActionDelegator&lt;/code&gt;)
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.php.internal.ui.actions.IPHPActionDelegator"/>
