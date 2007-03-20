@@ -1,13 +1,8 @@
-/*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *   Zend and IBM - Initial implementation
- *******************************************************************************/
+/***********************************************************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation. All rights reserved. This program and the accompanying
+ * materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Zend and IBM - Initial implementation
+ **********************************************************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
 import java.util.ArrayList;
@@ -37,35 +32,29 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.Page;
 
-
 public class RefactorActionGroup extends ActionGroup {
 
 	public static final String MENU_ID = "org.eclipse.php.ui.refactoring.menu"; //$NON-NLS-1$
 
 	/**
-	 * Pop-up menu: id of the reorg group of the refactor sub menu (value
-	 * <code>reorgGroup</code>).
+	 * Pop-up menu: id of the reorg group of the refactor sub menu (value <code>reorgGroup</code>).
 	 * 
 	 * @since 2.1
 	 */
 	public static final String GROUP_REORG = "reorgGroup"; //$NON-NLS-1$
 
 	/**
-	 * Pop-up menu: id of the type group of the refactor sub menu (value
-	 * <code>typeGroup</code>).
+	 * Pop-up menu: id of the type group of the refactor sub menu (value <code>typeGroup</code>).
 	 * 
 	 * @since 2.1
 	 */
 	public static final String GROUP_TYPE = "typeGroup"; //$NON-NLS-1$
 
 	/**
-	 * Pop-up menu: id of the coding group of the refactor sub menu (value
-	 * <code>codingGroup</code>).
+	 * Pop-up menu: id of the coding group of the refactor sub menu (value <code>codingGroup</code>).
 	 * 
 	 * @since 2.1
 	 */
-	public static final String GROUP_CODING = "codingGroup"; //$NON-NLS-1$
-
 	private IWorkbenchSite fSite;
 	private PHPStructuredEditor fEditor;
 	private String fGroupName = IContextMenuConstants.GROUP_REORGANIZE;
@@ -81,7 +70,7 @@ public class RefactorActionGroup extends ActionGroup {
 
 	private static class NoActionAvailable extends Action {
 		public NoActionAvailable() {
-			setEnabled(true);
+			setEnabled(false);
 			setText(PHPUIMessages.RefactorActionGroup_no_refactoring_available);
 		}
 	}
@@ -89,8 +78,8 @@ public class RefactorActionGroup extends ActionGroup {
 	private Action fNoActionAvailable = new NoActionAvailable();
 
 	/**
-	 * Creates a new <code>RefactorActionGroup</code>. The group requires
-	 * that the selection provided by the part's selection provider is of type <code>
+	 * Creates a new <code>RefactorActionGroup</code>. The group requires that the selection provided by the part's
+	 * selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
 	 * @param part the view part that owns this action group
@@ -103,8 +92,8 @@ public class RefactorActionGroup extends ActionGroup {
 	}
 
 	/**
-	 * Creates a new <code>RefactorActionGroup</code>. The action requires
-	 * that the selection provided by the page's selection provider is of type <code>
+	 * Creates a new <code>RefactorActionGroup</code>. The action requires that the selection provided by the page's
+	 * selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
 	 * @param page the page that owns this action group
@@ -115,6 +104,7 @@ public class RefactorActionGroup extends ActionGroup {
 
 	/**
 	 * Note: This constructor is for internal use only. Clients should not call this constructor.
+	 * 
 	 * @param editor the compilation unit editor
 	 * @param groupName the group name to add the actions to
 	 */
@@ -166,8 +156,8 @@ public class RefactorActionGroup extends ActionGroup {
 		provider.addSelectionChangedListener(action);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
@@ -188,8 +178,8 @@ public class RefactorActionGroup extends ActionGroup {
 		actionBars.setGlobalActionHandler(ActionFactory.MOVE.getId(), fMoveAction);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
@@ -217,7 +207,9 @@ public class RefactorActionGroup extends ActionGroup {
 	private void addRefactorSubmenu(IMenuManager menu) {
 		String menuText = PHPUIMessages.RefactorMenu_label;
 
-		IMenuManager refactorSubmenu = new MenuManager(menuText, MENU_ID);
+		IMenuManager refactorSubmenu = (IMenuManager) menu.find(MENU_ID);
+		if (refactorSubmenu == null)
+			refactorSubmenu = new MenuManager(menuText, MENU_ID);
 		if (fEditor != null) {
 			PHPFileData element = SelectionConverter.getInput(fEditor);
 			if (element != null && ActionUtils.isPHPSource(element)) {
@@ -226,7 +218,6 @@ public class RefactorActionGroup extends ActionGroup {
 						refactorMenuShown(manager);
 					}
 				});
-				refactorSubmenu.add(fNoActionAvailable);
 				menu.appendToGroup(fGroupName, refactorSubmenu);
 			}
 		} else {
@@ -241,7 +232,6 @@ public class RefactorActionGroup extends ActionGroup {
 		added += addAction(refactorSubmenu, fRenameAction);
 		added += addAction(refactorSubmenu, fMoveAction);
 		refactorSubmenu.add(new Separator(GROUP_TYPE));
-		refactorSubmenu.add(new Separator(GROUP_CODING));
 		return added;
 	}
 
@@ -268,7 +258,7 @@ public class RefactorActionGroup extends ActionGroup {
 			SelectionDispatchAction action = (SelectionDispatchAction) iter.next();
 			action.update(textSelection);
 		}
-		refactorSubmenu.removeAll();
+//		refactorSubmenu.removeAll();
 		if (fillRefactorMenu(refactorSubmenu) == 0)
 			refactorSubmenu.add(fNoActionAvailable);
 	}
