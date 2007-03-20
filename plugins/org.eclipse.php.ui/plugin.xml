@@ -399,7 +399,6 @@
 				id="org.eclipse.php.ui.refactoring.menu">
 				<separator name="reorgGroup" />
 				<separator name="typeGroup" />
-				<separator name="codingGroup" />
 			</menu>
 			<!--Reorganization group:-->
 			<action
