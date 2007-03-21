@@ -37,6 +37,7 @@ public class PHPPreferencePageBlocksRegistry {
 	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String PAGE_ID_ATTRIBUTE = "pageId"; //$NON-NLS-1$
+	private static final String PDT_PREFIX = "org.eclipse.php."; //$NON-NLS-1$
 
 	/*
 	 * PHP preferences addons stored by the ID of the PHP preferences page.
@@ -139,6 +140,17 @@ public class PHPPreferencePageBlocksRegistry {
 			IPHPPreferencePageBlock firstBlock = (IPHPPreferencePageBlock) o1;
 			IPHPPreferencePageBlock secondBlock = (IPHPPreferencePageBlock) o2;
 			if (firstBlock != null && secondBlock != null) {
+				boolean firstIsPDT = firstBlock.getClass().getName().startsWith(PDT_PREFIX);
+				boolean secondIsPDT = secondBlock.getClass().getName().startsWith(PDT_PREFIX);
+				if (firstIsPDT) {
+					if (!secondIsPDT) {
+						return -1;
+					}
+				} else {
+					if (secondIsPDT) {
+						return 1;
+					}
+				}
 				return firstBlock.getComparableName().compareTo(secondBlock.getComparableName());
 			}
 			if (firstBlock == null) {
