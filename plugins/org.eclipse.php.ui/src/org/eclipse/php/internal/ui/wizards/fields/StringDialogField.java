@@ -21,11 +21,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.contentassist.ContentAssistHandler;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 
@@ -34,10 +30,10 @@ import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
  */
 public class StringDialogField extends DialogField {
 
-	private String fText;
-	private Text fTextControl;
-	private ModifyListener fModifyListener;
-	private IContentAssistProcessor fContentAssistProcessor;
+	protected String fText;
+	protected Text fTextControl;
+	protected ModifyListener fModifyListener;
+	protected IContentAssistProcessor fContentAssistProcessor;
 
 	public StringDialogField() {
 		super();
@@ -144,7 +140,7 @@ public class StringDialogField extends DialogField {
 		return fTextControl;
 	}
 
-	private void doModifyText(ModifyEvent e) {
+	protected void doModifyText(ModifyEvent e) {
 		if (isOkToUse(fTextControl)) {
 			fText = fTextControl.getText();
 		}

@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.Label;
  * 
  * DialogField have a label.
  */
-public class DialogField {
 
+public class DialogField {
 	private Label fLabel;
 	protected String fLabelText;
 
