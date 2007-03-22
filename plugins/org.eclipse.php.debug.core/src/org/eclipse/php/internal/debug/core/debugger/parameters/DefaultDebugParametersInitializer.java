@@ -85,6 +85,15 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		return parameters;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer#getRequestURL(org.eclipse.debug.core.ILaunch)
+	 */
+	public String getRequestURL(ILaunch launch) {
+		String url = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
+		return url != null ? url.trim() : "";
+	}
+
 	public boolean getBooleanValue(String value) {
 		if (value != null) {
 			return Boolean.valueOf(value).booleanValue();

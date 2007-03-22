@@ -28,6 +28,15 @@ public interface IDebugParametersInitializer {
 	public String generateQuery(ILaunch launch);
 	
 	/**
+	 * Returns the request URL for the given launch. 
+	 * The request URL holds the URL's protocol, domain and path (without the query parameters).
+	 * 
+	 * @param launch The {@link ILaunch}
+	 * @return	The request url (e.g. http://www.eclipse.org/pdt/main.php)
+	 */
+	public String getRequestURL(ILaunch launch) ;
+	
+	/**
 	 * Generate and returns a debug query parameters
 	 * @param ILaunch launch
 	 * @return A hastable containing debug query parameters
