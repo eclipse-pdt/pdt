@@ -1,13 +1,8 @@
-/*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *   Zend and IBM - Initial implementation
- *******************************************************************************/
+/***********************************************************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation. All rights reserved. This program and the accompanying
+ * materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Zend and IBM - Initial implementation
+ **********************************************************************************************************************/
 package org.eclipse.php.internal.core.util;
 
 import java.io.File;
@@ -43,8 +38,7 @@ public class CodeDataResolver {
 
 	private static CodeDataResolver instance;
 
-	private CodeDataResolver() {
-	}
+	private CodeDataResolver() {}
 
 	public static CodeDataResolver getInstance() {
 		if (instance == null)
@@ -53,12 +47,16 @@ public class CodeDataResolver {
 	}
 
 	public CodeData[] resolve(IFile file, int offset) throws IOException, CoreException {
-		IStructuredDocument document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
-		return resolve(document, offset);
+		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(file);
+		CodeData[] resolvedElements = resolve(model.getStructuredDocument(), offset);
+		model.releaseFromRead();
+		return resolvedElements;
 	}
 
 	public CodeData[] resolve(IProject project, File file, int offset) throws IOException {
-		IStructuredDocument document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file.getAbsolutePath(), new FileInputStream(file), new ProjectResolver(project));
+		IStructuredDocument document =
+			StructuredModelManager.getModelManager().createStructuredDocumentFor(file.getAbsolutePath(),
+				new FileInputStream(file), new ProjectResolver(project));
 		return resolve(document, offset);
 	}
 
@@ -90,7 +88,8 @@ public class CodeDataResolver {
 	 * @param sDoc Document instance
 	 * @param offset Absolute offset in the document
 	 * @param phpModel Instance of PHP DOM Model
-	 * @return Array of resolved code datas, or empty array if offset doesn't point to PHP element (or in case of error).
+	 * @return Array of resolved code datas, or empty array if offset doesn't point to PHP element (or in case of
+	 *         error).
 	 */
 	public CodeData[] resolve(IStructuredDocument sDoc, int offset, DOMModelForPHP phpModel) {
 		try {
@@ -106,18 +105,21 @@ public class CodeDataResolver {
 
 				if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 					PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
-					tRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+					tRegion =
+						phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 
 					// Determine element name:
 					int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
-					TextSequence statement = PHPTextSequenceUtilities.getStatment(elementStart + tRegion.getLength(), sRegion, true);
+					TextSequence statement =
+						PHPTextSequenceUtilities.getStatment(elementStart + tRegion.getLength(), sRegion, true);
 					int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
 					int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statement, endPosition, true);
 					String elementName = statement.subSequence(startPosition, endPosition).toString();
 
 					// Determine previous word:
 					int prevWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, startPosition);
-					int prevWordStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statement, prevWordEnd, false);
+					int prevWordStart =
+						PHPTextSequenceUtilities.readIdentifiarStartIndex(statement, prevWordEnd, false);
 					String prevWord = statement.subSequence(prevWordStart, prevWordEnd).toString();
 
 					// Determine next word:
@@ -125,11 +127,14 @@ public class CodeDataResolver {
 					do {
 						nextRegion = phpScriptRegion.getPhpToken(nextRegion.getEnd());
 
-						if (!PHPPartitionTypes.isPHPCommentState(nextRegion.getType()) && nextRegion.getType() != PHPRegionTypes.WHITESPACE) {
+						if (!PHPPartitionTypes.isPHPCommentState(nextRegion.getType())
+							&& nextRegion.getType() != PHPRegionTypes.WHITESPACE) {
 							break;
 						}
 					} while (nextRegion.getEnd() < phpScriptRegion.getLength());
-					String nextWord = sDoc.get(container.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
+					String nextWord =
+						sDoc.get(container.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(),
+							nextRegion.getTextLength());
 
 					if (elementName.length() > 0) {
 
@@ -139,12 +144,14 @@ public class CodeDataResolver {
 						PHPFileData fileData = phpModel.getFileData(true);
 						String fileName = fileData != null ? fileData.getName() : null;
 
-						PHPClassData classData = fileData != null ? PHPFileDataUtilities.getContainerClassDada(fileData, offset) : null;
+						PHPClassData classData =
+							fileData != null ? PHPFileDataUtilities.getContainerClassDada(fileData, offset) : null;
 
 						// If we are in function declaration:
 						if ("function".equalsIgnoreCase(prevWord)) {
 							if (classData != null) {
-								return toArray(projectModel.getClassFunctionData(fileName, classData.getName(), elementName));
+								return toArray(projectModel.getClassFunctionData(fileName, classData.getName(),
+									elementName));
 							}
 							return toArray(projectModel.getFunction(fileName, elementName));
 						}
@@ -157,7 +164,8 @@ public class CodeDataResolver {
 						CodeData[] matchingClasses = getMatchingClasses(elementName, projectModel, fileName);
 
 						// Class instantiation:
-						if ("new".equalsIgnoreCase(prevWord) || "extends".equalsIgnoreCase(prevWord) || "implements".equalsIgnoreCase(prevWord)) {
+						if ("new".equalsIgnoreCase(prevWord) || "extends".equalsIgnoreCase(prevWord)
+							|| "implements".equalsIgnoreCase(prevWord)) {
 							return matchingClasses;
 						}
 
@@ -179,7 +187,8 @@ public class CodeDataResolver {
 
 							// If we are in var definition:
 							if (classData != null) {
-								if ("var".equalsIgnoreCase(prevWord) || "private".equalsIgnoreCase(prevWord) || "public".equalsIgnoreCase(prevWord) || "protected".equalsIgnoreCase(prevWord)) {
+								if ("var".equalsIgnoreCase(prevWord) || "private".equalsIgnoreCase(prevWord)
+									|| "public".equalsIgnoreCase(prevWord) || "protected".equalsIgnoreCase(prevWord)) {
 									return filterExact(classData.getVars(), elementName);
 								}
 								if ("this".equalsIgnoreCase(elementName)) {
@@ -188,7 +197,8 @@ public class CodeDataResolver {
 							}
 
 							PHPCodeContext context = ModelSupport.createContext(fileData, elementStart);
-							return filterExact(projectModel.getVariables(fileName, context, elementName, true), elementName);
+							return filterExact(projectModel.getVariables(fileName, context, elementName, true),
+								elementName);
 						}
 
 						// We are at class trigger:
@@ -196,7 +206,9 @@ public class CodeDataResolver {
 							return matchingClasses;
 						}
 
-						String className = getClassName(projectModel, fileData, statement, startPosition, offset, sDoc.getLineOfOffset(offset));
+						String className =
+							getClassName(projectModel, fileData, statement, startPosition, offset, sDoc
+								.getLineOfOffset(offset));
 						CodeData[] classDatas = getMatchingClasses(className, projectModel, fileName);
 
 						// Is it function or method:
@@ -204,7 +216,9 @@ public class CodeDataResolver {
 							CodeData[] result = null;
 							if (classDatas.length > 0) {
 								for (int i = 0; i < classDatas.length; ++i) {
-									result = ModelSupport.merge(result, toArray(projectModel.getClassFunctionData(fileName, className, elementName)));
+									result =
+										ModelSupport.merge(result, toArray(projectModel.getClassFunctionData(fileName,
+											className, elementName)));
 								}
 							} else {
 								result = projectModel.getFilteredFunctions(fileName, elementName);
@@ -221,7 +235,9 @@ public class CodeDataResolver {
 								if ("::".equals(trigger)) {
 									CodeData[] result = null;
 									for (int i = 0; i < classDatas.length; ++i) {
-										result = ModelSupport.merge(result, toArray(projectModel.getClassConstsData(fileName, className, elementName)));
+										result =
+											ModelSupport.merge(result, toArray(projectModel.getClassConstsData(
+												fileName, className, elementName)));
 									}
 									return result == null ? EMPTY : result;
 								}
@@ -230,8 +246,11 @@ public class CodeDataResolver {
 							// What can it be? Only class variables:
 							CodeData[] result = null;
 							for (int i = 0; i < classDatas.length; ++i) {
-								//								String fileName = classDatas[i].isUserCode() ? classDatas[i].getUserData().getFileName() : "";
-								result = ModelSupport.merge(result, toArray(projectModel.getClassVariablesData(fileName, className, elementName)));
+								// String fileName = classDatas[i].isUserCode() ?
+								// classDatas[i].getUserData().getFileName() : "";
+								result =
+									ModelSupport.merge(result, toArray(projectModel.getClassVariablesData(fileName,
+										className, elementName)));
 							}
 							return result == null ? EMPTY : result;
 						}
@@ -284,7 +303,8 @@ public class CodeDataResolver {
 	 * @param offset Absolute offset in the document
 	 * @param line Line number which corresponds to the offset
 	 */
-	private String getClassName(PHPProjectModel projectModel, PHPFileData fileData, TextSequence statement, int startPosition, int offset, int line) {
+	private String getClassName(PHPProjectModel projectModel, PHPFileData fileData, TextSequence statement,
+		int startPosition, int offset, int line) {
 		if (startPosition < 2) {
 			return null;
 		}
@@ -298,8 +318,7 @@ public class CodeDataResolver {
 		boolean isClassTriger = false;
 
 		String triggerText = statement.subSequence(startPosition - 2, startPosition).toString();
-		if ("->".equals(triggerText)) {
-		} else if ("::".equals(triggerText)) {
+		if ("->".equals(triggerText)) {} else if ("::".equals(triggerText)) {
 			isClassTriger = true;
 		} else {
 			return null;
@@ -310,7 +329,8 @@ public class CodeDataResolver {
 
 		if (lastObjectOperator == -1) {
 			// if there is no "->" or "::" in the left sequence then we need to calc the object type
-			return innerGetClassName(projectModel, fileData, statement, propertyEndPosition, isClassTriger, offset, line);
+			return innerGetClassName(projectModel, fileData, statement, propertyEndPosition, isClassTriger, offset,
+				line);
 		}
 
 		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(statement, lastObjectOperator + 2);
@@ -320,7 +340,7 @@ public class CodeDataResolver {
 		int bracketIndex = propertyName.indexOf('(');
 
 		if (bracketIndex == -1) {
-			//meaning its a class variable and not a function
+			// meaning its a class variable and not a function
 			return getVarType(projectModel, fileData, className, propertyName, offset, line);
 		}
 
@@ -331,7 +351,8 @@ public class CodeDataResolver {
 	/**
 	 * getting an instance and finding its type.
 	 */
-	private String innerGetClassName(PHPProjectModel projectModel, PHPFileData fileData, TextSequence statmentText, int propertyEndPosition, boolean isClassTriger, int offset, int line) {
+	private String innerGetClassName(PHPProjectModel projectModel, PHPFileData fileData, TextSequence statmentText,
+		int propertyEndPosition, boolean isClassTriger, int offset, int line) {
 		if (fileData == null) {
 			return null;
 		}
@@ -339,12 +360,18 @@ public class CodeDataResolver {
 		String className = statmentText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
 			if (className.equals("self")) {
-				PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset - 6); //the offset before self::
+				PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset - 6); // the
+				// offset
+				// before
+				// self::
 				if (classData != null) {
 					return classData.getName();
 				}
 			} else if (className.equals("parent")) {
-				PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset - 8); //the offset before parent::
+				PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset - 8); // the
+				// offset
+				// before
+				// parent::
 				if (classData != null) {
 					return projectModel.getSuperClassName(fileData.getName(), classData.getName());
 				}
@@ -354,16 +381,18 @@ public class CodeDataResolver {
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
 			int statmentStart = offset - statmentText.length();
-			return PHPFileDataUtilities.getVariableType(fileData.getName(), className, statmentStart, line, projectModel.getPHPUserModel(), true);
+			return PHPFileDataUtilities.getVariableType(fileData.getName(), className, statmentStart, line,
+				projectModel.getPHPUserModel(), true);
 		}
 		// if its function call calc the return type.
 		if (statmentText.charAt(propertyEndPosition - 1) == ')') {
 			int functionNameEnd = getFunctionNameEndOffset(statmentText, propertyEndPosition - 1);
-			int functionNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, functionNameEnd, false);
+			int functionNameStart =
+				PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, functionNameEnd, false);
 
 			String functionName = statmentText.subSequence(functionNameStart, functionNameEnd).toString();
 			PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset);
-			if (classData != null) { //if its a clss function
+			if (classData != null) { // if its a clss function
 				return getFunctionReturnType(projectModel, fileData, classData.getName(), functionName);
 			}
 			// if its a non class function
@@ -379,8 +408,7 @@ public class CodeDataResolver {
 	}
 
 	/**
-	 * this function searches the sequence from the right closing bracket ")" and finding
-	 * the position of the left "("
+	 * this function searches the sequence from the right closing bracket ")" and finding the position of the left "("
 	 * the offset has to be the offset of the "("
 	 */
 	private int getFunctionNameEndOffset(TextSequence statmentText, int offset) {
@@ -403,8 +431,11 @@ public class CodeDataResolver {
 	/**
 	 * finding the type of the class variable.
 	 */
-	private String getVarType(PHPProjectModel projectModel, PHPFileData fileData, String className, String varName, int statmentStart, int line) {
-		String tempType = PHPFileDataUtilities.getVariableType(fileData.getName(), "this;*" + varName, statmentStart, line, projectModel.getPHPUserModel(), true);
+	private String getVarType(PHPProjectModel projectModel, PHPFileData fileData, String className, String varName,
+		int statmentStart, int line) {
+		String tempType =
+			PHPFileDataUtilities.getVariableType(fileData.getName(), "this;*" + varName, statmentStart, line,
+				projectModel.getPHPUserModel(), true);
 		if (tempType != null) {
 			return tempType;
 		}
@@ -433,7 +464,8 @@ public class CodeDataResolver {
 	/**
 	 * finding the return type of the function.
 	 */
-	private String getFunctionReturnType(PHPProjectModel projectModel, PHPFileData fileData, String className, String functionName) {
+	private String getFunctionReturnType(PHPProjectModel projectModel, PHPFileData fileData, String className,
+		String functionName) {
 		CodeData classFunction = projectModel.getClassFunctionData(fileData.getName(), className, functionName);
 		if (classFunction != null) {
 			if (classFunction instanceof PHPFunctionData) {
