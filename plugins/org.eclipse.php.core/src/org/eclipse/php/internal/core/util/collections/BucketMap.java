@@ -1,13 +1,12 @@
 /**
  * Copyright (c) 2007 Zend Technologies
- * 
  */
 package org.eclipse.php.internal.core.util.collections;
 
 import java.util.*;
 
-public class BucketMap/*<K,V>*/{
-	private Map/*<K, Set<V>>*/map;
+public class BucketMap/* <K,V> */{
+	private Map/* <K, Set<V>> */map;
 
 	public BucketMap() {
 		map = new HashMap();
@@ -17,8 +16,8 @@ public class BucketMap/*<K,V>*/{
 		map = new HashMap(size);
 	}
 
-	public void add(/*K*/Object key, /*V*/Object value) {
-		Set/*<V>*/values = (Set) map.get(key);
+	public void add(/* K */Object key, /* V */Object value) {
+		Set/* <V> */values = (Set) map.get(key);
 		if (values == null) {
 			values = new HashSet(1);
 			map.put(key, values);
@@ -26,8 +25,8 @@ public class BucketMap/*<K,V>*/{
 		values.add(value);
 	}
 
-	public void addAll(/*K*/Object key, Collection/*<V>*/newValues) {
-		Set/*<V>*/values = (Set) map.get(key);
+	public void addAll(/* K */Object key, Collection/* <V> */newValues) {
+		Set/* <V> */values = (Set) map.get(key);
 		if (values == null) {
 			values = new HashSet();
 			map.put(key, values);
@@ -35,25 +34,25 @@ public class BucketMap/*<K,V>*/{
 		values.addAll(newValues);
 	}
 
-	public boolean contains(/*K*/Object key, /*V*/Object value) {
-		Set/*<V>*/values = (Set) map.get(key);
+	public boolean contains(/* K */Object key, /* V */Object value) {
+		Set/* <V> */values = (Set) map.get(key);
 		if (values == null)
 			return false;
 		return values.contains(value);
 	}
 
-	public Set/*<V>*/get(/*K*/Object key) {
-		Set/*<V>*/values = getSet(key);
+	public Set/* <V> */get(/* K */Object key) {
+		Set/* <V> */values = getSet(key);
 		if (values == null)
 			return new HashSet(0);
 		return values;
 	}
 
-	public Set/*<V>*/getSet(Object key) {
+	public Set/* <V> */getSet(Object key) {
 		return (Set) map.get(key);
 	}
 
-	public Set/*<V>*/getAll() {
+	public Set/* <V> */getAll() {
 		Set valuesSet = new HashSet();
 		for (Iterator i = map.values().iterator(); i.hasNext();) {
 			Set values = (Set) i.next();
@@ -63,8 +62,8 @@ public class BucketMap/*<K,V>*/{
 		return valuesSet;
 	}
 
-	public boolean remove(/*K*/Object key, /*V*/Object value) {
-		Set/*<K>*/values = (Set) map.get(key);
+	public boolean remove(/* K */Object key, /* V */Object value) {
+		Set/* <K> */values = (Set) map.get(key);
 		if (values == null)
 			return false;
 		boolean result = values.remove(value);
@@ -74,8 +73,8 @@ public class BucketMap/*<K,V>*/{
 		return result;
 	}
 
-	public/*V*/Object[] removeAll(Object/*K*/key) {
-		Set/*<V>*/removedStrings = (Set) map.remove(key);
+	public/* V */Object[] removeAll(Object/* K */key) {
+		Set/* <V> */removedStrings = (Set) map.remove(key);
 		if (removedStrings != null)
 			return removedStrings.toArray();
 		return new Object[0];
@@ -83,5 +82,9 @@ public class BucketMap/*<K,V>*/{
 
 	public void clear() {
 		map.clear();
+	}
+
+	public Set getKeys() {
+		return map.keySet();
 	}
 }
