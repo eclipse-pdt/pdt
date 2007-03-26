@@ -464,11 +464,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); //$NON-NLS-1$
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
-
-			ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
-			// We have to keep the context menu group separate to have better control over positioning
-			fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg });
-
 		}
 	}
 
@@ -1079,7 +1074,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				"ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
-
+		
+		ActionGroup rg= new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+		// We have to keep the context menu group separate to have better control over positioning
+		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg });
 	}
 
 	/**

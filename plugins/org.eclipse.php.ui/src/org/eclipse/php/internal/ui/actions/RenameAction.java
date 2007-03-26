@@ -25,12 +25,15 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.ui.actions.IRenamePHPElementActionFactory;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 
 
 public class RenameAction extends SelectionDispatchAction {
 
+	private static final String RENAME_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.RenameElement"; //$NON-NLS-1$
+	
 	private RenamePHPElementAction fRenamePHPElement;
 	private RenameResourceAction fRenameResource;
 
@@ -46,8 +49,19 @@ public class RenameAction extends SelectionDispatchAction {
 	public RenameAction(IWorkbenchSite site) {
 		super(site);
 		setText(PHPUIMessages.RenameAction_text);
-		fRenamePHPElement = new RenamePHPElementAction(site);
-		fRenamePHPElement.setText(getText());
+		
+		// gets the right factory to the element rename refactoring
+		final IRenamePHPElementActionFactory actionDelegatorFactory = PHPActionDelegatorRegistry.getActionDelegatorFactory(RENAME_ELEMENT_ACTION_ID);
+		if (actionDelegatorFactory == null) {
+			// default rename action
+			fRenamePHPElement = new RenamePHPElementAction(site);
+			fRenamePHPElement.setText(getText());
+		} else {
+			fRenamePHPElement = actionDelegatorFactory.createRenameAction(site);
+			fRenamePHPElement.setText(getText());
+		}
+
+		// rename resource
 		fRenameResource = new RenameResourceAction(site);
 		fRenameResource.setText(getText());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.RENAME_ACTION);
@@ -60,12 +74,21 @@ public class RenameAction extends SelectionDispatchAction {
 	public RenameAction(PHPStructuredEditor editor) {
 		this(editor.getEditorSite());
 		fEditor = editor;
-		fRenamePHPElement = new RenamePHPElementAction(editor);
-		fRenamePHPElement.setText(getText());
+		// gets the right factory to the element rename refactoring
+		final IRenamePHPElementActionFactory actionDelegatorFactory = PHPActionDelegatorRegistry.getActionDelegatorFactory(RENAME_ELEMENT_ACTION_ID);
+		if (actionDelegatorFactory == null) {
+			// default rename action
+			fRenamePHPElement = new RenamePHPElementAction(editor);
+			fRenamePHPElement.setText(getText());
+		} else {
+			fRenamePHPElement = actionDelegatorFactory.createRenameAction(editor);
+			fRenamePHPElement.setText(getText());
+		}
+		// rename resource
 		fRenameResource = new RenameResourceAction(editor.getSite());
 		fRenameResource.setText(getText());
 	}
-
+	
 	/*
 	 * @see ISelectionChangedListener#selectionChanged(SelectionChangedEvent)
 	 */
