@@ -24,7 +24,7 @@ import org.eclipse.ui.IWorkbenchSite;
 
 public class RenamePHPElementAction extends SelectionDispatchAction {
 
-	private PHPStructuredEditor fEditor;
+	protected PHPStructuredEditor fEditor;
 
 	public RenamePHPElementAction(IWorkbenchSite site) {
 		super(site);
