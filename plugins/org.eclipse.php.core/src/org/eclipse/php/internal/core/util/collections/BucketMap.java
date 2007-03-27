@@ -41,6 +41,10 @@ public class BucketMap/* <K,V> */{
 		return values.contains(value);
 	}
 
+	public boolean containsKey(/* K */Object key) {
+		return map.containsKey(key);
+	}
+
 	public Set/* <V> */get(/* K */Object key) {
 		Set/* <V> */values = getSet(key);
 		if (values == null)
