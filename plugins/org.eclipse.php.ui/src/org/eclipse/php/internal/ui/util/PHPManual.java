@@ -11,8 +11,8 @@
 package org.eclipse.php.internal.ui.util;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -83,8 +83,7 @@ public class PHPManual implements IPropertyChangeListener {
 			URL url = FileLocator.find(Platform.getBundle(PHPUiPlugin.getPluginId()), new Path("phpdoc.mapping"), null); //$NON-NLS-1$
 			if (url != null) {
 				try {
-					url = FileLocator.resolve(url);
-					BufferedReader r = new BufferedReader(new FileReader(url.getFile()));
+					BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream()));
 					String line;
 					while ((line = r.readLine()) != null) {
 						int sepIdx = line.indexOf('=');
