@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.OpenStrategy;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -47,17 +48,26 @@ public class OpenAction extends SelectionDispatchAction {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_ACTION);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on SelectionDispatchAction.
+	/* 
+	 * We override this function since we've changed isEnabled() to check its status according to the selection
 	 */
 	public void selectionChanged(ITextSelection selection) {
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on SelectionDispatchAction.
+	/* 
+	 * We override this function since we've changed isEnabled() to check its status according to the selection
 	 */
 	public void selectionChanged(IStructuredSelection selection) {
-		setEnabled(checkEnabled(selection));
+	}
+
+	
+	public boolean isEnabled() {
+		ISelection selection = getSelection();
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			return checkEnabled(structuredSelection);
+		}
+		return true;
 	}
 
 	private boolean checkEnabled(IStructuredSelection selection) {
@@ -141,4 +151,5 @@ public class OpenAction extends SelectionDispatchAction {
 	private String getDialogTitle() {
 		return PHPUIMessages.OpenAction_error_title;
 	}
+	
 }

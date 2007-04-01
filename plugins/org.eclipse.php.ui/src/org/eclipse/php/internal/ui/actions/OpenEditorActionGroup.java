@@ -78,10 +78,8 @@ public class OpenEditorActionGroup extends ActionGroup {
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
-		boolean enabled = fOpen.isEnabled();
 		fOpen = new OpenAction(fSite);        
 		fOpen.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_EDITOR);
-		fOpen.setEnabled(enabled);
 		appendToGroup(menu, fOpen);
 		if (!fIsEditorOwner) {
 			addOpenWithMenu(menu);
