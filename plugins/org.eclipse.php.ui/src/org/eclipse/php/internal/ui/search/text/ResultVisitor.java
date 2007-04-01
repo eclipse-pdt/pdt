@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.search.text;
         
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -24,7 +25,7 @@ import org.eclipse.search.internal.ui.text.FileMatch;
  * @author Roy, 2007
  */
 public class ResultVisitor extends TextSearchRequestor {
-	private final List fResult = new ArrayList(1);
+	private final List fResult = new LinkedList();
 	private final boolean fIsFileSearchOnly;
 	private final boolean fSearchInBinaries;
 	private final List fCachedMatches = new ArrayList();
