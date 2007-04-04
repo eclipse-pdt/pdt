@@ -88,10 +88,27 @@ public class CodeDataResolver {
 	 * @param sDoc Document instance
 	 * @param offset Absolute offset in the document
 	 * @param phpModel Instance of PHP DOM Model
+	 * @return Array of resolved code datas, or empty array if offset doesn't point to PHP element (or in case of error).
+	 */
+	public CodeData[] resolve(IStructuredDocument sDoc, int offset, DOMModelForPHP phpModel) {
+		final PHPProjectModel projectModel = phpModel.getProjectModel();
+		if (projectModel == null)
+			return EMPTY;
+		final PHPFileData fileData = phpModel.getFileData(true);
+		return resolve(sDoc, offset, projectModel, fileData);
+	}
+	
+	
+	/**
+	 * This method resolved PHP code data which is under the specified offset in the document.
+	 * 
+	 * @param sDoc Document instance
+	 * @param offset Absolute offset in the document
+	 * @param phpModel Instance of PHP DOM Model
 	 * @return Array of resolved code datas, or empty array if offset doesn't point to PHP element (or in case of
 	 *         error).
 	 */
-	public CodeData[] resolve(IStructuredDocument sDoc, int offset, DOMModelForPHP phpModel) {
+	public CodeData[] resolve(IStructuredDocument sDoc, int offset, PHPProjectModel projectModel, PHPFileData fileData) {
 		try {
 			IStructuredDocumentRegion sRegion = sDoc.getRegionAtCharacterOffset(offset);
 			if (sRegion != null) {
@@ -137,11 +154,6 @@ public class CodeDataResolver {
 							nextRegion.getTextLength());
 
 					if (elementName.length() > 0) {
-
-						PHPProjectModel projectModel = phpModel.getProjectModel();
-						if (projectModel == null)
-							return EMPTY;
-						PHPFileData fileData = phpModel.getFileData(true);
 						String fileName = fileData != null ? fileData.getName() : null;
 
 						PHPClassData classData =
