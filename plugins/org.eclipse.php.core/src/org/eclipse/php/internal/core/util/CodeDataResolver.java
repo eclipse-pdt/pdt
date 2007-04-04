@@ -47,10 +47,18 @@ public class CodeDataResolver {
 	}
 
 	public CodeData[] resolve(IFile file, int offset) throws IOException, CoreException {
-		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(file);
-		CodeData[] resolvedElements = resolve(model.getStructuredDocument(), offset);
-		model.releaseFromRead();
-		return resolvedElements;
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().getModelForRead(file);
+			if (model instanceof DOMModelForPHP) {
+				DOMModelForPHP phpModel = (DOMModelForPHP) model;
+				return resolve(model.getStructuredDocument(), offset, phpModel);
+			}
+			return EMPTY;
+		} finally {
+			if (model != null)
+				model.releaseFromRead();
+		}
 	}
 
 	public CodeData[] resolve(IProject project, File file, int offset) throws IOException {
