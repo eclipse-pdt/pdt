@@ -32,7 +32,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.search,
  org.eclipse.wst.common.modulecore,
  org.eclipse.ui.console,
- org.eclipse.wst.common.environment
+ org.eclipse.wst.common.environment,
+ org.eclipse.core.filesystem
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.php.internal.ui,
  org.eclipse.php.internal.ui.actions,
