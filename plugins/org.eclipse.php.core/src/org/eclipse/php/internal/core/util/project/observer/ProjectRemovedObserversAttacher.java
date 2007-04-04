@@ -13,12 +13,7 @@ package org.eclipse.php.internal.core.util.project.observer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 
 /**
  * The class is a utility class for attaching observers 2 the event of project closed.
@@ -61,7 +56,7 @@ public class ProjectRemovedObserversAttacher {
 					IResourceDelta[] affectedChildren = resourceDelta.getAffectedChildren(IResourceDelta.CHANGED);
 					if (affectedChildren.length > 0) {
 						handleClosedProjects(affectedChildren);
-					}else {
+					} else {
 						affectedChildren = resourceDelta.getAffectedChildren(IResourceDelta.REMOVED);
 						handleRemovedProjects(affectedChildren);
 					}
@@ -70,7 +65,7 @@ public class ProjectRemovedObserversAttacher {
 		}
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
 
-		if (!project.isAccessible()) {
+		if (project == null || !project.isAccessible()) {
 			return false;
 		}
 		CompositeProjectChangeObserver compositeProjectChangeObserver = getCompositeProjectChangeObserver(project);
@@ -86,6 +81,7 @@ public class ProjectRemovedObserversAttacher {
 			this.notifyProjectClosed(project);
 		}
 	}
+
 	private void notifyProjectClosed(IProject project) {
 		getCompositeProjectChangeObserver(project).closed();
 		removeCompositeProjectChangeObserver(project);

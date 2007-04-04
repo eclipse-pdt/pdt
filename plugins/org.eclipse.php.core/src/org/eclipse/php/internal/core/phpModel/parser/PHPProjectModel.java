@@ -33,11 +33,11 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 	private IPHPLanguageModel languageModel;
 	private Collection listeners = Collections.synchronizedCollection(new HashSet(2));
 	private IProject currentProject;
-	
+
 	public PHPProjectModel() {
 		super();
 	}
-	
+
 	/**
 	 * Initialize a non-project model 
 	 * this means we initialize the default model
@@ -58,9 +58,11 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		languageModel.initialize(project);
 		addModel(languageModel);
 
-		PHPIncludePathModelManager includePathModel = new PHPIncludePathModelManager();
-		includePathModel.initialize(project);
-		addModel(includePathModel);
+		if (project != null && project.isAccessible()) {
+			PHPIncludePathModelManager includePathModel = new PHPIncludePathModelManager();
+			includePathModel.initialize(project);
+			addModel(includePathModel);
+		}
 
 		addModelListenrs();
 	}
@@ -295,16 +297,16 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		return PHPCodeDataFactory.EMPTY_CODE_DATA_ARRAY;
 	}
 
-//	public PHPConstantData getConstant(String constantName, boolean caseSensitive) {
-//		PHPConstantData constantData = userModel.getConstants(constantName, caseSensitive);
-//		if (constantData == null) {
-//			CodeData[] constants = languageModel.getConstants(constantName, caseSensitive);
-//			if (constants != null && constants.length > 0) {
-//				constantData = (PHPConstantData) constants[0];
-//			}
-//		}
-//		return constantData;
-//	}
+	//	public PHPConstantData getConstant(String constantName, boolean caseSensitive) {
+	//		PHPConstantData constantData = userModel.getConstants(constantName, caseSensitive);
+	//		if (constantData == null) {
+	//			CodeData[] constants = languageModel.getConstants(constantName, caseSensitive);
+	//			if (constants != null && constants.length > 0) {
+	//				constantData = (PHPConstantData) constants[0];
+	//			}
+	//		}
+	//		return constantData;
+	//	}
 
 	public Object getAdapter(Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);

@@ -189,7 +189,7 @@ public class DefaultCacheManager {
 	 * @param isShared Indicate if the model is shared with other projects.
 	 */
 	public void load(IProject project, IPhpModel model, boolean isShared) {
-		if (!(model instanceof PHPUserModel)) {
+		if (project == null || !(model instanceof PHPUserModel)) {
 			return;
 		}
 		PHPUserModel userModel = (PHPUserModel) model;

@@ -25,13 +25,14 @@ public class GlobalParsingManager {
 	private static GlobalParsingManager instance;
 	private Map project2ParsingManagerMap = new HashMap();
 
-	private GlobalParsingManager() {}
-	
+	private GlobalParsingManager() {
+	}
+
 	public static GlobalParsingManager getInstance() {
 		if (instance == null) {
 			instance = new GlobalParsingManager();
 		}
-		
+
 		return instance;
 	}
 
@@ -51,24 +52,29 @@ public class GlobalParsingManager {
 		}
 		projectParsingManager.removeParserClient(parserClientFactory);
 	}
-	
+
 	private ProjectParsingManager getProjectParsingManager(IProject project) {
 		Object object = project2ParsingManagerMap.get(project);
 		if (object == null) {
 			ProjectParsingManager projectParsingManager = new ProjectParsingManager(project);
 			project2ParsingManagerMap.put(project, projectParsingManager);
-			register2RemoveManagerWhenProjectCloses(project);
-			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+			PHPProjectModel projectModel = null;
+			if (project != null && project.isAccessible()) {
+				register2RemoveManagerWhenProjectCloses(project);
+				projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+			} else {
+				projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
+			}
 			projectModel.addProjectModelListener(projectParsingManager);
 			return projectParsingManager;
 		}
-		return (ProjectParsingManager)object;
+		return (ProjectParsingManager) object;
 	}
 
 	private void register2RemoveManagerWhenProjectCloses(final IProject project) {
 		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
 			public void closed() {
-				ProjectParsingManager projectParsingManager = (ProjectParsingManager)project2ParsingManagerMap.remove(project);
+				ProjectParsingManager projectParsingManager = (ProjectParsingManager) project2ParsingManagerMap.remove(project);
 				if (projectParsingManager == null) {
 					return;
 				}

@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.documentModel.dom.DOMDocumentForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelParser;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelUpdater;
+import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -74,9 +75,17 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 				fileData = projectModel.getFileData(file.getFullPath().toString());
 			}
 		}
-
 		if (fileData == null) {
 			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation(), forceCreation);
+			if (fileData != null) {
+				return fileData;
+			}
+		}
+
+		//external file
+		if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
+			return fileData;
 		}
 
 		return fileData;
@@ -87,6 +96,11 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 	public PHPProjectModel getProjectModel() {
 		if (projectModel != null) {
 			return projectModel;
+		}
+
+		IFile iFile = getIFile();
+		if (ExternalPhpFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toString())) {
+			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
 		PHPFileData fileData = getFileData();
@@ -104,7 +118,13 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		if (file != null) {
 			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
 
-			if (projectModel != null) {
+			if (projectModel != null && file.exists()) {
+				projectModel.fileWasChanged(file, getStructuredDocument());
+			}
+
+			//external file
+			else if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+				projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 				projectModel.fileWasChanged(file, getStructuredDocument());
 			}
 		}
@@ -126,8 +146,13 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 				return null;
 			path = id.toString();
 		}
-		// @GINO: will probably not worked for linked resources
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		return (IFile) root.findMember(new Path(path));
+		IFile result = (IFile) root.findMember(new Path(path));
+		if (result != null) {
+			return result;
+		} else {
+			result = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(path));
+		}
+		return result;
 	}
 }

@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser.management;
 
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,13 +20,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.parser.IParserClientFactory;
-import org.eclipse.php.internal.core.phpModel.parser.IProjectModelListener;
-import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManager;
-import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManagerProvider;
-import org.eclipse.php.internal.core.phpModel.parser.PHPParserManager;
-import org.eclipse.php.internal.core.phpModel.parser.ParserClient;
-import org.eclipse.php.internal.core.phpModel.parser.ParserClientComposite;
+import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
+import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
@@ -43,8 +36,7 @@ class ProjectParsingManager implements IProjectModelListener {
 	private PHPParserManager parserManager;
 	private IProject project;
 	private PhpVersionListener phpVersionListener;
-	
-	
+
 	ProjectParsingManager(IProject project) {
 		this.project = project;
 		String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
@@ -57,7 +49,7 @@ class ProjectParsingManager implements IProjectModelListener {
 		PHPLanguageManager languageManager = PHPLanguageManagerProvider.instance().getPHPLanguageManager(phpVersion);
 		parserManager = languageManager.createPHPParserManager();
 	}
-	
+
 	private class PhpVersionListener implements IPreferencesPropagatorListener {
 
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
@@ -78,15 +70,24 @@ class ProjectParsingManager implements IProjectModelListener {
 
 		InputStreamReader inputStreamReader;
 		try {
-			inputStreamReader = new InputStreamReader(file.getContents(), file.getCharset());
+			InputStream is = null;
+			if (!file.exists()) {
+				try {
+					is = new FileInputStream(file.getFullPath().toString());
+				} catch (IOException ioe) {
+				}
+			} else {
+				is = file.getContents();
+			}
+			inputStreamReader = new InputStreamReader(is, file.getCharset());
 		} catch (CoreException e) {
 			PHPCorePlugin.log(e);
 			return;
 		} catch (UnsupportedEncodingException e) {
 			PHPCorePlugin.log(e);
 			return;
-		} 
-		
+		}
+
 		Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(file.getProject());
 		try {
 			parserManager.parse(inputStreamReader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
@@ -108,7 +109,7 @@ class ProjectParsingManager implements IProjectModelListener {
 		if (parserClientComposite.isEmpty()) {
 			return null;
 		}
-		
+
 		return parserClientComposite;
 	}
 
@@ -122,7 +123,15 @@ class ProjectParsingManager implements IProjectModelListener {
 		}
 		try {
 			StringReader reader = new StringReader(sDocument.get());
-			Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(file.getProject());
+			IProject project = null;
+			if (file.exists()) {
+				project = file.getProject();
+			} 
+			//external file
+			else if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+				project = PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject();
+			}
+			Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(project);
 			parserManager.parse(reader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
@@ -130,11 +139,9 @@ class ProjectParsingManager implements IProjectModelListener {
 		}
 	}
 
-
 	public void addParserClient(IParserClientFactory parserClientFactory) {
 		parserClientFactoryCollection.add(parserClientFactory);
 	}
-
 
 	public void removeParserClient(IParserClientFactory parserClientFactory) {
 		parserClientFactoryCollection.remove(parserClientFactory);
@@ -143,7 +150,7 @@ class ProjectParsingManager implements IProjectModelListener {
 	public IProject getProject() {
 		return project;
 	}
-	
+
 	public void dispose() {
 		parserClientFactoryCollection.clear();
 		parserClientFactoryCollection = null;

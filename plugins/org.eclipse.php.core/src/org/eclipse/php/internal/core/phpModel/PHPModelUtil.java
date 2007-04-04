@@ -537,23 +537,31 @@ public class PHPModelUtil {
 	}
 
 	public static boolean isPhpFile(final IFile file) {
-		IContentDescription contentDescription;
-		try {
-			contentDescription = file.getContentDescription();
-		} catch (final CoreException e) {
-			PHPCorePlugin.log(e);
-			return false;
-		}
-		if (contentDescription == null) {
-			if (hasPhpExtention(file))
-				PHPCorePlugin.logErrorMessage("content description null!");
-			return false;
+		IContentDescription contentDescription = null;
+		if (file.exists()) {
+			try {
+				contentDescription = file.getContentDescription();
+			} catch (final CoreException e) {
+				PHPCorePlugin.log(e);
+				return false;
+			}
+
+			if (contentDescription == null) {
+				if (hasPhpExtention(file))
+					PHPCorePlugin.logErrorMessage("content description null!");
+				return false;
+			}
+
+			if (!ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription.getContentType().getId()))
+				return false;
+
+			return true;
 		}
 
-		if (!ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription.getContentType().getId()))
-			return false;
-
-		return true;
+		else if (hasPhpExtention(file)) {
+			return true;
+		}
+		return false;
 	}
 
 	public static boolean isReadOnly(final Object target) {
@@ -573,7 +581,7 @@ public class PHPModelUtil {
 				if (fileProject.isAccessible()) {
 					return new Path(location).removeFirstSegments(1).toString();
 				}
-			} else { // file is in an include path
+			} else { // file is in an include file
 				IPhpModel[] models = model.getModels();
 				for (int i = 0; i < models.length; ++i) {
 					if (models[i].getFileData(location) == fileData) {

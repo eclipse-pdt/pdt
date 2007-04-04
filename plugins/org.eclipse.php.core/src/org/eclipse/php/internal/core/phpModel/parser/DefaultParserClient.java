@@ -10,38 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileDataUtilities;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPIncludeFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPMarker;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPTask;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableTypeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariablesTypeManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public abstract class DefaultParserClient extends ContextParserClient {
 
@@ -685,7 +657,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 
 	private String getPropertyType(String className, String propertyName, CodeData[] classes, CodeData[] functions) {
 		String rv;
-		if (className == null) {
+		if (className == null && (projectModel != null)) {
 			rv = getFunctionReturnType(propertyName, functions);
 			if (rv == null) {
 				rv = getFunctionReturnType(propertyName, projectModel.getFunctions());
@@ -693,7 +665,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 			return rv;
 		}
 		rv = innerGetPropertyType(className, propertyName, classes, functions);
-		if (rv == null) {
+		if (rv == null && (projectModel != null)) {
 			// maybe the class is not in the current file but in the project
 			rv = innerGetPropertyType(className, propertyName, projectModel.getClasses(), projectModel.getFunctions());
 		}
