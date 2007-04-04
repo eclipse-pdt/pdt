@@ -4,7 +4,10 @@
  */
 package org.eclipse.php.internal.ui.editor;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -12,9 +15,12 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.Utils;
+import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
@@ -81,6 +87,14 @@ public class LinkingSelectionListener implements ISelectionListener {
 	public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
 		Object selectedElement = computeSelectedElement(part, selection);
 		if (selectedElement != null) {
+			//Check if PHPCodeData since selection can be FileData, FunctionData etc...
+			if (selectedElement instanceof PHPCodeData) {
+				UserData userData = ((PHPCodeData) selectedElement).getUserData();
+				if (userData != null && ExternalPhpFilesRegistry.getInstance().isEntryExist(userData.getFileName())) {
+					return;
+				}
+			}
+
 			Object oldSelectedElement = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 			if (selectedElement.equals(oldSelectedElement))
 				return;
