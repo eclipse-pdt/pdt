@@ -1,17 +1,22 @@
-/***********************************************************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation. All rights reserved. This program and the accompanying
- * materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution,
- * and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Zend and IBM - Initial implementation
- **********************************************************************************************************************/
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
 import java.util.*;
 
-import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.link.contentassist.HTMLTextPresenter;
@@ -33,6 +38,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
@@ -63,6 +69,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -78,14 +85,11 @@ import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider
 public class PHPStructuredEditor extends StructuredTextEditor {
 
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN = "org.eclipse.php.ui.actions.Open"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION =
-		"org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT = "org.eclipse.php.ui.actions.Uncomment"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT = "org.eclipse.php.ui.actions.Comment"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT =
-		"org.eclipse.php.ui.actions.RemoveBlockComment"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT =
-		"org.eclipse.php.ui.actions.AddBlockComment"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT = "org.eclipse.php.ui.actions.RemoveBlockComment"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT = "org.eclipse.php.ui.actions.AddBlockComment"; //$NON-NLS-1$
 
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
 	private CompositeActionGroup fContextMenuGroup;
@@ -107,8 +111,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * @param prefix the prefix
 		 * @param textOperationAction the text operation action
 		 */
-		public InformationDispatchAction(final ResourceBundle resourceBundle, final String prefix,
-			final TextOperationAction textOperationAction) {
+		public InformationDispatchAction(final ResourceBundle resourceBundle, final String prefix, final TextOperationAction textOperationAction) {
 			super(resourceBundle, prefix, PHPStructuredEditor.this);
 			if (textOperationAction == null)
 				throw new IllegalArgumentException();
@@ -150,8 +153,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * @return <code>true</code> if successful, <code>false</code> otherwise
 		 * @since 3.2
 		 */
-		private boolean makeAnnotationHoverFocusable(final ISourceViewer sourceViewer,
-			final IAnnotationHover annotationHover) {
+		private boolean makeAnnotationHoverFocusable(final ISourceViewer sourceViewer, final IAnnotationHover annotationHover) {
 			final IVerticalRulerInfo info = getVerticalRuler();
 			final int line = info.getLineOfLastMouseButtonActivity();
 			if (line == -1)
@@ -175,16 +177,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				// hover region: the beginning of the concerned line to place the control right over the line
 				final IDocument document = sourceViewer.getDocument();
 				final int offset = document.getLineOffset(line);
-				final String contentType =
-					TextUtilities.getContentType(document, PHPPartitionTypes.PHP_DOC, offset, true);
+				final String contentType = TextUtilities.getContentType(document, PHPPartitionTypes.PHP_DOC, offset, true);
 
 				IInformationControlCreator controlCreator = null;
 
 				/*
 				 * XXX: This is a hack to avoid API changes at the end of 3.2,
 				 */
-				if ("org.eclipse.jface.text.source.projection.ProjectionAnnotationHover".equals(annotationHover
-					.getClass().getName()))
+				if ("org.eclipse.jface.text.source.projection.ProjectionAnnotationHover".equals(annotationHover.getClass().getName()))
 					controlCreator = new IInformationControlCreator() {
 						public IInformationControl createInformationControl(final Shell shell) {
 							final int shellStyle = SWT.RESIZE | SWT.TOOL | getOrientation();
@@ -193,13 +193,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 						}
 					};
 				else if (annotationHover instanceof IInformationProviderExtension2)
-					controlCreator =
-						((IInformationProviderExtension2) annotationHover).getInformationPresenterControlCreator();
+					controlCreator = ((IInformationProviderExtension2) annotationHover).getInformationPresenterControlCreator();
 				else if (annotationHover instanceof IAnnotationHoverExtension)
 					controlCreator = ((IAnnotationHoverExtension) annotationHover).getHoverControlCreator();
 
-				final IInformationProvider informationProvider =
-					new InformationProvider(new Region(offset, 0), hoverInfo, controlCreator);
+				final IInformationProvider informationProvider = new InformationProvider(new Region(offset, 0), hoverInfo, controlCreator);
 
 				fInformationPresenter.setOffset(offset);
 				fInformationPresenter.setAnchor(AbstractInformationControlManager.ANCHOR_RIGHT);
@@ -247,17 +245,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 				IInformationControlCreator controlCreator = null;
 				if (textHover instanceof IInformationProviderExtension2)
-					controlCreator =
-						((IInformationProviderExtension2) textHover).getInformationPresenterControlCreator();
+					controlCreator = ((IInformationProviderExtension2) textHover).getInformationPresenterControlCreator();
 
-				final IInformationProvider informationProvider =
-					new InformationProvider(hoverRegion, hoverInfo, controlCreator);
+				final IInformationProvider informationProvider = new InformationProvider(hoverRegion, hoverInfo, controlCreator);
 
 				fInformationPresenter.setOffset(offset);
 				fInformationPresenter.setAnchor(AbstractInformationControlManager.ANCHOR_BOTTOM);
 				fInformationPresenter.setMargins(6, 6); // default values from AbstractInformationControlManager
-				final String contentType =
-					TextUtilities.getContentType(sourceViewer.getDocument(), PHPPartitionTypes.PHP_DOC, offset, true);
+				final String contentType = TextUtilities.getContentType(sourceViewer.getDocument(), PHPPartitionTypes.PHP_DOC, offset, true);
 				fInformationPresenter.setInformationProvider(informationProvider, contentType);
 				fInformationPresenter.showInformation();
 
@@ -294,8 +289,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 			if (sourceViewer instanceof ISourceViewerExtension3) {
 				// does an annotation hover exist?
-				final IAnnotationHover annotationHover =
-					((ISourceViewerExtension3) sourceViewer).getCurrentAnnotationHover();
+				final IAnnotationHover annotationHover = ((ISourceViewerExtension3) sourceViewer).getCurrentAnnotationHover();
 				if (annotationHover != null && makeAnnotationHoverFocusable(sourceViewer, annotationHover))
 					return;
 			}
@@ -310,31 +304,27 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * 
 	 * @since 3.2
 	 */
-	private static final class InformationProvider implements IInformationProvider, IInformationProviderExtension,
-		IInformationProviderExtension2 {
+	private static final class InformationProvider implements IInformationProvider, IInformationProviderExtension, IInformationProviderExtension2 {
 
 		private IInformationControlCreator fControlCreator;
 		private Object fHoverInfo;
 		private IRegion fHoverRegion;
 
-		InformationProvider(final IRegion hoverRegion, final Object hoverInfo,
-			final IInformationControlCreator controlCreator) {
+		InformationProvider(final IRegion hoverRegion, final Object hoverInfo, final IInformationControlCreator controlCreator) {
 			fHoverRegion = hoverRegion;
 			fHoverInfo = hoverInfo;
 			fControlCreator = controlCreator;
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.information.IInformationProvider#getInformation(org.eclipse.jface.text.ITextViewer,
-		 *      org.eclipse.jface.text.IRegion)
+		 * @see org.eclipse.jface.text.information.IInformationProvider#getInformation(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
 		 */
 		public String getInformation(final ITextViewer textViewer, final IRegion subject) {
 			return fHoverInfo.toString();
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.information.IInformationProviderExtension#getInformation2(org.eclipse.jface.text.ITextViewer,
-		 *      org.eclipse.jface.text.IRegion)
+		 * @see org.eclipse.jface.text.information.IInformationProviderExtension#getInformation2(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
 		 * @since 3.2
 		 */
 		public Object getInformation2(final ITextViewer textViewer, final IRegion subject) {
@@ -349,8 +339,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.information.IInformationProvider#getSubject(org.eclipse.jface.text.ITextViewer,
-		 *      int)
+		 * @see org.eclipse.jface.text.information.IInformationProvider#getSubject(org.eclipse.jface.text.ITextViewer, int)
 		 */
 		public IRegion getSubject(final ITextViewer textViewer, final int invocationOffset) {
 			return fHoverRegion;
@@ -370,7 +359,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 						reparseRegion(doc, regionsIt, sdRegions[i].getStartOffset());
 					}
 				}
-			} catch (BadLocationException e) {}
+			} catch (BadLocationException e) {
+			}
 		}
 
 		public IProject getProject() {
@@ -411,10 +401,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Bug fix: #158170 Set WST's folding support enablement according to PHP editor folding support status. Must be
 		 * removed, when WTP releases folding support
 		 */
-		boolean foldingEnabled =
-			PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
-		SSEUIPlugin.getDefault().getPreferenceStore().setValue(IStructuredTextFoldingProvider.FOLDING_ENABLED,
-			foldingEnabled);
+		boolean foldingEnabled = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
+		SSEUIPlugin.getDefault().getPreferenceStore().setValue(IStructuredTextFoldingProvider.FOLDING_ENABLED, foldingEnabled);
 	}
 
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -433,12 +421,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	public void editorContextMenuAboutToShow(IMenuManager menu) {
 		super.editorContextMenuAboutToShow(menu);
 
-		if (fContextMenuGroup != null) {
-			ActionContext context = new ActionContext(getSelectionProvider().getSelection());
-			fContextMenuGroup.setContext(context);
-			fContextMenuGroup.fillContextMenu(menu);
-			fContextMenuGroup.setContext(null);
-		}
+		ActionContext context = new ActionContext(getSelectionProvider().getSelection());
+		fContextMenuGroup.setContext(context);
+		fContextMenuGroup.fillContextMenu(menu);
+		fContextMenuGroup.setContext(null);
 	}
 
 	protected void addContextMenuActions(final IMenuManager menu) {
@@ -464,6 +450,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); //$NON-NLS-1$
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
+
+			ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+			// We have to keep the context menu group separate to have better control over positioning
+			fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg });
+
 		}
 	}
 
@@ -531,11 +522,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.ui.texteditor.AbstractTextEditor.LineStartAction#getLineStartPosition(java.lang.String, int,
-		 *      java.lang.String)
+		 * @see org.eclipse.ui.texteditor.AbstractTextEditor.LineStartAction#getLineStartPosition(java.lang.String, int, java.lang.String)
 		 */
-		protected int getLineStartPosition(final IDocument document, final String line, final int length,
-			final int offset) {
+		protected int getLineStartPosition(final IDocument document, final String line, final int length, final int offset) {
 
 			String type = IDocument.DEFAULT_CONTENT_TYPE;
 			try {
@@ -940,7 +929,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	/**
 	 * Text navigation action to navigate to the next sub-word.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	protected class NavigateNextSubWordAction extends NextSubWordAction {
@@ -962,7 +951,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	/**
 	 * Text operation action to select the previous sub-word.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	protected class SelectPreviousSubWordAction extends PreviousSubWordAction {
@@ -998,7 +987,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	/**
 	 * Text navigation action to navigate to the previous sub-word.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	protected class NavigatePreviousSubWordAction extends PreviousSubWordAction {
@@ -1066,18 +1055,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action); //$NON-NLS-1$
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true); //$NON-NLS-1$
 
-		ResourceAction resAction =
-			new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this,
-				ISourceViewer.INFORMATION, true);
-		resAction =
-			new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(),
-				"ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
+		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true);
+		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
-		
-		ActionGroup rg= new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
-		// We have to keep the context menu group separate to have better control over positioning
-		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg });
+
 	}
 
 	/**
@@ -1128,9 +1110,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		} else {
 			IRegion visibleRegion = sourceViewer.getVisibleRegion();
 			// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
-			visible =
-				(targetOffset >= visibleRegion.getOffset() && targetOffset <= visibleRegion.getOffset()
-					+ visibleRegion.getLength());
+			visible = (targetOffset >= visibleRegion.getOffset() && targetOffset <= visibleRegion.getOffset() + visibleRegion.getLength());
 		}
 
 		if (!visible) {
@@ -1171,7 +1151,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * <p>
 	 * The selection offset is model based.
 	 * </p>
-	 * 
+	 *
 	 * @param sourceViewer the source viewer
 	 * @return a region denoting the current signed selection, for a resulting RtoL selections length is < 0
 	 */
@@ -1193,29 +1173,38 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		super.createPartControl(parent);
 		getSite().getWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
 
-			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective,
-				IWorkbenchPartReference partRef, String changeId) {
+			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
 				if (changeId == IWorkbenchPage.CHANGE_EDITOR_CLOSE) {
 					if (partRef.getPart(false) == getEditorPart()) {
 						IFile file = getFile();
-						if (file.exists() && file.isAccessible()) {
-							PHPWorkspaceModelManager.getInstance().addFileToModel(getFile());
+						if (file != null) {
+							ExternalPhpFilesRegistry externalRegistry = ExternalPhpFilesRegistry.getInstance();
+							if (file.exists()) {
+								PHPWorkspaceModelManager.getInstance().addFileToModel(getFile());
+							}
+							//external php file
+							else if (externalRegistry.isEntryExist(file.getFullPath().toString())) {
+								PHPWorkspaceModelManager.getInstance().removeFileFromModel(file);
+								externalRegistry.removeFileEntry(file.getFullPath().toString());
+
+							}
 						}
 						getSite().getWorkbenchWindow().removePerspectiveListener(this);
 					}
 				}
 			}
 
-			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {}
+			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+			}
 
-			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {}
+			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
+			}
 		});
 		final IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell shell) {
 				boolean cutDown = false;
 				int style = cutDown ? SWT.NONE : SWT.V_SCROLL | SWT.H_SCROLL;
-				return new DefaultInformationControl(shell, SWT.RESIZE | SWT.TOOL, style,
-					new HTMLTextPresenter(cutDown));
+				return new DefaultInformationControl(shell, SWT.RESIZE | SWT.TOOL, style, new HTMLTextPresenter(cutDown));
 			}
 		};
 
@@ -1227,9 +1216,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		StyledText styledText = getTextViewer().getTextWidget();
 		styledText.getContent().addTextChangeListener(new TextChangeListener() {
 
-			public void textChanging(TextChangingEvent event) {}
+			public void textChanging(TextChangingEvent event) {
+			}
 
-			public void textChanged(TextChangedEvent event) {}
+			public void textChanged(TextChangedEvent event) {
+			}
 
 			public void textSet(TextChangedEvent event) {
 				refreshViewer();
@@ -1237,13 +1228,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		});
 
-		// bug fix - #156810
+		//		 bug fix - #156810
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 
 			public void resourceChanged(IResourceChangeEvent event) {
 				try {
-					if (getSite().getPage().getActiveEditor().equals(PHPStructuredEditor.this)
-						&& event.getType() == IResourceChangeEvent.POST_CHANGE && event.getDelta() != null) {
+					if (getSite().getPage().getActiveEditor().equals(PHPStructuredEditor.this) && event.getType() == IResourceChangeEvent.POST_CHANGE && event.getDelta() != null) {
 						refreshViewer();
 					}
 				} catch (NullPointerException e) {
@@ -1272,6 +1262,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (input instanceof IFileEditorInput) {
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
+		} else if (input instanceof JavaFileEditorInput) {
+			JavaFileEditorInput fileInput = (JavaFileEditorInput) input;
+			IPath path = fileInput.getPath();
+			resource = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
 		} else if (input instanceof StorageEditorInput) {
 			final StorageEditorInput editorInput = (StorageEditorInput) input;
 			final IStorage storage = editorInput.getStorage();
@@ -1282,6 +1276,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 		if (resource instanceof IFile) {
 			if (PHPModelUtil.isPhpFile((IFile) resource)) {
+				//add external php file to registry
+				if (input instanceof JavaFileEditorInput) {
+					IPath path = ((JavaFileEditorInput) input).getPath();
+					ExternalPhpFilesRegistry.getInstance().addFileEntry(resource.getFullPath().toString(), path.toString());
+				}
 				PhpSourceParser.editFile.set(resource);
 				super.doSetInput(input);
 			} else {
@@ -1301,8 +1300,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		// so that if outline selects codedata, editor selects correct item
 		if (adapter instanceof ConfigurableContentOutlinePage && IContentOutlinePage.class.equals(required)) {
 			final ConfigurableContentOutlinePage outlinePage = (ConfigurableContentOutlinePage) adapter;
-			DoubleClickListener doubleClickListener =
-				((PHPContentOutlineConfiguration) outlinePage.getConfiguration()).getDoubleClickListener();
+			DoubleClickListener doubleClickListener = ((PHPContentOutlineConfiguration) outlinePage.getConfiguration()).getDoubleClickListener();
 			if (!doubleClickListener.isEnabled()) {
 				outlinePage.addDoubleClickListener(doubleClickListener);
 				doubleClickListener.setEnabled(true);
@@ -1317,24 +1315,23 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							return;
 						}
 						/*
-						 * The isFiringSelection check only works if a selection listener
+						 * The isFiringSelection check only works if a
+						 * selection listener
 						 */
 						if (event.getSelection().isEmpty() || selecting)
 							return;
 
-						if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null
-							&& !getSourceViewer().getTextWidget().isDisposed()
-							&& getSite().getPage().getActivePart() != getEditorPart())
+						if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && getSite().getPage().getActivePart() != getEditorPart())
 							if (event.getSelection() instanceof IStructuredSelection) {
 								final ISelection current = getSelectionProvider().getSelection();
 								if (current instanceof IStructuredSelection) {
 									final Object[] currentSelection = ((IStructuredSelection) current).toArray();
-									final Object[] newSelection =
-										((IStructuredSelection) event.getSelection()).toArray();
+									final Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
 									if (!Arrays.equals(currentSelection, newSelection))
 										if (newSelection.length > 0) {
 											/*
-											 * No ordering is guaranteed for multiple selection
+											 * No ordering is guaranteed for
+											 * multiple selection
 											 */
 											final Object o = newSelection[0];
 											selecting = true;
@@ -1346,7 +1343,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							}
 						clearStatusLine();
 					}
-
 				};
 			}
 			outlinePage.addSelectionChangedListener(selectionListener);
@@ -1361,7 +1357,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	public IFile getFile() {
 		final String filename = getModel().getBaseLocation();
-		return (IFile) ((Workspace) ResourcesPlugin.getWorkspace()).newResource(new Path(filename), IResource.FILE);
+		return ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(filename));
 	}
 
 	public PHPFileData getPHPFileData() {
@@ -1373,9 +1369,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		return super.getSourceViewerConfiguration();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see org.eclipse.wst.sse.ui.StructuredTextEditor#handleCursorPositionChanged()
 	 */
 	protected void handleCursorPositionChanged() {
@@ -1416,8 +1410,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (element != null) {
 			final UserData userData = element.getUserData();
 			PHPFileData fileData = getPHPFileData();
-			if (userData == null || fileData == null
-				|| !userData.getFileName().equals(fileData.getUserData().getFileName())) {
+			if (userData == null || fileData == null || !userData.getFileName().equals(fileData.getUserData().getFileName())) {
 				return;
 			}
 			int start = userData.getStartPosition();
@@ -1444,9 +1437,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							}
 
 							while (region.getEnd() != phpScriptRegion.getLength()) {
-								final String text =
-									document.get(sdRegionStart + phpScriptRegion.getStart() + region.getStart(),
-										region.getTextLength()).trim().replaceAll("[\"']+", "");
+								final String text = document.get(sdRegionStart + phpScriptRegion.getStart() + region.getStart(), region.getTextLength()).trim().replaceAll("[\"']+", "");
 								if (elementName.equals(text)) {
 									start = sdRegionStart + phpScriptRegion.getStart() + region.getStart();
 									length = region.getTextLength();
@@ -1517,8 +1508,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					}
 				else {
 					final ITextHover textHover = configuration.getTextHover(sourceViewer, t);
-					((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t,
-						ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
+					((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t, ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 				}
 			} else
 				sourceViewer.setTextHover(configuration.getTextHover(sourceViewer, t), t);
