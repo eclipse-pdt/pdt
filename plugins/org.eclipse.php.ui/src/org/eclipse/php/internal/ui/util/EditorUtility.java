@@ -10,29 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.internal.filesystem.local.LocalFile;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -42,6 +29,7 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
+import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
@@ -58,19 +46,11 @@ import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorRegistry;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
+import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
@@ -252,10 +232,21 @@ public class EditorUtility {
 		if (resource == null || !resource.exists() || !resource.getProject().equals(project)) {
 			final Object source = PHPModelUtil.getExternalResource(element, project);
 			if (source instanceof File) {
-				final LocalFileStorage fileStorage = new LocalFileStorage((File) source);
-				fileStorage.setProject(project);
-				fileStorage.setIncBaseDirName(incDir);
-				return new LocalFileStorageEditorInput(fileStorage);
+				File externalSource = (File) source;
+				Path path = new Path(externalSource.getPath());
+				//check if external file
+				if (ExternalPhpFilesRegistry.getInstance().isEntryExist(path.toString())) {
+					LocalFile locFile = new LocalFile(new File(ExternalPhpFilesRegistry.getInstance().getEntryFromRegistry(path.toString())));
+					final JavaFileEditorInput externalInput = new JavaFileEditorInput(locFile);
+					return externalInput;
+				}
+				//include path file
+				else {
+					final LocalFileStorage fileStorage = new LocalFileStorage((File) source);
+					fileStorage.setProject(project);
+					fileStorage.setIncBaseDirName(incDir);
+					return new LocalFileStorageEditorInput(fileStorage);
+				}
 			}
 			if (source instanceof ZipFile)
 				return createZipEntryStorageEditorInput((ZipFile) source, element, project);
