@@ -248,6 +248,7 @@
 			<arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} -size ${devtype}" />
 			<classpath>
 				<pathelement path="${updateLocalDirectory}/bin" />
+				<pathelement location="${java-home}/lib/rt.jar" />
 				<path refid="osgi.jar" />
 			</classpath>
 		</java>
