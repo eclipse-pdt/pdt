@@ -202,9 +202,10 @@ public class ContextManager {
         } else {
             if (rName.startsWith(context)) {
                 rName = rName.substring(context.length());
-            } else {
-                rName = rName.substring(1);
-            }
+            } 
+//            else {
+//                rName = rName.substring(1);
+//            }
         }
        
         return rName;

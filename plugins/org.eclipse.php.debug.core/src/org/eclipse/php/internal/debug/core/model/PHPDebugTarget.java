@@ -15,30 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IMarkerDelta;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IBreakpointManager;
-import org.eclipse.debug.core.IBreakpointManagerListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IMemoryBlock;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStackFrame;
-import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.*;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
@@ -46,14 +29,8 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.communication.DebugConnectionThread;
+import org.eclipse.php.internal.debug.core.debugger.*;
 import org.eclipse.php.internal.debug.core.debugger.Breakpoint;
-import org.eclipse.php.internal.debug.core.debugger.DebugError;
-import org.eclipse.php.internal.debug.core.debugger.DebugHandlersRegistry;
-import org.eclipse.php.internal.debug.core.debugger.DebugParametersInitializersRegistry;
-import org.eclipse.php.internal.debug.core.debugger.DefaultExpressionsManager;
-import org.eclipse.php.internal.debug.core.debugger.Expression;
-import org.eclipse.php.internal.debug.core.debugger.IRemoteDebugger;
-import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchProxy;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
@@ -576,7 +553,16 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 								fileName = fHTDocs + '/' + (String) marker.getAttribute(IPHPConstants.Include_Storage);
 							}
 						} else {
-							fileName = fHTDocs + fContextRoot + resource.getProjectRelativePath();
+							if (fHTDocs == null || fHTDocs.length() == 0) {
+								if (fContextRoot == null || fContextRoot.length() <= 1) {
+									fileName = resource.getProjectRelativePath().toString();
+								} else {
+									fileName = fContextRoot + resource.getProjectRelativePath();
+								}
+							} else {
+								fileName = fHTDocs + fContextRoot + resource.getProjectRelativePath();
+							}
+//							fileName = resource.getProjectRelativePath().toString();
 						}
 					} else {
 						fileName = (resource.getRawLocation()).toString();

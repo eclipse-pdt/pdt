@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
-	private ILaunch launch;
-	private Job runDispatch;
+	protected Job runDispatch;
+	protected ILaunch launch;
 	protected IDebuggerInitializer debuggerInitializer;
 
 	public PHPWebPageLaunchDelegate() {
@@ -255,7 +255,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	/*
 	 * Run is seperate thread so launch doesn't hang.
 	 */
-	class RunDispatchJobWebServer extends Job {
+	protected class RunDispatchJobWebServer extends Job {
 		private ILaunch launch;
 
 		public RunDispatchJobWebServer(ILaunch launch) {

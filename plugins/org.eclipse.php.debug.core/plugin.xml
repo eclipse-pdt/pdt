@@ -50,7 +50,7 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             name="%PHPScriptLaunch.label"
-            delegate="org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate"
+            delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
             modes="run"
             id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
          <fileExtension extension="php"/>
@@ -80,7 +80,7 @@
         type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
         sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
         sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
-        delegate="org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate"
+        delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
         modes="debug"/>
      <launchDelegate
            delegate="org.eclipse.php.internal.debug.core.launching.PHPWebPageLaunchDelegate"
