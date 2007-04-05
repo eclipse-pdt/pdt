@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.eclipse.php.debug.core; singleton:=true
 Bundle-Version: 0.7.0.qualifier
 Bundle-Activator: org.eclipse.php.internal.debug.core.PHPDebugPlugin
 Bundle-Localization: plugin
+Eclipse-BuddyPolicy: registered
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.php.core,
