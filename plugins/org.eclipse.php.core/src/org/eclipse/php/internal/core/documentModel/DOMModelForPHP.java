@@ -1,13 +1,8 @@
-/*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *   Zend and IBM - Initial implementation
- *******************************************************************************/
+/***********************************************************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation. All rights reserved. This program and the accompanying
+ * materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Zend and IBM - Initial implementation
+ **********************************************************************************************************************/
 package org.eclipse.php.internal.core.documentModel;
 
 import org.eclipse.core.resources.IFile;
@@ -51,7 +46,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		return new PHPDOMModelUpdater(this);
 	}
 
-	//@GINO: PHP API's coming soon
+	// @GINO: PHP API's coming soon
 
 	/*
 	 * Always get the latest version of FileData
@@ -62,7 +57,6 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 	}
 
 	/**
-	 * 
 	 * @param forceCreation - if we want to create a model project as well
 	 * @return fileData
 	 */
@@ -82,7 +76,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 			}
 		}
 
-		//external file
+		// external file
 		if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
 			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
 			return fileData;
@@ -122,7 +116,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 				projectModel.fileWasChanged(file, getStructuredDocument());
 			}
 
-			//external file
+			// external file
 			else if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
 				projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 				projectModel.fileWasChanged(file, getStructuredDocument());
@@ -136,8 +130,8 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		super.changedModel();
 	}
 
-	//returns the IFile corresponding with this model
-	private IFile getIFile() {
+	// returns the IFile corresponding with this model
+	public IFile getIFile() {
 
 		String path = getBaseLocation();
 		if (path == null || path.length() == 0) {
@@ -150,9 +144,8 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		IFile result = (IFile) root.findMember(new Path(path));
 		if (result != null) {
 			return result;
-		} else {
-			result = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(path));
 		}
+		result = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(path));
 		return result;
 	}
 }
