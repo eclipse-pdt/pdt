@@ -145,7 +145,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		if (result != null) {
 			return result;
 		}
-		result = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(path));
+		result = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
 		return result;
 	}
 }
