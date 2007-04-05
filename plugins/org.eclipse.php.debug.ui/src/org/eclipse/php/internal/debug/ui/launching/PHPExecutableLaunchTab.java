@@ -29,6 +29,9 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
@@ -92,9 +95,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	protected Button breakOnFirstLine;
 
 	private boolean enableDebugInfoOption;
-	private boolean enableFileSelection;
+	protected boolean enableFileSelection;
 	// Selection changed listener (checked PHP exe)
-	private final ISelectionChangedListener fCheckListener = new ISelectionChangedListener() {
+	private final ISelectionChangedListener fSelectionListener = new ISelectionChangedListener() {
 		public void selectionChanged(SelectionChangedEvent event) {
 			handleSelectedPHPexeChanged();
 		}
@@ -242,12 +245,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * @param group the composite to create the controls in
 	 */
 	protected void createLocationComponent(final Composite parent) {
-
-		//		phpsComboBlock.setDefaultPHPexeDescriptor(getDefaultPHPexeDescriptor());
-//		phpsComboBlock.setSpecificPHPexeDescriptor(getSpecificPHPexeDescriptor());
 		phpsComboBlock.createControl(parent);
 		final Control control = phpsComboBlock.getControl();
-		phpsComboBlock.addSelectionChangedListener(fCheckListener);
+		phpsComboBlock.addSelectionChangedListener(fSelectionListener);
 		final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		control.setLayoutData(gd);
 	}
@@ -274,7 +274,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	public String getName() {
-		return "PHP Executable";
+		return "PHP Script";
 	}
 
 	protected PHPexeDescriptor getSpecificPHPexeDescriptor() {
@@ -412,6 +412,16 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
 		if (breakOnFirstLine != null)
 			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
+		applyLaunchDelegateConfiguration(configuration);
+	}
+
+	/**
+	 * Apply the launch configuration delegate class that will be used when using this launch with the {@link PHPLaunchDelegateProxy}.
+	 * 
+	 * @param configuration	A ILaunchConfigurationWorkingCopy
+	 */
+	protected void applyLaunchDelegateConfiguration(final ILaunchConfigurationWorkingCopy configuration) {
+		configuration.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
 	}
 
 	/* (non-Javadoc)
@@ -429,6 +439,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				location = phpExeItem.getPhpEXE().toString();
 				configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
 				configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
+				applyLaunchDelegateConfiguration(configuration);
 			}
 		} catch (final CoreException e) {
 			Logger.log(Logger.ERROR, "Error setting default configuration", e); //$NON-NLS-1$

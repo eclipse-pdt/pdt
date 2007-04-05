@@ -76,7 +76,17 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	private final List phpExecutables = new ArrayList();
 
-	public PHPsComboBlock() {
+	private boolean isTitled;
+
+	private Link link;
+
+	/**
+	 * Constructs a new php combo box with or without a titled group that describes it. 
+	 * 
+	 * @param titleGrouped Set a titled group for this composite.
+	 */
+	public PHPsComboBlock(boolean titleGrouped) {
+		this.isTitled = titleGrouped;
 		fDefaultDescriptor = new PHPexeDescriptor() {
 			public String getDescription() {
 				final PHPexeItem def = getPHPs(true).getDefaultItem();
@@ -85,6 +95,13 @@ public class PHPsComboBlock implements ISelectionProvider {
 				return "No PHP exes defined"; //$NON-NLS-1$
 			}
 		};
+	}
+
+	/**
+	 *  Constructs a new php combo box wrapped inside a titled group that describes it. 
+	 */
+	public PHPsComboBlock() {
+		this(true);
 	}
 
 	/* (non-Javadoc)
@@ -101,20 +118,25 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	public void createControl(final Composite ancestor) {
 		final Font font = ancestor.getFont();
-		final Group group = new Group(ancestor, SWT.NULL);
+		Composite composite = null;
+		if (isTitled) {
+			Group g = new Group(ancestor, SWT.NULL);
+			if (fTitle == null)
+				fTitle = PHPDebugUIMessages.PHPexesComboBlock_3;
+			g.setText(fTitle);
+			composite = g;
+		} else {
+			composite = new Composite(ancestor, SWT.NULL);
+		}
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 3;
-		group.setLayout(layout);
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		group.setFont(font);
-		fControl = group;
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		composite.setFont(font);
+		fControl = composite;
 
 		GridData data;
-		if (fTitle == null)
-			fTitle = PHPDebugUIMessages.PHPexesComboBlock_3;
-		group.setText(fTitle);
-
-		fCombo = new Combo(group, SWT.DROP_DOWN | SWT.READ_ONLY);
+		fCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		fCombo.setFont(font);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
@@ -125,7 +147,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 			}
 		});
 
-		Link link = new Link(group, SWT.NONE);
+		link = new Link(composite, SWT.NONE);
 		link.setFont(font);
 		data = new GridData(SWT.BEGINNING, SWT.BOTTOM, true, false);
 		data.horizontalSpan = 1;
@@ -184,6 +206,17 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	public Control getControl() {
 		return fControl;
+	}
+
+	/**
+	 * Enable or disable the inner controls of this combo block.
+	 * 
+	 * @param enabled
+	 */
+	public void setEnabled(boolean enabled) {
+		fControl.setEnabled(enabled);
+		fCombo.setEnabled(enabled);
+		link.setEnabled(enabled);
 	}
 
 	/**
