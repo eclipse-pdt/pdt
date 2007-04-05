@@ -32,8 +32,8 @@ import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
 public class ServerDebugHandler extends SimpleDebugHandler {
 
 	private IRemoteDebugger fRemoteDebugger;
-	private PHPDebugTarget fDebugTarget;
 	private boolean fStatus;
+	protected PHPDebugTarget fDebugTarget;
 	protected DebugConnectionThread fConnectionThread;
 
 	public ServerDebugHandler() {
@@ -54,19 +54,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		fDebugTarget.setLastFileName(sFileName);
 		if (!fDebugTarget.isPHPCGI()) {
 			fDebugTarget.setServerWindows(false);
-			int index;
-			// check for Windows, since case isn't always returned correctly
-			if (fileName.startsWith(":\\", 1)) {
-				index = sFileName.toLowerCase().lastIndexOf(uri.toLowerCase());
-				fDebugTarget.setServerWindows(true);
-			} else {
-				if (uri.startsWith("/~")) {
-					int iUDir = uri.indexOf("/", 1);
-					uri = uri.substring(iUDir);
-				}
-				index = sFileName.lastIndexOf(uri);
-			}
-			fDebugTarget.setHTDocs(sFileName.substring(0, index));
+			fDebugTarget.setHTDocs(getHTDocs(fileName, sFileName, uri));
 		}
 
 		StartLock startLock = fDebugTarget.getStartLock();
@@ -90,6 +78,29 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		}
 	}
 
+	/**
+	 * Resolve and return the HTDocs folder.
+	 * @param fileName 
+	 * @param systemFileName 
+	 * @param uri 
+	 * @param htdocs
+	 */
+	protected String getHTDocs(String fileName, String systemFileName, String uri) {
+		int index;
+		// check for Windows, since case isn't always returned correctly
+		if (fileName.startsWith(":\\", 1)) {
+			index = systemFileName.toLowerCase().lastIndexOf(uri.toLowerCase());
+			fDebugTarget.setServerWindows(true);
+		} else {
+			if (uri.startsWith("/~")) {
+				int iUDir = uri.indexOf("/", 1);
+				uri = uri.substring(iUDir);
+			}
+			index = systemFileName.lastIndexOf(uri);
+		}
+		return systemFileName.substring(0, index);
+	}
+	
 	public void connectionEstablished() {
 		super.connectionEstablished();
 		StartLock startLock = fDebugTarget.getStartLock();
