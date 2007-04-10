@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
@@ -40,7 +41,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
 		String encodedURL = parametersInitializer.getRequestURL(launch);
 		encodedURL = encodedURL.replaceAll(" ", "%20");
-		final String debugQuery = encodedURL + '?' + parametersInitializer.generateQuery(launch);
+		final String debugQuery = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode()) ? encodedURL : encodedURL + '?' + parametersInitializer.generateQuery(launch);
 		if (isDebugMode) {
 			System.out.println("debugQuery = " + debugQuery);
 		}
