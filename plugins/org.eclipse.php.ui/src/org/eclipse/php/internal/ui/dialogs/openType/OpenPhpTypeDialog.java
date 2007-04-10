@@ -44,14 +44,25 @@ import org.eclipse.swt.widgets.Shell;
 public class OpenPhpTypeDialog extends Dialog {
 
 	private PHPCodeData selectedElement = null;
+
 	private BasicSelector basicSelector;
+
 	private CodeData[] initialElements;
+
 	private String initFilterText;
+
 	private PhpTypeFilter phpTypeFilter = new PhpTypeFilter();
+
+	private String title;
 
 	public OpenPhpTypeDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
+	}
+
+	public OpenPhpTypeDialog(Shell parentShell, String title) {
+		this(parentShell);
+		this.title = title;
 	}
 
 	protected Point getInitialSize() {
@@ -109,12 +120,14 @@ public class OpenPhpTypeDialog extends Dialog {
 
 		if (elements == null) {
 			ArrayList arrayList = new ArrayList();
-			//traverse over all the php projects and get the model for each one.
+			// traverse over all the php projects and get the model for each
+			// one.
 			IProject[] projects = PHPUiPlugin.getWorkspace().getRoot().getProjects();
 			for (int i = 0; i < projects.length; i++) {
 				IProject project = projects[i];
 				try {
-					if (!project.exists() || !project.isOpen() || !project.hasNature(PHPNature.ID)) {
+					if (!project.exists() || !project.isOpen()
+						|| !project.hasNature(PHPNature.ID)) {
 						continue;
 					}
 				} catch (CoreException ce) {
@@ -163,7 +176,9 @@ public class OpenPhpTypeDialog extends Dialog {
 
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(PHPUIMessages.OpenType_DialogTitle);
+		newShell.setText(title != null
+			? title
+			: PHPUIMessages.OpenType_DialogTitle);
 	}
 
 	public PHPCodeData getSelectedElement() {
