@@ -495,6 +495,9 @@ public class DebugConnectionThread implements Runnable {
 			for (int i = 0; i < debugTargets.length; i++) {
 				if (debugTargets[i].isTerminated()) {
 					launch.removeDebugTarget(debugTargets[i]);
+				} else {
+					// Do not allow any other targets or processes when an active debug target exists
+					return true;
 				}
 			}
 			for (int i = 0; i < processes.length; i++) {
@@ -1090,8 +1093,10 @@ public class DebugConnectionThread implements Runnable {
 							if (handler == null) {
 								responseTable.put(/*requestId*/idd, message);
 								IDebugRequestMessage req = (IDebugRequestMessage) requestsTable.remove(idd); // find the request.
-								synchronized (req) {
-									req.notifyAll(); // Notify the response is here.
+								if(req != null) {
+									synchronized (req) {
+										req.notifyAll(); // Notify the response is here.
+									}
 								}
 							} else {
 								inputMessageHandler.queueIn(message);
