@@ -34,7 +34,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public static final int PROTOCOL_ID = 2006040701;
 
 	protected boolean isDebugMode = System.getProperty("loggingDebug") != null;
-
+	protected boolean protocolSet;
 	private DebugConnectionThread connection;
 	private IDebugHandler debugHandler;
 
@@ -59,6 +59,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public void closeConnection() {
 		connection.closeConnection();
+		protocolSet = false;
 	}
 
 	public void setPeerResponseTimeout(int timeout) {
@@ -71,6 +72,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public void connectionClosed() {
 		debugHandler.connectionClosed();
+		protocolSet = false;
 	}
 
 	public void handleNotification(Object msg) {
@@ -120,6 +122,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public void closeDebugSession() {
 		if (connection.isConnected()) {
 			connection.sendNotification(new DebugSessionClosedNotification());
+			protocolSet = false;
 		}
 	}
 
@@ -140,7 +143,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public static String convertToSystemIndependentFileName(String fileName) {
 		return convertToSystemIndependentFileName(fileName, true);
 	}
-	
+
 	/**
 	 * Converts the given file name to a system independent file name. If the ignoreSystemType is false, the
 	 * convertion will occure only if the current system is Microsoft Windows.
@@ -516,6 +519,15 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return false;
 	}
 
+	/**
+	 * Returns true if the protocol was successfully set by this debugger.
+	 * 
+	 * @return True, if the protocol was set; False, otherwise.
+	 */
+	public boolean isProtocolSet() {
+		return protocolSet;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.debug.core.debugger.Debugger#setProtocol(int)
@@ -528,11 +540,14 @@ public class RemoteDebugger implements IRemoteDebugger {
 			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
 			if (responceProtocolID != protocolID) {
 				getDebugHandler().wrongDebugServer();
-				return false;
+				protocolSet = false;
+			} else {
+				protocolSet = true;
 			}
-			return true;
+		} else {
+			protocolSet = false;
 		}
-		return false;
+		return protocolSet;
 	}
 
 	/**
@@ -542,7 +557,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	protected int getProtocolID() {
 		return PROTOCOL_ID;
 	}
-	
+
 	/**
 	 * Asynchronic pause Returns true if successed sending the request, false
 	 * otherwise.
@@ -624,7 +639,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		return PHPProjectPreferences.getTransferEncoding(project);
 	}
-	
+
 	/**
 	 * aSynchronic assigned value
 	 */
@@ -678,6 +693,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	public void finish() {
 		connection.closeConnection();
+		protocolSet = false;
 	}
 
 	/**
@@ -887,7 +903,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				String result = null;
 				if (response != null) {
 					try {
-						result = new String(((GetVariableValueResponse) response).getVarResult(), ((IDebugMessage)response).getTransferEncoding());
+						result = new String(((GetVariableValueResponse) response).getVarResult(), ((IDebugMessage) response).getTransferEncoding());
 					} catch (UnsupportedEncodingException e) {
 					}
 				}
@@ -912,7 +928,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				String result = null;
 				if (response != null) {
 					try {
-						result = new String(((GetStackVariableValueResponse) response).getVarResult(), ((IDebugMessage)response).getTransferEncoding());
+						result = new String(((GetStackVariableValueResponse) response).getVarResult(), ((IDebugMessage) response).getTransferEncoding());
 					} catch (UnsupportedEncodingException e) {
 					}
 				}
