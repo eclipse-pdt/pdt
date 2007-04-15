@@ -35,6 +35,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.util.BlockingQueue;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
@@ -82,8 +83,8 @@ public class DebugConnectionThread implements Runnable {
 	private DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
 	private int lastRequestID = 1000;
 	protected int peerResponseTimeout = 3300; // 3.3 seconds.
+	protected PHPDebugTarget debugTarget;
 	private Thread theThread;
-	private PHPDebugTarget debugTarget;
 
 	/**
 	 * Constructs a new DebugConnectionThread with a given Socket.
@@ -195,7 +196,7 @@ public class DebugConnectionThread implements Runnable {
 				int messageSize = byteArrayOutputStream.size();
 
 				if (isDebugMode) {
-					System.out.println("sending message request size=" + messageSize + " type="+ theMsg.getType());
+					System.out.println("sending message request size=" + messageSize + " type=" + theMsg.getType());
 				}
 				synchronized (out) {
 					requestsTable.put(theMsg.getID(), theMsg);
@@ -215,7 +216,6 @@ public class DebugConnectionThread implements Runnable {
 						// TODO - Display a message that we are waiting for the server response.
 						// In case that the response finally arrives, remove the message.
 						// In case we have a timeout, close the connection and display a different message.
-						
 						request.wait(peerResponseTimeout);
 					} else if (isDebugMode) {
 						System.out.println("waiting for response " + response.getID());
@@ -233,8 +233,8 @@ public class DebugConnectionThread implements Runnable {
 					}
 					// Handle time out will stop the communication if need to stop.
 					//System.out.println("handleto");
-					
-					if(timeoutCount > 0) {
+
+					if (timeoutCount > 0) {
 						timeoutCount--;
 						handlePeerResponseTimeout();
 					} else {
@@ -376,6 +376,16 @@ public class DebugConnectionThread implements Runnable {
 		} catch (Exception exc) {
 			PHPDebugPlugin.log(exc);
 		}
+	}
+
+	/**
+	 * Reads and returns the message type from the data input stream.
+	 * 
+	 * @return The message type id.
+	 * @throws IOException
+	 */
+	protected short getMessageType(DataInputStream in) throws IOException {
+		return in.readShort();
 	}
 
 	/**
@@ -533,7 +543,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Hook a server debug session
 	 * 
@@ -568,8 +578,8 @@ public class DebugConnectionThread implements Runnable {
 		// This code will auto-expand the debugger view tree.
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				LaunchManager manager = (LaunchManager)DebugPlugin.getDefault().getLaunchManager();
-				manager.fireUpdate(new ILaunch[] {launch}, LaunchManager.ADDED);
+				LaunchManager manager = (LaunchManager) DebugPlugin.getDefault().getLaunchManager();
+				manager.fireUpdate(new ILaunch[] { launch }, LaunchManager.ADDED);
 			}
 		});
 	}
@@ -607,7 +617,8 @@ public class DebugConnectionThread implements Runnable {
 			project = workspaceRoot.getProject(projectString);
 			debugFileName = fileNameString;
 		} else {
-			return;
+			project = PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject();
+			debugFileName = fileNameString;
 		}
 		String workspaceRootPath = PHPDebugTarget.getWorkspaceRootPath(project.getWorkspace());
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
@@ -622,8 +633,8 @@ public class DebugConnectionThread implements Runnable {
 		// This code will auto-expand the debugger view tree.
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				LaunchManager manager = (LaunchManager)DebugPlugin.getDefault().getLaunchManager();
-				manager.fireUpdate(new ILaunch[] {launch}, LaunchManager.ADDED);
+				LaunchManager manager = (LaunchManager) DebugPlugin.getDefault().getLaunchManager();
+				manager.fireUpdate(new ILaunch[] { launch }, LaunchManager.ADDED);
 			}
 		});
 	}
@@ -791,7 +802,7 @@ public class DebugConnectionThread implements Runnable {
 					//System.out.println("InputMessageHandler handle: " + newInputMessage);
 
 					// do not stop untill the message is processed.
-					
+
 					synchronized (this) {
 						try {
 							if (newInputMessage instanceof DebugSessionStartedNotification) {
@@ -921,7 +932,7 @@ public class DebugConnectionThread implements Runnable {
 		public void setOutputEncoding(String outputEncoding) {
 			this.outputEncoding = outputEncoding;
 		}
-		
+
 		/**
 		 * Create an InputManager in a separate thread.
 		 */
@@ -1035,13 +1046,13 @@ public class DebugConnectionThread implements Runnable {
 					// This part is synchronized since we do not want the thread to be stoped
 					// when in processing of a message.
 					synchronized (this) {
-						int messageType = in.readShort();
+						int messageType = getMessageType(in);
 						// If this is the first message, the protocol is still held as invalid. 
 						// Check that the first message hes the DebugSessionStartedNotification type. If not, then we
 						// can assume that the remote debugger protocol has a different version then expected.
 						if (!validProtocol && messageType != startMessageId) {
 							// display an error message that the protocol in used is wrong.
-							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new String[] {String.valueOf(RemoteDebugger.PROTOCOL_ID)});
+							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new String[] { String.valueOf(RemoteDebugger.PROTOCOL_ID) });
 							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
 							DebugPlugin.log(status);
 							Display.getDefault().asyncExec(new Runnable() {
@@ -1093,10 +1104,13 @@ public class DebugConnectionThread implements Runnable {
 							if (handler == null) {
 								responseTable.put(/*requestId*/idd, message);
 								IDebugRequestMessage req = (IDebugRequestMessage) requestsTable.remove(idd); // find the request.
-								if(req != null) {
+								if (req != null) {
 									synchronized (req) {
 										req.notifyAll(); // Notify the response is here.
 									}
+								} else {
+									// Remove this message.
+									responseTable.remove(idd);
 								}
 							} else {
 								inputMessageHandler.queueIn(message);
