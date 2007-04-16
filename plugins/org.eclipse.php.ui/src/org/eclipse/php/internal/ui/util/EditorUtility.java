@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.util;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -561,5 +562,16 @@ public class EditorUtility {
 	 */
 	public static final PHPStructuredEditor getPHPStructuredEditor(final IWorkbenchPart editor) {
 		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null;
+	}
+	
+	/**
+	 * Gets a list of File full paths as strings and open them in the editor
+	 * works for both workspace and non- workspace files 
+	 * @param filesToOpen
+	 */
+	public static void openFilesInEditor(List filesToOpen){
+		PHPOpenExternalFileAction action = new PHPOpenExternalFileAction();
+		action.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+		action.run(filesToOpen);
 	}
 }
