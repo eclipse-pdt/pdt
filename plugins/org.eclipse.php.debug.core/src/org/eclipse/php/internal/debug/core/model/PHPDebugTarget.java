@@ -41,59 +41,59 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBreakpointManagerListener {
 
 	// containing launch object
-	private ILaunch fLaunch;
-	private IProcess fProcess;
+	protected ILaunch fLaunch;
+	protected IProcess fProcess;
 
 	// program name
-	private String fName;
-	private String fHTDocs;
-	private String fURL;
-	private int fRequestPort;
-	private DebugOutput fOutput = new DebugOutput();
+	protected String fName;
+	protected String fHTDocs;
+	protected String fURL;
+	protected int fRequestPort;
+	protected DebugOutput fOutput = new DebugOutput();
 
 	// suspend state
-	private boolean fSuspended = false;
+	protected boolean fSuspended = false;
 
 	// terminated state
-	private boolean fTerminated = false;
-	private boolean fTermainateCalled = false;
+	protected boolean fTerminated = false;
+	protected boolean fTermainateCalled = false;
 
 	// threads
-	private PHPThread fThread;
-	private IThread[] fThreads;
-	private IRemoteDebugger debugger;
-	private String fLastcmd;
-	private boolean fStatus;
-	private int fLastStop;
-	private String fLastFileName;
-	private boolean fIsPHPCGI;
-	private boolean fIsRunAsDebug;
+	protected PHPThread fThread;
+	protected IThread[] fThreads;
+	protected IRemoteDebugger debugger;
+	protected String fLastcmd;
+	protected boolean fStatus;
+	protected int fLastStop;
+	protected String fLastFileName;
+	protected boolean fIsPHPCGI;
+	protected boolean fIsRunAsDebug;
 
-	private PHPResponseHandler fPHPResponseHandler;
-	private org.eclipse.php.internal.debug.core.debugger.Debugger.StartResponseHandler fStartResponseHandler;
-	private org.eclipse.php.internal.debug.core.debugger.Debugger.BreakpointAddedResponseHandler fBreakpointAddedResponseHandler;
-	private org.eclipse.php.internal.debug.core.debugger.Debugger.BreakpointRemovedResponseHandler fBreakpointRemovedResponseHandler;
-	private org.eclipse.php.internal.debug.core.debugger.Debugger.StepIntoResponseHandler fStepIntoResponseHandler;
-	private org.eclipse.php.internal.debug.core.debugger.Debugger.StepOverResponseHandler fStepOverResponseHandler;
-	private org.eclipse.php.internal.debug.core.debugger.Debugger.StepOutResponseHandler fStepOutResponseHandler;
-	private org.eclipse.php.internal.debug.core.debugger.Debugger.GoResponseHandler fGoResponseHandler;
-	private org.eclipse.php.internal.debug.core.debugger.Debugger.PauseResponseHandler fPauseResponseHandler;
-	private DefaultExpressionsManager expressionsManager;
+	protected PHPResponseHandler fPHPResponseHandler;
+	protected org.eclipse.php.internal.debug.core.debugger.Debugger.StartResponseHandler fStartResponseHandler;
+	protected org.eclipse.php.internal.debug.core.debugger.Debugger.BreakpointAddedResponseHandler fBreakpointAddedResponseHandler;
+	protected org.eclipse.php.internal.debug.core.debugger.Debugger.BreakpointRemovedResponseHandler fBreakpointRemovedResponseHandler;
+	protected org.eclipse.php.internal.debug.core.debugger.Debugger.StepIntoResponseHandler fStepIntoResponseHandler;
+	protected org.eclipse.php.internal.debug.core.debugger.Debugger.StepOverResponseHandler fStepOverResponseHandler;
+	protected org.eclipse.php.internal.debug.core.debugger.Debugger.StepOutResponseHandler fStepOutResponseHandler;
+	protected org.eclipse.php.internal.debug.core.debugger.Debugger.GoResponseHandler fGoResponseHandler;
+	protected org.eclipse.php.internal.debug.core.debugger.Debugger.PauseResponseHandler fPauseResponseHandler;
+	protected DefaultExpressionsManager expressionsManager;
 
 	//	private IVariable[] fVariables;
-	private String fContextRoot = "";
-	private String fWorkspacePath = "";
-	private String fProjectName = "";
-	private IProject fProject;
-	private int fSuspendCount;
-	private ContextManager fContextManager;
-	private Vector fConsoleEventListeners = new Vector();
-	private Vector fDebugError = new Vector();
-	private StartLock fStartLock = new StartLock();
-	private BreakpointSet fBreakpointSet;
-	private IBreakpointManager fBreakpointManager;
-	private boolean fIsServerWindows = false;
-	private DebugConnectionThread fConnectionThread;
+	protected String fContextRoot = "";
+	protected String fWorkspacePath = "";
+	protected String fProjectName = "";
+	protected IProject fProject;
+	protected int fSuspendCount;
+	protected ContextManager fContextManager;
+	protected Vector fConsoleEventListeners = new Vector();
+	protected Vector fDebugError = new Vector();
+	protected StartLock fStartLock = new StartLock();
+	protected BreakpointSet fBreakpointSet;
+	protected IBreakpointManager fBreakpointManager;
+	protected boolean fIsServerWindows = false;
+	protected DebugConnectionThread fConnectionThread;
 
 	/**
 	 * Constructs a new debug target in the given launch for the associated PHP
@@ -562,10 +562,16 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 							} else {
 								fileName = fHTDocs + fContextRoot + resource.getProjectRelativePath();
 							}
-//							fileName = resource.getProjectRelativePath().toString();
+							//							fileName = resource.getProjectRelativePath().toString();
 						}
 					} else {
-						fileName = (resource.getRawLocation()).toString();
+						// If the breakpoint was set on a non-workspace file, make sure that the file name for the breakpoint
+						// is taken correctly.
+						if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
+							fileName = marker.getAttribute(IPHPConstants.Include_Storage, "");
+						} else {
+							fileName = (resource.getRawLocation()).toString();
+						}
 					}
 
 					runtimeBreakpoint.setFileName(fileName);
@@ -731,8 +737,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 			context = fContextRoot;
 		} else {
 			IPath raw = fProject.getLocation();
-			String location = raw.toPortableString();
-			length = location.length() + 1;
+			if (raw != null) {
+				String location = raw.toPortableString();
+				length = location.length() + 1;
+			}
 			context = null;
 		}
 		return fContextManager.getStackFrames(length, context, fIsServerWindows);
