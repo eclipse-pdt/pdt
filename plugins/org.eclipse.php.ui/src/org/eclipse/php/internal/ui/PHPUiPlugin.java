@@ -21,10 +21,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.php.internal.ui.dnd.DNDUtils;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.MembersOrderPreferenceCache;
@@ -34,11 +34,9 @@ import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.php.internal.ui.util.ProblemMarkerManager;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener2;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -51,7 +49,7 @@ import org.osgi.framework.BundleContext;
  */
 public class PHPUiPlugin extends AbstractUIPlugin {
 
-	//The shared instance.
+	// The shared instance.
 	private static PHPUiPlugin plugin;
 
 	public static final String ID = "org.eclipse.php.ui";
@@ -60,7 +58,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public static final boolean isDebugMode;
 
 	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective";
-	
+
 	static {
 		String value = Platform.getDebugOption("org.eclipse.php.ui/debug");
 		isDebugMode = value != null && value.equalsIgnoreCase("true");
@@ -87,6 +85,11 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		Display.getCurrent().asyncExec(new Runnable() {
+			public void run() {
+				DNDUtils.initEditorSiteExternalDrop();
+			}
+		});
 	}
 
 	/**
@@ -105,9 +108,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path.
-	 *
+	 * Returns an image descriptor for the image file at the given plug-in relative path.
+	 * 
 	 * @param path the path
 	 * @return the image descriptor
 	 */
@@ -230,18 +232,17 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the registry of the extensions to the <code>org.eclipse.php.ui.phpFoldingStructureProvider</code>
-	 * extension point.
+	 * Returns the registry of the extensions to the <code>org.eclipse.php.ui.phpFoldingStructureProvider</code> extension point.
 	 * 
 	 * @return the registry of contributed <code>IPHPFoldingStructureProvider</code>
 	 * @since 3.1
 	 */
 	public synchronized PHPFoldingStructureProviderRegistry getFoldingStructureProviderRegistry() {
 		if (fFoldingStructureProviderRegistry == null)
-			fFoldingStructureProviderRegistry= new PHPFoldingStructureProviderRegistry();
+			fFoldingStructureProviderRegistry = new PHPFoldingStructureProviderRegistry();
 		return fFoldingStructureProviderRegistry;
 	}
-	
+
 	/**
 	 * Returns all PHP editor text hovers contributed to the workbench.
 	 * 
@@ -250,46 +251,45 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public PHPEditorTextHoverDescriptor[] getPHPEditorTextHoverDescriptors() {
 		if (fPHPEditorTextHoverDescriptors == null) {
-			fPHPEditorTextHoverDescriptors= PHPEditorTextHoverDescriptor.getContributedHovers();
-			ConfigurationElementSorter sorter= new ConfigurationElementSorter() {
+			fPHPEditorTextHoverDescriptors = PHPEditorTextHoverDescriptor.getContributedHovers();
+			ConfigurationElementSorter sorter = new ConfigurationElementSorter() {
 				/*
 				 * @see org.eclipse.ui.texteditor.ConfigurationElementSorter#getConfigurationElement(java.lang.Object)
 				 */
 				public IConfigurationElement getConfigurationElement(Object object) {
-					return ((PHPEditorTextHoverDescriptor)object).getConfigurationElement();
+					return ((PHPEditorTextHoverDescriptor) object).getConfigurationElement();
 				}
 			};
 			sorter.sort(fPHPEditorTextHoverDescriptors);
-		
+
 			// Move Best Match hover to front
-			for (int i= 0; i < fPHPEditorTextHoverDescriptors.length - 1; i++) {
+			for (int i = 0; i < fPHPEditorTextHoverDescriptors.length - 1; i++) {
 				if (PreferenceConstants.ID_BESTMATCH_HOVER.equals(fPHPEditorTextHoverDescriptors[i].getId())) {
-					PHPEditorTextHoverDescriptor hoverDescriptor= fPHPEditorTextHoverDescriptors[i];
-					for (int j= i; j > 0; j--)
-						fPHPEditorTextHoverDescriptors[j]= fPHPEditorTextHoverDescriptors[j-1];
-					fPHPEditorTextHoverDescriptors[0]= hoverDescriptor;
+					PHPEditorTextHoverDescriptor hoverDescriptor = fPHPEditorTextHoverDescriptors[i];
+					for (int j = i; j > 0; j--)
+						fPHPEditorTextHoverDescriptors[j] = fPHPEditorTextHoverDescriptors[j - 1];
+					fPHPEditorTextHoverDescriptors[0] = hoverDescriptor;
 					break;
 				}
-				
+
 			}
 		}
-		
+
 		return fPHPEditorTextHoverDescriptors;
-	} 
+	}
 
 	/**
 	 * Resets the PHP editor text hovers contributed to the workbench.
 	 * <p>
-	 * This will force a rebuild of the descriptors the next time
-	 * a client asks for them.
+	 * This will force a rebuild of the descriptors the next time a client asks for them.
 	 * </p>
 	 * 
 	 * @since 2.1
 	 */
 	public void resetPHPEditorTextHoverDescriptors() {
-		fPHPEditorTextHoverDescriptors= null;
+		fPHPEditorTextHoverDescriptors = null;
 	}
-	
+
 	/**
 	 * Returns all PHP manual sites contributed to the workbench.
 	 */
