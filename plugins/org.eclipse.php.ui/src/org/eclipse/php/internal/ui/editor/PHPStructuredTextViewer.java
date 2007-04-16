@@ -19,14 +19,12 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
@@ -49,17 +47,15 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 	}
 
-	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_; //$NON-NLS-1$
+	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_;
 	private SourceViewerConfiguration config;
 
-	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
-		boolean showAnnotationsOverview, int styles) {
+	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 	}
 
 	/**
-	 * This method overrides WST since sometimes we get a subset of the document and NOT the whole document, although
-	 * the case is FORMAT_DOCUMENT. In all other cases we call the parent method.
+	 * This method overrides WST since sometimes we get a subset of the document and NOT the whole document, although the case is FORMAT_DOCUMENT. In all other cases we call the parent method.
 	 */
 	public void doOperation(int operation) {
 		Point selection = getTextWidget().getSelection();
@@ -118,9 +114,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		} else if (operation == CONTENTASSIST_PROPOSALS) {
 			// notifing the processors that the next request for completion is an explicit request
 			if (config != null) {
-				IContentAssistProcessor[] all =
-					((PHPStructuredTextViewerConfiguration) config).getContentAssistProcessors(this,
-						PHPPartitionTypes.PHP_DEFAULT);
+				IContentAssistProcessor[] all = ((PHPStructuredTextViewerConfiguration) config).getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
 				for (int i = 0; i < all.length; i++) {
 					if (all[i] instanceof IContentAssistProcessorForPHP) {
 						((IContentAssistProcessorForPHP) all[i]).explicitActivationRequest();
@@ -177,18 +171,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 
 		protected void redrawRegionChanged(RegionChangedEvent structuredDocumentEvent) {
-			if (structuredDocumentEvent != null && structuredDocumentEvent.getRegion() != null
-				&& structuredDocumentEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
+			if (structuredDocumentEvent != null && structuredDocumentEvent.getRegion() != null && structuredDocumentEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
 				final PhpScriptRegion region = (PhpScriptRegion) structuredDocumentEvent.getRegion();
 				if (region.isFullReparsed) {
 					final TextRegionListImpl newList = new TextRegionListImpl();
 					newList.add(region);
-					final IStructuredDocumentRegion structuredDocumentRegion =
-						structuredDocumentEvent.getStructuredDocumentRegion();
+					final IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentEvent.getStructuredDocumentRegion();
 					final IStructuredDocument structuredDocument = structuredDocumentEvent.getStructuredDocument();
-					final RegionsReplacedEvent regionsReplacedEvent =
-						new RegionsReplacedEvent(structuredDocument, structuredDocumentRegion,
-							structuredDocumentRegion, null, newList, null, 0, 0);
+					final RegionsReplacedEvent regionsReplacedEvent = new RegionsReplacedEvent(structuredDocument, structuredDocumentRegion, structuredDocumentRegion, null, newList, null, 0, 0);
 					redrawRegionsReplaced(regionsReplacedEvent);
 				} else {
 					region.isFullReparsed = true;
@@ -199,8 +189,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	/**
-	 * We override this function in order to use content assist for php and not use the defualt one dictated by
-	 * StructuredTextViewerConfiguration
+	 * We override this function in order to use content assist for php and not use the defualt one dictated by StructuredTextViewerConfiguration
 	 */
 	public void configure(SourceViewerConfiguration configuration) {
 		IContentAssistant oldContentAssistant = fContentAssistant;
