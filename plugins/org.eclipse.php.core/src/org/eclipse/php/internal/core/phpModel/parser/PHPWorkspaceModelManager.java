@@ -27,13 +27,11 @@ import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserve
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 /*
- * This is a singleton object that contains a MAP of Project to PHPProjectModels. It is bootstrap by the
- * PHPCorePlugin and sets itself as a IResourceListener in order to correctly update the Model when
- * Resources are created and saved.
+ * This is a singleton object that contains a MAP of Project to PHPProjectModels. It is bootstrap by the PHPCorePlugin and sets itself as a IResourceListener in order to correctly update the Model when Resources are created and saved.
  */
 public class PHPWorkspaceModelManager implements ModelListener {
 
-	//this is a singleton
+	// this is a singleton
 	protected static final PHPWorkspaceModelManager instance = new PHPWorkspaceModelManager();
 
 	private PHPWorkspaceModelManager() {
@@ -141,7 +139,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					IProject project = (IProject) resource;
 					int eventFlags = resourceDelta.getFlags();
 					if ((eventFlags & IResourceDelta.OPEN) != 0) {
-						//could be an OPEN or CLOSE
+						// could be an OPEN or CLOSE
 						if (project.isOpen()) {
 							runBuild(project);
 						}
@@ -157,7 +155,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					project.build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
-					//					ResourcesPlugin.getWorkspace().getRoot().accept(new FullPhpProjectBuildVisitor());
+					// ResourcesPlugin.getWorkspace().getRoot().accept(new FullPhpProjectBuildVisitor());
 				} finally {
 					monitor.done();
 				}
@@ -208,13 +206,13 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		// serialize the Models
 		IProject[] projects = listProjects();
 		for (int i = 0; i < projects.length; i++) {
-			// By removing each of the models we cause for a model dispose. 
+			// By removing each of the models we cause for a model dispose.
 			// The model dispose, in its turn, will save a cache snapshot of its state.
 			removeModel(projects[i]);
 		}
-		//remove as listener
-		//		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		//		workspace.removeResourceChangeListener(this);
+		// remove as listener
+		// IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		// workspace.removeResourceChangeListener(this);
 
 	}
 
@@ -310,12 +308,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	private synchronized PHPFileData getModelForExternalFile(IFile externalFile) {
 		PHPFileData fileData = null;
 		PHPProjectModel externalProjectModel = getDefaultPHPProjectModel();
-		//init for first time
+		// init for first time
 		if (externalProjectModel.getPHPUserModel() == null) {
 			externalProjectModel.addFileToModel(externalFile);
 		}
 
-		//use full path to distibguish between files with the same name (same project model...)
+		// use full path to distibguish between files with the same name (same project model...)
 		fileData = externalProjectModel.getFileData(externalFile.getFullPath().toString());
 		if (fileData == null) {
 			externalProjectModel.addFileToModel(externalFile);
@@ -342,7 +340,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filename));
 		PHPFileData result = null;
 		result = getModelForFile(filename, false);
-		if (result == null) {
+		if (result == null && file != null) {
 			if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
 				result = getModelForExternalFile(file);
 			}
@@ -461,8 +459,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		}
 	}
 
-	/** 
-	 * Model Listeners  
+	/**
+	 * Model Listeners
 	 */
 	public void addModelListener(ModelListener l) {
 		modelListeners.add(l);
@@ -548,7 +546,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		PHPProjectModel projectModel = getModelForProject(file.getProject());
 		if ((projectModel == null) && !file.exists()) {
 			projectModel = getDefaultPHPProjectModel();
-			//distinguish between include path and external files:
+			// distinguish between include path and external files:
 			if (projectModel.getFileData(file.getFullPath().toString()) == null) {
 				return;
 			}
@@ -560,7 +558,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	/**
-	 * Global listeners 
+	 * Global listeners
 	 */
 	public void addWorkspaceModelListener(IWorkspaceModelListener l) {
 		globalWorkspaceModelListeners.add(l);
