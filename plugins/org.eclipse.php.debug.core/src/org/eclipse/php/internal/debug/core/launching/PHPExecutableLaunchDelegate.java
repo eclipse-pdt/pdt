@@ -31,6 +31,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitialize
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.phpIni.IniModifier;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -91,19 +92,30 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		final IPath filePath = new Path(fileNameString);
 		IProject project = null;
+		IProject dummyProject = null;
 		String absolutePath = null;
 		if (projectName == null) {
-			final IResource res = workspaceRoot.findMember(filePath);
-			if (res == null || !res.isAccessible()) {
-				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
-				return;
+			IResource res = workspaceRoot.findMember(filePath);
+			if (res == null && filePath.getDevice() != null) {
+				// Get a dummy project because we are probably executing a file that is located out
+				// of the workspace.
+				dummyProject = PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject();
+				project = dummyProject;
+				absolutePath = filePath.makeAbsolute().toString();
+			} else {
+				if (res == null || !res.isAccessible()) {
+					displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
+					return;
+				}
 			}
-			project = res.getProject();
+			if (project == null) {
+				project = res.getProject();
+				absolutePath = res.getLocation().toString();
+			}
 			if (project == null) {
 				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));
 				return;
 			}
-			absolutePath = res.getLocation().toString();
 		} else {
 			try {
 				final IPath projectPath = new Path(projectName);
@@ -113,7 +125,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 		}
 
-		if (project == null || !project.isAccessible()) {
+		if (project == null || (!project.isAccessible() && project != dummyProject)) {
 			displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));
 			return;
 		}
@@ -122,13 +134,16 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		//		if (!saveFiles(project, monitor)) {
 		//			return;
 		//		}
-
 		File phpIni = IniModifier.findPHPIni(phpExeString);
-		if (phpIni != null) {
-			File tempIni = IniModifier.addIncludePath(phpIni, project);
-			if (tempIni != null) {
-				launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
+		if (project != dummyProject) {
+			if (phpIni != null) {
+				File tempIni = IniModifier.addIncludePath(phpIni, project);
+				if (tempIni != null) {
+					launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
+				}
 			}
+		} else {
+			launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, phpIni.getAbsolutePath());
 		}
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {

@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
@@ -96,6 +97,14 @@ public class BreakpointSet {
         
         if (!fIsPHPCGI) {
             if (resource instanceof IWorkspaceRoot) {
+            	try {
+					if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
+						// The breakpoint was set on an external file (out of the workspace).
+						// Return true to support this breakpoint.
+						return true;
+					}
+				} catch (CoreException e) {
+				}
                 String includeType = marker.getAttribute(IPHPConstants.Include_Storage_type, "");
                 String id = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, "");
                 String filename = marker.getAttribute(IPHPConstants.Include_Storage, "");
@@ -121,6 +130,14 @@ public class BreakpointSet {
             }
         } else {
             if (resource instanceof IWorkspaceRoot){
+            	try {
+					if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
+						// The breakpoint was set on an external file (out of the workspace).
+						// Return true to support this breakpoint.
+						return true;
+					}
+				} catch (CoreException e) {
+				}
                 return false;
             } else { 
                 IProject project = resource.getProject();

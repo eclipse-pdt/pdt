@@ -572,7 +572,7 @@ public class DebugConnectionThread implements Runnable {
 			runWithDebug = false;
 		}
 		PHPProcess process = new PHPProcess(launch, URL);
-		debugTarget = new PHPDebugTarget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
+		debugTarget = (PHPDebugTarget) createDebugTraget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
 		launch.addDebugTarget(debugTarget);
 		// A fix for Linux display problem.
 		// This code will auto-expand the debugger view tree.
@@ -582,6 +582,15 @@ public class DebugConnectionThread implements Runnable {
 				manager.fireUpdate(new ILaunch[] { launch }, LaunchManager.ADDED);
 			}
 		});
+	}
+
+	/**
+	 * Creates a new IDebugTarget.
+	 *
+	 * @throws CoreException
+	 */
+	protected IDebugTarget createDebugTraget(DebugConnectionThread thread, ILaunch launch, String url, int requestPort, PHPProcess process, String contextRoot, boolean runWithDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
+		return new PHPDebugTarget(thread, launch, url, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, project);
 	}
 
 	/**

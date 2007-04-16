@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.sse.ui,
  org.eclipse.php.debug.daemon,
  org.eclipse.php.ui,
- org.eclipse.ui.workbench
+ org.eclipse.ui.workbench,
+ org.eclipse.core.filesystem
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.debug.core.debugger.handlers,
