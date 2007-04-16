@@ -41,7 +41,9 @@
 		 	<contextLabel mode="run" label="%phpServerShortcut.label"/>
 		 	<enablement>
 		 		<count value="1"/>
+	 <!-- Pass a 'webPage' argument for the enablement test -->
      <test
+     	   args="webPage"
            property="org.eclipse.php.debug.ui.launchablePHP"
            value="true"/>
 		 	</enablement>
@@ -52,7 +54,9 @@
                   mode="debug"/>
             <enablement>
                <count value="1"/>
+               <!-- Pass a 'webPage' argument for the enablement test -->
                <test
+                     args="webPage"
                      property="org.eclipse.php.debug.ui.launchablePHP"
                      value="true"/>
             </enablement>

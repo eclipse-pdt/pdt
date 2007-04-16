@@ -399,7 +399,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	}
 
 	private IResource getFileFromDialog(IProject project) {
-		return LaunchUtilities.getFileFromDialog(project, getShell(), getFileExtensions(), getRequiredNatures());
+		return LaunchUtilities.getFileFromDialog(project, getShell(), getFileExtensions(), getRequiredNatures(), false);
 	}
 
 	protected void handleFileButtonSelected() {
