@@ -67,7 +67,7 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 
 	public void dragSetData(DragSourceEvent event) {
 		List resources = convertSelection();
-		event.data = (IResource[]) resources.toArray(new IResource[resources.size()]);
+		event.data = resources.toArray(new IResource[resources.size()]);
 	}
 
 	public void dragFinished(DragSourceEvent event) {
