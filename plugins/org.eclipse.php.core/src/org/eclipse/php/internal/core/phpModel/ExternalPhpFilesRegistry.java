@@ -2,7 +2,14 @@ package org.eclipse.php.internal.core.phpModel;
 
 import java.util.HashMap;
 
+import org.eclipse.core.internal.resources.File;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.php.internal.core.resources.PHPFileWrapper;
 
 /**
  * This class wraps a simple registry of files that are opened in PHP Editor
@@ -96,5 +103,25 @@ public class ExternalPhpFilesRegistry {
 	 */
 	public void removeListener(ExternalPHPFilesListener listener) {
 		listeners.remove(listener);
+	}
+
+	/**
+	 * Returns an array of IFiles that represents all the registered paths in this registry.
+	 * A zero sized array will be return if the registry does not hold any record.
+	 * @return 
+	 * 
+	 * @return An {@link IFile} array of {@link PHPFileWrapper}s.
+	 */
+	public IFile[] getAllAsIFiles() {
+		String[] files = new String[externalFilesRegistry.size()];
+		externalFilesRegistry.values().toArray(files);
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IFile[] iFiles = new IFile[files.length];
+		for (int i = 0; i < iFiles.length; i++) {
+			IPath path = Path.fromOSString(files[i]);
+			IFile file = workspaceRoot.getFile(path);
+			iFiles[i] = new PHPFileWrapper(file, path.getDevice());
+		}
+		return iFiles;
 	}
 }
