@@ -370,7 +370,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 							putModel(project, projectModel);
 							attachProjectCloseObserver(project);
 						}
-					} else if (project.equals(getDefaultPHPProjectModel().getProject())) {
+					} else if (!project.exists() && project.equals(getDefaultPHPProjectModel().getProject())) {
 						projectModel = getDefaultPHPProjectModel();
 						putModel(project, projectModel);
 						attachProjectCloseObserver(project);
