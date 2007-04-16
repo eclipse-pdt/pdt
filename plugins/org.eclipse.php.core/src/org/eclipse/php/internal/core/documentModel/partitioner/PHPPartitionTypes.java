@@ -32,9 +32,9 @@ public abstract class PHPPartitionTypes {
 	public static boolean isPHPDocState(final String type) {
 		return type == null ? false : type.startsWith("PHPDOC");
 	}
-	
+
 	public static boolean isPHPDocTagState(final String type) {
-		return isPHPDocState(type) && !type.startsWith("PHPDOC_COMMENT"); 
+		return isPHPDocState(type) && !type.startsWith("PHPDOC_COMMENT");
 	}
 
 	public static boolean isPHPLineCommentState(final String type) {
@@ -50,16 +50,17 @@ public abstract class PHPPartitionTypes {
 	}
 
 	public static final boolean isPHPRegularState(final String type) {
-		return !isPHPCommentState(type) && !isPHPQuotesState(type);
+		return type != null && !isPHPCommentState(type) && !isPHPQuotesState(type);
 	}
 
 	/**
 	 * Returns starting region of the current partition
+	 * 
 	 * @param region Region containing current offset
 	 * @param offset Current position relative to the containing region
 	 * @return Starting region of the current partition
 	 * @throws BadLocationException
-	 */	
+	 */
 	public static final ITextRegion getPartitionStartRegion(PhpScriptRegion region, int offset) throws BadLocationException {
 		String partitionType = region.getPartition(offset);
 		ITextRegion internalRegion = region.getPhpToken(offset);
@@ -73,9 +74,10 @@ public abstract class PHPPartitionTypes {
 		}
 		return startRegion;
 	}
-	
+
 	/**
 	 * Returns offset where the current partition starts
+	 * 
 	 * @param region Region containing current offset
 	 * @param offset Current position relative to the containing region
 	 * @return Starting offset of the current partition
@@ -85,9 +87,10 @@ public abstract class PHPPartitionTypes {
 		ITextRegion startRegion = getPartitionStartRegion(region, offset);
 		return startRegion.getStart();
 	}
-	
+
 	/**
 	 * Returns region current partition ends on
+	 * 
 	 * @param region Region containing current offset
 	 * @param offset Current position relative to the containing region
 	 * @return Ending region of the current partition
@@ -106,9 +109,10 @@ public abstract class PHPPartitionTypes {
 		}
 		return endRegion;
 	}
-	
+
 	/**
 	 * Returns offset where the current partition ends
+	 * 
 	 * @param region Region containing current offset
 	 * @param offset Current position relative to the containing region
 	 * @return Ending offset of the current partition
@@ -118,12 +122,13 @@ public abstract class PHPPartitionTypes {
 		ITextRegion endRegion = getPartitionEndRegion(region, offset);
 		return endRegion.getEnd();
 	}
-	
+
 	/**
 	 * Returns partition which corresponds to the provided offset
+	 * 
 	 * @param region Region containing current offset
 	 * @param offset Current position relative to the containing region
-	 * @return typed region containing partition 
+	 * @return typed region containing partition
 	 * @throws BadLocationException
 	 */
 	public static final ITypedRegion getPartition(PhpScriptRegion region, int offset) throws BadLocationException {
@@ -135,5 +140,5 @@ public abstract class PHPPartitionTypes {
 
 	public static boolean isPHPDocCommentState(String type) {
 		return type == PHPRegionTypes.PHPDOC_COMMENT;
-	}	
+	}
 }
