@@ -324,7 +324,9 @@
 		 	<contextLabel mode="run" label="%phpexeApplicationShortcut.label"/>
 		 	<enablement>
 		 		<count value="1"/>
+	 <!-- Pass a 'script' argument for the enablement test -->
      <test
+           args="script"
            property="org.eclipse.php.debug.ui.launchablePHP"
            value="true"/>
 		 	</enablement>
@@ -333,7 +335,9 @@
 		 	<contextLabel mode="debug" label="%phpexeApplicationShortcut.label"/>
 		 	<enablement>
 		 		<count value="1"/>
+	 <!-- Pass a 'script' argument for the enablement test -->
      <test
+           args="script"
            property="org.eclipse.php.debug.ui.launchablePHP"
            value="true"/>
 		 	</enablement>

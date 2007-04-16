@@ -25,7 +25,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.xml.ui,
  org.eclipse.php.debug.core,
  org.eclipse.php.core,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.eclipse.core.filesystem
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.php.internal.debug.ui,
  org.eclipse.php.internal.debug.ui.PropertyTesters,

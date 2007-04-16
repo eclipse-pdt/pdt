@@ -12,6 +12,8 @@ package org.eclipse.php.internal.debug.ui.launching;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
@@ -30,8 +32,9 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
      * @param message String
      * @parent extensions String[]
      * @param allowMultiple boolean
+     * @param allowExternalFiles Allows selection from an external files that are currently opened in the editor
      */
-    public ApplicationFileSelectionDialog(Shell parent, ILabelProvider labelProvider, String title, String message, String[] extensions, String[] requiredNatures, boolean allowMultiple) {
+    public ApplicationFileSelectionDialog(Shell parent, ILabelProvider labelProvider, String title, String message, String[] extensions, String[] requiredNatures, boolean allowMultiple, boolean allowExternalFiles) {
 
         super(parent, labelProvider, new BaseWorkbenchContentProvider());
 
@@ -56,4 +59,16 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
     public void setExtensions(String[] extensions) {
         fExtensions = extensions;
     }
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.dialogs.SelectionStatusDialog#createButtonBar(org.eclipse.swt.widgets.Composite)
+	 */
+	protected Control createButtonBar(Composite parent) {
+		Control control = super.createButtonBar(parent);
+//		Composite
+		// TODO
+		return control;
+	}
+    
+    
 }

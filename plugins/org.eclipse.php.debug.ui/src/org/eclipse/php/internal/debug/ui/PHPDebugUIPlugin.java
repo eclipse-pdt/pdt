@@ -13,13 +13,8 @@ package org.eclipse.php.internal.debug.ui;
 import java.util.List;
 
 import org.eclipse.core.internal.runtime.AdapterManager;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IThread;
@@ -31,6 +26,10 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener;
+import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
+import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
@@ -97,6 +96,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			list.remove(propertiesFactory);
 			list.add(0, propertiesFactory);
 		}
+
+		// Listen to external php files launches.
+		ExternalPhpFilesRegistry.getInstance().addListener(new ExternalFilesLaunchesListener());
 	}
 
 	/**
@@ -369,6 +371,85 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		}
 
 		public void launchesRemoved(ILaunch[] launches) {
+		}
+	}
+
+	/*
+	 * The external files launches listener is responsible of removing launches and markers (bookmarks, breakpoints etc.)
+	 * that are related to the removed file / launch.
+	 */
+	private static class ExternalFilesLaunchesListener implements ExternalPHPFilesListener {
+
+		private ILaunchConfigurationType configType;
+
+		/*
+		 * Contructs a new ExternalFilesLaunchesListener.
+		 */
+		public ExternalFilesLaunchesListener() {
+			configType = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurationType(IPHPConstants.PHPEXELaunchType);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener#externalFileAdded(java.lang.String, java.lang.String)
+		 */
+		public void externalFileAdded(String iFilePath, String localPath) {
+			// Empty
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener#externalFileRemoved(java.lang.String, java.lang.String)
+		 */
+		public void externalFileRemoved(String iFilePath, String localPath) {
+			// Check if there is a launch for this file.
+			try {
+				ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations(configType);
+				int numConfigs = configs == null ? 0 : configs.length;
+				for (int i = 0; i < numConfigs; i++) {
+					String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+					if (localPath.equals(fileName)) {
+						deleteLaunchConfiguration(configs[i]);
+						break;
+					}
+				}
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+
+			// Check for any marker that we have of the file and remove it when this file is closed.
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			try {
+				IMarker[] allMarkers = workspace.getRoot().findMarkers(null, true, IResource.DEPTH_INFINITE);
+				for (int i = 0; i < allMarkers.length; i++) {
+					Object nonWorkspaceBreakpoint = allMarkers[i].getAttribute(IPHPConstants.Non_Workspace_Breakpoint);
+					if (nonWorkspaceBreakpoint != null && nonWorkspaceBreakpoint == Boolean.TRUE) {
+						allMarkers[i].delete();
+					}
+				}
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+		}
+
+		// Deletes a launch configuration
+		private void deleteLaunchConfiguration(final ILaunchConfiguration launchConfig) throws CoreException {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					ILaunchConfiguration config = launchConfig;
+					try {
+						if (config instanceof ILaunchConfigurationWorkingCopy) {
+							config = ((ILaunchConfigurationWorkingCopy) config).getOriginal();
+						}
+						if (config != null) {
+							config.delete();
+						}
+					} catch (CoreException ce) {
+						Logger.logException(ce);
+					}
+				}
+			});
+
 		}
 	}
 }

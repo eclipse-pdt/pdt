@@ -16,6 +16,7 @@ import java.text.MessageFormat;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
@@ -42,6 +43,7 @@ import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
@@ -49,6 +51,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
  * Renders PHP debug elements
  */
 public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation {
+	
+	protected static final String JAVA_FILE_STORAGE_CLASS_NAME = ".JavaFileStorage";
 	private ImageDescriptorRegistry fDebugImageRegistry;
 
 	/*
@@ -175,9 +179,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			PHPThread thread = (PHPThread) frame.getThread();
 			PHPStackFrame topFrame = (PHPStackFrame) thread.getTopStackFrame();
 			if (topFrame.equals(frame)) {
-				frame = topFrame;				
+				frame = topFrame;
 			} // end fix
-			
+
 			StringBuffer buffer = new StringBuffer();
 			String frameName = frame.getName();
 			if (frameName != null && frameName.length() > 0) {
@@ -265,6 +269,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		if (element instanceof PHPSourceNotFoundInput) {
 			return new PHPSourceNotFoundEditorInput((PHPSourceNotFoundInput) element);
 		}
+		if (element.getClass().getName().endsWith(JAVA_FILE_STORAGE_CLASS_NAME)) {
+			return new JavaFileEditorInput(new LocalFile(((IStorage) element).getFullPath().toFile()));
+		}
 		return null;
 	}
 
@@ -278,7 +285,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		if (input instanceof PHPSourceNotFoundEditorInput) {
 			return "org.eclipse.php.debug.SourceNotFoundEditor";
 		}
-		if (element instanceof IFile || element instanceof ILineBreakpoint || element instanceof ZipEntryStorage || element instanceof LocalFileStorage) {
+		if (element instanceof IFile || element instanceof ILineBreakpoint || element instanceof ZipEntryStorage || element instanceof LocalFileStorage || element.getClass().getName().endsWith(JAVA_FILE_STORAGE_CLASS_NAME)) {
 			return "org.eclipse.php.editor"; //$NON-NLS-1$
 		}
 		return null;

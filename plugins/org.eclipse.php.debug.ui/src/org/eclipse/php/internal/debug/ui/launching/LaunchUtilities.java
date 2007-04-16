@@ -117,10 +117,20 @@ public class LaunchUtilities {
 		return text;
 	}
 
-	public static IResource getFileFromDialog(IProject project, Shell shell, String[] fileExtensions, String[] requiredNatures) {
+	/**
+	 * Returns a selected {@link IResource} from a user dialog. 
+	 * 
+	 * @param project The project to display
+	 * @param shell A Shell
+	 * @param fileExtensions	The required file extension
+	 * @param requiredNatures	The required nature
+	 * @param allowExternalFiles Allow selection from an external files that are currently opened in the editor
+	 * @return A selected IResource
+	 */
+	public static IResource getFileFromDialog(IProject project, Shell shell, String[] fileExtensions, String[] requiredNatures, boolean allowExternalFiles) {
 		LaunchUtilities inst = new LaunchUtilities();
 
-		ApplicationFileSelectionDialog d = new ApplicationFileSelectionDialog(shell, inst.new WebLaunchLabelProvider(), PHPDebugUIMessages.LaunchUtilities_selectFile, PHPDebugUIMessages.LaunchUtilities_selectProjectFile, fileExtensions, requiredNatures, false);
+		ApplicationFileSelectionDialog d = new ApplicationFileSelectionDialog(shell, inst.new WebLaunchLabelProvider(), PHPDebugUIMessages.LaunchUtilities_selectFile, PHPDebugUIMessages.LaunchUtilities_selectProjectFile, fileExtensions, requiredNatures, false, allowExternalFiles);
 
 		if (project != null) {
 			d.setInput(project);

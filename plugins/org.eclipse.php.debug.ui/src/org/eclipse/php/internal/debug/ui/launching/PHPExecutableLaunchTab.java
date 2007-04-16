@@ -324,11 +324,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	private void handleVariablesButtonSelected(final Text textField) {
 		IFile file = null;
-		final IResource resource = LaunchUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures());
+		final IResource resource = LaunchUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures(), true);
 		if (resource instanceof IFile)
 			file = (IFile) resource;
-		if (file != null)
+		if (file != null) {
 			textField.setText(file.getFullPath().toString());
+			textField.setData(file.getLocation().toString());
+		}
 	}
 
 	/* (non-Javadoc)
@@ -401,10 +403,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
 
 		String arguments = null;
-		if (!enableFileSelection || (arguments = argumentField.getText().trim()).length() == 0)
+		if (!enableFileSelection || (arguments = argumentField.getText().trim()).length() == 0) {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-		else
+			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, (String) null);
+		} else {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, arguments);
+			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, argumentField.getData().toString());
+		}
 		final boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo.getSelection() : true;
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
 
@@ -481,13 +486,17 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	protected void updateArgument(final ILaunchConfiguration configuration) {
 		String arguments = ""; //$NON-NLS-1$
+		String fullPath = ""; //$NON-NLS-1$
 		try {
 			arguments = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, ""); //$NON-NLS-1$
+			fullPath = configuration.getAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, ""); //$NON-NLS-1$
 		} catch (final CoreException ce) {
 			Logger.log(Logger.ERROR, "Error reading configuration", ce); //$NON-NLS-1$
 		}
-		if (argumentField != null)
+		if (argumentField != null) {
 			argumentField.setText(arguments);
+			argumentField.setData(fullPath);
+		}
 	}
 
 	/**

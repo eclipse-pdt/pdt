@@ -15,6 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.internal.resources.File;
+import org.eclipse.core.internal.resources.ResourceException;
+import org.eclipse.core.internal.resources.ResourceInfo;
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -35,6 +39,7 @@ import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
@@ -89,6 +94,11 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 						fileName = id.substring(incDir.length() + 1);
 					}
 					project = ((LocalFileStorage) storage).getProject();
+				} else if (input instanceof JavaFileEditorInput) {
+					// we have a JavaFileEditorStorage
+					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_LFile);
+					attributes.put(IPHPConstants.Non_Workspace_Breakpoint, Boolean.TRUE);
+					fileName = id;
 				} else {
 					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_RFile);
 					fileName = storage.getName();
@@ -121,6 +131,9 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 		 } else {
 		 resource = (IResource) input.getAdapter(IResource.class);
 		 }*/
+//		if (resource == null && input instanceof JavaFileEditorInput) {
+//			resource = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(((JavaFileEditorInput)input).getPath());
+//		}
 		if (resource == null) {
 			resource = ResourcesPlugin.getWorkspace().getRoot();
 		}

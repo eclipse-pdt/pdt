@@ -11,9 +11,7 @@
 
 package org.eclipse.php.internal.debug.ui.launching;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -31,9 +29,9 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -44,6 +42,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 
 public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
@@ -59,7 +58,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	 */
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
-			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, getPHPExeLaunchConfigType());
+			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, getPHPExeLaunchConfigType(), null);
 		}
 
 	}
@@ -70,10 +69,16 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	public void launch(IEditorPart editor, String mode) {
 		IEditorInput input = editor.getEditorInput();
 		IFile file = (IFile) input.getAdapter(IFile.class);
-		if (file != null) {
-			searchAndLaunch(new Object[] { file }, mode, getPHPExeLaunchConfigType());
+		String device = null;
+		if (file == null && input instanceof JavaFileEditorInput) {
+			// It's probably a launch for a file that is not in the workspace.
+			IPath path = ((JavaFileEditorInput) input).getPath();
+			file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
+			device = path.getDevice();
 		}
-
+		if (file != null) {
+			searchAndLaunch(new Object[] { file }, mode, getPHPExeLaunchConfigType(), device);
+		}
 	}
 
 	protected ILaunchConfigurationType getPHPExeLaunchConfigType() {
@@ -81,7 +86,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		return lm.getLaunchConfigurationType(IPHPConstants.PHPEXELaunchType);
 	}
 
-	static public void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
+	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType, String device) {
 		int entries = search == null ? 0 : search.length;
 		for (int i = 0; i < entries; i++) {
 			try {
@@ -99,6 +104,9 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 					if (contentType.isAssociatedWith(file.getName())) {
 						phpPathString = file.getFullPath().toString();
+						if (device != null && !file.exists()) {
+							phpPathString = device + phpPathString;
+						}
 					}
 				}
 
@@ -174,7 +182,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	 * 
 	 * @return a re-useable config or <code>null</code> if none
 	 */
-	static protected ILaunchConfiguration findLaunchConfiguration(String phpProject, String phpPathString, String phpExeName, String mode, ILaunchConfigurationType configType) {
+	protected static ILaunchConfiguration findLaunchConfiguration(String phpProject, String phpPathString, String phpExeName, String mode, ILaunchConfigurationType configType) {
 		ILaunchConfiguration config = null;
 
 		try {
@@ -203,13 +211,14 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	/**
 	 * Create & return a new configuration
 	 */
-	static protected ILaunchConfiguration createConfiguration(String phpProject, String phpPathString, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
+	protected static ILaunchConfiguration createConfiguration(String phpProject, String phpPathString, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
 		ILaunchConfiguration config = null;
-		if (!FileUtils.fileExists(phpPathString)) {
-			return null;
-		}
+		//		if (!FileUtils.fileExists(phpPathString)) {
+		//			return null;
+		//		}
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom("New_configuration"));
 
+		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
 		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, phpExeName);
 		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
