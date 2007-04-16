@@ -10,13 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.launching;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.php.internal.debug.ui.model.ExtendedWorkbenchContentProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
-import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 
 //import com.ibm.mrclean.project.FlexibleProjectUtils;
 
@@ -24,6 +29,8 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 
     protected String[] fExtensions;
     protected String[] fRequiredNatures;
+    private Button fExternalFilesBt;
+    private boolean fAllowExternalFiles;
 
     /**
      * FilteredFileSelectionDialog constructor comment.
@@ -36,8 +43,8 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
      */
     public ApplicationFileSelectionDialog(Shell parent, ILabelProvider labelProvider, String title, String message, String[] extensions, String[] requiredNatures, boolean allowMultiple, boolean allowExternalFiles) {
 
-        super(parent, labelProvider, new BaseWorkbenchContentProvider());
-
+        super(parent, labelProvider, new ExtendedWorkbenchContentProvider());
+        this.fAllowExternalFiles = allowExternalFiles;
         setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
         setTitle(title);
         if (title == null)
@@ -61,14 +68,35 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
     }
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ui.dialogs.SelectionStatusDialog#createButtonBar(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.ui.dialogs.ElementTreeSelectionDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createButtonBar(Composite parent) {
-		Control control = super.createButtonBar(parent);
-//		Composite
-		// TODO
-		return control;
+	protected Control createDialogArea(Composite parent) {
+		if (!fAllowExternalFiles) {
+			return super.createDialogArea(parent);
+		}
+		Font font = parent.getFont();
+		Composite composite = new Composite(parent, SWT.NULL);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginHeight = 0;
+        layout.marginLeft = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+        layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+        composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		composite.setFont(font);
+		
+		// Attach the regular dialog area
+		super.createDialogArea(composite);
+		
+		// Attach the checkbox
+		fExternalFilesBt = new Button(composite, SWT.CHECK);
+		fExternalFilesBt.setText("Show non-workspace files");
+		GridData data = new GridData();
+		data.grabExcessHorizontalSpace = true;
+		data.horizontalIndent = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		fExternalFilesBt.setLayoutData(data);
+		// TODO - Take the selection state from the preferences
+		
+		
+		return composite;
 	}
-    
-    
 }
