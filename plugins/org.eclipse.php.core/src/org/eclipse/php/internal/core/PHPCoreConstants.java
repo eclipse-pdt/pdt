@@ -32,6 +32,7 @@ public interface PHPCoreConstants {
 	public static final String ATTR_LOCATION = "ATTR_LOCATION"; //$NON-NLS-1$
 	public static final String ATTR_TOOL_ARGUMENTS = "ATTR_TOOL_ARGUMENTS"; //$NON-NLS-1$
 	public static final String ATTR_FILE = "ATTR_FILE"; //$NON-NLS-1$
+	public static final String ATTR_FILE_FULL_PATH = "ATTR_FILE_FULL_PATH"; //$NON-NLS-1$
 	
 	public static final String TASK_PRIORITIES = PLUGIN_ID + ".taskPriorities"; //$NON-NLS-1$
 	public static final String TASK_PRIORITY_HIGH = "HIGH"; //$NON-NLS-1$

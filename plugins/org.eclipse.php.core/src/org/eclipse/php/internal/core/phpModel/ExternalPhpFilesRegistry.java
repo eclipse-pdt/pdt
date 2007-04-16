@@ -2,6 +2,8 @@ package org.eclipse.php.internal.core.phpModel;
 
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.ListenerList;
+
 /**
  * This class wraps a simple registry of files that are opened in PHP Editor
  * and are NOT related to any project, i.e external PHP files.
@@ -13,6 +15,7 @@ public class ExternalPhpFilesRegistry {
 
 	private static ExternalPhpFilesRegistry instance = null;
 	private final HashMap externalFilesRegistry = new HashMap();
+	private final ListenerList listeners = new ListenerList();
 
 	private ExternalPhpFilesRegistry() {
 	}
@@ -30,7 +33,9 @@ public class ExternalPhpFilesRegistry {
 	 * @param localPath = The String representation of the real File's path from file system
 	 */
 	public void addFileEntry(String iFilePath, String localPath) {
-		externalFilesRegistry.put(iFilePath, localPath);
+		if (externalFilesRegistry.put(iFilePath, localPath) != null) {
+			notifyEntryChange(iFilePath, localPath, true);
+		}
 	}
 
 	/**
@@ -38,7 +43,22 @@ public class ExternalPhpFilesRegistry {
 	 * @param iFilePath - The String representation of the IFile's path
 	 */
 	public void removeFileEntry(String iFilePath) {
-		externalFilesRegistry.remove(iFilePath);
+		Object localPath = externalFilesRegistry.remove(iFilePath);
+		if (localPath != null) {
+			notifyEntryChange(iFilePath, localPath.toString(), false);
+		}
+	}
+
+	// Notify addition or removal events.
+	private void notifyEntryChange(String iFilePath, String localPath, boolean isAddition) {
+		Object[] listenersList = listeners.getListeners();
+		for (int i = 0; i < listenersList.length; i++) {
+			if (isAddition) {
+				((ExternalPHPFilesListener)listenersList[i]).externalFileAdded(iFilePath, localPath);
+			} else {
+				((ExternalPHPFilesListener)listenersList[i]).externalFileRemoved(iFilePath, localPath);
+			}
+		}
 	}
 
 	/**
@@ -58,5 +78,23 @@ public class ExternalPhpFilesRegistry {
 	 */
 	public boolean isEntryExist(String iFilePath) {
 		return externalFilesRegistry.containsKey(iFilePath);
+	}
+
+	/**
+	 * Adds a listener that will be notified on changes made to this {@link ExternalPhpFilesRegistry}.
+	 * 
+	 * @param listener An {@link ExternalPHPFilesListener} to add.
+	 */
+	public void addListener(ExternalPHPFilesListener listener) {
+		listeners.add(listener);
+	}
+
+	/**
+	 * Removes a listener for this {@link ExternalPhpFilesRegistry}.
+	 * 
+	 * @param listener An {@link ExternalPHPFilesListener} to remove.
+	 */
+	public void removeListener(ExternalPHPFilesListener listener) {
+		listeners.remove(listener);
 	}
 }
