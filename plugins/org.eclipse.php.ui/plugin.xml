@@ -1130,5 +1130,15 @@
 			id="org.eclipse.php.ui.reorgMoveAction"
 			priority="10" />
 	</extension>
-
+	<extension point="org.eclipse.wst.sse.ui.dropTargetTransfers">
+		<dropTargetContribution
+			targetID="org.eclipse.php.editor"
+			id="org.eclipse.php.editor.dropTargetContribution">
+			<dropAction
+				class="org.eclipse.php.internal.ui.IncludeDropAction"
+				transferID="org.eclipse.swt.dnd.FileTransfer"
+				id="org.eclipse.php.internal.ui.IncludeDropAction">
+			</dropAction>
+		</dropTargetContribution>
+	</extension>
 </plugin>
