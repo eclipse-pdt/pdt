@@ -1185,7 +1185,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							}
 							//external php file
 							else {
-								String fileName = getPHPFileData().getName();
+								String fileName = getModel().getBaseLocation();
 								if (externalRegistry.isEntryExist(fileName)) {
 									// Make sure that the file has a full path before we try to remove it from the model.
 									ExternalFileDecorator fileDecorator = new ExternalFileDecorator(file, Path.fromOSString(fileName).getDevice());
