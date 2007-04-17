@@ -353,7 +353,11 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * @see org.eclipse.core.resources.IResource#findMarkers(java.lang.String, boolean, int)
 	 */
 	public IMarker[] findMarkers(String type, boolean includeSubtypes, int depth) throws CoreException {
-		return file.findMarkers(type, includeSubtypes, depth);
+		try {
+			return file.findMarkers(type, includeSubtypes, depth);
+		} catch (Exception e) {
+			return new IMarker[0];
+		}
 	}
 
 	/**
