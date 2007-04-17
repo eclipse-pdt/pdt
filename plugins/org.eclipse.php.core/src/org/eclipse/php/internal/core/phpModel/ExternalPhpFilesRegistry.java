@@ -112,4 +112,15 @@ public class ExternalPhpFilesRegistry {
 		}
 		return iFiles;
 	}
+	
+	/**
+	 * Creates and returns an {@link ExternalFileDecorator} for a file that has the given pathString.
+	 * 
+	 * @param pathString A full path string. 
+	 * @return An {@link IFile} (new instance of {@link ExternalFileDecorator}).
+	 */
+	public static IFile getAsIFile(String pathString) {
+		IPath path = Path.fromOSString(pathString);
+		return new ExternalFileDecorator(ResourcesPlugin.getWorkspace().getRoot().getFile(path), path.getDevice());
+	}
 }
