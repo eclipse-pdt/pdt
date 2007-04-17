@@ -402,9 +402,25 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		 * @see org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener#externalFileRemoved(java.lang.String, java.lang.String)
 		 */
 		public void externalFileRemoved(String localPath) {
+			ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+			// Remove all the launches that are related to the removed local path.
+			try {
+				ILaunch[] launchs = launchManager.getLaunches();
+				for (int i = 0; i < launchs.length; i++) {
+					if (localPath.equals(launchs[i].getLaunchConfiguration().getAttribute(PHPCoreConstants.ATTR_FILE, (String) null))) {
+						// Terminate the launch in case that the file was closed during the debug session.
+						if (!launchs[i].isTerminated()) {
+							launchs[i].terminate();
+						}
+						launchManager.removeLaunch(launchs[i]);
+					}
+				}
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
 			// Check if there is a launch for this file.
 			try {
-				ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations(configType);
+				ILaunchConfiguration[] configs = launchManager.getLaunchConfigurations(configType);
 				int numConfigs = configs == null ? 0 : configs.length;
 				for (int i = 0; i < numConfigs; i++) {
 					String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
