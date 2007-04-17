@@ -27,77 +27,81 @@ import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
 public class BreakpointSet {
-    
-    private IProject fProject;
-    private ArrayList fZips;
-    private ArrayList fDirectories;
-    private ArrayList fProjects;
-    private boolean fIsPHPCGI;
-    
-    public BreakpointSet (IProject project, boolean isPHPCGI) {
-        
-        fProject = project;
-        fIsPHPCGI = isPHPCGI;
-        fZips = new ArrayList();
-        fDirectories = new ArrayList();
-        fProjects = new ArrayList();
-        
-        if (project == null);
-        PHPProjectOptions options = PHPProjectOptions.forProject(project);
-        if (options != null) {
-            IIncludePathEntry[] entries = options.readRawIncludePath();
 
-            if (entries != null) {
-                for (int i = 0; i < entries.length; i++) {
-                    if (entries[i].getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-                        IPath path = entries[i].getPath();
-                        File file = new File(path.toString());
-                        if (entries[i].getContentKind() == IIncludePathEntry.K_BINARY) {
-                            fZips.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
-                        } else {
-                            fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
-                        }
-                    } else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-                        IResource includeResource = entries[i].getResource();
-                        if (includeResource instanceof IProject) {
-                            fProjects.add(includeResource);
-                        }
-                    } else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-                        IPath path = entries[i].getPath();
-                        String variableName = path.toString();
-                        File file = getVariableFile(variableName);
-                        if (file.isDirectory()) {
-                            fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
-                        } else {
-                            String fileName = file.getName();
-                            if (fileName.toLowerCase().endsWith(".zip")) { //$NON-NLS-1$
-                                fZips.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-    }
-    
-    public boolean supportsBreakpoint(IBreakpoint breakpoint){
-        
-        // If no project, assume everything in the workspace
-        if (fProject == null) return true;
-        
-        PHPLineBreakpoint bp = (PHPLineBreakpoint) breakpoint;
-        IMarker marker = bp.getMarker();
-        IResource resource = null;
-        if (breakpoint instanceof PHPRunToLineBreakpoint) {
-            return true;
-        } else {
-            resource = marker.getResource();
-        }
-        
-        if (!fIsPHPCGI) {
-            if (resource instanceof IWorkspaceRoot) {
-            	try {
+	private IProject fProject;
+	private ArrayList fZips;
+	private ArrayList fDirectories;
+	private ArrayList fProjects;
+	private boolean fIsPHPCGI;
+
+	public BreakpointSet(IProject project, boolean isPHPCGI) {
+
+		fProject = project;
+		fIsPHPCGI = isPHPCGI;
+		fZips = new ArrayList();
+		fDirectories = new ArrayList();
+		fProjects = new ArrayList();
+
+		if (project == null)
+			;
+		PHPProjectOptions options = PHPProjectOptions.forProject(project);
+		if (options != null) {
+			IIncludePathEntry[] entries = options.readRawIncludePath();
+
+			if (entries != null) {
+				for (int i = 0; i < entries.length; i++) {
+					if (entries[i].getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+						IPath path = entries[i].getPath();
+						File file = new File(path.toString());
+						if (entries[i].getContentKind() == IIncludePathEntry.K_BINARY) {
+							fZips.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
+						} else {
+							fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
+						}
+					} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+						IResource includeResource = entries[i].getResource();
+						if (includeResource instanceof IProject) {
+							fProjects.add(includeResource);
+						}
+					} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+						IPath path = entries[i].getPath();
+						String variableName = path.toString();
+						File file = getVariableFile(variableName);
+						if (file != null) {
+							if (file.isDirectory()) {
+								fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
+							} else {
+								String fileName = file.getName();
+								if (fileName.toLowerCase().endsWith(".zip")) { //$NON-NLS-1$
+									fZips.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
+
+		// If no project, assume everything in the workspace
+		if (fProject == null)
+			return true;
+
+		PHPLineBreakpoint bp = (PHPLineBreakpoint) breakpoint;
+		IMarker marker = bp.getMarker();
+		IResource resource = null;
+		if (breakpoint instanceof PHPRunToLineBreakpoint) {
+			return true;
+		} else {
+			resource = marker.getResource();
+		}
+
+		if (!fIsPHPCGI) {
+			if (resource instanceof IWorkspaceRoot) {
+				try {
 					if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
 						// The breakpoint was set on an external file (out of the workspace).
 						// Return true to support this breakpoint.
@@ -105,32 +109,35 @@ public class BreakpointSet {
 					}
 				} catch (CoreException e) {
 				}
-                String includeType = marker.getAttribute(IPHPConstants.Include_Storage_type, "");
-                String id = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, "");
-                String filename = marker.getAttribute(IPHPConstants.Include_Storage, "");
-                String base = id.substring(0,(id.length()-(filename.length()+1)));
-                if (includeType.equals(IPHPConstants.Include_Storage_zip)) {
-                    Object [] zips = fZips.toArray();
-                    for (int i=0; i < zips.length; i++){
-                        if (base.equals((String)zips[i]))return true;
-                    }
-                   return false;
-                } else if (includeType.equals(IPHPConstants.Include_Storage_LFile)) {                    
-                    Object [] dirs = fDirectories.toArray();
-                    for (int i=0; i < dirs.length; i++){
-                        if (base.equals((String)dirs[i]))return true;
-                    }
-                    return false;
-                }
-                return true;
-            } else {
-                IProject project = resource.getProject();
-                if (fProject.equals(project))return true;
-                return fProjects.contains(project);
-            }
-        } else {
-            if (resource instanceof IWorkspaceRoot){
-            	try {
+				String includeType = marker.getAttribute(IPHPConstants.Include_Storage_type, "");
+				String id = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, "");
+				String filename = marker.getAttribute(IPHPConstants.Include_Storage, "");
+				String base = id.substring(0, (id.length() - (filename.length() + 1)));
+				if (includeType.equals(IPHPConstants.Include_Storage_zip)) {
+					Object[] zips = fZips.toArray();
+					for (int i = 0; i < zips.length; i++) {
+						if (base.equals((String) zips[i]))
+							return true;
+					}
+					return false;
+				} else if (includeType.equals(IPHPConstants.Include_Storage_LFile)) {
+					Object[] dirs = fDirectories.toArray();
+					for (int i = 0; i < dirs.length; i++) {
+						if (base.equals((String) dirs[i]))
+							return true;
+					}
+					return false;
+				}
+				return true;
+			} else {
+				IProject project = resource.getProject();
+				if (fProject.equals(project))
+					return true;
+				return fProjects.contains(project);
+			}
+		} else {
+			if (resource instanceof IWorkspaceRoot) {
+				try {
 					if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
 						// The breakpoint was set on an external file (out of the workspace).
 						// Return true to support this breakpoint.
@@ -138,31 +145,34 @@ public class BreakpointSet {
 					}
 				} catch (CoreException e) {
 				}
-                return false;
-            } else { 
-                IProject project = resource.getProject();
-                if (fProject.equals(project)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        
-    }
+				return false;
+			} else {
+				IProject project = resource.getProject();
+				if (fProject.equals(project)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
 
-    private File getVariableFile(String variableName) {
-        int index = variableName.indexOf('/');
-        String extention = ""; //$NON-NLS-1$
-        if (index != -1) {
-            if (index + 1 < variableName.length()) {
-                extention = variableName.substring(index + 1);
-            }
-            variableName = variableName.substring(0, index);
-        }
-        IPath path = PHPProjectOptions.getIncludePathVariable(variableName);
-        path = path.append(extention);
-        return path.toFile();
-    }
-    
+	}
+
+	private File getVariableFile(String variableName) {
+		int index = variableName.indexOf('/');
+		String extention = ""; //$NON-NLS-1$
+		if (index != -1) {
+			if (index + 1 < variableName.length()) {
+				extention = variableName.substring(index + 1);
+			}
+			variableName = variableName.substring(0, index);
+		}
+		IPath path = PHPProjectOptions.getIncludePathVariable(variableName);
+		if (path == null) {
+			return null;
+		}
+		path = path.append(extention);
+		return path.toFile();
+	}
+
 }
