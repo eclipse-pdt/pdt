@@ -18,6 +18,7 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
 import org.w3c.dom.Document;
@@ -136,7 +137,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		String path = getBaseLocation();
 		if (path == null || path.length() == 0) {
 			Object id = getId();
-			if (id == null)
+			if (id == null || IModelManager.UNMANAGED_MODEL.equals(id))
 				return null;
 			path = id.toString();
 		}
