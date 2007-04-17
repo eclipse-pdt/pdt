@@ -237,7 +237,7 @@ public class EditorUtility {
 				Path path = new Path(externalSource.getPath());
 				//check if external file
 				if (ExternalPhpFilesRegistry.getInstance().isEntryExist(path.toString())) {
-					LocalFile locFile = new LocalFile(new File(ExternalPhpFilesRegistry.getInstance().getEntryFromRegistry(path.toString())));
+					LocalFile locFile = new LocalFile(new File(path.toString()));
 					final JavaFileEditorInput externalInput = new JavaFileEditorInput(locFile);
 					return externalInput;
 				}

@@ -48,6 +48,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
@@ -1183,11 +1184,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 								PHPWorkspaceModelManager.getInstance().addFileToModel(getFile());
 							}
 							//external php file
-							else if (externalRegistry.isEntryExist(file.getFullPath().toString())) {
-								PHPWorkspaceModelManager.getInstance().removeFileFromModel(file);
-								externalRegistry.removeFileEntry(file.getFullPath().toString());
-
+							else {
+								String fileName = getPHPFileData().getName();
+								if (externalRegistry.isEntryExist(fileName)) {
+									// Make sure that the file has a full path before we try to remove it from the model.
+									ExternalFileDecorator fileDecorator = new ExternalFileDecorator(file, Path.fromOSString(fileName).getDevice());
+									PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
+									externalRegistry.removeFileEntry(fileName);
+								}
 							}
+
 						}
 						getSite().getWorkbenchWindow().removePerspectiveListener(this);
 					}
@@ -1265,7 +1271,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		} else if (input instanceof JavaFileEditorInput) {
 			JavaFileEditorInput fileInput = (JavaFileEditorInput) input;
 			IPath path = fileInput.getPath();
-			resource = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
+			// Wrap this file because it's an external (non workspace) file.
+			resource = new ExternalFileDecorator(((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(path), path.getDevice());
 		} else if (input instanceof StorageEditorInput) {
 			final StorageEditorInput editorInput = (StorageEditorInput) input;
 			final IStorage storage = editorInput.getStorage();
@@ -1279,7 +1286,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				//add external php file to registry
 				if (input instanceof JavaFileEditorInput) {
 					IPath path = ((JavaFileEditorInput) input).getPath();
-					ExternalPhpFilesRegistry.getInstance().addFileEntry(resource.getFullPath().toString(), path.toString());
+					ExternalPhpFilesRegistry.getInstance().addFileEntry(path.toString());
 				}
 				PhpSourceParser.editFile.set(resource);
 				super.doSetInput(input);
