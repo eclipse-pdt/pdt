@@ -3,13 +3,17 @@ package org.eclipse.php.internal.debug.ui.console;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.ui.console.FileLink;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.debug.ui.Logger;
-import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
@@ -55,10 +59,20 @@ public class PHPFileLink implements IHyperlink {
 		IEditorPart editorPart = null;
 		DOMModelForPHP domModel = null;
 		try {
+			if (fFile instanceof PHPCodeData) {
+				IPath path = Path.fromOSString(((PHPCodeData) fFile).getName());
+				fFile = new ExternalFileDecorator(ResourcesPlugin.getWorkspace().getRoot().getFile(path), path.getDevice()) {
+					/*
+					 * Override the default IFile exists method to allow the retrival of the DOM model.
+					 */
+					public boolean exists() {
+						return getFullPath().toFile().exists();
+					}
+				};
+			}
 			editorPart = EditorUtility.openInEditor(fFile, false);
 			if (editorPart != null && fFileLineNumber > 0) {
 				if (fFileOffset < 0) {
-					PHPStructuredEditor e = (PHPStructuredEditor) editorPart;
 					domModel = ((DOMModelForPHP) StructuredModelManager.getModelManager().getModelForRead((IFile) fFile));
 					IRegion region = domModel.getDocument().getStructuredDocument().getLineInformation(fFileLineNumber - 1);
 					fFileOffset = region.getOffset();
@@ -78,7 +92,7 @@ public class PHPFileLink implements IHyperlink {
 		} finally {
 			if (editorPart != null) {
 				EditorUtility.revealInEditor(editorPart, fFileOffset, fFileLength);
-				if(domModel != null) {
+				if (domModel != null) {
 					domModel.releaseFromRead();
 				}
 			}
