@@ -29,6 +29,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
@@ -58,7 +59,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	 */
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
-			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, getPHPExeLaunchConfigType(), null);
+			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, getPHPExeLaunchConfigType());
 		}
 
 	}
@@ -74,10 +75,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			// It's probably a launch for a file that is not in the workspace.
 			IPath path = ((JavaFileEditorInput) input).getPath();
 			file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
-			device = path.getDevice();
+			file = new ExternalFileDecorator(file, path.getDevice());
 		}
 		if (file != null) {
-			searchAndLaunch(new Object[] { file }, mode, getPHPExeLaunchConfigType(), device);
+			searchAndLaunch(new Object[] { file }, mode, getPHPExeLaunchConfigType());
 		}
 	}
 
@@ -86,7 +87,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		return lm.getLaunchConfigurationType(IPHPConstants.PHPEXELaunchType);
 	}
 
-	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType, String device) {
+	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
 		int entries = search == null ? 0 : search.length;
 		for (int i = 0; i < entries; i++) {
 			try {
@@ -104,9 +105,6 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 					if (contentType.isAssociatedWith(file.getName())) {
 						phpPathString = file.getFullPath().toString();
-						if (device != null && !file.exists()) {
-							phpPathString = device + phpPathString;
-						}
 					}
 				}
 

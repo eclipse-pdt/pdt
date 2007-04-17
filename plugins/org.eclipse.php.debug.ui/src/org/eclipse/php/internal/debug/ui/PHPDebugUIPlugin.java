@@ -393,7 +393,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		 * (non-Javadoc)
 		 * @see org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener#externalFileAdded(java.lang.String, java.lang.String)
 		 */
-		public void externalFileAdded(String iFilePath, String localPath) {
+		public void externalFileAdded(String localPath) {
 			// Empty
 		}
 
@@ -401,7 +401,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		 * (non-Javadoc)
 		 * @see org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener#externalFileRemoved(java.lang.String, java.lang.String)
 		 */
-		public void externalFileRemoved(String iFilePath, String localPath) {
+		public void externalFileRemoved(String localPath) {
 			// Check if there is a launch for this file.
 			try {
 				ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations(configType);
