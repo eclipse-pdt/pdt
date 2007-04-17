@@ -586,11 +586,22 @@ public class DebugConnectionThread implements Runnable {
 
 	/**
 	 * Creates a new IDebugTarget.
-	 *
+	 * This create method is usually used when hooking a PHP web page launch.
+	 * 
 	 * @throws CoreException
 	 */
 	protected IDebugTarget createDebugTraget(DebugConnectionThread thread, ILaunch launch, String url, int requestPort, PHPProcess process, String contextRoot, boolean runWithDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
 		return new PHPDebugTarget(thread, launch, url, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, project);
+	}
+
+	/**
+	 * Creates a new IDebugTarget.
+	 * This create method is usually used when hooking a PHP executable launch.
+	 * 
+	 * @throws CoreException 
+	 */
+	protected PHPDebugTarget createDebugTarget(DebugConnectionThread thread, ILaunch launch, String phpExeString, String debugFileName, String workspaceRootPath, int requestPort, PHPProcess process, boolean runWithDebugInfo, boolean stopAtFirstLine, IProject project) throws CoreException {
+		return new PHPDebugTarget(thread, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
 	}
 
 	/**
@@ -636,7 +647,7 @@ public class DebugConnectionThread implements Runnable {
 		IPath phpExe = new Path(phpExeString);
 		PHPProcess process = new PHPProcess(launch, phpExe.toOSString());
 
-		debugTarget = new PHPDebugTarget(this, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
+		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
 		launch.addDebugTarget(debugTarget);
 		// A fix for Linux display problem.
 		// This code will auto-expand the debugger view tree.
