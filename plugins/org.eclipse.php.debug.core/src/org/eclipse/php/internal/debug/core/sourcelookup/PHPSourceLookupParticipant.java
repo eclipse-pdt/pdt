@@ -47,9 +47,8 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 					if (!file.exists()) {
 						return EMPTY;
 					}
-					String path = '/' + stackFrame.getSourceName();
-					if (ExternalPhpFilesRegistry.getInstance().isEntryExist(path)) {
-						LocalFile locFile = new LocalFile(new File(path));
+					if (ExternalPhpFilesRegistry.getInstance().isEntryExist(fileName)) {
+						LocalFile locFile = new LocalFile(new File(fileName));
 						final JavaFileEditorInput externalInput = new JavaFileEditorInput(locFile);
 						IStorage storage = externalInput.getStorage();
 						if (storage != null) {
