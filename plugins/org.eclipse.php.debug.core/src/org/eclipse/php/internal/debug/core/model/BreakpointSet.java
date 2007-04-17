@@ -65,7 +65,7 @@ public class BreakpointSet {
                     } else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
                         IPath path = entries[i].getPath();
                         String variableName = path.toString();
-                        File file = getVriableFile(variableName);
+                        File file = getVariableFile(variableName);
                         if (file.isDirectory()) {
                             fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
                         } else {
@@ -151,7 +151,7 @@ public class BreakpointSet {
         
     }
 
-    private File getVriableFile(String variableName) {
+    private File getVariableFile(String variableName) {
         int index = variableName.indexOf('/');
         String extention = ""; //$NON-NLS-1$
         if (index != -1) {
