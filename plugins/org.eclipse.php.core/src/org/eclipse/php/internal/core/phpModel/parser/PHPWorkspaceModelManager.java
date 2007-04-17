@@ -22,6 +22,7 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModelFilterable.IPhpModelFilter;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -337,7 +338,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public PHPFileData getModelForFile(String filename) {
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filename));
+		IPath path = Path.fromOSString(filename);
+		IFile file = new ExternalFileDecorator(ResourcesPlugin.getWorkspace().getRoot().getFile(path), path.getDevice());
 		PHPFileData result = null;
 		result = getModelForFile(filename, false);
 		if (result == null && file != null) {

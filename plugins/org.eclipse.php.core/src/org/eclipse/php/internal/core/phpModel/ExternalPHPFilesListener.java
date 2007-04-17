@@ -20,16 +20,14 @@ public interface ExternalPHPFilesListener {
 	/**
 	 * Notifies that an external file was added to the external PHP files registry.
 	 * 
-	 * @param iFilePath	The String representation of the IFile's path
 	 * @param localPath	The String representation of the real File's path from file system
 	 */
-	public void externalFileAdded(String iFilePath, String localPath);
+	public void externalFileAdded(String localPath);
 	
 	/**
 	 * Notifies that an external file was removed from the external PHP files registry.
 	 * 
-	 * @param iFilePath	The String representation of the IFile's path
 	 * @param localPath	The String representation of the real File's path from file system
 	 */
-	public void externalFileRemoved(String iFilePath, String localPath);
+	public void externalFileRemoved(String localPath);
 }
