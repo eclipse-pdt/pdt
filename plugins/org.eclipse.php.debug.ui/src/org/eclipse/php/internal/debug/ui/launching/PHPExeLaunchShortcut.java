@@ -218,6 +218,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
+		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpPathString);
 		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, phpExeName);
 		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 
