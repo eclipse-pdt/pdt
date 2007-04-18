@@ -422,10 +422,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	public void editorContextMenuAboutToShow(IMenuManager menu) {
 		super.editorContextMenuAboutToShow(menu);
 
-		ActionContext context = new ActionContext(getSelectionProvider().getSelection());
-		fContextMenuGroup.setContext(context);
-		fContextMenuGroup.fillContextMenu(menu);
-		fContextMenuGroup.setContext(null);
+		if (fContextMenuGroup != null) {
+			ActionContext context = new ActionContext(getSelectionProvider().getSelection());
+			fContextMenuGroup.setContext(context);
+			fContextMenuGroup.fillContextMenu(menu);
+			fContextMenuGroup.setContext(null);
+		}
 	}
 
 	protected void addContextMenuActions(final IMenuManager menu) {
