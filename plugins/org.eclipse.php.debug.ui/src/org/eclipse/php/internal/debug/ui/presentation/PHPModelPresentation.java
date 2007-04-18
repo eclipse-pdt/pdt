@@ -51,7 +51,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
  * Renders PHP debug elements
  */
 public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation {
-	
+
 	protected static final String JAVA_FILE_STORAGE_CLASS_NAME = ".JavaFileStorage";
 	private ImageDescriptorRegistry fDebugImageRegistry;
 
@@ -238,9 +238,13 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 					IProject project = PHPDebugUIPlugin.getProject(projectName);
 					if (IPHPConstants.Include_Storage_LFile.equals(type)) {
 						File file = new File(id);
-						LocalFileStorage lfs = new LocalFileStorage(file);
-						lfs.setProject(project);
-						return new LocalFileStorageEditorInput(lfs);
+						if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
+							return new JavaFileEditorInput(new LocalFile(file));
+						} else {
+							LocalFileStorage lfs = new LocalFileStorage(file);
+							lfs.setProject(project);
+							return new LocalFileStorageEditorInput(lfs);
+						}
 					} else if (IPHPConstants.Include_Storage_zip.equals(type)) {
 						int index = id.lastIndexOf(filename);
 						String archive = id.substring(0, index - 1);
