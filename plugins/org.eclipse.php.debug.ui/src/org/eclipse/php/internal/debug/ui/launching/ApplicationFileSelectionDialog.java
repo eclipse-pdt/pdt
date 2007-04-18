@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.launching;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.model.ExtendedWorkbenchContentProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -27,45 +31,61 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
 public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 
-    protected String[] fExtensions;
-    protected String[] fRequiredNatures;
-    private Button fExternalFilesBt;
-    private boolean fAllowExternalFiles;
+	private static final String SHOW_EXTERNAL_FILES = "ApplicationFileSelectionDialog_showExternalFiles";
+	protected String[] fExtensions;
+	protected String[] fRequiredNatures;
+	private Button fExternalFilesBt;
+	private boolean fAllowExternalFiles;
+	private Preferences fStore;
 
-    /**
-     * FilteredFileSelectionDialog constructor comment.
-     * @param parent Shell
-     * @param title String
-     * @param message String
-     * @parent extensions String[]
-     * @param allowMultiple boolean
-     * @param allowExternalFiles Allows selection from an external files that are currently opened in the editor
-     */
-    public ApplicationFileSelectionDialog(Shell parent, ILabelProvider labelProvider, String title, String message, String[] extensions, String[] requiredNatures, boolean allowMultiple, boolean allowExternalFiles) {
+	/**
+	 * FilteredFileSelectionDialog constructor comment.
+	 * 
+	 * @param parent Shell
+	 * @param title String
+	 * @param message String
+	 * @parent extensions String[]
+	 * @param allowMultiple boolean
+	 * @param allowExternalFiles Allows selection from an external files that are currently opened in the editor
+	 */
+	public ApplicationFileSelectionDialog(Shell parent, ILabelProvider labelProvider, String title, String message, String[] extensions, String[] requiredNatures, boolean allowMultiple, boolean allowExternalFiles) {
+		super(parent, labelProvider, new ExtendedWorkbenchContentProvider());
+		this.fAllowExternalFiles = allowExternalFiles;
+		setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
+		setTitle(title);
+		if (title == null)
+			setTitle("Title"); //$NON-NLS-1$
+		if (message == null)
+			message = "Message"; //$NON-NLS-1$
+		setMessage(message);
+		setAllowMultiple(allowMultiple);
 
-        super(parent, labelProvider, new ExtendedWorkbenchContentProvider());
-        this.fAllowExternalFiles = allowExternalFiles;
-        setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
-        setTitle(title);
-        if (title == null)
-            setTitle("Title"); //$NON-NLS-1$
-        if (message == null)
-            message = "Message"; //$NON-NLS-1$
-        setMessage(message);
-        setAllowMultiple(allowMultiple);
+		if (extensions != null) {
+			addFilter(new ApplicationFileViewerFilter(requiredNatures, extensions));
+		}
+		PHPDebugUIPlugin debugPlugin = PHPDebugUIPlugin.getDefault();
+		if (debugPlugin != null) {
+			fStore = debugPlugin.getPluginPreferences();
+		}
+	}
 
-        if (extensions != null)
-            addFilter(new ApplicationFileViewerFilter(requiredNatures, extensions));
+	/**
+	 * Returns an array of supported extensions.
+	 * 
+	 * @return
+	 */
+	public String[] getExtensions() {
+		return fExtensions;
+	}
 
-    }
-
-    public String[] getExtensions() {
-        return fExtensions;
-    }
-
-    public void setExtensions(String[] extensions) {
-        fExtensions = extensions;
-    }
+	/**
+	 * Set the supported extensions.
+	 * 
+	 * @param extensions
+	 */
+	public void setExtensions(String[] extensions) {
+		fExtensions = extensions;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.dialogs.ElementTreeSelectionDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
@@ -78,15 +98,15 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 		Composite composite = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginHeight = 0;
-        layout.marginLeft = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
-        layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-        composite.setLayout(layout);
+		layout.marginLeft = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		composite.setFont(font);
-		
+
 		// Attach the regular dialog area
 		super.createDialogArea(composite);
-		
+
 		// Attach the checkbox
 		fExternalFilesBt = new Button(composite, SWT.CHECK);
 		fExternalFilesBt.setText("Show non-workspace files");
@@ -94,9 +114,43 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 		data.grabExcessHorizontalSpace = true;
 		data.horizontalIndent = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
 		fExternalFilesBt.setLayoutData(data);
-		// TODO - Take the selection state from the preferences
-		
-		
+
+		// Add a listener
+		fExternalFilesBt.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				updateView(fExternalFilesBt.getSelection());
+			}
+		});
+
+		// Set the current state as saved in the preferences.
+		String shouldShowExternals = fStore.getString(SHOW_EXTERNAL_FILES);
+		if (shouldShowExternals.length() == 0) {
+			fExternalFilesBt.setSelection(true);
+			updateView(true);
+		} else {
+			boolean show = Boolean.parseBoolean(shouldShowExternals);
+			fExternalFilesBt.setSelection(show);
+			updateView(show);
+		}
+
 		return composite;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.dialogs.SelectionStatusDialog#okPressed()
+	 */
+	protected void okPressed() {
+		// Save the external files visibility state into the preferences.
+		fStore.setValue(SHOW_EXTERNAL_FILES, Boolean.toString(fExternalFilesBt.getSelection()));
+		super.okPressed();
+	}
+
+	/*
+	 * Update the tree view.
+	 */
+	private void updateView(boolean showExternalFiles) {
+		((ExtendedWorkbenchContentProvider) getTreeViewer().getContentProvider()).setProvideExternalFiles(showExternalFiles);
+		getTreeViewer().refresh();
 	}
 }

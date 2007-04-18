@@ -27,11 +27,42 @@ import org.eclipse.ui.model.BaseWorkbenchContentProvider;
  */
 public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvider {
 
+	private boolean isProvidingExternals;
+
 	/**
 	 * Constructs a new ExtendedWorkbenchContentProvider.
+	 * By default, the provider provides the external files when the {@link #getChildren(Object)} method is called.
 	 */
 	public ExtendedWorkbenchContentProvider() {
 		super();
+		isProvidingExternals = true;
+	}
+
+	/**
+	 * Constructs a new ExtendedWorkbenchContentProvider.
+	 * 
+	 * @param provideExternalFiles Set the content provider to provide external files when the {@link #getChildren(Object)} is called.
+	 */
+	public ExtendedWorkbenchContentProvider(boolean provideExternalFiles) {
+		super();
+		isProvidingExternals = provideExternalFiles;
+	}
+
+	/**
+	 * Set the content provider to provide external files when the {@link #getChildren(Object)} is called.
+	 * 
+	 * @param provide
+	 */
+	public void setProvideExternalFiles(boolean shouldProvide) {
+		this.isProvidingExternals = shouldProvide;
+	}
+
+	/**
+	 * Returns if this provider provides external files when the {@link #getChildren(Object)} method is called.
+	 * @return
+	 */
+	public boolean isProvidingExternalFiles() {
+		return isProvidingExternals;
 	}
 
 	/* (non-Javadoc)
@@ -39,7 +70,7 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 	 */
 	public Object[] getChildren(Object element) {
 		Object[] children = super.getChildren(element);
-		if (element instanceof IWorkspaceRoot) {
+		if (isProvidingExternals && element instanceof IWorkspaceRoot) {
 			// Add the external files as IFiles
 			IFile[] externalFiles = ExternalPhpFilesRegistry.getInstance().getAllAsIFiles();
 			if (externalFiles.length > 0) {
