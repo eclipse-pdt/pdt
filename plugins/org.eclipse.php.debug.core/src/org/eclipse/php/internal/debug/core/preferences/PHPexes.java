@@ -180,6 +180,7 @@ public class PHPexes {
 		}
 		prefs.setValue(PHPDebugCorePreferenceNames.INSTALLED_PHP_NAMES, namesString.toString());
 		prefs.setValue(PHPDebugCorePreferenceNames.INSTALLED_PHP_LOCATIONS, locationsString.toString());
+		PHPDebugPlugin.getDefault().savePluginPreferences();
 //		final String defaultString = defaultItem != null ? defaultItem.name : "";
 //		prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP, defaultString);
 	}
