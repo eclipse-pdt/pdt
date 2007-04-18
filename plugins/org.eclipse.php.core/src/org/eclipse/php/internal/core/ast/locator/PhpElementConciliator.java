@@ -144,7 +144,7 @@ public class PhpElementConciliator {
 
 		ASTNode parent = locateNode.getParent();
 		final int parentType = parent.getType();
-		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.CLASS_DECLARATION || parentType == ASTNode.CATCH_CLAUSE || parentType == ASTNode.FORMAL_PARAMETER) {
+		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.CLASS_DECLARATION || parentType == ASTNode.INTERFACE_DECLARATION  || parentType == ASTNode.CATCH_CLAUSE || parentType == ASTNode.FORMAL_PARAMETER) {
 			return true;
 		}
 
@@ -195,6 +195,32 @@ public class PhpElementConciliator {
 	 */
 	private static boolean isGlobalVariable(ASTNode locateNode) {
 		assert locateNode != null;
+
+		// check if it is a GLOBALS['a'] direction
+		if (locateNode.getType() == ASTNode.SCALAR) {
+			Scalar scalar = (Scalar) locateNode;
+			final String stringValue = scalar.getStringValue();
+			if (scalar.getScalarType() == Scalar.TYPE_STRING && stringValue.length() > 2) {
+				final char charAtZero = stringValue.charAt(0);
+				final char charAtEnd = stringValue.charAt(stringValue.length() - 1);
+				if (!detectString(charAtZero) || !detectString(charAtEnd)) {
+					return false;
+				}
+				if (scalar.getParent().getType() == ASTNode.ARRAY_ACCESS) {
+					ArrayAccess arrayAccess = (ArrayAccess) scalar.getParent();
+					final Expression variableName = arrayAccess.getVariableName();
+					if (variableName.getType() == ASTNode.VARIABLE) {
+						Variable var = (Variable) variableName;
+						if (var.isDollared() &&  var.getVariableName().getType() == ASTNode.IDENTIFIER) {
+							final Identifier id = (Identifier) var.getVariableName();
+							if (id.getName().equals("GLOBALS")) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
 
 		// check if it is an identifier
 		if (locateNode.getType() != ASTNode.IDENTIFIER) {
@@ -256,6 +282,14 @@ public class PhpElementConciliator {
 			parent = parent.getParent();
 		}
 		return true;
+	}
+
+	/**
+	 * @param ch
+	 * @return
+	 */
+	private static final boolean detectString(final char ch) {
+		return ch == '\'' || ch == '\"';
 	}
 
 	/**
