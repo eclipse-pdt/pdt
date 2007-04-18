@@ -401,7 +401,15 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		 * (non-Javadoc)
 		 * @see org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener#externalFileRemoved(java.lang.String, java.lang.String)
 		 */
-		public void externalFileRemoved(String localPath) {
+		public void externalFileRemoved(final String localPath) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					handleExternalFileRemoval(localPath);
+				}
+			});
+		}
+
+		private void handleExternalFileRemoval(String localPath) {
 			ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 			// Remove all the launches that are related to the removed local path.
 			try {
