@@ -27,8 +27,8 @@ public class PhpMergeViewerCreator implements IViewerCreator  {
 	 */
 	
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {
-		return new TextMergeViewer(parent, config);
-		// return new PhpMergeViewer(parent, config);
+		// return new TextMergeViewer(parent, config);
+		return new PhpMergeViewer(parent, config);
 	}
 
 	

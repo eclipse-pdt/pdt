@@ -17,9 +17,7 @@ import java.util.ResourceBundle;
 import org.eclipse.compare.internal.MergeViewerAction;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.jface.action.*;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.*;
-import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -28,13 +26,13 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 /**
  * Extends the JFace SourceViewer with some convenience methods.
  */
-public class MergeSourceViewer extends SourceViewer
+public class MergeSourceViewer extends StructuredTextViewer
 						implements ISelectionChangedListener, ITextListener, IMenuListener {
 								
 	public static final String UNDO_ID= "undo"; //$NON-NLS-1$
@@ -77,15 +75,13 @@ public class MergeSourceViewer extends SourceViewer
 	private IDocument fRememberedDocument;
 	
 	private boolean fAddSaveAction= true;
-	private final StyledText fTextWidget;
-	
 	
 	public MergeSourceViewer(Composite parent, ResourceBundle bundle) {
 		this(parent, SWT.NONE, bundle);
 	}
 	
 	public MergeSourceViewer(Composite parent, int style, ResourceBundle bundle) {
-		super(parent, null, style | SWT.H_SCROLL | SWT.V_SCROLL);
+		super(parent, null, null, false, style | SWT.H_SCROLL | SWT.V_SCROLL);
 		
 		fResourceBundle= bundle;
 		
@@ -93,19 +89,10 @@ public class MergeSourceViewer extends SourceViewer
 		menu.setRemoveAllWhenShown(true);
 		menu.addMenuListener(this);
 
-		fTextWidget = new StyledText(parent, SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.READ_ONLY);
-		GridData data = new GridData(GridData.FILL_BOTH);
-		fTextWidget.setLayoutData(data);
-		fTextWidget.setEditable(false);
-		fTextWidget.setFont(JFaceResources.getTextFont());
-		StyledText te= getTextWidget();
+		StyledText te = getTextWidget();
 		te.setMenu(menu.createContextMenu(te));
 	}
 		
-	public StyledText getTextWidget() {
-		return fTextWidget;
-	}
-	
 	public void rememberDocument(IDocument doc) {
 //		if (doc != null && fRememberedDocument != null) {
 //			System.err.println("MergeSourceViewer.rememberDocument: fRememberedDocument != null: shouldn't happen"); //$NON-NLS-1$

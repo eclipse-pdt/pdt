@@ -249,7 +249,7 @@ public class AddBlockCommentAction extends BlockCommentAction {
 				IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 				IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(offset);
 				ITextRegion region = sdRegion.getRegionAtCharacterOffset(offset);
-				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+				if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
 					PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
 					region = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 					if (!PHPPartitionTypes.isPHPMultiLineCommentState(region.getType())) {
