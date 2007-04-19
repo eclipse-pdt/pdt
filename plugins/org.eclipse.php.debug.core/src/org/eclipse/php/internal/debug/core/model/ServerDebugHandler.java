@@ -224,6 +224,15 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		if (!fDebugTarget.isPHPCGI()) {
 			length = fDebugTarget.getHTDocs().length() + fDebugTarget.getContextRoot().length();
 			rName = sName.substring(length);
+			// Check if the name exists in the workspace. 
+			// If not, keep the original name.
+			try {
+				if (! ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(rName)).exists()) {
+					rName = sName;
+				}
+			} catch (Exception e) {
+				rName = sName;
+			}
 		} else {
 			length = fDebugTarget.getWorkspacePath().length() + fDebugTarget.getProjectName().length();
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
