@@ -111,7 +111,9 @@ public class PhpElementConciliator {
 		}
 
 		final int length = scalar.getStringValue().length() - 1;
-		if (scalar.getStringValue().charAt(0) != '"' && scalar.getStringValue().charAt(length) != '"') {
+		final char charAtBegining = scalar.getStringValue().charAt(0);
+		final char charAtEnd = scalar.getStringValue().charAt(length);
+		if (!detectString(charAtEnd) && !detectString(charAtBegining)) {
 			return true;
 		}
 
@@ -262,18 +264,7 @@ public class PhpElementConciliator {
 				while (i < statements.length && statements[i].getStart() < targetIdentifier.getStart()) {
 					if (statements[i].getType() == ASTNode.GLOBAL_STATEMENT) {
 						final GlobalStatement globalStatement = (GlobalStatement) statements[i];
-						final Variable[] variables = globalStatement.getVariables();
-						for (int j = 0; j < variables.length; j++) {
-							final Variable current = variables[j];
-
-							assert current.getVariableName().getType() == ASTNode.IDENTIFIER;
-							Identifier id = (Identifier) variable.getVariableName();
-
-							// variables are case sensative
-							if (id.getName().equals(targetIdentifier.getName())) {
-								isGlobal = true;
-							}
-						}
+						isGlobal = checkGlobal(targetIdentifier, variable, isGlobal, globalStatement);
 					}
 					i++;
 				}
@@ -282,6 +273,29 @@ public class PhpElementConciliator {
 			parent = parent.getParent();
 		}
 		return true;
+	}
+
+	/**
+	 * @param targetIdentifier
+	 * @param variable
+	 * @param isGlobal
+	 * @param globalStatement
+	 * @return
+	 */
+	private static boolean checkGlobal(Identifier targetIdentifier, Variable variable, boolean isGlobal, final GlobalStatement globalStatement) {
+		final Variable[] variables = globalStatement.getVariables();
+		for (int j = 0; j < variables.length; j++) {
+			final Variable current = variables[j];
+
+			assert current.getVariableName().getType() == ASTNode.IDENTIFIER;
+			Identifier id = (Identifier) variable.getVariableName();
+
+			// variables are case sensative
+			if (id.getName().equals(targetIdentifier.getName())) {
+				isGlobal = true;
+			}
+		}
+		return isGlobal;
 	}
 
 	/**
