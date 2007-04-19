@@ -179,7 +179,11 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 					if (file.exists()) {
 						fileObject = file;
 					} else {
-						PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(fileName);
+						PHPFileData fileData = null;
+						try {
+							fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(fileName);
+						} catch (Exception e) {
+						}
 						if (file != null) {
 							fileObject = fileData;
 						}
