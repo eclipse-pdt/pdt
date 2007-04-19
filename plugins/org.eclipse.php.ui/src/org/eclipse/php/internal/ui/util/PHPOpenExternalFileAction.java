@@ -22,12 +22,15 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
+
+import com.sun.corba.se.spi.extension.ZeroPortPolicy;
 
 /**
  * This class behaves like OpenExternalFileAction, with the difference that the run method gets a List
@@ -107,6 +110,7 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 					try {
 						page.openEditor(input, editorId);
 					} catch (PartInitException e) {
+						Logger.logException("Failed opening file called externally", e);
 					}
 				} else {
 					if (++numberOfFilesNotFound > 1)
