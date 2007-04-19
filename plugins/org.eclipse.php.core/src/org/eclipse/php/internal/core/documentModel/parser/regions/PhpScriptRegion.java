@@ -108,7 +108,7 @@ public class PhpScriptRegion extends ForeignRegion {
 			final int offset = requestStart - flatnode.getStartOffset() - getStart();
 
 			// support the <?php case
-			if (offset < 3) {
+			if (offset < 4) {
 				return null;
 			}
 			// checks for odd quotes
