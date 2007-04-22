@@ -91,9 +91,9 @@ public class IniModifier {
 
 			if (includePath != null) {
 				includePathBuffer = new StringBuffer(includePath.replaceAll("\"", "")); //$NON-NLS-1$ //$NON-NLS-2$
-				includePathBuffer.append(PATH_SEPARATOR);
 			} else
-				includePathBuffer = new StringBuffer();
+				includePathBuffer = new StringBuffer("."); //$NON-NLS-1$
+			includePathBuffer.append(PATH_SEPARATOR);
 
 			for (int i = 0; i < includePaths.length; ++i)
 				includePathBuffer.append(includePaths[i].toOSString()).append(PATH_SEPARATOR);
