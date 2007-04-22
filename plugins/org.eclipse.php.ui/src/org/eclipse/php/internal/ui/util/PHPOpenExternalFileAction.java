@@ -30,8 +30,6 @@ import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
-import com.sun.corba.se.spi.extension.ZeroPortPolicy;
-
 /**
  * This class behaves like OpenExternalFileAction, with the difference that the run method gets a List
  * of file paths (Strings) to open in the editor, instead of activating a file browse dialog
