@@ -251,7 +251,7 @@ public class PhpElementConciliator {
 			}
 			parent = parent.getParent();
 		}
-		return false;
+		return parent == null;
 	}
 
 	/**
