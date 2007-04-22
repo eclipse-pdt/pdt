@@ -47,6 +47,8 @@ import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesR
 import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
+	/** Constant value indicating if the current platform is Windows */
+	private static final boolean WINDOWS = java.io.File.separatorChar == '\\';
 	public static final String SAVE_AUTOMATICALLY = "save_automatically";
 
 	/** Indicator for an executable ILaunch (inserted into the launch attributes) */
@@ -96,7 +98,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String absolutePath = null;
 		if (projectName == null) {
 			IResource res = workspaceRoot.findMember(filePath);
-			if (res == null && filePath.getDevice() != null) {
+			if (res == null && (!WINDOWS || filePath.getDevice() != null)) {
 				// Get a dummy project because we are probably executing a file that is located out
 				// of the workspace.
 				dummyProject = PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject();
