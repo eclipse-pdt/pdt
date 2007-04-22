@@ -12,7 +12,10 @@ package org.eclipse.php.internal.debug.core.debugger;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
+import java.net.ConnectException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IStatus;
@@ -28,6 +31,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
  * A debug session initializer.
@@ -35,12 +39,11 @@ import org.eclipse.ui.PlatformUI;
 public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 	private DebugException exception;
 	private static boolean isDebugMode = System.getProperty("loggingDebug") != null;
-	
+
 	public void debug(ILaunch launch) throws DebugException {
 		exception = null;
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
-		String encodedURL = parametersInitializer.getRequestURL(launch);
-		encodedURL = encodedURL.replaceAll(" ", "%20");
+		final String encodedURL = parametersInitializer.getRequestURL(launch).replaceAll(" ", "%20");
 		final String debugQuery = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode()) ? encodedURL : encodedURL + '?' + parametersInitializer.generateQuery(launch);
 		if (isDebugMode) {
 			System.out.println("debugQuery = " + debugQuery);
@@ -54,11 +57,12 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		if (openInBrowser) {
 			// Start the debug session by openning a browser that will actually trigger the URL connection
 			// to the debug server.
-			
+
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					try {
-						PlatformUI.getWorkbench().getBrowserSupport().createBrowser(null).openURL(new URL(debugQuery));
+						int browserStyle = IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR | IWorkbenchBrowserSupport.STATUS;
+						PlatformUI.getWorkbench().getBrowserSupport().createBrowser(browserStyle, null, encodedURL, debugQuery).openURL(new URL(debugQuery));
 					} catch (Throwable t) {
 						Logger.logException("Error initializing the web browser.", t);
 						String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
