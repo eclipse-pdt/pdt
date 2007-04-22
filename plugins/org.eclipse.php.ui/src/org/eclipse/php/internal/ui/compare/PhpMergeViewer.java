@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.compare;
 import java.util.ArrayList;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -40,7 +41,9 @@ public class PhpMergeViewer extends TextMergeViewer {
 			if (fSourceViewer == null)
 				fSourceViewer = new ArrayList();
 			fSourceViewer.add(textViewer);
+			
 			((SourceViewer) textViewer).configure(new PHPStructuredTextViewerConfiguration());
+			getControl().setFont(JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT));
 		}
 	}
 	
