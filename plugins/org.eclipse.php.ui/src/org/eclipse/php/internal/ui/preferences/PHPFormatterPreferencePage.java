@@ -12,8 +12,12 @@ package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.util.ElementCreationProxy;
+import org.eclipse.php.ui.preferences.IPHPFormatterConfigurationBlockWrapper;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
@@ -26,7 +30,7 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 	public static final String PREF_ID = "org.eclipse.php.ui.preferences.PHPFormatterPreferencePage"; //$NON-NLS-1$
 	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPFormatterPreferencePage"; //$NON-NLS-1$
 
-	private PHPFormatterConfigurationBlock fConfigurationBlock;
+	private IPHPFormatterConfigurationBlockWrapper fConfigurationBlock;
 
 	public PHPFormatterPreferencePage(){
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
@@ -38,9 +42,30 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 	
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
-		fConfigurationBlock = new PHPFormatterConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
+		fConfigurationBlock = getFormatterPreferencesBlock();
+		fConfigurationBlock.init(getNewStatusChangedListener(), getProject(), container);
 
 		super.createControl(parent);
+	}
+
+	private IPHPFormatterConfigurationBlockWrapper getFormatterPreferencesBlock() {
+		IPHPFormatterConfigurationBlockWrapper prefBlock = null;
+		
+		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterPrefBlock";
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			if (element.getName().equals("block")) {
+				ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
+				prefBlock = (IPHPFormatterConfigurationBlockWrapper) ecProxy.getObject();
+			}
+		}
+		
+		if (prefBlock == null) {
+			prefBlock = new PHPFormatterConfigurationWrapper();
+		}
+		
+		return prefBlock;
 	}
 	
 	protected Control createPreferenceContent(Composite composite) {

@@ -306,9 +306,26 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IHTMLPartitions.HTML_DEFAULT);
-		formatter.setMasterStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()));
-		return formatter;
+		IContentFormatter usedFormatter = null;
+		
+		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterProcessor";
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			if (element.getName().equals("processor")) {
+				ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
+				usedFormatter = (IContentFormatter) ecProxy.getObject();
+			}
+		}
+		
+		if (usedFormatter == null) {
+			usedFormatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IHTMLPartitions.HTML_DEFAULT);
+			((MultiPassContentFormatter) usedFormatter).setMasterStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()));
+		}
+
+		
+		
+		return usedFormatter;
 	}
 
 	private static IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();

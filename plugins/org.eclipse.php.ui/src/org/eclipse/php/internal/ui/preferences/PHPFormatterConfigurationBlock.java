@@ -22,12 +22,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
@@ -56,7 +51,7 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 		initValues();
 	}
 
-	protected Control createContents(Composite parent) {
+	public Control createContents(Composite parent) {
 		setShell(parent.getShell());
 
 		Composite markersComposite = createFormaterContent(parent);
@@ -217,5 +212,33 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 	private void updateButtonStatus(Button b) {
 		fUseTabs = b.getSelection();
 		setValue(PREF_FORMATTER_USE_TABS, fUseTabs ? "true" : "false");
+	}
+
+	public Control createContentsWrapper(Composite composite) {
+		return createContents(composite);
+	}
+
+	public void disposeWrapper() {
+		dispose();		
+	}
+
+	public boolean hasProjectSpecificOptionsWrapper(IProject project) {
+		return hasProjectSpecificOptions(project);
+	}
+
+	public void performApplyWrapper() {
+		performApply();		
+	}
+
+	public void performDefaultsWrapper() {
+		performDefaults();
+	}
+
+	public boolean performOkWrapper() {
+		return performOk();
+	}
+
+	public void useProjectSpecificSettingsWrapper(boolean useProjectSpecificSettings) {
+		useProjectSpecificSettings(useProjectSpecificSettings);
 	}
 }

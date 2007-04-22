@@ -57,6 +57,8 @@
 		id="phpActionDelegator"
 		name="PHP Action Delegator"
 		schema="schema/phpActionDelegator.exsd" />
+ <extension-point id="phpFormatterProcessor" name="PHP Formatter Processor" schema="schema/phpFormatterProcessor.exsd"/>
+ <extension-point id="phpFormatterPrefBlock" name="PHP Formatter Preferences Block" schema="schema/phpFormatterPrefBlock.exsd"/>
 
 	<!--PHP Perspective Definition:-->
 	<extension point="org.eclipse.ui.perspectives">
