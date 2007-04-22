@@ -13,7 +13,9 @@ package org.eclipse.php.internal.core.ast.locator;
 import java.util.LinkedList;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
+import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Conciles the php element from a given path
@@ -146,7 +148,7 @@ public class PhpElementConciliator {
 
 		ASTNode parent = locateNode.getParent();
 		final int parentType = parent.getType();
-		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.CLASS_DECLARATION || parentType == ASTNode.INTERFACE_DECLARATION  || parentType == ASTNode.CATCH_CLAUSE || parentType == ASTNode.FORMAL_PARAMETER) {
+		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.CLASS_DECLARATION || parentType == ASTNode.INTERFACE_DECLARATION || parentType == ASTNode.CATCH_CLAUSE || parentType == ASTNode.FORMAL_PARAMETER) {
 			return true;
 		}
 
@@ -201,41 +203,21 @@ public class PhpElementConciliator {
 		// check if it is a GLOBALS['a'] direction
 		if (locateNode.getType() == ASTNode.SCALAR) {
 			Scalar scalar = (Scalar) locateNode;
-			final String stringValue = scalar.getStringValue();
-			if (scalar.getScalarType() == Scalar.TYPE_STRING && stringValue.length() > 2) {
-				final char charAtZero = stringValue.charAt(0);
-				final char charAtEnd = stringValue.charAt(stringValue.length() - 1);
-				if (!detectString(charAtZero) || !detectString(charAtEnd)) {
-					return false;
-				}
-				if (scalar.getParent().getType() == ASTNode.ARRAY_ACCESS) {
-					ArrayAccess arrayAccess = (ArrayAccess) scalar.getParent();
-					final Expression variableName = arrayAccess.getVariableName();
-					if (variableName.getType() == ASTNode.VARIABLE) {
-						Variable var = (Variable) variableName;
-						if (var.isDollared() &&  var.getVariableName().getType() == ASTNode.IDENTIFIER) {
-							final Identifier id = (Identifier) var.getVariableName();
-							if (id.getName().equals("GLOBALS")) {
-								return true;
-							}
-						}
-					}
-				}
-			}
+			return checkGLOBALS(scalar);
 		}
 
 		// check if it is an identifier
 		if (locateNode.getType() != ASTNode.IDENTIFIER) {
 			return false;
 		}
-		Identifier targetIdentifier = (Identifier) locateNode;
+		final Identifier targetIdentifier = (Identifier) locateNode;
 
 		ASTNode parent = locateNode.getParent();
 		if (parent.getType() != ASTNode.VARIABLE) {
 			return false;
 		}
 
-		Variable variable = (Variable) parent;
+		final Variable variable = (Variable) parent;
 		// if it is not a dollared variable - it is not a global one
 		if (!variable.isDollared() || variable.getParent().getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
@@ -251,28 +233,57 @@ public class PhpElementConciliator {
 
 		// check if declared global in function
 		while (parent != null) {
-
 			// if the variable was used inside a function
 			if (parent.getType() == ASTNode.FUNCTION_DECLARATION) {
-				boolean isGlobal = false;
-
-				final FunctionDeclaration functionDeclaration = (FunctionDeclaration) parent;
-				final Block body = functionDeclaration.getBody();
-				int i = 0;
-
-				final Statement[] statements = body.getStatements();
-				while (i < statements.length && statements[i].getStart() < targetIdentifier.getStart()) {
-					if (statements[i].getType() == ASTNode.GLOBAL_STATEMENT) {
-						final GlobalStatement globalStatement = (GlobalStatement) statements[i];
-						isGlobal = checkGlobal(targetIdentifier, variable, isGlobal, globalStatement);
+				// global declaration detection
+				class GlobalSeacher extends AbstractVisitor {
+					public int offset = -1; 
+					public void visit(GlobalStatement globalStatement) {
+						if (checkGlobal(targetIdentifier, variable, globalStatement)) {
+							offset = globalStatement.getStart();
+						}
 					}
-					i++;
 				}
-				return isGlobal;
+				GlobalSeacher searchGlobal = new GlobalSeacher();
+				parent.accept(searchGlobal);
+				if (searchGlobal.offset <= targetIdentifier.getStart())
+					return true;
 			}
 			parent = parent.getParent();
 		}
-		return true;
+		return false;
+	}
+
+	/**
+	 * @param scalar
+	 * @return true if the scalar is defines as $GLOBALS call
+	 */
+	private static boolean checkGLOBALS(Scalar scalar) {
+		final String stringValue = scalar.getStringValue();
+		if (scalar.getScalarType() != Scalar.TYPE_STRING || stringValue.length() < 3) {
+			return false;
+		}
+		final char charAtZero = stringValue.charAt(0);
+		final char charAtEnd = stringValue.charAt(stringValue.length() - 1);
+
+		if (!detectString(charAtZero) || !detectString(charAtEnd)) {
+			return false;
+		}
+		
+		if (scalar.getParent().getType() == ASTNode.ARRAY_ACCESS) {
+			ArrayAccess arrayAccess = (ArrayAccess) scalar.getParent();
+			final Expression variableName = arrayAccess.getVariableName();
+			if (variableName.getType() == ASTNode.VARIABLE) {
+				Variable var = (Variable) variableName;
+				if (var.isDollared() && var.getVariableName().getType() == ASTNode.IDENTIFIER) {
+					final Identifier id = (Identifier) var.getVariableName();
+					if (id.getName().equals("GLOBALS")) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -280,9 +291,9 @@ public class PhpElementConciliator {
 	 * @param variable
 	 * @param isGlobal
 	 * @param globalStatement
-	 * @return
+	 * @return true is the 
 	 */
-	private static boolean checkGlobal(Identifier targetIdentifier, Variable variable, boolean isGlobal, final GlobalStatement globalStatement) {
+	private static boolean checkGlobal(Identifier targetIdentifier, Variable variable, final GlobalStatement globalStatement) {
 		final Variable[] variables = globalStatement.getVariables();
 		for (int j = 0; j < variables.length; j++) {
 			final Variable current = variables[j];
@@ -292,10 +303,10 @@ public class PhpElementConciliator {
 
 			// variables are case sensative
 			if (id.getName().equals(targetIdentifier.getName())) {
-				isGlobal = true;
+				return true;
 			}
 		}
-		return isGlobal;
+		return false;
 	}
 
 	/**
