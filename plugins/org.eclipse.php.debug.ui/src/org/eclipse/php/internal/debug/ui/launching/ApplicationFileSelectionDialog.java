@@ -142,7 +142,9 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	 */
 	protected void okPressed() {
 		// Save the external files visibility state into the preferences.
-		fStore.setValue(SHOW_EXTERNAL_FILES, Boolean.toString(fExternalFilesBt.getSelection()));
+		if (fExternalFilesBt != null) {
+			fStore.setValue(SHOW_EXTERNAL_FILES, Boolean.toString(fExternalFilesBt.getSelection()));
+		}
 		super.okPressed();
 	}
 
