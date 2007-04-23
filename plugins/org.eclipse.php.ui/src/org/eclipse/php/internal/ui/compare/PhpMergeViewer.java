@@ -13,7 +13,6 @@ package org.eclipse.php.internal.ui.compare;
 import java.util.ArrayList;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -22,7 +21,7 @@ import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerC
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Description:   
+ * Description: The viewer enables the file comparing with syntax coloring  
  * @author Roy, 2007
  */
 public class PhpMergeViewer extends TextMergeViewer {
@@ -43,7 +42,6 @@ public class PhpMergeViewer extends TextMergeViewer {
 			fSourceViewer.add(textViewer);
 			
 			((SourceViewer) textViewer).configure(new PHPStructuredTextViewerConfiguration());
-			getControl().setFont(JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT));
 		}
 	}
 	
