@@ -246,8 +246,11 @@ public class PhpElementConciliator {
 				}
 				GlobalSeacher searchGlobal = new GlobalSeacher();
 				parent.accept(searchGlobal);
-				if (searchGlobal.offset <= targetIdentifier.getStart())
+				if (searchGlobal.offset != -1 && searchGlobal.offset <= targetIdentifier.getStart()) {
 					return true;
+				} else {
+					return false;
+				}
 			}
 			parent = parent.getParent();
 		}
