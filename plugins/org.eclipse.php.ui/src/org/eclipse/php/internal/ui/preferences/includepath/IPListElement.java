@@ -339,7 +339,7 @@ public class IPListElement {
 			case IIncludePathEntry.IPE_VARIABLE:
 				IPath resolvedPath = PHPProjectOptions.getResolvedVariablePath(path);
 				res = null;
-				isMissing = root.findMember(resolvedPath) == null && !resolvedPath.toFile().isFile();
+				isMissing = root.findMember(resolvedPath) == null && !resolvedPath.toFile().exists();
 				break;
 			case IIncludePathEntry.IPE_LIBRARY:
 			case IIncludePathEntry.IPE_JRE:
