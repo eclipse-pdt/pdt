@@ -105,7 +105,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	private CompletionProposalGroup classConstructorCompletionProposalGroup = new ClassConstructorCompletionProposalGroup();
 	private CompletionProposalGroup newStatmentCompletionProposalGroup = new NewStatmentCompletionProposalGroup();
 	private CompletionProposalGroup arrayCompletionProposalGroup = new ArrayCompletionProposalGroup();
-	private CompletionProposalGroup classStaticCallCompletionProposalGroup = new ClassStaticCallCompletionProposalGroup();
+	protected CompletionProposalGroup classStaticCallCompletionProposalGroup = new ClassStaticCallCompletionProposalGroup();
 	protected CompletionProposalGroup classVariableCallCompletionProposalGroup = new ClassVariableCallCompletionProposalGroup();
 
 	public ContentAssistSupport() {
