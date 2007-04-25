@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.project.options.includepath;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -39,14 +40,8 @@ public class IncludePathVariableManager {
 
 	IPreferenceStore preferenceStore = PHPCorePlugin.getDefault().getPreferenceStore();
 
-	public String[] getReservedIncludePathVariableNames() {
-		//		ArrayList list = new ArrayList();
-		//		list.addAll(reservedVariables.keySet());
-		//		return (String[]) list.toArray(new String[list.size()]);
-		return new String[0];
-	}
-
 	HashMap variables = new HashMap();
+	HashMap reservedVariables = new HashMap();
 	private ArrayList listeners;
 
 	private IncludePathVariableManager() {
@@ -153,7 +148,8 @@ public class IncludePathVariableManager {
 					}
 				}
 				if (value != null) {
-					PHPCorePlugin.setIncludePathVariable(name, new Path(value), null);
+					putVariable(name, new Path(value));
+					reservedVariables.put(name, null);
 				}
 			}
 		}
@@ -163,4 +159,16 @@ public class IncludePathVariableManager {
 		this.variables.put(name, path);
 	}
 
+	/**
+	 * Returns <code>true</code> if the specified variable is reserved
+	 * @param variableName Variable name
+	 */
+	public boolean isReserved(String variableName) {
+		return reservedVariables.containsKey(variableName);
+	}
+
+	public String[] getReservedVariables() {
+		Set reservedVariables = this.reservedVariables.keySet();
+		return (String[]) reservedVariables.toArray(new String[reservedVariables.size()]);
+	}
 }
