@@ -101,10 +101,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	protected ICompletionProposal[] templateProposals;
 
 	protected CompletionProposalGroup phpCompletionProposalGroup = new PHPCompletionProposalGroup();
-	private CompletionProposalGroup regularPHPCompletionProposalGroup = new RegularPHPCompletionProposalGroup();
-	private CompletionProposalGroup classConstructorCompletionProposalGroup = new ClassConstructorCompletionProposalGroup();
-	private CompletionProposalGroup newStatmentCompletionProposalGroup = new NewStatmentCompletionProposalGroup();
-	private CompletionProposalGroup arrayCompletionProposalGroup = new ArrayCompletionProposalGroup();
+	protected CompletionProposalGroup regularPHPCompletionProposalGroup = new RegularPHPCompletionProposalGroup();
+	protected CompletionProposalGroup classConstructorCompletionProposalGroup = new ClassConstructorCompletionProposalGroup();
+	protected CompletionProposalGroup newStatmentCompletionProposalGroup = new NewStatmentCompletionProposalGroup();
+	protected CompletionProposalGroup arrayCompletionProposalGroup = new ArrayCompletionProposalGroup();
 	protected CompletionProposalGroup classStaticCallCompletionProposalGroup = new ClassStaticCallCompletionProposalGroup();
 	protected CompletionProposalGroup classVariableCallCompletionProposalGroup = new ClassVariableCallCompletionProposalGroup();
 
