@@ -57,11 +57,13 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		}
 
 		protected void refresh(final Object obj) {
-			treeViewer.getControl().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					treeViewer.refresh(obj);
-				}
-			});
+			if (treeViewer != null && !treeViewer.getControl().isDisposed()) {
+				treeViewer.getControl().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						treeViewer.refresh(obj);
+					}
+				});
+			}
 		}
 
 		protected void refresh() {
