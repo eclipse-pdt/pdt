@@ -110,6 +110,23 @@
 	            adaptableType="org.eclipse.php.internal.ui.editor.PHPStructuredEditor">
 				<adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget"/>
 	      </factory>
+	      
+	      <!-- Adapters for contextual launch -->
+	      <factory
+	            class=""
+	            adaptableType="org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp">
+	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
+         </factory>
+         <factory
+	            class=""
+	            adaptableType="org.eclipse.core.resources.IResource">
+	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
+         </factory>
+		 <factory
+	            class=""
+	            adaptableType="java.io.File">
+	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
+         </factory>
       </extension>
     <extension
        	point="org.eclipse.debug.ui.variableValueEditors">
@@ -401,30 +418,31 @@
             type="java.lang.Object"/>
    
    </extension>
- <!--
- <extension point="org.eclipse.core.expressions.propertyTesters">
+ 
+ <!-- <extension point="org.eclipse.core.expressions.propertyTesters">
    <propertyTester
       id="org.eclipse.wst.server.ui.propertyTester"
       namespace="org.eclipse.wst.server.ui"
       properties="isRunnable"
       type="org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"
-      class="org.eclipse.php.debug.ui.PropertyTesters.RunnablePropertyTester">
+      class="org.eclipse.php.internal.debug.ui.PropertyTesters.RunnablePropertyTester">
    </propertyTester>
       <propertyTester
       id="org.eclipse.wst.server.ui.propertyTester"
       namespace="org.eclipse.wst.server.ui"
       properties="isRunnable"
       type="org.eclipse.core.internal.resources.Project"
-      class="org.eclipse.php.debug.ui.PropertyTesters.RunnablePropertyTester">
+      class="org.eclipse.php.internal.debug.ui.PropertyTesters.RunnablePropertyTester">
    </propertyTester>
       <propertyTester
       id="org.eclipse.wst.server.ui.propertyTester"
       namespace="org.eclipse.wst.server.ui"
       properties="isRunnable"
-      type="org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp"
-      class="org.eclipse.core.resources.IFolder">
+      type="org.eclipse.core.resources.IFolder"
+      class="org.eclipse.php.internal.debug.ui.PropertyTesters.RunnablePropertyTester">
    </propertyTester>
  </extension> -->
+ 
  <extension
        point="org.eclipse.php.ui.phpPreferencePageBlocks">
     <block
