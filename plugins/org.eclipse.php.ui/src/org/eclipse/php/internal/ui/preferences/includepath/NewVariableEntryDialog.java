@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
+import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.wizards.fields.DialogField;
@@ -133,7 +134,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 			String name = entries[i];
 			IPath entryPath = PHPProjectOptions.getIncludePathVariable(name);
 			if (entryPath != null) {
-				elements.add(new IPVariableElement(name, entryPath, false));
+				elements.add(new IPVariableElement(name, entryPath, IncludePathVariableManager.instance().isReserved(name)));
 			}
 		}
 
@@ -208,7 +209,11 @@ public class NewVariableEntryDialog extends StatusDialog {
 			for (int i = 0; i < nSelected; i++) {
 				IPVariableElement curr = (IPVariableElement) selected.get(i);
 				fResultPaths[i] = new Path(curr.getName());
-				if (!curr.getPath().toFile().isFile()) {
+				if (!curr.getPath().toFile().exists()) {
+					status.setError(PHPUIMessages.NewVariableEntryDialog_variable_non_existent_location); //$NON-NLS-1$
+					isValidSelection = false;
+				}
+				else if (!curr.getPath().toFile().isFile()) {
 					status.setInfo(PHPUIMessages.NewVariableEntryDialog_info_isfolder);
 					canExtend = true;
 				}

@@ -195,6 +195,7 @@ public class PHPUIMessages {
 	public static String NewVariableEntryDialog_info_isfolder;
 	public static String NewVariableEntryDialog_info_noselection;
 	public static String NewVariableEntryDialog_info_selected;
+	public static String NewVariableEntryDialog_variable_non_existent_location;
 
 	public static String EditVariableEntryDialog_title;
 	public static String EditVariableEntryDialog_filename_varlabel;

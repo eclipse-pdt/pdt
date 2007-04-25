@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.internal.ui.actions.StatusInfo;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.StatusDialog;
+import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -26,7 +27,6 @@ import org.eclipse.php.internal.ui.wizards.fields.DialogField;
 import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
 import org.eclipse.php.internal.ui.wizards.fields.IStringButtonAdapter;
 import org.eclipse.php.internal.ui.wizards.fields.LayoutUtil;
-import org.eclipse.php.internal.ui.wizards.fields.SelectionButtonDialogField;
 import org.eclipse.php.internal.ui.wizards.fields.StringButtonDialogField;
 import org.eclipse.php.internal.ui.wizards.fields.StringDialogField;
 import org.eclipse.swt.SWT;
@@ -34,7 +34,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -103,7 +102,7 @@ public class VariableCreationDialog extends StatusDialog {
 	}
 
 	public IPVariableElement getIncludePathElement() {
-		return new IPVariableElement(fNameField.getText(), new Path(fPathField.getText()), false);
+		return new IPVariableElement(fNameField.getText(), new Path(fPathField.getText()), IncludePathVariableManager.instance().isReserved(fNameField.getText()));
 	}
 
 	/*

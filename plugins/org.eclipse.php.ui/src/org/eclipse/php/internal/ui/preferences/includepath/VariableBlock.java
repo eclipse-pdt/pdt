@@ -106,10 +106,6 @@ public class VariableBlock {
 		fHasChanges = hasChanges;
 	}
 
-	private String[] getReservedVariableNames() {
-		return IncludePathVariableManager.instance().getReservedIncludePathVariableNames();
-	}
-
 	public Control createContents(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setFont(parent.getFont());
@@ -233,7 +229,7 @@ public class VariableBlock {
 
 	public void performDefaults() {
 		fVariablesList.removeAllElements();
-		String[] reservedName = getReservedVariableNames();
+		String[] reservedName = IncludePathVariableManager.instance().getReservedVariables();
 		for (int i = 0; i < reservedName.length; i++) {
 			IPVariableElement elem = new IPVariableElement(reservedName[i], Path.EMPTY, true);
 			elem.setReserved(true);
@@ -413,7 +409,7 @@ public class VariableBlock {
 	public void refresh(String initSelection) {
 		IPVariableElement initSelectedElement = null;
 
-		String[] reservedName = getReservedVariableNames();
+		String[] reservedName = IncludePathVariableManager.instance().getReservedVariables();
 		ArrayList reserved = new ArrayList(reservedName.length);
 		addAll(reservedName, reserved);
 
