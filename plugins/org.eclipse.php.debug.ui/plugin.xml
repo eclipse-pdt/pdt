@@ -114,17 +114,12 @@
 	      <!-- Adapters for contextual launch -->
 	      <factory
 	            class=""
-	            adaptableType="org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory$PHPFileDataImp">
+	            adaptableType="org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData">
 	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
          </factory>
          <factory
 	            class=""
 	            adaptableType="org.eclipse.core.resources.IResource">
-	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
-         </factory>
-		 <factory
-	            class=""
-	            adaptableType="java.io.File">
 	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
          </factory>
       </extension>
