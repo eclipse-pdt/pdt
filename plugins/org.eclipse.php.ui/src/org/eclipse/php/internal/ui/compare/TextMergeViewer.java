@@ -57,7 +57,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 
 /**

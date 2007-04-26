@@ -12,7 +12,6 @@ package org.eclipse.php.internal.ui.compare;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IViewerCreator;
-import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
