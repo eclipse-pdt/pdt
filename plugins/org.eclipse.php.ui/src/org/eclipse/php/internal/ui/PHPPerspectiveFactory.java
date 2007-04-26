@@ -40,7 +40,23 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 
 		//Adding the default views for the perspective
 		addViews(layout);
-
+		
+		layout.addPerspectiveShortcut("org.eclipse.php.perspective"); //$NON-NLS-N$
+		layout.addPerspectiveShortcut("org.eclipse.php.debug.ui.PHPDebugPerspective"); //$NON-NLS-N$
+		layout.addPerspectiveShortcut("com.zend.php.profile.ui.perspective"); //$NON-NLS-N$
+		layout.addPerspectiveShortcut("com.zend.php.wysiwyg.ui.webPerspective"); //$NON-NLS-N$
+		
+		layout.addShowViewShortcut(ID_EXPLORER); 
+		layout.addShowViewShortcut(ID_FUNCTIONS); 
+		layout.addShowViewShortcut(ID_PROJECT_OUTLINE); 
+		layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
+		layout.addShowViewShortcut("org.zend.php.rss.ui.RSSView"); //$NON-NLS-N$
+		layout.addShowViewShortcut("org.zend.php.framework.ui.views.mvc"); //$NON-NLS-N$
+		layout.addShowViewShortcut("org.zend.php.codegallery"); //$NON-NLS-N$
+		layout.addShowViewShortcut("com.zend.php.debug.ui.views.CodeCoverageView"); //$NON-NLS-N$
+		layout.addShowViewShortcut("com.zend.php.phpunit.PHPUnitView"); //$NON-NLS-N$
+		layout.addShowViewShortcut("com.zend.php.platform.ui.PlatformEventsView"); //$NON-NLS-N$
+		
 	}
 
 	/*
