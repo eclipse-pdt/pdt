@@ -27,10 +27,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.internal.resources.XMLWriter;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -143,6 +140,16 @@ public class PHPProjectOptions {
 	private void loadOptions() {
 
 		final IFile optionsFile = project.getFile(FILE_NAME);
+		// fixed bug 169296 - in case type .projectOptions don't exist in the project refresh it from local.
+		if (!optionsFile.exists()) {
+			try {
+				optionsFile.refreshLocal(IResource.DEPTH_ZERO, null);
+			} catch (CoreException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
 		if (!optionsFile.exists())
 			return;
 
