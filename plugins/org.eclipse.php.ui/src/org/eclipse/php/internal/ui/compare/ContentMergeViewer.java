@@ -45,7 +45,8 @@ import org.eclipse.ui.IKeyBindingService;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 /**
- * Description:   
+ * Description: this is exactly the  {@link org.eclipse.compare.contentmergeviewer} 
+ * it was overriden since we need the private members  
  * @author Roy, 2007
  */
 public abstract class ContentMergeViewer extends ContentViewer
