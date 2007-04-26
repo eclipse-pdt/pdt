@@ -125,6 +125,7 @@ public class PHPPluginImages {
 	public static final ImageDescriptor DESC_KEYWORD = createManaged(T_OBJ, IMG_KEYWORD);
 	public static final ImageDescriptor DESC_OBJS_CLASSALT = createManaged(T_OBJ, IMG_OBJS_CLASSALT);
 	public static final ImageDescriptor DESC_OBJS_UNKNOWN = createManaged(T_OBJ, IMG_OBJS_UNKNOWN);
+	public static final ImageDescriptor DESC_OBJS_WARNING = create(T_OBJ, "warning_obj.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_RUN = create(T_OVR, "run_co.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_WARNING = create(T_OVR, "warning_co.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_ERROR = create(T_OVR, "error_co.gif"); //$NON-NLS-1$
