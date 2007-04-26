@@ -13,9 +13,7 @@ package org.eclipse.php.internal.core.ast.locator;
 import java.util.LinkedList;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
-import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Conciles the php element from a given path
@@ -236,21 +234,28 @@ public class PhpElementConciliator {
 			// if the variable was used inside a function
 			if (parent.getType() == ASTNode.FUNCTION_DECLARATION) {
 				// global declaration detection
-				class GlobalSeacher extends AbstractVisitor {
-					public int offset = -1; 
-					public void visit(GlobalStatement globalStatement) {
-						if (checkGlobal(targetIdentifier, variable, globalStatement)) {
-							offset = globalStatement.getStart();
+				final int end = parent.getEnd();  
+				class GlobalSeacher extends ApplyAll {
+					public int offset = end;
+					
+					public void apply(ASTNode node) {
+						if (offset != end) {
+							return; 
 						}
+						
+						if (node.getType() == ASTNode.GLOBAL_STATEMENT) {
+							GlobalStatement globalStatement = (GlobalStatement) node;
+							if (checkGlobal(targetIdentifier, variable, globalStatement)) {
+								offset = globalStatement.getStart();
+							}
+						} 
+						
+						node.childrenAccept(this);
 					}
 				}
 				GlobalSeacher searchGlobal = new GlobalSeacher();
 				parent.accept(searchGlobal);
-				if (searchGlobal.offset != -1 && searchGlobal.offset <= targetIdentifier.getStart()) {
-					return true;
-				} else {
-					return false;
-				}
+				return searchGlobal.offset <= targetIdentifier.getStart(); 
 			}
 			parent = parent.getParent();
 		}
