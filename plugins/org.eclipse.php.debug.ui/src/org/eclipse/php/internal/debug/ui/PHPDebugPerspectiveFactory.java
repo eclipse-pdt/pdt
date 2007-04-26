@@ -61,6 +61,17 @@ public class PHPDebugPerspectiveFactory implements IPerspectiveFactory {
 		layout.addActionSet(IDebugUIConstants.LAUNCH_ACTION_SET);
 		layout.addActionSet(IDebugUIConstants.DEBUG_ACTION_SET);
 		
+		layout.addPerspectiveShortcut("org.eclipse.php.perspective"); //$NON-NLS-N$
+		layout.addPerspectiveShortcut("org.eclipse.php.debug.ui.PHPDebugPerspective"); //$NON-NLS-N$
+		layout.addPerspectiveShortcut("com.zend.php.profile.ui.perspective"); //$NON-NLS-N$
+		layout.addPerspectiveShortcut("com.zend.php.wysiwyg.ui.webPerspective"); //$NON-NLS-N$
+		
+		
+		layout.addShowViewShortcut(ID_PHPDebugOutput);
+		layout.addShowViewShortcut(ID_PHPBrowserOutput);
+		layout.addShowViewShortcut("org.eclipse.debug.ui.PHPStackView"); //$NON-NLS-N$
+		
+		
 		setContentsOfShowViewMenu(layout);
 	}
 	
