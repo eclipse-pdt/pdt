@@ -44,7 +44,25 @@ public class PHPProposalComperator implements Comparator {
 		int o2Type = getType(o2);
 		
 		int diff = o1Type - o2Type; // the difference between the two types
-		return diff != 0 ? diff : element1.getDisplayString().compareToIgnoreCase(element2.getDisplayString()) ;
+		return diff != 0 ? diff : compareDisplayString(element1, element2) ;
+	}
+
+	/**
+	 * fixed bug 179509
+	 * Compare strings in ICompletionProposal with the exception that string start with '_' come after 'a-z'
+	 */
+	private int compareDisplayString(ICompletionProposal element1, ICompletionProposal element2) {
+		int result = 0;
+		String displayString1 = element1.getDisplayString();
+		String displayString2 = element2.getDisplayString();
+		if (displayString1.charAt(0) == '_' && displayString2.charAt(0) != '_') {
+			result = 1;
+		} else if (displayString2.charAt(0) == '_' && displayString1.charAt(0) != '_') {
+			result = -1;
+		} else {
+			result = displayString1.compareToIgnoreCase(displayString2);
+		}		
+		return result;
 	}
 
 	private int getType(Object object) {
