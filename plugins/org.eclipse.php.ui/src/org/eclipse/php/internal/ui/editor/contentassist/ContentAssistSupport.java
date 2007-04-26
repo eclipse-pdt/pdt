@@ -912,7 +912,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			if (text.charAt(i) == '(') {
 				boolean showClassCompletion = true;
 				for (int j = text.length() - 1; j > i; j--) {
-					if (text.charAt(j) != ',' && !Character.isWhitespace(text.charAt(j))) {
+					// fixed bug 178032 - check if the cursor is after type means no '$' sign between cursor to '(' sign or ',' sign
+					if (text.charAt(j) == '$') {
 						showClassCompletion = false;
 						break;
 					}
@@ -923,7 +924,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				if (showClassCompletion) {
 					CodeData[] classes = projectModel.getClasses();
 					completionProposalGroup = phpCompletionProposalGroup;
-					completionProposalGroup.setData(offset, classes, "", selectionLength, false);
+					String prefix = text.subTextSequence(i+1, text.length()).toString();
+					completionProposalGroup.setData(offset, classes, prefix, selectionLength, false);
 				}
 				return true;
 			}
