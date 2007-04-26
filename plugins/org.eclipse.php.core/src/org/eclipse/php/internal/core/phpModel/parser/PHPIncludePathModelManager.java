@@ -43,6 +43,7 @@ import org.eclipse.php.internal.core.util.IncludeCacheManager;
 
 public class PHPIncludePathModelManager extends PhpModelProxy implements ExternalFilesModel {
 
+	public static final String COMPOSITE_INCLUDE_PATH_MODEL_ID = "CompositeIncludePathModel";
 	CompositePhpModel compositePhpModel;
 	private PHPParserManager parserManager;
 	private String phpVersion;
@@ -62,7 +63,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	public PHPIncludePathModelManager() {
 		compositePhpModel = new CompositePhpModel() {
 			public String getID() {
-				return "CompositeIncludePathModel"; //$NON-NLS-1$
+				return COMPOSITE_INCLUDE_PATH_MODEL_ID; //$NON-NLS-1$
 			}
 
 			public void initialize(IProject project) {
