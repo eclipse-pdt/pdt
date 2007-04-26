@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.php.internal.core.IncludePathContainerInitializer;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.project.IIncludePathContainer;
@@ -144,9 +145,8 @@ public class PHPProjectOptions {
 		if (!optionsFile.exists()) {
 			try {
 				optionsFile.refreshLocal(IResource.DEPTH_ZERO, null);
-			} catch (CoreException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (CoreException e) {
+				Logger.logException(e);
 			}
 		}
 
