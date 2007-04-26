@@ -17,7 +17,7 @@ import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.debugger.DebugError;
 
-abstract class SimpleDebugHandler implements IDebugHandler {
+public abstract class SimpleDebugHandler implements IDebugHandler {
 
 	public void ready(String fileName, int lineNumber) {
 		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: ready: " + fileName + " " + lineNumber);
