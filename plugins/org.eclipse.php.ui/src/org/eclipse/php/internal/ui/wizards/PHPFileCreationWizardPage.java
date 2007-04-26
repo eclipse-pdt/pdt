@@ -197,6 +197,8 @@ public class PHPFileCreationWizardPage extends WizardPage {
 
 	protected void setInitialFileName(final String fileName) {
 		fileText.setText(fileName);
+		// fixed bug 157145 - highlight the newfile word in the file name input
+		fileText.setSelection(0, 7);
 	}
 
 	/**
