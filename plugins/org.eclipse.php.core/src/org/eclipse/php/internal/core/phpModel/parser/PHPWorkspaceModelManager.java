@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
+import java.io.IOException;
 import java.util.*;
 
 import org.eclipse.core.resources.*;
@@ -25,6 +26,8 @@ import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 /*
@@ -144,10 +147,47 @@ public class PHPWorkspaceModelManager implements ModelListener {
 						if (project.isOpen()) {
 							runBuild(project);
 						}
+					} else {
+						// parse file which are not opened for editing but were changed
+						IResourceDelta[] childrenDelta = resourceDelta.getAffectedChildren();
+						for (int j = 0; j < childrenDelta.length; j++) {
+							IResourceDelta delta = childrenDelta[j];
+							parseModifiedClosedFiles(delta);
+						}
 					}
 				}
 			}
 
+			/**
+			 * This function iterates over changed resources recursivlly and request parsing only for those which are
+			 * not currently opened for editing.
+			 * 
+			 * @param delta
+			 */
+			private void parseModifiedClosedFiles(IResourceDelta delta) {
+				IResource resouce = delta.getResource();
+				if (resouce.getType() == IResource.FILE) {
+					IFile file = (IFile) resouce;
+					IStructuredModel existingModelForRead = null;
+					try {
+						existingModelForRead = StructuredModelManager.getModelManager().getModelForRead(file);
+					} catch (IOException e) {
+						return;
+					} catch (CoreException e) {
+						return;
+					}
+					if (existingModelForRead == null) {
+						addFileToModel(file);
+					}
+					existingModelForRead.releaseFromRead();
+				} else if (resouce.getType() == IResource.FOLDER) {
+					IResourceDelta[] childrenDelta = delta.getAffectedChildren();
+					for (int j = 0; j < childrenDelta.length; j++) {
+						IResourceDelta folderDelta = childrenDelta[j];
+						parseModifiedClosedFiles(folderDelta);
+					}
+				}
+			}
 		});
 	}
 
