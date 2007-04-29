@@ -246,25 +246,36 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		}
 	}
 
-	private boolean isBetweenBackquotes(IStructuredDocumentRegion sdRegion, int offset) {
+	// fixed bug 172149 - The offset changed according to the PHP script region offset
+	private boolean isBetweenBackquotes(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
 		if (sdRegion.getParentDocument().getLength() <= offset) {
 			return false;
-		}
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		if (tRegion == null || tRegion.getLength() > 1) {
+		}		
+		ITextRegion tRegion =  getPhpRegion(sdRegion, offset);
+		int regionStart = getRegionStart(sdRegion, offset);
+		if (tRegion instanceof PhpScriptRegion) {
+			PhpScriptRegion scriptRegion = (PhpScriptRegion)tRegion;			
+			ITextRegion quoteRegion = scriptRegion.getPhpToken(offset - regionStart);
+			if (quoteRegion == null || quoteRegion.getLength() > 1) {
+				return false;
+			}
+		}		
+
+		if (sdRegion.getFullText().charAt(offset) != BACK_QOUTE) {
 			return false;
 		}
 
-		if (sdRegion.getText(tRegion).charAt(0) != BACK_QOUTE) {
-			return false;
+		tRegion = getPhpRegion(sdRegion, offset + 1);
+		regionStart = getRegionStart(sdRegion, offset + 1);
+		if (tRegion instanceof PhpScriptRegion) {
+			PhpScriptRegion scriptRegion = (PhpScriptRegion)tRegion;
+			ITextRegion quoteRegion = scriptRegion.getPhpToken(offset + 1 - regionStart);
+			if (quoteRegion == null || quoteRegion.getLength() > 1) {
+				return false;
+			}
 		}
 
-		tRegion = sdRegion.getRegionAtCharacterOffset(offset + 1);
-		if (tRegion == null || tRegion.getLength() > 1) {
-			return false;
-		}
-
-		if (sdRegion.getText(tRegion).charAt(0) != BACK_QOUTE) {
+		if (sdRegion.getFullText().charAt(offset + 1) != BACK_QOUTE) {
 			return false;
 		}
 		String startState = FormatterUtils.getPartitionType(sdRegion.getParentDocument(), offset, true);
