@@ -1453,31 +1453,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	public IFile getFile() {
-		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
-		if (doc != null) {
-			IModelManager modelManager = StructuredModelManager.getModelManager();
-			IStructuredModel model = modelManager.getExistingModelForRead(doc);
-			try {
-				return ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(model.getBaseLocation()));
-			} finally {
-				model.releaseFromRead();
-			}
-		}
-		return null;
+		return ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(getModel().getBaseLocation()));
 	}
 
 	public PHPFileData getPHPFileData() {
-		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
-		if (doc != null) {
-			IModelManager modelManager = StructuredModelManager.getModelManager();
-			IStructuredModel model = modelManager.getExistingModelForRead(doc);
-			try {
-				return PHPWorkspaceModelManager.getInstance().getModelForFile(model.getBaseLocation());
-			} finally {
-				model.releaseFromRead();
-			}
-		}
-		return null;
+		return PHPWorkspaceModelManager.getInstance().getModelForFile(getModel().getBaseLocation());
 	}
 
 	public SourceViewerConfiguration getSourceViwerConfiguration() {
