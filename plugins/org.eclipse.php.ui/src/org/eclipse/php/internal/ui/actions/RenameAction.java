@@ -29,11 +29,10 @@ import org.eclipse.php.ui.actions.IRenamePHPElementActionFactory;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 
-
 public class RenameAction extends SelectionDispatchAction {
 
 	private static final String RENAME_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.RenameElement"; //$NON-NLS-1$
-	
+
 	private RenamePHPElementAction fRenamePHPElement;
 	private RenameResourceAction fRenameResource;
 
@@ -49,7 +48,7 @@ public class RenameAction extends SelectionDispatchAction {
 	public RenameAction(IWorkbenchSite site) {
 		super(site);
 		setText(PHPUIMessages.RenameAction_text);
-		
+
 		// gets the right factory to the element rename refactoring
 		final IRenamePHPElementActionFactory actionDelegatorFactory = PHPActionDelegatorRegistry.getActionDelegatorFactory(RENAME_ELEMENT_ACTION_ID);
 		if (actionDelegatorFactory == null) {
@@ -88,7 +87,7 @@ public class RenameAction extends SelectionDispatchAction {
 		fRenameResource = new RenameResourceAction(editor.getSite());
 		fRenameResource.setText(getText());
 	}
-	
+
 	/*
 	 * @see ISelectionChangedListener#selectionChanged(SelectionChangedEvent)
 	 */
@@ -122,8 +121,10 @@ public class RenameAction extends SelectionDispatchAction {
 	public void run(IStructuredSelection selection) {
 		boolean isFile = ActionUtils.containsOnly(selection.toList(), PHPFileData.class);
 
-		if (!isFile && fRenamePHPElement.isEnabled())
+		if (!isFile && fRenamePHPElement.isEnabled()) {
 			fRenamePHPElement.run(selection);
+			return;
+		}
 		if (fRenameResource != null && fRenameResource.isEnabled()) {
 			if (isFile) // convert selection to be resource
 			{
