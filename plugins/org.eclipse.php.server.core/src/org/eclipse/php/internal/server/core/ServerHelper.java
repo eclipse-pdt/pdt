@@ -49,8 +49,8 @@ public class ServerHelper {
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (propertyListeners == null) {
 			propertyListeners = new ArrayList(2);
-			propertyListeners.add(listener);
 		}
+		propertyListeners.add(listener);
 	}
 
 	/**
