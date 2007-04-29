@@ -37,14 +37,14 @@ public class PhpElementConciliator {
 			return CONCILIATOR_GLOBAL_VARIABLE;
 		} else if (isFunction(locateNode)) {
 			return CONCILIATOR_FUNCTION;
-		} else if (isLocalVariable(locateNode)) {
-			return CONCILIATOR_LOCAL_VARIABLE;
 		} else if (isClassName(locateNode)) {
 			return CONCILIATOR_CLASSNAME;
 		} else if (isConstant(locateNode)) {
 			return CONCILIATOR_CONSTANT;
 		} else if (isDispatch(locateNode)) {
 			return CONCILIATOR_CLASS_PROPERTY;
+		} else if (isLocalVariable(locateNode)) {
+			return CONCILIATOR_LOCAL_VARIABLE;
 		}
 		return CONCILIATOR_UNKNOWN;
 	}
@@ -80,6 +80,9 @@ public class PhpElementConciliator {
 				return true;
 			}
 		}
+		
+		if(parent.getType() == ASTNode.CLASS_CONSTANT_DECLARATION)
+			return true;
 
 		// check if it is a dispatch
 		while (parent != null) {
