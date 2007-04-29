@@ -377,6 +377,10 @@ public class PHPCodeDataFactory {
 			if(superClass != null) {
 				this.superClass.setContainer(this);
 			}
+			
+			for (int i = 0; i < interfaces.length; ++i) {
+				this.interfaces[i].setContainer(this);
+			}
 
 			setVars(vars);
 			setFunctions(functions);

@@ -516,20 +516,29 @@ public class PHPModelUtil {
 
 	public static PHPClassData discoverSuperClass(final PHPClassData classData, final String superClassName) {
 		final PHPSuperClassNameData currentSuperClassNameData = classData.getSuperClassData();
-		if (currentSuperClassNameData == null)
-			return null;
-		String currentSuperClassName = currentSuperClassNameData.getName();
-		if (currentSuperClassName == null)
-			return null;
-		PHPClassData currentSuperClassData = classData;
-		while ((currentSuperClassData = getSuperClass(currentSuperClassData)) != null) {
-			if ((currentSuperClassName = currentSuperClassData.getName()) == null)
+		if (currentSuperClassNameData != null) {
+			String currentSuperClassName = currentSuperClassNameData.getName();
+			if (currentSuperClassName == null)
 				return null;
-			if (currentSuperClassName.compareToIgnoreCase(superClassName) == 0)
-				return currentSuperClassData;
+			PHPClassData currentSuperClassData = classData;
+			while ((currentSuperClassData = getSuperClass(currentSuperClassData)) != null) {
+				if ((currentSuperClassName = currentSuperClassData.getName()) == null)
+					return null;
+				if (currentSuperClassName.compareToIgnoreCase(superClassName) == 0)
+					return currentSuperClassData;
+			}
 		}
 		return null;
-
+	}
+	
+	public static PHPClassData discoverInterface(final PHPClassData classData, final String interfaceName) {
+		PHPClassData[] interfaces = getInterfaces(classData);
+		for (int i = 0; i < interfaces.length; ++i) {
+			if (interfaces[i].getName() != null && interfaces[i].getName().equalsIgnoreCase(interfaceName)) {
+				return interfaces[i];
+			}
+		}
+		return null;
 	}
 
 	public static boolean isExternal(final Object target) {
