@@ -31,6 +31,7 @@ public class PhpElementConciliator {
 	public static final int CONCILIATOR_CLASSNAME = 4;
 	public static final int CONCILIATOR_CONSTANT = 5;
 	public static final int CONCILIATOR_CLASS_PROPERTY = 6;
+	public static final int CONCILIATOR_PROGRAM = 7;
 
 	public static int concile(ASTNode locateNode) {
 		if (isGlobalVariable(locateNode)) {
@@ -45,6 +46,8 @@ public class PhpElementConciliator {
 			return CONCILIATOR_CLASS_PROPERTY;
 		} else if (isLocalVariable(locateNode)) {
 			return CONCILIATOR_LOCAL_VARIABLE;
+		} else if (isProgram(locateNode)) {
+			return CONCILIATOR_PROGRAM;
 		}
 		return CONCILIATOR_UNKNOWN;
 	}
@@ -237,28 +240,28 @@ public class PhpElementConciliator {
 			// if the variable was used inside a function
 			if (parent.getType() == ASTNode.FUNCTION_DECLARATION) {
 				// global declaration detection
-				final int end = parent.getEnd();  
+				final int end = parent.getEnd();
 				class GlobalSeacher extends ApplyAll {
 					public int offset = end;
-					
+
 					public void apply(ASTNode node) {
 						if (offset != end) {
-							return; 
+							return;
 						}
-						
+
 						if (node.getType() == ASTNode.GLOBAL_STATEMENT) {
 							GlobalStatement globalStatement = (GlobalStatement) node;
 							if (checkGlobal(targetIdentifier, variable, globalStatement)) {
 								offset = globalStatement.getStart();
 							}
-						} 
-						
+						}
+
 						node.childrenAccept(this);
 					}
 				}
 				GlobalSeacher searchGlobal = new GlobalSeacher();
 				parent.accept(searchGlobal);
-				return searchGlobal.offset <= targetIdentifier.getStart(); 
+				return searchGlobal.offset <= targetIdentifier.getStart();
 			}
 			parent = parent.getParent();
 		}
@@ -280,7 +283,7 @@ public class PhpElementConciliator {
 		if (!detectString(charAtZero) || !detectString(charAtEnd)) {
 			return false;
 		}
-		
+
 		if (scalar.getParent().getType() == ASTNode.ARRAY_ACCESS) {
 			ArrayAccess arrayAccess = (ArrayAccess) scalar.getParent();
 			final Expression variableName = arrayAccess.getVariableName();
@@ -359,6 +362,17 @@ public class PhpElementConciliator {
 		}
 
 		return true;
+	}
+
+	/**
+	 * @param locateNode
+	 * @return true if the given path indicates a program
+	 */
+	private static boolean isProgram(ASTNode locateNode) {
+		assert locateNode != null;
+
+		// check if it is a program
+		return locateNode.getType() == ASTNode.PROGRAM;
 	}
 
 	/**
