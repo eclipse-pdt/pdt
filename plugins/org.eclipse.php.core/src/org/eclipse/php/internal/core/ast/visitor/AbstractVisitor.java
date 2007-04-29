@@ -192,7 +192,7 @@ public abstract class AbstractVisitor implements Visitor {
 	}
 
 	public void visit(ParenthesisExpression parenthesisExpression) {
-		parenthesisExpression.accept(this);		
+		parenthesisExpression.childrenAccept(this);		
 	}
 
 	public void visit(PostfixExpression postfixExpression) {
