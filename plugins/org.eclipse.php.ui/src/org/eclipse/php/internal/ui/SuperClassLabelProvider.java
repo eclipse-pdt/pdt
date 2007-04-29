@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.swt.graphics.Image;
 
@@ -33,6 +34,14 @@ public class SuperClassLabelProvider implements ILabelProvider {
 				if (superClassData != null)
 					return provider.getImage(superClassData);
 			}
+		} else if (element instanceof PHPInterfaceNameData) {
+			final PHPInterfaceNameData interfaceNameData = (PHPInterfaceNameData) element;
+			final PHPClassData container = (PHPClassData) interfaceNameData.getContainer();
+			if (container != null) {
+				final PHPClassData interfaceData = PHPModelUtil.discoverInterface(container, interfaceNameData.getName());
+				if (interfaceData != null)
+					return provider.getImage(interfaceData);
+			}
 		}
 		return null;
 	}
@@ -45,6 +54,14 @@ public class SuperClassLabelProvider implements ILabelProvider {
 				final PHPClassData superClassData = PHPModelUtil.discoverSuperClass(container, superClassNameData.getName());
 				if (superClassData != null)
 					return "Extends: " + provider.getText(superClassData);
+			}
+		} else if (element instanceof PHPInterfaceNameData) {
+			final PHPInterfaceNameData interfaceNameData = (PHPInterfaceNameData) element;
+			final PHPClassData container = (PHPClassData) interfaceNameData.getContainer();
+			if (container != null) {
+				final PHPClassData interfaceData = PHPModelUtil.discoverInterface(container, interfaceNameData.getName());
+				if (interfaceData != null)
+					return "Implements: " + provider.getText(interfaceData);
 			}
 		}
 		return null;
