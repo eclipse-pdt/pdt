@@ -84,6 +84,7 @@ public abstract class ASTNode implements Visitable {
 	public static final int UNARY_OPERATION = 59;
 	public static final int VARIABLE = 60;
 	public static final int WHILE_STATEMENT = 61;
+	public static final int PARENTHESIS_EXPRESSION = 62;
 
 	private final int start;
 	private final int length;

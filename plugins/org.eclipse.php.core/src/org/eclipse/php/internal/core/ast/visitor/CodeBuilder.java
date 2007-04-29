@@ -17,8 +17,6 @@ public class CodeBuilder implements Visitor {
 
 	final static StringBuffer buffer = new StringBuffer();
 
-	private String str;
-
 	public static void main(String[] args) {
 		try {
 			CodeBuilder codeBuilder = new CodeBuilder();
@@ -62,6 +60,14 @@ public class CodeBuilder implements Visitor {
 		}
 		fileInputStream.close();
 		return inputBuffer.toString();
+	}
+
+	private String str;
+
+	private void acceptQuoteExpression(Expression[] expressions) {
+		for (int i = 0; i < expressions.length; i++) {
+			expressions[i].accept(this);
+		}
 	}
 
 	public void visit(ArrayAccess arrayAccess) {
@@ -496,6 +502,15 @@ public class CodeBuilder implements Visitor {
 		methodInvocation.getMethod().accept(this);
 	}
 
+	public void visit(ParenthesisExpression parenthesisExpression) {
+		buffer.append("(");
+		if (parenthesisExpression.getExpr() != null) {
+			parenthesisExpression.getExpr().accept(this);
+		}
+		buffer.append(")");
+		
+	}
+
 	public void visit(PostfixExpression postfixExpressions) {
 		postfixExpressions.getVariable().accept(this);
 		buffer.append(PostfixExpression.getOperator(postfixExpressions.getOperator()));
@@ -561,12 +576,6 @@ public class CodeBuilder implements Visitor {
 				buffer.append("<<<Heredoc\n");
 				acceptQuoteExpression(quote.getExpressions());
 				buffer.append("\nHeredoc");
-		}
-	}
-
-	private void acceptQuoteExpression(Expression[] expressions) {
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].accept(this);
 		}
 	}
 

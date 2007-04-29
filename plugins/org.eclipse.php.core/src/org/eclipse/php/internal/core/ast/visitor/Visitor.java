@@ -42,8 +42,6 @@ public interface Visitor {
 
 	public void visit(CatchClause catchClause);
 
-	public void visit(StaticConstantAccess classConstantAccess);
-
 	public void visit(ClassConstantDeclaration classConstantDeclaration);
 
 	public void visit(ClassDeclaration classDeclaration);
@@ -110,6 +108,8 @@ public interface Visitor {
 
 	public void visit(MethodInvocation methodInvocation);
 
+	public void visit(ParenthesisExpression parenthesisExpression);
+
 	public void visit(PostfixExpression postfixExpression);
 
 	public void visit(PrefixExpression prefixExpression);
@@ -125,6 +125,8 @@ public interface Visitor {
 	public void visit(ReturnStatement returnStatement);
 
 	public void visit(Scalar scalar);
+
+	public void visit(StaticConstantAccess classConstantAccess);
 
 	public void visit(StaticFieldAccess staticFieldAccess);
 

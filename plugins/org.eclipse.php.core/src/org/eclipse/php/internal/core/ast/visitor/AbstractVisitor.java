@@ -59,10 +59,6 @@ public abstract class AbstractVisitor implements Visitor {
 		catchClause.childrenAccept(this);
 	}
 
-	public void visit(StaticConstantAccess classConstantAccess) {
-		classConstantAccess.childrenAccept(this);
-	}
-
 	public void visit(ClassConstantDeclaration classConstantDeclaration) {
 		classConstantDeclaration.childrenAccept(this);
 	}
@@ -195,6 +191,10 @@ public abstract class AbstractVisitor implements Visitor {
 		methodInvocation.childrenAccept(this);
 	}
 
+	public void visit(ParenthesisExpression parenthesisExpression) {
+		parenthesisExpression.accept(this);		
+	}
+
 	public void visit(PostfixExpression postfixExpression) {
 		postfixExpression.childrenAccept(this);
 	}
@@ -225,6 +225,10 @@ public abstract class AbstractVisitor implements Visitor {
 
 	public void visit(Scalar scalar) {
 		scalar.childrenAccept(this);
+	}
+
+	public void visit(StaticConstantAccess classConstantAccess) {
+		classConstantAccess.childrenAccept(this);
 	}
 
 	public void visit(StaticFieldAccess staticFieldAccess) {
