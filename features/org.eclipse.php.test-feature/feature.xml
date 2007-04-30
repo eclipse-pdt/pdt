@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.php.test_feature"
       label="%featureName"
-      version="0.7.0.qualifier" 
+      version="1.0.0.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -22,8 +22,6 @@
          id="org.eclipse.php.test"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="true"
-         />
+         version="0.0.0"/>
 
 </feature>
