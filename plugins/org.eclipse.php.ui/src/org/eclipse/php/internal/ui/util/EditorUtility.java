@@ -51,6 +51,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
+import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -568,10 +569,21 @@ public class EditorUtility {
 	 * Gets a list of File full paths as strings and open them in the editor
 	 * works for both workspace and non- workspace files 
 	 * @param filesToOpen
+	 * @param window
 	 */
-	public static void openFilesInEditor(List filesToOpen){
+	public static void openFilesInEditor(List filesToOpen, IWorkbenchWindow window){
 		PHPOpenExternalFileAction action = new PHPOpenExternalFileAction();
-		action.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+		action.init(window);
 		action.run(filesToOpen);
 	}
+	
+	/**
+	 * @see openFilesInEditor(List, IWorkbenchWindow)
+	 * @param filesToOpen
+	 */
+	public static void openFilesInEditor(List filesToOpen){
+		openFilesInEditor(filesToOpen, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+	}
+	
+	
 }
