@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.php.ui; singleton:=true
-Bundle-Version: 0.7.0.qualifier
-Bundle-Name: PDT UI Plug-in
+Bundle-Version: 1.0.0.qualifier
+Bundle-Name: PDT UI Plug-in (Incubation)
 Bundle-Activator: org.eclipse.php.internal.ui.PHPUiPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
