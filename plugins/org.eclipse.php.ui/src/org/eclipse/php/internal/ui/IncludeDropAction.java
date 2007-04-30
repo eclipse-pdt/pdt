@@ -26,6 +26,7 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -38,7 +39,7 @@ public class IncludeDropAction extends FileDropAction {
 		if (!(targetEditor instanceof PHPStructuredEditor))
 			return super.run(event, targetEditor);
 		PHPStructuredEditor phpEditor = (PHPStructuredEditor) targetEditor;
-		String[] fileNames = (String[]) event.data;
+		final String[] fileNames = (String[]) event.data;
 		if (fileNames == null || fileNames.length == 0) {
 			return false;
 		}
@@ -59,7 +60,11 @@ public class IncludeDropAction extends FileDropAction {
 			return true;
 		}
 		// default behavior
-		EditorUtility.openFilesInEditor(Arrays.asList(fileNames));
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				EditorUtility.openFilesInEditor(Arrays.asList(fileNames));
+			}
+		});
 		return true;
 		// return super.run(event, targetEditor);
 	}

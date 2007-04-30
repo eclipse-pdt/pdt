@@ -14,6 +14,12 @@ import java.util.Arrays;
 
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.dnd.*;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.activities.WorkbenchActivityHelper;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.wst.common.frameworks.internal.enablement.nonui.WorkbenchUtil;
 
 /**
  * Adapter to handle file drop from other applications.
@@ -47,9 +53,13 @@ public class ExternalFileDropAdapter extends DropTargetAdapter {
 		event.detail = DND.DROP_COPY;
 	}
 
-	public void drop(DropTargetEvent event) {
+	public void drop(final DropTargetEvent event) {
 		if (event.data instanceof String[]) {
-			EditorUtility.openFilesInEditor(Arrays.asList((Object[]) event.data));
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					EditorUtility.openFilesInEditor(Arrays.asList((Object[]) event.data));
+				}
+			});
 		}
 	}
 }
