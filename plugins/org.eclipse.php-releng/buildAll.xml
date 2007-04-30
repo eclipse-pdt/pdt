@@ -234,7 +234,7 @@
 
 		<!-- Now get the latest build SDK and unzip into the local directory for processing. -->
 		<exec dir="${updateLocalDirectory}" executable="unzip">
-			<arg line="-o -qq ${buildDirectory}/${buildLabel}/org.eclipse.php_feature-sdk-${buildLabel}.zip -d ." />
+			<arg line="-o -qq ${buildDirectory}/${buildLabel}/org.eclipse.php_feature-sdk-incubation-${buildLabel}.zip -d ." />
 		</exec>
 
 		<!-- Now get the current update site.xml from the download site so that we can update it. -->
