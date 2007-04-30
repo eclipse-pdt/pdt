@@ -128,7 +128,7 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 			fExternalFilesBt.setSelection(true);
 			updateView(true);
 		} else {
-			boolean show = Boolean.getBoolean(shouldShowExternals);
+			boolean show = Boolean.valueOf(shouldShowExternals).booleanValue();
 			fExternalFilesBt.setSelection(show);
 			updateView(show);
 		}
