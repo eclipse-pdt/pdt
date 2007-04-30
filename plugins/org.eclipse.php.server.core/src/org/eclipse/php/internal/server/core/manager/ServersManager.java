@@ -75,7 +75,10 @@ public class ServersManager implements PropertyChangeListener {
 	 * @param listener
 	 */
 	public static void addManagerListener(IServersManagerListener listener) {
-		getInstance().listeners.add(listener);
+		ArrayList listeners = getInstance().listeners;
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
 	}
 
 	/**
@@ -205,7 +208,7 @@ public class ServersManager implements PropertyChangeListener {
 			// In case that the project is not null, check that we have project-specific settings for it.
 			// Otherwise, map it to the workspace default server.
 			IScopeContext[] preferenceScopes = createPreferenceScopes(project);
-			String projectSpecificServer = preferenceScopes[0].getNode(NODE_QUALIFIER).get(DEFAULT_SERVER_PREFERENCES_KEY, (String)null);
+			String projectSpecificServer = preferenceScopes[0].getNode(NODE_QUALIFIER).get(DEFAULT_SERVER_PREFERENCES_KEY, (String) null);
 			if (projectSpecificServer == null) {
 				// We do not have a project specific setting for this project. Map it to the default workspace server.
 				manager.defaultServersMap.put(project, manager.defaultServersMap.get(null));
@@ -225,7 +228,7 @@ public class ServersManager implements PropertyChangeListener {
 			} else {
 				// Get the projects' default server
 				IScopeContext[] preferenceScopes = createPreferenceScopes(project);
-				serverName = preferenceScopes[0].getNode(NODE_QUALIFIER).get(DEFAULT_SERVER_PREFERENCES_KEY, (String)null);
+				serverName = preferenceScopes[0].getNode(NODE_QUALIFIER).get(DEFAULT_SERVER_PREFERENCES_KEY, (String) null);
 				if (serverName == null) {
 					// Take the workspace Server and make it the project's default server
 					Preferences prefs = Activator.getDefault().getPluginPreferences();
@@ -244,7 +247,7 @@ public class ServersManager implements PropertyChangeListener {
 				manager.innerSaveDefaultServer(project, server);
 				manager.save();
 			}
-		} 
+		}
 		return server;
 	}
 
