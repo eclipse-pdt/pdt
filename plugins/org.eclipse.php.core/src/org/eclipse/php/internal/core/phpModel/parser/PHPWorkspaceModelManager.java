@@ -336,7 +336,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		} else {
 			fileData = projModel.getFileData(filename);
 		}
-		if (fileData == null && forceCreation) {
+		if (fileData == null && forceCreation && projModel != null) {
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			if (file.exists()) {
 				addFileToModel(file);
