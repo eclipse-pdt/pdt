@@ -50,8 +50,8 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		layout.addShowViewShortcut(ID_FUNCTIONS); 
 		layout.addShowViewShortcut(ID_PROJECT_OUTLINE); 
 		layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
-		layout.addShowViewShortcut("org.zend.php.rss.ui.RSSView"); //$NON-NLS-N$
-		layout.addShowViewShortcut("org.zend.php.framework.ui.views.mvc"); //$NON-NLS-N$
+		layout.addShowViewShortcut("com.zend.php.rss.ui.RSSView"); //$NON-NLS-N$
+		layout.addShowViewShortcut("com.zend.php.framework.ui.views.mvc"); //$NON-NLS-N$
 		layout.addShowViewShortcut("com.zend.php.codegallery"); //$NON-NLS-N$
 		layout.addShowViewShortcut("com.zend.php.debug.ui.views.CodeCoverageView"); //$NON-NLS-N$
 		layout.addShowViewShortcut("com.zend.php.phpunit.PHPUnitView"); //$NON-NLS-N$
