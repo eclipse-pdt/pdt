@@ -172,14 +172,14 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					try {
 						existingModelForRead = StructuredModelManager.getModelManager().getModelForRead(file);
 					} catch (IOException e) {
-						return;
 					} catch (CoreException e) {
-						return;
+					} finally {
+						if (existingModelForRead != null) {
+							existingModelForRead.releaseFromRead();
+						} else if(file.exists()) {
+							addFileToModel(file);
+						}
 					}
-					if (existingModelForRead == null) {
-						addFileToModel(file);
-					}
-					existingModelForRead.releaseFromRead();
 				} else if (resouce.getType() == IResource.FOLDER) {
 					IResourceDelta[] childrenDelta = delta.getAffectedChildren();
 					for (int j = 0; j < childrenDelta.length; j++) {
