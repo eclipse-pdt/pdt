@@ -38,9 +38,9 @@ public class FormatPreferencesSupport {
 	private PreferencesPropagatorListener listener = null;
 
 	private boolean preferencesChanged = false;
-	
+
 	private PreferencesPropagator preferencesPropagator;
-	
+
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
 	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
 
@@ -60,9 +60,9 @@ public class FormatPreferencesSupport {
 	}
 
 	public int getIndentationSize(IDocument document) {
-		if(document == null){
+		if (document == null) {
 			String indentSize = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
-			if(indentSize == null){
+			if (indentSize == null) {
 				return 1;
 			}
 			return Integer.valueOf(indentSize).intValue();
@@ -72,9 +72,9 @@ public class FormatPreferencesSupport {
 	}
 
 	public char getIndentationChar(IDocument document) {
-		if(document == null){
+		if (document == null) {
 			String useTab = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
-			if(useTab == null){
+			if (useTab == null) {
 				return '\t';
 			}
 			return (Boolean.valueOf(useTab).booleanValue()) ? '\t' : ' ';
@@ -85,15 +85,21 @@ public class FormatPreferencesSupport {
 
 	private void verifyValidity(IDocument document) {
 		if (fLastDocument != document) {
-			DOMModelForPHP editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			PHPProjectModel projectModel = editorModel.getProjectModel();
-
-			IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModel);
-			if (fLastProject != project) {
-				fLastProject = project;
-				verifyListening();
+			DOMModelForPHP editorModel = null;
+			try {
+				editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager().getExistingModelForRead(document);
+				PHPProjectModel projectModel = editorModel.getProjectModel();
+				if (projectModel == null)
+					return;
+				IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModel);
+				if (fLastProject != project) {
+					fLastProject = project;
+					verifyListening();
+				}
+			} finally {
+				if (editorModel != null)
+					editorModel.releaseFromRead();
 			}
-			editorModel.releaseFromRead();
 		}
 
 		if (fLastDocument != document || preferencesChanged) {
@@ -109,11 +115,11 @@ public class FormatPreferencesSupport {
 	}
 
 	private void verifyListening() {
-		if(listener != null){
+		if (listener != null) {
 			preferencesPropagator.removePropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
 			preferencesPropagator.removePropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 		}
-		
+
 		listener = new PreferencesPropagatorListener(fLastProject);
 		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
 		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
