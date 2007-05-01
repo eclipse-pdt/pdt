@@ -169,7 +169,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		}
 	}
 
-	protected void configureContentAssistant(ISourceViewer sourceViewer) {
+	public void configureContentAssistant(ISourceViewer sourceViewer) {
 		setupPropertyChangeListener(sourceViewer);
 
 		IContentAssistant contentAssistant = getPHPContentAssistant(sourceViewer);

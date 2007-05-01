@@ -114,7 +114,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		} else if (operation == CONTENTASSIST_PROPOSALS) {
 			// notifing the processors that the next request for completion is an explicit request
 			if (config != null) {
-				IContentAssistProcessor[] all = ((PHPStructuredTextViewerConfiguration) config).getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
+				PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) config;
+				// fixed bug 180896 - call the configuration method before the operation
+				structuredTextViewerConfiguration.configureContentAssistant(this);
+				IContentAssistProcessor[] all = structuredTextViewerConfiguration.getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
 				for (int i = 0; i < all.length; i++) {
 					if (all[i] instanceof IContentAssistProcessorForPHP) {
 						((IContentAssistProcessorForPHP) all[i]).explicitActivationRequest();
