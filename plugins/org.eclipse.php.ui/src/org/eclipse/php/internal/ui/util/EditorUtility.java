@@ -371,7 +371,7 @@ public class EditorUtility {
 		return null;
 	}
 
-	private static IEditorPart openInEditor(final IEditorInput input, final String editorID, final boolean activate) throws PartInitException {
+	public static IEditorPart openInEditor(final IEditorInput input, final String editorID, final boolean activate) throws PartInitException {
 		if (input != null) {
 			final IWorkbenchPage p = PHPUiPlugin.getActivePage();
 			if (p != null) {
