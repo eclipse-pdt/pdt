@@ -6,6 +6,7 @@ package org.eclipse.php.internal.ui.preferences;
 
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 
 /**
@@ -13,6 +14,9 @@ import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
  * Serializes and unserializes PHPManualConfig using {@link PHPManualConfigurationBlock#PREFERENCES_DELIMITER}  
  */
 public class PHPManualConfigSerializer {
+	
+	private static final String INSTALL_AREA_PROP = "@osgi.install.area";
+	
 	public static String toString(PHPManualConfig config) {
 		return config.getLabel() + PHPManualConfigurationBlock.PREFERENCES_DELIMITER + config.getUrl() + PHPManualConfigurationBlock.PREFERENCES_DELIMITER + config.getExtension();
 	}
@@ -37,6 +41,12 @@ public class PHPManualConfigSerializer {
 			url = name;
 			name = "";
 		}
+		
+		int idx = url.indexOf(INSTALL_AREA_PROP);
+		if (idx != -1) {
+			url = url.substring(0, idx) + Platform.getInstallLocation().getURL().toExternalForm() + url.substring(idx + INSTALL_AREA_PROP.length());
+		}
+		
 		return new PHPManualConfig(name, url, extension, false);
 	}
 
