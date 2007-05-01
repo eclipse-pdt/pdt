@@ -511,26 +511,30 @@ public class PHPModelUtil {
 	 * @return <code>true</code> if the class extends other class 
 	 */
 	public static boolean hasSuperClass(final PHPClassData classData, final String superClassName) {
-		return discoverSuperClass(classData, superClassName) != null;
+		return discoverSuperClass(classData, superClassName) != null || superClassName.equalsIgnoreCase(getSuperClassName(classData));
+	}
+
+	public static String getSuperClassName(PHPClassData classData) {
+		final PHPSuperClassNameData currentSuperClassNameData = classData.getSuperClassData();
+		if (currentSuperClassNameData != null)
+			return currentSuperClassNameData.getName();
+		return null;
 	}
 
 	public static PHPClassData discoverSuperClass(final PHPClassData classData, final String superClassName) {
-		final PHPSuperClassNameData currentSuperClassNameData = classData.getSuperClassData();
-		if (currentSuperClassNameData != null) {
-			String currentSuperClassName = currentSuperClassNameData.getName();
-			if (currentSuperClassName == null)
+		String currentSuperClassName = getSuperClassName(classData);
+		if (currentSuperClassName == null)
+			return null;
+		PHPClassData currentSuperClassData = classData;
+		while ((currentSuperClassData = getSuperClass(currentSuperClassData)) != null) {
+			if ((currentSuperClassName = currentSuperClassData.getName()) == null)
 				return null;
-			PHPClassData currentSuperClassData = classData;
-			while ((currentSuperClassData = getSuperClass(currentSuperClassData)) != null) {
-				if ((currentSuperClassName = currentSuperClassData.getName()) == null)
-					return null;
-				if (currentSuperClassName.compareToIgnoreCase(superClassName) == 0)
-					return currentSuperClassData;
-			}
+			if (currentSuperClassName.compareToIgnoreCase(superClassName) == 0)
+				return currentSuperClassData;
 		}
 		return null;
 	}
-	
+
 	public static PHPClassData discoverInterface(final PHPClassData classData, final String interfaceName) {
 		PHPClassData[] interfaces = getInterfaces(classData);
 		for (int i = 0; i < interfaces.length; ++i) {
