@@ -97,6 +97,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 	private boolean enableDebugInfoOption;
 	protected boolean enableFileSelection;
+	protected boolean enableBreakpointSelection;
+
 	// Selection changed listener (checked PHP exe)
 	private final ISelectionChangedListener fSelectionListener = new ISelectionChangedListener() {
 		public void selectionChanged(SelectionChangedEvent event) {
@@ -116,6 +118,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 	public PHPExecutableLaunchTab() {
 		enableFileSelection = true;
+		enableBreakpointSelection = true;
 		phpsComboBlock = new PHPsComboBlock();
 	}
 
@@ -147,20 +150,20 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		final Group group = new Group(parent, SWT.NONE);
 		final String groupName = PHPDebugUIMessages.PHP_File;
 		group.setText(groupName);
-		
+
 		GridLayout layout = new GridLayout(3, false);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayout(layout);
 		group.setLayoutData(gd);
 		group.setFont(parent.getFont());
-		
+
 		argumentField = new Text(group, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		argumentField.setLayoutData(gd);
 		argumentField.addModifyListener(fListener);
 		addControlAccessibleListener(argumentField, group.getText());
-		
+
 		argumentVariablesButton = createPushButton(group, PHPDebugUIMessages.Browse, null);
 		gd = (GridData) argumentVariablesButton.getLayoutData();
 		gd.horizontalSpan = 1;
@@ -171,7 +174,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	// In case this is a debug mode, display checkboxes to override the 'Break on first line' attribute.
 	private void createBreakControl(final Composite parent) {
 		final String mode = getLaunchConfigurationDialog().getMode();
-		if (ILaunchManager.DEBUG_MODE.equals(mode)) {
+		if (ILaunchManager.DEBUG_MODE.equals(mode) && enableBreakpointSelection) {
 			final Group group = new Group(parent, SWT.NONE);
 			group.setText(PHPDebugUIMessages.Breakpoint_Group_Label);
 			final GridLayout layout = new GridLayout();
@@ -187,6 +190,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 			overrideBreakpiontSettings.addSelectionListener(fListener);
 			breakOnFirstLine.addSelectionListener(fListener);
+
+			if (!enableBreakpointSelection)
+				setEnableBreakpointSelection(enableBreakpointSelection);
 		}
 	}
 
@@ -295,8 +301,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	protected void handleBreakpointOverride() {
-		breakOnFirstLine.setEnabled(overrideBreakpiontSettings.getSelection());
 		updateLaunchConfigurationDialog();
+		breakOnFirstLine.setEnabled(overrideBreakpiontSettings.getSelection());
 	}
 
 	/**
@@ -483,6 +489,18 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (argumentField != null)
 			argumentField.setVisible(enabled);
 
+	}
+
+	public void setEnableBreakpointSelection(final boolean enabled) {
+		if (enabled == enableBreakpointSelection)
+			return;
+		enableBreakpointSelection = enabled;
+		if (overrideBreakpiontSettings != null) {
+			overrideBreakpiontSettings.setEnabled(enabled);
+			overrideBreakpiontSettings.setSelection(!enabled);
+			breakOnFirstLine.setSelection(enabled);
+			breakOnFirstLine.setEnabled(enabled);
+		}
 	}
 
 	/**
