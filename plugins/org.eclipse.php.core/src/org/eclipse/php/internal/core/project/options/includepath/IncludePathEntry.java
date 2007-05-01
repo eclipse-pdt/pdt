@@ -163,7 +163,11 @@ public class IncludePathEntry implements IIncludePathEntry {
 		switch (entryKind) {
 
 			case IIncludePathEntry.IPE_PROJECT:
-				resource = ResourcesPlugin.getWorkspace().getRoot().getProject(sResource);
+				try {
+					resource = ResourcesPlugin.getWorkspace().getRoot().getProject(sResource);
+				} catch (Exception e) {
+					// Do nothing
+				}
 				entry = newProjectEntry(path, resource, isExported);
 				break;
 			case IIncludePathEntry.IPE_LIBRARY:
