@@ -119,29 +119,4 @@ public class FileUtils {
 	      if (output != null) output.close();
 	    }
 	  }
-
-	  /**
-	   * This method retreives all Files recursively from the given parent directory.
-	   * If the given parent is a file and not a directory, it will return an ArrayList with
-	   * the given file.
-	   * @param parent
-	   * @return
-	   */
-	  public static ArrayList getFilesRecursive(File parent){
-		  ArrayList aggregator = new ArrayList();
-		  addFilesRecursive(parent, aggregator);
-		  return aggregator;
-	  }
-	  
-	  private static void addFilesRecursive(File parent, ArrayList aggregator){
-		  File[] children = parent.listFiles();
-		  for (int i=0 ; i<children.length ; i++){
-			  if (children[i].isDirectory()){
-				  addFilesRecursive(children[i], aggregator);
-			  }
-			  else {
-				  aggregator.add(children[i]);
-			  }
-		  }
-	  }
 }
