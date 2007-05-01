@@ -176,7 +176,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					} finally {
 						if (existingModelForRead != null) {
 							existingModelForRead.releaseFromRead();
-						} else if(file.exists()) {
+						} else if(file.isAccessible()) {
 							addFileToModel(file);
 						}
 					}
