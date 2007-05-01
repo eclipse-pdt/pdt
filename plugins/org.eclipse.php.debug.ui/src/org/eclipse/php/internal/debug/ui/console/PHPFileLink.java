@@ -18,6 +18,7 @@ import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.console.IHyperlink;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 
 /**
@@ -70,7 +71,11 @@ public class PHPFileLink implements IHyperlink {
 					}
 				};
 			}
-			editorPart = EditorUtility.openInEditor(fFile, false);
+			if (fFile instanceof IFile) {
+				editorPart = EditorUtility.openInEditor(new FileEditorInput((IFile) fFile), "org.eclipse.php.editor", false);
+			} else {
+				editorPart = EditorUtility.openInEditor(fFile, false);
+			}
 			if (editorPart != null && fFileLineNumber > 0) {
 				if (fFileOffset < 0) {
 					domModel = ((DOMModelForPHP) StructuredModelManager.getModelManager().getModelForRead((IFile) fFile));
