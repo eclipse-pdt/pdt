@@ -476,7 +476,9 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 					liberaries.add(entries[i]);
 				}
 			} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-				projectsList.add(entries[i]);
+				if (entries[i].getResource() != null) { // if project exists
+					projectsList.add(entries[i]);
+				}
 			} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 				variablesList.add(entries[i]);
 			}
