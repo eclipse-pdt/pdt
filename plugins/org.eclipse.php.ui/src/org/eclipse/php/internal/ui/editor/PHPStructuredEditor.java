@@ -434,6 +434,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		public IProject getProject() {
+			IFile file = getFile();
+			if (file == null)
+				return null;
 			return getFile().getProject();
 		}
 	};
@@ -1337,32 +1340,29 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		IResource resource = null;
 		IPath externalPath = null;
-		
+
 		if (input instanceof IFileEditorInput) {
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
-		}
-		else if (input instanceof JavaFileEditorInput) {
+		} else if (input instanceof JavaFileEditorInput) {
 			JavaFileEditorInput fileInput = (JavaFileEditorInput) input;
 			externalPath = fileInput.getPath();
 			// Wrap this file because it's an external (non workspace) file.
 			resource = new ExternalFileDecorator(((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(externalPath), externalPath.getDevice());
-		}
-		else if (input instanceof IStorageEditorInput) {
+		} else if (input instanceof IStorageEditorInput) {
 			final IStorageEditorInput editorInput = (IStorageEditorInput) input;
 			final IStorage storage = editorInput.getStorage();
-			
+
 			if (storage instanceof ZipEntryStorage) {
 				resource = ((ZipEntryStorage) storage).getProject();
-			}
-			else if (storage instanceof LocalFileStorage) {
+			} else if (storage instanceof LocalFileStorage) {
 				resource = ((LocalFileStorage) storage).getProject();
 			}
 			// Suppose that it's a remote storage. If something goes wrong in some case - add another "if" above.
-			else { 
+			else {
 				externalPath = storage.getFullPath();
 				resource = new ExternalFileDecorator(((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(externalPath), externalPath.getDevice());
-				
+
 				if (!(input instanceof StorageEditorInput)) {
 					input = new StorageEditorInput(storage) {
 						public boolean exists() {
@@ -1372,10 +1372,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				}
 			}
 		}
-		
+
 		if (resource instanceof IFile) {
 			if (PHPModelUtil.isPhpFile((IFile) resource)) {
-				if(externalPath != null) {
+				if (externalPath != null) {
 					ExternalPhpFilesRegistry.getInstance().addFileEntry(externalPath.toString());
 				}
 				PhpSourceParser.editFile.set(resource);
