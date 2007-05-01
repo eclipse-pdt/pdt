@@ -33,6 +33,10 @@ public class PhpParserSchedulerTask implements Runnable {
 
 	// holds the stack of tasks
 	private final LinkedList buffer = new LinkedList();
+	
+	// holds the hold tasks
+	private final LinkedList preBuffer = new LinkedList();
+
 
 	// this class is singleton - only one instance is allowed  
 	protected static final PhpParserSchedulerTask instance = new PhpParserSchedulerTask();
@@ -66,7 +70,9 @@ public class PhpParserSchedulerTask implements Runnable {
 
 				// do the job of parsing with the given information
 				release.run();
-
+				
+				preBuffer.remove(release.filename);
+				
 			} catch (InterruptedException e) {
 				// thread was stoped or canceled...
 				// just go out!
@@ -133,10 +139,16 @@ public class PhpParserSchedulerTask implements Runnable {
 		// creates the new task properties
 		final ParserExecuter parserProperties = new ParserExecuter(parserManager, phpParser, client, filename, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
 
+		preBuffer.add(filename);
+		
 		// adds  the task to the head of the list
 		buffer.addFirst(parserProperties);
 
 		// now you can notify that the stack is not empty
 		notifyAll();
+	}
+	
+	public boolean isDone(String filename) {
+		return !preBuffer.contains(filename);		
 	}
 }

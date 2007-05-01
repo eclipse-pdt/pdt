@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.php.internal.core.documentModel.validate.PHPProblemsValidator;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.phpModel.parser.PhpParserSchedulerTask;
 
 public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 
@@ -47,6 +48,13 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 
 	private void handle(IFile file) {
 		PHPWorkspaceModelManager.getInstance().addFileToModel(file);
+		// fixed bug 180894 - Wait till the parser complete its parsing
+		while (!PhpParserSchedulerTask.getInstance().isDone(file.getFullPath().toString())) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+			}
+		}
 		validator.validateFile(file);
 	}
 }
