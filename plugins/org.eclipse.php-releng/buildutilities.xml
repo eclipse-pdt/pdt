@@ -262,7 +262,7 @@
 	</target>
 
 	<target name="pack-all-in-one-tar" if="istar">
-		<property name="packName" value="pdt-all-in-one-incubation-${buildLabel}-${bos}-${bws}" />
+		<property name="packName" value="pdt-all-in-one-${buildLabel}-${bos}-${bws}" />
 
 		<exec dir="${buildDirectory}/${buildLabel}/temp" executable="tar" failonerror="true">
 			<arg line="-cf ${buildDirectory}/${buildLabel}/all-in-one/${packName}.tar eclipse " />
