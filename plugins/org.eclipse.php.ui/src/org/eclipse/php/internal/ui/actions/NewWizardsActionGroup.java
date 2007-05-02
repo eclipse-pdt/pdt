@@ -17,7 +17,10 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.IContextMenuConstants;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IWorkbenchSite;
@@ -64,7 +67,7 @@ public class NewWizardsActionGroup extends ActionGroup {
 		if (element instanceof IResource) {
 			return true;
 		}
-		if (element instanceof IFolder || element instanceof PHPProjectModel || element instanceof PHPCodeData) {
+		if (element instanceof IFolder || element instanceof PHPProjectModel || element instanceof PHPClassData || element instanceof PHPFileData) {
 			return true;
 		}
 
