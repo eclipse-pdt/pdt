@@ -14,6 +14,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.debug.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
@@ -72,7 +73,7 @@ public class PHPFileLink implements IHyperlink {
 				};
 			}
 			if (fFile instanceof IFile) {
-				editorPart = EditorUtility.openInEditor(new FileEditorInput((IFile) fFile), "org.eclipse.php.editor", false);
+				editorPart = EditorUtility.openInEditor(new FileEditorInput((IFile) fFile), PHPUiConstants.PHP_EDITOR_ID, false);
 			} else {
 				editorPart = EditorUtility.openInEditor(fFile, false);
 			}
