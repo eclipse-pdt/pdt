@@ -87,6 +87,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	 */
 	protected String getHTDocs(String fileName, String systemFileName, String uri) {
 		int index;
+		// clean any additional slashes in the file name and the uri
+		uri = uri.replaceAll("/+", "/");
+		systemFileName = systemFileName.replaceAll("/+", "/");
 		// check for Windows, since case isn't always returned correctly
 		if (fileName.startsWith(":\\", 1)) {
 			index = systemFileName.toLowerCase().lastIndexOf(uri.toLowerCase());
