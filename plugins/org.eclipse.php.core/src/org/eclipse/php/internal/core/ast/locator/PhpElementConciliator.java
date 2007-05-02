@@ -34,7 +34,9 @@ public class PhpElementConciliator {
 	public static final int CONCILIATOR_PROGRAM = 7;
 
 	public static int concile(ASTNode locateNode) {
-		if (isGlobalVariable(locateNode)) {
+		if (locateNode == null || isProgram(locateNode)) {
+			return CONCILIATOR_PROGRAM;
+		}else if (isGlobalVariable(locateNode)) {
 			return CONCILIATOR_GLOBAL_VARIABLE;
 		} else if (isFunction(locateNode)) {
 			return CONCILIATOR_FUNCTION;
@@ -46,8 +48,6 @@ public class PhpElementConciliator {
 			return CONCILIATOR_CLASS_PROPERTY;
 		} else if (isLocalVariable(locateNode)) {
 			return CONCILIATOR_LOCAL_VARIABLE;
-		} else if (isProgram(locateNode)) {
-			return CONCILIATOR_PROGRAM;
 		}
 		return CONCILIATOR_UNKNOWN;
 	}
