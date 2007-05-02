@@ -166,7 +166,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			 */
 			private void parseModifiedClosedFiles(IResourceDelta delta) {
 				IResource resouce = delta.getResource();
-				if (resouce.getType() == IResource.FILE) {
+				if (resouce.getType() == IResource.FILE  && delta.getKind() == IResourceDelta.CHANGED) {
 					IFile file = (IFile) resouce;
 					IStructuredModel existingModelForRead = null;
 					try {
