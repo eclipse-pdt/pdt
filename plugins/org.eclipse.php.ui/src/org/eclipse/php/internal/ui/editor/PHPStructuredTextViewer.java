@@ -195,32 +195,31 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * We override this function in order to use content assist for php and not use the defualt one dictated by StructuredTextViewerConfiguration
 	 */
 	public void configure(SourceViewerConfiguration configuration) {
-		IContentAssistant oldContentAssistant = fContentAssistant;
+
 		super.configure(configuration);
 
 		if (!(configuration instanceof PHPStructuredTextViewerConfiguration)) {
 			return;
 		}
 		config = configuration;
+		
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
-		IContentAssistant newAssistant = configuration.getContentAssistant(this);
-		newAssistant.uninstall();
-		newAssistant = phpConfiguration.getPHPContentAssistant(this);
-		if (newAssistant != oldContentAssistant || newAssistant == null || oldContentAssistant == null) {
-			if (fContentAssistant != null)
-				fContentAssistant.uninstall();
-
-			fContentAssistant = newAssistant;
-
-			if (fContentAssistant != null) {
-				fContentAssistant.install(this);
-				fContentAssistantInstalled = true;
-			} else {
-				// 248036 - disable the content assist operation if no content assistant
-				enableOperation(CONTENTASSIST_PROPOSALS, false);
-			}
+		IContentAssistant newPHPAssistant = phpConfiguration.getPHPContentAssistant(this, true);
+		
+		// Uninstall content assistant created in super:
+		if (fContentAssistant != null) {
+			fContentAssistant.uninstall();
 		}
-
+		
+		// Assign, and configure our content assistant:
+		fContentAssistant = newPHPAssistant;
+		if (fContentAssistant != null) {
+			fContentAssistant.install(this);
+			fContentAssistantInstalled = true;
+		} else {
+			// 248036 - disable the content assist operation if no content assistant
+			enableOperation(CONTENTASSIST_PROPOSALS, false);
+		}
 	}
 
 }

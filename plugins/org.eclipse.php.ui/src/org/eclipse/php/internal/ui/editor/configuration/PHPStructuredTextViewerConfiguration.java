@@ -182,9 +182,13 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	private StructuredContentAssistant fContentAssistant = null;
-
+	
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
-		if (fContentAssistant == null) {
+		return getPHPContentAssistant(sourceViewer, false);
+	}
+
+	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer, boolean reCreate) {
+		if (fContentAssistant == null || reCreate) {
 			fContentAssistant = getPHPContentAssistantExtension();
 			if (fContentAssistant == null) {
 				fContentAssistant = new StructuredContentAssistant();
