@@ -32,6 +32,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.phpIni.IniModifier;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -137,7 +138,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		//			return;
 		//		}
 		File phpIni = IniModifier.findPHPIni(phpExeString);
-		if (project != dummyProject) {
+		if (project != dummyProject && project.hasNature(PHPNature.ID)) {
 			if (phpIni != null) {
 				File tempIni = IniModifier.addIncludePath(phpIni, project);
 				if (tempIni != null) {
