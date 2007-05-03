@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui;
 
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -27,36 +29,45 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 	static final String TOP_RIGHT_LOCATION = "topRight";
 	static final String BOTTOM_LOCATION = "bottom";
 
+	static final String PERSPECTIVE_ID = "org.eclipse.php.perspective";
+
 	//other view id's
 	static final String ID_EXPLORER = "org.eclipse.php.ui.explorer";
 	static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions";
 	static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline";
-    static final String ID_Debug_INFO_FOLDER = "org.eclipse.php.debug.ui.debugInfoFolder"; //$NON-NLS-1$
-    static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
-    static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
-    
-    
+	static final String ID_Debug_INFO_FOLDER = "org.eclipse.php.debug.ui.debugInfoFolder"; //$NON-NLS-1$
+	static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
+	static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
+
 	public void createInitialLayout(IPageLayout layout) {
 
 		//Adding the default views for the perspective
 		addViews(layout);
-		
-		layout.addPerspectiveShortcut("org.eclipse.php.perspective"); //$NON-NLS-N$
+
+		layout.addPerspectiveShortcut(PERSPECTIVE_ID); //$NON-NLS-N$
 		layout.addPerspectiveShortcut("org.eclipse.php.debug.ui.PHPDebugPerspective"); //$NON-NLS-N$
-		layout.addPerspectiveShortcut("com.zend.php.profile.ui.perspective"); //$NON-NLS-N$
-		layout.addPerspectiveShortcut("com.zend.php.wysiwyg.ui.webPerspective"); //$NON-NLS-N$
-		
-		layout.addShowViewShortcut(ID_EXPLORER); 
-		layout.addShowViewShortcut(ID_FUNCTIONS); 
-		layout.addShowViewShortcut(ID_PROJECT_OUTLINE); 
+
+		layout.addShowViewShortcut(ID_EXPLORER);
+		layout.addShowViewShortcut(ID_FUNCTIONS);
+		layout.addShowViewShortcut(ID_PROJECT_OUTLINE);
 		layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
-		layout.addShowViewShortcut("com.zend.php.rss.ui.RSSView"); //$NON-NLS-N$
-		layout.addShowViewShortcut("com.zend.php.framework.ui.views.mvc"); //$NON-NLS-N$
-		layout.addShowViewShortcut("com.zend.php.codegallery"); //$NON-NLS-N$
-		layout.addShowViewShortcut("com.zend.php.debug.ui.views.CodeCoverageView"); //$NON-NLS-N$
-		layout.addShowViewShortcut("com.zend.php.phpunit.PHPUnitView"); //$NON-NLS-N$
-		layout.addShowViewShortcut("com.zend.php.platform.ui.PlatformEventsView"); //$NON-NLS-N$
-		
+
+		// add extension shortcuts
+		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut"; //$NON-NLS-N$
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(phpPerspectiveShortcut);
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			String perspectiveId = element.getAttribute("perspectiveId"); //$NON-NLS-N$
+			if (PERSPECTIVE_ID.equals(perspectiveId)) {
+				String type = element.getAttribute("type"); //$NON-NLS-N$
+				String additionId = element.getAttribute("additionId"); //$NON-NLS-N$
+				if (type.equals("Show View")) { //$NON-NLS-N$
+					layout.addShowViewShortcut(additionId);
+				} else if (type.equals("Open Perspective")) { //$NON-NLS-N$
+					layout.addPerspectiveShortcut(additionId);
+				}
+			}
+		}
 	}
 
 	/*
@@ -64,15 +75,15 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 	 * out in relation to each other and the editor area.
 	 */
 	protected void addViews(IPageLayout layout) {
-		
+
 		String editorArea = layout.getEditorArea();
-		
+
 		//	Everything is based off the editor area
-		
-        // remove debug views from PHP prespective. bug #163653
+
+		// remove debug views from PHP prespective. bug #163653
 		//IFolderLayout outlineFolder= layout.createFolder(ID_Debug_INFO_FOLDER, IPageLayout.RIGHT, (float) 0.75, editorArea);
-        //outlineFolder.addView(ID_PHPDebugOutput);
-        //outlineFolder.addView(ID_PHPBrowserOutput);
+		//outlineFolder.addView(ID_PHPDebugOutput);
+		//outlineFolder.addView(ID_PHPBrowserOutput);
 
 		// Top left: Resource Navigator view and PHP Explorer
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION, IPageLayout.LEFT, 0.22f, editorArea);
@@ -84,12 +95,12 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		bottomLeft.addView(IPageLayout.ID_OUTLINE);
 		bottomLeft.addView(ID_PROJECT_OUTLINE);
 		bottomLeft.addView(ID_FUNCTIONS);
-		
+
 		// Bottom: Attributes view, Problem View, Task List, placeholder for Design View Log
 		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION, IPageLayout.BOTTOM, 0.75f, editorArea);
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView(IPageLayout.ID_TASK_LIST);
-        bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
-        bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
+		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
+		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 	}
 }
