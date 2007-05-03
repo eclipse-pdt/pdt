@@ -173,7 +173,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 						if (project.isOpen()) {
 							runBuild(project);
 						}
-					} else {
+					} else if ((eventFlags & IResourceDelta.CHANGED) != 0) {
 						// parse file which are not opened for editing but were changed
 						IResourceDelta[] childrenDelta = resourceDelta.getAffectedChildren();
 						for (int j = 0; j < childrenDelta.length; j++) {
