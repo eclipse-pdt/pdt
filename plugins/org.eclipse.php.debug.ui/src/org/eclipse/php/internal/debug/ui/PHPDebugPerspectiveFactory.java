@@ -70,6 +70,7 @@ public class PHPDebugPerspectiveFactory implements IPerspectiveFactory {
 		layout.addShowViewShortcut(ID_PHPDebugOutput);
 		layout.addShowViewShortcut(ID_PHPBrowserOutput);
 		layout.addShowViewShortcut("org.eclipse.debug.ui.PHPStackView"); //$NON-NLS-N$
+		layout.addShowViewShortcut("com.zend.php.platform.ui.PlatformEventsView"); //$NON-NLS-N$
 		
 		
 		setContentsOfShowViewMenu(layout);
