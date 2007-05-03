@@ -11,6 +11,8 @@
 package org.eclipse.php.internal.debug.ui;
 
 
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -29,6 +31,9 @@ public class PHPDebugPerspectiveFactory implements IPerspectiveFactory {
     public static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
     public static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
     
+    
+    public static final String PERSPECTIVE_ID = "org.eclipse.php.debug.ui.PHPDebugPerspective"; //$NON-NLS-1$
+
 	/**
 	 * @see IPerspectiveFactory#createInitialLayout(IPageLayout)
 	 */
@@ -62,16 +67,28 @@ public class PHPDebugPerspectiveFactory implements IPerspectiveFactory {
 		layout.addActionSet(IDebugUIConstants.DEBUG_ACTION_SET);
 		
 		layout.addPerspectiveShortcut("org.eclipse.php.perspective"); //$NON-NLS-N$
-		layout.addPerspectiveShortcut("org.eclipse.php.debug.ui.PHPDebugPerspective"); //$NON-NLS-N$
-		layout.addPerspectiveShortcut("com.zend.php.profile.ui.perspective"); //$NON-NLS-N$
-		layout.addPerspectiveShortcut("com.zend.php.wysiwyg.ui.webPerspective"); //$NON-NLS-N$
-		
-		
+		layout.addPerspectiveShortcut(PERSPECTIVE_ID); //$NON-NLS-N$
+				
 		layout.addShowViewShortcut(ID_PHPDebugOutput);
 		layout.addShowViewShortcut(ID_PHPBrowserOutput);
 		layout.addShowViewShortcut("org.eclipse.debug.ui.PHPStackView"); //$NON-NLS-N$
-		layout.addShowViewShortcut("com.zend.php.platform.ui.PlatformEventsView"); //$NON-NLS-N$
 		
+		// add extension shortcuts
+		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut"; //$NON-NLS-N$
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(phpPerspectiveShortcut);
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			String perspectiveId = element.getAttribute("perspectiveId"); //$NON-NLS-N$
+			if (PERSPECTIVE_ID.equals(perspectiveId)) {
+				String type = element.getAttribute("type"); //$NON-NLS-N$
+				String additionId = element.getAttribute("additionId"); //$NON-NLS-N$
+				if (type.equals("Show View")) { //$NON-NLS-N$
+					layout.addShowViewShortcut(additionId);
+				} else if (type.equals("Open Perspective")) { //$NON-NLS-N$
+					layout.addPerspectiveShortcut(additionId);
+				}
+			}
+		}
 		
 		setContentsOfShowViewMenu(layout);
 	}
