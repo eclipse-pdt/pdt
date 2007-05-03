@@ -11,11 +11,37 @@
 package org.eclipse.php.internal.core.phpModel.parser;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
@@ -190,9 +216,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			}
 		});
 	}
-
+	
 	private void runBuild(final IProject project) {
-		WorkspaceJob cleanJob = new WorkspaceJob("Creating php model ...") {
+		WorkspaceJob cleanJob = new WorkspaceJob(NLS.bind("Building PHP project: {0} ...", project.getName())) {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					project.build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
@@ -207,9 +233,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		cleanJob.setUser(false);
 		cleanJob.schedule();
 	}
-
+	
 	private void runBuild() {
-		WorkspaceJob cleanJob = new WorkspaceJob("Creating php model ...") {
+		WorkspaceJob cleanJob = new WorkspaceJob("Building PHP projects ...") {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();

@@ -41,7 +41,7 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 
 	public IProject[] build(IncrementalProjectBuilder builder, int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		if (kind == IncrementalProjectBuilder.FULL_BUILD) {
-			fullBuild(builder);
+			fullBuild(builder, monitor);
 			return null;
 		}
 		
@@ -55,9 +55,9 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 		return null;
 	}
 
-	private void fullBuild(IncrementalProjectBuilder builder) {
+	private void fullBuild(IncrementalProjectBuilder builder, IProgressMonitor monitor) {
 		try {
-			builder.getProject().accept(new FullPhpProjectBuildVisitor());
+			builder.getProject().accept(new FullPhpProjectBuildVisitor(monitor));
 		} catch (CoreException e) {
 			PHPCorePlugin.log(e);
 			return;

@@ -14,13 +14,20 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.documentModel.validate.PHPProblemsValidator;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.parser.PhpParserSchedulerTask;
 
 public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 
+	private IProgressMonitor monitor;
 	private PHPProblemsValidator validator = PHPProblemsValidator.getInstance();
+
+	public FullPhpProjectBuildVisitor(IProgressMonitor monitor) {
+		this.monitor = monitor;
+	}
 
 	public boolean visit(IResource resource) {
 		// parse each PHP file with the parserFacade which adds it to
@@ -47,6 +54,9 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 	}
 
 	private void handle(IFile file) {
+
+		monitor.subTask(NLS.bind("Compiling: {0} ...", file.getFullPath().toPortableString()));
+
 		PHPWorkspaceModelManager.getInstance().addFileToModel(file);
 		// fixed bug 180894 - Wait till the parser complete its parsing
 		while (!PhpParserSchedulerTask.getInstance().isDone(file.getFullPath().toString())) {
