@@ -17,7 +17,9 @@ import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -64,6 +66,13 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 					file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(editorInput.getPath());
 				} else if (list.get(0) instanceof IFile) {
 					file = (IFile) list.get(0);
+				}
+				try {
+					//  Allow only a PHP Script launch shortcut in case the file is part of a non-PHP project.
+					if (file != null && file.getProject() != null && !file.getProject().hasNature(PHPNature.ID) && !SCRIPT_ID.equalsIgnoreCase(launchType)) {
+						return false;
+					}
+				} catch (CoreException ce) {
 				}
 				try {
 					return file.getContentDescription().getContentType().getId().equals(PHP_SOURCE_ID);
