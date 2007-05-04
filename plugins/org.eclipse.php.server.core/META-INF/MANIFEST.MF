@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PDT Server Core Plug-in (Incubation)
+Bundle-Name: PDT Server Core Plug-in
 Bundle-SymbolicName: org.eclipse.php.server.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.php.internal.server.core.Activator
