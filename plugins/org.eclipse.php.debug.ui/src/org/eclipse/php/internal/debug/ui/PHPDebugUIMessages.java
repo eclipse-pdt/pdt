@@ -116,8 +116,6 @@ public class PHPDebugUIMessages extends NLS {
 	public static String addPHPexeDialog_phpName;
 	public static String addPHPexeDialog_locationNotExists;
 	public static String addPHPexeDialog_pickPHPRootDialog_message;
-	public static String AddPHPexeDialog_PHP_name_must_be_a_valid_file_name___0__1;
-	public static String AddPHPexeDialog_0;
 
 	public static String PHPexesComboBlock_1;
 	public static String PHPexesComboBlock_2;

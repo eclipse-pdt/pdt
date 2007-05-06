@@ -178,11 +178,6 @@ public class AddPHPexeDialog extends StatusDialog {
 		} else {
 			if (fRequestor.isDuplicateName(name) && (fEditedPHPexe == null || !name.equals(fEditedPHPexe.getName()))) {
 				status.setError(PHPDebugUIMessages.addPHPexeDialog_duplicateName); //$NON-NLS-1$
-			} else {
-				IStatus s = ResourcesPlugin.getWorkspace().validateName(name, IResource.FILE);
-				if (!s.isOK()) {
-					status.setError(MessageFormat.format(PHPDebugUIMessages.AddPHPexeDialog_PHP_name_must_be_a_valid_file_name___0__1, new String[] { s.getMessage() })); //$NON-NLS-1$
-				}
 			}
 		}
 		return status;
