@@ -132,4 +132,8 @@ public class PHPVersionGroup implements SelectionListener {
 	public PHPVersionConfigurationBlock getVersionBlock() {
 		return fConfigurationBlock;
 	}
+
+	public void setVisible(boolean visible) {
+		fGroup.setVisible(visible);
+	}
 }

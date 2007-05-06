@@ -75,12 +75,11 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements IPr
 		return top;
 	}
 
-	private void createProjectNameGroup(Composite parent) {
+	protected void createProjectNameGroup(Composite parent) {
 		projectNameGroup = new NewProjectGroup(parent, model);
 	}
 
 	protected void createProjectOptionsGroup(Composite parent) {
-
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(3, false);
 		composite.setLayout(layout);
@@ -93,6 +92,10 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements IPr
 
 	public PHPVersionConfigurationBlock getPHPVersionBlock() {
 		return fVersionGroup.getVersionBlock();
+	}
+
+	public void setInitialProjectName(String name) {
+		projectNameGroup.projectNameField.setText(name);
 	}
 
 }
