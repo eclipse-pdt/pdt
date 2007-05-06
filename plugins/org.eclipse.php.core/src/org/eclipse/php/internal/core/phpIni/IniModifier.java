@@ -147,7 +147,7 @@ public class IniModifier {
 				paths.add(path);
 			} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
 				final IResource includeResource = entries[i].getResource();
-				if (includeResource != null && includeResource instanceof IProject)
+				if (includeResource != null && includeResource instanceof IProject && includeResource.isAccessible())
 					paths.add(includeResource.getLocation());
 			} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 				String variableName = path.toString();
