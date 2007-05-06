@@ -59,7 +59,7 @@ public class GlobalParsingManager {
 			ProjectParsingManager projectParsingManager = new ProjectParsingManager(project);
 			project2ParsingManagerMap.put(project, projectParsingManager);
 			PHPProjectModel projectModel = null;
-			if (project != null && project.isAccessible()) {
+			if (project != null && !PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject().equals(project)) {
 				register2RemoveManagerWhenProjectCloses(project);
 				projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
 			} else {
