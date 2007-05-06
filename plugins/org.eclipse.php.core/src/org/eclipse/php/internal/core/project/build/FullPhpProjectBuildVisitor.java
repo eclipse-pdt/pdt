@@ -58,13 +58,6 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 		monitor.subTask(NLS.bind("Compiling: {0} ...", file.getFullPath().toPortableString()));
 
 		PHPWorkspaceModelManager.getInstance().addFileToModel(file);
-		// fixed bug 180894 - Wait till the parser complete its parsing
-		while (!PhpParserSchedulerTask.getInstance().isDone(file.getFullPath().toString())) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-			}
-		}
 		validator.validateFile(file);
 	}
 }
