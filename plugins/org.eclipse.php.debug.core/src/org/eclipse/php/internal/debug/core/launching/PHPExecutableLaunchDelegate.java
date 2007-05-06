@@ -309,12 +309,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 		});
 	}
-
-	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
-		if (configuration.getAttribute(PHPExecutableLaunchDelegate.SAVE_AUTOMATICALLY, false)) {
-			return true;
-		}
-		return super.buildForLaunch(configuration, mode, monitor);
-	}
+//
+//	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
+//		if (configuration.getAttribute(PHPExecutableLaunchDelegate.SAVE_AUTOMATICALLY, false)) {
+//			return true;
+//		}
+//		return super.buildForLaunch(configuration, mode, monitor);
+//	}
 
 }
