@@ -54,12 +54,6 @@ public class PHPUIMessages {
 	public static String CodeAssistPreferencePage_autoActivationDelay;
 	public static String CodeAssistPreferencePage_autoActivationDelayIntValue;
 	public static String CodeAssistPreferencePage_autoActivationDelayPositive;
-	public static String CodeAssistPreferencePage_autoActivationDisableSizeLimitLabel;
-	public static String CodeAssistPreferencePage_autoActivationForClassNames;
-	public static String CodeAssistPreferencePage_autoActivationForFunctionsKeywordsConstants;
-	public static String CodeAssistPreferencePage_autoActivationForVariables;
-	public static String CodeAssistPreferencePage_autoActivationLimitNumberIntValue;
-	public static String CodeAssistPreferencePage_autoActivationLimitNumberPositive;
 	public static String CodeAssistPreferencePage_autoActivationSectionLabel;
 	public static String CodeAssistPreferencePage_autoActivationTriggersPHP;
 	public static String CodeAssistPreferencePage_autoActivationTriggersPHPDoc;
@@ -89,28 +83,9 @@ public class PHPUIMessages {
 	public static String ColorPage_Variable;
 	public static String CoreUtility_buildall_taskname;
 	public static String CoreUtility_buildproject_taskname;
-	public static String CoreUtility_job_title;
-	public static String ElementValidator_cannotPerform;
+	public static String CoreUtility_job_title;	
 	public static String ExceptionDialog_seeErrorLogMessage;
 	public static String IncludePathDialogAccess_0;
-	public static String InitializeAfterLoadJob_real_job_name;
-	public static String InitializeAfterLoadJob_starter_job_name;
-	public static String OptionalMessageDialog_dontShowAgain;
-	public static String PHPAnnotationHover_multipleMarkersAtThisLine;
-	public static String PHPEditor_codeassist_noCompletions;
-	public static String PHPEditorTextHoverDescriptor_cannot_create_message_decorator_error;
-	public static String PHPElementLabels_comma_string;
-	public static String PHPElementLabels_concat_string;
-	public static String PHPElementLabels_declseparator_string;
-	public static String PHPElementProperties_name;
-	public static String PHPImageLabelprovider_assert_wrongImage;
-	public static String PHPPlugin_internal_error;
-	public static String PHPUI_defaultDialogMessage;
-	public static String PHPUIHelp_link_label;
-	public static String PHPUIHelpContext_phpHelpCategory_label;
-	public static String ResourceTransferDragAdapter_cannot_delete_files;
-	public static String ResourceTransferDragAdapter_cannot_delete_resource;
-	public static String ResourceTransferDragAdapter_moving_resource;
 	public static String StatusBarUpdater_num_elements_selected;
 	public static String EditorUtility_concatModifierStrings;
 
@@ -122,7 +97,6 @@ public class PHPUIMessages {
 	public static String ProjectsWorkbookPage_chooseProjects_title;
 
 	public static String CPListLabelProvider_none;
-	public static String CPListLabelProvider_all;
 	public static String CPListLabelProvider_unknown_element_label;
 	public static String CPListLabelProvider_new;
 	public static String CPListLabelProvider_container;
@@ -134,10 +108,7 @@ public class PHPUIMessages {
 
 	public static String LibrariesWorkbookPage_libraries_label;
 	public static String LibrariesWorkbookPage_libraries_remove_button;
-	public static String LibrariesWorkbookPage_libraries_addzip_button;
-	public static String LibrariesWorkbookPage_libraries_addextzip_button;
 	public static String LibrariesWorkbookPage_libraries_addvariable_button;
-	public static String LibrariesWorkbookPage_libraries_addlibrary_button;
 	public static String LibrariesWorkbookPage_libraries_addincludepathfolder_button;
 	public static String LibrariesWorkbookPage_libraries_edit_button;
 	public static String LibrariesWorkbookPage_NewIncludePathDialog_new_title;
@@ -154,15 +125,11 @@ public class PHPUIMessages {
 	public static String IncludePathsBlock_includepath_label;
 	public static String IncludePathsBlock_includepath_up_button;
 	public static String IncludePathsBlock_includepath_down_button;
-	public static String IncludePathsBlock_includepath_checkall_button;
-	public static String IncludePathsBlock_includepath_uncheckall_button;
 	public static String IncludePathsBlock_warning_EntryMissing;
 	public static String IncludePathsBlock_warning_EntriesMissing;
 	public static String IncludePathsBlock_operationdesc_project;
 	public static String IncludePathsBlock_operationdesc_php;
 
-	public static String IncludePathsPropertyPage_error_message;
-	public static String IncludePathsPropertyPage_error_title;
 	public static String IncludePathsPropertyPage_job_title;
 	public static String IncludePathsPropertyPage_no_php_project_message;
 	public static String IncludePathsPropertyPage_closed_project_message;
@@ -179,12 +146,6 @@ public class PHPUIMessages {
 	public static String IncludePathDialogAccess_ExistingSourceFolderDialog_new_description;
 	public static String IncludePathDialogAccess_ExistingPHPFolderDialog_new_title;
 	public static String IncludePathDialogAccess_ExistingPHPFolderDialog_new_description;
-	public static String IncludePathDialogAccess_ZIPArchiveDialog_new_title;
-	public static String IncludePathDialogAccess_ZIPArchiveDialog_new_description;
-	public static String IncludePathDialogAccess_ZIPArchiveDialog_edit_title;
-	public static String IncludePathDialogAccess_ZIPArchiveDialog_edit_description;
-	public static String IncludePathDialogAccess_ExtZIPArchiveDialog_new_title;
-	public static String IncludePathDialogAccess_ExtZIPArchiveDialog_edit_title;
 
 	public static String NewVariableEntryDialog_title;
 	public static String NewVariableEntryDialog_vars_extend;
@@ -228,7 +189,6 @@ public class PHPUIMessages {
 	public static String VariableCreationDialog_titleedit;
 	public static String VariableCreationDialog_name_label;
 	public static String VariableCreationDialog_path_label;
-	public static String VariableCreationDialog_path_file_button;
 	public static String VariableCreationDialog_path_dir_button;
 	public static String VariableCreationDialog_error_entername;
 	public static String VariableCreationDialog_error_whitespace;
@@ -236,7 +196,6 @@ public class PHPUIMessages {
 	public static String VariableCreationDialog_error_nameexists;
 	public static String VariableCreationDialog_error_invalidpath;
 	public static String VariableCreationDialog_warning_pathnotexists;
-	public static String VariableCreationDialog_extjardialog_text;
 	public static String VariableCreationDialog_extdirdialog_text;
 	public static String VariableCreationDialog_extdirdialog_message;
 
@@ -281,13 +240,9 @@ public class PHPUIMessages {
 	public static String PHPOutlinePage_Sort_description;
 	public static String PHPOutlinePage_mode_php;
 	public static String PHPOutlinePage_mode_html;
-	public static String PHPOutlinePage_mode_mixed;	
-	public static String PHPOutlinePage_show_groups;	
-
 	public static String IncludePathDialogAccess_IncludePathFolderDialog_new_title;
 	public static String IncludePathDialogAccess_IncludePathFolderDialog_new_description;
 
-	public static String PHPEditorPreferencePage_folding_title;
 	public static String FoldingConfigurationBlock_enable;
 	public static String FoldingConfigurationBlock_combo_caption;
 	public static String FoldingConfigurationBlock_error_not_exist;
@@ -347,12 +302,10 @@ public class PHPUIMessages {
 	public static String TodoTaskInputDialog_error_entryExists;
 	public static String TodoTaskInputDialog_error_noSpace;
 	
-	public static String PHPTextHover_createTextHover;
-	public static String PHPTextHover_makeStickyHint;
+	public static String PHPTextHover_createTextHover;	
 	public static String PHPEditorPreferencePage_hoverTab_title;
 	public static String PHPEditorHoverConfigurationBlock_annotationRollover;
-	public static String PHPEditorHoverConfigurationBlock_hoverPreferences;
-	public static String PHPEditorHoverConfigurationBlock_enabled;
+	public static String PHPEditorHoverConfigurationBlock_hoverPreferences;	
 	public static String PHPEditorHoverConfigurationBlock_keyModifier;
 	public static String PHPEditorHoverConfigurationBlock_description;
 	public static String PHPEditorHoverConfigurationBlock_modifierIsNotValid;
@@ -370,8 +323,7 @@ public class PHPUIMessages {
 	public static String PHPFormatterPreferencePage_title;
 		
 	public static String Preferences_php_editor_useAspTagsAsPhp_label;
-
-	public static String PHPInterpreterPreferencePage_description;
+	
 	public static String PHPInterpreterPreferencePage_title;
 	public static String PHPVersionComboName;
 	public static String PHPVersionConfigurationBlock_needsbuild_title;
@@ -403,13 +355,11 @@ public class PHPUIMessages {
     public static String PHPVersionGroup_EnableProjectSettings;
     public static String PHPVersionGroup_ConfigWorkspaceSettings;
     public static String PHPProjectCreationWizard_PageTile;
-    public static String PHPProjectCreationWizard_LoadPagesFailure;
 	
     //  ----- Folding ------
     
 	public static String DefaultPHPFoldingPreferenceBlock_title;
 	public static String DefaultPHPFoldingPreferenceBlock_classes;
-	public static String DefaultPHPFoldingPreferenceBlock_includes;
 	public static String DefaultPHPFoldingPreferenceBlock_functions;
 	public static String DefaultPHPFoldingPreferenceBlock_PHPdoc;
 	public static String EmptyPHPFoldingPreferenceBlock_emptyCaption;
@@ -418,48 +368,20 @@ public class PHPUIMessages {
 	
 	public static String OpenWithMenu_label;
 	public static String RefactorMenu_label;
-	public static String SourceMenu_label;
 	
 	public static String OpenAction_label;
 	public static String OpenAction_tooltip;
 	public static String OpenAction_description;
-	public static String OpenAction_declaration_label;
 	public static String OpenAction_select_element;
 	public static String OpenAction_error_title;
-	public static String OpenAction_error_message;
-	public static String OpenAction_error_messageArgs;
 	public static String OpenAction_error_messageProblems;
 	public static String OpenAction_error_messageBadSelection;
 	
-	public static String ShowInExplorerViewAction_label;
-	public static String ShowInExplorerViewAction_description;
-	public static String ShowInExplorerViewAction_tooltip;
-	public static String ShowInExplorerViewAction_dialog_title;
-	public static String ShowInExplorerViewAction_error_message;
-	public static String ShowInNavigatorView_label;
-	public static String ShowInNavigatorView_dialog_title;
-	public static String ShowInNavigatorView_dialog_message;
-	public static String ShowInNavigatorView_error_activation_failed;
-	
-	public static String FormatAllAction_label;
-	public static String FormatAllAction_tooltip;
-	public static String FormatAllAction_description;
-	public static String FormatAllAction_status_description;
-	public static String FormatAllAction_multi_status_title;
-	public static String FormatAllAction_error_title;
-	public static String FormatAllAction_error_message;
-	public static String FormatAllAction_operation_description;
-	public static String FormatAllAction_failedvalidateedit_title;
-	public static String FormatAllAction_failedvalidateedit_message;
-	public static String FormatAllAction_noundo_title;
-	public static String FormatAllAction_noundo_message;
 	
 	public static String NewWizardsActionGroup_new;
 	public static String OpenProjectAction_dialog_title;
 	public static String OpenProjectAction_dialog_message;
 	public static String OpenProjectAction_error_message;
-	public static String OpenPHPPerspectiveAction_dialog_title;
-	public static String OpenPHPPerspectiveAction_error_open_failed;
 	
 	public static String RefreshAction_label;
 	public static String RefreshAction_toolTip;
@@ -469,9 +391,6 @@ public class PHPUIMessages {
 	public static String RefreshAction_locationDeleted_title;
 	public static String RefreshAction_locationDeleted_message;
 	
-	public static String ActionUtil_not_possible;
-	public static String SelectAllAction_label;
-	public static String SelectAllAction_tooltip;
 	public static String ToggleLinkingAction_label;
 	public static String ToggleLinkingAction_tooltip;
 	public static String ToggleLinkingAction_description;
@@ -494,35 +413,10 @@ public class PHPUIMessages {
 	public static String OpenTypeAction_errorTitle;
 
 	public static String CutAction_text;
-	public static String copyAction_description;
-	public static String copyAction_destination_label;
-	public static String copyAction_name;
-	public static String deleteAction_checkDeletion;
-	public static String deleteAction_confirm_title;
-	public static String deleteAction_confirmReadOnly;
-	public static String deleteAction_description;
-
-	public static String moveAction_checkMove;
-	public static String moveAction_error_readOnly;
-	public static String moveAction_label;
-	public static String moveAction_name;
-	public static String moveAction_destination_label;
-	public static String CopyResourcesToClipboardAction_copy;
 	public static String CopyToClipboardAction_4;
 	public static String CopyToClipboardAction_5;
 	public static String RefactoringAction_refactoring;
-	public static String RefactoringAction_exception;
 	public static String RefactoringAction_disabled;
-	public static String CutSourceReferencesToClipboardAction_cut;
-	public static String DeleteResourceAction_delete;
-	public static String DeleteResourceAction_exception;
-	public static String PasteSourceReferencesFromClipboardAction_paste1;
-	public static String PasteSourceReferencesFromClipboardAction_exception;
-
-	public static String CopyToClipboardProblemDialog_title;
-	public static String CopyToClipboardProblemDialog_message;
-	public static String PasteResourcesFromClipboardAction_error_title;
-	public static String PasteResourcesFromClipboardAction_error_message;
 
 	public static String PasteAction_text;
 	public static String PasteAction_desc;
@@ -533,14 +427,7 @@ public class PHPUIMessages {
 	public static String CopyToClipboardAction_desc;
 
 	public static String BuildAction_label;
-	
-	public static String RemoveBlockCommentAction_label;
-	public static String AddBlockCommentAction_label;
-	public static String ToggleCommentAction_label;
-	public static String UncommentAction_label;
-	public static String CommentAction_label;
-	public static String OpenFunctionsManualAction_label;
-	
+		
 	public static String ConfigureIncludePathAction_label;
 	public static String ConfigureIncludePathAction_tooltip;
 	public static String ConfigureIncludePathAction_description;
@@ -551,11 +438,6 @@ public class PHPUIMessages {
 	public static String PHPTemplateStore_error_title;
 	
 //  ----- Working Set ------
-	
-	public static String AbstractWorkingSetPage_workingSet_name;
-	public static String AbstractWorkingSetPage_warning_nameMustNotBeEmpty;
-	public static String AbstractWorkingSetPage_warning_workingSetExists;
-	public static String AbstractWorkingSetPage_warning_nameWhitespace;
 
 	public static String PHPWorkingSetPage_title;
 	public static String PHPWorkingSetPage_workingSet_name;
@@ -565,8 +447,6 @@ public class PHPUIMessages {
 	public static String PHPWorkingSetPage_warning_workingSetExists;
 	public static String PHPWorkingSetPage_warning_resourceMustBeChecked;
 	public static String PHPWorkingSetPage_warning_nameWhitespace;
-	public static String PHPWorkingSetPage_projectClosedDialog_message;
-	public static String PHPWorkingSetPage_projectClosedDialog_title;
 	public static String PHPWorkingSetPage_selectAll_label;
 	public static String PHPWorkingSetPage_selectAll_toolTip;
 	public static String PHPWorkingSetPage_deselectAll_label;
@@ -588,7 +468,6 @@ public class PHPUIMessages {
 	public static String ViewActionGroup_projects_label;
 	public static String ViewActionGroup_workingSets_label;
 
-	public static String WorkingSetModel_histroy_name;
 	public static String WorkingSetModel_others_name;
 
 	public static String WorkingSetConfigurationDialog_title;
@@ -600,15 +479,6 @@ public class PHPUIMessages {
 	public static String WorkingSetConfigurationDialog_down_label;
 	public static String WorkingSetConfigurationDialog_selectAll_label;
 	public static String WorkingSetConfigurationDialog_deselectAll_label;
-
-	public static String OpenCloseWorkingSetAction_close_label;
-	public static String OpenCloseWorkingSetAction_close_error_title;
-	public static String OpenCloseWorkingSetAction_close_error_message;
-	public static String OpenCloseWorkingSetAction_open_label;
-	public static String OpenCloseWorkingSetAction_open_error_title;
-	public static String OpenCloseWorkingSetAction_open_error_message;
-	public static String OpenPropertiesWorkingSetAction_label;
-	public static String RemoveWorkingSetElementAction_label;	
 	
 //  ----- Filter ------
 	
@@ -621,44 +491,14 @@ public class PHPUIMessages {
 	public static String CustomFiltersDialog_DeselectAllButton_label;
 	public static String OpenCustomFiltersDialogAction_text;
 	public static String FilterDescriptor_filterDescriptionCreationError_message;
-	public static String FilterDescriptor_filterCreationError_title;
 	public static String FilterDescriptor_filterCreationError_message;
 
 	
 //  ----- Explorer ------
 	
-	public static String DragAdapter_deleting;
-	public static String DragAdapter_problem;
-	public static String DragAdapter_problemTitle;
-	public static String DragAdapter_refreshing;
-	public static String DropAdapter_alreadyExists;
-	public static String DropAdapter_errorSame;
-	public static String DropAdapter_errorSubfolder;
-	public static String DropAdapter_errorTitle;
-	public static String DropAdapter_errorMessage;
-	public static String DropAdapter_question;
-	public static String ShowInNavigator_description;
-	public static String ShowInNavigator_error;
-	public static String ShowInNavigator_label;
-	public static String PHPExplorer_filters;
-	public static String PHPExplorer_gotoTitle;
-	public static String PHPExplorer_openPerspective;
-	public static String PHPExplorer_refactoringTitle;
-	public static String PHPExplorer_referencedLibs;
-	public static String PHPExplorer_binaryProjects;
 	public static String PHPExplorer_title;
 	public static String PHPExplorer_toolTip;
 	public static String PHPExplorer_toolTip2;
-	public static String PHPExplorer_openWith;
-	public static String PHPExplorer_element_not_present;
-	public static String PHPExplorer_filteredDialog_title;
-	public static String PHPExplorer_notFound;
-	public static String PHPExplorer_removeFilters;
-	public static String SelectionTransferDropAdapter_error_title;
-	public static String SelectionTransferDropAdapter_error_message;
-	public static String SelectionTransferDropAdapter_dialog_title;
-	public static String SelectionTransferDropAdapter_dialog_preview_label;
-	public static String SelectionTransferDropAdapter_dialog_question;
 	public static String CollapseAllAction_label;
 	public static String CollapseAllAction_tooltip;
 	public static String CollapseAllAction_description;
@@ -674,163 +514,39 @@ public class PHPUIMessages {
 	public static String SearchLabelProvider_potential_noCount;
 	public static String SearchLabelProvider_potential_plural;
 	public static String SearchLabelProvider_exact_plural;
-	public static String group_search;
-	public static String group_declarations;
-	public static String group_references;
-	public static String group_readReferences;
-	public static String group_writeReferences;
-	public static String group_implementors;
-	public static String group_occurrences;
-	public static String group_occurrences_quickMenu_noEntriesAvailable;
-	public static String Search_Error_phpElementAccess_title;
-	public static String Search_Error_phpElementAccess_message;
-	public static String Search_Error_search_title;
-	public static String Search_Error_search_message;
-	public static String Search_Error_search_notsuccessful_message;
-	public static String Search_Error_search_notsuccessful_title;
 	public static String Search_Error_openEditor_title;
 	public static String Search_Error_openEditor_message;
-	public static String Search_Error_codeResolve;
-	public static String SearchElementSelectionDialog_title;
-	public static String SearchElementSelectionDialog_message;
 	public static String SearchPage_searchFor_label;
 	public static String SearchPage_searchFor_class;
 	public static String SearchPage_searchFor_function;
-	public static String SearchPage_searchFor_constant;
-	public static String SearchPage_searchFor_variable;
+	public static String SearchPage_searchFor_constant;	
 	public static String SearchPage_expression_label;
 	public static String SearchPage_expression_caseSensitive;
 	public static String SearchUtil_workingSetConcatenation;
-	public static String Search_FindDeclarationAction_label;
-	public static String Search_FindDeclarationAction_tooltip;
-	public static String Search_FindDeclarationsInProjectAction_label;
-	public static String Search_FindDeclarationsInProjectAction_tooltip;
-	public static String Search_FindDeclarationsInWorkingSetAction_label;
-	public static String Search_FindDeclarationsInWorkingSetAction_tooltip;
-	public static String Search_FindHierarchyDeclarationsAction_label;
-	public static String Search_FindHierarchyDeclarationsAction_tooltip;
-	public static String Search_FindImplementorsAction_label;
-	public static String Search_FindImplementorsAction_tooltip;
-	public static String Search_FindImplementorsInProjectAction_label;
-	public static String Search_FindImplementorsInProjectAction_tooltip;
-	public static String Search_FindImplementorsInWorkingSetAction_label;
-	public static String Search_FindImplementorsInWorkingSetAction_tooltip;
-	public static String Search_FindReferencesAction_label;
-	public static String Search_FindReferencesAction_tooltip;
-	public static String Search_FindReferencesAction_BinPrimConstWarnDialog_title;
-	public static String Search_FindReferencesAction_BinPrimConstWarnDialog_message;
-	public static String Search_FindReferencesInProjectAction_label;
-	public static String Search_FindReferencesInProjectAction_tooltip;
-	public static String Search_FindReferencesInWorkingSetAction_label;
-	public static String Search_FindReferencesInWorkingSetAction_tooltip;
-	public static String Search_FindHierarchyReferencesAction_label;
-	public static String Search_FindHierarchyReferencesAction_tooltip;
-	public static String Search_FindReadReferencesAction_label;
-	public static String Search_FindReadReferencesAction_tooltip;
-	public static String Search_FindReadReferencesInProjectAction_label;
-	public static String Search_FindReadReferencesInProjectAction_tooltip;
-	public static String Search_FindReadReferencesInWorkingSetAction_label;
-	public static String Search_FindReadReferencesInWorkingSetAction_tooltip;
-	public static String Search_FindReadReferencesInHierarchyAction_label;
-	public static String Search_FindReadReferencesInHierarchyAction_tooltip;
-	public static String Search_FindWriteReferencesAction_label;
-	public static String Search_FindWriteReferencesAction_tooltip;
-	public static String Search_FindWriteReferencesInProjectAction_label;
-	public static String Search_FindWriteReferencesInProjectAction_tooltip;
-	public static String Search_FindWriteReferencesInWorkingSetAction_label;
-	public static String Search_FindWriteReferencesInWorkingSetAction_tooltip;
-	public static String Search_FindWriteReferencesInHierarchyAction_label;
-	public static String Search_FindWriteReferencesInHierarchyAction_tooltip;
-	public static String Search_FindOccurrencesInFile_shortLabel;
-	public static String Search_FindOccurrencesInFile_label;
-	public static String Search_FindOccurrencesInFile_tooltip;
-	public static String FindOccurrencesEngine_noSource_text;
-	public static String FindOccurrencesEngine_cannotParse_text;
-	public static String OccurrencesFinder_no_element;
-	public static String OccurrencesFinder_no_binding;
-	public static String OccurrencesFinder_searchfor;
-	public static String OccurrencesFinder_label_singular;
-	public static String OccurrencesFinder_label_plural;
-	public static String ExceptionOccurrencesFinder_no_exception;
-	public static String ExceptionOccurrencesFinder_searchfor;
-	public static String ExceptionOccurrencesFinder_label_singular;
-	public static String ExceptionOccurrencesFinder_label_plural;
-	public static String ImplementOccurrencesFinder_invalidTarget;
-	public static String ImplementOccurrencesFinder_searchfor;
-	public static String ImplementOccurrencesFinder_label_singular;
-	public static String ImplementOccurrencesFinder_label_plural;
 	public static String WorkspaceScope;
 	public static String WorkingSetScope;
 	public static String SelectionScope;
 	public static String EnclosingProjectsScope;
 	public static String EnclosingProjectScope;
-	public static String ProjectScope;
-	public static String HierarchyScope;
-	public static String PHPElementAction_operationUnavailable_title;
-	public static String PHPElementAction_operationUnavailable_generic;
 	public static String PHPSearchOperation_singularOccurrencesPostfix;
 	public static String PHPSearchOperation_pluralOccurrencesPostfix;
-	public static String PHPElementAction_typeSelectionDialog_title;
-	public static String PHPElementAction_typeSelectionDialog_message;
-	public static String PHPElementAction_error_open_message;
-	
-	public static String PHPSearchResultPage_sortByName;
-	public static String PHPSearchResultPage_sortByPath;
-	public static String PHPSearchResultPage_open_editor_error_title;
-	public static String PHPSearchResultPage_open_editor_error_message;
-	public static String PHPSearchResultPage_sortByParentName;
-	public static String PHPSearchResultPage_filtered_message;
-	public static String PHPSearchResultPage_sortBylabel;
 	public static String PHPSearchResultPage_error_marker;
 	public static String PHPSearchResultPage_groupby_project;
 	public static String PHPSearchResultPage_groupby_project_tooltip;
-	public static String PHPSearchResultPage_filteredWithCount_message;
 	public static String PHPSearchResultPage_groupby_file;
 	public static String PHPSearchResultPage_groupby_file_tooltip;
 	public static String PHPSearchResultPage_groupby_type;
 	public static String PHPSearchResultPage_groupby_type_tooltip;
 	public static String PHPSearchQuery_task_label;
-	public static String PHPSearchQuery_label;
-	public static String PHPSearchQuery_error_unsupported_pattern;
+	public static String PHPSearchQuery_label;	
 	public static String PHPSearchQuery_status_ok_message;
-	public static String PHPSearchQuery_error_participant_estimate;
-	public static String PHPSearchQuery_error_participant_search;
-	public static String SearchParticipant_error_noID;
-	public static String SearchParticipant_error_noNature;
-	public static String SearchParticipant_error_noClass;
-	public static String SearchParticipant_error_classCast;
-	public static String MatchFilter_ImportFilter_name;
-	public static String MatchFilter_ImportFilter_actionLabel;
-	public static String MatchFilter_ImportFilter_description;
-	public static String MatchFilter_WriteFilter_name;
-	public static String MatchFilter_WriteFilter_actionLabel;
-	public static String MatchFilter_WriteFilter_description;
-	public static String MatchFilter_ReadFilter_name;
-	public static String MatchFilter_ReadFilter_actionLabel;
-	public static String MatchFilter_ReadFilter_description;
-	public static String MatchFilter_ErasureFilter_name;
-	public static String MatchFilter_ErasureFilter_actionLabel;
-	public static String MatchFilter_ErasureFilter_description;
-	public static String MatchFilter_InexactFilter_name;
-	public static String MatchFilter_InexactFilter_actionLabel;
-	public static String MatchFilter_InexactFilter_description;
-	public static String MethodExitsFinder_no_return_type_selected;
-	public static String TextSearchLabelProvider_matchCountFormat;
-	public static String FiltersDialog_title;
-	public static String FiltersDialog_filters_label;
-	public static String FiltersDialog_description_label;
-	public static String FiltersDialog_limit_label;
-	public static String FiltersDialog_limit_error;
-	public static String FiltersDialogAction_label;
-	public static String PHPEngine_searching;
+		public static String PHPEngine_searching;
 
 	// ----- Editor ---
 	
-	public static String PHP_Editor_FoldingMenu_name;
 	public static String PHPStructuredEditor_Source;
 	public static String ShowPHPDoc_label;
 	public static String HoverFocus_message;
-	public static String HoverFocus_decoration;
 	
 	public static String GotoMatchingBracket_label;
 	public static String GotoMatchingBracket_error_invalidSelection;
