@@ -55,6 +55,12 @@ public class PHPProblemsValidator {
 		if (fileData == null) {
 			return;
 		}
+		// we check to see if the file was modified not from the editor and if so,
+		// request a parse operation for it.
+		if(phpFile.getModificationStamp() != fileData.getCreationTimeLastModified()){
+			PHPWorkspaceModelManager.getInstance().addFileToModel(phpFile);
+			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(phpFile.getFullPath().toString(), true);
+		}
 		IPHPMarker[] markers = fileData.getMarkers();
 		try {
 			phpFile.deleteMarkers(PHP_PROBLEM_MARKER_TYPE, false, IResource.DEPTH_INFINITE);
