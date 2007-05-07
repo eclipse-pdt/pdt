@@ -31,15 +31,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
@@ -192,7 +184,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			 */
 			private void parseModifiedClosedFiles(IResourceDelta delta) {
 				IResource resouce = delta.getResource();
-				if (resouce.getType() == IResource.FILE  && delta.getKind() == IResourceDelta.CHANGED) {
+				if (resouce.getType() == IResource.FILE && delta.getKind() == IResourceDelta.CHANGED) {
 					IFile file = (IFile) resouce;
 					IStructuredModel existingModelForRead = null;
 					try {
@@ -202,7 +194,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					} finally {
 						if (existingModelForRead != null) {
 							existingModelForRead.releaseFromRead();
-						} else if(file.isAccessible()) {
+						} else if (file.isAccessible()) {
 							addFileToModel(file);
 						}
 					}
@@ -216,7 +208,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			}
 		});
 	}
-	
+
 	private void runBuild(final IProject project) {
 		WorkspaceJob cleanJob = new WorkspaceJob(NLS.bind("Building PHP project: {0} ...", project.getName())) {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
@@ -233,7 +225,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		cleanJob.setUser(false);
 		cleanJob.schedule();
 	}
-	
+
 	private void runBuild() {
 		WorkspaceJob cleanJob = new WorkspaceJob("Building PHP projects ...") {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
@@ -263,7 +255,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		};
 		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 		cleanJob.setUser(false);
-		cleanJob.schedule();
+		cleanJob.run(new NullProgressMonitor());
 	}
 
 	/*
