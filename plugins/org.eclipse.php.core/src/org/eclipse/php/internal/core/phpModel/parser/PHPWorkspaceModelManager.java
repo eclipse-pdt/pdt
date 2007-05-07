@@ -209,7 +209,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		});
 	}
 
-	private void runBuild(final IProject project) {
+	public void runBuild(final IProject project) {
 		WorkspaceJob cleanJob = new WorkspaceJob(NLS.bind("Building PHP project: {0} ...", project.getName())) {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
@@ -244,7 +244,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 							return null;
 						}
 						if (hasNature) {
-							project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
+							project.build(IncrementalProjectBuilder.AUTO_BUILD, monitor);
 						}
 					}
 				} finally {
@@ -255,7 +255,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		};
 		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 		cleanJob.setUser(false);
-		cleanJob.run(new NullProgressMonitor());
+		cleanJob.schedule();
+		//		cleanJob.run(new NullProgressMonitor());
 	}
 
 	/*
