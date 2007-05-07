@@ -256,7 +256,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 		cleanJob.setUser(false);
 		cleanJob.schedule();
-		//		cleanJob.run(new NullProgressMonitor());
+		// the scheduled job randomly hangs lazy SaveManagerParticipants of some buggy external plugins (e.g. Subversive)
+		// The commented line does fix the behavior, but potentially may increase IDE's startup time.
+		//
+		// cleanJob.run(new NullProgressMonitor());
 	}
 
 	/*
