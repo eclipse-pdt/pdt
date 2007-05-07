@@ -151,9 +151,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @return
 	 */
 	public static String convertToSystemIndependentFileName(String fileName, boolean ignoreSystemType) {
-		if (ignoreSystemType || !ignoreSystemType && Platform.WS_WIN32.equals(Platform.getOS())) {
-			if (fileName == null)
-				return null;
+		if (fileName == null)
+			return null;
+		if (ignoreSystemType || File.separatorChar == '\\') {
 			fileName = fileName.replace('\\', '/');
 		}
 		return fileName;
@@ -162,7 +162,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	private static final String convertToSystemDependentFileName(String fileName) {
 		if (fileName == null)
 			return null;
-		if (Platform.WS_WIN32.equals(Platform.getOS())) {
+		if (File.separatorChar == '\\') {
 			fileName = fileName.replace('/', File.separatorChar);
 			fileName = fileName.replace('\\', File.separatorChar);
 		}
