@@ -407,11 +407,12 @@
 				menubarPath="org.eclipse.php.ui.refactoring.menu/reorgGroup"
 				id="org.eclipse.php.ui.actions.Move" />
 			<action
-				definitionId="org.eclipse.php.ui.edit.text.rename.element"
-				label="%Refactoring.renameAction.label"
-				retarget="true"
-				menubarPath="org.eclipse.php.ui.refactoring.menu/reorgGroup"
-				id="org.eclipse.php.ui.actions.Rename" />
+         class="org.eclipse.php.internal.ui.actions.RenameAction"
+         definitionId="org.eclipse.php.ui.edit.text.rename.element"
+         id="org.eclipse.php.ui.actions.Rename"
+         label="%Refactoring.renameAction.label"
+         menubarPath="org.eclipse.php.ui.refactoring.menu/reorgGroup"
+         retarget="true"/>
 			<!--Source Menu:-->
 			<menu
 				label="%SourceMenu.label"

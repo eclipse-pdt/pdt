@@ -39,11 +39,12 @@ public class RenameResourceAction extends SelectionDispatchAction {
 	}
 
 	public void selectionChanged(IStructuredSelection selection) {
-		IResource element = getResource(selection);
-		if (element == null)
-			setEnabled(false);
-		else
-			setEnabled(ActionUtils.isRenameAvailable(element));
+		setEnabled(true);
+//		IResource element = getResource(selection);
+//		if (element == null)
+//			setEnabled(false);
+//		else
+//			setEnabled(ActionUtils.isRenameAvailable(element));
 	}
 
 	public void run(IStructuredSelection selection) {

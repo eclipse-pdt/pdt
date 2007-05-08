@@ -28,26 +28,30 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 
 	public RenamePHPElementAction(IWorkbenchSite site) {
 		super(site);
+		update(getSelection());
 	}
 
 	public RenamePHPElementAction(PHPStructuredEditor editor) {
 		this(editor.getEditorSite());
 		fEditor = editor;
 		setEnabled(SelectionConverter.canOperateOn(fEditor));
+		update(getSelection());
+		setEnabled(true);
 	}
 
 	//---- Structured selection ------------------------------------------------
 
 	public void selectionChanged(IStructuredSelection selection) {
-		try {
-			if (selection.size() == 1) {
-				setEnabled(canEnable(selection));
-				return;
-			}
-		} catch (CoreException e) {
-			PHPUiPlugin.log(e);
-		}
-		setEnabled(false);
+//		try {
+//			if (selection.size() == 1) {
+//				setEnabled(canEnable(selection));
+//				return;
+//			}
+//		} catch (CoreException e) {
+//			PHPUiPlugin.log(e);
+//		}
+//		setEnabled(false);
+		setEnabled(true);
 	}
 
 	private static boolean canEnable(IStructuredSelection selection) throws CoreException {
