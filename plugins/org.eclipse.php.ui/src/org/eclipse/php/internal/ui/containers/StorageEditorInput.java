@@ -66,7 +66,7 @@ public abstract class StorageEditorInput extends PlatformObject implements IStor
 	 * @see IEditorInput#getToolTipText()
 	 */
 	public String getToolTipText() {
-		return getStorage().getFullPath().toOSString();
+		return getStorage().getFullPath().toString();
 	}
 	
 	/**
