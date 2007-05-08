@@ -68,7 +68,7 @@ public class PHPFileLink implements IHyperlink {
 					 * Override the default IFile exists method to allow the retrival of the DOM model.
 					 */
 					public boolean exists() {
-						return getFullPath().toFile().exists();
+						return true; //getFullPath().toFile().exists();
 					}
 				};
 			}

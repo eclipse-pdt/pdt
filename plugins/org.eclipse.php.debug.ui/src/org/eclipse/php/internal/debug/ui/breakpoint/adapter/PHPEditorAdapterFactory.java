@@ -33,20 +33,22 @@ public class PHPEditorAdapterFactory implements IAdapterFactory {
 			if (resource != null) {
 				if (resource.getType() == IResource.FILE) {
 					IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
-					IContentType fileContentType = ((IFile) resource).getContentDescription().getContentType();
+					if (resource.exists()) {
+						IContentType fileContentType = ((IFile) resource).getContentDescription().getContentType();
 
-					IContentType PHPContentType = contentTypeManager.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-					if (PHPContentType != null) {
-						if (fileContentType.isKindOf(PHPContentType)) {
-							if (adapterType.equals(IRunToLineTarget.class)) {
-								return new PHPRunToLineAdapter();
+						IContentType PHPContentType = contentTypeManager.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+						if (PHPContentType != null) {
+							if (fileContentType.isKindOf(PHPContentType)) {
+								if (adapterType.equals(IRunToLineTarget.class)) {
+									return new PHPRunToLineAdapter();
+								}
 							}
 						}
 					}
 				}
 			}
 		} catch (CoreException e1) {
-			Logger.logException("PHPEditorAdapterFactory unexpected error" , e1);
+			Logger.logException("PHPEditorAdapterFactory unexpected error", e1);
 		}
 		return null;
 	}
