@@ -33329,12 +33329,34 @@ interface IteratorAggregate {
 };
 
 interface Iterator {
+    function getIterator();
+
+    function current();
+
+    function next();
+
+    function key();
+
+    function valid();
+
+    function rewind();
+
 };
 
 interface ArrayAccess {
+    function offsetExists();
+
+    function offsetGet();
+
+    function offsetSet();
+
+    function offsetUnset();
+
 };
 
 interface Serializable {
+    function serialize();
+
 };
 
 interface SplObserver {
