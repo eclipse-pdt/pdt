@@ -33338,21 +33338,39 @@ interface Serializable {
 };
 
 interface SplObserver {
+    function update();
+
 };
 
 interface SplSubject {
-};
+    function attach();
 
-interface Countable {
+    function detach();
+
+    function notify();
+
 };
 
 interface RecursiveIterator {
+    function hasChildren();
+
+    function getChildren();
+
 };
 
 interface OuterIterator {
+    function getInnerIterator();
+
+};
+
+interface Countable {
+    function count();
+
 };
 
 interface SeekableIterator {
+    function seek();
+
 };
 
 define("ABDAY_1", 0);
