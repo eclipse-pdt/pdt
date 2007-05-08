@@ -756,4 +756,22 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	private boolean contains(IPhpModel model, PHPFileData fileData) {
 		return (model.getFileData(fileData.getName()) != null);
 	}
+
+	/**
+	 * @param entry
+	 * @param projectModel
+	 * @return
+	 */
+	public static PHPUserModel getUserModelForIncludeEntry(IIncludePathEntry entry, PHPProjectModel projectModel) {
+		PHPUserModel userModel = null;
+		PHPIncludePathModelManager includeManager = (PHPIncludePathModelManager) projectModel.getModel(COMPOSITE_INCLUDE_PATH_MODEL_ID);
+		if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+			userModel = (PHPUserModel) includeManager.getModel(entry.getPath().toString());
+		} else if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+				userModel = (PHPUserModel) includeManager.getModel(entry.getPath().toOSString());
+		} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+			userModel = PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) entry.getResource()).getPHPUserModel();
+		}
+		return userModel;
+	}
 }
