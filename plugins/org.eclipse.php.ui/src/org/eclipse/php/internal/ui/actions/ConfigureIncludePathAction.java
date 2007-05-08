@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.treecontent.PHPTreeNode;
 import org.eclipse.ui.IWorkbenchSite;
@@ -78,10 +79,13 @@ public class ConfigureIncludePathAction extends SelectionDispatchAction {
 		}
 		// file
 		if (element instanceof PHPCodeData){
-			IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();			
-			String fileName = ((PHPCodeData) element).getUserData().getFileName();
-			IFile file = wsRoot.getFile(new Path(fileName));
-			return file.getProject();			
+			IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
+			UserData userData = ((PHPCodeData) element).getUserData();
+			if (userData != null) {
+				String fileName = userData.getFileName();
+				IFile file = wsRoot.getFile(new Path(fileName));
+				return file.getProject();
+			}
 		}
 		
 		// library node
