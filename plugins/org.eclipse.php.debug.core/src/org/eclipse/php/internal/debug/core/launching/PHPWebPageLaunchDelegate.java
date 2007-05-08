@@ -40,6 +40,15 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		debuggerInitializer = createDebuggerInitilizer();
 	}
 
+	
+	/**
+	 * Override the extended getLaunch to create a PHPLaunch. 
+	 */
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
+		return new PHPLaunch(configuration, mode, null);
+	}
+
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.server.core.launch.IHTTPServerLaunch#launch(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)

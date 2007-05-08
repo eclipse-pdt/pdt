@@ -57,6 +57,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 	protected Map envVariables = null;
 
+	/**
+	 * Override the extended getLaunch to create a PHPLaunch. 
+	 */
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
+		return new PHPLaunch(configuration, mode, null);
+	}
+
 	public void debugPHPExecutable(final ILaunch launch, final String phpExe, final String fileToDebug) throws DebugException {
 		try {
 			launch.setAttribute(EXECUTABLE_LAUNCH, "true");
