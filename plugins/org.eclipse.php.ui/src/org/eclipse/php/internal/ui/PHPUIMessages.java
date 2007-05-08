@@ -344,7 +344,14 @@ public class PHPUIMessages {
 	public static String NewPHPManualSiteDialog_nameAlreadyInUse;
 	public static String NewPHPManualSiteDialog_updateTitle;
 	public static String NewPHPManualSiteDialog_newTitle;
-	public static String NewPHPManualSiteDialog_chooseDir;
+	public static String NewPHPManualSiteDialog_chooseDir;	
+	public static String NewPHPManualSiteDialog_chooseCHMFile;
+	public static String NewPHPManualSiteDialog_fileDoesntExist;
+	public static String NewPHPManualSiteDialog_remoteSiteURL;
+	public static String NewPHPManualSiteDialog_localDirectory;
+	public static String NewPHPManualSiteDialog_windowsCHMFile;
+	public static String NewPHPManualSiteDialog_fileExtension;
+	public static String NewPHPManualSiteDialog_dirDoesntExist;
 	
 	public static String PHPBasePreferencePage_description;
 	public static String PHPBasePreferencePage_doubleclick_action;
@@ -557,5 +564,8 @@ public class PHPUIMessages {
 	public static String PHPEditorPreferencePage_smartCaretPositioning;
 	public static String PHPEditorPreferencePage_prefEditorMessage;
 	public static String PHPEditorPreferencePage_prefEditorTooltip;
+	
+	public static String PHPAppearancePreferencePage_showMehodsReturnType;
+	public static String PHPAppearancePreferencePage_appearanceHeader;
 
 }
