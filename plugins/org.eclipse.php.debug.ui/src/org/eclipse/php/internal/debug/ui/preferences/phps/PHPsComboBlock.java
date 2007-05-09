@@ -128,8 +128,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 		} else {
 			composite = new Composite(ancestor, SWT.NULL);
 		}
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 3;
+		GridLayout layout = new GridLayout(4, true);
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		composite.setFont(font);
@@ -139,7 +138,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 		fCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		fCombo.setFont(font);
 		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 2;
+		data.horizontalSpan = 3;
 		fCombo.setLayoutData(data);
 		fCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
