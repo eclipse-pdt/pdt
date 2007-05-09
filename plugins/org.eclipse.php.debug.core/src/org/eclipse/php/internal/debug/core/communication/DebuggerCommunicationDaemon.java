@@ -43,6 +43,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	protected ServerSocket serverSocket;
 	protected boolean isAlive;
 	private IPropertyChangeListener portChangeListener;
+	private Thread listenerThread;
 
 	/**
 	 * Constructs a new DebuggerCommunicationDaemon
@@ -102,6 +103,14 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 				}
 			}
 		}
+		try {
+			// Wait for the listener thread to die.
+			// Wait, at most, 2 seconds.
+			if (listenerThread != null) {
+				listenerThread.join(2000);
+			}
+		} catch (InterruptedException e) {
+		}
 	}
 
 	/**
@@ -114,6 +123,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		try {
 			synchronized (lock) {
 				serverSocket = new ServerSocket(port);
+				startListen();
 			}
 		} catch (BindException exc) {
 			handleMultipleBindingError();
@@ -157,7 +167,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 
 	/**
 	 * Starts the listening thread.
-	 * If the thread is already started, nothing wil happen.
+	 * If the thread is already started, nothing should happen.
 	 */
 	private void startListenThread() {
 		synchronized (lock) {
@@ -166,7 +176,9 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 			}
 			isAlive = true;
 		}
-		(new Thread(new ReceiverThread())).start();
+		String port = " - Port: " + ((serverSocket != null) ? String.valueOf(serverSocket.getLocalPort()) : "??");
+		listenerThread = new Thread(new ReceiverThread(), "PHP Debugger ReceiverThread " + port);
+		listenerThread.start();
 	}
 
 	/*
