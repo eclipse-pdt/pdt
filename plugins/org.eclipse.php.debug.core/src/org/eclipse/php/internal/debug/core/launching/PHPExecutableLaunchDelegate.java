@@ -153,7 +153,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				}
 			}
 		} else {
-			launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, phpIni.getAbsolutePath());
+			if (phpIni != null) {
+				launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, phpIni.getAbsolutePath());
+			}
 		}
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
