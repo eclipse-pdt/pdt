@@ -44,6 +44,10 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	protected RetargetTextEditorAction fFormatDocument = null;
 	private RetargetTextEditorAction fGotoMatchingBracket;
 	private RetargetTextEditorAction fOpenDeclaration;
+	private RetargetTextEditorAction fRename;
+	private RetargetTextEditorAction fMove;
+	
+	
 	protected MenuManager fFormatMenu = null;
 
 	public final static String FORMAT_ACTIVE_ELEMENTS = "org.eclipse.wst.sse.ui.format.active.elements";//$NON-NLS-1$
@@ -53,7 +57,11 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	private final static String[] PHPEDITOR_ACTIONS = { "org.eclipse.php.ui.actions.RemoveBlockComment", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$
-		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, "FormatActiveElements" }; //$NON-NLS-1$
+		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, "FormatActiveElements",
+		IPHPEditorActionDefinitionIds.RENAME_ELEMENT,
+		IPHPEditorActionDefinitionIds.MOVE_ELEMENT
+		
+	}; //$NON-NLS-1$
 
 	// private ToggleCommentAction fToggleCommentAction;
 
@@ -80,7 +88,14 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
 		fOpenDeclaration = new RetargetTextEditorAction(b, "OpenAction_declaration_"); //$NON-NLS-1$
 		fOpenDeclaration.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
-
+		
+		fRename = new RetargetTextEditorAction(b,"");
+		fRename.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
+		
+		fMove = new RetargetTextEditorAction(b,"");
+		fMove.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
+		
+		
 		//		fFormatMenu = new MenuManager("Format");
 		//		fFormatMenu.add(fFormatDocument);
 		//		fFormatMenu.add(fFormatActiveElements);
@@ -133,7 +148,12 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fFormatDocument.setAction(getAction(editor, "FormatDocument"));
 		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements"));
 		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
-
+		
+		if (part instanceof PHPStructuredEditor) {
+			PHPStructuredEditor phpEditor= (PHPStructuredEditor) part;
+			phpEditor.getActionGroup().fillActionBars(getActionBars());			
+		}
+		
 		IActionBars actionBars = getActionBars();
 		if (actionBars == null)
 			return;

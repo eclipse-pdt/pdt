@@ -163,6 +163,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
 	private CompositeActionGroup fContextMenuGroup;
+	private CompositeActionGroup fActionGroups;
 
 	/**
 	 * This action behaves in two different ways: If there is no current text hover, the javadoc is displayed using
@@ -525,10 +526,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); //$NON-NLS-1$
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
-
-			ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
-			// We have to keep the context menu group separate to have better control over positioning
-			fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg });
 
 		}
 	}
@@ -1134,9 +1131,27 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
+		
+		ActionGroup rg= new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+		// We have to keep the context menu group separate to have better control over positioning
+		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg });
+						
+		fActionGroups= new CompositeActionGroup(new ActionGroup[] {
+			rg
+		});
+	
 
 	}
 
+	/**
+	 * Returns the standard action group of this editor.
+	 *
+	 * @return returns this editor's standard action group
+	 */
+	public ActionGroup getActionGroup() {
+		return fActionGroups;
+	}
+	
 	/**
 	 * Jumps to the matching bracket.
 	 */
