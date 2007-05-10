@@ -43,7 +43,7 @@ import org.eclipse.php.internal.core.util.IncludeCacheManager;
 
 public class PHPIncludePathModelManager extends PhpModelProxy implements ExternalFilesModel {
 
-	public static final String COMPOSITE_INCLUDE_PATH_MODEL_ID = "CompositeIncludePathModel";
+	public static final String COMPOSITE_INCLUDE_PATH_MODEL_ID = "CompositeIncludePathModel"; //$NON-NLS-1$
 	CompositePhpModel compositePhpModel;
 	private PHPParserManager parserManager;
 	private String phpVersion;
@@ -63,7 +63,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	public PHPIncludePathModelManager() {
 		compositePhpModel = new CompositePhpModel() {
 			public String getID() {
-				return COMPOSITE_INCLUDE_PATH_MODEL_ID; //$NON-NLS-1$
+				return COMPOSITE_INCLUDE_PATH_MODEL_ID;
 			}
 
 			public void initialize(IProject project) {
@@ -722,7 +722,9 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 			} else {
 				removeProject(resource);
 
-				PHPProjectOptions options = PHPProjectOptions.forProject(resource.getProject());
+				PHPProjectOptions options = PHPProjectOptions.forProject(project);
+				if (options == null)
+					return;
 				options.removeResourceFromIncludePath(resource);
 			}
 		}
@@ -768,9 +770,11 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 			userModel = (PHPUserModel) includeManager.getModel(entry.getPath().toString());
 		} else if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-				userModel = (PHPUserModel) includeManager.getModel(entry.getPath().toOSString());
+			userModel = (PHPUserModel) includeManager.getModel(entry.getPath().toOSString());
 		} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-			userModel = PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) entry.getResource()).getPHPUserModel();
+			PHPProjectModel modelForProject = PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) entry.getResource());
+			if (modelForProject != null)
+				userModel = modelForProject.getPHPUserModel();
 		}
 		return userModel;
 	}

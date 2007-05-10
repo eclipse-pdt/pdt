@@ -10,30 +10,19 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.project.options;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.internal.resources.XMLWriter;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.IncludePathContainerInitializer;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -51,13 +40,13 @@ import org.xml.sax.SAXException;
 
 public class PHPProjectOptions {
 
-	public static final String BUILDER_ID = PHPCorePlugin.ID + ".PhpIncrementalProjectBuilder";
+	public static final String BUILDER_ID = PHPCorePlugin.ID + ".PhpIncrementalProjectBuilder"; //$NON-NLS-1$
 	static final IIncludePathEntry[] EMPTY_INCLUDEPATH = {};
 
-	public static final String FILE_NAME = ".projectOptions";
-	private static final String TAG_OPTION = "projectOption";
+	public static final String FILE_NAME = ".projectOptions"; //$NON-NLS-1$
+	private static final String TAG_OPTION = "projectOption"; //$NON-NLS-1$
 
-	private static final String TAG_OPTIONS = "phpProjectOptions";
+	private static final String TAG_OPTIONS = "phpProjectOptions"; //$NON-NLS-1$
 	/**
 	 * Name of the User Library Container id.
 	 */
@@ -177,7 +166,7 @@ public class PHPProjectOptions {
 			int length = list.getLength();
 			for (int i = 0; i < length; ++i) {
 				final Element element = (Element) list.item(i);
-				final String key = element.getAttribute("name");
+				final String key = element.getAttribute("name"); //$NON-NLS-1$
 				final String value = element.getFirstChild().getNodeValue().trim();
 				options.put(key, value);
 			}
@@ -208,8 +197,8 @@ public class PHPProjectOptions {
 
 	}
 
-	public void modifyIncludePathEntry(final IIncludePathEntry newEntry, final IProject jproject, final IPath containerPath, final IProgressMonitor monitor) throws CoreException {
-		throw new RuntimeException("implement me");
+	public void modifyIncludePathEntry(final IIncludePathEntry newEntry, final IProject jproject, final IPath containerPath, final IProgressMonitor monitor) {
+		throw new RuntimeException("implement me"); //$NON-NLS-1$
 	}
 
 	public void notifyOptionChangeListeners(final String key, final Object oldValue, final Object newValue) {
@@ -252,23 +241,23 @@ public class PHPProjectOptions {
 	}
 
 	public void removeResourceFromIncludePath(final IResource resource) {
-		if (includePathEntries.length > 0) {
-			final IIncludePathEntry[] newIncludePathEntries = new IIncludePathEntry[includePathEntries.length - 1];
-			for (int i = 0, j = 0; i < includePathEntries.length; ++i) {
-				if (includePathEntries[i].getResource() == resource)
-					continue;
-				newIncludePathEntries[j++] = includePathEntries[i];
-			}
-			try {
-				setRawIncludePath(newIncludePathEntries, null);
-			} catch (final Exception e) {
-				PHPCorePlugin.log(e);
-			}
+		if (includePathEntries.length == 0)
+			return;
+		List newIncludePathEntries = new ArrayList(includePathEntries.length);
+		for (int i = 0; i < includePathEntries.length; ++i) {
+			if (includePathEntries[i].getResource() == resource)
+				continue;
+			newIncludePathEntries.add(includePathEntries[i]);
+		}
+		try {
+			setRawIncludePath((IIncludePathEntry[]) newIncludePathEntries.toArray(new IIncludePathEntry[newIncludePathEntries.size()]), null);
+		} catch (final Exception e) {
+			PHPCorePlugin.log(e);
 		}
 	}
 
 	public void runSave() {
-		final WorkspaceJob job = new WorkspaceJob("Project save") {
+		final WorkspaceJob job = new WorkspaceJob("Project save") { //$NON-NLS-1$
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					saveChanges(monitor);
@@ -295,7 +284,7 @@ public class PHPProjectOptions {
 			for (final Iterator iter = options.keySet().iterator(); iter.hasNext();) {
 				final String key = (String) iter.next();
 				final Object value = options.get(key);
-				attributes.put("name", key);
+				attributes.put("name", key); //$NON-NLS-1$
 				xmlWriter.startTag(TAG_OPTION, attributes);
 				xmlWriter.write(value.toString());
 				xmlWriter.endTag(TAG_OPTION);
@@ -327,7 +316,6 @@ public class PHPProjectOptions {
 	}
 
 	public void setOption(final String key, final Object value) {
-		assert value != null;
 		final Object oldValue = options.get(key);
 		if (oldValue != null) {
 			if (value != null && value.equals(oldValue))
@@ -340,12 +328,13 @@ public class PHPProjectOptions {
 
 	}
 
-	public void setRawIncludePath(final IIncludePathEntry[] newIncludePathEntries, final SubProgressMonitor subProgressMonitor) throws CoreException {
+	public void setRawIncludePath(final IIncludePathEntry[] newIncludePathEntries, final SubProgressMonitor subProgressMonitor) {
 		final IIncludePathEntry[] oldValue = includePathEntries;
 		includePathEntries = newIncludePathEntries;
 		IncludePathEntry.updateProjectReferences(includePathEntries, oldValue, project, subProgressMonitor);
 
-		saveChanges(subProgressMonitor);
+		runSave();
+		//		saveChanges(subProgressMonitor);
 		notifyOptionChangeListeners(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, oldValue, newIncludePathEntries);
 	}
 }
