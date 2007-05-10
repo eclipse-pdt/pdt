@@ -68,8 +68,10 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 
 	public void run(IStructuredSelection selection) {
 		PHPCodeData element = getPHPElement(selection);
-		if (element == null)
+		if (element == null) {
+			super.run(selection);
 			return;
+		}
 		try {
 			run(element);
 		} catch (CoreException e) {

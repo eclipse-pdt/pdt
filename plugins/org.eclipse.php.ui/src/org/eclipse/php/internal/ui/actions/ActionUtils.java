@@ -18,6 +18,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -30,6 +33,9 @@ import org.eclipse.swt.widgets.Shell;
 
 
 public class ActionUtils {
+
+	final private static IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+	
 	public static boolean containsOnlyProjects(List elements) {
 		if (elements.isEmpty())
 			return false;
@@ -81,6 +87,17 @@ public class ActionUtils {
 		}
 		return (IResource[]) result.toArray(new IResource[result.size()]);
 	}
+	
+	public static IResource[] getPHPResources(final Object[] elements) {
+		List result = new ArrayList();
+				
+		for (int index = 0; index < elements.length; index++) {
+			if (elements[index] instanceof IResource && contentType.isAssociatedWith(((IResource) elements[index]).getName()))
+				result.add(elements[index]);
+		}
+		return (IResource[]) result.toArray(new IResource[result.size()]);
+	}
+	
 
 	public static Object[] getPHPElements(List elements) {
 		return getPHPElements(elements,false);
