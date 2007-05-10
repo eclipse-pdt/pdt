@@ -20,7 +20,6 @@ import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.IPhpModelFilterable.IPhpModelFilter;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
@@ -71,8 +70,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		initModelFilter();
 	}
 
-	private IPhpModelFilter filter;
-
 	private void initModelFilter() {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.modelFilter");
 		for (int i = 0; i < elements.length; i++) {
@@ -86,7 +83,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	private void initModelFilter(final IConfigurationElement element) {
 		SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.core.modelFilter") {
 			public void run() throws Exception {
-				filter = (IPhpModelFilter) element.createExecutableExtension("class");
+				element.createExecutableExtension("class");
 			}
 		});
 	}
