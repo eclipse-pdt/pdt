@@ -218,12 +218,19 @@ public class RefactorActionGroup extends ActionGroup {
 						refactorMenuShown(manager);
 					}
 				});
-				menu.appendToGroup(fGroupName, refactorSubmenu);
+				fillMenu(menu, refactorSubmenu);
 			}
+
 		} else {
-			if (fillRefactorMenu(refactorSubmenu) > 0)
-				menu.appendToGroup(fGroupName, refactorSubmenu);
+			fillMenu(menu, refactorSubmenu);
 		}
+	}
+
+	private void fillMenu(IMenuManager menu, IMenuManager refactorSubmenu) {
+		if (fillRefactorMenu(refactorSubmenu) > 0)
+			menu.appendToGroup(fGroupName, refactorSubmenu);
+		else
+			refactorSubmenu.add(fNoActionAvailable);
 	}
 
 	private int fillRefactorMenu(IMenuManager refactorSubmenu) {
@@ -258,9 +265,6 @@ public class RefactorActionGroup extends ActionGroup {
 			SelectionDispatchAction action = (SelectionDispatchAction) iter.next();
 			action.update(textSelection);
 		}
-//		refactorSubmenu.removeAll();
-		if (fillRefactorMenu(refactorSubmenu) == 0)
-			refactorSubmenu.add(fNoActionAvailable);
 	}
 
 	private void refactorMenuHidden(IMenuManager manager) {
