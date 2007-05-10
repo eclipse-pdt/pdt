@@ -173,6 +173,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+					monitor.beginTask("Building PHP projects ...", projects.length);
+
 					for (int i = 0; i < projects.length; i++) {
 						IProject project = projects[i];
 						if (!project.isOpen()) {
@@ -188,6 +190,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 						if (hasNature) {
 							project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
 						}
+						monitor.worked(1);
 					}
 				} finally {
 					monitor.done();
@@ -198,10 +201,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 		cleanJob.setUser(false);
 		cleanJob.schedule();
-		// the scheduled job randomly hangs lazy SaveManagerParticipants of some buggy external plugins (e.g. Subversive)
-		// The commented line does fix the behavior, but potentially may increase IDE's startup time.
-		//
-		// cleanJob.run(new NullProgressMonitor());
 	}
 
 	/*

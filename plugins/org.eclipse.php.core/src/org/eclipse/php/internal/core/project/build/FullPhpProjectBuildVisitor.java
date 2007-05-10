@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.documentModel.validate.PHPProblemsValidator;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.parser.PhpParserSchedulerTask;
 
 public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 
@@ -54,7 +53,6 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 	}
 
 	private void handle(IFile file) {
-
 		monitor.subTask(NLS.bind("Compiling: {0} ...", file.getFullPath().toPortableString()));
 
 		PHPWorkspaceModelManager.getInstance().addFileToModel(file);

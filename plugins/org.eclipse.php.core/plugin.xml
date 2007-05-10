@@ -141,5 +141,9 @@
     <attribute name="userEditable"/>
     <super type="org.eclipse.core.resources.textmarker"/>
  </extension>
+ <extension
+       point="org.eclipse.ui.startup">
+    <startup class="org.eclipse.php.internal.core.EarlyStartup"/>
+ </extension>
 
 </plugin>

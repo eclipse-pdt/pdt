@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core;
 
-import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -33,8 +31,6 @@ public class PHPCorePlugin extends AbstractUIPlugin {
 
 	//The shared instance.
 	private static PHPCorePlugin plugin;
-	//Resource bundle.
-	private ResourceBundle resourceBundle;
 
 	/**
 	 * The constructor.
@@ -49,10 +45,6 @@ public class PHPCorePlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
-		PHPWorkspaceModelManager.getInstance().startup();
-		IncludePathVariableManager.instance().startUp();
-		
 	}
 
 	/**
@@ -65,7 +57,6 @@ public class PHPCorePlugin extends AbstractUIPlugin {
 		} finally {
 			super.stop(context);
 			plugin = null;
-			resourceBundle = null;
 		}
 	}
 
