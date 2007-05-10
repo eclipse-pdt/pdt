@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
@@ -92,7 +93,11 @@ public class ActionUtils {
 		List result = new ArrayList();
 				
 		for (int index = 0; index < elements.length; index++) {
-			if (elements[index] instanceof IResource && contentType.isAssociatedWith(((IResource) elements[index]).getName()))
+			if (elements[index] instanceof IFile) {
+				if (contentType.isAssociatedWith(((IResource) elements[index]).getName())) {
+					result.add(elements[index]);
+				}
+			} else if (elements[index] instanceof IResource) // other resource then file
 				result.add(elements[index]);
 		}
 		return (IResource[]) result.toArray(new IResource[result.size()]);
