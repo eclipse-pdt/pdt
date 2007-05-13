@@ -65,7 +65,11 @@ public class XMLPreferencesWriter {
 			if (object instanceof HashMap) {
 				write(sb, (HashMap) object);
 			} else {
-				sb.append(getEscaped(object.toString()));
+				if (object != null) {
+					sb.append(getEscaped(object.toString()));
+				} else {
+					sb.append(""); //$NON-NLS-1$
+				}
 			}
 			sb.append("</"); //$NON-NLS-1$
 			sb.append(key);
