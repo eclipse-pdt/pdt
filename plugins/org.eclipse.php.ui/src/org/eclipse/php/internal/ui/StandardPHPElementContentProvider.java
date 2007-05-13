@@ -38,7 +38,7 @@ public class StandardPHPElementContentProvider implements ITreeContentProvider {
 	protected static final Object[] NO_CHILDREN = new Object[0];
 	protected boolean fProvideMembers;
 
-	IPHPTreeContentProvider[] treeProviders;
+	protected IPHPTreeContentProvider[] treeProviders;
 
 	public StandardPHPElementContentProvider() {
 		this(false);

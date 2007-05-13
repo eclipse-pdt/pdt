@@ -24,6 +24,8 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.StandardPHPElementContentProvider;
 import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
+import org.eclipse.php.internal.ui.treecontent.TreeProvider;
+import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.swt.widgets.Control;
 
 public class ProjectOutlineContentProvider extends StandardPHPElementContentProvider implements ModelListener, IWorkspaceModelListener {
@@ -193,6 +195,13 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					toUpdate = outlineNode.addChildren(fileData);
 					fViewer.add(outlineNode, toUpdate);
 				}
+				for (int i = 0; i < treeProviders.length; i++) {
+					IPHPTreeContentProvider provider = treeProviders[i];
+					Object[] children = provider.getChildren(fStoredProject);
+					for (int j = 0; j < children.length; j++) {
+						fViewer.refresh(children[j],true);
+					}
+				}
 			}
 		};
 		fViewer.getControl().getDisplay().asyncExec(runnable);
@@ -228,6 +237,13 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					toUpdate = outlineNode.removeChildren(fileData);
 					fViewer.remove(outlineNode, toUpdate);
 				}
+				for (int i = 0; i < treeProviders.length; i++) {
+					IPHPTreeContentProvider provider = treeProviders[i];
+					Object[] children = provider.getChildren(fStoredProject);
+					for (int j = 0; j < children.length; j++) {
+						fViewer.refresh(children[j],true);
+					}
+				}
 			}
 		};
 		fViewer.getControl().getDisplay().asyncExec(runnable);
@@ -261,6 +277,13 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 						outlineNode.setModel(model);
 					outlineNode.loadChildren();
 					fViewer.refresh(outlineNode, true);
+				}
+				for (int i = 0; i < treeProviders.length; i++) {
+					IPHPTreeContentProvider provider = treeProviders[i];
+					Object[] children = provider.getChildren(fStoredProject);
+					for (int j = 0; j < children.length; j++) {
+						fViewer.refresh(children[j],true);
+					}
 				}
 				ISelection currentSelection = fViewer.getSelection();
 				if (currentSelection.isEmpty()) {
