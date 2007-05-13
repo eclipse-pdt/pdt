@@ -11,9 +11,9 @@
 package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.ui.util.IPHPOutlineElementComparer;
+import org.eclipse.php.ui.util.IPHPTreeElementComparer;
 
-public class PHPElementComparer implements IPHPOutlineElementComparer {
+public class PHPElementComparer implements IPHPTreeElementComparer {
 
 	public boolean equals(Object a, Object b) {
 		if (a == b)

@@ -30,9 +30,9 @@
 		name="PHP Hyperlink Detector"
 		schema="schema/phpHyperlinkDetector.exsd" />
 	<extension-point
-		id="phpOutlineElementComparers"
-		name="PHP Outline Element Comparer"
-		schema="schema/phpOutlineElementComparers.exsd" />
+		id="phpTreeElementComparers"
+		name="PHP Tree Element Comparer"
+		schema="schema/phpTreeElementComparers.exsd" />
 	<extension-point
 		id="actionFilterContributors"
 		name="PHP Action Filter Contributor"

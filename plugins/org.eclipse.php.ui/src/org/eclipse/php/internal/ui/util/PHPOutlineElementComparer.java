@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.IElementComparer;
-import org.eclipse.php.ui.util.IPHPOutlineElementComparer;
+import org.eclipse.php.ui.util.IPHPTreeElementComparer;
 
 /**
  * 
@@ -27,21 +27,21 @@ import org.eclipse.php.ui.util.IPHPOutlineElementComparer;
  */
 public class PHPOutlineElementComparer implements IElementComparer {
 
-	private IPHPOutlineElementComparer[] comparers;
+	private IPHPTreeElementComparer[] comparers;
 
 	public PHPOutlineElementComparer() {
 		ArrayList comparers = new ArrayList();
 		comparers.add(new PHPElementComparer());
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpOutlineElementComparers");
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpTreeElementComparers");
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals("comparer")) {
 				ComparerProxy modelManagerProxy = new ComparerProxy(element);
-				IPHPOutlineElementComparer comparer = modelManagerProxy.getComparer();
+				IPHPTreeElementComparer comparer = modelManagerProxy.getComparer();
 				comparers.add(comparer);
 			}
 		}
-		this.comparers = new IPHPOutlineElementComparer[comparers.size()];
+		this.comparers = new IPHPTreeElementComparer[comparers.size()];
 		comparers.toArray(this.comparers);
 	}
 
@@ -55,7 +55,7 @@ public class PHPOutlineElementComparer implements IElementComparer {
 		if (a.equals(b))
 			return true;
 		for (int i = 0; i < comparers.length; i++) {
-			IPHPOutlineElementComparer comparer = comparers[i];
+			IPHPTreeElementComparer comparer = comparers[i];
 			if (comparer.supports(a)) {
 				return comparer.equals(a, b);
 			}
@@ -65,7 +65,7 @@ public class PHPOutlineElementComparer implements IElementComparer {
 
 	public int hashCode(Object element) {
 		for (int i = 0; i < comparers.length; i++) {
-			IPHPOutlineElementComparer comparer = comparers[i];
+			IPHPTreeElementComparer comparer = comparers[i];
 			if (comparer.supports(element)) {
 				return comparer.hashCode(element);
 			}
@@ -75,17 +75,17 @@ public class PHPOutlineElementComparer implements IElementComparer {
 
 	private class ComparerProxy {
 		IConfigurationElement element;
-		IPHPOutlineElementComparer comparer;
+		IPHPTreeElementComparer comparer;
 
 		public ComparerProxy(IConfigurationElement element) {
 			this.element = element;
 		}
 
-		public IPHPOutlineElementComparer getComparer() {
+		public IPHPTreeElementComparer getComparer() {
 			if (comparer == null) {
 				SafeRunner.run(new SafeRunnable("Error creation comparer for extension-point org.eclipse.php.ui.phpOutlineElementComparers") {
 					public void run() throws Exception {
-						comparer = (IPHPOutlineElementComparer) element.createExecutableExtension("class");
+						comparer = (IPHPTreeElementComparer) element.createExecutableExtension("class");
 					}
 				});
 			}
