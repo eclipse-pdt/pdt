@@ -10,13 +10,26 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IBreakpointManager;
+import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.explorer.ExplorerPart;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.internal.ViewSite;
@@ -40,11 +53,6 @@ public class RenameResourceAction extends SelectionDispatchAction {
 
 	public void selectionChanged(IStructuredSelection selection) {
 		setEnabled(true);
-//		IResource element = getResource(selection);
-//		if (element == null)
-//			setEnabled(false);
-//		else
-//			setEnabled(ActionUtils.isRenameAvailable(element));
 	}
 
 	public void run(IStructuredSelection selection) {
@@ -58,7 +66,7 @@ public class RenameResourceAction extends SelectionDispatchAction {
 
 	private ResourceNavigatorRenameAction createWorkbenchAction(IStructuredSelection selection) {
 		ResourceNavigatorRenameAction action;
-		action = new ResourceNavigatorRenameAction(getShell(), treeViewer);
+		action = new PHPResourceNavigatorRenameAction(getShell(), treeViewer);
 		action.selectionChanged(selection);
 		return action;
 	}
@@ -73,5 +81,63 @@ public class RenameResourceAction extends SelectionDispatchAction {
 		if (!(first instanceof IResource))
 			return null;
 		return (IResource) first;
+	}
+
+	/*
+	 * A PHP resource rename action that delegates the ResourceNavigatorRenameAction and maintain
+	 * any removed PHP conditional breakpoints.
+	 */
+	private class PHPResourceNavigatorRenameAction extends ResourceNavigatorRenameAction {
+
+		public PHPResourceNavigatorRenameAction(Shell shell, TreeViewer treeViewer) {
+			super(shell, treeViewer);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.ui.views.navigator.ResourceNavigatorRenameAction#runWithNewPath(org.eclipse.core.runtime.IPath, org.eclipse.core.resources.IResource)
+		 */
+		protected void runWithNewPath(IPath path, IResource resource) {
+			// Get the breakpoints and bookmarks that were set on this resource before running the 
+			// workbench action. Add these markers after the workbench action is processed.
+			final ArrayList breakpoints = new ArrayList(6);
+			final ArrayList oldAttributes = new ArrayList(6);
+			IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
+			try {
+				IMarker[] markers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
+				for (int i = 0; i < markers.length; i++) {
+					IBreakpoint breakpoint = breakpointManager.getBreakpoint(markers[i]);
+					if (breakpoint != null && !breakpoints.contains(breakpoint)) {
+						breakpoints.add(breakpoint);
+						oldAttributes.add(breakpoint.getMarker().getAttributes());
+					}
+				}
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+			// Call the super implementation
+			super.runWithNewPath(path, resource);
+
+			// Add the breakpoints that got removed after the rename action.
+			Iterator breakpointsIterator = breakpoints.iterator();
+			Iterator attributesIterator = oldAttributes.iterator();
+			while (breakpointsIterator.hasNext()) {
+				IBreakpoint breakpoint = (IBreakpoint) breakpointsIterator.next();
+				Map oldAttributesMap = (Map) attributesIterator.next();
+				try {
+					IMarker newMarker = ResourcesPlugin.getWorkspace().getRoot().getFile(path).createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker");
+					// Fix the breakpoint's tooltip string before applying the old attributes to the new marker.
+					String oldMessge = (String) oldAttributesMap.get(IMarker.MESSAGE);
+					if (oldMessge != null) {
+						oldAttributesMap.put(IMarker.MESSAGE, oldMessge.replaceFirst(resource.getName(), path.lastSegment()));
+					}
+					newMarker.setAttributes(oldAttributesMap);
+					breakpoint.setMarker(newMarker);
+					breakpointManager.addBreakpoint(breakpoint);
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+			}
+		}
+
 	}
 }
