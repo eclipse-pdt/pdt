@@ -187,11 +187,13 @@ public class ContextManager {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fTarget.getProjectName());
 		if (project != null) {
 			PHPProjectOptions options = PHPProjectOptions.forProject(project);
-			IIncludePathEntry[] includePaths = options.readRawIncludePath();
-			for (int i = 0; i < includePaths.length; i++) {
-				String includePath = includePaths[i].getPath().toString();
-				if (filename.startsWith(includePath)) {
-					return filename.substring(includePath.length());
+			if (options != null) {
+				IIncludePathEntry[] includePaths = options.readRawIncludePath();
+				for (int i = 0; i < includePaths.length; i++) {
+					String includePath = includePaths[i].getPath().toString();
+					if (filename.startsWith(includePath)) {
+						return filename.substring(includePath.length());
+					}
 				}
 			}
 		}
