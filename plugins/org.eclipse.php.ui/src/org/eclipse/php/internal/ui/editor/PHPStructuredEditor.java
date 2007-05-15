@@ -1291,7 +1291,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			JavaFileEditorInput fileInput = (JavaFileEditorInput) input;
 			externalPath = fileInput.getPath();
 			// Wrap this file because it's an external (non workspace) file.
-			resource = new ExternalFileDecorator(((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(externalPath), externalPath.getDevice());
+			resource = ExternalFileDecorator.createFile(externalPath.toString());
 		} else if (input instanceof IStorageEditorInput) {
 			final IStorageEditorInput editorInput = (IStorageEditorInput) input;
 			final IStorage storage = editorInput.getStorage();
@@ -1304,7 +1304,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			// Suppose that it's a remote storage. If something goes wrong in some case - add another "if" above.
 			else {
 				externalPath = storage.getFullPath();
-				resource = ExternalFilesRegistry.getAsIFile(externalPath.toString());
+				resource = ExternalFileDecorator.createFile(externalPath.toString());
 
 				if (!(input instanceof StorageEditorInput)) {
 					input = new StorageEditorInput(storage) {
@@ -1396,7 +1396,17 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	public IFile getFile() {
-		return ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(getModel().getBaseLocation()));
+		IPath path = new Path(getModel().getBaseLocation());
+		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())){
+			return ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+		}
+		//could be that it is an external file BUT was already removed !, check :
+		else if(path.segmentCount() == 1){
+			return ExternalFileDecorator.createFile(path.toString());
+		}
+		
+		//handle case of workspace file AND/OR an external file with more than 1 segment
+		return ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
 	}
 
 	public PHPFileData getPHPFileData() {
