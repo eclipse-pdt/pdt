@@ -11,6 +11,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
@@ -65,7 +66,7 @@ public class PHPFileLink implements IHyperlink {
 				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					fFile = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
 				} else {
-					fFile = ExternalFilesRegistry.getAsIFile(path.toString());
+					fFile = ExternalFileDecorator.createFile(path.toString());
 				}
 			}
 			if (fFile instanceof IFile) {

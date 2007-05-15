@@ -31,6 +31,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -78,7 +79,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 				file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
 			} else {
-				file = ExternalFilesRegistry.getAsIFile(path.toString());
+				file = ExternalFileDecorator.createFile(path.toString());
 			}
 		}
 		if (file != null) {
