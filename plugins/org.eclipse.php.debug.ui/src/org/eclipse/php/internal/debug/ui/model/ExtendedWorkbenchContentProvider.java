@@ -15,7 +15,7 @@ package org.eclipse.php.internal.debug.ui.model;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 
 /**
@@ -72,7 +72,7 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 		Object[] children = super.getChildren(element);
 		if (isProvidingExternals && element instanceof IWorkspaceRoot) {
 			// Add the external files as IFiles
-			IFile[] externalFiles = ExternalPhpFilesRegistry.getInstance().getAllAsIFiles();
+			IFile[] externalFiles = ExternalFilesRegistry.getInstance().getAllAsIFiles();
 			if (externalFiles.length > 0) {
 				if (children.length == 0) {
 					return externalFiles;

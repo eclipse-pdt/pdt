@@ -3,7 +3,6 @@ package org.eclipse.php.internal.debug.ui.console;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -12,7 +11,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.util.EditorUtility;
@@ -63,14 +62,11 @@ public class PHPFileLink implements IHyperlink {
 		try {
 			if (fFile instanceof PHPCodeData) {
 				IPath path = Path.fromOSString(((PHPCodeData) fFile).getName());
-				fFile = new ExternalFileDecorator(ResourcesPlugin.getWorkspace().getRoot().getFile(path), path.getDevice()) {
-					/*
-					 * Override the default IFile exists method to allow the retrival of the DOM model.
-					 */
-					public boolean exists() {
-						return true; //getFullPath().toFile().exists();
-					}
-				};
+				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
+					fFile = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+				} else {
+					fFile = ExternalFilesRegistry.getAsIFile(path.toString());
+				}
 			}
 			if (fFile instanceof IFile) {
 				editorPart = EditorUtility.openInEditor(new FileEditorInput((IFile) fFile), PHPUiConstants.PHP_EDITOR_ID, false);

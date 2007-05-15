@@ -27,8 +27,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener;
-import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistryListener;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
@@ -98,7 +98,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		}
 
 		// Listen to external php files launches.
-		ExternalPhpFilesRegistry.getInstance().addListener(new ExternalFilesLaunchesListener());
+		ExternalFilesRegistry.getInstance().addListener(new ExternalFilesLaunchesListener());
 	}
 
 	/**
@@ -378,7 +378,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	 * The external files launches listener is responsible of removing launches and markers (bookmarks, breakpoints etc.)
 	 * that are related to the removed file / launch.
 	 */
-	private static class ExternalFilesLaunchesListener implements ExternalPHPFilesListener {
+	private static class ExternalFilesLaunchesListener implements ExternalFilesRegistryListener {
 
 		private ILaunchConfigurationType configType;
 

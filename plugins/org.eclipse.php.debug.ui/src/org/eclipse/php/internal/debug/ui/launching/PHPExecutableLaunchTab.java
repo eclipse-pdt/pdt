@@ -26,7 +26,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
@@ -388,7 +388,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			if (enableFileSelection) {
 				final String phpFile = launchConfig.getAttribute(PHPCoreConstants.ATTR_FILE, "");
 				if (!fileExists(phpFile)) {
-					if (ExternalPhpFilesRegistry.getInstance().isEntryExist(phpFile)) {
+					if (ExternalFilesRegistry.getInstance().isEntryExist(phpFile)) {
 						// Allow external files that are open in the editor.
 						return true;
 					}

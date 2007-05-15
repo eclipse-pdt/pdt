@@ -11,7 +11,9 @@
 
 package org.eclipse.php.internal.debug.ui.launching;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -29,7 +31,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
@@ -70,12 +72,14 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	public void launch(IEditorPart editor, String mode) {
 		IEditorInput input = editor.getEditorInput();
 		IFile file = (IFile) input.getAdapter(IFile.class);
-		String device = null;
 		if (file == null && input instanceof JavaFileEditorInput) {
 			// It's probably a launch for a file that is not in the workspace.
 			IPath path = ((JavaFileEditorInput) input).getPath();
-			file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
-			file = new ExternalFileDecorator(file, path.getDevice());
+			if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
+				file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+			} else {
+				file = ExternalFilesRegistry.getAsIFile(path.toString());
+			}
 		}
 		if (file != null) {
 			searchAndLaunch(new Object[] { file }, mode, getPHPExeLaunchConfigType());
