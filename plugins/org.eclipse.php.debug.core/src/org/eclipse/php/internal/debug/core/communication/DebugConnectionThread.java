@@ -35,7 +35,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.BlockingQueue;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
@@ -637,7 +637,7 @@ public class DebugConnectionThread implements Runnable {
 			project = workspaceRoot.getProject(projectString);
 			debugFileName = fileNameString;
 		} else {
-			project = PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject();
+			project = ExternalFilesRegistry.getInstance().getExternalFilesProject();
 			debugFileName = fileNameString;
 		}
 		String workspaceRootPath = PHPDebugTarget.getWorkspaceRootPath(project.getWorkspace());

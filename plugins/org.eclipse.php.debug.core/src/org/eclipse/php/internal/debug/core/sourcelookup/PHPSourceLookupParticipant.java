@@ -16,7 +16,7 @@ import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
-import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.model.PHPStackFrame;
 import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 
@@ -47,7 +47,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 					if (!file.exists()) {
 						return EMPTY;
 					}
-					if (ExternalPhpFilesRegistry.getInstance().isEntryExist(fileName)) {
+					if (ExternalFilesRegistry.getInstance().isEntryExist(fileName)) {
 						LocalFile locFile = new LocalFile(new File(fileName));
 						final JavaFileEditorInput externalInput = new JavaFileEditorInput(locFile);
 						IStorage storage = externalInput.getStorage();

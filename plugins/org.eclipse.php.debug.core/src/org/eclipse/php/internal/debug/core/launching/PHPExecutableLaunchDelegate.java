@@ -31,8 +31,8 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitialize
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.phpIni.IniModifier;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -109,7 +109,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			if (res == null && (!WINDOWS || filePath.getDevice() != null)) {
 				// Get a dummy project because we are probably executing a file that is located out
 				// of the workspace.
-				dummyProject = PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject();
+				dummyProject = ExternalFilesRegistry.getInstance().getExternalFilesProject();
 				project = dummyProject;
 				absolutePath = filePath.makeAbsolute().toString();
 			} else {
@@ -318,12 +318,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 		});
 	}
-//
-//	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
-//		if (configuration.getAttribute(PHPExecutableLaunchDelegate.SAVE_AUTOMATICALLY, false)) {
-//			return true;
-//		}
-//		return super.buildForLaunch(configuration, mode, monitor);
-//	}
+	//
+	//	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
+	//		if (configuration.getAttribute(PHPExecutableLaunchDelegate.SAVE_AUTOMATICALLY, false)) {
+	//			return true;
+	//		}
+	//		return super.buildForLaunch(configuration, mode, monitor);
+	//	}
 
 }
