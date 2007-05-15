@@ -6,9 +6,7 @@ import java.util.HashMap;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.Path;
 
 /**
  * This class wraps a simple registry of files that are opened in the Editor
@@ -117,18 +115,6 @@ public class ExternalFilesRegistry {
 		IFile[] result = new ExternalFileDecorator[coll.size()];
 		coll.toArray(result);
 		return result;
-	}
-
-	/**
-	 * Creates and returns an {@link ExternalFileDecorator} for a file that has the given pathString.
-	 * Use this only to create NEW instances of the {@link ExternalFileDecorator} and
-	 * the created file will not be registered.
-	 * @param pathString A full path string. 
-	 * @return An {@link IFile} (new instance of {@link ExternalFileDecorator}).
-	 */
-	public static IFile getAsIFile(String pathString) {
-		IPath path = Path.fromOSString(pathString);
-		return new ExternalFileDecorator(ResourcesPlugin.getWorkspace().getRoot().getFile(path), path.getDevice());
 	}
 
 	/**

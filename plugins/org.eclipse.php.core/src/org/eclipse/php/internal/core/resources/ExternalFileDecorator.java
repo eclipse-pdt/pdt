@@ -8,9 +8,6 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-/**
- * 
- */
 package org.eclipse.php.internal.core.resources;
 
 import java.io.InputStream;
@@ -30,7 +27,7 @@ import org.eclipse.php.internal.core.Logger;
 /**
  * An ExternalFileDecorator is an {@link IFile} wrapper that allows the setting of a device name.
  * This {@link ExternalFileDecorator} is useful when dealing with non-workspace files (externals).
- * 
+ * Note : Create instances of this class via the createFile() method.
  * @author shalom
  */
 public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICoreConstants, Cloneable, IPathRequestor {
@@ -40,11 +37,10 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 
 	/**
 	 * Constructs a new ExternalFileDecorator.
-	 * 
 	 * @param file The {@link IFile} to decorate.
 	 * @param device The device name for the {@link IFile}.
 	 */
-	public ExternalFileDecorator(IFile file, String device) {
+	ExternalFileDecorator(IFile file, String device) {
 		this.file = file;
 		this.device = device;
 	}
@@ -58,6 +54,13 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 */
 	public IPath getFullPath() {
 		IPath path = file.getFullPath();
+		if (path.segmentCount() > 1) {
+			if (path.segment(0).equals(ExternalFilesRegistry.getInstance().getExternalFilesProject().getName())) {
+				path = path.removeFirstSegments(1);
+				String segment = java.io.File.separatorChar + path.segment(0);
+				path = new Path(segment);
+			}
+		}
 		return path.setDevice(device);
 	}
 
@@ -919,5 +922,22 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 */
 	public String toString() {
 		return getFullPath().toString();
+	}
+
+	/**
+	 * Creates and returns an {@link ExternalFileDecorator} for a file that has the given pathString.
+	 * Use this to create NEW instances of the ExternalFileDecorator.
+	 * Note that the created file will not be automatically inserted into the ExternalFilesRegistry.
+	 * @param pathString A full path string. 
+	 * @return An {@link IFile} (new instance of {@link ExternalFileDecorator}).
+	 */
+	public synchronized static IFile createFile(String pathString) {
+		IPath path = Path.fromOSString(pathString);
+		if (path.segmentCount() == 1) {
+			IPath p = new Path(path.getDevice());
+			p = p.append(ExternalFilesRegistry.getInstance().getExternalFilesProject().getFullPath());
+			path = p.append(path.segment(0));
+		}
+		return new ExternalFileDecorator(ResourcesPlugin.getWorkspace().getRoot().getFile(path), path.getDevice());
 	}
 }
