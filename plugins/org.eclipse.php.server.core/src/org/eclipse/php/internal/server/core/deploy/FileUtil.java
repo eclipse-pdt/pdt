@@ -145,7 +145,7 @@ public class FileUtil {
 			}
 			return new Status(IStatus.OK, Activator.PLUGIN_ID, 0, NLS.bind(PHPServerCoreMessages.getString("FileUtil.copying"), new String[] { to }), null); //$NON-NLS-1$
 		} catch (Exception e) {
-			Logger.logException(PHPServerCoreMessages.getString("FileUtil.errorCopyingFile"), e); //$NON-NLS-1$
+			Logger.log(IStatus.WARNING, PHPServerCoreMessages.getString("FileUtil.errorCopyingFile"), e); //$NON-NLS-1$
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, NLS.bind(PHPServerCoreMessages.getString("FileUtil.errorCopyingFileTo"), new String[] { to, e.getLocalizedMessage() }), e); //$NON-NLS-1$
 		} finally {
 			try {
@@ -292,6 +292,11 @@ public class FileUtil {
 			// delete old files and directories from this directory
 			if (toDir.exists() && toDir.isDirectory()) {
 				toFiles = toDir.listFiles();
+				if (toFiles == null) {
+					monitor.done();
+					displayPublishError();
+					return false;
+				}
 				int toSize = toFiles.length;
 
 				// check if this exact file exists in the new directory
@@ -320,12 +325,7 @@ public class FileUtil {
 				}
 				if (!toDir.mkdirs()) {
 					monitor.done();
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							ErrorDialog.openError(Display.getDefault().getActiveShell(),
-								PHPServerCoreMessages.getString("FileUtil.publishError"), PHPServerCoreMessages.getString("FileUtil.serverPublishError"), new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, PHPServerCoreMessages.getString("FileUtil.writePermissionError"), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						}
-					});
+					displayPublishError();
 					return false;
 				}
 			}
@@ -391,5 +391,14 @@ public class FileUtil {
 			Logger.logException("Error smart copying directory " + from + " - " + to, e); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
+	}
+
+	private static void displayPublishError() {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				ErrorDialog.openError(Display.getDefault().getActiveShell(),
+					PHPServerCoreMessages.getString("FileUtil.publishError"), PHPServerCoreMessages.getString("FileUtil.serverPublishError"), new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, PHPServerCoreMessages.getString("FileUtil.writePermissionError"), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+		});
 	}
 }
