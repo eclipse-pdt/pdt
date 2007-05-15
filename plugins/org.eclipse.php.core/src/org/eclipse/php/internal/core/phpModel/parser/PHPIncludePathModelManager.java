@@ -433,7 +433,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		}
 	}
 
-	public void clean() {
+	public void clear() {
 		//we shouldn't call super because it will rebuild the other projects model
 		rebuild();
 	}
