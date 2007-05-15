@@ -46,7 +46,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		fPart = part;
 		fViewer = part.getViewer();
 	}
-	
+
 	/**
 	 * Retunrs the node type or -1 if the given object is not an OutlineNode.
 	 * 
@@ -199,7 +199,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					IPHPTreeContentProvider provider = treeProviders[i];
 					Object[] children = provider.getChildren(fStoredProject);
 					for (int j = 0; j < children.length; j++) {
-						fViewer.refresh(children[j],true);
+						fViewer.refresh(children[j], true);
 					}
 				}
 			}
@@ -241,7 +241,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					IPHPTreeContentProvider provider = treeProviders[i];
 					Object[] children = provider.getChildren(fStoredProject);
 					for (int j = 0; j < children.length; j++) {
-						fViewer.refresh(children[j],true);
+						fViewer.refresh(children[j], true);
 					}
 				}
 			}
@@ -281,8 +281,10 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				for (int i = 0; i < treeProviders.length; i++) {
 					IPHPTreeContentProvider provider = treeProviders[i];
 					Object[] children = provider.getChildren(fStoredProject);
+					if (children == null)
+						continue;
 					for (int j = 0; j < children.length; j++) {
-						fViewer.refresh(children[j],true);
+						fViewer.refresh(children[j], true);
 					}
 				}
 				ISelection currentSelection = fViewer.getSelection();
@@ -317,14 +319,13 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 			postRefresh(project, true);
 	}
 
-	
 	public static class OutlineNode implements Comparable {
 		final private Set children = new TreeSet(); //we choose TreeSet since it is an ordered Collection with O(1) for add/remove actions
 		final private ProjectOutlinePart part;
 		final private String text;
 		final private int type;
 		private PHPProjectModel model;
-		
+
 		public OutlineNode(final int type, final String text, final PHPProjectModel model, final ProjectOutlinePart part) {
 			this.type = type;
 			this.text = text;
@@ -462,5 +463,5 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		public void setModel(final PHPProjectModel model) {
 			this.model = model;
 		}
-	}	
+	}
 }
