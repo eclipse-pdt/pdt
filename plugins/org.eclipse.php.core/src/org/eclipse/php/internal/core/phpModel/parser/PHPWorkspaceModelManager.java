@@ -18,11 +18,10 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -220,8 +219,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public final static PHPProjectModel getDefaultPHPProjectModel() {
 		if (defaultModel == null) {
 			defaultModel = new PHPProjectModel();
-			IProject dummyExternalProject = ResourcesPlugin.getWorkspace().getRoot().getProject("external_" + System.currentTimeMillis());
-			defaultModel.initialize(dummyExternalProject);
+			defaultModel.initialize(ExternalFilesRegistry.getInstance().getExternalFilesProject());
 			PHPWorkspaceModelManager.getInstance().fireProjectModelAdded(defaultModel.getProject());
 		}
 		return defaultModel;
@@ -339,11 +337,16 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	public PHPFileData getModelForFile(String filename) {
 		IPath path = Path.fromOSString(filename);
-		IFile file = new ExternalFileDecorator(ResourcesPlugin.getWorkspace().getRoot().getFile(path), path.getDevice());
+		IFile file;
+		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
+			file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+		} else {
+			file = ExternalFilesRegistry.getAsIFile(path.toString());
+		}
 		PHPFileData result = null;
 		result = getModelForFile(filename, false);
 		if (result == null && file != null) {
-			if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+			if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
 				result = getModelForExternalFile(file);
 			}
 		}
@@ -370,7 +373,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 							putModel(project, projectModel);
 							attachProjectCloseObserver(project);
 						}
-					} else if (!project.exists() && project.equals(getDefaultPHPProjectModel().getProject())) {
+					} else if (!project.exists() && project.equals(ExternalFilesRegistry.getInstance().getExternalFilesProject())) {
 						projectModel = getDefaultPHPProjectModel();
 						putModel(project, projectModel);
 						attachProjectCloseObserver(project);
@@ -396,7 +399,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	public IProject getProjectForModel(PHPProjectModel model) {
 		if (model.equals(getDefaultPHPProjectModel())) {
-			return getDefaultPHPProjectModel().getProject();
+			return ExternalFilesRegistry.getInstance().getExternalFilesProject();
 		}
 
 		for (Iterator iter = models.keySet().iterator(); iter.hasNext();) {

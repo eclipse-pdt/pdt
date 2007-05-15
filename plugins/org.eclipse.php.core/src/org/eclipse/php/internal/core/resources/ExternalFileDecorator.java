@@ -522,7 +522,7 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * @see org.eclipse.core.resources.IResource#getProject()
 	 */
 	public IProject getProject() {
-		return file.getProject();
+		return ExternalFilesRegistry.getInstance().getExternalFilesProject();
 	}
 
 	/**

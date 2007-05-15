@@ -8,14 +8,15 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.phpModel;
+package org.eclipse.php.internal.core.resources;
+
 
 /**
- * A listenr for changes occured in the {@link ExternalPhpFilesRegistry}.
+ * A listenr for changes occured in the {@link ExternalFilesRegistry}.
  * 
  * @author shalom
  */
-public interface ExternalPHPFilesListener {
+public interface ExternalFilesRegistryListener {
 	
 	/**
 	 * Notifies that an external file was added to the external PHP files registry.

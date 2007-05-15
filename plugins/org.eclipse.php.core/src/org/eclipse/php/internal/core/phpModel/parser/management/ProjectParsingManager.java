@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
@@ -28,6 +27,7 @@ import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 class ProjectParsingManager implements IProjectModelListener {
@@ -126,10 +126,10 @@ class ProjectParsingManager implements IProjectModelListener {
 			IProject project = null;
 			if (file.exists()) {
 				project = file.getProject();
-			} 
+			}
 			//external file
-			else if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
-				project = PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject();
+			else if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+				project = ExternalFilesRegistry.getInstance().getExternalFilesProject();
 			}
 			Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(project);
 			parserManager.parse(reader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));

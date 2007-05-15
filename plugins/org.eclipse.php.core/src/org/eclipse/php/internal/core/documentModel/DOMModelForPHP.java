@@ -8,17 +8,15 @@ package org.eclipse.php.internal.core.documentModel;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.documentModel.dom.DOMDocumentForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelParser;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelUpdater;
-import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
@@ -80,7 +78,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		// external file
-		if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+		if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
 			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
 			return fileData;
 		}
@@ -96,7 +94,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		IFile iFile = getIFile();
-		if (ExternalPhpFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toString())) {
+		if (ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toString())) {
 			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
@@ -120,7 +118,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 			}
 
 			// external file
-			else if (ExternalPhpFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+			else if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
 				projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 				projectModel.fileWasChanged(file, getStructuredDocument());
 			}
@@ -148,10 +146,8 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		if (result != null) {
 			return result;
 		}
-		if (ExternalPhpFilesRegistry.getInstance().isEntryExist(path)) {
-			IPath iPath = Path.fromOSString(path);
-			result = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
-			result = new ExternalFileDecorator(result, iPath.getDevice());
+		if (ExternalFilesRegistry.getInstance().isEntryExist(path)) {
+			result = ExternalFilesRegistry.getInstance().getFileEntry(path);
 		}
 		if (result == null) {
 			result = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(path));
