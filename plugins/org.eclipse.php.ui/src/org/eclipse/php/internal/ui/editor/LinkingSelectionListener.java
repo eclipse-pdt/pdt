@@ -12,11 +12,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.Utils;
-import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
@@ -86,7 +86,7 @@ public class LinkingSelectionListener implements ISelectionListener {
 			//Check if PHPCodeData since selection can be FileData, FunctionData etc...
 			if (selectedElement instanceof PHPCodeData) {
 				UserData userData = ((PHPCodeData) selectedElement).getUserData();
-				if (userData != null && ExternalPhpFilesRegistry.getInstance().isEntryExist(userData.getFileName())) {
+				if (userData != null && ExternalFilesRegistry.getInstance().isEntryExist(userData.getFileName())) {
 					return;
 				}
 			}

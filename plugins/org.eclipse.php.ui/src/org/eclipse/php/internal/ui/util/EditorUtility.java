@@ -30,7 +30,6 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
-import org.eclipse.php.internal.core.phpModel.ExternalPhpFilesRegistry;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
@@ -39,6 +38,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -237,7 +237,7 @@ public class EditorUtility {
 				File externalSource = (File) source;
 				Path path = new Path(externalSource.getPath());
 				//check if external file
-				if (ExternalPhpFilesRegistry.getInstance().isEntryExist(path.toString())) {
+				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					LocalFile locFile = new LocalFile(new File(path.toString()));
 					final JavaFileEditorInput externalInput = new JavaFileEditorInput(locFile);
 					return externalInput;
