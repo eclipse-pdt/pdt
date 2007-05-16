@@ -40,6 +40,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNam
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -219,7 +220,8 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		//		if (!FileUtils.fileExists(phpPathString)) {
 		//			return null;
 		//		}
-		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom("New_configuration"));
+
+		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(phpPathString));
 
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
@@ -232,4 +234,28 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		return config;
 	}
 
+	/**
+	 * Returns a name for a newly created launch configuration according to the given file name.
+	 * In case the name generation fails, return the "New_configuration" string.
+	 * 
+	 * @param fileName	The original file name that this shortcut shoul execute.
+	 * @return The new configuration name, or "New_configuration" in case it fails for some reason.
+	 */
+	protected static String getNewConfigurationName(String fileName) {
+		String configurationName = "New_configuration";
+		try {
+			IPath path = Path.fromOSString(fileName);
+			String fileExtention = path.getFileExtension();
+			String lastSegment = path.lastSegment();
+			if (lastSegment != null) {
+				if (fileExtention != null) {
+					lastSegment = lastSegment.replaceFirst("." + fileExtention, "");
+				}
+				configurationName = lastSegment;
+			}
+		} catch (Exception e) {
+			Logger.log(Logger.WARNING_DEBUG, "Could not generate configuration name for " + fileName + ".\nThe default name will be used.", e);
+		}
+		return DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom(configurationName);
+	}
 }
