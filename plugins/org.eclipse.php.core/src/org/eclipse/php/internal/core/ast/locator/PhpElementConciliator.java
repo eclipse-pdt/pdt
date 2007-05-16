@@ -251,7 +251,7 @@ public class PhpElementConciliator {
 
 						if (node.getType() == ASTNode.GLOBAL_STATEMENT) {
 							GlobalStatement globalStatement = (GlobalStatement) node;
-							if (checkGlobal(targetIdentifier, variable, globalStatement)) {
+							if (checkGlobal(targetIdentifier, globalStatement)) {
 								offset = globalStatement.getStart();
 							}
 						}
@@ -307,13 +307,13 @@ public class PhpElementConciliator {
 	 * @param globalStatement
 	 * @return true is the 
 	 */
-	private static boolean checkGlobal(Identifier targetIdentifier, Variable variable, final GlobalStatement globalStatement) {
+	private static boolean checkGlobal(Identifier targetIdentifier, final GlobalStatement globalStatement) {
 		final Variable[] variables = globalStatement.getVariables();
 		for (int j = 0; j < variables.length; j++) {
 			final Variable current = variables[j];
 
 			assert current.getVariableName().getType() == ASTNode.IDENTIFIER;
-			Identifier id = (Identifier) variable.getVariableName();
+			Identifier id = (Identifier) current.getVariableName();
 
 			// variables are case sensative
 			if (id.getName().equals(targetIdentifier.getName())) {
