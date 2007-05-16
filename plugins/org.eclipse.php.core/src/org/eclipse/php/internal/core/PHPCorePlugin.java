@@ -10,17 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -48,16 +42,6 @@ public class PHPCorePlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
-		// Dirty hack! Fix Subversive issue: listening to resource changes before plugin was loaded.
-		Bundle svnBundle = Platform.getBundle("org.polarion.team.svn.core");
-		if (svnBundle != null) {
-			try {
-				svnBundle.start();
-			} catch (BundleException e) {
-				Logger.logException(e);
-			}
-		}
-
 		PHPWorkspaceModelManager.getInstance().startup();
 		IncludePathVariableManager.instance().startUp();
 	}
