@@ -131,7 +131,9 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetectorForPHP {
 					} else { // The current token is not a string - resolve this PHP element
 						CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(sDoc, region.getOffset());
 						if (codeDatas != null && codeDatas.length != 0) {
-							return new IHyperlink[] { new PHPCodeHyperLink(selectWord(document, region.getOffset()), codeDatas) };
+							if (codeDatas[0].getUserData() != null) {
+								return new IHyperlink[] { new PHPCodeHyperLink(selectWord(document, region.getOffset()), codeDatas) };
+							}
 						}
 					}
 				}
