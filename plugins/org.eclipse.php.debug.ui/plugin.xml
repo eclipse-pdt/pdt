@@ -375,7 +375,7 @@
      <extension
          point="org.eclipse.ui.commands">
           <command
-            categoryId="org.eclipse.debug.ui.category.debug"
+            categoryId="org.eclipse.debug.ui.category.run"
             description="Debug PHP Script"
             id="org.eclipse.php.deubg.ui.phpexeShortcut.debug"
             name="Debug PHP Script"/>
