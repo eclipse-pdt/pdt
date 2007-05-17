@@ -38,27 +38,27 @@ import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPro
 import org.osgi.service.prefs.BackingStoreException;
 
 public class PHPProjectCreationWizard extends DataModelWizard implements IExecutableExtension, INewWizard {
-	
+
 	private static final String ID = "org.eclipse.php.ui.wizards.PHPProjectCreationWizard"; //$NON-NLS-1$
 
 	protected PHPIncludePathPage includePathPage;
-    protected PHPProjectWizardBasePage basePage;
-    
-    protected final ArrayList wizardPagesList = new ArrayList();
-    private IProject createdProject = null;
-    private IConfigurationElement configElement; 
-    private List /** WizardPageFactory */ wizardPageFactories = new ArrayList(); 
-	
+	protected PHPProjectWizardBasePage basePage;
+
+	protected final ArrayList wizardPagesList = new ArrayList();
+	private IProject createdProject = null;
+	private IConfigurationElement configElement;
+	private List /** WizardPageFactory */
+	wizardPageFactories = new ArrayList();
+
 	public PHPProjectCreationWizard(IDataModel model) {
 		super(model);
 		populateWizardFactoryList();
 	}
 
-	public PHPProjectCreationWizard() {		
-		super();		
+	public PHPProjectCreationWizard() {
+		super();
 		populateWizardFactoryList();
 	}
-	
 
 	/**
 	 * This operation is called after the Wizard  is created (and before the doAddPages) 
@@ -76,17 +76,24 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	public void doAddPages() {
-		addPage(basePage = new PHPProjectWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
-		addPage(includePathPage = new PHPIncludePathPage(getDataModel(), "page2")); //$NON-NLS-1$
-		
+		addDeafaultPages();
+		addContributedPages();
+
+	}
+
+	protected void addContributedPages() {
 		// generates the pages added trough the phpWizardPages extention point
 		// and add them to the wizard
 		for (Iterator iter = wizardPageFactories.iterator(); iter.hasNext();) {
 			WizardPageFactory pageFactory = (WizardPageFactory) iter.next();
 			IWizardPage currentPage = pageFactory.createPage(getDataModel());
-			addPage(currentPage);	
+			addPage(currentPage);
 		}
-			
+	}
+
+	protected void addDeafaultPages() {
+		addPage(basePage = new PHPProjectWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
+		addPage(includePathPage = new PHPIncludePathPage(getDataModel(), "page2")); //$NON-NLS-1$
 	}
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
@@ -94,38 +101,38 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		setWindowTitle(PHPUIMessages.PHPProjectCreationWizard_PageTile); 
+		setWindowTitle(PHPUIMessages.PHPProjectCreationWizard_PageTile);
 		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
 	}
 
 	protected boolean prePerformFinish() {
-		createdProject = (IProject)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
-		
-		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH,includePathPage.getIncludePathsBlock().getIncludepathEntries());	
+		createdProject = (IProject) getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
+
+		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, includePathPage.getIncludePathsBlock().getIncludepathEntries());
 		basePage.setProjectOptionInModel(getDataModel());
-			
-        return super.prePerformFinish();
+
+		return super.prePerformFinish();
 	}
-	
+
 	protected void postPerformFinish() throws InvocationTargetException {
 		BasicNewProjectResourceWizard.updatePerspective(configElement);
-				
-		if (createdProject != null) { 			
-//			 Save any project-specific data (Fix Bug# 143406)
- 			try {
-				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();				
+
+		if (createdProject != null) {
+			//			 Save any project-specific data (Fix Bug# 143406)
+			try {
+				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();
 			} catch (BackingStoreException e) {
 				Logger.logException(e);
-			} 				
- 		}
+			}
+		}
 	}
-	
-	private void populateWizardFactoryList(){
+
+	private void populateWizardFactoryList() {
 		IWizardPage[] pageGenerators = PHPWizardPagesRegistry.getPageFactories(ID);
 		if (pageGenerators != null) {
-			for (int i = 0; i < pageGenerators.length; i++) {		
+			for (int i = 0; i < pageGenerators.length; i++) {
 				WizardPageFactory pageFactory = (WizardPageFactory) pageGenerators[i];
-				wizardPageFactories.add(pageFactory);				
+				wizardPageFactories.add(pageFactory);
 			}
 		}
 	}
