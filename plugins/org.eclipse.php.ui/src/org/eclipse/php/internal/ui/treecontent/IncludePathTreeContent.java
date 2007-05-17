@@ -227,7 +227,11 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			}
 		} else if ((parentElement instanceof PHPTreeNode) && ID_INCLUDES_NODE.equals(((PHPTreeNode) parentElement).getId())) {
 			PHPTreeNode treeNode = (PHPTreeNode) parentElement;
-			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) treeNode.getData(), true);//			PHPIncludePathModel model=PHPIncludePathModelManager
+			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject((IProject) treeNode.getData()/*, true*/);//			PHPIncludePathModel model=PHPIncludePathModelManager
+			// if we force creation of the project model it hangs when creating a new project with heavy predefined include path.
+			// On this stage there is no need to create the model, since we listen for include path changes.
+			if (projectModel == null)
+				return new Object[0];
 			PHPIncludePathModelManager includeModelManager = (PHPIncludePathModelManager) projectModel.getModel(INCLUDE_MODEL_MANAGER_ID);
 			if (includeModelManager == null) {
 				return new Object[0];
