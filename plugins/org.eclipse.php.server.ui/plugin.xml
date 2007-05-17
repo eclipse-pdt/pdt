@@ -76,7 +76,7 @@
   <extension
          point="org.eclipse.ui.commands">
           <command
-            categoryId="org.eclipse.debug.ui.category.debug"
+            categoryId="org.eclipse.debug.ui.category.run"
             description="Debug PHP Web Page"
             id="org.eclipse.php.server.ui.phpServerShortcut.debug"
             name="Debug PHP Web Page"/>
