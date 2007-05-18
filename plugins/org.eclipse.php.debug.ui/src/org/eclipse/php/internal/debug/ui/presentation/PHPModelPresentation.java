@@ -178,7 +178,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			// Synchronize the top frame with the given values.
 			PHPThread thread = (PHPThread) frame.getThread();
 			PHPStackFrame topFrame = (PHPStackFrame) thread.getTopStackFrame();
-			if (topFrame.equals(frame)) {
+			if (topFrame != null && topFrame.equals(frame)) {
 				frame = topFrame;
 			} // end fix
 
