@@ -1,9 +1,6 @@
 package org.eclipse.php.internal.debug.ui.console;
 
-import java.io.IOException;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.ui.console.FileLink;
@@ -15,12 +12,13 @@ import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.console.IHyperlink;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
  * 
@@ -74,10 +72,9 @@ public class PHPFileLink implements IHyperlink {
 			} else {
 				editorPart = EditorUtility.openInEditor(fFile, false);
 			}
-			if (editorPart != null && fFileLineNumber > 0) {
+			if (editorPart != null && fFileLineNumber > 0 && editorPart instanceof StructuredTextEditor) {
 				if (fFileOffset < 0) {
-					domModel = ((DOMModelForPHP) StructuredModelManager.getModelManager().getModelForRead((IFile) fFile));
-					IRegion region = domModel.getDocument().getStructuredDocument().getLineInformation(fFileLineNumber - 1);
+					IRegion region = ((StructuredTextEditor) editorPart).getTextViewer().getDocument().getLineInformation(fFileLineNumber - 1);
 					fFileOffset = region.getOffset();
 					fFileLength = region.getLength();
 				}
@@ -85,10 +82,6 @@ public class PHPFileLink implements IHyperlink {
 		} catch (PartInitException e) {
 			Logger.logException(e);
 		} catch (BadLocationException e) {
-			Logger.logException(e);
-		} catch (IOException e) {
-			Logger.logException(e);
-		} catch (CoreException e) {
 			Logger.logException(e);
 		} catch (NullPointerException npe) {
 			Logger.logException(npe);
