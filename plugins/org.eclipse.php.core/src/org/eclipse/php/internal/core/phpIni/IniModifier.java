@@ -141,6 +141,7 @@ public class IniModifier {
 		final PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		final IIncludePathEntry[] entries = options.readRawIncludePath();
 		final List/*<IPath>*/paths = new ArrayList(entries.length);
+		paths.add(project.getLocation());
 		for (int i = 0; i < entries.length; ++i) {
 			final IPath path = entries[i].getPath();
 			if (entries[i].getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
