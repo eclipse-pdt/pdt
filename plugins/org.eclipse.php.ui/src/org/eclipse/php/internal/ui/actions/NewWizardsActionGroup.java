@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.IContextMenuConstants;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IWorkbenchSite;
@@ -66,6 +67,9 @@ public class NewWizardsActionGroup extends ActionGroup {
 		if (element instanceof IFolder || element instanceof PHPProjectModel || element instanceof PHPClassData || element instanceof PHPFileData) {
 			return true;
 		}
+
+		if (element instanceof PHPFunctionData && ((PHPFunctionData) element).getContainer() instanceof PHPFileData)
+			return true;
 
 		return false;
 	}

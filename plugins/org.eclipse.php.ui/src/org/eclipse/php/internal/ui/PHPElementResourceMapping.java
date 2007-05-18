@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 
 public abstract class PHPElementResourceMapping extends ResourceMapping {
 
@@ -150,7 +151,9 @@ public abstract class PHPElementResourceMapping extends ResourceMapping {
 			return create((PHPFileData) element);
 		else if (element instanceof PHPClassData)
 			return create((PHPClassData) element);
-		else
+		else if (element instanceof PHPFunctionData) {
+			return create((PHPFunctionData) element);
+		} else
 			return null;
 
 	}
@@ -169,9 +172,18 @@ public abstract class PHPElementResourceMapping extends ResourceMapping {
 		return new CompilationUnitResourceMapping(unit);
 	}
 
-	public static ResourceMapping create(PHPClassData type) {
-		// top level types behave like the CU
-		PHPCodeData parent = type.getContainer();
+	public static ResourceMapping create(PHPClassData clasz) {
+		// top level types behave like the File
+		PHPCodeData parent = clasz.getContainer();
+		if (parent instanceof PHPFileData) {
+			return create((PHPFileData) parent);
+		}
+		return null;
+	}
+
+	public static ResourceMapping create(PHPFunctionData function) {
+		// top level functions behave like the File
+		PHPCodeData parent = function.getContainer();
 		if (parent instanceof PHPFileData) {
 			return create((PHPFileData) parent);
 		}
