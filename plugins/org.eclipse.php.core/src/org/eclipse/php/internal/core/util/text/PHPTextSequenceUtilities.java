@@ -28,7 +28,7 @@ public class PHPTextSequenceUtilities {
 	private static final Pattern COMMENT_START_PATTERN = Pattern.compile("(/[*])|(//)");
 	private static final Pattern COMMENT_END_PATTERN = Pattern.compile("[*]/");
 	private static final String START_COMMENT = "/*";
-	private static final String END_COMMENT = "*/";
+//	private static final String END_COMMENT = "*/";
 	private static final char END_LINE = '\n';
 	private static final Pattern FUNCTION_PATTERN = Pattern.compile("function\\s", Pattern.CASE_INSENSITIVE);
 	private static final Pattern CLASS_PATTERN = Pattern.compile("(class|interface)\\s", Pattern.CASE_INSENSITIVE);
@@ -108,7 +108,7 @@ public class PHPTextSequenceUtilities {
 	}
 
 	private static TextSequence removeComments(TextSequence textSequence) {
-		while (true) {
+		FIND_COMMENT_START: while (true) {
 			int commentStartPosition = getCommentStartIndex(textSequence);
 			if (commentStartPosition > -1) {
 				String startCommentString = textSequence.subSequence(commentStartPosition, commentStartPosition + 2).toString();
@@ -127,7 +127,7 @@ public class PHPTextSequenceUtilities {
 					for (; commentEndPosition < textSequence.length(); commentEndPosition++) {
 						if (textSequence.charAt(commentEndPosition) == END_LINE) {
 							textSequence = textSequence.cutTextSequence(commentStartPosition, commentEndPosition);
-							continue;
+							continue FIND_COMMENT_START;
 						}
 					}
 				}
