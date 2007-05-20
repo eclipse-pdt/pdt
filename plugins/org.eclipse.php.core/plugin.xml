@@ -34,6 +34,7 @@
          <content-type
                base-type="org.eclipse.core.runtime.text"
                file-extensions="php,php3,php4,php5,phtml,inc,tpl"
+               default-charset="UTF-8"
                id="phpsource"
                name="PHP Content Type"
                priority="high">
