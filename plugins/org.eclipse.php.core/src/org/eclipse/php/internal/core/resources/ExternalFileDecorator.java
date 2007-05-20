@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.resources;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
@@ -23,6 +25,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 
 /**
  * An ExternalFileDecorator is an {@link IFile} wrapper that allows the setting of a device name.
@@ -416,7 +419,11 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * @see org.eclipse.core.resources.IFile#getContents()
 	 */
 	public InputStream getContents() throws CoreException {
-		return file.getContents();
+		try {
+			return new FileInputStream(file.getFullPath().toFile());
+		} catch (FileNotFoundException e) {
+			throw new CoreException(new Status(IStatus.ERROR, PHPCorePlugin.ID, IStatus.ERROR, e.getMessage(), e));
+		}
 	}
 
 	/**
