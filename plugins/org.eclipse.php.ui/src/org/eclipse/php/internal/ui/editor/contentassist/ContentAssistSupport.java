@@ -381,6 +381,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		String startWith = text.subSequence(startPosition, endPosition).toString();
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, startPosition);
+		if (endPosition == 0) {
+			return false;
+		}
 		char c = text.charAt(endPosition - 1);
 		if (c != '\"' && c != '\'') {
 			return false;
