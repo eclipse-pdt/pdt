@@ -28,15 +28,15 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Shell;
 
-
 public class ActionUtils {
 
 	final private static IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-	
+
 	public static boolean containsOnlyProjects(List elements) {
 		if (elements.isEmpty())
 			return false;
@@ -63,17 +63,16 @@ public class ActionUtils {
 	}
 
 	public static IResource[] getResources(List elements) {
-		return getResources(elements,false);
+		return getResources(elements, false);
 	}
-	
-	public static IResource[] getResources(List elements,boolean includePHPFileData) {
+
+	public static IResource[] getResources(List elements, boolean includePHPFileData) {
 		List resources = new ArrayList(elements.size());
 		for (Iterator iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof IResource)
 				resources.add(element);
-			else if (includePHPFileData&& element instanceof PHPFileData)
-			{
+			else if (includePHPFileData && element instanceof PHPFileData) {
 				resources.add(PHPModelUtil.getResource(element));
 			}
 		}
@@ -88,10 +87,10 @@ public class ActionUtils {
 		}
 		return (IResource[]) result.toArray(new IResource[result.size()]);
 	}
-	
+
 	public static IResource[] getPHPResources(final Object[] elements) {
 		List result = new ArrayList();
-				
+
 		for (int index = 0; index < elements.length; index++) {
 			if (elements[index] instanceof IFile) {
 				if (contentType.isAssociatedWith(((IResource) elements[index]).getName())) {
@@ -102,18 +101,17 @@ public class ActionUtils {
 		}
 		return (IResource[]) result.toArray(new IResource[result.size()]);
 	}
-	
 
 	public static Object[] getPHPElements(List elements) {
-		return getPHPElements(elements,false);
+		return getPHPElements(elements, false);
 	}
-	
+
 	public static Object[] getPHPElements(List elements, boolean phpFileDataIsResource) {
 		List resources = new ArrayList(elements.size());
 		for (Iterator iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof PHPCodeData || element instanceof PHPProjectModel || element instanceof PHPWorkspaceModelManager)
-				if (!phpFileDataIsResource || !(element instanceof PHPFileData) )
+				if (!phpFileDataIsResource || !(element instanceof PHPFileData))
 					resources.add(element);
 		}
 		return resources.toArray();
@@ -131,8 +129,11 @@ public class ActionUtils {
 
 	public static boolean isPHPSource(PHPCodeData element) {
 		IResource resource = PHPModelUtil.getResource(element);
-		if (resource == null)
+		if (resource == null) {
 			return false;
+		} else if (ExternalFilesRegistry.getInstance().isEntryExist(resource.getFullPath().toString())) {
+			return true;
+		}
 		IProject resourceProject = resource.getProject();
 		if (resourceProject == null)
 			return false;
@@ -215,11 +216,11 @@ public class ActionUtils {
 		}
 		return false;
 	}
-	
+
 	public static boolean arePHPElements(final Object[] elements) {
-		if (elements!=null) {
+		if (elements != null) {
 			for (int index = 0; index < elements.length; index++) {
-				if (elements[index]instanceof PHPCodeData && !(elements[index] instanceof PHPFileData))
+				if (elements[index] instanceof PHPCodeData && !(elements[index] instanceof PHPFileData))
 					return true;
 			}
 		}
