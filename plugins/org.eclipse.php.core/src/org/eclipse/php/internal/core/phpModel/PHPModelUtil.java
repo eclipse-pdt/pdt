@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInt
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 
 public class PHPModelUtil {
 
@@ -331,7 +332,10 @@ public class PHPModelUtil {
 			final Path path = new Path(filename);
 			if (path.segmentCount() < 2) // path doesnt include project name, return null
 				return null;
-			final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+			if(resource == null && ExternalFilesRegistry.getInstance().isEntryExist(filename)) {
+				resource = ExternalFilesRegistry.getInstance().getFileEntry(filename);
+			}
 			return resource;
 		} else if (element instanceof PHPProjectModel) {
 			final PHPProjectModel projectModel = (PHPProjectModel) element;
