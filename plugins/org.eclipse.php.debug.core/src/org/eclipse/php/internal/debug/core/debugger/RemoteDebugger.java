@@ -15,7 +15,6 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
@@ -159,7 +158,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return fileName;
 	}
 
-	private static final String convertToSystemDependentFileName(String fileName) {
+	public static final String convertToSystemDependentFileName(String fileName) {
 		if (fileName == null)
 			return null;
 		if (File.separatorChar == '\\') {

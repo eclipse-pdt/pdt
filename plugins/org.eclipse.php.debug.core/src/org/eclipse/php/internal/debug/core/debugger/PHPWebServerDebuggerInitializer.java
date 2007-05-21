@@ -24,7 +24,6 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
-import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -75,7 +74,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 			}
 		} else {
 			try {
-				connect(new URL(debugQuery), Integer.parseInt(launch.getAttribute(IDebugParametersKeys.PORT)), false);
+				connect(new URL(debugQuery));
 			} catch (java.net.MalformedURLException e) {
 				Logger.logException("Malformed URL Exception " + debugQuery, e); //Debugger_Unexpected_Error
 				String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
@@ -84,7 +83,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		}
 	}
 
-	protected void connect(URL url, int port, boolean isDebugPassive) throws DebugException {
+	public static void connect(URL url) throws DebugException {
 		try {
 			URLConnection connection = url.openConnection();
 			String headerKey = connection.getHeaderFieldKey(1);
