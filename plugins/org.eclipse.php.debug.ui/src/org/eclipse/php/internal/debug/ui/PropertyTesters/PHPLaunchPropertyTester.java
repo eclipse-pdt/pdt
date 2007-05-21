@@ -20,6 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -63,7 +64,11 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 					// In this case, the editor input is probably an external file. 
 					// Allow only script run/debug on this kind of file (internal executable launch).
 					JavaFileEditorInput editorInput = (JavaFileEditorInput) obj;
-					file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(editorInput.getPath());
+					// Try to get it first from the external files registry.
+					file = ExternalFilesRegistry.getInstance().getFileEntry(editorInput.getPath().toString());
+					if (file == null) {
+						file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(editorInput.getPath());
+					}
 				} else if (list.get(0) instanceof IFile) {
 					file = (IFile) list.get(0);
 				}
