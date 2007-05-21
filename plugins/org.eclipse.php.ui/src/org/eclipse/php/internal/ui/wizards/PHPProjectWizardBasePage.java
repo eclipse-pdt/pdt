@@ -28,9 +28,9 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements IPr
 	protected PHPVersionGroup fVersionGroup;
 
 	public PHPProjectWizardBasePage(IDataModel dataModel, String pageName) {
-		super(dataModel, pageName);
-		setDescription("PHP Project Creation"); //$NON-NLS-1$
-		setTitle("PHP Project Creation"); //$NON-NLS-1$
+		super(dataModel, pageName);		
+		setTitle("New PHP Project"); 
+		setDescription("Create a PHP project");
 		setPageComplete(false);
 	}
 
