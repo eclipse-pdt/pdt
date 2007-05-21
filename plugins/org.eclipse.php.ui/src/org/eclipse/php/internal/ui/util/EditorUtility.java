@@ -19,6 +19,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.internal.filesystem.local.LocalFile;
+import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
@@ -51,7 +52,6 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
-import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -438,6 +438,9 @@ public class EditorUtility {
 		IPath path = new Path(fileName);
 		IFile file = root.getFileForLocation(path);
 		if (file == null) {
+			if (path.segmentCount() < ICoreConstants.MINIMUM_FILE_SEGMENT_LENGTH) {
+				return null;
+			}
 			file = root.getFile(path);
 			if (file == null) {
 				final IProject[] projects = root.getProjects();
