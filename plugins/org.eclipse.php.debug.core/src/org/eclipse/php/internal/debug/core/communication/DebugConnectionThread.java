@@ -567,7 +567,7 @@ public class DebugConnectionThread implements Runnable {
 		String contextRoot = launchConfiguration.getAttribute(Server.CONTEXT_ROOT, "");
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(launchDecorator.getProject());
 		int requestPort = PHPProjectPreferences.getDebugPort(launchDecorator.getProject());
-		boolean runWithDebug = launchConfiguration.getAttribute("run_with_debug", true);
+		boolean runWithDebug = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebug = false;
 		}

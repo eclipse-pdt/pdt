@@ -114,27 +114,41 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	}
 
 	/**
+	 * Returns true if this daemon is listening for communication requests.
+	 * @return True, if the daemon is listening; False, otherwise.
+	 */
+	public boolean isListening() {
+		synchronized (lock) {
+			return isAlive;
+		}
+	}
+	
+	/**
 	 * Initialize the ServerSocket to listen for debug requests on a specified port. 
 	 * The port is defined in the workspace preferences.
+	 * 
+	 * @return True, if the reset did not yield any errors; False, otherwise.
 	 */
-	public void resetSocket() {
+	public boolean resetSocket() {
 		stopListen();
 		int port = getReceiverPort();
 		try {
 			synchronized (lock) {
 				serverSocket = new ServerSocket(port);
 				startListen();
+				return true;
 			}
 		} catch (BindException exc) {
 			handleMultipleBindingError();
 		} catch (IOException e) {
 			Logger.logException("Error while restting the socket for the debug requests.", e);
 		}
+		return false;
 	}
 
 	public void handleMultipleBindingError() {
 		final int port = getReceiverPort();
-		Logger.log(Logger.ERROR, "Port " + port + " is in use. Please select a different port for the debugger.");
+		Logger.log(Logger.ERROR, "The debug port " + port + " is in use. Please select a different port for the debugger.");
 		final Display display = Display.getDefault();
 		display.asyncExec(new Runnable() {
 			public void run() {
