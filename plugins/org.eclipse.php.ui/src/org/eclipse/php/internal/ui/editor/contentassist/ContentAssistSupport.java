@@ -839,11 +839,22 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 		int currChar = offset;
 		int bracketsNum = 1;
+		char inStringMode = 0;
 		while (bracketsNum != 0 && currChar >= 0) {
 			currChar--;
-			if (statmentText.charAt(currChar) == ')') {
+			// get the current char
+			final char charAt = statmentText.charAt(currChar);
+			// if it is string close / open - update state
+			if (charAt == '\'' || charAt == '"') {
+				inStringMode = inStringMode == 0 ? charAt : inStringMode == charAt ? 0 : inStringMode;
+			}
+
+			if (inStringMode != 0)
+				continue;
+
+			if (charAt == ')') {
 				bracketsNum++;
-			} else if (statmentText.charAt(currChar) == '(') {
+			} else if (charAt == '(') {
 				bracketsNum--;
 			}
 		}
