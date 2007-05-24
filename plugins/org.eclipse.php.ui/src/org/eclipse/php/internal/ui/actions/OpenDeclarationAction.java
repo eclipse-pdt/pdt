@@ -150,8 +150,9 @@ public class OpenDeclarationAction extends TextEditorAction implements IUpdate {
 
 		if (userCodeData.size() > 0) {
 			fCodeDatas = (CodeData[]) userCodeData.toArray(new CodeData[userCodeData.size()]);
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 }
