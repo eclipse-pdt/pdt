@@ -15,17 +15,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -44,7 +37,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
 public class PHPFileCreationWizard extends Wizard implements INewWizard {
-	
+
 	protected PHPFileCreationWizardPage phpFileCreationWizardPage;
 	private ISelection selection;
 	protected NewPhpTemplatesWizardPage newPhpTemplatesWizardPage;
@@ -63,7 +56,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		phpFileCreationWizardPage = new PHPFileCreationWizardPage(selection);
 		addPage(phpFileCreationWizardPage);
-		
+
 		newPhpTemplatesWizardPage = new NewPhpTemplatesWizardPage();
 		addPage(newPhpTemplatesWizardPage);
 	}
@@ -100,8 +93,6 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		return true;
 	}
 
-	
-
 	/**
 	 * We will accept the selection in the workbench to see if
 	 * we can initialize from it.
@@ -110,14 +101,14 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
 	}
-	
+
 	/**
 	 * A static nested class for the creation of a new PHP File.
 	 * @author yaronm
 	 *
 	 */
 	public static class FileCreator {
-			
+
 		/**
 		 * The worker method. It will find the container, create the
 		 * file if missing or just replace its contents, and open
@@ -134,6 +125,15 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			}
 			IContainer container = (IContainer) resource;
 			final IFile file = container.getFile(new Path(fileName));
+
+			// adopt project's/workspace's line delimiter (separator)
+			String lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null, new IScopeContext[] { new ProjectScope(container.getProject()) });
+			if (lineSeparator == null)
+				lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null, new IScopeContext[] { new InstanceScope() });
+			if (lineSeparator == null)
+				lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);
+			contents = contents.replaceAll("(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$ //$NON-NLS-2$
+
 			try {
 				InputStream stream = openContentStream(contents);
 				if (file.exists()) {
@@ -144,10 +144,10 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				stream.close();
 			} catch (IOException e) {
 			}
-			
+
 			// Change file encoding:
 			if (container instanceof IProject) {
-				PHPProjectOptions options = PHPProjectOptions.forProject((IProject)container);
+				PHPProjectOptions options = PHPProjectOptions.forProject((IProject) container);
 				if (options != null) {
 					String defaultEncoding = (String) options.getOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
 					if (defaultEncoding == null || defaultEncoding.length() == 0) {
@@ -156,7 +156,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 					file.setCharset(defaultEncoding, monitor);
 				}
 			}
-			
+
 			monitor.worked(1);
 			monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning, fileName));
 			wizard.getShell().getDisplay().asyncExec(new Runnable() {
@@ -178,7 +178,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			if (contents == null) {
 				contents = "";
 			}
-				
+
 			return new ByteArrayInputStream(contents.getBytes());
 		}
 
@@ -187,5 +187,5 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			throw new CoreException(status);
 		}
 	}
-	
+
 }
