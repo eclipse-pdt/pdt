@@ -226,7 +226,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 				// init the breakpoint settings
 				boolean isOverrideBreakpointSetting = configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
 				overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
-				breakOnFirstLine.setEnabled(isOverrideBreakpointSetting);
+				breakOnFirstLine.setEnabled(isOverrideBreakpointSetting && overrideBreakpiontSettings.isEnabled());
 				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
 			}
 			updateDebugFrom();
