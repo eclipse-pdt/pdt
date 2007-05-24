@@ -421,7 +421,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, arguments);
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, argumentField.getData().toString());
 		}
-		final boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo.getSelection() : true;
+		final boolean debugInfo = enableDebugInfoOption ? (runWithDebugInfo != null && runWithDebugInfo.getSelection()) : true;
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
 
 		if (overrideBreakpiontSettings != null)
@@ -466,7 +466,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public void setEnableDebugInfoOption(final boolean enabled) {
 		if (enabled == enableDebugInfoOption)
 			return;
-		enableDebugInfoOption = true;
+		enableDebugInfoOption = enabled;
 		if (runWithDebugInfo != null)
 			runWithDebugInfo.setVisible(enabled);
 	}
