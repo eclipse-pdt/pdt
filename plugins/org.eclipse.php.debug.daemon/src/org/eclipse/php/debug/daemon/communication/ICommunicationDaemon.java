@@ -22,6 +22,12 @@ public interface ICommunicationDaemon {
 	public void init();
 	
 	/**
+	 * Returns true if this daemon is listening for communication requests.
+	 * @return True, if the daemon is listening; False, otherwise.
+	 */
+	public boolean  isListening();
+	
+	/**
 	 * Starts the listening thread for any incoming debug requests or responces.
 	 */
 	public void startListen();
@@ -34,8 +40,11 @@ public interface ICommunicationDaemon {
 
 	/**
 	 * Initialize a listen socket for debug requests. 
+	 * 
+	 * @return True, if the reset did not yield any errors; False, otherwise.
+	 * 
 	 */
-	public void resetSocket();
+	public boolean resetSocket();
 	
 	/**
 	 * Handle an error of Multiple Bindings, which means that the two daemon instances

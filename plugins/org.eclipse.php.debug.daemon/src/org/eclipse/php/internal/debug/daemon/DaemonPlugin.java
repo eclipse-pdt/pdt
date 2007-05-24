@@ -61,6 +61,31 @@ public class DaemonPlugin extends Plugin {
 		daemons = null;
 	}
 
+	/**
+	 * Make sure that the communication daemons are alive and listening. 
+	 * This method can be called before a communication session is requested in order
+	 * to make sure that the requested communication daemon is up and running.
+	 * 
+	 * The method goes over the registered daemons and reset the socket for any communication 
+	 * daemon that is not listening.
+	 * 
+	 * @return True, if all the communication daemons passed the validation; False, otherwise.
+	 */
+	public boolean validateCommunicationDaemons() {
+		boolean validated = true;
+		if (daemons != null) {
+			for (int i = 0; i < daemons.length; i++) {
+				if (!daemons[i].isListening()) {
+					validated &= daemons[i].resetSocket();
+				}
+			}
+		}
+		return validated;
+	}
+	
+	/**
+	 * Returns the DaemonPlugin ID string (e.g. org.eclipse.php.debug.daemon).
+	 */
 	public static String getID() {
 		return ID;
 	}
