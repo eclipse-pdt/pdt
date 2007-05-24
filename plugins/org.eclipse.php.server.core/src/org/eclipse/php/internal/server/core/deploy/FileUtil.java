@@ -269,6 +269,7 @@ public class FileUtil {
 		} catch (IOException ioe) {
 		}
 		return smartCopyDirectory(from, to, ignoredResources, timeDifference, monitor);
+		// TODO - Return an IStatus instead of a simple boolean
 	}
 
 	/*
@@ -344,6 +345,7 @@ public class FileUtil {
 			if (toSize > 0)
 				dw = 500 / toSize;
 
+			boolean copyOK = true;
 			for (int i = 0; i < fromSize; i++) {
 				File current = fromFiles[i];
 
@@ -367,7 +369,7 @@ public class FileUtil {
 					toFile += current.getName();
 					if (!ignoredResources.containsKey(current.getName())) {
 						if (current.isFile()) {
-							copyFile(fromFile, toFile);
+							copyOK &= copyFile(fromFile, toFile).getSeverity() == IStatus.OK;
 							monitor.worked(dw);
 						} else if (current.isDirectory()) {
 							monitor.subTask(NLS.bind(PHPServerCoreMessages.getString("FileUtil.copying"), new String[] { fromFile, toFile })); //$NON-NLS-1$
@@ -386,7 +388,7 @@ public class FileUtil {
 			}
 			monitor.worked(500 - dw * toSize);
 			monitor.done();
-			return true;
+			return copyOK;
 		} catch (Exception e) {
 			Logger.logException("Error smart copying directory " + from + " - " + to, e); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
