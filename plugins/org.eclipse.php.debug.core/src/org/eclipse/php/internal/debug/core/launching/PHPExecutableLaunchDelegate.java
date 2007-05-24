@@ -43,6 +43,7 @@ import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.model.DebugSessionIdGenerator;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveFilesHandler;
 import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 import org.eclipse.swt.widgets.Display;
@@ -78,6 +79,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
+		// Check that the debug daemon is functional
+		if (!DaemonPlugin.getDefault().validateCommunicationDaemons()) {
+			monitor.setCanceled(true);
+			monitor.done();
+			return;
+		}
+		// Check for previous launches.
 		if (!PHPLaunchUtilities.notifyPreviousLaunches(launch)) {
 			monitor.setCanceled(true);
 			monitor.done();

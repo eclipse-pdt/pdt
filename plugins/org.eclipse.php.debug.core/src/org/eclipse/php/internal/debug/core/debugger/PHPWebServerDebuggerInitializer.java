@@ -18,6 +18,7 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
@@ -43,7 +44,12 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		exception = null;
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
 		final String encodedURL = parametersInitializer.getRequestURL(launch).replaceAll(" ", "%20");
-		final String debugQuery = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode()) ? encodedURL : encodedURL + '?' + parametersInitializer.generateQuery(launch);
+		boolean runWithDebug = true;
+		try {
+			runWithDebug = launch.getLaunchConfiguration().getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
+		} catch (CoreException e1) {
+		}
+		final String debugQuery = (!runWithDebug && ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) ? encodedURL : encodedURL + '?' + parametersInitializer.generateQuery(launch);
 		if (isDebugMode) {
 			System.out.println("debugQuery = " + debugQuery);
 		}

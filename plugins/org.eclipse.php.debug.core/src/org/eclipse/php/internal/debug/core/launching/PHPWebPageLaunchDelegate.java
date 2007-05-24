@@ -18,6 +18,8 @@ import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.debugger.PHPWebServerDebuggerInitializer;
 import org.eclipse.php.internal.debug.core.model.DebugSessionIdGenerator;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
+import org.eclipse.php.internal.server.core.PHPServerCoreMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.deploy.DeployFilter;
 import org.eclipse.php.internal.server.core.deploy.FileUtil;
@@ -40,7 +42,6 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		debuggerInitializer = createDebuggerInitilizer();
 	}
 
-	
 	/**
 	 * Override the extended getLaunch to create a PHPLaunch. 
 	 */
@@ -48,12 +49,18 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		return new PHPLaunch(configuration, mode, null);
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.server.core.launch.IHTTPServerLaunch#launch(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+		// Check that the debug daemon is functional
+		if (!DaemonPlugin.getDefault().validateCommunicationDaemons()) {
+			monitor.setCanceled(true);
+			monitor.done();
+			return;
+		}
+		// Check for previous launches
 		if (!PHPLaunchUtilities.notifyPreviousLaunches(launch)) {
 			monitor.setCanceled(true);
 			monitor.done();
@@ -65,13 +72,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			return;
 		}
 		PHPLaunchUtilities.showDebugView();
-		boolean runWithDebug = configuration.getAttribute("run_with_debug", true);
 		this.launch = launch;
-		if (mode.equals(ILaunchManager.RUN_MODE) && !runWithDebug) {
-			runWithoutDebug(configuration, mode, launch, monitor);
-			return;
-		}
-
 		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, ""));
 		if (server == null) {
 			Logger.log(Logger.ERROR, "Launch configuration could not find server");
@@ -96,6 +97,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		if (publish) {
 			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
 				// Return if the publish failed.
+				displayErrorMessage(PHPServerCoreMessages.getString("FileUtil.serverPublishError"));
 				terminated();
 				return;
 			}
@@ -110,60 +112,31 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		wc.doSave();
 
 		String URL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
-		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebug == true) {
+		boolean isDebugLaunch = mode.equals(ILaunchManager.DEBUG_MODE);
+		if (isDebugLaunch) {
 			boolean stopAtFirstLine = false;
 			if (wc.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false)) {
 				stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
 			} else {
 				stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(proj);
 			}
-			int requestPort = PHPProjectPreferences.getDebugPort(proj);
-
-			// Generate a session id for this launch and put it in the map
-			int sessionID = DebugSessionIdGenerator.generateSessionID();
-			PHPSessionLaunchMapper.put(sessionID, new PHPServerLaunchDecorator(launch, proj));
-
-			// Fill all debug attributes:
-			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
-			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
-			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
-			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
+		}
+		int requestPort = PHPProjectPreferences.getDebugPort(proj);
 
-			// Trigger the debug session by initiating a debug requset to the debug server
-			runDispatch = new RunDispatchJobWebServer(launch);
-			runDispatch.schedule();
-		}
-	}
+		// Generate a session id for this launch and put it in the map
+		int sessionID = DebugSessionIdGenerator.generateSessionID();
+		PHPSessionLaunchMapper.put(sessionID, new PHPServerLaunchDecorator(launch, proj));
 
-	public void runWithoutDebug(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+		// Fill all rest of the attributes:
+		launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
+		launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
+		launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
+		launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
 
-		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, ""));
-		if (server == null) {
-			Logger.log(Logger.ERROR, "Launch configuration could not find server");
-			//throw CoreException();
-			return;
-		}
-		String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
-		// Get the project from the file name
-		IPath filePath = new Path(fileName);
-		IProject proj = null;
-		try {
-			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
-		} catch (Throwable t) {
-		}
-		if (proj == null) {
-			Logger.log(Logger.ERROR, "Could not launch (Project is null).");
-			return;
-		}
-
-		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
-		if (publish) {
-			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
-				// Return if the publish failed.
-				return;
-			}
-		}
+		// Trigger the session by initiating a debug requset to the debug server
+		runDispatch = new RunDispatchJobWebServer(launch);
+		runDispatch.schedule();
 	}
 
 	/**
