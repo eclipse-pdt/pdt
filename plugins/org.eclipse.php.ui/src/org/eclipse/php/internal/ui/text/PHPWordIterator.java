@@ -12,7 +12,7 @@ package org.eclipse.php.internal.ui.text;
 
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
-import org.eclipse.jface.text.Assert;
+import org.eclipse.core.runtime.Assert;
 
 
 /**

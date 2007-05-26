@@ -179,7 +179,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 		super(site);
 		setText(PHPUIMessages.CopyToClipboardAction_text);
 		setDescription(PHPUIMessages.CopyToClipboardAction_desc);
-		org.eclipse.jface.util.Assert.isNotNull(clipboard);
+		org.eclipse.core.runtime.Assert.isNotNull(clipboard);
 		fClipboard = clipboard;
 		fPasteAction = pasteAction;
 		ISharedImages workbenchImages = getWorkbenchSharedImages();

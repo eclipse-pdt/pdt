@@ -6,7 +6,6 @@ package org.eclipse.php.internal.ui.preferences;
 
 import java.util.StringTokenizer;
 
-import org.eclipse.core.internal.runtime.URLTool;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 
@@ -45,7 +44,11 @@ public class PHPManualConfigSerializer {
 		
 		int idx = url.indexOf(INSTALL_AREA_PROP);
 		if (idx != -1) {
-			url = url.substring(0, idx) + URLTool.removeTrailingSlash(Platform.getInstallLocation().getURL()).toExternalForm() + url.substring(idx + INSTALL_AREA_PROP.length());
+			String platformLocation = Platform.getInstallLocation().getURL().toExternalForm();
+			if (platformLocation.endsWith("/")) {
+				platformLocation = platformLocation.substring(0, platformLocation.length() - 1);
+			}
+			url = url.substring(0, idx) + platformLocation + url.substring(idx + INSTALL_AREA_PROP.length());
 		}
 		
 		return new PHPManualConfig(name, url, extension, false);

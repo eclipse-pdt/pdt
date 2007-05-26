@@ -11,7 +11,7 @@
 package org.eclipse.php.internal.ui.workingset;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.util.Assert;
+import org.eclipse.core.runtime.Assert;
 
 public class ViewAction extends Action {
 

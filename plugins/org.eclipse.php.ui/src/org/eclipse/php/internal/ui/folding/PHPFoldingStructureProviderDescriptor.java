@@ -12,7 +12,7 @@ package org.eclipse.php.internal.ui.folding;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.jface.text.Assert;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 

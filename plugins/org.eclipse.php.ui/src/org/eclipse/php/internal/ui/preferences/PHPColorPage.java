@@ -79,7 +79,7 @@ public class PHPColorPage extends AbstractColorPage {
 		list.add(PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		list.add(PreferenceConstants.EDITOR_TASK_COLOR);
 	}
-
+	
 	protected void setupPicker(StyledTextColorPicker picker) {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		picker.setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());

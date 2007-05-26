@@ -12,7 +12,7 @@ package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.Assert;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;

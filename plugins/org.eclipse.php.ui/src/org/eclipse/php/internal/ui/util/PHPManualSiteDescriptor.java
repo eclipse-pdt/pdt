@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.text.Assert;
+import org.eclipse.core.runtime.Assert;
 
 public class PHPManualSiteDescriptor {
 

@@ -30,7 +30,6 @@ import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.html.internal.validation.HTMLValidator;
-import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
@@ -226,7 +225,7 @@ public class PHPHTMLValidator extends HTMLValidator {
 					}
 					String args[] = new String[] { fileName };
 
-					Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(HTMLUIMessages.MESSAGE_HTML_VALIDATION_MESSAGE_UI_, args));
+					Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind("HTML Syntax : {0}", args));
 					mess.setParams(args);
 					reporter.displaySubtask(this, mess);
 				}

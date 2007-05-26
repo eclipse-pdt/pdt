@@ -1,23 +1,27 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2000, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Max Weninger (max.weninger@windriver.com) - Bug 131895 [Edit] Undo in compare
+ *     Max Weninger (max.weninger@windriver.com) - Bug 72936 [Viewers] Show line numbers in comparision
  *******************************************************************************/
 package org.eclipse.php.internal.ui.compare;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.*;
 
+import org.eclipse.compare.ICompareContainer;
 import org.eclipse.compare.internal.MergeViewerAction;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.source.*;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -28,7 +32,12 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.ui.texteditor.FindReplaceAction;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+
 /**
  * Extends the JFace SourceViewer with some convenience methods.
  * @inspiredby {@link org.eclipse.compare.internal.MergeSourceViewer}
@@ -45,17 +54,25 @@ public class MergeSourceViewer extends StructuredTextViewer
 	public static final String DELETE_ID= "delete"; //$NON-NLS-1$
 	public static final String SELECT_ALL_ID= "selectAll"; //$NON-NLS-1$
 	public static final String SAVE_ID= "save"; //$NON-NLS-1$
+	public static final String FIND_ID= "find"; //$NON-NLS-1$
 
 	class TextOperationAction extends MergeViewerAction {
 		
 		private int fOperationCode;
 		
 		TextOperationAction(int operationCode, boolean mutable, boolean selection, boolean content) {
+			this(operationCode, null, mutable, selection, content);
+
+		}
+		
+		public TextOperationAction(int operationCode, String actionDefinitionId, boolean mutable, boolean selection, boolean content) {
 			super(mutable, selection, content);
+			if (actionDefinitionId != null)
+				setActionDefinitionId(actionDefinitionId);
 			fOperationCode= operationCode;
 			update();
 		}
-		
+
 		public void run() {
 			if (isEnabled())
 				doOperation(fOperationCode);
@@ -77,24 +94,39 @@ public class MergeSourceViewer extends StructuredTextViewer
 	private IDocument fRememberedDocument;
 	
 	private boolean fAddSaveAction= true;
+	private boolean isConfigured = false;
 	
-	public MergeSourceViewer(Composite parent, ResourceBundle bundle) {
-		this(parent, SWT.NONE, bundle);
-	}
-	
-	public MergeSourceViewer(Composite parent, int style, ResourceBundle bundle) {
-		super(parent, null, null, false, style | SWT.H_SCROLL | SWT.V_SCROLL);
+	// line number ruler support
+	private IPropertyChangeListener fPreferenceChangeListener;
+	private boolean fShowLineNumber=false;
+	private LineNumberRulerColumn fLineNumberColumn;
+	private List textActions = new ArrayList();
+
+	public MergeSourceViewer(Composite parent, int style, ResourceBundle bundle, ICompareContainer container) {
+		super(parent, new CompositeRuler(), null, false, style | SWT.H_SCROLL | SWT.V_SCROLL);
 		
 		fResourceBundle= bundle;
 		
 		MenuManager menu= new MenuManager();
 		menu.setRemoveAllWhenShown(true);
 		menu.addMenuListener(this);
-
-		StyledText te = getTextWidget();
+		StyledText te= getTextWidget();
 		te.setMenu(menu.createContextMenu(te));
-	}
+		container.registerContextMenu(menu, this);
 		
+		// for listening to editor show/hide line number preference value
+		fPreferenceChangeListener= new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				MergeSourceViewer.this.handlePropertyChangeEvent(event);
+			}
+		};
+		EditorsUI.getPreferenceStore().addPropertyChangeListener(fPreferenceChangeListener);
+		fShowLineNumber= EditorsUI.getPreferenceStore().getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER);
+		if(fShowLineNumber){
+			updateLineNumberRuler();
+		}
+	}
+	
 	public void rememberDocument(IDocument doc) {
 //		if (doc != null && fRememberedDocument != null) {
 //			System.err.println("MergeSourceViewer.rememberDocument: fRememberedDocument != null: shouldn't happen"); //$NON-NLS-1$
@@ -321,59 +353,71 @@ public class MergeSourceViewer extends StructuredTextViewer
 		fActions.put(actionId, action);
 	}
 	
-	public MergeViewerAction getAction(String actionId) {
-		MergeViewerAction action= (MergeViewerAction) fActions.get(actionId);
+	public IAction getAction(String actionId) {
+		IAction action= (IAction) fActions.get(actionId);
 		if (action == null) {
 			action= createAction(actionId);
 			if (action == null)
 				return null;
-			
-			if (action.isContentDependent())
-				addTextListener(this);
-			if (action.isSelectionDependent())
-				addSelectionChangedListener(this);
+			if (action instanceof MergeViewerAction) {
+				MergeViewerAction mva = (MergeViewerAction) action;
+				if (mva.isContentDependent())
+					addTextListener(this);
+				if (mva.isSelectionDependent())
+					addSelectionChangedListener(this);
 				
-			Utilities.initAction(action, fResourceBundle, "action." + actionId + ".");			 //$NON-NLS-1$ //$NON-NLS-2$
-			fActions.put(actionId, action);
+				Utilities.initAction(action, fResourceBundle, "action." + actionId + ".");			 //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			addAction(actionId, action);
+				
 		}
-		if (action.isEditableDependent() && !isEditable())
-			return null;
+		if (action instanceof MergeViewerAction) {
+			MergeViewerAction mva = (MergeViewerAction) action;
+			if (mva.isEditableDependent() && !isEditable())
+				return null;
+		}
 		return action;
 	}
 	
-	protected MergeViewerAction createAction(String actionId) {
+	protected IAction createAction(String actionId) {
 		if (UNDO_ID.equals(actionId))
-			return new TextOperationAction(UNDO, true, false, true);
+			return new TextOperationAction(UNDO, "org.eclipse.ui.edit.undo", true, false, true); //$NON-NLS-1$
 		if (REDO_ID.equals(actionId))
-			return new TextOperationAction(REDO, true, false, true);
+			return new TextOperationAction(REDO, "org.eclipse.ui.edit.redo", true, false, true); //$NON-NLS-1$
 		if (CUT_ID.equals(actionId))
-			return new TextOperationAction(CUT, true, true, false);
+			return new TextOperationAction(CUT, "org.eclipse.ui.edit.cut", true, true, false); //$NON-NLS-1$
 		if (COPY_ID.equals(actionId))
-			return new TextOperationAction(COPY, false, true, false);
+			return new TextOperationAction(COPY, "org.eclipse.ui.edit.copy", false, true, false); //$NON-NLS-1$
 		if (PASTE_ID.equals(actionId))
-			return new TextOperationAction(PASTE, true, false, false);
+			return new TextOperationAction(PASTE, "org.eclipse.ui.edit.paste", true, false, false); //$NON-NLS-1$
 		if (DELETE_ID.equals(actionId))
-			return new TextOperationAction(DELETE, true, false, false);
+			return new TextOperationAction(DELETE, "org.eclipse.ui.edit.delete", true, false, false); //$NON-NLS-1$
 		if (SELECT_ALL_ID.equals(actionId))
-			return new TextOperationAction(SELECT_ALL, false, false, false);
+			return new TextOperationAction(SELECT_ALL, "org.eclipse.ui.edit.selectAll", false, false, false); //$NON-NLS-1$
 		return null;
 	}
 	
 	public void selectionChanged(SelectionChangedEvent event) {
 		Iterator e= fActions.values().iterator();
 		while (e.hasNext()) {
-			MergeViewerAction action= (MergeViewerAction) e.next();
-			if (action.isSelectionDependent())
-				action.update();
+			Object next = e.next();
+			if (next instanceof MergeViewerAction) {
+				MergeViewerAction action = (MergeViewerAction) next;
+				if (action.isSelectionDependent())
+					action.update();
+			}
 		}
 	}
 					
 	public void textChanged(TextEvent event) {
 		Iterator e= fActions.values().iterator();
 		while (e.hasNext()) {
-			MergeViewerAction action= (MergeViewerAction) e.next();
-			if (action.isContentDependent())
-				action.update();
+			Object next = e.next();
+			if (next instanceof MergeViewerAction) {
+				MergeViewerAction action = (MergeViewerAction) next;
+				if (action.isContentDependent())
+					action.update();
+			}
 		}
 	}
 		
@@ -385,6 +429,10 @@ public class MergeSourceViewer extends StructuredTextViewer
 		menu.add(new Separator("undo")); //$NON-NLS-1$
 		addMenu(menu, UNDO_ID);
 		addMenu(menu, REDO_ID);
+		menu.add(new GroupMarker("save")); //$NON-NLS-1$
+		if (fAddSaveAction)
+			addMenu(menu, SAVE_ID);
+		menu.add(new Separator("file")); //$NON-NLS-1$
 	
 		menu.add(new Separator("ccp")); //$NON-NLS-1$
 		addMenu(menu, CUT_ID);
@@ -395,13 +443,21 @@ public class MergeSourceViewer extends StructuredTextViewer
 
 		menu.add(new Separator("edit")); //$NON-NLS-1$
 		menu.add(new Separator("find")); //$NON-NLS-1$
-		//addMenu(menu, FIND_ID);
+		addMenu(menu, FIND_ID);
 		
-		menu.add(new Separator("save")); //$NON-NLS-1$
-		if (fAddSaveAction)
-			addMenu(menu, SAVE_ID);
+		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		
+		menu.add(new Separator("text")); //$NON-NLS-1$
+		for (Iterator iterator = textActions.iterator(); iterator.hasNext();) {
+			IAction action = (IAction) iterator.next();
+			menu.add(action);
+		}
 		
 		menu.add(new Separator("rest")); //$NON-NLS-1$
+		
+		// update all actions
+		// to get undo redo right
+		updateActions();
 	}
 	
 	private void addMenu(IMenuManager menu, String actionId) {
@@ -414,7 +470,104 @@ public class MergeSourceViewer extends StructuredTextViewer
 		
 		removeTextListener(this);
 		removeSelectionChangedListener(this);
+		EditorsUI.getPreferenceStore().removePropertyChangeListener(fPreferenceChangeListener);
 		
 		super.handleDispose();
+	}
+	
+	/**
+	 * update all actions independent of their type
+	 *
+	 */
+	public void updateActions() {
+		Iterator e= fActions.values().iterator();
+		while (e.hasNext()) {
+			Object next = e.next();
+			if (next instanceof MergeViewerAction) {
+				MergeViewerAction action = (MergeViewerAction) next;
+				action.update();
+			} if (next instanceof FindReplaceAction) {
+				FindReplaceAction action = (FindReplaceAction) next;
+				action.update();
+			}
+		}
+	}
+	
+	public void configure(SourceViewerConfiguration configuration) {
+		if (isConfigured )
+			unconfigure();
+		isConfigured = true;
+		super.configure(configuration);
+	}
+	
+	/**
+	 * specific implementation to support a vertical ruler
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
+	public void setBounds (int x, int y, int width, int height) {
+		if(getControl() instanceof Composite){
+			((Composite)getControl()).setBounds(x, y, width, height);
+		} else {
+			getTextWidget().setBounds(x, y, width, height);			
+		}
+	}
+	
+	/**
+	 * handle show/hide line numbers from editor preferences
+	 * @param event
+	 */
+	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
+		
+		String key= event.getProperty();
+		
+		if(key.equals(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER)){
+			boolean b= EditorsUI.getPreferenceStore().getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER);
+			if (b != fShowLineNumber){
+				toggleLineNumberRuler();	
+			}
+		}
+	}
+
+	/**
+	 * Hides or shows line number ruler column based of preference setting
+	 */
+	private void updateLineNumberRuler() 
+	{
+		IVerticalRuler v= getVerticalRuler();
+		if (v!=null && v instanceof CompositeRuler) {
+			CompositeRuler c= (CompositeRuler) v;
+
+			if(!fShowLineNumber){
+				if(fLineNumberColumn!=null){
+					c.removeDecorator(fLineNumberColumn);
+				}
+			} else {
+				if(fLineNumberColumn==null){
+					fLineNumberColumn = new LineNumberRulerColumn();
+				}
+				c.addDecorator(0, fLineNumberColumn);
+			}
+		}
+	}
+
+	/**
+	 * Toggles line number ruler column.
+	 */
+	private void toggleLineNumberRuler() 
+	{	
+		fShowLineNumber=!fShowLineNumber;
+		
+		updateLineNumberRuler();
+	}
+
+	public void addTextAction(IAction textEditorPropertyAction) {
+		textActions.add(textEditorPropertyAction);
+	}
+
+	public void addAction(String id, IAction action) {
+		fActions.put(id, action);
 	}
 }

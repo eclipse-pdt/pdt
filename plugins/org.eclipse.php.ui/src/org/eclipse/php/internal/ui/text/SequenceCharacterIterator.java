@@ -11,7 +11,7 @@
 package org.eclipse.php.internal.ui.text;
 
 import java.text.CharacterIterator;
-import org.eclipse.jface.text.Assert;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * A <code>CharSequence</code> based implementation of <code>CharacterIterator</code>.

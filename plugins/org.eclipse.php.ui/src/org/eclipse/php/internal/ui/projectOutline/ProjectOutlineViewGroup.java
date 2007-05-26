@@ -13,7 +13,7 @@ package org.eclipse.php.internal.ui.projectOutline;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.util.Assert;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.ui.actions.OpenEditorActionGroup;
 import org.eclipse.php.internal.ui.workingset.ViewActionGroup;
 import org.eclipse.ui.IActionBars;

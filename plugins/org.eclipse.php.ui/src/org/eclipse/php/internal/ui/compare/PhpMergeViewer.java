@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.compare;
 import java.util.ArrayList;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.SourceViewer;

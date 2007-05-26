@@ -13,7 +13,7 @@ package org.eclipse.php.internal.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.text.Assert;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PHPManualConfig;
 import org.eclipse.php.internal.ui.preferences.PHPManualConfigSerializer;

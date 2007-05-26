@@ -1,23 +1,26 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2000, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.php.internal.ui.compare;
 
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.*;
+import org.eclipse.compare.contentmergeviewer.IFlushable;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.internal.*;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
@@ -27,12 +30,9 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ContentViewer;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.*;
@@ -41,16 +41,35 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.IKeyBindingService;
-import org.eclipse.ui.IWorkbenchPartSite;
 
 /**
- * Description: this is exactly the  {@link org.eclipse.compare.contentmergeviewer} 
- * it was overriden since we need the private members  
- * @author Roy, 2007
+ * An abstract compare and merge viewer with two side-by-side content areas
+ * and an optional content area for the ancestor. The implementation makes no
+ * assumptions about the content type.
+ * <p>
+ * <code>ContentMergeViewer</code>
+ * <ul>
+ * <li>implements the overall layout and defines hooks so that subclasses
+ *	can easily provide an implementation for a specific content type,
+ * <li>implements the UI for making the areas resizable,
+ * <li>has an action for controlling whether the ancestor area is visible or not,
+ * <li>has actions for copying one side of the input to the other side,
+ * <li>tracks the dirty state of the left and right sides and send out notification
+ *	on state changes.
+ * </ul>
+ * A <code>ContentMergeViewer</code> accesses its
+ * model by means of a content provider which must implement the
+ * <code>IMergeViewerContentProvider</code> interface.
+ * </p>
+ * <p>
+ * Clients may wish to use the standard concrete subclass <code>TextMergeViewer</code>,
+ * or define their own subclass.
+ * 
+ * @see IMergeViewerContentProvider
+ * @see TextMergeViewer
  */
 public abstract class ContentMergeViewer extends ContentViewer
-					implements IPropertyChangeNotifier, ISavable {
+					implements IPropertyChangeNotifier, IFlushable {
 	
 	class SaveAction extends MergeViewerAction {
 				
@@ -60,14 +79,9 @@ public abstract class ContentMergeViewer extends ContentViewer
 		}
 			
 		public void run() {
-			saveContent(getInput());
+			flush(null);
 		}
-	}
-	
-	/**
-	 * Property names.
-	 */
-	private static final String ANCESTOR_ENABLED= ComparePreferencePage.INITIALLY_SHOW_ANCESTOR_PANE;	
+	}	
 	
 	/* package */ static final int HORIZONTAL= 1;
 	/* package */ static final int VERTICAL= 2;
@@ -88,12 +102,12 @@ public abstract class ContentMergeViewer extends ContentViewer
 			Rectangle r= composite.getClientArea();
 			
 			int centerWidth= getCenterWidth();	
-			int width1= (int)((r.width-centerWidth)*fHSplit);
+			int width1= (int)((r.width-centerWidth)*getHorizontalSplitRatio());
 			int width2= r.width-width1-centerWidth;
 			
 			int height1= 0;
 			int height2= 0;
-			if (fAncestorEnabled && fShowAncestor) {
+			if (fIsThreeWay && fAncestorVisible) {
 				height1= (int)((r.height-(2*headerHeight))*fVSplit);
 				height2= r.height-(2*headerHeight)-height1;
 			} else {
@@ -103,7 +117,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 							
 			int y= 0;
 			
-			if (fAncestorEnabled && fShowAncestor) {
+			if (fIsThreeWay && fAncestorVisible) {
 				fAncestorLabel.setBounds(0, y, r.width, headerHeight);
 				fAncestorLabel.setVisible(true);
 				y+= headerHeight;
@@ -133,6 +147,21 @@ public abstract class ContentMergeViewer extends ContentViewer
 				fCenter.setBounds(width1, y, centerWidth, height2);
 					
 			handleResizeLeftRight(0, y, width1, centerWidth, width2, height2);
+		}
+
+		private double getHorizontalSplitRatio() {
+			if (fHSplit < 0) {
+				Object input = getInput();
+				if (input instanceof ICompareInput) {
+					ICompareInput ci = (ICompareInput) input;
+					if (ci.getLeft() == null)
+						return 0.1;
+					if (ci.getRight() == null)
+						return 0.9;
+				}
+				return HSPLIT;
+			}
+			return fHSplit;
 		}
 	}
 
@@ -164,7 +193,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 				
 		public void mouseDoubleClick(MouseEvent e) {
 			if ((fDirection & HORIZONTAL) != 0)
-				fHSplit= HSPLIT;
+				fHSplit= -1;
 			if ((fDirection & VERTICAL) != 0)
 				fVSplit= VSPLIT;
 			fComposite.layout(true);
@@ -226,18 +255,17 @@ public abstract class ContentMergeViewer extends ContentViewer
 	/** Style bits for top level composite */
 	private int fStyles;
 	private ResourceBundle fBundle;
-	private CompareConfiguration fCompareConfiguration;
+	private final CompareConfiguration fCompareConfiguration;
 	private IPropertyChangeListener fPropertyChangeListener;
 	private ICompareInputChangeListener fCompareInputChangeListener;
 	private ListenerList fListenerList;
 	boolean fConfirmSave= true;
 	
-	private double fHSplit= HSPLIT;		// width ratio of left and right panes
+	private double fHSplit= -1;		// width ratio of left and right panes
 	private double fVSplit= VSPLIT;		// height ratio of ancestor and bottom panes
 	
-	private boolean fAncestorEnabled= true;	// show ancestor in case of conflicts
-	/* package */ boolean fShowAncestor= false;	// if current input has conflicts
-	private boolean fIsThreeWay= false;
+	private boolean fIsThreeWay;		// whether their is an ancestor
+	private boolean fAncestorVisible;	// whether the ancestor pane is visible
 	private ActionContributionItem fAncestorItem;
 	
 	private Action fCopyLeftToRightAction;	// copy from left to right
@@ -246,7 +274,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 	MergeViewerAction fLeftSaveAction;
 	MergeViewerAction fRightSaveAction;
 	
-	private IKeyBindingService fKeyBindingService;
+	private CompareHandlerService fHandlerService;
 
 	// SWT widgets
 	/* package */ Composite fComposite;
@@ -265,6 +293,17 @@ public abstract class ContentMergeViewer extends ContentViewer
 	private Cursor fVSashCursor;
 	private Cursor fHVSashCursor;
 
+	private ILabelProviderListener labelChangeListener = new ILabelProviderListener() {
+		public void labelProviderChanged(LabelProviderChangedEvent event) {
+			Object[] elements = event.getElements();
+			for (int i = 0; i < elements.length; i++) {
+				Object object = elements[i];
+				if (object == getInput())
+					updateHeader();
+			}
+		}
+	};
+
 	//---- end
 	
 	/**
@@ -280,31 +319,36 @@ public abstract class ContentMergeViewer extends ContentViewer
 		fStyles= style & ~(SWT.LEFT_TO_RIGHT | SWT.RIGHT_TO_LEFT);	// remove BIDI direction bits
 		fBundle= bundle;
 		
-		fAncestorEnabled= Utilities.getBoolean(cc, ANCESTOR_ENABLED, fAncestorEnabled);
+		fAncestorVisible= Utilities.getBoolean(cc, ICompareUIConstants.PROP_ANCESTOR_VISIBLE, fAncestorVisible);
 		fConfirmSave= Utilities.getBoolean(cc, CompareEditor.CONFIRM_SAVE_PROPERTY, fConfirmSave);
 
 		setContentProvider(new MergeViewerContentProvider(cc));
 		
 		fCompareInputChangeListener= new ICompareInputChangeListener() {
 			public void compareInputChanged(ICompareInput input) {
-				ContentMergeViewer.this.internalRefresh(input);
+				if (input == getInput()) {
+					handleCompareInputChange();
+				}
 			}
 		};
 		
-		fCompareConfiguration= cc;
-		if (fCompareConfiguration != null) {
-			fPropertyChangeListener= new IPropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent event) {
-					ContentMergeViewer.this.propertyChange(event);
-				}
-			};
-			fCompareConfiguration.addPropertyChangeListener(fPropertyChangeListener);
-		}
+		// Make sure the compare configuration is not null
+		if (cc == null)
+			fCompareConfiguration = new CompareConfiguration();
+		else
+			fCompareConfiguration= cc;
+		fPropertyChangeListener= new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				ContentMergeViewer.this.handlePropertyChangeEvent(event);
+			}
+		};
+		fCompareConfiguration.addPropertyChangeListener(fPropertyChangeListener);
 			
 		fLeftSaveAction= new SaveAction(true);
 		fLeftSaveAction.setEnabled(false);
 		fRightSaveAction= new SaveAction(false);
 		fRightSaveAction.setEnabled(false);
+		
 	}
 	
 	//---- hooks ---------------------
@@ -446,26 +490,38 @@ public abstract class ContentMergeViewer extends ContentViewer
 		};
 	}
 	
-	/*
+	/**
 	 * The <code>ContentMergeViewer</code> implementation of this 
 	 * <code>Viewer</code> method does nothing. Subclasses may reimplement.
+	 * @see org.eclipse.jface.viewers.Viewer#setSelection(org.eclipse.jface.viewers.ISelection, boolean)
 	 */
 	public void setSelection(ISelection selection, boolean reveal) {
 		// empty implementation
 	}
 
-	/* package */ void propertyChange(PropertyChangeEvent event) {
+	/**
+	 * Callback that is invoked when a property in the compare configuration 
+	 * ({@link #getCompareConfiguration()} changes.
+	 * @param event the property change event
+	 * @since 3.3
+	 */
+	protected void handlePropertyChangeEvent(PropertyChangeEvent event) {
 		
 		String key= event.getProperty();
 
-		if (key.equals(ANCESTOR_ENABLED)) {
-			fAncestorEnabled= Utilities.getBoolean(getCompareConfiguration(), ANCESTOR_ENABLED, fAncestorEnabled);
+		if (key.equals(ICompareUIConstants.PROP_ANCESTOR_VISIBLE)) {
+			fAncestorVisible= Utilities.getBoolean(getCompareConfiguration(), ICompareUIConstants.PROP_ANCESTOR_VISIBLE, fAncestorVisible);
 			fComposite.layout(true);
 			
 			updateCursor(fLeftLabel, VERTICAL);
 			updateCursor(fDirectionLabel, HORIZONTAL | VERTICAL);
 			updateCursor(fRightLabel, VERTICAL);
 			
+			return;
+		}
+		
+		if (key.equals(ICompareUIConstants.PROP_IGNORE_ANCESTOR)) {
+			setAncestorVisibility(false, !Utilities.getBoolean(getCompareConfiguration(), ICompareUIConstants.PROP_IGNORE_ANCESTOR, false));
 			return;
 		}
 	}
@@ -475,7 +531,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 			Cursor cursor= null;
 			switch (dir) {
 			case VERTICAL:
-				if (fAncestorEnabled) {
+				if (fAncestorVisible) {
 					if (fVSashCursor == null) fVSashCursor= new Cursor(c.getDisplay(), SWT.CURSOR_SIZENS);
 					cursor= fVSashCursor;
 				} else {
@@ -488,7 +544,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 				cursor= fHSashCursor;
 				break;
 			case VERTICAL + HORIZONTAL:
-				if (fAncestorEnabled) {
+				if (fAncestorVisible) {
 					if (fHVSashCursor == null) fHVSashCursor= new Cursor(c.getDisplay(), SWT.CURSOR_SIZEALL);
 					cursor= fHVSashCursor;
 				} else {
@@ -502,7 +558,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 		}
 	}
 
-	void setAncestorVisibility(boolean visible, boolean enabled) {
+	private void setAncestorVisibility(boolean visible, boolean enabled) {
 		if (fAncestorItem != null) {
 			Action action= (Action) fAncestorItem.getAction();
 			if (action != null) {
@@ -510,13 +566,17 @@ public abstract class ContentMergeViewer extends ContentViewer
 				action.setEnabled(enabled);
 			}
 		}
-		if (fCompareConfiguration != null)
-			fCompareConfiguration.setProperty(ANCESTOR_ENABLED, new Boolean(visible));
+		getCompareConfiguration().setProperty(ICompareUIConstants.PROP_ANCESTOR_VISIBLE, new Boolean(visible));
 	}
 
 	//---- input
-			 
-	/* package */ boolean isThreeWay() {
+	
+	/**
+	 * Return whether the input is a three-way comparison.
+	 * @return whether the input is a three-way comparison
+	 * @since 3.3
+	 */
+	protected boolean isThreeWay() {
 		return fIsThreeWay;
 	}
 	
@@ -533,15 +593,29 @@ public abstract class ContentMergeViewer extends ContentViewer
 	 */
 	protected final void inputChanged(Object input, Object oldInput) {
 		
-		if (input != oldInput)
-			if (oldInput instanceof ICompareInput)
-				((ICompareInput)oldInput).removeCompareInputChangeListener(fCompareInputChangeListener);
+		if (input != oldInput && oldInput != null) {
+			ICompareInputLabelProvider lp = getCompareConfiguration().getLabelProvider();
+			if (lp != null)
+				lp.removeListener(labelChangeListener);
+		}
+		
+		if (input != oldInput && oldInput instanceof ICompareInput) {
+			ICompareContainer container = getCompareConfiguration().getContainer();
+			container.removeCompareInputChangeListener((ICompareInput)oldInput, fCompareInputChangeListener);
+		}
 		
 		boolean success= doSave(input, oldInput);
 		
-		if (input != oldInput)
-			if (input instanceof ICompareInput)
-				((ICompareInput)input).addCompareInputChangeListener(fCompareInputChangeListener);
+		if (input != oldInput && input instanceof ICompareInput) {
+			ICompareContainer container = getCompareConfiguration().getContainer();
+			container.addCompareInputChangeListener((ICompareInput)input, fCompareInputChangeListener);
+		}
+		
+		if (input != oldInput && input != null) {
+			ICompareInputLabelProvider lp = getCompareConfiguration().getLabelProvider();
+			if (lp != null)
+				lp.addListener(labelChangeListener);
+		}
 		
 		if (success) {
 			setLeftDirty(false);
@@ -570,10 +644,15 @@ public abstract class ContentMergeViewer extends ContentViewer
 	protected boolean doSave(Object newInput, Object oldInput) {
 		
 		// before setting the new input we have to save the old
-		if (fLeftSaveAction.isEnabled() || fRightSaveAction.isEnabled()) {
+		if (isLeftDirty() || isRightDirty()) {
 			
-			// post alert
-			if (fConfirmSave) {
+			
+			if (Utilities.RUNNING_TESTS) {
+				if (Utilities.TESTING_FLUSH_ON_COMPARE_INPUT_CHANGE) {
+					flushContent(oldInput, null);
+				}
+			} else if (fConfirmSave) {
+				// post alert
 				Shell shell= fComposite.getShell();
 				
 				MessageDialog dialog= new MessageDialog(shell,
@@ -589,7 +668,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 									
 				switch (dialog.open()) {	// open returns index of pressed button
 				case 0:
-					saveContent(oldInput);
+					flushContent(oldInput, null);
 					break;
 				case 1:
 					setLeftDirty(false);
@@ -599,7 +678,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 					throw new ViewerSwitchingCancelled();
 				}
 			} else
-				saveContent(oldInput);
+				flushContent(oldInput, null);
 			return true;
 		}
 		return false;
@@ -615,8 +694,8 @@ public abstract class ContentMergeViewer extends ContentViewer
 		fConfirmSave= enable;
 	}
 	
-	/* (non Javadoc)
-	 * see Viewer.refresh
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.Viewer#refresh()
 	 */
 	public void refresh() {
 		internalRefresh(getInput());
@@ -627,32 +706,33 @@ public abstract class ContentMergeViewer extends ContentViewer
 		IMergeViewerContentProvider content= getMergeContentProvider();
 		if (content != null) {
 			Object ancestor= content.getAncestorContent(input);
-			if (input instanceof ICompareInput)	
+			boolean oldFlag = fIsThreeWay;
+			if (Utilities.isHunk(input)) {
+				fIsThreeWay = true;
+			} else if (input instanceof ICompareInput)	
 				fIsThreeWay= (((ICompareInput)input).getKind() & Differencer.DIRECTION_MASK) != 0;
 			else
 				fIsThreeWay= ancestor != null;
 				
 			if (fAncestorItem != null)
 				fAncestorItem.setVisible(fIsThreeWay);
-				
-			boolean oldFlag= fShowAncestor;
-			fShowAncestor= fIsThreeWay && content.showAncestor(input);
 			
-			if (fAncestorEnabled && oldFlag != fShowAncestor)
+			if (fAncestorVisible && oldFlag != fIsThreeWay)
 				fComposite.layout(true);
 			
+									
+			Object left= content.getLeftContent(input);
+			Object right= content.getRightContent(input);
+			updateContent(ancestor, left, right);
+			
+			updateHeader();
 			ToolBarManager tbm= CompareViewerPane.getToolBarManager(fComposite.getParent());
-			if (tbm != null) {
+			if (tbm != null ) {
 				updateToolItems();
 				tbm.update(true);
 				tbm.getControl().getParent().layout(true);
 			}
 			
-			updateHeader();
-									
-			Object left= content.getLeftContent(input);
-			Object right= content.getRightContent(input);
-			updateContent(ancestor, left, right);
 		}
 	}
 	
@@ -674,7 +754,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 											
 		fComposite= new Composite(parent, fStyles | SWT.LEFT_TO_RIGHT) { // we force a specific direction
 			public boolean setFocus() {
-				return internalSetFocus();
+				return ContentMergeViewer.this.handleSetFocus();
 			}
 		};
 		fComposite.setData(CompareUI.COMPARE_VIEWER_TITLE, getTitle());
@@ -697,13 +777,18 @@ public abstract class ContentMergeViewer extends ContentViewer
 		new Resizer(fRightLabel, VERTICAL);
 		
 		if (fCenter == null || fCenter.isDisposed())
-			fCenter= createCenter(fComposite);
+			fCenter= createCenterControl(fComposite);
 				
 		createControls(fComposite);
 		
-		IWorkbenchPartSite ps= Utilities.findSite(fComposite);
-		fKeyBindingService= ps != null ? ps.getKeyBindingService() : null;
+		fHandlerService= CompareHandlerService.createFor(getCompareConfiguration().getContainer(), fComposite.getShell());
 						
+		initializeToolbars(parent);
+	
+		return fComposite;
+	}
+
+	private void initializeToolbars(Composite parent) {
 		ToolBarManager tbm= CompareViewerPane.getToolBarManager(parent);
 		if (tbm != null) {
 			tbm.removeAll();
@@ -724,7 +809,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 					};
 				Utilities.initAction(fCopyLeftToRightAction, getResourceBundle(), "action.CopyLeftToRight."); //$NON-NLS-1$
 				tbm.appendToGroup("merge", fCopyLeftToRightAction); //$NON-NLS-1$
-				Utilities.registerAction(fKeyBindingService, fCopyLeftToRightAction, "org.eclipse.compare.copyAllLeftToRight");	//$NON-NLS-1$
+				fHandlerService.registerAction(fCopyLeftToRightAction, "org.eclipse.compare.copyAllLeftToRight"); //$NON-NLS-1$
 			}
 			
 			if (cc.isLeftEditable()) {
@@ -736,73 +821,108 @@ public abstract class ContentMergeViewer extends ContentViewer
 					};
 				Utilities.initAction(fCopyRightToLeftAction, getResourceBundle(), "action.CopyRightToLeft."); //$NON-NLS-1$
 				tbm.appendToGroup("merge", fCopyRightToLeftAction); //$NON-NLS-1$
-				Utilities.registerAction(fKeyBindingService, fCopyRightToLeftAction, "org.eclipse.compare.copyAllRightToLeft");	//$NON-NLS-1$
+				fHandlerService.registerAction(fCopyRightToLeftAction, "org.eclipse.compare.copyAllRightToLeft"); //$NON-NLS-1$
 			}
 			
-			Action a= new ChangePropertyAction(fBundle, fCompareConfiguration, "action.EnableAncestor.", ANCESTOR_ENABLED); //$NON-NLS-1$
-			a.setChecked(fAncestorEnabled);
+			final ChangePropertyAction a= new ChangePropertyAction(fBundle, getCompareConfiguration(), "action.EnableAncestor.", ICompareUIConstants.PROP_ANCESTOR_VISIBLE); //$NON-NLS-1$
+			a.setChecked(fAncestorVisible);
 			fAncestorItem= new ActionContributionItem(a);
 			fAncestorItem.setVisible(false);
 			tbm.appendToGroup("modes", fAncestorItem); //$NON-NLS-1$
+			tbm.getControl().addDisposeListener(a);
 			
 			createToolItems(tbm);
 			updateToolItems();
 			
 			tbm.update(true);
 		}
-	
-		return fComposite;
 	}
 	
-	/* package */ boolean internalSetFocus() {
+	/**
+	 * Callback that is invoked when the control of this merge viewer is given focus.
+	 * This method should return <code>true</code> if a particular widget was given focus
+	 * and false otherwise. By default, <code>false</code> is returned. Subclasses may override.
+	 * @return whether  particular widget was given focus
+	 * @since 3.3
+	 */
+	protected boolean handleSetFocus() {
 		return false;
 	}
 	
-	/* package */ int getCenterWidth() {
+	/**
+	 * Return the desired width of the center control. This width is used
+	 * to calculate the values used to layout the ancestor, left and right sides.
+	 * @return the desired width of the center control
+	 * @see #handleResizeLeftRight(int, int, int, int, int, int)
+	 * @see #handleResizeAncestor(int, int, int, int)
+	 * @since 3.3
+	 */
+	protected int getCenterWidth() {
 		return 3;
 	}
 	
-	/* package */ boolean getAncestorEnabled() {
-		return fAncestorEnabled;
+	/**
+	 * Return whether the ancestor pane is visible or not.
+	 * @return whether the ancestor pane is visible or not
+	 * @since 3.3
+	 */
+	protected boolean isAncestorVisible() {
+		return fAncestorVisible;
 	}
 	
-	/* package */ Control createCenter(Composite parent) {
+	/**
+	 * Create the control that divides the left and right sides of the merge viewer.
+	 * @param parent the parent composite
+	 * @return the center control
+	 * @since 3.3
+	 */
+	protected Control createCenterControl(Composite parent) {
 		Sash sash= new Sash(parent, SWT.VERTICAL);
 		new Resizer(sash, HORIZONTAL);
 		return sash;
 	}
 	
-	/* package */ Control getCenter() {
+	/**
+	 * Return the center control that divides the left and right sides of the merge viewer.
+	 * This method returns the control that was created by calling {@link #createCenterControl(Composite)}.
+	 * @see #createCenterControl(Composite)
+	 * @return the center control
+	 * @since 3.3
+	 */
+	protected Control getCenterControl() {
 		return fCenter;
 	}
 		
-	/* 
-	 * @see Viewer.getControl()
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.Viewer#getControl()
 	 */
 	public Control getControl() {
 		return fComposite;
 	}
 	
-	/*
+	/**
 	 * Called on the viewer disposal.
 	 * Unregisters from the compare configuration.
 	 * Clients may extend if they have to do additional cleanup.
+	 * @see org.eclipse.jface.viewers.ContentViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
 	 */
 	protected void handleDispose(DisposeEvent event) {
 		
-		if (fKeyBindingService != null) {
-			if (fCopyLeftToRightAction != null)
-				fKeyBindingService.unregisterAction(fCopyLeftToRightAction);
-			if (fCopyRightToLeftAction != null)
-				fKeyBindingService.unregisterAction(fCopyRightToLeftAction);
-			fKeyBindingService= null;
-		}
+		if (fHandlerService != null)
+			fHandlerService.dispose();
 		
 		Object input= getInput();	
-		if (input instanceof ICompareInput)
-			((ICompareInput)input).removeCompareInputChangeListener(fCompareInputChangeListener);
+		if (input instanceof ICompareInput) {
+			ICompareContainer container = getCompareConfiguration().getContainer();
+			container.removeCompareInputChangeListener((ICompareInput)input, fCompareInputChangeListener);
+		}
+		if (input != null) {
+			ICompareInputLabelProvider lp = getCompareConfiguration().getLabelProvider();
+			if (lp != null)
+				lp.removeListener(labelChangeListener);
+		}
 		
-		if (fCompareConfiguration != null && fPropertyChangeListener != null) {
+		if (fPropertyChangeListener != null) {
 			fCompareConfiguration.removePropertyChangeListener(fPropertyChangeListener);
 			fPropertyChangeListener= null;
 		}
@@ -894,26 +1014,32 @@ public abstract class ContentMergeViewer extends ContentViewer
 		IMergeViewerContentProvider content= getMergeContentProvider();
 		Object input= getInput();
 
+		// Only change a label if there is a new label available
 		if (fAncestorLabel != null) {
-			fAncestorLabel.setImage(content.getAncestorImage(input));
-			fAncestorLabel.setText(content.getAncestorLabel(input));
+			Image ancestorImage = content.getAncestorImage(input);
+			if (ancestorImage != null)
+				fAncestorLabel.setImage(ancestorImage);
+			String ancestorLabel = content.getAncestorLabel(input);
+			if (ancestorLabel != null)
+				fAncestorLabel.setText(ancestorLabel);
 		}
 		if (fLeftLabel != null) {
-			fLeftLabel.setImage(content.getLeftImage(input));
-			fLeftLabel.setText(content.getLeftLabel(input));
+			Image leftImage = content.getLeftImage(input);
+			if (leftImage != null)
+				fLeftLabel.setImage(leftImage);
+			String leftLabel = content.getLeftLabel(input);
+			if (leftLabel != null)
+				fLeftLabel.setText(leftLabel);
 		}
 		if (fRightLabel != null) {
-			fRightLabel.setImage(content.getRightImage(input));
-			fRightLabel.setText(content.getRightLabel(input));
+			Image rightImage = content.getRightImage(input);
+			if (rightImage != null)
+				fRightLabel.setImage(rightImage);
+			String rightLabel = content.getRightLabel(input);
+			if (rightLabel != null)
+				fRightLabel.setText(rightLabel);
 		}
 	}
-	
-//	private Image loadImage(String name) {
-//		ImageDescriptor id= ImageDescriptor.createFromFile(ContentMergeViewer.class, name);
-//		if (id != null)
-//			return id.createImage();
-//		return null;
-//	}
 		
 	/*
 	 * Calculates the height of the header.
@@ -923,22 +1049,11 @@ public abstract class ContentMergeViewer extends ContentViewer
 		headerHeight= Math.max(headerHeight, fDirectionLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).y);		
 		return headerHeight;
 	}
-
-	//---- merge direction
-	
-	/*
-	 * Returns true if both sides are editable.
-	 */
-	/* package */ boolean canToggleMergeDirection() {
-		IMergeViewerContentProvider content= getMergeContentProvider();
-		Object input= getInput();
-		return content.isLeftEditable(input) && content.isRightEditable(input);
-	}
 	
 	//---- dirty state & saving state
 	
-	/* (non Javadoc)
-	 * see IPropertyChangeNotifier.addPropertyChangeListener
+	/* (non-Javadoc)
+	 * @see org.eclipse.compare.IPropertyChangeNotifier#addPropertyChangeListener(org.eclipse.jface.util.IPropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
 		if (fListenerList == null)
@@ -946,8 +1061,8 @@ public abstract class ContentMergeViewer extends ContentViewer
 		fListenerList.add(listener);
 	}
 	
-	/* (non Javadoc)
-	 * see IPropertyChangeNotifier.removePropertyChangeListener
+	/* (non-Javadoc)
+	 * @see org.eclipse.compare.IPropertyChangeNotifier#removePropertyChangeListener(org.eclipse.jface.util.IPropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(IPropertyChangeListener listener) {
 		if (fListenerList != null) {
@@ -957,7 +1072,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 		}
 	}
 	
-	/* package */ void fireDirtyState(boolean state) {
+	private void fireDirtyState(boolean state) {
 		Utilities.firePropertyChange(fListenerList, this, CompareEditorInput.DIRTY_STATE, null, new Boolean(state));
 	}
 	
@@ -971,9 +1086,11 @@ public abstract class ContentMergeViewer extends ContentViewer
 	 * @param dirty the state of the left side dirty flag
 	 */
 	protected void setLeftDirty(boolean dirty) {
-		if (fLeftSaveAction.isEnabled() != dirty) {
+		if (isLeftDirty() != dirty) {
 			fLeftSaveAction.setEnabled(dirty);
-			fireDirtyState(dirty);
+			// Only fire the event if the combined dirty state has changed
+			if ((!isRightDirty() && !isLeftDirty()) || (!isRightDirty() && isLeftDirty()))
+				fireDirtyState(dirty);
 		}
 	}
 	
@@ -987,46 +1104,133 @@ public abstract class ContentMergeViewer extends ContentViewer
 	 * @param dirty the state of the right side dirty flag
 	 */
 	protected void setRightDirty(boolean dirty) {
-		if (fRightSaveAction.isEnabled() != dirty) {
+		if (isRightDirty() != dirty) {
 			fRightSaveAction.setEnabled(dirty);
-			fireDirtyState(dirty);
+			// Only fire the event if the combined dirty state has changed
+			if ((!isRightDirty() && !isLeftDirty()) || (isRightDirty() && !isLeftDirty()))
+				fireDirtyState(dirty);
 		}
 	}
 	
-	/*
+	/**
+	 * Method from the old internal <code>ISavable</code> interface
 	 * Save the viewers's content.
 	 * Note: this method is for internal use only. Clients should not call this method. 
-	 * @since 2.0
+	 * @param monitor a progress monitor
+	 * @throws CoreException 
+	 * @deprecated use {@link IFlushable#flush(IProgressMonitor)}.
 	 */
-	public void save(IProgressMonitor pm) throws CoreException {
-		saveContent(getInput());
+	public void save(IProgressMonitor monitor) throws CoreException {
+		flush(monitor);
 	}
 	
-	/*
-	 * Save modified content back to input elements via the content provider.
+	/**
+	 * Flush any modifications made in the viewer into the compare input. This method
+	 * calls {@link #flushContent(Object, IProgressMonitor)} with the compare input
+	 * of the viewer as the first parameter.
+	 * @param monitor a progress monitor
+	 * @see org.eclipse.compare.contentmergeviewer.IFlushable#flush(org.eclipse.core.runtime.IProgressMonitor)
+	 * @since 3.3
 	 */
-	/* package */ void saveContent(Object oldInput) {
+	public final void flush(IProgressMonitor monitor) {
+		flushContent(getInput(), monitor);
+	}
+	
+	/**
+	 * Flush the modified content back to input elements via the content provider.
+	 * The provided input may be the current input of the viewer or it may be
+	 * the previous input (i.e. this method may be called to flush modified content
+	 * during an input change).
+	 * @param input the compare input
+	 * @param monitor a progress monitor or <code>null</code> if the method
+	 * was call from a place where a progress monitor was not available.
+	 * @since 3.3
+	 */
+	protected void flushContent(Object input, IProgressMonitor monitor) {
 				
 		// write back modified contents
 		IMergeViewerContentProvider content= (IMergeViewerContentProvider) getContentProvider();
 		
-		boolean leftEmpty= content.getLeftContent(oldInput) == null;
-		boolean rightEmpty= content.getRightContent(oldInput) == null;
+		boolean leftEmpty= content.getLeftContent(input) == null;
+		boolean rightEmpty= content.getRightContent(input) == null;
 
-		if (fCompareConfiguration.isLeftEditable() && fLeftSaveAction.isEnabled()) {
+		if (getCompareConfiguration().isLeftEditable() && isLeftDirty()) {
 			byte[] bytes= getContents(true);
-			if (leftEmpty && bytes != null && bytes.length == 0)
-				bytes= null;
-			setLeftDirty(false);
-			content.saveLeftContent(oldInput, bytes);
-		}
-		
-		if (fCompareConfiguration.isRightEditable() && fRightSaveAction.isEnabled()) {
-			byte[] bytes= getContents(false);
 			if (rightEmpty && bytes != null && bytes.length == 0)
 				bytes= null;
-			setRightDirty(false);
-			content.saveRightContent(oldInput, bytes);
+			setLeftDirty(false);
+			content.saveLeftContent(input, bytes);
 		}
+		
+		if (getCompareConfiguration().isRightEditable() && isRightDirty()) {
+			byte[] bytes= getContents(false);
+			if (leftEmpty && bytes != null && bytes.length == 0)
+				bytes= null;
+			setRightDirty(false);
+			content.saveRightContent(input, bytes);
+		}
+	}
+
+	/**
+	 * Return the dirty state of the right side of this viewer.
+	 * @return the dirty state of the right side of this viewer
+	 * @since 3.3
+	 */
+	protected boolean isRightDirty() {
+		return fRightSaveAction.isEnabled();
+	}
+
+	/**
+	 * Return the dirty state of the left side of this viewer.
+	 * @return the dirty state of the left side of this viewer
+	 * @since 3.3
+	 */
+	protected boolean isLeftDirty() {
+		return fLeftSaveAction.isEnabled();
+	}
+
+	/**
+	 * Handle a change to the given input reported from an {@link org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener}.
+	 * This class registers a listener with its input and reports any change events through
+	 * this method. By default, this method prompts for any unsaved changes and then refreshes 
+	 * the viewer. Subclasses may override.
+	 * @since 3.3
+	 */
+	protected void handleCompareInputChange() {
+		// before setting the new input we have to save the old
+		Object input = getInput();
+		if (isLeftDirty() || isRightDirty()) {
+			
+			if (Utilities.RUNNING_TESTS) {
+				if (Utilities.TESTING_FLUSH_ON_COMPARE_INPUT_CHANGE) {
+					flushContent(input, null);
+				}
+			} else {
+				// post alert
+				Shell shell= fComposite.getShell();
+				
+				MessageDialog dialog= new MessageDialog(shell,
+					CompareMessages.ContentMergeViewer_resource_changed_title,
+					null, 	// accept the default window icon
+					CompareMessages.ContentMergeViewer_resource_changed_description,
+					MessageDialog.QUESTION,
+					new String[] {
+						IDialogConstants.YES_LABEL, // 0
+						IDialogConstants.NO_LABEL, // 1
+					},
+					0);		// default button index
+									
+				switch (dialog.open()) {	// open returns index of pressed button
+				case 0:
+					flushContent(input, null);
+					break;
+				case 1:
+					setLeftDirty(false);
+					setRightDirty(false);
+					break;
+				}
+			}
+		}
+		refresh();
 	}
 }

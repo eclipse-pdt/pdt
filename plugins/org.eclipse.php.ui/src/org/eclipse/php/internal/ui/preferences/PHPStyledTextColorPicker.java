@@ -1,23 +1,29 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.io.CharArrayReader;
+import java.text.Collator;
+import java.util.*;
+import java.util.List;
 
+import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
@@ -25,35 +31,174 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.util.PHPColorHelper;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.*;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.ColorDialog;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.sse.core.internal.document.DocumentReader;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.StyledTextColorPicker;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.w3c.dom.Node;
 
+/**
+ * This class is configurable by setting 3 properties: 1) an array of Strings
+ * as the styleNames; one unique entry for every style type meant to be
+ * configurable by the user 2) a Dictionary of descriptions, mapping the
+ * styleNames to unique descriptions - meant for use within the selection
+ * ComboBox TODO (pa) this should probably be working off document partitions
+ * now (2.1+) 3) a Dictionary mapping parsed ITextRegion contexts (strings) to
+ * the locally defined styleNames
+ *  
+ */
 public class PHPStyledTextColorPicker extends StyledTextColorPicker {
+	protected class DescriptionSorter extends org.eclipse.wst.sse.ui.internal.util.Sorter {
+		Collator collator = Collator.getInstance();
 
-	protected IStructuredDocumentRegion fNodes = null;
-	protected IPreferenceStore fPreferenceStore;
-	protected Button fUnderline;
-	protected SelectionListener buttonListener;
-	protected LineStyleProviderForPhp fStyleProvider;
-
-	public PHPStyledTextColorPicker(Composite parent, int style) {
-		super(parent, style);
+		public boolean compare(Object elementOne, Object elementTwo) {
+			/**
+			 * Returns true if elementTwo is 'greater than' elementOne This is
+			 * the 'ordering' method of the sort operation. Each subclass
+			 * overides this method with the particular implementation of the
+			 * 'greater than' concept for the objects being sorted.
+			 */
+			return (collator.compare(elementOne.toString(), elementTwo.toString())) < 0;
+		}
 	}
 
+	public static final String BACKGROUND = "background"; //$NON-NLS-1$
+	public static final String BOLD = "bold"; //$NON-NLS-1$
+	public static final String COLOR = "color"; //$NON-NLS-1$
+
+	// names for preference elements ... non-NLS
+	public static final String FOREGROUND = "foreground"; //$NON-NLS-1$
+	public static final String ITALIC = "italic"; //$NON-NLS-1$
+	public static final String NAME = "name"; //$NON-NLS-1$
+
+	protected static final boolean showItalic = true;
+	protected AccessibleControlListener backgroundAccListener = new AccessibleControlAdapter() {
+		/**
+		 * @see org.eclipse.swt.accessibility.AccessibleControlAdapter#getValue(AccessibleControlEvent)
+		 */
+		public void getValue(AccessibleControlEvent e) {
+			if (e.childID == ACC.CHILDID_SELF) {
+				e.result = fBackground.getColorValue().toString();
+			}
+		}
+	};
+	protected SelectionListener buttonListener = new SelectionListener() {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+			widgetSelected(e);
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			String namedStyle = getStyleName(fStyleCombo.getItem(fStyleCombo.getSelectionIndex()));
+			if (namedStyle == null)
+				return;
+			if (e.widget == fBold) {
+				// get current (newly old) style
+				String prefString = getPreferenceStore().getString(namedStyle);
+				String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
+				if (stylePrefs != null) {
+					String oldValue = stylePrefs[2];
+					String newValue = String.valueOf(fBold.getSelection());
+					if (!newValue.equals(oldValue)) {
+						stylePrefs[2] = newValue;
+						String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
+						getPreferenceStore().setValue(namedStyle, newPrefString);
+						refresh();
+					}
+				}
+			} else if (showItalic && e.widget == fItalic) {
+				// get current (newly old) style
+				String prefString = getPreferenceStore().getString(namedStyle);
+				String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
+				if (stylePrefs != null) {
+					String oldValue = stylePrefs[3];
+					String newValue = String.valueOf(fItalic.getSelection());
+					if (!newValue.equals(oldValue)) {
+						stylePrefs[3] = newValue;
+						String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
+						getPreferenceStore().setValue(namedStyle, newPrefString);
+						refresh();
+					}
+				}
+			} else if (e.widget == fUnderline) {
+				String prefString = getPreferenceStore().getString(namedStyle);
+				String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
+				if (stylePrefs != null) {
+					String oldValue = stylePrefs[4];
+					String newValue = String.valueOf(fUnderline.getSelection());
+					if (!newValue.equals(oldValue)) {
+						stylePrefs[4] = newValue;
+						String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
+						getPreferenceStore().setValue(namedStyle, newPrefString);
+						refresh();
+					}
+				}
+			} else if (e.widget == fClearStyle) {
+				getPreferenceStore().setToDefault(namedStyle);
+				refresh();
+			}
+		}
+	};
+
+	protected SelectionListener comboListener = new SelectionListener() {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+			widgetSelected(e);
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			int selectedIndex = fStyleCombo.getSelectionIndex();
+			String description = selectedIndex >= 0 ? fStyleCombo.getItem(selectedIndex) : null;
+			activate(getStyleName(description));
+		}
+	};
+	protected ColorSelector fBackground;
+	protected Label fBackgroundLabel;
+	protected Button fBold;
+	protected Button fClearStyle;
+	// Dictionary mapping the ITextRegion types above to color names, which
+	// are, in turn, attributes
+	protected Dictionary fContextStyleMap = null;
+	protected Color fDefaultBackground = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+
+	protected Color fDefaultForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+	// Dictionary mapping the ITextRegion types above to display strings, for
+	// use in the combo box
+	protected Dictionary fDescriptions = null;
+	protected ColorSelector fForeground;
+	protected Label fForegroundLabel;
+//	private String fGeneratorKey;
+	protected String fInput = ""; //$NON-NLS-1$
+	protected Button fItalic;
+	protected Button fUnderline;
+
+	private IStructuredDocumentRegion fNodes = null;
+
+	private IPreferenceStore fPreferenceStore;
+	protected Combo fStyleCombo = null;
+	// The list of supported ITextRegion types [Strings]
+	protected List fStyleList = null;
+
+	// controls in picker
+	protected StyledText fText = null;
+	
+	protected LineStyleProviderForPhp fStyleProvider;
+	
 	public void setLineStyleProvider(LineStyleProviderForPhp styleProvider) {
 		fStyleProvider = styleProvider;
 		if (fPreferenceStore != null) {
@@ -64,212 +209,66 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 	public LineStyleProviderForPhp getLineStyleProvider() {
 		return fStyleProvider;
 	}
-	
-	protected RGB changeColor(RGB startValue) {
-		ColorDialog colorDlg = new ColorDialog(getShell());
-		if (startValue != null) {
-			colorDlg.setRGB(startValue);
-		}
-		colorDlg.open();
-		RGB newRGB = colorDlg.getRGB();
-		if (newRGB != null) {
-			return newRGB;
-		}
-		return startValue;
+
+	/**
+	 * XMLTextColorPicker constructor comment.
+	 * 
+	 * @param parent
+	 *            org.eclipse.swt.widgets.Composite
+	 * @param style
+	 *            int
+	 */
+	public PHPStyledTextColorPicker(Composite parent, int style) {
+		super(parent, style);
+		//GridLayout
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		setLayout(layout);
+		createControls(this);
 	}
 
-	protected String changeColor(String rgb) {
-		String changedColor = "null"; //$NON-NLS-1$
-		RGB newColor = changeColor(PHPColorHelper.toRGB(rgb));
-		// null check to see if using default value
-		if (newColor != null) {
-			changedColor = PHPColorHelper.toRGBString(newColor);
-		}
-		return changedColor;
-	}
-
-	protected SelectionListener initButtonListener() {
-		if (buttonListener != null) {
-			return buttonListener;
-		}
-
-		buttonListener = new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				String namedStyle = getStyleName(fStyleCombo.getItem(fStyleCombo.getSelectionIndex()));
-				if (namedStyle != null) {
-					if (e.widget == fForeground) {
-						// get current (newly old) style
-						String prefString = getPreferenceStore().getString(namedStyle);
-						String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
-						if (stylePrefs != null) {
-							String oldValue = stylePrefs[0];
-							// open color dialog to get new color
-							String newValue = changeColor(oldValue);
-
-							if (!newValue.equals(oldValue)) {
-								stylePrefs[0] = newValue;
-								String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
-								getPreferenceStore().setValue(namedStyle, newPrefString);
-								refresh();
-							}
-						}
-					} else if (e.widget == fBackground) {
-						// get current (newly old) style
-						String prefString = getPreferenceStore().getString(namedStyle);
-						String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
-						if (stylePrefs != null) {
-							String oldValue = stylePrefs[1];
-							// open color dialog to get new color
-							String newValue = changeColor(oldValue);
-
-							if (!newValue.equals(oldValue)) {
-								stylePrefs[1] = newValue;
-								String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
-								getPreferenceStore().setValue(namedStyle, newPrefString);
-								refresh();
-							}
-						}
-					} else if (e.widget == fBold) {
-						// get current (newly old) style
-						String prefString = getPreferenceStore().getString(namedStyle);
-						String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
-						if (stylePrefs != null) {
-							String oldValue = stylePrefs[2];
-							String newValue = String.valueOf(fBold.getSelection());
-							if (!newValue.equals(oldValue)) {
-								stylePrefs[2] = newValue;
-								String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
-								getPreferenceStore().setValue(namedStyle, newPrefString);
-								refresh();
-							}
-						}
-					} else if (e.widget == fItalic) {
-						// get current (newly old) style
-						String prefString = getPreferenceStore().getString(namedStyle);
-						String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
-						if (stylePrefs != null) {
-							String oldValue = stylePrefs[3];
-							String newValue = String.valueOf(fItalic.getSelection());
-							if (!newValue.equals(oldValue)) {
-								stylePrefs[3] = newValue;
-								String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
-								getPreferenceStore().setValue(namedStyle, newPrefString);
-								refresh();
-							}
-						}
-					} else if (e.widget == fUnderline) {
-						String prefString = getPreferenceStore().getString(namedStyle);
-						String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
-						if (stylePrefs != null) {
-							String oldValue = stylePrefs[4];
-							String newValue = String.valueOf(fUnderline.getSelection());
-							if (!newValue.equals(oldValue)) {
-								stylePrefs[4] = newValue;
-								String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
-								getPreferenceStore().setValue(namedStyle, newPrefString);
-								refresh();
-							}
-						}
-					} else if (e.widget == fClearStyle) {
-						getPreferenceStore().setToDefault(namedStyle);
-						refresh();
-					}
-				}
-			}
-		};
-
-		return buttonListener;
-	}
-
-	protected String getStyleName(String description) {
-		if (description == null) {
-			return null;
-		}
-		String styleName = null;
-		java.util.Enumeration keys = getDescriptions().keys();
-		while (keys.hasMoreElements()) {
-			String test = keys.nextElement().toString();
-			if (getDescriptions().get(test).equals(description)) {
-				styleName = test;
-				break;
-			}
-		}
-		return styleName;
-	}
-
+	// activate controls based on the given local color type
 	protected void activate(String namedStyle) {
-		super.activate(namedStyle);
 		if (namedStyle == null) {
-			fItalic.setEnabled(false);
+			fForeground.setEnabled(false);
+			fBackground.setEnabled(false);
+			fClearStyle.setEnabled(false);
+			fBold.setEnabled(false);
+			if (showItalic)
+				fItalic.setEnabled(false);
 			fUnderline.setEnabled(false);
-		} else {
-			fItalic.setEnabled(true);
+			fForegroundLabel.setEnabled(false);
+			fBackgroundLabel.setEnabled(false);
+		} 
+		else {		
+			fForeground.setEnabled(true);
+			fBackground.setEnabled(true);
+			fClearStyle.setEnabled(true);
+			fBold.setEnabled(true);
+			if (showItalic)
+				fItalic.setEnabled(true);
 			fUnderline.setEnabled(true);
+			fForegroundLabel.setEnabled(true);
+			fBackgroundLabel.setEnabled(true);
+			
 		}
 		TextAttribute attribute = getAttribute(namedStyle);
-		fItalic.setSelection((attribute.getStyle() & SWT.ITALIC) != 0);
+		Color color = attribute.getForeground();
+		if (color == null) {
+			color = fDefaultForeground;
+		}
+		fForeground.setColorValue(color.getRGB());
+
+		color = attribute.getBackground();
+		if (color == null) {
+			color = fDefaultBackground;
+		}
+		fBackground.setColorValue(color.getRGB());
+
+		fBold.setSelection((attribute.getStyle() & SWT.BOLD) != 0);
+		if (showItalic)
+			fItalic.setSelection((attribute.getStyle() & SWT.ITALIC) != 0);
 		fUnderline.setSelection((attribute.getStyle() & TextAttribute.UNDERLINE) != 0);
-	}
-
-	protected Button createCheckBox(Composite group, String label) {
-		Button button = new Button(group, SWT.CHECK | SWT.CENTER);
-		if (label != null) {
-			button.setText(label);
-		}
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_END;
-		button.setLayoutData(data);
-		return button;
-	}
-
-	protected void createControls(Composite parent) {
-		super.createControls(parent);
-
-		initButtonListener();
-
-		// Remove old listeners
-		fForeground.removeSelectionListener(super.buttonListener);
-		fBackground.removeSelectionListener(super.buttonListener);
-		fClearStyle.removeSelectionListener(super.buttonListener);
-		fBold.removeSelectionListener(super.buttonListener);
-		if (showItalic) {
-			fItalic.removeSelectionListener(super.buttonListener);
-		}
-
-		fForeground.addSelectionListener(buttonListener);
-		fBackground.addSelectionListener(buttonListener);
-		fClearStyle.addSelectionListener(buttonListener);
-		fBold.addSelectionListener(buttonListener);
-
-		// Add Italic (if doesn't exist) and Underline checkboxes
-		Composite styleRow = fBold.getParent();
-		if (!showItalic) {
-			((GridLayout) styleRow.getLayout()).numColumns++;
-			fItalic = createCheckBox(styleRow, SSEUIMessages.Italics_UI); ////$NON-NLS-1$
-			fItalic.setEnabled(false);
-			fItalic.addSelectionListener(buttonListener);
-		}
-		((GridLayout) styleRow.getLayout()).numColumns++;
-		fUnderline = createCheckBox(styleRow, PHPUIMessages.ColorPage_Underline);
-		fUnderline.setEnabled(false);
-		fUnderline.addSelectionListener(buttonListener);
-	}
-
-	protected TextAttribute getAttribute(String namedStyle) {
-		TextAttribute ta = new TextAttribute(getDefaultForeground(), getDefaultBackground(), SWT.NORMAL);
-
-		if (namedStyle != null && getPreferenceStore() != null) {
-			String prefString = getPreferenceStore().getString(namedStyle);
-			String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
-			if (stylePrefs != null) {
-				ta = PHPColorHelper.createTextAttribute(stylePrefs);
-			}
-		}
-		return ta;
 	}
 
 	protected void applyStyles() {
@@ -287,6 +286,292 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 			StyleRange element = (StyleRange) iter.next();
 			fText.setStyleRange(element);			
 		}
+	}
+
+	protected void close() {
+	}
+
+	/**
+	 * Creates an new checkbox instance and sets the default layout data.
+	 * 
+	 * @param group
+	 *            the composite in which to create the checkbox
+	 * @param label
+	 *            the string to set into the checkbox
+	 * @return the new checkbox
+	 */
+	private Button createCheckBox(Composite group, String label) {
+		Button button = new Button(group, SWT.CHECK | SWT.CENTER);
+		if (label != null)
+			button.setText(label);
+		GridData data = new GridData(GridData.FILL_BOTH);
+		data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_END;
+		//	data.verticalAlignment = GridData.VERTICAL_ALIGN_FILL;
+		button.setLayoutData(data);
+		return button;
+	}
+
+	private Combo createCombo(Composite parent, String[] labels, int selectedItem) {
+		Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
+		combo.setItems(labels);
+		if (selectedItem >= 0)
+			combo.select(selectedItem);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_FILL;
+		combo.setLayoutData(data);
+		return combo;
+	}
+
+	/**
+	 * Creates composite control and sets the default layout data.
+	 */
+	private Composite createComposite(Composite parent, int numColumns) {
+		Composite composite = new Composite(parent, SWT.NULL);
+		//GridLayout
+		GridLayout layout = new GridLayout();
+		layout.numColumns = numColumns;
+		layout.horizontalSpacing = 5;
+		layout.makeColumnsEqualWidth = false;
+		composite.setLayout(layout);
+		//GridData
+		GridData data = new GridData(GridData.FILL_VERTICAL);
+		data.grabExcessVerticalSpace = false;
+		data.verticalAlignment = GridData.VERTICAL_ALIGN_CENTER;
+		composite.setLayoutData(data);
+		return composite;
+	}
+
+	protected void createControls(Composite parent) {
+		Composite styleRow = createComposite(parent, 3);
+		// row 1 - content type label, combo box, restore defaults
+		createLabel(styleRow, SSEUIMessages.Content_type__UI_); //$NON-NLS-1$ = "Content type:"
+		// Contexts combo box
+		fStyleCombo = createCombo(styleRow, new String[0], -1);
+		fClearStyle = createPushButton(styleRow, SSEUIMessages.Restore_Default_UI_); //$NON-NLS-1$ = "Restore Default"
+		Composite styleRow2;
+		if (showItalic)
+			styleRow2 = createComposite(parent, 7);
+		else
+			styleRow2 = createComposite(parent, 6);
+		// row 2 - foreground label, button, background label, button, bold,
+		// italics?
+		fForegroundLabel = createLabel(styleRow2, SSEUIMessages.Foreground_UI_); //$NON-NLS-1$ = "Foreground"
+		fForeground = new ColorSelector(styleRow2);
+		fForeground.getButton().setLayoutData(new GridData());
+		setAccessible(fForeground.getButton(), fForegroundLabel.getText());
+		fForeground.getButton().getAccessible().addAccessibleControlListener(foregroundAccListener); // defect
+		// 200764
+		// -
+		// ACC:display
+		// values
+		// for
+		// color
+		// buttons
+		((GridData) fForeground.getButton().getLayoutData()).minimumWidth = 20;
+		fBackgroundLabel = createLabel(styleRow2, SSEUIMessages.Background_UI_); //$NON-NLS-1$ = "Background"
+		fBackground = new ColorSelector(styleRow2);
+		fBackground.getButton().setLayoutData(new GridData());
+		setAccessible(fBackground.getButton(), fBackgroundLabel.getText());
+		fBackground.getButton().getAccessible().addAccessibleControlListener(backgroundAccListener); // defect
+		// 200764
+		// -
+		// ACC:display
+		// values
+		// for
+		// color
+		// buttons
+		((GridData) fBackground.getButton().getLayoutData()).minimumWidth = 20;
+		createLabel(styleRow2, ""); //$NON-NLS-1$
+		fBold = createCheckBox(styleRow2, SSEUIMessages.Bold_UI_);
+		if (showItalic)
+			fItalic = createCheckBox(styleRow2, SSEUIMessages.Italics_UI);
+		fUnderline = createCheckBox(styleRow, PHPUIMessages.ColorPage_Underline);
+		//		// Defaults checkbox
+		fForeground.setEnabled(false);
+		fBackground.setEnabled(false);
+		fClearStyle.setEnabled(false);
+		fBold.setEnabled(false);
+		if (showItalic)
+			fItalic.setEnabled(false);
+		fUnderline.setEnabled(false);
+		fForegroundLabel.setEnabled(false);
+		fBackgroundLabel.setEnabled(false);
+		Composite sample = createComposite(parent, 1);
+		createLabel(sample, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
+		// BUG141089 - make sure text is left-aligned
+		fText = new StyledText(sample, SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.READ_ONLY);
+		GridData data = new GridData(GridData.FILL_BOTH);
+		fText.setLayoutData(data);
+		fText.setEditable(false);
+		fText.setBackground(fDefaultBackground);
+		fText.setFont(JFaceResources.getTextFont());
+		fText.addKeyListener(getTextKeyListener());
+		fText.addSelectionListener(getTextSelectionListener());
+		fText.addMouseListener(getTextMouseListener());
+		fText.addTraverseListener(getTraverseListener()); // defect 220377 -
+		// Provide tab
+		// traversal for
+		// fText widget
+		setAccessible(fText, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
+		fForeground.addListener(new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
+					// get current (newly old) style
+					String namedStyle = getStyleName(fStyleCombo.getItem(fStyleCombo.getSelectionIndex()));
+					String prefString = getPreferenceStore().getString(namedStyle);
+					String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
+					if (stylePrefs != null) {
+						String oldValue = stylePrefs[0];
+						String newValue = "null";   //$NON-NLS-1$
+						Object newValueObject = event.getNewValue();
+						if (newValueObject instanceof RGB) {
+							newValue = PHPColorHelper.toRGBString((RGB)newValueObject);
+						}
+	
+						if (!newValue.equals(oldValue)) {
+							stylePrefs[0] = newValue;
+							String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
+							getPreferenceStore().setValue(namedStyle, newPrefString);
+							refresh();
+						}
+					}
+				}
+			}
+		});
+		fBackground.addListener(new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
+					// get current (newly old) style
+					String namedStyle = getStyleName(fStyleCombo.getItem(fStyleCombo.getSelectionIndex()));
+					String prefString = getPreferenceStore().getString(namedStyle);
+					String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
+					if (stylePrefs != null) {
+						String oldValue = stylePrefs[1];
+
+						String newValue = "null";   //$NON-NLS-1$
+						Object newValueObject = event.getNewValue();
+						if (newValueObject instanceof RGB) {
+							newValue = PHPColorHelper.toRGBString((RGB)newValueObject);
+						}
+						
+						if (!newValue.equals(oldValue)) {
+							stylePrefs[1] = newValue;
+							String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
+							getPreferenceStore().setValue(namedStyle, newPrefString);
+							refresh();
+						}
+					}
+				}
+			}
+		});
+
+		fClearStyle.addSelectionListener(buttonListener);
+		fBold.addSelectionListener(buttonListener);
+		if (showItalic)
+			fItalic.addSelectionListener(buttonListener);
+		fUnderline.addSelectionListener(buttonListener);
+		fStyleCombo.addSelectionListener(comboListener);
+	}
+
+	/**
+	 * Utility method that creates a label instance and sets the default
+	 * layout data.
+	 */
+	private Label createLabel(Composite parent, String text) {
+		Label label = new Label(parent, SWT.LEFT);
+		label.setText(text);
+		GridData data = new GridData();
+		data.horizontalAlignment = GridData.FILL;
+		label.setLayoutData(data);
+		return label;
+	}
+
+	private Button createPushButton(Composite parent, String label) {
+		Button button = new Button(parent, SWT.PUSH);
+		button.setText(label);
+		GridData data = new GridData(GridData.FILL_BOTH);
+		//	data.horizontalAlignment = GridData.FILL;
+		button.setLayoutData(data);
+		return button;
+	}
+
+	protected TextAttribute getAttribute(String namedStyle) {
+		TextAttribute ta = new TextAttribute(getDefaultForeground(), getDefaultBackground(), SWT.NORMAL);
+
+		if (namedStyle != null && getPreferenceStore() != null) {
+			String prefString = getPreferenceStore().getString(namedStyle);
+			String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
+			if (stylePrefs != null) {
+				RGB foreground = PHPColorHelper.toRGB(stylePrefs[0]);
+				RGB background = PHPColorHelper.toRGB(stylePrefs[1]);
+
+				int fontModifier = SWT.NORMAL;
+				boolean bold = Boolean.valueOf(stylePrefs[2]).booleanValue();
+				if (bold)
+					fontModifier = fontModifier | SWT.BOLD;
+
+				if (showItalic) {
+					boolean italic = Boolean.valueOf(stylePrefs[3]).booleanValue();
+					if (italic)
+						fontModifier = fontModifier | SWT.ITALIC;
+				}
+
+				ta = new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, fontModifier);
+			}
+		}
+		return ta;
+	}
+
+	// defect 200764 - ACC:display values for color buttons
+	/**
+	 * @return String - color Button b's current RBG value
+	 */
+//	private String getColorButtonValue(Button b) {
+//		if ((b == null) || (b.getImage() == null) || (b.getImage().getImageData() == null) || (b.getImage().getImageData().getRGBs() == null) || (b.getImage().getImageData().getRGBs()[0] == null))
+//			return null;
+//		String val = b.getImage().getImageData().getRGBs()[0].toString();
+//		return val;
+//	}
+
+	/**
+	 * @deprecated use getPreferenceStore instead left for legacy clients,
+	 *             delete by WTP M4
+	 */
+	public Node getColorsNode() {
+		//return fColorsNode;
+		return null;
+	}
+
+	/**
+	 * @return java.util.Dictionary
+	 */
+	public Dictionary getContextStyleMap() {
+		return fContextStyleMap;
+	}
+
+	/**
+	 * @return org.eclipse.swt.graphics.Color
+	 */
+	public Color getDefaultBackground() {
+		return fDefaultBackground;
+	}
+
+	/**
+	 * @return org.eclipse.swt.graphics.Color
+	 */
+	public Color getDefaultForeground() {
+		return fDefaultForeground;
+	}
+
+	/**
+	 * @return java.util.Dictionary
+	 */
+	public Dictionary getDescriptions() {
+		return fDescriptions;
+	}
+
+	public Font getFont() {
+		return fText.getFont();
 	}
 
 	protected String getNamedStyleAtOffset(int offset) {
@@ -332,30 +617,308 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 		return namedStyle;
 	}
 
-	/*
-	 * This method is overriden, because parent's setText() creates wrong type of input reader
-	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.StyledTextColorPicker#setText(java.lang.String)
-	 */
-	public void setText(String s) {
-		fInput = s;
-		DocumentReader docReader = new DocumentReader(new Document(fInput));
-		getParser().reset(docReader);
-		fNodes = getParser().getDocumentRegions();
-		if (fText != null) {
-			fText.setText(s);
-		}
-		applyStyles();
+
+	public RegionParser getParser() {
+		return fParser;
 	}
 
-	public IPreferenceStore getPreferenceStore() {
+	private IPreferenceStore getPreferenceStore() {
 		return fPreferenceStore;
 	}
 
-	public void setPreferenceStore(IPreferenceStore preferenceStore) {
-		fPreferenceStore = preferenceStore;
-		if (fStyleProvider != null) {
-			fStyleProvider.setColorPreferences(preferenceStore);
-		}
-		super.setPreferenceStore(preferenceStore);
+	/**
+	 * @return String[]
+	 */
+	public List getStyleList() {
+		return fStyleList;
 	}
+
+	private String getStyleName(String description) {
+		if (description == null)
+			return null;
+		String styleName = null;
+		java.util.Enumeration keys = getDescriptions().keys();
+		while (keys.hasMoreElements()) {
+			String test = keys.nextElement().toString();
+			if (getDescriptions().get(test).equals(description)) {
+				styleName = test;
+				break;
+			}
+		}
+		return styleName;
+	}
+
+	public String getText() {
+		return fInput;
+	}
+
+	private KeyListener getTextKeyListener() {
+		return new KeyListener() {
+			public void keyPressed(KeyEvent e) {
+				if (e.widget instanceof StyledText) {
+					int x = ((StyledText) e.widget).getCaretOffset();
+					selectColorAtOffset(x);
+				}
+			}
+
+			public void keyReleased(KeyEvent e) {
+				if (e.widget instanceof StyledText) {
+					int x = ((StyledText) e.widget).getCaretOffset();
+					selectColorAtOffset(x);
+				}
+			}
+		};
+	}
+
+	private MouseListener getTextMouseListener() {
+		return new MouseListener() {
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+
+			public void mouseDown(MouseEvent e) {
+			}
+
+			public void mouseUp(MouseEvent e) {
+				if (e.widget instanceof StyledText) {
+					int x = ((StyledText) e.widget).getCaretOffset();
+					selectColorAtOffset(x);
+				}
+			}
+		};
+	}
+
+	private SelectionListener getTextSelectionListener() {
+		return new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				selectColorAtOffset(e.x);
+				if (e.widget instanceof StyledText) {
+					((StyledText) e.widget).setSelection(e.x);
+				}
+			}
+
+// Commented out when moving to RC2 to remove "unused" error/warning			
+//			public void widgetDoubleSelected(SelectionEvent e) {
+//				selectColorAtOffset(e.x);
+//				if (e.widget instanceof StyledText) {
+//					((StyledText) e.widget).setSelection(e.x);
+//				}
+//			}
+
+			public void widgetSelected(SelectionEvent e) {
+				selectColorAtOffset(e.x);
+				if (e.widget instanceof StyledText) {
+					((StyledText) e.widget).setSelection(e.x);
+				}
+			}
+		};
+	}
+
+	// defect 220377 - Provide tab traversal for fText widget
+	private TraverseListener getTraverseListener() {
+		return new TraverseListener() {
+			/**
+			 * @see org.eclipse.swt.events.TraverseListener#keyTraversed(TraverseEvent)
+			 */
+			public void keyTraversed(TraverseEvent e) {
+				if (e.widget instanceof StyledText) {
+					if ((e.detail == SWT.TRAVERSE_TAB_NEXT) || (e.detail == SWT.TRAVERSE_TAB_PREVIOUS))
+						e.doit = true;
+				}
+			}
+		};
+	}
+
+	// refresh the GUI after a color change
+	public void refresh() {
+		fText.setRedraw(false);
+		int selectedIndex = fStyleCombo.getSelectionIndex();
+		String description = selectedIndex >= 0 ? fStyleCombo.getItem(selectedIndex) : null;
+		activate(getStyleName(description));
+		// update Font
+		fText.setFont(JFaceResources.getTextFont());
+		// reapplyStyles
+		applyStyles();
+		fText.setRedraw(true);
+	}
+
+	public void releasePickerResources() {
+//		if (fForeground != null && !fForeground.isDisposed() && fForeground.getImage() != null)
+//			fForeground.getImage().dispose();
+//		if (fBackground != null && !fBackground.isDisposed() && fBackground.getImage() != null)
+//			fBackground.getImage().dispose();
+	}
+
+	private void selectColorAtOffset(int offset) {
+		String namedStyle = getNamedStyleAtOffset(offset);
+		if (namedStyle == null) {
+			fStyleCombo.deselectAll();
+			activate(null);
+			return;
+		}
+		String description = (String) getDescriptions().get(namedStyle);
+		if (description == null)
+			return;
+		int itemCount = fStyleCombo.getItemCount();
+		for (int i = 0; i < itemCount; i++) {
+			if (fStyleCombo.getItem(i).equals(description)) {
+				fStyleCombo.select(i);
+				break;
+			}
+		}
+		activate(namedStyle);
+	}
+
+	/**
+	 * Specifically set the reporting name of a control for accessibility
+	 */
+	private void setAccessible(Control control, String name) {
+		if (control == null)
+			return;
+		final String n = name;
+		control.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			public void getName(AccessibleEvent e) {
+				if (e.childID == ACC.CHILDID_SELF)
+					e.result = n;
+			}
+		});
+	}
+
+	/**
+	 * @deprecated use setPreferenceStore instead left for legacy clients,
+	 *             delete by WTP M4
+	 */
+	public void setColorsNode(Node newColorsNode) {
+		//fColorsNode = newColorsNode;
+	}
+
+	/**
+	 * @param newContextStyleMap
+	 *            java.util.Dictionary
+	 */
+	public void setContextStyleMap(Dictionary newContextStyleMap) {
+		fContextStyleMap = newContextStyleMap;
+	}
+
+	/**
+	 * @param newDefaultBackground
+	 *            org.eclipse.swt.graphics.Color
+	 */
+	public void setDefaultBackground(Color newDefaultBackground) {
+		fDefaultBackground = newDefaultBackground;
+	}
+
+	/**
+	 * @deprecated use setPreferenceStore instead left for legacy clients,
+	 *             delete by WTP M4
+	 */
+	public void setDefaultColorsNode(Node newDefaultColorsNode) {
+		//fDefaultColorsNode = newDefaultColorsNode;
+	}
+
+	/**
+	 * @param newDefaultForeground
+	 *            org.eclipse.swt.graphics.Color
+	 */
+	public void setDefaultForeground(Color newDefaultForeground) {
+		fDefaultForeground = newDefaultForeground;
+	}
+
+	/**
+	 * @param newDescriptions
+	 *            java.util.Dictionary
+	 */
+	public void setDescriptions(Dictionary newDescriptions) {
+		fDescriptions = newDescriptions;
+		updateStyleList();
+	}
+
+	public void setFont(Font font) {
+		fText.setFont(font);
+		fText.redraw();
+	}
+
+	/**
+	 * @deprecated generator key should no longer be needed
+	 */
+	public void setGeneratorKey(String key) {
+//		fGeneratorKey = key;
+	}
+
+	/**
+	 * @param newParser
+	 */
+	public void setParser(RegionParser newParser) {
+		fParser = newParser;
+	}
+
+	public void setPreferenceStore(IPreferenceStore store) {
+		fPreferenceStore = store;
+		if (fStyleProvider != null) {
+			fStyleProvider.setColorPreferences(store);
+		}
+	}
+
+	/**
+	 * @param newStyleList
+	 *            String[]
+	 */
+	public void setStyleList(List newStyleList) {
+		fStyleList = newStyleList;
+		updateStyleList();
+	}
+
+	public void setText(String s) {
+		fInput = s;
+		getParser().reset(new CharArrayReader(fInput.toCharArray()));
+		fNodes = getParser().getDocumentRegions();
+		if (Debug.displayInfo)
+			System.out.println("Length of input: " //$NON-NLS-1$
+						//$NON-NLS-1$
+						+ s.length() + ", " //$NON-NLS-1$
+						+ getParser().getRegions().size() + " regions."); //$NON-NLS-1$
+		if (fText != null)
+			fText.setText(s);
+		applyStyles();
+	}
+
+
+
+	/**
+	 * @return org.eclipse.swt.graphics.RGB
+	 * @param anRGBString
+	 *            java.lang.String
+	 * @param defaultRGB
+	 *            org.eclipse.swt.graphics.RGB
+	 */
+	// TODO: never used
+	 RGB toRGB(String anRGBString, RGB defaultRGB) {
+		RGB result = PHPColorHelper.toRGB(anRGBString);
+		if (result == null)
+			return defaultRGB;
+		return result;
+	}
+
+	private void updateStyleList() {
+		if (fStyleList == null || fDescriptions == null)
+			return;
+		String[] descriptions = new String[fStyleList.size()];
+		for (int i = 0; i < fStyleList.size(); i++) {
+			if (fStyleList.get(i) != null)
+				descriptions[i] = (String) getDescriptions().get(fStyleList.get(i));
+			else
+				descriptions[i] = (String) fStyleList.get(i);
+		}
+		Object[] sortedObjects = new DescriptionSorter().sort(descriptions);
+		String[] sortedDescriptions = new String[descriptions.length];
+		for (int i = 0; i < descriptions.length; i++) {
+			sortedDescriptions[i] = sortedObjects[i].toString();
+		}
+		fStyleCombo.setItems(sortedDescriptions);
+		fStyleCombo.select(0); //defect 219855 - initially select first item
+		// in comboBox
+		//		fStyleCombo.deselectAll();
+	}
+
+
+
 }
