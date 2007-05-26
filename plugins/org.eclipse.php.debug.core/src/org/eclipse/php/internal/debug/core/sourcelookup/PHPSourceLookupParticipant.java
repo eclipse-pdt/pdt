@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.model.PHPStackFrame;
-import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
+import org.eclipse.php.internal.ui.editor.input.PHPFileEditorInput;
 
 /**
  * The PHP source lookup participant knows how to translate a 
@@ -49,7 +49,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 					}
 					if (ExternalFilesRegistry.getInstance().isEntryExist(fileName)) {
 						LocalFile locFile = new LocalFile(new File(fileName));
-						final JavaFileEditorInput externalInput = new JavaFileEditorInput(locFile);
+						final PHPFileEditorInput externalInput = new PHPFileEditorInput(locFile);
 						IStorage storage = externalInput.getStorage();
 						if (storage != null) {
 							return new Object[] { storage };

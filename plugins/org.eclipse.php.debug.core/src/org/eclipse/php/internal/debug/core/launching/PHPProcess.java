@@ -19,12 +19,10 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamsProxy;
-import org.eclipse.debug.internal.ui.actions.provisional.IAsynchronousTerminateAdapter;
-import org.eclipse.debug.internal.ui.actions.provisional.IBooleanRequestMonitor;
-import org.eclipse.debug.internal.ui.viewers.provisional.IAsynchronousRequestMonitor;
+import org.eclipse.debug.core.model.ITerminate;
 import org.eclipse.debug.ui.console.IConsole;
 
-public class PHPProcess extends PlatformObject implements IProcess, IAsynchronousTerminateAdapter {
+public class PHPProcess extends PlatformObject implements IProcess {
 
 	private ILaunch fLaunch;
 	private String fName;
@@ -97,7 +95,7 @@ public class PHPProcess extends PlatformObject implements IProcess, IAsynchronou
 			}
 			return null;
 		}
-		if (adapter.equals(IAsynchronousTerminateAdapter.class)) {
+		if (adapter.equals(ITerminate.class)) {
 			return this;
 		}
 		return null;
@@ -114,8 +112,8 @@ public class PHPProcess extends PlatformObject implements IProcess, IAsynchronou
 	}
 
 	public void terminate() throws DebugException {
+		fLaunch.terminate();
 		fTerminated = true;
-
 	}
 
 	public void setPHPHyperLink(PHPHyperLink pLink) {
@@ -140,29 +138,5 @@ public class PHPProcess extends PlatformObject implements IProcess, IAsynchronou
 
 	public void setDebugTarget(IDebugTarget target) {
 		fDebugTarget = target;
-	}
-
-	public void canTerminate(Object element, IBooleanRequestMonitor monitor) {
-		if (this.equals(element)) {
-			monitor.setResult(canTerminate());
-			monitor.done();
-		}
-	}
-
-	public void isTerminated(Object element, IBooleanRequestMonitor monitor) {
-		if (this.equals(element)) {
-			monitor.setResult(isTerminated());
-			monitor.done();
-		}
-	}
-
-	public void terminate(Object element, IAsynchronousRequestMonitor monitor) {
-		if (this.equals(element)) {
-			try {
-				fLaunch.terminate();
-				monitor.done();
-			} catch (DebugException e) {
-			}
-		}
 	}
 }
