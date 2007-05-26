@@ -14,7 +14,10 @@ package org.eclipse.php.internal.ui.preferences;
 
 import java.io.CharArrayReader;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Dictionary;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.preference.ColorSelector;
@@ -31,16 +34,32 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.util.PHPColorHelper;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.accessibility.*;
+import org.eclipse.swt.accessibility.ACC;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleControlAdapter;
+import org.eclipse.swt.accessibility.AccessibleControlEvent;
+import org.eclipse.swt.accessibility.AccessibleControlListener;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -48,7 +67,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.internal.preferences.ui.StyledTextColorPicker;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.w3c.dom.Node;
 
@@ -62,7 +80,7 @@ import org.w3c.dom.Node;
  * the locally defined styleNames
  *  
  */
-public class PHPStyledTextColorPicker extends StyledTextColorPicker {
+public class PHPStyledTextColorPicker extends Composite {
 	protected class DescriptionSorter extends org.eclipse.wst.sse.ui.internal.util.Sorter {
 		Collator collator = Collator.getInstance();
 
@@ -97,6 +115,7 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 			}
 		}
 	};
+
 	protected SelectionListener buttonListener = new SelectionListener() {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -196,16 +215,30 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 
 	// controls in picker
 	protected StyledText fText = null;
-	
+
 	protected LineStyleProviderForPhp fStyleProvider;
-	
+	// A RegionParser, which will turn the input into
+	// IStructuredDocumentRegion(s) and Regions
+	protected RegionParser fParser = null;
+	// defect 200764 - ACC:display values for color buttons
+	protected AccessibleControlListener foregroundAccListener = new AccessibleControlAdapter() {
+		/**
+		 * @see org.eclipse.swt.accessibility.AccessibleControlAdapter#getValue(AccessibleControlEvent)
+		 */
+		public void getValue(AccessibleControlEvent e) {
+			if (e.childID == ACC.CHILDID_SELF) {
+				e.result = fForeground.getColorValue().toString();
+			}
+		}
+	};
+
 	public void setLineStyleProvider(LineStyleProviderForPhp styleProvider) {
 		fStyleProvider = styleProvider;
 		if (fPreferenceStore != null) {
 			fStyleProvider.setColorPreferences(fPreferenceStore);
 		}
 	}
-	
+
 	public LineStyleProviderForPhp getLineStyleProvider() {
 		return fStyleProvider;
 	}
@@ -239,8 +272,7 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 			fUnderline.setEnabled(false);
 			fForegroundLabel.setEnabled(false);
 			fBackgroundLabel.setEnabled(false);
-		} 
-		else {		
+		} else {
 			fForeground.setEnabled(true);
 			fBackground.setEnabled(true);
 			fClearStyle.setEnabled(true);
@@ -250,7 +282,7 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 			fUnderline.setEnabled(true);
 			fForegroundLabel.setEnabled(true);
 			fBackgroundLabel.setEnabled(true);
-			
+
 		}
 		TextAttribute attribute = getAttribute(namedStyle);
 		Color color = attribute.getForeground();
@@ -275,16 +307,16 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 		if (fText == null || fText.isDisposed() || fInput == null || fInput.length() == 0) {
 			return;
 		}
-		
+
 		fStyleProvider.loadColors();
-		
+
 		IStructuredDocumentRegion node = fNodes;
 		final Collection holdResults = new ArrayList();
 		fStyleProvider.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
-		
+
 		for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
 			StyleRange element = (StyleRange) iter.next();
-			fText.setStyleRange(element);			
+			fText.setStyleRange(element);
 		}
 	}
 
@@ -350,9 +382,9 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 		fClearStyle = createPushButton(styleRow, SSEUIMessages.Restore_Default_UI_); //$NON-NLS-1$ = "Restore Default"
 		Composite styleRow2;
 		if (showItalic)
-			styleRow2 = createComposite(parent, 7);
+			styleRow2 = createComposite(parent, 8);
 		else
-			styleRow2 = createComposite(parent, 6);
+			styleRow2 = createComposite(parent, 7);
 		// row 2 - foreground label, button, background label, button, bold,
 		// italics?
 		fForegroundLabel = createLabel(styleRow2, SSEUIMessages.Foreground_UI_); //$NON-NLS-1$ = "Foreground"
@@ -385,7 +417,7 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 		fBold = createCheckBox(styleRow2, SSEUIMessages.Bold_UI_);
 		if (showItalic)
 			fItalic = createCheckBox(styleRow2, SSEUIMessages.Italics_UI);
-		fUnderline = createCheckBox(styleRow, PHPUIMessages.ColorPage_Underline);
+		fUnderline = createCheckBox(styleRow2, PHPUIMessages.ColorPage_Underline);
 		//		// Defaults checkbox
 		fForeground.setEnabled(false);
 		fBackground.setEnabled(false);
@@ -422,12 +454,12 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 					String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
 					if (stylePrefs != null) {
 						String oldValue = stylePrefs[0];
-						String newValue = "null";   //$NON-NLS-1$
+						String newValue = "null"; //$NON-NLS-1$
 						Object newValueObject = event.getNewValue();
 						if (newValueObject instanceof RGB) {
-							newValue = PHPColorHelper.toRGBString((RGB)newValueObject);
+							newValue = PHPColorHelper.toRGBString((RGB) newValueObject);
 						}
-	
+
 						if (!newValue.equals(oldValue)) {
 							stylePrefs[0] = newValue;
 							String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
@@ -448,12 +480,12 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 					if (stylePrefs != null) {
 						String oldValue = stylePrefs[1];
 
-						String newValue = "null";   //$NON-NLS-1$
+						String newValue = "null"; //$NON-NLS-1$
 						Object newValueObject = event.getNewValue();
 						if (newValueObject instanceof RGB) {
-							newValue = PHPColorHelper.toRGBString((RGB)newValueObject);
+							newValue = PHPColorHelper.toRGBString((RGB) newValueObject);
 						}
-						
+
 						if (!newValue.equals(oldValue)) {
 							stylePrefs[1] = newValue;
 							String newPrefString = PHPColorHelper.packStylePreferences(stylePrefs);
@@ -515,6 +547,11 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 					if (italic)
 						fontModifier = fontModifier | SWT.ITALIC;
 				}
+				
+				boolean underline = Boolean.valueOf(stylePrefs[4]).booleanValue();
+				if (underline) {
+					fontModifier = fontModifier | TextAttribute.UNDERLINE;
+				}
 
 				ta = new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, fontModifier);
 			}
@@ -532,7 +569,6 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 //		String val = b.getImage().getImageData().getRGBs()[0].toString();
 //		return val;
 //	}
-
 	/**
 	 * @deprecated use getPreferenceStore instead left for legacy clients,
 	 *             delete by WTP M4
@@ -588,13 +624,13 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 
 		String regionContext;
 		ITextRegion interest = fNodes.getRegionAtCharacterOffset(offset);
-		
+
 		ITextRegionCollection container = fNodes;
 		if (interest instanceof ITextRegionContainer) {
 			container = (ITextRegionContainer) interest;
 			interest = container.getRegionAtCharacterOffset(offset);
 		}
-		
+
 		if (interest.getType() == PHPRegionContext.PHP_CONTENT) {
 			PhpScriptRegion phpScript = (PhpScriptRegion) interest;
 			try {
@@ -616,7 +652,6 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 		String namedStyle = (String) getContextStyleMap().get(regionContext);
 		return namedStyle;
 	}
-
 
 	public RegionParser getParser() {
 		return fParser;
@@ -873,15 +908,13 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 		fNodes = getParser().getDocumentRegions();
 		if (Debug.displayInfo)
 			System.out.println("Length of input: " //$NON-NLS-1$
-						//$NON-NLS-1$
-						+ s.length() + ", " //$NON-NLS-1$
-						+ getParser().getRegions().size() + " regions."); //$NON-NLS-1$
+				//$NON-NLS-1$
+				+ s.length() + ", " //$NON-NLS-1$
+				+ getParser().getRegions().size() + " regions."); //$NON-NLS-1$
 		if (fText != null)
 			fText.setText(s);
 		applyStyles();
 	}
-
-
 
 	/**
 	 * @return org.eclipse.swt.graphics.RGB
@@ -891,7 +924,7 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 	 *            org.eclipse.swt.graphics.RGB
 	 */
 	// TODO: never used
-	 RGB toRGB(String anRGBString, RGB defaultRGB) {
+	RGB toRGB(String anRGBString, RGB defaultRGB) {
 		RGB result = PHPColorHelper.toRGB(anRGBString);
 		if (result == null)
 			return defaultRGB;
@@ -918,7 +951,5 @@ public class PHPStyledTextColorPicker extends StyledTextColorPicker {
 		// in comboBox
 		//		fStyleCombo.deselectAll();
 	}
-
-
 
 }
