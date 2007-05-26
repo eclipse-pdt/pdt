@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.views.variables;
 
-import org.eclipse.debug.internal.ui.elements.adapters.VariableColumnEditor;
+import org.eclipse.debug.internal.ui.model.elements.VariableEditor;
+import org.eclipse.debug.internal.ui.viewers.model.provisional.IPresentationContext;
 import org.eclipse.jface.viewers.ICellModifier;
 
 /**
@@ -18,15 +19,9 @@ import org.eclipse.jface.viewers.ICellModifier;
  * 
  * @author shalom
  */
-public class PHPVariableColumnEditor extends VariableColumnEditor {
+public class PHPVariableColumnEditor extends VariableEditor {
 
-	private ICellModifier fCellModifier;
-
-	public ICellModifier getCellModifier() {
-		if (fCellModifier == null) {
-			fCellModifier = new PHPVariableCellModifier(getPresentationContext());
-		}
-		return fCellModifier;
+	public ICellModifier getCellModifier(IPresentationContext context, Object element) {
+		return new PHPVariableCellModifier();
 	}
-
 }

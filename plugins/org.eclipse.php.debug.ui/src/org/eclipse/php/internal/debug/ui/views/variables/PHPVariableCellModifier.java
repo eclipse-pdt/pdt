@@ -11,10 +11,8 @@
 package org.eclipse.php.internal.debug.ui.views.variables;
 
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.internal.ui.elements.adapters.DefaultVariableCellModifier;
 import org.eclipse.debug.internal.ui.elements.adapters.VariableColumnPresentation;
-import org.eclipse.debug.internal.ui.viewers.provisional.IPresentationContext;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.php.internal.debug.core.model.PHPValue;
 import org.eclipse.php.internal.debug.core.model.PHPVariable;
@@ -26,10 +24,6 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
  *
  */
 public class PHPVariableCellModifier extends DefaultVariableCellModifier implements ICellModifier {
-
-	public PHPVariableCellModifier(IPresentationContext context) {
-		super(context);
-	}
 
 	/**
 	 * Overrides the default cell modifier to support PHPVariables. 

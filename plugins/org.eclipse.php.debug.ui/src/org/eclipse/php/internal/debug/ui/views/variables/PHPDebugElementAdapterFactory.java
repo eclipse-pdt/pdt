@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.views.variables;
 
-import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.debug.core.model.IVariable;
-import org.eclipse.debug.internal.ui.viewers.provisional.IColumnEditorFactoryAdapter;
-import org.eclipse.debug.internal.ui.viewers.provisional.IColumnPresentationFactoryAdapter;
+import org.eclipse.debug.internal.ui.viewers.model.provisional.IElementEditor;
 import org.eclipse.debug.internal.ui.views.launch.DebugElementAdapterFactory;
 import org.eclipse.php.internal.debug.core.model.PHPVariable;
 
@@ -24,15 +21,15 @@ import org.eclipse.php.internal.debug.core.model.PHPVariable;
  */
 public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
 
-	private static IColumnPresentationFactoryAdapter fgVariableColumnFactory = new PHPVariableColumnFactoryAdapter();
+	private static IElementEditor fElementEditor = new PHPVariableColumnEditor();
 
 	/**
 	 * Override the default getAdapter to provide PHPVariable special variable column factory adapter.
 	 */
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
-		if (adapterType.equals(IColumnEditorFactoryAdapter.class)) {
+		if (adapterType.equals(IElementEditor.class)) {
 			if (adaptableObject instanceof PHPVariable) {
-				return fgVariableColumnFactory;
+				return fElementEditor;
 			}
 		}
 		return super.getAdapter(adaptableObject, adapterType);

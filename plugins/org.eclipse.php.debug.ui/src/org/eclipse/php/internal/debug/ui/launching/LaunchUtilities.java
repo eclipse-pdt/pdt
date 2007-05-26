@@ -19,7 +19,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.internal.ide.dialogs.ResourceSorter;
 
 public class LaunchUtilities {
 
@@ -142,7 +141,7 @@ public class LaunchUtilities {
 		}
 
 		d.setAllowMultiple(false);
-		d.setSorter(new ResourceSorter(ResourceSorter.TYPE));
+		d.setComparator(new ResourceSorter(ResourceSorter.TYPE));
 		d.open();
 
 		if (d.getReturnCode() == Window.OK) {
