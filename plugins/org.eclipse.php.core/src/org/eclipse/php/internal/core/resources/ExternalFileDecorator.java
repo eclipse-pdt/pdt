@@ -947,4 +947,8 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 		}
 		return new ExternalFileDecorator(ResourcesPlugin.getWorkspace().getRoot().getFile(path), path.getDevice());
 	}
+
+	public int findMaxProblemSeverity(String type, boolean includeSubtypes, int depth) throws CoreException {
+		return file.findMaxProblemSeverity(type, includeSubtypes, depth);
+	}
 }
