@@ -28,14 +28,19 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.treecontent.TreeProvider;
+import org.eclipse.php.internal.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.php.internal.ui.util.PHPElementLabels;
 import org.eclipse.php.internal.ui.util.PHPOutlineElementComparer;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 
 public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfiguration {
 	private PHPOutlineContentProvider fContentProvider = null;
@@ -109,6 +114,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	DoubleClickListener doubleClickListener = new DoubleClickListener();
 	private SortAction sortAction;
+	private JFaceNodeLabelProvider fSimpleLabelProvider;
 
 	public DoubleClickListener getDoubleClickListener() {
 		return doubleClickListener;
@@ -179,4 +185,29 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return treeProviders;
 	}
 
+	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
+		if (fSimpleLabelProvider == null) {
+			fSimpleLabelProvider = new StatusLineLabelProvider(treeViewer);
+		}
+		return fSimpleLabelProvider;
+	}
+	
+	private class StatusLineLabelProvider extends JFaceNodeLabelProvider {
+		TreeViewer treeViewer = null;
+
+		public StatusLineLabelProvider(TreeViewer viewer) {
+			treeViewer = viewer;
+		}
+
+		public String getText(Object element) {
+			if (element == null)
+				return null;
+			
+			return PHPElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
+		}
+	}
+
+	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
+		return new PHPNodeActionManager((IStructuredModel) treeViewer.getInput(), treeViewer);
+	}
 }
