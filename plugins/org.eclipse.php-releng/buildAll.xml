@@ -90,7 +90,7 @@
 		<property name="os" value="${env.BASEOS}" />
 		<property name="ws" value="${env.BASEWS}" />
 		<property name="arch" value="${env.BASEARCH}" />
-		<java jar="${buildDirectory}/startup.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}/../">
+		<java jar="${buildDirectory}/plugins/org.eclipse.equinox.launcher.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}/../">
 			<arg line="-Dosgi.ws=${ws} -Dosgi.os=${os} -Dosgi.arch=${arch} -data workspace" />
 			<arg line="-application org.eclipse.ant.core.antRunner -file test.xml" />
 			<arg line="-Dws=${ws} -Dos=${os} -Darch=${arch} -logger org.apache.tools.ant.DefaultLogger" />
@@ -264,7 +264,7 @@
 	</target>
 
 	<target name="createPackFilesIfDesired" if="doPack" depends="init">
-		<java jar="${buildDirectory}/startup.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}">
+		<java jar="${buildDirectory}/plugins/org.eclipse.equinox.launcher.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}">
 			<arg line="${logIfDebug}" />
 			<arg line="-application org.eclipse.update.core.siteOptimizer" />
 			<arg line="-jarProcessor  ${verboseIfDebug} -outputDir ${buildDirectory}/${buildLabel}/updateSite -pack ${buildDirectory}/${buildLabel}/updateSite" />

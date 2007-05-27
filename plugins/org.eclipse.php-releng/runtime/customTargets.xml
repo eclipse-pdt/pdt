@@ -203,7 +203,7 @@
 
 
 	<target name="runTestEclipse">
-		<java taskname="test-wtp-${testTarget}" classpath="${testRoot}/eclipse/startup.jar" fork="true" classname="org.eclipse.core.launcher.Main" failonerror="true" timeout="7200000" output="${testRoot}/results/consolelogs/wtptestlog.txt" dir="${testRoot}">
+		<java taskname="test-wtp-${testTarget}" classpath="${testRoot}/eclipse/plugins/org.eclipse.equinox.launcher.jar" fork="true" classname="org.eclipse.core.launcher.Main" failonerror="true" timeout="7200000" output="${testRoot}/results/consolelogs/wtptestlog.txt" dir="${testRoot}">
 			<jvmarg value="-Dosgi.ws=${basews}" />
 			<jvmarg value="-Dosgi.os=${baseos}" />
 			<jvmarg value="-Dosgi.arch=${basearch}" />
