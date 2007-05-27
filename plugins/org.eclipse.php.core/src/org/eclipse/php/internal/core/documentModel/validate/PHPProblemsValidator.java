@@ -10,14 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.validate;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
@@ -26,13 +28,12 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.validation.internal.TaskListUtility;
-import org.eclipse.wst.validation.internal.core.Message;
-import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
-import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 
 public class PHPProblemsValidator {
 
 	private static PHPProblemsValidator instance;
+	private ProblemsModelListener problemsModelListener = new ProblemsModelListener();
+	private Set files = new HashSet();
 
 	public static PHPProblemsValidator getInstance() {
 		if (instance == null)
@@ -50,16 +51,21 @@ public class PHPProblemsValidator {
 
 	private TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();
 
-	public void validateFile(IFile phpFile, boolean validateTasks) {
-		PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(phpFile.getFullPath().toString(), true);
+	/**
+	 * This synchronic method that validate the file problems 
+	 * @param phpFile
+	 * @param validateTasks
+	 */
+	public void validateFileProblems(IFile phpFile, boolean validateTasks) {
+		PHPFileData fileData = getFileModel(phpFile);
 		if (fileData == null) {
 			return;
 		}
 		// we check to see if the file was modified not from the editor and if so,
 		// request a parse operation for it.
-		if(phpFile.getModificationStamp() != fileData.getCreationTimeLastModified()){
+		if (phpFile.getModificationStamp() != fileData.getCreationTimeLastModified()) {
 			PHPWorkspaceModelManager.getInstance().addFileToModel(phpFile);
-			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(phpFile.getFullPath().toString(), true);
+			fileData = getFileModel(phpFile);
 		}
 		IPHPMarker[] markers = fileData.getMarkers();
 		try {
@@ -160,8 +166,37 @@ public class PHPProblemsValidator {
 		}
 	}
 
+	/**
+	 * This asynchronic method that validate the file problems which add a model listener to
+	 * model manager.
+	 * @param phpFile
+	 */
 	public void validateFile(IFile phpFile) {
 		validateFile(phpFile, true);
+	}
+
+	private void validateFile(IFile phpFile, boolean validateTasks) {
+		synchronized (files) {
+			if (files.isEmpty()) {
+				PHPWorkspaceModelManager.getInstance().addModelListener(problemsModelListener);
+			}
+			files.add(phpFile.getFullPath());
+		}
+	}
+
+	private void processValidation(IFile phpFile, boolean validateTasks) {
+		synchronized (files) {
+			if (files.remove(phpFile.getFullPath())) {
+				if (files.isEmpty()) {
+					PHPWorkspaceModelManager.getInstance().removeModelListener(problemsModelListener);
+				}
+				validateFileProblems(phpFile, validateTasks);
+			}
+		}
+	}
+
+	private PHPFileData getFileModel(IFile phpFile) {
+		return PHPWorkspaceModelManager.getInstance().getModelForFile(phpFile.getFullPath().toString(), true);
 	}
 
 	private void createMarker(IFile phpFile, UserData userData, String markerType, String descr, int prio) throws CoreException {
@@ -190,5 +225,30 @@ public class PHPProblemsValidator {
 			}
 		}
 		return IMarker.PRIORITY_NORMAL;
+	}
+
+	private class ProblemsModelListener implements ModelListener {
+
+		public void dataCleared() {
+			// do nothing
+		}
+
+		public void fileDataAdded(PHPFileData fileData) {
+			action(fileData);
+		}
+
+		public void fileDataChanged(PHPFileData fileData) {
+			action(fileData);
+		}
+
+		public void fileDataRemoved(PHPFileData fileData) {
+			// do nothing
+		}
+
+		private void action(PHPFileData fileData) {
+			final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+			IFile phpfile = workspaceRoot.getFile(new Path((String) fileData.getIdentifier()));
+			processValidation(phpfile, true);
+		}
 	}
 }
