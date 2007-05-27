@@ -606,8 +606,7 @@ public class PHPModelUtil {
 							PHPIncludePathModelManager manager = (PHPIncludePathModelManager) models[i];
 							IPhpModel[] includeModels = manager.listModels();
 							for (int j = 0; j < includeModels.length; ++j) {
-								String root = ((PHPIncludePathModel) includeModels[j]).getID();
-								IPath path = IncludePathVariableManager.instance().getIncludePathVariable(root);
+								IPath path = PHPModelUtil.getIncludeModelLocation(includeModels[j]);
 								if (includeModels[j].getFileData(location) == fileData) {
 									return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString();
 								}
