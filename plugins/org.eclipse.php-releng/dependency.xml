@@ -21,9 +21,6 @@
 			<param name="groupId" value="gef" />
 		</antcall>
 		<antcall target="getAndInstall">
-			<param name="groupId" value="jem" />
-		</antcall>
-		<antcall target="getAndInstall">
 			<param name="groupId" value="eclipse" />
 		</antcall>
 		<antcall target="getAndInstall">
@@ -45,9 +42,6 @@
 		</antcall>
 		<antcall target="getAndInstall">
 			<param name="groupId" value="gefRuntime" />
-		</antcall>
-		<antcall target="getAndInstall">
-			<param name="groupId" value="jemRuntime" />
 		</antcall>
 		<antcall target="getAndInstall">
 			<param name="groupId" value="eclipseRuntime" />
