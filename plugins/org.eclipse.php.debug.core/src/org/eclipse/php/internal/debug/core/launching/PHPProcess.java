@@ -112,7 +112,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	}
 
 	public void terminate() throws DebugException {
-		fLaunch.terminate();
+		// fLaunch.terminate(); // No need starting from Eclipse 3.3
 		fTerminated = true;
 	}
 
