@@ -131,7 +131,7 @@ if [ ! -r ../org.eclipse.releng.basebuilder ]
     mv org.eclipse.releng.basebuilder ../
 fi
 
-$vm/bin/java -jar ../org.eclipse.releng.basebuilder/startup.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $logger $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm $platformParams
+$vm/bin/java -jar ../org.eclipse.releng.basebuilder/plugins/org.eclipse.equinox.launcher.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $logger $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm $platformParams
 
 if [ "$buildType" != "N" ]
 then
