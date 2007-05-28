@@ -41,7 +41,6 @@ public class TaskTagsProvider {
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
 	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
 
-
 	/**
 	 * Constructs a new TaskTagsProvider.
 	 */
@@ -170,7 +169,7 @@ public class TaskTagsProvider {
 		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, PHPCorePlugin.getDefault().getPreferenceStore());
 		projectToTaskTagListener = new HashMap();
 		projectToPropagatorListeners = new HashMap();
-		preferencesPropagator = PreferencePropagatorFactory.getInstance().getPreferencePropagator(NODES_QUALIFIER, store);
+		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER, store);
 		isInstalled = true;
 	}
 
