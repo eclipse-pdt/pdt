@@ -17,10 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.internal.resources.XMLWriter;
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.core.util.Messages;
@@ -58,7 +55,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 		this.resource = resource;
 		this.isExported = isExported;
 	}
-	
+
 	/**
 	 * This method gets the include path entries for a given project
 	 * @param preferenceKey
@@ -67,10 +64,10 @@ public class IncludePathEntry implements IIncludePathEntry {
 	 * @param workingCopyManager
 	 * @return List of IIncludePathEntrys for a given project
 	 */
-	public static List getIncludePathEntriesFromPreferences (Key preferenceKey, IProject project, ProjectScope projectScope, IWorkingCopyManager workingCopyManager){
-		
+	public static List getIncludePathEntriesFromPreferences(Key preferenceKey, IProject project, ProjectScope projectScope, IWorkingCopyManager workingCopyManager) {
+
 		final ArrayList entries = new ArrayList();
-		
+
 		HashMap[] maps = XMLPreferencesReader.read(preferenceKey, projectScope, workingCopyManager);
 		if (maps.length > 0) {
 			for (int entryCount = 0; entryCount < maps.length; ++entryCount) {
@@ -78,20 +75,20 @@ public class IncludePathEntry implements IIncludePathEntry {
 				descriptor.restoreFromMap(maps[entryCount]);
 				entries.add(IncludePathEntry.elementDecode(descriptor, project.getFullPath()));
 			}
-		}	
+		}
 		return entries;
 	}
-	
+
 	/**
 	 * This method gets the include path entries for a given project as a string and returns a "decoded" List of IIncludePathEntrys
 	 * @param String representing the entries they way they are saved into the preferences
 	 * @param project
 	 * @return List of IIncludePathEntrys for a given project
 	 */
-	public static List getIncludePathEntriesFromPreferences (String entriesString, IProject project){
-		
+	public static List getIncludePathEntriesFromPreferences(String entriesString, IProject project) {
+
 		final ArrayList entries = new ArrayList();
-		
+
 		HashMap[] maps = XMLPreferencesReader.getHashFromStoredValue(entriesString);
 		if (maps.length > 0) {
 			for (int entryCount = 0; entryCount < maps.length; ++entryCount) {
@@ -99,12 +96,9 @@ public class IncludePathEntry implements IIncludePathEntry {
 				descriptor.restoreFromMap(maps[entryCount]);
 				entries.add(IncludePathEntry.elementDecode(descriptor, project.getFullPath()));
 			}
-		}	
+		}
 		return entries;
 	}
-	
-	
-	
 
 	public int getContentKind() {
 		return contentKind;
@@ -125,8 +119,6 @@ public class IncludePathEntry implements IIncludePathEntry {
 	public boolean isExported() {
 		return isExported;
 	}
-	
-	
 
 	public static IIncludePathEntry elementDecode(Element element, PHPProjectOptions options) {
 
@@ -142,15 +134,15 @@ public class IncludePathEntry implements IIncludePathEntry {
 		IIncludePathEntry entry = getEntry(pathAttr, entryKindAttr, contentKindAttr, resourceAttr, isExported, projectPath);
 		return entry;
 	}
-	
-	public static IIncludePathEntry elementDecode(IncludePathEntryDescriptor descriptor, IPath projectPath ){
-		
-		IIncludePathEntry entry = getEntry(descriptor.getPath(), descriptor.getEntryKind(), descriptor.getContentKind(), descriptor.getResourceName(),descriptor.isExported(), projectPath);	
+
+	public static IIncludePathEntry elementDecode(IncludePathEntryDescriptor descriptor, IPath projectPath) {
+
+		IIncludePathEntry entry = getEntry(descriptor.getPath(), descriptor.getEntryKind(), descriptor.getContentKind(), descriptor.getResourceName(), descriptor.isExported(), projectPath);
 		return entry;
 	}
-	
-	public static IIncludePathEntry getEntry(String sPath, String sEntryKind, String sContentKind, String sResource, boolean isExported, IPath projectPath ){
-//		 ensure path is absolute
+
+	public static IIncludePathEntry getEntry(String sPath, String sEntryKind, String sContentKind, String sResource, boolean isExported, IPath projectPath) {
+		//		 ensure path is absolute
 		IPath path = new Path(sPath);
 		int entryKind = entryKindFromString(sEntryKind);
 		if (entryKind != IIncludePathEntry.IPE_VARIABLE && entryKind != IIncludePathEntry.IPE_CONTAINER && !path.isAbsolute()) {
@@ -189,8 +181,6 @@ public class IncludePathEntry implements IIncludePathEntry {
 		}
 		return entry;
 	}
-	
-	
 
 	public static IIncludePathEntry newProjectEntry(IPath path, IResource resource, boolean isExported) {
 
@@ -262,16 +252,16 @@ public class IncludePathEntry implements IIncludePathEntry {
 		writer.printTag(TAG_INCLUDEPATHENTRY, parameters);
 		writer.endTag(TAG_INCLUDEPATHENTRY);
 	}
-	
-	public String elementEncode(IPath projectPath){
-		IncludePathEntryDescriptor descriptor = new IncludePathEntryDescriptor(this,projectPath);
+
+	public String elementEncode(IPath projectPath) {
+		IncludePathEntryDescriptor descriptor = new IncludePathEntryDescriptor(this, projectPath);
 		return descriptor.toString();
 	}
 
-	public static void updateProjectReferences(IIncludePathEntry[] newEntries, IIncludePathEntry[] oldEntries, IProject project, SubProgressMonitor monitor) {
+	public static void updateProjectReferences(IIncludePathEntry[] newEntries, IIncludePathEntry[] oldEntries, final IProject project, SubProgressMonitor monitor) {
 		try {
 			boolean changedReferences = false;
-			IProjectDescription projectDescription = project.getDescription();
+			final IProjectDescription projectDescription = project.getDescription();
 			ArrayList referenced = new ArrayList();
 			ArrayList referencedNames = new ArrayList();
 			IProject[] referencedProjects = projectDescription.getReferencedProjects();
@@ -312,7 +302,14 @@ public class IncludePathEntry implements IIncludePathEntry {
 			if (changedReferences) {
 				IProject[] referenceProjects = (IProject[]) referenced.toArray(new IProject[referenced.size()]);
 				projectDescription.setReferencedProjects(referenceProjects);
-				project.setDescription(projectDescription, monitor);	
+				WorkspaceJob job = new WorkspaceJob("updating project description") {
+					public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+						project.setDescription(projectDescription, monitor);
+						return Status.OK_STATUS;
+					}
+				};
+				job.setRule(project.getParent());
+				job.schedule();
 			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
@@ -398,7 +395,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 			default:
 				return "unknown"; //$NON-NLS-1$
 		}
-	}	
+	}
 
 	public String validate() {
 		String message = null;
@@ -422,8 +419,8 @@ public class IncludePathEntry implements IIncludePathEntry {
 					message = "included source not found: " + path.toOSString();
 				break;
 			case IIncludePathEntry.IPE_VARIABLE:
-//				if (resource == null || !resource.exists())
-//					message = "included variable not found: " + path.toOSString();
+				//				if (resource == null || !resource.exists())
+				//					message = "included variable not found: " + path.toOSString();
 				break;
 			case IIncludePathEntry.IPE_CONTAINER:
 				break;
@@ -438,7 +435,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 	 */
 	public void setResource(IResource resource) {
 		this.resource = resource;
-		
+
 	}
 
 	public int hashCode() {
