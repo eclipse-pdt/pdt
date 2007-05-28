@@ -36,20 +36,20 @@
 		<delete dir="${install}" />
 		<mkdir dir="${install}" />
 		<exec dir="." executable="unzip">
-			<arg line="-o -qq ${runtimeArchive} -d ${install}"/>
+			<arg line="-o -qq ${runtimeArchive} -d ${install}" />
 		</exec>
-		<antcall target="installTestPlugins"/>
+		<antcall target="installTestPlugins" />
 	</target>
 
 	<!--setup for tar.gz archives-->
 	<target name="setup-tar.gz" description="Reinstall the test Eclipse installation if specified by user">
-		<property name="currentDir" value="${basedir}"/>
+		<property name="currentDir" value="${basedir}" />
 		<delete dir="${install}" />
 		<mkdir dir="${install}" />
 		<exec dir="${install}" executable="tar">
-			<arg line="-xzf ${currentDir}/${runtimeArchive}"/>
+			<arg line="-xzf ${currentDir}/${runtimeArchive}" />
 		</exec>
-		<antcall target="installTestPlugins"/>
+		<antcall target="installTestPlugins" />
 	</target>
 
 	<target name="installTestPlugins">
@@ -62,7 +62,7 @@
 				eclipse/plugins/org.eclipse.ant.optional.junit_*
 				${testPluginsRequired}
 				-x eclipse/plugins/*.source*/**
-				-d ${install}"/>
+				-d ${install}" />
 		</exec>
 	</target>
 
@@ -75,7 +75,7 @@
 		<!--Unlock files on the Mac before starting tests.
 		  Required to delete some workspace directories (org.eclipse.core.filebuffers.tests and Team CVS tests).-->
 		<exec dir="${basedir}" executable="chflags" os="Mac OS X">
-			<arg line="-R nouchg ${install}"/>
+			<arg line="-R nouchg ${install}" />
 		</exec>
 	</target>
 
@@ -166,23 +166,23 @@
 			</condition-->
 
 			<condition property="performance.target.present" value="true">
-				<isset property="@{testPlugin}.has.performance.target"/>
+				<isset property="@{testPlugin}.has.performance.target" />
 			</condition>
 
 			<!--override the value of this property with performance if the tests run on performance machine-->
 			<property name="test.target" value="junit" />
 			<property name="report" value="@{testPlugin}" />
-			
+
 			<!--install Cloudscape plug-ins if running performance tests-->
 			<condition property="derby" value="eclipse/plugins/Cloudscape*/* ">
-				<equals arg1="${test.target}" arg2="performance"/>
+				<equals arg1="${test.target}" arg2="performance" />
 			</condition>
 			<property name="derby" value="" />
 			<antcall target="${test.target}">
 				<param name="testPlugin" value="${@{testPlugin}}" />
 				<param name="testPluginsRequired" value="@{testPluginsRequired}" />
 				<param name="output-file" value="@{testPlugin}.xml" />
-			</antcall>		
+			</antcall>
 		</sequential>
 	</macrodef>
 
@@ -192,40 +192,16 @@
 		<antcall target="genResults" />
 	</target>
 
-<target name="php.test.core" description="Runs core tests">
-		<antcall target="runtests">
-			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="testClass" value="org.eclipse.php.test.HeadlessTestSuite" />
-			<param name="report" value="HeadlessTestSuite" />
-			<param name="testPluginsRequired" value="" />
-			<param name="application" value="org.eclipse.test.coretestapplication" />
-			<param name="testTarget" value="HeadlessTestSuite" />
-			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
-		</antcall>
+	<target name="php.test.core" description="Runs core tests">
+		<runTests testPlugin="org.eclipse.php.test" />
 	</target>
 
 	<target name="php.test.ui" description="Runs ui tests">
-		<antcall target="runtests">
-			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="testClass" value="org.eclipse.php.test.GUITestSuite" />
-			<param name="report" value="GUITestSuite" />
-			<param name="testPluginsRequired" value="" />
-			<param name="application" value="org.eclipse.test.uitestapplication" />
-			<param name="testTarget" value="GUITestSuite" />
-			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=true" />
-		</antcall>
+		<runTests testPlugin="org.eclipse.php.test" />
 	</target>
 
 	<target name="php.test.bare" description="Runs bare tests">
-		<antcall target="runtests">
-			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="testClass" value="org.eclipse.php.test.BareTestSuite" />
-			<param name="report" value="BareTestSuite" />
-			<param name="testPluginsRequired" value="" />
-			<param name="application" value="org.eclipse.test.coretestapplication" />
-			<param name="testTarget" value="BareTestSuite" />
-			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
-		</antcall>
+		<runTests testPlugin="org.eclipse.php.test" />
 	</target>
 
 	<target name="all">
@@ -233,7 +209,7 @@
 		<antcall target="php.test.core" />
 		<antcall target="php.test.ui" />
 	</target>
-	
+
 	<target name="genHtml" description="Generates HTML results with provided JUNIT.XSL provided">
 		<style style="JUNIT.XSL" basedir="${results}/xml" destdir="${results}/html" />
 	</target>
