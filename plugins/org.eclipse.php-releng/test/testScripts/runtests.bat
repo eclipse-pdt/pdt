@@ -51,8 +51,11 @@ set tests=%tests% %1 && shift && goto processcmdlineargs
 REM ***************************************************************************
 REM	Run tests by running Ant in Eclipse on the test.xml script
 REM ***************************************************************************
+REM get name of org.eclipse.equinox.launcher_*.jar with version label
+dir /b eclipse\plugins\org.eclipse.equinox.launcher_*.jar>launcher-jar-name.txt
+set /p launcher-jar=<launcher-jar-name.txt
 
-%vm% -jar eclipse\startup.jar -Dosgi.ws=%ws% -Dosgi.os=%os% -Dosgi.arch=%arch% -data workspace -application org.eclipse.ant.core.antRunner -file test.xml %tests% -Dws=%ws% -Dos=%os% -Darch=%arch% -D%installmode%=true %properties% -logger org.apache.tools.ant.DefaultLogger
+%vm% -jar eclipse\plugins\%launcher-jar% -Dosgi.ws=%ws% -Dosgi.os=%os% -Dosgi.arch=%arch% -data workspace -application org.eclipse.ant.core.antRunner -file test.xml %tests% -Dws=%ws% -Dos=%os% -Darch=%arch% -D%installmode%=true %properties% -logger org.apache.tools.ant.DefaultLogger
 goto end
 
 :end
