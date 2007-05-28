@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
-import org.eclipse.debug.internal.ui.viewers.AsynchronousViewer;
+import org.eclipse.debug.internal.ui.viewers.model.InternalTreeModelViewer;
 import org.eclipse.debug.internal.ui.views.launch.LaunchView;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -359,7 +359,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 							segments[4] = frame;
 							TreePath treePath = new TreePath(segments);
 							// set the current launch as the LaunchViewer selection.
-							((AsynchronousViewer) view.getViewer()).setSelection(new TreeSelection(treePath), true, true);
+							((InternalTreeModelViewer) view.getViewer()).setSelection(new TreeSelection(treePath), true, true);
 						} catch (DebugException e) {
 						}
 					}
