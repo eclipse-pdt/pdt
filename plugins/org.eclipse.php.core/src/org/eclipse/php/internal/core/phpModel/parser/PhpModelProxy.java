@@ -20,6 +20,10 @@ public abstract class PhpModelProxy implements IPhpModel {
 		return model.getID();
 	}
 
+	public IPhpModel getModel() {
+		return model;
+	}
+
 	public CodeData[] getFileDatas() {
 		return model.getFileDatas();
 	}
