@@ -16,7 +16,7 @@ zend_extension=&amp;lt;path to the Zend Debugger extension&amp;gt;
 
    <element name="extension">
       <complexType>
-         <sequence>
+         <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="phpExe"/>
          </sequence>
          <attribute name="point" type="string" use="required">
