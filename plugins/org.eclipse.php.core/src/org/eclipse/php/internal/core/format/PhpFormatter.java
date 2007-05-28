@@ -244,8 +244,17 @@ public class PhpFormatter implements IStructuredFormatter {
 			// replace the starting spaces
 			final String newIndentation = resultBuffer.toString();
 			final String oldIndentation = lineText.substring(0, startingWhiteSpaces);
-			if (newIndentation.length() != oldIndentation.length())
+			char newChar = '\0';
+			if (newIndentation.length() > 0) {
+				newChar = newIndentation.charAt(0);
+			}
+			char oldChar = '\0';
+			if (oldIndentation.length() > 0) {
+				oldChar = oldIndentation.charAt(0); 
+			}
+			if (newIndentation.length() != oldIndentation.length() || newChar != oldChar) {
 				document.replaceText(sdRegion, orginalLineStart, startingWhiteSpaces, newIndentation);
+			}
 
 		} catch (BadLocationException e) {
 			Logger.logException(e);
