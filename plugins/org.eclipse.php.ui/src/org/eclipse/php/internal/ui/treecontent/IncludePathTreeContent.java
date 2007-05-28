@@ -55,7 +55,12 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 				treeViewer.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (treeViewer != null && !treeViewer.getControl().isDisposed()) {
+							// Clear any cached data in the tree (fixed bug #171147)
+							includePathTree.getDataTree().empty();
+							// Refresh the viewer
+							treeViewer.getControl().setRedraw(false);
 							treeViewer.refresh(obj);
+							treeViewer.getControl().setRedraw(true);
 						}
 					}
 				});
