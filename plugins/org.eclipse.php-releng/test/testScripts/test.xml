@@ -152,6 +152,8 @@
 		</condition>
 	</target>
 
+	
+	
 	<macrodef name="runTests">
 		<attribute name="testPlugin" />
 		<attribute name="testPluginsRequired" default="**/${@{testPlugin}}/* ${@{testPlugin}.prerequisite.testplugins}" />
@@ -192,18 +194,49 @@
 		<antcall target="genResults" />
 	</target>
 
+	<target name="runtests" depends="init" unless="skip.test">
+		<property name="${testPlugin}.prerequisites" value="" />
+		<!--override the value of this property with performance if the tests run on performance machine-->
+		<property name="test.target" value="junit" />
+		<antcall target="${test.target}" />
+	</target>
+
 	<target name="php.test.core" description="Runs core tests">
-		<runTests testPlugin="org.eclipse.php.test" />
+		<antcall target="runtests">
+			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="testClass" value="org.eclipse.php.test.HeadlessTestSuite" />
+			<param name="report" value="HeadlessTestSuite" />
+			<param name="testPluginsRequired" value="" />
+			<param name="application" value="org.eclipse.test.coretestapplication" />
+			<param name="testTarget" value="HeadlessTestSuite" />
+			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
+		</antcall>
 	</target>
 
 	<target name="php.test.ui" description="Runs ui tests">
-		<runTests testPlugin="org.eclipse.php.test" />
+		<antcall target="runtests">
+			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="testClass" value="org.eclipse.php.test.GUITestSuite" />
+			<param name="report" value="GUITestSuite" />
+			<param name="testPluginsRequired" value="" />
+			<param name="application" value="org.eclipse.test.uitestapplication" />
+			<param name="testTarget" value="GUITestSuite" />
+			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=true" />
+		</antcall>
 	</target>
 
 	<target name="php.test.bare" description="Runs bare tests">
-		<runTests testPlugin="org.eclipse.php.test" />
+		<antcall target="runtests">
+			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="testClass" value="org.eclipse.php.test.BareTestSuite" />
+			<param name="report" value="BareTestSuite" />
+			<param name="testPluginsRequired" value="" />
+			<param name="application" value="org.eclipse.test.coretestapplication" />
+			<param name="testTarget" value="BareTestSuite" />
+			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
+		</antcall>
 	</target>
-
+	
 	<target name="all">
 		<antcall target="php.test.bare" />
 		<antcall target="php.test.core" />
