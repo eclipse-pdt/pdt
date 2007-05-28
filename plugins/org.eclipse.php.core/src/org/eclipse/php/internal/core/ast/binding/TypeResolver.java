@@ -292,8 +292,11 @@ public class TypeResolver extends AbstractVisitor {
 				leftAttr = evaluatedAttribute;
 				infixExpression.getRight().accept(this);
 				rightAttr = evaluatedAttribute;
-				if (leftAttr.getType() == AttributeType.ARRAY_ATTRIBUTE || leftAttr.getType() == AttributeType.CLASS_ATTRIBUTE || rightAttr.getType() == AttributeType.STRING_ATTRIBUTE || rightAttr.getType() == AttributeType.CLASS_ATTRIBUTE) {
-					// semantic error is detected
+				if (leftAttr.getType() == AttributeType.STRING_ATTRIBUTE || rightAttr.getType() == AttributeType.STRING_ATTRIBUTE) {
+					final CompositeAttribute attr = new CompositeAttribute();
+					attr.addAttribute(Attribute.INT_ATTRIBUTE);
+					attr.addAttribute(Attribute.REAL_ATTRIBUTE);
+					evaluatedAttribute = attr;
 				}
 				if (leftAttr == Attribute.REAL_ATTRIBUTE || rightAttr == Attribute.REAL_ATTRIBUTE) {
 					evaluatedAttribute = Attribute.REAL_ATTRIBUTE;
@@ -309,7 +312,8 @@ public class TypeResolver extends AbstractVisitor {
 				infixExpression.getRight().accept(this);
 				rightAttr = evaluatedAttribute;
 				if (leftAttr.getType() == AttributeType.ARRAY_ATTRIBUTE || leftAttr.getType() == AttributeType.CLASS_ATTRIBUTE || rightAttr.getType() == AttributeType.STRING_ATTRIBUTE || rightAttr.getType() == AttributeType.CLASS_ATTRIBUTE) {
-					// semantic error is detected
+					// warning here 
+					evaluatedAttribute = Attribute.BOOL_ATTRIBUTE;
 				}
 				final CompositeAttribute attr = new CompositeAttribute();
 				attr.addAttribute(Attribute.INT_ATTRIBUTE);

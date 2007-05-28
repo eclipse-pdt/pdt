@@ -217,11 +217,6 @@ public class ProgramScope extends AbstractVisitor implements Scope {
 
 	}
 
-	public void visit(ExpressionStatement statement) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void visit(Program program) {
 		super.visit(program);
 	}

@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.ast.binding;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +30,24 @@ public class CompositeAttribute extends Attribute {
 		assert attr != null;
 
 		attributes.add(attr);
+	}
+
+	/**
+	 * Prints the composite attributes together
+	 */
+	public String toString() {
+		StringBuffer buffer = new StringBuffer(getType().toString());
+		buffer.append("(");
+		for (Iterator iter = attributes.iterator(); iter.hasNext();) {
+			Attribute element = (Attribute) iter.next();
+			buffer.append(element.toString());
+			if (iter.hasNext()) {
+				buffer.append(", ");
+			}
+		}
+		buffer.append(")");
+		
+		return buffer.toString();
 	}
 
 	public List getAttrributes() {
