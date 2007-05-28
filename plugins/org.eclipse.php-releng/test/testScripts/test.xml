@@ -192,6 +192,18 @@
 		<antcall target="genResults" />
 	</target>
 
+<target name="php.test.core" description="Runs core tests">
+		<antcall target="runtests">
+			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="testClass" value="org.eclipse.php.test.HeadlessTestSuite" />
+			<param name="report" value="HeadlessTestSuite" />
+			<param name="testPluginsRequired" value="" />
+			<param name="application" value="org.eclipse.test.coretestapplication" />
+			<param name="testTarget" value="HeadlessTestSuite" />
+			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
+		</antcall>
+	</target>
+
 	<target name="php.test.ui" description="Runs ui tests">
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
@@ -204,9 +216,16 @@
 		</antcall>
 	</target>
 
-	<target name="genResults">
-		<copy file="${eclipse-home}/${report}.xml" tofile="${results}/xml/${report}_${platform}.xml" failonerror="false" />
-		<style style="${eclipse-home}/plugins/org.eclipse.test/JUNIT.XSL" basedir="${results}/xml" destdir="${results}/html" />
+	<target name="php.test.bare" description="Runs bare tests">
+		<antcall target="runtests">
+			<param name="testPlugin" value="org.eclipse.php.test" />
+			<param name="testClass" value="org.eclipse.php.test.BareTestSuite" />
+			<param name="report" value="BareTestSuite" />
+			<param name="testPluginsRequired" value="" />
+			<param name="application" value="org.eclipse.test.coretestapplication" />
+			<param name="testTarget" value="BareTestSuite" />
+			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
+		</antcall>
 	</target>
 
 	<target name="all">
