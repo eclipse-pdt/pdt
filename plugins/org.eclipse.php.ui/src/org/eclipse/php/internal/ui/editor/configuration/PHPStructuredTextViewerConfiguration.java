@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.editor.configuration;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -28,6 +29,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
+import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -182,7 +184,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	private StructuredContentAssistant fContentAssistant = null;
-	
+
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
 		return getPHPContentAssistant(sourceViewer, false);
 	}
@@ -250,7 +252,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			if (hoverDescs[i].isEnabled()) {
 				int j = 0;
 				int stateMask = hoverDescs[i].getStateMask();
-				while (j < stateMasksLength) {
+				while ( j < stateMasksLength ) {
 					if (stateMasks[j] == stateMask)
 						break;
 					j++;
@@ -278,7 +280,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		PHPEditorTextHoverDescriptor[] hoverDescs = PHPUiPlugin.getDefault().getPHPEditorTextHoverDescriptors();
 		int i = 0;
-		while (i < hoverDescs.length) {
+		while ( i < hoverDescs.length ) {
 			if (hoverDescs[i].isEnabled() && hoverDescs[i].getStateMask() == stateMask) {
 				return new PHPTextHoverProxy(hoverDescs[i], null);
 			}
@@ -311,7 +313,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		IContentFormatter usedFormatter = null;
-		
+
 		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterProcessor";
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
 		for (int i = 0; i < elements.length; i++) {
@@ -321,14 +323,12 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				usedFormatter = (IContentFormatter) ecProxy.getObject();
 			}
 		}
-		
+
 		if (usedFormatter == null) {
 			usedFormatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IHTMLPartitions.HTML_DEFAULT);
 			((MultiPassContentFormatter) usedFormatter).setMasterStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()));
 		}
 
-		
-		
 		return usedFormatter;
 	}
 
@@ -349,5 +349,38 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			return new PHPDoubleClickStrategy();
 		} else
 			return super.getDoubleClickStrategy(sourceViewer, contentType);
+	}
+
+	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
+		Vector vector = new Vector();
+
+		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
+		char indentCharPref = FormatPreferencesSupport.getInstance().getIndentationChar(null);
+		int indentationSize = FormatPreferencesSupport.getInstance().getIndentationSize(null);
+
+		for (int i = 0; i <= indentationSize; i++) {
+			StringBuffer prefix = new StringBuffer();
+			boolean appendTab = false;
+
+			for (int j = 0; j + i < indentationSize; j++)
+				prefix.append(indentCharPref);
+
+			if (i != 0) {
+				appendTab = true;
+			}
+
+			if (appendTab) {
+				prefix.append('\t');
+				vector.add(prefix.toString());
+				// remove the tab so that indentation - tab is also an indent
+				// prefix
+				prefix.deleteCharAt(prefix.length() - 1);
+			}
+			vector.add(prefix.toString());
+		}
+
+		vector.add(""); //$NON-NLS-1$
+
+		return (String[]) vector.toArray(new String[vector.size()]);
 	}
 }
