@@ -7,52 +7,189 @@
 	<!--properties file containing the build information-->
 	<property file="label.properties" />
 
-	<!--suffix added to report name to identify which platform tests results come from-->
+	<!--default directory where test-eclipse will be installed-->
+	<property name="install" value="${basedir}/test-eclipse" />
+
+	<!--suffix added to test output files to identify platform on which tests ran.-->
 	<property name="platform" value="${os}.${ws}.${arch}" />
 
 	<!-- The root of the eclipse installation -->
-	<property name="eclipse-home" value="eclipse" />
+	<property name="eclipse-home" value="${install}/eclipse" />
 
-	<!-- The directory that will contain the xml and html results from the tests that are run -->
+	<!-- The directory that will contain all files containing information on the tests that ran.-->
 	<property name="results" value="${basedir}/results" />
 	<property name="org.eclipse.test" value="org.eclipse.test" />
 
-	<target name="init">
+	<target name="setup" unless="noclean" depends="init">
+		<condition property="setupTarget" value="setup-zip">
+			<contains string="${runtimeArchive}" substring=".zip" />
+		</condition>
+		<condition property="setupTarget" value="setup-tar.gz">
+			<contains string="${runtimeArchive}" substring=".tar.gz" />
+		</condition>
+		<antcall target="${setupTarget}" />
+		<antcall target="configureTeamTest" />
+	</target>
+
+	<!--setup for zip archives-->
+	<target name="setup-zip" description="Reinstall the test Eclipse installation if specified by user">
+		<delete dir="${install}" />
+		<mkdir dir="${install}" />
+		<exec dir="." executable="unzip">
+			<arg line="-o -qq ${runtimeArchive} -d ${install}"/>
+		</exec>
+		<antcall target="installTestPlugins"/>
+	</target>
+
+	<!--setup for tar.gz archives-->
+	<target name="setup-tar.gz" description="Reinstall the test Eclipse installation if specified by user">
+		<property name="currentDir" value="${basedir}"/>
+		<delete dir="${install}" />
+		<mkdir dir="${install}" />
+		<exec dir="${install}" executable="tar">
+			<arg line="-xzf ${currentDir}/${runtimeArchive}"/>
+		</exec>
+		<antcall target="installTestPlugins"/>
+	</target>
+
+	<target name="installTestPlugins">
+		<exec dir="." executable="unzip">
+			<arg line="-o -qq eclipse-junit-tests-*.zip
+				${derby}
+				eclipse/plugins/org.eclipse.test/*
+				eclipse/plugins/org.eclipse.test.performance_*
+				eclipse/plugins/org.eclipse.test.performance.win32_*
+				eclipse/plugins/org.eclipse.ant.optional.junit_*
+				${testPluginsRequired}
+				-x eclipse/plugins/*.source*/**
+				-d ${install}"/>
+		</exec>
+	</target>
+
+	<target name="init" depends="setRuntimeArchive">
+
 		<mkdir dir="${results}/xml" />
 		<mkdir dir="${results}/html" />
+		<mkdir dir="${junit-report-output}" />
+
+		<!--Unlock files on the Mac before starting tests.
+		  Required to delete some workspace directories (org.eclipse.core.filebuffers.tests and Team CVS tests).-->
+		<exec dir="${basedir}" executable="chflags" os="Mac OS X">
+			<arg line="-R nouchg ${install}"/>
+		</exec>
 	</target>
 
-	<target name="junit">
-		<echo>"report - ${report}"</echo>
-		<echo>"results - ${results}"</echo>
-		<echo>"basedir - ${basedir}"</echo>
-		<echo>"testClass - ${testClass}"</echo>
-		<mkdir dir="${results}/xml/all" />
-		<property name="derby" value="" />
-		<ant antfile="${eclipse-home}/plugins/${org.eclipse.php.test}/test.xml" dir="." />
-		<copy file="TEST-${testClass}.xml" tofile="${results}/xml/${report}/TEST-${testClass}.xml" failonerror="false" />
-		<ant antfile="${eclipse-home}/plugins/${org.eclipse.php.test}/test.xml" target="collect-all" dir="." />
-		<copy file="TEST-php.xml" tofile="${results}/xml/all/TEST-php.xml" failonerror="false" />
-		<antcall target="genHtml" />
+	<target name="setRuntimeArchive">
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-win32.zip">
+			<and>
+				<equals arg1="${os}" arg2="win32" />
+				<equals arg1="${ws}" arg2="win32" />
+				<equals arg1="${arch}" arg2="x86" />
+			</and>
+		</condition>
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-linux-gtk.tar.gz">
+			<and>
+				<equals arg1="${os}" arg2="linux" />
+				<equals arg1="${ws}" arg2="gtk" />
+				<equals arg1="${arch}" arg2="x86" />
+			</and>
+		</condition>
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-linux-motif.tar.gz">
+			<and>
+				<equals arg1="${os}" arg2="linux" />
+				<equals arg1="${ws}" arg2="motif" />
+				<equals arg1="${arch}" arg2="x86" />
+			</and>
+		</condition>
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-linux-gtk-ppc.tar.gz">
+			<and>
+				<equals arg1="${os}" arg2="linux" />
+				<equals arg1="${ws}" arg2="gtk" />
+				<equals arg1="${arch}" arg2="ppc" />
+			</and>
+		</condition>
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-linux-gtk-x86_64.tar.gz">
+			<and>
+				<equals arg1="${os}" arg2="linux" />
+				<equals arg1="${ws}" arg2="gtk" />
+				<equals arg1="${arch}" arg2="ppc" />
+			</and>
+		</condition>
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-macosx-carbon.tar.gz">
+			<and>
+				<equals arg1="${os}" arg2="macosx" />
+				<equals arg1="${ws}" arg2="carbon" />
+				<equals arg1="${arch}" arg2="ppc" />
+			</and>
+		</condition>
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-hpux-motif.zip">
+			<and>
+				<equals arg1="${os}" arg2="hpux" />
+				<equals arg1="${ws}" arg2="motif" />
+				<equals arg1="${arch}" arg2="PA_RISC" />
+			</and>
+		</condition>
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-solaris-motif.zip">
+			<and>
+				<equals arg1="${os}" arg2="solaris" />
+				<equals arg1="${ws}" arg2="motif" />
+				<equals arg1="${arch}" arg2="sparc" />
+			</and>
+		</condition>
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-solaris-gtk.zip">
+			<and>
+				<equals arg1="${os}" arg2="solaris" />
+				<equals arg1="${ws}" arg2="gtk" />
+				<equals arg1="${arch}" arg2="sparc" />
+			</and>
+		</condition>
+		<condition property="runtimeArchive" value="eclipse-SDK-${buildId}-aix-motif.zip">
+			<and>
+				<equals arg1="${os}" arg2="aix" />
+				<equals arg1="${ws}" arg2="motif" />
+				<equals arg1="${arch}" arg2="ppc" />
+			</and>
+		</condition>
 	</target>
 
-	<target name="runtests" depends="init" unless="skip.test">
-		<property name="${testPlugin}.prerequisites" value="" />
-		<!--override the value of this property with performance if the tests run on performance machine-->
-		<property name="test.target" value="junit" />
-		<antcall target="${test.target}" />
-	</target>
+	<macrodef name="runTests">
+		<attribute name="testPlugin" />
+		<attribute name="testPluginsRequired" default="**/${@{testPlugin}}/* ${@{testPlugin}.prerequisite.testplugins}" />
 
-	<target name="php.test.core" description="Runs core tests">
-		<antcall target="runtests">
-			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="testClass" value="org.eclipse.php.test.HeadlessTestSuite" />
-			<param name="report" value="HeadlessTestSuite" />
-			<param name="testPluginsRequired" value="" />
-			<param name="application" value="org.eclipse.test.coretestapplication" />
-			<param name="testTarget" value="HeadlessTestSuite" />
-			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
-		</antcall>
+		<sequential>
+
+			<!--alwasy use eclipse executable to launch tests with the exception of performance tests-->
+			<!--condition property="useEclipseExe" value="true">
+				<not>
+					<equals arg1="${test.target}" arg2="performance"/>
+				</not>
+			</condition-->
+
+			<condition property="performance.target.present" value="true">
+				<isset property="@{testPlugin}.has.performance.target"/>
+			</condition>
+
+			<!--override the value of this property with performance if the tests run on performance machine-->
+			<property name="test.target" value="junit" />
+			<property name="report" value="@{testPlugin}" />
+			
+			<!--install Cloudscape plug-ins if running performance tests-->
+			<condition property="derby" value="eclipse/plugins/Cloudscape*/* ">
+				<equals arg1="${test.target}" arg2="performance"/>
+			</condition>
+			<property name="derby" value="" />
+			<antcall target="${test.target}">
+				<param name="testPlugin" value="${@{testPlugin}}" />
+				<param name="testPluginsRequired" value="@{testPluginsRequired}" />
+				<param name="output-file" value="@{testPlugin}.xml" />
+			</antcall>		
+		</sequential>
+	</macrodef>
+
+	<target name="junit" unless="skip.test">
+		<antcall target="setup" />
+		<ant antfile="${eclipse-home}/plugins/${testPlugin}/test.xml" dir="${eclipse-home}" />
+		<antcall target="genResults" />
 	</target>
 
 	<target name="php.test.ui" description="Runs ui tests">
@@ -67,16 +204,9 @@
 		</antcall>
 	</target>
 
-	<target name="php.test.bare" description="Runs bare tests">
-		<antcall target="runtests">
-			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="testClass" value="org.eclipse.php.test.BareTestSuite" />
-			<param name="report" value="BareTestSuite" />
-			<param name="testPluginsRequired" value="" />
-			<param name="application" value="org.eclipse.test.coretestapplication" />
-			<param name="testTarget" value="BareTestSuite" />
-			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
-		</antcall>
+	<target name="genResults">
+		<copy file="${eclipse-home}/${report}.xml" tofile="${results}/xml/${report}_${platform}.xml" failonerror="false" />
+		<style style="${eclipse-home}/plugins/org.eclipse.test/JUNIT.XSL" basedir="${results}/xml" destdir="${results}/html" />
 	</target>
 
 	<target name="all">
