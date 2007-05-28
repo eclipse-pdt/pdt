@@ -219,6 +219,8 @@ public class PHPValue extends PHPDebugElement implements IValue {
 				}
 			} catch (DebugException e) {
 				return false;
+			} catch (NullPointerException npe) {
+				return false;
 			}
 			return true;
 		}
