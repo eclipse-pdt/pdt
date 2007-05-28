@@ -19,7 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.internal.events.ResourceDelta;
 import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -410,7 +412,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 
 		if (projectResourcesListener == null) {
 			projectResourcesListener = new ProjectResourceChangeListener();
-			ResourcesPlugin.getWorkspace().addResourceChangeListener(projectResourcesListener, IResourceChangeEvent.PRE_DELETE);
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(projectResourcesListener, IResourceChangeEvent.POST_CHANGE);
 		}
 	}
 
@@ -709,8 +711,35 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	private class ProjectResourceChangeListener implements IResourceChangeListener {
 
 		public void resourceChanged(IResourceChangeEvent event) {
-			if (event.getType() == IResourceChangeEvent.PRE_DELETE) {
-				handleProjectDeletion(event.getResource());
+			if (event.getType() == IResourceChangeEvent.POST_CHANGE && event.getSource() instanceof IWorkspace) {
+				IResourceDelta[] affectedChildren = event.getDelta().getAffectedChildren();
+				for (int i = 0; i < affectedChildren.length; i++) {
+					if ((affectedChildren[i].getFlags() & IResourceDelta.MOVED_TO) != 0) {
+						IProject projectMovedFrom = (IProject) affectedChildren[i].getResource();
+						IProject projectMovedTo = ResourcesPlugin.getWorkspace().getRoot().getProject(affectedChildren[i].getMovedToPath().lastSegment());
+						affectedChildren[i].getMovedToPath();
+						handleProjectRename(projectMovedFrom, projectMovedTo);
+					} else if(affectedChildren[i].getKind() == IResourceDelta.REMOVED) {
+						IProject removedProject = (IProject) affectedChildren[i].getResource();
+						handleProjectDeletion(removedProject);
+					}
+
+				}
+			}
+		}
+
+		private void handleProjectRename(IProject from, IProject to) {
+			if (from == project) {
+				handleProjectDeletion(from);
+			} else {
+				removeProject(from);
+				addProject(to);
+
+				PHPProjectOptions options = PHPProjectOptions.forProject(project);
+				if (options == null)
+					return;
+
+				options.renameResourceAtIncludePath(from, to);
 			}
 		}
 
