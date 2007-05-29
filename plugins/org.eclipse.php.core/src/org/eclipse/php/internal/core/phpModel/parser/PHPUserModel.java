@@ -474,6 +474,12 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 		manager = new PHPUserModelManager(project, this);
 	}
 
+	public IProject getProject() {
+		if (manager != null)
+			return manager.getProject();
+		return null;
+	}
+
 	public void fileAdded(IFile file) {
 	}
 
