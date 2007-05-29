@@ -96,8 +96,11 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 		return null;
 	}
 
-	public IContextInformationValidator getContextInformationValidator() {
-		return contextInformationValidator;
+	public final IContextInformationValidator getContextInformationValidator() {
+		if (this.getClass().equals(PHPContentAssistProcessor.class)) {
+			return contextInformationValidator;
+		}
+		return null;
 	}
 	
 	private int guessContextInformationPosition(ITextViewer viewer, int offset) {
