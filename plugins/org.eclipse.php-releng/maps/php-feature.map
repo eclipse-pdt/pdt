@@ -9,6 +9,6 @@ plugin@org.eclipse.php.ui=v20070529-TEST,:pserver:anonymous@dev.eclipse.org:/cvs
 plugin@org.eclipse.php.help=v20070527,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 plugin@org.eclipse.php.delivery=v20070527,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 feature@org.eclipse.php_feature=v20070529-TEST,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php-feature/
-feature@org.eclipse.php.sdk_feature=v20070527,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php.sdk-feature/
+feature@org.eclipse.php.sdk_feature=v20070529-TEST2,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php.sdk-feature/
 feature@org.eclipse.php.test_feature=v20070527,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php.test-feature/
 plugin@org.eclipse.php.test=v20070529-TEST,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
