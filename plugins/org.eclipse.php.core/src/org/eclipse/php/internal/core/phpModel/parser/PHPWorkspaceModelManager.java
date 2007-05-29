@@ -187,6 +187,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 						if (hasNature) {
 							project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
 						}
+						if (monitor.isCanceled()) {
+							break;
+						}
 						monitor.worked(1);
 					}
 				} finally {

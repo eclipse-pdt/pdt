@@ -53,9 +53,12 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 	}
 
 	private void handle(IFile file) {
+		if (monitor.isCanceled()) {
+			return;
+		}
 		monitor.subTask(NLS.bind("Compiling: {0} ...", file.getFullPath().toPortableString()));
 
 		validator.validateFile(file);
-		PHPWorkspaceModelManager.getInstance().addFileToModel(file);		
+		PHPWorkspaceModelManager.getInstance().addFileToModel(file);
 	}
 }
