@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.ListenerList;
  */
 public class ExternalFilesRegistry {
 
-	private static ExternalFilesRegistry instance = null;
+	private static final ExternalFilesRegistry instance = new ExternalFilesRegistry();
 	private final HashMap externalFilesRegistry = new HashMap();
 	private final ListenerList listeners = new ListenerList();
 	private IProject externalFilesProject;
@@ -26,10 +26,7 @@ public class ExternalFilesRegistry {
 		externalFilesProject = ResourcesPlugin.getWorkspace().getRoot().getProject("external_" + System.currentTimeMillis());
 	}
 
-	public static synchronized ExternalFilesRegistry getInstance() {
-		if (instance == null) {
-			instance = new ExternalFilesRegistry();
-		}
+	public static ExternalFilesRegistry getInstance() {
 		return instance;
 	}
 
@@ -38,7 +35,7 @@ public class ExternalFilesRegistry {
 	 * @param iFilePath - The String representation of the IFile's path
 	 * @param localPath = The String representation of the real File's path from file system
 	 */
-	public void addFileEntry(String localPath, IFile externalFile) {
+	public synchronized void addFileEntry(String localPath, IFile externalFile) {
 		if (!externalFilesRegistry.containsKey(localPath)) {
 			externalFilesRegistry.put(localPath, externalFile);
 			notifyEntryChange(localPath, true);
@@ -58,7 +55,7 @@ public class ExternalFilesRegistry {
 	 * Removes the external file representation from the files registry
 	 * @param localPath - The String representation of the local path
 	 */
-	public void removeFileEntry(String localPath) {
+	public synchronized void removeFileEntry(String localPath) {
 		if (externalFilesRegistry.remove(localPath) != null) {
 			notifyEntryChange(localPath, false);
 		}
