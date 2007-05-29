@@ -53,24 +53,12 @@
             delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
             modes="run"
             id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
-         <fileExtension extension="php"/>
-         <fileExtension extension="php3"/>
-         <fileExtension extension="php4"/>
-         <fileExtension extension="php5"/>
-         <fileExtension extension="phtml"/>
       </launchConfigurationType>
       <launchConfigurationType
             delegate="org.eclipse.php.internal.debug.core.launching.PHPWebPageLaunchDelegate"
             id="org.eclipse.php.debug.core.launching.webPageLaunch"
-            modes="run,debug"
-            name="%webPageLaunchConfigurationType.label"
-            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
-            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php">
-         <fileExtension extension="php"/>
-         <fileExtension extension="php3"/>
-         <fileExtension extension="php4"/>
-         <fileExtension extension="php5"/>
-         <fileExtension extension="phtml"/>
+            modes="run"
+            name="%webPageLaunchConfigurationType.label">
       </launchConfigurationType>
    </extension>
    
