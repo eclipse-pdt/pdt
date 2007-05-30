@@ -19,7 +19,7 @@
 	<property name="extraVMargs" value=""/>
 	<property name="timeout" value="7200000" />
 	<property name="junit-report-output" value="${results}" />
-	<property name="test-output" value="${junit-report-output}/${classname}.xml" />
+	<property name="test-output" value="${junit-report-output}/xml/TEST-${classname}.xml" />
 	<property name="formatter" value="org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter"/>
 	
 	
