@@ -19,7 +19,7 @@ chmod +x *
 dos2unix runtests
 
 # runtests
-./runtests -ws gtk -os linux -arch ppc -xserver
+./runtests -ws gtk -os linux -arch ppc -jvm /shared/common/ibm-java2-ppc-50/bin/java -xserver
 
 # update by rss + mail
 cd ../rss
