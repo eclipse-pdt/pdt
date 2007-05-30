@@ -333,7 +333,7 @@ public class PHPModelUtil {
 			if (path.segmentCount() < 2) // path doesnt include project name, return null
 				return null;
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-			if(resource == null && ExternalFilesRegistry.getInstance().isEntryExist(filename)) {
+			if (resource == null && ExternalFilesRegistry.getInstance().isEntryExist(filename)) {
 				resource = ExternalFilesRegistry.getInstance().getFileEntry(filename);
 			}
 			return resource;
@@ -555,30 +555,20 @@ public class PHPModelUtil {
 
 	public static boolean isPhpFile(final IFile file) {
 		IContentDescription contentDescription = null;
-		if (file.exists()) {
-			try {
-				contentDescription = file.getContentDescription();
-			} catch (final CoreException e) {
-				PHPCorePlugin.log(e);
-				return false;
-			}
-
-			if (contentDescription == null) {
-				if (hasPhpExtention(file))
-					PHPCorePlugin.logErrorMessage("content description null!");
-				return false;
-			}
-
-			if (!ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription.getContentType().getId()))
-				return false;
-
-			return true;
+		if (!file.exists()) {
+			return hasPhpExtention(file);
+		}
+		try {
+			contentDescription = file.getContentDescription();
+		} catch (final CoreException e) {
+			return hasPhpExtention(file);
 		}
 
-		else if (hasPhpExtention(file)) {
-			return true;
+		if (contentDescription == null) {
+			return hasPhpExtention(file);
 		}
-		return false;
+
+		return ContentTypeIdForPHP.ContentTypeID_PHP.equals(contentDescription.getContentType().getId());
 	}
 
 	public static boolean isReadOnly(final Object target) {
