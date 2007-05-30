@@ -20,12 +20,8 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.wst.common_core.feature" version="2.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.common_ui.feature" version="2.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.xml_core.feature" version="2.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.xml_ui.feature" version="2.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.web_core.feature" version="2.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.web_ui.feature" version="2.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.wst" version="2.0.0" match="compatible"/>
+      <import feature="org.eclipse.platform" version="3.3.0" match="compatible"/>
    </requires>
 
    <plugin
