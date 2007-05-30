@@ -57,7 +57,7 @@ import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * The debug connection thread is responsible of initilizing and handle a single debug session that was
+ * The debug connection thread is responsible of initializing and handle a single debug session that was
  * triggered by a remote or local debugger.
  * 
  * @author shalom
@@ -225,7 +225,7 @@ public class DebugConnectionThread implements Runnable {
 					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 				}
 
-				// if the responce is null. it meens that there is no answer from the server.
+				// if the response is null. it means that there is no answer from the server.
 				// This can be because on the peerResponseTimeout.
 				if (response == null && isConnected()) {
 					if (isDebugMode) {
@@ -251,11 +251,11 @@ public class DebugConnectionThread implements Runnable {
 			}
 			return response;
 
-		} catch (IOException exc) { // retrun null for any exception
+		} catch (IOException exc) { // Return null for any exception
 			//Log.writeLog("No Connection");
 			//Log.writeLog(exc);
 
-		} catch (InterruptedException exc) {// retrun null for any exception
+		} catch (InterruptedException exc) {// Return null for any exception
 			//Log.writeLog(exc);
 		}
 		return null;
@@ -290,7 +290,7 @@ public class DebugConnectionThread implements Runnable {
 				byteArrayOutputStream.writeTo(out);
 				out.flush();
 			}
-		} catch (Exception exc) { // retrun null for any exception
+		} catch (Exception exc) { // Return null for any exception
 			System.out.println("Exception for request no." + theMsg.getType() + exc.toString());
 			responseHandler.handleResponse(request, null);
 			responseHandlers.remove(new Integer(msgId));
@@ -468,9 +468,9 @@ public class DebugConnectionThread implements Runnable {
 	}
 
 	/**
-	 * Hook the debug session to the currect ILaunch that started it. 
-	 * In case there is no such launch, the user will have to fill in some of the detailes needed to start a debug
-	 * session currectly.
+	 * Hook the debug session to the correct ILaunch that started it. 
+	 * In case there is no such launch, the user will have to fill in some of the details needed to start a debug
+	 * session correctly.
 	 *  
 	 * @param debugSessionStartedNotification
 	 * @return True, if the debug session hook was successful; False, otherwise.
@@ -686,14 +686,14 @@ public class DebugConnectionThread implements Runnable {
 			inWork = true;
 			shouldExit = false;
 			theThread = new Thread(this);
-			// This makes the printings much faster.
+			// This makes the printing much faster.
 			theThread.setPriority(1);//theThread.getPriority()+1);
 			theThread.start();
 		}
 
 		/**
 		 * start the thread on a new output.
-		 * This will block untill end of processing of all the messages.
+		 * This will block until end of processing of all the messages.
 		 */
 		public synchronized void start(DataOutputStream out, boolean clearQueue) {
 			if (clearQueue)
@@ -703,7 +703,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 
 		/**
-		 * This function will block the calling thread untill the the InputMessageHandler
+		 * This function will block the calling thread until the the InputMessageHandler
 		 * becomes inactive.
 		 */
 		public void waitForStart(DataOutputStream out, boolean clearQueue) {
@@ -764,7 +764,7 @@ public class DebugConnectionThread implements Runnable {
 
 		/**
 		 * This method is called by the input manager so that the message handler
-		 * will queueIn an internal protocal message for the closure of connection.
+		 * will queueIn an internal protocol message for the closure of connection.
 		 */
 		public synchronized void connectionClosed() {
 			ensureStarted(); // make sure the thread will process the stop message
@@ -821,7 +821,7 @@ public class DebugConnectionThread implements Runnable {
 
 					//System.out.println("InputMessageHandler handle: " + newInputMessage);
 
-					// do not stop untill the message is processed.
+					// do not stop until the message is processed.
 
 					synchronized (this) {
 						try {
@@ -858,7 +858,7 @@ public class DebugConnectionThread implements Runnable {
 										out.flush();
 									}
 								} else {
-									// error, we could not find the relevant request message handler for the recieved message.
+									// error, we could not find the relevant request message handler for the received message.
 								}
 							} else if (newInputMessage instanceof IDebugResponseMessage) {
 								IDebugResponseMessage r = (IDebugResponseMessage) newInputMessage;
@@ -944,7 +944,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 
 		/**
-		 * Set the debug output enconding. 
+		 * Set the debug output encoding. 
 		 * The output encoding effects the {@link OutputNotification} strings encoding.
 		 * 
 		 * @param outputEncoding
@@ -1032,8 +1032,8 @@ public class DebugConnectionThread implements Runnable {
 
 							}
 							wait();
-							// This way we will start working untill the connectionCreator
-							// hase finished updating the in + out.
+							// This way we will start working until the connectionCreator
+							// has finished updating the in + out.
 							synchronized (in) {
 							}
 						}
@@ -1063,12 +1063,12 @@ public class DebugConnectionThread implements Runnable {
 						Logger.log(Logger.ERROR, "Socket error (length is negative): possibly Server is SSL, Client is not.");
 					}
 					// We have a new message. process it !!.
-					// This part is synchronized since we do not want the thread to be stoped
+					// This part is synchronized since we do not want the thread to be stopped
 					// when in processing of a message.
 					synchronized (this) {
 						int messageType = getMessageType(in);
 						// If this is the first message, the protocol is still held as invalid. 
-						// Check that the first message hes the DebugSessionStartedNotification type. If not, then we
+						// Check that the first message has the DebugSessionStartedNotification type. If not, then we
 						// can assume that the remote debugger protocol has a different version then expected.
 						if (!validProtocol && messageType != startMessageId) {
 							// display an error message that the protocol in used is wrong.
