@@ -16,6 +16,7 @@ import org.eclipse.debug.core.ILaunchesListener;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.php.internal.core.util.collections.IntMap;
 import org.eclipse.php.internal.debug.core.launching.PHPServerLaunchDecorator;
+import org.eclipse.swt.browser.Browser;
 
 /**
  * This class is responsible for mapping debug session id's to the ILaunch that is responsible for
@@ -98,6 +99,11 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 			}
 		}
 		updateSystemProperty(launches);
+		if (DebugPlugin.getDefault().getLaunchManager().getLaunches().length == 0) {
+			// In case we have no more launches, clear the browser's cache (cookies) to avoid any debug session trigger as a result
+			// of a remaining cookie.
+			Browser.clearSessions();
+		}
 	}
 
 	/**
