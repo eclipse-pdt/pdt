@@ -11,34 +11,28 @@
 	<property name="platform" value="${os}.${ws}.${arch}" />
 
 	<!-- The directory that will contain the xml and html results from the tests that are run -->
-	<property name="results" value="${basedir}/results" />
+	<property name="junit-report-output" value="${basedir}/results" />
 	<property name="org.eclipse.test" value="org.eclipse.test" />
 
 	<!-- The root of the eclipse installation -->
 	<property name="eclipse-home" value="eclipse" />
 	<property name="extraVMargs" value=""/>
 	<property name="timeout" value="7200000" />
-	<property name="junit-report-output" value="${results}" />
-	<property name="test-output" value="${junit-report-output}/${classname}.xml" />
 	<property name="formatter" value="org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter"/>
 
 	<target name="init">
-		<mkdir dir="${results}/xml" />
-		<mkdir dir="${results}/html" />
+		<mkdir dir="${junit-report-output}/xml" />
+		<mkdir dir="${junit-report-output}/html" />
 	</target>
 
 	<target name="junit">
 		<echo>"report - ${report}"</echo>
-		<echo>"results - ${results}"</echo>
 		<echo>"basedir - ${basedir}"</echo>
-		<echo>"testClass - ${testClass}"</echo>
-		<mkdir dir="${results}/xml/all" />
 		<property name="derby" value="" />
+		
+		<property name="test-output" value="${junit-report-output}/${classname}.xml" />		
+		<mkdir dir="${junit-report-output}/xml/all" />
 		<ant antfile="${eclipse-home}/plugins/${org.eclipse.php.test}/test.xml" dir="." />
-		<copy file="TEST-${testClass}.xml" tofile="${results}/xml/${report}/TEST-${testClass}.xml" failonerror="false" />
-		<ant antfile="${eclipse-home}/plugins/${org.eclipse.php.test}/test.xml" target="collect-all" dir="." />
-		<copy file="TEST-php.xml" tofile="${results}/xml/all/TEST-php.xml" failonerror="false" />
-		<antcall target="genHtml" />
 	</target>
 
 	<target name="runtests" depends="init" unless="skip.test">
@@ -51,7 +45,7 @@
 	<target name="php.test.core" description="Runs core tests">
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="testClass" value="org.eclipse.php.test.HeadlessTestSuite" />
+			<param name="classname" value="org.eclipse.php.test.HeadlessTestSuite" />
 			<param name="report" value="HeadlessTestSuite" />
 			<param name="testPluginsRequired" value="" />
 			<param name="application" value="org.eclipse.test.coretestapplication" />
@@ -63,7 +57,7 @@
 	<target name="php.test.ui" description="Runs ui tests">
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="testClass" value="org.eclipse.php.test.GUITestSuite" />
+			<param name="classname" value="org.eclipse.php.test.GUITestSuite" />
 			<param name="report" value="GUITestSuite" />
 			<param name="testPluginsRequired" value="" />
 			<param name="application" value="org.eclipse.test.uitestapplication" />
@@ -75,7 +69,7 @@
 	<target name="php.test.bare" description="Runs bare tests">
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="testClass" value="org.eclipse.php.test.BareTestSuite" />
+			<param name="classname" value="org.eclipse.php.test.BareTestSuite" />
 			<param name="report" value="BareTestSuite" />
 			<param name="testPluginsRequired" value="" />
 			<param name="application" value="org.eclipse.test.coretestapplication" />
@@ -89,9 +83,4 @@
 		<antcall target="php.test.core" />
 		<antcall target="php.test.ui" />
 	</target>
-	
-	<target name="genHtml" description="Generates HTML results with provided JUNIT.XSL provided">
-		<style style="JUNIT.XSL" basedir="${results}/xml" destdir="${results}/html" />
-	</target>
-
 </project>
