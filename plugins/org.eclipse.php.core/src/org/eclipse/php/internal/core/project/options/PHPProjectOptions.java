@@ -240,33 +240,19 @@ public class PHPProjectOptions {
 		return object;
 	}
 
-	public boolean removeResourceFromIncludePath(final IResource resource) {
-		boolean removed = false;
+	public void removeResourceFromIncludePath(final IResource resource) {
 		if (includePathEntries.length == 0)
-			return false;
+			return;
 		List newIncludePathEntries = new ArrayList(includePathEntries.length);
 		for (int i = 0; i < includePathEntries.length; ++i) {
 			if (includePathEntries[i].getResource() == resource) {
-				removed = true;
 				continue;
 			}
 			newIncludePathEntries.add(includePathEntries[i]);
 		}
 		try {
 			setRawIncludePath((IIncludePathEntry[]) newIncludePathEntries.toArray(new IIncludePathEntry[newIncludePathEntries.size()]), null);
-			return removed;
-		} catch (final Exception e) {
-			PHPCorePlugin.log(e);
-		}
-		return false;
-	}
-
-	public void addResourceToIncludePath(final IResource resource) {
-		IIncludePathEntry newSourceEntry = IncludePathEntry.newProjectEntry(resource.getFullPath(), resource, false);
-		List newIncludePathEntries = new ArrayList(Arrays.asList(includePathEntries));
-		newIncludePathEntries.add(newSourceEntry);
-		try {
-			setRawIncludePath((IIncludePathEntry[]) newIncludePathEntries.toArray(new IIncludePathEntry[newIncludePathEntries.size()]), null);
+			return;
 		} catch (final Exception e) {
 			PHPCorePlugin.log(e);
 		}
