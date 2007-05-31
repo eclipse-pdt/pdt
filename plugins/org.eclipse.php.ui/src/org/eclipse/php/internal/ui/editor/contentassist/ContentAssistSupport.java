@@ -544,7 +544,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		if (isClassTriger) {
 			if (isParent) {
-				showParentCall(projectModel, fileName, offset, className, functionName, selectionLength, explicit, isStrict);
+				if (className != "") {
+					showParentCall(projectModel, fileName, offset, className, functionName, selectionLength, explicit, isStrict);
+				}
 			} else {
 				showClassStaticCall(projectModel, fileName, offset, className, functionName, selectionLength, explicit);
 			}
@@ -920,7 +922,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (functionStart == -1) {
 			return false;
 		}
-		
+
 		// are we inside parameters part in function declaretion statment
 		for (int i = text.length() - 1; i >= functionStart; i--) {
 			if (text.charAt(i) == '(') {
@@ -938,16 +940,16 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				if (showClassCompletion) {
 					CodeData[] classes = projectModel.getClasses();
 					completionProposalGroup = phpCompletionProposalGroup;
-					String prefix = text.subTextSequence(i+1, text.length()).toString();
+					String prefix = text.subTextSequence(i + 1, text.length()).toString();
 					completionProposalGroup.setData(offset, classes, prefix, selectionLength, false);
 				}
 				return true;
 			}
 		}
-		
+
 		PHPClassData classData = getContainerClassData(projectModel, fileName, text.getOriginalOffset(functionStart));
 		// We look for the container class data in function start offset.
-		
+
 		if (classData == null) {
 			// We are not inside class function.
 			return true;
