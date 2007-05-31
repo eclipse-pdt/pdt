@@ -166,7 +166,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 
 		CodeData[] functions = ModelSupport.getCodeDataStartingWith(classData.getFunctions(), startsWith);
 
-		CodeData[] superFunctions = null;
+		CodeData[] superFunctions = new CodeData[0];
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null) {
 			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : "";
