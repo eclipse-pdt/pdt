@@ -53,6 +53,9 @@
 			<param name="groupId" value="eclipseRuntime" />
 		</antcall>
 		<antcall target="getAndInstall">
+			<param name="groupId" value="cvsClient" />
+		</antcall>
+		<antcall target="getAndInstall">
 			<param name="groupId" value="jdtRuntime" />
 		</antcall>
 
