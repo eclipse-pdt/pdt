@@ -133,12 +133,16 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 
 	// returns the IFile corresponding with this model
 	public IFile getIFile() {
+		String id = getId();
+		if (IModelManager.UNMANAGED_MODEL.equals(id)) {
+			return null;
+		}
 
 		String path = getBaseLocation();
 		if (path == null || path.length() == 0) {
-			Object id = getId();
-			if (id == null || IModelManager.UNMANAGED_MODEL.equals(id))
+			if (id == null) {
 				return null;
+			}
 			path = id.toString();
 		}
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
