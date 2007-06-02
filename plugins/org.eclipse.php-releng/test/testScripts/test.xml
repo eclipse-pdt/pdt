@@ -21,17 +21,12 @@
 	<property name="formatter" value="org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter"/>
 
 	<target name="init">
-		<mkdir dir="${junit-report-output}/xml" />
-		<mkdir dir="${junit-report-output}/html" />
+		<mkdir dir="${junit-report-output}" />
 	</target>
 
 	<target name="junit">
-		<echo>"report - ${report}"</echo>
-		<echo>"basedir - ${basedir}"</echo>
 		<property name="derby" value="" />
-		
-		<property name="test-output" value="${junit-report-output}/${classname}.xml" />		
-		<mkdir dir="${junit-report-output}/xml/all" />
+		<property name="test-output" value="${junit-report-output}/${classname}.result.xml" />	
 		<ant antfile="${eclipse-home}/plugins/${org.eclipse.php.test}/test.xml" dir="." />
 	</target>
 

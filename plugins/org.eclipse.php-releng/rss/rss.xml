@@ -15,8 +15,9 @@
 	<tstamp>
 	    <format property="bugFormat" pattern="yyyy-M-d" locale="en,UK"/>
 	</tstamp>
-
-
+	<property name="junitreport-html-file" value="../src/results/TEST-php.html" />
+	<property name="junitreport-xml-file" value="../src/results/TEST-php.xml" />	
+	
 	<property name="buildDirectory" location="${basedir}/../src/eclipse" />
 	<property file="${buildDirectory}/label.properties"/>
 	<property name="remoteDirectory" value="downloads/drops" />
@@ -67,11 +68,11 @@
 	</target>
 
 	<target name="mailUnitTestResults">
-		<mail from="php-unit-test-daemon@eclipse.org " encoding="uu" tolist="pdt-unit-test@eclipse.org;" files="../src/results/html/all/TEST-php.html bug_distribution.csv" subject="Nightly build results ${timestamp}" />
+		<mail from="php-unit-test-daemon@eclipse.org " encoding="uu" tolist="pdt-unit-test@eclipse.org;" files="${junitreport-html-file} bug_distribution.csv" subject="Nightly build results ${timestamp}" />
 	</target>
 
 	<target name="getTestResults">
-		<xslt in="../src/results/xml/all/TEST-php.xml" out="content" style="style.xsl">
+		<xslt in="${junitreport-xml-file}" out="content" style="style.xsl">
 			<outputproperty name="method" value="text" />
 			<outputproperty name="omit-xml-declaration" value="yes" />			
 			<outputproperty name="indent" value="no" />
@@ -90,7 +91,7 @@
 			<arg line="-avz --password-file=$HOME/.pass --stats --include *.zip --exclude bldindex.html ${buildLabel} apeled@dev.eclipse.org:~/downloads/tools/pdt/${remoteDirectory}" />
 		</exec>
 
-		<property name="source" value="../src/results/html/all/TEST-php.html" />
+		<property name="source" value="${junitreport-html-file}" />
 		<property name="target" value="reports/TEST-php${date}.html" />
 		<exec dir="." executable="rsync">
 			<arg line="-avz --password-file=$HOME/.pass --stats ${source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/results/"/>
