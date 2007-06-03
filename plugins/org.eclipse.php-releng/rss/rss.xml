@@ -68,9 +68,9 @@
 	</target>
 
 	<target name="mailUnitTestResults">
-		<mail from="php-unit-test-daemon@eclipse.org " encoding="uu" tolist="pdt-unit-test@eclipse.org;" files="${junitreport-html-file} bug_distribution.csv" subject="Nightly build results ${timestamp}" />
+		<mail from="php-unit-test-daemon@eclipse.org " encoding="auto" tolist="pdt-unit-test@eclipse.org" files="${junitreport-html-file} bug_distribution.csv" subject="Nightly build results ${timestamp}" />
 	</target>
-
+	
 	<target name="getTestResults">
 		<xslt in="${junitreport-xml-file}" out="content" style="style.xsl">
 			<outputproperty name="method" value="text" />
