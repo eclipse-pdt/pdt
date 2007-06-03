@@ -13,7 +13,9 @@
  */
 package org.eclipse.php.internal.debug.core.launching;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.Launch;
@@ -74,6 +76,27 @@ public class PHPLaunch extends Launch {
 		}
 
 		return true;
+	}
+
+	public Object[] getChildren() {
+		// screen any dead targets in case we have at least one live target.
+		List targets = getDebugTargets0();
+		List toRemove = new ArrayList(targets.size());
+		if (targets.size() > 1) {
+			IDebugTarget[] targetsArr = new IDebugTarget[targets.size()];
+			targets.toArray(targetsArr);
+			for (int i = 0; i < targetsArr.length; i++) {
+				if (targetsArr[i].isTerminated()) {
+					toRemove.add(targetsArr[i]);
+				}
+			}
+			if (toRemove.size() < targets.size()) {
+				// we have some connected and some terminated.
+				// remove the terminated.
+				targets.removeAll(toRemove);
+			}
+		}
+		return super.getChildren();
 	}
 
 }
