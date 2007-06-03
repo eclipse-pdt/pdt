@@ -580,6 +580,9 @@ public class DebugConnectionThread implements Runnable {
 			public void run() {
 				LaunchManager manager = (LaunchManager) DebugPlugin.getDefault().getLaunchManager();
 				manager.fireUpdate(new ILaunch[] { launch }, LaunchManager.ADDED);
+				// Added to fix a problem while migrating to 3.3.
+				// The stack tree was not updated.
+				manager.fireUpdate(new ILaunch[] { launch }, LaunchManager.CHANGED); 
 			}
 		});
 	}
