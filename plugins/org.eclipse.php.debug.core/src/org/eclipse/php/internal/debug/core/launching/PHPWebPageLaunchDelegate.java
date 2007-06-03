@@ -260,6 +260,8 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 	}
 
+	private static IThread[] EMPTY_THREADS = new IThread[0];
+	
 	/*
 	 * A dummy debug target for the termination of the ILaunch.
 	 */
@@ -280,7 +282,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 
 		public IThread[] getThreads() throws DebugException {
-			return null;
+			return EMPTY_THREADS;
 		}
 
 		public boolean hasThreads() throws DebugException {
@@ -308,7 +310,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 
 		public boolean canTerminate() {
-			return true;
+			return false;
 		}
 
 		public boolean isTerminated() {
