@@ -17,6 +17,8 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.internal.ui.viewers.model.InternalTreeModelViewer;
@@ -33,7 +35,6 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
-import org.eclipse.php.internal.debug.core.model.PHPStackFrame;
 import org.eclipse.php.internal.debug.ui.views.variables.PHPDebugElementAdapterFactory;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.widgets.Display;
@@ -342,13 +343,13 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 							return;
 						try {
 							// build the tree path LaunchManager->Launch->DebugTarget->PHPThread->PHPStackFrame
-							PHPDebugTarget target = (PHPDebugTarget) currentLaunches[0].getDebugTarget();
+							IDebugTarget target = (IDebugTarget) currentLaunches[0].getDebugTarget();
 							if (target == null)
 								return;
 							if (target.getThreads() == null || target.getThreads().length == 0)
 								return;
 							IThread thread = target.getThreads()[0];
-							PHPStackFrame frame = (PHPStackFrame) thread.getTopStackFrame();
+							IStackFrame frame = thread.getTopStackFrame();
 							if (frame == null)
 								return;
 							Object[] segments = new Object[5];
