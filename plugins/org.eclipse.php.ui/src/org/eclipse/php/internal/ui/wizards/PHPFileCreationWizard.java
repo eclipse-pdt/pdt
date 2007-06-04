@@ -146,7 +146,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			}
 
 			// Change file encoding:
-			if (container instanceof IProject) {
+			/*if (container instanceof IProject) {
 				PHPProjectOptions options = PHPProjectOptions.forProject((IProject) container);
 				if (options != null) {
 					String defaultEncoding = (String) options.getOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
@@ -155,7 +155,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 					}
 					file.setCharset(defaultEncoding, monitor);
 				}
-			}
+			}*/
 
 			monitor.worked(1);
 			monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning, fileName));
