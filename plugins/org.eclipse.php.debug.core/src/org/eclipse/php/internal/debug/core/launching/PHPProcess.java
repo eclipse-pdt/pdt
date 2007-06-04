@@ -98,7 +98,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		if (adapter.equals(ITerminate.class)) {
 			return this;
 		}
-		return null;
+		return super.getAdapter(adapter);
 	}
 
 	public boolean canTerminate() {
