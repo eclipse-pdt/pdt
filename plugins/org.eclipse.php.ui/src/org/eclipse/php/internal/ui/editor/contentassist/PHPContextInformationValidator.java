@@ -30,6 +30,9 @@ public class PHPContextInformationValidator implements IContextInformationValida
     private int fCurrentParameter;
     
 	public void install(IContextInformation info, ITextViewer viewer, int offset) {
+		if (info == null) {
+			throw new NullPointerException();
+		}
         fInformation= info;
         fViewer= viewer;
         fPosition= offset;
