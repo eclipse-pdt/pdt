@@ -10,8 +10,19 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.jface.text.*;
-import org.eclipse.jface.text.contentassist.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.text.contentassist.ContextInformation;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension2;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension3;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
+import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
@@ -205,5 +216,15 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 
 	public CodeData getCodeData() {
 		return codeData;
+	}
+	
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("proposal: ").append(displayText);
+		buffer.append(" name: ").append(codeData != null ? codeData.getName() : "empty");
+		buffer.append(" type: ").append(codeData != null ? codeData.getClass().toString() : "empty");
+		buffer.append(" prefix: ").append(prefix);
+		buffer.append(" suffix: ").append(suffix);
+		return buffer.toString();
 	}
 }
