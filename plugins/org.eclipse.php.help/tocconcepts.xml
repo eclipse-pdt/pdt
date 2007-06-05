@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Concepts" link_to="toc.xml#concepts"> 
-
+<toc label="Concepts" link_to="toc.xml#concepts">
 <topic label="Code Assist" href="html/gettingstarted/code_assist.html"></topic>
 <topic label="Code Folding" href="html/gettingstarted/code_folding.htm"></topic>
 <topic label="Creating a File" href="html/gettingstarted/creating_a_file.html"></topic>

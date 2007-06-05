@@ -5,9 +5,6 @@
   <topic label="Getting Started" topic="html/gettingstarted.html">
     <anchor id="gettingstarted"/>
   </topic>
-  <topic label="Creating a Project">
-    <anchor id="creatingaproject"/>
-  </topic>
   <topic label="Concepts">
     <anchor id="concepts"/>
   </topic>
