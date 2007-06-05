@@ -18,10 +18,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
-import org.eclipse.php.internal.ui.editor.input.PHPFileEditorInput;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
 /**
@@ -60,14 +61,14 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 				if (obj instanceof FileEditorInput) {
 					FileEditorInput editorInput = (FileEditorInput) list.get(0);
 					file = editorInput.getFile();
-				} else if (SCRIPT_ID.equalsIgnoreCase(launchType) && obj instanceof PHPFileEditorInput) {
+				} else if (SCRIPT_ID.equalsIgnoreCase(launchType) && obj instanceof FileStoreEditorInput) {
 					// In this case, the editor input is probably an external file. 
 					// Allow only script run/debug on this kind of file (internal executable launch).
-					PHPFileEditorInput editorInput = (PHPFileEditorInput) obj;
+					FileStoreEditorInput editorInput = (FileStoreEditorInput) obj;
 					// Try to get it first from the external files registry.
-					file = ExternalFilesRegistry.getInstance().getFileEntry(editorInput.getPath().toString());
+					file = ExternalFilesRegistry.getInstance().getFileEntry(editorInput.getURI().getPath());
 					if (file == null) {
-						file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(editorInput.getPath());
+						file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(editorInput.getURI().getPath()));
 					}
 				} else if (list.get(0) instanceof IFile) {
 					file = (IFile) list.get(0);

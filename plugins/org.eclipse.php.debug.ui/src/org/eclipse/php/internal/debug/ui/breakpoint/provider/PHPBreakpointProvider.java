@@ -31,11 +31,11 @@ import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
-import org.eclipse.php.internal.ui.editor.input.PHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
@@ -90,7 +90,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 						fileName = id.substring(incDir.length() + 1);
 					}
 					project = ((LocalFileStorage) storage).getProject();
-				} else if (input instanceof PHPFileEditorInput) {
+				} else if (input instanceof FileStoreEditorInput) {
 					// we have a JavaFileEditorStorage
 					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_LFile);
 					attributes.put(IPHPConstants.Non_Workspace_Breakpoint, Boolean.TRUE);

@@ -43,11 +43,11 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
-import org.eclipse.php.internal.ui.editor.input.PHPFileEditorInput;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 
 public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
@@ -74,9 +74,9 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	public void launch(IEditorPart editor, String mode) {
 		IEditorInput input = editor.getEditorInput();
 		IFile file = (IFile) input.getAdapter(IFile.class);
-		if (file == null && input instanceof PHPFileEditorInput) {
+		if (file == null && input instanceof FileStoreEditorInput) {
 			// It's probably a launch for a file that is not in the workspace.
-			IPath path = ((PHPFileEditorInput) input).getPath();
+			IPath path = new Path(((FileStoreEditorInput) input).getURI().getPath());
 			if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 				file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
 			} else {

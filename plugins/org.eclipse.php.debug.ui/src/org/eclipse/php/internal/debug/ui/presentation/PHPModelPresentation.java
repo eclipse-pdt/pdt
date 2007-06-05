@@ -40,10 +40,10 @@ import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor
 import org.eclipse.php.internal.debug.ui.sourcelookup.PHPSourceNotFoundEditorInput;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
-import org.eclipse.php.internal.ui.editor.input.PHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
@@ -239,7 +239,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 					if (IPHPConstants.Include_Storage_LFile.equals(type)) {
 						File file = new File(id);
 						if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
-							return new PHPFileEditorInput(new LocalFile(file));
+							return new FileStoreEditorInput(new LocalFile(file));
 						} else {
 							LocalFileStorage lfs = new LocalFileStorage(file);
 							lfs.setProject(project);
@@ -274,7 +274,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			return new PHPSourceNotFoundEditorInput((PHPSourceNotFoundInput) element);
 		}
 		if (element.getClass().getName().endsWith(JAVA_FILE_STORAGE_CLASS_NAME)) {
-			return new PHPFileEditorInput(new LocalFile(((IStorage) element).getFullPath().toFile()));
+			return new FileStoreEditorInput(new LocalFile(((IStorage) element).getFullPath().toFile()));
 		}
 		return null;
 	}
