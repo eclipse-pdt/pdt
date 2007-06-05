@@ -45,11 +45,11 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.editor.input.PHPFileEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.FileEditorInput;
@@ -238,7 +238,7 @@ public class EditorUtility {
 				//check if external file
 				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					LocalFile locFile = new LocalFile(new File(path.toString()));
-					final PHPFileEditorInput externalInput = new PHPFileEditorInput(locFile);
+					final FileStoreEditorInput externalInput = new FileStoreEditorInput(locFile);
 					return externalInput;
 				}
 				//include path file
@@ -566,26 +566,25 @@ public class EditorUtility {
 	public static final PHPStructuredEditor getPHPStructuredEditor(final IWorkbenchPart editor) {
 		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null;
 	}
-	
+
 	/**
 	 * Gets a list of File full paths as strings and open them in the editor
 	 * works for both workspace and non- workspace files 
 	 * @param filesToOpen
 	 * @param window
 	 */
-	public static void openFilesInEditor(List filesToOpen, IWorkbenchWindow window){
+	public static void openFilesInEditor(List filesToOpen, IWorkbenchWindow window) {
 		PHPOpenExternalFileAction action = new PHPOpenExternalFileAction();
 		action.init(window);
 		action.run(filesToOpen);
 	}
-	
+
 	/**
 	 * @see openFilesInEditor(List, IWorkbenchWindow)
 	 * @param filesToOpen
 	 */
-	public static void openFilesInEditor(List filesToOpen){
+	public static void openFilesInEditor(List filesToOpen) {
 		openFilesInEditor(filesToOpen, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 	}
-	
-	
+
 }

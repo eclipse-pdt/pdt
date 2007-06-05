@@ -23,10 +23,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.ui.Logger;
-import org.eclipse.php.internal.ui.editor.input.PHPFileEditorInput;
 import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -180,7 +180,7 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 		IFile workspaceFile= getWorkspaceFile(fileStore);
 		if (workspaceFile != null)
 			return new FileEditorInput(workspaceFile);
-		return new PHPFileEditorInput(fileStore);
+		return new FileStoreEditorInput(fileStore);
 	}
 
 	private IFile getWorkspaceFile(IFileStore fileStore) {

@@ -54,7 +54,6 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.containers.StorageEditorInput;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
-import org.eclipse.php.internal.ui.editor.input.PHPFileEditorInput;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration.DoubleClickListener;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -71,6 +70,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -1287,9 +1287,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (input instanceof IFileEditorInput) {
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
-		} else if (input instanceof PHPFileEditorInput) {
-			PHPFileEditorInput fileInput = (PHPFileEditorInput) input;
-			externalPath = fileInput.getPath();
+		} else if (input instanceof FileStoreEditorInput) {
+			FileStoreEditorInput fileInput = (FileStoreEditorInput) input;
+			externalPath = new Path(fileInput.getURI().getPath());
 			// Wrap this file because it's an external (non workspace) file.
 			resource = ExternalFileDecorator.createFile(externalPath.toString());
 		} else if (input instanceof IStorageEditorInput) {
