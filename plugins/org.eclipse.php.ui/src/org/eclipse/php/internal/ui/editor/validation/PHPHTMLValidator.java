@@ -10,21 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.validation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
@@ -38,12 +30,7 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.reconcile.ReconcileStepForPHP;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.internal.validation.HTMLValidationReporter;
@@ -81,7 +68,7 @@ import org.w3c.dom.Text;
 
 public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 
-	private IDocument fDocument;	
+	private IDocument fDocument;
 	private String currentFileName = null;
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
@@ -116,12 +103,14 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 	public void connect(IDocument document) {
 		super.connect(document);
 		fDocument = document;
-		
+
 		IStructuredModel structuredModel = null;
 		try {
 			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+			if(structuredModel == null)
+				return;
 			currentFileName = structuredModel.getId();
-			
+
 			PHPWorkspaceModelManager.getInstance().addModelListener(this);
 			DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
 			PHPFileData fd = domModelForPHP.getFileData();
@@ -281,10 +270,10 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 			mess.setOffset(startPosition);
 			mess.setLength(length);
 			messages.add(mess);
-		}	
+		}
 		ReconcileStepForPHP reconcileStepForPHP = new ReconcileStepForPHP();
 		Map annotations = createAnnotations(reconcileStepForPHP, messages);
-		
+
 		// get text viewer and set annotations
 		StructuredTextViewer textViewer = getTextViewer();
 	    
@@ -309,43 +298,45 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 
 	private StructuredTextViewer getTextViewer() {
 		IWorkbench workbench = PlatformUI.getWorkbench();
-	    IWorkbenchWindow workbenchwindow = workbench.getActiveWorkbenchWindow();
-	    if (workbenchwindow == null) {
-	    	IWorkbenchWindow[] workbenchWindows = workbench.getWorkbenchWindows();
-	    	if (workbenchWindows.length > 0) {
-	    		workbenchwindow = workbenchWindows[0];
-	    	}
-	    }
-	    IWorkbenchPage workbenchpage = workbenchwindow.getActivePage();
-	    IEditorPart editorpart = workbenchpage.getActiveEditor();
-	    if (editorpart instanceof PHPStructuredEditor) {
-	    	PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor)editorpart;
-	    	StructuredTextViewer textViewer = phpStructuredEditor.getTextViewer();
+		IWorkbenchWindow workbenchwindow = workbench.getActiveWorkbenchWindow();
+		if (workbenchwindow == null) {
+			IWorkbenchWindow[] workbenchWindows = workbench.getWorkbenchWindows();
+			if (workbenchWindows.length > 0) {
+				workbenchwindow = workbenchWindows[0];
+			}
+		}
+		IWorkbenchPage workbenchpage = workbenchwindow.getActivePage();
+		if (workbenchpage == null)
+			return null;
+		IEditorPart editorpart = workbenchpage.getActiveEditor();
+		if (editorpart instanceof PHPStructuredEditor) {
+			PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editorpart;
+			StructuredTextViewer textViewer = phpStructuredEditor.getTextViewer();
 	    	if (fDocument == textViewer.getDocument()) {
 	    		return textViewer;
 	    	}
-    		// get right viewer by comparing viewer document
-    		IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
-    		for (int i = 0; i < editorReferences.length; i++) {
-				IEditorReference editorReference = editorReferences[i];
-				editorpart = editorReference.getEditor(false);
-				if (editorpart instanceof PHPStructuredEditor) {
-			    	phpStructuredEditor = (PHPStructuredEditor)editorpart;
-			    	textViewer = phpStructuredEditor.getTextViewer();
-			    	if (fDocument == textViewer.getDocument()) {
+				// get right viewer by comparing viewer document
+				IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
+				for (int i = 0; i < editorReferences.length; i++) {
+					IEditorReference editorReference = editorReferences[i];
+					editorpart = editorReference.getEditor(false);
+					if (editorpart instanceof PHPStructuredEditor) {
+						phpStructuredEditor = (PHPStructuredEditor) editorpart;
+						textViewer = phpStructuredEditor.getTextViewer();
+						if (fDocument == textViewer.getDocument()) {
 			    		return textViewer;
-			    	}					 
+					}
+				}
 				}
 			}
-	    }
 		return null;
 	}
 
 	private boolean isPhpViewerAnnotation(TemporaryAnnotation annotation) {
-		ReconcileAnnotationKey key  = (ReconcileAnnotationKey) annotation.getKey();
+		ReconcileAnnotationKey key = (ReconcileAnnotationKey) annotation.getKey();
 		return key.getPartitionType().equals(PHPPartitionTypes.PHP_DEFAULT);
 	}
-	
+
 	/**
 	 * Converts a map of IValidatorForReconcile to List to annotations based
 	 * on those messages
@@ -381,9 +372,9 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 
 		return annotations;
 	}
-	
+
 	public ReconcileAnnotationKey createKey(ReconcileStepForPHP reconcileStepForPHP) {
-		 return new ReconcileAnnotationKey(reconcileStepForPHP, PHPPartitionTypes.PHP_DEFAULT, ReconcileAnnotationKey.TOTAL);
+		return new ReconcileAnnotationKey(reconcileStepForPHP, PHPPartitionTypes.PHP_DEFAULT, ReconcileAnnotationKey.TOTAL);
 	}
 
 	public void fileDataRemoved(PHPFileData fileData) {
