@@ -221,7 +221,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 
 	static final IPath INCLUDE_MODELS_PATH_ROOT = new Path("\0IncludePaths");
 
-	public Object[] getChildren(Object parentElement) {
+	public synchronized Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IProject) {
 			IProject project = (IProject) parentElement;
 			PHPProjectOptions options = PHPProjectOptions.forProject(project);
@@ -252,9 +252,10 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 			return filteredModels.toArray();
 		} else if (parentElement instanceof PHPIncludePathModel || parentElement instanceof PhpModelProxy) {
 			IPhpModel includePathModel = (IPhpModel) parentElement;
-			validateRoot();
 			IPath modelPath = INCLUDE_MODELS_PATH_ROOT.append(IncludeModelPathRootConverter.to(includePathModel));
+			System.out.println();
 			if (!includePathTree.includes(modelPath)) {
+				validateRoot();
 				includePathTree.createElement(modelPath, includePathModel);
 			}
 			return getPathChildren(modelPath);
