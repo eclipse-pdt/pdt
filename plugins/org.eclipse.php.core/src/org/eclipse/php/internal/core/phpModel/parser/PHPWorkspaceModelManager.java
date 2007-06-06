@@ -224,6 +224,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		if (defaultModel == null) {
 			defaultModel = new PHPProjectModel();
 			defaultModel.initialize(ExternalFilesRegistry.getInstance().getExternalFilesProject());
+			defaultModel.getPHPUserModel().addModelListener(PHPWorkspaceModelManager.getInstance());
 			PHPWorkspaceModelManager.getInstance().fireProjectModelAdded(defaultModel.getProject());
 		}
 		return defaultModel;
