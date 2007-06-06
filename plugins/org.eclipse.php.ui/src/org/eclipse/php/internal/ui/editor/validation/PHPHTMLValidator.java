@@ -286,6 +286,28 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 		Map annotations = createAnnotations(reconcileStepForPHP, messages);
 		
 		// get text viewer and set annotations
+		StructuredTextViewer textViewer = getTextViewer();
+	    
+	    if (textViewer == null){
+	    	return;
+	    }
+    	StructuredResourceMarkerAnnotationModel annotationModel = (StructuredResourceMarkerAnnotationModel) textViewer.getAnnotationModel();
+    	// iterate the exist annotations and remove PHP annotations
+    	Iterator annotationIt = annotationModel.getAnnotationIterator();
+    	List annotationToRemove = new ArrayList();
+    	while (annotationIt.hasNext()) {
+			Annotation annotation = (Annotation) annotationIt.next();
+			if (annotation instanceof TemporaryAnnotation) {
+				TemporaryAnnotation temporaryAnnotation = (TemporaryAnnotation)annotation;
+				if (isPhpViewerAnnotation(temporaryAnnotation)) {
+					annotationToRemove.add(temporaryAnnotation);
+				} 
+			}
+		}
+    	annotationModel.replaceAnnotations((Annotation[]) annotationToRemove.toArray(new Annotation[0]), annotations);
+	}
+
+	private StructuredTextViewer getTextViewer() {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 	    IWorkbenchWindow workbenchwindow = workbench.getActiveWorkbenchWindow();
 	    if (workbenchwindow == null) {
@@ -299,41 +321,24 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 	    if (editorpart instanceof PHPStructuredEditor) {
 	    	PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor)editorpart;
 	    	StructuredTextViewer textViewer = phpStructuredEditor.getTextViewer();
-	    	if (fDocument != textViewer.getDocument()) {
-	    		// get right viewer by comparing viewer document
-	    		boolean found = false;
-	    		IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
-	    		for (int i = 0; i < editorReferences.length; i++) {
-					IEditorReference editorReference = editorReferences[i];
-					editorpart = editorReference.getEditor(false);
-					if (editorpart instanceof PHPStructuredEditor) {
-				    	phpStructuredEditor = (PHPStructuredEditor)editorpart;
-				    	textViewer = phpStructuredEditor.getTextViewer();
-				    	if (fDocument == textViewer.getDocument()) {
-				    		found = true;
-				    		break;
-				    	}					 
-					}
-				}
-				if (!found) {
-					return;
-				}
+	    	if (fDocument == textViewer.getDocument()) {
+	    		return textViewer;
 	    	}
-			StructuredResourceMarkerAnnotationModel annotationModel = (StructuredResourceMarkerAnnotationModel) textViewer.getAnnotationModel();
-	    	// iterate the exist annotations and remove PHP annotations
-	    	Iterator annotationIt = annotationModel.getAnnotationIterator();
-	    	List annotationToRemove = new ArrayList();
-	    	while (annotationIt.hasNext()) {
-				Annotation annotation = (Annotation) annotationIt.next();
-				if (annotation instanceof TemporaryAnnotation) {
-					TemporaryAnnotation temporaryAnnotation = (TemporaryAnnotation)annotation;
-					if (isPhpViewerAnnotation(temporaryAnnotation)) {
-						annotationToRemove.add(temporaryAnnotation);
-					} 
-				} 
+    		// get right viewer by comparing viewer document
+    		IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
+    		for (int i = 0; i < editorReferences.length; i++) {
+				IEditorReference editorReference = editorReferences[i];
+				editorpart = editorReference.getEditor(false);
+				if (editorpart instanceof PHPStructuredEditor) {
+			    	phpStructuredEditor = (PHPStructuredEditor)editorpart;
+			    	textViewer = phpStructuredEditor.getTextViewer();
+			    	if (fDocument == textViewer.getDocument()) {
+			    		return textViewer;
+			    	}					 
+				}
 			}
-	    	annotationModel.replaceAnnotations((Annotation[]) annotationToRemove.toArray(new Annotation[0]), annotations);
 	    }
+		return null;
 	}
 
 	private boolean isPhpViewerAnnotation(TemporaryAnnotation annotation) {
