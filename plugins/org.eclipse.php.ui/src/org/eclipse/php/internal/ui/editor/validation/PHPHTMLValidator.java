@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.validation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -18,14 +24,26 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.editor.reconcile.ReconcileStepForPHP;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.internal.validation.HTMLValidationReporter;
@@ -39,6 +57,10 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
+import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
+import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -57,13 +79,10 @@ import org.w3c.dom.Text;
  *
  */
 
-public class PHPHTMLValidator extends HTMLValidator {
+public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 
-	private IDocument fDocument;
-
-	public PHPHTMLValidator() {
-
-	}
+	private IDocument fDocument;	
+	private String currentFileName = null;
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
 		int offset = dirtyRegion.getOffset();
@@ -91,60 +110,29 @@ public class PHPHTMLValidator extends HTMLValidator {
 				super.validate(dirtyRegion, helper, reporter);
 			}
 			return;
-		} else if (!isPHPPartition(type)) {
-			return;
 		}
-
-		IStructuredModel structuredModel = null;
-		try {
-			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-			if (structuredModel == null) {
-				return; // error
-			}
-			DOMModelForPHP model = (DOMModelForPHP) structuredModel;
-
-			//@GINO: Updata the FileData because the content has changed
-			//this might not be the best way to do this
-			if (!DOMModelForPHP.FREQUENT_MODEL_UPDATE)
-				model.updateFileData();
-
-			PHPFileData fileData = model.getFileData();
-			if (fileData == null) {
-				return;
-			}
-
-			reporter.removeAllMessages(this);
-			IPHPMarker[] markers = fileData.getMarkers();
-
-			if (markers == null) {
-				return;
-			}
-			for (int i = 0; markers.length > i; i++) {
-				IPHPMarker marker = markers[i];
-				if (marker.getType().equals(IPHPMarker.TASK)) {
-					continue;
-				}
-				String descr = marker.getDescription();
-				LocalizedMessage mess = new LocalizedMessage(IMessage.HIGH_SEVERITY, descr);
-				UserData userData = marker.getUserData();
-
-				final int startPosition = userData.getStartPosition();
-				final int length = userData.getEndPosition() - startPosition;
-
-				mess.setOffset(startPosition);
-				mess.setLength(length);
-				reporter.addMessage(this, mess);
-			}
-		} finally {
-			if (structuredModel != null)
-				structuredModel.releaseFromRead();
-		}
-
 	}
 
 	public void connect(IDocument document) {
 		super.connect(document);
 		fDocument = document;
+		
+		IStructuredModel structuredModel = null;
+		try {
+			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+			currentFileName = structuredModel.getId();
+			
+			PHPWorkspaceModelManager.getInstance().addModelListener(this);
+			DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
+			PHPFileData fd = domModelForPHP.getFileData();
+			if (fd != null) {
+				fileDataChanged(fd);
+			}
+		} finally {
+			if (structuredModel != null) {
+				structuredModel.releaseFromRead();
+			}
+		}
 	}
 
 	/**
@@ -155,13 +143,7 @@ public class PHPHTMLValidator extends HTMLValidator {
 		if (document == fDocument) {
 			fDocument = null;
 		}
-	}
-
-	private boolean isPHPPartition(String type) {
-		if (type == null || type == "") {
-			return false;
-		}
-		return ((type.equals(PHPPartitionTypes.PHP_DEFAULT)) || (type.equals(PHPPartitionTypes.PHP_DOC)) || (type.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)) || (type.equals(PHPPartitionTypes.PHP_QUOTED_STRING)) || (type.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)));
+		PHPWorkspaceModelManager.getInstance().removeModelListener(this);
 	}
 
 	//See org.eclipse.wst.html.internal.validation.HTMLValidator.validate
@@ -232,8 +214,9 @@ public class PHPHTMLValidator extends HTMLValidator {
 				adapter.validate(ir);
 			}
 		} finally {
-			if (model != null)
+			if (model != null) {
 				model.releaseFromRead();
+			}
 		}
 	}
 
@@ -256,10 +239,149 @@ public class PHPHTMLValidator extends HTMLValidator {
 					largestRegion = getLargest(regions);
 				}
 			} finally {
-				if (sModel != null)
+				if (sModel != null) {
 					sModel.releaseFromRead();
+				}
 			}
 		}
 		return largestRegion;
+	}
+
+	public void dataCleared() {
+		// do nothing
+	}
+
+	public void fileDataAdded(PHPFileData fileData) {
+		// do nothing
+	}
+
+	public void fileDataChanged(PHPFileData fileData) {
+		if (!fileData.getName().equals(currentFileName)) {
+			return;
+		}
+
+		IPHPMarker[] markers = fileData.getMarkers();
+
+		if (markers == null) {
+			return;
+		}
+		List messages = new ArrayList();
+		for (int i = 0; markers.length > i; i++) {
+			IPHPMarker marker = markers[i];
+			if (marker.getType().equals(IPHPMarker.TASK)) {
+				continue;
+			}
+			String descr = marker.getDescription();
+			LocalizedMessage mess = new LocalizedMessage(IMessage.HIGH_SEVERITY, descr);
+			UserData userData = marker.getUserData();
+
+			final int startPosition = userData.getStartPosition();
+			final int length = userData.getEndPosition() - startPosition;
+
+			mess.setOffset(startPosition);
+			mess.setLength(length);
+			messages.add(mess);
+		}	
+		ReconcileStepForPHP reconcileStepForPHP = new ReconcileStepForPHP();
+		Map annotations = createAnnotations(reconcileStepForPHP, messages);
+		
+		// get text viewer and set annotations
+		IWorkbench workbench = PlatformUI.getWorkbench();
+	    IWorkbenchWindow workbenchwindow = workbench.getActiveWorkbenchWindow();
+	    if (workbenchwindow == null) {
+	    	IWorkbenchWindow[] workbenchWindows = workbench.getWorkbenchWindows();
+	    	if (workbenchWindows.length > 0) {
+	    		workbenchwindow = workbenchWindows[0];
+	    	}
+	    }
+	    IWorkbenchPage workbenchpage = workbenchwindow.getActivePage();
+	    IEditorPart editorpart = workbenchpage.getActiveEditor();
+	    if (editorpart instanceof PHPStructuredEditor) {
+	    	PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor)editorpart;
+	    	StructuredTextViewer textViewer = phpStructuredEditor.getTextViewer();
+	    	if (fDocument != textViewer.getDocument()) {
+	    		// get right viewer by comparing viewer document
+	    		boolean found = false;
+	    		IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
+	    		for (int i = 0; i < editorReferences.length; i++) {
+					IEditorReference editorReference = editorReferences[i];
+					editorpart = editorReference.getEditor(false);
+					if (editorpart instanceof PHPStructuredEditor) {
+				    	phpStructuredEditor = (PHPStructuredEditor)editorpart;
+				    	textViewer = phpStructuredEditor.getTextViewer();
+				    	if (fDocument == textViewer.getDocument()) {
+				    		found = true;
+				    		break;
+				    	}					 
+					}
+				}
+				if (!found) {
+					return;
+				}
+	    	}
+			StructuredResourceMarkerAnnotationModel annotationModel = (StructuredResourceMarkerAnnotationModel) textViewer.getAnnotationModel();
+	    	// iterate the exist annotations and remove PHP annotations
+	    	Iterator annotationIt = annotationModel.getAnnotationIterator();
+	    	List annotationToRemove = new ArrayList();
+	    	while (annotationIt.hasNext()) {
+				Annotation annotation = (Annotation) annotationIt.next();
+				if (annotation instanceof TemporaryAnnotation) {
+					TemporaryAnnotation temporaryAnnotation = (TemporaryAnnotation)annotation;
+					if (isPhpViewerAnnotation(temporaryAnnotation)) {
+						annotationToRemove.add(temporaryAnnotation);
+					} 
+				} 
+			}
+	    	annotationModel.replaceAnnotations((Annotation[]) annotationToRemove.toArray(new Annotation[0]), annotations);
+	    }
+	}
+
+	private boolean isPhpViewerAnnotation(TemporaryAnnotation annotation) {
+		ReconcileAnnotationKey key  = (ReconcileAnnotationKey) annotation.getKey();
+		return key.getPartitionType().equals(PHPPartitionTypes.PHP_DEFAULT);
+	}
+	
+	/**
+	 * Converts a map of IValidatorForReconcile to List to annotations based
+	 * on those messages
+	 * 
+	 * @param messages
+	 * @return
+	 */
+	public Map createAnnotations(ReconcileStepForPHP reconcileStepForPHP, List messageList) {
+		Map annotations = new HashMap();
+		for (int i = 0; i < messageList.size(); i++) {
+			IMessage validationMessage = (IMessage) messageList.get(i);
+
+			int offset = validationMessage.getOffset();
+
+			if (offset < 0)
+				continue;
+
+			String messageText = null;
+			try {
+				messageText = validationMessage.getText(validationMessage.getClass().getClassLoader());
+			} catch (Exception t) {
+				Logger.logException("exception reporting message from validator", t); //$NON-NLS-1$
+				continue;
+			}
+
+			int length = validationMessage.getLength();
+			if (length >= 0) {
+				Position p = new Position(offset, length);
+				ReconcileAnnotationKey key = createKey(reconcileStepForPHP);
+				annotations.put(new TemporaryAnnotation(p, TemporaryAnnotation.ANNOT_ERROR, messageText, key), p);
+			}
+		}
+
+		return annotations;
+	}
+	
+	public ReconcileAnnotationKey createKey(ReconcileStepForPHP reconcileStepForPHP) {
+		 return new ReconcileAnnotationKey(reconcileStepForPHP, PHPPartitionTypes.PHP_DEFAULT, ReconcileAnnotationKey.TOTAL);
+	}
+
+	public void fileDataRemoved(PHPFileData fileData) {
+		// do nothing
 	}
 }
