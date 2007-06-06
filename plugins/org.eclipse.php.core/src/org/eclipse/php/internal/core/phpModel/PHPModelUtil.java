@@ -34,81 +34,6 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 
 public class PHPModelUtil {
 
-	static class FindElementVisitor implements PHPProjectModelVisitor {
-		PHPCodeData foundElement;
-		int offset;
-
-		FindElementVisitor(final int offset) {
-			this.offset = offset;
-		}
-
-		boolean checkInside(final PHPCodeData codeData) {
-			final UserData userData = codeData.getUserData();
-			final boolean found = userData.getStartPosition() <= offset && userData.getEndPosition() >= offset;
-			if (found)
-				foundElement = codeData;
-			return found;
-		}
-
-		public void visit(final PHPClassConstData codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPClassData codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPClassVarData codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPCodeData phpCodeData) {
-			checkInside(phpCodeData);
-		}
-
-		public void visit(final PHPConstantData codeData) {
-			checkInside(codeData);
-
-		}
-
-		public void visit(final PHPDocTagData codeData) {
-
-		}
-
-		public void visit(final PHPFileData codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPFunctionData codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPFunctionParameter codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPIncludeFileData codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPInterfaceNameData codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPKeywordData codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPSuperClassNameData codeData) {
-			checkInside(codeData);
-		}
-
-		public void visit(final PHPVariableData codeData) {
-			checkInside(codeData);
-		}
-
-	}
-
 	public static class PHPContainerStringConverter {
 		public static Object toContainer(final String sPath) {
 			final IPath path = Path.fromPortableString(sPath);
@@ -154,20 +79,8 @@ public class PHPModelUtil {
 	}
 
 	public static PHPCodeData getElementAt(final PHPCodeData elementData, final int offset) {
+		// why?
 		throw new RuntimeException("test me");
-		//		PHPCodeData element=null;
-		//		
-		//		UserData userData= elementData.getUserData();
-		//		if (offset>=userData.getStartPosition() && offset<=userData.getEndPosition())
-		//		{
-		//			element = elementData;
-		//			FindElementVisitor visitor = new FindElementVisitor(offset);
-		//			elementData.accept( visitor);
-		//			element = visitor.foundElement;
-		//		}
-		//					
-		//		
-		//		return element;
 	}
 
 	public static Object getExternalResource(final Object element, final IProject project) {
