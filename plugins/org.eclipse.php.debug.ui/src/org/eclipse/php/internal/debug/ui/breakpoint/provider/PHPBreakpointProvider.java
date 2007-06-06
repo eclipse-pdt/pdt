@@ -127,9 +127,9 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 		 } else {
 		 resource = (IResource) input.getAdapter(IResource.class);
 		 }*/
-//		if (resource == null && input instanceof PHPFileEditorInput) {
-//			resource = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(((PHPFileEditorInput)input).getPath());
-//		}
+		if (resource == null && input instanceof FileStoreEditorInput) {
+			resource = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(((FileStoreEditorInput) input).getURI().getPath()));
+		}
 		if (resource == null) {
 			resource = ResourcesPlugin.getWorkspace().getRoot();
 		}
