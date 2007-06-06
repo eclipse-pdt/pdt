@@ -1140,14 +1140,14 @@
 			</dropAction>
 		</dropTargetContribution>
 	</extension>
-
-<extension point = "org.eclipse.compare.contentMergeViewers"> 
+<!-- Temporary disabled - doesn't work with eclipse 3.3 well -->
+<!--extension point = "org.eclipse.compare.contentMergeViewers"> 
      <viewer 
          id="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator" 
          class="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator" 
          extensions="php" 
     /> 
-    </extension> 	
+    </extension-->
 	
 	
 </plugin>
