@@ -22,13 +22,11 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 
@@ -488,11 +486,7 @@ public class PHPModelUtil {
 		return false;
 	}
 
-	public static String getRelativeLocation(IProject project, String location) {
-		PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-		if (model == null) {
-			return location;
-		}
+	public static String getRelativeLocation(IPhpModel model, String location) {
 		PHPFileData fileData = model.getFileData(location);
 		if (fileData != null) {
 			IResource resource = getResource(fileData);
@@ -501,8 +495,8 @@ public class PHPModelUtil {
 				if (fileProject.isAccessible()) {
 					return new Path(location).removeFirstSegments(1).toString();
 				}
-			} else { // file is in an include file
-				IPhpModel[] models = model.getModels();
+			} else if (model instanceof CompositePhpModel) { // file is in an include file
+				IPhpModel[] models = ((CompositePhpModel) model).getModels();
 				for (int i = 0; i < models.length; ++i) {
 					if (models[i].getFileData(location) == fileData) {
 						if (models[i] instanceof PHPIncludePathModelManager) {
@@ -520,6 +514,15 @@ public class PHPModelUtil {
 			}
 		}
 		return location;
+
+	}
+
+	public static String getRelativeLocation(IProject project, String location) {
+		PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+		if (model == null) {
+			return location;
+		}
+		return getRelativeLocation(model, location);
 	}
 
 	public static PHPFileData getFileData(Object element) {
