@@ -16,7 +16,6 @@ import java.text.MessageFormat;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
@@ -43,7 +42,6 @@ import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
@@ -52,7 +50,6 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
  */
 public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation {
 
-	protected static final String JAVA_FILE_STORAGE_CLASS_NAME = ".JavaFileStorage";
 	private ImageDescriptorRegistry fDebugImageRegistry;
 
 	/*
@@ -238,13 +235,11 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 					IProject project = PHPDebugUIPlugin.getProject(projectName);
 					if (IPHPConstants.Include_Storage_LFile.equals(type)) {
 						File file = new File(id);
-						if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
-							return new FileStoreEditorInput(new LocalFile(file));
-						} else {
-							LocalFileStorage lfs = new LocalFileStorage(file);
+						LocalFileStorage lfs = new LocalFileStorage(file);
+						if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) != Boolean.TRUE) {
 							lfs.setProject(project);
-							return new LocalFileStorageEditorInput(lfs);
 						}
+						return new LocalFileStorageEditorInput(lfs);
 					} else if (IPHPConstants.Include_Storage_zip.equals(type)) {
 						int index = id.lastIndexOf(filename);
 						String archive = id.substring(0, index - 1);
@@ -273,9 +268,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		if (element instanceof PHPSourceNotFoundInput) {
 			return new PHPSourceNotFoundEditorInput((PHPSourceNotFoundInput) element);
 		}
-		if (element.getClass().getName().endsWith(JAVA_FILE_STORAGE_CLASS_NAME)) {
-			return new FileStoreEditorInput(new LocalFile(((IStorage) element).getFullPath().toFile()));
-		}
+		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: " + element.getClass().getName());
 		return null;
 	}
 
@@ -289,7 +282,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		if (input instanceof PHPSourceNotFoundEditorInput) {
 			return "org.eclipse.php.debug.SourceNotFoundEditor";
 		}
-		if (element instanceof IFile || element instanceof ILineBreakpoint || element instanceof ZipEntryStorage || element instanceof LocalFileStorage || element.getClass().getName().endsWith(JAVA_FILE_STORAGE_CLASS_NAME)) {
+		if (element instanceof IFile || element instanceof ILineBreakpoint || element instanceof ZipEntryStorage || element instanceof LocalFileStorage) {
 			return "org.eclipse.php.editor"; //$NON-NLS-1$
 		}
 		return null;

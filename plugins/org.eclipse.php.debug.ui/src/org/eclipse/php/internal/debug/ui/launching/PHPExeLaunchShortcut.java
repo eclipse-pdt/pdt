@@ -28,6 +28,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
@@ -43,11 +44,11 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 
 public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
@@ -74,13 +75,17 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	public void launch(IEditorPart editor, String mode) {
 		IEditorInput input = editor.getEditorInput();
 		IFile file = (IFile) input.getAdapter(IFile.class);
-		if (file == null && input instanceof FileStoreEditorInput) {
-			// It's probably a launch for a file that is not in the workspace.
-			IPath path = new Path(((FileStoreEditorInput) input).getURI().getPath());
-			if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
-				file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
-			} else {
-				file = ExternalFileDecorator.createFile(path.toString());
+		if (file == null && input instanceof LocalFileStorageEditorInput) {
+			LocalFileStorageEditorInput editorInput = (LocalFileStorageEditorInput)input;
+			LocalFileStorage fileStorage = (LocalFileStorage)editorInput.getStorage();
+			if (fileStorage.getProject() == null) {
+				// It's probably a launch for a file that is not in the workspace.
+				IPath path = fileStorage.getFullPath();
+				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
+					file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+				} else {
+					file = ExternalFileDecorator.createFile(path.toString());
+				}
 			}
 		}
 		if (file != null) {

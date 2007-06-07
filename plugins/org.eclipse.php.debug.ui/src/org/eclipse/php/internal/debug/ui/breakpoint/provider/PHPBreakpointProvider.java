@@ -35,7 +35,6 @@ import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
@@ -63,20 +62,24 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				} catch (BadLocationException e) {
 				}
 			} else if (input instanceof IStorageEditorInput) {
+				
 				// For non-resources, use the workspace root and a coordinated
 				// attribute that is used to
 				// prevent unwanted (breakpoint) markers from being loaded
 				// into the editors.
 				res = ResourcesPlugin.getWorkspace().getRoot();
+				
 				String id = input.getName();
 				IStorage storage = ((IStorageEditorInput) input).getStorage();
 				if (input instanceof IStorageEditorInput && ((IStorageEditorInput) input).getStorage() != null) {
 					id = storage.getFullPath().toString();
 				}
+				
 				Map attributes = new HashMap();
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
 				String fileName = "";
 				IProject project = null;
+				
 				if (storage instanceof ZipEntryStorage) {
 					fileName = RemoteDebugger.convertToSystemIndependentFileName(((ZipEntryStorage) storage).getZipEntry().getName());
 					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_zip);
@@ -84,21 +87,21 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				} else if (storage instanceof LocalFileStorage) {
 					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_LFile);
 					fileName = RemoteDebugger.convertToSystemIndependentFileName(((LocalFileStorage) storage).getName());
-					String incDir = ((LocalFileStorage) storage).getIncBaseDirName();
-					incDir = RemoteDebugger.convertToSystemIndependentFileName(incDir);
-					if (incDir != null) {
-						fileName = id.substring(incDir.length() + 1);
-					}
+//					String incDir = ((LocalFileStorage) storage).getIncBaseDirName();
+//					incDir = RemoteDebugger.convertToSystemIndependentFileName(incDir);
+//					if (incDir != null) {
+//						fileName = id.substring(incDir.length() + 1);
+//					}
 					project = ((LocalFileStorage) storage).getProject();
-				} else if (input instanceof FileStoreEditorInput) {
-					// we have a JavaFileEditorStorage
-					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_LFile);
-					attributes.put(IPHPConstants.Non_Workspace_Breakpoint, Boolean.TRUE);
-					fileName = id;
+					if (project == null) {
+						attributes.put(IPHPConstants.Non_Workspace_Breakpoint, Boolean.TRUE);
+						fileName = id;
+					}
 				} else {
 					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_RFile);
 					fileName = storage.getName();
 				}
+				
 				attributes.put(IPHPConstants.Include_Storage, fileName);
 				String projectName = "";
 				if (project != null)
@@ -122,15 +125,8 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 
 	private IResource getResourceFromInput(IEditorInput input) {
 		IResource resource = (IResource) input.getAdapter(IFile.class);
-		/*        if (resource == null && input instanceof IStorageEditorInput) {
-		 resource = ResourcesPlugin.getWorkspace().getRoot();
-		 } else {
-		 resource = (IResource) input.getAdapter(IResource.class);
-		 }*/
-		if (resource == null && input instanceof FileStoreEditorInput) {
-			resource = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(new Path(((FileStoreEditorInput) input).getURI().getPath()));
-		}
-		if (resource == null) {
+		if (resource == null || !resource.exists()) {
+			// for no workspace resources - use workspace root for storing breakpoints
 			resource = ResourcesPlugin.getWorkspace().getRoot();
 		}
 		return resource;
