@@ -67,7 +67,7 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.ui.views.navigator.NavigatorDragAdapter;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
-public class ExplorerPart extends ViewPart implements IMenuListener, FocusListener {
+public class ExplorerPart extends ViewPart implements IMenuListener, FocusListener, IPartListener2 {
 
 	private static String MEMENTO_ROOT_MODE = "ExplorerPart.rootMode";
 	private static String MEMENTO_WORKING_SET = "ExplorerPart.workingSet";
@@ -80,7 +80,10 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 	 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
 	 */
 	public void focusGained(FocusEvent e) {
-		fContentProvider.postRefresh(fViewer.getInput());
+		
+		// Why do we need refresh here? 
+		//fContentProvider.postRefresh(fViewer.getInput());
+		
 		// activate the org.eclipse.php.ui.contexts.window context 
 		// only for this view the allow the F3 shortcut which conflict with JDT
 		IContextService service = (IContextService) PHPUiPlugin.getDefault().getWorkbench().getService(IContextService.class);
@@ -101,6 +104,35 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 			service.deactivateContext(contextActivation);
 		}
 	}
+	
+	public void partActivated(IWorkbenchPartReference partRef) {
+	}
+
+	public void partBroughtToTop(IWorkbenchPartReference partRef) {
+	}
+
+	public void partClosed(IWorkbenchPartReference partRef) {
+	}
+
+	public void partDeactivated(IWorkbenchPartReference partRef) {
+	}
+
+	public void partHidden(IWorkbenchPartReference partRef) {
+	}
+
+	public void partInputChanged(IWorkbenchPartReference partRef) {
+	}
+
+	public void partOpened(IWorkbenchPartReference partRef) {
+	}
+
+	public void partVisible(IWorkbenchPartReference partRef) {
+		// We have to refresh the view, since if the editor has been updated
+		// while this view was hidden (another view was active in the same folder)
+		// - the view is not synchronized with the editor contents.
+		fContentProvider.postRefresh(fViewer.getInput());
+	}
+
 
 	protected ExplorerLabelProvider fLabelProvider;
 
@@ -358,6 +390,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		site.registerContextMenu(menuMgr, fViewer);
 		site.setSelectionProvider(fViewer);
 		site.getPage().addPartListener(fPartListener);
+		site.getPage().addPartListener(this);
 
 		initLinkingEnabled();
 		fActionSet = new ExplorerActionGroup(this);
@@ -540,6 +573,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 			fContextMenu.dispose();
 
 		getSite().getPage().removePartListener(fPartListener);
+		getSite().getPage().removePartListener(this);
 
 		if (fActionSet != null)
 			fActionSet.dispose();
