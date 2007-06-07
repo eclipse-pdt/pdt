@@ -72,6 +72,10 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 	private String currentFileName = null;
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
+		//handle the cases that the connect() run before the structured model was created (look at innerConnect()).
+		if (currentFileName == null && fDocument != null) {
+			innerConnect();
+		}
 		int offset = dirtyRegion.getOffset();
 		ITypedRegion typedRegion;
 		try {
@@ -104,11 +108,16 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 		super.connect(document);
 		fDocument = document;
 
+		innerConnect();
+	}
+
+	private void innerConnect() {
 		IStructuredModel structuredModel = null;
 		try {
 			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-			if(structuredModel == null)
+			if (structuredModel == null) {
 				return;
+			}
 			currentFileName = structuredModel.getId();
 
 			PHPWorkspaceModelManager.getInstance().addModelListener(this);
@@ -276,24 +285,24 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 
 		// get text viewer and set annotations
 		StructuredTextViewer textViewer = getTextViewer();
-	    
-	    if (textViewer == null){
-	    	return;
-	    }
-    	StructuredResourceMarkerAnnotationModel annotationModel = (StructuredResourceMarkerAnnotationModel) textViewer.getAnnotationModel();
-    	// iterate the exist annotations and remove PHP annotations
-    	Iterator annotationIt = annotationModel.getAnnotationIterator();
-    	List annotationToRemove = new ArrayList();
-    	while (annotationIt.hasNext()) {
+
+		if (textViewer == null) {
+			return;
+		}
+		StructuredResourceMarkerAnnotationModel annotationModel = (StructuredResourceMarkerAnnotationModel) textViewer.getAnnotationModel();
+		// iterate the exist annotations and remove PHP annotations
+		Iterator annotationIt = annotationModel.getAnnotationIterator();
+		List annotationToRemove = new ArrayList();
+		while (annotationIt.hasNext()) {
 			Annotation annotation = (Annotation) annotationIt.next();
 			if (annotation instanceof TemporaryAnnotation) {
-				TemporaryAnnotation temporaryAnnotation = (TemporaryAnnotation)annotation;
+				TemporaryAnnotation temporaryAnnotation = (TemporaryAnnotation) annotation;
 				if (isPhpViewerAnnotation(temporaryAnnotation)) {
 					annotationToRemove.add(temporaryAnnotation);
-				} 
+				}
 			}
 		}
-    	annotationModel.replaceAnnotations((Annotation[]) annotationToRemove.toArray(new Annotation[0]), annotations);
+		annotationModel.replaceAnnotations((Annotation[]) annotationToRemove.toArray(new Annotation[0]), annotations);
 	}
 
 	private StructuredTextViewer getTextViewer() {
@@ -312,23 +321,23 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 		if (editorpart instanceof PHPStructuredEditor) {
 			PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editorpart;
 			StructuredTextViewer textViewer = phpStructuredEditor.getTextViewer();
-	    	if (fDocument == textViewer.getDocument()) {
-	    		return textViewer;
-	    	}
-				// get right viewer by comparing viewer document
-				IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
-				for (int i = 0; i < editorReferences.length; i++) {
-					IEditorReference editorReference = editorReferences[i];
-					editorpart = editorReference.getEditor(false);
-					if (editorpart instanceof PHPStructuredEditor) {
-						phpStructuredEditor = (PHPStructuredEditor) editorpart;
-						textViewer = phpStructuredEditor.getTextViewer();
-						if (fDocument == textViewer.getDocument()) {
-			    		return textViewer;
+			if (fDocument == textViewer.getDocument()) {
+				return textViewer;
+			}
+			// get right viewer by comparing viewer document
+			IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
+			for (int i = 0; i < editorReferences.length; i++) {
+				IEditorReference editorReference = editorReferences[i];
+				editorpart = editorReference.getEditor(false);
+				if (editorpart instanceof PHPStructuredEditor) {
+					phpStructuredEditor = (PHPStructuredEditor) editorpart;
+					textViewer = phpStructuredEditor.getTextViewer();
+					if (fDocument == textViewer.getDocument()) {
+						return textViewer;
 					}
 				}
-				}
 			}
+		}
 		return null;
 	}
 
