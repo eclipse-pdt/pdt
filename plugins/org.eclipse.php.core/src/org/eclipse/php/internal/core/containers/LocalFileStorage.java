@@ -27,8 +27,11 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.util.Messages;
 
 /**
- * Implementation of storage for a local file
- * (<code>java.io.File</code>).
+ * Implementation of storage for a local file (<code>java.io.File</code>).
+ * We use this class for storing external files and included files.
+ * If {@link #getProject()} returns <code>null</code> - that means that the file is external,
+ * otherwise - the file is probably from the include path ({@link #getProject()} returns
+ * instance of project contains this include path)
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
@@ -95,7 +98,7 @@ public class LocalFileStorage extends PlatformObject implements IStorage {
      * @see org.eclipse.core.resources.IStorage#isReadOnly()
      */
     public boolean isReadOnly() {
-        return true;
+        return fProject != null;
     }
 
     /**
