@@ -234,8 +234,7 @@ public class PHPModelUtil {
 			final PHPCodeData codeData = (PHPCodeData) element;
 			if (fileData != null)
 				filename = fileData.getName();
-			else if (codeData.isUserCode()) {
-				codeData.getContainer();
+			else if (codeData.getUserData() != null) {
 				final UserData userData = codeData.getUserData();
 				filename = userData.getFileName();
 			} else
