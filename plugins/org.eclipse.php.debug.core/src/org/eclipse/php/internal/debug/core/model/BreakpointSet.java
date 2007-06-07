@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
@@ -99,63 +100,41 @@ public class BreakpointSet {
 			resource = marker.getResource();
 		}
 
-		if (!fIsPHPCGI) {
-			if (resource instanceof IWorkspaceRoot) {
-				try {
-					if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
-						// The breakpoint was set on an external file (out of the workspace).
-						// Return true to support this breakpoint.
-						return true;
-					}
-				} catch (CoreException e) {
-				}
-				String includeType = marker.getAttribute(IPHPConstants.Include_Storage_type, "");
-				String id = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, "");
-				String filename = marker.getAttribute(IPHPConstants.Include_Storage, "");
-				String base = id.substring(0, (id.length() - (filename.length() + 1)));
-				if (includeType.equals(IPHPConstants.Include_Storage_zip)) {
-					Object[] zips = fZips.toArray();
-					for (int i = 0; i < zips.length; i++) {
-						if (base.equals((String) zips[i]))
-							return true;
-					}
-					return false;
-				} else if (includeType.equals(IPHPConstants.Include_Storage_LFile)) {
-					Object[] dirs = fDirectories.toArray();
-					for (int i = 0; i < dirs.length; i++) {
-						if (base.equals((String) dirs[i]))
-							return true;
-					}
-					return false;
-				}
-				return true;
-			} else {
-				IProject project = resource.getProject();
-				if (fProject.equals(project))
+		if (resource instanceof IWorkspaceRoot) {
+			try {
+				if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
+					// The breakpoint was set on an external file (out of the workspace).
+					// Return true to support this breakpoint.
 					return true;
-				return fProjects.contains(project);
+				}
+			} catch (CoreException e) {
 			}
-		} else {
-			if (resource instanceof IWorkspaceRoot) {
-				try {
-					if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
-						// The breakpoint was set on an external file (out of the workspace).
-						// Return true to support this breakpoint.
+			String includeType = marker.getAttribute(IPHPConstants.Include_Storage_type, "");
+			String id = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, "");
+			Path idPath = new Path(id);
+			String base = idPath.removeLastSegments(1).toString();
+			if (includeType.equals(IPHPConstants.Include_Storage_zip)) {
+				Object[] zips = fZips.toArray();
+				for (int i = 0; i < zips.length; i++) {
+					if (base.equals((String) zips[i]))
 						return true;
-					}
-				} catch (CoreException e) {
 				}
 				return false;
-			} else {
-				IProject project = resource.getProject();
-				if (fProject.equals(project)) {
-					return true;
-				} else {
-					return false;
+			} else if (includeType.equals(IPHPConstants.Include_Storage_LFile)) {
+				Object[] dirs = fDirectories.toArray();
+				for (int i = 0; i < dirs.length; i++) {
+					if (base.equals((String) dirs[i]))
+						return true;
 				}
+				return false;
 			}
+			return true;
+		} else {
+			IProject project = resource.getProject();
+			if (fProject.equals(project))
+				return true;
+			return fProjects.contains(project);
 		}
-
 	}
 
 	private File getVariableFile(String variableName) {

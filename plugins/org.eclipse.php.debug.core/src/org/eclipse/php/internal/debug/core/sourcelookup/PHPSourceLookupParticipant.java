@@ -13,12 +13,11 @@ package org.eclipse.php.internal.debug.core.sourcelookup;
 import java.io.File;
 
 import org.eclipse.core.internal.filesystem.local.LocalFile;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
+import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.model.PHPStackFrame;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 
 /**
  * The PHP source lookup participant knows how to translate a 
@@ -48,9 +47,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 						return EMPTY;
 					}
 					if (ExternalFilesRegistry.getInstance().isEntryExist(fileName)) {
-						LocalFile locFile = new LocalFile(new File(fileName));
-						final FileStoreEditorInput externalInput = new FileStoreEditorInput(locFile);
-						IStorage storage = null;//externalInput.getStorage();
+						LocalFileStorage storage = new LocalFileStorage(new File(fileName));
 						if (storage != null) {
 							return new Object[] { storage };
 						} else {

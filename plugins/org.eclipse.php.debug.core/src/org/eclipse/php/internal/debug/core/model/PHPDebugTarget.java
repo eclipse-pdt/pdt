@@ -567,7 +567,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 					} else {
 						// If the breakpoint was set on a non-workspace file, make sure that the file name for the breakpoint
 						// is taken correctly.
-						if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
+						if (IPHPConstants.Include_Storage_LFile.equals(marker.getAttribute(IPHPConstants.Include_Storage_type))) {
 							fileName = marker.getAttribute(IPHPConstants.Include_Storage, "");
 						} else {
 							fileName = (resource.getRawLocation()).toString();
