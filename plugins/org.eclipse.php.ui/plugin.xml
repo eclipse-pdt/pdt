@@ -171,13 +171,14 @@
 	<!--PHP Editor:-->
 	<extension point="org.eclipse.ui.editors">
 		<editor
-			class="org.eclipse.php.internal.ui.editor.PHPStructuredEditor"
-			contributorClass="org.eclipse.php.internal.ui.editor.PHPEditorActionBarContributor"
-			default="true"
-			icon="icons/full/obj16/phpfile.gif"
-			id="org.eclipse.php.editor"
-			name="PHP Editor"
-			symbolicFontName="org.eclipse.wst.sse.ui.textfont">
+        class="org.eclipse.php.internal.ui.editor.PHPStructuredEditor"
+        contributorClass="org.eclipse.php.internal.ui.editor.PHPEditorActionBarContributor"
+        default="true"
+        icon="icons/full/obj16/phpfile.gif"
+        id="org.eclipse.php.editor"
+        matchingStrategy="org.eclipse.php.internal.ui.editor.PHPEditorMatchingStrategy"
+        name="PHP Editor"
+        symbolicFontName="org.eclipse.wst.sse.ui.textfont">
 			<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource" />
 		</editor>
 	</extension>

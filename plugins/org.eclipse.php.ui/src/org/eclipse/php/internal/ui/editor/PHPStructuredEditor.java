@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
+import java.io.File;
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
 import java.util.*;
@@ -52,6 +53,7 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.containers.StorageEditorInput;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
@@ -1284,24 +1286,25 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		IResource resource = null;
 		IPath externalPath = null;
 
+		// Replace input received from Eclipse platform with WST-compatible:
+		if (input instanceof FileStoreEditorInput) {
+			input = new LocalFileStorageEditorInput(new LocalFileStorage(new File(((FileStoreEditorInput)input).getURI())));
+		}
+
 		if (input instanceof IFileEditorInput) {
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
-		} else if (input instanceof FileStoreEditorInput) {
-			FileStoreEditorInput fileInput = (FileStoreEditorInput) input;
-			externalPath = new Path(fileInput.getURI().getPath());
-			// Wrap this file because it's an external (non workspace) file.
-			resource = ExternalFileDecorator.createFile(externalPath.toString());
 		} else if (input instanceof IStorageEditorInput) {
 			final IStorageEditorInput editorInput = (IStorageEditorInput) input;
 			final IStorage storage = editorInput.getStorage();
 
 			if (storage instanceof ZipEntryStorage) {
 				resource = ((ZipEntryStorage) storage).getProject();
-			} else if (storage instanceof LocalFileStorage) {
+			} else if (storage instanceof LocalFileStorage && ((LocalFileStorage) storage).getProject() != null) {
 				resource = ((LocalFileStorage) storage).getProject();
 			}
-			// Suppose that it's a remote storage. If something goes wrong in some case - add another "if" above.
+			// Suppose that it's a external storage (or remote).
+			// If something goes wrong in some case - add another "if" above.
 			else {
 				externalPath = storage.getFullPath();
 				resource = ExternalFileDecorator.createFile(externalPath.toString());

@@ -18,7 +18,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -26,6 +25,7 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
@@ -49,7 +49,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.FileEditorInput;
@@ -235,19 +234,15 @@ public class EditorUtility {
 			if (source instanceof File) {
 				File externalSource = (File) source;
 				Path path = new Path(externalSource.getPath());
-				//check if external file
-				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
-					LocalFile locFile = new LocalFile(new File(path.toString()));
-					final FileStoreEditorInput externalInput = new FileStoreEditorInput(locFile);
-					return externalInput;
-				}
-				//include path file
-				else {
-					final LocalFileStorage fileStorage = new LocalFileStorage((File) source);
+
+				final LocalFileStorage fileStorage = new LocalFileStorage((File) source);
+				
+				// If this file isn't external, it's probably from the include path:
+				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					fileStorage.setProject(project);
 					fileStorage.setIncBaseDirName(incDir);
-					return new LocalFileStorageEditorInput(fileStorage);
 				}
+				return new LocalFileStorageEditorInput(fileStorage);
 			}
 			if (source instanceof ZipFile)
 				return createZipEntryStorageEditorInput((ZipFile) source, element, project);
@@ -565,6 +560,37 @@ public class EditorUtility {
 	 */
 	public static final PHPStructuredEditor getPHPStructuredEditor(final IWorkbenchPart editor) {
 		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null;
+	}
+
+	/**
+	 * Returns PHP editor which corresponds to ITextViewer
+	 * @return php editor, or <code>null</code> if no editor found
+	 */
+	public static final PHPStructuredEditor getPHPStructuredEditor(final ITextViewer textViewer) {
+		IWorkbenchPage workbenchpage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+
+		// Check active editor, first:
+		IEditorPart activeEditorPart = workbenchpage.getActiveEditor();
+		if (activeEditorPart instanceof PHPStructuredEditor) {
+			PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) activeEditorPart;
+			if (phpStructuredEditor.getTextViewer().getDocument() == textViewer.getDocument()) {
+				return phpStructuredEditor;
+			}
+		}
+
+		// Check other editors:
+		IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
+		for (int i = 0; i < editorReferences.length; i++) {
+			IEditorReference editorReference = editorReferences[i];
+			IEditorPart editorpart = editorReference.getEditor(false);
+			if (editorpart instanceof PHPStructuredEditor) {
+				PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editorpart;
+				if (phpStructuredEditor.getTextViewer().getDocument() == textViewer.getDocument()) {
+					return phpStructuredEditor;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
