@@ -487,7 +487,9 @@ public class PHPModelUtil {
 
 	public static String getRelativeLocation(IPhpModel model, String location) {
 		PHPFileData fileData = model.getFileData(location);
+		
 		if (fileData != null) {
+			// deterministic
 			IResource resource = getResource(fileData);
 			if (resource != null && resource.exists()) { // file is in a project
 				IProject fileProject = resource.getProject();
@@ -510,6 +512,19 @@ public class PHPModelUtil {
 						}
 					}
 				}
+			}
+		} else {
+			// heuristic
+			IPath pathLocation = new Path(location);
+			if(model instanceof PHPProjectModel) {
+				String projectName = pathLocation.segment(0);
+				if(projectName.equals(((PHPProjectModel)model).getProject().getName()))
+					return pathLocation.removeFirstSegments(1).makeRelative().toString();
+				PHPIncludePathModelManager includeManager = (PHPIncludePathModelManager) ((PHPProjectModel)model).getModel(PHPIncludePathModelManager.COMPOSITE_INCLUDE_PATH_MODEL_ID);
+				if(includeManager.getModel(projectName) != null)
+					return pathLocation.removeFirstSegments(1).makeRelative().toString();
+				
+				// TODO include variables/directories
 			}
 		}
 		return location;
