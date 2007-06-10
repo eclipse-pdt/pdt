@@ -369,6 +369,9 @@
          <perspective
                id="org.eclipse.debug.ui.DebugPerspective">
          </perspective>
+         <configurationType
+    		id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
+  		 </configurationType>
  
       </shortcut>
    </extension>
