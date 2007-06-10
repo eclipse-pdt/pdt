@@ -71,6 +71,9 @@
          <perspective
                id="org.eclipse.debug.ui.DebugPerspective">
          </perspective>
+         <configurationType
+               id="org.eclipse.php.debug.core.launching.webPageLaunch">
+         </configurationType>
       </shortcut>
   </extension>
   <extension
