@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
-import java.io.File;
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
 import java.util.*;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -53,8 +53,6 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
-import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
-import org.eclipse.php.internal.ui.containers.StorageEditorInput;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration.DoubleClickListener;
@@ -72,7 +70,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
-import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -415,6 +413,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
+	}
+	
+	protected void setDocumentProvider(IEditorInput input) {
+		if (input instanceof IURIEditorInput) {
+			setDocumentProvider(new TextFileDocumentProvider());
+		} else {
+			super.setDocumentProvider(input);
+		}
 	}
 
 	public void dispose() {
@@ -1286,15 +1292,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		IResource resource = null;
 		IPath externalPath = null;
 
-		// Replace input received from Eclipse platform with WST-compatible:
-		if (input instanceof FileStoreEditorInput) {
-			input = new LocalFileStorageEditorInput(new LocalFileStorage(new File(((FileStoreEditorInput)input).getURI())));
-		}
-
 		if (input instanceof IFileEditorInput) {
+			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
-		} else if (input instanceof IStorageEditorInput) {
+		}
+		else if (input instanceof IStorageEditorInput) {
+			// This kind of editor input usually means non-workspace file, like
+			// PHP file which comes from include path, remote file which comes from
+			// Web server while debugging, file from ZIP archive, etc...
+			
 			final IStorageEditorInput editorInput = (IStorageEditorInput) input;
 			final IStorage storage = editorInput.getStorage();
 
@@ -1302,25 +1309,21 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				resource = ((ZipEntryStorage) storage).getProject();
 			} else if (storage instanceof LocalFileStorage && ((LocalFileStorage) storage).getProject() != null) {
 				resource = ((LocalFileStorage) storage).getProject();
-			}
-			// Suppose that it's a external storage (or remote).
-			// If something goes wrong in some case - add another "if" above.
-			else {
+			} else {
+				// This is, probably, a remote storage:
 				externalPath = storage.getFullPath();
 				resource = ExternalFileDecorator.createFile(externalPath.toString());
-
-				if (!(input instanceof StorageEditorInput)) {
-					input = new StorageEditorInput(storage) {
-						public boolean exists() {
-							return false;
-						}
-					};
-				}
 			}
+		} else if (input instanceof IURIEditorInput) {
+			// External file editor input. It's usually used when opening PHP file
+			// via "File -> Open File" menu option, or using D&D:
+			externalPath = URIUtil.toPath(((IURIEditorInput)input).getURI());
+			resource = ExternalFileDecorator.createFile(externalPath.toString());
 		}
 
 		if (resource instanceof IFile) {
 			if (PHPModelUtil.isPhpFile((IFile) resource)) {
+				// Add file decorator entry to the list of external files:
 				if (externalPath != null && (resource instanceof ExternalFileDecorator)) {
 					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toString(), (ExternalFileDecorator) resource);
 				}

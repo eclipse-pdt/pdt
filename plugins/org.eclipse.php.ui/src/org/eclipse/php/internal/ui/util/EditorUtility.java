@@ -18,6 +18,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -31,9 +32,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
@@ -49,6 +48,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.FileEditorInput;
@@ -207,16 +207,16 @@ public class EditorUtility {
 	}
 
 	public static IEditorInput getEditorInput(final Object input) {
-		IProject project = null;
 		if (input instanceof TreeItem) {
-			project = getProject((TreeItem) input);
+			IProject project = getProject((TreeItem) input);
 			final String incDir = getIncludeDirectory((TreeItem) input);
 			return getEditorInput((PHPCodeData) ((TreeItem) input).getData(), project, incDir);
 		}
 
-		if (input instanceof PHPCodeData)
+		if (input instanceof PHPCodeData) {
 			return getEditorInput((PHPCodeData) input, null, null);
-
+		}
+		
 		if (input instanceof IFile)
 			return new FileEditorInput((IFile) input);
 
@@ -234,14 +234,15 @@ public class EditorUtility {
 			if (source instanceof File) {
 				File externalSource = (File) source;
 				Path path = new Path(externalSource.getPath());
-
-				final LocalFileStorage fileStorage = new LocalFileStorage((File) source);
 				
-				// If this file isn't external, it's probably from the include path:
-				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
-					fileStorage.setProject(project);
-					fileStorage.setIncBaseDirName(incDir);
+				// If this is external file:
+				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
+					return new FileStoreEditorInput(new LocalFile(externalSource));
 				}
+
+				LocalFileStorage fileStorage = new LocalFileStorage((File) source);
+				fileStorage.setProject(project);
+				fileStorage.setIncBaseDirName(incDir);
 				return new LocalFileStorageEditorInput(fileStorage);
 			}
 			if (source instanceof ZipFile)
@@ -266,6 +267,7 @@ public class EditorUtility {
 
 		if (input == null)
 			return null;
+		
 		PHPIncludePathModel includePathModel = (PHPIncludePathModel) input.getData();
 		if (includePathModel.getType() == PHPIncludePathModel.TYPE_VARIABLE) {
 			IPath includePath = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
