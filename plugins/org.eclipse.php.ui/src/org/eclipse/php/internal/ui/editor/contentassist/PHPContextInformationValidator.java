@@ -159,6 +159,11 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		presentation.clear();
 		fCurrentParameter= currentParameter;
 
+		// this check was added in order to workaround bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=191849
+		// when it will be resolved this check can be removed.
+		if(fInformation == null){
+			return false;
+		}
 		String s= fInformation.getInformationDisplayString();
 		int start= 0;
 		int occurrences= 0;
