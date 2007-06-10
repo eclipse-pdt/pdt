@@ -17,34 +17,28 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
-import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
 public class BreakpointSet {
 
 	private IProject fProject;
-	private ArrayList fZips;
 	private ArrayList fDirectories;
 	private ArrayList fProjects;
-	private boolean fIsPHPCGI;
+
+//	private boolean fIsPHPCGI;
 
 	public BreakpointSet(IProject project, boolean isPHPCGI) {
 
 		fProject = project;
-		fIsPHPCGI = isPHPCGI;
-		fZips = new ArrayList();
+//		fIsPHPCGI = isPHPCGI;
 		fDirectories = new ArrayList();
 		fProjects = new ArrayList();
 
-		if (project == null)
-			;
 		PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		if (options != null) {
 			IIncludePathEntry[] entries = options.readRawIncludePath();
@@ -54,11 +48,7 @@ public class BreakpointSet {
 					if (entries[i].getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
 						IPath path = entries[i].getPath();
 						File file = new File(path.toString());
-						if (entries[i].getContentKind() == IIncludePathEntry.K_BINARY) {
-							fZips.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
-						} else {
-							fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
-						}
+						fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
 					} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
 						IResource includeResource = entries[i].getResource();
 						if (includeResource instanceof IProject) {
@@ -71,11 +61,6 @@ public class BreakpointSet {
 						if (file != null) {
 							if (file.isDirectory()) {
 								fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
-							} else {
-								String fileName = file.getName();
-								if (fileName.toLowerCase().endsWith(".zip")) { //$NON-NLS-1$
-									fZips.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
-								}
 							}
 						}
 					}
@@ -101,32 +86,18 @@ public class BreakpointSet {
 		}
 
 		if (resource instanceof IWorkspaceRoot) {
-			try {
-				if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) == Boolean.TRUE) {
-					// The breakpoint was set on an external file (out of the workspace).
-					// Return true to support this breakpoint.
-					return true;
+			String storageType = marker.getAttribute(IPHPConstants.STORAGE_TYPE, "");
+
+			if (storageType.equals(IPHPConstants.STORAGE_TYPE_INCLUDE)) {
+				String includeBasedir = (String) marker.getAttribute(IPHPConstants.STORAGE_INC_BASEDIR, "");
+				if (!"".equals(includeBasedir)) {
+					Object[] dirs = fDirectories.toArray();
+					for (int i = 0; i < dirs.length; i++) {
+						if (includeBasedir.equals((String) dirs[i]))
+							return true;
+					}
+					return false;
 				}
-			} catch (CoreException e) {
-			}
-			String includeType = marker.getAttribute(IPHPConstants.Include_Storage_type, "");
-			String id = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, "");
-			Path idPath = new Path(id);
-			String base = idPath.removeLastSegments(1).toString();
-			if (includeType.equals(IPHPConstants.Include_Storage_zip)) {
-				Object[] zips = fZips.toArray();
-				for (int i = 0; i < zips.length; i++) {
-					if (base.equals((String) zips[i]))
-						return true;
-				}
-				return false;
-			} else if (includeType.equals(IPHPConstants.Include_Storage_LFile)) {
-				Object[] dirs = fDirectories.toArray();
-				for (int i = 0; i < dirs.length; i++) {
-					if (base.equals((String) dirs[i]))
-						return true;
-				}
-				return false;
 			}
 			return true;
 		} else {

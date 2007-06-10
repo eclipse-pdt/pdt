@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
+import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
+import org.eclipse.ui.IURIEditorInput;
+
 /**
  * Constants for the PHP debugger.
  */
@@ -30,13 +33,27 @@ public interface IPHPConstants {
 	public static final String PHPProcessType = ID_PHP_DEBUG_CORE + ".launching.PHPProcess";
 	public static final String RUN_WITH_DEBUG_INFO = ID_PHP_DEBUG_CORE + ".RunWithDebugInfo";
 	public static final String OPEN_IN_BROWSER = ID_PHP_DEBUG_CORE + ".OpenInBrowser";
-	public static final String Include_Storage = ID_PHP_DEBUG_CORE + ".Include_Storage";
-	public static final String Include_Storage_type = ID_PHP_DEBUG_CORE + ".Include_Storage_Type";
-	public static final String Include_Storage_zip = ID_PHP_DEBUG_CORE + ".zip";
-	public static final String Include_Storage_LFile = ID_PHP_DEBUG_CORE + ".lfile";
-	public static final String Include_Storage_RFile = ID_PHP_DEBUG_CORE + ".rfile";
-	public static final String Include_Storage_Project = ID_PHP_DEBUG_CORE + ".project";
-	public static final String Non_Workspace_Breakpoint = ID_PHP_DEBUG_CORE + ".Non_Workspace_Breakpoint";
+	
+	public static final String STORAGE_TYPE = ID_PHP_DEBUG_CORE + ".Storage_Type";
+	
+	/** File from include path ({@link LocalFileStorageEditorInput}) */
+	public static final String STORAGE_TYPE_INCLUDE = ID_PHP_DEBUG_CORE + ".Include";
+	
+	/** Remote file */
+	public static final String STORAGE_TYPE_REMOTE = ID_PHP_DEBUG_CORE + ".Remote";
+	
+	/** External file ({@link IURIEditorInput}) */
+	public static final String STORAGE_TYPE_EXTERNAL = ID_PHP_DEBUG_CORE + ".External";
+
+	/** File resource for storage (if available) */
+	public static final String STORAGE_FILE = ID_PHP_DEBUG_CORE + ".Storage_File";
+	
+	/** Project resource for storage (if available) */
+	public static final String STORAGE_PROJECT = ID_PHP_DEBUG_CORE + ".Project";
+	
+	/** Include path base directory for storage (if available) */
+	public static final String STORAGE_INC_BASEDIR = ID_PHP_DEBUG_CORE + ".Include_Path_Basedir";
+	
 	public static final String Default_Server_Name = "Default PHP Web Server";
 	public static final String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType";
 	public static final String PHPServerLaunchType = "org.eclipse.php.debug.core.launching.webPageLaunch";

@@ -546,11 +546,11 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 					String fileName;
 					if (!fIsPHPCGI) {
 						if (resource instanceof IWorkspaceRoot) {
-							if (IPHPConstants.Include_Storage_RFile.equals(marker.getAttribute(IPHPConstants.Include_Storage_type))) {
-								fileName = (String) marker.getAttribute(IPHPConstants.Include_Storage);
+							if (IPHPConstants.STORAGE_TYPE_REMOTE.equals(marker.getAttribute(IPHPConstants.STORAGE_TYPE))) {
+								fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
 								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
 							} else {
-								fileName = fHTDocs + '/' + (String) marker.getAttribute(IPHPConstants.Include_Storage);
+								fileName = fHTDocs + '/' + (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
 							}
 						} else {
 							if (fHTDocs == null || fHTDocs.length() == 0) {
@@ -567,8 +567,11 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 					} else {
 						// If the breakpoint was set on a non-workspace file, make sure that the file name for the breakpoint
 						// is taken correctly.
-						if (IPHPConstants.Include_Storage_LFile.equals(marker.getAttribute(IPHPConstants.Include_Storage_type))) {
-							fileName = marker.getAttribute(IPHPConstants.Include_Storage, "");
+						if (resource instanceof IWorkspaceRoot) {
+							fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
+							if (IPHPConstants.STORAGE_TYPE_INCLUDE.equals(marker.getAttribute(IPHPConstants.STORAGE_TYPE))) {
+								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
+							}
 						} else {
 							fileName = (resource.getRawLocation()).toString();
 						}

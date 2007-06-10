@@ -15,8 +15,6 @@ import java.io.File;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
-import org.eclipse.php.internal.core.containers.LocalFileStorage;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.model.PHPStackFrame;
 
 /**
@@ -35,33 +33,32 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	}
 
 	public Object[] findSourceElements(Object object) throws CoreException {
+		Object[] sourceElements = EMPTY;
 		try {
-			Object[] sourceElements = super.findSourceElements(object);
-			if (sourceElements == EMPTY) {
-				// If the lookup returned an empty elements array, check if the source is outside the workspace.
-				if (object instanceof PHPStackFrame) {
-					PHPStackFrame stackFrame = (PHPStackFrame) object;
-					String fileName = stackFrame.getAbsoluteFileName();
-					File file = new File(fileName);
-					if (!file.exists()) {
-						return EMPTY;
-					}
-					if (ExternalFilesRegistry.getInstance().isEntryExist(fileName)) {
-						LocalFileStorage storage = new LocalFileStorage(new File(fileName));
-						if (storage != null) {
-							return new Object[] { storage };
-						} else {
-							return EMPTY;
-						}
-					}
+			sourceElements = super.findSourceElements(object);
+		} catch (Throwable e) {
+			// Check if the lookup failed because the source is outside the workspace.
+		}
 
+		if (sourceElements == EMPTY) {
+			// If the lookup returned an empty elements array, check if the source is outside the workspace.
+			if (object instanceof PHPStackFrame) {
+				PHPStackFrame stackFrame = (PHPStackFrame) object;
+				String fileName = stackFrame.getAbsoluteFileName();
+				File file = new File(fileName);
+				if (!file.exists()) {
+					return EMPTY;
+				}
+
+				LocalFile storage = new LocalFile(file);
+				if (storage != null) {
+					return new Object[] { storage };
+				} else {
+					return EMPTY;
 				}
 			}
-			return sourceElements;
-		} catch (CoreException ce) {
-			// Check if the lookup failed because the source is outside the workspace.
-			return EMPTY;
 		}
+		return sourceElements;
 	}
 
 }

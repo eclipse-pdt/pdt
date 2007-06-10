@@ -86,7 +86,7 @@ public class PHPLineBreakpoint extends LineBreakpoint {
         IResource resource = marker.getResource();       
         String fileName = "";
         if (resource instanceof IWorkspaceRoot) {
-            fileName = (String)marker.getAttribute(IPHPConstants.Include_Storage); 
+            fileName = (String)marker.getAttribute(IPHPConstants.STORAGE_FILE); 
         }else {
             IFile file = (IFile) resource;
             IPath path = file.getFullPath();
