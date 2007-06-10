@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.console;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -184,8 +186,13 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 							fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(fileName);
 						} catch (Exception e) {
 						}
-						if (file != null) {
+						if (fileData != null) {
 							fileObject = fileData;
+						} else {
+							File externalFile = new File(fileName);
+							if (externalFile.exists()) {
+								fileObject = externalFile;
+							}
 						}
 					}
 					if (fileObject != null) {

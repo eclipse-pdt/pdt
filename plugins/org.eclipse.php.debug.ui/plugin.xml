@@ -127,6 +127,11 @@
 	            adaptableType="org.eclipse.ui.IStorageEditorInput">
 	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
          </factory>
+         <factory
+	            class=""
+	            adaptableType="org.eclipse.ui.IURIEditorInput">
+	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
+         </factory>
       </extension>
     <extension
        	point="org.eclipse.debug.ui.variableValueEditors">

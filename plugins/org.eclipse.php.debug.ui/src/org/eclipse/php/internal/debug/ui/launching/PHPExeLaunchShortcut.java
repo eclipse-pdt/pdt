@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.debug.ui.launching;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -44,10 +45,11 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
-import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class PHPExeLaunchShortcut implements ILaunchShortcut {
@@ -75,12 +77,23 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	public void launch(IEditorPart editor, String mode) {
 		IEditorInput input = editor.getEditorInput();
 		IFile file = (IFile) input.getAdapter(IFile.class);
-		if (file == null && input instanceof LocalFileStorageEditorInput) {
-			LocalFileStorageEditorInput editorInput = (LocalFileStorageEditorInput)input;
-			LocalFileStorage fileStorage = (LocalFileStorage)editorInput.getStorage();
-			if (fileStorage.getProject() == null) {
-				// It's probably a launch for a file that is not in the workspace.
-				IPath path = fileStorage.getFullPath();
+		if (file == null) {
+			IPath path = null;
+			
+			if (input instanceof IStorageEditorInput) {
+				IStorageEditorInput editorInput = (IStorageEditorInput)input;
+				try {
+					LocalFileStorage fileStorage = (LocalFileStorage)editorInput.getStorage();
+					path = fileStorage.getFullPath();
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+			} else if (input instanceof IURIEditorInput) {
+				IURIEditorInput editorInput = (IURIEditorInput)input;
+				path = URIUtil.toPath(editorInput.getURI());
+			}
+			
+			if (path != null) {
 				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
 				} else {

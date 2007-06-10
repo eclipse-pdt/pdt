@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.ui.PropertyTesters;
 import java.util.List;
 
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -23,6 +24,7 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
 /**
@@ -61,15 +63,20 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 				if (obj instanceof FileEditorInput) {
 					FileEditorInput editorInput = (FileEditorInput) list.get(0);
 					file = editorInput.getFile();
-				} else if (SCRIPT_ID.equalsIgnoreCase(launchType) && obj instanceof LocalFileStorageEditorInput) {
-					// In this case, the editor input is probably an external file. 
-					// Allow only script run/debug on this kind of file (internal executable launch).
-					LocalFileStorageEditorInput editorInput = (LocalFileStorageEditorInput) obj;
-					// Try to get it first from the external files registry.
-					IPath fullPath = editorInput.getStorage().getFullPath();
-					file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toString());
-					if (file == null) {
-						file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(fullPath);
+				} else if (SCRIPT_ID.equalsIgnoreCase(launchType)) {
+					if (obj instanceof LocalFileStorageEditorInput) {
+						// In this case, the editor input is probably an external file. 
+						// Allow only script run/debug on this kind of file (internal executable launch).
+						LocalFileStorageEditorInput editorInput = (LocalFileStorageEditorInput) obj;
+						// Try to get it first from the external files registry.
+						IPath fullPath = editorInput.getStorage().getFullPath();
+						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toString());
+						if (file == null) {
+							file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(fullPath);
+						}
+					} else if (obj instanceof IURIEditorInput) {
+						IPath fullPath = URIUtil.toPath(((IURIEditorInput)obj).getURI());
+						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toString());
 					}
 				} else if (list.get(0) instanceof IFile) {
 					file = (IFile) list.get(0);

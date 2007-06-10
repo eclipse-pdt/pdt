@@ -11,11 +11,10 @@
 package org.eclipse.php.internal.debug.ui.presentation;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
@@ -42,6 +41,7 @@ import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
@@ -121,7 +121,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 				return null;
 			} else if (resource instanceof IWorkspaceRoot) {
 				try {
-					String filename = (String) marker.getAttribute(IPHPConstants.Include_Storage);
+					String filename = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
 					Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
 					return filename + " [line: " + lineNumber.toString() + "]";
 				} catch (CoreException e) {
@@ -224,40 +224,37 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			PHPLineBreakpoint breakpoint = (PHPLineBreakpoint) element;
 			IMarker marker = breakpoint.getMarker();
 			IResource resource = marker.getResource();
+			
 			if (resource instanceof IFile) {
 				return new FileEditorInput((IFile) resource);
-			} else if (resource instanceof IWorkspaceRoot) {
+			}
+			// Breakpoints for external files are stored in workspace root:
+			else if (resource instanceof IWorkspaceRoot) {
 				try {
-					String filename = (String) marker.getAttribute(IPHPConstants.Include_Storage);
-					String type = (String) marker.getAttribute(IPHPConstants.Include_Storage_type);
-					String id = (String) marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
-					String projectName = (String) marker.getAttribute(IPHPConstants.Include_Storage_Project, "");
-					IProject project = PHPDebugUIPlugin.getProject(projectName);
-					if (IPHPConstants.Include_Storage_LFile.equals(type)) {
-						File file = new File(id);
+					String filename = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
+					String type = (String) marker.getAttribute(IPHPConstants.STORAGE_TYPE);
+					
+					if (IPHPConstants.STORAGE_TYPE_INCLUDE.equals(type)) {
+						String projectName = (String) marker.getAttribute(IPHPConstants.STORAGE_PROJECT, "");
+						IProject project = PHPDebugUIPlugin.getProject(projectName);
+						String includeBaseDir = (String) marker.getAttribute(IPHPConstants.STORAGE_INC_BASEDIR, "");
+						filename = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, filename);
+						
+						File file = new File(filename);
 						LocalFileStorage lfs = new LocalFileStorage(file);
-						if (marker.getAttribute(IPHPConstants.Non_Workspace_Breakpoint) != Boolean.TRUE) {
-							lfs.setProject(project);
-						}
+						lfs.setProject(project);
+						lfs.setIncBaseDirName(includeBaseDir);
 						return new LocalFileStorageEditorInput(lfs);
-					} else if (IPHPConstants.Include_Storage_zip.equals(type)) {
-						int index = id.lastIndexOf(filename);
-						String archive = id.substring(0, index - 1);
-						ZipFile zip = new ZipFile(archive);
-						ZipEntry entry = new ZipEntry(filename);
-						ZipEntryStorage zipStore = new ZipEntryStorage(zip, entry);
-						zipStore.setProject(project);
-						return new ZipEntryStorageEditorInput(zipStore);
-
+					}
+					else if (IPHPConstants.STORAGE_TYPE_EXTERNAL.equals(type)) {
+						File file = new File(filename);
+						LocalFile store = new LocalFile(file);
+						return new FileStoreEditorInput(store);
 					}
 				} catch (CoreException e) {
 					Logger.logException("Unexpected error in PHPModelPresentation", e);
-				} catch (IOException e) {
-					Logger.logException("Unexpected error in PHPModelPresentation", e);
 				}
 			}
-
-			//            return new FileEditorInput((IFile) ((ILineBreakpoint) element).getMarker().getResource());
 		}
 		if (element instanceof ZipEntryStorage) {
 			return new ZipEntryStorageEditorInput((ZipEntryStorage) element);
@@ -267,6 +264,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		}
 		if (element instanceof PHPSourceNotFoundInput) {
 			return new PHPSourceNotFoundEditorInput((PHPSourceNotFoundInput) element);
+		}
+		if (element instanceof IFileStore) {
+			return new FileStoreEditorInput((IFileStore)element);
 		}
 		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: " + element.getClass().getName());
 		return null;
@@ -282,7 +282,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		if (input instanceof PHPSourceNotFoundEditorInput) {
 			return "org.eclipse.php.debug.SourceNotFoundEditor";
 		}
-		if (element instanceof IFile || element instanceof ILineBreakpoint || element instanceof ZipEntryStorage || element instanceof LocalFileStorage) {
+		if (element instanceof IFile || element instanceof ILineBreakpoint || element instanceof ZipEntryStorage || element instanceof LocalFileStorage || element instanceof LocalFile) {
 			return "org.eclipse.php.editor"; //$NON-NLS-1$
 		}
 		return null;

@@ -447,8 +447,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			try {
 				IMarker[] allMarkers = workspace.getRoot().findMarkers(null, true, IResource.DEPTH_INFINITE);
 				for (int i = 0; i < allMarkers.length; i++) {
-					Object nonWorkspaceBreakpoint = allMarkers[i].getAttribute(IPHPConstants.Non_Workspace_Breakpoint);
-					if (nonWorkspaceBreakpoint != null && nonWorkspaceBreakpoint == Boolean.TRUE) {
+					String storageType = allMarkers[i].getAttribute(IPHPConstants.STORAGE_TYPE, "");
+					if (storageType.equals(IPHPConstants.STORAGE_TYPE_EXTERNAL) || storageType.equals(IPHPConstants.STORAGE_TYPE_REMOTE)) {
 						allMarkers[i].delete();
 					}
 				}

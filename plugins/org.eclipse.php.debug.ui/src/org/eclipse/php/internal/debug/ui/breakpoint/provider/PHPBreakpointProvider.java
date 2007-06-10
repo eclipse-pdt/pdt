@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -23,7 +24,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
-import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
@@ -35,6 +35,7 @@ import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
@@ -61,52 +62,43 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 					point = PHPDebugTarget.createBreakpoint(res, editorLineNumber);
 				} catch (BadLocationException e) {
 				}
-			} else if (input instanceof IStorageEditorInput) {
+			}
+			else if (input instanceof IURIEditorInput) {
+				Map attributes = new HashMap();
+				attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_EXTERNAL);
 				
-				// For non-resources, use the workspace root and a coordinated
-				// attribute that is used to
-				// prevent unwanted (breakpoint) markers from being loaded
-				// into the editors.
-				res = ResourcesPlugin.getWorkspace().getRoot();
-				
-				String id = input.getName();
+				String fileName = RemoteDebugger.convertToSystemIndependentFileName(URIUtil.toPath(((IURIEditorInput)input).getURI()).toString());
+				attributes.put(IPHPConstants.STORAGE_FILE, fileName);
+				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
+				point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
+			}
+			else if (input instanceof IStorageEditorInput) {
 				IStorage storage = ((IStorageEditorInput) input).getStorage();
-				if (input instanceof IStorageEditorInput && ((IStorageEditorInput) input).getStorage() != null) {
-					id = storage.getFullPath().toString();
-				}
 				
 				Map attributes = new HashMap();
-				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
 				String fileName = "";
-				IProject project = null;
 				
-				if (storage instanceof ZipEntryStorage) {
-					fileName = RemoteDebugger.convertToSystemIndependentFileName(((ZipEntryStorage) storage).getZipEntry().getName());
-					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_zip);
-					project = ((ZipEntryStorage) storage).getProject();
-				} else if (storage instanceof LocalFileStorage) {
-					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_LFile);
+				String secondaryId = storage.getFullPath().toString();
+				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, secondaryId);
+				
+				if (storage instanceof LocalFileStorage) {
+					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_INCLUDE);
+					
 					fileName = RemoteDebugger.convertToSystemIndependentFileName(((LocalFileStorage) storage).getName());
-//					String incDir = ((LocalFileStorage) storage).getIncBaseDirName();
-//					incDir = RemoteDebugger.convertToSystemIndependentFileName(incDir);
-//					if (incDir != null) {
-//						fileName = id.substring(incDir.length() + 1);
-//					}
-					project = ((LocalFileStorage) storage).getProject();
-					if (project == null) {
-						attributes.put(IPHPConstants.Non_Workspace_Breakpoint, Boolean.TRUE);
-						fileName = id;
+					String incDir = ((LocalFileStorage) storage).getIncBaseDirName();
+					incDir = RemoteDebugger.convertToSystemIndependentFileName(incDir);
+					if (incDir != null) {
+						fileName = secondaryId.substring(incDir.length() + 1);
 					}
+					IProject project = ((LocalFileStorage) storage).getProject();
+					attributes.put(IPHPConstants.STORAGE_PROJECT, project != null ? project.getName() : "");
+					attributes.put(IPHPConstants.STORAGE_INC_BASEDIR, incDir != null ? incDir : "");
 				} else {
-					attributes.put(IPHPConstants.Include_Storage_type, IPHPConstants.Include_Storage_RFile);
+					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_REMOTE);
 					fileName = storage.getName();
 				}
 				
-				attributes.put(IPHPConstants.Include_Storage, fileName);
-				String projectName = "";
-				if (project != null)
-					projectName = project.getName();
-				attributes.put(IPHPConstants.Include_Storage_Project, projectName);
+				attributes.put(IPHPConstants.STORAGE_FILE, fileName);
 				point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
 			}
 		}
@@ -126,7 +118,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 	private IResource getResourceFromInput(IEditorInput input) {
 		IResource resource = (IResource) input.getAdapter(IFile.class);
 		if (resource == null || !resource.exists()) {
-			// for no workspace resources - use workspace root for storing breakpoints
+			// for non-workspace resources - use workspace root for storing breakpoints
 			resource = ResourcesPlugin.getWorkspace().getRoot();
 		}
 		return resource;
