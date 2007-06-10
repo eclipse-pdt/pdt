@@ -23,6 +23,7 @@ import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class PHPProjectModel extends FilterableCompositePhpModel implements IPhpProjectModel, IAdaptable {
@@ -236,6 +237,16 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		if (superClass != null) {
 			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : "";
 			return getClassConstsData(fileName, superClass, constName);
+		}
+		
+		final PHPInterfaceNameData[] interfacesNamesData = classData.getInterfacesNamesData();
+		for (int i = 0; i < interfacesNamesData.length; i++) {
+			PHPInterfaceNameData interfaceNameData = interfacesNamesData[i];
+			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : "";
+			final CodeData classConstsData = getClassConstsData(fileName, interfaceNameData.getName(), constName);
+			if (classConstsData != null) {
+				return classConstsData;
+			}
 		}
 
 		return null;
