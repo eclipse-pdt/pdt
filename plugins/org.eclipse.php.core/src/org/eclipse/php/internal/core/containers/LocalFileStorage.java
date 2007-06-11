@@ -98,7 +98,7 @@ public class LocalFileStorage extends PlatformObject implements IStorage {
      * @see org.eclipse.core.resources.IStorage#isReadOnly()
      */
     public boolean isReadOnly() {
-        return fProject != null;
+        return true;
     }
 
     /**
