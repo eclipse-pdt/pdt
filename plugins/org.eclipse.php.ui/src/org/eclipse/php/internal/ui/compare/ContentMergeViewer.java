@@ -13,10 +13,25 @@ package org.eclipse.php.internal.ui.compare;
 
 import java.util.ResourceBundle;
 
-import org.eclipse.compare.*;
+import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareEditorInput;
+import org.eclipse.compare.CompareUI;
+import org.eclipse.compare.CompareViewerPane;
+import org.eclipse.compare.ICompareContainer;
+import org.eclipse.compare.ICompareInputLabelProvider;
+import org.eclipse.compare.IPropertyChangeNotifier;
 import org.eclipse.compare.contentmergeviewer.IFlushable;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
-import org.eclipse.compare.internal.*;
+import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
+import org.eclipse.compare.internal.ChangePropertyAction;
+import org.eclipse.compare.internal.CompareEditor;
+import org.eclipse.compare.internal.CompareHandlerService;
+import org.eclipse.compare.internal.CompareMessages;
+import org.eclipse.compare.internal.ICompareUIConstants;
+import org.eclipse.compare.internal.MergeViewerAction;
+import org.eclipse.compare.internal.MergeViewerContentProvider;
+import org.eclipse.compare.internal.Utilities;
+import org.eclipse.compare.internal.ViewerSwitchingCancelled;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
@@ -32,15 +47,29 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.ContentViewer;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
+import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Sash;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * An abstract compare and merge viewer with two side-by-side content areas
@@ -764,16 +793,16 @@ public abstract class ContentMergeViewer extends ContentViewer
 		fComposite.setLayout(new ContentMergeViewerLayout());
 		
 		int style= SWT.SHADOW_OUT;
-		fAncestorLabel= new CLabel(fComposite, style);
+		fAncestorLabel= new CLabel(fComposite, style | Window.getDefaultOrientation());
 		
-		fLeftLabel= new CLabel(fComposite, style);
+		fLeftLabel= new CLabel(fComposite, style | Window.getDefaultOrientation());
 		new Resizer(fLeftLabel, VERTICAL);
 		
 		fDirectionLabel= new CLabel(fComposite, style);
 		fDirectionLabel.setAlignment(SWT.CENTER);
 		new Resizer(fDirectionLabel, HORIZONTAL | VERTICAL);
 		
-		fRightLabel= new CLabel(fComposite, style);
+		fRightLabel= new CLabel(fComposite, style | Window.getDefaultOrientation());
 		new Resizer(fRightLabel, VERTICAL);
 		
 		if (fCenter == null || fCenter.isDisposed())
@@ -1021,7 +1050,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 				fAncestorLabel.setImage(ancestorImage);
 			String ancestorLabel = content.getAncestorLabel(input);
 			if (ancestorLabel != null)
-				fAncestorLabel.setText(ancestorLabel);
+				fAncestorLabel.setText(TextProcessor.process(ancestorLabel));
 		}
 		if (fLeftLabel != null) {
 			Image leftImage = content.getLeftImage(input);
@@ -1029,7 +1058,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 				fLeftLabel.setImage(leftImage);
 			String leftLabel = content.getLeftLabel(input);
 			if (leftLabel != null)
-				fLeftLabel.setText(leftLabel);
+				fLeftLabel.setText(TextProcessor.process(leftLabel));
 		}
 		if (fRightLabel != null) {
 			Image rightImage = content.getRightImage(input);
@@ -1037,7 +1066,7 @@ public abstract class ContentMergeViewer extends ContentViewer
 				fRightLabel.setImage(rightImage);
 			String rightLabel = content.getRightLabel(input);
 			if (rightLabel != null)
-				fRightLabel.setText(rightLabel);
+				fRightLabel.setText(TextProcessor.process(rightLabel));
 		}
 	}
 		
