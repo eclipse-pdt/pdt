@@ -22,6 +22,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
+import org.eclipse.debug.internal.core.LaunchManager;
+import org.eclipse.debug.internal.ui.views.launch.LaunchView;
+import org.eclipse.debug.ui.AbstractDebugView;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
@@ -33,6 +37,9 @@ import org.eclipse.php.internal.debug.core.debugger.*;
 import org.eclipse.php.internal.debug.core.debugger.Breakpoint;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchProxy;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
 /**
@@ -328,9 +335,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
 	public boolean canTerminate() {
-		if (fTerminated)
-			return false;
-		return true;
+		return !fTerminated;
 	}
 
 	/*
@@ -393,6 +398,20 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointManagerListener(this);
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: Firing terminate");
 		fireTerminateEvent();
+		
+		// Refresh the launch-viewer to display the debug elements in their real terminated state.
+		// This is needed since the migration to 3.3 (Europa)
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				if (page == null)
+					return;
+				AbstractDebugView view = (AbstractDebugView) page.findView(IDebugUIConstants.ID_DEBUG_VIEW);
+				if (view == null)
+					return;
+				view.getViewer().refresh();
+			}
+		});
 	}
 
 	/*
