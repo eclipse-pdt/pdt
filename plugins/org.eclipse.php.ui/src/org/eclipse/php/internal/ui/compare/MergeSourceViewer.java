@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,13 @@ import java.util.*;
 import org.eclipse.compare.ICompareContainer;
 import org.eclipse.compare.internal.MergeViewerAction;
 import org.eclipse.compare.internal.Utilities;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IOperationHistoryListener;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.OperationHistoryEvent;
 import org.eclipse.jface.action.*;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -26,25 +32,21 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.FindReplaceAction;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-
 /**
  * Extends the JFace SourceViewer with some convenience methods.
- * @inspiredby {@link org.eclipse.compare.internal.MergeSourceViewer}
- * The different is that the PHP text viewer is structured one.
  */
 public class MergeSourceViewer extends StructuredTextViewer
-						implements ISelectionChangedListener, ITextListener, IMenuListener {
+						implements ISelectionChangedListener, ITextListener, IMenuListener, IOperationHistoryListener {
 								
 	public static final String UNDO_ID= "undo"; //$NON-NLS-1$
 	public static final String REDO_ID= "redo"; //$NON-NLS-1$
@@ -125,6 +127,10 @@ public class MergeSourceViewer extends StructuredTextViewer
 		if(fShowLineNumber){
 			updateLineNumberRuler();
 		}
+		
+		IOperationHistory history = getHistory();
+		if (history != null) 
+			history.addOperationHistoryListener(this);
 	}
 	
 	public void rememberDocument(IDocument doc) {
@@ -146,12 +152,18 @@ public class MergeSourceViewer extends StructuredTextViewer
 		StyledText te= getTextWidget();
 		if (te != null)
 			te.setFont(font);
+		if (fLineNumberColumn != null) {
+			fLineNumberColumn.setFont(font);
+			layoutViewer();
+		}
 	}
 	
 	public void setBackgroundColor(Color color) {
 		StyledText te= getTextWidget();
 		if (te != null)
 			te.setBackground(color);
+		if (fLineNumberColumn != null)
+			fLineNumberColumn.setBackground(color);
 	}
 	
 	public void setEnabled(boolean enabled) {
@@ -410,6 +422,10 @@ public class MergeSourceViewer extends StructuredTextViewer
 	}
 					
 	public void textChanged(TextEvent event) {
+		updateContentDependantActions();
+	}
+
+	void updateContentDependantActions() {
 		Iterator e= fActions.values().iterator();
 		while (e.hasNext()) {
 			Object next = e.next();
@@ -472,6 +488,10 @@ public class MergeSourceViewer extends StructuredTextViewer
 		removeSelectionChangedListener(this);
 		EditorsUI.getPreferenceStore().removePropertyChangeListener(fPreferenceChangeListener);
 		
+		IOperationHistory history = getHistory();
+		if (history != null) 
+			history.removeOperationHistoryListener(this);
+		
 		super.handleDispose();
 	}
 	
@@ -528,6 +548,8 @@ public class MergeSourceViewer extends StructuredTextViewer
 			if (b != fShowLineNumber){
 				toggleLineNumberRuler();	
 			}
+		} else if (key.equals(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER_COLOR)) {
+			updateLineNumberColumnPresentation(true);
 		}
 	}
 
@@ -547,10 +569,45 @@ public class MergeSourceViewer extends StructuredTextViewer
 			} else {
 				if(fLineNumberColumn==null){
 					fLineNumberColumn = new LineNumberRulerColumn();
+					updateLineNumberColumnPresentation(false);
 				}
 				c.addDecorator(0, fLineNumberColumn);
 			}
 		}
+	}
+
+	private void updateLineNumberColumnPresentation(boolean refresh) {
+		if (fLineNumberColumn == null)
+			return;
+		RGB rgb=  getColorFromStore(EditorsUI.getPreferenceStore(), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER_COLOR);
+		if (rgb == null)
+			rgb= new RGB(0, 0, 0);
+		ISharedTextColors sharedColors= getSharedColors();
+		fLineNumberColumn.setForeground(sharedColors.getColor(rgb));
+		if (refresh) {
+			fLineNumberColumn.redraw();
+		}
+	}
+	
+	private void layoutViewer() {
+		Control parent= getControl();
+		if (parent instanceof Composite && !parent.isDisposed())
+			((Composite) parent).layout(true);
+	}
+	
+	private ISharedTextColors getSharedColors() {
+		return EditorsUI.getSharedTextColors();
+	}
+	
+	private RGB getColorFromStore(IPreferenceStore store, String key) {
+		RGB rgb= null;
+		if (store.contains(key)) {
+			if (store.isDefault(key))
+				rgb= PreferenceConverter.getDefaultColor(store, key);
+			else
+				rgb= PreferenceConverter.getColor(store, key);
+		}
+		return rgb;
 	}
 
 	/**
@@ -569,5 +626,33 @@ public class MergeSourceViewer extends StructuredTextViewer
 
 	public void addAction(String id, IAction action) {
 		fActions.put(id, action);
+	}
+	
+	private IOperationHistory getHistory() {
+		if (PlatformUI.getWorkbench() == null) {
+			return null;
+		}
+		return PlatformUI.getWorkbench().getOperationSupport()
+				.getOperationHistory();
+	}
+
+	public void historyNotification(OperationHistoryEvent event) {
+		// This method updates the enablement of all content operations
+		// when the undo history changes. It could be localized to UNDO and REDO.
+		IUndoContext context = getUndoContext();
+		if (context != null && event.getOperation().hasContext(context)) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					updateContentDependantActions();
+				}
+			});
+		}
+	}
+
+	private IUndoContext getUndoContext() {
+		IUndoManager undoManager = getUndoManager();
+		if (undoManager instanceof IUndoManagerExtension)
+			return ((IUndoManagerExtension)undoManager).getUndoContext();
+		return null;
 	}
 }

@@ -1635,7 +1635,9 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable  {
 	}
 	
 	private void updateFont() {
-		Font f= JFaceResources.getFont(fSymbolicFontName);
+		// TODO : set the font thru the prefernce
+		// Font f= JFaceResources.getFont(fSymbolicFontName);
+		Font f= JFaceResources.getFont(JFaceResources.TEXT_FONT);
 		if (f != null) {
 			if (fAncestor != null)
 				fAncestor.setFont(f);
