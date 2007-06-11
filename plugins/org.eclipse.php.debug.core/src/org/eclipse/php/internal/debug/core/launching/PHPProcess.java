@@ -102,9 +102,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	}
 
 	public boolean canTerminate() {
-		if (fTerminated)
-			return false;
-		return true;
+		return !fTerminated;
 	}
 
 	public boolean isTerminated() {
