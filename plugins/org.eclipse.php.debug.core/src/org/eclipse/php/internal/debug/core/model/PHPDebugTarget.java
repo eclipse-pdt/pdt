@@ -22,8 +22,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
-import org.eclipse.debug.internal.core.LaunchManager;
-import org.eclipse.debug.internal.ui.views.launch.LaunchView;
 import org.eclipse.debug.ui.AbstractDebugView;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
