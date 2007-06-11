@@ -449,7 +449,10 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 				for (int i = 0; i < allMarkers.length; i++) {
 					String storageType = allMarkers[i].getAttribute(IPHPConstants.STORAGE_TYPE, "");
 					if (storageType.equals(IPHPConstants.STORAGE_TYPE_EXTERNAL) || storageType.equals(IPHPConstants.STORAGE_TYPE_REMOTE)) {
-						allMarkers[i].delete();
+						String fileName = allMarkers[i].getAttribute(IPHPConstants.STORAGE_FILE, "");
+						if (localPath.equals(fileName)) {
+							allMarkers[i].delete();
+						}
 					}
 				}
 			} catch (CoreException e) {
