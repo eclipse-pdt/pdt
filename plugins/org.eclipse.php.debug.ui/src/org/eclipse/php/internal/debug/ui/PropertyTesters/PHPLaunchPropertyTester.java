@@ -63,6 +63,8 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 				if (obj instanceof FileEditorInput) {
 					FileEditorInput editorInput = (FileEditorInput) list.get(0);
 					file = editorInput.getFile();
+				} else if (obj instanceof IFile) {
+					file = (IFile) obj;
 				} else if (SCRIPT_ID.equalsIgnoreCase(launchType)) {
 					if (obj instanceof LocalFileStorageEditorInput) {
 						// In this case, the editor input is probably an external file. 
@@ -78,8 +80,6 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 						IPath fullPath = URIUtil.toPath(((IURIEditorInput)obj).getURI());
 						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toString());
 					}
-				} else if (list.get(0) instanceof IFile) {
-					file = (IFile) list.get(0);
 				}
 				try {
 					//  Allow only a PHP Script launch shortcut in case the file is part of a non-PHP project.
