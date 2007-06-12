@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
@@ -34,7 +36,15 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 
 		// append the file name
 		if (fileName != null) {
-			descriptionText.append(getLocationTableRow(fileName));
+			File file = new File(fileName);
+			if (file.exists()){
+				descriptionText.append(getLocationTableRow(fileName));
+			}
+			else {
+				fileName = new Path(fileName).lastSegment();
+				descriptionText.append(getLocationTableRow(fileName));
+			}
+			
 		}
 
 		// append the class name if it exists
@@ -61,7 +71,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 			it = phpCodeData.getDocBlock().getTags(PHPDocTag.THROWS);
 			if (it.hasNext()) {
 				descriptionText.append(getThrowTagTableRows(it));
-			}			
+			}
 			// append see also information
 			it = phpCodeData.getDocBlock().getTags(PHPDocTag.SEE);
 			if (it.hasNext()) {
@@ -88,8 +98,13 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		String[] implement = null;
 		String desc = classData.getDescription();
 
-		if (fileData != null) {
-			fileName = fileData.getName();
+		fileName = classData.isUserCode() ? classData.getUserData().getFileName() : null;
+		
+		if (fileName != null) {
+			File file = new File(fileName);
+			if (!file.exists()){
+				fileName = new Path(fileName).lastSegment();
+			}
 		}
 		if (superClass != null) {
 			superClassName = superClass.getName();
@@ -146,7 +161,15 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		String fileName = containerClass != null ? variableData.getUserData().getFileName() : null;
 
 		if (fileName != null) {
-			descriptionText.append(getLocationTableRow(fileName));
+			File file = new File(fileName);
+			if (file.exists()){
+				descriptionText.append(getLocationTableRow(fileName));
+			}
+			else {
+				fileName = new Path(fileName).lastSegment();
+				descriptionText.append(getLocationTableRow(fileName));
+			}
+			
 		}
 		if (className != null) {
 			getClassNameTableRow(className, projectModel);
@@ -185,7 +208,15 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		String fileName = codeData.getUserData() != null ? codeData.getUserData().getFileName() : null;
 
 		if (fileName != null) {
-			descriptionText.append(getLocationTableRow(fileName));
+			File file = new File(fileName);
+			if (file.exists()){
+				descriptionText.append(getLocationTableRow(fileName));
+			}
+			else {
+				fileName = new Path(fileName).lastSegment();
+				descriptionText.append(getLocationTableRow(fileName));
+			}
+			
 		}
 		if (className != null) {
 			descriptionText.append(getClassNameTableRow(className, projectModel));
@@ -295,7 +326,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		helpBuffer.append("</dd>");
 		return helpBuffer.toString();
 	}
-	
+
 	private static String getThrowTagTableRows(Iterator it) {
 		helpBuffer.delete(0, helpBuffer.length());
 		helpBuffer.append("<br><dt>Throws</dt>");

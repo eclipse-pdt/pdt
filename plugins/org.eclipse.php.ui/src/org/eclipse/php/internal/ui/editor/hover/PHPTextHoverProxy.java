@@ -60,12 +60,9 @@ public class PHPTextHoverProxy extends AbstractPHPTextHover implements ITextHove
 	 * @see ITextHover#getHoverInfo(ITextViewer, IRegion)
 	 */
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		if (ensureHoverCreated()){
-			if (!(fHover.getEditorPart().getEditorInput() instanceof NonExistingPHPFileEditorInput)) {
-				return fHover.getHoverInfo(textViewer, hoverRegion);
-			}
+		if (ensureHoverCreated()) {
+			return fHover.getHoverInfo(textViewer, hoverRegion);
 		}
-		
 
 		return null;
 	}
