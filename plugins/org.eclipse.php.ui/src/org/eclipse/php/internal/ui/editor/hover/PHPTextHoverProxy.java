@@ -15,6 +15,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -59,8 +60,12 @@ public class PHPTextHoverProxy extends AbstractPHPTextHover implements ITextHove
 	 * @see ITextHover#getHoverInfo(ITextViewer, IRegion)
 	 */
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		if (ensureHoverCreated())
-			return fHover.getHoverInfo(textViewer, hoverRegion);
+		if (ensureHoverCreated()){
+			if (!(fHover.getEditorPart().getEditorInput() instanceof NonExistingPHPFileEditorInput)) {
+				return fHover.getHoverInfo(textViewer, hoverRegion);
+			}
+		}
+		
 
 		return null;
 	}

@@ -93,6 +93,12 @@
 			<newWizardShortcut id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard" />
 
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator" />
+   <newWizardShortcut
+         id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard">
+   </newWizardShortcut>
+   <actionSet
+         id="org.eclipse.php.ui.UntitledPHPDocumentActionSet">
+   </actionSet>
 
 		</perspectiveExtension>
 
@@ -159,6 +165,15 @@
 			name="PHP File"
 			icon="icons/full/obj16/add_php_file.gif" />
 		<primaryWizard id="org.eclipse.ui.wizards.new.folder" />
+  <wizard
+        canFinishEarly="true"
+        category="org.eclipse.php.project.ui"
+        class="org.eclipse.php.internal.ui.wizards.UntitledPHPDocumentWizard"
+        hasPages="false"
+        icon="icons/full/obj16/add_php_file.gif"
+        id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"
+        name="Untitled PHP Document">
+  </wizard>
 	</extension>
 
 	<!-- the following are needed to add an image for SWPs into the "Add/Remove Project" dialog -->
@@ -180,6 +195,17 @@
         symbolicFontName="org.eclipse.wst.sse.ui.textfont">
 			<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource" />
 		</editor>
+  <editor
+        class="org.eclipse.php.internal.ui.editor.UntitledPHPEditor"
+        contributorClass="org.eclipse.php.internal.ui.editor.PHPEditorActionBarContributor"
+        icon="icons/full/obj16/phpfile.gif"
+        id="org.eclipse.php.untitledPhpEditor"
+        name="Untitiled PHP Document Editor"
+        symbolicFontName="org.eclipse.wst.sse.ui.textfont">
+     <contentTypeBinding
+           contentTypeId="org.eclipse.php.core.phpsource">
+     </contentTypeBinding>
+  </editor>
 	</extension>
 
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
@@ -496,6 +522,19 @@
 				label="%openPHPSearchPageAction.label"
 				menubarPath="org.eclipse.search.menu/dialogGroup" />
 		</actionSet>
+  <actionSet
+        id="org.eclipse.php.ui.UntitledPHPDocumentActionSet"
+        label="New PHP Document"
+        visible="false">
+     <action
+           class="org.eclipse.php.internal.ui.actions.NewUntitledDocumentAction"
+           icon="icons/full/obj16/add_php_file.gif"
+           id="org.eclipse.php.ui.UntitledPHPDocumentAction"
+           label="New Untitled PHP Document"
+           toolbarPath="org.eclipse.ui.workbench.file/new"
+           tooltip="New Untitled PHP Document">
+     </action>
+  </actionSet>
 	</extension>
 
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
@@ -621,6 +660,10 @@
 			description="%ActionDefinition.gotoMatchingBracket.description"
 			id="org.eclipse.php.ui.editor.goto.matching.bracket"
 			name="%ActionDefinition.gotoMatchingBracket.name" />
+  <command
+        id="org.eclipse.php.ui.NewUntitledPHPDocumentAction"
+        name="New Untitled PHP Document">
+  </command>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">

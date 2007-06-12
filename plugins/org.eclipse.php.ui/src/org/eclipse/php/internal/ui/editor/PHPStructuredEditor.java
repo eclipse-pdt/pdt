@@ -54,6 +54,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration.DoubleClickListener;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -369,7 +370,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			IFile file = getFile();
 			if (file == null)
 				return null;
-			return getFile().getProject();
+			return file.getProject();
 		}
 	};
 
@@ -416,7 +417,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 	
 	protected void setDocumentProvider(IEditorInput input) {
-		if (input instanceof IURIEditorInput) {
+		if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			setDocumentProvider(new TextFileDocumentProvider());
 		} else {
 			super.setDocumentProvider(input);
@@ -1314,10 +1315,18 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				externalPath = storage.getFullPath();
 				resource = ExternalFileDecorator.createFile(externalPath.toString());
 			}
-		} else if (input instanceof IURIEditorInput) {
+		} else if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			// External file editor input. It's usually used when opening PHP file
 			// via "File -> Open File" menu option, or using D&D:
-			externalPath = URIUtil.toPath(((IURIEditorInput)input).getURI());
+			//OR
+			// When we are dealing with an Untitled PHP document and the underlying PHP file
+			// does not really exist, but is still considered as an "External" file.
+			if (input instanceof NonExistingPHPFileEditorInput){
+				externalPath = ((NonExistingPHPFileEditorInput)input).getPath();
+			}
+			else {
+				externalPath = URIUtil.toPath(((IURIEditorInput)input).getURI());
+			}
 			resource = ExternalFileDecorator.createFile(externalPath.toString());
 		}
 

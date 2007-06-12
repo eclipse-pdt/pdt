@@ -32,11 +32,14 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.*;
+import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -44,6 +47,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.*;
@@ -216,7 +220,7 @@ public class EditorUtility {
 		if (input instanceof PHPCodeData) {
 			return getEditorInput((PHPCodeData) input, null, null);
 		}
-		
+
 		if (input instanceof IFile)
 			return new FileEditorInput((IFile) input);
 
@@ -234,7 +238,7 @@ public class EditorUtility {
 			if (source instanceof File) {
 				File externalSource = (File) source;
 				Path path = new Path(externalSource.getPath());
-				
+
 				// If this is external file:
 				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					return new FileStoreEditorInput(new LocalFile(externalSource));
@@ -248,6 +252,18 @@ public class EditorUtility {
 			if (source instanceof ZipFile)
 				return createZipEntryStorageEditorInput((ZipFile) source, element, project);
 		}
+
+		//Another test whether this external file test is an UNTITLED DOCUMENT ,i.e the file does not really exist
+		if (resource instanceof ExternalFileDecorator) {
+			File untitledDocumentDummyFile = resource.getFullPath().toFile();
+			//this file should not exist
+			if (untitledDocumentDummyFile.exists()) {
+				return null;
+			}
+
+			return new NonExistingPHPFileEditorInput(resource.getFullPath());
+		}
+
 		if (resource instanceof IFile)
 			return new FileEditorInput((IFile) resource);
 
@@ -267,7 +283,7 @@ public class EditorUtility {
 
 		if (input == null)
 			return null;
-		
+
 		PHPIncludePathModel includePathModel = (PHPIncludePathModel) input.getData();
 		if (includePathModel.getType() == PHPIncludePathModel.TYPE_VARIABLE) {
 			IPath includePath = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
