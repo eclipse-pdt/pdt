@@ -60,9 +60,12 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	public void doOperation(int operation) {
 		Point selection = getTextWidget().getSelection();
 		int cursorPosition = selection.x;
+		// save the last cursor position and the top visible line.  
 		int selectionLength = selection.y - selection.x;
+		int topLine = getTextWidget().getTopIndex();
 		if (operation == FORMAT_DOCUMENT) {
 			try {
+				setRedraw(false);
 				// begin recording
 				beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
 
@@ -80,9 +83,13 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			} finally {
 				// end recording
 				selection = getTextWidget().getSelection();
-				cursorPosition = selection.x;
+				
 				selectionLength = selection.y - selection.x;
 				endRecording(cursorPosition, selectionLength);
+				// return the cursor to its original position after the formatter change its position.
+				getTextWidget().setSelection(cursorPosition);
+				getTextWidget().setTopIndex(topLine);
+				setRedraw(true);
 			}
 		} else if (operation == PASTE) {
 			super.doOperation(operation);
