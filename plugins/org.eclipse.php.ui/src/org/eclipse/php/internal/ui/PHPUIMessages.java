@@ -846,6 +846,9 @@ public class PHPUIMessages {
 	
 	public static String PHPAppearancePreferencePage_showMehodsReturnType;
 	public static String PHPAppearancePreferencePage_appearanceHeader;
-
-
+	
+	public static String ConvertToPDTProjectAction_convert_to_PDT_project_title;
+	public static String ConvertToPDTProjectAction_convert_to_PDT_project_tooltip;
+	public static String ConvertToPDTProjectAction_convert_to_PDT_project_description;
+	public static String ConvertToPDTProjectAction_converting_project_job_title;
 }
