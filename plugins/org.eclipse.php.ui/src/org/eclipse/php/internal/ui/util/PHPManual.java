@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -158,11 +160,23 @@ public class PHPManual implements IPropertyChangeListener {
 			} else {
 				browser = browserSupport.createBrowser(BROWSER_ID);
 			}
-			browser.openURL(new URL(url.toString()));
+			
+			if (url.toString().startsWith("mk:")) {
+                browser.openURL(new URL(null, url.toString(), new MkHandler()));
+            } else {
+                browser.openURL(new URL(url.toString()));
+            }
+			
 		} catch (PartInitException e) {
 			Logger.logException(e);
 		} catch (MalformedURLException e) {
 			Logger.logException(e);
 		}
 	}
+	
+	private class MkHandler extends URLStreamHandler {
+        protected URLConnection openConnection(URL arg0) throws IOException {
+            return null;
+        }
+    }
 }

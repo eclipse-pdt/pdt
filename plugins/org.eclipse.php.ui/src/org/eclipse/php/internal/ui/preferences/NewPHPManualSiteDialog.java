@@ -11,10 +11,13 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import java.io.File;
+import java.io.FileReader;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -48,6 +51,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 	private static final boolean isWindows = System.getProperty("os.name").startsWith("Windows"); //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String FILE_PROTO = "file://"; //$NON-NLS-1$
 	private static final String CHM_PROTO = "mk:@MSITStore:"; //$NON-NLS-1$
+	private static final Pattern LANG_DETECT_PATTERN = Pattern.compile("/([a-z_]*)/function\\."); //$NON-NLS-1$
 
 	protected Text name;
 	protected Text url;
@@ -109,6 +113,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		layout.numColumns = 2;
 		layout.marginHeight = 10;
 		layout.marginWidth = 15;
+		layout.verticalSpacing = 10;
 		composite.setLayout(layout);
 		GridData data = new GridData();
 		data.widthHint = 400;
@@ -137,7 +142,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 
 		// --------- Remote Site: ---------------------
 		remoteSiteBtn = new Button(composite, SWT.RADIO);
-		remoteSiteBtn.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_remoteSiteURL"));  //$NON-NLS-1$
+		remoteSiteBtn.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_remoteSiteURL")); //$NON-NLS-1$
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		remoteSiteBtn.setLayoutData(data);
@@ -145,6 +150,9 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = remoteSiteBtn.getSelection();
 				url.setEnabled(enabled);
+				if (enabled) {
+					fileExtCombo.select(0);
+				}
 			}
 		});
 
@@ -161,7 +169,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 
 		// --------- Local Directory: ---------------------
 		localDirectoryBtn = new Button(composite, SWT.RADIO);
-		localDirectoryBtn.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_localDirectory"));  //$NON-NLS-1$
+		localDirectoryBtn.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_localDirectory")); //$NON-NLS-1$
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		localDirectoryBtn.setLayoutData(data);
@@ -170,6 +178,9 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 				boolean enabled = localDirectoryBtn.getSelection();
 				localDir.setEnabled(enabled);
 				dirBrowseButton.setEnabled(enabled);
+				if (enabled) {
+					fileExtCombo.select(2);
+				}
 			}
 		});
 
@@ -205,7 +216,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		// --------- Site Name: ---------------------
 		if (isWindows) {
 			chmFileBtn = new Button(composite, SWT.RADIO);
-			chmFileBtn.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_windowsCHMFile"));  //$NON-NLS-1$
+			chmFileBtn.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_windowsCHMFile")); //$NON-NLS-1$
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
 			chmFileBtn.setLayoutData(data);
@@ -214,6 +225,9 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 					boolean enabled = chmFileBtn.getSelection();
 					chmFile.setEnabled(enabled);
 					chmBrowseButton.setEnabled(enabled);
+					if (enabled) {
+						fileExtCombo.select(2);
+					}
 				}
 			});
 
@@ -237,7 +251,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			chmBrowseButton.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
 					FileDialog dialog = new FileDialog(PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
-					dialog.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_chooseCHMFile"));  //$NON-NLS-1$
+					dialog.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_chooseCHMFile")); //$NON-NLS-1$
 					dialog.setFilterExtensions(new String[] { "*.chm" }); //$NON-NLS-1$
 					String fileAsString = dialog.open();
 					if (fileAsString == null) {
@@ -260,7 +274,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		fileExtLabel = new Label(fileExtGroup, SWT.NONE);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		fileExtLabel.setLayoutData(data);
-		fileExtLabel.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_fileExtension"));  //$NON-NLS-1$
+		fileExtLabel.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_fileExtension")); //$NON-NLS-1$
 		fileExtCombo = new Combo(fileExtGroup, SWT.READ_ONLY);
 		fileExtCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -340,7 +354,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			String localDirStr = localDir.getText().trim();
 			if (!new File(localDirStr).isDirectory()) {
 				okButton.setEnabled(false);
-				this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_dirDoesntExist"), null));  //$NON-NLS-1$
+				this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_dirDoesntExist"), null)); //$NON-NLS-1$
 				return;
 			}
 			result = new PHPManualConfig(name.getText(), FILE_PROTO + localDirStr, fileExtCombo.getText(), false);
@@ -348,10 +362,10 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			String chmFileStr = chmFile.getText().trim();
 			if (!new File(chmFileStr).isFile()) {
 				okButton.setEnabled(false);
-				this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_fileDoesntExist"), null));  //$NON-NLS-1$
+				this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_fileDoesntExist"), null)); //$NON-NLS-1$
 				return;
 			}
-			result = new PHPManualConfig(name.getText(), CHM_PROTO + chmFileStr + "::/en", fileExtCombo.getText(), false); //$NON-NLS-1$
+			result = new PHPManualConfig(name.getText(), CHM_PROTO + chmFileStr + detectCHMLanguageSuffix(chmFileStr), fileExtCombo.getText(), false); //$NON-NLS-1$
 		}
 	}
 
@@ -379,5 +393,29 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 	protected void updateButtonsEnableState(IStatus status) {
 		if (okButton != null && !okButton.isDisposed() && name.getText().trim().length() != 0)
 			okButton.setEnabled(!status.matches(IStatus.ERROR));
+	}
+
+	private String detectCHMLanguageSuffix(String chmFile) {
+		StringBuffer suffix = new StringBuffer("::/"); //$NON-NLS-1$
+		String defaultLang = "en"; //$NON-NLS-1$
+		char[] buf = new char[8192];
+		try {
+			FileReader r = new FileReader(chmFile);
+			try {
+				r.read(buf);
+
+				Matcher m = LANG_DETECT_PATTERN.matcher(new String(buf));
+				if (m.find()) {
+					suffix.append(m.group(1));
+				} else {
+					suffix.append(defaultLang);
+				}
+			} finally {
+				r.close();
+			}
+		} catch (Exception e) {
+			suffix.append(defaultLang);
+		}
+		return suffix.toString();
 	}
 }
