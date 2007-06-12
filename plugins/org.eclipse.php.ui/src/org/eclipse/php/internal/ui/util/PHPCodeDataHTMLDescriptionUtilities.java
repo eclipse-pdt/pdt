@@ -37,11 +37,12 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		// append the file name
 		if (fileName != null) {
 			File file = new File(fileName);
-			if (file.exists()){
+			Path path = new Path(fileName);
+			if ((path.getDevice() != null) && !file.exists()){
+				fileName = new Path(fileName).lastSegment();
 				descriptionText.append(getLocationTableRow(fileName));
 			}
 			else {
-				fileName = new Path(fileName).lastSegment();
 				descriptionText.append(getLocationTableRow(fileName));
 			}
 			
@@ -102,7 +103,9 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		
 		if (fileName != null) {
 			File file = new File(fileName);
-			if (!file.exists()){
+			Path path = new Path(fileName);
+			//Do not show the full path of an Untitled PHP Document's file, replace it with the last segment
+			if ((path.getDevice() != null) && !file.exists()){
 				fileName = new Path(fileName).lastSegment();
 			}
 		}
@@ -162,11 +165,13 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 
 		if (fileName != null) {
 			File file = new File(fileName);
-			if (file.exists()){
+			Path path = new Path(fileName);
+			//Do not show the full path of an Untitled PHP Document's file, replace it with the last segment
+			if ((path.getDevice() != null) && !file.exists()){
+				fileName = new Path(fileName).lastSegment();
 				descriptionText.append(getLocationTableRow(fileName));
 			}
 			else {
-				fileName = new Path(fileName).lastSegment();
 				descriptionText.append(getLocationTableRow(fileName));
 			}
 			
@@ -209,11 +214,13 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 
 		if (fileName != null) {
 			File file = new File(fileName);
-			if (file.exists()){
+			Path path = new Path(fileName);
+			//Do not show the full path of an Untitled PHP Document's file, replace it with the last segment
+			if ((path.getDevice() != null) && !file.exists()){
+				fileName = new Path(fileName).lastSegment();
 				descriptionText.append(getLocationTableRow(fileName));
 			}
 			else {
-				fileName = new Path(fileName).lastSegment();
 				descriptionText.append(getLocationTableRow(fileName));
 			}
 			
