@@ -171,10 +171,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		}
 	}
 
-	public void configureContentAssistant(ISourceViewer sourceViewer) {
-		setupPropertyChangeListener(sourceViewer);
-
-		IContentAssistant contentAssistant = getPHPContentAssistant(sourceViewer);
+	private void configureContentAssistant(ISourceViewer sourceViewer) {
+		IContentAssistant contentAssistant = getContentAssistant(sourceViewer);
 		if (contentAssistant instanceof StructuredContentAssistant) {
 			StructuredContentAssistant structuredContentAssistant = (StructuredContentAssistant) contentAssistant;
 			structuredContentAssistant.enableAutoInsert(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
@@ -185,20 +183,17 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private StructuredContentAssistant fContentAssistant = null;
 
-	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
-		return getPHPContentAssistant(sourceViewer, false);
-	}
-
-	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer, boolean reCreate) {
-		if (fContentAssistant == null || reCreate) {
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		if (fContentAssistant == null) {
 			fContentAssistant = getPHPContentAssistantExtension();
 			if (fContentAssistant == null) {
 				fContentAssistant = new StructuredContentAssistant();
 			}
 			// content assistant configurations
 			fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-			fContentAssistant.enableAutoActivation(true);
-			fContentAssistant.setAutoActivationDelay(500);
+			fContentAssistant.enableAutoActivation(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION));
+			fContentAssistant.setAutoActivationDelay(PreferenceConstants.getPreferenceStore().getInt(PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY));
+			fContentAssistant.enableAutoInsert(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
 			fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
 			fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
 			fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
@@ -216,6 +211,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 					}
 				}
 			}
+
+			setupPropertyChangeListener(sourceViewer);
 		}
 		return fContentAssistant;
 	}
@@ -252,7 +249,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			if (hoverDescs[i].isEnabled()) {
 				int j = 0;
 				int stateMask = hoverDescs[i].getStateMask();
-				while ( j < stateMasksLength ) {
+				while (j < stateMasksLength) {
 					if (stateMasks[j] == stateMask)
 						break;
 					j++;
@@ -280,7 +277,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		PHPEditorTextHoverDescriptor[] hoverDescs = PHPUiPlugin.getDefault().getPHPEditorTextHoverDescriptors();
 		int i = 0;
-		while ( i < hoverDescs.length ) {
+		while (i < hoverDescs.length) {
 			if (hoverDescs[i].isEnabled() && hoverDescs[i].getStateMask() == stateMask) {
 				return new PHPTextHoverProxy(hoverDescs[i], null);
 			}
