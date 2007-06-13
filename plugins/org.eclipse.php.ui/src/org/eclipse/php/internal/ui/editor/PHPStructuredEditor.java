@@ -72,6 +72,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -417,7 +418,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 	
 	protected void setDocumentProvider(IEditorInput input) {
-		if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
+		if (input instanceof FileStoreEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			setDocumentProvider(new TextFileDocumentProvider());
 		} else {
 			super.setDocumentProvider(input);
