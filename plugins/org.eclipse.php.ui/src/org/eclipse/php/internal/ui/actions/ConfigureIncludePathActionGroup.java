@@ -26,6 +26,7 @@ public class ConfigureIncludePathActionGroup extends ActionGroup {
 	private IWorkbenchSite fSite;
 	private boolean fIsEditorOwner;
 	private ConfigureIncludePathAction fConfigureIncludePath;
+	private RemoveFromIncludePathAction fRemoveFromIncludePathAction;
 
 	/**
 	 * Creates a new <code>ConfigureBuildPathActionGroup</code>. The group requires
@@ -37,6 +38,7 @@ public class ConfigureIncludePathActionGroup extends ActionGroup {
 	public ConfigureIncludePathActionGroup(IViewPart part) {
 		fSite = part.getSite();
 		fConfigureIncludePath = new ConfigureIncludePathAction(fSite);
+		fRemoveFromIncludePathAction = new RemoveFromIncludePathAction(fSite);
 		initialize(fSite.getSelectionProvider());
 	}
 
@@ -54,8 +56,10 @@ public class ConfigureIncludePathActionGroup extends ActionGroup {
 	private void initialize(ISelectionProvider provider) {
 		ISelection selection = provider.getSelection();
 		fConfigureIncludePath.update(selection);
+		fRemoveFromIncludePathAction.update(selection);
 		if (!fIsEditorOwner) {
 			provider.addSelectionChangedListener(fConfigureIncludePath);
+			provider.addSelectionChangedListener(fRemoveFromIncludePathAction);
 		}
 	}
 
@@ -72,7 +76,7 @@ public class ConfigureIncludePathActionGroup extends ActionGroup {
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
 		appendToGroup(menu, fConfigureIncludePath);
-		
+		appendToGroup(menu, fRemoveFromIncludePathAction);
 	}
 
 	/*
@@ -81,14 +85,16 @@ public class ConfigureIncludePathActionGroup extends ActionGroup {
 	public void dispose() {
 		ISelectionProvider provider = fSite.getSelectionProvider();
 		provider.removeSelectionChangedListener(fConfigureIncludePath);
+		provider.removeSelectionChangedListener(fRemoveFromIncludePathAction);
 		super.dispose();
 	}
 
 
 	private void appendToGroup(IMenuManager menu, IAction action) {
-		if (action.isEnabled())	
+		if (action.isEnabled())	 {
 			menu.appendToGroup(IContextMenuConstants.GROUP_REORGANIZE,new Separator());
 			menu.appendToGroup(IContextMenuConstants.GROUP_REORGANIZE, action);
+		}
 	}
 
 	

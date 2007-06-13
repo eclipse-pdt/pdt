@@ -851,4 +851,9 @@ public class PHPUIMessages {
 	public static String ConvertToPDTProjectAction_convert_to_PDT_project_tooltip;
 	public static String ConvertToPDTProjectAction_convert_to_PDT_project_description;
 	public static String ConvertToPDTProjectAction_converting_project_job_title;
+	
+	public static String RemoveFromIncludePathAction_remove_from_include_path_title;
+	public static String RemoveFromIncludePathAction_remove_from_include_path_tooltip;
+	public static String RemoveFromIncludePathAction_remove_from_include_path_desc;
+	public static String RemoveFromIncludePathAction_remove_from_include_path_job;
 }
