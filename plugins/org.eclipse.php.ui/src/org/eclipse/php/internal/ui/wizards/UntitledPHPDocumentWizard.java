@@ -28,6 +28,9 @@ import org.eclipse.ui.*;
 public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 
 	private IWorkbenchWindow fWindow;
+	private final static String UNTITLED_EDITOR_ID = "org.eclipse.php.untitledPhpEditor";
+	private final static String UNTITLED_FOLDER_PATH = "/Untitled_Documents";
+	private final static String UNTITLED_PHP_DOC_PREFIX = "PHPDocument";
 
 	public UntitledPHPDocumentWizard() {
 	}
@@ -47,22 +50,17 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 		fWindow = null;
 	}
 
-	private IEditorInput createEditorInput(IFileStore fileStore) {
-		return new NonExistingPHPFileEditorInput(fileStore, "PHPDocument");
-	}
-
 	/*
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
 	public boolean performFinish() {
 		IPath stateLocation = PHPUiPlugin.getDefault().getStateLocation();
-		IPath path = stateLocation.append("/Untitled_Documents");
+		IPath path = stateLocation.append(UNTITLED_FOLDER_PATH);
 		IFileStore fileStore = EFS.getLocalFileSystem().getStore(path);
-		IEditorInput input = createEditorInput(fileStore);
-		String editorId = "org.eclipse.php.untitledPhpEditor";//the ID of the editor to be opened
+		IEditorInput input = new NonExistingPHPFileEditorInput(fileStore, UNTITLED_PHP_DOC_PREFIX);
 		IWorkbenchPage page = fWindow.getActivePage();
 		try {
-			page.openEditor(input, editorId);
+			page.openEditor(input, UNTITLED_EDITOR_ID);
 		} catch (PartInitException e) {
 			Logger.logException(e);
 			return false;

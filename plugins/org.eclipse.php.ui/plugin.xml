@@ -93,13 +93,6 @@
 			<newWizardShortcut id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard" />
 
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator" />
-   <newWizardShortcut
-         id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard">
-   </newWizardShortcut>
-   <actionSet
-         id="org.eclipse.php.ui.UntitledPHPDocumentActionSet">
-   </actionSet>
-
 		</perspectiveExtension>
 
 		<perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
@@ -522,19 +515,6 @@
 				label="%openPHPSearchPageAction.label"
 				menubarPath="org.eclipse.search.menu/dialogGroup" />
 		</actionSet>
-  <actionSet
-        id="org.eclipse.php.ui.UntitledPHPDocumentActionSet"
-        label="New PHP Document"
-        visible="false">
-     <action
-           class="org.eclipse.php.internal.ui.actions.NewUntitledDocumentAction"
-           icon="icons/full/obj16/add_php_file.gif"
-           id="org.eclipse.php.ui.UntitledPHPDocumentAction"
-           label="New Untitled PHP Document"
-           toolbarPath="org.eclipse.ui.workbench.file/new"
-           tooltip="New Untitled PHP Document">
-     </action>
-  </actionSet>
 	</extension>
 
 	<extension point="org.eclipse.ui.actionSetPartAssociations">

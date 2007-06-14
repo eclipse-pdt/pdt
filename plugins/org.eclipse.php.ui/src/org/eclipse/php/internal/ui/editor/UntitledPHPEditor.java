@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
+import java.util.HashMap;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -18,6 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.EditorUtility;
@@ -37,6 +40,15 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
  */
 public class UntitledPHPEditor extends PHPStructuredEditor {
 
+	/**
+	 * This static member holds the history of saved Untitled documents
+	 * You can retrieve the saved workspace file's path (real) by giving its old (dummy) one
+	 * It is recommended that once you use it, delete the entry from this map
+	 * to prevent memory increase. The reason we use a map is since the user can save
+	 * multiple Untitled documents when performing Saving All
+	 */
+	public static HashMap<IPath,IPath> latestSavedUntitled = new HashMap<IPath, IPath>();
+	
 	/**
 	 * Overrides
 	 */
@@ -62,11 +74,12 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 		IDocumentProvider provider = getDocumentProvider();
 		final IEditorInput newInput;
 
-		IPath filePath = null;
+		IPath newPath = null;
 
 		SaveUntitledDialog dialog = new SaveUntitledDialog(shell);
-
-		String originalName = ((NonExistingPHPFileEditorInput)input).getPath().lastSegment();
+		
+		IPath oldPath = ((NonExistingPHPFileEditorInput)input).getPath();
+		String originalName = oldPath.lastSegment();
 		dialog.setOriginalName(originalName);
 		dialog.create();
 
@@ -76,15 +89,15 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 			return;
 		}
 
-		filePath = dialog.getResult();
-		if (filePath == null) {
+		newPath = dialog.getResult();
+		if (newPath == null) {
 			if (progressMonitor != null)
 				progressMonitor.setCanceled(true);
 			return;
 		}
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IFile file = workspace.getRoot().getFile(filePath);
+		IFile file = workspace.getRoot().getFile(newPath);
 		newInput = new FileEditorInput(file);
 
 		if (provider == null) {
@@ -99,18 +112,21 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 			success = true;
 
 		} catch (CoreException x) {
+			Logger.logException(x);
 			final IStatus status = x.getStatus();
 			if (status == null || status.getSeverity() != IStatus.CANCEL) {
-				String title = "Save Error";
-				String msg = NLSUtility.format("The document cannot be saved", x.getMessage());
+				String title = PHPUIMessages.getString("UntitledPHPEditor_saveError"); //$NON-NLS-1$
+				String msg = NLSUtility.format(PHPUIMessages.getString("UntitledPHPEditor_documentCannotBeSaved"), x.getMessage()); //$NON-NLS-1$
 				MessageDialog.openError(shell, title, msg);
 			}
 		} finally {
-			//close the untitled document and open the save one from its target project
-			if (filePath != null) {
+			latestSavedUntitled.put(oldPath, newPath);
+			// 1. close the untitled document 
+			// 2. open the saved file from its new path
+			if (newPath != null) {
 				close(false);
 				try {
-					EditorUtility.openInEditor(filePath.toString(), 0);
+					EditorUtility.openInEditor(newPath.toString(), 0);
 				} catch (CoreException e) {
 					Logger.logException(e);
 				}
