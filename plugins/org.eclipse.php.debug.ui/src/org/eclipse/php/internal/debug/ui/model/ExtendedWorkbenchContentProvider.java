@@ -13,6 +13,8 @@
  */
 package org.eclipse.php.internal.debug.ui.model;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
@@ -73,6 +75,7 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 		if (isProvidingExternals && element instanceof IWorkspaceRoot) {
 			// Add the external files as IFiles
 			IFile[] externalFiles = ExternalFilesRegistry.getInstance().getAllAsIFiles();
+			externalFiles = filterNonExistingFiles(externalFiles);
 			if (externalFiles.length > 0) {
 				if (children.length == 0) {
 					return externalFiles;
@@ -84,5 +87,20 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 			}
 		}
 		return children;
+	}
+
+	/*
+	 * Filter out any non-existing files.
+	 */
+	private IFile[] filterNonExistingFiles(IFile[] files) {
+		ArrayList existingFiles = new ArrayList(files.length);
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].getFullPath().toFile().exists()) {
+				existingFiles.add(files[i]);
+			}
+		}
+		IFile[] existing = new IFile[existingFiles.size()];
+		existingFiles.toArray(existing);
+		return existing;
 	}
 }
