@@ -1337,6 +1337,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				if (externalPath != null && (resource instanceof ExternalFileDecorator)) {
 					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toString(), (ExternalFileDecorator) resource);
 				}
+				// Remove an older record from the external files registry in case this editor
+				// is being reused to display a new content.
+				IEditorInput oldInput = getEditorInput();
+				if (oldInput != null && oldInput instanceof IStorageEditorInput) {
+				    String storagePath = ((IStorageEditorInput)oldInput).getStorage().getFullPath().toString();
+				    ExternalFilesRegistry.getInstance().removeFileEntry(storagePath);
+				}
 				PhpSourceParser.editFile.set(resource);
 				super.doSetInput(input);
 			} else {
