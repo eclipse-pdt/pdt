@@ -11,10 +11,10 @@
 
 package org.eclipse.php.internal.debug.ui.launching;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -38,6 +39,8 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
+import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
+import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -45,6 +48,8 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.ui.editor.UntitledPHPEditor;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -53,6 +58,12 @@ import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class PHPExeLaunchShortcut implements ILaunchShortcut {
+
+	//The following 4 lines were copied from org.eclipse.debug.core.model.LaunchConfigurationDelegate
+	private static final String DEBUG_UI = "org.eclipse.debug.ui";
+	private static final IStatus promptStatus = new Status(IStatus.INFO, DEBUG_UI, 200, "", null);
+	private static final String DEBUG_CORE = "org.eclipse.debug.core";
+	private static final IStatus saveScopedDirtyEditors = new Status(IStatus.INFO, DEBUG_CORE, 222, "", null);
 
 	/**
 	 * 
@@ -79,20 +90,42 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		IFile file = (IFile) input.getAdapter(IFile.class);
 		if (file == null) {
 			IPath path = null;
-			
+
 			if (input instanceof IStorageEditorInput) {
-				IStorageEditorInput editorInput = (IStorageEditorInput)input;
+				IStorageEditorInput editorInput = (IStorageEditorInput) input;
 				try {
-					LocalFileStorage fileStorage = (LocalFileStorage)editorInput.getStorage();
+					LocalFileStorage fileStorage = (LocalFileStorage) editorInput.getStorage();
 					path = fileStorage.getFullPath();
 				} catch (CoreException e) {
 					Logger.logException(e);
 				}
 			} else if (input instanceof IURIEditorInput) {
-				IURIEditorInput editorInput = (IURIEditorInput)input;
-				path = URIUtil.toPath(editorInput.getURI());
+				path = URIUtil.toPath(((IURIEditorInput) input).getURI());
+			} else if (input instanceof NonExistingPHPFileEditorInput) {
+				IPath oldPath = ((NonExistingPHPFileEditorInput) input).getPath();//Untitled dummy path
+				IStatusHandler prompter = DebugPlugin.getDefault().getStatusHandler(promptStatus);
+				if (prompter != null) {
+					try {
+						int[] breakpointLines = getBreakpointLines(oldPath);
+
+						// the following line will ask the user to save all unsaved documents
+						// see org.eclipse.debug.core.model.LaunchConfigurationDelegate
+						if (!(Boolean) prompter.handleStatus(saveScopedDirtyEditors, new Object[] {})) {
+							return;//save canceled
+						}
+						//retrieve the new path after save and remove from map
+						path = UntitledPHPEditor.latestSavedUntitled.get(oldPath);
+						UntitledPHPEditor.latestSavedUntitled.remove(oldPath);
+						if (path != null) {
+							copyBreakPoints(path, breakpointLines);
+						}
+					} catch (Exception e) {
+						Logger.logException(e);
+						return;
+					}
+				}
 			}
-			
+
 			if (path != null) {
 				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
@@ -104,6 +137,32 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		if (file != null) {
 			searchAndLaunch(new Object[] { file }, mode, getPHPExeLaunchConfigType());
 		}
+	}
+
+	//copy the given line breakpoints to the file of the given path
+	private void copyBreakPoints(IPath newPath, int[] lineNumbers) throws CoreException {
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(newPath);
+		for (int i = 0; i < lineNumbers.length; i++) {
+			DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(PHPDebugTarget.createBreakpoint(resource, lineNumbers[i]));
+		}
+	}
+
+	//reteive all the line numbers of breakpoints that exist within the file in the given path 
+	private int[] getBreakpointLines(IPath path) throws CoreException {
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPConstants.ID_PHP_DEBUG_CORE);
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < breakpoints.length; i++) {
+			PHPConditionalBreakpoint breakPoint = (PHPConditionalBreakpoint) breakpoints[i];
+			if (breakPoint.getRuntimeBreakpoint().getFileName().equals(path.toString())) {
+				list.add(breakPoint.getLineNumber());
+
+			}
+		}
+		int[] result = new int[list.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = list.get(i);
+		}
+		return result;
 	}
 
 	protected ILaunchConfigurationType getPHPExeLaunchConfigType() {

@@ -31,6 +31,7 @@ import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -63,11 +64,18 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				} catch (BadLocationException e) {
 				}
 			}
-			else if (input instanceof IURIEditorInput) {
+			else if (input instanceof IURIEditorInput || (input instanceof NonExistingPHPFileEditorInput)) {
 				Map attributes = new HashMap();
 				attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_EXTERNAL);
 				
-				String fileName = RemoteDebugger.convertToSystemIndependentFileName(URIUtil.toPath(((IURIEditorInput)input).getURI()).toString());
+				String pathName = null;
+				if (input instanceof IURIEditorInput){
+					pathName = URIUtil.toPath(((IURIEditorInput)input).getURI()).toString();
+				}
+				else {
+					pathName = ((NonExistingPHPFileEditorInput)input).getPath().toString();
+				}
+				String fileName = RemoteDebugger.convertToSystemIndependentFileName(pathName);
 				attributes.put(IPHPConstants.STORAGE_FILE, fileName);
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
 				point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);

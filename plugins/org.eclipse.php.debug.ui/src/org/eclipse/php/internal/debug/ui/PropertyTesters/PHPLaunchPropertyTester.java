@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -76,8 +77,14 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 						if (file == null) {
 							file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(fullPath);
 						}
-					} else if (obj instanceof IURIEditorInput) {
-						IPath fullPath = URIUtil.toPath(((IURIEditorInput)obj).getURI());
+					} else if (obj instanceof IURIEditorInput || obj instanceof NonExistingPHPFileEditorInput) {
+						IPath fullPath = null;
+						if (obj instanceof IURIEditorInput) {
+							fullPath = URIUtil.toPath(((IURIEditorInput) obj).getURI());
+						} else {
+							fullPath = ((NonExistingPHPFileEditorInput) obj).getPath();
+						}
+
 						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toString());
 					}
 				}

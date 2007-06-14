@@ -132,6 +132,11 @@
 	            adaptableType="org.eclipse.ui.IURIEditorInput">
 	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
          </factory>
+         <factory
+	            class=""
+	            adaptableType="org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput">
+	            <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
+         </factory>
       </extension>
     <extension
        	point="org.eclipse.debug.ui.variableValueEditors">
