@@ -509,6 +509,8 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	 */
 
 	protected void fixObjectInstantiation(PHPClassData[] cls, PHPFunctionData[] func) {
+		CodeData[] projectClasses = projectModel.getClasses();
+		CodeData[] projectFunctions = projectModel.getFunctions();
 		PHPVariablesTypeManager variablesTypeManager = variableContextBuilder.getPHPVariablesTypeManager();
 		Map variablesInstansiations = variablesTypeManager.getVariablesInstansiation();
 
@@ -571,7 +573,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 				int position = variableTypeData.getPosition();
 				boolean isUserDocumentation = variableTypeData.isUserDocumentation();
 				if (className != null && (className.startsWith("r_variable"))) {
-					className = getClassName(className, position, lineNumber, cls, func);
+					className = getClassName(className, position, lineNumber, cls, func, projectClasses, projectFunctions);
 				}
 				variablesNames.add(variableName);
 				contextes.add(codeContext);
@@ -599,7 +601,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 	}
 
-	private String getClassName(String className, int position, int lineNumber, PHPClassData[] cls, PHPFunctionData[] func) {
+	private String getClassName(String className, int position, int lineNumber, PHPClassData[] cls, PHPFunctionData[] func, CodeData[] projectClasses, CodeData[] projectFunctions) {
 		String[] classNameParts = className.split(";");
 		String sourceClassName = null;
 		int propertyNamePosition = 1;
@@ -613,7 +615,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 		if ((classNameParts[1].equals("function_call"))) {
 			// meaning it's $a = foo();
-			sourceClassName = getFunctionReturnType(classNameParts[2], position, cls, func);
+			sourceClassName = getFunctionReturnType(classNameParts[2], position, cls, func, projectClasses, projectFunctions);
 			propertyNamePosition = 3;
 		} else {
 			propertyNamePosition = 2;
@@ -627,7 +629,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		// this loop is for the case there is a nesting: $a = $b->foo()->bar()
 		for (; propertyNamePosition < classNameParts.length; propertyNamePosition++) {
 			if (!classNameParts[propertyNamePosition].equals("null")) {
-				sourceClassName = getPropertyType(sourceClassName, classNameParts[propertyNamePosition], cls, func);
+				sourceClassName = getPropertyType(sourceClassName, classNameParts[propertyNamePosition], cls, func, projectClasses, projectFunctions);
 				// the "-" stands for finding the property but couldn't find
 				// it's type
 				if (sourceClassName != null && sourceClassName.equals("-")) {
@@ -643,31 +645,31 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	 * this function is for finding the return type of a standalone functions
 	 * for example: $a = foo()
 	 */
-	private String getFunctionReturnType(String functionName, int position, PHPClassData[] classes, PHPFunctionData[] functions) {
+	private String getFunctionReturnType(String functionName, int position, PHPClassData[] classes, PHPFunctionData[] functions, CodeData[] projectClasses, CodeData[] projectFunctions) {
 		for (int i = 0; i < classes.length; i++) {
 			PHPClassData cl = classes[i];
 			UserData userData = cl.getUserData();
 			if (position > userData.getStartPosition() && position <= userData.getEndPosition()) {
-				return getPropertyType(cl.getName(), functionName, classes, functions);
+				return getPropertyType(cl.getName(), functionName, classes, functions, projectClasses, projectFunctions);
 			}
 		}
-		return getPropertyType(null, functionName, classes, functions);
+		return getPropertyType(null, functionName, classes, functions, projectClasses, projectFunctions);
 
 	}
 
-	private String getPropertyType(String className, String propertyName, CodeData[] classes, CodeData[] functions) {
+	private String getPropertyType(String className, String propertyName, CodeData[] classes, CodeData[] functions, CodeData[] projectClasses, CodeData[] projectFunctions) {
 		String rv;
 		if (className == null && (projectModel != null)) {
 			rv = getFunctionReturnType(propertyName, functions);
 			if (rv == null) {
-				rv = getFunctionReturnType(propertyName, projectModel.getFunctions());
+				rv = getFunctionReturnType(propertyName, projectFunctions);
 			}
 			return rv;
 		}
 		rv = innerGetPropertyType(className, propertyName, classes, functions);
 		if (rv == null && (projectModel != null)) {
 			// maybe the class is not in the current file but in the project
-			rv = innerGetPropertyType(className, propertyName, projectModel.getClasses(), projectModel.getFunctions());
+			rv = innerGetPropertyType(className, propertyName, projectClasses, projectFunctions);
 		}
 		return rv;
 	}
