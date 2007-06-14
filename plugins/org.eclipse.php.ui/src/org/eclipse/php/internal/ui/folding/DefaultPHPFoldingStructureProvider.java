@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.folding;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
@@ -22,14 +23,20 @@ import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 /**
@@ -61,10 +68,11 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		toRemove = new ArrayList();
 		newFolds = new LinkedHashMap();
 	}
-	
+
 	static int failCount;
 	static final int MAX_RETRY = 3;
-	static final int THREAD_DELAY=5000;
+	static final int THREAD_DELAY = 5000;
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.jface.text.source.projection.IProjectionListener#projectionEnabled()
@@ -86,14 +94,14 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 				modelStateListener = new PHPModelStateListener();
 				model.addModelStateListener(modelStateListener);
 				model.releaseFromRead();
-				failCount=0;
+				failCount = 0;
 			} else {
-				TimerTask thread = new TimerTask(){
+				TimerTask thread = new TimerTask() {
 					public void run() {
-						if (failCount++ < MAX_RETRY) {							
-							projectionEnabled();	
+						if (failCount++ < MAX_RETRY) {
+							projectionEnabled();
 						}
-					}					
+					}
 				};
 				Timer t = new Timer(false);
 				t.schedule(thread, THREAD_DELAY);
@@ -115,7 +123,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 			if (model != null) {
 				model.removeModelStateListener(modelStateListener);
 				model.releaseFromRead();
-			} 
+			}
 			modelStateListener = null;
 			document = null;
 		}
@@ -213,9 +221,22 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 						// At this stage we have the added map.
 						// All the Annotations that are left in the hash need
 						// to be removed from the model.
-						Iterator annotationsToRemove = exitingHashMap.values().iterator();
+						boolean removeAnyway = false;
+						Iterator annotationsToRemove = exitingHashMap.entrySet().iterator();
 						while (annotationsToRemove.hasNext()) {
-							toRemove.add(annotationsToRemove.next());
+							Entry entry = (Entry) annotationsToRemove.next();
+							AnnotatedPosition position = (AnnotatedPosition) entry.getKey();
+							PHPProjectionAnnotation projectionToRemove = (PHPProjectionAnnotation) entry.getValue();
+							// Check if this annotation should be removed.
+							// Any expanded annotation should be removed.
+							if (removeAnyway || !projectionToRemove.isCollapsed()) {
+								toRemove.add(projectionToRemove);
+							} else if (shouldRemoveAnnotation(projectionToRemove, position.offset)) {
+								toRemove.add(projectionToRemove);
+								// We can assume that any other fold that we have under this fold should be
+								// removed since it's probably under a comment.
+								removeAnyway = true;
+							}
 						}
 						//						List removals = new LinkedList();
 						//						model.getPosition((Annotation)removals.get(0));
@@ -239,12 +260,34 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		} finally {
 			if (sModel != null) {
 				sModel.releaseFromRead();
-				if (fileData != null){
+				if (fileData != null) {
 					allowCollapsing = false;
 				}
 			}
-			
+
 		}
+	}
+
+	/*
+	 * Check and return if the given projection-annotation should be removed from the annotations model.
+	 * If the fold is collapsed and we are not dealing with a comment that caused it to expand 
+	 * we keep the fold and do not remove it, even though the model does not hold any data about it.
+	 * However, if the annotation is already expanded, we remove it from the model. 
+	 * 
+	 * This technique prevents the expanding of the folds when editing the code in a way that the 
+	 * classes, functions and comments model temporarily drops some of the data. 
+	 */
+	private boolean shouldRemoveAnnotation(PHPProjectionAnnotation projectionToRemove, int annotationOffset) {
+		// Check if the caret position in the document is inside a comment. If so, the last edit was a
+		// comment that was added and we need to open the folds anyway.
+		if (document != null) {
+			try {
+				return isInComment((IStructuredDocument) document, annotationOffset);
+			} catch (BadLocationException e) {
+				Logger.logException(e);
+			}
+		}
+		return false;
 	}
 
 	/*
@@ -425,6 +468,60 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 			return new AnnotatedPosition(offset, endOffset - offset);
 		}
 		return null;
+	}
+
+	/*
+	 * Returns true if the given offset is inside a PHPDoc comment.
+	 */
+	private boolean isInComment(IStructuredDocument document, int offset) throws BadLocationException {
+		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+		ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+
+		if (textRegion == null)
+			return false;
+
+		ITextRegionCollection container = sdRegion;
+
+		if (textRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) textRegion;
+			textRegion = container.getRegionAtCharacterOffset(offset);
+		}
+
+		if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
+			return false;
+		}
+		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
+			if (container.getStartOffset(textRegion) == offset) {
+				ITextRegion regionBefore = container.getRegionAtCharacterOffset(offset - 1);
+				if (regionBefore instanceof PhpScriptRegion) {
+					textRegion = regionBefore;
+				}
+			} else {
+				return false;
+			}
+		}
+
+		PhpScriptRegion phpScriptRegion = null;
+		String partitionType = null;
+		int internalOffset = 0;
+
+		if (textRegion instanceof PhpScriptRegion) {
+			phpScriptRegion = (PhpScriptRegion) textRegion;
+			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
+
+			partitionType = phpScriptRegion.getPartition(internalOffset);
+			//if we are at the beginning of multi-line comment or docBlock then we should get completion.
+			if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC) {
+				String regionType = phpScriptRegion.getPhpToken(internalOffset).getType();
+				if (regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START) {
+					if (phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset) {
+						partitionType = phpScriptRegion.getPartition(internalOffset - 1);
+					}
+				}
+			}
+			return (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC);
+		}
+		return false;
 	}
 
 	/*
