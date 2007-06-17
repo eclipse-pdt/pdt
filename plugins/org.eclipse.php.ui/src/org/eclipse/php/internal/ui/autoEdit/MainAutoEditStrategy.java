@@ -42,7 +42,7 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 			docBlockAutoEditStrategy.customizeDocumentCommand(document, command);
 		} else if (partitionType.equals(PHPPartitionTypes.PHP_QUOTED_STRING)) {
 			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
-		} else if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
+		} else if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT) || partitionType.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
 			caseDefaultAutoEditStrategy.customizeDocumentCommand(document, command);
 			matchingBracketAutoEditStrategy.customizeDocumentCommand(document, command);
 			curlyOpenAutoEditStrategy.customizeDocumentCommand(document, command);
