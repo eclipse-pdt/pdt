@@ -419,6 +419,13 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			if (startsWith.startsWith("$")) {
 				if (!explicit && !autoShowVariables)
 					return;
+				try {
+					//if we're right next to a letter, in an implicit scenario, we don't want it to complete the variables name. 
+					if(!explicit && startsWith.equals("$") && document.getLength() != offset && Character.isLetter(document.getChar(offset))){
+						return;
+					}
+				} catch (BadLocationException e) {
+				}
 				if (PHPPartitionTypes.isPHPQuotesState(type)) {
 					final IStructuredDocument doc = document;
 					try {
