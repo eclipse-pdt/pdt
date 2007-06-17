@@ -62,6 +62,9 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		workingFileName = null;
 
 		this.projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+		if(this.projectModel == null){
+			this.projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
+		}
 		this.userModel = userModel;
 	}
 
