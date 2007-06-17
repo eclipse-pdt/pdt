@@ -375,6 +375,19 @@ public class PHPModelUtil {
 		}
 		return model;
 	}
+	
+	public static IPhpModel getIncludeModelForFile(PHPProjectModel model, PHPFileData fileData) {
+		PHPIncludePathModelManager includeManager = (PHPIncludePathModelManager) model.getModel(PHPIncludePathModelManager.COMPOSITE_INCLUDE_PATH_MODEL_ID);
+		if(includeManager == null)
+			return null;
+		IPhpModel[] includeModels = includeManager.listModels();
+		for (int j = 0; j < includeModels.length; ++j) {
+			if (includeModels[j].getFileData(fileData.getName()) == fileData) {
+				return includeModels[j];
+			}
+		}
+		return null;
+	}
 
 	public static boolean hasChildren(final PHPCodeData element) {
 		if (element instanceof PHPFunctionData)
@@ -484,7 +497,7 @@ public class PHPModelUtil {
 	public static boolean isReadOnly(final Object target) {
 		return false;
 	}
-
+	
 	public static String getRelativeLocation(IPhpModel model, String location) {
 		PHPFileData fileData = model.getFileData(location);
 		
@@ -496,21 +509,11 @@ public class PHPModelUtil {
 				if (fileProject.isAccessible()) {
 					return new Path(location).removeFirstSegments(1).toString();
 				}
-			} else if (model instanceof CompositePhpModel) { // file is in an include file
-				IPhpModel[] models = ((CompositePhpModel) model).getModels();
-				for (int i = 0; i < models.length; ++i) {
-					if (models[i].getFileData(location) == fileData) {
-						if (models[i] instanceof PHPIncludePathModelManager) {
-							PHPIncludePathModelManager manager = (PHPIncludePathModelManager) models[i];
-							IPhpModel[] includeModels = manager.listModels();
-							for (int j = 0; j < includeModels.length; ++j) {
-								IPath path = getIncludeModelLocation(includeModels[j]);
-								if (includeModels[j].getFileData(location) == fileData) {
-									return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString();
-								}
-							}
-						}
-					}
+			} else if (model instanceof PHPProjectModel) { // file is in an include file
+				IPhpModel includeModel = getIncludeModelForFile((PHPProjectModel)model, fileData);
+				IPath path = getIncludeModelLocation(includeModel);
+				if (includeModel.getFileData(location) == fileData) {
+					return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString();
 				}
 			}
 		} else {
@@ -642,5 +645,17 @@ public class PHPModelUtil {
 		if (id != null)
 			return new Path(id);
 		return null;
+	}
+
+	public static IPath getFileDataShortPath(PHPProjectModel model, PHPFileData fileData) {
+		IPath shortPath;
+		IPhpModel includeModel = getIncludeModelForFile(model, fileData);
+		if(includeModel != null) {
+			IPath path = getIncludeModelLocation(includeModel);
+			shortPath = new Path(includeModel.getID()).append(new Path(fileData.getName()).removeFirstSegments(path.segmentCount()));
+		} else {
+			shortPath = new Path(fileData.getName());
+		}
+		return shortPath;
 	}
 }
