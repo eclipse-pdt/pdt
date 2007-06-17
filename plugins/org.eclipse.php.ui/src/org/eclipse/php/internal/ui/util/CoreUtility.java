@@ -19,14 +19,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -184,5 +177,15 @@ public class CoreUtility {
         }
         return isAutoBuilding;
     }
+
+	public static boolean isPrefixOf(IPath prefix, IPath path) {
+		if (prefix.isPrefixOf(path))
+			return true;
+		if (prefix.segmentCount() > path.segmentCount())
+			return false;
+		if (prefix.segmentCount() != 0 && !prefix.hasTrailingSeparator() && prefix.removeLastSegments(1).isPrefixOf(path) && path.segment(prefix.segmentCount() - 1).startsWith(prefix.lastSegment()))
+			return true;
+		return false;
+	}
 	
 }
