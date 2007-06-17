@@ -130,7 +130,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		}
 
 		public void fileDataChanged(PHPFileData fileData) {
-			refresh(fileData, false);
+//			refresh(fileData, false);
 		}
 
 		public void fileDataRemoved(PHPFileData fileData) {
