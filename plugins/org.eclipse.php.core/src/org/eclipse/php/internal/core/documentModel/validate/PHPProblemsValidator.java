@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPTask;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.validation.internal.TaskListUtility;
 
@@ -247,8 +248,17 @@ public class PHPProblemsValidator {
 
 		private void action(PHPFileData fileData) {
 			final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-			IFile phpfile = workspaceRoot.getFile(new Path((String) fileData.getIdentifier()));
-			processValidation(phpfile, true);
+			IFile phpFile = null;
+			String fileName = (String) fileData.getIdentifier();
+			ExternalFilesRegistry externalRegistry = ExternalFilesRegistry.getInstance();
+			//check if the file is external and support files on the device with no folder
+			if (externalRegistry.isEntryExist(fileName)) {
+				phpFile = externalRegistry.getFileEntry(fileName);
+			} else {
+				phpFile = workspaceRoot.getFile(new Path(fileName));
+			}
+
+			processValidation(phpFile, true);
 		}
 	}
 }
