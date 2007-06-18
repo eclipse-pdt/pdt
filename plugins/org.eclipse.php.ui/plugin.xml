@@ -253,6 +253,53 @@
 		</validator>
 	</extension>
 
+	<extension
+		id="PHPHTMLValidator"
+		name="PHP HTML Validator"
+		point="org.eclipse.wst.validation.validator">
+		<validator>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.php">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.php3">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.php4">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.php5">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.phtml">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.tpl">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.inc">
+			</filter>
+
+         	<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource"/>			
+			<projectNature id=""/>
+			<enablement></enablement>
+			<helper class="org.eclipse.wst.html.internal.validation.HTMLValidationWorkbenchHelper"/>
+			<run
+				async="true"
+				fullBuild="true"
+				incremental="true"
+				enabled="true"
+				class="org.eclipse.php.internal.ui.editor.validation.PHPHTMLValidator"/>
+		</validator>
+	</extension>
+
 	<!--Templates:-->
 	<extension point="org.eclipse.ui.editors.templates">
 

@@ -10,12 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.validation;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.osgi.util.NLS;
@@ -37,10 +43,7 @@ import org.eclipse.wst.html.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.html.internal.validation.HTMLValidator;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.*;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
@@ -388,5 +391,83 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 
 	public void fileDataRemoved(PHPFileData fileData) {
 		// do nothing
+	}
+	
+	/**
+	 * The getModel function was overriden since this validator was also registered as org.eclipse.wst.validation.validator (not only org.eclipse.wst.sse.ui.sourcevalidation)
+	 * The getModel failed since the private method canHandle() were looking for html files.
+	 * In the future if the canHandle() will be changed to protected - this function can be removed.
+	 * (submitted bug for it #193122)
+	 */
+	
+	protected IDOMModel getModel(IProject project, IFile file) {
+		if (project == null || file == null)
+			return null;
+		if (!file.exists())
+			return null;
+		if (!canHandle(file))
+			return null;
+
+		IStructuredModel model = null;
+		IModelManager manager = StructuredModelManager.getModelManager();
+		try {
+			file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		try {
+			try {
+				model = manager.getModelForRead(file);
+			}
+			catch (UnsupportedEncodingException ex) {
+				// retry ignoring META charset for invalid META charset
+				// specification
+				// recreate input stream, because it is already partially read
+				model = manager.getModelForRead(file, new String(), null);
+			}
+		}
+		catch (UnsupportedEncodingException ex) {
+		}
+		catch (IOException ex) {
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+
+		if (model == null)
+			return null;
+		if (!(model instanceof IDOMModel)) {
+			releaseModel(model);
+			return null;
+		}
+		return (IDOMModel) model;
+	}
+	
+	private IContentTypeManager fContentTypeManager = Platform.getContentTypeManager();
+	private IContentType phpContentType = fContentTypeManager.getContentType("org.eclipse.php.core.phpsource");
+	
+	private boolean canHandle(IFile file) {
+		boolean result = false;
+		if (file != null) {
+			try {
+				IContentDescription contentDescription = file.getContentDescription();
+				if (contentDescription != null) {
+					IContentType fileContentType = contentDescription.getContentType();
+					if (fileContentType.isKindOf(phpContentType)) {
+						result = true;
+					}
+				}
+				else if (phpContentType != null) {
+					result = phpContentType.isAssociatedWith(file.getName());
+				}
+			}
+			catch (CoreException e) {
+				// should be rare, but will ignore to avoid logging "encoding
+				// exceptions" and the like here.
+				// Logger.logException(e);
+			}
+		}
+		return result;
 	}
 }
