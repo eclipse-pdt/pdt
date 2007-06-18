@@ -3,6 +3,8 @@
  */
 package org.eclipse.php.internal.core.util;
 
+import org.eclipse.core.runtime.IPath;
+
 /**
  * This class gives workaround of the fact Path cannot handle relative paths (./ and ../).
  * It allows to replace .. & . with || & . and backwards.
@@ -40,11 +42,12 @@ public class IncludeStringHack {
 		return includeString;
 	}
 
-	public static boolean isHacked(String includeString) {
-		if (includeString.length() != 0 && includeString.charAt(0) == '|') {
-			return true;
+	public static boolean isHacked(IPath includePath) {
+		for (int i = 0; i < includePath.segmentCount(); ++i) {
+			if (includePath.segment(i).equals("|") || includePath.segment(i).equals("||")) {
+				return true;
+			}
 		}
 		return false;
 	}
-
 }
