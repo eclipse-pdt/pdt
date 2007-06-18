@@ -41,11 +41,8 @@ import org.eclipse.php.internal.debug.core.debugger.DebugParametersInitializersR
 import org.eclipse.php.internal.debug.core.debugger.PHPExecutableDebuggerInitializer;
 import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.model.DebugSessionIdGenerator;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
-import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveFilesHandler;
-import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
@@ -300,21 +297,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				RefreshTab.refreshResources(configuration, subMonitor);
 			}
 		}
-
-	}
-
-	protected boolean saveFiles(final IProject project, final IProgressMonitor monitor) {
-		final Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		boolean autoSave = prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY);
-
-		final SaveFilesResult result = SaveFilesHandler.handle(project, autoSave, true, monitor);
-		if (!result.isAccepted())
-			return false;
-		if (result.isAutoSave() && !autoSave) {
-			prefs.setValue(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, true);
-			PHPDebugPlugin.getDefault().savePluginPreferences();
-		}
-		return true;
 
 	}
 

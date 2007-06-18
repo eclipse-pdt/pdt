@@ -15,6 +15,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.IInternalDebugUIConstants;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -111,10 +112,18 @@ public class PHPDebugPlugin extends Plugin {
 
 	}
 
+	/**
+	 * Returns true if the auto-save is on for any dirty file that exists when a Run/Debug launch is triggered.
+	 * 
+	 * @deprecated since PDT 1.0, this method simply extracts the value of IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH
+	 * from the {@link DebugUIPlugin}
+	 */
 	public static boolean getAutoSaveDirtyOption() {
-		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY);
-
+		String saveDirty = DebugUIPlugin.getDefault().getPreferenceStore().getString(IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH);
+		if (saveDirty == null) {
+			return true;
+		}
+		return Boolean.valueOf(saveDirty).booleanValue();
 	}
 
 	public static boolean getOpenDebugViewsOption() {

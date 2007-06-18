@@ -30,7 +30,6 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 		node.putBoolean(PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, true);
-		node.putBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, false);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
 		node.putInt(PHPDebugCorePreferenceNames.DEBUG_PORT, 10000);
 		node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "UTF-8");

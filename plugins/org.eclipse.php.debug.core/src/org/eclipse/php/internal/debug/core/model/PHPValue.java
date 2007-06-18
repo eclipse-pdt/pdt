@@ -155,7 +155,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 
 	public boolean equals(Object obj) {
 		// we restrict the recursion (checking descendants equality) to 5 levels 
-		// to avoid OutOfMemoryError caused endles loop when the following type of PHP code
+		// to avoid OutOfMemoryError caused endless loop when the following type of PHP code
 		// is used
 		//   class Parent { $child }
 		//   class Child { $parent}
@@ -180,7 +180,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 		boolean otherValueNull = otherValue.fValue.getValue() == null;
 
 		if (fVariable.getFullName().equals(otherValue.fVariable.getFullName()) && (otherValueNull || fValue.getValueAsString().equals(otherValue.fValue.getValueAsString()))) {
-			// if i don't have childrens means that I am a scalar
+			// if i don't have children means that I am a scalar
 			if (!fHasChildren) {
 				return !otherValue.fHasChildren;
 			}
