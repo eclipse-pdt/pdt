@@ -24,7 +24,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
  * A PHP debug preferences page Workspace UI addon.
@@ -39,7 +38,6 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractPHPPreferencePage
 	private Button fRunWithDebugInfo;
 	private Button fOpenInBrowser;
 	private Button fOpenDebugViews;
-	private Button fAutoSaveDirty;
 	private PreferencePage propertyPage;
 
 	public void setCompositeAddon(Composite parent) {
@@ -54,7 +52,6 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractPHPPreferencePage
 		fOpenDebugViews.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS));
 		fRunWithDebugInfo.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
 		fOpenInBrowser.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER));
-		fAutoSaveDirty.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY));
 		fDebugTextBox.setText(Integer.toString(prefs.getInt(PHPDebugCorePreferenceNames.DEBUG_PORT)));
 	}
 
@@ -78,7 +75,6 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractPHPPreferencePage
 		fRunWithDebugInfo.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
 		fOpenInBrowser.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER));
 		fOpenDebugViews.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS));
-		fAutoSaveDirty.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY));
 		fDebugTextBox.setText(Integer.toString(prefs.getDefaultInt(PHPDebugCorePreferenceNames.DEBUG_PORT)));
 	}
 
@@ -89,7 +85,6 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractPHPPreferencePage
 		fRunWithDebugInfo = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_5, PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, 0);
 		fOpenInBrowser = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_11, PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, 0);
 		fOpenDebugViews = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_7, PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, 0);
-		fAutoSaveDirty = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_10, PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, 0);
 	}
 
 	private void savePreferences() {
@@ -98,7 +93,6 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractPHPPreferencePage
 		prefs.setValue(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, fRunWithDebugInfo.getSelection());
 		prefs.setValue(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, fOpenInBrowser.getSelection());
 		prefs.setValue(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, fOpenDebugViews.getSelection());
-		prefs.setValue(PHPDebugCorePreferenceNames.AUTO_SAVE_DIRTY, fAutoSaveDirty.getSelection());
 		prefs.setValue(PHPDebugCorePreferenceNames.DEBUG_PORT, fDebugTextBox.getText());
 		PHPDebugPlugin.getDefault().savePluginPreferences();
 	}
