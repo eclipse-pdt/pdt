@@ -10,10 +10,25 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.phpElementData;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.util.regex.Pattern;
 
-import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
-import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
-import org.eclipse.php.internal.core.phpModel.parser.PHPUserModel;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.phpModel.parser.*;
+import org.eclipse.php.internal.core.phpModel.parser.php4.CompletionLexer4;
+import org.eclipse.php.internal.core.phpModel.parser.php4.PHP4DefaultParserClient;
+import org.eclipse.php.internal.core.phpModel.parser.php4.PhpParser4;
+import org.eclipse.php.internal.core.phpModel.parser.php5.CompletionLexer5;
+import org.eclipse.php.internal.core.phpModel.parser.php5.PHP5DefaultParserClient;
+import org.eclipse.php.internal.core.phpModel.parser.php5.PhpParser5;
+import org.eclipse.php.internal.core.preferences.PreferencesSupport;
+import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
+import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
+import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
 
 public final class PHPFileDataUtilities {
 
@@ -137,6 +152,71 @@ public final class PHPFileDataUtilities {
 			className = userModel.getVariableType(fileName, context, variableName, currentLine, showObjectsFromOtherFiles);
 		}
 		return className;
+	}
+
+	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+	private static final PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
+	
+	public static PHPFileData getFileData(Reader reader) {
+		Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
+		IProject project = null;
+		boolean useAspTags = UseAspTagsHandler.useAspTagsAsPhp(project);
+		String phpVersion = preferencesSupport.getPreferencesValue(Keys.PHP_VERSION, PHPVersion.PHP5, project);
+
+		return getFileData(reader, "tmp", 0, phpVersion, tasksPatterns, useAspTags);
+	}
+
+	public static PHPFileData getFileData(Reader reader, String fileName, long lastModified, String phpVersion, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) {
+		PhpParser phpParser = null;
+		ParserClient client = null;
+
+		PHPUserModel model = new PHPUserModel();
+		try {
+			CompletionLexer lexer = null;
+			if (phpVersion == PHPVersion.PHP5) {
+				lexer = new CompletionLexer5(reader);
+				phpParser = new PhpParser5();
+				client = new PHP5DefaultParserClient(model, null);
+			} else {
+				lexer = new CompletionLexer4(reader);
+				phpParser = new PhpParser4();
+				client = new PHP4DefaultParserClient(model, null);
+			}
+			lexer.setUseAspTagsAsPhp(useAspTagsAsPhp);
+			lexer.setParserClient(client);
+			lexer.setTasksPatterns(tasksPatterns);
+
+			phpParser.setScanner(lexer);
+			phpParser.setParserClient(client);
+
+			client.startParsing(fileName);
+
+			phpParser.parse();
+
+		} catch (Exception e) {
+			Logger.logException(e);
+
+		} finally {
+
+			try {
+				if (client != null && phpParser != null) {
+					client.finishParsing(phpParser.getLength(), phpParser.getCurrentLine(), lastModified);
+				}
+
+			} catch (Exception ex) {
+				Logger.logException(ex);
+
+			} finally {
+				try {
+					reader.close();
+				} catch (IOException exception) {
+					Logger.logException(exception);
+				}
+			}
+		}
+		;
+		PHPFileData fileData = model.getFileData(fileName);
+		return fileData;
 	}
 
 }
