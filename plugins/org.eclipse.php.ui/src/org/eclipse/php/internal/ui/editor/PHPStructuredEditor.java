@@ -427,6 +427,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	public void dispose() {
 		PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
+		phpVersionListener = null;
 		super.dispose();
 	}
 
