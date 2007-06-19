@@ -42,10 +42,11 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(userModelManager.getProject(), projectChangeObserver = new IProjectClosedObserver() {
 			public void closed() {
 				PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
+				phpVersionListener = null;
 			}
 		});
 	}
-
+	
 	private class PhpVersionListener implements IPreferencesPropagatorListener {
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			phpVersion = (String) event.getNewValue();

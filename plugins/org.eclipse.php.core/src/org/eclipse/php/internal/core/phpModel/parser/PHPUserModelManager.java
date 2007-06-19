@@ -49,6 +49,11 @@ public class PHPUserModelManager {
 		if (file.exists()) {
 			DefaultCacheManager.instance().save(project, userModel, false);
 		}
+		
+		GlobalParsingManager.getInstance().removeParserClient(userModelParserClientFactoryVersionDependent, project);
+		
+		cachedUserModel.dispose();
+		cachedUserModel = null;
 	}
 
 	public void fileRemoved(IFile file) {

@@ -62,8 +62,8 @@ public class ProjectRemovedObserversAttacher {
 					}
 				}
 			};
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
 		}
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
 
 		if (project == null || !project.isAccessible()) {
 			return false;

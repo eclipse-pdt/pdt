@@ -15,11 +15,7 @@ import java.util.Iterator;
 
 public class CompositeProjectChangeObserver extends HashSet implements IProjectClosedObserver {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	
 	public void closed() {
 		for (Iterator iter = iterator(); iter.hasNext();) {

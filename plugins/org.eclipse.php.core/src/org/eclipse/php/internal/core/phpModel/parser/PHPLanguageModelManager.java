@@ -66,6 +66,7 @@ public class PHPLanguageModelManager extends PhpModelProxy implements IPHPLangua
 	public void dispose() {
 		super.dispose();
 		PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
+		phpVersionListener = null;
 	}
 
 	private class PhpVersionListener implements IPreferencesPropagatorListener {

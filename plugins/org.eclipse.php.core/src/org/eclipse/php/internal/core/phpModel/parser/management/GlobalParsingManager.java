@@ -33,7 +33,6 @@ public class GlobalParsingManager {
 		if (instance == null) {
 			instance = new GlobalParsingManager();
 		}
-
 		return instance;
 	}
 
