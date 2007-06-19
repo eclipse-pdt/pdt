@@ -11,31 +11,27 @@
 
 package org.eclipse.php.internal.ui.autoEdit;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DocumentCommand;
-import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.*;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.preferences.PreferencesSupport;
+import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
+import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
+import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.util.PHPDocBlockSerialezer;
@@ -48,8 +44,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
  * 
@@ -176,25 +170,21 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			}
 
 			if (isDocBlock && TypingPreferences.addDocTags) {
-				//taking off the /** in order to find the closest codeData
-				document.replace(lineStart, lineEnd - lineStart, "");
-				command.offset = lineStart;
-
-				// making sure the new fileData will be created after the deletion
-				DOMModelForPHP editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager().getModelForRead(document);
-				editorModel.updateFileData();
+				//taking off the text after the /** in order to find the closest codeData
+				document.replace(lineStart + 3, lineEnd - lineStart - 3, "");
+				lineEnd = lineStart + 3; //now the end of the line is the end of the comment start
+				command.offset = lineEnd;
 
 				if (lineContent.equals("")) { //this is a patch in order to make PHPDescriptionTool add a default shortDescription
 					lineContent = null;
 				}
 
-				String stub = getDocBlockStub(editorModel, document, lineStart, lineContent);
-
+				DOMModelForPHP editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager().getModelForRead(document);
+				PHPFileData fileData = editorModel.getFileData();
 				editorModel.releaseFromRead();
 
-				// putting back the /** that was taken off
-				command.offset += commentStart.length();
-				document.replace(lineStart, 0, commentStart);
+				fileData = updateFileData(document, lineStart, lineEnd, fileData);
+				String stub = getDocBlockStub(fileData, document, lineStart, lineContent, lineEnd);
 
 				if (stub != null) {
 					command.text = stub.substring(3);
@@ -202,7 +192,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 						//this means that we added the default shortDescription to the docBlock
 						//now we want to make sure this description will be selected in the editor 
 						//at the end of the command
-						String fileName = editorModel.getFileData().getName();
+						String fileName = fileData.getName();
 						IFile file = PHPUiPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
 						IEditorPart editorPart;
 						try {
@@ -239,12 +229,33 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		return rvPosition;
 	}
 
+	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+	private static final PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
+
+	private PHPFileData updateFileData(IStructuredDocument document, int commentStart, int commentEnd, PHPFileData fileData) {
+		String fileName = fileData.getName();
+
+		Pattern[] tasks = new Pattern[0];
+
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
+		IProject project = null;
+		if (file != null) {
+			project = file.getProject();
+			tasks = TaskPatternsProvider.getInstance().getPatternsForProject(project);
+		}
+		boolean useAspTags = UseAspTagsHandler.useAspTagsAsPhp(project);
+		String version = preferencesSupport.getPreferencesValue(Keys.PHP_VERSION, PHPVersion.PHP5, project);
+
+		fileData = PHPFileDataUtilities.getFileData(new SkippedTextDocumentReader(document, commentStart, commentEnd - commentStart), fileData.getName(), 0, version, tasks, useAspTags);
+		return fileData;
+	}
+
 	/**
-	 * this function determins if the new line is needed within a docBlock or this is a new docBloc
+	 * this function determines if the new line is needed within a docBlock or this is a new docBloc
 	 *
 	 * @param doc
 	 * @param offset
-	 * @return true - the dockBlock allready exists
+	 * @return true - the dockBlock already exists
 	 */
 	private boolean isInsideExistingDocBlock(IStructuredDocument document, int offset) {
 
@@ -282,16 +293,12 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		return false;
 	}
 
-	/**
-	 * @return true - if the docBlock was added
-	 */
-	private String getDocBlockStub(DOMModelForPHP editorModel, IStructuredDocument document, int offset, String shortDescription) {
+	private String getDocBlockStub(PHPFileData fileData, IStructuredDocument document, int offset, String shortDescription, int skippedAreaEndoffset) {
 
-		PHPFileData fileData = editorModel.getFileData();
 		if (fileData == null) {
 			return null;
 		}
-		PHPCodeData codeData = getClosestCodeData(document, fileData, offset);
+		PHPCodeData codeData = getClosestCodeData(document, fileData, offset, skippedAreaEndoffset);
 		if (codeData == null) {
 			return null;
 		}
@@ -300,9 +307,10 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 	}
 
 	/**
-	 * finds the closest codeData to the offest
+	 * finds the closest codeData to the offset
+	 * @param skippedAreaEndoffset 
 	 */
-	private PHPCodeData getClosestCodeData(IStructuredDocument document, PHPFileData fileData, int offset) {
+	private PHPCodeData getClosestCodeData(IStructuredDocument document, PHPFileData fileData, int offset, int skippedAreaEndoffset) {
 
 		PHPCodeData closestCodeData = null;
 		int closestCodeDataOffset = document.getLength();
@@ -314,7 +322,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			if (startOffset < offset) {
 				int endOffset = classData.getUserData().getEndPosition();
 				if (endOffset > offset) {
-					return getClosestCodeDataFromClass(document, classData, offset);
+					return getClosestCodeDataFromClass(document, classData, offset, skippedAreaEndoffset);
 				}
 			} else {
 				if (startOffset < closestCodeDataOffset) {
@@ -360,13 +368,13 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			}
 		}
 
-		if (closestCodeData != null && isNoCodeBetween(document, offset, closestCodeDataOffset)) {
+		if (closestCodeData != null && isNoCodeBetween(document, skippedAreaEndoffset, closestCodeDataOffset)) {
 			return closestCodeData;
 		}
 		return null;
 	}
 
-	private PHPCodeData getClosestCodeDataFromClass(IStructuredDocument document, PHPClassData classData, int offset) {
+	private PHPCodeData getClosestCodeDataFromClass(IStructuredDocument document, PHPClassData classData, int offset, int skippedAreaEndoffset) {
 		PHPCodeData closestCodeData = null;
 		int closestCodeDataOffset = document.getLength();
 
@@ -423,7 +431,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			}
 		}
 
-		if (closestCodeData != null && isNoCodeBetween(document, offset, closestCodeDataOffset)) {
+		if (closestCodeData != null && isNoCodeBetween(document, skippedAreaEndoffset, closestCodeDataOffset)) {
 			return closestCodeData;
 		}
 		return null;
@@ -438,49 +446,38 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 	 */
 
 	private boolean isNoCodeBetween(IStructuredDocument document, int offset, int endOffset) {
-		int index = offset;
-
+		char[] chars = null;
 		try {
-			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(index);
-
-			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(index);
-			// in case the cursor on the beginning of '?>' tag
-			// we decrease the offset to get the PhpScriptRegion 
-			if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
-				tRegion = sdRegion.getRegionAtCharacterOffset(index - 1);
-			}
-			int regionStart = sdRegion.getStartOffset(tRegion);
-
-			if (tRegion instanceof ITextRegionContainer) {
-				ITextRegionContainer container = (ITextRegionContainer) tRegion;
-				tRegion = container.getRegionAtCharacterOffset(index);
-				regionStart += tRegion.getStart();
-			}
-
-			// find the specified php token in the PhpScriptRegion
-			if (tRegion instanceof PhpScriptRegion) {
-				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
-				while (tRegion != null && index < endOffset && index - regionStart > 0) {
-					tRegion = scriptRegion.getPhpToken(index - regionStart);
-
-					if (tRegion != null) {
-						String regionType = tRegion.getType();
-						if (regionType == PHPRegionTypes.PHP_LINE_COMMENT || regionStart + tRegion.getTextEnd() < index) {
-							index = regionStart + tRegion.getEnd() + 1;
-						} else {
-							return false;
-						}
+			chars = document.get(offset, endOffset - offset).toCharArray();
+		} catch (BadLocationException e) {
+			return true;
+		}
+		if (chars == null) {
+			return true;
+		}
+		boolean inLineComment = false;
+		for (int index = 0; index < chars.length; index++) {
+			char curr = chars[index];
+			if (inLineComment) {
+				if (curr == '\n' || curr == '\r') {
+					inLineComment = false;
+				}
+			} else {
+				if (!Character.isWhitespace(curr)) {
+					if (curr == '/' && index + 1 < chars.length && chars[index + 1] == '/') {
+						inLineComment = true;
+					} else {
+						return false;
 					}
 				}
 			}
-		} catch (BadLocationException e) {
 		}
 
 		return true;
 	}
 
 	/**
-	 * the perpose of this class is to select text in the editor
+	 * the purpose of this class is to select text in the editor
 	 * 
 	 *
 	 */
@@ -498,5 +495,113 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		public void run() {
 			EditorUtility.revealInEditor(textEditor, offset, length);
 		}
+	}
+
+	/**
+	 * This class purpose is to read the document and skip a certain part.
+	 *
+	 */
+	private class SkippedTextDocumentReader extends Reader {
+		private IDocument document = null;
+		private int mark = 0;
+		private int position = 0;
+		private int skippedPosition;
+		private int skippedLength;
+
+		public SkippedTextDocumentReader(IDocument document, int skippedPosition, int skippedLength) {
+			super();
+			this.document = document;
+			this.skippedPosition = skippedPosition;
+			this.skippedLength = skippedLength;
+		}
+
+		public void close() throws IOException {
+			document = null;
+		}
+
+		public void mark(int readAheadLimit) throws IOException {
+			mark = position;
+		}
+
+		public boolean markSupported() {
+			return true;
+		}
+
+		public int read(char[] cbuf, int off, int len) throws IOException {
+			if (document == null)
+				return -1;
+
+			char[] readChars = null;
+			try {
+				if (position >= document.getLength())
+					return -1;
+
+				if (position < skippedPosition) {
+					if (position + len < skippedPosition) {
+						//we try to read before the skipped area - we should do nothing
+					} else {
+						//we need to split the reading since the requested string includes the skipped area.
+						String s1 = document.get(position, skippedPosition - position);
+						String s2 = document.get(skippedPosition + skippedLength, len - (skippedPosition - position));
+						readChars = (s1 + s2).toCharArray();
+					}
+				} else if (position <= skippedPosition + skippedLength) {
+					//the reading starts in the middle of the skipped area - moving the reading index forward
+					position = skippedPosition + skippedLength;
+				}
+				// the IDocument is likely using a GapTextStore, so we can't
+				// retrieve a char[] directly
+				if (readChars == null) {
+					//meaning it wasn't filled already 
+					if (position + len > document.getLength())
+						readChars = document.get(position, document.getLength() - position).toCharArray();
+					else
+						readChars = document.get(position, len).toCharArray();
+				}
+				System.arraycopy(readChars, 0, cbuf, off, readChars.length);
+				position += readChars.length;
+				return readChars.length;
+			} catch (Exception e) {
+				throw new IOException("Exception while reading from IDocument: " + e); //$NON-NLS-1$
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.io.Reader#reset()
+		 */
+		public void reset() throws IOException {
+			position = mark;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.io.Reader#reset()
+		 */
+		public void reset(int pos) throws IOException {
+			position = pos;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.io.Reader#skip(long)
+		 */
+		public long skip(long n) throws IOException {
+			if (document == null)
+				return 0;
+
+			long skipped = n;
+			if (position + n > document.getLength()) {
+				skipped = document.getLength() - position;
+				position = document.getLength();
+			} else {
+				position += n;
+			}
+			return skipped;
+		}
+
 	}
 }
