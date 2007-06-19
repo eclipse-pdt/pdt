@@ -190,14 +190,10 @@
 		</editor>
   <editor
         class="org.eclipse.php.internal.ui.editor.UntitledPHPEditor"
-        contributorClass="org.eclipse.php.internal.ui.editor.PHPEditorActionBarContributor"
         icon="icons/full/obj16/phpfile.gif"
         id="org.eclipse.php.untitledPhpEditor"
         name="Untitiled PHP Document Editor"
         symbolicFontName="org.eclipse.wst.sse.ui.textfont">
-     <contentTypeBinding
-           contentTypeId="org.eclipse.php.core.phpsource">
-     </contentTypeBinding>
   </editor>
 	</extension>
 
