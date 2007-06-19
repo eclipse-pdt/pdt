@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
@@ -29,6 +31,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
  * This class behaves like OpenExternalFileAction, with the difference that the run method gets a List
@@ -43,17 +46,16 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 		 */
 		public String getText(Object element) {
 			if (element instanceof IFile) {
-				IPath path=  ((IFile) element).getFullPath();
+				IPath path = ((IFile) element).getFullPath();
 				return path != null ? path.toString() : ""; //$NON-NLS-1$
 			}
 			return super.getText(element);
 		}
 	}
 
-
 	private IWorkbenchWindow fWindow;
 	private String fFilterPath;
-	private StringBuffer notFound= new StringBuffer();
+	private StringBuffer notFound = new StringBuffer();
 
 	public PHPOpenExternalFileAction() {
 		setEnabled(true);
@@ -63,16 +65,16 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
 	 */
 	public void dispose() {
-		fWindow= null;
-		fFilterPath= null;
+		fWindow = null;
+		fFilterPath = null;
 	}
 
 	/*
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
 	 */
 	public void init(IWorkbenchWindow window) {
-		fWindow= window;
-		fFilterPath= System.getProperty("user.home"); //$NON-NLS-1$
+		fWindow = window;
+		fFilterPath = System.getProperty("user.home"); //$NON-NLS-1$
 	}
 
 	/*
@@ -93,36 +95,77 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 	 */
 	public void run(List filePaths) {
 		if (filePaths != null) {
-			int numberOfFilesNotFound= 0;
-			
-			for (Iterator iter = filePaths.iterator(); iter.hasNext();) {				
+			int numberOfFilesNotFound = 0;
+
+			for (Iterator iter = filePaths.iterator(); iter.hasNext();) {
 				String currentFilePath = (String) iter.next();
-				IPath path = new Path(currentFilePath);						
-				fFilterPath= path.removeLastSegments(1).toOSString();				
-				IFileStore fileStore= EFS.getLocalFileSystem().getStore(new Path(fFilterPath));
-				fileStore= fileStore.getChild(path.lastSegment());
-				if (!fileStore.fetchInfo().isDirectory() && fileStore.fetchInfo().exists()) {
-					IEditorInput input= createEditorInput(fileStore);
-					String editorId= getEditorId(fileStore);
-					IWorkbenchPage page= fWindow.getActivePage();
-					try {
-						page.openEditor(input, editorId);
-					} catch (PartInitException e) {
-						Logger.logException("Failed opening file called externally", e);
-					}
-				} else {
-					if (++numberOfFilesNotFound > 1)
-						notFound.append('\n');
-					notFound.append(currentFilePath);
-				}
+				numberOfFilesNotFound = openFile(numberOfFilesNotFound, currentFilePath, -1);
 			}
 		}
 	}
-	
+
+	public void run(String filePath, int lineNumber) {
+		openFile(0, filePath, lineNumber);
+	}
+
+	private int openFile(int numberOfFilesNotFound, String currentFilePath, int lineNumber) {
+		IPath path = new Path(currentFilePath);
+		fFilterPath = path.removeLastSegments(1).toOSString();
+		IFileStore fileStore = EFS.getLocalFileSystem().getStore(new Path(fFilterPath));
+		fileStore = fileStore.getChild(path.lastSegment());
+		if (!fileStore.fetchInfo().isDirectory() && fileStore.fetchInfo().exists()) {
+			IEditorInput input = createEditorInput(fileStore);
+			String editorId = getEditorId(fileStore);
+			IWorkbenchPage page = fWindow.getActivePage();
+			IEditorPart editorPart = null;
+			try {
+				editorPart = page.openEditor(input, editorId);
+				// if the open file request has a line number, try to set the cursor on that line				
+				if (lineNumber >= 0) {
+					gotoLine(editorPart, currentFilePath, lineNumber);
+				}
+			} catch (PartInitException e) {
+				Logger.logException("Failed opening file called externally", e);
+			}
+		} else {
+			if (++numberOfFilesNotFound > 1)
+				notFound.append('\n');
+			notFound.append(currentFilePath);
+		}
+		return numberOfFilesNotFound;
+	}
+
+	/**
+	 * Sets the focus on a specific line number for the given file 
+	 * @param editorPart
+	 * @param filePath
+	 * @param lineNumber
+	 */
+	private void gotoLine(IEditorPart editorPart, String filePath, int lineNumber) {
+		int offset = 0;
+		int length = 0;
+		if (editorPart != null && lineNumber > 0 && editorPart instanceof StructuredTextEditor) {
+			IRegion region;
+			try {
+				region = ((StructuredTextEditor) editorPart).getTextViewer().getDocument().getLineInformation(lineNumber - 1);
+				offset = region.getOffset();
+				length = region.getLength();
+			} catch (BadLocationException e) {
+				// failed calculating offset for goto line feature
+				return;
+			}
+
+			if (editorPart != null) {
+				EditorUtility.revealInEditor(editorPart, offset, length);
+			}
+
+		}
+	}
+
 	/**
 	 * Returns a String with the names of the files that couldnt be found
 	 */
-	public String getFileNotFoundStr(){
+	public String getFileNotFoundStr() {
 		return notFound.toString();
 	}
 
@@ -131,31 +174,31 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 	 *		see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=110203
 	 */
 	private String getEditorId(IFileStore file) {
-		IWorkbench workbench= fWindow.getWorkbench();
-		IEditorRegistry editorRegistry= workbench.getEditorRegistry();
-		IEditorDescriptor descriptor= editorRegistry.getDefaultEditor(file.getName(), getContentType(file));
+		IWorkbench workbench = fWindow.getWorkbench();
+		IEditorRegistry editorRegistry = workbench.getEditorRegistry();
+		IEditorDescriptor descriptor = editorRegistry.getDefaultEditor(file.getName(), getContentType(file));
 
 		// check the OS for in-place editor (OLE on Win32)
 		if (descriptor == null && editorRegistry.isSystemInPlaceEditorAvailable(file.getName()))
-			descriptor= editorRegistry.findEditor(IEditorRegistry.SYSTEM_INPLACE_EDITOR_ID);
-		
+			descriptor = editorRegistry.findEditor(IEditorRegistry.SYSTEM_INPLACE_EDITOR_ID);
+
 		// check the OS for external editor
 		if (descriptor == null && editorRegistry.isSystemExternalEditorAvailable(file.getName()))
-			descriptor= editorRegistry.findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-		
+			descriptor = editorRegistry.findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
+
 		if (descriptor != null)
 			return descriptor.getId();
-		
+
 		return EditorsUI.DEFAULT_TEXT_EDITOR_ID;
 	}
 
-	private IContentType getContentType (IFileStore fileStore) {
+	private IContentType getContentType(IFileStore fileStore) {
 		if (fileStore == null)
 			return null;
 
-		InputStream stream= null;
+		InputStream stream = null;
 		try {
-			stream= fileStore.openInputStream(EFS.NONE, null);
+			stream = fileStore.openInputStream(EFS.NONE, null);
 			return Platform.getContentTypeManager().findContentTypeFor(stream, fileStore.getName());
 		} catch (IOException x) {
 			EditorsPlugin.log(x);
@@ -164,7 +207,7 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 			// Do not log FileNotFoundException (no access)
 			if (!(x.getStatus().getException() instanceof FileNotFoundException))
 				EditorsPlugin.log(x);
-			
+
 			return null;
 		} finally {
 			try {
@@ -177,17 +220,17 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 	}
 
 	private IEditorInput createEditorInput(IFileStore fileStore) {
-		IFile workspaceFile= getWorkspaceFile(fileStore);
+		IFile workspaceFile = getWorkspaceFile(fileStore);
 		if (workspaceFile != null)
 			return new FileEditorInput(workspaceFile);
-		
+
 		return new FileStoreEditorInput(fileStore);
 	}
 
 	private IFile getWorkspaceFile(IFileStore fileStore) {
-		IWorkspace workspace= ResourcesPlugin.getWorkspace();
-		IFile[] files= workspace.getRoot().findFilesForLocation(new Path(fileStore.toURI().getPath()));
-		files= filterNonExistentFiles(files);
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IFile[] files = workspace.getRoot().findFilesForLocation(new Path(fileStore.toURI().getPath()));
+		files = filterNonExistentFiles(files);
 		if (files == null || files.length == 0)
 			return null;
 		if (files.length == 1)
@@ -195,21 +238,21 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 		return selectWorkspaceFile(files);
 	}
 
-	private IFile[] filterNonExistentFiles(IFile[] files){
+	private IFile[] filterNonExistentFiles(IFile[] files) {
 		if (files == null)
 			return null;
 
-		int length= files.length;
-		ArrayList existentFiles= new ArrayList(length);
-		for (int i= 0; i < length; i++) {
+		int length = files.length;
+		ArrayList existentFiles = new ArrayList(length);
+		for (int i = 0; i < length; i++) {
 			if (files[i].exists())
 				existentFiles.add(files[i]);
 		}
-		return (IFile[])existentFiles.toArray(new IFile[existentFiles.size()]);
+		return (IFile[]) existentFiles.toArray(new IFile[existentFiles.size()]);
 	}
 
 	private IFile selectWorkspaceFile(IFile[] files) {
-		ElementListSelectionDialog dialog= new ElementListSelectionDialog(fWindow.getShell(), new FileLabelProvider());
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(fWindow.getShell(), new FileLabelProvider());
 		dialog.setElements(files);
 //		dialog.setTitle(TextEditorMessages.OpenExternalFileAction_title_selectWorkspaceFile);
 //		dialog.setMessage(TextEditorMessages.OpenExternalFileAction_message_fileLinkedToMultiple);

@@ -631,4 +631,25 @@ public class EditorUtility {
 		openFilesInEditor(filesToOpen, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 	}
 
+	/**
+	 * Open a file by the given path at the line specified
+	 * @param filePath
+	 * @param lineNumber
+	 * @param window
+	 */
+	public static void openFileInEditor(String filePath, int lineNumber, IWorkbenchWindow window) {
+		PHPOpenExternalFileAction action = new PHPOpenExternalFileAction();
+		action.init(window);
+		action.run(filePath, lineNumber);
+	}
+
+	/**
+	 * Open a file by the given path at the line specified
+	 * @param filePath
+	 * @param lineNumber
+	 */
+	public static void openFileInEditor(String filePath, int lineNumber) {
+		openFileInEditor(filePath, lineNumber, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+	}
+
 }
