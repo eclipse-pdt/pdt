@@ -82,7 +82,7 @@ public class DebugConnectionThread implements Runnable {
 	private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	private DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
 	private int lastRequestID = 1000;
-	protected int peerResponseTimeout = 3300; // 3.3 seconds.
+	protected int peerResponseTimeout = 500; // 0.5 seconds.
 	protected PHPDebugTarget debugTarget;
 	private Thread theThread;
 
@@ -208,17 +208,21 @@ public class DebugConnectionThread implements Runnable {
 			}
 
 			IDebugResponseMessage response = null;
-			int timeoutCount = 3;
+			int timeoutCount = 20;
 			while (response == null && isConnected()) {
 				synchronized (request) {
 					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 					if (response == null) {
-						// TODO - Display a message that we are waiting for the server response.
-						// In case that the response finally arrives, remove the message.
-						// In case we have a timeout, close the connection and display a different message.
+						if (isDebugMode) {
+							System.out.println("Response is null. Waiting " + ((21 - timeoutCount) * peerResponseTimeout) + " milliseconds");
+						}
+						if (timeoutCount == 15) { // Display a progress dialog after a quarter of the assigned time have passed.
+							// Display a message that we are waiting for the server response.
+							// In case that the response finally arrives, remove the message.
+							// In case we have a timeout, close the connection and display a different message.
+							PHPLaunchUtilities.showWaitForDebuggerMessage(this);
+						}
 						request.wait(peerResponseTimeout);
-					} else if (isDebugMode) {
-						System.out.println("waiting for response " + response.getID());
 					}
 				}
 				if (response == null) {
@@ -239,6 +243,7 @@ public class DebugConnectionThread implements Runnable {
 						handlePeerResponseTimeout();
 					} else {
 						closeConnection();
+						PHPLaunchUtilities.hideWaitForDebuggerMessage();
 						PHPLaunchUtilities.showDebuggerErrorMessage();
 					}
 					if (!isConnected())
@@ -246,6 +251,7 @@ public class DebugConnectionThread implements Runnable {
 					//System.out.println("rewaiting");
 				}
 			}
+			PHPLaunchUtilities.hideWaitForDebuggerMessage();
 			if (isDebugMode) {
 				System.out.println("response received by client: " + response);
 			}
@@ -582,7 +588,7 @@ public class DebugConnectionThread implements Runnable {
 				manager.fireUpdate(new ILaunch[] { launch }, LaunchManager.ADDED);
 				// Added to fix a problem while migrating to 3.3.
 				// The stack tree was not updated.
-				manager.fireUpdate(new ILaunch[] { launch }, LaunchManager.CHANGED); 
+				manager.fireUpdate(new ILaunch[] { launch }, LaunchManager.CHANGED);
 			}
 		});
 	}

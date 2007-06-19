@@ -49,6 +49,8 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String PHPLaunchUtilities_rememberDecision;
 	public static String PHPLaunchUtilities_PHPPerspectiveSwitchTitle;
 	public static String PHPLaunchUtilities_PHPPerspectiveSwitchMessage;
+	public static String PHPLaunchUtilities_terminate;
+	public static String PHPLaunchUtilities_waitingForDebugger;
 
     static {
         // load message values from bundle file

@@ -11,23 +11,31 @@
 package org.eclipse.php.internal.debug.core.launching;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.*;
 
@@ -38,13 +46,14 @@ public class PHPLaunchUtilities {
 
 	public static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
 	public static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
+	private static DebuggerDelayProgressMonitorDialog progressDialog;
 
 	/**
 	 * Display the Debug Output view in case it's hidden or not initialized. 
 	 * In case where the Browser Output view is visible, nothing will happen and the Browser Output 
 	 * will remain as the visible view during the debug session.
 	 * 
-	 * Note that the behaviour given by this function is mainly needed when we are in a PHP Perspective (not debug)
+	 * Note that the behavior given by this function is mainly needed when we are in a PHP Perspective (not debug)
 	 * and a session without a breakpoint was launched. So in this case a 'force' output display is triggered.
 	 * 
 	 * This function also take into account the PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS flag and does not
@@ -102,7 +111,7 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Notify the existance of a previous PHP debug session in case the user launched a new session.
+	 * Notify the existence of a previous PHP debug session in case the user launched a new session.
 	 *
 	 * @param newLaunchConfiguration
 	 * @param newLaunch
@@ -141,7 +150,7 @@ public class PHPLaunchUtilities {
 		final Display disp = Display.getDefault();
 		disp.syncExec(new Runnable() {
 			public void run() {
-				// Display a dialog to notify the existance of a previous active launch.
+				// Display a dialog to notify the existence of a previous active launch.
 				MessageDialogWithToggle m = MessageDialogWithToggle.openYesNoQuestion(disp.getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_confirmation, PHPDebugCoreMessages.PHPLaunchUtilities_multipleLaunchesPrompt, PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision, false, store,
 					PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES);
 				resultHolder.setReturnCode(m.getReturnCode());
@@ -357,24 +366,51 @@ public class PHPLaunchUtilities {
 	/**
 	 * Display a wait window, indicating the user that the debug session is in progress and the
 	 * PDT is waiting for the debugger's response.
-	 * Once a responce arrives, the {@link #hideWaitForDebuggerMessage()} should be called to remove 
+	 * Once a response arrives, the {@link #hideWaitForDebuggerMessage()} should be called to remove 
 	 * the window.
 	 * In case a response does not arrive, there is a good chance that the {@link #showDebuggerErrorMessage()} should
 	 * be called.
+	 * @param debugConnectionThread 
 	 * @see #hideWaitForDebuggerMessage()
 	 * @see #showDebuggerErrorMessage()
 	 */
-	public static void showWaitForDebuggerMessage() {
-		// TODO
+	public static void showWaitForDebuggerMessage(final DebugConnectionThread debugConnectionThread) {
+		if (progressDialog != null) {
+			// Allow only one progress indicator
+			return;
+		}
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				progressDialog = new DebuggerDelayProgressMonitorDialog();
+				if (progressDialog.open() == Window.CANCEL) {
+					debugConnectionThread.closeConnection();
+				}
+				progressDialog = null;
+			}
+		});
 	}
 
+	/**
+	 * Hides the progress indicator that appears when user is waiting for the debugger to response.
+	 * 
+	 * @see #showWaitForDebuggerMessage()
+	 */
 	public static void hideWaitForDebuggerMessage() {
-		// TODO
+		if (progressDialog != null) {
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					if (progressDialog != null) {
+						progressDialog.close();
+					}
+				}
+			});
+			progressDialog = null;
+		}
 	}
 
 	/**
 	 * Display an error message to indicating an fatal error detected while staring a debug session.
-	 * A fatal error occures when the remote debugger does not exist or has a different version.
+	 * A fatal error occurs when the remote debugger does not exist or has a different version.
 	 */
 	public static void showDebuggerErrorMessage() {
 		Display.getDefault().syncExec(new Runnable() {
@@ -405,6 +441,33 @@ public class PHPLaunchUtilities {
 
 		public void setReturnCode(int returnCode) {
 			this.returnCode = returnCode;
+		}
+	}
+
+	private static class DebuggerDelayProgressMonitorDialog extends ProgressMonitorDialog {
+
+		public DebuggerDelayProgressMonitorDialog() {
+			super(null);
+			setBlockOnOpen(true);
+			setCancelable(true);
+		}
+
+		protected void createCancelButton(Composite parent) {
+			cancel = createButton(parent, IDialogConstants.CANCEL_ID, PHPDebugCoreMessages.PHPLaunchUtilities_terminate, true);
+			if (arrowCursor == null) {
+				arrowCursor = new Cursor(cancel.getDisplay(), SWT.CURSOR_ARROW);
+			}
+			cancel.setCursor(arrowCursor);
+			setOperationCancelButtonEnabled(enableCancelButton);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.dialogs.ProgressMonitorDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+		 */
+		protected Control createDialogArea(Composite parent) {
+			Control c = super.createDialogArea(parent);
+			getProgressMonitor().beginTask(PHPDebugCoreMessages.PHPLaunchUtilities_waitingForDebugger, IProgressMonitor.UNKNOWN);
+			return c;
 		}
 	}
 }
