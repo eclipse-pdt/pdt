@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.project.properties.handlers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
@@ -48,7 +48,7 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 			return;
 		}
 		PHPWorkspaceModelManager.getInstance().addWorkspaceModelListener(project.getName(), instance);
-		projectListeners.put(project, new ArrayList());
+		projectListeners.put(project, new HashSet());
 
 		//register as a listener to the PP on this project
 		PreferencesPropagatorListener listener = new PreferencesPropagatorListener(project);
@@ -57,17 +57,19 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 	}
 
 	public synchronized void projectModelRemoved(IProject project) {
-		projectListeners.remove(project);
 		PreferencesPropagatorListener listener = (PreferencesPropagatorListener) preferencesPropagatorListeners.get(project);
 		preferencesPropagator.removePropagatorListener(listener, Keys.PHP_VERSION);
 		preferencesPropagatorListeners.remove(project);
+		
+		projectListeners.remove(project);
+		PHPWorkspaceModelManager.getInstance().removeWorkspaceModelListener(project.getName(), instance);
 	}
 
 	public void projectModelChanged(IProject project) {
 	}
 
 	private void projectVersionChanged(IProject project, PreferencesPropagatorEvent event) {
-		ArrayList listeners = (ArrayList) projectListeners.get(project);
+		HashSet listeners = (HashSet) projectListeners.get(project);
 		if (listeners != null) {
 			for (Iterator iter = listeners.iterator(); iter.hasNext();) {
 				IPreferencesPropagatorListener listener = (IPreferencesPropagatorListener) iter.next();
@@ -112,17 +114,17 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 
 	public void addPhpVersionChangedListener(IPreferencesPropagatorListener listener) {
 		IProject project = listener.getProject();
-		ArrayList listeners = (ArrayList) projectListeners.get(project);
+		HashSet listeners = (HashSet) projectListeners.get(project);
 		if (listeners == null) {
 			projectModelAdded(project);
-			listeners = (ArrayList) projectListeners.get(project);
+			listeners = (HashSet) projectListeners.get(project);
 		}
 		listeners.add(listener);
 	}
 
 	public void removePhpVersionChangedListener(IPreferencesPropagatorListener listener) {
 		IProject project = listener.getProject();
-		ArrayList listeners = (ArrayList) projectListeners.get(project);
+		HashSet listeners = (HashSet) projectListeners.get(project);
 		if (listeners != null) {
 			listeners.remove(listener);
 		}
