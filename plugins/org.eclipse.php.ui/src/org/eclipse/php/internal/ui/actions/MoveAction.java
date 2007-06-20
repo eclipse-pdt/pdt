@@ -98,9 +98,7 @@ public class MoveAction extends SelectionDispatchAction {
 
 		if (!selection.isEmpty()) {
 			if (ActionUtils.containsOnlyProjects(selection.toList())) {
-				//setEnabled(createWorkbenchAction(selection).isEnabled());
-				// disable project move since it doesn't work in eclipse
-				setEnabled(false);
+				setEnabled(createWorkbenchAction(selection).isEnabled());
 				return;
 			}
 			List elements = selection.toList();
