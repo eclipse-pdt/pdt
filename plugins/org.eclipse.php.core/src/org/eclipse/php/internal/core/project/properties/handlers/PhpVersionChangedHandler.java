@@ -27,10 +27,10 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 	private HashMap projectListeners = new HashMap();
 	private HashMap preferencesPropagatorListeners = new HashMap();
 
-	private static PhpVersionChangedHandler instance = new PhpVersionChangedHandler();
 	private PreferencesPropagator preferencesPropagator;
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
 	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+	private static PhpVersionChangedHandler instance = new PhpVersionChangedHandler();
 
 	private PhpVersionChangedHandler() {
 		preferencesPropagator = PreferencePropagatorFactory.getInstance().getPreferencePropagator(NODES_QUALIFIER, store);
