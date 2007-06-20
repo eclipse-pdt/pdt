@@ -15,14 +15,7 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.documentModel.dom.Utils;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -43,8 +36,8 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 
 public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfiguration {
-	private PHPOutlineContentProvider fContentProvider = null;
-	private PHPOutlineLabelProvider fLabelProvider = null;
+	protected PHPOutlineContentProvider fContentProvider = null;
+	protected PHPOutlineLabelProvider fLabelProvider = null;
 	IPHPTreeContentProvider[] treeProviders;
 
 	protected IContributionItem[] createMenuContributions(final TreeViewer viewer) {
@@ -179,7 +172,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return super.getSelection(viewer, selection);
 	}
 
-	private IPHPTreeContentProvider[] getTreeProviders() {
+	protected IPHPTreeContentProvider[] getTreeProviders() {
 		if (treeProviders == null)
 			treeProviders = TreeProvider.getTreeProviders(IPageLayout.ID_OUTLINE);
 		return treeProviders;
@@ -191,7 +184,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		}
 		return fSimpleLabelProvider;
 	}
-	
+
 	private class StatusLineLabelProvider extends JFaceNodeLabelProvider {
 		TreeViewer treeViewer = null;
 
@@ -202,7 +195,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		public String getText(Object element) {
 			if (element == null)
 				return null;
-			
+
 			return PHPElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
 		}
 	}
