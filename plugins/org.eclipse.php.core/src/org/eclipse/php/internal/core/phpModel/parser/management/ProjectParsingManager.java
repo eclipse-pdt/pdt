@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChang
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 class ProjectParsingManager implements IProjectModelListener {
@@ -122,7 +123,7 @@ class ProjectParsingManager implements IProjectModelListener {
 			return;
 		}
 		try {
-			StringReader reader = new StringReader(sDocument.get());
+			final DocumentReader reader = new DocumentReader(sDocument);
 			IProject project = null;
 			if (file.exists()) {
 				project = file.getProject();
