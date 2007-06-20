@@ -584,12 +584,13 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			listener.projectModelAdded(project);
 		}
 
-		List listeners = (List) workspaceModelListeners.get(project.getName());
-		if (listeners == null) {
+		List listenersList = (List) workspaceModelListeners.get(project.getName());
+		if (listenersList == null) {
 			return;
 		}
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			IWorkspaceModelListener listener = (IWorkspaceModelListener) iter.next();
+		Object[] listeners = listenersList.toArray();
+		for (int i = 0; i < listeners.length; ++i) {
+			IWorkspaceModelListener listener = (IWorkspaceModelListener) listeners[i];
 			listener.projectModelAdded(project);
 		}
 	}
@@ -600,12 +601,13 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			listener.projectModelRemoved(project);
 		}
 
-		List listeners = (List) workspaceModelListeners.get(project.getName());
-		if (listeners == null) {
+		List listenersList = (List) workspaceModelListeners.get(project.getName());
+		if (listenersList == null) {
 			return;
 		}
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			IWorkspaceModelListener listener = (IWorkspaceModelListener) iter.next();
+		Object[] listeners = listenersList.toArray();
+		for (int i = 0; i < listeners.length; ++i) {
+			IWorkspaceModelListener listener = (IWorkspaceModelListener) listeners[i];
 			listener.projectModelRemoved(project);
 		}
 	}
@@ -616,12 +618,13 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			listener.projectModelChanged(project);
 		}
 
-		List listeners = (List) workspaceModelListeners.get(project.getName());
-		if (listeners == null) {
+		List listenersList = (List) workspaceModelListeners.get(project.getName());
+		if (listenersList == null) {
 			return;
 		}
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			IWorkspaceModelListener listener = (IWorkspaceModelListener) iter.next();
+		Object[] listeners = listenersList.toArray();
+		for (int i = 0; i < listeners.length; ++i) {
+			IWorkspaceModelListener listener = (IWorkspaceModelListener) listeners[i];
 			listener.projectModelChanged(project);
 		}
 	}
