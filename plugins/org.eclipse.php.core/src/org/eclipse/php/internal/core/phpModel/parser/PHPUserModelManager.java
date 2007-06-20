@@ -31,8 +31,11 @@ public class PHPUserModelManager {
 	PHPUserModelManager(IProject project, PHPUserModel userModel) {
 		this.project = project;
 		this.userModel = userModel;
+		
 		userModelParserClientFactoryVersionDependent = new UserModelParserClientFactoryVersionDependent(this);
+		
 		GlobalParsingManager.getInstance().addParserClient(userModelParserClientFactoryVersionDependent, project);
+		
 		// Create a cached user model without initialization
 		cachedUserModel = new PHPUserModel();
 		DefaultCacheManager.instance().load(project, cachedUserModel, false);
@@ -51,6 +54,9 @@ public class PHPUserModelManager {
 		}
 		
 		GlobalParsingManager.getInstance().removeParserClient(userModelParserClientFactoryVersionDependent, project);
+		
+		userModelParserClientFactoryVersionDependent.dispose();
+		userModelParserClientFactoryVersionDependent = null;
 		
 		cachedUserModel.dispose();
 		cachedUserModel = null;

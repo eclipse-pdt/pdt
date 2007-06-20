@@ -19,7 +19,14 @@ public class ParserClientComposite extends HashSet implements ParserClient {
 	
 	public ParserClientComposite() {
 	}
-	
+
+	public void dispose() {
+		for (Iterator iter = iterator(); iter.hasNext();) {
+			ParserClient parserClient = (ParserClient) iter.next();
+			parserClient.dispose();
+		}
+	}
+
 	public void handleFunctionDeclarationStarts(String functionName) {
 		for (Iterator iter = iterator(); iter.hasNext();) {
 			ParserClient parserClient = (ParserClient) iter.next();

@@ -233,6 +233,26 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		private List constansList = new ArrayList(2000);
 
 		private List functionParametersList = new ArrayList();
+		
+		public void dispose() {
+			functionsList.clear();
+			functionsList = null;
+			
+			classVarsList.clear();
+			classVarsList = null;
+			
+			classFunctionsList.clear();
+			classFunctionsList = null;
+			
+			classesList.clear();
+			classesList = null;
+			
+			constansList.clear();
+			constansList = null;
+			
+			functionParametersList.clear();
+			functionParametersList = null;
+		}
 
 		public void handleFunctionParameter(String classType, String variableName, boolean isReference, boolean isConst, String defaultValue, int startPosition, int endPosition, int stopPosition, int lineNumber) {
 			variableName = variableName.substring(1);

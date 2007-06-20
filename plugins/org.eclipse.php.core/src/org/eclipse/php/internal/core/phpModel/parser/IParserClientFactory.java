@@ -26,4 +26,6 @@ public interface IParserClientFactory {
 	 * @return null if the parsing is not neededd for the given file with the given reason
 	 */
 	public ParserClient create();
+	
+	public void dispose();
 }

@@ -469,6 +469,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 		//		GlobalParsingManager.getInstance().removeParserClient(parserClient, project);
 		if (manager != null) {
 			manager.dispose();
+			manager = null;
 		}
 	}
 

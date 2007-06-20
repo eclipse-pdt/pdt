@@ -24,15 +24,12 @@ import org.eclipse.core.resources.*;
  */
 public class ProjectRemovedObserversAttacher {
 
-	private static ProjectRemovedObserversAttacher instance;
+	private static ProjectRemovedObserversAttacher instance = new ProjectRemovedObserversAttacher();
 
 	private Map project2CompositeProjectChangeObserver = new HashMap();
 	private IResourceChangeListener resourceChangeListener;
 
 	public static ProjectRemovedObserversAttacher getInstance() {
-		if (instance == null) {
-			instance = new ProjectRemovedObserversAttacher();
-		}
 		return instance;
 	}
 
@@ -62,8 +59,8 @@ public class ProjectRemovedObserversAttacher {
 					}
 				}
 			};
-			ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
 		}
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
 
 		if (project == null || !project.isAccessible()) {
 			return false;

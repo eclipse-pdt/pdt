@@ -29,6 +29,9 @@ public class ContextParserClient implements ParserClient {
 		functionName = "";
 		updateContext();
 	}
+	
+	public void dispose() {
+	}
 
 	protected PHPCodeContext getContext() {
 		return context;

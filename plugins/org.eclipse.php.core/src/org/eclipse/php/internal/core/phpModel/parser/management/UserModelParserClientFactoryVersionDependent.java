@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.phpModel.parser.management;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
@@ -29,6 +30,14 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 	private Map version2ParserClientMap = new HashMap();
 	private PHPUserModelManager userModelManager;
 	private IProjectClosedObserver projectChangeObserver;
+	
+	public void dispose() {
+		Iterator i = version2ParserClientMap.values().iterator();
+		while (i.hasNext()) {
+			((ParserClient)i.next()).dispose();
+		}
+		userModelManager = null;
+	}
 
 	public UserModelParserClientFactoryVersionDependent(PHPUserModelManager userModelManager) {
 		this.userModelManager = userModelManager;
@@ -42,7 +51,6 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(userModelManager.getProject(), projectChangeObserver = new IProjectClosedObserver() {
 			public void closed() {
 				PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
-				phpVersionListener = null;
 			}
 		});
 	}

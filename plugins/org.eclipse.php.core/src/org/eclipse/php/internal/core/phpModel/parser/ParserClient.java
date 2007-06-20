@@ -18,6 +18,8 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
  * of this interface.
  */
 public interface ParserClient {
+	
+	public void dispose();
 
 	public void handleFunctionDeclarationStarts(String functionName);
 
