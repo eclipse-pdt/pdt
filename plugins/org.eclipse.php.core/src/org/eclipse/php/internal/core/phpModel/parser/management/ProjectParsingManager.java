@@ -123,7 +123,7 @@ class ProjectParsingManager implements IProjectModelListener {
 			return;
 		}
 		try {
-			final DocumentReader reader = new DocumentReader(sDocument);
+			final Reader reader = new DocumentReader(sDocument);
 			IProject project = null;
 			if (file.exists()) {
 				project = file.getProject();
