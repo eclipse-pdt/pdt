@@ -62,13 +62,6 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
      * @see org.eclipse.debug.core.model.IVariable#getValue()
      */
     public IValue getValue() throws DebugException { 
-        // fix bug 163509 - Variables View is not updated after changing value.
-    	// we sync the variables from the monitor which refreshes the VariablesView with
-    	// the ExpressionManager cached variables with updated values. 
-    	if (!global) {
-    		((PHPDebugTarget)getDebugTarget()).getExpressionManager().update(variable, 2);
-	        pValue.updateValue(variable.getValue());
-        }
         hasChanged = false;
         return pValue;
     }
