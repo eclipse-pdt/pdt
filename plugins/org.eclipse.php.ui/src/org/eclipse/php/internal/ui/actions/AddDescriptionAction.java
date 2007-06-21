@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.Iterator;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
@@ -20,25 +22,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.util.PHPDocBlockSerialezer;
 import org.eclipse.php.internal.ui.editor.util.PHPDocTool;
 import org.eclipse.php.internal.ui.util.EditorUtility;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.*;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -46,48 +36,54 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class AddDescriptionAction implements IObjectActionDelegate {
 
-	private PHPCodeData phpCodeData;
+	private PHPCodeData[] phpCodeData;
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 
 	public void run(IAction action) {
-
-		UserData userData = phpCodeData.getUserData();
-		String fileName = userData.getFileName();
-		IFile file = PHPUiPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
-		IEditorPart editorPart;
-		try {
-			editorPart = EditorUtility.openInEditor(file, true);
-		} catch (PartInitException e) {
-			Logger.logException(e);
+		if (phpCodeData == null) {
 			return;
 		}
-		ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(editorPart);
-		IEditorInput editorInput = editorPart.getEditorInput();
-		IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
-		if (phpCodeData instanceof PHPFileData) {
-			handleFileDocBlock((PHPFileData)phpCodeData, (IStructuredDocument)document);
+		
+		for (int i = 0; i < phpCodeData.length; ++i) {
+			PHPCodeData codeData = phpCodeData[i];
+			UserData userData = codeData.getUserData();
+			String fileName = userData.getFileName();
+			IFile file = PHPUiPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
+			IEditorPart editorPart;
+			try {
+				editorPart = EditorUtility.openInEditor(file, true);
+			} catch (PartInitException e) {
+				Logger.logException(e);
+				return;
+			}
+			ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(editorPart);
+			IEditorInput editorInput = editorPart.getEditorInput();
+			IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
+			if (codeData instanceof PHPFileData) {
+				handleFileDocBlock((PHPFileData)codeData, (IStructuredDocument)document);
+			}
+			PHPDocBlock docBlock = PHPDocTool.createPhpDoc(codeData, document);
+			int startPosition = getCodeDataOffset(codeData);
+			String dockBlockText = insertDocBlock(codeData, (IStructuredDocument)document, startPosition);
+			if(dockBlockText == null) {
+				return;
+			}
+			String shortDescription = docBlock.getShortDescription();
+			int shortDescriptionInnerOffset = dockBlockText.indexOf(shortDescription);
+			int shortDescriptionStartOffset = startPosition + shortDescriptionInnerOffset;
+	
+			EditorUtility.revealInEditor(textEditor, shortDescriptionStartOffset, shortDescription.length());
 		}
-		PHPDocBlock docBlock = PHPDocTool.createPhpDoc(this.phpCodeData, document);
-		int startPosition = getCodeDataOffset();
-		String dockBlockText = insertDocBlock(phpCodeData, (IStructuredDocument)document, startPosition);
-		if(dockBlockText == null) {
-			return;
-		}
-		String shortDescription = docBlock.getShortDescription();
-		int shortDescriptionInnerOffset = dockBlockText.indexOf(shortDescription);
-		int shortDescriptionStartOffset = startPosition + shortDescriptionInnerOffset;
-
-		EditorUtility.revealInEditor(textEditor, shortDescriptionStartOffset, shortDescription.length());
 	}
 
-	private int getCodeDataOffset() {
-		if (phpCodeData instanceof PHPFileData) {
-			PHPBlock[] phpBlocks = ((PHPFileData) phpCodeData).getPHPBlocks();
+	private int getCodeDataOffset(PHPCodeData codeData) {
+		if (codeData instanceof PHPFileData) {
+			PHPBlock[] phpBlocks = ((PHPFileData) codeData).getPHPBlocks();
 			return phpBlocks.length > 0 ? phpBlocks[0].getPHPStartTag().getEndPosition() : -1;
 		}
-		int dataOffset = phpCodeData.getUserData().getStartPosition();
+		int dataOffset = codeData.getUserData().getStartPosition();
 		return dataOffset;
 	}
 
@@ -95,8 +91,14 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 		if (selection == null || !(selection instanceof IStructuredSelection)) {
 			return;
 		}
+		
 		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-		this.phpCodeData = (PHPCodeData) structuredSelection.getFirstElement();
+		phpCodeData = new PHPCodeData[structuredSelection.size()];
+		Iterator i = structuredSelection.iterator();
+		int idx = 0;
+		while (i.hasNext()) {
+			phpCodeData[idx++] = (PHPCodeData) i.next();
+		}
 	}
 
 	/**

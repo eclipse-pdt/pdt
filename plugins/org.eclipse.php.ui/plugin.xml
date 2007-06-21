@@ -1062,7 +1062,6 @@
 				label="%action.addDescription.name"
 				class="org.eclipse.php.internal.ui.actions.AddDescriptionAction"
 				menubarPath="source/sourceGroup"
-				enablesFor="1"
 				id="org.eclipse.php.ui.actions.AddDescriptionAction">
 				<enablement>
 					<objectState
