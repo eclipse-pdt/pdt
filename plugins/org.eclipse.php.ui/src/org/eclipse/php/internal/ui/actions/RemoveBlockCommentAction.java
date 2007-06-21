@@ -88,7 +88,8 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 						break; // comment is not opened or not closed
 					}
 				} else {
-					int endPartitionOffset = PHPPartitionTypes.getPartitionStart(phpScriptRegion, offset - container.getStartOffset() - phpScriptRegion.getStart());
+					// Jump to the end of the current region:
+					int endPartitionOffset = PHPPartitionTypes.getPartitionEnd(phpScriptRegion, offset - container.getStartOffset() - phpScriptRegion.getStart());
 					offset = container.getStart() + phpScriptRegion.getStart() + endPartitionOffset;
 				}
 			} else {
