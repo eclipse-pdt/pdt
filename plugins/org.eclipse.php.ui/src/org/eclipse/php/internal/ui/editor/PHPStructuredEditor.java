@@ -1036,13 +1036,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET); //$NON-NLS-1$
 		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action); //$NON-NLS-1$
 
-		action = new AddBlockCommentAction(resourceBundle, "AddBlockCommentAction_", this); //$NON-NLS-1$
+		action = new AddBlockCommentActionDelegate(resourceBundle, "AddBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.add.block.comment"); //$NON-NLS-1$
 		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, action); //$NON-NLS-1$
 		markAsSelectionDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, true); //$NON-NLS-1$
 		((BlockCommentAction) action).configure(sourceViewer, configuration);
 
-		action = new RemoveBlockCommentAction(resourceBundle, "RemoveBlockCommentAction_", this); //$NON-NLS-1$
+		action = new RemoveBlockCommentActionDelegate(resourceBundle, "RemoveBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.remove.block.comment"); //$NON-NLS-1$
 		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT, action); //$NON-NLS-1$
 		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT, true); //$NON-NLS-1$
