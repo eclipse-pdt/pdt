@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -175,10 +176,8 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 
 	private void parse(File file, ParserClient client) {
 		try {
-			FileInputStream is = new FileInputStream(file);
-			InputStreamReader inputStreamReader = new InputStreamReader(is);
-
-			parserManager.parse(inputStreamReader, file.getPath(), file.lastModified(), client, UseAspTagsHandler.useAspTagsAsPhp(project));
+			final FileReader fileReader = new FileReader(file);
+			parserManager.parse(fileReader, file.getPath(), file.lastModified(), client, UseAspTagsHandler.useAspTagsAsPhp(project));
 
 		} catch (FileNotFoundException e) {
 			PHPCorePlugin.log(e);
