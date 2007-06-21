@@ -10,33 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-
 import java.io.File;
 import java.io.Serializable;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.php.internal.core.phpModel.phpElementData.AbstractCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPIncludeFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPProjectModelVisitor;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariablesTypeManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.util.Visitor;
-
 
 public class PHPCodeDataFactory {
 
@@ -79,9 +59,10 @@ public class PHPCodeDataFactory {
 
 	/**
 	 * Returns new PHPClassVarData.
+	 * @param includingType TODO
 	 */
-	public static PHPIncludeFileData createPHPIncludeFileData(String name, PHPDocBlock docBlock, UserData userData) {
-		return new PHPIncludeFileDataImp(name, docBlock, userData);
+	public static PHPIncludeFileData createPHPIncludeFileData(String includingType, String name, PHPDocBlock docBlock, UserData userData) {
+		return new PHPIncludeFileDataImp(includingType, name, docBlock, userData);
 	}
 
 	/**
@@ -374,10 +355,10 @@ public class PHPCodeDataFactory {
 			this.vars = vars;
 			this.consts = consts;
 			this.superClass = superClass;
-			if(superClass != null) {
+			if (superClass != null) {
 				this.superClass.setContainer(this);
 			}
-			
+
 			for (int i = 0; i < interfaces.length; ++i) {
 				this.interfaces[i].setContainer(this);
 			}
@@ -503,12 +484,19 @@ public class PHPCodeDataFactory {
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	private static class PHPIncludeFileDataImp extends PHPCodeDataImp implements PHPIncludeFileData {
 
-		private PHPIncludeFileDataImp(String name, PHPDocBlock docBlock, UserData userData) {
+		private String includingType;
+
+		private PHPIncludeFileDataImp(String includingType, String name, PHPDocBlock docBlock, UserData userData) {
 			super(name, docBlock, userData);
+			this.includingType = includingType;
 		}
 
 		public void accept(Visitor v) {
 			((PHPProjectModelVisitor) v).visit(this);
+		}
+
+		public String getIncludingType() {
+			return includingType;
 		}
 
 	}

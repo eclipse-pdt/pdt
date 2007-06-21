@@ -43,7 +43,7 @@ public interface ParserClient {
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public void handleIncludedFile(String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber);
+	public void handleIncludedFile(String includingType, String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber);
 
 	public void haveReturnValue();
 
@@ -62,7 +62,7 @@ public interface ParserClient {
 	public void handleError(String description, int startPosition, int endPosition, int lineNumber);
 
 	public void handleSyntaxError(int currToken, String currText, short[] rowOfProbe, int startPosition, int endPosition, int lineNumber);
-	
+
 	public void handleTask(String taskName, String description, int startPosition, int endPosition, int lineNumber);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////

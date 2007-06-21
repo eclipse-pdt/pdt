@@ -8,10 +8,17 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.phpModel.phpElementData;
 
-public interface PHPIncludeFileData extends PHPCodeData {
+package org.eclipse.php.internal.core.phpModel.parser;
 
-	public String getIncludingType();
+/**
+ * @author guy.g
+ *
+ */
+public abstract class IncludingType {
 
+	public static final String REQUIRE = "require";
+	public static final String REQUIRE_ONCE = "require_once";
+	public static final String INCLUDE = "include";
+	public static final String INCLUDE_ONCE = "include_once";
 }

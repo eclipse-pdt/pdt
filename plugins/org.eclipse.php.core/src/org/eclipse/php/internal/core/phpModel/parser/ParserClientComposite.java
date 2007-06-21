@@ -16,7 +16,7 @@ import java.util.Iterator;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
 
 public class ParserClientComposite extends HashSet implements ParserClient {
-	
+
 	public ParserClientComposite() {
 	}
 
@@ -90,10 +90,10 @@ public class ParserClientComposite extends HashSet implements ParserClient {
 		}
 	}
 
-	public void handleIncludedFile(String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber) {
+	public void handleIncludedFile(String includingType, String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber) {
 		for (Iterator iter = iterator(); iter.hasNext();) {
 			ParserClient parserClient = (ParserClient) iter.next();
-			parserClient.handleIncludedFile(includeFileName, docInfo, startPosition, endPosition, stopPosition, lineNumber);
+			parserClient.handleIncludedFile(includingType, includeFileName, docInfo, startPosition, endPosition, stopPosition, lineNumber);
 		}
 	}
 

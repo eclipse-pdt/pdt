@@ -62,7 +62,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		workingFileName = null;
 
 		this.projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-		if(this.projectModel == null){
+		if (this.projectModel == null) {
 			this.projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 		this.userModel = userModel;
@@ -330,7 +330,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		classConsts.add(classConstData);
 	}
 
-	public void handleIncludedFile(String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber) {
+	public void handleIncludedFile(String includingType, String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber) {
 		if (includeFileName == null || includeFileName.length() == 0) {
 			return;
 		}
@@ -343,7 +343,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 
 		UserData userData = PHPCodeDataFactory.createUserData(workingFileName, startPosition, endPosition, stopPosition, lineNumber);
-		PHPIncludeFileData include = PHPCodeDataFactory.createPHPIncludeFileData(includeFileName, docInfo, userData);
+		PHPIncludeFileData include = PHPCodeDataFactory.createPHPIncludeFileData(includingType, includeFileName, docInfo, userData);
 		includeFiles.add(include);
 	}
 

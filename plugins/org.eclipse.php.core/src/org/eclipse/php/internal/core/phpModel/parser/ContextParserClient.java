@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-
 import java.util.Stack;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
@@ -67,7 +66,7 @@ public class ContextParserClient implements ParserClient {
 	public void handleClassConstDeclaration(String constName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
 	}
 
-	public void handleIncludedFile(String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber) {
+	public void handleIncludedFile(String includingType, String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber) {
 	}
 
 	public void handleError(String description, int startPosition, int endPosition, int lineNumber) {
@@ -76,9 +75,9 @@ public class ContextParserClient implements ParserClient {
 	public void handleSyntaxError(int currToken, String currText, short[] rowOfProbe, int startPosition, int endPosition, int lineNumber) {
 	}
 
-	public void handleTask(String taskName, String description, int startPosition, int endPosition, int lineNumber){
+	public void handleTask(String taskName, String description, int startPosition, int endPosition, int lineNumber) {
 	}
-	
+
 	public void haveReturnValue() {
 	}
 

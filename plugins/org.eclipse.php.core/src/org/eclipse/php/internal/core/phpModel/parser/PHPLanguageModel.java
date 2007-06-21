@@ -414,7 +414,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		public void handleClassConstDeclaration(String constName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
 		}
 
-		public void handleIncludedFile(String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber) {
+		public void handleIncludedFile(String includingType, String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber) {
 		}
 
 		public void haveReturnValue() {
