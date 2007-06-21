@@ -65,7 +65,9 @@ public class GlobalParsingManager {
 			} else {
 				projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 			}
-			projectModel.addProjectModelListener(projectParsingManager);
+			if (projectModel != null) {//handle when poject model was already deleted
+				projectModel.addProjectModelListener(projectParsingManager);
+			}
 			return projectParsingManager;
 		}
 		return (ProjectParsingManager) object;
