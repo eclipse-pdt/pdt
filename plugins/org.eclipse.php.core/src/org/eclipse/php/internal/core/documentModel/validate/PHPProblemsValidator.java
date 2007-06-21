@@ -108,6 +108,10 @@ public class PHPProblemsValidator {
 	 * @param markers
 	 */
 	private void validateTasks(IFile phpFile, IPHPMarker[] markers) {
+		if (phpFile == null || !phpFile.exists()) {
+			return;
+		}
+		
 		IMarker[] rullerAddedMarkers = null; // We have to get all the markers, so we wont delete the ruler-added ones (Fix Bug #95)
 		Map[] rullerMarkersAttributes = null;
 		try {
