@@ -321,7 +321,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 		}
 
-		if (isInArrayOption(projectModel, fileName, haveSpacesAtEnd, firstWord, lastWord, startPosition, offset, selectionLength, statmentText)) {
+		if (isInArrayOption(projectModel, fileName, haveSpacesAtEnd, firstWord, lastWord, startPosition, offset, selectionLength, statmentText, type)) {
 			// the current position is after '[' sign show special completion.
 			return;
 		}
@@ -1298,7 +1298,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return false;
 	}
 
-	protected boolean isInArrayOption(PHPProjectModel projectModel, String fileName, boolean haveSpacesAtEnd, String firstWord, String lastWord, int startPosition, int offset, int selectionLength, TextSequence text) {
+	protected boolean isInArrayOption(PHPProjectModel projectModel, String fileName, boolean haveSpacesAtEnd, String firstWord, String lastWord, int startPosition, int offset, int selectionLength, TextSequence text, String type) {
+		if (PHPPartitionTypes.isPHPQuotesState(type)) {
+			return false;
+		}
 		boolean isArrayOption = false;
 		if (startPosition > 0 && !lastWord.startsWith("$")) {
 			if (haveSpacesAtEnd) {
