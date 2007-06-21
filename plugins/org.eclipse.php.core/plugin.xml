@@ -20,7 +20,7 @@
 
 	<!-- DocumentFactory extension for PHP: This is needed in order to bootstrap the lookup of the ModelHandler -->
 	<extension point="org.eclipse.core.filebuffers.documentCreation"
-         id="org.eclipse.wst.html.core.documentfactories"
+         id="org.eclipse.php.core.documentfactories"
          name="PHP Document Creation Factory">
          <!-- This is a base factory class included in WST -->
       <factory
