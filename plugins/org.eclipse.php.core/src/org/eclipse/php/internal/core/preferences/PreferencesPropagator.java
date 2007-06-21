@@ -216,7 +216,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 					projectToPropagator.put(project, ppp);
 				}
 				ppp.notifyPropagatorEvent(event);
-			} else if (event.getNewValue() != null) {
+			} else {
 				List list = getPropagatorListeners(propertyKey);
 				if (list==null)
 					return;
