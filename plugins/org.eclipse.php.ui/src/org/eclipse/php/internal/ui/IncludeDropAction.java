@@ -49,7 +49,7 @@ public class IncludeDropAction extends FileDropAction {
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileNames[i]));
 			PHPFileData fileData = null;
 			if (file != null)
-				fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(file, true);
+				fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(file, false);
 			else
 				fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(fileNames[i], false);
 			if (fileData != null) {
