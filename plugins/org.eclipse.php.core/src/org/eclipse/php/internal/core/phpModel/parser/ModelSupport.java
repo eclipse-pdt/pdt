@@ -23,6 +23,7 @@ public class ModelSupport {
 	public static final CodeDataFilter NOT_STATIC_VARIABLES_FILTER = new StaticVariablesFilter(false);
 	public static final CodeDataFilter STATIC_FUNCTIONS_FILTER = new StaticFunctionsFilter(true);
 	public static final CodeDataFilter INTERNAL_CODEDATA_FILTER = new InternalPhpCodeData();
+	public static final CodeDataFilter NOT_MAGIC_FUNCTION = new MegicFunctionFilter(false);
 
 	public static final CodeDataFilter PIRVATE_ACCESS_LEVEL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
@@ -620,5 +621,57 @@ public class ModelSupport {
 			return docBlock != null && docBlock.hasTagOf(PHPDocTag.INTERNAL);
 		}
 	}
+	
+	/**
+	 * filters magic functions (constructors are considered as magic functions) 
+	 * @author guy.g
+	 *
+	 */
+	private static final class MegicFunctionFilter implements CodeDataFilter {
+		
+		private static final String[] magicFunction = {"__construct", "__destruct", "__call", "__get", "__set", "__isset", "__unset", "__sleep", "__wakeup", "__toString", "__clone", "__autoload" };
+		boolean acceptMagicFunction;
 
+		/**
+		 * @param acceptMagicFunction the return value that should be returned if the function is a magic function.  
+		 */
+		MegicFunctionFilter(boolean acceptMagicFunction) {
+			this.acceptMagicFunction = acceptMagicFunction;
+		}
+
+		public boolean accept(CodeData codeData) {
+			if (codeData instanceof PHPFunctionData) {
+				PHPFunctionData function = (PHPFunctionData) codeData;
+				String functionName = function.getName();
+				if(isMagicFunction(functionName)){
+					return acceptMagicFunction;
+				}
+				
+				//if the function's name is the same as the class's name then it is a constructor. 
+				PHPCodeData container = function.getContainer();
+				if (container instanceof PHPClassData) {
+					PHPClassData classData = (PHPClassData) container;
+					if(classData.getName().equals(functionName)){
+						return acceptMagicFunction;
+					}
+				}
+			
+		}
+			return !acceptMagicFunction;
+	}
+
+		/**
+		 * checking if the function name is one of the known magic functions  
+		 * @return <code>true</code> if the function is a magic function
+		 */
+		private boolean isMagicFunction(String functionName) {
+			for (int i = 0; i < magicFunction.length; i++) {
+				String magicFunctionName = magicFunction[i];
+				if(magicFunctionName.equals(functionName)){
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 }
