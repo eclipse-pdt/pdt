@@ -26,6 +26,7 @@ import org.eclipse.debug.ui.console.ConsoleColorProvider;
 import org.eclipse.debug.ui.console.IConsole;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.debugger.DebugError;
@@ -169,29 +170,32 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 				int lineNumber = debugError.getLineNumber();
 				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileName));
 				if (file == null) {
-					ILaunchConfiguration configuration = fLaunch.getLaunchConfiguration();
-					String projectName = configuration.getAttribute(IPHPConstants.PHP_Project, (String) null);
-					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-					// Search for a file match.
-					file = PHPSourceSearchEngine.getResource(fileName, project);
-					// Modify the DebugError file name - For now it's disabled.
-					// debugError.setFileName(file.getFullPath().toString());
-
 					Object fileObject = null;
-					if (file.exists()) {
-						fileObject = file;
+					if (ExternalFilesRegistry.getInstance().isEntryExist(fileName)) {
+						fileObject = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
 					} else {
-						PHPFileData fileData = null;
-						try {
-							fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(fileName);
-						} catch (Exception e) {
-						}
-						if (fileData != null) {
-							fileObject = fileData;
+						ILaunchConfiguration configuration = fLaunch.getLaunchConfiguration();
+						String projectName = configuration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+						IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+						// Search for a file match.
+						file = PHPSourceSearchEngine.getResource(fileName, project);
+						// Modify the DebugError file name - For now it's disabled.
+						// debugError.setFileName(file.getFullPath().toString());
+						if (file.exists()) {
+							fileObject = file;
 						} else {
-							File externalFile = new File(fileName);
-							if (externalFile.exists()) {
-								fileObject = externalFile;
+							PHPFileData fileData = null;
+							try {
+								fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(fileName);
+							} catch (Exception e) {
+							}
+							if (fileData != null) {
+								fileObject = fileData;
+							} else {
+								File externalFile = new File(fileName);
+								if (externalFile.exists()) {
+									fileObject = externalFile;
+								}
 							}
 						}
 					}
