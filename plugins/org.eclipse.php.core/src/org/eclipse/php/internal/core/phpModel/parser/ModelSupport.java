@@ -647,7 +647,7 @@ public class ModelSupport {
 					return acceptMagicFunction;
 				}
 				
-				//if the function's name is the same as the class's name then it is a constructor. 
+				//if the function's name is the same as the class's name then it is a constructor. (PHP4 support)
 				PHPCodeData container = function.getContainer();
 				if (container instanceof PHPClassData) {
 					PHPClassData classData = (PHPClassData) container;
