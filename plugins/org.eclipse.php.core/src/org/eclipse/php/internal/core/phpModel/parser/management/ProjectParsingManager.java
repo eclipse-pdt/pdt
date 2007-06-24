@@ -64,6 +64,12 @@ class ProjectParsingManager implements IProjectModelListener {
 	}
 
 	public void fileAdded(IFile file) {
+		File ioFile = new File(file.getFullPath().toString());
+		//handle Untitled dummy files etc.
+		if (ioFile.exists()){
+			return;
+		}
+		
 		ParserClient parserClient = buildParserClient(file, IParserClientFactory.fileAdded);
 		if (parserClient == null) {
 			return;
