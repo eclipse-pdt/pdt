@@ -526,7 +526,8 @@ public class PHPModelUtil {
 				PHPIncludePathModelManager includeManager = (PHPIncludePathModelManager) ((PHPProjectModel)model).getModel(PHPIncludePathModelManager.COMPOSITE_INCLUDE_PATH_MODEL_ID);
 				if(includeManager.getModel(projectName) != null)
 					return pathLocation.removeFirstSegments(1).makeRelative().toString();
-				
+				if(ResourcesPlugin.getWorkspace().getRoot().getProject(projectName) != null)
+					return pathLocation.removeFirstSegments(1).makeRelative().toString();
 				// TODO include variables/directories
 			}
 		}
