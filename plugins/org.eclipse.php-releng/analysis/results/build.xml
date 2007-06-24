@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="simplefraction" default="analysis" basedir=".">
+    <target name="analysis">
+
+	<echo message="Generating Analysis Report" />
+    	<xslt in="ANALYSIS-php.xml" out="ANALYSIS-php.html" style="analysis.xsl"/>
+
+	<echo message="Generating Short Summary (first 80 lines of the full report)" />
+	<exec dir="." executable="head" output="header.html">
+		<arg line="ANALYSIS-php.html --lines=80"/>
+	</exec>
+
+	<echo message="Adding a footer (link to the full report to the short one)" />
+	<exec dir="." executable="cat" output="summary.html">
+		<arg line="header.html footer.html"/>
+	</exec>
+
+	<echo message="Storing the report on the server" />
+	<exec dir="." executable="rsync">
+		<arg line="-avz --password-file=$HOME/.pass --stats ANALYSIS-php.html apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/drops/results/"/>
+	</exec>
+
+	<echo message="Sending an email to the group" />
+ 	<mail from="php-unit-test-daemon@eclipse.org " encoding="auto" tolist="pdt-unit-test@eclipse.org " files="summary.html" subject="Analysis report" />
+    </target>
+</project>
