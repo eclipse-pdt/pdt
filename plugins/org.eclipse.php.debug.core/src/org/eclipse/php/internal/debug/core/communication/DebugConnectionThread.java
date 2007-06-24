@@ -46,6 +46,7 @@ import org.eclipse.php.internal.debug.core.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.debugger.messages.DebugSessionStartedNotification;
+import org.eclipse.php.internal.debug.core.debugger.messages.GetVariableValueRequest;
 import org.eclipse.php.internal.debug.core.debugger.messages.OutputNotification;
 import org.eclipse.php.internal.debug.core.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
@@ -186,6 +187,12 @@ public class DebugConnectionThread implements Runnable {
 	 * @return A response for the delivered request.
 	 */
 	public Object sendRequest(Object request) throws Exception {
+		if (isDebugMode) {
+			if (request instanceof GetVariableValueRequest) {
+				GetVariableValueRequest gvr = (GetVariableValueRequest) request;
+				System.out.println("sendRequest()->GetVariableValueRequest:getVar() = " + gvr.getVar());
+			}
+		}
 		try {
 			IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
 			synchronized (byteArrayOutputStream) {
