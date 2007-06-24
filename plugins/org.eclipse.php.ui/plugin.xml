@@ -1156,13 +1156,14 @@
 	</extension>
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
-			adaptable="true"
-			class="org.eclipse.php.internal.ui.util.ProblemsLabelDecorator"
-			id="org.eclipse.php.ui.problemsDecorator"
-			label="PHP Problem Decorator"
-			lightweight="true"
-			objectClass="org.eclipse.core.resources.IResource"
-			state="true" />
+        adaptable="true"
+        class="org.eclipse.php.internal.ui.util.ProblemsLabelDecorator"
+        id="org.eclipse.php.ui.problemsDecorator"
+        label="PHP Problem Decorator"
+        lightweight="true"
+        location="BOTTOM_LEFT"
+        objectClass="org.eclipse.core.resources.IResource"
+        state="true"/>
 	</extension>
 	<extension point="org.eclipse.ui.ide.markerSupport">
 		<markerTypeCategory name="%PhpProblemFilterCategory.name">
