@@ -22,19 +22,22 @@ import org.eclipse.php.internal.core.util.DefaultCacheManager;
 
 public class PHPUserModelManager {
 
-	private PHPUserModel userModel;
+	private final PHPUserModel userModel;
 	private PHPUserModel cachedUserModel;
 
-	private IProject project;
-	private UserModelParserClientFactoryVersionDependent userModelParserClientFactoryVersionDependent;
+	private final IProject project;
+	private IParserClientFactory parserClientFactoryForAdd;
+	private IParserClientFactory parserClientFactoryForChange;
 
 	PHPUserModelManager(IProject project, PHPUserModel userModel) {
 		this.project = project;
 		this.userModel = userModel;
 		
-		userModelParserClientFactoryVersionDependent = new UserModelParserClientFactoryVersionDependent(this);
+		parserClientFactoryForAdd = new UserModelParserClientFactoryVersionDependent(this, IParserClientFactory.fileAdded);
+		parserClientFactoryForChange = new UserModelParserClientFactoryVersionDependent(this, IParserClientFactory.fileChanged);
 		
-		GlobalParsingManager.getInstance().addParserClient(userModelParserClientFactoryVersionDependent, project);
+		GlobalParsingManager.getInstance().addParserClient(parserClientFactoryForAdd, project);
+		GlobalParsingManager.getInstance().addParserClient(parserClientFactoryForChange, project);
 		
 		// Create a cached user model without initialization
 		cachedUserModel = new PHPUserModel();
@@ -53,10 +56,13 @@ public class PHPUserModelManager {
 			DefaultCacheManager.instance().save(project, userModel, false);
 		}
 		
-		GlobalParsingManager.getInstance().removeParserClient(userModelParserClientFactoryVersionDependent, project);
+		GlobalParsingManager.getInstance().removeParserClient(parserClientFactoryForAdd, project);
+		GlobalParsingManager.getInstance().removeParserClient(parserClientFactoryForChange, project);
 		
-		userModelParserClientFactoryVersionDependent.dispose();
-		userModelParserClientFactoryVersionDependent = null;
+		parserClientFactoryForAdd.dispose();
+		parserClientFactoryForChange.dispose();
+		parserClientFactoryForAdd = null;
+		parserClientFactoryForChange = null;
 		
 		cachedUserModel.dispose();
 		cachedUserModel = null;

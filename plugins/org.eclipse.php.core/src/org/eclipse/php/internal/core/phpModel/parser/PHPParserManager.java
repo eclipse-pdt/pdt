@@ -37,6 +37,10 @@ public abstract class PHPParserManager {
 
 	public void parse(Reader reader, String fileName, long lastModified, ParserClient client, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) {
 		scheduler.schedule(this, phpParser, client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
+	}
 
+	public void parseNow(Reader reader, String fileName, long lastModified, ParserClient client, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) {
+		final ParserExecuter parserExecuter = new ParserExecuter(this, this.createPhpParser(), client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
+		parserExecuter.run();
 	}
 }

@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser.management;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -20,7 +26,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.parser.*;
+import org.eclipse.php.internal.core.phpModel.parser.IParserClientFactory;
+import org.eclipse.php.internal.core.phpModel.parser.IProjectModelListener;
+import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManager;
+import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManagerProvider;
+import org.eclipse.php.internal.core.phpModel.parser.PHPParserManager;
+import org.eclipse.php.internal.core.phpModel.parser.ParserClient;
+import org.eclipse.php.internal.core.phpModel.parser.ParserClientComposite;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
@@ -97,7 +109,7 @@ class ProjectParsingManager implements IProjectModelListener {
 
 		Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(file.getProject());
 		try {
-			parserManager.parse(inputStreamReader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
+			parserManager.parseNow(inputStreamReader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 			return;

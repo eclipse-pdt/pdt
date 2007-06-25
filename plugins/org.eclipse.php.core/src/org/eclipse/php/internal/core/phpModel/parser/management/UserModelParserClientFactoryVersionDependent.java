@@ -30,6 +30,7 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 	private Map version2ParserClientMap = new HashMap();
 	private PHPUserModelManager userModelManager;
 	private IProjectClosedObserver projectChangeObserver;
+	private final int target;
 	
 	public void dispose() {
 		Iterator i = version2ParserClientMap.values().iterator();
@@ -39,10 +40,11 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 		userModelManager = null;
 	}
 
-	public UserModelParserClientFactoryVersionDependent(PHPUserModelManager userModelManager) {
+	public UserModelParserClientFactoryVersionDependent(PHPUserModelManager userModelManager, int target) {
 		this.userModelManager = userModelManager;
 		phpVersion = PhpVersionProjectPropertyHandler.getVersion(userModelManager.getProject());
 		initVersionChangeListener();
+		this.target = target;
 	}
 
 	private void initVersionChangeListener() {
@@ -78,11 +80,11 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 	}
 
 	public boolean isParsable(String fileName, int parsingReason) {
-		if ((parsingReason & fileAdded) != 0) {
+		if ((parsingReason & fileAdded & target) != 0) {
 			if (!userModelManager.shouldParse(fileName)) {
 				return false;
 			}
 		}
-		return true;
+		return (parsingReason & target) == target;
 	}
 }
