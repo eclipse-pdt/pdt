@@ -213,6 +213,13 @@ public class CodeDataResolver {
 							PHPCodeContext context = ModelSupport.createContext(fileData, elementStart);
 							return filterExact(projectModel.getVariables(fileName, context, elementName, true), elementName);
 						}
+						
+						// If we are at class constant definition:
+						if (classData != null) {
+							if ("const".equalsIgnoreCase(prevWord)) {
+								return filterExact(classData.getConsts(), elementName);
+							}
+						}
 
 						// We are at class trigger:
 						if ("::".equals(nextWord)) {
