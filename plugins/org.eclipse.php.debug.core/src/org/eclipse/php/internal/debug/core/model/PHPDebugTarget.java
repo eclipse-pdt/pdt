@@ -92,8 +92,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	protected IProject fProject;
 	protected int fSuspendCount;
 	protected ContextManager fContextManager;
-	protected Vector fConsoleEventListeners = new Vector();
-	protected Vector fDebugError = new Vector();
+	protected Vector<IPHPConsoleEventListener> fConsoleEventListeners = new Vector<IPHPConsoleEventListener>();
+	protected Vector<DebugError> fDebugError = new Vector<DebugError>();
 	protected StartLock fStartLock = new StartLock();
 	protected BreakpointSet fBreakpointSet;
 	protected IBreakpointManager fBreakpointManager;
@@ -102,7 +102,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Constructs a new debug target in the given launch for the associated PHP
-	 * Debugger on a apache Server.
+	 * Debugger on a Apache Server.
 	 * 
 	 * @param connectionThread 	The debug connection thread for the communication read and write processes.
 	 * @param launch 			containing launch
@@ -396,7 +396,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointManagerListener(this);
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: Firing terminate");
 		fireTerminateEvent();
-		
+
 		// Refresh the launch-viewer to display the debug elements in their real terminated state.
 		// This is needed since the migration to 3.3 (Europa)
 		Display.getDefault().asyncExec(new Runnable() {
@@ -936,7 +936,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 			fConsoleEventListeners.add(listener);
 		}
 		if (fDebugError != null) {
-			Enumeration enumObject = fDebugError.elements();
+			Enumeration<DebugError> enumObject = fDebugError.elements();
 			boolean empty = fDebugError.isEmpty();
 			if (!empty) {
 				while (enumObject.hasMoreElements()) {
@@ -957,7 +957,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		fConsoleEventListeners.remove(listener);
 	}
 
-	public List getConsoleEventListeners() {
+	public List<IPHPConsoleEventListener> getConsoleEventListeners() {
 		return fConsoleEventListeners;
 	}
 
@@ -1052,7 +1052,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		return fProjectName + "/";
 	}
 
-	public List getDebugErrors() {
+	public List<DebugError> getDebugErrors() {
 		return fDebugError;
 	}
 
