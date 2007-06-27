@@ -404,9 +404,11 @@ public class PasteAction extends SelectionDispatchAction {
 		if (paster.canEnable(availableDataTypes))
 			result.add(paster);
 
-		paster = new ResourceNameTextPaster(shell, fClipboard, fSelectedText);
-		if (paster.canEnable(availableDataTypes)) {
-			result.add(paster);
+		if (fSelectedText != null) {
+			paster = new ResourceNameTextPaster(shell, fClipboard, fSelectedText);
+			if (paster.canEnable(availableDataTypes)) {
+				result.add(paster);
+			}
 		}
 		return (Paster[]) result.toArray(new Paster[result.size()]);
 	}
