@@ -92,5 +92,7 @@ public interface IPHPHelpContextIds {
 	
 	public static final String PHP_WORKING_SET_PAGE= PREFIX + "php_working_set_page_context"; //$NON-NLS-1$
 	public static final String PHP_MANUAL_PREFERENCE_PAGE = PREFIX + "php_manual_preference_page_context"; //$NON-NLS-1$
+	
+	public static final String PHP_SYNTAX_COLORING_PAGE = PREFIX + "php_syntax_coloring_preference_page"; //$NON-NLS-1$
 
 }

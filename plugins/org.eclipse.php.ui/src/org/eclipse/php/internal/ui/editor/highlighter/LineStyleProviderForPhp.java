@@ -25,16 +25,12 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.php.internal.ui.util.PHPColorHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
@@ -266,11 +262,31 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	protected void addTextAttribute(String colorKey) {
 		if (getColorPreferences() != null) {
 			String prefString = getColorPreferences().getString(colorKey);
-			String[] stylePrefs = PHPColorHelper.unpackStylePreferences(prefString);
+			String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 			if (stylePrefs != null) {
-				getTextAttributes().put(colorKey, PHPColorHelper.createTextAttribute(stylePrefs));
+				getTextAttributes().put(colorKey, createTextAttribute(stylePrefs));
 			}
 		}
+	}
+	
+	/*
+	 * Creates TextAttribute from the given style description array string
+	 */
+	protected TextAttribute createTextAttribute(String[] stylePrefs) {
+		int fontModifier = SWT.NORMAL;
+		if (Boolean.valueOf(stylePrefs[2]).booleanValue()) { // bold
+			fontModifier |= SWT.BOLD;
+		}
+		if (Boolean.valueOf(stylePrefs[3]).booleanValue()) { // italic
+			fontModifier |= SWT.ITALIC;
+		}
+		if (Boolean.valueOf(stylePrefs[4]).booleanValue()) { // strikethrough
+			fontModifier |= TextAttribute.STRIKETHROUGH;
+		}
+		if (Boolean.valueOf(stylePrefs[5]).booleanValue()) { // underline
+			fontModifier |= TextAttribute.UNDERLINE;
+		}
+		return new TextAttribute(EditorUtility.getColor(ColorHelper.toRGB(stylePrefs[0])), EditorUtility.getColor(ColorHelper.toRGB(stylePrefs[1])), fontModifier);
 	}
 
 	public TextAttribute getTextAttributeForColor(String colorKey) {
@@ -293,6 +309,10 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 			result.underline = true;
 			result.fontStyle &= ~TextAttribute.UNDERLINE;
+		}
+		if ((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
+			result.strikeout = true;
+			result.fontStyle &= ~TextAttribute.STRIKETHROUGH;
 		}
 		return result;
 	}
@@ -471,6 +491,10 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 					if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 						styleRange.underline = true;
 						styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
+					}
+					if ((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
+						styleRange.strikeout = true;
+						styleRange.fontStyle &= ~TextAttribute.STRIKETHROUGH;
 					}
 					holdResults.add(styleRange);
 					// technically speaking, we don't need to update

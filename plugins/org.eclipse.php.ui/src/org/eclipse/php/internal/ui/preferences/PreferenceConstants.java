@@ -19,12 +19,12 @@ import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.util.PHPColorHelper;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 public class PreferenceConstants {
@@ -396,7 +396,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_BOUNDARYMARKER_DEFAULT_COLOR = PHPColorHelper.getColorString(255, 0, 0) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
+	public static final String EDITOR_BOUNDARYMARKER_DEFAULT_COLOR = ColorHelper.getColorString(255, 0, 0);
 
 	/**
 	 * A named preference that controls whether the 'close braces' feature is
@@ -457,7 +457,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_COMMENT_DEFAULT_COLOR = PHPColorHelper.getColorString(128, 128, 128) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
+	public static final String EDITOR_COMMENT_DEFAULT_COLOR = ColorHelper.getColorString(128, 128, 128);
 
 	/**
 	 * A named preference that holds the color for the TASK tag inside the comment
@@ -473,7 +473,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_TASK_DEFAULT_COLOR = PHPColorHelper.getColorString(124, 165, 213) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(true, false, false); //$NON-NLS-1$
+	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper.getColorString(124, 165, 213) + " | true";
 
 	/**
 	 * A named preference that controls if correction indicators are shown in the UI.
@@ -497,7 +497,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_HEREDOC_DEFAULT_COLOR = PHPColorHelper.getColorString(0, 130, 130) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
+	public static final String EDITOR_HEREDOC_DEFAULT_COLOR = ColorHelper.getColorString(0, 130, 130);
 
 	/**
 	 * A named preference that holds the color for the PHP keyword
@@ -513,7 +513,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_KEYWORD_DEFAULT_COLOR = PHPColorHelper.getColorString(0, 0, 255) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
+	public static final String EDITOR_KEYWORD_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 255);
 
 	/**
 	 * A named preference that holds the color for the normal PHP text
@@ -529,7 +529,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_NORMAL_DEFAULT_COLOR = PHPColorHelper.getColorString(0, 0, 0) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
+	public static final String EDITOR_NORMAL_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 0);
 
 	/**
 	 * A named preference that holds the color for the numbers
@@ -545,7 +545,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_NUMBER_DEFAULT_COLOR = PHPColorHelper.getColorString(255, 0, 0) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
+	public static final String EDITOR_NUMBER_DEFAULT_COLOR = ColorHelper.getColorString(255, 0, 0);
 
 	/**
 	 * A named preference that holds the color for the PHPDoc comments
@@ -561,7 +561,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_PHPDOC_DEFAULT_COLOR = PHPColorHelper.getColorString(128, 128, 128) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(true, false, false); //$NON-NLS-1$
+	public static final String EDITOR_PHPDOC_DEFAULT_COLOR = ColorHelper.getColorString(128, 128, 128) + " | true"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP string
@@ -577,7 +577,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_STRING_DEFAULT_COLOR = PHPColorHelper.getColorString(0, 130, 0) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
+	public static final String EDITOR_STRING_DEFAULT_COLOR = ColorHelper.getColorString(0, 130, 0);
 
 	/**
 	 * A named preference that controls whether the outline view selection
@@ -602,7 +602,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_VARIABLE_DEFAULT_COLOR = PHPColorHelper.getColorString(102, 0, 0) + PHPColorHelper.NOBACKGROUND + PHPColorHelper.getStyleString(false, false, false); //$NON-NLS-1$
+	public static final String EDITOR_VARIABLE_DEFAULT_COLOR = ColorHelper.getColorString(102, 0, 0);
 
 	/**
 	 * A named preference that controls the smart tab behavior.

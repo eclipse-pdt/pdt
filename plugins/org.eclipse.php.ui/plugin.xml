@@ -839,7 +839,7 @@
 		</page>
 		<page
 			category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
-			class="org.eclipse.php.internal.ui.preferences.PHPColorPage"
+			class="org.eclipse.php.internal.ui.preferences.PHPSyntaxColoringPage"
 			id="org.eclipse.php.ui.preferences.PHPColorPage"
 			name="%syntaxColoringPreferencePageName" />
 		<page
