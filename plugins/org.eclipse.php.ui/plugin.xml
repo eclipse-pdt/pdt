@@ -718,33 +718,62 @@
 
 		<!-- refactoring -->
 		<key
-			sequence="M2+M3+R"
-			commandId="org.eclipse.php.ui.edit.text.rename.element"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+        commandId="org.eclipse.php.ui.edit.text.rename.element"
+        contextId="org.eclipse.php.ui.contexts.window"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="M2+M3+R"/>
+  <key
+        commandId="org.eclipse.php.ui.edit.text.rename.element"
+        contextId="org.eclipse.php.ui.phpEditorScope"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="M2+M3+R">
+  </key>
+		<key
+        platform="carbon"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="M2+M3+R"/>
+		<key
+        commandId="org.eclipse.php.ui.edit.text.rename.element"
+        contextId="org.eclipse.php.ui.contexts.window"
+        platform="carbon"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="COMMAND+ALT+R"/>
+  <key
+        commandId="org.eclipse.php.ui.edit.text.rename.element"
+        contextId="org.eclipse.php.ui.phpEditorScope"
+        platform="carbon"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="COMMAND+ALT+R">
+  </key>
+		<key
+        commandId="org.eclipse.php.ui.edit.text.move.element"
+        contextId="org.eclipse.php.ui.contexts.window"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="M2+M3+V"/>
+  <key
+        commandId="org.eclipse.php.ui.edit.text.move.element"
+        contextId="org.eclipse.php.ui.phpEditorScope"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="M2+M3+V">
+  </key>
 		<key
 			platform="carbon"
-			sequence="M2+M3+R"
+			sequence="M2+M3+V"
 			commandId=""
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key
-			platform="carbon"
-			sequence="COMMAND+ALT+R"
-			commandId="org.eclipse.php.ui.edit.text.rename.element"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key
-			sequence="M2+M3+V"
-			commandId="org.eclipse.php.ui.edit.text.move.element"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key
-			platform="carbon"
-			sequence="M2+M3+V"
-			commandId=""
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key
-			platform="carbon"
-			sequence="COMMAND+ALT+V"
-			commandId="org.eclipse.php.ui.edit.text.move.element"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+        commandId="org.eclipse.php.ui.edit.text.move.element"
+        contextId="org.eclipse.php.ui.contexts.window"
+        platform="carbon"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="COMMAND+ALT+V"/>
+  <key
+        commandId="org.eclipse.php.ui.edit.text.move.element"
+        contextId="org.eclipse.php.ui.phpEditorScope"
+        platform="carbon"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="COMMAND+ALT+V">
+  </key>
 		<key
 			sequence="F3"
 			commandId="org.eclipse.php.ui.edit.text.open.editor"
