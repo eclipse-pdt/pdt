@@ -122,7 +122,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 			return isAlive;
 		}
 	}
-	
+
 	/**
 	 * Initialize the ServerSocket to listen for debug requests on a specified port. 
 	 * The port is defined in the workspace preferences.
@@ -191,7 +191,8 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 			isAlive = true;
 		}
 		String port = " - Port: " + ((serverSocket != null) ? String.valueOf(serverSocket.getLocalPort()) : "??");
-		listenerThread = new Thread(new ReceiverThread(), "PHP Debugger ReceiverThread " + port);
+		listenerThread = new Thread(new ReceiverThread(), "PHP Debugger Daemon Thread " + port);
+		listenerThread.setDaemon(true);
 		listenerThread.start();
 	}
 
