@@ -583,6 +583,9 @@ public abstract class DefaultParserClient extends ContextParserClient {
 				if (className != null && (className.startsWith("r_variable"))) {
 					className = getClassName(className, position, lineNumber, cls, func, projectClasses, projectFunctions);
 				}
+				if ("self".equalsIgnoreCase(className)) {
+					className = codeContext.getContainerClassName();
+				}
 				variablesNames.add(variableName);
 				contextes.add(codeContext);
 				classNames.add(className);
