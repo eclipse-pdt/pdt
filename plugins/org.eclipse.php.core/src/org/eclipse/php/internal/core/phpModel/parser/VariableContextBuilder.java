@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableTypeData;
@@ -82,11 +84,13 @@ public class VariableContextBuilder {
 	}
 
 	public PHPVariablesTypeManager getPHPVariablesTypeManager() {
-		Map vars = new HashMap(contextsToVariables.size());
-		Iterator keys = contextsToVariables.keySet().iterator();
-		while (keys.hasNext()) {
-			Object key = keys.next();
-			List contextList = (List) contextsToVariables.get(key);
+		final Map vars = new HashMap(contextsToVariables.size());
+		final Iterator iterator = contextsToVariables.entrySet().iterator();
+		
+		while (iterator.hasNext()) {
+			final Map.Entry next = (Entry) iterator.next();
+			Object key = next.getKey();
+			List contextList = (List) next.getValue();
 			PHPVariableData[] contextVars = new PHPVariableData[contextList.size()];
 			contextList.toArray(contextVars);
 			Arrays.sort(contextVars);

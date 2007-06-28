@@ -15,7 +15,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.phpModel.parser.*;
+import org.eclipse.php.internal.core.phpModel.parser.IParserClientFactory;
+import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManager;
+import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManagerProvider;
+import org.eclipse.php.internal.core.phpModel.parser.PHPUserModelManager;
+import org.eclipse.php.internal.core.phpModel.parser.ParserClient;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
@@ -30,7 +34,6 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 	private Map version2ParserClientMap = new HashMap();
 	private PHPUserModelManager userModelManager;
 	private IProjectClosedObserver projectChangeObserver;
-	private final int target;
 	
 	public void dispose() {
 		Iterator i = version2ParserClientMap.values().iterator();
@@ -40,11 +43,10 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 		userModelManager = null;
 	}
 
-	public UserModelParserClientFactoryVersionDependent(PHPUserModelManager userModelManager, int target) {
+	public UserModelParserClientFactoryVersionDependent(PHPUserModelManager userModelManager) {
 		this.userModelManager = userModelManager;
 		phpVersion = PhpVersionProjectPropertyHandler.getVersion(userModelManager.getProject());
 		initVersionChangeListener();
-		this.target = target;
 	}
 
 	private void initVersionChangeListener() {
@@ -80,11 +82,11 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 	}
 
 	public boolean isParsable(String fileName, int parsingReason) {
-		if ((parsingReason & fileAdded & target) != 0) {
+		if ((parsingReason & fileAdded) != 0) {
 			if (!userModelManager.shouldParse(fileName)) {
 				return false;
 			}
 		}
-		return (parsingReason & target) == target;
+		return true;
 	}
 }

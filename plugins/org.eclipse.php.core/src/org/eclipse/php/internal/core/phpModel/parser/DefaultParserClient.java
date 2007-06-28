@@ -430,76 +430,71 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		return endPosition;
 	}
 
-	// finish parsing is 
-	private final static Object mutex = new Object();
-
 	public void finishParsing(int lastPosition, int lastLine, long lastModified) {
-		synchronized (mutex) {
-			restoreToDefaultContext(lastPosition);
+		restoreToDefaultContext(lastPosition);
 
-			PHPClassData[] allClasses = new PHPClassData[classes.size()];
-			classes.toArray(allClasses);
+		PHPClassData[] allClasses = new PHPClassData[classes.size()];
+		classes.toArray(allClasses);
 
-			PHPFunctionData[] allFunctions = new PHPFunctionData[functions.size()];
-			functions.toArray(allFunctions);
+		PHPFunctionData[] allFunctions = new PHPFunctionData[functions.size()];
+		functions.toArray(allFunctions);
 
-			PHPIncludeFileData[] allIncludes = new PHPIncludeFileData[includeFiles.size()];
-			includeFiles.toArray(allIncludes);
+		PHPIncludeFileData[] allIncludes = new PHPIncludeFileData[includeFiles.size()];
+		includeFiles.toArray(allIncludes);
 
-			PHPConstantData[] allConstants = new PHPConstantData[constants.size()];
-			constants.toArray(allConstants);
+		PHPConstantData[] allConstants = new PHPConstantData[constants.size()];
+		constants.toArray(allConstants);
 
-			IPHPMarker[] allMarkers = new IPHPMarker[markers.size()];
-			markers.toArray(allMarkers);
+		IPHPMarker[] allMarkers = new IPHPMarker[markers.size()];
+		markers.toArray(allMarkers);
 
-			if (phpTags.size() % 2 == 1) {
-				phpTags.add(PHPCodeDataFactory.createUserData(workingFileName, lastPosition, lastPosition, lastPosition, 0));
-			}
-
-			PHPBlock[] phpBlocks = new PHPBlock[(phpTags.size() + 1) >> 1]; // we
-			// want
-			// to
-			// round
-			// the
-			// result
-			// up
-			for (int i = 0; i < phpBlocks.length; i++) {
-				int p = i << 1;
-				UserData startTag = (UserData) phpTags.get(p);
-				UserData endTag;
-				if (p + 1 < phpTags.size()) {
-					endTag = (UserData) phpTags.get(p + 1);
-				} else {
-					endTag = (UserData) phpTags.get(p);
-				}
-				phpBlocks[i] = new PHPBlock(startTag, endTag);
-			}
-
-			fixObjectInstantiation(allClasses, allFunctions);
-			PHPVariablesTypeManager variablesTypeManager = variableContextBuilder.getPHPVariablesTypeManager();
-
-			UserData userData = PHPCodeDataFactory.createUserData(workingFileName, 0, 0, 0, lastLine);
-
-			PHPFileData fileData = PHPCodeDataFactory.createPHPFileData(workingFileName, userData, allClasses, allFunctions, variablesTypeManager, allIncludes, allConstants, allMarkers, phpBlocks, firstPHPDocBlock, lastModified);
-
-			for (int i = 0; i < allClasses.length; i++) {
-				allClasses[i].setContainer(fileData);
-			}
-
-			for (int i = 0; i < allFunctions.length; i++) {
-				allFunctions[i].setContainer(fileData);
-			}
-
-			for (int i = 0; i < allConstants.length; i++) {
-				allConstants[i].setContainer(fileData);
-			}
-
-			for (int i = 0; i < allIncludes.length; i++) {
-				allIncludes[i].setContainer(fileData);
-			}
-
-			userModel.insert(fileData);
+		if (phpTags.size() % 2 == 1) {
+			phpTags.add(PHPCodeDataFactory.createUserData(workingFileName, lastPosition, lastPosition, lastPosition, 0));
 		}
+
+		PHPBlock[] phpBlocks = new PHPBlock[(phpTags.size() + 1) >> 1]; // we
+		// want
+		// to
+		// round
+		// the
+		// result
+		// up
+		for (int i = 0; i < phpBlocks.length; i++) {
+			int p = i << 1;
+			UserData startTag = (UserData) phpTags.get(p);
+			UserData endTag;
+			if (p + 1 < phpTags.size()) {
+				endTag = (UserData) phpTags.get(p + 1);
+			} else {
+				endTag = (UserData) phpTags.get(p);
+			}
+			phpBlocks[i] = new PHPBlock(startTag, endTag);
+		}
+
+		fixObjectInstantiation(allClasses, allFunctions);
+		PHPVariablesTypeManager variablesTypeManager = variableContextBuilder.getPHPVariablesTypeManager();
+
+		UserData userData = PHPCodeDataFactory.createUserData(workingFileName, 0, 0, 0, lastLine);
+
+		PHPFileData fileData = PHPCodeDataFactory.createPHPFileData(workingFileName, userData, allClasses, allFunctions, variablesTypeManager, allIncludes, allConstants, allMarkers, phpBlocks, firstPHPDocBlock, lastModified);
+
+		for (int i = 0; i < allClasses.length; i++) {
+			allClasses[i].setContainer(fileData);
+		}
+
+		for (int i = 0; i < allFunctions.length; i++) {
+			allFunctions[i].setContainer(fileData);
+		}
+
+		for (int i = 0; i < allConstants.length; i++) {
+			allConstants[i].setContainer(fileData);
+		}
+
+		for (int i = 0; i < allIncludes.length; i++) {
+			allIncludes[i].setContainer(fileData);
+		}
+
+		userModel.insert(fileData);
 	}
 
 	/**
@@ -607,7 +602,8 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		Iterator userDocumentationsIterator = userDocumentations.iterator();
 
 		while (contextesIterator.hasNext()) {
-			variableContextBuilder.addObjectInstantiation((PHPCodeContext) contextesIterator.next(), (String) variablesNamesIterator.next(), (String) classNamesIterator.next(), ((Boolean) userDocumentationsIterator.next()).booleanValue(), ((Integer) linesIterator.next()).intValue(),
+			final String next = (String) variablesNamesIterator.next();
+			variableContextBuilder.addObjectInstantiation((PHPCodeContext) contextesIterator.next(), next, (String) classNamesIterator.next(), ((Boolean) userDocumentationsIterator.next()).booleanValue(), ((Integer) linesIterator.next()).intValue(),
 				((Integer) positionsIterator.next()).intValue());
 		}
 	}

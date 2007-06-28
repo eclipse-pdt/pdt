@@ -15,11 +15,11 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 /**
- * This task handles the schedulaing of the model parser queue. <br>
+ * This task handles the scheduling of the model parser queue. <br>
  * The task can be suspended, resumed and stopped, depending on the que state.<br> 
  * Refer to the following link for more information about timing a thread: 
  * {@link http://java.sun.com/docs/books/tutorial/essential/threads/synchronization.html}
- * In addition the que is handled in a Mutual exclusion way, so no double reference is possible for the que  
+ * In addition the queue is handled in a Mutual exclusion way, so no double reference is possible for the que  
  *    
  * @author Roy Ganor, 2006
  */
@@ -32,12 +32,8 @@ public class PhpParserSchedulerTask implements Runnable {
 	private static final int BUFFER_MAX_SIZE = 100;
 
 	// holds the stack of tasks
-	private final LinkedList buffer = new LinkedList();
+	private final LinkedList<ParserExecuter> buffer = new LinkedList<ParserExecuter>();
 	
-	// holds the hold tasks
-	private final LinkedList preBuffer = new LinkedList();
-
-
 	// this class is singleton - only one instance is allowed  
 	protected static final PhpParserSchedulerTask instance = new PhpParserSchedulerTask();
 
@@ -70,11 +66,9 @@ public class PhpParserSchedulerTask implements Runnable {
 
 				// do the job of parsing with the given information
 				release.run();
-				
-				preBuffer.remove(release.filename);
-				
+			
 			} catch (InterruptedException e) {
-				// thread was stoped or canceled...
+				// thread was stopped or canceled...
 				// just go out!
 			}
 		}
@@ -98,7 +92,7 @@ public class PhpParserSchedulerTask implements Runnable {
 		}
 
 		// get the next item
-		final ParserExecuter item = (ParserExecuter) buffer.removeFirst();
+		final ParserExecuter item = buffer.removeFirst();
 
 		// notify that the stack is not full 
 		notifyAll();
@@ -125,7 +119,7 @@ public class PhpParserSchedulerTask implements Runnable {
 			}
 		}
 
-		// add it (saftly)
+		// add it (safely)
 		// if the stack is full - wait() for an empty place 
 		while (buffer.size() >= BUFFER_MAX_SIZE) {
 			try {
@@ -139,16 +133,11 @@ public class PhpParserSchedulerTask implements Runnable {
 		// creates the new task properties
 		final ParserExecuter parserProperties = new ParserExecuter(parserManager, phpParser, client, filename, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
 
-		preBuffer.add(filename);
 		
 		// adds  the task to the head of the list
 		buffer.addFirst(parserProperties);
 
 		// now you can notify that the stack is not empty
 		notifyAll();
-	}
-	
-	public boolean isDone(String filename) {
-		return !preBuffer.contains(filename);		
 	}
 }

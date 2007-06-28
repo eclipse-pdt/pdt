@@ -26,18 +26,16 @@ public class PHPUserModelManager {
 	private PHPUserModel cachedUserModel;
 
 	private final IProject project;
-	private IParserClientFactory parserClientFactoryForAdd;
-	private IParserClientFactory parserClientFactoryForChange;
+	
+	private IParserClientFactory parserClientFactory;
 
 	PHPUserModelManager(IProject project, PHPUserModel userModel) {
 		this.project = project;
 		this.userModel = userModel;
 		
-		parserClientFactoryForAdd = new UserModelParserClientFactoryVersionDependent(this, IParserClientFactory.fileAdded);
-		parserClientFactoryForChange = new UserModelParserClientFactoryVersionDependent(this, IParserClientFactory.fileChanged);
+		parserClientFactory = new UserModelParserClientFactoryVersionDependent(this);
 		
-		GlobalParsingManager.getInstance().addParserClient(parserClientFactoryForAdd, project);
-		GlobalParsingManager.getInstance().addParserClient(parserClientFactoryForChange, project);
+		GlobalParsingManager.getInstance().addParserClient(parserClientFactory, project);
 		
 		// Create a cached user model without initialization
 		cachedUserModel = new PHPUserModel();
@@ -56,13 +54,10 @@ public class PHPUserModelManager {
 			DefaultCacheManager.instance().save(project, userModel, false);
 		}
 		
-		GlobalParsingManager.getInstance().removeParserClient(parserClientFactoryForAdd, project);
-		GlobalParsingManager.getInstance().removeParserClient(parserClientFactoryForChange, project);
+		GlobalParsingManager.getInstance().removeParserClient(parserClientFactory, project);
 		
-		parserClientFactoryForAdd.dispose();
-		parserClientFactoryForChange.dispose();
-		parserClientFactoryForAdd = null;
-		parserClientFactoryForChange = null;
+		parserClientFactory.dispose();
+		parserClientFactory = null;
 		
 		cachedUserModel.dispose();
 		cachedUserModel = null;
