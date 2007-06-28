@@ -173,7 +173,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : "";
 			superFunctions = ModelSupport.getFilteredCodeData(getClassFunctions(fileName, superClass, startsWith), ModelSupport.PROTECTED_ACCESS_LEVEL_FILTER);
 		}
-		return ModelSupport.mergeAndRemoveDuplicated(functions, superFunctions);
+		return ModelSupport.removeRepeatedNames(ModelSupport.mergeAndRemoveDuplicated(functions, superFunctions));
 	}
 
 	public CodeData getClassVariablesData(String fileName, String className, String startsWith) {
