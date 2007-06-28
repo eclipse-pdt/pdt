@@ -15,6 +15,9 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.php.internal.ui.SuperClassLabelProvider;
 import org.eclipse.php.internal.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
+import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.internal.WorkingSet;
 
 /**
  * Provides the labels for the PHP Explorer.
@@ -34,10 +37,13 @@ public class ExplorerLabelProvider extends AppearanceAwareLabelProvider {
 
 	public Image getImage(Object object) {
 		Image image = superClassLabelProvider.getImage(object);
-		if (image != null)
+		if (image != null) {
 			return image;
+		}
+		if (object instanceof WorkingSet) {
+			return WorkbenchImages.getImage(IWorkbenchGraphicConstants.IMG_OBJ_WORKING_SETS);
+		}
 		return super.getImage(object);
-
 	}
 
 	public String getText(Object element) {
