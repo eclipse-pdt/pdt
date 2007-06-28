@@ -1,6 +1,6 @@
 Bundle-SymbolicName: org.eclipse.php.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Name: PDT Core Plug-in
+Bundle-Name: PDT Core Plug-in (Incubation)
 Bundle-Activator: org.eclipse.php.internal.core.PHPCorePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
