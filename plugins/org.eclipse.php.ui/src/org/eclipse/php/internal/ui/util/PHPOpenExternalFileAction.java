@@ -24,11 +24,13 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -114,14 +116,15 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 		IFileStore fileStore = EFS.getLocalFileSystem().getStore(new Path(fFilterPath));
 		fileStore = fileStore.getChild(path.lastSegment());
 		if (!fileStore.fetchInfo().isDirectory() && fileStore.fetchInfo().exists()) {
-			IEditorInput input = createEditorInput(fileStore);
-			String editorId = getEditorId(fileStore);
+//			IEditorInput input = createEditorInput(fileStore);
+//			String editorId = getEditorId(fileStore);
 			IWorkbenchPage page = fWindow.getActivePage();
 			IEditorPart editorPart = null;
 			try {
-				editorPart = page.openEditor(input, editorId);
+				IDE.openEditorOnFileStore(page, fileStore);				
 				// if the open file request has a line number, try to set the cursor on that line				
 				if (lineNumber >= 0) {
+					editorPart = page.getActiveEditor();
 					gotoLine(editorPart, currentFilePath, lineNumber);
 				}
 			} catch (PartInitException e) {
