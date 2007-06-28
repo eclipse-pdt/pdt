@@ -223,14 +223,14 @@
 
 		<!--create zip file of the automated testing framework-->
 		<exec dir="${workingDirectory}" executable="zip">
-			<arg line="-r -q ${postingDirectory}/${buildLabel}/pdt-Automated-Tests-${buildId}.zip pdt-testing" />
+			<arg line="-r -q ${postingDirectory}/${buildLabel}/pdt-Automated-Tests-incubation-${buildId}.zip pdt-testing" />
 		</exec>
 
 		<mkdir dir="${postingDirectory}/${buildLabel}/checksum" />
-		<checksum file="${postingDirectory}/${buildLabel}/pdt-Automated-Tests-${buildId}.zip" property="md5" />
-		<checksum file="${postingDirectory}/${buildLabel}/pdt-Automated-Tests-${buildId}.zip" algorithm="SHA" property="sha" />
-		<echo message="${md5} *eclipse-Automated-Tests-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/pdt-Automated-Tests-${buildId}.zip.md5" />
-		<echo message="${sha} *eclipse-Automated-Tests-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/pdt-Automated-Tests-${buildId}.zip.sha1" />
+		<checksum file="${postingDirectory}/${buildLabel}/pdt-Automated-Tests-incubation-${buildId}.zip" property="md5" />
+		<checksum file="${postingDirectory}/${buildLabel}/pdt-Automated-Tests-incubation-${buildId}.zip" algorithm="SHA" property="sha" />
+		<echo message="${md5} *eclipse-Automated-Tests-incubation-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/pdt-Automated-Tests-incubation-${buildId}.zip.md5" />
+		<echo message="${sha} *eclipse-Automated-Tests-incubation-${buildId}.zip" file="${postingDirectory}/${buildLabel}/checksum/pdt-Automated-Tests-incubation-${buildId}.zip.sha1" />
 		<delete file="${buildDirectory}/${buildLabel}/pdt-junit-tests-${buildId}.zip" />
 
 		<!-- Create symblink to the @dot package-->
