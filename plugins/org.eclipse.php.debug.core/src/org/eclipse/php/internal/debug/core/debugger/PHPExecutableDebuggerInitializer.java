@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -182,10 +183,17 @@ public class PHPExecutableDebuggerInitializer {
 			}
 			// In case this thread ended and we do not have any IDebugTarget (PHPDebugTarget) hooked in the 
 			// launch that was created, we can tell that there is something wrong, and probably there is no debugger
-			// installed (e.g. the deubgger dll/so is not properly configured in the php.ini).
+			// installed (e.g. the debugger dll/so is not properly configured in the php.ini).
 			if (launch != null && launch.getDebugTarget() == null) {
 				String launchName = launch.getLaunchConfiguration().getName();
-				final String message = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2, new String[] { launchName });
+				boolean isRunMode = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode());
+				String msg = null;
+				if (isRunMode) {
+					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_3, new String[] { launchName });
+				} else {
+					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2, new String[] { launchName });
+				}
+				final String message = msg;
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Error, message);
