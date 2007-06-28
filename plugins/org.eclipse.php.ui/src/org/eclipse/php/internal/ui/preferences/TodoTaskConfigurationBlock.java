@@ -17,22 +17,14 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.IFontProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.util.preferences.Key;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.util.StatusInfo;
-import org.eclipse.php.internal.ui.wizards.fields.DialogField;
-import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
-import org.eclipse.php.internal.ui.wizards.fields.IListAdapter;
-import org.eclipse.php.internal.ui.wizards.fields.ListDialogField;
-import org.eclipse.php.internal.ui.wizards.fields.SelectionButtonDialogField;
+import org.eclipse.php.internal.ui.wizards.fields.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -297,6 +289,11 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		}
 	}
 
+	public void useProjectSpecificSettings(boolean enable) {
+		super.useProjectSpecificSettings(enable);
+		fTodoTasksList.setEnabled(enable);
+	}
+	
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
 		String title = PHPUIMessages.TodoTaskConfigurationBlock_needsbuild_title;
 		String message;
