@@ -15,6 +15,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.debug.ui.ILaunchGroup;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -469,5 +471,38 @@ public class PHPLaunchUtilities {
 			getProgressMonitor().beginTask(PHPDebugCoreMessages.PHPLaunchUtilities_waitingForDebugger, IProgressMonitor.UNKNOWN);
 			return c;
 		}
+	}
+
+	/**
+	 * Opens the launch configuration dialog on the given launch configuration in the given mode.
+	 * 
+	 * @param configuration An {@link ILaunchConfiguration}
+	 * @param mode The launch mode (Run/Debug)
+	 */
+	public static void openLaunchConfigurationDialog(final ILaunchConfiguration configuration, final String mode) {
+		// Run it on the UI thread
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				ILaunchConfiguration conf = configuration;
+				try {
+					// The DebugUIPlugin creates stand-in launches with copied configurations
+					// while a launch is waiting for a build. These copied configurations
+					// have an attribute that points to the config that the user is really
+					// launching.
+					String underlyingHandle = configuration.getAttribute(DebugUIPlugin.ATTR_LAUNCHING_CONFIG_HANDLE, ""); //$NON-NLS-1$
+					if (underlyingHandle.length() > 0) {
+						ILaunchConfiguration underlyingConfig = DebugPlugin.getDefault().getLaunchManager().getLaunchConfiguration(underlyingHandle);
+						if (underlyingConfig != null) {
+							conf = underlyingConfig;
+						}
+					}
+				} catch (CoreException e) {
+				}
+				ILaunchGroup group = DebugUITools.getLaunchGroup(conf, mode);
+				if (group != null) {
+					DebugUITools.openLaunchConfigurationDialog(Display.getDefault().getActiveShell(), conf, group.getIdentifier(), null);
+				}
+			}
+		});
 	}
 }

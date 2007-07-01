@@ -1,5 +1,7 @@
 package org.eclipse.php.internal.debug.core.launching;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -134,9 +136,32 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
 		launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
 
-		// Trigger the session by initiating a debug requset to the debug server
+		// Trigger the session by initiating a debug request to the debug server
 		runDispatch = new RunDispatchJobWebServer(launch);
 		runDispatch.schedule();
+	}
+
+	/*
+	 * Override the super preLaunchCheck to make sure that the server we are using is still valid. 
+	 * If not, notify the user that a change should be made and open the launch configuration page to do so.
+	 * 
+	 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#preLaunchCheck(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public boolean preLaunchCheck(final ILaunchConfiguration configuration, final String mode, IProgressMonitor monitor) throws CoreException {
+		// Check if the server exists
+		final String serverName = configuration.getAttribute(Server.NAME, "");
+		Server server = ServersManager.getServer(serverName);
+		if (server == null) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle, MessageFormat.format(PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound, new String[] { serverName }));
+					PHPLaunchUtilities.openLaunchConfigurationDialog(configuration, mode);
+				}
+			});
+			return false;
+		}
+
+		return super.preLaunchCheck(configuration, mode, monitor);
 	}
 
 	/**
@@ -261,7 +286,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	private static IThread[] EMPTY_THREADS = new IThread[0];
-	
+
 	/*
 	 * A dummy debug target for the termination of the ILaunch.
 	 */
