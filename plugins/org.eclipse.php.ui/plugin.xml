@@ -241,58 +241,7 @@
 			<contentTypeIdentifier id="org.eclipse.php.core.phpsource">
 				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT" />
 				<partitionType id="org.eclipse.php.PHP_DEFAULT" />
-				<partitionType id="org.eclipse.php.PHP_QUOTED_STRING" />
-				<partitionType id="org.eclipse.php.PHP_MULTI_LINE_COMMENT" />
-				<partitionType id="org.eclipse.php.PHP_SINGLE_LINE_COMMENT" />
-				<partitionType id="org.eclipse.php.PHP_DOC" />
 			</contentTypeIdentifier>
-		</validator>
-	</extension>
-
-	<extension
-		id="PHPHTMLValidator"
-		name="PHP HTML Validator"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.php">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.php3">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.php4">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.php5">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.phtml">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.tpl">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.inc">
-			</filter>
-
-         	<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource"/>			
-			<projectNature id=""/>
-			<enablement></enablement>
-			<helper class="org.eclipse.wst.html.internal.validation.HTMLValidationWorkbenchHelper"/>
-			<run
-				async="true"
-				fullBuild="true"
-				incremental="true"
-				enabled="true"
-				class="org.eclipse.wst.html.internal.validation.HTMLValidator"/>
 		</validator>
 	</extension>
 
