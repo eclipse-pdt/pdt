@@ -10,23 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.validate;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPTask;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.validation.internal.TaskListUtility;
 
@@ -50,21 +47,10 @@ public class PHPProblemsValidator {
 
 	private TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();
 
-	/**
-	 * This synchronic method that validate the file problems 
-	 * @param phpFile
-	 * @param validateTasks
-	 */
 	public void validateFileProblems(IFile phpFile, boolean validateTasks) {
 		PHPFileData fileData = getFileModel(phpFile);
 		if (fileData == null) {
 			return;
-		}
-		// we check to see if the file was modified not from the editor and if so,
-		// request a parse operation for it.
-		if (phpFile.getModificationStamp() != fileData.getCreationTimeLastModified()) {
-			PHPWorkspaceModelManager.getInstance().addFileToModel(phpFile);
-			fileData = getFileModel(phpFile);
 		}
 		IPHPMarker[] markers = fileData.getMarkers();
 		try {
@@ -169,11 +155,6 @@ public class PHPProblemsValidator {
 		}
 	}
 
-	/**
-	 * This asynchronic method that validate the file problems which add a model listener to
-	 * model manager.
-	 * @param phpFile
-	 */
 	public void validateFile(IFile phpFile) {
 		validateFile(phpFile, true);
 	}
@@ -183,7 +164,7 @@ public class PHPProblemsValidator {
 	}
 
 	private PHPFileData getFileModel(IFile phpFile) {
-		return PHPWorkspaceModelManager.getInstance().getModelForFile(phpFile.getFullPath().toString(), true);
+		return PHPWorkspaceModelManager.getInstance().getModelForFile(phpFile.getFullPath().toString(), false);
 	}
 
 	private void createMarker(IFile phpFile, UserData userData, String markerType, String descr, int prio) throws CoreException {
@@ -213,4 +194,5 @@ public class PHPProblemsValidator {
 		}
 		return IMarker.PRIORITY_NORMAL;
 	}
+
 }
