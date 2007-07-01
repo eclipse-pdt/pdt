@@ -33,8 +33,6 @@ import org.eclipse.wst.validation.internal.TaskListUtility;
 public class PHPProblemsValidator {
 
 	private static PHPProblemsValidator instance;
-	private ProblemsModelListener problemsModelListener = new ProblemsModelListener();
-	private Set files = new HashSet();
 
 	public static PHPProblemsValidator getInstance() {
 		if (instance == null)
@@ -181,23 +179,7 @@ public class PHPProblemsValidator {
 	}
 
 	private void validateFile(IFile phpFile, boolean validateTasks) {
-		synchronized (files) {
-			if (files.isEmpty()) {
-				PHPWorkspaceModelManager.getInstance().addModelListener(problemsModelListener);
-			}
-			files.add(phpFile.getFullPath());
-		}
-	}
-
-	private void processValidation(IFile phpFile, boolean validateTasks) {
-		synchronized (files) {
-			if (files.remove(phpFile.getFullPath())) {
-				if (files.isEmpty()) {
-					PHPWorkspaceModelManager.getInstance().removeModelListener(problemsModelListener);
-				}
-				validateFileProblems(phpFile, validateTasks);
-			}
-		}
+		validateFileProblems(phpFile, validateTasks);
 	}
 
 	private PHPFileData getFileModel(IFile phpFile) {
@@ -230,39 +212,5 @@ public class PHPProblemsValidator {
 			}
 		}
 		return IMarker.PRIORITY_NORMAL;
-	}
-
-	private class ProblemsModelListener implements ModelListener {
-
-		public void dataCleared() {
-			// do nothing
-		}
-
-		public void fileDataAdded(PHPFileData fileData) {
-			action(fileData);
-		}
-
-		public void fileDataChanged(PHPFileData fileData) {
-			action(fileData);
-		}
-
-		public void fileDataRemoved(PHPFileData fileData) {
-			// do nothing
-		}
-
-		private void action(PHPFileData fileData) {
-			final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-			IFile phpFile = null;
-			String fileName = (String) fileData.getIdentifier();
-			ExternalFilesRegistry externalRegistry = ExternalFilesRegistry.getInstance();
-			//check if the file is external and support files on the device with no folder
-			if (externalRegistry.isEntryExist(fileName)) {
-				phpFile = externalRegistry.getFileEntry(fileName);
-			} else {
-				phpFile = workspaceRoot.getFile(new Path(fileName));
-			}
-
-			processValidation(phpFile, true);
-		}
 	}
 }
