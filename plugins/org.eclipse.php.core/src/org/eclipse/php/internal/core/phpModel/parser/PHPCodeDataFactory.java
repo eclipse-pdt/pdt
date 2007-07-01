@@ -12,6 +12,8 @@ package org.eclipse.php.internal.core.phpModel.parser;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -31,6 +33,7 @@ public class PHPCodeDataFactory {
 	public static final PHPClassData.PHPInterfaceNameData[] EMPTY_INTERFACES_DATA_ARRAY = new PHPClassData.PHPInterfaceNameData[0];
 	public static final PHPBlock[] EMPTY_PHP_BLOCK_ARRAY = new PHPBlock[0];
 	public static final PHPFunctionData.PHPFunctionParameter[] EMPTY_FUNCTION_PARAMETER_DATA_ARRAY = new PHPFunctionData.PHPFunctionParameter[0];
+	public static final PHPDocTag[] EMPTY_PHP_DOC_TAG = new PHPDocTag[0];
 
 	/**
 	 * Returns new PHPFunctionData.
@@ -124,6 +127,59 @@ public class PHPCodeDataFactory {
 	 */
 	public static UserData createUserData(String fileName, int startPosition, int endPosition, int stopPosition, int stopLine) {
 		return new UserDataImp(fileName, startPosition, endPosition, stopPosition, stopLine);
+	}
+
+	/**
+	 * Creates magic methods for the specified class
+	 */
+	public static CodeData[] createMagicMethods(PHPClassData classData, boolean isPHP5) {
+		List methods = new LinkedList();
+
+		methods.add(PHPCodeDataFactory.createPHPFuctionData("__get", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is called each time variable is referenced from the object", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
+			new BasicPHPDocTag(PHPDocTag.RETURN, "variable value") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null) }, "mixed"));
+
+		methods.add(PHPCodeDataFactory.createPHPFuctionData("__set", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is called each time variable is set in the object", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
+			new BasicPHPDocTag(PHPDocTag.PARAM, "mixed $value variable value"), new BasicPHPDocTag(PHPDocTag.RETURN, "void") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] {
+			new PHPFunctionParameterImp("name", null, false, false, "string", null), new PHPFunctionParameterImp("value", null, false, false, "string", null), }, "void"));
+
+		methods.add(PHPCodeDataFactory.createPHPFuctionData("__call", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time not existing method is called on the object", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name method name"),
+			new BasicPHPDocTag(PHPDocTag.PARAM, "array arguments method arguments"), new BasicPHPDocTag(PHPDocTag.RETURN, "Return value of non-existent method") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] {
+			new PHPFunctionParameterImp("name", null, false, false, "string", null), new PHPFunctionParameterImp("arguments", null, false, false, "array", null), }, "mixed"));
+
+		methods.add(PHPCodeDataFactory.createPHPFuctionData("__sleep", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is executed prior to any serialization of the object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(),
+			EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null));
+
+		methods.add(PHPCodeDataFactory.createPHPFuctionData("__wakeup", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is executed after the object is deserialized", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
+			null));
+
+		if (isPHP5) {
+			methods.add(PHPCodeDataFactory.createPHPFuctionData("__isset", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time isset() is called on the object variable", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
+				new BasicPHPDocTag(PHPDocTag.RETURN, "true if the object variable is set, otherwise false") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), }, "boolean"));
+
+			methods.add(PHPCodeDataFactory.createPHPFuctionData("__unset", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time unset() is called on the object variable", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
+				new BasicPHPDocTag(PHPDocTag.RETURN, "unsets the object variable") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), }, "void"));
+		}
+
+		return (CodeData[]) methods.toArray(new CodeData[methods.size()]);
+	}
+
+	/**
+	 * Creates constructors for the class
+	 */
+	public static CodeData[] createConstructors(PHPClassData classData, boolean isPHP5) {
+		List constructors = new LinkedList();
+
+		constructors.add(PHPCodeDataFactory.createPHPFuctionData(classData.getName(), PHPModifier.PUBLIC, new PHPDocBlockImp("Constructs this object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, classData
+			.getName()));
+
+		if (isPHP5) {
+			constructors.add(PHPCodeDataFactory.createPHPFuctionData(PHPClassData.CONSTRUCTOR, PHPModifier.PUBLIC, new PHPDocBlockImp("Constructs this object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
+				classData.getName()));
+			constructors.add(PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESCRUCTOR, PHPModifier.PUBLIC, new PHPDocBlockImp("Destructs this object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
+				"void"));
+		}
+
+		return (CodeData[]) constructors.toArray(new CodeData[constructors.size()]);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
