@@ -174,7 +174,7 @@
    	     library.xml in org.eclipse.test whenever its version is updated.-->
 		<!--copy eclipse test framework -->
 		<copy todir="${workingDirectory}/eclipse/plugins/org.eclipse.test">
-			<fileset dir="${buildDirectory}/plugins/org.eclipse.test_3.1.0" />
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.test_3.2.0" />
 		</copy>
 
 		<property file="${buildDirectory}/finalPluginsVersions.properties" />
