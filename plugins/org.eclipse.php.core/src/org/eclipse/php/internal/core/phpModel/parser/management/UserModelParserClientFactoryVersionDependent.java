@@ -15,11 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.phpModel.parser.IParserClientFactory;
-import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManager;
-import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManagerProvider;
-import org.eclipse.php.internal.core.phpModel.parser.PHPUserModelManager;
-import org.eclipse.php.internal.core.phpModel.parser.ParserClient;
+import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
@@ -40,7 +36,6 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 		while (i.hasNext()) {
 			((ParserClient)i.next()).dispose();
 		}
-		userModelManager = null;
 	}
 
 	public UserModelParserClientFactoryVersionDependent(PHPUserModelManager userModelManager) {
