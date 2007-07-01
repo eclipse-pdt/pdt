@@ -24,6 +24,7 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.util.FileUtils;
+import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.ui.launching.LaunchUtilities;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
@@ -52,12 +53,12 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	protected Label fPublishToLabel;
 	protected Text fPublishToRoot;
 	protected Text fPublishTo;
-	
+
 //	protected Label fContextRootLabel;
 	protected Label fURLLabel;
 	protected Text fURL;
 //	protected Text fContextRoot;
-	
+
 	protected Button projectButton;
 	protected Button fileButton;
 	protected Button publish;
@@ -175,7 +176,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		gridData.horizontalIndent = 20;
 		gridData.horizontalSpan = 1;
 		fURLLabel.setLayoutData(gridData);
-		
+
 		fURL = new Text(group, SWT.SINGLE | SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = 1;
@@ -315,7 +316,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		gd.horizontalIndent = 20;
 		fPublishToLabel.setLayoutData(gd);
 
-		
 		innerPublishContextComposite = new Composite(group, SWT.NONE);
 		layout = new GridLayout(3, false);
 		layout.horizontalSpacing = 0;
@@ -329,12 +329,12 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		gd.grabExcessHorizontalSpace = false;
 		fPublishToRoot.setLayoutData(gd);
 		fPublishToRoot.setEditable(false);
-		
+
 		fPublishTo = new Text(innerPublishContextComposite, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 1;
 		fPublishTo.setLayoutData(gd);
-		
+
 		fPublishTo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateLaunchConfigurationDialog();
@@ -353,7 +353,6 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		handleServerSelection();
 	}
 
-	
 	public String[] getRequiredNatures() {
 		return null;
 	}
@@ -615,39 +614,44 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 			String serverName = configuration.getAttribute(Server.NAME, ""); //$NON-NLS-1$
 			if (serverName != null && !serverName.equals("")) { //$NON-NLS-1$
 				server = ServersManager.getServer(serverName);
-
 				if (server == null) { //server no longer exists				
 					setErrorMessage(PHPServerUIMessages.getString("ServerTab.invalidServerError")); //$NON-NLS-1$
-					serverCombo.setEnabled(false);
-					return;
-				}
-
-				serverCombo.setText(server.getName());
-				publish.setEnabled(server.canPublish());
-			} else {
-				if (serverCombo.getItemCount() > 0) {
-					// Select the default server
-					String projectName = configuration.getAttribute("org.eclipse.php.internal.debug.core.PHP_Project", (String) null);
-					IProject project = null;
-					if (projectName != null) {
-						project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-					}
-					Server defaultServer = ServersManager.getDefaultServer(project);
-					int nameIndex = serverCombo.indexOf(defaultServer.getName());
-					if (nameIndex > -1) {
-						serverCombo.select(nameIndex);
-					} else {
-						serverCombo.select(0);
-					}
-					server = ServersManager.getServer(serverCombo.getText());
+					selectDefaultServer(configuration);
+				} else {
+					serverCombo.setText(server.getName());
 					publish.setEnabled(server.canPublish());
 				}
+			} else {
+				selectDefaultServer(configuration);
 			}
 			//flag should only be set if launch has been attempted on the config
 			if (configuration.getAttribute(READ_ONLY, false)) {
 				serverCombo.setEnabled(false);
 			}
 		} catch (Exception e) {
+		}
+	}
+
+	/*
+	 * Select the default server.
+	 */
+	private void selectDefaultServer(ILaunchConfiguration configuration) throws CoreException {
+		if (serverCombo.getItemCount() > 0) {
+			// Select the default server
+			String projectName = configuration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+			IProject project = null;
+			if (projectName != null) {
+				project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			}
+			Server defaultServer = ServersManager.getDefaultServer(project);
+			int nameIndex = serverCombo.indexOf(defaultServer.getName());
+			if (nameIndex > -1) {
+				serverCombo.select(nameIndex);
+			} else {
+				serverCombo.select(0);
+			}
+			server = ServersManager.getServer(serverCombo.getText());
+			publish.setEnabled(server.canPublish());
 		}
 	}
 
@@ -687,7 +691,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		fURL.setEditable(!autoGenerateURL);
 //		fContextRootLabel.setEnabled(!autoGenerateURL);
 //		fContextRoot.setEditable(!autoGenerateURL);
-		
+
 		boolean publishEnabled = publish.getSelection();
 		fPublishToLabel.setEnabled(publishEnabled);
 		fPublishTo.setEditable(publishEnabled);
@@ -704,6 +708,9 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 	}
 
 	private static String computeContextRoot(String url, String fileName, Server server) {
+		if (server == null) {
+			return ""; //$NON-NLS-1$
+		}
 		String serverBaseURL = server.getBaseURL();
 		if (url.length() > serverBaseURL.length() + 1) {
 			url = url.substring(serverBaseURL.length() + 1);
