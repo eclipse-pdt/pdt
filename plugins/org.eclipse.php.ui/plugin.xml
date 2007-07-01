@@ -292,7 +292,7 @@
 				fullBuild="true"
 				incremental="true"
 				enabled="true"
-				class="org.eclipse.php.internal.ui.editor.validation.PHPHTMLValidator"/>
+				class="org.eclipse.wst.html.internal.validation.HTMLValidator"/>
 		</validator>
 	</extension>
 

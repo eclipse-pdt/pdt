@@ -400,7 +400,7 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 	 * (submitted bug for it #193122)
 	 */
 	
-	protected IDOMModel getModel(IProject project, IFile file) {
+/*	protected IDOMModel getModel(IProject project, IFile file) {
 		if (project == null || file == null)
 			return null;
 		if (!file.exists())
@@ -443,7 +443,7 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 		}
 		return (IDOMModel) model;
 	}
-	
+
 	private IContentTypeManager fContentTypeManager = Platform.getContentTypeManager();
 	private IContentType phpContentType = fContentTypeManager.getContentType("org.eclipse.php.core.phpsource");
 	
@@ -469,5 +469,5 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 			}
 		}
 		return result;
-	}
+	}*/
 }
