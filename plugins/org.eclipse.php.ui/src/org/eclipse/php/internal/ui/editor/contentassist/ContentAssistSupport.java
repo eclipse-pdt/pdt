@@ -421,7 +421,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 					return;
 				try {
 					//if we're right next to a letter, in an implicit scenario, we don't want it to complete the variables name. 
-					if(!explicit && startsWith.equals("$") && document.getLength() != offset && Character.isLetter(document.getChar(offset))){
+					if (!explicit && startsWith.equals("$") && document.getLength() != offset && Character.isLetter(document.getChar(offset))) {
 						return;
 					}
 				} catch (BadLocationException e) {
@@ -975,20 +975,23 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return true;
 		}
 
-		if (!explicit && functionNameStart.length() == 0) {
+		/*if (!explicit && functionNameStart.length() == 0) {
 			return true;
-		}
+		}*/
 
 		CodeData[] data;
 		String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
 		boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
-		if (isPHP5) {
-			data = new CodeData[] { PHPCodeDataFactory.createPHPFuctionData(PHPClassData.CONSTRUCTOR, PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null),
-				PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESCRUCTOR, PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null),
-				PHPCodeDataFactory.createPHPFuctionData(classData.getName(), PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null), };
-		} else {
-			data = new CodeData[] { PHPCodeDataFactory.createPHPFuctionData(classData.getName(), PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null), };
-		}
+		
+		CodeData[] magicMethods = PHPCodeDataFactory.createMagicMethods(classData, isPHP5);
+		CodeData[] constructors = PHPCodeDataFactory.createConstructors(classData, isPHP5);
+		
+		data = new CodeData[magicMethods.length + constructors.length];
+		System.arraycopy(magicMethods, 0, data, 0, magicMethods.length);
+		System.arraycopy(constructors, 0, data, magicMethods.length, constructors.length);
+		
+		Arrays.sort(data);
+		
 		completionProposalGroup = classConstructorCompletionProposalGroup;
 		completionProposalGroup.setData(offset, data, functionNameStart, selectionLength);
 		return true;
