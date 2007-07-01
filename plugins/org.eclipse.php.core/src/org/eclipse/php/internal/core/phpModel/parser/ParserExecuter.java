@@ -50,7 +50,7 @@ public final class ParserExecuter implements Runnable {
 	 * The mutex keeps that only one parsing will be performed  
 	 */
 	public final void run() {
-		// synchronized (mutex) {
+		synchronized (mutex) {
 			try {
 
 				final CompletionLexer lexer = parserManager.createCompletionLexer(reader);
@@ -89,6 +89,6 @@ public final class ParserExecuter implements Runnable {
 					}
 				}
 			}
-		// }
+		}
 	}
 }
