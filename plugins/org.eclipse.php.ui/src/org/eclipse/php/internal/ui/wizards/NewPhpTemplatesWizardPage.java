@@ -45,7 +45,7 @@ public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage
 	}
 
 	protected String getPreferencePageId() {
-		return "org.eclipse.php.ui.preferences.ui.PHPTemplatesPreferencePage"; //$NON-NLS-1$
+		return "org.eclipse.php.ui.preferences.PHPTemplatesPreferencePage"; //$NON-NLS-1$
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
