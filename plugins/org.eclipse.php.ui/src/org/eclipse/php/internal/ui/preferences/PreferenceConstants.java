@@ -779,7 +779,7 @@ public class PreferenceConstants {
 	/**
 	 * A named preference that defines the key for the hover modifiers.
 	 */
-	public static final String EDITOR_TEXT_HOVER_MODIFIERS = "hoverModifiers"; //$NON-NLS-1$
+	public static final String EDITOR_TEXT_HOVER_MODIFIERS = PHPUiPlugin.ID + "hoverModifiers"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that defines the key for the hover modifier state masks.
@@ -788,7 +788,7 @@ public class PreferenceConstants {
 	 * 
 	 * @see #EDITOR_TEXT_HOVER_MODIFIERS
 	 */
-	public static final String EDITOR_TEXT_HOVER_MODIFIER_MASKS = "hoverModifierMasks"; //$NON-NLS-1$
+	public static final String EDITOR_TEXT_HOVER_MODIFIER_MASKS = PHPUiPlugin.ID + "hoverModifierMasks"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that defines the key for the default PHP Manual site.

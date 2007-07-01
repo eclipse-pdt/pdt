@@ -71,6 +71,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.texteditor.*;
@@ -417,6 +418,25 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
 	}
 	
+	protected void initializeEditor() {
+		super.initializeEditor();
+		
+		setPreferenceStore(createCombinedPreferenceStore());
+	}
+	
+	/**
+	 * Create a preference store that combines the source editor preferences
+	 * with the base editor's preferences.
+	 * 
+	 * @return IPreferenceStore
+	 */
+	private IPreferenceStore createCombinedPreferenceStore() {
+		IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
+		IPreferenceStore phpEditorPrefs = PHPUiPlugin.getDefault().getPreferenceStore();
+		return new ChainedPreferenceStore(new IPreferenceStore[]{sseEditorPrefs, baseEditorPrefs, phpEditorPrefs});
+	}
+
 	protected void setDocumentProvider(IEditorInput input) {
 		if (input instanceof FileStoreEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			setDocumentProvider(new TextFileDocumentProvider());
@@ -1451,7 +1471,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	protected void handlePreferenceStoreChanged(final PropertyChangeEvent event) {
 		final String property = event.getProperty();
 		try {
-			if (PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS.equals(property))
+			if (PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS.equals(property) || PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS.equals(property))
 				updateHoverBehavior();
 		} finally {
 			super.handlePreferenceStoreChanged(event);
