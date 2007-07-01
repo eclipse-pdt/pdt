@@ -1476,6 +1476,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		} else
 			fCursorActions.remove(actionId);
 	}
+	
+	public IDocument getDocument() {
+		return getSourceViewer().getDocument();
+	}
 
 	public void setSelection(final PHPCodeData element, boolean reveal) {
 		if (element != null) {
