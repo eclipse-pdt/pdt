@@ -276,7 +276,7 @@
 	</target>
 	
 	<target name="pack-all-in-one-zip" if="iszip">
-		<property name="packName" value="pdt-all-in-one-${buildLabel}-${bos}.zip" />
+		<property name="packName" value="pdt-all-in-one-incubation-${buildLabel}-${bos}.zip" />
 
 		<zip destfile="${buildDirectory}/${buildLabel}/all-in-one/${packName}">
 			<fileset dir="${buildDirectory}/${buildLabel}/temp">
