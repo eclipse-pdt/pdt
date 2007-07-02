@@ -19,6 +19,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class ModelSupport {
 
+	private static final String EMPTY_STRING = "";
 	public static final CodeDataFilter STATIC_VARIABLES_FILTER = new StaticVariablesFilter(true);
 	public static final CodeDataFilter NOT_STATIC_VARIABLES_FILTER = new StaticVariablesFilter(false);
 	public static final CodeDataFilter STATIC_FUNCTIONS_FILTER = new StaticFunctionsFilter(true);
@@ -101,7 +102,7 @@ public class ModelSupport {
 		if (sortedArray == null) {
 			sortedArray = PHPCodeDataFactory.EMPTY_CODE_DATA_ARRAY;
 		}
-		if (startsWith == null || startsWith.equals("") || sortedArray.length == 0) {
+		if (startsWith == null || startsWith.equals(EMPTY_STRING) || sortedArray.length == 0) {
 			return sortedArray;
 		}
 
@@ -400,15 +401,15 @@ public class ModelSupport {
 
 	public static PHPCodeContext createContext(String className, String functionName) {
 		if (className == null) {
-			className = "";
+			className = EMPTY_STRING;
 		}
 		if (functionName == null) {
-			functionName = "";
+			functionName = EMPTY_STRING;
 		}
-		if (className.equals("") && functionName.equals("")) {
+		if (EMPTY_STRING.equals(className) && EMPTY_STRING.equals(functionName)) {
 			return EMPTY_CONTEXT;
 		}
-		return new PHPCodeContextImp("", className, functionName);
+		return new PHPCodeContextImp(null, className, functionName);
 	}
 
 	public static PHPCodeContext createContext(PHPFileData fileData, int offset) {
@@ -424,7 +425,7 @@ public class ModelSupport {
 			return EMPTY_CONTEXT;
 		}
 		String fileName = currCodeData.getUserData().getFileName();
-		String className = "";
+		String className = EMPTY_STRING;
 		String functionName;
 		if (currCodeData instanceof PHPFunctionData) {
 			PHPFunctionData functionCodeData = (PHPFunctionData) currCodeData;
@@ -471,13 +472,13 @@ public class ModelSupport {
 		return result;
 	}
 
-	public static final PHPCodeContext EMPTY_CONTEXT = new PHPCodeContextImp("", "", "");
+	public static final PHPCodeContext EMPTY_CONTEXT = new PHPCodeContextImp(EMPTY_STRING, EMPTY_STRING, EMPTY_STRING);
 
 	public static File[] getFileSStartingWith(File[] sortedArray, String startsWith, boolean caseSensitive) {
 		if (sortedArray == null) {
 			sortedArray = new File[0];
 		}
-		if (startsWith == null || startsWith.equals("") || sortedArray.length == 0) {
+		if (startsWith == null || startsWith.equals(EMPTY_STRING) || sortedArray.length == 0) {
 			return sortedArray;
 		}
 
@@ -509,20 +510,15 @@ public class ModelSupport {
 
 	private static class PHPCodeContextImp implements PHPCodeContext, Serializable {
 
-		//		private final String fileName;
 		private final String className;
 		private final String functionName;
 		private int hash;
 
 		PHPCodeContextImp(String fileName, String className, String functionName) {
-			//			this.fileName = fileName;
 			this.className = className;
 			this.functionName = functionName;
 		}
 
-		//		public final String getContainerFileName() {
-		//			return fileName;
-		//		}
 
 		public final String getContainerClassName() {
 			return className;
@@ -540,7 +536,6 @@ public class ModelSupport {
 				return false;
 			}
 			PHPCodeContextImp other = (PHPCodeContextImp) obj;
-			//			return fileName.equals(other.fileName) && className.equals(other.className) && functionName.equals(other.functionName);
 			return className.equals(other.className) && functionName.equals(other.functionName);
 		}
 

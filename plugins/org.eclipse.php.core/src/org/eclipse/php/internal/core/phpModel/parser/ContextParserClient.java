@@ -16,6 +16,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
 
 public class ContextParserClient implements ParserClient {
 
+	private static final String EMPTY_STRING = "";
 	private String className;
 	private String functionName;
 	private PHPCodeContext context;
@@ -24,8 +25,8 @@ public class ContextParserClient implements ParserClient {
 	private Stack functions = new Stack();
 
 	public ContextParserClient() {
-		className = "";
-		functionName = "";
+		className = EMPTY_STRING;
+		functionName = EMPTY_STRING;
 		updateContext();
 	}
 	
@@ -91,7 +92,7 @@ public class ContextParserClient implements ParserClient {
 		if (!functions.isEmpty()) {
 			this.functions.pop();
 		}
-		this.functionName = (functions.isEmpty()) ? "" : (String) functions.peek();
+		this.functionName = (functions.isEmpty()) ? EMPTY_STRING : (String) functions.peek();
 		updateContext();
 	}
 
@@ -105,7 +106,7 @@ public class ContextParserClient implements ParserClient {
 		if (!classes.isEmpty()) {
 			this.classes.pop();
 		}
-		this.className = (classes.isEmpty()) ? "" : (String) classes.peek();
+		this.className = (classes.isEmpty()) ? EMPTY_STRING : (String) classes.peek();
 		updateContext();
 	}
 
@@ -122,8 +123,8 @@ public class ContextParserClient implements ParserClient {
 	}
 
 	public void startParsing(String fileName) {
-		className = "";
-		functionName = "";
+		className = EMPTY_STRING;
+		functionName = EMPTY_STRING;
 		updateContext();
 	}
 

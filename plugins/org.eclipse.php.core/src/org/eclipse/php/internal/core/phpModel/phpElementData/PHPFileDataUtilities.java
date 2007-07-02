@@ -136,9 +136,12 @@ public final class PHPFileDataUtilities {
 		return 0;
 	}
 
-	public static String getVariableType(String fileName, String variableName, int position, int line, PHPUserModel userModel, boolean showObjectsFromOtherFiles) {
+	public final static String getVariableType(String fileName, String variableName, int position, int line, PHPUserModel userModel, boolean showObjectsFromOtherFiles) {
+		return getVariableType(fileName, variableName, position, line, userModel, userModel.getFileData(fileName), showObjectsFromOtherFiles);
+	}
+
+	public static String getVariableType(String fileName, String variableName, int position, int line, PHPUserModel userModel, PHPFileData fileData, boolean showObjectsFromOtherFiles) {
 		String className;
-		PHPFileData fileData = userModel.getFileData(fileName);
 		if (variableName.equals("$this")) {
 			PHPClassData classData = getContainerClassDada(fileData, position);
 			if (classData != null) {
@@ -153,6 +156,9 @@ public final class PHPFileDataUtilities {
 		}
 		return className;
 	}
+	
+	
+	
 
 	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
 	private static final PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
