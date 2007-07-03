@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.php.core.project.build.IPHPBuilderExtension;
 
 /**
@@ -38,9 +39,11 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 	 * @return <code>null</code>
 	 */
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
+		monitor.beginTask("Running builder extensions...", extensions.length);
 		for (int i = 0; i < extensions.length; ++i) {
+			IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
 			if (extensions[i].isEnabled()) {
-				extensions[i].build(this, kind, args, monitor);
+				extensions[i].build(this, kind, args, subMonitor);
 			}
 		}
 		return null;
