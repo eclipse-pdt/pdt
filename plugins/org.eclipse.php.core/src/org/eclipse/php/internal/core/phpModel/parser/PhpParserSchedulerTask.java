@@ -29,11 +29,11 @@ public class PhpParserSchedulerTask implements Runnable {
 	private volatile boolean threadAlive = true;
 
 	// a limit size for the parser stack 
-	private static final int BUFFER_MAX_SIZE = 100;
+	private static final int BUFFER_MAX_SIZE = 10;
 
 	// holds the stack of tasks
 	private final LinkedList<ParserExecuter> buffer = new LinkedList<ParserExecuter>();
-	
+
 	// this class is singleton - only one instance is allowed  
 	protected static final PhpParserSchedulerTask instance = new PhpParserSchedulerTask();
 
@@ -52,6 +52,13 @@ public class PhpParserSchedulerTask implements Runnable {
 
 	/**
 	 * Run the consumer operation 
+	 * Note: we want to reduce the number of parsing operations 
+	 *       by removing all sequence tasks besides the last one 
+	 * 
+	 * inside the loop we have
+	 * 1) released the next parsing operation
+	 * 2) wait for 500 ms.
+	 * 3) if there are new parsing operation requests - skip the current on
 	 */
 	public void run() {
 
@@ -65,8 +72,15 @@ public class PhpParserSchedulerTask implements Runnable {
 				assert release != null;
 
 				// do the job of parsing with the given information
+				Thread.sleep(500);
+				if (buffer.size() > 0) {
+					final ParserExecuter top = buffer.getFirst();
+					if (top.filename.equals(release.filename)) {
+						continue;
+					}
+				}
 				release.run();
-			
+
 			} catch (InterruptedException e) {
 				// thread was stopped or canceled...
 				// just go out!
@@ -113,7 +127,7 @@ public class PhpParserSchedulerTask implements Runnable {
 		// check the top of the stack, if it is the file is already 
 		// on stack just ignore the last one
 		if (buffer.size() > 0) {
-			final ParserExecuter top = (ParserExecuter) buffer.getFirst();
+			final ParserExecuter top = buffer.getFirst();
 			if (top.filename.equals(filename)) {
 				buffer.removeFirst();
 			}
@@ -133,7 +147,6 @@ public class PhpParserSchedulerTask implements Runnable {
 		// creates the new task properties
 		final ParserExecuter parserProperties = new ParserExecuter(parserManager, phpParser, client, filename, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
 
-		
 		// adds  the task to the head of the list
 		buffer.addFirst(parserProperties);
 
