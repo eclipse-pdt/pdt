@@ -21,7 +21,7 @@ import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.TreeCodeDataDB;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
-public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModelFilterable {
+public class PHPUserModel implements IPhpModel, IProjectModelListener {
 
 	private static final CodeData[] EMPTY = new CodeData[0];
 
@@ -43,11 +43,6 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 		functionsDB = new TreeCodeDataDB();
 		constantsDB = new TreeCodeDataDB();
 		globalsVariablesDB = new GlobalVariablesCodeDataDB();
-	}
-
-	public PHPUserModel(IPhpModelFilter filter) {
-		this();
-		setFilter(filter);
 	}
 
 	public String getID() {
@@ -186,14 +181,6 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 				return curr;
 			}
 		}
-		if (filter != null) {
-			for (Iterator i = functions.iterator(); i.hasNext();) {
-				PHPFunctionData curr = (PHPFunctionData) i.next();
-				if (filter.select(this, curr, fileName)) {
-					return curr;
-				}
-			}
-		}
 		return (PHPFunctionData) functions.iterator().next();
 	}
 
@@ -218,14 +205,6 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 			PHPClassData curr = (PHPClassData) i.next();
 			if (curr.getUserData().getFileName().equals(fileName)) {
 				return curr;
-			}
-		}
-		if (filter != null) {
-			for (Iterator i = classes.iterator(); i.hasNext();) {
-				PHPClassData curr = (PHPClassData) i.next();
-				if (filter.select(this, curr, fileName)) {
-					return curr;
-				}
 			}
 		}
 		return (PHPClassData) classes.iterator().next();
@@ -389,14 +368,6 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 				return curr;
 			}
 		}
-		if (filter != null) {
-			for (Iterator i = constants.iterator(); i.hasNext();) {
-				PHPConstantData curr = (PHPConstantData) i.next();
-				if (filter.select(this, curr, fileName)) {
-					return curr;
-				}
-			}
-		}
 		return (PHPConstantData) constants.iterator().next();
 	}
 
@@ -485,51 +456,6 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener, IPhpModel
 	}
 
 	public void fileChanged(IFile file, IStructuredDocument sDocument) {
-	}
-
-	IPhpModelFilter filter = null;
-
-	public void setFilter(IPhpModelFilter filter) {
-		this.filter = filter;
-	}
-
-	public CodeData[] getFilteredClasses(String fileName, String className) {
-		CodeData[] allElements = getClass(className);
-		return selectElements(fileName, allElements);
-	}
-
-	public CodeData[] getFilteredConstants(String fileName, String constantName) {
-		CodeData[] allElements = getConstant(constantName);
-		return selectElements(fileName, allElements);
-	}
-
-	public CodeData[] getFilteredFunctions(String fileName, String functionName) {
-		CodeData[] allElements = getFunction(functionName);
-		return selectElements(fileName, allElements);
-	}
-
-	/**
-	 * @param fileName
-	 * @param allElements
-	 * @return selected elements
-	 */
-	private CodeData[] selectElements(String fileName, CodeData[] allElements) {
-		if (allElements == null || allElements.length == 0)
-			return EMPTY;
-		if (filter == null)
-			return allElements;
-
-		List filteredElements = new ArrayList();
-		if (allElements != null && filter != null) {
-			for (int j = 0; j < allElements.length; ++j) {
-				if (filter.select(this, allElements[j], fileName)) {
-					filteredElements.add(allElements[j]);
-				}
-			}
-		}
-		if (filteredElements.size() != 0)
-			return (CodeData[]) filteredElements.toArray(new CodeData[filteredElements.size()]);
-		return allElements;
 	}
 
 }
