@@ -30,6 +30,9 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 	}
 
 	public boolean visit(IResource resource) {
+		if(monitor.isCanceled()){
+			return false;
+		}
 		// parse each PHP file with the parserFacade which adds it to
 		// the model
 		if (resource.getType() == IResource.FILE) {
