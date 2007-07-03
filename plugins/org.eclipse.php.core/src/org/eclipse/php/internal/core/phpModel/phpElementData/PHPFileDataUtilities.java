@@ -136,13 +136,13 @@ public final class PHPFileDataUtilities {
 		return 0;
 	}
 
-	public final static String getVariableType(String fileName, String variableName, int position, int line, PHPUserModel userModel, boolean showObjectsFromOtherFiles) {
-		return getVariableType(fileName, variableName, position, line, userModel, userModel.getFileData(fileName), showObjectsFromOtherFiles);
+	public final static String getVariableType(String fileName, String variableName, int position, int line, IPhpModel model, boolean showObjectsFromOtherFiles) {
+		return getVariableType(model.getFileData(fileName), variableName, position, line, model, showObjectsFromOtherFiles);
 	}
 
-	public static String getVariableType(String fileName, String variableName, int position, int line, PHPUserModel userModel, PHPFileData fileData, boolean showObjectsFromOtherFiles) {
+	public static String getVariableType(PHPFileData fileData, String variableName, int position, int line, IPhpModel model, boolean showObjectsFromOtherFiles) {
 		String className;
-		if (variableName.equals("$this")) {
+		if ("$this".equals(variableName)) {
 			PHPClassData classData = getContainerClassDada(fileData, position);
 			if (classData != null) {
 				className = classData.getName();
@@ -152,13 +152,10 @@ public final class PHPFileDataUtilities {
 		} else {
 			int currentLine = line + 1;
 			PHPCodeContext context = ModelSupport.createContext(fileData, position);
-			className = userModel.getVariableType(fileName, context, variableName, currentLine, showObjectsFromOtherFiles);
+			className = model.getVariableType(fileData.getName(), context, variableName, currentLine, showObjectsFromOtherFiles);
 		}
 		return className;
 	}
-	
-	
-	
 
 	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
 	private static final PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);

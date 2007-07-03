@@ -393,7 +393,7 @@ public class CodeDataResolver {
 		if (className.length() > 0 && className.charAt(0) == '$') {
 			// set the new statement start location as the original (absolute) one
 			int statementStart = statmentText.getOriginalOffset(0);
-			return PHPFileDataUtilities.getVariableType(fileData.getName(), className, statementStart, line, projectModel.getPHPUserModel(), true);
+			return PHPFileDataUtilities.getVariableType(fileData, className, statementStart, line, projectModel, true);
 		}
 		// if its function call calc the return type.
 		if (statmentText.charAt(propertyEndPosition - 1) == ')') {
