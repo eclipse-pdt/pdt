@@ -177,7 +177,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 			
 		}
 		if (className != null) {
-			getClassNameTableRow(className, projectModel);
+			descriptionText.append(getClassNameTableRow(className, projectModel));
 		}
 		if (desc.length() > 0) {
 			descriptionText.append(getDescriptionTableRow(desc));
