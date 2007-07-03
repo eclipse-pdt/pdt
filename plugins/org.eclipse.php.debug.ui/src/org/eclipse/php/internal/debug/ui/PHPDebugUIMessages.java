@@ -26,6 +26,8 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String InstalledPHPsBlock_16;
 
+	public static String InstalledPHPsBlock_setDefault;
+
 	public static String PHPDebugPreferencesAddon_debugOutputEncoding;
 
 	public static String PHPDebugPreferencesAddon_debugTransferEncoding;

@@ -27,6 +27,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
@@ -140,7 +141,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	private boolean fResizingTable = false;
 
 	private Button fSearchButton;
-
+	private Button fSetDefaultButton;
 	/**
 	 * Selection listeners (checked PHP changes)
 	 */
@@ -318,6 +319,23 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 			}
 		});
 
+		fSetDefaultButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_setDefault);
+		fSetDefaultButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				PHPexeItem defaultItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement();
+				phpExes.setDefaultItem(defaultItem);
+				commitChanges();
+				setPHPs(phpExes.getItems());
+				Preferences prefs = PHPProjectPreferences.getModelPreferences();
+				prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP, defaultItem.getName());
+			}
+		});
+
 		// copied from ListDialogField.CreateSeparator()
 		final Label separator = new Label(buttons, SWT.NONE);
 		separator.setVisible(false);
@@ -361,6 +379,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		final int selectionCount = ((IStructuredSelection) fPHPExeList.getSelection()).size();
 		fEditButton.setEnabled(selectionCount == 1);
 		fRemoveButton.setEnabled(selectionCount > 0);
+		fSetDefaultButton.setEnabled(selectionCount == 1 && !((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement().equals(phpExes.getDefaultItem()));
 	}
 
 	/**
