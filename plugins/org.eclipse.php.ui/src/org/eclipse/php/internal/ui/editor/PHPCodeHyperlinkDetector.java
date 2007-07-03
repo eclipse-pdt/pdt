@@ -81,7 +81,7 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetectorForPHP {
 						if (prevRegion != null) {
 
 							// Check whether this string belongs to some kind of include/require structure:
-							prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart() - 1);
+							//prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart() - 1);
 							if (prevRegion != null && isIncludeType(prevRegion.getType())) {
 
 								int startOffset = container.getStartOffset() + phpScriptRegion.getStart() + phpToken.getStart();
