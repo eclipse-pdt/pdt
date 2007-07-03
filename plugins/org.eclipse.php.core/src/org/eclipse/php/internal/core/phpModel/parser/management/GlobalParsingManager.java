@@ -46,10 +46,11 @@ public class GlobalParsingManager {
 	}
 
 	public void removeParserClient(IParserClientFactory parserClientFactory, IProject project) {
-		ProjectParsingManager projectParsingManager = getProjectParsingManager(project);
-		if (projectParsingManager == null) {
+		Object object = project2ParsingManagerMap.get(project);
+		if (object == null) {
 			return;
 		}
+		ProjectParsingManager projectParsingManager = (ProjectParsingManager) object;
 		projectParsingManager.removeParserClient(parserClientFactory);
 	}
 
