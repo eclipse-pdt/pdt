@@ -66,26 +66,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		attachProjectOpenObserver();
 
 		initLanguageModels();
-
-		initModelFilter();
-	}
-
-	private void initModelFilter() {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.modelFilter");
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			if (element.getName().equals("filter")) {
-				initModelFilter(element);
-			}
-		}
-	}
-
-	private void initModelFilter(final IConfigurationElement element) {
-		SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.core.modelFilter") {
-			public void run() throws Exception {
-				element.createExecutableExtension("class");
-			}
-		});
 	}
 
 	private void initLanguageModels() {
