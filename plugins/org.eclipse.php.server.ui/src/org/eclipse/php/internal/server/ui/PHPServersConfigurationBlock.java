@@ -13,11 +13,11 @@ package org.eclipse.php.internal.server.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
@@ -47,6 +47,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	private static final int IDX_ADD = 0;
 	private static final int IDX_EDIT = 1;
 	private static final int IDX_REMOVE = 2;
+	private static final int IDX_DEFAULT = 3;
 
 	private IStatus fServersStatus;
 	private ListDialogField fServersList;
@@ -61,8 +62,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	public Control createControl(Composite parent) {
 
 		ServerAdapter adapter = new ServerAdapter();
-		String buttons[] = new String[] {
-			PHPServerUIMessages.getString("PHPServersConfigurationBlock.new"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.edit"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.remove") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		String buttons[] = new String[] { PHPServerUIMessages.getString("PHPServersConfigurationBlock.new"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.edit"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.remove"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.setDefault") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		fServersList = new ListDialogField(adapter, buttons, new PHPServersLabelProvider()) {
 			protected boolean managedButtonPressed(int index) {
 				if (index == getRemoveButtonIndex()) {
@@ -142,6 +142,14 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		} else if (index == IDX_EDIT) {
 			handleEditServerButtonSelected();
 			fServersList.refresh();
+		} else if (index == IDX_DEFAULT) {
+			List selectedElements = fServersList.getSelectedElements();
+			if (selectedElements.size() > 0) {
+				Server server = (Server) selectedElements.get(0);
+				ServersManager.setDefaultServer(null, server);
+				ServersManager.save();
+				fServersList.refresh();
+			}
 		}
 	}
 
@@ -246,6 +254,13 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			field.enableButton(IDX_EDIT, hasActiveSelection(selectedElements));
 			// Do not allow the removal of the last element
 			field.enableButton(IDX_REMOVE, hasActiveSelection(selectedElements) && field.getElements().size() > 1);
+
+			//handle default button enablement
+			if (selectedElements.size() == 1) {
+				field.enableButton(IDX_DEFAULT, !selectedElements.get(0).equals(ServersManager.getDefaultServer(null)));
+			} else {
+				field.enableButton(IDX_DEFAULT, false);
+			}
 		}
 	}
 
@@ -272,7 +287,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			if (columnIndex == 0) {
 				String serverName = server.getName();
 				if (isDefault((Server) element)) {
-					serverName += PHPServerUIMessages.getString("PHPServersConfigurationBlock.workspaceDefault");
+					serverName += PHPServerUIMessages.getString("PHPServersConfigurationBlock.workspaceDefault"); //$NON-NLS-1$
 				}
 				return serverName;
 			} else if (columnIndex == 1) {
