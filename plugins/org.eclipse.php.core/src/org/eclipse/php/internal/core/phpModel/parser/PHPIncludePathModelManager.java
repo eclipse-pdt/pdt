@@ -718,7 +718,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 						IProject projectMovedTo = ResourcesPlugin.getWorkspace().getRoot().getProject(affectedChildren[i].getMovedToPath().lastSegment());
 						affectedChildren[i].getMovedToPath();
 						handleProjectRename(projectMovedFrom, projectMovedTo);
-					} else if(affectedChildren[i].getKind() == IResourceDelta.REMOVED) {
+					} else if (affectedChildren[i].getKind() == IResourceDelta.REMOVED) {
 						IProject removedProject = (IProject) affectedChildren[i].getResource();
 						handleProjectDeletion(removedProject);
 					}
@@ -795,6 +795,8 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	public static PHPUserModel getUserModelForIncludeEntry(IIncludePathEntry entry, PHPProjectModel projectModel) {
 		PHPUserModel userModel = null;
 		PHPIncludePathModelManager includeManager = (PHPIncludePathModelManager) projectModel.getModel(COMPOSITE_INCLUDE_PATH_MODEL_ID);
+		if (includeManager == null)
+			return null;
 		if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 			userModel = (PHPUserModel) includeManager.getModel(entry.getPath().toString());
 		} else if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
