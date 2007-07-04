@@ -49,7 +49,7 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public PHPDebugPlugin() {
 		plugin = this;
-		Display.getDefault().syncExec(new Runnable() {
+		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
 				fInitialAutoRemoveLaunches = preferenceStore.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
