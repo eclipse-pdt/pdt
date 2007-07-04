@@ -137,7 +137,14 @@ public final class PHPFileDataUtilities {
 	}
 
 	public final static String getVariableType(String fileName, String variableName, int position, int line, IPhpModel model, boolean showObjectsFromOtherFiles) {
-		return getVariableType(model.getFileData(fileName), variableName, position, line, model, showObjectsFromOtherFiles);
+		final PHPFileData fileData = model.getFileData(fileName);
+		
+		// if it is the first time (that we build the model) there is no such model yet...
+		if (fileData == null) {
+			return null;
+		}
+		
+		return getVariableType(fileData, variableName, position, line, model, showObjectsFromOtherFiles);
 	}
 
 	public static String getVariableType(PHPFileData fileData, String variableName, int position, int line, IPhpModel model, boolean showObjectsFromOtherFiles) {
