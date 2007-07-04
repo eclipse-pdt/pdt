@@ -191,8 +191,17 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 
 		} catch (DebugException e) {
 			Logger.logException("Unexpected error in PHPModelPresentation", e);
+		} catch (NullPointerException npe) {
+			// This is here for debug purpose. Figure out why do we get nulls.
+			StringBuffer errorMessage = new StringBuffer("NPE in getStackFrameText(). Frame = ");
+			errorMessage.append(frame);
+			if (frame != null) {
+				errorMessage.append(", Thread = ");
+				errorMessage.append(frame.getThread());
+			}
+			Logger.logException(errorMessage.toString(), npe);
 		}
-		return null;
+		return ""; //$NON-NLS-1$
 
 	}
 
