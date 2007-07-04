@@ -16,6 +16,8 @@ import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
@@ -238,9 +240,11 @@ public class DefaultCacheManager {
 			StreamUtils.closeStream(in);
 			if (invalidCache) {
 				if (cacheFile.delete()) {
-					PHPCorePlugin.logErrorMessage("Invalid cache version. The cache file was deleted.");//$NON-NLS-1$
+					String message = "Invalid cache version. The cache file was deleted.";//$NON-NLS-1$
+					PHPCorePlugin.log(new Status(IStatus.INFO, PHPCorePlugin.ID, message, null));
 				} else {
-					PHPCorePlugin.logErrorMessage("Invalid cache version. Could not delete the file: " + cacheFile.getPath());//$NON-NLS-1$
+					String message = "Invalid cache version. Could not delete the file: " + cacheFile.getPath();//$NON-NLS-1$
+					PHPCorePlugin.log(new Status(IStatus.INFO, PHPCorePlugin.ID, message, null));
 				}
 			}
 		}
