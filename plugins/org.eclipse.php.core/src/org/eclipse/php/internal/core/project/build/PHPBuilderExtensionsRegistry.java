@@ -26,30 +26,51 @@ import org.eclipse.php.core.project.build.IPHPBuilderExtension;
  * @author michael
  */
 public class PHPBuilderExtensionsRegistry {
-	
+
+	private static final String DEFAULT_EXTENSION_ID = "org.eclipse.php.core.project.build.DefaultPHPBuilderExtension";
 	private static final String EXTENSION_NAME = "phpBuilderExtensions"; //$NON-NLS-1$
 	private static final String BUILDER_ELEMENT = "builder"; //$NON-NLS-1$
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
-	
+
 	/** PHP builder extensions map (ID to extension instance) */
 	private Map<String, Object> extensions;
 
 	/** Instance of {@link PHPBuilderExtensionsRegistry} singleton */
 	private static PHPBuilderExtensionsRegistry instance;
-	
+
 	/**
 	 * Constructor.
 	 * Looks for all contributed PHP builder extensions and initializes them.
 	 */
 	private PHPBuilderExtensionsRegistry() {
-		
-		extensions = new LinkedHashMap();
-		
+
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID, EXTENSION_NAME);
+
+		Object defaultExtension = null;
+
+		for (IConfigurationElement element : elements) {
+			if (BUILDER_ELEMENT.equals(element.getName()) && DEFAULT_EXTENSION_ID.equals(element.getAttribute(ID_ATTRIBUTE))) {
+				try {
+					defaultExtension = element.createExecutableExtension(CLASS_ATTRIBUTE);
+				} catch (CoreException e) {
+					PHPCorePlugin.log(e);
+				}
+				break;
+			}
+		}
+
+		if (defaultExtension == null) {
+			PHPCorePlugin.log(new IllegalStateException("no default project builder extension"));
+			return;
+		}
+
+		extensions = new LinkedHashMap();
+		extensions.put(DEFAULT_EXTENSION_ID, defaultExtension);
+
 		for (int i = 0; i < elements.length; ++i) {
 			IConfigurationElement element = elements[i];
-			if (BUILDER_ELEMENT.equals(element.getName())) {
+			if (BUILDER_ELEMENT.equals(element.getName()) && !DEFAULT_EXTENSION_ID.equals(element.getAttribute(ID_ATTRIBUTE))) {
 				try {
 					extensions.put(element.getAttribute(ID_ATTRIBUTE), element.createExecutableExtension(CLASS_ATTRIBUTE));
 				} catch (CoreException e) {
@@ -58,12 +79,12 @@ public class PHPBuilderExtensionsRegistry {
 			}
 		}
 	}
-	
+
 	public synchronized static PHPBuilderExtensionsRegistry getInstance() {
-		 if (instance == null) {
-			 instance = new PHPBuilderExtensionsRegistry();
-		 }
-		 return instance;
+		if (instance == null) {
+			instance = new PHPBuilderExtensionsRegistry();
+		}
+		return instance;
 	}
 
 	/**
@@ -75,13 +96,13 @@ public class PHPBuilderExtensionsRegistry {
 		Collection extensions = instance.extensions.values();
 		return (IPHPBuilderExtension[]) extensions.toArray(new IPHPBuilderExtension[extensions.size()]);
 	}
-	
+
 	/**
 	 * Returns PHP builder extension by its ID.
 	 * @param id ID of the extension
 	 * @return {@link IPHPBuilderExtension} if found in the map, otherwise <code>null</code>.
 	 */
 	public IPHPBuilderExtension getExtension(String id) {
-		return (IPHPBuilderExtension)instance.extensions.get(id);
+		return (IPHPBuilderExtension) instance.extensions.get(id);
 	}
 }
