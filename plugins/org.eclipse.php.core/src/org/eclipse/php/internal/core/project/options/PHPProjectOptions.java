@@ -10,8 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.project.options;
 
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,7 +31,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.php.internal.core.IncludePathContainerInitializer;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -326,10 +340,15 @@ public class PHPProjectOptions {
 
 			final IFile optionsFile = project.getFile(FILE_NAME);
 
-			if (optionsFile.exists())
+			if (optionsFile.exists()) {
 				optionsFile.setContents(inputStream, IResource.FORCE, monitor);
-			else
+			} else {
 				optionsFile.create(inputStream, IResource.FORCE, monitor);
+			}
+			
+			// XXX: refresh of .projectOptions file is needed for some reason. Otherwise,
+			// we are getting "Project is out of sync" on project rename operation:
+			optionsFile.refreshLocal(IResource.DEPTH_ZERO, monitor);
 
 		} catch (final IOException e) {
 			PHPCorePlugin.log(e);
