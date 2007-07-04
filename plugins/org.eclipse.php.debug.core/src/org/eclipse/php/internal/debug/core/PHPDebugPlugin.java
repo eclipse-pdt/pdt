@@ -24,6 +24,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -48,9 +49,14 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public PHPDebugPlugin() {
 		plugin = this;
-		IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
-		fInitialAutoRemoveLaunches = preferenceStore.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
-		preferenceStore.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
+				fInitialAutoRemoveLaunches = preferenceStore.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
+				preferenceStore.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
+			}
+		});
+		
 	}
 
 	public static final boolean DebugPHP;
