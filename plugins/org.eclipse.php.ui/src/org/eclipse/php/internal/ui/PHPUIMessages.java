@@ -856,4 +856,8 @@ public class PHPUIMessages {
 	public static String RemoveFromIncludePathAction_remove_from_include_path_tooltip;
 	public static String RemoveFromIncludePathAction_remove_from_include_path_desc;
 	public static String RemoveFromIncludePathAction_remove_from_include_path_job;
+	
+	public static String UntitledPHPEditor_saveError;
+	public static String UntitledPHPEditor_documentCannotBeSaved;
+
 }
