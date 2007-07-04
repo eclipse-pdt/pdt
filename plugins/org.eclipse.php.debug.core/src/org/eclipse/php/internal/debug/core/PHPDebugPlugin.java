@@ -49,14 +49,6 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public PHPDebugPlugin() {
 		plugin = this;
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
-				fInitialAutoRemoveLaunches = preferenceStore.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
-				preferenceStore.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
-			}
-		});
-		
 	}
 
 	public static final boolean DebugPHP;
@@ -71,6 +63,12 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		// Set the AutoRemoveOldLaunchesListener
+		IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
+		fInitialAutoRemoveLaunches = preferenceStore.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
+		preferenceStore.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
+		
 		org.eclipse.php.internal.server.core.Activator.getDefault(); // TODO - Check if getInstance is needed
 		setLaunchPerspective();
 		// check for default server
