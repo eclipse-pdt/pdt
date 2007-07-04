@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.project.build;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -32,7 +33,7 @@ public class PHPBuilderExtensionsRegistry {
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	
 	/** PHP builder extensions map (ID to extension instance) */
-	private Map extensions;
+	private Map<String, Object> extensions;
 
 	/** Instance of {@link PHPBuilderExtensionsRegistry} singleton */
 	private static PHPBuilderExtensionsRegistry instance;
@@ -43,7 +44,7 @@ public class PHPBuilderExtensionsRegistry {
 	 */
 	private PHPBuilderExtensionsRegistry() {
 		
-		extensions = new HashMap();
+		extensions = new LinkedHashMap();
 		
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID, EXTENSION_NAME);
 		for (int i = 0; i < elements.length; ++i) {
