@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.internal.events.ResourceDelta;
 import org.eclipse.core.resources.*;
@@ -177,7 +178,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	private void parse(File file, ParserClient client) {
 		try {
 			final FileReader fileReader = new FileReader(file);
-			parserManager.parse(fileReader, file.getPath(), file.lastModified(), client, UseAspTagsHandler.useAspTagsAsPhp(project));
+			parserManager.parseNow(fileReader, file.getPath(), file.lastModified(), client, new Pattern[0], UseAspTagsHandler.useAspTagsAsPhp(project));
 
 		} catch (FileNotFoundException e) {
 			PHPCorePlugin.log(e);
