@@ -76,10 +76,14 @@ class ProjectParsingManager implements IProjectModelListener {
 	}
 
 	public void fileAdded(IFile file) {
-		File ioFile = new File(file.getFullPath().toString());
-		//handle Untitled dummy files etc.
-		if (!ioFile.exists()){
-			return;
+		
+		// check if it is an external file
+		if (!file.exists()) {
+			final File ioFile = new File(file.getFullPath().toString());
+			// if it is an external file that doesn't exist - out
+			if (!ioFile.exists()) {
+				return;
+			}
 		}
 		
 		ParserClient parserClient = buildParserClient(file, IParserClientFactory.fileAdded);
