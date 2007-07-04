@@ -175,6 +175,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		for (int i = 0; i < entries; i++) {
 			try {
 				String phpPathString = null;
+				String phpFileLocation = null;
 				IProject project = null;
 				Object obj = search[i];
 
@@ -188,6 +189,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 					if (contentType.isAssociatedWith(file.getName())) {
 						phpPathString = file.getFullPath().toString();
+						phpFileLocation = file.getLocation().toString();
 					}
 				}
 
@@ -212,7 +214,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				}
 
 				// Launch the app
-				ILaunchConfiguration config = findLaunchConfiguration(project.getName(), phpPathString, phpExeName, mode, configType);
+				ILaunchConfiguration config = findLaunchConfiguration(project.getName(), phpPathString, phpFileLocation, phpExeName, mode, configType);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
@@ -263,7 +265,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	 * 
 	 * @return a re-useable config or <code>null</code> if none
 	 */
-	protected static ILaunchConfiguration findLaunchConfiguration(String phpProject, String phpPathString, String phpExeName, String mode, ILaunchConfigurationType configType) {
+	protected static ILaunchConfiguration findLaunchConfiguration(String phpProject, String phpPathString, String phpFileFullLocation, String phpExeName, String mode, ILaunchConfigurationType configType) {
 		ILaunchConfiguration config = null;
 
 		try {
@@ -281,7 +283,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			}
 
 			if (config == null) {
-				config = createConfiguration(phpProject, phpPathString, phpExeName, configType);
+				config = createConfiguration(phpProject, phpPathString, phpFileFullLocation, phpExeName, configType);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -292,17 +294,13 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	/**
 	 * Create & return a new configuration
 	 */
-	protected static ILaunchConfiguration createConfiguration(String phpProject, String phpPathString, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
+	protected static ILaunchConfiguration createConfiguration(String phpProject, String phpPathString, String phpFileFullLocation, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
 		ILaunchConfiguration config = null;
-		//		if (!FileUtils.fileExists(phpPathString)) {
-		//			return null;
-		//		}
-
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(phpPathString));
 
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
-		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpPathString);
+		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
 		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, phpExeName);
 		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 
