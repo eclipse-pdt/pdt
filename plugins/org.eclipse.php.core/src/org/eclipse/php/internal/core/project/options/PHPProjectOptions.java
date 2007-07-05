@@ -219,9 +219,9 @@ public class PHPProjectOptions {
 		final Object object = optionsChangeListenersMap.get(key);
 		if (object == null)
 			return;
-		final List OptionChangeListeners = (List) object;
-		for (final Iterator optionChangeListenerIterator = OptionChangeListeners.iterator(); optionChangeListenerIterator.hasNext();) {
-			final IPhpProjectOptionChangeListener phpProjectOptionChangeListener = (IPhpProjectOptionChangeListener) optionChangeListenerIterator.next();
+		final List optionChangeListeners = (List) object;
+		for (final Iterator i = optionChangeListeners.iterator(); i.hasNext();) {
+			final IPhpProjectOptionChangeListener phpProjectOptionChangeListener = (IPhpProjectOptionChangeListener) i.next();
 			phpProjectOptionChangeListener.notifyOptionChanged(oldValue, newValue);
 		}
 	}
