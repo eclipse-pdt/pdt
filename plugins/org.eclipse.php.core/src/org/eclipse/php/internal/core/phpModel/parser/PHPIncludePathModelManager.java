@@ -366,13 +366,14 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		compositePhpModel.addModel(modelWrapper);
 	}
 
-	public void removeProject(IResource project) {
+	public boolean removeProject(IResource project) {
 		int index = getIndexOf(project);
 		if (index == -1) {
-			return;
+			return false;
 		}
 		projects.remove(index);
 		innerRemoveProject(project);
+		return true;
 	}
 
 	private void innerRemoveProject(IResource project) {
@@ -717,7 +718,6 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 					if ((affectedChildren[i].getFlags() & IResourceDelta.MOVED_TO) != 0) {
 						IProject projectMovedFrom = (IProject) affectedChildren[i].getResource();
 						IProject projectMovedTo = ResourcesPlugin.getWorkspace().getRoot().getProject(affectedChildren[i].getMovedToPath().lastSegment());
-						affectedChildren[i].getMovedToPath();
 						handleProjectRename(projectMovedFrom, projectMovedTo);
 					} else if (affectedChildren[i].getKind() == IResourceDelta.REMOVED) {
 						IProject removedProject = (IProject) affectedChildren[i].getResource();
@@ -732,8 +732,10 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 			if (from == project) {
 				handleProjectDeletion(from);
 			} else {
-				removeProject(from);
-				addProject(to);
+				boolean removed = removeProject(from);
+				if(removed) {
+					addProject(to);
+				}
 
 				PHPProjectOptions options = PHPProjectOptions.forProject(project);
 				if (options == null)
