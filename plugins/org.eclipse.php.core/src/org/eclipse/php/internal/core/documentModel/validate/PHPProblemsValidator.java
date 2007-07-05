@@ -164,7 +164,6 @@ public class PHPProblemsValidator {
 	}
 
 	private PHPFileData getFileModel(IFile phpFile) {
-		PHPWorkspaceModelManager.getInstance().addFileToModel(phpFile);
 		return PHPWorkspaceModelManager.getInstance().getModelForFile(phpFile.getFullPath().toString(), false);
 	}
 

@@ -57,12 +57,9 @@ public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 
 		switch (fileDelta.getKind()) {
 			case IResourceDelta.ADDED:
+			case IResourceDelta.CHANGED:
 				PHPWorkspaceModelManager.getInstance().addFileToModel(file);
 				validator.validateFile(file);
-
-				break;
-			case IResourceDelta.CHANGED:
-				validator.validateFileProblems(file, true);
 				break;
 			case IResourceDelta.REMOVED:
 				PHPWorkspaceModelManager.getInstance().removeFileFromModel(file);
