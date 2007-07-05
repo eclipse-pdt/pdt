@@ -53,7 +53,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	 */
 	private final static Set modelListeners = Collections.synchronizedSet(new HashSet(2));
 	private final static Map workspaceModelListeners = Collections.synchronizedMap(new HashMap(2));
-	private final static Set globalWorkspaceModelListeners = Collections.synchronizedSet(new HashSet(2));
+	private final static Set<IWorkspaceModelListener> globalWorkspaceModelListeners = new HashSet<IWorkspaceModelListener>(2);
 
 	/*
 	 * This call is used to populate the model from the content of the project
@@ -310,11 +310,11 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		PHPProjectModel projModel = getModelForProject(file.getProject(), forceCreation);
 		if (projModel == null) {
 			if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
-				return getModelForExternalFile(file);	
+				return getModelForExternalFile(file);
 			}
-			return null;			
+			return null;
 		}
-		
+
 		String filename = file.getFullPath().toString();
 		PHPFileData fileData = projModel.getFileData(filename);
 		if (fileData == null && forceCreation) {
@@ -552,20 +552,43 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	/**
-	 * Global listeners
+	 * Global listeners 
 	 */
-	public void addWorkspaceModelListener(IWorkspaceModelListener l) {
-		globalWorkspaceModelListeners.add(l);
+
+	/**
+	 * add a global listener
+	 */
+	public synchronized void addWorkspaceModelListener(IWorkspaceModelListener listener) {
+		if (listener == null) {
+			throw new IllegalArgumentException("Error registering IWorkspaceModelListener");
+		}
+		globalWorkspaceModelListeners.add(listener);
 	}
 
-	public void removeWorkspaceModelListener(IWorkspaceModelListener l) {
-		globalWorkspaceModelListeners.remove(l);
+	/**
+	 * remove a global listener
+	 * @param listener
+	 */
+	public synchronized void removeWorkspaceModelListener(IWorkspaceModelListener listener) {
+		if (listener == null) {
+			throw new IllegalArgumentException("Error registering IWorkspaceModelListener");
+		}
+		globalWorkspaceModelListeners.remove(listener);
 	}
+
+	private synchronized IWorkspaceModelListener[] getGlobalWorkspaceModelListeners() {
+		return globalWorkspaceModelListeners.toArray(new IWorkspaceModelListener[globalWorkspaceModelListeners.size()]);
+	}
+	
+	/**
+	 * End Global listeners
+	 */
 
 	public void fireProjectModelAdded(IProject project) {
-		for (Iterator iter = globalWorkspaceModelListeners.iterator(); iter.hasNext();) {
-			IWorkspaceModelListener listener = (IWorkspaceModelListener) iter.next();
-			listener.projectModelAdded(project);
+		final IWorkspaceModelListener[] globalListeners = getGlobalWorkspaceModelListeners();
+		for (int i = 0; i < globalListeners.length; i++) {
+			IWorkspaceModelListener workspaceModelListener = globalListeners[i];
+			workspaceModelListener.projectModelAdded(project);
 		}
 
 		List listenersList = (List) workspaceModelListeners.get(project.getName());
@@ -580,9 +603,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public void fireProjectModelRemoved(IProject project) {
-		for (Iterator iter = globalWorkspaceModelListeners.iterator(); iter.hasNext();) {
-			IWorkspaceModelListener listener = (IWorkspaceModelListener) iter.next();
-			listener.projectModelRemoved(project);
+		final IWorkspaceModelListener[] globalListeners = getGlobalWorkspaceModelListeners();
+		for (int i = 0; i < globalListeners.length; i++) {
+			IWorkspaceModelListener workspaceModelListener = globalListeners[i];
+			workspaceModelListener.projectModelRemoved(project);
 		}
 
 		List listenersList = (List) workspaceModelListeners.get(project.getName());
@@ -597,9 +621,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public void fireProjectModelChanged(IProject project) {
-		for (Iterator iter = globalWorkspaceModelListeners.iterator(); iter.hasNext();) {
-			IWorkspaceModelListener listener = (IWorkspaceModelListener) iter.next();
-			listener.projectModelChanged(project);
+		final IWorkspaceModelListener[] globalListeners = getGlobalWorkspaceModelListeners();
+		for (int i = 0; i < globalListeners.length; i++) {
+			IWorkspaceModelListener workspaceModelListener = globalListeners[i];
+			workspaceModelListener.projectModelChanged(project);
 		}
 
 		List listenersList = (List) workspaceModelListeners.get(project.getName());
