@@ -132,7 +132,9 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null, new IScopeContext[] { new InstanceScope() });
 			if (lineSeparator == null)
 				lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);
-			contents = contents.replaceAll("(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$ //$NON-NLS-2$
+			if (contents != null) {
+				contents = contents.replaceAll("(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$ //$NON-NLS-2$	
+			}
 
 			try {
 				InputStream stream = openContentStream(contents);
