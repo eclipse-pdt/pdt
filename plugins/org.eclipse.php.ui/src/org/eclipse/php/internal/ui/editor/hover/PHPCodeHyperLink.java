@@ -46,6 +46,10 @@ public class PHPCodeHyperLink implements IHyperlink {
 	}
 
 	public void open() {
+		if (codeDatas == null) {
+			return;
+		}
+		
 		CodeData codeData;
 		if (codeDatas.length > 1) {
 			OpenPhpTypeDialog dialog = new OpenPhpTypeDialog(Display.getDefault().getActiveShell());
