@@ -129,6 +129,7 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		if (selectedDirectory != null){
 			text.add(selectedDirectory);
 			text.select(text.indexOf(selectedDirectory));
+			text.notifyListeners(SWT.Modify, new Event());
 		}
 	}
 	
