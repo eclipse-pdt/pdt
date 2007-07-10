@@ -81,8 +81,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				handleFileLocationButtonSelected();
 			else if (source == argumentVariablesButton)
 				handleVariablesButtonSelected(argumentField);
-			else if (source == overrideBreakpiontSettings)
-				handleBreakpointOverride();
 			else if (source == breakOnFirstLine)
 				handleBreakButtonSelected();
 		}
@@ -110,7 +108,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 	protected WidgetListener fListener = new WidgetListener();
 	private Text locationField;
-	protected Button overrideBreakpiontSettings;
 	protected PHPsComboBlock phpsComboBlock;
 	private Button runWithDebugInfo;
 
@@ -182,13 +179,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			final GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 			group.setLayout(layout);
 			group.setLayoutData(gridData);
-
-			overrideBreakpiontSettings = createCheckButton(group, PHPDebugUIMessages.Breakpoint_Group_Override_Break_Setting);
 			breakOnFirstLine = createCheckButton(group, PHPDebugUIMessages.Breakpoint_Group_BreakAtFirstLine);
-			final GridData data = (GridData) breakOnFirstLine.getLayoutData();
-			data.horizontalIndent = 20;
-
-			overrideBreakpiontSettings.addSelectionListener(fListener);
 			breakOnFirstLine.addSelectionListener(fListener);
 
 			if (!enableBreakpointSelection)
@@ -300,11 +291,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		updateLaunchConfigurationDialog();
 	}
 
-	protected void handleBreakpointOverride() {
-		updateLaunchConfigurationDialog();
-		breakOnFirstLine.setEnabled(overrideBreakpiontSettings.getSelection());
-	}
-
 	/**
 	 * Prompts the user to choose a location from the filesystem and
 	 * sets the location as the full path of the selected file.
@@ -352,12 +338,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			updateArgument(configuration);
 		// init the breakpoint settings
 		try {
-			final boolean isOverrideBreakpointSetting = configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
-			if (overrideBreakpiontSettings != null)
-				overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
 			if (breakOnFirstLine != null) {
-				breakOnFirstLine.setEnabled(isOverrideBreakpointSetting);
-				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
+				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPDebugPlugin.getStopAtFirstLine()));
 			}
 		} catch (final CoreException e) {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
@@ -423,9 +405,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		}
 		final boolean debugInfo = enableDebugInfoOption ? (runWithDebugInfo != null && runWithDebugInfo.getSelection()) : true;
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
-
-		if (overrideBreakpiontSettings != null)
-			configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
 		if (breakOnFirstLine != null)
 			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 		applyLaunchDelegateConfiguration(configuration);
@@ -454,7 +433,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 					return;
 				location = phpExeItem.getPhpEXE().toString();
 				configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
-				configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
+				configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPDebugPlugin.getStopAtFirstLine());
 				applyLaunchDelegateConfiguration(configuration);
 			}
 		} catch (final CoreException e) {
@@ -495,9 +474,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (enabled == enableBreakpointSelection)
 			return;
 		enableBreakpointSelection = enabled;
-		if (overrideBreakpiontSettings != null) {
-			overrideBreakpiontSettings.setEnabled(enabled);
-			overrideBreakpiontSettings.setSelection(!enabled);
+		if (breakOnFirstLine != null) {
 			breakOnFirstLine.setSelection(enabled);
 			breakOnFirstLine.setEnabled(enabled);
 		}

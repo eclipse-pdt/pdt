@@ -29,6 +29,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
@@ -214,7 +215,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				}
 
 				// Launch the app
-				ILaunchConfiguration config = findLaunchConfiguration(project.getName(), phpPathString, phpFileLocation, phpExeName, mode, configType);
+				ILaunchConfiguration config = findLaunchConfiguration(project, phpPathString, phpFileLocation, phpExeName, mode, configType);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
@@ -265,7 +266,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	 * 
 	 * @return a re-useable config or <code>null</code> if none
 	 */
-	protected static ILaunchConfiguration findLaunchConfiguration(String phpProject, String phpPathString, String phpFileFullLocation, String phpExeName, String mode, ILaunchConfigurationType configType) {
+	protected static ILaunchConfiguration findLaunchConfiguration(IProject phpProject, String phpPathString, String phpFileFullLocation, String phpExeName, String mode, ILaunchConfigurationType configType) {
 		ILaunchConfiguration config = null;
 
 		try {
@@ -294,7 +295,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	/**
 	 * Create & return a new configuration
 	 */
-	protected static ILaunchConfiguration createConfiguration(String phpProject, String phpPathString, String phpFileFullLocation, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
+	protected static ILaunchConfiguration createConfiguration(IProject phpProject, String phpPathString, String phpFileFullLocation, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
 		ILaunchConfiguration config = null;
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(phpPathString));
 
@@ -303,6 +304,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
 		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, phpExeName);
 		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(phpProject));
 
 		config = wc.doSave();
 
