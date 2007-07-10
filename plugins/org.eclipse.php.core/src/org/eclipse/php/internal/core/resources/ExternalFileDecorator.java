@@ -23,9 +23,11 @@ import org.eclipse.core.internal.watson.IPathRequestor;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 
 /**
  * An ExternalFileDecorator is an {@link IFile} wrapper that allows the setting of a device name.
@@ -37,6 +39,7 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 
 	private String device;
 	private IFile file;
+	private IContentDescription dummyDescription;
 
 	/**
 	 * Constructs a new ExternalFileDecorator.
@@ -410,7 +413,18 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * @see org.eclipse.core.resources.IFile#getContentDescription()
 	 */
 	public IContentDescription getContentDescription() throws CoreException {
-		return file.getContentDescription();
+		try {
+			return file.getContentDescription();
+		} catch (CoreException ce) {
+		}
+		return getDummyContentDescription();
+	}
+
+	private IContentDescription getDummyContentDescription() {
+		if (dummyDescription == null) {
+			dummyDescription = new DummyContentDescription();
+		}
+		return dummyDescription;
 	}
 
 	/**
@@ -950,5 +964,36 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 
 	public int findMaxProblemSeverity(String type, boolean includeSubtypes, int depth) throws CoreException {
 		return file.findMaxProblemSeverity(type, includeSubtypes, depth);
+	}
+
+	/*
+	 * Dummy content description for external php files.
+	 */
+	private static class DummyContentDescription implements IContentDescription {
+
+		IContentType contentType;
+
+		public DummyContentDescription() {
+			contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+		}
+
+		public String getCharset() {
+			return null;
+		}
+
+		public IContentType getContentType() {
+			return contentType;
+		}
+
+		public Object getProperty(QualifiedName key) {
+			return null;
+		}
+
+		public boolean isRequested(QualifiedName key) {
+			return false;
+		}
+
+		public void setProperty(QualifiedName key, Object value) {
+		}
 	}
 }
