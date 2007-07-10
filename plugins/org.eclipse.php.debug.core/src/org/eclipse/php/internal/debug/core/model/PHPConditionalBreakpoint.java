@@ -83,7 +83,7 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
         super.setMarker(marker);
         fCondition = (String) marker.getAttribute(IPHPConstants.Condition);
         Boolean enabled = (Boolean) marker.getAttribute(IPHPConstants.ConditionEnabled);
-        fConditionEnabled = enabled.booleanValue();
+        fConditionEnabled = enabled != null ? enabled.booleanValue() : false;
         addConditionToBP();
     }
 
