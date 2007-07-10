@@ -47,7 +47,6 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	private Text debugFromTxt;
 	protected Button openBrowser;
 	protected boolean isOpenInBrowser;
-	protected Button overrideBreakpiontSettings;
 	protected Button breakOnFirstLine;
 	protected WidgetListener listener;
 	protected ILaunchConfiguration launchConfiguration;
@@ -222,12 +221,9 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			}
 			String startFromURL = configuration.getAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, "");
 			debugFromTxt.setText(startFromURL);
-			if (overrideBreakpiontSettings != null) {
+			if (breakOnFirstLine != null) {
 				// init the breakpoint settings
-				boolean isOverrideBreakpointSetting = configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false);
-				overrideBreakpiontSettings.setSelection(isOverrideBreakpointSetting);
-				breakOnFirstLine.setEnabled(isOverrideBreakpointSetting && overrideBreakpiontSettings.isEnabled());
-				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false));
+				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPDebugPlugin.getStopAtFirstLine()));
 			}
 			updateDebugFrom();
 
@@ -254,10 +250,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 				configuration.setAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
 				configuration.setAttribute(IPHPConstants.DEBUGGING_SHOULD_CONTINUE, debugContinueBt.getSelection());
 			}
-			if (overrideBreakpiontSettings != null) {
-				configuration.setAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, overrideBreakpiontSettings.getSelection());
-				configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
-			}
+			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 		} else {
 			// Allow only debug-first-page
 			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_FIRST_PAGE);
@@ -318,19 +311,12 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		group.setLayout(layout);
 		group.setLayoutData(gridData);
 
-		// TODO - remove the override check-box & use the String externalization
-		overrideBreakpiontSettings = createCheckButton(group, "Override project/workspace 'Break at First Line' setting");
 		breakOnFirstLine = createCheckButton(group, "Break at First Line");
-		GridData data = (GridData) breakOnFirstLine.getLayoutData();
-		data.horizontalIndent = 20;
-
-		overrideBreakpiontSettings.addSelectionListener(listener);
 		breakOnFirstLine.addSelectionListener(listener);
 
 		// Disables/Enables all the controls according the the debug mode.
 		String mode = getLaunchConfigurationDialog().getMode();
 		boolean isDebugMode = ILaunchManager.DEBUG_MODE.equals(mode);
-		overrideBreakpiontSettings.setEnabled(isDebugMode);
 		breakOnFirstLine.setEnabled(isDebugMode);
 	}
 
@@ -369,10 +355,6 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 		public void widgetSelected(SelectionEvent e) {
 			setDirty(true);
-			Object source = e.getSource();
-			if (source == overrideBreakpiontSettings) {
-				breakOnFirstLine.setEnabled(overrideBreakpiontSettings.getSelection());
-			}
 			updateLaunchConfigurationDialog();
 		}
 	}
