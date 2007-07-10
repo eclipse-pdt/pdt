@@ -26,6 +26,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
@@ -66,16 +67,25 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 			}
 			else if (input instanceof IURIEditorInput || (input instanceof NonExistingPHPFileEditorInput)) {
 				Map attributes = new HashMap();
-				attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_EXTERNAL);
-				
 				String pathName = null;
 				if (input instanceof IURIEditorInput){
-					pathName = URIUtil.toPath(((IURIEditorInput)input).getURI()).toString();
+					if (res instanceof ExternalFileDecorator) {
+						pathName = res.getFullPath().toString();
+					} else {
+						pathName = URIUtil.toPath(((IURIEditorInput)input).getURI()).toString();
+					}
 				}
 				else {
 					pathName = ((NonExistingPHPFileEditorInput)input).getPath().toString();
 				}
 				String fileName = RemoteDebugger.convertToSystemIndependentFileName(pathName);
+				if (res instanceof IWorkspaceRoot) {
+					// We are dealing with remote
+					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_REMOTE);
+				} else {
+					// We are dealing with storage
+					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_EXTERNAL);
+				}
 				attributes.put(IPHPConstants.STORAGE_FILE, fileName);
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
 				point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);

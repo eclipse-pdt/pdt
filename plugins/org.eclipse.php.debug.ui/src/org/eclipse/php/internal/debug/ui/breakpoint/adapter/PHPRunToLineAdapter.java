@@ -20,6 +20,7 @@ import org.eclipse.debug.ui.actions.RunToLineHandler;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
@@ -27,10 +28,7 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider;
 import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.*;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
@@ -129,9 +127,19 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 		if (textEditor == null)
 			return null;
 		IEditorInput input = textEditor.getEditorInput();
-		if (!(input instanceof IFileEditorInput))
-			return null;
-		return ((IFileEditorInput) input).getFile();
+		if (input instanceof IFileEditorInput) {
+			return ((IFileEditorInput) input).getFile();
+		}
+		if (input instanceof IURIEditorInput) {
+			String filePath = ((IURIEditorInput)input).getURI().getPath();
+			IFile result = ExternalFilesRegistry.getInstance().getFileEntry(filePath);
+			if (result == null && filePath.length() > 0 && filePath.charAt(0) == '/') {
+				return ExternalFilesRegistry.getInstance().getFileEntry(filePath.substring(1));
+			}
+			return result;
+		}
+		return null;
+		
 	}
 
 	/**
