@@ -12,7 +12,7 @@ package org.eclipse.php.debug.core.debugger.parameters;
 
 /**
  * An interface that holds the debug parameters keys.
- * This interface is not meant to be implamented.
+ * This interface is not meant to be implemented.
  */
 public interface IDebugParametersKeys {
 
@@ -20,6 +20,12 @@ public interface IDebugParametersKeys {
 	public static final String PASSIVE_DEBUG = "passiveDebug";
 	public static final String WEB_SERVER_DEBUGGER = "webServerDebugger";
 	public static final String FIRST_LINE_BREAKPOINT = "firstLineBreakpoint";
+	/**
+	 * This parameter key is deprecated.
+	 * We now use only the {@value #FIRST_LINE_BREAKPOINT} in the 
+	 * launch configuration. 
+	 * @deprecated
+	 */
 	public static final String OVERRIDE_FIRST_LINE_BREAKPOINT = "overrideFirstLineBreakpoint";
 	public static final String PROTOCOL_ID = "protocolID";
 	public static final String ORIGINAL_URL = "uriginalURL";

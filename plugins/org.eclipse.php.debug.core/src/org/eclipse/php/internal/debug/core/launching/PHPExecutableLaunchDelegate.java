@@ -164,12 +164,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
-			boolean stopAtFirstLine = false;
-			if (configuration.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false)) {
-				stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
-			} else {
-				stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
-			}
+			boolean stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
 			final int requestPort = PHPProjectPreferences.getDebugPort(project);
 
 			// Set Project Name

@@ -116,12 +116,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		String URL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
 		boolean isDebugLaunch = mode.equals(ILaunchManager.DEBUG_MODE);
 		if (isDebugLaunch) {
-			boolean stopAtFirstLine = false;
-			if (wc.getAttribute(IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT, false)) {
-				stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
-			} else {
-				stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(proj);
-			}
+			boolean stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(proj));
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
 		}
 		int requestPort = PHPProjectPreferences.getDebugPort(proj);
