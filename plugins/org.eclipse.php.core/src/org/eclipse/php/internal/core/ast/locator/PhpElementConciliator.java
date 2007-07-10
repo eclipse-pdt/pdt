@@ -79,6 +79,15 @@ public class PhpElementConciliator {
 		}
 
 		if (parent.getType() == ASTNode.VARIABLE) {
+
+			// check for $this variable
+			final Identifier id = (Identifier) node;
+			final Variable variable = (Variable) parent;
+			
+			if (id.getName().equals(THIS) && variable.isDollared()) {
+				return false;
+			}
+			
 			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION) {
 				return true;
 			}
@@ -178,7 +187,7 @@ public class PhpElementConciliator {
 		}
 
 		Variable parent = (Variable) targetIdentifier.getParent();
-		if (!parent.isDollared() || targetIdentifier.equals(PhpElementConciliator.THIS)) {
+		if (targetIdentifier.getName().equals(THIS)) {
 			return false;
 		}
 
