@@ -29,7 +29,7 @@ public class PhpParserSchedulerTask implements Runnable {
 	private volatile boolean threadAlive = true;
 
 	// a limit size for the parser stack 
-	private static final int BUFFER_MAX_SIZE = 10;
+	private static final int BUFFER_MAX_SIZE = Integer.MAX_VALUE;
 
 	// holds the stack of tasks
 	private final LinkedList<ParserExecuter> buffer = new LinkedList<ParserExecuter>();
