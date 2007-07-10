@@ -83,6 +83,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
@@ -98,6 +99,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
 	private CompositeActionGroup fContextMenuGroup;
 	private CompositeActionGroup fActionGroups;
+	/**Indicates whether the structure editor is displaying an external file*/
+	protected boolean isExternal;
 
 	/**
 	 * This action behaves in two different ways: If there is no current text hover, the javadoc is displayed using
@@ -417,13 +420,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		super.init(site, input);
 		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
 	}
-	
+
 	protected void initializeEditor() {
 		super.initializeEditor();
-		
+
 		setPreferenceStore(createCombinedPreferenceStore());
 	}
-	
+
 	/**
 	 * Create a preference store that combines the source editor preferences
 	 * with the base editor's preferences.
@@ -434,7 +437,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault().getPreferenceStore();
 		IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
 		IPreferenceStore phpEditorPrefs = PHPUiPlugin.getDefault().getPreferenceStore();
-		return new ChainedPreferenceStore(new IPreferenceStore[]{sseEditorPrefs, baseEditorPrefs, phpEditorPrefs});
+		return new ChainedPreferenceStore(new IPreferenceStore[] { sseEditorPrefs, baseEditorPrefs, phpEditorPrefs });
 	}
 
 	protected void setDocumentProvider(IEditorInput input) {
@@ -1092,7 +1095,22 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
-
+		
+		if (isExternal) {
+			// Override the way breakpoints are set on external files.
+			action = new ToggleExternalBreakpointAction(this, getVerticalRuler());
+			setAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS, action);
+			// StructuredTextEditor Action - manage breakpoints
+			action = new ManageExternalBreakpointAction(this, getVerticalRuler());
+			setAction(ActionDefinitionIds.MANAGE_BREAKPOINTS, action);
+			// StructuredTextEditor Action - edit breakpoints
+			action = new EditExternalBreakpointAction(this, getVerticalRuler());
+			setAction(ActionDefinitionIds.EDIT_BREAKPOINTS, action);
+			
+			// Set the ruler double-click behavior.
+			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new ToggleExternalBreakpointAction(this, getVerticalRuler(), getAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK)));
+		}
+		
 		ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
 		// We have to keep the context menu group separate to have better control over positioning
 		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg });
@@ -1313,17 +1331,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		IResource resource = null;
 		IPath externalPath = null;
-
+		isExternal = false;
 		if (input instanceof IFileEditorInput) {
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
-		}
-		else if (input instanceof IStorageEditorInput) {
+		} else if (input instanceof IStorageEditorInput) {
 			// This kind of editor input usually means non-workspace file, like
 			// PHP file which comes from include path, remote file which comes from
 			// Web server while debugging, file from ZIP archive, etc...
-			
+
 			final IStorageEditorInput editorInput = (IStorageEditorInput) input;
 			final IStorage storage = editorInput.getStorage();
 
@@ -1342,11 +1359,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			//OR
 			// When we are dealing with an Untitled PHP document and the underlying PHP file
 			// does not really exist, but is still considered as an "External" file.
-			if (input instanceof NonExistingPHPFileEditorInput){
-				externalPath = ((NonExistingPHPFileEditorInput)input).getPath();
-			}
-			else {
-				externalPath = URIUtil.toPath(((IURIEditorInput)input).getURI());
+			if (input instanceof NonExistingPHPFileEditorInput) {
+				externalPath = ((NonExistingPHPFileEditorInput) input).getPath();
+			} else {
+				externalPath = URIUtil.toPath(((IURIEditorInput) input).getURI());
 			}
 			resource = ExternalFileDecorator.createFile(externalPath.toString());
 		}
@@ -1356,13 +1372,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				// Add file decorator entry to the list of external files:
 				if (externalPath != null && (resource instanceof ExternalFileDecorator)) {
 					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toString(), (ExternalFileDecorator) resource);
+					isExternal = true;
 				}
 				// Remove an older record from the external files registry in case this editor
 				// is being reused to display a new content.
 				IEditorInput oldInput = getEditorInput();
 				if (oldInput != null && oldInput instanceof IStorageEditorInput) {
-				    String storagePath = ((IStorageEditorInput)oldInput).getStorage().getFullPath().toString();
-				    ExternalFilesRegistry.getInstance().removeFileEntry(storagePath);
+					String storagePath = ((IStorageEditorInput) oldInput).getStorage().getFullPath().toString();
+					ExternalFilesRegistry.getInstance().removeFileEntry(storagePath);
 				}
 				PhpSourceParser.editFile.set(resource);
 				super.doSetInput(input);
@@ -1440,14 +1457,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	public IFile getFile() {
 		IPath path = new Path(getModel().getBaseLocation());
-		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())){
+		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 			return ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
 		}
 		//could be that it is an external file BUT was already removed !, check :
-		else if(path.segmentCount() == 1){
+		else if (path.segmentCount() == 1) {
 			return ExternalFileDecorator.createFile(path.toString());
 		}
-		
+
 		//handle case of workspace file AND/OR an external file with more than 1 segment
 		return ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
 	}
@@ -1496,7 +1513,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		} else
 			fCursorActions.remove(actionId);
 	}
-	
+
 	public IDocument getDocument() {
 		return getSourceViewer().getDocument();
 	}
