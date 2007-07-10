@@ -16,6 +16,8 @@ import java.util.List;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -24,15 +26,17 @@ import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel;
 
 /**
- * A helper class for all the actions that deals with setting and managing breakpoints on external files.
+ * A helper class for all the actions that deals with setting and managing
+ * breakpoints on external files.
  * 
  * @author shalom
- *
+ * 
  */
 public class ExternalBreakpointActionHelper {
 
 	/**
 	 * Returns if there are markers which include the ruler's line of activity.
+	 * 
 	 * @param resource
 	 * @param document
 	 * @param annotationModel
@@ -45,15 +49,22 @@ public class ExternalBreakpointActionHelper {
 				IMarker[] allMarkers;
 				if (resource.exists()) {
 					allMarkers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
-
+					if (allMarkers != null) {
+						for (int i = 0; i < allMarkers.length; i++) {
+							if (includesRulerLine(annotationModel.getMarkerPosition(allMarkers[i]), document, rulerInfo)) {
+								return true;
+							}
+						}
+					}
 				} else {
 					// get it from the workspace root
 					allMarkers = resource.getWorkspace().getRoot().findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
-				}
-				if (allMarkers != null) {
-					for (int i = 0; i < allMarkers.length; i++) {
-						if (includesRulerLine(annotationModel.getMarkerPosition(allMarkers[i]), document, rulerInfo)) {
-							return true;
+					IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
+					if (allMarkers != null) {
+						for (int i = 0; i < allMarkers.length; i++) {
+							if (manager.getBreakpoint(allMarkers[i]) != null && includesRulerLine(annotationModel.getMarkerPosition(allMarkers[i]), document, rulerInfo)) {
+								return true;
+							}
 						}
 					}
 				}
@@ -80,16 +91,25 @@ public class ExternalBreakpointActionHelper {
 				IMarker[] allMarkers;
 				if (resource.exists()) {
 					allMarkers = resource.findMarkers(IBreakpoint.BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
+					if (allMarkers != null) {
+						for (int i = 0; i < allMarkers.length; i++) {
+							if (includesRulerLine(annotationModel.getMarkerPosition(allMarkers[i]), document, rulerInfo)) {
+								markers.add(allMarkers[i]);
+							}
+						}
+					}
 				} else {
 					allMarkers = resource.getWorkspace().getRoot().findMarkers(IBreakpoint.BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
-				}
-				if (allMarkers != null) {
-					for (int i = 0; i < allMarkers.length; i++) {
-						if (includesRulerLine(annotationModel.getMarkerPosition(allMarkers[i]), document, rulerInfo)) {
-							markers.add(allMarkers[i]);
+					if (allMarkers != null) {
+						IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
+						for (int i = 0; i < allMarkers.length; i++) {
+							if (manager.getBreakpoint(allMarkers[i]) != null && includesRulerLine(annotationModel.getMarkerPosition(allMarkers[i]), document, rulerInfo)) {
+								markers.add(allMarkers[i]);
+							}
 						}
 					}
 				}
+
 			} catch (CoreException x) {
 			}
 		}
@@ -103,8 +123,7 @@ public class ExternalBreakpointActionHelper {
 	 *            the position to be checked
 	 * @param document
 	 *            the document the position refers to
-	 * @return <code>true</code> if the line is included by the given
-	 *         position
+	 * @return <code>true</code> if the line is included by the given position
 	 */
 	private static boolean includesRulerLine(Position position, IDocument document, IVerticalRulerInfo rulerInfo) {
 		if (position != null && rulerInfo != null) {

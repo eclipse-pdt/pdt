@@ -48,4 +48,15 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	protected IMarker[] getMarkers() {
 		return ExternalBreakpointActionHelper.getMarkers(getResource(), getDocument(), getAnnotationModel(), getRulerInfo());
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction#update()
+	 */
+	public void update() {
+		breakpoints = getBreakpoints(getMarkers());
+		boolean enableThisAction = hasMarkers() && breakpoints.length > 0;
+		setEnabled(enableThisAction);
+
+	}
 }
