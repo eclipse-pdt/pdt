@@ -5,6 +5,7 @@ import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.FormattingContext;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
@@ -194,4 +195,36 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			super.redrawRegionChanged(structuredDocumentEvent);
 		}
 	}
+
+	/**
+	 * We override this function in order to use content assist for php and not use the defualt one dictated by StructuredTextViewerConfiguration
+	 */
+	public void configure(SourceViewerConfiguration configuration) {
+
+		super.configure(configuration);
+
+		if (!(configuration instanceof PHPStructuredTextViewerConfiguration)) {
+			return;
+		}
+		config = configuration;
+		
+		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
+		IContentAssistant newPHPAssistant = phpConfiguration.getPHPContentAssistant(this, true);
+		
+		// Uninstall content assistant created in super:
+		if (fContentAssistant != null) {
+			fContentAssistant.uninstall();
+		}
+		
+		// Assign, and configure our content assistant:
+		fContentAssistant = newPHPAssistant;
+		if (fContentAssistant != null) {
+			fContentAssistant.install(this);
+			fContentAssistantInstalled = true;
+		} else {
+			// 248036 - disable the content assist operation if no content assistant
+			enableOperation(CONTENTASSIST_PROPOSALS, false);
+		}
+	}
+
 }

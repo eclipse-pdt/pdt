@@ -172,7 +172,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	private void configureContentAssistant(ISourceViewer sourceViewer) {
-		IContentAssistant contentAssistant = getContentAssistant(sourceViewer);
+		IContentAssistant contentAssistant = getPHPContentAssistant(sourceViewer);
 		if (contentAssistant instanceof StructuredContentAssistant) {
 			StructuredContentAssistant structuredContentAssistant = (StructuredContentAssistant) contentAssistant;
 			structuredContentAssistant.enableAutoInsert(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
@@ -183,9 +183,14 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private StructuredContentAssistant fContentAssistant = null;
 
-	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		if (fContentAssistant == null) {
+	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
+		return getPHPContentAssistant(sourceViewer, false);
+	}
+
+	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer, boolean reCreate) {
+		if (fContentAssistant == null || reCreate) {
 			fContentAssistant = getPHPContentAssistantExtension();
+			setupPropertyChangeListener(sourceViewer);
 			if (fContentAssistant == null) {
 				fContentAssistant = new StructuredContentAssistant();
 			}
@@ -211,8 +216,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 					}
 				}
 			}
-
-			setupPropertyChangeListener(sourceViewer);
 		}
 		return fContentAssistant;
 	}
