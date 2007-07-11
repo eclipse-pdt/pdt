@@ -481,13 +481,16 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 				length = partitionLength;
 			}
 			phpTokens = region.getPhpTokens(from, Math.min(length, region.getLength()));
+			ITextRegion prevElement = null;
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
 				attr = getAttributeFor(element);
-				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))) {
-					styleRange.length += element.getLength();
+				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr)) && prevElement != null && prevElement.getTextLength() == prevElement.getLength()) {
+					// extends the prev styleRange with the current element length
+					styleRange.length += element.getTextLength();
 				} else {
-					styleRange =new StyleRange(regionStart + element.getStart(), element.getLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
+					// create new styleRange
+					styleRange =new StyleRange(regionStart + element.getStart(), element.getTextLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
 					if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 						styleRange.underline = true;
 						styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
@@ -503,6 +506,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 					// it hasn't changed
 					previousAttr = attr;
 				}
+				prevElement = element;
 			}
 			return true;
 		} catch (BadLocationException e) {
