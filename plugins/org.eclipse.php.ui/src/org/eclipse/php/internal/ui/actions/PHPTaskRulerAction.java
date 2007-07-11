@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IMarker;
@@ -17,7 +18,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.php.core.phpModel.phpElementData.PHPTask;
+import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPTask;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.MarkerRulerAction;
 import org.eclipse.ui.texteditor.TaskRulerAction;
@@ -61,13 +64,25 @@ public class PHPTaskRulerAction extends TaskRulerAction {
 			TaskPropertiesDialog dialog = new TaskPropertiesDialog(getTextEditor().getSite().getShell());
 			dialog.setResource(resource);
 			dialog.setInitialAttributes(getInitialAttributes());
-			dialog.open();
-			IMarker marker = dialog.getMarker();
-			// Add an attribute that will be read in the validation process. 
-			// Fix bug #95 (See also PHPProblemsValidator)
-			try {
-				marker.setAttribute(PHPTask.RULER_PHP_TASK, true);
-			} catch (CoreException e) {
+			if (dialog.open() == Window.OK) {
+				// Add an attribute that will be read in the validation process. 
+				// Fix bug #95 (See also PHPProblemsValidator)
+				if (dialog.getMarker() != null) {
+					try {
+						dialog.getMarker().setAttribute(PHPTask.RULER_PHP_TASK, true);
+					} catch (CoreException e) {
+					}
+				} else {
+					// For some reason, the dialog.getMarker returns null (since 3.3).
+					// In this case, make all the task markers as RULER_PHP_TASK
+					Iterator markers = getMarkers().iterator();
+					while (markers.hasNext()) {
+						try {
+							((IMarker) markers.next()).setAttribute(PHPTask.RULER_PHP_TASK, true);
+						} catch (CoreException e) {
+						}
+					}
+				}
 			}
 		}
 	}
@@ -76,6 +91,6 @@ public class PHPTaskRulerAction extends TaskRulerAction {
 	 * @see AbstractRulerActionDelegate#createAction(ITextEditor, IVerticalRulerInfo)
 	 */
 	protected IAction createAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
-		return new TaskMarkerRulerAction(ActionMessages.getBundleForConstructedKeys(), "Editor.ManageTasks.", editor, rulerInfo); //$NON-NLS-1$
+		return new TaskMarkerRulerAction(PHPUIMessages.getBundleForConstructedKeys(), "Editor.ManageTasks.", editor, rulerInfo); //$NON-NLS-1$
 	}
 }
