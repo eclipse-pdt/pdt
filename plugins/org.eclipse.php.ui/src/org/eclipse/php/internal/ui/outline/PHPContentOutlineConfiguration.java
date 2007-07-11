@@ -203,4 +203,11 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
 		return new PHPNodeActionManager((IStructuredModel) treeViewer.getInput(), treeViewer);
 	}
+
+	@Override
+	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
+		super.enableShowAttributes(showAttributes, treeViewer);
+		((PHPOutlineLabelProvider) getLabelProvider(treeViewer)).setShowAttributes(showAttributes);
+	}
+
 }
