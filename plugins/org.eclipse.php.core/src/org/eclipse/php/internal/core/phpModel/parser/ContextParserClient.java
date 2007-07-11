@@ -21,8 +21,8 @@ public class ContextParserClient implements ParserClient {
 	private String functionName;
 	private PHPCodeContext context;
 
-	private Stack classes = new Stack();
-	private Stack functions = new Stack();
+	private final Stack classes = new Stack();
+	private final Stack functions = new Stack();
 
 	public ContextParserClient() {
 		className = EMPTY_STRING;
@@ -123,6 +123,8 @@ public class ContextParserClient implements ParserClient {
 	}
 
 	public void startParsing(String fileName) {
+		this.classes.clear();
+		this.functions.clear();
 		className = EMPTY_STRING;
 		functionName = EMPTY_STRING;
 		updateContext();
