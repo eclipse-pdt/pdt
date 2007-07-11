@@ -262,7 +262,9 @@ public class PhpTokenContainer {
 
 		// if state was change - we add a new token and add state 
 		if (lexerStateChanges.size() == 0 || !getLastChange().state.equals(lexerState)) {
-			final ContextRegion contextRegion = new ContextRegion(yylex, start, yylengthLength, yylength);
+			int textLength = (PhpLexer.WHITESPACE.equals(yylex)) ? 0 : yylengthLength;
+			
+			final ContextRegion contextRegion = new ContextRegion(yylex, start, textLength, yylength);
 			phpTokens.addLast(contextRegion);
 			lexerStateChanges.addLast(new LexerStateChange((LexerState) lexerState, contextRegion));
 			return;
