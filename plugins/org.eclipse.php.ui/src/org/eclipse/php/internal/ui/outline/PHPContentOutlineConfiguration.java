@@ -31,18 +31,9 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.utils.StringUtils;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
-import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 
 public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfiguration {
 	protected PHPOutlineContentProvider fContentProvider = null;
