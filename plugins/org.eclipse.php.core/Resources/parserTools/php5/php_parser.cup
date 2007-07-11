@@ -1,0 +1,1419 @@
+package org.eclipse.php.internal.core.phpModel.parser.php5;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////    $Id: php_parser.cup,v 1.1 2007/07/11 12:51:41 ggurfinke Exp $
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
+import java.io.StringReader;
+import java.util.StringTokenizer;
+import org.eclipse.php.internal.core.phpModel.parser.CompletionLexer;
+import org.eclipse.php.internal.core.phpModel.parser.ParserClient;
+import org.eclipse.php.internal.core.phpModel.parser.PhpParser;
+import org.eclipse.php.internal.core.phpModel.parser.IncludingType;
+import org.eclipse.php.internal.core.phpModel.parser.phpdoc.DocumentorLexer;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
+
+parser code {:
+    public static final Integer ZERO_INTEGER = new Integer(0);
+    public static final Integer PUBLIC_INTEGER = new Integer(PHPModifier.PUBLIC);
+    public static final Integer PRIVATE_INTEGER = new Integer(PHPModifier.PRIVATE);
+    public static final Integer PROTECTED_INTEGER = new Integer(PHPModifier.PROTECTED);
+    public static final Integer STATIC_INTEGER = new Integer(PHPModifier.STATIC);
+    public static final Integer FINAL_INTEGER = new Integer(PHPModifier.FINAL);
+    public static final Integer INTERFACE_INTEGER = new Integer(PHPModifier.INTERFACE);
+    public static final Integer ABSTRACT_INTEGER = new Integer(PHPModifier.ABSTRACT);
+
+    public static final int DEFAULT_ERROR_STRATEGY = 0;
+    public static final int STACK_ERROR_STRATEGY = 1;
+
+    private ErrorStrategy defaultStrategy = new DefaultErrorStrategy();;
+    private ErrorStrategy stackStrategy = new StackErrorStrategy();
+    private ErrorStrategy errorStrategy = defaultStrategy;
+    private ParserClient parserClient;
+
+    public void setErrorStrategy(int strategy) {
+        errorStrategy = (strategy == STACK_ERROR_STRATEGY) ? stackStrategy : defaultStrategy;
+    }
+
+    public ErrorStrategy getErrorStrategy() {
+        return errorStrategy;
+    }
+
+    public void setParserClient(ParserClient client) {
+        parserClient = client;
+    }
+
+    public ParserClient getParserClient() {
+        return parserClient;
+    }
+
+    /**
+     * This method is called when a syntax error has been detected and recovery is about to be invoked.
+     * The super class just emit a "Syntax error" error message.
+     * @param cur_token the current lookahead Symbol.
+     */
+    public void syntax_error(Symbol cur_token) {
+        //System.out.println("syntax_error:"+cur_token);
+        //super.syntax_error(cur_token,info);
+        int state = ((Symbol) stack.peek()).parse_state;
+        short[] rowOfProbe = action_tab[state];
+        getParserClient().handleSyntaxError(cur_token.sym, (String)cur_token.value, rowOfProbe, cur_token.left, cur_token.right, getCurrentLine());    }
+
+    /**
+     * Report a non fatal error (or warning).  This method takes a message
+     * string and an additional object (to be used by specializations implemented in subclasses).
+     * The super class prints the message to System.err.
+     * @param message an error message.
+     * @param info    an extra object reserved for use by specialized subclasses.
+     */
+    public void report_error(String message, Object info) {
+        //System.out.println("report_error:"+message);
+        //System.out.println("report_error:"+info);
+        //super.report_error(message,info);
+        getParserClient().handleError("report_error", cur_token.left, cur_token.right, getCurrentLine());
+    }
+
+    /**
+     * This method is called if it is determined that syntax error recovery has been unsuccessful.
+     * The super class report a fatal error.
+     * @param cur_token the current lookahead Symbol.
+     */
+    public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
+        //System.out.println("unrecovered_syntax_error:"+cur_token);
+        //super.unrecovered_syntax_error(cur_token);
+        getParserClient().handleError("unrecovered_syntax_error", cur_token.left, cur_token.right, getCurrentLine());
+    }
+
+    /**
+     * Report a fatal error.  This method takes a message string and an additional object
+     * (to be used by specializations implemented in subclasses).
+     * The super class reports the error then throws an exception.
+     * @param message an error message.
+     * @param info    an extra object reserved for use by specialized subclasses.
+     */
+
+    public void report_fatal_error(String message, Object info) throws Exception {
+        //System.out.println("report_fatal_error:"+cur_token);
+        //super.report_fatal_error(message,info);
+        getParserClient().handleError("report_fatal_error", cur_token.left, cur_token.right, getCurrentLine());
+    }
+
+    /**
+     * Attempt to recover from a syntax error.  This returns false if recovery fails,
+     * true if it succeeds.
+     * @param debug should we produce debugging messages as we parse.
+     */
+    protected boolean error_recovery(boolean debug) throws java.lang.Exception {
+        return errorStrategy.errorRecovery(debug);
+    }
+
+
+    interface ErrorStrategy {
+        public boolean errorRecovery(boolean debug) throws Exception;
+    }
+
+    class DefaultErrorStrategy implements ErrorStrategy {
+
+        public boolean errorRecovery(boolean debug) throws Exception {
+            return PhpParser5.super.error_recovery(debug);
+        }
+    }
+
+    class StackErrorStrategy implements ErrorStrategy {
+
+        private Symbol errorLoopSymbol = null;
+
+        public boolean errorRecovery(boolean debug) throws Exception {
+            //first we empty the stack leaving only the first start_state symbol.
+            while (stack.size() > 1) {
+                stack.pop();
+                tos--;
+            }
+            //if we recognize a loop (the parser can't advance) we scan to the next token.
+            if (errorLoopSymbol != null && errorLoopSymbol.equals(cur_token))
+                cur_token = scan();
+            else {
+                errorLoopSymbol = cur_token;
+            }
+            return true;
+        }
+    }
+
+    public int getCurrentLine(){
+        CompletionLexer lexer = (CompletionLexer)getScanner();
+        return lexer.getCurrentLine();
+    }
+
+    public int getLength() {
+        CompletionLexer lexer = (CompletionLexer)getScanner();
+        return lexer.getLength();
+    }
+
+    PHPDocBlock getPHPDoc(int location) {
+        CompletionLexer lexer = (CompletionLexer)getScanner();
+        Object[] phpDocValue = lexer.getPHPDoc(location);
+
+        if (phpDocValue[0] == null) {
+            return null;
+        }
+
+        return parseDocBlock((String)phpDocValue[0], ((Integer) phpDocValue[1]).intValue());
+    }
+
+    public String createString(int StartOffset, int endOffset) {
+        CompletionLexer lexer = (CompletionLexer)getScanner();
+        return lexer.createString(StartOffset, endOffset);
+    }
+
+    public Symbol parse() throws java.lang.Exception{
+        Symbol s = super.parse();
+        CompletionLexer lexer = (CompletionLexer)getScanner();
+        Object[] phpDocValue = lexer.getFirstPHPDoc();
+
+        if (phpDocValue[0] == null) {
+            getParserClient().setFirstDocBlock(null);
+            return s;
+        }
+
+        PHPDocBlock docBlock = parseDocBlock((String)phpDocValue[0], ((Integer) phpDocValue[1]).intValue());
+
+        getParserClient().setFirstDocBlock(docBlock);
+        return s;
+    }
+
+    private PHPDocBlock parseDocBlock(String comment, int startPosition){
+        DocumentorLexer docLexer = new DocumentorLexer(new StringReader(comment));
+        PHPDocBlock rv = docLexer.parse();
+        rv.setStartPosition(startPosition);
+        rv.setEndPosition(startPosition + comment.length() - 1);
+        return rv;
+    }
+
+    protected int error_sync_size() {
+        return 1;
+    }
+
+:}
+
+/* terminals */
+
+terminal  T_EXIT;
+terminal  T_IF;
+terminal  T_LNUMBER;
+terminal  String T_DNUMBER;
+terminal  String T_STRING;
+terminal  String T_STRING_VARNAME;
+terminal  String T_VARIABLE;
+terminal  T_NUM_STRING;
+terminal  T_INLINE_HTML;
+terminal  T_CHARACTER;
+terminal  T_BAD_CHARACTER;
+terminal  T_ENCAPSED_AND_WHITESPACE;
+terminal  String T_CONSTANT_ENCAPSED_STRING;
+terminal  T_ECHO;
+terminal  T_DO;
+terminal  T_WHILE;
+terminal  T_ENDWHILE;
+terminal  T_FOR;
+terminal  T_ENDFOR;
+terminal  T_FOREACH;
+terminal  T_ENDFOREACH;
+terminal  T_DECLARE;
+terminal  T_ENDDECLARE;
+terminal  T_INSTANCEOF;
+terminal  T_CLONE;
+terminal  T_AS;
+terminal  T_SWITCH;
+terminal  T_ENDSWITCH;
+terminal  T_CASE;
+terminal  T_DEFAULT;
+terminal  T_BREAK;
+terminal  T_CONTINUE;
+terminal  T_FUNCTION;
+terminal  T_CONST;
+terminal  T_RETURN;
+terminal  T_TRY;
+terminal  T_CATCH;
+terminal  T_THROW;
+terminal  T_USE;
+terminal  T_GLOBAL;
+terminal  T_VAR;
+terminal  T_UNSET;
+terminal  T_ISSET;
+terminal  T_EMPTY;
+terminal  T_HALT_COMPILER;
+terminal  T_CLASS;
+terminal  T_INTERFACE;
+terminal  T_EXTENDS;
+terminal  T_IMPLEMENTS;
+terminal  T_OBJECT_OPERATOR;
+terminal  T_DOUBLE_ARROW;
+terminal  T_LIST;
+terminal  T_ARRAY;
+terminal  T_CLASS_C;
+terminal  T_METHOD_C;
+terminal  T_FUNC_C;
+terminal  T_LINE;
+terminal  String T_FILE;
+terminal  T_START_HEREDOC;
+terminal  T_END_HEREDOC;
+terminal  T_DOLLAR_OPEN_CURLY_BRACES;
+terminal  T_CURLY_OPEN;
+terminal  T_CURLY_OPEN_WITH_DOLAR;
+terminal  T_CURLY_CLOSE;
+terminal  T_PAAMAYIM_NEKUDOTAYIM;
+terminal String T_VAR_COMMENT;
+terminal String T_DEFINE;
+
+terminal T_INCLUDE,T_INCLUDE_ONCE,T_EVAL,T_REQUIRE,T_REQUIRE_ONCE;
+terminal T_COMMA;
+terminal T_LOGICAL_OR,T_LOGICAL_XOR,T_LOGICAL_AND,T_PRINT;
+terminal T_EQUAL;
+terminal T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,T_CONCAT_EQUAL,T_MOD_EQUAL,T_AND_EQUAL,T_OR_EQUAL,T_XOR_EQUAL,T_SL_EQUAL,T_SR_EQUAL;
+terminal T_QUESTION_MARK;
+terminal T_SEMICOLON;
+terminal T_BOOLEAN_OR,T_BOOLEAN_AND;
+terminal T_OR;
+terminal T_KOVA;
+terminal T_REFERENCE;
+terminal T_IS_EQUAL,T_IS_NOT_EQUAL,T_IS_IDENTICAL,T_IS_NOT_IDENTICAL;
+terminal T_IS_SMALLER_OR_EQUAL,T_IS_GREATER_OR_EQUAL;
+terminal T_RGREATER;
+terminal T_LGREATER;
+terminal T_SL,T_SR;
+terminal T_PLUS;
+terminal T_MINUS;
+terminal T_TIMES;
+terminal T_DIV;
+terminal T_PRECENT;
+terminal T_NOT;
+terminal T_TILDA;
+terminal T_NEKUDA;
+terminal T_INC,T_DEC,T_INT_CAST,T_DOUBLE_CAST,T_STRING_CAST,T_ARRAY_CAST,T_OBJECT_CAST,T_BOOL_CAST,T_UNSET_CAST;
+terminal T_AT;
+terminal T_OPEN_RECT,T_CLOSE_RECT;
+terminal T_NEW;
+terminal T_ENDIF;
+terminal T_ELSEIF;
+terminal T_ELSE;
+terminal T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+terminal T_OPEN_PARENTHESE,T_CLOSE_PARENTHESE;
+terminal T_NEKUDOTAIM;
+terminal T_DOLLAR;
+terminal T_QUATE,T_BACKQUATE,T_SINGLE_QUATE;
+
+/* Non terminals */
+
+non terminal thestart;
+non terminal top_statement_list;
+non terminal top_statement;
+non terminal statement;
+non terminal inner_statement_list;
+non terminal inner_statement;
+non terminal unticked_statement;
+non terminal unset_variables;
+non terminal unset_variable;
+non terminal use_filename;
+non terminal foreach_optional_arg;
+non terminal foreach_variable;
+non terminal for_statement;
+non terminal foreach_statement;
+non terminal declare_statement;
+non terminal declare_list;
+non terminal switch_case_list;
+non terminal case_list;
+non terminal case_separator;
+non terminal while_statement;
+non terminal elseif_list;
+non terminal new_elseif_list;
+non terminal else_single;
+non terminal new_else_single;
+non terminal parameter_list;
+non terminal non_empty_parameter_list;
+non terminal parameter;
+non terminal function_call_parameter_list;
+non terminal non_empty_function_call_parameter_list;
+non terminal String define_function_call_parameter_list;
+non terminal global_var_list;
+non terminal global_var;
+non terminal static_var_list;
+non terminal class_statement_list;
+non terminal class_statement;
+non terminal is_reference;
+non terminal echo_expr_list;
+non terminal for_expr;
+non terminal non_empty_for_expr;
+non terminal String expr_without_variable;
+non terminal String function_call;
+non terminal exit_expr;
+non terminal String ctor_arguments;
+non terminal String common_scalar;
+non terminal String static_scalar;
+non terminal String scalar;
+non terminal static_array_pair_list;
+non terminal possible_comma;
+non terminal non_empty_static_array_pair_list;
+non terminal String expr;
+non terminal String reference_variable;
+non terminal String compound_variable;
+non terminal dim_offset;
+non terminal String object_property;
+non terminal String object_dim_list;
+non terminal String variable_name;
+non terminal simple_indirect_reference;
+non terminal assignment_list;
+non terminal assignment_list_element;
+non terminal array_pair_list;
+non terminal non_empty_array_pair_list;
+non terminal encaps_list;
+non terminal encaps_var;
+non terminal encaps_var_offset;
+non terminal internal_functions_in_yacc;
+non terminal String string_st;
+non terminal Integer interface_entry;
+non terminal String interface_extends_list;
+
+non terminal w_variable;
+non terminal String fully_qualified_class_name;
+non terminal String class_variable_declaration;
+non terminal class_constant_declaration;
+non terminal Integer method_modifiers;
+non terminal method_body;
+non terminal Integer non_empty_member_modifiers;
+non terminal Integer member_modifier;
+non terminal method_or_not;
+non terminal String variable_properties;
+non terminal function_declaration_statement;
+non terminal class_declaration_statement;
+non terminal String variable;
+non terminal additional_catches;
+non terminal non_empty_additional_catches;
+non terminal additional_catch;
+non terminal unticked_function_declaration_statement;
+non terminal unticked_class_declaration_statement;
+non terminal Integer class_entry_type;
+non terminal String extends_from;
+non terminal String implements_list;
+non terminal String interface_list;
+non terminal String optional_class_type;
+non terminal String r_variable;
+non terminal Integer variable_modifiers;
+non terminal rw_variable;
+non terminal variable_without_objects;
+non terminal String variable_property;
+non terminal static_member;
+non terminal isset_variables;
+non terminal String tracked_variable;
+
+non terminal String class_name_reference;
+non terminal class_constant;
+non terminal dynamic_class_name_reference;
+non terminal String base_variable;
+non terminal dynamic_class_name_variable_properties;
+non terminal dynamic_class_name_variable_property;
+non terminal static_class_constant;
+non terminal String base_variable_with_function_calls;
+
+
+precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
+precedence left T_COMMA;
+precedence left T_LOGICAL_OR;
+precedence left T_LOGICAL_XOR;
+precedence left T_LOGICAL_AND;
+precedence right T_PRINT;
+precedence left T_EQUAL, T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,T_CONCAT_EQUAL,T_MOD_EQUAL,T_AND_EQUAL,T_OR_EQUAL,T_XOR_EQUAL,T_SL_EQUAL,T_SR_EQUAL;
+precedence left T_QUESTION_MARK,T_SEMICOLON;
+precedence left T_BOOLEAN_OR;
+precedence left T_BOOLEAN_AND;
+precedence left T_OR;
+precedence left T_KOVA;
+precedence left T_REFERENCE;
+
+precedence nonassoc T_IS_EQUAL,T_IS_NOT_EQUAL,T_IS_IDENTICAL,T_IS_NOT_IDENTICAL;
+precedence nonassoc T_RGREATER,T_IS_SMALLER_OR_EQUAL,T_LGREATER,T_IS_GREATER_OR_EQUAL;
+precedence left T_SL,T_SR;
+precedence left T_PLUS,T_MINUS,T_NEKUDA;
+precedence left T_TIMES,T_DIV,T_PRECENT;
+precedence right T_NOT;
+precedence nonassoc T_INSTANCEOF;
+precedence right T_TILDA,T_INC,T_DEC,T_INT_CAST,T_DOUBLE_CAST,T_STRING_CAST,T_ARRAY_CAST,T_OBJECT_CAST,T_BOOL_CAST,T_UNSET_CAST,T_AT;
+precedence right T_OPEN_RECT;
+precedence nonassoc T_NEW, T_CLONE;
+precedence left T_ELSEIF;
+precedence left T_ELSE;
+precedence left T_ENDIF;
+precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+
+thestart ::=
+top_statement_list
+;
+
+top_statement_list ::=
+top_statement_list top_statement
+| /* empty */
+;
+
+top_statement ::=
+statement
+| function_declaration_statement
+| class_declaration_statement
+| T_HALT_COMPILER T_OPEN_PARENTHESE T_CLOSE_PARENTHESE T_SEMICOLON
+;
+
+inner_statement_list ::=
+inner_statement_list  inner_statement
+| /* empty */
+;
+
+inner_statement ::=
+statement
+| function_declaration_statement
+| class_declaration_statement
+| T_HALT_COMPILER:halt T_OPEN_PARENTHESE T_CLOSE_PARENTHESE:close T_SEMICOLON {:
+parser.syntax_error(new Symbol(3/*top_statement*/, haltleft, closeright, "__halt_compiler()"));
+:}
+;
+
+statement ::=
+unticked_statement
+;
+
+unticked_statement ::=
+T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE
+| T_IF T_OPEN_PARENTHESE expr T_CLOSE_PARENTHESE statement elseif_list else_single
+| T_IF T_OPEN_PARENTHESE expr T_CLOSE_PARENTHESE T_NEKUDOTAIM inner_statement_list new_elseif_list new_else_single T_ENDIF T_SEMICOLON
+| T_WHILE T_OPEN_PARENTHESE expr  T_CLOSE_PARENTHESE while_statement
+| T_DO statement T_WHILE T_OPEN_PARENTHESE expr T_CLOSE_PARENTHESE T_SEMICOLON
+| T_FOR T_OPEN_PARENTHESE for_expr T_SEMICOLON for_expr T_SEMICOLON for_expr T_CLOSE_PARENTHESE for_statement
+| T_SWITCH T_OPEN_PARENTHESE expr T_CLOSE_PARENTHESE switch_case_list
+| T_BREAK T_SEMICOLON
+| T_BREAK expr T_SEMICOLON
+| T_CONTINUE T_SEMICOLON
+| T_CONTINUE expr T_SEMICOLON
+| T_RETURN T_SEMICOLON
+| T_RETURN expr_without_variable T_SEMICOLON
+{: parser.getParserClient().haveReturnValue(); :}
+| T_RETURN variable T_SEMICOLON
+{: parser.getParserClient().haveReturnValue(); :}
+| T_GLOBAL global_var_list T_SEMICOLON
+| T_STATIC static_var_list T_SEMICOLON
+| T_ECHO echo_expr_list T_SEMICOLON
+| T_INLINE_HTML
+| expr T_SEMICOLON
+| T_USE use_filename T_SEMICOLON
+| T_UNSET T_OPEN_PARENTHESE unset_variables T_CLOSE_PARENTHESE T_SEMICOLON
+| T_FOREACH T_OPEN_PARENTHESE variable T_AS foreach_variable foreach_optional_arg T_CLOSE_PARENTHESE foreach_statement
+| T_FOREACH T_OPEN_PARENTHESE expr_without_variable T_AS variable foreach_optional_arg T_CLOSE_PARENTHESE foreach_statement
+| T_DECLARE T_OPEN_PARENTHESE declare_list T_CLOSE_PARENTHESE declare_statement
+| T_SEMICOLON /* empty statement */
+| T_TRY T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE T_CATCH T_OPEN_PARENTHESE fully_qualified_class_name:className tracked_variable:var T_CLOSE_PARENTHESE
+    {: parser.getParserClient().handleObjectInstansiation(var, className, null, parser.getCurrentLine(), classNameleft, false); :}
+T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE additional_catches
+| T_THROW expr T_SEMICOLON
+| error:theError /* error statement */
+{:
+    parser.getParserClient().handleError("unticked_statement::=error ", theErrorleft, theErrorright, parser.getCurrentLine());
+:}
+
+| T_VAR_COMMENT:varComment
+{:
+    varComment = varComment.substring(2, varComment.length() - 2).trim();   // remove '/*' and '*/'
+
+    StringTokenizer tokenizer = new StringTokenizer(varComment, " \n\t\r");
+    if (tokenizer.countTokens() >= 3) {
+        tokenizer.nextToken();  // ignore the @var
+        String objectName = tokenizer.nextToken();
+        String objectType = tokenizer.nextToken();
+        if (objectName.charAt(0) != '$') {
+            objectName = "$" + objectName;
+        }
+        parser.getParserClient().handleObjectInstansiation(objectName, objectType, null, parser.getCurrentLine(), varCommentleft, true);
+    }
+:}
+;
+
+additional_catches ::=
+non_empty_additional_catches
+| /* empty */
+;
+
+non_empty_additional_catches ::=
+additional_catch
+| non_empty_additional_catches additional_catch
+;
+
+additional_catch ::=
+T_CATCH T_OPEN_PARENTHESE fully_qualified_class_name:className T_VARIABLE:var T_CLOSE_PARENTHESE
+    {: parser.getParserClient().handleObjectInstansiation(var, className, null, parser.getCurrentLine(), classNameleft, false); :}
+ T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE
+;
+
+unset_variables ::=
+unset_variable
+| unset_variables T_COMMA unset_variable
+;
+
+unset_variable ::=
+variable
+;
+
+use_filename ::=
+T_CONSTANT_ENCAPSED_STRING
+| T_OPEN_PARENTHESE T_CONSTANT_ENCAPSED_STRING T_CLOSE_PARENTHESE
+;
+
+function_declaration_statement ::=
+unticked_function_declaration_statement
+;
+
+class_declaration_statement ::=
+unticked_class_declaration_statement
+;
+
+is_reference ::=
+/* empty */
+| T_REFERENCE
+;
+
+unticked_function_declaration_statement ::=
+T_FUNCTION:tFunc is_reference string_st:functionName
+    {:parser.getParserClient().handleFunctionDeclarationStarts(functionName);:}
+T_OPEN_PARENTHESE parameter_list T_CLOSE_PARENTHESE
+    {:
+        parser.getParserClient().handleFunctionDeclaration(functionName, false, 0, parser.getPHPDoc(tFuncleft), tFuncleft, functionNameleft, parser.getCurrentLine());
+     :}
+T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE:curlyClose
+    {:parser.getParserClient().handleFunctionDeclarationEnds(functionName, false, curlyCloseright);:}
+;
+
+unticked_class_declaration_statement ::=
+class_entry_type:modifier T_STRING:className
+    {: parser.getParserClient().hadleClassDeclarationStarts(className, modifierleft); :}
+extends_from:superClassName implements_list:interfacesNames
+    {:
+        parser.getParserClient().handleClassDeclaration(className, modifier.intValue(), superClassName, interfacesNames, parser.getPHPDoc(modifierleft), modifierleft, classNameleft, parser.getCurrentLine());
+    :}
+T_CURLY_OPEN class_statement_list T_CURLY_CLOSE:end_curly
+    {: parser.getParserClient().handleClassDeclarationEnds(className, end_curlyright); :}
+|
+interface_entry:modifier T_STRING:className
+    {: parser.getParserClient().hadleClassDeclarationStarts(className, modifierleft); :}
+interface_extends_list:interfacesList
+    {:
+        parser.getParserClient().handleClassDeclaration(className, modifier.intValue(), null, interfacesList, parser.getPHPDoc(modifierleft), modifierleft, classNameleft, parser.getCurrentLine());
+    :}
+T_CURLY_OPEN class_statement_list T_CURLY_CLOSE:end_curly
+    {: parser.getParserClient().handleClassDeclarationEnds(className, end_curlyright); :}
+;
+
+class_entry_type ::=
+T_CLASS                     {: RESULT = PhpParser5.ZERO_INTEGER; :}
+| T_ABSTRACT T_CLASS        {: RESULT = PhpParser5.ABSTRACT_INTEGER; :}
+| T_FINAL T_CLASS           {: RESULT = PhpParser5.FINAL_INTEGER; :}
+;
+
+extends_from ::=
+/* empty */
+| T_EXTENDS fully_qualified_class_name:className
+{: RESULT = "[" + classNameleft + "." + classNameright + "]" + className; :}
+;
+
+interface_entry ::=
+	T_INTERFACE             {: RESULT = PhpParser5.INTERFACE_INTEGER; :}
+;
+
+interface_extends_list ::=
+/* empty */
+| T_EXTENDS interface_list:interfaceList {: RESULT = interfaceList; :}
+;
+
+implements_list ::=
+/* empty */
+| T_IMPLEMENTS interface_list:classesNames
+{: RESULT = classesNames; :}
+;
+
+interface_list ::=
+fully_qualified_class_name:className
+{: RESULT = "[" + classNameleft + "." + classNameright + "]" + className; :}
+| interface_list:list T_COMMA fully_qualified_class_name:className
+{: RESULT = list + "," + "[" + classNameleft + "." + classNameright + "]" + className; :}
+;
+
+foreach_optional_arg ::=
+/* empty */
+|	T_DOUBLE_ARROW foreach_variable
+;
+
+foreach_variable ::=
+variable
+| T_REFERENCE variable
+;
+
+for_statement ::=
+statement
+| T_NEKUDOTAIM inner_statement_list T_ENDFOR T_SEMICOLON
+;
+
+foreach_statement ::=
+statement
+| T_NEKUDOTAIM inner_statement_list T_ENDFOREACH T_SEMICOLON
+;
+
+declare_statement ::=
+statement
+| T_NEKUDOTAIM inner_statement_list T_ENDDECLARE T_SEMICOLON
+;
+
+declare_list ::=
+string_st T_EQUAL static_scalar
+| declare_list T_COMMA string_st T_EQUAL static_scalar
+;
+
+switch_case_list ::=
+T_CURLY_OPEN case_list T_CURLY_CLOSE
+| T_CURLY_OPEN T_SEMICOLON case_list T_CURLY_CLOSE
+| T_NEKUDOTAIM case_list T_ENDSWITCH T_SEMICOLON
+| T_NEKUDOTAIM T_SEMICOLON case_list T_ENDSWITCH T_SEMICOLON
+;
+
+case_list ::=
+/* empty */
+| case_list T_CASE expr case_separator inner_statement_list
+| case_list T_DEFAULT case_separator inner_statement_list
+;
+
+case_separator ::=
+T_NEKUDOTAIM
+| T_SEMICOLON
+;
+
+while_statement ::=
+statement
+| T_NEKUDOTAIM inner_statement_list T_ENDWHILE T_SEMICOLON
+;
+
+elseif_list ::=
+/* empty */
+| elseif_list T_ELSEIF T_OPEN_PARENTHESE expr T_CLOSE_PARENTHESE statement
+;
+
+new_elseif_list ::=
+/* empty */
+| new_elseif_list T_ELSEIF T_OPEN_PARENTHESE expr T_CLOSE_PARENTHESE T_NEKUDOTAIM inner_statement_list
+;
+
+else_single ::=
+/* empty */
+| T_ELSE statement
+;
+
+new_else_single ::=
+/* empty */
+| T_ELSE T_NEKUDOTAIM inner_statement_list
+;
+
+parameter_list ::=
+non_empty_parameter_list
+|
+;
+
+non_empty_parameter_list ::=
+parameter
+| non_empty_parameter_list T_COMMA non_empty_parameter_list
+| error:theError non_empty_parameter_list
+{:
+    parser.getParserClient().handleError("non_empty_parameter_list::=error1", theErrorleft, theErrorright, parser.getCurrentLine());
+:}
+;
+
+parameter ::=
+optional_class_type:classType T_VARIABLE:var
+{:
+    parser.getParserClient().handleFunctionParameter(classType, var, false, false, "", classTypeleft, varright, varleft, parser.getCurrentLine());
+:}
+| optional_class_type:classType T_REFERENCE:ref T_VARIABLE:var
+{:
+    parser.getParserClient().handleFunctionParameter(classType, var, true, false, "", classTypeleft, varright, varleft, parser.getCurrentLine());
+:}
+| optional_class_type:classType T_VARIABLE:var T_EQUAL static_scalar:scalar
+{:
+    parser.getParserClient().handleFunctionParameter(classType, var, false, false, scalar, classTypeleft, scalarright, varleft, parser.getCurrentLine());
+:}
+| optional_class_type:classType T_REFERENCE:ref T_VARIABLE:var T_EQUAL static_scalar:scalar
+{:
+    parser.getParserClient().handleFunctionParameter(classType, var, true, false, scalar, classTypeleft, scalarright, varleft, parser.getCurrentLine());
+:}
+| error:theError
+{:
+    parser.getParserClient().handleError("parameter::=error", theErrorleft, theErrorright, parser.getCurrentLine());
+:}
+;
+
+optional_class_type ::=
+/* empty */
+| T_STRING:className
+{: RESULT = className;:}
+|	T_ARRAY
+{: RESULT = "array";:}
+;
+
+function_call_parameter_list ::=
+non_empty_function_call_parameter_list
+| /* empty */
+;
+
+non_empty_function_call_parameter_list ::=
+expr_without_variable
+| variable
+| T_REFERENCE w_variable
+| non_empty_function_call_parameter_list T_COMMA expr_without_variable
+| non_empty_function_call_parameter_list T_COMMA variable
+| non_empty_function_call_parameter_list T_COMMA T_REFERENCE w_variable
+;
+
+global_var_list ::=
+global_var_list T_COMMA global_var
+| global_var
+;
+
+global_var ::=
+T_VARIABLE:var
+{:
+    parser.getParserClient().handleGlobalVar(var);
+:}
+| T_DOLLAR r_variable:var
+{:
+    parser.getParserClient().handleGlobalVar("$" + var);
+:}
+| T_DOLLAR T_CURLY_OPEN expr T_CURLY_CLOSE
+;
+
+static_var_list ::=
+static_var_list T_COMMA T_VARIABLE:var
+{:
+    parser.getParserClient().handleGlobalVar(var);
+:}
+| static_var_list T_COMMA T_VARIABLE:var T_EQUAL static_scalar
+{:
+    parser.getParserClient().handleGlobalVar(var);
+:}
+| T_VARIABLE:var
+{:
+    parser.getParserClient().handleGlobalVar(var);
+:}
+| T_VARIABLE:var T_EQUAL static_scalar
+{:
+    parser.getParserClient().handleGlobalVar(var);
+:}
+;
+
+class_statement_list ::=
+class_statement_list class_statement
+| /* empty */
+;
+
+class_statement ::=
+variable_modifiers:modifier class_variable_declaration:decl T_SEMICOLON
+{:
+    parser.getParserClient().handleClassVariablesDeclaration(decl, modifier.intValue(), parser.getPHPDoc(modifierleft), modifierleft, declright, declleft);
+:}
+| class_constant_declaration T_SEMICOLON
+
+| method_modifiers:modifier T_FUNCTION:tfunc is_reference string_st:functionName
+    {:parser.getParserClient().handleFunctionDeclarationStarts(functionName);:}
+T_OPEN_PARENTHESE parameter_list T_CLOSE_PARENTHESE
+{:
+    int leftPosition = modifierleft;
+    if (modifierleft == modifierright) {
+        leftPosition = tfuncleft;
+    }
+    parser.getParserClient().handleFunctionDeclaration(functionName, true, modifier.intValue(), parser.getPHPDoc(leftPosition), leftPosition, functionNameleft, parser.getCurrentLine());
+:}
+method_body:body
+{:
+    parser.getParserClient().handleFunctionDeclarationEnds(functionName, true, bodyright);
+:}
+
+| T_VAR_COMMENT:varComment
+{:
+    varComment = varComment.substring(2, varComment.length() - 2).trim();   // remove '/*' and '*/'
+
+    StringTokenizer tokenizer = new StringTokenizer(varComment, " \n\t\r");
+    if (tokenizer.countTokens() >= 3) {
+        tokenizer.nextToken();  // ignore the @var
+        String objectName = tokenizer.nextToken();
+        String objectType = tokenizer.nextToken();
+        if (objectName.charAt(0) != '$') {
+            objectName = "$" + objectName;
+        }
+        parser.getParserClient().handleObjectInstansiation(objectName, objectType, null, parser.getCurrentLine(), varCommentleft, true);
+    }
+:}
+;
+
+method_body ::=
+T_SEMICOLON /* abstract method */
+| T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE
+;
+
+variable_modifiers ::=
+non_empty_member_modifiers:modifier
+{: RESULT = modifier; :}
+| T_VAR
+{: RESULT = PhpParser5.ZERO_INTEGER; :}
+;
+
+method_modifiers ::=
+/* empty */
+{: RESULT = PhpParser5.ZERO_INTEGER; :}
+| non_empty_member_modifiers:modifier
+{: RESULT = modifier; :}
+;
+
+non_empty_member_modifiers ::=
+member_modifier:modofier
+{: RESULT = modofier; :}
+| non_empty_member_modifiers:modifiers1 member_modifier:modofier2
+{: RESULT = new Integer(modifiers1.intValue() | modofier2.intValue()); :}
+;
+
+member_modifier ::=
+T_PUBLIC
+{: RESULT = PhpParser5.PUBLIC_INTEGER; :}
+| T_PROTECTED
+{: RESULT = PhpParser5.PROTECTED_INTEGER; :}
+| T_PRIVATE
+{: RESULT = PhpParser5.PRIVATE_INTEGER; :}
+| T_STATIC
+{: RESULT = PhpParser5.STATIC_INTEGER; :}
+| T_ABSTRACT
+{: RESULT = PhpParser5.ABSTRACT_INTEGER; :}
+| T_FINAL
+{: RESULT = PhpParser5.FINAL_INTEGER; :}
+;
+
+class_variable_declaration ::=
+class_variable_declaration:decl T_COMMA T_VARIABLE:var
+{: RESULT = decl + "," + var; :}
+| class_variable_declaration:decl T_COMMA T_VARIABLE:var T_EQUAL static_scalar
+{: RESULT = decl+","+var; :}
+| T_VARIABLE:var
+{: RESULT = var;  :}
+| T_VARIABLE:var T_EQUAL static_scalar
+{: RESULT = var; :}
+;
+
+class_constant_declaration ::=
+class_constant_declaration T_COMMA:comma T_STRING:constName T_EQUAL static_scalar:value
+{:
+    parser.getParserClient().handleClassConstDeclaration(constName, parser.getPHPDoc(commaleft), commaleft, valueright, constNameleft);
+:}
+| T_CONST:tconst T_STRING:constName T_EQUAL static_scalar:value
+{:
+    parser.getParserClient().handleClassConstDeclaration(constName, parser.getPHPDoc(tconstleft), tconstleft, valueright, constNameleft);
+:}
+
+;
+
+echo_expr_list ::=
+echo_expr_list T_COMMA expr
+| expr
+;
+
+for_expr ::=
+/* empty */
+| non_empty_for_expr
+;
+
+non_empty_for_expr ::=
+non_empty_for_expr T_COMMA expr
+| expr
+;
+
+expr_without_variable ::=
+T_LIST T_OPEN_PARENTHESE assignment_list T_CLOSE_PARENTHESE T_EQUAL expr
+| variable:var T_EQUAL expr:exp
+{:
+    if (var != null) {
+        if (exp != null) {
+            String objectType = null;
+            String args = null;
+            if (exp.startsWith("object_instansiation")) {
+                String[] strings = exp.split(";");
+                objectType = strings[1];
+                if(strings.length == 3){
+                    args = strings[2];
+                }
+            } else if (exp.equals("array")) {
+                objectType = "array";
+            } else if (exp.startsWith("r_variable")){
+                objectType = exp;
+            }
+            parser.getParserClient().handleObjectInstansiation(var, objectType, args, parser.getCurrentLine(), expleft, false);
+        } else {
+            parser.getParserClient().handleVariableName(var, parser.getCurrentLine());
+        }
+    }
+:}
+
+| variable:var1 T_EQUAL T_REFERENCE variable:var2
+{:
+    if (var1 != null) {
+        if (var2 != null) {
+            String objectType = null;
+            String args = null;
+            if (var2.startsWith("$") || var2.startsWith("function_call")){
+                objectType = "r_variable;" + var2;
+            } else {
+                String[] strings = var2.split(";");
+                objectType = strings[0];
+                if(strings.length == 2){
+                    args = strings[1];
+                }
+            }
+            parser.getParserClient().handleObjectInstansiation(var1, objectType, args, parser.getCurrentLine(), var2left, false);
+        } else {
+            parser.getParserClient().handleVariableName(var1, parser.getCurrentLine());
+        }
+    }
+:}
+| variable:var  T_EQUAL T_REFERENCE T_NEW class_name_reference:className ctor_arguments:ctor
+{:
+   parser.getParserClient().handleObjectInstansiation(var, className, ctor, parser.getCurrentLine(), classNameleft, false);
+:}
+| T_NEW class_name_reference:className ctor_arguments:ctor
+{: RESULT = "object_instansiation;" + className + ";" + ctor; :}
+| T_CLONE expr:e
+{: RESULT = e; :}
+| variable T_PLUS_EQUAL expr
+| variable T_MINUS_EQUAL expr
+| variable T_MUL_EQUAL expr
+| variable T_DIV_EQUAL expr
+| variable T_CONCAT_EQUAL expr
+| variable T_MOD_EQUAL expr
+| variable T_AND_EQUAL expr
+| variable T_OR_EQUAL expr
+| variable T_XOR_EQUAL expr
+| variable T_SL_EQUAL expr
+| variable T_SR_EQUAL expr
+| rw_variable T_INC
+| T_INC rw_variable
+| rw_variable T_DEC
+| T_DEC rw_variable
+| expr T_BOOLEAN_OR expr
+| expr T_BOOLEAN_AND expr
+| expr T_LOGICAL_OR expr
+| expr T_LOGICAL_AND expr
+| expr T_LOGICAL_XOR expr
+| expr T_OR expr
+| expr T_REFERENCE expr
+| expr T_KOVA expr
+| expr:e1 T_NEKUDA expr:e2 {: RESULT = e1 + e2; :}
+| expr T_PLUS expr
+| expr T_MINUS expr
+| expr T_TIMES expr
+| expr T_DIV expr
+| expr T_PRECENT expr
+| expr T_SL expr
+| expr T_SR expr
+| T_PLUS expr
+| T_MINUS expr
+| T_NOT expr
+| T_TILDA expr
+| expr T_IS_IDENTICAL expr
+| expr T_IS_NOT_IDENTICAL expr
+| expr T_IS_EQUAL expr
+| expr T_IS_NOT_EQUAL expr
+| expr T_RGREATER expr
+| expr T_IS_SMALLER_OR_EQUAL expr
+| expr T_LGREATER expr
+| expr T_IS_GREATER_OR_EQUAL expr
+| expr T_INSTANCEOF class_name_reference
+| T_OPEN_PARENTHESE expr:e T_CLOSE_PARENTHESE
+{: RESULT = e; :}
+| expr T_QUESTION_MARK expr T_NEKUDOTAIM expr
+| internal_functions_in_yacc
+| T_INT_CAST expr
+| T_DOUBLE_CAST expr
+| T_STRING_CAST expr
+| T_ARRAY_CAST expr
+| T_OBJECT_CAST expr
+| T_BOOL_CAST expr
+| T_UNSET_CAST expr
+| T_EXIT exit_expr
+| T_AT expr:e 
+{: RESULT = e; :}
+| scalar:scalar_result
+{: RESULT = scalar_result; :}
+| T_ARRAY T_OPEN_PARENTHESE array_pair_list T_CLOSE_PARENTHESE
+{: RESULT = "array"; :}
+| T_BACKQUATE encaps_list T_BACKQUATE
+| T_PRINT expr
+;
+
+define_function_call_parameter_list ::=
+expr_without_variable:val
+{: RESULT = parser.createString(valleft, valright);:}
+| variable:val
+{: RESULT = parser.createString(valleft, valright);:}
+| T_REFERENCE w_variable:val
+{: RESULT = parser.createString(valleft - 1, valright);:}
+| define_function_call_parameter_list:val T_COMMA expr_without_variable
+{: RESULT = val;:}
+| define_function_call_parameter_list:val T_COMMA variable
+{: RESULT = val;:}
+| define_function_call_parameter_list:val T_COMMA T_REFERENCE w_variable
+{: RESULT = val;:}
+;
+function_call ::=
+T_DEFINE:define T_OPEN_PARENTHESE T_CONSTANT_ENCAPSED_STRING:value T_COMMA define_function_call_parameter_list:val T_CLOSE_PARENTHESE
+{:
+    parser.getParserClient().handleDefine(value, val, parser.getPHPDoc(defineleft), defineleft, valueright, valueleft);
+:}
+| T_DEFINE:define T_OPEN_PARENTHESE T_STRING:value T_COMMA define_function_call_parameter_list:val T_CLOSE_PARENTHESE
+{:
+    parser.getParserClient().handleDefine(value, val, parser.getPHPDoc(defineleft), defineleft, valueright, valueleft);
+:}
+| T_DEFINE T_OPEN_PARENTHESE function_call_parameter_list T_CLOSE_PARENTHESE
+| T_STRING:name T_OPEN_PARENTHESE function_call_parameter_list T_CLOSE_PARENTHESE
+{: RESULT = "function_call;" + name;:}
+| fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:name T_OPEN_PARENTHESE function_call_parameter_list T_CLOSE_PARENTHESE
+{: RESULT = className + ";" + name;:}
+| fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects T_OPEN_PARENTHESE function_call_parameter_list T_CLOSE_PARENTHESE
+| variable_without_objects  T_OPEN_PARENTHESE function_call_parameter_list T_CLOSE_PARENTHESE
+;
+
+fully_qualified_class_name ::=
+T_STRING:className
+{: RESULT = className; :}
+;
+
+class_name_reference ::=
+T_STRING:className
+{: RESULT = className; :}
+| dynamic_class_name_reference
+;
+
+dynamic_class_name_reference ::=
+base_variable T_OBJECT_OPERATOR object_property dynamic_class_name_variable_properties
+| base_variable
+;
+
+dynamic_class_name_variable_properties ::=
+dynamic_class_name_variable_properties dynamic_class_name_variable_property
+| /* empty */
+;
+
+dynamic_class_name_variable_property ::=
+T_OBJECT_OPERATOR object_property
+;
+
+exit_expr ::=
+/* empty */
+| T_OPEN_PARENTHESE T_CLOSE_PARENTHESE
+| T_OPEN_PARENTHESE expr T_CLOSE_PARENTHESE
+;
+
+ctor_arguments ::=
+/* empty */
+| T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE 
+{: RESULT = ((CompletionLexer)parser.getScanner()).createString(parametersleft,parametersright); :}
+;
+
+common_scalar ::=
+T_LNUMBER
+| T_DNUMBER:value                   {: RESULT = value; :}
+| T_CONSTANT_ENCAPSED_STRING:value  {: RESULT = value; :}
+| T_LINE
+| T_FILE:value                      {: RESULT = value; :}
+| T_CLASS_C
+| T_METHOD_C
+| T_FUNC_C
+;
+
+static_scalar ::=  /* compile-time evaluated scalars */
+common_scalar:scalar
+{: RESULT = scalar; :}
+| string_st:str
+{: RESULT = str; :}
+| T_PLUS static_scalar
+| T_MINUS static_scalar
+| T_ARRAY T_OPEN_PARENTHESE static_array_pair_list T_CLOSE_PARENTHESE
+{: RESULT = "array"; :}
+| static_class_constant
+;
+
+static_class_constant ::=
+T_STRING T_PAAMAYIM_NEKUDOTAYIM T_STRING
+;
+
+scalar ::=
+string_st:str
+{: RESULT = str; :}
+| T_STRING_VARNAME:str
+{: RESULT = str; :}
+| class_constant
+| common_scalar:scalar
+{: RESULT = scalar; :}
+| T_QUATE encaps_list T_QUATE
+| T_SINGLE_QUATE encaps_list T_SINGLE_QUATE
+| T_START_HEREDOC encaps_list T_END_HEREDOC
+;
+
+static_array_pair_list ::=
+/* empty */
+| non_empty_static_array_pair_list possible_comma
+;
+
+possible_comma ::=
+/* empty */
+| T_COMMA
+;
+
+non_empty_static_array_pair_list ::=
+non_empty_static_array_pair_list T_COMMA static_scalar T_DOUBLE_ARROW static_scalar
+| non_empty_static_array_pair_list T_COMMA static_scalar
+| static_scalar T_DOUBLE_ARROW static_scalar
+| static_scalar
+;
+
+expr ::=
+r_variable:var
+{: RESULT = var; :}
+| expr_without_variable:ewv
+{: RESULT = ewv; :}
+;
+
+r_variable ::=
+variable:var
+{: RESULT = "r_variable;" + var; :}
+;
+
+w_variable ::=
+variable:var
+{: RESULT = var; :}
+;
+
+rw_variable ::=
+variable:var
+{: RESULT = var; :}
+;
+
+variable ::=
+base_variable_with_function_calls:varName T_OBJECT_OPERATOR object_property:propertyName method_or_not:isFunction variable_properties:variableProperty
+{: 	String property = propertyName;
+    if(isFunctionleft >= isFunctionright){
+        property = "*" + propertyName;
+    }
+    RESULT = varName + ";" + property + ";" + variableProperty;
+:}
+| base_variable_with_function_calls:var
+{: RESULT = var; :}
+;
+
+variable_properties ::=
+variable_properties:propertiesName variable_property:propertyName
+{:
+    if(propertiesNameleft < propertiesNameright){
+        RESULT = propertiesName + ";" + propertyName;
+    } else {
+        RESULT = propertyName;
+    }
+:}
+| /* empty */
+;
+
+variable_property ::=
+T_OBJECT_OPERATOR object_property:propertyName method_or_not:isFunction
+{:
+    RESULT = propertyName;
+    if(isFunctionleft >= isFunctionright){
+        RESULT = "*" + propertyName;
+    }
+:}
+;
+
+method_or_not ::=
+T_OPEN_PARENTHESE function_call_parameter_list T_CLOSE_PARENTHESE
+| /* empty */
+;
+
+variable_without_objects ::=
+reference_variable
+| simple_indirect_reference reference_variable
+;
+
+static_member ::=
+fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
+;
+
+base_variable_with_function_calls ::=
+base_variable:var
+{: RESULT = var; :}
+| function_call:var
+{: RESULT = var; :}
+;
+
+base_variable ::=
+reference_variable:var
+{: RESULT = var; :}
+| simple_indirect_reference reference_variable
+| static_member
+;
+
+reference_variable ::=
+reference_variable T_OPEN_RECT dim_offset T_CLOSE_RECT
+| reference_variable T_CURLY_OPEN expr T_CURLY_CLOSE
+| compound_variable:comp_var
+{: RESULT = comp_var; :}
+;
+
+compound_variable ::=
+tracked_variable:var
+{: RESULT = var; :}
+| T_DOLLAR T_CURLY_OPEN expr T_CURLY_CLOSE
+;
+
+dim_offset ::=
+/* empty */
+| expr
+;
+
+object_property ::=
+object_dim_list:value
+{: RESULT = value; :}
+| variable_without_objects
+;
+
+object_dim_list ::=
+object_dim_list T_OPEN_RECT dim_offset T_CLOSE_RECT
+| object_dim_list T_CURLY_OPEN expr T_CURLY_CLOSE
+| variable_name:name
+{: RESULT = name; :}
+;
+
+variable_name ::=
+string_st:value
+{: RESULT = value; :}
+| T_CURLY_OPEN expr T_CURLY_CLOSE
+;
+
+simple_indirect_reference ::=
+T_DOLLAR
+{: RESULT = "$"; :}
+| simple_indirect_reference:ref T_DOLLAR
+{: RESULT = ref + "$"; :}
+;
+
+assignment_list ::=
+assignment_list T_COMMA assignment_list_element
+| assignment_list_element
+;
+
+assignment_list_element ::=
+variable
+| T_LIST T_OPEN_PARENTHESE assignment_list T_CLOSE_PARENTHESE
+| /* empty */
+;
+
+
+array_pair_list ::=
+/* empty */
+| non_empty_array_pair_list possible_comma
+;
+
+non_empty_array_pair_list ::=
+non_empty_array_pair_list T_COMMA expr T_DOUBLE_ARROW expr
+| non_empty_array_pair_list T_COMMA expr
+| expr T_DOUBLE_ARROW expr
+| expr
+| non_empty_array_pair_list T_COMMA expr T_DOUBLE_ARROW T_REFERENCE w_variable
+| non_empty_array_pair_list T_COMMA T_REFERENCE w_variable
+| expr T_DOUBLE_ARROW T_REFERENCE w_variable
+| T_REFERENCE w_variable
+;
+
+encaps_list ::=
+encaps_list encaps_var
+| encaps_list string_st
+| encaps_list T_NUM_STRING
+| encaps_list T_ENCAPSED_AND_WHITESPACE
+| encaps_list T_CHARACTER
+| encaps_list T_BAD_CHARACTER
+| encaps_list T_OPEN_RECT
+| encaps_list T_CLOSE_RECT
+| encaps_list T_CURLY_OPEN
+| encaps_list T_CURLY_CLOSE
+| encaps_list T_OBJECT_OPERATOR
+| /* empty */
+;
+
+encaps_var ::=
+tracked_variable
+| tracked_variable T_OPEN_RECT encaps_var_offset T_CLOSE_RECT
+| tracked_variable T_OBJECT_OPERATOR string_st
+| T_DOLLAR_OPEN_CURLY_BRACES expr T_CURLY_CLOSE
+| T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME T_OPEN_RECT expr T_CLOSE_RECT T_CURLY_CLOSE
+| T_CURLY_OPEN_WITH_DOLAR variable T_CURLY_CLOSE
+;
+
+encaps_var_offset ::=
+string_st
+| T_NUM_STRING
+| tracked_variable
+;
+
+internal_functions_in_yacc ::=
+T_ISSET T_OPEN_PARENTHESE isset_variables T_CLOSE_PARENTHESE
+| T_EMPTY T_OPEN_PARENTHESE variable T_CLOSE_PARENTHESE
+| T_INCLUDE:include expr:e
+{:
+    RESULT = e;
+        parser.getParserClient().handleIncludedFile(IncludingType.INCLUDE, e, parser.getPHPDoc(includeleft), includeleft, eright, eleft, parser.getCurrentLine());
+:}
+| T_INCLUDE_ONCE:include expr:e
+{:
+    RESULT = e;
+    parser.getParserClient().handleIncludedFile(IncludingType.INCLUDE_ONCE, e, parser.getPHPDoc(includeleft), includeleft, eright, eleft, parser.getCurrentLine());
+:}
+| T_EVAL T_OPEN_PARENTHESE expr T_CLOSE_PARENTHESE
+| T_REQUIRE:include expr:e
+{:
+    RESULT = e;
+    parser.getParserClient().handleIncludedFile(IncludingType.REQUIRE, e, parser.getPHPDoc(includeleft), includeleft, eright, eleft, parser.getCurrentLine());
+:}
+| T_REQUIRE_ONCE:include expr:e
+{:
+    RESULT = e;
+    parser.getParserClient().handleIncludedFile(IncludingType.REQUIRE_ONCE, e, parser.getPHPDoc(includeleft), includeleft, eright, eleft, parser.getCurrentLine());
+:}
+;
+
+isset_variables ::=
+variable
+| isset_variables T_COMMA variable
+;
+
+class_constant ::=
+fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
+;
+
+tracked_variable ::=
+T_VARIABLE:var
+{:
+    RESULT = var;
+    parser.getParserClient().handleVariableName(var, parser.getCurrentLine());
+:}
+;
+
+string_st ::=
+T_STRING:value
+{: RESULT = value; :}
+| T_DEFINE:value
+{: RESULT = value; :}
+;
