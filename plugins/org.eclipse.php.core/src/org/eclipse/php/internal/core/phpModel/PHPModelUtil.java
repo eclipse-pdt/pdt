@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 
 public class PHPModelUtil {
@@ -402,16 +403,28 @@ public class PHPModelUtil {
 	}
 
 	public static boolean hasPhpExtention(final IFile file) {
-		final IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-		final String[] validExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		final String fileName = file.getName();
 		final int index = fileName.lastIndexOf('.');
-		if (index == -1)
+		if (index == -1) {
 			return false;
-		final String ext = fileName.substring(index + 1);
-		for (int i = 0; i < validExtensions.length; i++)
-			if (ext.equals(validExtensions[i]))
+		}
+		String ext = fileName.substring(index + 1);
+		
+		// handle SVN external file extension (e.g sample.php:12358)
+		// fixed bug 186064
+		if (file instanceof ExternalFileDecorator) {
+			int pos = ext.indexOf(':');
+			ext = pos > 0 ? ext.substring(0, pos) : ext;
+		}
+		
+		final IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+		final String[] validExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		for (int i = 0; i < validExtensions.length; i++) {
+			if (ext.equals(validExtensions[i])) {
 				return true;
+			}
+		}
+				
 		return false;
 	}
 
