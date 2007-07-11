@@ -107,7 +107,17 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 
 		String currentState = FormatterUtils.getPartitionType(document, offset, true);
 
-		final char prevChar = document.getChar(offset - 1);
+		// fixed bug 186710
+		// scan for the first char that not equals to space or tab 
+		int charPosition = offset;
+		char prevChar = '\0';
+		while (charPosition-- >= 0) {
+			prevChar = document.getChar(charPosition);
+			if (prevChar != ' ' && prevChar != '\t') {
+				break;
+			}
+		}
+		
 		if (TypingPreferences.closeCurlyBracket && prevChar == '{') {
 			if (currentState != PHPPartitionTypes.PHP_DEFAULT)
 				if (document.getLength() == offset)
