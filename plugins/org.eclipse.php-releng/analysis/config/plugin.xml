@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         id="analysisapplication"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.eclipse.php.analysis.AnalysisRunnerForPDT">
+            <parameter
+                  name="productInfo"
+                  value="product.ini">
+            </parameter>
+         </run>
+      </application>
+   </extension>
+</plugin>
+
+

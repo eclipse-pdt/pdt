@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Analysis Plug-in
+Bundle-SymbolicName: org.eclipse.php.analysis;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.php.analysis.Activator
+Require-Bundle: org.eclipse.jdt,
+ org.eclipse.jdt.core,
+ org.eclipse.debug.core,
+ org.eclipse.tptp.platform.analysis,
+ org.eclipse.tptp.platform.analysis.core,
+ org.eclipse.tptp.platform.analysis.core.ui,
+ org.eclipse.tptp.platform.analysis.core.ui.doc,
+ org.eclipse.debug.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.tptp.platform.analysis.codereview.java,
+ org.eclipse.tptp.platform.analysis.codereview.java.rules
+Eclipse-LazyStart: true
