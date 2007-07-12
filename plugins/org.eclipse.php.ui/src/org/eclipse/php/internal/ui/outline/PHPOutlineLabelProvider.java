@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.SuperClassLabelProvider;
@@ -88,10 +90,12 @@ public class PHPOutlineLabelProvider extends AppearanceAwareLabelProvider {
 						Element element = (Element) node;
 						NamedNodeMap attributes = element.getAttributes();
 						Node idTypedAttribute = null;
-						Node requiredAttribute = null;
+						//Node requiredAttribute = null;
+						ArrayList requiredAttribute = new ArrayList(2);
 						boolean hasId = false;
 						boolean hasName = false;
-						Node shownAttribute = null;
+//						Node shownAttribute = null;
+						ArrayList shownAttribute = new ArrayList(2);
 
 						// try to get content model element
 						// declaration
@@ -111,11 +115,10 @@ public class PHPOutlineLabelProvider extends AppearanceAwareLabelProvider {
 								if (attrDecl != null) {
 									if ((attrDecl.getAttrType() != null) && (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
 										idTypedAttribute = attr;
-									} else if (attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED && requiredAttribute == null) {
-										// as a backup, keep tabs on
-										// any required
-										// attributes
-										requiredAttribute = attr;
+									} else if (attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) {
+										requiredAttribute.add(attr);
+									} else if (node.getNodeName().equals("script") && attrName.equalsIgnoreCase("src")) {
+										requiredAttribute.add(attr);
 									} else {
 										hasId = hasId || attrName.equals("id"); //$NON-NLS-1$
 										hasName = hasName || attrName.equals("name"); //$NON-NLS-1$
@@ -131,26 +134,30 @@ public class PHPOutlineLabelProvider extends AppearanceAwareLabelProvider {
 						 * "name", otherwise just use first attribute
 						 */
 						if (idTypedAttribute != null) {
-							shownAttribute = idTypedAttribute;
-						} else if (requiredAttribute != null) {
-							shownAttribute = requiredAttribute;
+							shownAttribute.add(idTypedAttribute);
+						} else if (requiredAttribute.size() > 0) {
+							shownAttribute.addAll(requiredAttribute);
 						} else if (hasId) {
-							shownAttribute = attributes.getNamedItem("id"); //$NON-NLS-1$
+							shownAttribute.add(attributes.getNamedItem("id")); //$NON-NLS-1$
 						} else if (hasName) {
-							shownAttribute = attributes.getNamedItem("name"); //$NON-NLS-1$
+							shownAttribute.add(attributes.getNamedItem("name")); //$NON-NLS-1$
 						}
 						if (shownAttribute == null) {
-							shownAttribute = attributes.item(0);
+							shownAttribute.add(attributes.item(0));
 						}
 
 						// display the attribute and value (without quotes)
-						String attributeName = shownAttribute.getNodeName();
-						if (attributeName != null && attributeName.length() > 0) {
-							text.append(" " + attributeName); //$NON-NLS-1$
-							String attributeValue = shownAttribute.getNodeValue();
-							if (attributeValue != null && attributeValue.length() > 0) {
-								text.append("=" + StringUtils.strip(attributeValue)); //$NON-NLS-1$
+						for (int i = 0; i < shownAttribute.size(); i++) {
+							Node curr = (Node) shownAttribute.get(i);
+							String attributeName = curr.getNodeName();
+							if (attributeName != null && attributeName.length() > 0) {
+								text.append(" " + attributeName); //$NON-NLS-1$
+								String attributeValue = curr.getNodeValue();
+								if (attributeValue != null && attributeValue.length() > 0) {
+									text.append("=" + StringUtils.strip(attributeValue)); //$NON-NLS-1$
+								}
 							}
+
 						}
 					}
 				}
