@@ -136,24 +136,23 @@ public class PHPCompletionRendererVisitor extends SimplePHPCodeDataVisitor {
 
 		String classType = codeData.getClassType();
 		if (classType != null && classType.length() != 0) {
-			buffer.append(classType);
-			buffer.append(" ");
-		} else {
-			// buffer.append("unknown");
-			// buffer.append(" ");
-		}
+			buffer.append(classType).append(" ");
+		} 
 		if (codeData.isConst()) {
 			buffer.append("const ");
 		}
 		if (codeData.isReference()) {
 			buffer.append("&");
 		}
-		buffer.append("$");
+		// add the $ sign only in case of the parameter is with prefix (e.g. const)
+		// fixed bug 196114
+		if (buffer.length() > 0) {
+			buffer.append("$");
+		}
 		buffer.append(codeData.getName());
 		String defaultValue = codeData.getDefaultValue();
 		if (defaultValue != null && defaultValue.length() != 0) {
-			buffer.append(" = ");
-			buffer.append(defaultValue);
+			buffer.append(" = ").append(defaultValue);
 		}
 
 	}
