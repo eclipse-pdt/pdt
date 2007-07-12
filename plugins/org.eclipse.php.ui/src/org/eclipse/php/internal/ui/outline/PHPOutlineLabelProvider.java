@@ -91,11 +91,11 @@ public class PHPOutlineLabelProvider extends AppearanceAwareLabelProvider {
 						NamedNodeMap attributes = element.getAttributes();
 						Node idTypedAttribute = null;
 						//Node requiredAttribute = null;
-						ArrayList requiredAttribute = new ArrayList(2);
+						ArrayList<Node> requiredAttribute = new ArrayList<Node>(2);
 						boolean hasId = false;
 						boolean hasName = false;
 //						Node shownAttribute = null;
-						ArrayList shownAttribute = new ArrayList(2);
+						ArrayList<Node> shownAttribute = new ArrayList<Node>(2);
 
 						// try to get content model element
 						// declaration
@@ -148,7 +148,7 @@ public class PHPOutlineLabelProvider extends AppearanceAwareLabelProvider {
 
 						// display the attribute and value (without quotes)
 						for (int i = 0; i < shownAttribute.size(); i++) {
-							Node curr = (Node) shownAttribute.get(i);
+							Node curr = shownAttribute.get(i);
 							String attributeName = curr.getNodeName();
 							if (attributeName != null && attributeName.length() > 0) {
 								text.append(" " + attributeName); //$NON-NLS-1$
