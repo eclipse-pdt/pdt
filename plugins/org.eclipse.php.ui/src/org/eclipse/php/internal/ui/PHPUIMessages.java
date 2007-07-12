@@ -551,8 +551,6 @@ public class PHPUIMessages {
 	
 	public static String PHPTemplateStore_error_message_nameEmpty;
 	public static String PHPTemplateStore_error_title;
-	public static String PHPTemplateStore_confirm_title;
-	public static String PHPTemplateStore_confirm_message_override;
 	
 //  ----- Working Set ------
 	

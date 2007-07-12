@@ -35,16 +35,7 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
 			return;
 		}
-		// fixed bug 171929
-		// check if the template already exists and need to override
-		if (findTemplate(template.getName(), template.getContextTypeId()) != null) {
-			String title = PHPUIMessages.PHPTemplateStore_confirm_title;
-			String message = MessageFormat.format(PHPUIMessages.PHPTemplateStore_confirm_message_override, new Object[] { template.getName() });
-			if (!MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), title, message)) {
-				// not override
-				return;
-			}
-		}
+
 		super.add(data);
 	}
 
