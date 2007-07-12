@@ -4,6 +4,8 @@
  */
 package org.eclipse.php.internal.ui.preferences;
 
+import java.text.MessageFormat;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
@@ -26,13 +28,22 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 	}
 
 	public void add(TemplatePersistenceData data) {
-		// TODO Auto-generated method stub
 		Template template = data.getTemplate();
 		if (template.getName().equals("")) { //$NON-NLS-1$
 			String title = PHPUIMessages.PHPTemplateStore_error_title;
 			String message = PHPUIMessages.PHPTemplateStore_error_message_nameEmpty;
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
 			return;
+		}
+		// fixed bug 171929
+		// check if the template already exists and need to override
+		if (findTemplate(template.getName(), template.getContextTypeId()) != null) {
+			String title = PHPUIMessages.PHPTemplateStore_confirm_title;
+			String message = MessageFormat.format(PHPUIMessages.PHPTemplateStore_confirm_message_override, new Object[] { template.getName() });
+			if (!MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), title, message)) {
+				// not override
+				return;
+			}
 		}
 		super.add(data);
 	}
