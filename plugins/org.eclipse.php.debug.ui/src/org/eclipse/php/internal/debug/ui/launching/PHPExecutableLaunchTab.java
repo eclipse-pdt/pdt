@@ -205,8 +205,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (enableFileSelection)
 			createArgumentComponent(mainComposite);
 
-		if (enableDebugInfoOption)
-			createDebugInfoComponent(mainComposite);
+		// Create the debug info component anyway to avoid problems when applying the configuration.
+		createDebugInfoComponent(mainComposite);
+		runWithDebugInfo.setVisible(enableDebugInfoOption);
 
 		createBreakControl(mainComposite);
 		createVerticalSpacer(mainComposite, 1);
@@ -445,6 +446,11 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public void setEnableDebugInfoOption(final boolean enabled) {
 		if (enabled == enableDebugInfoOption)
 			return;
+		// Make sure that the debug-info-option can be true only when we are in a RUN_MODE.
+		if(!getLaunchConfigurationDialog().getMode().equals(ILaunchManager.RUN_MODE)) {
+			enableDebugInfoOption = false;
+			return;
+		}
 		enableDebugInfoOption = enabled;
 		if (runWithDebugInfo != null)
 			runWithDebugInfo.setVisible(enabled);
