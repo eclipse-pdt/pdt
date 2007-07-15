@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.actions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
@@ -22,9 +23,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.Logger;
@@ -52,7 +55,25 @@ public class RenameResourceAction extends SelectionDispatchAction {
 	}
 
 	public void selectionChanged(IStructuredSelection selection) {
-		setEnabled(true);
+		if(selection instanceof ITextSelection) {
+			setEnabled(true);
+			return;
+		}
+		if(selection.size() != 1) {
+			setEnabled(false);
+			return;
+		}
+		Object object = selection.toArray()[0];
+		if(object instanceof PHPFileData || object instanceof IResource) {
+			IResource res = PHPModelUtil.getResource(object);
+			if(res != null && res.exists()) {
+				setEnabled(true);
+			} else {
+				setEnabled(false);
+			}
+			return;
+		}
+		setEnabled(false);
 	}
 
 	public void run(IStructuredSelection selection) {
