@@ -219,6 +219,10 @@
 			type="structuredtextfoldingprovider"
 			class="org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderProxy"
 			target="org.eclipse.php.core.phpsource" />
+		<provisionalDefinition
+			type="spellingregions"
+			value="XML_COMMENT_TEXT, PHP_CONTENT, XML_CONTENT"
+			target="org.eclipse.php.core.phpsource" />
 	</extension>
 
 	<extension point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
