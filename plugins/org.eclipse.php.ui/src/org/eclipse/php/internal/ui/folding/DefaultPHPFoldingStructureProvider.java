@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.folding;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -34,6 +35,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
@@ -181,10 +183,9 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 				DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
 				fileData = editorModel.getFileData();
 				if (fileData == null) {
-					// It's possible that while loading, the model is not yet ready, therefore, we will wait until the 
-					// model fires the fileDataAdded event with the currect file data.
-					// Fix bug #75
-					return;
+					// create file data 
+					IProject project = editorModel.getProjectModel().getProject();
+					fileData = PHPFileDataUtilities.getFileData(new DocumentReader(document), project);
 				}
 				workspaceModelManagerInstance.removeModelListener(this);
 				ProjectionAnnotationModel model = viewer.getProjectionAnnotationModel();
