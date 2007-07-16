@@ -188,16 +188,8 @@ public class PhpElementConciliator {
 
 		Variable parent = (Variable) targetIdentifier.getParent();
 
-		// check for not variables
-		if (!parent.isDollared()) {
-			return false;
-		}
-		
-		if (targetIdentifier.getName().equals(THIS)) {
-			return false;
-		}
-
-		if (parent.getType() == ASTNode.FIELD_DECLARATION) {
+		// check for not variables / or $this / or field declaration 
+		if (!parent.isDollared() || targetIdentifier.getName().equals(THIS) || parent.getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
 
