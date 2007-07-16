@@ -418,7 +418,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
-		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
 	}
 
 	protected void initializeEditor() {
@@ -1095,7 +1094,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
-		
+
 		if (isExternal) {
 			// Override the way breakpoints are set on external files.
 			action = new ToggleExternalBreakpointAction(this, getVerticalRuler());
@@ -1106,11 +1105,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			// StructuredTextEditor Action - edit breakpoints
 			action = new EditExternalBreakpointAction(this, getVerticalRuler());
 			setAction(ActionDefinitionIds.EDIT_BREAKPOINTS, action);
-			
+
 			// Set the ruler double-click behavior.
 			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new ToggleExternalBreakpointAction(this, getVerticalRuler(), getAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK)));
 		}
-		
+
 		ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
 		// We have to keep the context menu group separate to have better control over positioning
 		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg });
@@ -1383,8 +1382,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				}
 				PhpSourceParser.editFile.set(resource);
 				super.doSetInput(input);
+				PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
 			} else {
-				close(false);
+				super.doSetInput(input);
+//				close(false);
 			}
 		} else {
 			super.doSetInput(input);
@@ -1456,6 +1457,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	public IFile getFile() {
+		// when a file with no content type associated with it is opened with this editor
+		// there will be no model for it. If it has a FileEditorInput we'll return the IFile from it
+		// else, null.
+		if (getModel() == null) {
+			if (getEditorInput() instanceof IFileEditorInput) {
+				return ((IFileEditorInput) getEditorInput()).getFile();
+			} else {
+				return null;
+			}
+		}
 		IPath path = new Path(getModel().getBaseLocation());
 		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 			return ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
@@ -1470,6 +1481,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	public PHPFileData getPHPFileData() {
+		if (getModel() == null) {
+			return null;
+		}
 		return PHPWorkspaceModelManager.getInstance().getModelForFile(getModel().getBaseLocation());
 	}
 

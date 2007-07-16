@@ -82,6 +82,8 @@ public class FunctionsViewGroup extends ViewActionGroup {
 		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 		if (phpEditor != null) {
 			final IFile file = phpEditor.getFile();
+			if(file == null)
+				return;
 			final String version = PhpVersionProjectPropertyHandler.getVersion(file.getProject());
 			setMode(getVersion(version));
 		}
