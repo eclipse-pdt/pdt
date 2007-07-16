@@ -182,7 +182,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 			if (sModel != null && sModel instanceof DOMModelForPHP) {
 				DOMModelForPHP editorModel = (DOMModelForPHP) sModel;
 				fileData = editorModel.getFileData();
-				if (fileData == null) {
+				if (fileData == null && editorModel.getProjectModel() != null) {
 					// create file data 
 					IProject project = editorModel.getProjectModel().getProject();
 					fileData = PHPFileDataUtilities.getFileData(new DocumentReader(document), project);
