@@ -168,8 +168,11 @@ public final class PHPFileDataUtilities {
 	private static final PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
 	
 	public static PHPFileData getFileData(Reader reader) {
+		return getFileData(reader, null);
+	}
+	
+	public static PHPFileData getFileData(Reader reader, IProject project) {
 		Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
-		IProject project = null;
 		boolean useAspTags = UseAspTagsHandler.useAspTagsAsPhp(project);
 		String phpVersion = preferencesSupport.getPreferencesValue(Keys.PHP_VERSION, PHPVersion.PHP5, project);
 
