@@ -44,10 +44,10 @@ public class PhpElementConciliator {
 			return CONCILIATOR_CLASSNAME;
 		} else if (isConstant(locateNode)) {
 			return CONCILIATOR_CONSTANT;
-		} else if (isDispatch(locateNode)) {
-			return CONCILIATOR_CLASS_PROPERTY;
 		} else if (isLocalVariable(locateNode)) {
 			return CONCILIATOR_LOCAL_VARIABLE;
+		} else if (isDispatch(locateNode)) {
+			return CONCILIATOR_CLASS_PROPERTY;
 		}
 		return CONCILIATOR_UNKNOWN;
 	}
@@ -187,6 +187,12 @@ public class PhpElementConciliator {
 		}
 
 		Variable parent = (Variable) targetIdentifier.getParent();
+
+		// check for not variables
+		if (!parent.isDollared()) {
+			return false;
+		}
+		
 		if (targetIdentifier.getName().equals(THIS)) {
 			return false;
 		}
