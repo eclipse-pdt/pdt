@@ -91,8 +91,9 @@ public class MoveAction extends SelectionDispatchAction {
 
 		selectedResources = null;
 
+		// disable moving the file through right click on the editor - confusing.
 		if (selection != null && selection instanceof ITextSelection) {
-			selectionChanged((ITextSelection) selection);
+			setEnabled(false);
 			return;
 		}
 
@@ -138,24 +139,6 @@ public class MoveAction extends SelectionDispatchAction {
 			setEnabled(false);
 
 		setEnabled(computeEnableState());
-		fReorgMoveAction.setSelection(selectedResources);
-	}
-
-	// we will get to this method only in case this is an editor selection
-	public void selectionChanged(ITextSelection selection) {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (activePage == null)
-			return;
-		IWorkbenchPart activePart = activePage.getActivePart();
-		if (activePage == null)
-			return;
-		// get the current file 
-		PHPStructuredEditor editor = EditorUtility.getPHPStructuredEditor(activePart);
-		if (editor == null)
-			return;
-		IResource[] resources = { editor.getFile() };
-		selectedResources = new StructuredSelection(resources);
-		setEnabled(true);
 		fReorgMoveAction.setSelection(selectedResources);
 	}
 
