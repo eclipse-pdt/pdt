@@ -420,7 +420,7 @@ public class PHPModelUtil {
 		final IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 		final String[] validExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		for (int i = 0; i < validExtensions.length; i++) {
-			if (ext.equals(validExtensions[i])) {
+			if (ext.equalsIgnoreCase(validExtensions[i])) {
 				return true;
 			}
 		}
