@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.validation,
  org.eclipse.core.filebuffers,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ org.eclipse.core.filesystem
 Eclipse-LazyStart: true
 Provide-Package: org.eclipse.php.core,
  org.eclipse.php.core.documentModel,
@@ -33,6 +34,7 @@ Provide-Package: org.eclipse.php.core,
  org.eclipse.php.internal.core.documentModel.partitioner,
  org.eclipse.php.internal.core.documentModel.provisional.contenttype,
  org.eclipse.php.internal.core.documentModel.validate,
+ org.eclipse.php.internal.core.filesystem,
  org.eclipse.php.internal.core.format,
  org.eclipse.php.internal.core.format.htmlFormatters,
  org.eclipse.php.internal.core.phpIni,
