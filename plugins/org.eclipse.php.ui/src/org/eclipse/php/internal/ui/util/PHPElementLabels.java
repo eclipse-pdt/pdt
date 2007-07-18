@@ -10,26 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPIncludeFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.internal.ui.functions.PHPFunctionsContentProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -278,6 +267,8 @@ public class PHPElementLabels {
 			buf.append("PHP Model");
 		} else if (element instanceof IResource) {
 			buf.append(((IResource) element).getName());
+		} else if (element instanceof IPhpModel) {
+			buf.append(((IPhpModel)element).getID());
 		}
 
 		if (root != null && getFlag(flags, APPEND_ROOT_PATH)) {
@@ -628,7 +619,7 @@ public class PHPElementLabels {
 	}
 
 	public static String getTextLabel(Object obj, long flags) {
-		if (obj instanceof PHPCodeData || obj instanceof PHPProjectModel) {
+		if (obj instanceof PHPCodeData || obj instanceof PHPProjectModel || obj instanceof IPhpModel) {
 			return getElementLabel(obj, flags);
 		} else if (obj instanceof IAdaptable) {
 			IWorkbenchAdapter wbadapter = (IWorkbenchAdapter) ((IAdaptable) obj).getAdapter(IWorkbenchAdapter.class);

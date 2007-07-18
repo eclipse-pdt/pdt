@@ -321,6 +321,11 @@
 			<adapter type="org.eclipse.ui.views.properties.IPropertySource" />
 		</factory>
 		<factory
+			adaptableType="org.eclipse.php.internal.core.phpModel.parser.IPhpModel"
+			class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
+			<adapter type="org.eclipse.ui.model.IWorkbenchAdapter" />
+		</factory>
+		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
 			class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />

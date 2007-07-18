@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -38,6 +39,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 
 public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	public static final String ID_INCLUDES_NODE = "org.eclipse.php.ui.treecontent.IncludesNode";
@@ -45,7 +47,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	HashMap projects = new HashMap();
 	ElementTree includePathTree = new ElementTree();
 
-	class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListener, ModelListener {
+	class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListener, ModelListener, IWorkbenchAdapter {
 		IncludesNode(String text, Image image, String id, Object data, Object[] children) {
 			super(text, image, id, data, children);
 		}
@@ -135,6 +137,23 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 
 		public void fileDataRemoved(PHPFileData fileData) {
 			refresh(fileData, true);
+		}
+
+		// implements IWorkbenchAdapter
+		public Object[] getChildren(Object o) {
+			return new Object[0];
+		}
+
+		public ImageDescriptor getImageDescriptor(Object object) {
+			return null;
+		}
+
+		public String getLabel(Object o) {
+			return getText();
+		}
+
+		public Object getParent(Object o) {
+			return null;
 		}
 
 	}

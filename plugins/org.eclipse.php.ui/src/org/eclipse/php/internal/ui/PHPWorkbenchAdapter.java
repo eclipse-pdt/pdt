@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
@@ -59,7 +60,7 @@ public class PHPWorkbenchAdapter implements IWorkbenchAdapter {
 	}
 
 	private Object getPHPElement(Object element) {
-		if (element instanceof PHPCodeData || element instanceof PHPProjectModel || element instanceof PHPWorkspaceModelManager)
+		if (element instanceof PHPCodeData || element instanceof PHPProjectModel || element instanceof PHPWorkspaceModelManager || element instanceof IPhpModel)
 			return element;
 		return null;
 	}
