@@ -349,8 +349,6 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		public Object[] getChildren() {
 			if (model == null)
 				return NO_CHILDREN;
-			if (children == null)
-				loadChildren();
 			return children.toArray();
 		}
 
@@ -369,8 +367,6 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		public boolean hasChildren() {
 			if (model == null)
 				return false;
-			if (children == null)
-				loadChildren();
 			return children.size() > 0;
 		}
 
@@ -388,9 +384,6 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 						newChildren = newData.getConstants();
 						break;
 				}
-			}
-			if (children == null) {
-				children.clear();
 			}
 			for (int i = 0; i < newChildren.length; ++i) {
 				children.add(newChildren[i]);
