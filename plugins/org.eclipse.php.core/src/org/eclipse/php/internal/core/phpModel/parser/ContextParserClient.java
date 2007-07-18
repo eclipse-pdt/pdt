@@ -123,8 +123,8 @@ public class ContextParserClient implements ParserClient {
 	}
 
 	public void startParsing(String fileName) {
-		this.classes.clear();
-		this.functions.clear();
+		classes.clear();
+		functions.clear();
 		className = EMPTY_STRING;
 		functionName = EMPTY_STRING;
 		updateContext();
