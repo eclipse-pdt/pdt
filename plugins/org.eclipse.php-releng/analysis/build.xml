@@ -1,0 +1,27 @@
+<project name="MyProject" default="findbugs" basedir=".">
+
+  <property name="findbugs.home" value="/opt/users/phpBuild/analysis/findbugs" />
+  <property name="eclipse.home" value="/opt/users/phpBuild/src" />
+
+  <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+
+  <target name="findbugs">
+    <findbugs home="${findbugs.home}" output="html" outputFile="FINDBUGS-php.html" stylesheet="fancy.xsl">
+      <auxClasspath path="" />
+      <sourcePath path="${eclipse.home}/eclipse/plugins/org.eclipse.php.ui" />
+      <class location="${eclipse.home}/eclipse/plugins/org.eclipse.php.ui" />
+      <class location="${eclipse.home}/eclipse/plugins/org.eclipse.php.core" />
+      <class location="${eclipse.home}/eclipse/plugins/org.eclipse.php.debug.ui" />
+      <class location="${eclipse.home}/eclipse/plugins/org.eclipse.php.debug.core" />
+      <class location="${eclipse.home}/eclipse/plugins/org.eclipse.php.debug.daemon" />
+      <class location="${eclipse.home}/eclipse/plugins/org.eclipse.php.server.core" />
+      <class location="${eclipse.home}/eclipse/plugins/org.eclipse.php.server.ui" />
+    </findbugs>
+  </target>
+
+  <target name="genHTML">
+	<xslt in="bcel-fb.xml" out="output.html" style="/opt/users/phpBuild/analysis/findbugs/src/xsl/fancy.xsl" />
+  </target>
+
+</project>
+
