@@ -531,8 +531,8 @@
 			parentId="org.eclipse.ui.textEditorScope"
 			id="org.eclipse.php.ui.phpEditorScope" />
 		<context
-			name="Open PHP File"
-			description="Open PHP File"
+			name="%context.window.name"
+			description="%context.window.description"
 			parentId="org.eclipse.ui.contexts.window"
 			id="org.eclipse.php.ui.contexts.window" />
 	</extension>
@@ -612,9 +612,9 @@
 			categoryId="org.eclipse.ui.category.navigate"
 			id="org.eclipse.php.ui.edit.text.open.editor" />
 		<command
-			name="open declaration"
-			description="open declaration"
-			categoryId="org.eclipse.ui.category.navigate"
+			name="%OpenDeclaration.name"
+			description="OpenDeclaration.description"
+			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.php.ui.edit.text.OpenDeclaration" />
 		<command
 			name="%command.openType.name"
