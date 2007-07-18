@@ -319,13 +319,11 @@ public class PHPModelUtil {
 			if (fileName.equals(""))
 				fileName = null;
 			PHPClassData interfaceClassData = null;
-			IPhpModel model = null;
-			IProject project = null;
 			// first try to find in the same user model:
 			final IResource resource = getResource(classData);
 			if (resource != null) {
-				project = resource.getProject();
-				model = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+				final IProject project = resource.getProject();
+				final IPhpModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
 				if (model != null) {
 					interfaceClassData = model.getClass(resource.getName(), interfaceName);
 					if (interfaceClassData != null) {
