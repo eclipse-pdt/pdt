@@ -247,7 +247,16 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		}
 		final IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 		if (!contentType.isAssociatedWith(fileName)) {
-			updateStatus("File extension must be \"php\"");
+			// fixed bug 195274
+			// get the extensions from content type
+			final String[] fileExtensions = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+			StringBuffer buffer = new StringBuffer("The file name must end in one of the following extensions [");
+			buffer.append(fileExtensions[0]);
+			for (String extension : fileExtensions) {
+				buffer.append(", ").append(extension);
+			} 
+			buffer.append("]");
+			updateStatus(buffer.toString());
 			return;
 		}
 
