@@ -116,7 +116,13 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
 		final IContributionItem showGroupsItem = new ActionContributionItem(new ShowGroupsAction("Show Groups", viewer));
-		final IContributionItem toggleLinking = super.createMenuContributions(viewer)[0];
+		// fixed bug 174653
+		// use only the toggleLinking menu and dispose the others
+		IContributionItem[] menuContributions = super.createMenuContributions(viewer);
+		final IContributionItem toggleLinking = menuContributions[0];
+		for (int i = 1; i < menuContributions.length; i++) {
+			menuContributions[i].dispose();
+		}
 		sortAction = new SortAction(viewer);
 		final IContributionItem sortItem = new ActionContributionItem(sortAction);
 
