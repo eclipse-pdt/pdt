@@ -75,6 +75,15 @@ public class PHPExecutableDebuggerInitializer {
 			if (envVariables != null) {
 				systemEnvironmentVariables.putAll(envVariables);
 			}
+			
+			String OS = System.getProperty("os.name");
+			if (!OS.startsWith("Win")) {
+				if (OS.startsWith("Mac")) { //$NON-NLS-1$ //$NON-NLS-2$
+					systemEnvironmentVariables.put("DYLD_LIBRARY_PATH", workingDir.getAbsolutePath()); //$NON-NLS-1$
+				} else {
+					systemEnvironmentVariables.put("LD_LIBRARY_PATH", workingDir.getAbsolutePath()); //$NON-NLS-1$
+				}
+			}
 
 			String[] combinedEnvVars = mapAsArray(systemEnvironmentVariables);
 
