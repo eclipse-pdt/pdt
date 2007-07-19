@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -236,7 +238,9 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null) {
 			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : "";
-			return getClassConstsData(fileName, superClass, constName);
+			CodeData classConstsData = getClassConstsData(fileName, superClass, constName);
+			if(classConstsData != null)
+				return classConstsData;
 		}
 		
 		final PHPInterfaceNameData[] interfacesNamesData = classData.getInterfacesNamesData();
@@ -260,13 +264,19 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 
 		CodeData[] variables = ModelSupport.getCodeDataStartingWith(classData.getConsts(), startsWith);
 
-		CodeData[] superConsts = null;
+		Collection<CodeData> superConsts = new ArrayList();
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null) {
 			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : "";
-			superConsts = getClassConsts(fileName, superClass, startsWith);
+			superConsts.addAll(Arrays.asList(getClassConsts(fileName, superClass, startsWith)));
 		}
-		return ModelSupport.merge(variables, superConsts);
+		PHPInterfaceNameData[] interfacesNamesData = classData.getInterfacesNamesData();
+		for (PHPInterfaceNameData interfaceNameData : interfacesNamesData) {
+			String interfaceName = interfaceNameData.getName();
+			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : "";
+			superConsts.addAll(Arrays.asList(getClassConsts(fileName, interfaceName, startsWith)));
+		}
+		return ModelSupport.merge(variables, superConsts.toArray(new CodeData[superConsts.size()]));
 	}
 
 	public String getSuperClassName(String fileName, String className) {
