@@ -19,8 +19,19 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
@@ -241,8 +252,23 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				fileName = filePath.toOSString();
 			}
 			final String[] cmdLine = new String[] { phpExe.toOSString(), "-c", phpConfigDir, fileName };
+			
+			// Set library search path:
+			StringBuffer buf = new StringBuffer();
+			if (System.getProperty("os.name").startsWith("Mac")) { //$NON-NLS-1$ //$NON-NLS-2$
+				buf.append("DYLD_LIBRARY_PATH"); //$NON-NLS-1$
+			} else {
+				buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
+			}
+			buf.append('=');
+			buf.append(workingDir.getAbsolutePath());
+			String[] envpNew = new String[envp == null ? 1 : envp.length + 1];
+			if (envp != null) {
+				System.arraycopy(envp, 0, envpNew, 0, envp.length);
+			}
+			envpNew[envpNew.length-1] = buf.toString();
 
-			final Process p = DebugPlugin.exec(cmdLine, workingDir, envp);
+			final Process p = DebugPlugin.exec(cmdLine, workingDir, envpNew);
 			IProcess process = null;
 
 			// add process type to process attributes
