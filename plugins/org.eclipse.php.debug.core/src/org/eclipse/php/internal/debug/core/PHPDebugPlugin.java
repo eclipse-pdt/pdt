@@ -11,12 +11,8 @@
 package org.eclipse.php.internal.debug.core;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.IInternalDebugUIConstants;
-import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -24,7 +20,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
-import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -63,14 +58,11 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
 		// Set the AutoRemoveOldLaunchesListener
 		IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
 		fInitialAutoRemoveLaunches = preferenceStore.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
 		preferenceStore.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
-		
 		org.eclipse.php.internal.server.core.Activator.getDefault(); // TODO - Check if getInstance is needed
-		setLaunchPerspective();
 		// check for default server
 		createDefaultPHPServer();
 	}
@@ -146,22 +138,6 @@ public class PHPDebugPlugin extends Plugin {
 		Preferences serverPrefs = org.eclipse.php.internal.server.core.Activator.getDefault().getPluginPreferences();
 		return serverPrefs.getString(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
 
-	}
-
-	public void setLaunchPerspective() {
-		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfigurationType[] types = manager.getLaunchConfigurationTypes();
-		Preferences prefs = getPluginPreferences();
-		boolean usePHPDebugPerspective = prefs.getBoolean(PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE);
-		for (int i = 0; i < types.length; i++) {
-			if (types[i].getIdentifier().startsWith("org.eclipse.php.")) {
-				if (usePHPDebugPerspective) {
-					DebugUITools.setLaunchPerspective(types[i], ILaunchManager.DEBUG_MODE, fPHPDebugPerspective);
-				} else {
-					DebugUITools.setLaunchPerspective(types[i], ILaunchManager.DEBUG_MODE, fDebugPerspective);
-				}
-			}
-		}
 	}
 
 	/**

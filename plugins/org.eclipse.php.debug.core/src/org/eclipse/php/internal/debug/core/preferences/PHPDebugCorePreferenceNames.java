@@ -25,7 +25,6 @@ public class PHPDebugCorePreferenceNames {
 	private static final String Debug_ID = PHPDebugPlugin.getID();
 
 	public static final String STOP_AT_FIRST_LINE = Debug_ID + "stop_at_first_line_string";//$NON-NLS-1$
-	public static final String USE_PHP_DEBUG_PERSPECTIVE = Debug_ID + "USE_PHP_DEBUG_PERSPECTIVE";//$NON-NLS-1$
 	public static final String DEBUG_PORT = Debug_ID + "debug_port";//$NON-NLS-1$
 
 	public static final String INSTALLED_PHP_NAMES = Debug_ID + "installedPHPNames";//$NON-NLS-1$

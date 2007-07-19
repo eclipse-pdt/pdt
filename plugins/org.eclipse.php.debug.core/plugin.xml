@@ -64,19 +64,29 @@
    
    <extension point="org.eclipse.debug.core.launchDelegates">
      <launchDelegate
-        id="org.eclipse.php.debug.core.launching.launchDelegate.scriptDebug"
-        type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
-        sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
-        sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
-        delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
-        modes="debug"/>
+           delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
+           id="org.eclipse.php.debug.core.launching.launchDelegate.scriptDebug"
+           modes="debug"
+           sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+           sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
+           type="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
+        <modeCombination
+              modes="debug"
+              perspective="org.eclipse.php.debug.ui.PHPDebugPerspective">
+        </modeCombination>
+     </launchDelegate>
      <launchDelegate
            delegate="org.eclipse.php.internal.debug.core.launching.PHPWebPageLaunchDelegate"
            id="org.eclipse.php.debug.core.launching.launchDelegate.webPageDebug"
            modes="debug"
            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php"
-           type="org.eclipse.php.debug.core.launching.webPageLaunch"/>
+           type="org.eclipse.php.debug.core.launching.webPageLaunch">
+        <modeCombination
+              modes="debug"
+              perspective="org.eclipse.php.debug.ui.PHPDebugPerspective">
+        </modeCombination>
+     </launchDelegate>
   </extension>
  
   <extension point="org.eclipse.core.runtime.preferences">

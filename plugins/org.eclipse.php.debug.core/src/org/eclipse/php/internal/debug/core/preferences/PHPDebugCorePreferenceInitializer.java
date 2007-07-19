@@ -27,7 +27,6 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 
 		// formatting preferences
 		node.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, false);
-		node.putBoolean(PHPDebugCorePreferenceNames.USE_PHP_DEBUG_PERSPECTIVE, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
