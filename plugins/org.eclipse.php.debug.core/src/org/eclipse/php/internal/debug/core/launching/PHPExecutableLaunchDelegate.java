@@ -232,7 +232,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			if (monitor.isCanceled())
 				return;
 
-			final String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
+			String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
 
 			if (monitor.isCanceled())
 				return;
@@ -252,23 +252,26 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				fileName = filePath.toOSString();
 			}
 			final String[] cmdLine = new String[] { phpExe.toOSString(), "-c", phpConfigDir, fileName };
-			
-			// Set library search path:
-			StringBuffer buf = new StringBuffer();
-			if (System.getProperty("os.name").startsWith("Mac")) { //$NON-NLS-1$ //$NON-NLS-2$
-				buf.append("DYLD_LIBRARY_PATH"); //$NON-NLS-1$
-			} else {
-				buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
-			}
-			buf.append('=');
-			buf.append(workingDir.getAbsolutePath());
-			String[] envpNew = new String[envp == null ? 1 : envp.length + 1];
-			if (envp != null) {
-				System.arraycopy(envp, 0, envpNew, 0, envp.length);
-			}
-			envpNew[envpNew.length-1] = buf.toString();
 
-			final Process p = DebugPlugin.exec(cmdLine, workingDir, envpNew);
+			// Set library search path:
+			if (!WINDOWS) {
+				StringBuffer buf = new StringBuffer();
+				if (System.getProperty("os.name").startsWith("Mac")) { //$NON-NLS-1$ //$NON-NLS-2$
+					buf.append("DYLD_LIBRARY_PATH"); //$NON-NLS-1$
+				} else {
+					buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
+				}
+				buf.append('=');
+				buf.append(workingDir.getAbsolutePath());
+				String[] envpNew = new String[envp == null ? 1 : envp.length + 1];
+				if (envp != null) {
+					System.arraycopy(envp, 0, envpNew, 0, envp.length);
+				}
+				envpNew[envpNew.length - 1] = buf.toString();
+				envp = envpNew;
+			}
+
+			final Process p = DebugPlugin.exec(cmdLine, workingDir, envp);
 			IProcess process = null;
 
 			// add process type to process attributes
