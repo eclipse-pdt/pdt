@@ -993,6 +993,14 @@
 			description="Server Projects"
 			class="org.eclipse.php.internal.ui.filters.ServerProjectFilter"
 			id="org.eclipse.php.ui.explorer.ServerProjectFilter" />
+  <filter
+        class="org.eclipse.php.internal.ui.filters.RSEProjectFilter"
+        description="Filter out an RSE temporary project"
+        enabled="true"
+        id="org.eclipse.php.ui.explorer.RSEProjectFilter"
+        name="RSE Temp Project"
+        targetId="org.eclipse.php.ui.explorer">
+  </filter>
 	</extension>
 
 	<extension point="org.eclipse.search.searchPages">

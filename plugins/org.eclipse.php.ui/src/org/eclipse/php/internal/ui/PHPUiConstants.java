@@ -17,4 +17,5 @@ public interface PHPUiConstants {
 			// disable cut/copy/paste/rename etc on php elements within file
 	public static final boolean DISABLE_ELEMENT_REFACTORING=true;
 	public static final String CONTENT_ASSIST_PROFERENCE_PAGE = "org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage";
+	public static final String RSE_TEMP_PROJECT_NATURE_ID = "org.eclipse.rse.ui.remoteSystemsTempNature"; //$NON-NLS-1$
 }

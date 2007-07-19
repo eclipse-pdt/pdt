@@ -50,7 +50,9 @@ import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
 import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
@@ -1246,6 +1248,18 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							ExternalFilesRegistry externalRegistry = ExternalFilesRegistry.getInstance();
 							if (file.exists()) {
 								PHPWorkspaceModelManager.getInstance().addFileToModel(getFile());
+								IProject proj = file.getProject();
+								try {
+									//remove the file from project model when it is an RSE project.
+									//this is to prevent display of the completion from this file
+									//when it is closed
+									if (proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) {
+										PHPWorkspaceModelManager.getInstance().getModelForProject(proj).removeFileFromModel(file);
+									}
+								} catch (CoreException ce) {
+									Logger.logException(ce);
+									return;
+								}	
 							}
 							//external php file
 							else {
@@ -1335,6 +1349,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
+			
+			//we add this test to provide model for PHP files opened from RSE (temp) project 
+			IProject proj = resource.getProject();
+			if (proj.isAccessible() && proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) {
+				PHPWorkspaceModelManager.getInstance().getModelForProject(proj, true);
+			}
 		} else if (input instanceof IStorageEditorInput) {
 			// This kind of editor input usually means non-workspace file, like
 			// PHP file which comes from include path, remote file which comes from
