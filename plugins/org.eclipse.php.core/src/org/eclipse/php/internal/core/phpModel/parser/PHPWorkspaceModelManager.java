@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
@@ -352,7 +353,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					if (project.isOpen() && project.exists() && project.isAccessible()) {
 						boolean hasNature;
 						try {
-							hasNature = project.hasNature(PHPNature.ID);
+							//support both RSE and PHP projects
+							//this is to provide the model+outline to php files from RSE, such as FTP etc...
+							hasNature = project.hasNature(PHPCoreConstants.RSE_TEMP_PROJECT_NATURE_ID) || project.hasNature(PHPNature.ID);
 						} catch (CoreException e) {
 							PHPCorePlugin.log(e);
 							return null;
@@ -579,7 +582,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	private synchronized IWorkspaceModelListener[] getGlobalWorkspaceModelListeners() {
 		return globalWorkspaceModelListeners.toArray(new IWorkspaceModelListener[globalWorkspaceModelListeners.size()]);
 	}
-	
+
 	/**
 	 * End Global listeners
 	 */

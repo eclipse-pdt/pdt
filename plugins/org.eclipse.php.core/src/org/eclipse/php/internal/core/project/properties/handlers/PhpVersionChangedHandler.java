@@ -120,6 +120,9 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 	}
 
 	public void removePhpVersionChangedListener(IPreferencesPropagatorListener listener) {
+		if (listener == null){//this was added since when working with RSE project model, listener was NULL
+			return;
+		}
 		IProject project = listener.getProject();
 		HashSet listeners = (HashSet) projectListeners.get(project);
 		if (listeners != null) {
