@@ -447,7 +447,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 			if (PHPPartitionTypes.isPHPQuotesState(type) || type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(tRegion) + tRegion.getLength() <= offset) {
 				completionProposalGroup = regularPHPCompletionProposalGroup;
-				completionProposalGroup.setData(offset, null, startsWith, selectionLength, isStrict);
+				completionProposalGroup.setData(offset, new CodeData[0], startsWith, selectionLength, isStrict);
 				return;
 			}
 		}
