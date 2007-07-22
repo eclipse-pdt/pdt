@@ -39,6 +39,7 @@ import org.eclipse.php.internal.ui.editor.util.PHPDocTool;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -192,16 +193,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 						//this means that we added the default shortDescription to the docBlock
 						//now we want to make sure this description will be selected in the editor 
 						//at the end of the command
-						String fileName = fileData.getName();
-						IFile file = PHPUiPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
-						IEditorPart editorPart;
-						try {
-							editorPart = EditorUtility.openInEditor(file, true);
-						} catch (PartInitException e) {
-							Logger.logException(e);
-							command.text = commentStart + command.text;
-							return -1;
-						}
+						IEditorPart editorPart = PHPUiPlugin.getActivePage().getActiveEditor();
 						ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 						//25 - stands for the shortDescription length
 						//E - stands for the first latter in the shortDescription
