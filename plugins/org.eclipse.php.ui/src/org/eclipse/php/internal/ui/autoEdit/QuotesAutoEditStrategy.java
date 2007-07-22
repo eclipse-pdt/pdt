@@ -261,7 +261,8 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			}
 		}		
 
-		if (sdRegion.getFullText().charAt(offset) != BACK_QOUTE) {
+		// fixed bug 197412
+		if (sdRegion.getFullText().charAt(offset - sdRegion.getStartOffset()) != BACK_QOUTE) {
 			return false;
 		}
 
@@ -275,7 +276,8 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			}
 		}
 
-		if (sdRegion.getFullText().charAt(offset + 1) != BACK_QOUTE) {
+		// fixed bug 197412
+		if (sdRegion.getFullText().charAt(offset + 1  - sdRegion.getStartOffset()) != BACK_QOUTE) {
 			return false;
 		}
 		String startState = FormatterUtils.getPartitionType(sdRegion.getParentDocument(), offset, true);
