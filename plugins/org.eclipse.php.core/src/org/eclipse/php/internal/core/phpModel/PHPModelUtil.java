@@ -13,7 +13,9 @@ package org.eclipse.php.internal.core.phpModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
@@ -453,7 +455,12 @@ public class PHPModelUtil {
 		if (currentSuperClassName == null)
 			return null;
 		PHPClassData currentSuperClassData = classData;
+		Set<PHPClassData> visitedClasses = new HashSet();
+		visitedClasses.add(currentSuperClassData);
 		while ((currentSuperClassData = getSuperClass(currentSuperClassData)) != null) {
+			if(visitedClasses.contains(currentSuperClassData))
+				return null;
+			visitedClasses.add(currentSuperClassData);
 			if ((currentSuperClassName = currentSuperClassData.getName()) == null)
 				return null;
 			if (currentSuperClassName.compareToIgnoreCase(superClassName) == 0)
