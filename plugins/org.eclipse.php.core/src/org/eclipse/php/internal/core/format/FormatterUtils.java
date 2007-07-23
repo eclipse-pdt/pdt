@@ -54,10 +54,13 @@ public class FormatterUtils {
 			if (tRegion != null && tRegion instanceof PhpScriptRegion) {
 				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
 				int regionOffset = offset - regionStart;
-				if (PHPPartitionTypes.getPartitionStart(scriptRegion, regionOffset) == regionOffset && regionOffset > 0) {
-					regionOffset = regionOffset - 1;
-				}
-				return scriptRegion.getPartition(regionOffset); 
+				ITextRegion innerRegion = scriptRegion.getPhpToken(regionOffset);
+				String partition = scriptRegion.getPartition(regionOffset);
+				// check if the offset is in the start of the php token
+				if (offset - (sdRegion.getStart() + regionStart + innerRegion.getStart()) == 0) {
+					return PHPPartitionTypes.PHP_DEFAULT;
+				}			
+				return partition;
 			}
 		} catch (final BadLocationException e) {
 		}
