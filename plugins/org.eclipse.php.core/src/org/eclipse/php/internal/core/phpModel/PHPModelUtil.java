@@ -460,11 +460,11 @@ public class PHPModelUtil {
 		while ((currentSuperClassData = getSuperClass(currentSuperClassData)) != null) {
 			if(visitedClasses.contains(currentSuperClassData))
 				return null;
-			visitedClasses.add(currentSuperClassData);
 			if ((currentSuperClassName = currentSuperClassData.getName()) == null)
 				return null;
 			if (currentSuperClassName.compareToIgnoreCase(superClassName) == 0)
 				return currentSuperClassData;
+			visitedClasses.add(currentSuperClassData);
 		}
 		return null;
 	}
