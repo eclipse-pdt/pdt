@@ -45,7 +45,7 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 				setControlsEnabled(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, autoActivateSectionEnabled);
 				setControlsEnabled(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, autoActivateSectionEnabled);
 				setControlsEnabled(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, autoActivateSectionEnabled);
-				setControlsEnabled(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, autoActivateSectionEnabled);
+//				setControlsEnabled(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, autoActivateSectionEnabled);
 			}
 		});
 
@@ -55,6 +55,7 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 		autoActivationTriggersPHP = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationTriggersPHP, PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, 4, 20);
 
 		autoActivationTriggersPHPDoc = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationTriggersPHPDoc, PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, 4, 20);
+		autoActivationTriggersPHPDoc.setEnabled(false);
 
 	}
 }
