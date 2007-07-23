@@ -19,7 +19,8 @@ public class RSEProjectFilter extends ViewerFilter {
 		if (element instanceof IProject) {
 			IProject proj = (IProject) element;
 			try {
-				if (proj.exists() && proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) {
+				//project must be open to check if an RSE nature
+				if (proj.isOpen() && proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) {
 					return false;
 				}
 			} catch (CoreException ce) {
