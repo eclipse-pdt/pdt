@@ -155,15 +155,14 @@ public class PasteAction extends SelectionDispatchAction {
 		}
 
 		public void paste(Object[] phpElements, IResource[] resources, TransferData[] availableTypes) throws CoreException {
-			String[] fileData = getClipboardFiles(availableTypes);
-			if (fileData == null)
-				return;
-
 			IContainer container = getAsContainer(getTarget(phpElements, resources));
 			if (container == null)
 				return;
 
-			new CopyFilesAndFoldersOperation(getShell()).copyFiles(fileData, container);
+			// fixed bug 154866 
+			// copy resources instead of files 
+			CopyFilesAndFoldersOperation copyFilesAndFoldersOperation = new CopyFilesAndFoldersOperation(getShell());
+			copyFilesAndFoldersOperation.copyResources(resources, container);
 		}
 
 		private Object getTarget(Object[] phpElements, IResource[] resources) {
@@ -196,14 +195,6 @@ public class PasteAction extends SelectionDispatchAction {
 				return (IContainer) target;
 			if (target instanceof IFile)
 				return ((IFile) target).getParent();
-			return null;
-		}
-
-		private String[] getClipboardFiles(TransferData[] availableDataTypes) {
-			Transfer transfer = FileTransfer.getInstance();
-			if (isAvailable(transfer, availableDataTypes)) {
-				return (String[]) getContents(getClipboard(), transfer, getShell());
-			}
 			return null;
 		}
 
