@@ -12,17 +12,11 @@ package org.eclipse.php.internal.ui.editor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.swt.SWT;
@@ -39,19 +33,16 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
-import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
 public class PHPSourceViewer extends Composite {
 
-	private Dictionary fContextStyleMap = null;
 	private Color fDefaultBackground = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 	private Color fDefaultForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
 	private String fInput = ""; //$NON-NLS-1$
@@ -110,13 +101,6 @@ public class PHPSourceViewer extends Composite {
 	}
 
 	/**
-	 * @return java.util.Dictionary
-	 */
-	public Dictionary getContextStyleMap() {
-		return fContextStyleMap;
-	}
-
-	/**
 	 * @return org.eclipse.swt.graphics.Color
 	 */
 	public Color getDefaultBackground() {
@@ -171,14 +155,6 @@ public class PHPSourceViewer extends Composite {
 	}
 
 	/**
-	 * @param newContextStyleMap
-	 *            java.util.Dictionary
-	 */
-	public void setContextStyleMap(Dictionary newContextStyleMap) {
-		fContextStyleMap = newContextStyleMap;
-	}
-
-	/**
 	 * @param newDefaultBackground
 	 *            org.eclipse.swt.graphics.Color
 	 */
@@ -218,14 +194,20 @@ public class PHPSourceViewer extends Composite {
 		if (fText == null || fText.isDisposed() || fInput == null || fInput.length() == 0) {
 			return;
 		}
-		IStructuredDocumentRegion node = fNodes;
-		final LineStyleProviderForPhp styler = new LineStyleProviderForPhp();
-		final Collection holdResults = new ArrayList();
-		styler.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
 		
-		for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
-			StyleRange element = (StyleRange) iter.next();
-			fText.setStyleRange(element);			
+		styleProvider.loadColors();
+		LineStyleProviderForHTML lineStyleProviderForHTML = new LineStyleProviderForHTML();
+		
+		IStructuredDocumentRegion documentRegion = fNodes;
+		while (documentRegion != null) {
+			final Collection holdResults = new ArrayList();
+			styleProvider.prepareTextRegions(documentRegion, 0, documentRegion.getEnd(), holdResults);
+			
+			for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
+				StyleRange element = (StyleRange) iter.next();
+				fText.setStyleRange(element);
+			}
+			documentRegion = documentRegion.getNext();
 		}
 	}
 
@@ -245,8 +227,6 @@ public class PHPSourceViewer extends Composite {
 		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
 		styleProvider = new LineStyleProviderForPhp();
-		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
-		setContextStyleMap(contextStyleMap);
 	}
 
 	public StyledText getTextWidget() {
