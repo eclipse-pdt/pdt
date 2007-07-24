@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import java.io.File;
+
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.IPath;
@@ -57,7 +59,9 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 		IPath stateLocation = PHPUiPlugin.getDefault().getStateLocation();
 		IPath path = stateLocation.append(UNTITLED_FOLDER_PATH);
 		IFileStore fileStore = EFS.getLocalFileSystem().getStore(path);
-		IEditorInput input = new NonExistingPHPFileEditorInput(fileStore, UNTITLED_PHP_DOC_PREFIX);
+		NonExistingPHPFileEditorInput input = new NonExistingPHPFileEditorInput(fileStore, UNTITLED_PHP_DOC_PREFIX);
+		File f = input.getPath().toFile();
+		f.deleteOnExit();
 		IWorkbenchPage page = fWindow.getActivePage();
 		try {
 			page.openEditor(input, UNTITLED_EDITOR_ID);

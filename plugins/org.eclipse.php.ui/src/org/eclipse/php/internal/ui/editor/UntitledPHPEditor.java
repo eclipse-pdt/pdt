@@ -27,16 +27,13 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveAsDialog;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.EditorUtility;
-import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.internal.editors.text.NLSUtility;
 import org.eclipse.ui.part.FileEditorInput;
@@ -112,7 +109,7 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 
 		IPath newPath = null;
 
-		SaveUntitledDialog dialog = new SaveUntitledDialog(shell);
+		SaveAsDialog dialog = new SaveAsDialog(shell);
 
 		IPath oldPath = ((NonExistingPHPFileEditorInput) input).getPath();
 		String originalName = oldPath.lastSegment();
@@ -173,25 +170,5 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 			progressMonitor.setCanceled(!success);
 
 		return;
-	}
-
-	/**
-	 * The "Save As" dialog for the untitled document
-	 * @author yaronm
-	 */
-	class SaveUntitledDialog extends SaveAsDialog {
-		public SaveUntitledDialog(Shell parentShell) {
-			super(parentShell);
-		}
-
-		/**
-		 * Simply overrides its base class's method to change the image
-		 */
-		protected Control createContents(Composite parent) {
-			Control control = super.createContents(parent);
-			setTitleImage(PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_WIZBAN_ADD_PHP_FILE));
-			return control;
-		}
-
 	}
 }
