@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.validation;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.content.IContentDescription;
-import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.osgi.util.NLS;
@@ -43,7 +37,10 @@ import org.eclipse.wst.html.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.html.internal.validation.HTMLValidator;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.*;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
@@ -76,6 +73,7 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
 		//handle the cases that the connect() run before the structured model was created (look at innerConnect()).
+		
 		if (currentFileName == null && fDocument != null) {
 			innerConnect();
 		}
@@ -129,6 +127,22 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 			if (fd != null) {
 				fileDataChanged(fd);
 			}
+		} finally {
+			if (structuredModel != null) {
+				structuredModel.releaseFromRead();
+			}
+		}
+	}
+	
+	private void calcCurrentFileName() {
+		IStructuredModel structuredModel = null;
+		try {
+			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+			if (structuredModel == null) {
+				return;
+			}
+			currentFileName = structuredModel.getId();
+
 		} finally {
 			if (structuredModel != null) {
 				structuredModel.releaseFromRead();
@@ -253,7 +267,10 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 	}
 
 	public void fileDataAdded(PHPFileData fileData) {
-		// do nothing
+		// fixed bug 197413
+		// in case of saving the file in different location
+		// reassign the currentFileName variable.
+		calcCurrentFileName();
 	}
 
 	public void fileDataChanged(PHPFileData fileData) {
