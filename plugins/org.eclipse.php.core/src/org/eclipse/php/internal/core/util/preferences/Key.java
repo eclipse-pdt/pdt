@@ -6,6 +6,7 @@ package org.eclipse.php.internal.core.util.preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.ui.preferences.IWorkingCopyManager;
+import org.osgi.service.prefs.BackingStoreException;
 
 public final class Key {
 
@@ -30,7 +31,16 @@ public final class Key {
 	}
 
 	public String getStoredValue(IScopeContext context, IWorkingCopyManager manager) {
-		return getNode(context, manager).get(fKey, null);
+		// fixed bug 197125
+		// check if the node preferences existence before get its keys
+		IEclipsePreferences node = getNode(context, manager);
+		try {
+			if (node.nodeExists("")) {
+				return node.get(fKey, null);
+			}
+		} catch (BackingStoreException e) {
+		}
+		return null;
 	}
 
 	public String getStoredValue(IScopeContext[] lookupOrder, boolean ignoreTopScope, IWorkingCopyManager manager) {
