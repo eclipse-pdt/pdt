@@ -20,8 +20,8 @@ public class CodeBuilder implements Visitor {
 	public static void main(String[] args) {
 		try {
 			CodeBuilder codeBuilder = new CodeBuilder();
-			String inputDir = "C:/swtTests/inputFiles";
-			String outputDir = "C:/swtTests/outputFiles";
+			String inputDir = args[0];
+			String outputDir = args[1];
 			File dir = new File(inputDir);
 			String[] files = dir.list();
 			for (int i = 0; i < files.length; i++) {
