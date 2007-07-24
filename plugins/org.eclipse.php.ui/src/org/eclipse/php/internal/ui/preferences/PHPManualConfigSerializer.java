@@ -4,6 +4,7 @@
  */
 package org.eclipse.php.internal.ui.preferences;
 
+import java.io.File;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.Platform;
@@ -44,11 +45,11 @@ public class PHPManualConfigSerializer {
 		
 		int idx = url.indexOf(INSTALL_AREA_PROP);
 		if (idx != -1) {
-			String platformLocation = Platform.getInstallLocation().getURL().toExternalForm();
+			String platformLocation = new File(Platform.getInstallLocation().getURL().getPath()).getPath();
 			if (platformLocation.endsWith("/")) {
 				platformLocation = platformLocation.substring(0, platformLocation.length() - 1);
 			}
-			url = url.substring(0, idx) + platformLocation + url.substring(idx + INSTALL_AREA_PROP.length());
+			url = "file://" + new File(url.substring(0, idx) + platformLocation + url.substring(idx + INSTALL_AREA_PROP.length())).getAbsolutePath();
 		}
 		
 		return new PHPManualConfig(name, url, extension, false);
