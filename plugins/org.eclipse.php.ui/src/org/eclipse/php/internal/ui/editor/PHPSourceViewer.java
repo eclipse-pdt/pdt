@@ -14,9 +14,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.swt.SWT;
@@ -30,9 +37,16 @@ import org.eclipse.swt.custom.TextChangedEvent;
 import org.eclipse.swt.custom.TextChangingEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
+import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
@@ -41,10 +55,10 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
-public class PHPSourceViewer extends Composite {
+public class PHPSourceViewer extends Composite implements IPropertyChangeListener {
 
-	private Color fDefaultBackground = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
-	private Color fDefaultForeground = getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+	private Color fDefaultBackground;
+	private Color fDefaultForeground;
 	private String fInput = ""; //$NON-NLS-1$
 
 	private IStructuredDocumentRegion fNodes = null;
@@ -53,14 +67,49 @@ public class PHPSourceViewer extends Composite {
 	private StyledText fText = null;
 	private LineStyleProviderForPhp styleProvider;
 
+	private IPreferenceStore editorStore;
+
 	public PHPSourceViewer(Composite parent, int style) {
 		super(parent, style);
+
+		editorStore = EditorsPlugin.getDefault().getPreferenceStore();
+
+		fDefaultBackground = editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT) ? null : new Color(getDisplay(), PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
+		fDefaultForeground = editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT) ? null : new Color(getDisplay(), PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
+
+		editorStore.addPropertyChangeListener(this);
+
 		FillLayout layout = new FillLayout();
 		setLayout(layout);
 		//		GridData data = new GridData(GridData.FILL_BOTH | GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL);
 		//		setLayoutData(data);
 		createControls(this);
 		setupViewer();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+	 */
+	public void propertyChange(final PropertyChangeEvent event) {
+		if (AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT.equals(event.getProperty())) {
+			if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT))
+				fDefaultBackground = null;
+			else
+				fDefaultBackground = new Color(Display.getCurrent(), PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
+			refresh();
+		} else if (AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT.equals(event.getProperty())) {
+			if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT))
+				fDefaultForeground = null;
+			else
+				fDefaultForeground = new Color(Display.getCurrent(), PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
+			refresh();
+		} else if (AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND.equals(event.getProperty())) {
+			fDefaultBackground = new Color(Display.getCurrent(), PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
+			refresh();
+		} else if (AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND.equals(event.getProperty())) {
+			fDefaultForeground = new Color(Display.getCurrent(), PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
+			refresh();
+		}
 	}
 
 	public void createControls(Composite parent) {
@@ -92,6 +141,7 @@ public class PHPSourceViewer extends Composite {
 
 		});
 		fText.setBackground(fDefaultBackground);
+		fText.setForeground(fDefaultForeground);
 		fText.setFont(JFaceResources.getTextFont());
 		setAccessible(fText, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
 	}
@@ -128,12 +178,16 @@ public class PHPSourceViewer extends Composite {
 
 	// refresh the GUI after a color change
 	public void refresh() {
-		fText.setRedraw(false);
-		// update Font
-		fText.setFont(JFaceResources.getTextFont());
-		// reapplyStyles
-		applyStyles();
-		fText.setRedraw(true);
+		if (!fText.isDisposed()) {
+			fText.setRedraw(false);
+			fText.setBackground(fDefaultBackground);
+			fText.setForeground(fDefaultForeground);
+			// update Font
+			fText.setFont(JFaceResources.getTextFont());
+			// reapplyStyles
+			applyStyles();
+			fText.setRedraw(true);
+		}
 	}
 
 	public void releasePickerResources() {
@@ -200,12 +254,12 @@ public class PHPSourceViewer extends Composite {
 		
 		IStructuredDocumentRegion documentRegion = fNodes;
 		while (documentRegion != null) {
-			final Collection holdResults = new ArrayList();
+		final Collection holdResults = new ArrayList();
 			styleProvider.prepareTextRegions(documentRegion, 0, documentRegion.getEnd(), holdResults);
-			
-			for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
-				StyleRange element = (StyleRange) iter.next();
-				fText.setStyleRange(element);
+
+		for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
+			StyleRange element = (StyleRange) iter.next();
+			fText.setStyleRange(element);
 			}
 			documentRegion = documentRegion.getNext();
 		}
@@ -231,6 +285,16 @@ public class PHPSourceViewer extends Composite {
 
 	public StyledText getTextWidget() {
 		return fText;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Widget#dispose()
+	 */
+	public void dispose() {
+		editorStore.removePropertyChangeListener(this);
+		fDefaultBackground.dispose();
+		fDefaultForeground.dispose();
+		super.dispose();
 	}
 
 }
