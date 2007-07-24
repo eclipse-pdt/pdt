@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.core.documentModel.dom.DOMDocumentForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelParser;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelUpdater;
@@ -154,6 +155,9 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 			result = ExternalFilesRegistry.getInstance().getFileEntry(path);
 		}
 		if (result == null) {
+			if (Platform.getOS() != Platform.OS_WIN32) {
+				path = path.replace('\\', '/');
+			}
 			result = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(path));
 		}
 		return result;

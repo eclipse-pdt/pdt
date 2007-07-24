@@ -20,8 +20,28 @@ import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.internal.resources.WorkspaceRoot;
 import org.eclipse.core.internal.watson.IPathRequestor;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFileState;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -953,7 +973,11 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * @return An {@link IFile} (new instance of {@link ExternalFileDecorator}).
 	 */
 	public synchronized static IFile createFile(String pathString) {
+		if (Platform.getOS() != Platform.OS_WIN32) {
+			pathString = pathString.replace('\\', '/');
+		}
 		IPath path = Path.fromOSString(pathString);
+		path = new Path(path.toOSString());
 		if (path.segmentCount() == 1) {
 			IPath p = new Path(path.getDevice());
 			p = p.append(ExternalFilesRegistry.getInstance().getExternalFilesProject().getFullPath());
