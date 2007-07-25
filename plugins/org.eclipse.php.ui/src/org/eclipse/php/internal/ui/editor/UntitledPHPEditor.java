@@ -20,15 +20,21 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveAsDialog;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.internal.editors.text.NLSUtility;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -46,13 +52,44 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 	 * to prevent memory increase. The reason we use a map is since the user can save
 	 * multiple Untitled documents when performing Saving All
 	 */
-	public static HashMap<IPath,IPath> latestSavedUntitled = new HashMap<IPath, IPath>();
-	
+	public static HashMap<IPath, IPath> latestSavedUntitled = new HashMap<IPath, IPath>();
+
 	/**
 	 * Overrides
 	 */
 	public void doSave(IProgressMonitor progressMonitor) {
 		performSaveAs(progressMonitor);
+	}
+
+	/**
+	 * This is an override in order to provide the PHP template content
+	 * for the Untitled PHP document
+	 */
+	protected void doSetInput(IEditorInput input) throws CoreException {
+		super.doSetInput(input);
+		final TextFileDocumentProvider documentProvider = (TextFileDocumentProvider) getDocumentProvider();
+		if (documentProvider == null){
+			return;
+		}
+		final IDocument document = documentProvider.getDocument(input);
+		String content = loadPHPTemplate();
+		document.set(content);
+		documentProvider.saveDocument(null, input, document, true);
+	}
+
+	//Load the last template name used in New HTML File wizard.
+	private String loadPHPTemplate() {
+		String templateName = getPreferenceStore().getString(PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
+		if (templateName == null || templateName.length() == 0) {
+			return ""; //$NON-NLS-1$
+		}
+
+		PHPTemplateStore fTemplateStore = (PHPTemplateStore) PHPUiPlugin.getDefault().getTemplateStore();
+		Template template = fTemplateStore.findTemplate(templateName);
+		if (template != null) {
+			return template.getPattern();
+		}
+		return "";
 	}
 
 	/**
@@ -76,8 +113,8 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 		IPath newPath = null;
 
 		SaveAsDialog dialog = new SaveAsDialog(shell);
-		
-		IPath oldPath = ((NonExistingPHPFileEditorInput)input).getPath();
+
+		IPath oldPath = ((NonExistingPHPFileEditorInput) input).getPath();
 		String originalName = oldPath.lastSegment();
 		dialog.setOriginalName(originalName);
 		dialog.create();
