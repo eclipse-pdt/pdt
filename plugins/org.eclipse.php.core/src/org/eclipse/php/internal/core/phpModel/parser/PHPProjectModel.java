@@ -13,9 +13,8 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,7 +33,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 
 	private PHPUserModel userModel;
 	private IPHPLanguageModel languageModel;
-	private Collection listeners = Collections.synchronizedCollection(new HashSet(2));
+	private Set<IProjectModelListener> listeners = new HashSet<IProjectModelListener>(2);
 	private IProject currentProject;
 
 	public PHPProjectModel() {
@@ -345,37 +344,40 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		fireFileChanged(file, sDocument);
 	}
 
-	public void addProjectModelListener(IProjectModelListener l) {
-		if (!listeners.contains(l))
-			listeners.add(l);
+	/**
+	 * Project Model Listeners methods
+	 */
+	public synchronized void addProjectModelListener(IProjectModelListener l) {
+		listeners.add(l);
 	}
 
-	public Collection getProjectModelListeners() {
-		return this.listeners;
-	}
-
-	public void removeProjectModelListener(IProjectModelListener l) {
+	public synchronized void removeProjectModelListener(IProjectModelListener l) {
 		listeners.remove(l);
 	}
 
+	public synchronized IProjectModelListener[] getProjectModelListeners() {
+		return listeners.toArray(new IProjectModelListener[listeners.size()]);
+	}
+	
 	private void fireFileChanged(IFile file, IStructuredDocument sDocument) {
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			IProjectModelListener projectModelListener = (IProjectModelListener) iter.next();
+		final IProjectModelListener[] projectModelListeners = getProjectModelListeners();
+		for (IProjectModelListener projectModelListener : projectModelListeners) {
 			projectModelListener.fileChanged(file, sDocument);
 		}
 	}
 
 	private void fireFileDataRemoved(IFile file) {
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			IProjectModelListener projectModelListener = (IProjectModelListener) iter.next();
+		final IProjectModelListener[] projectModelListeners = getProjectModelListeners();
+		for (IProjectModelListener projectModelListener : projectModelListeners) {
 			projectModelListener.fileRemoved(file);
 		}
 	}
 
 	private void fireFileDataAdded(IFile file) {
-		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			IProjectModelListener projectModelListener = (IProjectModelListener) iter.next();
+		final IProjectModelListener[] projectModelListeners = getProjectModelListeners();
+		for (IProjectModelListener projectModelListener : projectModelListeners) {
 			projectModelListener.fileAdded(file);
 		}
 	}
 }
+
