@@ -17,6 +17,8 @@ public class CodeDataActionFilterContributor implements IActionFilterContributor
 
 	public boolean testAttribute(Object target, String name, String value) {
 		PHPCodeData phpCodeData = (PHPCodeData)target;
-		return phpCodeData.getDocBlock() == null;
+		
+		// null phpCodeData.getUserData() indicates on language model elements
+		return phpCodeData.getUserData() != null && phpCodeData.getDocBlock() == null;
 	}
 }
