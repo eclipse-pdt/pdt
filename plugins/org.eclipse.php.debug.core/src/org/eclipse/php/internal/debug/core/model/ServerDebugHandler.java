@@ -101,7 +101,13 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			}
 			index = systemFileName.lastIndexOf(uri);
 		}
-		return systemFileName.substring(0, index);
+		if (index > -1) {
+			return systemFileName.substring(0, index);
+		} 
+		// We probably have a server mapping directive that cause the htdocs calculation
+		// to fail.
+		// In this case, return an empty htdocs.
+		return "";
 	}
 	
 	public void connectionEstablished() {
