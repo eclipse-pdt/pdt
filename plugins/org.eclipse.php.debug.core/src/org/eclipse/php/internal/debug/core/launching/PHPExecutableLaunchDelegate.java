@@ -63,6 +63,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/** Indicator for an executable ILaunch (inserted into the launch attributes) */
 	public static final String EXECUTABLE_LAUNCH = "executable_launch";
+	private final static String UNTITLED_FOLDER_PATH = "Untitled_Documents";
 
 	protected Map envVariables = null;
 
@@ -306,7 +307,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				 */
 			} else {
 				// wait for process to exit
-				while (!process.isTerminated())
+				while ( !process.isTerminated() )
 					try {
 						if (monitor.isCanceled()) {
 							process.terminate();
@@ -332,12 +333,17 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 		});
 	}
-	//
-	//	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
-	//		if (configuration.getAttribute(PHPExecutableLaunchDelegate.SAVE_AUTOMATICALLY, false)) {
-	//			return true;
-	//		}
-	//		return super.buildForLaunch(configuration, mode, monitor);
-	//	}
+
+	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
+		String filePath = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, "");
+		IPath path = Path.fromOSString(filePath);
+		// find if the file is under UNTITLED_FOLDER_PATH always look like .../Untitled_Documents/filename.php
+		String parentDir = path.segment(path.segmentCount() - 2);
+		if (UNTITLED_FOLDER_PATH.equals(parentDir)) {
+			// means this is untitled file no need for save before launch
+			return true;
+		}
+		return super.saveBeforeLaunch(configuration, mode, monitor);
+	}
 
 }
