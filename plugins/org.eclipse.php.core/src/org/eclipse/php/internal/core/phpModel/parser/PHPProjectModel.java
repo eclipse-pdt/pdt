@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -238,10 +234,10 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		if (superClass != null) {
 			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : "";
 			CodeData classConstsData = getClassConstsData(fileName, superClass, constName);
-			if(classConstsData != null)
+			if (classConstsData != null)
 				return classConstsData;
 		}
-		
+
 		final PHPInterfaceNameData[] interfacesNamesData = classData.getInterfacesNamesData();
 		for (int i = 0; i < interfacesNamesData.length; i++) {
 			PHPInterfaceNameData interfaceNameData = interfacesNamesData[i];
@@ -358,7 +354,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 	public synchronized IProjectModelListener[] getProjectModelListeners() {
 		return listeners.toArray(new IProjectModelListener[listeners.size()]);
 	}
-	
+
 	private void fireFileChanged(IFile file, IStructuredDocument sDocument) {
 		final IProjectModelListener[] projectModelListeners = getProjectModelListeners();
 		for (IProjectModelListener projectModelListener : projectModelListeners) {
@@ -380,4 +376,3 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		}
 	}
 }
-
