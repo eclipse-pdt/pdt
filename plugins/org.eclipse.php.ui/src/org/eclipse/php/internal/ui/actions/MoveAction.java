@@ -10,23 +10,41 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiConstants;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-
+import org.eclipse.ui.actions.MoveProjectAction;
+import org.eclipse.ui.actions.MoveResourceAction;
+import org.eclipse.ui.actions.SelectionListenerAction;
 
 public class MoveAction extends SelectionDispatchAction {
 
+	private static final String MOVE_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$
+
 	private PHPStructuredEditor fEditor;
-	private ReorgMoveAction fReorgMoveAction;
+	private IPHPActionDelegator fReorgMoveAction;
+	private IStructuredSelection selectedResources;
 
 	/**
 	 * Creates a new <code>MoveAction</code>. The action requires
@@ -37,9 +55,7 @@ public class MoveAction extends SelectionDispatchAction {
 	 */
 	public MoveAction(IWorkbenchSite site) {
 		super(site);
-		setText(ActionMessages.MoveAction_text);
-		fReorgMoveAction = new ReorgMoveAction(site);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
+		initMoveAction();
 	}
 
 	/**
@@ -49,8 +65,17 @@ public class MoveAction extends SelectionDispatchAction {
 	public MoveAction(PHPStructuredEditor editor) {
 		super(editor.getEditorSite());
 		fEditor = editor;
-		setText(ActionMessages.MoveAction_text);
-		fReorgMoveAction = new ReorgMoveAction(editor.getEditorSite());
+		initMoveAction();
+	}
+
+	/**
+	 * Initialize the action
+	 *
+	 */
+	private void initMoveAction() {
+		fReorgMoveAction = PHPActionDelegatorRegistry.getActionDelegator(MOVE_ACTION_ID);
+		setText(PHPUIMessages.MoveAction_text);
+		update(getSelection());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
 	}
 
@@ -58,13 +83,100 @@ public class MoveAction extends SelectionDispatchAction {
 	 * @see ISelectionChangedListener#selectionChanged(SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
-		fReorgMoveAction.selectionChanged(event);
-		setEnabled(computeEnableState());
+		super.selectionChanged(event);
+	}
+
+	public void selectionChanged(IStructuredSelection selection) {
+
+		selectedResources = null;
+
+		if (selection != null && selection instanceof ITextSelection) {
+			selectionChanged((ITextSelection) selection);
+			return;
+		}
+
+		if (!selection.isEmpty()) {
+			if (ActionUtils.containsOnlyProjects(selection.toList())) {
+				setEnabled(createWorkbenchAction(selection).isEnabled());
+				return;
+			}
+			List elements = selection.toList();
+			IResource[] resources = ActionUtils.getResources(elements);
+			Object[] phpElements = ActionUtils.getPHPElements(elements);
+
+			if (elements.size() != resources.length + phpElements.length)
+				setEnabled(false);
+			else {
+				boolean enabled = true;
+				if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING) {
+					for (int i = 0; i < phpElements.length; i++) {
+						if (!(phpElements[i] instanceof PHPFileData))
+							enabled = false;
+					}
+				}
+				if (enabled) {
+					List list = new ArrayList(Arrays.asList(resources));
+					for (int i = 0; i < phpElements.length; i++) {
+						if (phpElements[i] instanceof PHPFileData) {
+							IResource res = PHPModelUtil.getResource(phpElements[i]);
+							if (res != null && res.exists()) {
+								list.add(PHPModelUtil.getResource(phpElements[i]));
+							}
+						}
+
+					}
+					if (list.size() == elements.size()) // only files selected
+					{
+						selectedResources = new StructuredSelection(list);
+						enabled = createWorkbenchAction(selectedResources).isEnabled();
+					}
+				}
+				setEnabled(enabled);
+			}
+		} else {
+			selectedResources = StructuredSelection.EMPTY;
+			setEnabled(false);
+		}
+
+		fReorgMoveAction.setSelection(selectedResources);
+	}
+
+	// we will get to this method only in case this is an editor selection
+	public void selectionChanged(ITextSelection selection) {
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (activePage == null)
+			return;
+		IWorkbenchPart activePart = activePage.getActivePart();
+		if (activePage == null)
+			return;
+		// get the current file 
+		PHPStructuredEditor editor = EditorUtility.getPHPStructuredEditor(activePart);
+		if (editor == null)
+			return;
+		IResource[] resources = { editor.getFile() };
+		selectedResources = new StructuredSelection(resources);
+		setEnabled(true);
+		fReorgMoveAction.setSelection(selectedResources);
+	}
+
+	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
+
+		List list = selection.toList();
+		SelectionListenerAction action = null;
+		if (list.size() == 0 || list.get(0) instanceof IProject) {
+			action = new MoveProjectAction(getShell());
+			action.selectionChanged(selection);
+		} else if (selectedResources != null) {
+			action = new MoveResourceAction(getShell());
+			action.selectionChanged(selection);
+
+		}
+		return action;
 	}
 
 	public void run(IStructuredSelection selection) {
-		if (fReorgMoveAction.isEnabled())
-			fReorgMoveAction.run();
+		if (isEnabled())
+			fReorgMoveAction.run(selection);
 
 	}
 
@@ -75,16 +187,16 @@ public class MoveAction extends SelectionDispatchAction {
 		if (tryReorgMove(selection))
 			return;
 
-		MessageDialog.openInformation(getShell(), ActionMessages.MoveAction_Move, ActionMessages.MoveAction_select);
+		MessageDialog.openInformation(getShell(), PHPUIMessages.MoveAction_Move, PHPUIMessages.MoveAction_select);
 	}
 
 	private boolean tryReorgMove(ITextSelection selection) {
 		PHPCodeData element = SelectionConverter.getElementAtOffset(fEditor);
 		if (element == null)
 			return false;
-		StructuredSelection mockStructuredSelection = new StructuredSelection(element);
-		fReorgMoveAction.selectionChanged(mockStructuredSelection);
-		if (!fReorgMoveAction.isEnabled())
+		IStructuredSelection mockStructuredSelection = new StructuredSelection(element);
+		selectionChanged(mockStructuredSelection);
+		if (!isEnabled())
 			return false;
 
 		fReorgMoveAction.run(mockStructuredSelection);
@@ -95,11 +207,6 @@ public class MoveAction extends SelectionDispatchAction {
 	 * @see SelectionDispatchAction#update(ISelection)
 	 */
 	public void update(ISelection selection) {
-		fReorgMoveAction.update(selection);
-		setEnabled(computeEnableState());
-	}
-
-	private boolean computeEnableState() {
-		return fReorgMoveAction.isEnabled();
+		super.update(selection);
 	}
 }
