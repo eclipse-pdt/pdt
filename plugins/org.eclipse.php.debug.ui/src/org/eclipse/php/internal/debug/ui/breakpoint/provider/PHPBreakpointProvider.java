@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
@@ -47,13 +48,21 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 	public IStatus addBreakpoint(IDocument document, IEditorInput input, int editorLineNumber, int offset) throws CoreException {
 		// check if there is a valid position to set breakpoint
 		int pos = getValidPosition(document, editorLineNumber);
+
+		//calculate the line number here so both workspace files AND externals will get it
+		try {
+			editorLineNumber = document.getLineOfOffset(pos) + 1;
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+			return new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), "Invalid breakpoint location");
+
+		}
 		IStatus status = null;
 		IBreakpoint point = null;
 		if (pos >= 0) {
 			IResource res = getResourceFromInput(input);
 			if (res != null && (input instanceof IFileEditorInput)) {
 				try {
-					editorLineNumber = document.getLineOfOffset(pos) + 1;
 					Integer lineNumberInt = new Integer(editorLineNumber);
 					IMarker[] breakpoints = res.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
 					for (int i = 0; i < breakpoints.length; ++i) {
@@ -64,19 +73,17 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 					point = PHPDebugTarget.createBreakpoint(res, editorLineNumber);
 				} catch (BadLocationException e) {
 				}
-			}
-			else if (input instanceof IURIEditorInput || (input instanceof NonExistingPHPFileEditorInput)) {
+			} else if (input instanceof IURIEditorInput || (input instanceof NonExistingPHPFileEditorInput)) {
 				Map attributes = new HashMap();
 				String pathName = null;
-				if (input instanceof IURIEditorInput){
+				if (input instanceof IURIEditorInput) {
 					if (res instanceof ExternalFileDecorator) {
 						pathName = res.getFullPath().toString();
 					} else {
-						pathName = URIUtil.toPath(((IURIEditorInput)input).getURI()).toString();
+						pathName = URIUtil.toPath(((IURIEditorInput) input).getURI()).toString();
 					}
-				}
-				else {
-					pathName = ((NonExistingPHPFileEditorInput)input).getPath().toString();
+				} else {
+					pathName = ((NonExistingPHPFileEditorInput) input).getPath().toString();
 				}
 				String fileName = RemoteDebugger.convertToSystemIndependentFileName(pathName);
 				if (res instanceof IWorkspaceRoot) {
@@ -89,19 +96,18 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				attributes.put(IPHPConstants.STORAGE_FILE, fileName);
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
 				point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
-			}
-			else if (input instanceof IStorageEditorInput) {
+			} else if (input instanceof IStorageEditorInput) {
 				IStorage storage = ((IStorageEditorInput) input).getStorage();
-				
+
 				Map attributes = new HashMap();
 				String fileName = "";
-				
+
 				String secondaryId = storage.getFullPath().toString();
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, secondaryId);
-				
+
 				if (storage instanceof LocalFileStorage) {
 					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_INCLUDE);
-					
+
 					fileName = RemoteDebugger.convertToSystemIndependentFileName(((LocalFileStorage) storage).getName());
 					String incDir = ((LocalFileStorage) storage).getIncBaseDirName();
 					incDir = RemoteDebugger.convertToSystemIndependentFileName(incDir);
@@ -115,7 +121,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_REMOTE);
 					fileName = storage.getName();
 				}
-				
+
 				attributes.put(IPHPConstants.STORAGE_FILE, fileName);
 				point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
 			}
