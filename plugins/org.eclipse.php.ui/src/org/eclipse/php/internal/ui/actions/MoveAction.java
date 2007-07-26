@@ -14,14 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
@@ -30,9 +28,6 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.util.EditorUtility;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.MoveProjectAction;
@@ -78,14 +73,6 @@ public class MoveAction extends SelectionDispatchAction {
 		setText(PHPUIMessages.MoveAction_text);
 		update(getSelection());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
-	}
-
-	/*
-	 * @see ISelectionChangedListener#selectionChanged(SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent event) {
-		super.selectionChanged(event);
-		setEnabled(computeEnableState());
 	}
 
 	public void selectionChanged(IStructuredSelection selection) {
@@ -136,10 +123,11 @@ public class MoveAction extends SelectionDispatchAction {
 				}
 				setEnabled(enabled);
 			}
-		} else
+		} else {
+			selectedResources = StructuredSelection.EMPTY;
 			setEnabled(false);
-
-		setEnabled(computeEnableState());
+		}
+			
 		fReorgMoveAction.setSelection(selectedResources);
 	}
 
@@ -192,12 +180,5 @@ public class MoveAction extends SelectionDispatchAction {
 	 */
 	public void update(ISelection selection) {
 		super.update(selection);
-		setEnabled(computeEnableState());
-
 	}
-
-	private boolean computeEnableState() {
-		return isEnabled();
-	}
-
 }
