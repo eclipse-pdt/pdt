@@ -17,6 +17,7 @@ import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.ILineBreakpoint;
@@ -38,6 +39,7 @@ import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor
 import org.eclipse.php.internal.debug.ui.sourcelookup.PHPSourceNotFoundEditorInput;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -49,7 +51,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
  * Renders PHP debug elements
  */
 public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation {
-
+	protected final static String UNTITLED_FOLDER_PATH = "Untitled_Documents";
+	
 	private ImageDescriptorRegistry fDebugImageRegistry;
 
 	/*
@@ -275,6 +278,10 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			return new PHPSourceNotFoundEditorInput((PHPSourceNotFoundInput) element);
 		}
 		if (element instanceof IFileStore) {
+			if (isUntitled(element)) {
+				String path = ((IFileStore)element).toString();
+				return new NonExistingPHPFileEditorInput(new Path(path));
+			} 
 			return new FileStoreEditorInput((IFileStore)element);
 		}
 		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: " + element.getClass().getName());
@@ -288,6 +295,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 *      java.lang.Object)
 	 */
 	public String getEditorId(IEditorInput input, Object element) {
+		if (isUntitled(element)) {
+			return "org.eclipse.php.untitledPhpEditor"; //$NON-NLS-1$
+		}
 		if (input instanceof PHPSourceNotFoundEditorInput) {
 			return "org.eclipse.php.debug.SourceNotFoundEditor";
 		}
@@ -295,5 +305,16 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			return "org.eclipse.php.editor"; //$NON-NLS-1$
 		}
 		return null;
+	}
+	
+	protected boolean isUntitled(Object element) {
+		if (element instanceof IFileStore) {
+			final IFileStore localFile = (IFileStore)element;
+			IFileStore parentDir = localFile.getParent();
+			if (parentDir != null && UNTITLED_FOLDER_PATH.equals(parentDir.getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

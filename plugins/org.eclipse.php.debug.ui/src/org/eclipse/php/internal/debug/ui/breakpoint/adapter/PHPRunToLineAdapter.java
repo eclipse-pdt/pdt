@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.ui.breakpoint.adapter;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -27,6 +28,7 @@ import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.*;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -137,6 +139,9 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				return ExternalFilesRegistry.getInstance().getFileEntry(filePath.substring(1));
 			}
 			return result;
+		}
+		if (input instanceof NonExistingPHPFileEditorInput) {
+			return (IFile)((NonExistingPHPFileEditorInput)input).getAdapter(IResource.class);
 		}
 		return null;
 		

@@ -27,6 +27,7 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
@@ -49,7 +50,6 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
-import org.eclipse.php.internal.ui.editor.UntitledPHPEditor;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -57,6 +57,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.editors.text.TextFileDocumentProvider;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
@@ -103,28 +105,21 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			} else if (input instanceof IURIEditorInput) {
 				path = URIUtil.toPath(((IURIEditorInput) input).getURI());
 			} else if (input instanceof NonExistingPHPFileEditorInput) {
-				IPath oldPath = ((NonExistingPHPFileEditorInput) input).getPath();//Untitled dummy path
-				IStatusHandler prompter = DebugPlugin.getDefault().getStatusHandler(promptStatus);
-				if (prompter != null) {
-					try {
-						int[] breakpointLines = getBreakpointLines(oldPath);
-
-						// the following line will ask the user to save all unsaved documents
-						// see org.eclipse.debug.core.model.LaunchConfigurationDelegate
-						if (!(Boolean) prompter.handleStatus(saveScopedDirtyEditors, new Object[] {})) {
-							return;//save canceled
-						}
-						//retrieve the new path after save and remove from map
-						path = UntitledPHPEditor.latestSavedUntitled.get(oldPath);
-						UntitledPHPEditor.latestSavedUntitled.remove(oldPath);
-						if (path != null) {
-							copyBreakPoints(path, breakpointLines);
-						}
-					} catch (Exception e) {
-						Logger.logException(e);
-						return;
+				// handle untitled document debugging
+				// first save the file to the disk and after that set the document as dirty
+				try {
+					if (editor instanceof ITextEditor) {
+						ITextEditor textEditor = (ITextEditor)editor;
+						final TextFileDocumentProvider documentProvider = (TextFileDocumentProvider) textEditor.getDocumentProvider();
+						final IDocument document = documentProvider.getDocument(input);
+						documentProvider.saveDocument(null, input, document, true);
+						// set document dirty
+						document.replace(0, 0, "");
 					}
+				} catch (Exception e) {
+					Logger.logException(e);
 				}
+				path = ((NonExistingPHPFileEditorInput) input).getPath();//Untitled dummy path
 			}
 
 			if (path != null) {
