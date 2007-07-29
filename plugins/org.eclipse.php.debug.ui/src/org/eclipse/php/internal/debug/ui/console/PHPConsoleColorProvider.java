@@ -26,6 +26,7 @@ import org.eclipse.debug.ui.console.ConsoleColorProvider;
 import org.eclipse.debug.ui.console.IConsole;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
@@ -195,6 +196,8 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 								File externalFile = new File(fileName);
 								if (externalFile.exists()) {
 									fileObject = externalFile;
+								} else {
+									fileObject = ExternalFileDecorator.createFile(fileName);
 								}
 							}
 						}
@@ -202,6 +205,8 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 					if (fileObject != null) {
 						fileLink = new PHPFileLink(fileObject, -1, -1, lineNumber);
 					}
+				} else {
+					fileLink = new PHPFileLink(file, -1, -1, lineNumber);
 				}
 			} catch (CoreException e) {
 				Logger.logException("PHPConsoleListener unexpected error", e);
