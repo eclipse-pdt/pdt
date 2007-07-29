@@ -201,11 +201,14 @@
 	</target>
 
 	<target name="packAllInOne">
-		<!-- Do not create all-in-one for nightly build
+		<!-- Do not create all-in-one for nightly/integration build
         -->
 		<condition property="pack-all-in-one" value="true">
 			<not>
-				<contains string="${buildType}" substring="N" />
+				<or>
+					<contains string="${buildType}" substring="N" />
+					<contains string="${buildType}" substring="I" />
+				</or>
 			</not>
 		</condition>
 		<antcall target="call-all-in-one" />
@@ -274,7 +277,7 @@
 			<param name="packName" value="${packName}.tar.gz" />
 		</antcall>
 	</target>
-	
+
 	<target name="pack-all-in-one-zip" if="iszip">
 		<property name="packName" value="pdt-all-in-one-incubation-${buildLabel}-${bos}.zip" />
 
