@@ -29,6 +29,7 @@ import org.eclipse.debug.ui.IValueDetailListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
+import org.eclipse.php.internal.core.filesystem.FileStoreFactory;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceNotFoundInput;
@@ -257,11 +258,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 						lfs.setProject(project);
 						lfs.setIncBaseDirName(includeBaseDir);
 						return new LocalFileStorageEditorInput(lfs);
-					}
-					else if (IPHPConstants.STORAGE_TYPE_EXTERNAL.equals(type)) {
+					} else if (IPHPConstants.STORAGE_TYPE_EXTERNAL.equals(type) || IPHPConstants.STORAGE_TYPE_REMOTE.equals(type)) {
 						File file = new File(filename);
-						LocalFile store = new LocalFile(file);
-						return new FileStoreEditorInput(store);
+						return new FileStoreEditorInput(FileStoreFactory.createFileStore(file));
 					}
 				} catch (CoreException e) {
 					Logger.logException("Unexpected error in PHPModelPresentation", e);
