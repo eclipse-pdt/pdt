@@ -115,9 +115,9 @@ class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListene
 		final IPath fileTreeLocation = modelPath.append(fileLocation.removeFirstSegments(includeModelLocation.segmentCount()));
 		if (IncludePathTreeContent.includePathTree.includes(fileTreeLocation)) {
 			refreshExistingFileNode(fileTreeLocation, deleted);
-			IncludePathTreeContent.includePathTree.createElement(fileTreeLocation, fileData);
-		}
-		else
+			if (!deleted)
+				IncludePathTreeContent.includePathTree.createElement(fileTreeLocation, fileData);
+		} else
 			refreshMissingFileNode(fileTreeLocation, deleted);
 	}
 
