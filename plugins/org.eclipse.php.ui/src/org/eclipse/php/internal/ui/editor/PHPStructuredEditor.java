@@ -1109,7 +1109,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			setAction(ActionDefinitionIds.EDIT_BREAKPOINTS, action);
 
 			// Set the ruler double-click behavior.
-			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new ToggleExternalBreakpointAction(this, getVerticalRuler(), getAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK)));
+			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new ToggleExternalBreakpointAction(this, getVerticalRuler(), null));
 		}
 
 		ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
@@ -1259,7 +1259,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 								} catch (CoreException ce) {
 									Logger.logException(ce);
 									return;
-								}	
+								}
 							}
 							//external php file
 							else {
@@ -1349,7 +1349,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
-			
+
 			//we add this test to provide model for PHP files opened from RSE (temp) project 
 			IProject proj = resource.getProject();
 			if (proj.isAccessible() && proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) {
