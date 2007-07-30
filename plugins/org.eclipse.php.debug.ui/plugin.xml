@@ -60,6 +60,15 @@
 				id="org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider" />
 		</breakpointContribution>
 	</extension> 
+	
+	<extension
+       point="org.eclipse.ui.editors.markerUpdaters">
+	    <updater
+	          class="org.eclipse.php.internal.debug.ui.breakpoint.BreakpointMarkerUpdater"
+	          id="org.eclipse.php.debug.ui.bpMarkerUpdater"
+	          markerType="org.eclipse.php.debug.core.PHPConditionalBreakpointMarker">
+	    </updater>
+ 	</extension>
 
 	
 	<extension
