@@ -95,7 +95,19 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				}
 				attributes.put(IPHPConstants.STORAGE_FILE, fileName);
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
-				point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
+
+				try {
+					Integer lineNumberInt = new Integer(editorLineNumber);
+					IMarker[] breakpoints = res.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
+					for (int i = 0; i < breakpoints.length; ++i) {
+						if (breakpoints[i].getAttributes().get("lineNumber").equals(lineNumberInt)) {
+							throw new BadLocationException();
+						}
+					}
+					point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
+				} catch (BadLocationException e) {
+				}
+
 			} else if (input instanceof IStorageEditorInput) {
 				IStorage storage = ((IStorageEditorInput) input).getStorage();
 
