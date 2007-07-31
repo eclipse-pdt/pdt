@@ -1,11 +1,11 @@
 plugin@org.eclipse.php=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
-plugin@org.eclipse.php.core=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
+plugin@org.eclipse.php.core=v20070731,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 plugin@org.eclipse.php.debug.core=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 plugin@org.eclipse.php.debug.daemon=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 plugin@org.eclipse.php.debug.ui=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 plugin@org.eclipse.php.server.core=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 plugin@org.eclipse.php.server.ui=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
-plugin@org.eclipse.php.ui=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
+plugin@org.eclipse.php.ui=v20070731,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 plugin@org.eclipse.php.help=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 plugin@org.eclipse.php.delivery=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 feature@org.eclipse.php_feature=v20070729,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php-feature/
