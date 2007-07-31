@@ -280,12 +280,12 @@ public class PHPTextSequenceUtilities {
 		for (; rv > 0; rv--) {
 			char currChar = textSequence.charAt(rv - 1);
 			if (currChar == '\'' || currChar == '"') {
-				inStringMode = inStringMode == 0 ? currChar : inStringMode == currChar ? 0 : inStringMode;		
+				inStringMode = inStringMode == 0 ? currChar : inStringMode == currChar ? 0 : inStringMode;
 			}
 			if (inStringMode != 0) {
 				continue;
 			}
-			
+
 			if (!Character.isLetterOrDigit(currChar) && currChar != '_' && currChar != '$' && !(Character.isWhitespace(currChar) && currChar != '\n')) {
 				switch (currChar) {
 					case '(':
