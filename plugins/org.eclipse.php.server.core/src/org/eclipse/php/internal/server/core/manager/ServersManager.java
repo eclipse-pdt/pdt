@@ -248,6 +248,14 @@ public class ServersManager implements PropertyChangeListener {
 				manager.save();
 			}
 		}
+		
+		//fixed bug 197579 - in case of no default server mark the first server as default
+		if (server == null) {
+			if (manager.servers.size() > 0) {
+				server = (Server) manager.servers.values().iterator().next();
+				setDefaultServer(null, server);
+			}
+		}
 		return server;
 	}
 
