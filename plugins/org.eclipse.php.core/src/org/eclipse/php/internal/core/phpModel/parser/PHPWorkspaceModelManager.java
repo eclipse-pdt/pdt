@@ -293,12 +293,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	private synchronized PHPFileData getModelForExternalFile(IFile externalFile) {
 		PHPFileData fileData = null;
 		PHPProjectModel externalProjectModel = getDefaultPHPProjectModel();
-		// init for first time
+		// initialize for first time
 		if (externalProjectModel.getPHPUserModel() == null) {
 			externalProjectModel.addFileToModel(externalFile);
 		}
 
-		// use full path to distibguish between files with the same name (same project model...)
+		// use full path to distinguish between files with the same name (same project model...)
 		fileData = externalProjectModel.getFileData(externalFile.getFullPath().toString());
 		if (fileData == null) {
 			externalProjectModel.addFileToModel(externalFile);
