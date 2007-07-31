@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
+import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
@@ -197,11 +198,19 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	/**
-	 * We override this function in order to use content assist for php and not use the defualt one dictated by StructuredTextViewerConfiguration
+	 * We override this function in order to use content assist for php and not use the default one dictated by StructuredTextViewerConfiguration
 	 */
 	public void configure(SourceViewerConfiguration configuration) {
 
 		super.configure(configuration);
+		
+		// release old annotation hover before setting new one
+		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {
+			((StructuredTextAnnotationHover) fAnnotationHover).release();
+		}
+		// set PHP fAnnotationHover and initial the AnnotationHoverManager
+		setAnnotationHover(new PHPStructuredTextAnnotationHover());
+		ensureAnnotationHoverManagerInstalled();
 
 		if (!(configuration instanceof PHPStructuredTextViewerConfiguration)) {
 			return;
@@ -226,5 +235,16 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
 		}
 	}
+	
+	/**
+	 * override the parent method to prevent initialization of wrong
+	 * fAnnotationHover specific instance 
+	 */
+	protected void ensureAnnotationHoverManagerInstalled() {
+		if (fAnnotationHover instanceof PHPStructuredTextAnnotationHover) {
+			super.ensureAnnotationHoverManagerInstalled();
+		}
+	}
+
 
 }
