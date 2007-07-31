@@ -93,9 +93,12 @@ public class PHPTextSequenceUtilities {
 
 				TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startOffset, offset - startOffset);
 
-				if (removeComments) {
+				// remove comments 
+				// TODO if the text sequence is large just ignore it, should be fixed.
+				if (removeComments && textSequence.length() < 1000) {
 					textSequence = removeComments(textSequence);
 				}
+
 				// remove spaces from start.
 				textSequence = textSequence.subTextSequence(readForwardSpaces(textSequence, 0), textSequence.length());
 				return textSequence;
