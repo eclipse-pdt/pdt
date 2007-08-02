@@ -65,7 +65,7 @@ public class ReorgMoveAction extends Action implements IPHPMoveActionDelegator {
 		List list = selection.toList();
 		SelectionListenerAction action = null;
 		if (list.size() == 0 || list.get(0) instanceof IProject) {
-			action = new MoveProjectAction(fShell);
+			action = new PHPMoveProjectAction(fShell);
 			action.selectionChanged(selection);
 		} else if (selectedResources != null) {
 			action = new MoveResourceAction(fShell);
