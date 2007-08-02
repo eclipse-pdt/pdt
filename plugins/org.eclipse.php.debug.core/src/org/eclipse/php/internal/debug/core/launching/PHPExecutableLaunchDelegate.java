@@ -19,19 +19,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
@@ -307,7 +296,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				 */
 			} else {
 				// wait for process to exit
-				while ( !process.isTerminated() )
+				while (!process.isTerminated())
 					try {
 						if (monitor.isCanceled()) {
 							process.terminate();
@@ -336,6 +325,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
 		String filePath = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, "");
+		if ("".equals(filePath)) {
+			return super.saveBeforeLaunch(configuration, mode, monitor);
+		}
 		IPath path = Path.fromOSString(filePath);
 		// find if the file is under UNTITLED_FOLDER_PATH always look like .../Untitled_Documents/filename.php
 		String parentDir = path.segment(path.segmentCount() - 2);
