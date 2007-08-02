@@ -328,7 +328,7 @@ public class ServerTab extends AbstractLaunchConfigurationTab {
 		gd.horizontalSpan = 2;
 		gd.grabExcessHorizontalSpace = false;
 		fPublishToRoot.setLayoutData(gd);
-		fPublishToRoot.setEditable(false);
+		fPublishToRoot.setEnabled(false);
 
 		fPublishTo = new Text(innerPublishContextComposite, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
