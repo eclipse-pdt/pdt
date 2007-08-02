@@ -164,7 +164,7 @@ public class MoveAction extends SelectionDispatchAction {
 		List list = selection.toList();
 		SelectionListenerAction action = null;
 		if (list.size() == 0 || list.get(0) instanceof IProject) {
-			action = new MoveProjectAction(getShell());
+			action = new PHPMoveProjectAction(getShell());
 			action.selectionChanged(selection);
 		} else if (selectedResources != null) {
 			action = new MoveResourceAction(getShell());
@@ -209,4 +209,5 @@ public class MoveAction extends SelectionDispatchAction {
 	public void update(ISelection selection) {
 		super.update(selection);
 	}
+	
 }
