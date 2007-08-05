@@ -15,14 +15,9 @@ import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.projection.IProjectionListener;
-import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
-import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
-import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.jface.text.source.projection.*;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -189,7 +184,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 					// create file data 
 					IProject project = editorModel.getProjectModel().getProject();
 					fileData = PHPFileDataUtilities.getFileData(new DocumentReader(document), project);
-				} 
+				}
 				workspaceModelManagerInstance.removeModelListener(this);
 				ProjectionAnnotationModel model = viewer.getProjectionAnnotationModel();
 				if (model != null) {
@@ -203,7 +198,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 						// In this map we use the AnnotatedPosition as keys
 						Iterator existing = model.getAnnotationIterator();
 						LinkedHashMap exitingHashMap = new LinkedHashMap();
-						while (existing.hasNext()) {
+						while ( existing.hasNext() ) {
 							ProjectionAnnotation existingAnnotation = (ProjectionAnnotation) existing.next();
 							Position existingPosition = model.getPosition(existingAnnotation);
 							exitingHashMap.put(existingPosition, existingAnnotation);
@@ -211,7 +206,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 						Iterator additionsIterator = additions.values().iterator();
 
-						while (additionsIterator.hasNext()) {
+						while ( additionsIterator.hasNext() ) {
 							AnnotatedPosition addedPosition = (AnnotatedPosition) additionsIterator.next();
 							// Try to remove the added Position from the existing positions.
 							// If the position was found and removed, then it was not new. Otherwise, it's a new
@@ -227,7 +222,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 						// to be removed from the model.
 						boolean removeAnyway = false;
 						Iterator annotationsToRemove = exitingHashMap.entrySet().iterator();
-						while (annotationsToRemove.hasNext()) {
+						while ( annotationsToRemove.hasNext() ) {
 							Entry entry = (Entry) annotationsToRemove.next();
 							AnnotatedPosition position = (AnnotatedPosition) entry.getKey();
 							PHPProjectionAnnotation projectionToRemove = (PHPProjectionAnnotation) entry.getValue();
@@ -449,7 +444,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		try {
 			int start = document.getLineOfOffset(element.getStartPosition());
 			int end = document.getLineOfOffset(element.getEndPosition() + 1);
-			return createAnnotatedPosition(start, end);
+			return createCommentAnnotatedPosition(start, end);
 		} catch (BadLocationException x) {
 		}
 		return null;
@@ -470,6 +465,25 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 				return null;
 			}
 			return new AnnotatedPosition(offset, endOffset - offset);
+		}
+		return null;
+	}
+
+	/*
+	 * Create and return a Position according to the given start and end document positions.
+	 */
+	private AnnotatedPosition createCommentAnnotatedPosition(int start, int end) throws BadLocationException {
+		if (start != end) {
+			int offset = document.getLineOffset(start);
+			int endOffset;
+			if (document.getNumberOfLines() > end + 1) {
+				endOffset = document.getLineOffset(end + 1);
+			} else if (end > start) {
+				endOffset = document.getLineOffset(end) + document.getLineLength(end);
+			} else {
+				return null;
+			}
+			return new CommentAnnotatedPosition(offset, endOffset - offset);
 		}
 		return null;
 	}
@@ -613,6 +627,104 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 		public String toString() {
 			return "[AnnotatedPosition (" + getOffset() + ", " + getLength() + ")]";
+		}
+	}
+
+	private class CommentAnnotatedPosition extends AnnotatedPosition implements IProjectionPosition {
+		/**
+		 * Constructs a new CommentAnnotatedPosition.
+		 * 
+		 * @param offset
+		 * @param length
+		 */
+		public CommentAnnotatedPosition(int offset, int length) {
+			super(offset, length);
+		}
+
+		/**
+		 * Constructs a new CommentAnnotatedPosition.
+		 * 
+		 * @param offset
+		 * @param length
+		 * @param annotation
+		 */
+		public CommentAnnotatedPosition(int offset, int length, ProjectionAnnotation annotation) {
+			super(offset, length, annotation);
+		}
+
+		/**
+		 * Returns the offset of the caption (the anchor region) of this projection
+		 * position. The returned offset is relative to the receivers offset into
+		 * the document.
+		 *
+		 * @param document the document that this position is attached to
+		 * @return the caption offset relative to the position's offset
+		 * @throws BadLocationException if accessing the document fails
+		 */
+		public int computeCaptionOffset(IDocument document) throws BadLocationException {
+			return findFirstContent(document, getOffset(), getLength());
+		}
+
+		/**
+		 * Returns an array of regions that should be collapsed when the annotation
+		 * belonging to this position is collapsed. May return null instead of
+		 * an empty array.
+		 *
+		 * @param document the document that this position is attached to
+		 * @return the foldable regions for this position
+		 * @throws BadLocationException if accessing the document fails
+		 */
+		public IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException {
+			int contentStart = findFirstContent(document, getOffset(), getLength());
+
+			int firstLine = document.getLineOfOffset(getOffset());
+			int captionLine = document.getLineOfOffset(getOffset() + contentStart);
+			int lastLine = document.getLineOfOffset(getOffset() + getLength());
+
+			IRegion preRegion;
+			if (firstLine < captionLine) {
+				int preOffset = document.getLineOffset(firstLine);
+				IRegion preEndLineInfo = document.getLineInformation(captionLine);
+				int preEnd = preEndLineInfo.getOffset();
+				preRegion = new Region(preOffset, preEnd - preOffset);
+			} else {
+				preRegion = null;
+			}
+
+			if (captionLine < lastLine) {
+				int postOffset = document.getLineOffset(captionLine + 1);
+				IRegion postRegion = new Region(postOffset, getOffset() + getLength() - postOffset);
+
+				if (preRegion == null)
+					return new IRegion[] { postRegion };
+
+				return new IRegion[] { preRegion, postRegion };
+			}
+
+			if (preRegion != null) {
+				return new IRegion[] { preRegion };
+			}
+
+			return null;
+		}
+
+		/**
+		 * Finds the offset of the first identifier part within <code>content</code>.
+		 * Returns 0 if none is found.
+		 *
+		 * @param content the content to search
+		 * @param prefixEnd the end of the prefix
+		 * @return the first index of a unicode identifier part, or zero if none can
+		 *         be found
+		 * @throws BadLocationException 
+		 */
+		private int findFirstContent(final IDocument document, int offset, int length) throws BadLocationException {
+			for (int index = 0; index < length; index++) {
+				char currentChar = document.getChar(offset + index);
+				if (Character.isUnicodeIdentifierPart(currentChar))
+					return index;
+			}
+			return 0;
 		}
 	}
 
