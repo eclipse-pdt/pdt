@@ -240,7 +240,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	private IPath[] chooseExtensions(IPVariableElement elem) {
 		File file = elem.getPath().toFile();
 
-		ZipFileSelectionDialog dialog = new ZipFileSelectionDialog(getShell(), true, false);
+		ZipFileSelectionDialog dialog = new ZipFileSelectionDialog(getShell(), true, true);
 		dialog.setTitle(PHPUIMessages.NewVariableEntryDialog_ExtensionDialog_title);
 		dialog.setMessage(MessageFormat.format(PHPUIMessages.NewVariableEntryDialog_ExtensionDialog_description, new String[] { elem.getName() }));
 		dialog.setInput(file);

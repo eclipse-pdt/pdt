@@ -158,7 +158,7 @@ public class EditVariableEntryDialog extends StatusDialog {
 		File initialSelection = resolvedPath != null ? resolvedPath.toFile() : null;
 
 		String currVariable = currPath.segment(0);
-		ZipFileSelectionDialog dialog = new ZipFileSelectionDialog(getShell(), false, false);
+		ZipFileSelectionDialog dialog = new ZipFileSelectionDialog(getShell(), false, true);
 		dialog.setTitle(PHPUIMessages.EditVariableEntryDialog_extvardialog_title);
 		dialog.setMessage(PHPUIMessages.EditVariableEntryDialog_extvardialog_description);
 		dialog.setInput(fFileVariablePath.toFile());
