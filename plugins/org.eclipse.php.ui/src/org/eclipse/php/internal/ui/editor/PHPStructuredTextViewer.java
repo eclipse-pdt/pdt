@@ -34,20 +34,6 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
-	/**
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#modelLine2WidgetLine(int)
-	 */
-	public int modelLine2WidgetLine(int modelLine) {
-		// TODO Auto-generated method stub
-		try {
-			return super.modelLine2WidgetLine(modelLine);
-		} catch (IllegalStateException e) {
-			return -1;
-		}
-	}
-
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_;
 	private SourceViewerConfiguration config;
 
@@ -245,6 +231,17 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			super.ensureAnnotationHoverManagerInstalled();
 		}
 	}
-
-
+	
+	/**
+	 * (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#modelLine2WidgetLine(int)
+	 * TODO: ask Seva why he put this here - we shouldn't handle things like this 
+	 */
+	public int modelLine2WidgetLine(int modelLine) {
+		try {
+			return super.modelLine2WidgetLine(modelLine);
+		} catch (IllegalStateException e) {
+			return -1;
+		}
+	}
 }
