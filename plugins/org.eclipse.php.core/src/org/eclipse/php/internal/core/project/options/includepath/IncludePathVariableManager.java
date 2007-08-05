@@ -48,7 +48,15 @@ public class IncludePathVariableManager {
 	}
 
 	public IPath getIncludePathVariable(String variableName) {
-		return (IPath) variables.get(variableName);
+		IPath varPath = null;
+		IPath path = new Path(variableName);
+		if (path.segmentCount() == 1) {
+			varPath = (IPath) variables.get(variableName);
+		} else {
+			varPath = (IPath) variables.get(path.segment(0));
+			varPath = varPath.append(path.removeFirstSegments(1));
+		}
+		return varPath;
 	}
 
 	public void setIncludePathVariables(String[] names, IPath[] paths, SubProgressMonitor monitor) {
@@ -141,7 +149,7 @@ public class IncludePathVariableManager {
 				String value = element.getAttribute("value"); //$NON-NLS-1$
 				if (element.getAttribute("initializer") != null) { //$NON-NLS-1$
 					try {
-						IIncludePathVariableInitializer initializer = (IIncludePathVariableInitializer)element.createExecutableExtension("initializer"); //$NON-NLS-1$
+						IIncludePathVariableInitializer initializer = (IIncludePathVariableInitializer) element.createExecutableExtension("initializer"); //$NON-NLS-1$
 						value = initializer.initialize(name);
 					} catch (CoreException e) {
 						PHPCorePlugin.log(e);
