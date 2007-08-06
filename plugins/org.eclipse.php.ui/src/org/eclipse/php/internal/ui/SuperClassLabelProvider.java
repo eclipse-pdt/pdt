@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2006 Zend Technologies
- * 
+ *
  */
 package org.eclipse.php.internal.ui;
 
@@ -8,6 +8,8 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.swt.graphics.Image;
@@ -47,11 +49,16 @@ public class SuperClassLabelProvider implements ILabelProvider {
 	}
 
 	public String getText(final Object element) {
-		if (element instanceof PHPSuperClassNameData) {
-			final PHPSuperClassNameData superClassNameData = (PHPSuperClassNameData) element;
+		if (element instanceof PHPSuperClassNameData || element instanceof PHPInterfaceNameData && (((PHPClassData)((PHPInterfaceNameData)element).getContainer()).getModifiers() & PHPModifier.INTERFACE) > 0) {
+			final PHPCodeData superClassNameData = (PHPCodeData) element;
 			final PHPClassData container = (PHPClassData) superClassNameData.getContainer();
 			if (container != null) {
-				final PHPClassData superClassData = PHPModelUtil.discoverSuperClass(container, superClassNameData.getName());
+				final PHPClassData superClassData;
+				if(superClassNameData instanceof PHPSuperClassNameData) {
+					superClassData = PHPModelUtil.discoverSuperClass(container, superClassNameData.getName());
+				} else {
+					superClassData = PHPModelUtil.discoverInterface(container, superClassNameData.getName());
+				}
 				if (superClassData != null)
 					return "Extends: " + provider.getText(superClassData);
 			}
