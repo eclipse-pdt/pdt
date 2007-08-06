@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class PHPExecutableDebuggerInitializer {
 
-	private HashMap systemEnvironmentVariables = null;
+	private HashMap<String, String> systemEnvironmentVariables = null;
 	private ILaunch launch;
 
 	public PHPExecutableDebuggerInitializer(ILaunch launch) throws IOException {
@@ -50,7 +50,7 @@ public class PHPExecutableDebuggerInitializer {
 		initializeDebug(phpExe, fileName, query, null, null);
 	}
 
-	public void initializeDebug(String phpExe, String fileName, String query, Map envVariables, String phpIniLocation) {
+	public void initializeDebug(String phpExe, String fileName, String query, Map<String, String> envVariables, String phpIniLocation) {
 		try {
 			IPath phpExePath = new Path(phpExe);
 			File workingDir = new File(phpExePath.removeLastSegments(1).toString());
@@ -75,7 +75,7 @@ public class PHPExecutableDebuggerInitializer {
 			if (envVariables != null) {
 				systemEnvironmentVariables.putAll(envVariables);
 			}
-			
+
 			String OS = System.getProperty("os.name");
 			if (!OS.startsWith("Win")) {
 				if (OS.startsWith("Mac")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -106,19 +106,19 @@ public class PHPExecutableDebuggerInitializer {
 		}
 	}
 
-	private String[] mapAsArray(Map map) {
+	private String[] mapAsArray(Map<String, String> map) {
 		String[] strArr = new String[map.size()];
-		Iterator entries = map.entrySet().iterator();
+		Iterator<Entry<String, String>> entries = map.entrySet().iterator();
 		int index = 0;
 		while (entries.hasNext()) {
-			Entry entry = (Entry) entries.next();
+			Entry<String, String> entry = entries.next();
 			strArr[index++] = entry.getKey() + "=" + entry.getValue();
 		}
 		return strArr;
 	}
 
 	private void initializeSystemEnvironmentVariables() throws IOException {
-		ArrayList list = new ArrayList();
+		ArrayList<String> list = new ArrayList<String>();
 		Process p;
 		Runtime r = Runtime.getRuntime();
 		String OS = System.getProperty("os.name").toLowerCase();
@@ -144,7 +144,7 @@ public class PHPExecutableDebuggerInitializer {
 			p = r.exec("set");
 		} else {
 			System.out.println("OS not known: " + OS);
-			systemEnvironmentVariables = new HashMap(0);
+			systemEnvironmentVariables = new HashMap<String, String>(0);
 			return;
 		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -153,7 +153,7 @@ public class PHPExecutableDebuggerInitializer {
 			list.add(line);
 		}
 		br.close();
-		systemEnvironmentVariables = new HashMap();
+		systemEnvironmentVariables = new HashMap<String, String>();
 		for (int i = 0; i < list.size(); i++) {
 			String[] env = ((String) list.get(i)).split("=");
 			if (env.length == 2) {
