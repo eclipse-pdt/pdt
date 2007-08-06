@@ -40,7 +40,6 @@ import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
 public class ContentAssistSupport implements IContentAssistSupport {
@@ -178,7 +177,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
-		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
+		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(viewer, offset);
 		ITextRegion textRegion = null;
 		// 	in case we are at the end of the document, asking for completion
 		if (offset == editorModel.getStructuredDocument().getLength()) {
@@ -214,15 +213,15 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		// find the start String for completion
 		int startOffset = container.getStartOffset(textRegion);
 
-		//in case we are standing at the beginning of a word and asking for completion 
+		//in case we are standing at the beginning of a word and asking for completion
 		//should not take into account the found region
 		//find the previous region and update the start offset
 		if (startOffset == offset) {
 			ITextRegion preTextRegion = container.getRegionAtCharacterOffset(offset - 1);
 			IStructuredDocumentRegion preSdRegion = null;
-			if (preTextRegion != null || ((preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null)) {
+			if (preTextRegion != null || (preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null) {
 				if (preTextRegion.getType() == "") {
-					// TODO needs to be fixed. The problem is what to do if the cursor is exatly between problematic regions, e.g. single line comment and quoted string?? 
+					// TODO needs to be fixed. The problem is what to do if the cursor is exatly between problematic regions, e.g. single line comment and quoted string??
 				}
 			}
 			startOffset = sdRegion.getStartOffset(textRegion);
@@ -246,7 +245,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 					}
 				}
 			}
-			if ((partitionType == PHPPartitionTypes.PHP_DEFAULT) || (partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) || (partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
+			if (partitionType == PHPPartitionTypes.PHP_DEFAULT || partitionType == PHPPartitionTypes.PHP_QUOTED_STRING || partitionType == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT) {
 			} else {
 				return;
 			}
@@ -255,7 +254,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		IStructuredDocument document = sdRegion.getParentDocument();
 		// if there is no project model (the file is not part of a project)
-		// complete with language model only 
+		// complete with language model only
 		if (fileData == null || phpScriptRegion == null) {
 			getRegularCompletion(viewer, projectModel, "", "", offset, selectionLength, explicit, container, phpScriptRegion, internalPHPRegion, document, isStrict);
 			return;
@@ -363,7 +362,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				Logger.logException(e);
 				return false;
 			}
-			return (firstChar == '\'') && (documentOffset <= endOffset - 1) && (startOffset < documentOffset);
+			return firstChar == '\'' && documentOffset <= endOffset - 1 && startOffset < documentOffset;
 		}
 		return false;
 	}
@@ -420,7 +419,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				if (!explicit && !autoShowVariables)
 					return;
 				try {
-					//if we're right next to a letter, in an implicit scenario, we don't want it to complete the variables name. 
+					//if we're right next to a letter, in an implicit scenario, we don't want it to complete the variables name.
 					if (!explicit && startsWith.equals("$") && document.getLength() != offset && Character.isLetter(document.getChar(offset))) {
 						return;
 					}
@@ -650,8 +649,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			// if its a non class function
 			PHPFileData fileData = projectModel.getFileData(fileName);
 			PHPFunctionData[] functions = fileData.getFunctions();
-			for (int i = 0; i < functions.length; i++) {
-				PHPFunctionData function = functions[i];
+			for (PHPFunctionData function : functions) {
 				if (function.getName().equals(functionName)) {
 					return function.getReturnType();
 				}
@@ -723,8 +721,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (rv == null) {
 			PHPFileData fileData = projectModel.getFileData(fileName);
 			CodeData[] functions = fileData.getFunctions();
-			for (int i = 0; i < functions.length; i++) {
-				CodeData function = functions[i];
+			for (CodeData function : functions) {
 				if (function.getName().equals(functionName)) {
 					if (function instanceof PHPFunctionData) {
 						rv = ((PHPFunctionData) function).getReturnType();
@@ -736,8 +733,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		// checking if its a non-class function from within the project
 		if (rv == null) {
 			CodeData[] functions = projectModel.getFunctions();
-			for (int i = 0; i < functions.length; i++) {
-				CodeData function = functions[i];
+			for (CodeData function : functions) {
 				if (function.getName().equals(functionName)) {
 					if (function instanceof PHPFunctionData) {
 						rv = ((PHPFunctionData) function).getReturnType();
@@ -795,8 +791,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		//adding the default C'tor and D'tor if they don't exist
 		boolean ctorExists = false;
 		boolean dtorExists = false;
-		for (int i = 0; i < functions.length; i++) {
-			CodeData data = functions[i];
+		for (CodeData data : functions) {
 			if (data.getName().equals(PHPClassData.CONSTRUCTOR)) {
 				ctorExists = true;
 			}
@@ -871,7 +866,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	/**
-	 * Returns the security filter we can use 
+	 * Returns the security filter we can use
 	 * @param isInstanceOf - true if we are dealing with instance - not $this-> or MyClass::
 	 * @return
 	 * ModelSupport.PIRVATE_ACCESS_LEVEL_FILTER - if we can see private fields
@@ -882,7 +877,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		PHPCodeContext context = getContext(projectModel, fileName, offset);
 		String contextClassName = context.getContainerClassName();
 		// if the name of the context class is the same as the className itself then we are
-		// inside the same class - meaning we can use private methodes. 
+		// inside the same class - meaning we can use private methodes.
 		if (contextClassName.equals(className)) {
 			return ModelSupport.PIRVATE_ACCESS_LEVEL_FILTER;
 		}
@@ -892,7 +887,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER;
 		}
 
-		// if we are out side of a class 
+		// if we are out side of a class
 		if (contextClassName.equals("")) {
 			return ModelSupport.PUBLIC_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC;
 		}
@@ -982,16 +977,16 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] data;
 		String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
 		boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
-		
+
 		CodeData[] magicMethods = PHPCodeDataFactory.createMagicMethods(classData, isPHP5);
 		CodeData[] constructors = PHPCodeDataFactory.createConstructors(classData, isPHP5);
-		
+
 		data = new CodeData[magicMethods.length + constructors.length];
 		System.arraycopy(magicMethods, 0, data, 0, magicMethods.length);
 		System.arraycopy(constructors, 0, data, magicMethods.length, constructors.length);
-		
+
 		Arrays.sort(data);
-		
+
 		completionProposalGroup = classConstructorCompletionProposalGroup;
 		completionProposalGroup.setData(offset, data, functionNameStart, selectionLength);
 		return true;
@@ -1066,7 +1061,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return true;
 		}
 
-		if (foundImplements) {
+		if (foundImplements || !isClassDeclaration) {
 			if (explicit) {
 				showInterfaceList(projectModel, lastWord, offset, selectionLength, explicit);
 			}
@@ -1085,9 +1080,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] classes = projectModel.getClasses();
 		ArrayList interfaces = new ArrayList(classes.length / 10);
 
-		for (int i = 0; i < classes.length; i++) {
-			if (PHPModifier.isInterface(((PHPClassData) classes[i]).getModifiers())) {
-				interfaces.add(classes[i]);
+		for (CodeData element : classes) {
+			if (PHPModifier.isInterface(((PHPClassData) element).getModifiers())) {
+				interfaces.add(element);
 			}
 		}
 		CodeData[] interfacesArray = new CodeData[interfaces.size()];
@@ -1115,12 +1110,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			CodeData extendsCodeData = null;
 			CodeData implementsCodeData = null;
 			CodeData[] keywords = projectModel.getKeywordData();
-			for (int i = 0; i < keywords.length; i++) {
-				if (keywords[i].getName().equals("extends")) {
-					extendsCodeData = keywords[i];
+			for (CodeData element : keywords) {
+				if (element.getName().equals("extends")) {
+					extendsCodeData = element;
 				}
-				if (keywords[i].getName().equals("implements")) {
-					implementsCodeData = keywords[i];
+				if (element.getName().equals("implements")) {
+					implementsCodeData = element;
 				}
 			}
 			String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
@@ -1154,9 +1149,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (implementCodeData == null) {
 			CodeData implementsCodeData = null;
 			CodeData[] keywords = projectModel.getKeywordData();
-			for (int i = 0; i < keywords.length; i++) {
-				if (keywords[i].getName().equals("implements")) {
-					implementsCodeData = keywords[i];
+			for (CodeData element : keywords) {
+				if (element.getName().equals("implements")) {
+					implementsCodeData = element;
 					break;
 				}
 			}
@@ -1182,9 +1177,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (extendsCodeData == null) {
 			CodeData extendCodeData = null;
 			CodeData[] keywords = projectModel.getKeywordData();
-			for (int i = 0; i < keywords.length; i++) {
-				if (keywords[i].getName().equals("extends")) {
-					extendCodeData = keywords[i];
+			for (CodeData element : keywords) {
+				if (element.getName().equals("extends")) {
+					extendCodeData = element;
 					break;
 				}
 			}
@@ -1211,8 +1206,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	private CodeData[] getOnlyClasses(PHPProjectModel projectModel) {
 		CodeData[] classes = projectModel.getClasses();
 		int numOfInterfaces = 0;
-		for (int i = 0; i < classes.length; i++) {
-			if (PHPModifier.isInterface(((PHPClassData) classes[i]).getModifiers())) {
+		for (CodeData element : classes) {
+			if (PHPModifier.isInterface(((PHPClassData) element).getModifiers())) {
 				numOfInterfaces++;
 			}
 		}
@@ -1338,10 +1333,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] constans;
 		if (lastWord.length() == 0) {
 			functions = projectModel.getFunctions();
-			constans = (disableConstants) ? null : projectModel.getConstants();
+			constans = disableConstants ? null : projectModel.getConstants();
 		} else {
 			functions = projectModel.getFunctions(lastWord);
-			constans = (disableConstants) ? null : projectModel.getConstants(lastWord, constantCaseSensitive);
+			constans = disableConstants ? null : projectModel.getConstants(lastWord, constantCaseSensitive);
 		}
 		CodeData[] result = ModelSupport.merge(functions, ModelSupport.merge(arrayResult, constans));
 
@@ -1429,7 +1424,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	private class NewStatmentCompletionProposalGroup extends CompletionProposalGroup {
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			PHPClassData classData = (PHPClassData) codeData;
-			int suffixOffset = (classData.getConstructor().getParameters().length > 0) ? 1 : 2;
+			int suffixOffset = classData.getConstructor().getParameters().length > 0 ? 1 : 2;
 
 			return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true);
 		}
