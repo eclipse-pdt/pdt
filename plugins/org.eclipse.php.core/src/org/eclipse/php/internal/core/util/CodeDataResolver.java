@@ -69,7 +69,7 @@ public class CodeDataResolver {
 
 	/**
 	 * This method resolved PHP code data which is under the specified offset in the document.
-	 * 
+	 *
 	 * @param sDoc Document instance
 	 * @param offset Absolute offset in the document
 	 * @return Array of resolved code datas, or empty array if offset doesn't point to PHP element (or in case of error)
@@ -91,7 +91,7 @@ public class CodeDataResolver {
 
 	/**
 	 * This method resolved PHP code data which is under the specified offset in the document.
-	 * 
+	 *
 	 * @param sDoc Document instance
 	 * @param offset Absolute offset in the document
 	 * @param phpModel Instance of PHP DOM Model
@@ -107,7 +107,7 @@ public class CodeDataResolver {
 
 	/**
 	 * This method resolved PHP code data which is under the specified offset in the document.
-	 * 
+	 *
 	 * @param sDoc Document instance
 	 * @param offset Absolute offset in the document
 	 * @param phpModel Instance of PHP DOM Model
@@ -174,13 +174,34 @@ public class CodeDataResolver {
 						CodeData[] matchingClasses = getMatchingClasses(elementName, projectModel, fileName);
 
 						// Class instantiation:
-						if ("new".equalsIgnoreCase(prevWord) || "extends".equalsIgnoreCase(prevWord) || "implements".equalsIgnoreCase(prevWord)) {
+						if ("new".equalsIgnoreCase(prevWord)) {
 							return matchingClasses;
+						}
+
+						// Handle extends and implements:
+						if ("class".equals(statement.subSequence(0, 5).toString()) || "interface".equals(statement.subSequence(0, 8).toString())) {
+
+							if ("extends".equalsIgnoreCase(prevWord) || "implements".equalsIgnoreCase(prevWord)) {
+								return matchingClasses;
+							}
+
+							// Multiple extensions and implementations:
+
+							final int listStartPosition = PHPTextSequenceUtilities.readIdentifierListStartIndex(statement, endPosition);
+
+							// Determine pre-list word:
+							final int preListWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, listStartPosition);
+							final int preListWordStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statement, preListWordEnd, false);
+							final String preListWord = statement.subSequence(preListWordStart, preListWordEnd).toString();
+
+							if ("extends".equalsIgnoreCase(preListWord) || "implements".equalsIgnoreCase(preListWord)) {
+								return matchingClasses;
+							}
 						}
 
 						// Previous trigger:
 						String trigger = null;
-						if(startPosition > 2) {
+						if (startPosition > 2) {
 							trigger = statement.subSequence(startPosition - 2, startPosition).toString();
 						}
 
@@ -213,7 +234,7 @@ public class CodeDataResolver {
 							PHPCodeContext context = ModelSupport.createContext(fileData, elementStart);
 							return filterExact(projectModel.getVariables(fileName, context, elementName, true), elementName);
 						}
-						
+
 						// If we are at class constant definition:
 						if (classData != null) {
 							if ("const".equalsIgnoreCase(prevWord)) {
@@ -258,7 +279,7 @@ public class CodeDataResolver {
 
 							// What can it be? Only class variables:
 							CodeData[] result = null;
-							if(elementName.charAt(0) == '$')
+							if (elementName.charAt(0) == '$')
 								elementName = elementName.substring(1);
 							for (int i = 0; i < classDatas.length; ++i) {
 								// String fileName = classDatas[i].isUserCode() ?
@@ -309,7 +330,7 @@ public class CodeDataResolver {
 
 	/**
 	 * Returns the class containing the PHP element
-	 * 
+	 *
 	 * @param projectModel PHP project model
 	 * @param fileData Current file data
 	 * @param startPosition PHP element start position
@@ -407,8 +428,7 @@ public class CodeDataResolver {
 			}
 			// if its a non class function
 			PHPFunctionData[] functions = fileData.getFunctions();
-			for (int i = 0; i < functions.length; i++) {
-				PHPFunctionData function = functions[i];
+			for (PHPFunctionData function : functions) {
 				if (function.getName().equals(functionName)) {
 					return function.getReturnType();
 				}
@@ -495,8 +515,7 @@ public class CodeDataResolver {
 		// checking if its a non-class function from within the file
 		if (rv == null) {
 			CodeData[] functions = fileData.getFunctions();
-			for (int i = 0; i < functions.length; i++) {
-				CodeData function = functions[i];
+			for (CodeData function : functions) {
 				if (function.getName().equals(functionName)) {
 					if (function instanceof PHPFunctionData) {
 						rv = ((PHPFunctionData) function).getReturnType();
@@ -508,8 +527,7 @@ public class CodeDataResolver {
 		// checking if its a non-class function from within the project
 		if (rv == null) {
 			CodeData[] functions = projectModel.getFunctions();
-			for (int i = 0; i < functions.length; i++) {
-				CodeData function = functions[i];
+			for (CodeData function : functions) {
 				if (function.getName().equals(functionName)) {
 					if (function instanceof PHPFunctionData) {
 						rv = ((PHPFunctionData) function).getReturnType();

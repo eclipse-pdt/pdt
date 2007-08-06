@@ -39,11 +39,11 @@ public class PHPTextSequenceUtilities {
 	/**
 	 * This function returns statement text depending on the current offset.
 	 * It searches backwards until it finds ';', '{' or '}'.
-	 * 
+	 *
 	 * @param offset The absolute offset in the document
 	 * @param sdRegion Structured document region of the offset
 	 * @param removeComments Flag determining whether to remove comments in the resulted text sequence
-	 * 
+	 *
 	 * @return text sequence of the statement
 	 */
 	public static TextSequence getStatment(int offset, IStructuredDocumentRegion sdRegion, boolean removeComments) {
@@ -79,7 +79,7 @@ public class PHPTextSequenceUtilities {
 					startTokenRegion = phpScriptRegion.getPhpToken(documentOffset - startOffset - 1);
 				}
 				while (true) {
-					// If statement start is at the beginning of the PHP script region: 
+					// If statement start is at the beginning of the PHP script region:
 					if (startTokenRegion.getStart() == 0) {
 						break;
 					}
@@ -93,7 +93,7 @@ public class PHPTextSequenceUtilities {
 
 				TextSequence textSequence = TextSequenceUtilities.createTextSequence(sdRegion, startOffset, offset - startOffset);
 
-				// remove comments 
+				// remove comments
 				// TODO if the text sequence is large just ignore it, should be fixed.
 				if (removeComments && textSequence.length() < 1000) {
 					textSequence = removeComments(textSequence);
@@ -326,5 +326,37 @@ public class PHPTextSequenceUtilities {
 		}
 		return -1;
 	}
+
+	public static int readIdentifierListStartIndex(TextSequence textSequence, int endPosition) {
+		int startPosition = endPosition;
+		int listStartPosition = startPosition;
+		boolean beforeWhitespace = false;
+		boolean beforeComma = false;
+		while (startPosition > 0) {
+			final char ch = textSequence.charAt(startPosition - 1);
+			if (Character.isLetterOrDigit(ch) || ch == '_') {
+				if (beforeWhitespace) {
+					// identifiers delimited by a whitespace are not a list:
+					return --listStartPosition;
+				}
+				listStartPosition = startPosition;
+				beforeComma = false;
+			} else if (ch == ',') {
+				if(beforeComma) {
+					// only one comma may delimit a list
+					return endPosition;
+				}
+				beforeComma = true;
+				beforeWhitespace = false;
+			} else if (Character.isWhitespace(ch) && !beforeComma) {
+				beforeWhitespace = true;
+			} else {
+				return --listStartPosition;
+			}
+			startPosition--;
+		}
+		return listStartPosition;
+	}
+
 
 }
