@@ -147,10 +147,12 @@ class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListene
 	private void refreshMissingFileNode(final IPath fileTreeLocation, final boolean deleted) {
 		IPath elementToRefresh = fileTreeLocation;
 		while (!IncludePathTreeContent.includePathTree.includes(elementToRefresh) && elementToRefresh.segmentCount() > 1) {
-			if (deleted)
-				if (IncludePathTreeContent.includePathTree.includes(elementToRefresh) && IncludePathTreeContent.includePathTree.getChildCount(elementToRefresh) < 1)
+			if (deleted) {
+				if (IncludePathTreeContent.includePathTree.includes(elementToRefresh) && IncludePathTreeContent.includePathTree.getChildCount(elementToRefresh) < 1) {
 					IncludePathTreeContent.includePathTree.deleteElement(elementToRefresh);
-			elementToRefresh = fileTreeLocation.removeLastSegments(1);
+				}
+			}
+			elementToRefresh = elementToRefresh.removeLastSegments(1);
 		}
 		refresh(IncludePathTreeContent.includePathTree.getElementData(elementToRefresh));
 	}
