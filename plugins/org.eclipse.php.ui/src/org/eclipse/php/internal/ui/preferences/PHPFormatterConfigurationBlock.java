@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.util.preferences.Key;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -24,7 +25,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
-import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * @author guy.g
@@ -32,23 +32,21 @@ import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
  */
 public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationBlock implements ModifyListener, SelectionListener {
 
-	private static final Key PREF_FORMATTER_USE_TABS = getPHPCoreKey(PHPCoreConstants.FORMATTER_USE_TABS);
-	private static final Key PREF_FORMATTER_INDENTATION_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+	public static final Key PREF_FORMATTER_USE_TABS = getPHPCoreKey(PHPCoreConstants.FORMATTER_USE_TABS);
+	public static final Key PREF_FORMATTER_INDENTATION_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+
+	private static final int MIN_INDENT_SIZE = 0;
+	private static final int MAX_INDENT_SIZE = 32;
 
 	private IStatus fFormatterStatus;
 
-	private final int MIN_INDENTATION_SIZE = 0;
-	private final int MAX_INDENTATION_SIZE = 16;
-
-	private Button fIndentUsingTabs;
-	private Button fIndentUsingSpaces;
-	private Spinner fIndentationSizeSpinner;
+	private Combo tabPolicyCombo;
+	private Text indentSizeTxt;
 
 	public PHPFormatterConfigurationBlock(IStatusChangeListener context, IProject project, IWorkbenchPreferenceContainer container) {
 		super(context, project, getKeys(), container);
 
 		fFormatterStatus = new StatusInfo();
-		initValues();
 	}
 
 	public Control createContents(Composite parent) {
@@ -62,43 +60,73 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 	}
 
 	private Composite createFormaterContent(Composite parent) {
+		Group formattingComposite = createComposite(parent, 2);
+		final String[] tabPolicyLabels = new String[] { PHPUIMessages.getString("PHPFormatterConfigurationBlock.tabsLabel"), PHPUIMessages.getString("PHPFormatterConfigurationBlock.spacesLabel") }; //$NON-NLS-1$ //$NON-NLS-2$
+		Label indentTabsLabel = new Label(formattingComposite, SWT.NULL);
+		indentTabsLabel.setText(PHPUIMessages.getString("PHPFormatterConfigurationBlock.tabPolicyLabel")); //$NON-NLS-1$
+		tabPolicyCombo = new Combo(formattingComposite, SWT.NULL | SWT.READ_ONLY);
+		tabPolicyCombo.setItems(tabPolicyLabels);
+		tabPolicyCombo.select(0);
 
-		Composite formattingComposite = createComposite(parent, 2);
+		GridData gd = new GridData();
+		gd.widthHint = 20;
 
-		fIndentUsingTabs = createRadioButton(formattingComposite, XMLUIMessages.Indent_using_tabs);
-		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
-		fIndentUsingTabs.addSelectionListener(this);
+		Label indentSizeLabel = new Label(formattingComposite, SWT.NULL);
+		indentSizeLabel.setText(PHPUIMessages.getString("PHPFormatterConfigurationBlock.indentSizeLabel")); //$NON-NLS-1$
+		indentSizeTxt = new Text(formattingComposite, SWT.BORDER);
+		indentSizeTxt.setTextLimit(2);
+		indentSizeTxt.setLayoutData(gd);
 
-		fIndentUsingSpaces = createRadioButton(formattingComposite, XMLUIMessages.Indent_using_spaces);
-		((GridData) fIndentUsingSpaces.getLayoutData()).horizontalSpan = 2;
+		tabPolicyCombo.addSelectionListener(new SelectionListener() {
 
-		createLabel(formattingComposite, XMLUIMessages.Indentation_size);
-		fIndentationSizeSpinner = new Spinner(formattingComposite, SWT.READ_ONLY | SWT.BORDER);
-		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		fIndentationSizeSpinner.setLayoutData(gd);
-		fIndentationSizeSpinner.setToolTipText(XMLUIMessages.Indentation_size_tip);
-		fIndentationSizeSpinner.setMinimum(MIN_INDENTATION_SIZE);
-		fIndentationSizeSpinner.setMaximum(MAX_INDENTATION_SIZE);
-		fIndentationSizeSpinner.setIncrement(1);
-		fIndentationSizeSpinner.setPageIncrement(4);
-		fIndentationSizeSpinner.addModifyListener(this);
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
 
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				Combo source = (Combo) e.getSource();
+				int selectIndex = source.getSelectionIndex();
+				if (selectIndex == 1) { //select 'Spaces'
+					indentSizeTxt.setEnabled(true);
+				} else {//select 'Tabs'
+					indentSizeTxt.setEnabled(false);
+					indentSizeTxt.setText("1"); //$NON-NLS-1$
+				}
+			}
+		});
+
+		indentSizeTxt.addModifyListener(this);
+		tabPolicyCombo.addSelectionListener(this);
+
+		initValues();
 		updateValues();
+
 		return formattingComposite;
 	}
 
 	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
 		if (changedKey != null) {
 			if (PREF_FORMATTER_INDENTATION_SIZE.equals(changedKey)) {
-				fFormatterStatus = validate();
+				try {
+					fIndentationSize = Integer.valueOf(newValue);
+					if (fIndentationSize < MIN_INDENT_SIZE || fIndentationSize > MAX_INDENT_SIZE) {
+						fFormatterStatus = new StatusInfo(IStatus.ERROR, PHPUIMessages.getString("PHPFormatterConfigurationBlock.indentSizeErrorMessage")); //$NON-NLS-1$
+					} else {
+						setValue(PREF_FORMATTER_INDENTATION_SIZE, String.valueOf(fIndentationSize));
+						fFormatterStatus = new StatusInfo();
+					}
+				} catch (NumberFormatException nfe) {
+					fFormatterStatus = new StatusInfo(IStatus.ERROR, PHPUIMessages.getString("PHPFormatterConfigurationBlock.indentSizeErrorMessage")); //$NON-NLS-1$
+				}
 			} else {
 				return;
 			}
 		} else {
-			fFormatterStatus = validate();
+			fFormatterStatus = new StatusInfo();
 		}
-		IStatus status = fFormatterStatus;
-		fContext.statusChanged(status);
+
+		fContext.statusChanged(fFormatterStatus);
 
 	}
 
@@ -106,57 +134,29 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 		return null;
 	}
 
-	private IStatus validate() {
-		return new StatusInfo();
-	}
-
 	private static Key[] getKeys() {
 		return new Key[] { PREF_FORMATTER_USE_TABS, PREF_FORMATTER_INDENTATION_SIZE };
 	}
 
-	private Composite createComposite(Composite parent, int numColumns) {
-		Composite composite = new Composite(parent, SWT.NULL);
+	private Group createComposite(Composite parent, int numColumns) {
+		Group group = new Group(parent, SWT.NONE);
+		group.setText(" Formatting ");
 
 		//GridLayout
 		GridLayout layout = new GridLayout();
 		layout.numColumns = numColumns;
-		composite.setLayout(layout);
+		layout.marginTop = 5;
+		layout.marginBottom = 5;
+
+		group.setLayout(layout);
 
 		//GridData
-		GridData data = new GridData(GridData.FILL);
-		data.horizontalIndent = 0;
-		data.verticalAlignment = GridData.FILL;
-		data.horizontalAlignment = GridData.FILL;
-		data.grabExcessHorizontalSpace = true;
-		composite.setLayoutData(data);
+		GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
 
-		return composite;
-	}
+		group.setLayoutData(data);
+		group.setLayoutData(data);
 
-	private Button createRadioButton(Composite group, String label) {
-		Button button = new Button(group, SWT.RADIO);
-		button.setText(label);
-
-		//GridData
-		GridData data = new GridData(GridData.FILL);
-		data.verticalAlignment = GridData.CENTER;
-		data.horizontalAlignment = GridData.FILL;
-		button.setLayoutData(data);
-
-		return button;
-	}
-
-	private Label createLabel(Composite parent, String text) {
-		Label label = new Label(parent, SWT.LEFT);
-		label.setText(text);
-
-		//GridData
-		GridData data = new GridData(GridData.FILL);
-		data.verticalAlignment = GridData.CENTER;
-		data.horizontalAlignment = GridData.FILL;
-		label.setLayoutData(data);
-
-		return label;
+		return group;
 	}
 
 	public void modifyText(ModifyEvent e) {
@@ -166,16 +166,14 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 		if (e.widget != null && e.widget.isDisposed())
 			return;
 
-		validateValues();
-		enableValues(e.widget);
+		validateValues(e.widget);
 	}
 
-	protected void validateValues() {
-	}
+	protected void validateValues(Widget w) {
+		Text c = (Text) w;
+		String textFieldStr = c.getText();
+		validateSettings(PREF_FORMATTER_INDENTATION_SIZE, new Integer(fIndentationSize).toString(), textFieldStr);
 
-	protected void enableValues(Widget w) {
-		fIndentationSize = ((Spinner) w).getSelection();
-		setValue(PREF_FORMATTER_INDENTATION_SIZE, String.valueOf(fIndentationSize));
 	}
 
 	protected void updateControls() {
@@ -192,26 +190,30 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 
 		fUseTabs = Boolean.valueOf(useTabs).booleanValue();
 		fIndentationSize = Integer.valueOf(indentationSize).intValue();
-
+		indentSizeTxt.setText(indentationSize);
 	}
 
 	private void updateValues() {
-		fIndentUsingTabs.setSelection(fUseTabs);
-		fIndentUsingSpaces.setSelection(!fUseTabs);
-		fIndentationSizeSpinner.setSelection(fIndentationSize);
+		if (fUseTabs) {
+			tabPolicyCombo.select(0);
+			indentSizeTxt.setEnabled(false);
+		} else {
+			tabPolicyCombo.select(1);
+			indentSizeTxt.setEnabled(true);
+		}
 	}
 
 	public void widgetSelected(SelectionEvent e) {
-		updateButtonStatus((Button) e.widget);
+		updateButtonStatus((Combo) e.widget);
 	}
 
 	public void widgetDefaultSelected(SelectionEvent e) {
-		updateButtonStatus((Button) e.widget);
+		updateButtonStatus((Combo) e.widget);
 	}
 
-	private void updateButtonStatus(Button b) {
-		fUseTabs = b.getSelection();
-		setValue(PREF_FORMATTER_USE_TABS, fUseTabs ? "true" : "false");
+	private void updateButtonStatus(Combo b) {
+		fUseTabs = (b.getSelectionIndex() == 0);
+		setValue(PREF_FORMATTER_USE_TABS, fUseTabs ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public Control createContentsWrapper(Composite composite) {
@@ -219,7 +221,7 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 	}
 
 	public void disposeWrapper() {
-		dispose();		
+		dispose();
 	}
 
 	public boolean hasProjectSpecificOptionsWrapper(IProject project) {
@@ -227,7 +229,7 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 	}
 
 	public void performApplyWrapper() {
-		performApply();		
+		performApply();
 	}
 
 	public void performDefaultsWrapper() {

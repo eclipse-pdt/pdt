@@ -55,4 +55,7 @@ public class PHPFormatterConfigurationWrapper implements IPHPFormatterConfigurat
 		pConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 	}
 
+	public String getDescription() {
+		return null;
+	}
 }

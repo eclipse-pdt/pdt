@@ -52,7 +52,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  */
 public abstract class PropertyAndPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IWorkbenchPropertyPage {
 
-	private Control fConfigurationBlockControl;
+	protected Control fConfigurationBlockControl;
 	private ControlEnableState fBlockEnableState;
 	private Link fChangeWorkspaceSettings;
 	private SelectionButtonDialogField fUseProjectSettings;

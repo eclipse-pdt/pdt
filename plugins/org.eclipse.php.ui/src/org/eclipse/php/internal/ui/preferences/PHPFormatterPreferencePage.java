@@ -18,6 +18,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.php.ui.preferences.IPHPFormatterConfigurationBlockWrapper;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
@@ -26,31 +27,31 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * @author guy.g
  */
 public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
-	
+
 	public static final String PREF_ID = "org.eclipse.php.ui.preferences.PHPFormatterPreferencePage"; //$NON-NLS-1$
 	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPFormatterPreferencePage"; //$NON-NLS-1$
 
 	private IPHPFormatterConfigurationBlockWrapper fConfigurationBlock;
+	private boolean hasExtensionsForPDT = false;
 
-	public PHPFormatterPreferencePage(){
+	public PHPFormatterPreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
-		setDescription(PHPUIMessages.PHPFormatterPreferencePage_description);
-		
+
 		// only used when page is shown programatically
 		setTitle(PHPUIMessages.PHPFormatterPreferencePage_title);
 	}
-	
+
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
 		fConfigurationBlock = getFormatterPreferencesBlock();
 		fConfigurationBlock.init(getNewStatusChangedListener(), getProject(), container);
-
+		setDescription(fConfigurationBlock.getDescription());
 		super.createControl(parent);
 	}
 
 	private IPHPFormatterConfigurationBlockWrapper getFormatterPreferencesBlock() {
 		IPHPFormatterConfigurationBlockWrapper prefBlock = null;
-		
+
 		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterPrefBlock";
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
 		for (int i = 0; i < elements.length; i++) {
@@ -60,16 +61,28 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 				prefBlock = (IPHPFormatterConfigurationBlockWrapper) ecProxy.getObject();
 			}
 		}
-		
+
 		if (prefBlock == null) {
 			prefBlock = new PHPFormatterConfigurationWrapper();
+		} else {
+			hasExtensionsForPDT = true;
 		}
-		
+
 		return prefBlock;
 	}
-	
+
 	protected Control createPreferenceContent(Composite composite) {
 		return fConfigurationBlock.createContents(composite);
+	}
+
+	@Override
+	protected Control createContents(Composite parent) {
+		Control control = super.createContents(parent);
+		if (!hasExtensionsForPDT) {
+			GridData data = new GridData(GridData.FILL, GridData.FILL, true, false);
+			super.fConfigurationBlockControl.setLayoutData(data);
+		}
+		return control;
 	}
 
 	protected boolean hasProjectSpecificOptions(IProject project) {
@@ -104,7 +117,6 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		}
 		return super.performOk();
 	}
-
 
 	public void performApply() {
 		if (fConfigurationBlock != null) {
