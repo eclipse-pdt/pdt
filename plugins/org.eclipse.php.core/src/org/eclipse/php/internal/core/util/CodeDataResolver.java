@@ -179,7 +179,8 @@ public class CodeDataResolver {
 						}
 
 						// Handle extends and implements:
-						if ("class".equals(statement.subSequence(0, 5).toString()) || "interface".equals(statement.subSequence(0, 8).toString())) {
+						// Check that the statement suites the condition. If class or interface keywords don't appear in the beginning of the statement or they are alone there.
+						if (statement.length() > 6 && ("class".equals(statement.subSequence(0, 5).toString()) || statement.length() > 10 && "interface".equals(statement.subSequence(0, 9).toString()))) {
 
 							if ("extends".equalsIgnoreCase(prevWord) || "implements".equalsIgnoreCase(prevWord)) {
 								return matchingClasses;
