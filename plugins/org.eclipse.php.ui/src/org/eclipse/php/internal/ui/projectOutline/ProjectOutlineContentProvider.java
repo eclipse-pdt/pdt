@@ -310,8 +310,6 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	}
 
 	public void projectModelChanged(final IProject project) {
-		if (fPart.isInCurrentProject(project))
-			postRefresh(project, true);
 	}
 
 	public void projectModelRemoved(final IProject project) {
