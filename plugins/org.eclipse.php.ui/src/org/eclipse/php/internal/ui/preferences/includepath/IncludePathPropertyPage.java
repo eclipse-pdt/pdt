@@ -115,10 +115,6 @@ public class IncludePathPropertyPage extends PropertyPage implements IStatusChan
 						// keep unsaved
 					}
 				}
-			} else {
-				if (!fIncludePathsBlock.hasChangesInDialog() && fIncludePathsBlock.hasChangesInIncludePathFile()) {
-					fIncludePathsBlock.init(getProject(), null);
-				}
 			}
 		}
 		super.setVisible(visible);

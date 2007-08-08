@@ -213,11 +213,9 @@ public class IncludePathBlock {
 	public void init(IProject phpProject, IIncludePathEntry[] includepathEntries) {
 		fCurrProject = phpProject;
 		phpOptions = PHPProjectOptions.forProject(fCurrProject);
-		boolean projectExists = false;
 		List newIncludePath = null;
 		IProject project = fCurrProject.getProject();
-		projectExists = (project.exists() && project.getFile(PHPProjectOptions.FILE_NAME).exists()); //$NON-NLS-1$
-		if (projectExists) {
+		if (project.exists()) {
 			if (includepathEntries == null) {
 				includepathEntries = phpOptions.readRawIncludePath();
 			}
@@ -282,14 +280,7 @@ public class IncludePathBlock {
 		return !currSettings.equals(fUserSettingsTimeStamp);
 	}
 
-	public boolean hasChangesInIncludePathFile() {
-		IFile file = fCurrProject.getProject().getFile(PHPProjectOptions.FILE_NAME); //$NON-NLS-1$
-		return fFileTimeStamp != file.getModificationStamp();
-	}
-
 	public void initializeTimeStamps() {
-		IFile file = fCurrProject.getProject().getFile(PHPProjectOptions.FILE_NAME); //$NON-NLS-1$
-		fFileTimeStamp = file.getModificationStamp();
 		fUserSettingsTimeStamp = getEncodedSettings();
 	}
 
