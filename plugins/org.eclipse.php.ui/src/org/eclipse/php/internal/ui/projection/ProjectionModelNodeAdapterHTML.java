@@ -104,7 +104,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	// org.eclipse.jst.jsp.ui.internal.projection
 
 	ProjectionModelNodeAdapterFactoryHTML fAdapterFactory;
-	protected Map<TagProjectionAnnotation, Position> previousAnnotations = new HashMap<TagProjectionAnnotation, Position>();
+	protected Map<ProjectionAnnotation, Position> previousAnnotations = new HashMap<ProjectionAnnotation, Position>();
 
 	public ProjectionModelNodeAdapterHTML(ProjectionModelNodeAdapterFactoryHTML factory) {
 		fAdapterFactory = factory;

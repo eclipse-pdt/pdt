@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.projection;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
@@ -33,7 +36,8 @@ import org.w3c.dom.Node;
 /**
  * Updates the projection model of a structured model for JSP.
  */
-public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingProvider, IProjectionListener, ITextInputListener {
+public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingProvider, IProjectionListener, ITextInputListener, ModelListener {
+
 	private final static boolean debugProjectionPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.php.ui/projectionperf")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private IDocument fDocument;
@@ -49,10 +53,6 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	 * performance sake)
 	 */
 	private final int MAX_SIBLINGS = 1000;
-
-	private boolean foldingClasses;
-	private boolean foldingFunctions;
-	private boolean foldingPhpDoc;
 
 	/**
 	 * Adds an adapter to node and its children
@@ -70,10 +70,8 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			// adapter with projection information
 			ProjectionModelNodeAdapterPHP adapter = (ProjectionModelNodeAdapterPHP) notifier.getExistingAdapter(ProjectionModelNodeAdapterPHP.class);
 			if (adapter != null) {
-				adapter.setProvider(this);// in order to get preference values for folding:
 				adapter.updateAdapter(node, fViewer);
-			}
-			else {
+			} else {
 				// just call getadapter so the adapter is created and
 				// automatically initialized
 				notifier.getAdapterFor(ProjectionModelNodeAdapterPHP.class);
@@ -81,8 +79,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			ProjectionModelNodeAdapterHTML adapter2 = (ProjectionModelNodeAdapterHTML) notifier.getExistingAdapter(ProjectionModelNodeAdapterHTML.class);
 			if (adapter2 != null) {
 				adapter2.updateAdapter(node);
-			}
-			else {
+			} else {
 				// just call getadapter so the adapter is created and
 				// automatically initialized
 				notifier.getAdapterFor(ProjectionModelNodeAdapterHTML.class);
@@ -125,8 +122,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 						}
 					}
 				}
-			}
-			finally {
+			} finally {
 				if (sModel != null) {
 					sModel.releaseFromRead();
 				}
@@ -176,8 +172,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 					// try and get the factory
 					factory = (ProjectionModelNodeAdapterFactoryHTML) factoryRegistry.getFactoryFor(ProjectionModelNodeAdapterHTML.class);
 				}
-			}
-			finally {
+			} finally {
 				if (sModel != null)
 					sModel.releaseFromRead();
 			}
@@ -227,8 +222,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 					// try and get the factory
 					factory = (ProjectionModelNodeAdapterFactoryPHP) factoryRegistry.getFactoryFor(ProjectionModelNodeAdapterPHP.class);
 				}
-			}
-			finally {
+			} finally {
 				if (sModel != null)
 					sModel.releaseFromRead();
 			}
@@ -268,31 +262,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			addAllAdapters();
 		}
 		fProjectionNeedsToBeEnabled = false;
-		initializePreferences();
 	}
-
-	/**
-	 * Initialize the preferences of the PHP folding.
-	 */
-	private void initializePreferences() {
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
-		foldingClasses = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_CLASSES);
-		foldingFunctions = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_FUNCTIONS);
-		foldingPhpDoc = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_PHPDOC);
-	}
-
-	boolean isFoldingClasses() {
-		return foldingClasses;
-	}
-
-	boolean isFoldingFunctions() {
-		return foldingFunctions;
-	}
-
-	boolean isFoldingPhpDoc() {
-		return foldingPhpDoc;
-	}
-
 
 	/**
 	 * Associate a ProjectionViewer with this IStructuredTextFoldingProvider
@@ -308,6 +278,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		fViewer = viewer;
 		fViewer.addProjectionListener(this);
 		fViewer.addTextInputListener(this);
+		PHPWorkspaceModelManager.getInstance().addModelListener(this);
 	}
 
 	private boolean isInstalled() {
@@ -393,8 +364,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 						}
 					}
 				}
-			}
-			finally {
+			} finally {
 				if (sModel != null) {
 					sModel.releaseFromRead();
 				}
@@ -436,6 +406,50 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			fViewer.removeProjectionListener(this);
 			fViewer.removeTextInputListener(this);
 			fViewer = null;
+			PHPWorkspaceModelManager.getInstance().removeModelListener(this);
 		}
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#fileDataChanged(org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData)
+	 */
+	public void fileDataChanged(PHPFileData fileData) {
+		IResource file = PHPModelUtil.getResource(fileData);
+		IDocument document = fViewer.getDocument();
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+		assert model instanceof DOMModelForPHP : "Incompatible model (or null)";
+		try {
+			DOMModelForPHP viewerModel = (DOMModelForPHP) model;
+			if (viewerModel != null && viewerModel.getFileData() == fileData) {
+				// Update all the annotations in the document:
+				addAllAdapters();
+			}
+		} finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#dataCleared()
+	 */
+	public void dataCleared() {
+		// nothing to do
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#fileDataAdded(org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData)
+	 */
+	public void fileDataAdded(PHPFileData fileData) {
+		// nothing to do
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#fileDataRemoved(org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData)
+	 */
+	public void fileDataRemoved(PHPFileData fileData) {
+		// nothing to do
 	}
 }

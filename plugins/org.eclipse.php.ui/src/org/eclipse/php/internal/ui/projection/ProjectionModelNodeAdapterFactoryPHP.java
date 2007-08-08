@@ -11,22 +11,61 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.projection;
 
+import java.util.Map;
+
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Node;
 
 public class ProjectionModelNodeAdapterFactoryPHP extends ProjectionModelNodeAdapterFactoryHTML {
+
+	private boolean foldingClasses;
+	private boolean foldingFunctions;
+	private boolean foldingPhpDoc;
+
 	public ProjectionModelNodeAdapterFactoryPHP() {
 		this(ProjectionModelNodeAdapterPHP.class);
 	}
 
 	public ProjectionModelNodeAdapterFactoryPHP(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
+		initialize();
 	}
 
 	public ProjectionModelNodeAdapterFactoryPHP(Object adapterKey) {
 		super(adapterKey);
+		initialize();
+	}
+
+	/**
+	 * Initialize the preferences of the PHP folding.
+	 */
+	private void initialize() {
+		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+		foldingClasses = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_CLASSES);
+		foldingFunctions = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_FUNCTIONS);
+		foldingPhpDoc = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_PHPDOC);
+	}
+
+	boolean isFoldingClasses() {
+		return true;
+		// return foldingClasses;
+	}
+
+	boolean isFoldingFunctions() {
+		return true;
+		// return foldingFunctions;
+	}
+
+	boolean isFoldingPhpDoc() {
+		return true;
+		// return foldingPhpDoc;
 	}
 
 	/**
@@ -72,6 +111,19 @@ public class ProjectionModelNodeAdapterFactoryPHP extends ProjectionModelNodeAda
 				return true;
 			}
 		}
-		return false;
+		return super.isNodeProjectable(node);
+	}
+
+	/**
+	 * @param phpModel
+	 */
+	public ProjectionViewerInformation findInformation(DOMModelForPHP phpModel) {
+		for (Map.Entry<ProjectionViewer, ProjectionViewerInformation> entry : fProjectionViewers.entrySet()) {
+			ProjectionViewer viewer = entry.getKey();
+			if (viewer.getDocument() == phpModel.getStructuredDocument()) {
+				return entry.getValue();
+			}
+		}
+		throw new IllegalStateException("Viewer should exist");
 	}
 }

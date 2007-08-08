@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.projection;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.text.DocumentEvent;
@@ -56,8 +56,11 @@ class ProjectionViewerInformation {
 			// listeners have been notified
 			IDocument document = event.getDocument();
 			if (document instanceof IDocumentExtension && fInfo.getDocument() == document) {
-				if (fInfo.hasChangesQueued())
-					((IDocumentExtension) document).registerPostNotificationReplace(this, new PostDocumentChangedListener(fInfo));
+				//	if (fInfo.hasChangesQueued())
+				// In WST, when they have no events they don't need to listen to post document change
+				// We (PDT) need to listen in order to set document changing to false.
+				// Otherwise, when an event from php model arrive, they can't update.
+				((IDocumentExtension) document).registerPostNotificationReplace(this, new PostDocumentChangedListener(fInfo));
 			}
 		}
 	}
@@ -112,7 +115,7 @@ class ProjectionViewerInformation {
 
 	private List getQueuedAnnotationChanges() {
 		if (fQueuedAnnotationChanges == null) {
-			fQueuedAnnotationChanges = new ArrayList();
+			fQueuedAnnotationChanges = new LinkedList();
 		}
 		return fQueuedAnnotationChanges;
 	}
@@ -121,7 +124,7 @@ class ProjectionViewerInformation {
 		fIsDocumentChanging = changing;
 	}
 
-	private boolean isDocumentChanging() {
+	boolean isDocumentChanging() {
 		return fIsDocumentChanging;
 	}
 
