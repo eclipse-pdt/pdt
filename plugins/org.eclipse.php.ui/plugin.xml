@@ -747,7 +747,7 @@
 		<!-- perspectives -->
 		<!-- views -->
 		<key
-			sequence="M2+M3+Q P"
+			sequence="M2+M3+Q E"
 			commandId="org.eclipse.php.ui.explorer"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key
@@ -901,21 +901,21 @@
 
 	<!--History & Others Working Set:-->
 	<extension point="org.eclipse.ui.workingSets">
-		<workingSet
+		<!--workingSet
 			name="%HistoryWorkingSetWizardPage.name"
-			icon="icons/full/obj16/history_working_set_obj.gif"
+			icon="icons/full/obj16/php_project_obj.gif"
 			updaterClass="org.eclipse.php.internal.ui.workingset.HistoryWorkingSetUpdater"
 			id="org.eclipse.php.ui.HistoryWorkingSet" />
 		<workingSet
 			name="%OthersWorkingSetWizardPage.name"
-			icon="icons/full/obj16/jworkingSet_obj.gif"
+			icon="icons/full/obj16/php_project_obj.gif"
 			updaterClass="org.eclipse.php.internal.ui.workingset.OthersWorkingSetUpdater"
-			id="org.eclipse.php.ui.OthersWorkingSet" />
+			id="org.eclipse.php.ui.OthersWorkingSet" /-->
 		<workingSet
 			name="%PHPWorkingSetPage.name"
 			pageClass="org.eclipse.php.internal.ui.workingset.PHPWorkingSetPage"
 			updaterClass="org.eclipse.php.internal.ui.workingset.PHPWorkingSetUpdater"
-			icon="icons/full/obj16/jworkingSet_obj.gif"
+			icon="icons/full/obj16/php_project_obj.gif"
 			id="org.eclipse.php.ui.workingset.PHPWorkingSetPage" />
 	</extension>
 
