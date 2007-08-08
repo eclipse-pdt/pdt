@@ -21,6 +21,8 @@ import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -171,7 +173,17 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 	}
 
 	protected void formatNode(IDOMNode node, HTMLFormatContraints contraints) {
-		super.formatNode(node, contraints);
+		// fixed bug 198901 - prevent the HTML formatter to format the value of style attribute
+		// skip the format start tag and end tag
+		Attr attr = null;
+		if (node instanceof Element) {
+			attr = ((Element)node).getAttributeNode("style");//$NON-NLS-1$
+		}
+		if (attr == null || attr.getValue().indexOf("<?") == -1) {
+			super.formatNode(node, contraints);	 
+		} else {
+			formatChildNodes(node, contraints);
+		}
 
 		// get over the attribute and look for php attributes
 
