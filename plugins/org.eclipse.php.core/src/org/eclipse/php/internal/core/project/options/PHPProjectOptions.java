@@ -10,33 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.project.options;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.internal.resources.XMLWriter;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.core.IncludePathContainerInitializer;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -46,20 +29,25 @@ import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.osgi.service.prefs.BackingStoreException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public class PHPProjectOptions {
 
+	private static final String LOCATION_INCLUDE_PATH = "Include Path";
+	private static final String OWNER_PHP_INCLUDE_PATH = "phpIncludePath";
+	private static final String OWNER_ATTRIBUTE = "Owner";
+	
 	public static final String BUILDER_ID = PHPCorePlugin.ID + ".PhpIncrementalProjectBuilder"; //$NON-NLS-1$
 	static final IIncludePathEntry[] EMPTY_INCLUDEPATH = {};
 
-	public static final String FILE_NAME = ".projectOptions"; //$NON-NLS-1$
-	private static final String TAG_OPTION = "projectOption"; //$NON-NLS-1$
+	private static final String PREF_QUALIFIER = PHPCorePlugin.ID + ".projectOptions"; //$NON-NLS-1$
+	private static final String OLD_FILE_NAME = ".projectOptions"; //$NON-NLS-1$
 
+	private static final String TAG_OPTION = "projectOption"; //$NON-NLS-1$
 	private static final String TAG_OPTIONS = "phpProjectOptions"; //$NON-NLS-1$
 	/**
 	 * Name of the User Library Container id.
@@ -105,146 +93,88 @@ public class PHPProjectOptions {
 		IncludePathVariableManager.instance().setIncludePathVariables(names, paths, monitor);
 	}
 
-	IIncludePathEntry[] includePathEntries = {};
+	private IIncludePathEntry[] includePathEntries = {};
 
-	private Map options = new HashMap();
-
-	private final Map optionsChangeListenersMap = new HashMap();
+	private final Map<String, List<IPhpProjectOptionChangeListener>> optionsChangeListenersMap = new HashMap<String, List<IPhpProjectOptionChangeListener>>();
 
 	private IProject project;
+	private IEclipsePreferences preferences;
 
 	public PHPProjectOptions(final IProject project) {
 		//		assert project != null;
 		this.project = project;
-		loadOptions();
+		ProjectScope projectScope = new ProjectScope(project);
+		preferences = projectScope.getNode(PREF_QUALIFIER);
+		loadIncludePath();
 
-		//		initializeArguments();
+		// backward compatible
+		loadOldConfiguration();
 	}
 
 	public void addOptionChangeListener(final String optionKey, final IPhpProjectOptionChangeListener optionChangeListener) {
-		List optionChangeListeners = null;
-		final Object object = optionsChangeListenersMap.get(optionKey);
-		if (object == null) {
-			optionChangeListeners = new ArrayList();
+		List<IPhpProjectOptionChangeListener> optionChangeListeners = optionsChangeListenersMap.get(optionKey);
+		if (optionChangeListeners == null) {
+			optionChangeListeners = new ArrayList<IPhpProjectOptionChangeListener>();
 			optionsChangeListenersMap.put(optionKey, optionChangeListeners);
-		} else
-			optionChangeListeners = (List) object;
+		}
 
 		optionChangeListeners.add(optionChangeListener);
 	}
 
-	public Object getOption(final String key) {
-		return options.get(key);
+	public void removeOptionChangeListener(final String optionKey, final IPhpProjectOptionChangeListener optionChangeListener) {
+		List<IPhpProjectOptionChangeListener> optionChangeListeners = optionsChangeListenersMap.get(optionKey);
+		if (optionChangeListeners != null) {
+			optionChangeListeners.remove(optionChangeListener);
+		}
+	}
+
+	public void notifyOptionChangeListeners(final String key, final Object oldValue, final Object newValue) {
+		List<IPhpProjectOptionChangeListener> optionChangeListeners = optionsChangeListenersMap.get(key);
+		if (optionChangeListeners == null)
+			return;
+		for (final Iterator<IPhpProjectOptionChangeListener> i = optionChangeListeners.iterator(); i.hasNext();) {
+			final IPhpProjectOptionChangeListener phpProjectOptionChangeListener = i.next();
+			phpProjectOptionChangeListener.notifyOptionChanged(oldValue, newValue);
+		}
 	}
 
 	public IProject getProject() {
 		return project;
 	}
 
-	private void loadOptions() {
+	public Object getOption(final String key) {
+		return preferences.get(key, null);
+	}
 
-		final IFile optionsFile = project.getFile(FILE_NAME);
-		// fixed bug 169296 - in case type .projectOptions don't exist in the project refresh it from local.
-		if (!optionsFile.exists()) {
-			try {
-				optionsFile.refreshLocal(IResource.DEPTH_ZERO, null);
-			} catch (CoreException e) {
-				Logger.logException(e);
+	public void setOption(final String key, final Object value) {
+		final Object oldValue = getOption(key);
+		if (oldValue != null) {
+			if (value != null && value.equals(oldValue)) {
+				return;
 			}
-		}
-
-		if (!optionsFile.exists())
+		} else if (value == null) {
 			return;
-
-		final ArrayList paths = new ArrayList();
-		includePathEntries = EMPTY_INCLUDEPATH;
-		try {
-			Element cpElement;
-			final Reader reader = new InputStreamReader(optionsFile.getContents());
-
-			try {
-				final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
-			} catch (final SAXException e) {
-				throw new IOException("Bad project options file format");
-			} catch (final ParserConfigurationException e) {
-				throw new IOException("Bad project options file format");
-			} finally {
-				reader.close();
-			}
-
-			options = new HashMap();
-			if (!cpElement.getNodeName().equalsIgnoreCase(TAG_OPTIONS))
-				throw new IOException("Bad project options file format");
-			NodeList list = cpElement.getElementsByTagName(TAG_OPTION);
-			int length = list.getLength();
-			for (int i = 0; i < length; ++i) {
-				final Element element = (Element) list.item(i);
-				final String key = element.getAttribute("name"); //$NON-NLS-1$
-				final String value = element.getFirstChild().getNodeValue().trim();
-				options.put(key, value);
-			}
-
-			list = cpElement.getElementsByTagName(IncludePathEntry.TAG_INCLUDEPATH);
-			if (list.getLength() > 0) {
-				final Element includePathElement = (Element) list.item(0);
-				list = includePathElement.getElementsByTagName(IncludePathEntry.TAG_INCLUDEPATHENTRY);
-				length = list.getLength();
-
-				for (int i = 0; i < length; ++i) {
-					final Node node = list.item(i);
-					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						final IIncludePathEntry entry = IncludePathEntry.elementDecode((Element) node, this);
-						paths.add(entry);
-					}
-				}
-
-			}
-		} catch (final IOException e) {
-			PHPCorePlugin.log(e);
-		} catch (final CoreException e) {
-			PHPCorePlugin.log(e);
 		}
-		final int pathSize = paths.size();
-		includePathEntries = new IIncludePathEntry[pathSize];
-		paths.toArray(includePathEntries);
-
-	}
-
-	public void modifyIncludePathEntry(final IIncludePathEntry newEntry, final IProject jproject, final IPath containerPath, final IProgressMonitor monitor) {
-		throw new RuntimeException("implement me"); //$NON-NLS-1$
-	}
-
-	public void notifyOptionChangeListeners(final String key, final Object oldValue, final Object newValue) {
-		final Object object = optionsChangeListenersMap.get(key);
-		if (object == null)
-			return;
-		final List optionChangeListeners = (List) object;
-		for (final Iterator i = optionChangeListeners.iterator(); i.hasNext();) {
-			final IPhpProjectOptionChangeListener phpProjectOptionChangeListener = (IPhpProjectOptionChangeListener) i.next();
-			phpProjectOptionChangeListener.notifyOptionChanged(oldValue, newValue);
-		}
-	}
-
-	public IIncludePathEntry[] readRawIncludePath() {
-		return includePathEntries;
+		preferences.put(key, value.toString());
+		flushPrefs();
+		notifyOptionChangeListeners(key, oldValue, value);
 	}
 
 	public Object removeOption(final String key) {
-		final Object object = options.remove(key);
-		if (object == null)
-			return object;
-
-		runSave();
+		final Object object = getOption(key);
+		if (object != null) {
+			preferences.remove(key);
+			flushPrefs();
+		}
 		return object;
 	}
 
-	public void removeOptionChangeListener(final String optionKey, final IPhpProjectOptionChangeListener optionChangeListener) {
-		final Object object = optionsChangeListenersMap.get(optionKey);
-		if (object == null)
-			return;
-		final List optionChangeListeners = (List) object;
-		optionChangeListeners.remove(optionChangeListener);
+	private void flushPrefs() {
+		try {
+			preferences.flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 	}
 
 	public Object removeOptionNotify(final String key) {
@@ -254,10 +184,18 @@ public class PHPProjectOptions {
 		return object;
 	}
 
+	public void modifyIncludePathEntry(final IIncludePathEntry newEntry, final IProject jproject, final IPath containerPath, final IProgressMonitor monitor) {
+		throw new RuntimeException("implement me"); //$NON-NLS-1$
+	}
+
+	public IIncludePathEntry[] readRawIncludePath() {
+		return includePathEntries;
+	}
+
 	public void removeResourceFromIncludePath(final IResource resource) {
 		if (includePathEntries.length == 0)
 			return;
-		List newIncludePathEntries = new ArrayList(includePathEntries.length);
+		List<IIncludePathEntry> newIncludePathEntries = new ArrayList<IIncludePathEntry>(includePathEntries.length);
 		for (int i = 0; i < includePathEntries.length; ++i) {
 			if (includePathEntries[i].getResource() == resource) {
 				continue;
@@ -275,7 +213,7 @@ public class PHPProjectOptions {
 	public void renameResourceAtIncludePath(final IResource from, final IResource to) {
 		if (includePathEntries.length == 0)
 			return;
-		List newIncludePathEntries = new ArrayList(includePathEntries.length);
+		List<IIncludePathEntry> newIncludePathEntries = new ArrayList<IIncludePathEntry>(includePathEntries.length);
 		for (int i = 0; i < includePathEntries.length; ++i) {
 			if (includePathEntries[i].getResource() == from) {
 				IIncludePathEntry newSourceEntry = IncludePathEntry.newProjectEntry(to.getFullPath(), to, false);
@@ -291,90 +229,169 @@ public class PHPProjectOptions {
 		}
 	}
 
-	public void runSave() {
-		final WorkspaceJob job = new WorkspaceJob("Project save") { //$NON-NLS-1$
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-				try {
-					saveChanges(monitor);
-				} finally {
-					monitor.done();
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		job.setRule(getProject());
-		job.setUser(false);
-		job.schedule();
-	}
-
-	public void saveChanges(final IProgressMonitor monitor) throws CoreException {
-		try {
-
-			final ByteArrayOutputStream s = new ByteArrayOutputStream();
-			final XMLWriter xmlWriter = new XMLWriter(s);
-
-			xmlWriter.startTag(TAG_OPTIONS, null);
-
-			final HashMap attributes = new HashMap();
-			for (final Iterator iter = options.keySet().iterator(); iter.hasNext();) {
-				final String key = (String) iter.next();
-				final Object value = options.get(key);
-				attributes.put("name", key); //$NON-NLS-1$
-				xmlWriter.startTag(TAG_OPTION, attributes);
-				xmlWriter.write(value.toString());
-				xmlWriter.endTag(TAG_OPTION);
-			}
-
-			xmlWriter.startTag(IncludePathEntry.TAG_INCLUDEPATH, null);
-			for (int i = 0; i < includePathEntries.length; ++i)
-				((IncludePathEntry) includePathEntries[i]).elementEncode(xmlWriter, project.getFullPath(), true);
-
-			xmlWriter.endTag(IncludePathEntry.TAG_INCLUDEPATH);
-
-			xmlWriter.endTag(TAG_OPTIONS);
-
-			xmlWriter.flush();
-			xmlWriter.close();
-
-			final InputStream inputStream = new ByteArrayInputStream(s.toByteArray());
-
-			final IFile optionsFile = project.getFile(FILE_NAME);
-
-			if (optionsFile.exists()) {
-				optionsFile.setContents(inputStream, IResource.FORCE, monitor);
-			} else {
-				optionsFile.create(inputStream, IResource.FORCE, monitor);
-			}
-			
-			// XXX: refresh of .projectOptions file is needed for some reason. Otherwise,
-			// we are getting "Project is out of sync" on project rename operation:
-			optionsFile.refreshLocal(IResource.DEPTH_ZERO, monitor);
-
-		} catch (final IOException e) {
-			PHPCorePlugin.log(e);
-		}
-	}
-
-	public void setOption(final String key, final Object value) {
-		final Object oldValue = options.get(key);
-		if (oldValue != null) {
-			if (value != null && value.equals(oldValue))
-				return;
-		} else if (value == null)
-			return;
-		options.put(key, value);
-		runSave();
-		notifyOptionChangeListeners(key, oldValue, value);
-
-	}
-
 	public void setRawIncludePath(final IIncludePathEntry[] newIncludePathEntries, final SubProgressMonitor subProgressMonitor) {
 		final IIncludePathEntry[] oldValue = includePathEntries;
 		includePathEntries = newIncludePathEntries;
 		IncludePathEntry.updateProjectReferences(includePathEntries, oldValue, project, subProgressMonitor);
 
-		runSave();
-		//		saveChanges(subProgressMonitor);
+		saveIncludePath();
 		notifyOptionChangeListeners(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, oldValue, newIncludePathEntries);
+	}
+
+	private void saveIncludePath() {
+		try {
+			final ByteArrayOutputStream s = new ByteArrayOutputStream();
+			final XMLWriter xmlWriter = new XMLWriter(s);
+
+			xmlWriter.startTag(IncludePathEntry.TAG_INCLUDEPATH, null);
+			for (int i = 0; i < includePathEntries.length; ++i) {
+				((IncludePathEntry) includePathEntries[i]).elementEncode(xmlWriter, project.getFullPath(), true);
+			}
+			xmlWriter.endTag(IncludePathEntry.TAG_INCLUDEPATH);
+			xmlWriter.flush();
+			xmlWriter.close();
+
+			preferences.put(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, new String(s.toByteArray()));
+			flushPrefs();
+			validateIncludePath();
+		} catch (IOException e) {
+			PHPCorePlugin.log(e);
+		} finally {
+
+		}
+	}
+
+	private void loadIncludePath() {
+		try {
+			String includePathXml = preferences.get(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, null);
+
+			if (includePathXml == null) {
+				return;
+			}
+
+			Element cpElement;
+			final Reader reader = new StringReader(includePathXml);
+
+			try {
+				final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
+			} catch (final Exception e) {
+				throw new IOException("Bad project options file format");
+			} finally {
+				reader.close();
+			}
+
+			final List<IIncludePathEntry> paths = new ArrayList<IIncludePathEntry>();
+			NodeList list = cpElement.getElementsByTagName(IncludePathEntry.TAG_INCLUDEPATHENTRY);
+			for (int i = 0; i < list.getLength(); ++i) {
+				final Node node = list.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					final IIncludePathEntry entry = IncludePathEntry.elementDecode((Element) node, this);
+					paths.add(entry);
+				}
+			}
+			final int pathSize = paths.size();
+			includePathEntries = new IIncludePathEntry[pathSize];
+			paths.toArray(includePathEntries);
+		} catch (IOException e) {
+			PHPCorePlugin.log(e);
+		} finally {
+
+		}
+	}
+
+	private void loadOldConfiguration() {
+		final IFile optionsFile = project.getFile(OLD_FILE_NAME);
+		if (!optionsFile.exists()) {
+			return;
+		}
+
+		final List<IIncludePathEntry> paths = new ArrayList<IIncludePathEntry>();
+		includePathEntries = EMPTY_INCLUDEPATH;
+		try {
+			Element cpElement;
+			final Reader reader = new InputStreamReader(optionsFile.getContents());
+
+			try {
+				final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
+			} catch (final Exception e) {
+				throw new IOException("Bad project options file format");
+			} finally {
+				reader.close();
+			}
+
+			if (!cpElement.getNodeName().equalsIgnoreCase(TAG_OPTIONS))
+				throw new IOException("Bad project options file format");
+			NodeList list = cpElement.getElementsByTagName(TAG_OPTION);
+			int length = list.getLength();
+			for (int i = 0; i < length; ++i) {
+				final Element element = (Element) list.item(i);
+				final String key = element.getAttribute("name"); //$NON-NLS-1$
+				final String value = element.getFirstChild().getNodeValue().trim();
+				preferences.put(key, value);
+			}
+
+			list = cpElement.getElementsByTagName(IncludePathEntry.TAG_INCLUDEPATH);
+			if (list.getLength() > 0) {
+				final Element includePathElement = (Element) list.item(0);
+				list = includePathElement.getElementsByTagName(IncludePathEntry.TAG_INCLUDEPATHENTRY);
+				length = list.getLength();
+
+				for (int i = 0; i < length; ++i) {
+					final Node node = list.item(i);
+					if (node.getNodeType() == Node.ELEMENT_NODE) {
+						final IIncludePathEntry entry = IncludePathEntry.elementDecode((Element) node, this);
+						paths.add(entry);
+					}
+				}
+
+				final int pathSize = paths.size();
+				includePathEntries = new IIncludePathEntry[pathSize];
+				paths.toArray(includePathEntries);
+			}
+
+			saveIncludePath();
+
+			optionsFile.delete(true, new NullProgressMonitor());
+		} catch (final IOException e) {
+			PHPCorePlugin.log(e);
+		} catch (final CoreException e) {
+			PHPCorePlugin.log(e);
+		}
+	}
+
+	public void validateIncludePath() {
+		clearMarkers();
+		for (int i = 0; i < includePathEntries.length; i++) {
+			String message = includePathEntries[i].validate();
+			if (message != null) {
+				addError(message);
+			}
+		}
+	}
+
+	private void addError(String message) {
+		try {
+			IMarker marker = project.createMarker(IMarker.PROBLEM);
+			marker.setAttribute(IMarker.LOCATION, LOCATION_INCLUDE_PATH);
+			marker.setAttribute(IMarker.MESSAGE, message);
+			marker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+			marker.setAttribute(OWNER_ATTRIBUTE, OWNER_PHP_INCLUDE_PATH);
+		} catch (CoreException e) {
+		}
+	}
+
+	private void clearMarkers() {
+		try {
+			IMarker[] markers = project.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+			for (int i = 0; i < markers.length; i++) {
+				if (OWNER_PHP_INCLUDE_PATH.equals(markers[i].getAttribute(OWNER_ATTRIBUTE))) {
+					markers[i].delete();
+				}
+			}
+		} catch (CoreException e) {
+		}
 	}
 }

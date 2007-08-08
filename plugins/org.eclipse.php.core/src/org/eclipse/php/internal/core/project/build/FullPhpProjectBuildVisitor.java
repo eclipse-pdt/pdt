@@ -19,6 +19,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.documentModel.validate.PHPProblemsValidator;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 
 public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 
@@ -52,7 +53,8 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 		if (PHPWorkspaceModelManager.getInstance().getModelForProject(project, true) == null) {
 			return false;
 		}
-
+		PHPProjectOptions projectOptions = PHPProjectOptions.forProject(project);
+		projectOptions.validateIncludePath();
 		return true;
 	}
 
