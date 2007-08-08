@@ -38,7 +38,7 @@ import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider
 
 /**
  * A PHPFoldingStructureProvider.
- * 
+ *
  * @author shalom
  */
 public class DefaultPHPFoldingStructureProvider implements IProjectionListener, IStructuredTextFoldingProvider, ModelListener {
@@ -73,7 +73,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.jface.text.source.projection.IProjectionListener#projectionEnabled()
-	 * 
+	 *
 	 * In case getExistingModelForRead returns null, schedule a thread that starts after THREAD_DELAY milliseconds
 	 * retry for MAX_RETRY times.
 	 */
@@ -181,7 +181,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 					return;
 				}
 				if (fileData == null) {
-					// create file data 
+					// create file data
 					IProject project = editorModel.getProjectModel().getProject();
 					fileData = PHPFileDataUtilities.getFileData(new DocumentReader(document), project);
 				}
@@ -194,7 +194,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 						toRemove.clear();
 						newFolds.clear();
 
-						// get the existing annotations. 
+						// get the existing annotations.
 						// In this map we use the AnnotatedPosition as keys
 						Iterator existing = model.getAnnotationIterator();
 						LinkedHashMap exitingHashMap = new LinkedHashMap();
@@ -210,7 +210,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 							AnnotatedPosition addedPosition = (AnnotatedPosition) additionsIterator.next();
 							// Try to remove the added Position from the existing positions.
 							// If the position was found and removed, then it was not new. Otherwise, it's a new
-							// one and we add it to the new folds. 
+							// one and we add it to the new folds.
 							//								addedPosition.hashCode()
 							if (exitingHashMap.remove(addedPosition) == null) {
 								newFolds.put(addedPosition.getAnnotation(), addedPosition);
@@ -269,12 +269,12 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 	/*
 	 * Check and return if the given projection-annotation should be removed from the annotations model.
-	 * If the fold is collapsed and we are not dealing with a comment that caused it to expand 
+	 * If the fold is collapsed and we are not dealing with a comment that caused it to expand
 	 * we keep the fold and do not remove it, even though the model does not hold any data about it.
-	 * However, if the annotation is already expanded, we remove it from the model. 
-	 * 
-	 * This technique prevents the expanding of the folds when editing the code in a way that the 
-	 * classes, functions and comments model temporarily drops some of the data. 
+	 * However, if the annotation is already expanded, we remove it from the model.
+	 *
+	 * This technique prevents the expanding of the folds when editing the code in a way that the
+	 * classes, functions and comments model temporarily drops some of the data.
 	 */
 	private boolean shouldRemoveAnnotation(PHPProjectionAnnotation projectionToRemove, int annotationOffset) {
 		// Check if the caret position in the document is inside a comment. If so, the last edit was a
@@ -301,9 +301,9 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 	}
 
 	/**
-	 * Computes and returns the projection annotations additions. 
+	 * Computes and returns the projection annotations additions.
 	 * A user can override this method to add more additions.
-	 * 
+	 *
 	 * @param fileData The PHPFileData to compute.
 	 * @return	A Map of projection annotations.
 	 */
@@ -329,31 +329,31 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 		// Get the external consts docs
 		PHPConstantData[] constants = fileData.getConstants();
-		for (int k = 0; k < constants.length; k++) {
-			data.add(constants[k].getDocBlock());
+		for (PHPConstantData element : constants) {
+			data.add(element.getDocBlock());
 		}
 
 		// Get the functions docs
 		PHPFunctionData[] functionsData = fileData.getFunctions();
-		for (int index = 0; index < functionsData.length; index++) {
-			data.add(functionsData[index].getDocBlock());
+		for (PHPFunctionData element : functionsData) {
+			data.add(element.getDocBlock());
 		}
 
 		// For each class, get the functions docs, the variables docs and the constants docs
 		PHPClassData[] classData = fileData.getClasses();
-		for (int j = 0; j < classData.length; j++) {
-			data.add(classData[j].getDocBlock());
-			PHPFunctionData[] functions = classData[j].getFunctions();
-			for (int k = 0; k < functions.length; k++) {
-				data.add(functions[k].getDocBlock());
+		for (PHPClassData element : classData) {
+			data.add(element.getDocBlock());
+			PHPFunctionData[] functions = element.getFunctions();
+			for (PHPFunctionData element2 : functions) {
+				data.add(element2.getDocBlock());
 			}
-			PHPClassConstData[] classConstants = classData[j].getConsts();
-			for (int k = 0; k < classConstants.length; k++) {
-				data.add(classConstants[k].getDocBlock());
+			PHPClassConstData[] classConstants = element.getConsts();
+			for (PHPClassConstData element2 : classConstants) {
+				data.add(element2.getDocBlock());
 			}
-			PHPClassVarData[] variables = classData[j].getVars();
-			for (int k = 0; k < variables.length; k++) {
-				data.add(variables[k].getDocBlock());
+			PHPClassVarData[] variables = element.getVars();
+			for (PHPClassVarData element2 : variables) {
+				data.add(element2.getDocBlock());
 			}
 		}
 
@@ -369,16 +369,16 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 		// Get the global functions
 		PHPFunctionData[] functionsData = fileData.getFunctions();
-		for (int i = 0; i < functionsData.length; i++) {
-			data.add(functionsData[i]);
+		for (PHPFunctionData element : functionsData) {
+			data.add(element);
 		}
 
 		// Get the functions that are inside classes
 		PHPClassData[] classData = fileData.getClasses();
-		for (int j = 0; j < classData.length; j++) {
-			PHPFunctionData[] functions = classData[j].getFunctions();
-			for (int k = 0; k < functions.length; k++) {
-				data.add(functions[k]);
+		for (PHPClassData element : classData) {
+			PHPFunctionData[] functions = element.getFunctions();
+			for (PHPFunctionData element2 : functions) {
+				data.add(element2);
 			}
 		}
 		addAnnotations(data, map, allowCollapsing && collapseFunctions, false);
@@ -391,8 +391,8 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		ArrayList data = new ArrayList();
 
 		PHPClassData[] classData = fileData.getClasses();
-		for (int i = 0; i < classData.length; i++) {
-			data.add(classData[i]);
+		for (PHPClassData element : classData) {
+			data.add(element);
 		}
 		addAnnotations(data, map, allowCollapsing && collapseClasses, false);
 	}
@@ -537,7 +537,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 					}
 				}
 			}
-			return (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC);
+			return partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC;
 		}
 		return false;
 	}
@@ -587,7 +587,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 		/**
 		 * Constructs a new AnnotatedPosition.
-		 * 
+		 *
 		 * @param offset
 		 * @param length
 		 */
@@ -597,7 +597,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 		/**
 		 * Constructs a new AnnotatedPosition.
-		 * 
+		 *
 		 * @param offset
 		 * @param length
 		 * @param annotation
@@ -609,7 +609,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 		/**
 		 * Returns the ProjectionAnnotation that is attached to this position.
-		 * 
+		 *
 		 * @return
 		 */
 		public ProjectionAnnotation getAnnotation() {
@@ -618,7 +618,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 		/**
 		 * Attach a ProjectionAnnotation to this position.
-		 * 
+		 *
 		 * @param annotation
 		 */
 		public void setAnnotation(ProjectionAnnotation annotation) {
@@ -633,7 +633,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 	private class CommentAnnotatedPosition extends AnnotatedPosition implements IProjectionPosition {
 		/**
 		 * Constructs a new CommentAnnotatedPosition.
-		 * 
+		 *
 		 * @param offset
 		 * @param length
 		 */
@@ -643,7 +643,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 		/**
 		 * Constructs a new CommentAnnotatedPosition.
-		 * 
+		 *
 		 * @param offset
 		 * @param length
 		 * @param annotation
@@ -716,7 +716,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		 * @param prefixEnd the end of the prefix
 		 * @return the first index of a unicode identifier part, or zero if none can
 		 *         be found
-		 * @throws BadLocationException 
+		 * @throws BadLocationException
 		 */
 		private int findFirstContent(final IDocument document, int offset, int length) throws BadLocationException {
 			for (int index = 0; index < length; index++) {
@@ -729,7 +729,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 	}
 
 	/*
-	 * A PHP ProjectionAnnotation. 
+	 * A PHP ProjectionAnnotation.
 	 */
 	private static final class PHPProjectionAnnotation extends ProjectionAnnotation {
 
