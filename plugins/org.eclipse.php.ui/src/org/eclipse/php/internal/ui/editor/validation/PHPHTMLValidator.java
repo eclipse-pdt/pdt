@@ -60,7 +60,7 @@ import org.w3c.dom.Text;
 
 /**
  * @author Robert Goodman
- * This changes HTML syntax highlighting not to syntax check PHP regions. 
+ * This changes HTML syntax highlighting not to syntax check PHP regions.
  * Having to copy a lot of code since the HTML validator is coded to support subclassing.
  * This file can be removed after moving to WST 1.0
  *
@@ -73,7 +73,7 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
 		//handle the cases that the connect() run before the structured model was created (look at innerConnect()).
-		
+
 		if (currentFileName == null && fDocument != null) {
 			innerConnect();
 		}
@@ -89,18 +89,23 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 		final String type = typedRegion.getType();
 		if (type.equals(IHTMLPartitions.HTML_DEFAULT)) {
 			IStructuredModel structuredModel = null;
-			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-			DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
-			IFile documentFile = domModelForPHP.getIFile();
-			structuredModel.releaseFromRead();
-			//added a test if external file in order not to get exception
-			//when getting the IFile instance of the document
-			//An exception is thrown when segmentCount == 1 (C:\file.php for example) 
-			if (ExternalFilesRegistry.getInstance().isEntryExist(documentFile.getFullPath().toString())) {
-				validateHTMLForExternalDocument(dirtyRegion, helper, reporter);
-			} else {
-				super.validate(dirtyRegion, helper, reporter);
+			try {
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
+				IFile documentFile = domModelForPHP.getIFile();
+				//added a test if external file in order not to get exception
+				//when getting the IFile instance of the document
+				//An exception is thrown when segmentCount == 1 (C:\file.php for example)
+				if (ExternalFilesRegistry.getInstance().isEntryExist(documentFile.getFullPath().toString())) {
+					validateHTMLForExternalDocument(dirtyRegion, helper, reporter);
+				} else {
+					super.validate(dirtyRegion, helper, reporter);
+				}
+			} finally {
+				if (structuredModel != null)
+					structuredModel.releaseFromRead();
 			}
+
 			return;
 		}
 	}
@@ -133,7 +138,7 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 			}
 		}
 	}
-	
+
 	private void calcCurrentFileName() {
 		IStructuredModel structuredModel = null;
 		try {
@@ -168,7 +173,7 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 		if (helper == null || fDocument == null)
 			return;
 
-		if ((reporter != null) && (reporter.isCancelled() == true)) {
+		if (reporter != null && reporter.isCancelled() == true) {
 			throw new OperationCanceledException();
 		}
 
@@ -284,8 +289,7 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 			return;
 		}
 		List messages = new ArrayList();
-		for (int i = 0; markers.length > i; i++) {
-			IPHPMarker marker = markers[i];
+		for (IPHPMarker marker : markers) {
 			if (marker.getType().equals(IPHPMarker.TASK)) {
 				continue;
 			}
@@ -346,8 +350,7 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 			}
 			// get right viewer by comparing viewer document
 			IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
-			for (int i = 0; i < editorReferences.length; i++) {
-				IEditorReference editorReference = editorReferences[i];
+			for (IEditorReference editorReference : editorReferences) {
 				editorpart = editorReference.getEditor(false);
 				if (editorpart instanceof PHPStructuredEditor) {
 					phpStructuredEditor = (PHPStructuredEditor) editorpart;
@@ -369,7 +372,7 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 	/**
 	 * Converts a map of IValidatorForReconcile to List to annotations based
 	 * on those messages
-	 * 
+	 *
 	 * @param messages
 	 * @return
 	 */
@@ -409,82 +412,82 @@ public class PHPHTMLValidator extends HTMLValidator implements ModelListener {
 	public void fileDataRemoved(PHPFileData fileData) {
 		// do nothing
 	}
-	
+
 	/**
 	 * The getModel function was overriden since this validator was also registered as org.eclipse.wst.validation.validator (not only org.eclipse.wst.sse.ui.sourcevalidation)
 	 * The getModel failed since the private method canHandle() were looking for html files.
 	 * In the future if the canHandle() will be changed to protected - this function can be removed.
 	 * (submitted bug for it #193122)
 	 */
-	
-/*	protected IDOMModel getModel(IProject project, IFile file) {
-		if (project == null || file == null)
-			return null;
-		if (!file.exists())
-			return null;
-		if (!canHandle(file))
-			return null;
 
-		IStructuredModel model = null;
-		IModelManager manager = StructuredModelManager.getModelManager();
-		try {
-			file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
-		}
-		catch (CoreException e) {
-			Logger.logException(e);
-		}
-		try {
+	/*	protected IDOMModel getModel(IProject project, IFile file) {
+			if (project == null || file == null)
+				return null;
+			if (!file.exists())
+				return null;
+			if (!canHandle(file))
+				return null;
+
+			IStructuredModel model = null;
+			IModelManager manager = StructuredModelManager.getModelManager();
 			try {
-				model = manager.getModelForRead(file);
-			}
-			catch (UnsupportedEncodingException ex) {
-				// retry ignoring META charset for invalid META charset
-				// specification
-				// recreate input stream, because it is already partially read
-				model = manager.getModelForRead(file, new String(), null);
-			}
-		}
-		catch (UnsupportedEncodingException ex) {
-		}
-		catch (IOException ex) {
-		}
-		catch (CoreException e) {
-			Logger.logException(e);
-		}
-
-		if (model == null)
-			return null;
-		if (!(model instanceof IDOMModel)) {
-			releaseModel(model);
-			return null;
-		}
-		return (IDOMModel) model;
-	}
-
-	private IContentTypeManager fContentTypeManager = Platform.getContentTypeManager();
-	private IContentType phpContentType = fContentTypeManager.getContentType("org.eclipse.php.core.phpsource");
-	
-	private boolean canHandle(IFile file) {
-		boolean result = false;
-		if (file != null) {
-			try {
-				IContentDescription contentDescription = file.getContentDescription();
-				if (contentDescription != null) {
-					IContentType fileContentType = contentDescription.getContentType();
-					if (fileContentType.isKindOf(phpContentType)) {
-						result = true;
-					}
-				}
-				else if (phpContentType != null) {
-					result = phpContentType.isAssociatedWith(file.getName());
-				}
+				file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
 			}
 			catch (CoreException e) {
-				// should be rare, but will ignore to avoid logging "encoding
-				// exceptions" and the like here.
-				// Logger.logException(e);
+				Logger.logException(e);
 			}
+			try {
+				try {
+					model = manager.getModelForRead(file);
+				}
+				catch (UnsupportedEncodingException ex) {
+					// retry ignoring META charset for invalid META charset
+					// specification
+					// recreate input stream, because it is already partially read
+					model = manager.getModelForRead(file, new String(), null);
+				}
+			}
+			catch (UnsupportedEncodingException ex) {
+			}
+			catch (IOException ex) {
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
+
+			if (model == null)
+				return null;
+			if (!(model instanceof IDOMModel)) {
+				releaseModel(model);
+				return null;
+			}
+			return (IDOMModel) model;
 		}
-		return result;
-	}*/
+
+		private IContentTypeManager fContentTypeManager = Platform.getContentTypeManager();
+		private IContentType phpContentType = fContentTypeManager.getContentType("org.eclipse.php.core.phpsource");
+
+		private boolean canHandle(IFile file) {
+			boolean result = false;
+			if (file != null) {
+				try {
+					IContentDescription contentDescription = file.getContentDescription();
+					if (contentDescription != null) {
+						IContentType fileContentType = contentDescription.getContentType();
+						if (fileContentType.isKindOf(phpContentType)) {
+							result = true;
+						}
+					}
+					else if (phpContentType != null) {
+						result = phpContentType.isAssociatedWith(file.getName());
+					}
+				}
+				catch (CoreException e) {
+					// should be rare, but will ignore to avoid logging "encoding
+					// exceptions" and the like here.
+					// Logger.logException(e);
+				}
+			}
+			return result;
+		}*/
 }
