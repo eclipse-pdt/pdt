@@ -44,31 +44,6 @@
 			-->
 		</content-type>
    </extension>  
- 
-  	<extension
-		id="PHPIncludePathValidator"
-		name="PHP Include Path Validator"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-		    <projectNature id="org.eclipse.wst.common.modulecore.ModuleCoreNature" />
-			<projectNature id="org.eclipse.php.core.PHPNature" />
-			<projectNature id="org.eclipse.wst.web.StaticWebNature" />
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.projectOptions">
-			</filter>
-			<helper
-				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
-			</helper>
-			<run
-				enabled="true"
-				class="org.eclipse.php.internal.core.project.options.includepath.IncludePathValidator">
-			</run>
-			<dependentValidator
-               depValValue="true">
-         </dependentValidator>
-		</validator>
-	</extension>
    
    	 <extension
 		 id="PHPNature"
