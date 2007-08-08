@@ -694,7 +694,6 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 			}
 
 			public void projectModelChanged(IProject project) {
-				updateModel(project);
 			}
 
 			private void updateModel(IProject project) {

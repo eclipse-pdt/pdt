@@ -11,12 +11,25 @@
 package org.eclipse.php.core.documentModel;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 
 public interface IWorkspaceModelListener {
 	
+	/**
+	 * Event been fired when {@link PHPProjectModel} is been created and added to the {@link PHPWorkspaceModelManager} 
+	 */
 	public void projectModelAdded(IProject project);
 
+	/**
+	 * Event been fired when {@link PHPProjectModel} is been removed from the {@link PHPWorkspaceModelManager} 
+	 */
+
 	public void projectModelRemoved(IProject project);
+	
+	/**
+	 * Event been fired when {@link PHPProjectModel} is built (fully not for every file changed) 
+	 */
 	
 	public void projectModelChanged(IProject project);
 }

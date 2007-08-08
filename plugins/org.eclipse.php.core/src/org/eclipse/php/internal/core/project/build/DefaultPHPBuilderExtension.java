@@ -57,7 +57,9 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 
 	private void fullBuild(IncrementalProjectBuilder builder, IProgressMonitor monitor) {
 		try {
-			builder.getProject().accept(new FullPhpProjectBuildVisitor(monitor));
+			IProject project = builder.getProject();
+			project.accept(new FullPhpProjectBuildVisitor(monitor));
+			PHPWorkspaceModelManager.getInstance().fireProjectModelChanged(project);
 		} catch (CoreException e) {
 			PHPCorePlugin.log(e);
 			return;

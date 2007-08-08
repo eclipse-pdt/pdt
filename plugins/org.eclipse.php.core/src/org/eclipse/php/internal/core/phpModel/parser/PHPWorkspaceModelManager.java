@@ -22,6 +22,8 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.project.build.FullPhpProjectBuildVisitor;
+import org.eclipse.php.internal.core.project.build.PHPIncrementalProjectBuilder;
 import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
@@ -133,8 +135,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		WorkspaceJob cleanJob = new WorkspaceJob(NLS.bind("Building PHP project: {0} ...", project.getName())) {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
-					project.build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
-					// ResourcesPlugin.getWorkspace().getRoot().accept(new FullPhpProjectBuildVisitor());
+					project.accept(new FullPhpProjectBuildVisitor(monitor));
+					fireProjectModelChanged(project);
 				} finally {
 					monitor.done();
 				}
@@ -166,7 +168,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 							return null;
 						}
 						if (hasNature) {
-							project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
+							project.accept(new FullPhpProjectBuildVisitor(monitor));
+							fireProjectModelChanged(project);
 						}
 						if (monitor.isCanceled()) {
 							break;
@@ -442,11 +445,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		} else {
 			this.copyUserModelListeners(projectModel.getPHPUserModel(), oldPhpProjectModel.getPHPUserModel().getModelListenerList());
 		}
-		if (oldPhpProjectModel == null) {
-			fireProjectModelAdded(project);
-		} else {
-			fireProjectModelChanged(project);
-		}
+		fireProjectModelAdded(project);
 	}
 
 	private void copyUserModelListeners(PHPUserModel newUserModel, List modelListenerList) {
