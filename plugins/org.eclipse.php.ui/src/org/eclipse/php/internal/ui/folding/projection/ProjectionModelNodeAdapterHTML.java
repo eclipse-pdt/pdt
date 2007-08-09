@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *
  *******************************************************************************/
-package org.eclipse.php.internal.ui.projection;
+package org.eclipse.php.internal.ui.folding.projection;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,7 +38,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	// org.eclipse.jst.jsp.ui.internal.projection
 	private final static boolean debugProjectionPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.html.ui/projectionperf")); //$NON-NLS-1$ //$NON-NLS-2$
 
-	private class TagProjectionAnnotation extends ProjectionAnnotation {
+	private static class TagProjectionAnnotation extends ProjectionAnnotation {
 		private boolean fIsVisible = false; /* workaround for BUG85874 */
 		private Node fNode;
 
@@ -212,7 +212,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	 *
 	 * @param node
 	 */
-	void updateAdapter(Node node) {
+	public void updateAdapter(Node node) {
 		updateAdapter(node, null);
 	}
 

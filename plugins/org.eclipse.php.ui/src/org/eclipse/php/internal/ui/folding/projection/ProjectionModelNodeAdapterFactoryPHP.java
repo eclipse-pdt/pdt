@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *
  *******************************************************************************/
-package org.eclipse.php.internal.ui.projection;
+package org.eclipse.php.internal.ui.folding.projection;
 
 import java.util.Map;
 
@@ -35,18 +35,18 @@ public class ProjectionModelNodeAdapterFactoryPHP extends ProjectionModelNodeAda
 
 	public ProjectionModelNodeAdapterFactoryPHP(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
-		initialize();
+		initializePreference();
 	}
 
 	public ProjectionModelNodeAdapterFactoryPHP(Object adapterKey) {
 		super(adapterKey);
-		initialize();
+		initializePreference();
 	}
 
 	/**
 	 * Initialize the preferences of the PHP folding.
 	 */
-	private void initialize() {
+	public void initializePreference() {
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
 		foldingClasses = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_CLASSES);
 		foldingFunctions = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_FUNCTIONS);
@@ -54,18 +54,15 @@ public class ProjectionModelNodeAdapterFactoryPHP extends ProjectionModelNodeAda
 	}
 
 	boolean isFoldingClasses() {
-		return true;
-		// return foldingClasses;
+		return foldingClasses;
 	}
 
 	boolean isFoldingFunctions() {
-		return true;
-		// return foldingFunctions;
+		return foldingFunctions;
 	}
 
 	boolean isFoldingPhpDoc() {
-		return true;
-		// return foldingPhpDoc;
+		return foldingPhpDoc;
 	}
 
 	/**
@@ -117,13 +114,21 @@ public class ProjectionModelNodeAdapterFactoryPHP extends ProjectionModelNodeAda
 	/**
 	 * @param phpModel
 	 */
-	public ProjectionViewerInformation findInformation(DOMModelForPHP phpModel) {
+	public ProjectionViewerInformation getInformation(ProjectionViewer viewer) {
+		return fProjectionViewers.get(viewer);
+	}
+
+	/**
+	 * @param phpModel
+	 */
+	public ProjectionViewer findViewer(DOMModelForPHP phpModel) {
 		for (Map.Entry<ProjectionViewer, ProjectionViewerInformation> entry : fProjectionViewers.entrySet()) {
 			ProjectionViewer viewer = entry.getKey();
 			if (viewer.getDocument() == phpModel.getStructuredDocument()) {
-				return entry.getValue();
+				return entry.getKey();
 			}
 		}
 		throw new IllegalStateException("Viewer should exist");
 	}
+
 }

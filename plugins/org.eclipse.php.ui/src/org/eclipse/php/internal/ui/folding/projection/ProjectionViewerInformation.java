@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.internal.ui.projection;
+package org.eclipse.php.internal.ui.folding.projection;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -69,7 +69,7 @@ class ProjectionViewerInformation {
 	 * Essentially a post document changed listener because it is called after
 	 * documentchanged has been fired.
 	 */
-	private class PostDocumentChangedListener implements IDocumentExtension.IReplace {
+	private static class PostDocumentChangedListener implements IDocumentExtension.IReplace {
 		private ProjectionViewerInformation fInfo;
 
 		public PostDocumentChangedListener(ProjectionViewerInformation info) {
@@ -141,8 +141,7 @@ class ProjectionViewerInformation {
 			ProjectionAnnotationModelChanges changes = (ProjectionAnnotationModelChanges) queuedChanges.remove(0);
 			try {
 				fProjectionAnnotationModel.modifyAnnotations(changes.getDeletions(), changes.getAdditions(), changes.getModifications());
-			}
-			catch (Exception e) {
+			} catch (RuntimeException e) {
 				// if anything goes wrong, log it be continue
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 			}

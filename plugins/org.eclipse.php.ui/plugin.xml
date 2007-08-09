@@ -1078,7 +1078,7 @@
 
 	<extension point="org.eclipse.php.ui.foldingStructureProviders">
 		<provider
-			class="org.eclipse.php.internal.ui.folding.DefaultPHPFoldingStructureProvider"
+			class="org.eclipse.php.internal.ui.folding.StructuredTextFoldingProviderPHP"
 			id="org.eclipse.php.ui.defaultFoldingProvider"
 			name="%defaultFoldingStructureProviderName"
 			preferencesClass="org.eclipse.php.internal.ui.folding.DefaultPHPFoldingPreferenceBlock" />

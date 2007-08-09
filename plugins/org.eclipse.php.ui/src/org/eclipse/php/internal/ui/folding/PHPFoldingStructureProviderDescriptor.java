@@ -10,36 +10,30 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.folding;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
-
 /**
  * Describes a contribution to the folding provider extension point.
- *
- * @since 3.0
  */
 public final class PHPFoldingStructureProviderDescriptor {
 
 	/* extension point attribute names */
 
-	private static final String PREFERENCES_CLASS= "preferencesClass"; //$NON-NLS-1$
-	private static final String CLASS= "class"; //$NON-NLS-1$
-	private static final String NAME= "name"; //$NON-NLS-1$
-	private static final String ID= "id"; //$NON-NLS-1$
+	private static final String PREFERENCES_CLASS = "preferencesClass"; //$NON-NLS-1$
+	private static final String CLASS = "class"; //$NON-NLS-1$
+	private static final String NAME = "name"; //$NON-NLS-1$
+	private static final String ID = "id"; //$NON-NLS-1$
 
 	/** The identifier of the extension. */
 	private String fId;
 	/** The name of the extension. */
 	private String fName;
-	/** The class name of the provided <code>IJavaFoldingStructureProvider</code>. */
-	private String fClass;
 	/**
 	 * <code>true</code> if the extension specifies a custom
-	 * <code>IJavaFoldingPreferenceBlock</code>.
 	 */
 	private boolean fHasPreferences;
 	/** The configuration element of this extension. */
@@ -51,21 +45,18 @@ public final class PHPFoldingStructureProviderDescriptor {
 	 * @param element the configuration element to read
 	 */
 	PHPFoldingStructureProviderDescriptor(IConfigurationElement element) {
-		fElement= element;
-		fId= element.getAttributeAsIs(ID);
+		fElement = element;
+		fId = element.getAttributeAsIs(ID);
 		Assert.isLegal(fId != null);
 
-		fName= element.getAttribute(NAME);
+		fName = element.getAttribute(NAME);
 		if (fName == null)
-			fName= fId;
-
-		fClass= element.getAttributeAsIs(CLASS);
-		Assert.isLegal(fClass != null);
+			fName = fId;
 
 		if (element.getAttributeAsIs(PREFERENCES_CLASS) == null)
-			fHasPreferences= false;
+			fHasPreferences = false;
 		else
-			fHasPreferences= true;
+			fHasPreferences = true;
 	}
 
 	/**
@@ -76,7 +67,7 @@ public final class PHPFoldingStructureProviderDescriptor {
 	 * @throws CoreException if creation fails
 	 */
 	public IStructuredTextFoldingProvider createProvider() throws CoreException {
-		IStructuredTextFoldingProvider prov= (IStructuredTextFoldingProvider) fElement.createExecutableExtension(CLASS);
+		IStructuredTextFoldingProvider prov = (IStructuredTextFoldingProvider) fElement.createExecutableExtension(CLASS);
 		return prov;
 	}
 
@@ -89,10 +80,10 @@ public final class PHPFoldingStructureProviderDescriptor {
 	 */
 	public IPHPFoldingPreferenceBlock createPreferences() throws CoreException {
 		if (fHasPreferences) {
-			IPHPFoldingPreferenceBlock prefs= (IPHPFoldingPreferenceBlock) fElement.createExecutableExtension(PREFERENCES_CLASS);
+			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) fElement.createExecutableExtension(PREFERENCES_CLASS);
 			return prefs;
 		} else {
-			return new EmptyPHPFoldingPreferenceBlock();
+			throw new IllegalStateException("Preference class not found");
 		}
 	}
 

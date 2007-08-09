@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.internal.ui.projection;
+package org.eclipse.php.internal.ui.folding.projection;
 
 import java.util.Map;
 

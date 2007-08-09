@@ -32,7 +32,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 
 /**
- * Java default folding preferences.
+ * PHP default folding preferences.
  *
  * @since 3.0
  */
@@ -69,8 +69,8 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 		return (OverlayKey[]) overlayKeys.toArray(new OverlayKey[overlayKeys.size()]);
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.text.folding.IJavaFoldingPreferences#createControl(org.eclipse.swt.widgets.Group)
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public Control createControl(Composite composite) {
 		fOverlayStore.load();
@@ -118,30 +118,30 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 		}
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.text.folding.AbstractJavaFoldingPreferences#performOk()
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#performOk()
 	 */
 	public void performOk() {
 		fOverlayStore.propagate();
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.text.folding.AbstractJavaFoldingPreferences#initialize()
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#initialize()
 	 */
 	public void initialize() {
 		initializeFields();
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.text.folding.AbstractJavaFoldingPreferences#performDefaults()
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#performDefaults()
 	 */
 	public void performDefaults() {
 		fOverlayStore.loadDefaults();
 		initializeFields();
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.text.folding.AbstractJavaFoldingPreferences#dispose()
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock#dispose()
 	 */
 	public void dispose() {
 		fOverlayStore.stop();

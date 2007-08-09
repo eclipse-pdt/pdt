@@ -40,7 +40,9 @@ import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider
  * A PHPFoldingStructureProvider.
  *
  * @author shalom
+ * @deprecated
  */
+@Deprecated
 public class DefaultPHPFoldingStructureProvider implements IProjectionListener, IStructuredTextFoldingProvider, ModelListener {
 
 	private static final PHPWorkspaceModelManager workspaceModelManagerInstance = PHPWorkspaceModelManager.getInstance();

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Tom Turrell-Croft, left@ultrasis.com - [174307] Enable folding for div tags in JSP and HTML files
  *******************************************************************************/
-package org.eclipse.php.internal.ui.projection;
+package org.eclipse.php.internal.ui.folding.projection;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -173,7 +173,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 *            assumes viewer's document and projection annotation model
 	 *            are not null
 	 */
-	void addProjectionViewer(ProjectionViewer viewer) {
+	public void addProjectionViewer(ProjectionViewer viewer) {
 		// remove old entry if it exists
 		removeProjectionViewer(viewer);
 
@@ -193,7 +193,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 *
 	 * @param viewer
 	 */
-	void removeProjectionViewer(ProjectionViewer viewer) {
+	public void removeProjectionViewer(ProjectionViewer viewer) {
 		if (fProjectionViewers != null) {
 			// remove entry from list of viewers
 			ProjectionViewerInformation info = fProjectionViewers.remove(viewer);
