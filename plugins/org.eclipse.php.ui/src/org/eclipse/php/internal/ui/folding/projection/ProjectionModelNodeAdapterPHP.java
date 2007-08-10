@@ -126,13 +126,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 				return;
 			}
 
-			Object lockObject = modelViewer.getProjectionAnnotationModel().getLockObject();
-			modelViewer.getProjectionAnnotationModel().setLockObject(this);
-
 			PHPFileData fileData = phpModel.getFileData();
-
-			if(true)
-				return;
 
 			if (fileData == null) {
 				return;
