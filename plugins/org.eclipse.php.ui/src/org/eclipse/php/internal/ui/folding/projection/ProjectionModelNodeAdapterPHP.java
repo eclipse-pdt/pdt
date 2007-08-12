@@ -78,7 +78,6 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			}
 			
 			PHPFileData fileData = phpModel.getFileData();
-
 			if (fileData == null) {
 				return;
 			}
@@ -180,7 +179,8 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		int codeStartOffset = userData.getStartPosition();
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
-			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, false, collapse);
+			// false - when adding new annotation - don't fold
+			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, false, false);  
 			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition());
 
@@ -190,6 +190,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 				currentAnnotations.put(newAnnotation, newPosition);
 				// add to map containing annotations to add
 				addedAnnotations.put(newAnnotation, newPosition);
+				
 			} else {
 				// add to map containing all annotations for this
 				// adapter
@@ -250,8 +251,9 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		int codeStartOffset = docBlock.getStartPosition();
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
+			// false - when adding new annotation - don't fold
 			Position newPosition = createPosition(codeStartOffset, docBlock.getEndPosition());
-			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, collapse, true);
+			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, true, false);
 			
 			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			if (existingAnnotation == null) {
