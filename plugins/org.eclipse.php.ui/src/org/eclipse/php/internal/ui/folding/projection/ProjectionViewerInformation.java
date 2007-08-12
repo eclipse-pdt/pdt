@@ -36,7 +36,7 @@ class ProjectionViewerInformation {
 	 * Listens to document to be aware of when to update the projection
 	 * annotation model.
 	 */
-	private class DocumentListener implements IDocumentListener {
+	private static class DocumentListener implements IDocumentListener {
 		private ProjectionViewerInformation fInfo;
 
 		public DocumentListener(ProjectionViewerInformation info) {

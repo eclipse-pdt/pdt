@@ -36,6 +36,9 @@ import org.w3c.dom.Node;
 public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTML {
 
 	private IStructuredDocument document;
+	
+	// first time we load the adapter - we should adopt the preference auto folding
+	private boolean shouldAutoCollapseAnnotations = true;
 
 	public ProjectionModelNodeAdapterPHP(ProjectionModelNodeAdapterFactoryPHP factory) {
 		super(factory);
@@ -120,8 +123,9 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			if (oldList != null && oldList.length > 0 || !addedAnnotations.isEmpty() || modifyList != null && modifyList.length > 0) {
 				fAdapterFactory.queueAnnotationModelChanges(node, oldList, addedAnnotations, modifyList);
 			}
-			
-			information.applyAnnotationModelChanges();
+
+			// next time don't obey preferences rules 
+			shouldAutoCollapseAnnotations = false;
 		}
 
 		// save new list of annotations
@@ -180,7 +184,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
 			// false - when adding new annotation - don't fold
-			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, false, false);  
+			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, false, shouldAutoCollapseAnnotations ? collapse : false);  
 			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition());
 
@@ -252,10 +256,9 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
 			// false - when adding new annotation - don't fold
-			Position newPosition = createPosition(codeStartOffset, docBlock.getEndPosition());
-			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, true, false);
-			
-			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
+			final Position newPosition = createPosition(codeStartOffset, docBlock.getEndPosition());
+			final ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, true, shouldAutoCollapseAnnotations ? collapse : false);
+			final ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			if (existingAnnotation == null) {
 				// add to map containing all annotations for this
 				// adapter
