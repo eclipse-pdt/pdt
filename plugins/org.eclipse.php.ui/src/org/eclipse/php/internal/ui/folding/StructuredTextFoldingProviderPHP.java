@@ -424,21 +424,27 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#fileDataChanged(org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData)
 	 */
 	public void fileDataChanged(final PHPFileData fileData) {
-		final IResource file = PHPModelUtil.getResource(fileData);
-		final IDocument document = fViewer.getDocument();
-		final IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-		assert model instanceof DOMModelForPHP : "Incompatible model (or null)";
-		try {
-			final DOMModelForPHP viewerModel = (DOMModelForPHP) model;
-			if (viewerModel != null && viewerModel.getFileData() == fileData) {
-				// Update all the annotations in the document:
-				addAllAdapters();
+
+		Thread thread = new Thread() {
+			public void run() {
+				final IResource file = PHPModelUtil.getResource(fileData);
+				final IDocument document = fViewer.getDocument();
+				final IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+				assert model instanceof DOMModelForPHP : "Incompatible model (or null)";
+				try {
+					final DOMModelForPHP viewerModel = (DOMModelForPHP) model;
+					if (viewerModel != null && viewerModel.getFileData() == fileData) {
+						// Update all the annotations in the document:
+						addAllAdapters();
+					}
+				} finally {
+					if (model != null) {
+						model.releaseFromRead();
+					}
+				}
 			}
-		} finally {
-			if (model != null) {
-				model.releaseFromRead();
-			}
-		}
+		};
+		thread.start();
 	}
 
 	/** (non-Javadoc)
@@ -468,12 +474,13 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 		final ProjectionModelNodeAdapterFactoryPHP factory = getAdapterFactoryPHP(false);
-		if (PreferenceConstants.EDITOR_FOLDING_CLASSES.equals(property) || PreferenceConstants.EDITOR_FOLDING_CLASSES.equals(property) || PreferenceConstants.EDITOR_FOLDING_PHPDOC.equals(property)) {
+		
+		if (factory != null && (PreferenceConstants.EDITOR_FOLDING_CLASSES.equals(property) || PreferenceConstants.EDITOR_FOLDING_CLASSES.equals(property) || PreferenceConstants.EDITOR_FOLDING_PHPDOC.equals(property))) {
 			// factory preferences should be refreshed
 			factory.initializePreference();
+
 			// adapters should be re-initialized
 			initialize();
 		}
-
 	}
 }

@@ -122,6 +122,11 @@ public class ProjectionModelNodeAdapterFactoryPHP extends ProjectionModelNodeAda
 	 * @param phpModel
 	 */
 	public ProjectionViewer findViewer(DOMModelForPHP phpModel) {
+		// this situation is possible if the release() operation claled beforehand
+		if (fProjectionViewers == null) {
+			return null;
+		}
+		
 		for (Map.Entry<ProjectionViewer, ProjectionViewerInformation> entry : fProjectionViewers.entrySet()) {
 			ProjectionViewer viewer = entry.getKey();
 			if (viewer.getDocument() == phpModel.getStructuredDocument()) {

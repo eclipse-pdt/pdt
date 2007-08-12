@@ -12,10 +12,14 @@
 package org.eclipse.php.internal.ui.folding.projection;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
+import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
@@ -30,63 +34,6 @@ import org.w3c.dom.Node;
  * @author Seva & Roy 2007
  */
 public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTML {
-
-	/**
-	 * @author seva, 2007
-	 *
-	 */
-	private static class MyPosition extends Position {
-
-		/** (non-Javadoc)
-		 * @see org.eclipse.jface.text.Position#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object other) {
-			// TODO Auto-generated method stub
-			return super.equals(other);
-		}
-
-		/** (non-Javadoc)
-		 * @see org.eclipse.jface.text.Position#setLength(int)
-		 */
-		@Override
-		public void setLength(int length) {
-			// TODO Auto-generated method stub
-			super.setLength(length);
-		}
-
-		/** (non-Javadoc)
-		 * @see org.eclipse.jface.text.Position#setOffset(int)
-		 */
-		@Override
-		public void setOffset(int offset) {
-			// TODO Auto-generated method stub
-			super.setOffset(offset);
-		}
-
-		/**
-		 *
-		 */
-		public MyPosition() {
-			super();
-		}
-
-		/**
-		 * @param offset
-		 * @param length
-		 */
-		public MyPosition(int offset, int length) {
-			super(offset, length);
-		}
-
-		/**
-		 * @param offset
-		 */
-		public MyPosition(int offset) {
-			super(offset);
-		}
-
-	}
 
 	private IStructuredDocument document;
 
@@ -118,14 +65,18 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			DOMModelForPHP phpModel = (DOMModelForPHP) element.getModel();
 			document = phpModel.getStructuredDocument();
 
+			// resolve the viewer
 			ProjectionViewer modelViewer = getAdapterFactory().findViewer(phpModel);
-			ProjectionViewerInformation information = getAdapterFactory().getInformation(modelViewer);
-
-			// ignore editor changes when the php model isn't ready.
-			if (information.isDocumentChanging()) {
+			if (modelViewer == null) {
 				return;
 			}
 
+			// ignore editor changes when the php model isn't ready.
+			ProjectionViewerInformation information = getAdapterFactory().getInformation(modelViewer);
+			if (information.isDocumentChanging()) {
+				return;
+			}
+			
 			PHPFileData fileData = phpModel.getFileData();
 
 			if (fileData == null) {
@@ -170,6 +121,8 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			if (oldList != null && oldList.length > 0 || !addedAnnotations.isEmpty() || modifyList != null && modifyList.length > 0) {
 				fAdapterFactory.queueAnnotationModelChanges(node, oldList, addedAnnotations, modifyList);
 			}
+			
+			information.applyAnnotationModelChanges();
 		}
 
 		// save new list of annotations
@@ -186,32 +139,33 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		final boolean foldingFunctions = getAdapterFactory().isFoldingFunctions();
 		final boolean foldingClasses = getAdapterFactory().isFoldingClasses();
 
+		// adds the file doc block
+		createDocBlockAnnotations(currentAnnotations, addedAnnotations, fileData, startOffset, endOffset, foldingPhpDoc);
+		
 		for (PHPClassData classData : classes) {
 			createCodeDataAnnotations(currentAnnotations, addedAnnotations, classData, startOffset, endOffset, foldingClasses);
-			createDocBlockAnnotations(currentAnnotations, addedAnnotations, classData.getDocBlock(), startOffset, endOffset, foldingPhpDoc);
+			createDocBlockAnnotations(currentAnnotations, addedAnnotations, classData, startOffset, endOffset, foldingPhpDoc);
 			PHPFunctionData[] methods = classData.getFunctions();
 			for (PHPFunctionData methodData : methods) {
 				createCodeDataAnnotations(currentAnnotations, addedAnnotations, methodData, startOffset, endOffset, foldingFunctions);
-				createDocBlockAnnotations(currentAnnotations, addedAnnotations, methodData.getDocBlock(), startOffset, endOffset, foldingPhpDoc);
+				createDocBlockAnnotations(currentAnnotations, addedAnnotations, methodData, startOffset, endOffset, foldingPhpDoc);
 			}
 			PHPClassVarData[] variables = classData.getVars();
 			for (PHPClassVarData variableData : variables) {
-				createDocBlockAnnotations(currentAnnotations, addedAnnotations, variableData.getDocBlock(), startOffset, endOffset, foldingPhpDoc);
+				createDocBlockAnnotations(currentAnnotations, addedAnnotations, variableData, startOffset, endOffset, foldingPhpDoc);
 			}
 
 			PHPClassConstData[] constants = classData.getConsts();
 			for (PHPClassConstData variableData : constants) {
-				createDocBlockAnnotations(currentAnnotations, addedAnnotations, variableData.getDocBlock(), startOffset, endOffset, foldingPhpDoc);
+				createDocBlockAnnotations(currentAnnotations, addedAnnotations, variableData, startOffset, endOffset, foldingPhpDoc);
 			}
 		}
 
 		PHPFunctionData[] functions = fileData.getFunctions();
 		for (PHPFunctionData functionData : functions) {
 			createCodeDataAnnotations(currentAnnotations, addedAnnotations, functionData, startOffset, endOffset, foldingFunctions);
-			createDocBlockAnnotations(currentAnnotations, addedAnnotations, functionData.getDocBlock(), startOffset, endOffset, foldingPhpDoc);
+			createDocBlockAnnotations(currentAnnotations, addedAnnotations, functionData, startOffset, endOffset, foldingPhpDoc);
 		}
-
-		createDocBlockAnnotations(currentAnnotations, addedAnnotations, fileData.getDocBlock(), startOffset, endOffset, foldingPhpDoc);
 	}
 
 	/**
@@ -221,14 +175,15 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	 * @param startOffset
 	 * @param endOffset
 	 */
-	private void createCodeDataAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, CodeData codeData, int startOffset, int endOffset, boolean collapse) {
+	private void createCodeDataAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPCodeData codeData, int startOffset, int endOffset, boolean collapse) {
 		UserData userData = codeData.getUserData();
 		int codeStartOffset = userData.getStartPosition();
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
-			ProjectionAnnotation newAnnotation = new ProjectionAnnotation(collapse);
+			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, false, collapse);
+			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition());
-			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newPosition);
+
 			if (existingAnnotation == null) {
 				// add to map containing all annotations for this
 				// adapter
@@ -246,7 +201,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	}
 
 	private Position createPosition(int startOffset, int endOffset) {
-		return new MyPosition(startOffset, endOffset - startOffset);
+		return new Position(startOffset, endOffset - startOffset);
 	}
 
 	/* TODO think in this direction:
@@ -277,13 +232,17 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 
 	/**
 	 * Computes current annotations on given CodeDatas.
+	 * @param fileData 
 	 *
 	 * @param codeDatas
 	 * @param startOffset
 	 * @param endOffset
 	 * @param collapse
 	 */
-	private void createDocBlockAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPDocBlock docBlock, int startOffset, int endOffset, boolean collapse) {
+	private void createDocBlockAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPCodeData codeData, int startOffset, int endOffset, boolean collapse) {
+		final PHPDocBlock docBlock = codeData.getDocBlock();
+		
+		// no need to add an empty doc block
 		if (docBlock == null) {
 			return;
 		}
@@ -292,8 +251,9 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
 			Position newPosition = createPosition(codeStartOffset, docBlock.getEndPosition());
-			ProjectionAnnotation newAnnotation = new ProjectionAnnotation(collapse);
-			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newPosition);
+			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, collapse, true);
+			
+			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			if (existingAnnotation == null) {
 				// add to map containing all annotations for this
 				// adapter
@@ -314,17 +274,16 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	 * @param classData
 	 * @return
 	 */
-	private ProjectionAnnotation getExistingAnnotation(Position position) {
-		assert position != null : "Position should be not null";
-		ProjectionAnnotation existingAnnotation = null;
+	private ProjectionAnnotation getExistingAnnotation(ProjectionAnnotation projectionAnnotation) {
+		assert projectionAnnotation != null : "projectionAnnotation should be not null";
 		if (!previousAnnotations.isEmpty()) {
-			for (Map.Entry<ProjectionAnnotation, Position> entry : previousAnnotations.entrySet()) {
-				if (position.equals(entry.getValue())) {
-					return entry.getKey();
+			for (ProjectionAnnotation annotation : previousAnnotations.keySet()) {
+				if (projectionAnnotation.equals(annotation)) {
+					return annotation;
 				}
 			}
 		}
-		return existingAnnotation;
+		return null;
 	}
 
 	private ProjectionModelNodeAdapterFactoryPHP getAdapterFactory() {
