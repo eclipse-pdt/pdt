@@ -11,161 +11,14 @@
 package org.eclipse.php.internal.ui.folding.projection;
 
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.ui.folding.projection.Element.ElementFactory;
 
 /**
  * Represents an annotation in a php node
  * @author Roy, 2007
  */
 public class ElementProjectionAnnotation extends ProjectionAnnotation {
-
-	public static enum ElementType {
-		FILE, CLASS, FUNCTION, METHOD, FIELD, CONSTANT, DOC;
-	}
-
-	/**
-	 * A folded element
-	 */
-	public static class Element {
-		public final ElementType type;
-		public final String name;
-		public final Element parent;
-
-		public Element(ElementType type, String name, Element parent) {
-			this.type = type;
-			this.name = name;
-			this.parent = parent;
-		}
-
-		public Element(ElementType type, String name) {
-			this(type, name, null);
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((parent == null) ? 0 : parent.hashCode());
-			result = prime * result + ((name == null) ? 0 : name.hashCode());
-			result = prime * result + ((type == null) ? 0 : type.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			assert obj instanceof Element;
-			final Element other = (Element) obj;
-			if (parent == null) {
-				if (other.parent != null)
-					return false;
-			} else if (!parent.equals(other.parent))
-				return false;
-			if (name == null) {
-				if (other.name != null)
-					return false;
-			} else if (!name.equals(other.name))
-				return false;
-			if (type == null) {
-				if (other.type != null)
-					return false;
-			} else if (!type.equals(other.type))
-				return false;
-			return true;
-		}
-	}
-
-	/**
-	 * This factory constructs elements
-	 */
-	public static class ElementFactory {
-
-		private ElementFactory() {
-		}
-
-		public static final Element createElement(final PHPFileData fileData, boolean isPhpDoc) {
-			final Element element = new Element(ElementType.FILE, fileData.getName());
-			return isPhpDoc ? createElement(element) : element;
-		}
-
-		public static final Element createElement(final PHPClassData classData, boolean isPhpDoc) {
-			final Element element = new Element(ElementType.CLASS, classData.getName());
-			return isPhpDoc ? createElement(element) : element;			
-		}
-
-		public static final Element createElement(final PHPFunctionData functionData, boolean isPhpDoc) {
-			final Element element = new Element(ElementType.FUNCTION, functionData.getName());
-			return isPhpDoc ? createElement(element) : element;			
-		}
-		
-		public static final Element createElement(final PHPClassData classData, final PHPFunctionData functionData, boolean isPhpDoc) {
-			final Element parent = createElement(classData, false);
-			final Element element = new Element(ElementType.METHOD, functionData.getName(), parent);
-			return isPhpDoc ? createElement(element) : element;			
-		}
-
-		public static final Element createElement(final PHPClassData classData, final PHPClassVarData variableData, boolean isPhpDoc) {
-			final Element parent = createElement(classData, false);
-			final Element element = new Element(ElementType.FIELD, variableData.getName(), parent);
-			return isPhpDoc ? createElement(element) : element;			
-		}
-
-		public static final Element createElement(final PHPClassData classData, final PHPClassConstData classConstantData, boolean isPhpDoc) {
-			final Element parent = createElement(classData, false);
-			final Element element = new Element(ElementType.CONSTANT, classConstantData.getName(), parent);
-			return isPhpDoc ? createElement(element) : element;			
-		}
-
-		public static final Element createElement(final Element documentedelement) {
-			return new Element(ElementType.DOC, null, documentedelement);
-		}		
-
-		public static Element createElement(PHPCodeData codeData, boolean isPhpDoc) {
-			Element element = null;
-
-			// the container of the code data is used to identify the whole picture
-			final PHPCodeData container = codeData.getContainer();
-			
-			// file element
-			if (codeData instanceof PHPFileData) {
-				element = createElement((PHPFileData) codeData, false);
-
-			// class element
-			} else if (codeData instanceof PHPClassData) {
-				element = createElement((PHPClassData) codeData, false);
-				
-			} else if (codeData instanceof PHPFunctionData) {
-				// method element
-				if (container instanceof PHPClassData) {
-					assert container != null;
-					element = createElement((PHPClassData) container, (PHPFunctionData) codeData, false);
-				} else {
-					
-					// function element
-					assert container instanceof PHPFileData;
-					element = createElement((PHPFunctionData) codeData, false);
-				}
-
-			// field element	
-			} else if (codeData instanceof PHPClassVarData) {
-				assert container != null;
-				element = createElement((PHPClassData) container, (PHPClassVarData) codeData, false);
-			
-			// class constant
-			} else if (codeData instanceof PHPClassConstData) {
-				assert container != null;
-				element = createElement((PHPClassData) container, (PHPClassConstData) codeData, false);
-				
-			} else {
-				throw new IllegalStateException("Internal Error: CodeData is not supported as folded element");
-			}
-			
-			return isPhpDoc ? createElement(element) : element;
-		}
-	}
 
 	// holds the element of this projection annotation
 	public final Element element;
@@ -207,5 +60,16 @@ public class ElementProjectionAnnotation extends ProjectionAnnotation {
 		} else if (!element.equals(other.element))
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		final StringBuffer buffer = new StringBuffer();
+		buffer.append("[Annotation: ");
+		buffer.append(this.element.toString());
+		buffer.append(", collapse: ");
+		buffer.append(isCollapsed());
+		buffer.append("]");
+		return buffer.toString();
 	}
 }
