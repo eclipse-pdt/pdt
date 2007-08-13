@@ -551,7 +551,7 @@ public class PhpElementConciliator {
 	}
 
 	/**
-	 * Searches for global variable with a given name, stops when found
+	 * Searches for class with a given name, stops when found
 	 */
 	private static class ClassSearcher extends ApplyAll {
 
