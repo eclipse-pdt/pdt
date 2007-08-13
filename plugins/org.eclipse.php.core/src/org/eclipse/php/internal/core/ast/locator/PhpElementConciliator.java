@@ -569,7 +569,7 @@ public class PhpElementConciliator {
 
 			if (node.getType() == ASTNode.CLASS_DECLARATION || node.getType() == ASTNode.INTERFACE_DECLARATION) {
 				TypeDeclaration typeDeclaration = (TypeDeclaration) node;
-				if (typeDeclaration.getName().equals(name)) {
+				if (typeDeclaration.getName().getName().equals(name)) {
 					exists = true;
 				}
 			} else {
