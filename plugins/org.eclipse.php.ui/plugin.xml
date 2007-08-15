@@ -242,7 +242,7 @@
 	<!--======================================================================================-->
 	<extension
 		id="HTMLValidator"
-		name="HTML_Syntax_Validator_For_PHP"
+		name="HTML Syntax Validator (for PHP Files)"
 		point="org.eclipse.wst.validation.validator">
 		<validator>
 			<filter
@@ -252,6 +252,10 @@
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.php4">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				nameFilter="*.inc">
 			</filter>
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"
