@@ -12,14 +12,10 @@
 package org.eclipse.php.internal.ui.folding.projection;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
-import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
@@ -36,7 +32,7 @@ import org.w3c.dom.Node;
 public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTML {
 
 	private IStructuredDocument document;
-	
+
 	// first time we load the adapter - we should adopt the preference auto folding
 	private boolean shouldAutoCollapseAnnotations = true;
 
@@ -44,6 +40,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		super(factory);
 	}
 
+	@Override
 	public boolean isAdapterForType(Object type) {
 		return type == ProjectionModelNodeAdapterPHP.class;
 	}
@@ -57,6 +54,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	 * We don't handle the HTML projections as it is handled in the HTML adapter
 	 * hence don't call the super @see ProjectionModelNodeAdapterHTML#updateAdapter(org.w3c.dom.Node, org.eclipse.jface.text.source.projection.ProjectionViewer)
 	 */
+	@Override
 	public synchronized void updateAdapter(Node node, ProjectionViewer viewer) {
 
 		final Map<ProjectionAnnotation, Position> addedAnnotations = new HashMap<ProjectionAnnotation, Position>();
@@ -79,7 +77,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			if (information.isDocumentChanging()) {
 				return;
 			}
-			
+
 			PHPFileData fileData = phpModel.getFileData();
 			if (fileData == null) {
 				return;
@@ -144,7 +142,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 
 		// adds the file doc block
 		createDocBlockAnnotations(currentAnnotations, addedAnnotations, fileData, startOffset, endOffset, foldingPhpDoc);
-		
+
 		for (PHPClassData classData : classes) {
 			createCodeDataAnnotations(currentAnnotations, addedAnnotations, classData, startOffset, endOffset, foldingClasses);
 			createDocBlockAnnotations(currentAnnotations, addedAnnotations, classData, startOffset, endOffset, foldingPhpDoc);
@@ -184,9 +182,9 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
 			// false - when adding new annotation - don't fold
-			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, false, shouldAutoCollapseAnnotations ? collapse : false);  
+			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, false, shouldAutoCollapseAnnotations ? collapse : false);
 			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
-			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition());
+			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition() + 2);
 
 			if (existingAnnotation == null) {
 				// add to map containing all annotations for this
@@ -194,7 +192,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 				currentAnnotations.put(newAnnotation, newPosition);
 				// add to map containing annotations to add
 				addedAnnotations.put(newAnnotation, newPosition);
-				
+
 			} else {
 				// add to map containing all annotations for this
 				// adapter
@@ -207,6 +205,10 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 
 	private Position createPosition(int startOffset, int endOffset) {
 		return new Position(startOffset, endOffset - startOffset);
+	}
+
+	private Position createCommentPosition(int startOffset, int endOffset) {
+		return new CommentPosition(startOffset, endOffset - startOffset);
 	}
 
 	/* TODO think in this direction:
@@ -246,7 +248,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	 */
 	private void createDocBlockAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPCodeData codeData, int startOffset, int endOffset, boolean collapse) {
 		final PHPDocBlock docBlock = codeData.getDocBlock();
-		
+
 		// no need to add an empty doc block
 		if (docBlock == null) {
 			return;
@@ -256,7 +258,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
 			// false - when adding new annotation - don't fold
-			final Position newPosition = createPosition(codeStartOffset, docBlock.getEndPosition());
+			final Position newPosition = createCommentPosition(codeStartOffset, docBlock.getEndPosition() + 2);
 			final ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, true, shouldAutoCollapseAnnotations ? collapse : false);
 			final ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			if (existingAnnotation == null) {
