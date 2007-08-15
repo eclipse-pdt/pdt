@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.documentModel.validate;
+package org.eclipse.php.internal.core.documentModel.markers;
 
 import java.util.Map;
 
@@ -27,27 +27,27 @@ import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.validation.internal.TaskListUtility;
 
-public class PHPProblemsValidator {
+public class MarkerContributor {
 
-	private static PHPProblemsValidator instance;
+	private static MarkerContributor instance;
 
-	public static PHPProblemsValidator getInstance() {
+	public static MarkerContributor getInstance() {
 		if (instance == null)
-			instance = new PHPProblemsValidator();
+			instance = new MarkerContributor();
 		return instance;
 	}
 
-	private PHPProblemsValidator() {
+	private MarkerContributor() {
 	}
 
-	private static String ID = "org.eclipse.php.core.documentModel.validate.PHPProblemsValidator";
+	private static String ID = "org.eclipse.php.core.documentModel.validate.PHPProblemsMarker";
 	private static String PHP_PROBLEM_MARKER_TYPE = PHPCorePlugin.ID + ".phpproblemmarker";
 
 	private static String[] owners = new String[] { ID };
 
-	private TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();
+	private final TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();
 
-	public void validateFileProblems(IFile phpFile, boolean validateTasks) {
+	public void markFileProblems(IFile phpFile, boolean markTasks) {
 		PHPFileData fileData = getFileModel(phpFile);
 		if (fileData == null) {
 			return;
@@ -57,17 +57,17 @@ public class PHPProblemsValidator {
 			phpFile.deleteMarkers(PHP_PROBLEM_MARKER_TYPE, false, IResource.DEPTH_INFINITE);
 		} catch (CoreException e) {
 		}
-		if (validateTasks) {
-			validateTasks(phpFile, markers);
+		if (markTasks) {
+			markTasks(phpFile, markers);
 		}
-		validateErrors(phpFile, markers);
+		markErrors(phpFile, markers);
 	}
 
 	/**
 	 * @param phpFile
 	 * @param markers
 	 */
-	private void validateErrors(IFile phpFile, IPHPMarker[] markers) {
+	private void markErrors(IFile phpFile, IPHPMarker[] markers) {
 		if (markers != null) {
 			try {
 				for (int i = 0; markers.length > i; i++) {
@@ -91,11 +91,11 @@ public class PHPProblemsValidator {
 	 * @param phpFile
 	 * @param markers
 	 */
-	private void validateTasks(IFile phpFile, IPHPMarker[] markers) {
+	private void markTasks(IFile phpFile, IPHPMarker[] markers) {
 		if (phpFile == null || !phpFile.exists()) {
 			return;
 		}
-		
+
 		IMarker[] rullerAddedMarkers = null; // We have to get all the markers, so we wont delete the ruler-added ones (Fix Bug #95)
 		Map[] rullerMarkersAttributes = null;
 		try {
@@ -155,12 +155,8 @@ public class PHPProblemsValidator {
 		}
 	}
 
-	public void validateFile(IFile phpFile) {
-		validateFile(phpFile, true);
-	}
-
-	private void validateFile(IFile phpFile, boolean validateTasks) {
-		validateFileProblems(phpFile, validateTasks);
+	public void markFile(IFile phpFile) {
+		markFileProblems(phpFile, true);
 	}
 
 	private PHPFileData getFileModel(IFile phpFile) {
@@ -170,11 +166,8 @@ public class PHPProblemsValidator {
 	private void createMarker(IFile phpFile, UserData userData, String markerType, String descr, int prio) throws CoreException {
 		IMarker marker = phpFile.createMarker(markerType);
 		marker.setAttribute(IMarker.LINE_NUMBER, userData.getStopLine() + 1);
-		marker.setAttribute(IMarker.CHAR_START, userData.getStartPosition());
-		marker.setAttribute(IMarker.CHAR_END, userData.getEndPosition() + 1);
 		marker.setAttribute(IMarker.MESSAGE, descr);
 		marker.setAttribute(IMarker.PRIORITY, prio);
-		marker.setAttribute(IMarker.USER_EDITABLE, false);
 		if (markerType == PHP_PROBLEM_MARKER_TYPE) {
 			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 		}

@@ -14,12 +14,12 @@ import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.CodeDataDB;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.FilesCodeDataDB;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.GlobalVariablesCodeDataDB;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.TreeCodeDataDB;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class PHPUserModel implements IPhpModel, IProjectModelListener {
 
@@ -455,7 +455,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		manager.fileRemoved(file);
 	}
 
-	public void fileChanged(IFile file, IStructuredDocument sDocument) {
+	public void fileChanged(IFile file, IDocument sDocument) {
 	}
 
 }

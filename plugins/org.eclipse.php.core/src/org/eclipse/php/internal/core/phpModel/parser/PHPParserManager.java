@@ -15,30 +15,19 @@ import java.util.regex.Pattern;
 
 public abstract class PHPParserManager {
 
-	private PhpParser phpParser;
-
 	protected abstract CompletionLexer createCompletionLexer(Reader reader);
 
 	protected abstract PhpParser createPhpParser();
 
 	/**
-	 * Builds the scheduler for the parsing tasks
+	 * Parse now is used by the PHP builders - there is no schedule or delay process  
+	 * @param reader
+	 * @param fileName
+	 * @param lastModified
+	 * @param client
+	 * @param tasksPatterns
+	 * @param useAspTagsAsPhp
 	 */
-	private static PhpParserSchedulerTask scheduler = PhpParserSchedulerTask.getInstance();
-	static {
-		assert scheduler != null; 
-		Thread thread = new Thread(scheduler, "PHP Parser Scheduler");
-		thread.start();
-	}
-	
-	public void parse(Reader reader, String fileName, long lastModified, ParserClient client, boolean useAspTagsAsPhp) {
-		parse(reader, fileName, lastModified, client, new Pattern[0], useAspTagsAsPhp);
-	}
-
-	public void parse(Reader reader, String fileName, long lastModified, ParserClient client, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) {
-		scheduler.schedule(this, phpParser, client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
-	}
-
 	public void parseNow(Reader reader, String fileName, long lastModified, ParserClient client, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) {
 		final ParserExecuter parserExecuter = new ParserExecuter(this, this.createPhpParser(), client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
 		parserExecuter.run();

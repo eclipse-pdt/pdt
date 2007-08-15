@@ -16,12 +16,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class PHPProjectModel extends FilterableCompositePhpModel implements IPhpProjectModel, IAdaptable {
 
@@ -29,7 +29,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 
 	private PHPUserModel userModel;
 	private IPHPLanguageModel languageModel;
-	private Set<IProjectModelListener> listeners = new HashSet<IProjectModelListener>(2);
+	private final Set<IProjectModelListener> listeners = new HashSet<IProjectModelListener>(2);
 	private IProject currentProject;
 
 	public PHPProjectModel() {
@@ -280,7 +280,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 	public CodeData[] getClassConsts(String fileName, String className, String startsWith) {
 		return getClassConsts(fileName, className, startsWith, new HashSet());
 	}
-	
+
 	private CodeData[] getClassConsts(String fileName, String className, String startsWith, HashSet subClasses) {
 		PHPClassData classData = getClass(fileName, className);
 		if (classData == null) {
@@ -325,6 +325,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	@Override
 	public CodeData[] getVariables(String fileName, PHPCodeContext context, String startsWith, boolean showVariablesFromOtherFiles) {
 		return ModelSupport.removeRepeatedNames(super.getVariables(fileName, context, startsWith, showVariablesFromOtherFiles));
 	}
@@ -367,7 +368,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		fireFileDataRemoved(file);
 	}
 
-	public void fileWasChanged(IFile file, IStructuredDocument sDocument) {
+	public void fileWasChanged(IFile file, IDocument sDocument) {
 		fireFileChanged(file, sDocument);
 	}
 
@@ -386,7 +387,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		return listeners.toArray(new IProjectModelListener[listeners.size()]);
 	}
 
-	private void fireFileChanged(IFile file, IStructuredDocument sDocument) {
+	private void fireFileChanged(IFile file, IDocument sDocument) {
 		final IProjectModelListener[] projectModelListeners = getProjectModelListeners();
 		for (IProjectModelListener projectModelListener : projectModelListeners) {
 			projectModelListener.fileChanged(file, sDocument);

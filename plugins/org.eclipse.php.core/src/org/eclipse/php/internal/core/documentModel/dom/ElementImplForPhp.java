@@ -18,7 +18,6 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
@@ -35,14 +34,20 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 		super();
 	}
 
+	public Object getAdapter(Class adapter) {
+		return Platform.getAdapterManager().getAdapter(this, adapter);
+	}
+
 	public ElementImplForPhp(ElementStyleImpl that) {
 		super(that);
 	}
 
+	@Override
 	protected boolean isNestedClosed(String regionType) {
 		return regionType == PHPRegionContext.PHP_CLOSE;
 	}
 
+	@Override
 	public Node cloneNode(boolean deep) {
 		ElementImpl cloned = new ElementImplForPhp(this);
 		if (deep)
@@ -50,16 +55,19 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 		return cloned;
 	}
 
+	@Override
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
 
+	@Override
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
 	}
 
 	/**
 	 */
+	@Override
 	public boolean isGlobalTag() {
 		return isPhpTag() ? false : super.isGlobalTag();
 	}
@@ -71,22 +79,13 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 		return getNodeName() == PHPDOMModelParser.PHP_TAG_NAME;
 	}
 
+	@Override
 	public INodeAdapter getExistingAdapter(Object type) {
-		String className = ((Class) type).getName();
-		if ((className.equals("org.eclipse.wst.html.core.internal.validate.ElementPropagatingValidator") || type == ValidationAdapter.class) && isPhpTag()) {
-			return validator;
+		if (type == ValidationAdapter.class && isPhpTag()) {
+			return nullValidator;
 		}
 		return super.getExistingAdapter(type);
 	}
 
-	private final static ValidationComponent validator = new PHPValidationComponent();
-	private static class PHPValidationComponent extends ValidationComponent {
-		public void validate(IndexedRegion node) {
-		}
-	}
-
-	public Object getAdapter(Class adapter) {
-		return Platform.getAdapterManager().getAdapter(this, adapter);
-	}
-
+	private final static ValidationComponent nullValidator = new NullValidator();
 }

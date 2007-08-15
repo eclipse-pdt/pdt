@@ -10,13 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser.management;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,14 +19,9 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.parser.IParserClientFactory;
-import org.eclipse.php.internal.core.phpModel.parser.IProjectModelListener;
-import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManager;
-import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManagerProvider;
-import org.eclipse.php.internal.core.phpModel.parser.PHPParserManager;
-import org.eclipse.php.internal.core.phpModel.parser.ParserClient;
-import org.eclipse.php.internal.core.phpModel.parser.ParserClientComposite;
+import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
@@ -41,7 +30,6 @@ import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProje
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 class ProjectParsingManager implements IProjectModelListener {
 
@@ -76,7 +64,7 @@ class ProjectParsingManager implements IProjectModelListener {
 	}
 
 	public void fileAdded(IFile file) {
-		
+
 		// check if it is an external file
 		if (!file.exists()) {
 			final File ioFile = new File(file.getFullPath().toString());
@@ -85,7 +73,7 @@ class ProjectParsingManager implements IProjectModelListener {
 				return;
 			}
 		}
-		
+
 		ParserClient parserClient = buildParserClient(file, IParserClientFactory.fileAdded);
 		if (parserClient == null) {
 			return;
@@ -139,7 +127,7 @@ class ProjectParsingManager implements IProjectModelListener {
 	public void fileRemoved(IFile file) {
 	}
 
-	public void fileChanged(IFile file, IStructuredDocument sDocument) {
+	public void fileChanged(IFile file, IDocument sDocument) {
 		ParserClient parserClient = buildParserClient(file, IParserClientFactory.fileChanged);
 		if (parserClient == null) {
 			return;
@@ -155,7 +143,7 @@ class ProjectParsingManager implements IProjectModelListener {
 				project = ExternalFilesRegistry.getInstance().getExternalFilesProject();
 			}
 			Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(project);
-			parserManager.parse(reader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
+			parserManager.parseNow(reader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 			return;

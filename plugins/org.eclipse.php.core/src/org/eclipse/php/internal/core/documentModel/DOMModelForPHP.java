@@ -29,21 +29,22 @@ import org.w3c.dom.Document;
  */
 public class DOMModelForPHP extends DOMStyleModelImpl {
 
-	public static final boolean FREQUENT_MODEL_UPDATE = true;
-
 	/*
 	 * This is modeled after what is done for JSP
 	 */
+	@Override
 	protected Document internalCreateDocument() {
 		DOMDocumentForPHP document = new DOMDocumentForPHP();
 		document.setModel(this);
 		return document;
 	}
 
+	@Override
 	protected XMLModelParser createModelParser() {
 		return new PHPDOMModelParser(this);
 	}
 
+	@Override
 	protected XMLModelUpdater createModelUpdater() {
 		return new PHPDOMModelUpdater(this);
 	}
@@ -100,10 +101,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		PHPFileData fileData = getFileData();
-		if (fileData != null)
-			projectModel = PHPModelUtil.getProjectModelForFile(fileData);
-		else
-			projectModel = null;
+		projectModel = fileData != null ? PHPModelUtil.getProjectModelForFile(fileData) : null;
 		return projectModel;
 	}
 
@@ -124,12 +122,6 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 				projectModel.fileWasChanged(file, getStructuredDocument());
 			}
 		}
-	}
-
-	public void changedModel() {
-		if (FREQUENT_MODEL_UPDATE)
-			updateFileData();
-		super.changedModel();
 	}
 
 	// returns the IFile corresponding with this model

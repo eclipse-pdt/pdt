@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.documentModel.markers.MarkerContributor;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.documentModel.validate.PHPProblemsValidator;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.PHPNature;
 
@@ -26,7 +26,7 @@ public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 	// used to examine if a file is php associated
 	private static final IContentTypeManager CONTENT_TYPE_MANAGER = Platform.getContentTypeManager();
 
-	private PHPProblemsValidator validator = PHPProblemsValidator.getInstance();
+	private MarkerContributor validator = MarkerContributor.getInstance();
 
 	public boolean visit(IResourceDelta delta) {
 		switch (delta.getResource().getType()) {
@@ -59,7 +59,7 @@ public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 			case IResourceDelta.ADDED:
 			case IResourceDelta.CHANGED:
 				PHPWorkspaceModelManager.getInstance().addFileToModel(file);
-				validator.validateFile(file);
+				validator.markFile(file);
 				break;
 			case IResourceDelta.REMOVED:
 				PHPWorkspaceModelManager.getInstance().removeFileFromModel(file);

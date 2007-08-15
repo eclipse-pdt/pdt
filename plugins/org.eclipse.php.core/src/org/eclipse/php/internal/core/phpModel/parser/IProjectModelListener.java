@@ -11,7 +11,7 @@
 package org.eclipse.php.internal.core.phpModel.parser;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.jface.text.IDocument;
 
 public interface IProjectModelListener {
 
@@ -19,6 +19,6 @@ public interface IProjectModelListener {
 
 	public void fileRemoved(IFile file);
 
-	public void fileChanged(IFile file, IStructuredDocument sDocument);
+	public void fileChanged(IFile file, IDocument sDocument);
 
 }
