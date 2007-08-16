@@ -39,7 +39,7 @@ public class CorePreferenceConstants {
 		store.setDefault(PHPCoreConstants.TASK_TAGS, PHPCoreConstants.DEFAULT_TASK_TAGS);
 		store.setDefault(PHPCoreConstants.TASK_PRIORITIES, PHPCoreConstants.DEFAULT_TASK_PRIORITIES);
 		store.setDefault(PHPCoreConstants.TASK_CASE_SENSITIVE, PHPCoreConstants.ENABLED);
-		store.setDefault(Keys.EDITOR_USE_ASP_TAGS, true);
+		store.setDefault(Keys.EDITOR_USE_ASP_TAGS, false);
 
 		store.setDefault(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		store.setDefault(PHPCoreConstants.FORMATTER_INDENTATION_SIZE, PHPCoreConstants.DEFAULT_INDENTATION_SIZE);
