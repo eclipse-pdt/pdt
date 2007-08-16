@@ -51,6 +51,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	private static final Pattern extendsPattern = Pattern.compile("\\Wextends\\W", Pattern.CASE_INSENSITIVE);
 	private static final Pattern implementsPattern = Pattern.compile("\\Wimplements", Pattern.CASE_INSENSITIVE);
 	private static final Pattern catchPattern = Pattern.compile("catch\\s[^{]*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]");
 
 	public static final ICompletionProposal[] EMPTY_CompletionProposal_ARRAY = new ICompletionProposal[0];
 	public static final CodeDataCompletionProposal[] EMPTY_CodeDataCompletionProposal_ARRAY = new CodeDataCompletionProposal[0];
@@ -630,6 +631,18 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				}
 			}
 			return className;
+		}
+		//check for $GLOBALS['myVar'] scenario
+		if (className.length() == 0) {
+			//this can happen if the first char before the property is ']'
+			String testedVar = statmentText.subSequence(0, propertyEndPosition).toString().trim();
+			Matcher m = globalPattern.matcher(testedVar);
+			if (m.matches()) {
+				// $GLOBALS['myVar'] => 'myVar'
+				String quotedVarName = testedVar.substring(testedVar.indexOf('[') + 1, testedVar.indexOf(']')).trim();
+				// 'myVar' => $myVar
+				className = "$" + quotedVarName.substring(1, quotedVarName.length() - 1);
+			}
 		}
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
