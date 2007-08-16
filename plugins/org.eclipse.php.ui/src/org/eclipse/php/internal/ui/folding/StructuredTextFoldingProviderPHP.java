@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.folding;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
@@ -19,7 +18,6 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
@@ -114,8 +112,12 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			try {
 				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 				if (sModel != null) {
-					final int startOffset = 0;
-					final IndexedRegion startNode = sModel.getIndexedRegion(startOffset);
+					IndexedRegion startNode = sModel.getIndexedRegion(0);
+					if (startNode == null) {
+						assert sModel instanceof IDOMModel;
+						startNode = ((IDOMModel) sModel).getDocument();
+					}
+
 					if (startNode instanceof Node) {
 						int siblingLevel = 0;
 						Node nextSibling = (Node) startNode;
@@ -358,8 +360,6 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	 * purposes
 	 */
 	private void removeAllAdapters() {
-		final long start = System.currentTimeMillis();
-
 		if (fDocument != null) {
 			IStructuredModel sModel = null;
 			try {
@@ -425,10 +425,13 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	 */
 	public void fileDataChanged(final PHPFileData fileData) {
 
-		final IResource file = PHPModelUtil.getResource(fileData);
-		final IDocument document = fViewer.getDocument();
-		final IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-		assert model instanceof DOMModelForPHP : "Incompatible model (or null)";
+		// don't refresh for uninitialized viewers
+		if (fDocument == null) {
+			return;
+		}
+
+		final IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+		assert model instanceof DOMModelForPHP : "Incompatible model or null";
 		try {
 			final DOMModelForPHP viewerModel = (DOMModelForPHP) model;
 			if (viewerModel != null && viewerModel.getFileData() == fileData) {

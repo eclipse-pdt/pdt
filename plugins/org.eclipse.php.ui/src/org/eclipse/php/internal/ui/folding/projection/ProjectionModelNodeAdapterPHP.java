@@ -14,7 +14,7 @@ package org.eclipse.php.internal.ui.folding.projection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
@@ -184,7 +184,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			// false - when adding new annotation - don't fold
 			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, false, shouldAutoCollapseAnnotations ? collapse : false);
 			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
-			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition() + 2);
+			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition(), document);
 
 			if (existingAnnotation == null) {
 				// add to map containing all annotations for this
@@ -203,12 +203,55 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		}
 	}
 
-	private Position createPosition(int startOffset, int endOffset) {
-		return new Position(startOffset, endOffset - startOffset);
+	private Position createPosition(int startOffset, int endOffset, IDocument document) {
+		assert document != null;
+
+		final IRegion alignRegion = alignRegion(startOffset, endOffset, document);
+		return new Position(alignRegion.getOffset(), alignRegion.getLength());
 	}
 
-	private Position createCommentPosition(int startOffset, int endOffset) {
-		return new CommentPosition(startOffset, endOffset - startOffset);
+	private Position createCommentPosition(int startOffset, int endOffset, IDocument document) {
+		assert document != null;
+
+		final IRegion alignRegion = alignRegion(startOffset, endOffset, document);
+		return new CommentPosition(alignRegion.getOffset(), alignRegion.getLength());
+	}
+
+	/**
+	 * Aligns <code>region</code> to start and end at a line offset. The region's start is
+	 * decreased to the next line offset, and the end offset increased to the next line start or the
+	 * end of the document. <code>null</code> is returned if <code>region</code> is
+	 * <code>null</code> itself or does not comprise at least one line delimiter, as a single line
+	 * cannot be folded.
+	 * 
+	 * @param region the region to align, may be <code>null</code>
+	 * @param document the folding context
+	 * @return a region equal or greater than <code>region</code> that is aligned with line
+	 *         offsets, <code>null</code> if the region is too small to be foldable (e.g. covers
+	 *         only one line)
+	 */
+	protected final IRegion alignRegion(int startOfset, int endOffsetOrg, IDocument document) {
+		try {
+			final int length = document.getLength();
+			int start = document.getLineOfOffset(startOfset);
+			int end = document.getLineOfOffset(Math.min(length, endOffsetOrg));
+
+			if (start >= end)
+				return null;
+
+			int offset = document.getLineOffset(start);
+			int endOffset;
+			if (document.getNumberOfLines() > end + 1)
+				endOffset = document.getLineOffset(end + 1);
+			else
+				endOffset = document.getLineOffset(end) + document.getLineLength(end);
+
+			return new Region(offset, endOffset - offset);
+
+		} catch (BadLocationException x) {
+			// concurrent modification
+			return new Region(startOfset, endOffsetOrg - startOfset);
+		}
 	}
 
 	/* TODO think in this direction:
@@ -258,7 +301,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
 			// false - when adding new annotation - don't fold
-			final Position newPosition = createCommentPosition(codeStartOffset, docBlock.getEndPosition() + 2);
+			final Position newPosition = createCommentPosition(codeStartOffset, docBlock.getEndPosition(), document);
 			final ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, true, shouldAutoCollapseAnnotations ? collapse : false);
 			final ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			if (existingAnnotation == null) {

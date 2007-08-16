@@ -289,6 +289,9 @@
 			id="org.eclipse.php.ui.internal.validation.phpsyntaxvalidation">
 			<contentTypeIdentifier id="org.eclipse.php.core.phpsource">
 				<partitionType id="org.eclipse.php.PHP_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
