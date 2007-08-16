@@ -23,7 +23,6 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.build.FullPhpProjectBuildVisitor;
-import org.eclipse.php.internal.core.project.build.PHPIncrementalProjectBuilder;
 import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
@@ -54,7 +53,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	/**
 	 * Model listeners
 	 */
-	private final static Set modelListeners = Collections.synchronizedSet(new HashSet(2));
+	private final static Set<ModelListener> modelListeners = new HashSet<ModelListener>(3);
 	private final static Map workspaceModelListeners = Collections.synchronizedMap(new HashMap(2));
 	private final static Set<IWorkspaceModelListener> globalWorkspaceModelListeners = new HashSet<IWorkspaceModelListener>(2);
 
@@ -133,6 +132,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	public void runBuild(final IProject project) {
 		WorkspaceJob cleanJob = new WorkspaceJob(NLS.bind("Building PHP project: {0} ...", project.getName())) {
+			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					project.accept(new FullPhpProjectBuildVisitor(monitor));
@@ -150,6 +150,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	private void runBuild() {
 		WorkspaceJob cleanJob = new WorkspaceJob("Building PHP projects ...") {
+			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -458,20 +459,18 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	/**
 	 * Model Listeners
 	 */
-	public void addModelListener(ModelListener l) {
+	public synchronized void addModelListener(ModelListener l) {
 		modelListeners.add(l);
 	}
 
-	public void removeModelListener(ModelListener l) {
+	public synchronized void removeModelListener(ModelListener l) {
 		modelListeners.remove(l);
 	}
 
-	private ModelListener[] getModelListenersIteratorCopy() {
-		synchronized (modelListeners) {
-			ModelListener[] iterator = new ModelListener[modelListeners.size()];
-			modelListeners.toArray(iterator);
-			return iterator;
-		}
+	private synchronized ModelListener[] getModelListenersIteratorCopy() {
+		ModelListener[] iterator = new ModelListener[modelListeners.size()];
+		modelListeners.toArray(iterator);
+		return iterator;
 	}
 
 	public void fileDataChanged(PHPFileData fileData) {
