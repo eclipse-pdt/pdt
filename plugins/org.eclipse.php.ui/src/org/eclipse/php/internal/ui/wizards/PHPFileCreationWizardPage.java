@@ -102,7 +102,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		label.setText("File Name");
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
-        fileText.setFocus();
+		fileText.setFocus();
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		//gd.widthHint = 300;
@@ -241,10 +241,23 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			return;
 		}
 
-		if (fileName.length() == 0) {
+		int dotIndex = fileName.lastIndexOf('.');
+		if (fileName.length() == 0 || dotIndex == 0) {
 			updateStatus("File name must be specified");
 			return;
 		}
+
+		if (dotIndex != -1) {
+			String fileNameWithoutExtention = fileName.substring(0, dotIndex);
+			for (int i = 0; i < fileNameWithoutExtention.length(); i++) {
+				char ch = fileNameWithoutExtention.charAt(i);
+				if (!Character.isJavaIdentifierPart(ch)) {
+					updateStatus("File name contians illigal characters");
+					return;
+				}
+			}
+		}
+
 		final IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 		if (!contentType.isAssociatedWith(fileName)) {
 			// fixed bug 195274
@@ -254,7 +267,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			buffer.append(fileExtensions[0]);
 			for (String extension : fileExtensions) {
 				buffer.append(", ").append(extension);
-			} 
+			}
 			buffer.append("]");
 			updateStatus(buffer.toString());
 			return;
