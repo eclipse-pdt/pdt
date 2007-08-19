@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPCodeHyperlinkDetector;
@@ -60,7 +61,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private LineStyleProvider fLineStyleProvider;
 	private IPropertyChangeListener propertyChangeListener;
 
-	private ArrayList detectors;
+	private final ArrayList detectors;
 
 	public PHPStructuredTextViewerConfiguration() {
 		detectors = new ArrayList();
@@ -85,6 +86,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * by this editor. They include all those supported by HTML editor plus
 	 * PHP.
 	 */
+	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (configuredContentTypes == null) {
 			String[] phpTypes = PHPStructuredTextPartitioner.getConfiguredContentTypes();
@@ -111,6 +113,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return fLineStyleProvider;
 	}
 
+	@Override
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
 			return new LineStyleProvider[] { getLineStyleProvider() };
@@ -118,6 +121,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return super.getLineStyleProviders(sourceViewer, partitionType);
 	}
 
+	@Override
 	public IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 		IContentAssistProcessor[] processors = null;
 
@@ -237,6 +241,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return rv;
 	}
 
+	@Override
 	public String[] getDefaultPrefixes(ISourceViewer sourceViewer, String contentType) {
 		return new String[] { "//", "#", "" }; //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -244,6 +249,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	/*
 	 * @see SourceViewerConfiguration#getConfiguredTextHoverStateMasks(ISourceViewer, String)
 	 */
+	@Override
 	public int[] getConfiguredTextHoverStateMasks(ISourceViewer sourceViewer, String contentType) {
 		PHPEditorTextHoverDescriptor[] hoverDescs = PHPUiPlugin.getDefault().getPHPEditorTextHoverDescriptors();
 		int stateMasks[] = new int[hoverDescs.length];
@@ -272,6 +278,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	/*
 	 * @see SourceViewerConfiguration#getTextHover(ISourceViewer, String, int)
 	 */
+	@Override
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		// Screen out any non-PHP content
 		if (!PHPStructuredTextPartitioner.isPHPPartitionType(contentType)) {
@@ -293,10 +300,12 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	/*
 	 * @see SourceViewerConfiguration#getTextHover(ISourceViewer, String)
 	 */
+	@Override
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
 		return getTextHover(sourceViewer, contentType, ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 	}
 
+	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (!fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
 			return null;
@@ -311,6 +320,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return detectors;
 	}
 
+	@Override
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		IContentFormatter usedFormatter = null;
 
@@ -332,17 +342,30 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return usedFormatter;
 	}
 
-	private static IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
+	private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
+	private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();
+	private static final IAutoEditStrategy[] phpStrategies = new IAutoEditStrategy[] { mainAutoEditStrategy };
 
-	private static IAutoEditStrategy[] phpStrategies = new IAutoEditStrategy[] { mainAutoEditStrategy };
-
+	@Override
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		if (contentType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
 			return phpStrategies;
 		}
-		return super.getAutoEditStrategies(sourceViewer, contentType);
+
+		return getPhpAutoEditStrategy(sourceViewer, contentType);
 	}
 
+	private final IAutoEditStrategy[] getPhpAutoEditStrategy(ISourceViewer sourceViewer, String contentType) {
+		final IAutoEditStrategy[] autoEditStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
+		final int length = autoEditStrategies.length;
+		final IAutoEditStrategy[] augAutoEditStrategies = new IAutoEditStrategy[length + 1];
+		System.arraycopy(autoEditStrategies, 0, augAutoEditStrategies, 0, length);
+		augAutoEditStrategies[length] = closeTagAutoEditStrategy;
+
+		return augAutoEditStrategies;
+	}
+
+	@Override
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
 		if (contentType == PHPPartitionTypes.PHP_DEFAULT) {
 			// use php's doubleclick strategy
@@ -351,6 +374,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			return super.getDoubleClickStrategy(sourceViewer, contentType);
 	}
 
+	@Override
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
 		Vector vector = new Vector();
 

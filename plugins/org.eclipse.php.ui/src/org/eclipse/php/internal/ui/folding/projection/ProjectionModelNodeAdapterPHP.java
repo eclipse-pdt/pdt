@@ -237,7 +237,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			int end = document.getLineOfOffset(Math.min(length, endOffsetOrg));
 
 			if (start >= end)
-				return null;
+				return new Region(startOfset, 0);
 
 			int offset = document.getLineOffset(start);
 			int endOffset;

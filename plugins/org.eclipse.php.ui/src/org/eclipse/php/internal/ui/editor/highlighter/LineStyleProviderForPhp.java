@@ -41,7 +41,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	private IStructuredDocument fDocument;
 	private Highlighter fHighlighter;
 	private boolean fInitialized;
-	private PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
+	private final PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
 	private Map fTextAttributes;
 	private IPreferenceStore fColorPreferences;
 
@@ -268,7 +268,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 			}
 		}
 	}
-	
+
 	/*
 	 * Creates TextAttribute from the given style description array string
 	 */
@@ -321,7 +321,8 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		final int partitionStartOffset = typedRegion.getOffset();
 		final int partitionLength = typedRegion.getLength();
 		IStructuredDocumentRegion structuredDocumentRegion = getDocument().getRegionAtCharacterOffset(partitionStartOffset);
-		return prepareTextRegions(structuredDocumentRegion, partitionStartOffset, partitionLength, holdResults);
+		final boolean prepareTextRegions = prepareTextRegions(structuredDocumentRegion, partitionStartOffset, partitionLength, holdResults);
+		return prepareTextRegions;
 	}
 
 	/**
@@ -470,12 +471,12 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 
 		ITextRegion[] phpTokens = null;
 		try {
-			
+
 			int from;
 			int length;
 			if (partitionStartOffset < regionStart) {
 				from = 0;
-				length = partitionLength - (partitionStartOffset - regionStart);  
+				length = partitionLength - (partitionStartOffset - regionStart);
 			} else {
 				from = partitionStartOffset - regionStart;
 				length = partitionLength;
@@ -484,13 +485,17 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 			ITextRegion prevElement = null;
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
+				// ignore any first whitespace regions
+				if (i == 0 && element.getType() == PHPRegionTypes.WHITESPACE) {
+					continue;
+				}
 				attr = getAttributeFor(element);
 				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr)) && prevElement != null && prevElement.getTextLength() == prevElement.getLength()) {
 					// extends the prev styleRange with the current element length
 					styleRange.length += element.getTextLength();
 				} else {
 					// create new styleRange
-					styleRange =new StyleRange(regionStart + element.getStart(), element.getTextLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
+					styleRange = new StyleRange(regionStart + element.getStart(), element.getTextLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
 					if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 						styleRange.underline = true;
 						styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
@@ -511,11 +516,10 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 			return true;
 		} catch (BadLocationException e) {
 			Logger.logException(e);
-			return false;			
-		}		
+			return false;
+		}
 	}
-	
-	
+
 	/*
 	 * Returns hash of color attributes
 	 */
@@ -560,7 +564,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	public void setColorPreferences(IPreferenceStore preferenceStore) {
 		fColorPreferences = preferenceStore;
 	}
-	
+
 	public IPreferenceStore getColorPreferences() {
 		if (fColorPreferences != null) {
 			return fColorPreferences;
