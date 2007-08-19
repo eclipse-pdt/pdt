@@ -48,11 +48,11 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	 */
 	private static final Object DISABLE_LINK = "DISABLE_LINK"; //$NON-NLS-1$
 
-	private Map fData = null;
-	private Button fEnableProjectSettings;
+	protected Map fData = null;
+	protected Button fEnableProjectSettings;
 	private Link fProjectSettingsLink;
-	private IPHPPreferencePageBlock[] projectScopeAddons;
-	private IPHPPreferencePageBlock[] workspaceAddons;
+	protected IPHPPreferencePageBlock[] projectScopeAddons;
+	protected IPHPPreferencePageBlock[] workspaceAddons;
 
 	public AbstractPHPPropertyPreferencePage() {
 		super();
