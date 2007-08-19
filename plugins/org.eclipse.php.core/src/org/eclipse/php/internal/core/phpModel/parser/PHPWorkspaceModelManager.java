@@ -122,7 +122,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					if ((eventFlags & IResourceDelta.OPEN) != 0) {
 						// could be an OPEN or CLOSE
 						if (project.isOpen()) {
-							runBuild(project);
+							try {
+								if(project.hasNature(PHPNature.ID)){
+									runBuild(project);
+								}
+							} catch (CoreException e) {
+							}
 						}
 					}
 				}
