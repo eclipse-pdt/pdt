@@ -21,6 +21,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.SimplePHPCodeDataVisitor;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.contentassist.ContentAssistSupport.PHPTagData;
 import org.eclipse.php.internal.ui.util.PHPElementImageDescriptor;
 import org.eclipse.php.internal.ui.util.PHPElementImageProvider;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -87,6 +88,11 @@ public class PHPCompletionRendererVisitor extends SimplePHPCodeDataVisitor {
 		buffer.append(rt);
 	}
 
+	public void visit(PHPTagData codeData) {
+		image = PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_KEYWORD);
+		buffer.append("php");
+	}
+
 	public void visit(PHPClassVarData codeData) {
 		int modifiers = codeData.getModifiers();
 		int flags = computeAdornments(modifiers, 0);
@@ -137,7 +143,7 @@ public class PHPCompletionRendererVisitor extends SimplePHPCodeDataVisitor {
 		String classType = codeData.getClassType();
 		if (classType != null && classType.length() != 0) {
 			buffer.append(classType).append(" ");
-		} 
+		}
 		if (codeData.isConst()) {
 			buffer.append("const ");
 		}

@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegio
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.util.Visitor;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -509,10 +510,18 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	private static final PHPTagData[] phpTagDataArray = { new PHPTagData() };
 
-	private static class PHPTagData extends PHPCodeDataFactory.PHPFunctionDataImp {
+	static class PHPTagData extends PHPCodeDataFactory.PHPFunctionDataImp {
 
 		PHPTagData() {
 			super("php", 0, null, null, PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, "");
+		}
+
+		public void accept(Visitor v) {
+			if (v instanceof PHPCompletionRendererVisitor) {
+				((PHPCompletionRendererVisitor) v).visit(this);
+			} else {
+				super.accept(v);
+			}
 		}
 
 	}
@@ -1395,6 +1404,9 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				PHPKeywordData phpKeywordData = (PHPKeywordData) codeData;
 				suffix = phpKeywordData.getSuffix();
 				caretOffsetInSuffix = phpKeywordData.getSuffixOffset();
+			} else if (codeData instanceof PHPTagData) {
+				suffix = "";
+				caretOffsetInSuffix = 0;
 			} else if (codeData instanceof PHPFunctionData) {
 				PHPFunctionData phpFunctionData = (PHPFunctionData) codeData;
 				suffix = "()";
