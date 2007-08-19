@@ -486,7 +486,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
 				// ignore any first whitespace regions
-				if (i == 0 && element.getType() == PHPRegionTypes.WHITESPACE) {
+				if (i == 0 && (element.getType() == PHPRegionTypes.WHITESPACE || element.getTextEnd() < from)) {
 					continue;
 				}
 				attr = getAttributeFor(element);
