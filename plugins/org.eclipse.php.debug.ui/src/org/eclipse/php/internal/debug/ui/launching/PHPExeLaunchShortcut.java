@@ -40,13 +40,11 @@ import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
-import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
-import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.core.preferences.*;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
@@ -62,14 +60,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
-	//The following 4 lines were copied from org.eclipse.debug.core.model.LaunchConfigurationDelegate
-	private static final String DEBUG_UI = "org.eclipse.debug.ui";
-	private static final IStatus promptStatus = new Status(IStatus.INFO, DEBUG_UI, 200, "", null);
-	private static final String DEBUG_CORE = "org.eclipse.debug.core";
-	private static final IStatus saveScopedDirtyEditors = new Status(IStatus.INFO, DEBUG_CORE, 222, "", null);
-
 	/**
-	 * 
+	 * PHPExeLaunchShortcut constructor.
 	 */
 	public PHPExeLaunchShortcut() {
 		super();
@@ -109,7 +101,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				// first save the file to the disk and after that set the document as dirty
 				try {
 					if (editor instanceof ITextEditor) {
-						ITextEditor textEditor = (ITextEditor)editor;
+						ITextEditor textEditor = (ITextEditor) editor;
 						final TextFileDocumentProvider documentProvider = (TextFileDocumentProvider) textEditor.getDocumentProvider();
 						final IDocument document = documentProvider.getDocument(input);
 						documentProvider.saveDocument(null, input, document, true);
@@ -194,12 +186,9 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_target, null));
 				}
 
-				String defaultPHPExe = getDefaultPHPExe(project);
-				PHPexes exes = new PHPexes();
-				exes.load(PHPProjectPreferences.getModelPreferences());
-				PHPexeItem defaultEXE = exes.getItem(defaultPHPExe);
+				PHPexeItem defaultEXE = getDefaultPHPExe(project);
 				if (defaultEXE == null) {
-					defaultEXE = exes.getDefaultItem();
+					defaultEXE = getWorkspaceDefaultExe();
 				}
 				String phpExeName = (defaultEXE != null) ? defaultEXE.getPhpEXE().getAbsolutePath().toString() : null;
 
@@ -210,7 +199,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				}
 
 				// Launch the app
-				ILaunchConfiguration config = findLaunchConfiguration(project, phpPathString, phpFileLocation, phpExeName, mode, configType);
+				ILaunchConfiguration config = findLaunchConfiguration(project, phpPathString, phpFileLocation, defaultEXE, mode, configType);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
@@ -228,11 +217,17 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		}
 	}
 
+	private static PHPexeItem getWorkspaceDefaultExe() {
+		String phpDebuggerId = PHPDebugPlugin.getCurrentDebuggerId();
+		return PHPexes.getInstance().getDefaultItem(phpDebuggerId);
+	}
+
 	// Returns the default php executable name for the current project. 
 	// In case the project does not have any special settings, return the workspace default.
-	private static String getDefaultPHPExe(IProject project) {
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		String phpExe = prefs.getString(PHPDebugCorePreferenceNames.DEFAULT_PHP);
+	private static PHPexeItem getDefaultPHPExe(IProject project) {
+		// Take the default workspace item for the debugger's id.
+		String phpDebuggerId = PHPDebugPlugin.getCurrentDebuggerId();
+		String phpExe = PHPexes.getInstance().getDefaultItem(phpDebuggerId).getName();
 		if (project != null) {
 			// In case that the project is not null, check that we have project-specific settings for it.
 			// Otherwise, map it to the workspace default server.
@@ -240,11 +235,13 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			if (preferenceScopes[0] instanceof ProjectScope) {
 				IEclipsePreferences node = preferenceScopes[0].getNode(PHPProjectPreferences.getPreferenceNodeQualifier());
 				if (node != null) {
+					// Replace the workspace defaults with the project-specific settings.
+					phpDebuggerId = node.get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, phpDebuggerId);
 					phpExe = node.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
 				}
 			}
 		}
-		return phpExe;
+		return PHPexes.getInstance().getItem(phpDebuggerId, phpExe);
 	}
 
 	// Creates a preferences scope for the given project.
@@ -261,7 +258,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	 * 
 	 * @return a re-useable config or <code>null</code> if none
 	 */
-	protected static ILaunchConfiguration findLaunchConfiguration(IProject phpProject, String phpPathString, String phpFileFullLocation, String phpExeName, String mode, ILaunchConfigurationType configType) {
+	protected static ILaunchConfiguration findLaunchConfiguration(IProject phpProject, String phpPathString, String phpFileFullLocation, PHPexeItem defaultEXE, String mode, ILaunchConfigurationType configType) {
 		ILaunchConfiguration config = null;
 
 		try {
@@ -272,14 +269,14 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
 
-				if (phpPathString.equals(fileName) && exeName.equals(phpExeName)) {
+				if (phpPathString.equals(fileName) && exeName.equals(defaultEXE.getPhpEXE().getAbsolutePath().toString())) {
 					config = configs[i].getWorkingCopy();
 					break;
 				}
 			}
 
 			if (config == null) {
-				config = createConfiguration(phpProject, phpPathString, phpFileFullLocation, phpExeName, configType);
+				config = createConfiguration(phpProject, phpPathString, phpFileFullLocation, defaultEXE, configType);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -290,14 +287,17 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	/**
 	 * Create & return a new configuration
 	 */
-	protected static ILaunchConfiguration createConfiguration(IProject phpProject, String phpPathString, String phpFileFullLocation, String phpExeName, ILaunchConfigurationType configType) throws CoreException {
+	protected static ILaunchConfiguration createConfiguration(IProject phpProject, String phpPathString, String phpFileFullLocation, PHPexeItem defaultEXE, ILaunchConfigurationType configType) throws CoreException {
 		ILaunchConfiguration config = null;
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(phpPathString));
-
-		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
+		
+		// Set the delegate class according to selected executable.
+		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, defaultEXE.getDebuggerID());
+		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(defaultEXE.getDebuggerID());
+		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getScriptLaunchDelegateClass());
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
-		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, phpExeName);
+		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, defaultEXE.getPhpEXE().getAbsolutePath().toString());
 		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(phpProject));
 

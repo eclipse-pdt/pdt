@@ -14,7 +14,7 @@ import org.eclipse.debug.internal.ui.DebugPluginImages;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.php.internal.debug.core.debugger.Expression;
+import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.swt.graphics.Image;
 
 public class PHPStackLabelProvider implements ILabelProvider {

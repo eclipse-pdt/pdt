@@ -16,11 +16,14 @@ import java.util.List;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -29,8 +32,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * A composite that displays installed PHP's in a combo box, with a 'manage...'
- * button to modify installed PHPs.
+ * A composite that displays installed PHP's in a combo box, with a 'PHP Executables' page link
+ * to modify installed PHPs.
  * <p>
  * This block implements ISelectionProvider - it sends selection change events
  * when the checked PHP in the table changes, or when the "use default" button
@@ -39,46 +42,48 @@ import org.eclipse.swt.widgets.*;
  */
 public class PHPsComboBlock implements ISelectionProvider {
 
-	PHPexes exes;
+	PHPexes exes = PHPexes.getInstance();
 
-	/**
+	/*
 	 * The main control
 	 */
-	private Combo fCombo;
+	protected Combo fExecutablesCombo;
+	protected Combo fDebuggersCombo;
 
-	/**
+	/*
 	 * This block's control
 	 */
 	private Composite fControl;
 
-	/**
+	/*
 	 * Default PHP descriptor or <code>null</code> if none.
 	 */
 	private PHPexeDescriptor fDefaultDescriptor = null;
 
-	/**
+	/*
 	 * Previous selection
 	 */
 	private ISelection fPrevSelection = new StructuredSelection();
 
-	/**
+	/*
 	 * Selection listeners (checked PHP changes)
 	 */
 	private final ListenerList fSelectionListeners = new ListenerList();
 
-	/**
+	/*
 	 * The title used for the PHPexe block
 	 */
 	private String fTitle = null;
 
-	/**
-	 * VMs being displayed
+	/*
+	 * PHP executable being displayed
 	 */
-	private final List phpExecutables = new ArrayList();
-
+	private final List<PHPexeItem> phpExecutables = new ArrayList<PHPexeItem>();
 	private boolean isTitled;
-
 	private Link link;
+	private Set<String> fDebuggerIds;
+
+	private Timer timer;
 
 	/**
 	 * Constructs a new php combo box with or without a titled group that describes it. 
@@ -89,7 +94,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 		this.isTitled = titleGrouped;
 		fDefaultDescriptor = new PHPexeDescriptor() {
 			public String getDescription() {
-				final PHPexeItem def = getPHPs(true).getDefaultItem();
+				final PHPexeItem def = exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 				if (def != null)
 					return def.getName() + " (" + def.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				return "No PHP exes defined"; //$NON-NLS-1$
@@ -128,27 +133,71 @@ public class PHPsComboBlock implements ISelectionProvider {
 		} else {
 			composite = new Composite(ancestor, SWT.NULL);
 		}
-		GridLayout layout = new GridLayout(4, true);
+		GridLayout layout = new GridLayout(2, false);
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		composite.setFont(font);
 		fControl = composite;
 
 		GridData data;
-		fCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		fCombo.setFont(font);
+		// Add a top-left composite that will hold the label and the combo of the php debuggers
+		Composite topLeft = new Composite(composite, SWT.NONE);
+		layout = new GridLayout(2, false);
+		topLeft.setLayout(layout);
+		topLeft.setFont(font);
+		// Add the label
+		Label debuggerLabel = new Label(topLeft, SWT.WRAP);
+		debuggerLabel.setText(PHPDebugUIMessages.PhpDebugPreferencePage_phpDebugger);
+		data = new GridData(GridData.BEGINNING);
+		data.widthHint = 100;
+		debuggerLabel.setLayoutData(data);
+		// Add the debuggers combo
+		fDebuggersCombo = new Combo(topLeft, SWT.DROP_DOWN | SWT.READ_ONLY);
+		fDebuggersCombo.setFont(font);
 		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 3;
-		fCombo.setLayoutData(data);
-		fCombo.addSelectionListener(new SelectionAdapter() {
+
+		fDebuggersCombo.setLayoutData(data);
+		fDebuggersCombo.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				String selectedDebuggerID = getSelectedDebuggerId();
+				PHPexeItem[] items = exes.getItems(selectedDebuggerID);
+				List<PHPexeItem> itemsList = Arrays.asList(items);
+				setPHPexes(itemsList);
+				fireSelectionChanged();
+				signalExecutablesCombo();
+			}
+		});
+
+		// add a dummy label to fill in the missing column
+		Label dummy = new Label(composite, SWT.NONE);
+		dummy.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL));
+
+		// Add a bottom-left composite that will hold the label and the combo of the php executables
+		Composite bottomLeft = new Composite(composite, SWT.NONE);
+		layout = new GridLayout(2, false);
+		bottomLeft.setLayout(layout);
+		bottomLeft.setFont(font);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		bottomLeft.setLayoutData(data);
+		// Add the label
+		Label executableLabel = new Label(bottomLeft, SWT.WRAP);
+		executableLabel.setText("PHP Executable:");
+		data = new GridData(GridData.BEGINNING);
+		data.widthHint = 100;
+		executableLabel.setLayoutData(data);
+		fExecutablesCombo = new Combo(bottomLeft, SWT.DROP_DOWN | SWT.READ_ONLY);
+		fExecutablesCombo.setFont(font);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		fExecutablesCombo.setLayoutData(data);
+		fExecutablesCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				setPHPexe(getPHPexe());
 			}
 		});
-
+		// Add the php executables link to the right side of the composite
 		link = new Link(composite, SWT.NONE);
 		link.setFont(font);
-		data = new GridData(SWT.BEGINNING, SWT.BOTTOM, true, false);
+		data = new GridData(SWT.BEGINNING, SWT.CENTER, true, false);
 		data.horizontalSpan = 1;
 		link.setLayoutData(data);
 		link.setText(PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink);
@@ -159,26 +208,58 @@ public class PHPsComboBlock implements ISelectionProvider {
 				fillWithWorkspacePHPexes();
 				if (phpExecutables.contains(selected)) {
 					String name = selected.getName() + " (" + selected.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-					fCombo.select(fCombo.indexOf(name));
+					fExecutablesCombo.select(fExecutablesCombo.indexOf(name));
 				}
 			}
 		});
 
-		if (getPHPs(true).getDefaultItem() == null) {
+		if (exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId()) == null) {
 			MessageDialog.openInformation(getShell(), PHPDebugUIMessages.PHPsComboBlock_NoPHPsTitle, PHPDebugUIMessages.PHPsComboBlock_noPHPsMessage);
 			new ShowPHPsPreferences().run(null);
 		}
+		fillDebuggers();
 		fillWithWorkspacePHPexes();
+	}
+
+	/**
+	 * Populates the debuggers with the debuggers defined in the workspace.
+	 */
+	protected void fillDebuggers() {
+		fDebuggerIds = PHPDebuggersRegistry.getDebuggersIds();
+		for (String id : fDebuggerIds) {
+			// Insert the debuggers names
+			fDebuggersCombo.add(PHPDebuggersRegistry.getDebuggerName(id));
+		}
+		// Select the default debugger
+		String defaultName = PHPDebuggersRegistry.getDebuggerName(PHPDebuggersRegistry.getDefaultDebuggerId());
+		int index = fDebuggersCombo.indexOf(defaultName);
+		if (index > -1) {
+			fDebuggersCombo.select(index);
+		} else if (fDebuggersCombo.getItemCount() > 0) {
+			fDebuggersCombo.select(0);
+		}
+	}
+
+	/**
+	 * Signal the executable combo about a change in the debugger's selection.
+	 * The default signal is by blinking with a color change for 3 times.
+	 * This behavior can be overridden.
+	 */
+	protected void signalExecutablesCombo() {
+		if (timer != null) {
+			timer.cancel();
+		}
+		timer = new Timer(true);
+		timer.scheduleAtFixedRate(new BlinkTask(), 0, 300L);
 	}
 
 	/**
 	 * Populates the PHPexe table with existing PHPexes defined in the workspace.
 	 */
 	protected void fillWithWorkspacePHPexes() {
-
 		// fill with PHPexes
-		final List standins = new ArrayList();
-		final PHPexeItem[] types = getPHPs(true).getItems();
+		final List<PHPexeItem> standins = new ArrayList<PHPexeItem>();
+		final PHPexeItem[] types = exes.getItems(PHPDebugPlugin.getCurrentDebuggerId());
 		for (int i = 0; i < types.length; i++) {
 			final PHPexeItem type = types[i];
 			standins.add(type);
@@ -214,7 +295,8 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	public void setEnabled(boolean enabled) {
 		fControl.setEnabled(enabled);
-		fCombo.setEnabled(enabled);
+		fExecutablesCombo.setEnabled(enabled);
+		fDebuggersCombo.setEnabled(enabled);
 		link.setEnabled(enabled);
 	}
 
@@ -224,7 +306,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 * @return the selected PHPexe or <code>null</code> if none
 	 */
 	public PHPexeItem getPHPexe() {
-		final int index = fCombo.getSelectionIndex();
+		final int index = fExecutablesCombo.getSelectionIndex();
 		if (index >= 0)
 			return (PHPexeItem) phpExecutables.get(index);
 		return null;
@@ -239,19 +321,30 @@ public class PHPsComboBlock implements ISelectionProvider {
 		return (PHPexeItem[]) phpExecutables.toArray(new PHPexeItem[phpExecutables.size()]);
 	}
 
-	public PHPexes getPHPs(final boolean load) {
-		if (exes == null || load) {
-			exes = new PHPexes();
-			exes.load(PHPProjectPreferences.getModelPreferences());
-		}
-		return exes;
-	}
-
+	/**
+	 * Returns the location of the PHP executable that was selected.
+	 * 
+	 * @return The executable's location.
+	 */
 	public String getSelectedLocation() {
 		final PHPexeItem item = getPHPexe();
 		if (item != null)
 			return item.getPhpEXE().toString();
 		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * Returns the id of the selected debugger.
+	 *  
+	 * @return The debugger's id.
+	 */
+	public String getSelectedDebuggerId() {
+		int selectedIndex = fDebuggersCombo.getSelectionIndex();
+		String debuggerId = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID; // default
+		if (selectedIndex > -1 && fDebuggerIds.size() > selectedIndex) {
+			debuggerId = fDebuggerIds.toArray()[selectedIndex].toString();
+		}
+		return debuggerId;
 	}
 
 	/* (non-Javadoc)
@@ -278,7 +371,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	/**
 	 * Sets the selected PHPexe, or <code>null</code>
 	 * 
-	 * @param vm PHPexe or <code>null</code>
+	 * @param item {@link PHPexeItem} or <code>null</code>
 	 */
 	public void setPHPexe(final PHPexeItem item) {
 		if (item == null)
@@ -288,19 +381,33 @@ public class PHPsComboBlock implements ISelectionProvider {
 	}
 
 	/**
+	 * Sets the selected PHP debugger.
+	 * The debugger will be selected only if it's in the installed debuggers list.
+	 * Also, the executables list will be updated to the default executables values for this debugger and 
+	 * the selected exe will be the default exe from this group.
+	 * 
+	 * @param debuggerID The debugger id to set.
+	 */
+	public void setDebugger(String debuggerID) {
+		int index = fDebuggersCombo.indexOf(PHPDebuggersRegistry.getDebuggerName(debuggerID));
+		if (index > -1) {
+			fDebuggersCombo.select(index);
+			setPHPexes(Arrays.asList(exes.getItems(debuggerID)));
+		}
+	}
+
+	/**
 	 * Sets the PHPexes to be displayed in this block
 	 * 
 	 * @param vms PHPexes to be displayed
 	 */
-	protected void setPHPexes(final List phps) {
+	protected void setPHPexes(final List<PHPexeItem> phps) {
 		phpExecutables.clear();
 		phpExecutables.addAll(phps);
 		// sort by name
-		Collections.sort(phpExecutables, new Comparator() {
-			public int compare(final Object o1, final Object o2) {
-				final PHPexeItem left = (PHPexeItem) o1;
-				final PHPexeItem right = (PHPexeItem) o2;
-				return left.getName().compareToIgnoreCase(right.getName());
+		Collections.sort(phpExecutables, new Comparator<PHPexeItem>() {
+			public int compare(final PHPexeItem o1, final PHPexeItem o2) {
+				return o1.getName().compareToIgnoreCase(o2.getName());
 			}
 
 			public boolean equals(final Object obj) {
@@ -309,23 +416,19 @@ public class PHPsComboBlock implements ISelectionProvider {
 		});
 		// now make an array of names
 		final String[] names = new String[phpExecutables.size()];
-		final Iterator iter = phpExecutables.iterator();
+		final Iterator<PHPexeItem> iter = phpExecutables.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
-			final PHPexeItem item = (PHPexeItem) iter.next();
+			final PHPexeItem item = iter.next();
 			names[i] = item.getName() + " (" + item.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			i++;
 		}
-		fCombo.setItems(names);
-		PHPexes exes = getPHPs(false);
-		if (exes == null) {
-			exes = getPHPs(true);
-		}
-		PHPexeItem defaultExe = exes.getDefaultItem();
+		fExecutablesCombo.setItems(names);
+		PHPexeItem defaultExe = exes.getDefaultItem(getSelectedDebuggerId());
 		if (defaultExe != null) {
 			String defaultName = defaultExe.getName() + " (" + defaultExe.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-			fCombo.select(fCombo.indexOf(defaultName));
+			fExecutablesCombo.select(fExecutablesCombo.indexOf(defaultName));
 		}
 	}
 
@@ -337,16 +440,16 @@ public class PHPsComboBlock implements ISelectionProvider {
 			if (!selection.equals(fPrevSelection)) {
 				fPrevSelection = selection;
 				if (selection.isEmpty()) {
-					fCombo.setText(""); //$NON-NLS-1$
-					fCombo.select(-1);
+					fExecutablesCombo.setText(""); //$NON-NLS-1$
+					fExecutablesCombo.select(-1);
 					// need to do this to clear the old text
-					fCombo.setItems(new String[] {});
+					fExecutablesCombo.setItems(new String[] {});
 					fillWithWorkspacePHPexes();
 				} else {
-					final Object jre = ((IStructuredSelection) selection).getFirstElement();
-					final int index = phpExecutables.indexOf(jre);
+					final Object phpExe = ((IStructuredSelection) selection).getFirstElement();
+					final int index = phpExecutables.indexOf(phpExe);
 					if (index >= 0)
-						fCombo.select(index);
+						fExecutablesCombo.select(index);
 				}
 				fireSelectionChanged();
 			}
@@ -371,4 +474,33 @@ public class PHPsComboBlock implements ISelectionProvider {
 		}
 	}
 
+	/*
+	 * A task that blinks the executables combo.
+	 */
+	private class BlinkTask extends TimerTask {
+		int counter;
+		public void run() {
+			try {
+				if (counter++ < 6) {
+					fExecutablesCombo.getDisplay().syncExec(new Runnable() {
+						public void run() {
+							try {
+								if (counter % 2 != 0) {
+									fExecutablesCombo.setEnabled(false);
+								} else {
+									fExecutablesCombo.setEnabled(true);
+								}
+							} catch (SWTException se) {
+								cancel();
+							}
+						}
+					});
+				} else {
+					cancel();
+				}
+			} catch (SWTException se) {
+				cancel();
+			}
+		}
+	}
 }

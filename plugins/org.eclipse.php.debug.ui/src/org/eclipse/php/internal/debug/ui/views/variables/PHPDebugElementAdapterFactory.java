@@ -12,7 +12,7 @@ package org.eclipse.php.internal.debug.ui.views.variables;
 
 import org.eclipse.debug.internal.ui.viewers.model.provisional.IElementEditor;
 import org.eclipse.debug.internal.ui.views.launch.DebugElementAdapterFactory;
-import org.eclipse.php.internal.debug.core.model.PHPVariable;
+import org.eclipse.php.internal.debug.core.zend.model.PHPVariable;
 
 /**
  * The PHPDebugElementAdapterFactory is designed to replace the default DebugElementAdapterFactory that is initialized

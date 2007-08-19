@@ -19,7 +19,7 @@ import org.eclipse.debug.ui.actions.IVariableValueEditor;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.debug.core.model.PHPValue;
+import org.eclipse.php.internal.debug.core.zend.model.PHPValue;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.swt.widgets.Shell;
 

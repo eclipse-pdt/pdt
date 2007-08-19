@@ -25,15 +25,16 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.Logger;
@@ -389,12 +390,14 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void performApply(final ILaunchConfigurationWorkingCopy configuration) {
-		//		String location= locationField.getText().trim();
+		final String debuggerID = phpsComboBlock.getSelectedDebuggerId();
 		final String location = phpsComboBlock.getSelectedLocation();
-		if (location.length() == 0)
+		if (location.length() == 0) {
 			configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
-		else
+		} else {
 			configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
+		}
+		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
 
 		String arguments = null;
 		if (!enableFileSelection || (arguments = argumentField.getText().trim()).length() == 0) {
@@ -413,11 +416,21 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 	/**
 	 * Apply the launch configuration delegate class that will be used when using this launch with the {@link PHPLaunchDelegateProxy}.
+	 * This method sets the class name of the launch delegate that is associated with the debugger that
+	 * was defined to this launch configuration.
+	 * The class name is retrieved from the debugger's {@link IDebuggerConfiguration}.
 	 * 
 	 * @param configuration	A ILaunchConfigurationWorkingCopy
 	 */
 	protected void applyLaunchDelegateConfiguration(final ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
+		String debuggerID = null;
+		try {
+			debuggerID = configuration.getAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin.getCurrentDebuggerId());
+			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerID);
+			configuration.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getScriptLaunchDelegateClass());
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -427,9 +440,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		try {
 			String location = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, ""); //$NON-NLS-1$
 			if (location.equals("")) {
-				final PHPexes phpExes = new PHPexes();
-				phpExes.load(PHPProjectPreferences.getModelPreferences());
-				final PHPexeItem phpExeItem = phpExes.getDefaultItem();
+				PHPexes phpExes = PHPexes.getInstance();
+				final PHPexeItem phpExeItem = phpExes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 				if (phpExeItem == null)
 					return;
 				location = phpExeItem.getPhpEXE().toString();
@@ -447,7 +459,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (enabled == enableDebugInfoOption)
 			return;
 		// Make sure that the debug-info-option can be true only when we are in a RUN_MODE.
-		if(!getLaunchConfigurationDialog().getMode().equals(ILaunchManager.RUN_MODE)) {
+		if (!getLaunchConfigurationDialog().getMode().equals(ILaunchManager.RUN_MODE)) {
 			enableDebugInfoOption = false;
 			return;
 		}
@@ -527,18 +539,26 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	protected void updateLocation(final ILaunchConfiguration configuration) {
 		String location = ""; //$NON-NLS-1$
+		String debuggerID = ""; //$NON-NLS-1$
 		try {
 			location = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, ""); //$NON-NLS-1$
+			debuggerID = configuration.getAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin.getCurrentDebuggerId());
 		} catch (final CoreException ce) {
 			Logger.log(Logger.ERROR, "Error reading configuration", ce); //$NON-NLS-1$
 		}
-		//		locationField.setText(location);
-		final PHPexes exes = phpsComboBlock.getPHPs(true);
+		final PHPexes exes = PHPexes.getInstance();
 		PHPexeItem phpexe;
-		if (location != null && location.length() > 0)
+		if (location != null && location.length() > 0) {
 			phpexe = exes.getItemForFile(location);
-		else
-			phpexe = exes.getDefaultItem();
+		} else {
+			phpexe = exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
+		}
+		// Check that this debugger still exists. If not, take the defaults.
+		if (!PHPDebuggersRegistry.getDebuggersIds().contains(debuggerID)) {
+			debuggerID = PHPDebugPlugin.getCurrentDebuggerId();
+			phpexe = exes.getDefaultItem(debuggerID);
+		}
+		phpsComboBlock.setDebugger(debuggerID);
 		phpsComboBlock.setPHPexe(phpexe);
 	}
 }

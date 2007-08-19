@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -39,8 +40,6 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 	public static String ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage";
 	// PHP Block
 	private InstalledPHPsBlock fPHPBlock;
-
-	PHPexes phpExes;
 
 	public PHPsPreferencePage() {
 		super();
@@ -75,9 +74,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		layout.marginWidth = 0;
 		ancestor.setLayout(layout);
 
-		phpExes = new PHPexes();
-		phpExes.load(getModelPreferences());
-		fPHPBlock = new InstalledPHPsBlock(phpExes);
+		fPHPBlock = new InstalledPHPsBlock();
 		fPHPBlock.createControl(ancestor);
 		Control control = fPHPBlock.getControl();
 		GridData data = new GridData(GridData.FILL_BOTH);
@@ -130,7 +127,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 	}
 
 	private void initDefaultPHP() {
-		PHPexeItem realDefault = phpExes.getDefaultItem();
+		PHPexeItem realDefault = PHPexes.getInstance().getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 		if (realDefault != null) {
 			PHPexeItem[] phps = fPHPBlock.getPHPs();
 			for (int i = 0; i < phps.length; i++) {

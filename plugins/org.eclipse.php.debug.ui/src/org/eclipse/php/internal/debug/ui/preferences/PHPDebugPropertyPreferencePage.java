@@ -13,11 +13,23 @@ package org.eclipse.php.internal.debug.ui.preferences;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.AbstractPHPPropertyPreferencePage;
+import org.eclipse.php.internal.ui.preferences.PHPPreferencePageBlocksRegistry;
+import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 
+/**
+ * The main PHP | Debug preferences page.
+ * 
+ * @author Shalom Gibly
+ */
 public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferencePage {
 
 	private static final String PAGE_ID = "org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage";
@@ -51,5 +63,40 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 
 	public String getTitle() {
 		return PHPDebugUIMessages.PhpDebugPreferencePage_8;
+	}
+	
+	/**
+	 * Override the default creation on the workspace content to add a fixed debuggers table that will display all the
+	 * supported debuggers and will allow their preferences modification.
+	 */
+	protected Control createWorkspaceContents(Composite composite) {
+		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
+		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
+		group.setLayout(new GridLayout());
+		// Add the debuggers table
+		createDebuggersTable(group);
+		try {
+			workspaceAddons = PHPPreferencePageBlocksRegistry.getPHPPreferencePageBlock(getPreferencePageID());
+			for (int i = 0; i < workspaceAddons.length; i++) {
+				workspaceAddons[i].setCompositeAddon(group);
+				workspaceAddons[i].initializeValues(this);
+			}
+		} catch (Exception e) {
+			PHPUiPlugin.log(e);
+		}
+		scrolledCompositeImpl.setContent(group);
+		return scrolledCompositeImpl;
+	}
+
+	/**
+	 * Creates the debuggers table.
+	 * The created table allows only viewing and modifying any existing debugger that is 
+	 * registered thought the phpDebuggers extension point.
+	 * 
+	 * @param composite
+	 */
+	protected void createDebuggersTable(Composite composite) {
+		PHPDebuggersTable table = new PHPDebuggersTable();
+		table.createControl(composite);
 	}
 }

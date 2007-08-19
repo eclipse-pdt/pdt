@@ -526,5 +526,57 @@
        </action>
     </actionSet>
  </extension>
+   <extension
+         point="org.eclipse.debug.ui.debugModelPresentations">
+      <debugModelPresentation
+            class="org.eclipse.php.internal.debug.ui.presentation.XDebugModelPresentation"
+            id="org.eclipse.php.xdebug.core.dbgp.model">
+      </debugModelPresentation>
+   </extension>
    
+    <extension
+       	point="org.eclipse.debug.ui.variableValueEditors">
+    	<variableValueEditor
+          modelId="org.eclipse.php.xdebug.core.dbgp.model"
+          class="org.eclipse.php.xdebug.ui.actions.XDebugVariableValueEditor"/>
+ 	</extension>   
+  
+<extension
+         point="org.eclipse.debug.core.watchExpressionDelegates">
+         <watchExpressionDelegate
+         	debugModel="org.eclipse.php.xdebug.core.dbgp.model"
+         	delegateClass="org.eclipse.php.internal.debug.ui.watch.XDebugWatchExpressionDelegate"/>
+   </extension> 
+   
+	<extension point="org.eclipse.php.ui.phpEditorTextHovers">
+	    <hover
+          label="Variable Values"
+          description="Shows the value of the selected variable when debugging"
+          class="org.eclipse.php.internal.debug.ui.hovers.XDebugTextHover"
+          id="org.eclipse.php.xdebug.ui.hover.XDebugTextHover">
+    	</hover>
+    </extension> 
+    
+    
+	<extension
+         point="org.eclipse.ui.popupMenus">           
+      <viewerContribution
+            id="php.editor.menuActions.xdebug"
+            targetID="org.eclipse.php.core.phpsource.source.EditorContext">
+         <action
+               class="org.eclipse.php.internal.debug.ui.actions.XDebugRunToLine"
+               definitionId="org.eclipse.php.xdebug.ui.actions.XDebugRunToLine"
+               id="php.editor.context.runToLineAction.xdebug"
+               label="XDebug Run to Line"
+               menubarPath="additions"/>
+         <visibility>
+            <and>
+             	<systemProperty
+                	name="org.eclipse.php.debug.ui.activeDebugging"
+                 	value="true"/>
+              <objectClass name="org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode"/>
+         	</and>
+         </visibility>
+      </viewerContribution>
+   </extension>  
 </plugin>

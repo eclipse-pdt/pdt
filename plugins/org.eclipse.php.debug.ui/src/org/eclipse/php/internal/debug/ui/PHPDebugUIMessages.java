@@ -14,12 +14,19 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Strings used by PHP Core
- * 
  */
 public class PHPDebugUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.ui.PHPDebugUIMessages";//$NON-NLS-1$
 
 	public static String DebugBrowserView_swtBrowserNotAvailable0;
+
+	public static String DebugPHPArgumentsTab_phpScriptArguments;
+
+	public static String DebugPHPArgumentsTab_scriptArguments;
+
+	public static String DebugPHPArgumentsTab_unknownError;
+
+	public static String DebugPHPArgumentsTab_variables;
 
 	public static String EnableSetCondition_1;
 	public static String EnterCondition_1;
@@ -27,6 +34,12 @@ public class PHPDebugUIMessages extends NLS {
 	public static String InstalledPHPsBlock_16;
 
 	public static String InstalledPHPsBlock_setDefault;
+
+	public static String PHPDebuggersTable_configure;
+	public static String PHPDebuggersTable_debuggerType;
+	public static String PHPDebuggersTable_installedDebuggers;
+	public static String PHPDebuggersTable_notDefined;
+	public static String PHPDebuggersTable_port;
 
 	public static String PHPDebugPreferencesAddon_debugOutputEncoding;
 
@@ -104,6 +117,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String InstalledPHPsBlock_13;
 	public static String InstalledPHPsBlock_14;
 	public static String InstalledPHPsBlock_15;
+	public static String InstalledPHPsBlock_17;
 
 	public static String PHPexe_executable_was_not_found_1;
 	public static String PHPexe_ok_2;
@@ -114,9 +128,11 @@ public class PHPDebugUIMessages extends NLS {
 	public static String addPHPexeDialog_enterLocation;
 	public static String addPHPexeDialog_enterName;
 	public static String addPHPexeDialog_phpHome;
+	public static String addPHPexeDialog_phpDebugger;
 	public static String addPHPexeDialog_phpName;
 	public static String addPHPexeDialog_locationNotExists;
 	public static String addPHPexeDialog_pickPHPRootDialog_message;
+	public static String addPHPexeDialog_readOnlyPHPExe;
 
 	public static String PHPexesComboBlock_1;
 	public static String PHPexesComboBlock_2;
@@ -147,6 +163,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PhpDebugPreferencePage_10;
 	public static String PhpDebugPreferencePage_11;
 	public static String PhpDebugPreferencePage_12;
+	public static String PhpDebugPreferencePage_phpDebugger;
 	public static String PhpDebugPreferencePage_serversLink;
 	public static String PhpDebugPreferencePage_installedPHPsLink;
 	

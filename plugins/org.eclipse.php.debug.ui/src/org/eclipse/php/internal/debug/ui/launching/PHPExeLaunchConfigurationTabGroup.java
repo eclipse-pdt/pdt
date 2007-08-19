@@ -12,11 +12,7 @@ package org.eclipse.php.internal.debug.ui.launching;
 
 import java.util.ArrayList;
 
-import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
-import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
-import org.eclipse.debug.ui.CommonTab;
-import org.eclipse.debug.ui.ILaunchConfigurationDialog;
-import org.eclipse.debug.ui.ILaunchConfigurationTab;
+import org.eclipse.debug.ui.*;
 
 /**
  * A PHP executable launch configuration tab group that loads all of its tabs
@@ -38,7 +34,7 @@ public class PHPExeLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 	 */
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		AbstractLaunchConfigurationTab[] tabs = LaunchConfigurationsTabsRegistry.getLaunchTabs(CONFIGURATION_TAB_GROUP_ID, mode);
-		ArrayList list = new ArrayList();
+		ArrayList<ILaunchConfigurationTab> list = new ArrayList<ILaunchConfigurationTab>();
 		if (tabs != null) {
 			for (int i = 0; i < tabs.length; i++) {
 				list.add(tabs[i]);
@@ -50,10 +46,21 @@ public class PHPExeLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 			aTab.setLaunchConfigurationDialog(dialog);
 			list.add(aTab);
 		}
+
+		// Add arguments, environment and common tabs to the tabs group.
+		PHPDebugArgumentsTab argumentsTab = new PHPDebugArgumentsTab();
+		argumentsTab.setLaunchConfigurationDialog(dialog);
+		list.add(argumentsTab);
+
+		EnvironmentTab environmentTab = new EnvironmentTab();
+		environmentTab.setLaunchConfigurationDialog(dialog);
+		list.add(environmentTab);
+		
 		CommonTab newTab = new CommonTab();
 		newTab.setLaunchConfigurationDialog(dialog);
 		list.add(newTab);
-		ILaunchConfigurationTab[] allTabs = (ILaunchConfigurationTab[]) list.toArray(new ILaunchConfigurationTab[list.size()]);
+		
+		ILaunchConfigurationTab[] allTabs = list.toArray(new ILaunchConfigurationTab[list.size()]);
 		setTabs(allTabs);
 	}
 

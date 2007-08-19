@@ -25,10 +25,10 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IWatchExpressionDelegate;
 import org.eclipse.debug.core.model.IWatchExpressionListener;
 import org.eclipse.debug.core.model.IWatchExpressionResult;
-import org.eclipse.php.internal.debug.core.debugger.DefaultExpressionsManager;
-import org.eclipse.php.internal.debug.core.debugger.Expression;
-import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
-import org.eclipse.php.internal.debug.core.model.PHPValue;
+import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
+import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.zend.model.PHPValue;
 import org.eclipse.php.internal.debug.ui.Logger;
 
 /**

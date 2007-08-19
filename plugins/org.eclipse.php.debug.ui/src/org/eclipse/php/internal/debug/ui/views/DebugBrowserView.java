@@ -20,7 +20,7 @@ import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
-import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;

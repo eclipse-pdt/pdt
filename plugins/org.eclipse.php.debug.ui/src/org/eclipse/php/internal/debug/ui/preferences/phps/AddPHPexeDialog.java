@@ -11,15 +11,15 @@
 package org.eclipse.php.internal.debug.ui.preferences.phps;
 
 import java.io.File;
-import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.Iterator;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.internal.ui.PixelConverter;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.StatusDialog;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -35,15 +35,16 @@ import org.eclipse.swt.widgets.*;
 public class AddPHPexeDialog extends StatusDialog {
 
 	private IAddPHPexeDialogRequestor fRequestor;
-
 	private PHPexeItem fEditedPHPexe;
-
 	private PHPexes fPHPexes;
 
 	private StringButtonDialogField fPHPRoot;
 	private StringDialogField fPHPexeName;
+	private Combo fDebuggers;
+	private Collection<String> debuggersIds;
 
 	private IStatus[] fStati;
+	private Label fDebuggersLabel;
 
 	public AddPHPexeDialog(IAddPHPexeDialogRequestor requestor, Shell shell, PHPexes phpexes, PHPexeItem editedPHPexe) {
 		super(shell);
@@ -56,6 +57,7 @@ public class AddPHPexeDialog extends StatusDialog {
 
 		fPHPexes = phpexes;
 		fEditedPHPexe = editedPHPexe;
+		debuggersIds = PHPDebuggersRegistry.getDebuggersIds();
 	}
 
 	/**
@@ -95,7 +97,6 @@ public class AddPHPexeDialog extends StatusDialog {
 				updateStatusLine();
 			}
 		});
-
 	}
 
 	protected String getPHPexeName() {
@@ -107,16 +108,29 @@ public class AddPHPexeDialog extends StatusDialog {
 	}
 
 	protected Control createDialogArea(Composite ancestor) {
-		
+
 		PixelConverter pixelConverter = new PixelConverter(ancestor);
-		
+
 		createDialogFields();
 		Composite parent = (Composite) super.createDialogArea(ancestor);
 		((GridLayout) parent.getLayout()).numColumns = 3;
 
 		fPHPexeName.doFillIntoGrid(parent, 3);
 		fPHPRoot.doFillIntoGrid(parent, 3);
-		((GridData)fPHPRoot.getTextControl(parent).getLayoutData()).widthHint = pixelConverter.convertWidthInCharsToPixels(50);
+		((GridData) fPHPRoot.getTextControl(parent).getLayoutData()).widthHint = pixelConverter.convertWidthInCharsToPixels(50);
+
+		fDebuggersLabel = new Label(parent, SWT.LEFT | SWT.WRAP);
+		fDebuggersLabel.setFont(parent.getFont());
+		fDebuggersLabel.setText(PHPDebugUIMessages.addPHPexeDialog_phpDebugger);
+		GridData data = new GridData();
+		data.horizontalSpan = 1;
+		fDebuggersLabel.setLayoutData(data);
+
+		fDebuggers = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
+		data = new GridData();
+		data.horizontalSpan = 1;
+		data.grabExcessHorizontalSpace = true;
+		fDebuggers.setLayoutData(data);
 
 		initializeFields();
 		createFieldListeners();
@@ -131,15 +145,53 @@ public class AddPHPexeDialog extends StatusDialog {
 	}
 
 	private void initializeFields() {
+		Iterator<String> debuggers = debuggersIds.iterator();
+		while (debuggers.hasNext()) {
+			String id = debuggers.next();
+			String debuggerName = PHPDebuggersRegistry.getDebuggerName(id);
+			fDebuggers.add(debuggerName);
+		}
 		if (fEditedPHPexe == null) {
 			fPHPexeName.setText(""); //$NON-NLS-1$
 			fPHPRoot.setText(""); //$NON-NLS-1$
+			String defaultDebuggerId = PHPDebuggersRegistry.getDefaultDebuggerId();
+			if (defaultDebuggerId != null) {
+				int index = fDebuggers.indexOf(PHPDebuggersRegistry.getDebuggerName(defaultDebuggerId));
+				fDebuggers.select(index);
+			} else {
+				if (fDebuggers.getItemCount() > 0) {
+					fDebuggers.select(0);
+				} else {
+					hideDebuggersCombo();
+				}
+			}
 		} else {
 			fPHPexeName.setText(fEditedPHPexe.getName());
+			fPHPexeName.setEnabled(fEditedPHPexe.isEditable());
 			fPHPRoot.setText(fEditedPHPexe.getLocation().getAbsolutePath());
+			fPHPRoot.setEnabled(fEditedPHPexe.isEditable());
+			String debuggerID = fEditedPHPexe.getDebuggerID();
+			fDebuggers.setEnabled(fEditedPHPexe.isEditable());
+			fDebuggersLabel.setEnabled(fEditedPHPexe.isEditable());
+			int index = fDebuggers.indexOf(PHPDebuggersRegistry.getDebuggerName(debuggerID));
+			if (index > -1) {
+				fDebuggers.select(index);
+			} else {
+				if (fDebuggers.getItemCount() > 0) {
+					fDebuggers.select(0);
+				} else {
+					hideDebuggersCombo();
+				}
+			}
 		}
 		setPHPexeNameStatus(validatePHPexeName());
+		setEditingEnabledStatus(validateEditingEnabled());
 		updateStatusLine();
+	}
+
+	private void hideDebuggersCombo() {
+		fDebuggers.setVisible(false);
+		fDebuggersLabel.setVisible(false);
 	}
 
 	private IStatus validateJRELocation() {
@@ -160,7 +212,7 @@ public class AddPHPexeDialog extends StatusDialog {
 					 * @see java.lang.Runnable#run()
 					 */
 					public void run() {
-						temp[0] =  validateLocation(tempFile);
+						temp[0] = validateLocation(tempFile);
 					}
 				};
 				BusyIndicator.showWhile(getShell().getDisplay(), r);
@@ -179,6 +231,16 @@ public class AddPHPexeDialog extends StatusDialog {
 			if (fRequestor.isDuplicateName(name) && (fEditedPHPexe == null || !name.equals(fEditedPHPexe.getName()))) {
 				status.setError(PHPDebugUIMessages.addPHPexeDialog_duplicateName); //$NON-NLS-1$
 			}
+		}
+		return status;
+	}
+	
+	private IStatus validateEditingEnabled() {
+		StatusInfo status = new StatusInfo();
+		if (fEditedPHPexe == null || fEditedPHPexe.isEditable()) {
+			status.setOK();
+		} else {
+			status.setInfo(PHPDebugUIMessages.addPHPexeDialog_readOnlyPHPExe);
 		}
 		return status;
 	}
@@ -227,6 +289,11 @@ public class AddPHPexeDialog extends StatusDialog {
 	protected void setFieldValuesToPHPexe(PHPexeItem vm) {
 		vm.setLocation(new File(fPHPRoot.getText()).getAbsoluteFile());
 		vm.setName(fPHPexeName.getText());
+		if (fDebuggers.isVisible()) {
+			int selectedIndex = fDebuggers.getSelectionIndex();
+			String debuggerId = debuggersIds.toArray()[selectedIndex].toString();
+			vm.setDebuggerID(debuggerId);
+		}
 
 	}
 
@@ -243,6 +310,10 @@ public class AddPHPexeDialog extends StatusDialog {
 
 	private void setJRELocationStatus(IStatus status) {
 		fStati[1] = status;
+	}
+	
+	private void setEditingEnabledStatus(IStatus status) {
+		fStati[2] = status;
 	}
 
 	/**
@@ -272,33 +343,6 @@ public class AddPHPexeDialog extends StatusDialog {
 		return "ADD_PHPexe_DIALOG_SECTION"; //$NON-NLS-1$
 	}
 
-//	/* (non-Javadoc)
-//	 * @see org.eclipse.jface.window.Window#close()
-//	 */
-//	public boolean close() {
-//		DialogSettingsHelper.persistShellGeometry(getShell(), getDialogSettingsSectionName());
-//		return super.close();
-//	}
-//
-//	/* (non-Javadoc)
-//	 * @see org.eclipse.jface.window.Window#getInitialLocation(org.eclipse.swt.graphics.Point)
-//	 */
-//	protected Point getInitialLocation(Point initialSize) {
-//		Point initialLocation = DialogSettingsHelper.getInitialLocation(getDialogSettingsSectionName());
-//		if (initialLocation != null) {
-//			return initialLocation;
-//		}
-//		return super.getInitialLocation(initialSize);
-//	}
-//
-//	/* (non-Javadoc)
-//	 * @see org.eclipse.jface.window.Window#getInitialSize()
-//	 */
-//	protected Point getInitialSize() {
-//		Point size = super.getInitialSize();
-//		return DialogSettingsHelper.getInitialSize(getDialogSettingsSectionName(), size);
-//	}
-	
 	public static IStatus validateLocation(File phpHome) {
 		IStatus status = null;
 		File phpExecutable = PHPexeItem.findPHPExecutable(phpHome);

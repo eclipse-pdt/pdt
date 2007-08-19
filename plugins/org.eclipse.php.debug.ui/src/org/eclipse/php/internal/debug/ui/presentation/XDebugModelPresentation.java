@@ -17,7 +17,7 @@ import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.ILineBreakpoint;
@@ -29,13 +29,13 @@ import org.eclipse.debug.ui.IValueDetailListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
-import org.eclipse.php.internal.core.filesystem.FileStoreFactory;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
-import org.eclipse.php.internal.debug.core.model.*;
+import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
+import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceNotFoundInput;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
-import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
-import org.eclipse.php.internal.debug.core.zend.model.PHPThread;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpThread;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
@@ -43,7 +43,6 @@ import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor
 import org.eclipse.php.internal.debug.ui.sourcelookup.PHPSourceNotFoundEditorInput;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
-import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -54,9 +53,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 /**
  * Renders PHP debug elements
  */
-public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation {
-	protected final static String UNTITLED_FOLDER_PATH = "Untitled_Documents";
-	
+public class XDebugModelPresentation extends LabelProvider implements IDebugModelPresentation {
+
 	private ImageDescriptorRegistry fDebugImageRegistry;
 
 	/*
@@ -114,12 +112,13 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
 	public String getText(Object element) {
-		if (element instanceof PHPDebugTarget) {
-			return getTargetText((PHPDebugTarget) element);
-		} else if (element instanceof PHPThread) {
-			return getThreadText((PHPThread) element);
-		} else if (element instanceof PHPStackFrame) {
-			return getStackFrameText((PHPStackFrame) element);
+		if (element instanceof DBGpTarget) {
+			return getTargetText((DBGpTarget) element);
+		} else if (element instanceof DBGpThread) {
+			return getThreadText((DBGpThread) element);
+		} else if (element instanceof DBGpStackFrame) {
+			//return getStackFrameText((DBGpStackFrame) element);
+			return null;
 		} else if (element instanceof PHPLineBreakpoint) {
 			PHPLineBreakpoint breakpoint = (PHPLineBreakpoint) element;
 			IMarker marker = breakpoint.getMarker();
@@ -132,7 +131,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 					Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
 					return filename + " [line: " + lineNumber.toString() + "]";
 				} catch (CoreException e) {
-					Logger.logException("Unexpected error in PHPModelPresentation", e);
+					Logger.logException("Unexpected error in XDebugModelPresentation", e);
 				}
 			}
 		}
@@ -140,7 +139,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 
 	}
 
-	private String getTargetText(PHPDebugTarget target) {
+	private String getTargetText(DBGpTarget target) {
 		String label = ""; //$NON-NLS-1$
 		if (target.isTerminated()) {
 			label = MessageFormat.format(PHPDebugUIMessages.MPresentation_Terminated_1, new Object[] {});
@@ -148,14 +147,14 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		return label + PHPDebugUIMessages.MPresentation_PHP_APP_1;
 	}
 
-	private String getThreadText(PHPThread thread) {
-		PHPDebugTarget target = (PHPDebugTarget) thread.getDebugTarget();
+	private String getThreadText(DBGpThread thread) {
+		DBGpTarget target = (DBGpTarget) thread.getDebugTarget();
 		String label = "";
 		try {
 			label = target.getName();
 		} catch (DebugException e1) {
 			// Just log should never happen
-			Logger.logException("PHPModelPresentation error getting target name", e1);
+			Logger.logException("XDebugModelPresentation error getting target name", e1);
 		}
 		if (thread.isStepping()) {
 			label += PHPDebugUIMessages.MPresentation_Stepping_1;
@@ -176,12 +175,12 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		return label;
 	}
 
-	private String getStackFrameText(PHPStackFrame frame) {
+	private String getStackFrameText(DBGpStackFrame frame) {
 		try {
 			// Fix bug #160443 (Stack frames line numbers update).
 			// Synchronize the top frame with the given values.
-			PHPThread thread = (PHPThread) frame.getThread();
-			PHPStackFrame topFrame = (PHPStackFrame) thread.getTopStackFrame();
+			DBGpThread thread = (DBGpThread) frame.getThread();
+			DBGpStackFrame topFrame = (DBGpStackFrame) thread.getTopStackFrame();
 			if (topFrame != null && topFrame.equals(frame)) {
 				frame = topFrame;
 			} // end fix
@@ -240,7 +239,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			PHPLineBreakpoint breakpoint = (PHPLineBreakpoint) element;
 			IMarker marker = breakpoint.getMarker();
 			IResource resource = marker.getResource();
-			
+
 			if (resource instanceof IFile) {
 				return new FileEditorInput((IFile) resource);
 			}
@@ -249,21 +248,22 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 				try {
 					String filename = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
 					String type = (String) marker.getAttribute(IPHPConstants.STORAGE_TYPE);
-					
+
 					if (IPHPConstants.STORAGE_TYPE_INCLUDE.equals(type)) {
 						String projectName = (String) marker.getAttribute(IPHPConstants.STORAGE_PROJECT, "");
 						IProject project = PHPDebugUIPlugin.getProject(projectName);
 						String includeBaseDir = (String) marker.getAttribute(IPHPConstants.STORAGE_INC_BASEDIR, "");
 						filename = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, filename);
-						
+
 						File file = new File(filename);
 						LocalFileStorage lfs = new LocalFileStorage(file);
 						lfs.setProject(project);
 						lfs.setIncBaseDirName(includeBaseDir);
 						return new LocalFileStorageEditorInput(lfs);
-					} else if (IPHPConstants.STORAGE_TYPE_EXTERNAL.equals(type) || IPHPConstants.STORAGE_TYPE_REMOTE.equals(type)) {
+					} else if (IPHPConstants.STORAGE_TYPE_EXTERNAL.equals(type)) {
 						File file = new File(filename);
-						return new FileStoreEditorInput(FileStoreFactory.createFileStore(file));
+						LocalFile store = new LocalFile(file);
+						return new FileStoreEditorInput(store);
 					}
 				} catch (CoreException e) {
 					Logger.logException("Unexpected error in PHPModelPresentation", e);
@@ -280,13 +280,10 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			return new PHPSourceNotFoundEditorInput((PHPSourceNotFoundInput) element);
 		}
 		if (element instanceof IFileStore) {
-			if (isUntitled(element)) {
-				String path = ((IFileStore)element).toString();
-				return new NonExistingPHPFileEditorInput(new Path(path));
-			} 
-			return new FileStoreEditorInput((IFileStore)element);
+			return new FileStoreEditorInput((IFileStore) element);
 		}
-		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: " + element.getClass().getName());
+
+		Logger.log(IStatus.WARNING, "Unknown editor input type: " + element.getClass().getName());
 		return null;
 	}
 
@@ -297,9 +294,6 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 *      java.lang.Object)
 	 */
 	public String getEditorId(IEditorInput input, Object element) {
-		if (isUntitled(element)) {
-			return "org.eclipse.php.untitledPhpEditor"; //$NON-NLS-1$
-		}
 		if (input instanceof PHPSourceNotFoundEditorInput) {
 			return "org.eclipse.php.debug.SourceNotFoundEditor";
 		}
@@ -307,16 +301,5 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			return "org.eclipse.php.editor"; //$NON-NLS-1$
 		}
 		return null;
-	}
-	
-	protected boolean isUntitled(Object element) {
-		if (element instanceof IFileStore) {
-			final IFileStore localFile = (IFileStore)element;
-			IFileStore parentDir = localFile.getParent();
-			if (parentDir != null && UNTITLED_FOLDER_PATH.equals(parentDir.getName())) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

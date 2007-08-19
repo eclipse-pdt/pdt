@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -27,8 +26,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -99,6 +97,12 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 						}
 						return phpExe.getName();
 					case 1:
+						String debuggerName = PHPDebuggersRegistry.getDebuggerName(phpExe.getDebuggerID());
+						if (debuggerName == null) {
+							debuggerName = "";
+						}
+						return debuggerName;
+					case 2:
 						return phpExe.getLocation().getAbsolutePath();
 				}
 			}
@@ -113,7 +117,10 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		}
 
 		private boolean isDefault(Object element) {
-			return element == phpExes.getDefaultItem();
+			if (element instanceof PHPexeItem) {
+				return ((PHPexeItem) element).isDefault();
+			}
+			return false;
 		}
 
 	}
@@ -133,7 +140,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	/**
 	 * VMs being displayed
 	 */
-	private final List fPHPexes = new ArrayList();
+	private final List<PHPexeItem> fPHPexes = new ArrayList<PHPexeItem>();
 
 	private Button fRemoveButton;
 
@@ -151,14 +158,14 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	private int fSortColumn = 0;
 
 	// column weights
-	private float fWeight1 = 1 / 3F;
-
-	private float fWeight2 = 1 / 3F;
+	private float fWeight1 = 3 / 8F;
+	private float fWeight2 = 2 / 8F;
+	private float fWeight3 = 3 / 8F;
 
 	PHPexes phpExes;
 
-	public InstalledPHPsBlock(final PHPexes phpExes) {
-		this.phpExes = phpExes;
+	public InstalledPHPsBlock() {
+		this.phpExes = PHPexes.getInstance();
 	}
 
 	/**
@@ -183,16 +190,16 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	/**
 	 * Correctly resizes the table so no phantom columns appear
 	 */
-	protected void configureTableResizing(final Composite parent, final Composite buttons, final Table table, final TableColumn column1, final TableColumn column2) {
+	protected void configureTableResizing(final Composite parent, final Composite buttons, final Table table, final TableColumn column1, final TableColumn column2, final TableColumn column3) {
 		parent.addControlListener(new ControlAdapter() {
 			public void controlResized(final ControlEvent e) {
-				resizeTable(parent, buttons, table, column1, column2);
+				resizeTable(parent, buttons, table, column1, column2, column3);
 			}
 		});
 		table.addListener(SWT.Paint, new Listener() {
 			public void handleEvent(final Event event) {
 				table.removeListener(SWT.Paint, this);
-				resizeTable(parent, buttons, table, column1, column2);
+				resizeTable(parent, buttons, table, column1, column2, column3);
 			}
 		});
 		column1.addControlListener(new ControlAdapter() {
@@ -205,6 +212,13 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 			public void controlResized(final ControlEvent e) {
 				if (column2.getWidth() > 0 && !fResizingTable)
 					fWeight2 = getColumnWeight(1);
+			}
+		});
+
+		column3.addControlListener(new ControlAdapter() {
+			public void controlResized(final ControlEvent e) {
+				if (column3.getWidth() > 0 && !fResizingTable)
+					fWeight3 = getColumnWeight(2);
 			}
 		});
 	}
@@ -258,8 +272,16 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		});
 
 		final TableColumn column2 = new TableColumn(table, SWT.NULL);
-		column2.setText(PHPDebugUIMessages.InstalledPHPsBlock_1);
+		column2.setText(PHPDebugUIMessages.InstalledPHPsBlock_17);
 		column2.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				sortByDebugger();
+			}
+		});
+
+		final TableColumn column3 = new TableColumn(table, SWT.NULL);
+		column3.setText(PHPDebugUIMessages.InstalledPHPsBlock_1);
+		column3.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				sortByLocation();
 			}
@@ -268,9 +290,6 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		fPHPExeList = new CheckboxTableViewer(table);
 		fPHPExeList.setLabelProvider(new PHPExeLabelProvider());
 		fPHPExeList.setContentProvider(new PHPsContentProvider());
-		// by default, sort by name
-		sortByName();
-
 		fPHPExeList.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(final SelectionChangedEvent evt) {
 				enableButtons();
@@ -320,19 +339,14 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		});
 
 		fSetDefaultButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_setDefault);
-		fSetDefaultButton.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
+		fSetDefaultButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				PHPexeItem defaultItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement();
 				phpExes.setDefaultItem(defaultItem);
 				commitChanges();
-				setPHPs(phpExes.getItems());
-				Preferences prefs = PHPProjectPreferences.getModelPreferences();
-				prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP, defaultItem.getName());
+				setPHPs(phpExes.getAllItems());
+				//				Preferences prefs = PHPProjectPreferences.getModelPreferences();
+				//				prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP, defaultItem.getName());
 			}
 		});
 
@@ -352,9 +366,11 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 			}
 		});
 
-		configureTableResizing(parent, buttons, table, column1, column2);
+		configureTableResizing(parent, buttons, table, column1, column2, column3);
 
 		fillWithWorkspacePHPs();
+		// by default, sort by the debugger type
+		sortByDebugger();
 		enableButtons();
 	}
 
@@ -376,10 +392,18 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	}
 
 	private void enableButtons() {
-		final int selectionCount = ((IStructuredSelection) fPHPExeList.getSelection()).size();
-		fEditButton.setEnabled(selectionCount == 1);
-		fRemoveButton.setEnabled(selectionCount > 0);
-		fSetDefaultButton.setEnabled(selectionCount == 1 && !((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement().equals(phpExes.getDefaultItem()));
+		IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
+		Object[] elements = selection.toArray();
+		boolean canRemoveOrEdit = true;
+		for (int i = 0; canRemoveOrEdit && i < elements.length; i++) {
+			PHPexeItem item = (PHPexeItem) elements[i];
+			canRemoveOrEdit &= item.isEditable();
+		}
+		final int selectionCount = selection.size();
+		fEditButton.setEnabled(canRemoveOrEdit && selectionCount == 1);
+		fRemoveButton.setEnabled(canRemoveOrEdit && selectionCount > 0);
+		PHPexeItem selectedItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement();
+		fSetDefaultButton.setEnabled(selectionCount == 1 && selectedItem != null && !selectedItem.isDefault());
 	}
 
 	/**
@@ -387,8 +411,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	 */
 	protected void fillWithWorkspacePHPs() {
 		// fill with PHPs
-		final PHPexeItem[] items = phpExes.getItems();
-
+		final PHPexeItem[] items = phpExes.getAllItems();
 		setPHPs(items);
 	}
 
@@ -416,7 +439,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	 * @return PHPs currently being displayed in this block
 	 */
 	public PHPexeItem[] getPHPs() {
-		return (PHPexeItem[]) fPHPexes.toArray(new PHPexeItem[fPHPexes.size()]);
+		return fPHPexes.toArray(new PHPexeItem[fPHPexes.size()]);
 	}
 
 	protected Shell getShell() {
@@ -428,7 +451,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	 */
 	public boolean isDuplicateName(final String name) {
 		for (int i = 0; i < fPHPexes.size(); i++) {
-			final PHPexeItem phpExe = (PHPexeItem) fPHPexes.get(i);
+			final PHPexeItem phpExe = fPHPexes.get(i);
 			if (phpExe.getName().equals(name))
 				return true;
 		}
@@ -457,8 +480,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	}
 
 	public void commitChanges() {
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		phpExes.store(prefs);
+		phpExes.save();
 	}
 
 	public void removePHPs(final PHPexeItem[] phpExes) {
@@ -476,7 +498,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		fSelectionListeners.remove(listener);
 	}
 
-	private void resizeTable(final Composite parent, final Composite buttons, final Table table, final TableColumn column1, final TableColumn column2) {
+	private void resizeTable(final Composite parent, final Composite buttons, final Table table, final TableColumn column1, final TableColumn column2, final TableColumn column3) {
 		fResizingTable = true;
 		int parentWidth = -1;
 		int parentHeight = -1;
@@ -505,6 +527,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 			// match the client area width
 			column1.setWidth(Math.round(width * fWeight1));
 			column2.setWidth(Math.round(width * fWeight2));
+			column3.setWidth(Math.round(width * fWeight3));
 			table.setSize(width, parentHeight);
 		} else {
 			// table is getting bigger so make the table
@@ -513,6 +536,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 			table.setSize(width, parentHeight);
 			column1.setWidth(Math.round(width * fWeight1));
 			column2.setWidth(Math.round(width * fWeight2));
+			column3.setWidth(Math.round(width * fWeight3));
 		}
 		fResizingTable = false;
 	}
@@ -527,6 +551,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	public void restoreColumnSettings(final IDialogSettings settings, final String qualifier) {
 		fWeight1 = restoreColumnWeight(settings, qualifier, 0);
 		fWeight2 = restoreColumnWeight(settings, qualifier, 1);
+		fWeight3 = restoreColumnWeight(settings, qualifier, 2);
 		fPHPExeList.getTable().layout(true);
 		try {
 			fSortColumn = settings.getInt(qualifier + ".sortColumn"); //$NON-NLS-1$
@@ -538,9 +563,12 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 				sortByName();
 				break;
 			case 2:
-				sortByLocation();
+				sortByDebugger();
 				break;
 			case 3:
+				sortByLocation();
+				break;
+			case 4:
 				sortByType();
 				break;
 		}
@@ -550,7 +578,12 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		try {
 			return settings.getFloat(qualifier + ".column" + col); //$NON-NLS-1$
 		} catch (final NumberFormatException e) {
-			return 1 / 3F;
+			switch (col) {
+				case 1:
+					return 2 / 8F;
+				default:
+					return 3 / 8F;
+			}
 		}
 
 	}
@@ -563,7 +596,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	 * @param qualifier key qualifier
 	 */
 	public void saveColumnSettings(final IDialogSettings settings, final String qualifier) {
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < 3; i++)
 			//persist the first 2 column weights
 			settings.put(qualifier + ".column" + i, getColumnWeight(i)); //$NON-NLS-1$
 		settings.put(qualifier + ".sortColumn", fSortColumn); //$NON-NLS-1$
@@ -619,9 +652,12 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 				final String name = PHPDebugUIMessages.InstalledPHPsBlock_16;
 				String nameCopy = new String(name);
 				int i = 1;
-				while (isDuplicateName(nameCopy))
+				while (isDuplicateName(nameCopy)) {
 					nameCopy = name + '(' + i++ + ')';
-				final PHPexeItem phpExe = new PHPexeItem(nameCopy, location, true);
+				}
+				// Since the search for PHP exe option does not 'know' the debugger id it should assign to the PHPexeItem, 
+				// we call for PHPexes.getDefaultDebuggerId() - which can also return null in some cases.
+				final PHPexeItem phpExe = new PHPexeItem(nameCopy, location, PHPDebuggersRegistry.getDefaultDebuggerId(), true);
 				if (phpExe.getPhpEXE() != null) {
 					phpExes.addItem(phpExe);
 					phpExeAdded(phpExe);
@@ -697,7 +733,11 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		for (int i = 0; i < phpExes.length; i++)
 			fPHPexes.add(phpExes[i]);
 		fPHPExeList.setInput(fPHPexes);
-		fPHPExeList.refresh();
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				fPHPExeList.refresh();
+			}
+		});
 	}
 
 	/**
@@ -719,6 +759,29 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 			}
 		});
 		fSortColumn = 2;
+	}
+
+	/**
+	 * Sorts by debugger type.
+	 */
+	private void sortByDebugger() {
+		fPHPExeList.setSorter(new ViewerSorter() {
+			public int compare(final Viewer viewer, final Object e1, final Object e2) {
+				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
+					final PHPexeItem left = (PHPexeItem) e1;
+					final PHPexeItem right = (PHPexeItem) e2;
+					String leftDebugger = PHPDebuggersRegistry.getDebuggerName(left.getDebuggerID());
+					String rightDebugger = PHPDebuggersRegistry.getDebuggerName(right.getDebuggerID());
+					return rightDebugger.compareToIgnoreCase(leftDebugger);
+				}
+				return super.compare(viewer, e1, e2);
+			}
+
+			public boolean isSorterProperty(final Object element, final String property) {
+				return true;
+			}
+		});
+		fSortColumn = 3;
 	}
 
 	/**

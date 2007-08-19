@@ -14,8 +14,8 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.internal.ui.elements.adapters.DefaultVariableCellModifier;
 import org.eclipse.debug.internal.ui.elements.adapters.VariableColumnPresentation;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.php.internal.debug.core.model.PHPValue;
-import org.eclipse.php.internal.debug.core.model.PHPVariable;
+import org.eclipse.php.internal.debug.core.zend.model.PHPValue;
+import org.eclipse.php.internal.debug.core.zend.model.PHPVariable;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 
 /**
