@@ -27,6 +27,9 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -37,7 +40,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
-public class PHPServerLaunchShortcut implements ILaunchShortcut {
+/**
+ * A PHP web page launch shortcut.
+ * 
+ * @author Shalom Gibly
+ */
+public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
@@ -179,7 +187,13 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 		}
 		String URL = server.getBaseURL() + '/' + new Path(fileName).removeFirstSegments(1);
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(fileName));
-
+		
+		// Set the debugger ID and the configuration delegate for this launch configuration
+		String debuggerID = PHPProjectPreferences.getDefaultDebuggerID(project);
+		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
+		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerID);
+		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getWebLaunchDelegateClass());
+		
 		wc.setAttribute(Server.NAME, server.getName());
 		wc.setAttribute(Server.FILE_NAME, fileName);
 		wc.setAttribute(Server.CONTEXT_ROOT, computeContextRoot(URL, fileName, server));
@@ -193,9 +207,9 @@ public class PHPServerLaunchShortcut implements ILaunchShortcut {
 
 		// Display a dialog for selecting the URL.
 		String title = ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page" : "Run PHP Web Page";
-		ServerURLLaunchDialog launchDialog = new ServerURLLaunchDialog(wc, server, title);
+		PHPWebPageURLLaunchDialog launchDialog = new PHPWebPageURLLaunchDialog(wc, server, title);
 		launchDialog.setBlockOnOpen(true);
-		if (launchDialog.open() == ServerURLLaunchDialog.OK) {
+		if (launchDialog.open() == PHPWebPageURLLaunchDialog.OK) {
 			// Save the user-given URL as part of the launch configuration.
 			config = wc.doSave();
 			return config;

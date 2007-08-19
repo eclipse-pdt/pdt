@@ -24,6 +24,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -47,7 +48,6 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	private Text debugFromTxt;
 	protected Button openBrowser;
 	protected boolean isOpenInBrowser;
-	protected Button breakOnFirstLine;
 	protected WidgetListener listener;
 	protected ILaunchConfiguration launchConfiguration;
 
@@ -71,7 +71,6 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		composite.setLayout(layout);
 
 		createAdvanceControl(composite);
-		createBreakControl(composite);
 		createExtensionControls(composite);
 
 		Dialog.applyDialogFont(composite);
@@ -221,10 +220,6 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			}
 			String startFromURL = configuration.getAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, "");
 			debugFromTxt.setText(startFromURL);
-			if (breakOnFirstLine != null) {
-				// init the breakpoint settings
-				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPDebugPlugin.getStopAtFirstLine()));
-			}
 			updateDebugFrom();
 
 			enableSessionSettingButtons(isOpenInBrowser);
@@ -250,7 +245,6 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 				configuration.setAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
 				configuration.setAttribute(IPHPConstants.DEBUGGING_SHOULD_CONTINUE, debugContinueBt.getSelection());
 			}
-			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 		} else {
 			// Allow only debug-first-page
 			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_FIRST_PAGE);
@@ -300,26 +294,6 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		return isValidExtension(launchConfig);
 	}
 
-	//	 In case this is a debug mode, display checkboxes to override the 'Break on first line' attribute.
-	protected void createBreakControl(Composite parent) {
-
-		Group group = new Group(parent, SWT.NONE);
-		group.setText("Breakpoint");
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		group.setLayout(layout);
-		group.setLayoutData(gridData);
-
-		breakOnFirstLine = createCheckButton(group, "Break at First Line");
-		breakOnFirstLine.addSelectionListener(listener);
-
-		// Disables/Enables all the controls according the the debug mode.
-		String mode = getLaunchConfigurationDialog().getMode();
-		boolean isDebugMode = ILaunchManager.DEBUG_MODE.equals(mode);
-		breakOnFirstLine.setEnabled(isDebugMode);
-	}
-
 	/**
 	 * Override this method to perform the isValid in the extending classes.
 	 * 
@@ -340,10 +314,14 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
+				try {
 				boolean debugFromSelected = debugStartFromBt.getSelection();
 				debugFromTxt.setEnabled(debugFromSelected);
 				debugContinueBt.setEnabled(debugFromSelected);
 				resetBt.setEnabled(debugFromSelected);
+				} catch (SWTException se) {
+					// Just in case the widget was disposed (cases such as the configuration deletion).
+				}
 			}
 		});
 	}

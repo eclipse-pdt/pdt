@@ -30,7 +30,7 @@ public class ServerLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 			}
 		}
 		if (list.isEmpty()) {
-			ServerTab aTab = new ServerTab();
+			ServerLaunchConfigurationTab aTab = new ServerLaunchConfigurationTab();
 			aTab.setLaunchConfigurationDialog(dialog);
 			list.add(aTab);
 		}

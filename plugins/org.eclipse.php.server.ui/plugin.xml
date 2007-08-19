@@ -20,19 +20,19 @@
   <extension
        point="org.eclipse.php.debug.ui.launchConfigurationTabs">
     <launchConfigurationTab
-          class="org.eclipse.php.internal.server.ui.launching.PHPServerTab"
-          id="org.eclipse.php.debug.ui.launching.PHPServerTab"
+          class="org.eclipse.php.internal.server.ui.launching.PHPWebPageLaunchConfigurationTab"
+          id="org.eclipse.php.debug.ui.launching.PHPWebPageLaunchConfigurationTab"
           launchConfigurationTabGroupId="org.eclipse.php.server.ui.launchConfigurationTabGroup"/>
     <launchConfigurationTab
           class="org.eclipse.php.internal.server.ui.launching.PHPServerAdvancedTab"
           id="org.eclipse.php.debug.ui.launching.PHPServerAdvancedTab"
           launchConfigurationTabGroupId="org.eclipse.php.server.ui.launchConfigurationTabGroup"
-          placeAfter="org.eclipse.php.debug.ui.launching.PHPServerTab"/>
+          placeAfter="org.eclipse.php.debug.ui.launching.PHPWebPageLaunchConfigurationTab"/>
  </extension>
   <extension
         point="org.eclipse.debug.ui.launchShortcuts">
      <shortcut
-            class="org.eclipse.php.internal.server.ui.launching.PHPServerLaunchShortcut"
+            class="org.eclipse.php.internal.server.ui.launching.PHPWebPageLaunchShortcut"
             icon="icons/full/obj16/server_run.gif"
             id="org.eclipse.php.server.ui.phpServerShortcut"
             label="%phpServerShortcut.label"

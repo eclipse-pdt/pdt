@@ -15,7 +15,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.ui.launching.LaunchUtil;
-import org.eclipse.php.internal.server.ui.ServerTab;
+import org.eclipse.php.internal.server.ui.ServerLaunchConfigurationTab;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -23,9 +23,9 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Robert G., Shalom G.
  */
-public class PHPServerTab extends ServerTab {
+public class PHPWebPageLaunchConfigurationTab extends ServerLaunchConfigurationTab {
 
-	public PHPServerTab() {
+	public PHPWebPageLaunchConfigurationTab() {
 		super();
 	}
 
