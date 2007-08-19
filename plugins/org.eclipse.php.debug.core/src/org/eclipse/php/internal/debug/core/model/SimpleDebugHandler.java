@@ -15,7 +15,7 @@ package org.eclipse.php.internal.debug.core.model;
 
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.debugger.DebugError;
+import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 
 public abstract class SimpleDebugHandler implements IDebugHandler {
 

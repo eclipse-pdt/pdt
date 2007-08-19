@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 
 public class PHPProjectPreferences {
@@ -52,15 +53,19 @@ public class PHPProjectPreferences {
 
 	}
 
-	public static int getDebugPort(IProject project) {
-		Preferences prefs = getModelPreferences();
-		int port = prefs.getInt(PHPDebugCorePreferenceNames.DEBUG_PORT);
-		if (project != null && getElementSettingsForProject(project)) {
-			IScopeContext projectScope = getProjectScope(project);
-			port = projectScope.getNode(getPreferenceNodeQualifier()).getInt(PHPDebugCorePreferenceNames.DEBUG_PORT, port);
+	/**
+	 * Returns the debug port defined for the given debugger id.
+	 *  
+	 * @param debuggerId The debugger id.
+	 * @return The debug port; -1 if no such debugger exists.
+	 */
+	public static int getDebugPort(String debuggerId) {
+		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerId);
+		if (debuggerConfiguration == null) {
+			return -1;
 		}
+		int port = debuggerConfiguration.getPort();
 		return port;
-
 	}
 
 	public static String getDefaultServerName(IProject project) {
@@ -72,6 +77,16 @@ public class PHPProjectPreferences {
 		}
 		return serverName;
 	}
+	
+	public static String getDefaultDebuggerID(IProject project) {
+		Preferences prefs = getModelPreferences();
+		String debuggerID = prefs.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
+		if (project != null && getElementSettingsForProject(project)) {
+			IScopeContext projectScope = getProjectScope(project);
+			debuggerID = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
+		}
+		return debuggerID;
+	}
 
 	public static String getTransferEncoding(IProject project) {
 		Preferences prefs = getModelPreferences();
@@ -82,7 +97,7 @@ public class PHPProjectPreferences {
 		}
 		return encoding;
 	}
-	
+
 	public static String getOutputEncoding(IProject project) {
 		Preferences prefs = getModelPreferences();
 		String encoding = prefs.getString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);

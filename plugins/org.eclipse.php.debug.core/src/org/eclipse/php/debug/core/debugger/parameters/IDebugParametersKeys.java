@@ -20,17 +20,19 @@ public interface IDebugParametersKeys {
 	public static final String PASSIVE_DEBUG = "passiveDebug";
 	public static final String WEB_SERVER_DEBUGGER = "webServerDebugger";
 	public static final String FIRST_LINE_BREAKPOINT = "firstLineBreakpoint";
-	/**
-	 * This parameter key is deprecated.
-	 * We now use only the {@value #FIRST_LINE_BREAKPOINT} in the 
-	 * launch configuration. 
-	 * @deprecated
-	 */
-	public static final String OVERRIDE_FIRST_LINE_BREAKPOINT = "overrideFirstLineBreakpoint";
+	public static final String EXE_CONFIG_PROGRAM_ARGUMENTS = "exeDebugArguments";
 	public static final String PROTOCOL_ID = "protocolID";
 	public static final String ORIGINAL_URL = "uriginalURL";
 	public static final String SESSION_ID = "debugSessionID";
 	public static final String TRANSFER_ENCODING = "debugTransferEncoding";
 	public static final String OUTPUT_ENCODING = "debugOutputEncoding";
 	public static final String PHP_INI_LOCATION = "PHPIniLocation";
+	
+	/**
+	 * This parameter key is depreciated.
+	 * We now use only the {@value #FIRST_LINE_BREAKPOINT} in the 
+	 * launch configuration. 
+	 * @deprecated
+	 */
+	public static final String OVERRIDE_FIRST_LINE_BREAKPOINT = "overrideFirstLineBreakpoint";
 }

@@ -114,7 +114,7 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
     }
 
     protected void addConditionToBP() {
-        org.eclipse.php.internal.debug.core.debugger.Breakpoint rbp = getRuntimeBreakpoint();
+        org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint rbp = getRuntimeBreakpoint();
         if (isConditionEnabled()) {
             rbp.setConditionalFlag(true);
             rbp.setExpression(getCondition());

@@ -1,0 +1,118 @@
+/*******************************************************************************
+ * Copyright (c) 2006 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
+
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.model.IValue;
+import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
+import org.w3c.dom.Node;
+
+public abstract class DBGpValue extends DBGpElement implements IValue {
+
+	private boolean modifiable = false;
+	private IVariable[] variables = new IVariable[0];
+	private DBGpBaseVariable owner;
+	private String valueString = "";
+
+	private static final String ENCODING_BASE64 = "base64";
+
+	public DBGpValue(DBGpBaseVariable variable) {
+		super(variable.getDebugTarget());
+		owner = variable;
+	}
+
+	public DBGpValue(DBGpBaseVariable variable, Node property) {
+		super(variable.getDebugTarget());
+		owner = variable;
+		simpleParseNode(property);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.debug.core.model.IValue#isAllocated()
+	 */
+	public boolean isAllocated() throws DebugException {
+		return true;
+	}
+
+	boolean isModifiable() {
+		return modifiable;
+	}
+
+	void setModifiable(boolean canModify) {
+		modifiable = canModify;
+	}
+
+	// override this definitely
+	public abstract String getReferenceTypeName() throws DebugException;
+
+	public String getValueString() throws DebugException {
+		return valueString;
+	}
+
+	void setValueString(String newValueStr) {
+		valueString = newValueStr;
+	}
+
+	// override this if necessary: Object, Array only
+	public IVariable[] getVariables() throws DebugException {
+		return variables;
+	}
+
+	//override this if necessary: Object, Array only
+	public boolean hasVariables() throws DebugException {
+		return false;
+	}
+
+	// override this if modifiable 
+	boolean verifyValue(String expression) throws DebugException {
+		return false;
+	}
+
+	// override this if modifiable
+	public void setValue(String expression) throws DebugException {
+	}
+
+	public DBGpBaseVariable getOwner() {
+		return owner;
+	}
+
+	/*
+	 * This method extracts the information out of the CDATA section
+	 * 
+	 * <property name="1" fullname="$a[1]" address="10208616" type="float">
+	 *    <![CDATA[15.1]]>
+	 * </property>
+	 */
+	void simpleParseNode(Node property) {
+		String data = null;
+		String encoding = DBGpResponse.getAttribute(property, "encoding");
+		Node Child = property.getFirstChild();
+		if (Child != null) {
+			data = decodeValue(Child.getNodeValue(), encoding);
+		}
+		genValueString(data);
+	}
+
+	private String decodeValue(String valueData, String encoding) {
+		String res = valueData;
+		if (encoding != null && encoding.equalsIgnoreCase(ENCODING_BASE64)) {
+			if (valueData != null && valueData.trim().length() != 0)
+				res = new String(Base64.decode(valueData.trim().getBytes()));
+		}
+		return res;
+	}
+
+	// override this definitely
+	abstract void genValueString(String data);
+}

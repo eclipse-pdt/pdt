@@ -55,6 +55,20 @@ public class PHPDebugCoreMessages extends NLS {
 	
 	public static String PHPWebPageLaunchDelegate_serverNotFound;
 
+	public static String DebuggerConfigurationDialog_debugPort;
+	public static String DebuggerConfigurationDialog_invalidPort;
+
+	public static String ZendDebuggerConfigurationDialog_runWithDebugInfo;
+	public static String ZendDebuggerConfigurationDialog_zendDebugger;
+	public static String ZendDebuggerConfigurationDialog_zendDebuggerSettings;
+	
+	public static String XDebugConfigurationDialog_invalidTimeout;
+	public static String XDebugConfigurationDialog_invalidTimeoutValue;
+	public static String XDebugConfigurationDialog_maxArrayDepth;
+	public static String XDebugConfigurationDialog_showSuperGlobals;
+	public static String XDebugConfigurationDialog_xdebugSettings;
+	public static String XDebugConfigurationDialog_invalidPortRange;
+
     static {
         // load message values from bundle file
         NLS.initializeMessages(BUNDLE_NAME, PHPDebugCoreMessages.class);

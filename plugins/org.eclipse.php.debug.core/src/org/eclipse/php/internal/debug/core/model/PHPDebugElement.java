@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.model;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.DebugElement;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 /**
  * Common function of PHP debug model elements

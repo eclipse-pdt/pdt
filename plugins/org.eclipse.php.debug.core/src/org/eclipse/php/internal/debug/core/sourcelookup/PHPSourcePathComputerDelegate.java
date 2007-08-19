@@ -23,7 +23,7 @@ import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeS
 
 /**
  * Computes the default source lookup path for a PHP launch configuration. For
- * now just use a project name PHP
+ * now just use a project name.
  */
 public class PHPSourcePathComputerDelegate implements ISourcePathComputerDelegate {
 

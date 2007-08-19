@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.debug.core.debugger;
 
-import org.eclipse.php.internal.debug.core.debugger.DebugError;
-import org.eclipse.php.internal.debug.core.debugger.IRemoteDebugger;
-import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
+import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public interface IDebugHandler {
 

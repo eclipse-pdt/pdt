@@ -37,11 +37,11 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.debugger.DebugParametersInitializersRegistry;
-import org.eclipse.php.internal.debug.core.debugger.PHPExecutableDebuggerInitializer;
-import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
-import org.eclipse.php.internal.debug.core.model.DebugSessionIdGenerator;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
+import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitializersRegistry;
+import org.eclipse.php.internal.debug.core.zend.debugger.PHPExecutableDebuggerInitializer;
+import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.swt.widgets.Display;
 
@@ -54,7 +54,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	public static final String EXECUTABLE_LAUNCH = "executable_launch";
 	private final static String UNTITLED_FOLDER_PATH = "Untitled_Documents";
 
-	protected Map envVariables = null;
+	protected Map<String, String> envVariables = null;
 
 	/**
 	 * Override the extended getLaunch to create a PHPLaunch. 
@@ -78,7 +78,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
 		// Check that the debug daemon is functional
-		if (!DaemonPlugin.getDefault().validateCommunicationDaemons()) {
+		// DEBUGGER - Make sure that the active debugger id is indeed Zend's debugger
+		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
 			monitor.setCanceled(true);
 			monitor.done();
 			return;
@@ -166,7 +167,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
 			boolean stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
-			final int requestPort = PHPProjectPreferences.getDebugPort(project);
+			final int requestPort = PHPProjectPreferences.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
 			// Set Project Name
 			final String projectString = project.getFullPath().toString();

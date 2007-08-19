@@ -14,8 +14,11 @@ import java.io.File;
 
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
-import org.eclipse.php.internal.debug.core.model.PHPStackFrame;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
+import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 
 /**
  * The PHP source lookup participant knows how to translate a 
@@ -28,6 +31,15 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	public String getSourceName(Object object) throws CoreException {
 		if (object instanceof PHPStackFrame) {
 			return ((PHPStackFrame) object).getSourceName();
+		}
+		if (object instanceof DBGpStackFrame) {
+			String src = ((DBGpStackFrame) object).getSourceName();
+			if (src == null) {
+				src = ((DBGpStackFrame) object).getQualifiedFile();
+				IPath p = new Path(src);
+				src = p.lastSegment();
+			}
+			return src;
 		}
 		return null;
 	}
@@ -42,9 +54,13 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 
 		if (sourceElements == EMPTY) {
 			// If the lookup returned an empty elements array, check if the source is outside the workspace.
+			String fileName = null;
 			if (object instanceof PHPStackFrame) {
-				PHPStackFrame stackFrame = (PHPStackFrame) object;
-				String fileName = stackFrame.getAbsoluteFileName();
+				fileName = ((PHPStackFrame) object).getAbsoluteFileName();
+			} else if (object instanceof DBGpStackFrame) {
+				fileName = ((DBGpStackFrame) object).getQualifiedFile();
+			}
+			if (fileName != null) {
 				File file = new File(fileName);
 				if (!file.exists()) {
 					return EMPTY;

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.php.internal.debug.core.debugger.Breakpoint;
+import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
 
 /**
  * A run to line breakpoint.
@@ -62,7 +62,7 @@ public class PHPRunToLineBreakpoint extends PHPLineBreakpoint {
         IPath path = file.getFullPath();
         String fileName = path.lastSegment();
         Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
-        fBreakpoint = new org.eclipse.php.internal.debug.core.debugger.Breakpoint(fileName, (lineNumber.intValue()/*-1*/));
+        fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(fileName, (lineNumber.intValue()/*-1*/));
         fBreakpoint.setLifeTime(Breakpoint.ZEND_ONETIME_BREAKPOINT);
     }
 

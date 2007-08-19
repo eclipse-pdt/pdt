@@ -8,6 +8,8 @@
    <extension-point id="phpDebugHandlers" name="PHP Debug Handler" schema="schema/phpDebugHandlers.exsd"/>
    <extension-point id="phpExe" name="PHP exe" schema="schema/phpExe.exsd"/>
    <extension-point id="phpDebugParametersInitializers" name="phpDebugParametersInitializers" schema="schema/phpDebugParametersInitializer.exsd"/>
+   <extension-point id="fileMapper" name="XDebug File mapping" schema="schema/fileMapper.exsd"/>
+   <extension-point id="phpDebuggers" name="PHP Debuggers" schema="schema/phpDebuggers.exsd"/>
     
    <extension
          point="org.eclipse.debug.core.sourceLocators">
@@ -55,7 +57,7 @@
             id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType">
       </launchConfigurationType>
       <launchConfigurationType
-            delegate="org.eclipse.php.internal.debug.core.launching.PHPWebPageLaunchDelegate"
+            delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
             id="org.eclipse.php.debug.core.launching.webPageLaunch"
             modes="run"
             name="%webPageLaunchConfigurationType.label">
@@ -76,7 +78,7 @@
         </modeCombination>
      </launchDelegate>
      <launchDelegate
-           delegate="org.eclipse.php.internal.debug.core.launching.PHPWebPageLaunchDelegate"
+           delegate="org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy"
            id="org.eclipse.php.debug.core.launching.launchDelegate.webPageDebug"
            modes="debug"
            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
@@ -99,198 +101,198 @@
 	  <!-- Request Messages -->
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.AddBreakpointRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointRequest"
             id="org.eclipse.php.debug.core.debugger.messages.AddBreakpointRequest"
 	    name="Add Breakpoint Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.AssignValueRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.AssignValueRequest"
             id="org.eclipse.php.debug.core.debugger.messages.AssignValueRequest"
 	    name="Assign Value Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.CancelAllBreakpointsRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsRequest"
             id="org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsRequest"
 	    name="Cancel All Breakpoints Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.CancelBreakpointRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointRequest"
             id="org.eclipse.php.debug.core.debugger.messages.CancelBreakpointRequest"
 	    name="Cancel Breakpoint Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.EvalRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalRequest"
             id="org.eclipse.php.debug.core.debugger.messages.EvalRequest"
 	    name="Eval Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.GetCallStackRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackRequest"
             id="org.eclipse.php.debug.core.debugger.messages.GetCallStackRequest"
 	    name="Get Call Stack Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.GetStackVariableValueRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueRequest"
             id="org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueRequest"
 	    name="Get Stack Variable Value Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.GetVariableValueRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueRequest"
             id="org.eclipse.php.debug.core.debugger.messages.GetVariableValueRequest"
 	    name="Get Variable Value Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.GoRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GoRequest"
             id="org.eclipse.php.debug.core.debugger.messages.GoRequest"
 	    name="Go Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.PauseDebuggerRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerRequest"
             id="org.eclipse.php.debug.core.debugger.messages.PauseDebuggerRequest"
 	    name="Pause Debugger Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.StartRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.StartRequest"
             id="org.eclipse.php.debug.core.debugger.messages.StartRequest"
 	    name="Start Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.StepIntoRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoRequest"
             id="org.eclipse.php.debug.core.debugger.messages.StepIntoRequest"
 	    name="Step Into Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.StepOutRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutRequest"
             id="org.eclipse.php.debug.core.debugger.messages.StepOutRequest"
 	    name="Step Out Request"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.StepOverRequest"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverRequest"
             id="org.eclipse.php.debug.core.debugger.messages.StepOverRequest"
 	    name="Step Over Request"/>
 	  <message
-           class="org.eclipse.php.internal.debug.core.debugger.messages.SetProtocolRequest"
+           class="org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest"
            id="org.eclipse.php.debug.core.debugger.messages.SetProtocolRequest"
         name="Set Protocol Request"/>
         
 	  <!-- Response Messages -->
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.AddBreakpointResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointResponse"
             id="org.eclipse.php.debug.core.debugger.messages.AddBreakpointResponse"
 	    name="Add Breakpoint Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.AssignValueResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.AssignValueResponse"
             id="org.eclipse.php.debug.core.debugger.messages.AssignValueResponse"
 	    name="Assign Value Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.CancelAllBreakpointsResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsResponse"
             id="org.eclipse.php.debug.core.debugger.messages.CancelAllBreakpointsResponse"
 	    name="Cancel All Breakpoints Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.CancelBreakpointResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointResponse"
             id="org.eclipse.php.debug.core.debugger.messages.CancelBreakpointResponse"
 	    name="Cancel Breakpoint Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.EvalResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalResponse"
             id="org.eclipse.php.debug.core.debugger.messages.EvalResponse"
 	    name="Eval Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.GetCallStackResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackResponse"
             id="org.eclipse.php.debug.core.debugger.messages.GetCallStackResponse"
 	    name="Get Call Stack Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.GetStackVariableValueResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueResponse"
             id="org.eclipse.php.debug.core.debugger.messages.GetStackVariableValueResponse"
 	    name="Get Stack Variable Value Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.GetVariableValueResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueResponse"
             id="org.eclipse.php.debug.core.debugger.messages.GetVariableValueResponse"
 	    name="Get Variable Value Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.GoResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GoResponse"
             id="org.eclipse.php.debug.core.debugger.messages.GoResponse"
 	    name="Go Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.PauseDebuggerResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerResponse"
             id="org.eclipse.php.debug.core.debugger.messages.PauseDebuggerResponse"
 	    name="Pause Debugger Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.StartResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.StartResponse"
             id="org.eclipse.php.debug.core.debugger.messages.StartResponse"
 	    name="Start Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.StepIntoResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoResponse"
             id="org.eclipse.php.debug.core.debugger.messages.StepIntoResponse"
 	    name="Step Into Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.StepOutResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutResponse"
             id="org.eclipse.php.debug.core.debugger.messages.StepOutResponse"
 	    name="Step Out Response"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.StepOverResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverResponse"
             id="org.eclipse.php.debug.core.debugger.messages.StepOverResponse"
 	    name="Step Over Response"/>
 	  <message
-           class="org.eclipse.php.internal.debug.core.debugger.messages.SetProtocolResponse"
+           class="org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse"
            id="org.eclipse.php.debug.core.debugger.messages.SetProtocolResponse"
         name="Set Protocol Response"/>
 
 	  <!-- Notification Messages -->
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.DebuggerErrorNotification"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.DebuggerErrorNotification"
             id="org.eclipse.php.debug.core.debugger.messages.DebuggerErrorNotification"
 	    name="Debugger Error Notification"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.DebugScriptEndedNotification"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugScriptEndedNotification"
             id="org.eclipse.php.debug.core.debugger.messages.DebugScriptEndedNotification"
 	    name="Debug Script Ended Notification"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.DebugSessionClosedNotification"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionClosedNotification"
             id="org.eclipse.php.debug.core.debugger.messages.DebugSessionClosedNotification"
 	    name="Debug Session Closed Notification"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.DebugSessionStartedNotification"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification"
             id="org.eclipse.php.debug.core.debugger.messages.DebugSessionStartedNotification"
 	    name="Debug Session Started Notification"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.HeaderOutputNotification"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.HeaderOutputNotification"
             id="org.eclipse.php.debug.core.debugger.messages.HeaderOutputNotification"
 	    name="Header Output Notification"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.OutputNotification"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.OutputNotification"
             id="org.eclipse.php.debug.core.debugger.messages.OutputNotification"
 	    name="Output Notification"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.ParsingErrorNotification"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.ParsingErrorNotification"
             id="org.eclipse.php.debug.core.debugger.messages.ParsingErrorNotification"
 	    name="Parsing Error Notification"/>
 
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.ReadyNotification"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.ReadyNotification"
             id="org.eclipse.php.debug.core.debugger.messages.ReadyNotification"
 	    name="Ready Notification"/>
       <message
-            class="org.eclipse.php.internal.debug.core.debugger.messages.UnknownMessageResponse"
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.UnknownMessageResponse"
             id="org.eclipse.php.debug.core.debugger.messages.UnknownMessageResponse"
             name="Unknown Message Response"/>
 
@@ -298,7 +300,7 @@
   <extension
         point="org.eclipse.php.debug.core.phpDebugParametersInitializers">
      <initializer
-           class="org.eclipse.php.internal.debug.core.debugger.parameters.DefaultDebugParametersInitializer"
+           class="org.eclipse.php.internal.debug.core.zend.debugger.parameters.DefaultDebugParametersInitializer"
            id="org.eclipse.php.debug.core.defaultInitializer"
            name="org.eclipse.php.debug.core.defaultInitializer"/>
   </extension>
@@ -306,8 +308,27 @@
   <extension
         point="org.eclipse.php.debug.daemon.debugCommunicationDaemon">
      <daemon
-           class="org.eclipse.php.internal.debug.core.communication.DebuggerCommunicationDaemon"
+           class="org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon"
            id="org.eclipse.php.debug.core.BasicDebugDaemon"
-           name="Basic Debug Daemon"/>
+           name="Basic Zend Debug Daemon"/>
+     <daemon
+           class="org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon"
+           id="org.eclipse.php.debug.core.BasicXDebugDaemon"
+           name="Basic XDebug Debug Daemon">
+     </daemon>
   </extension>
+  
+   <extension
+         point="org.eclipse.php.debug.core.phpDebuggers">
+      <phpDebugger
+            debuggerConfiguration="org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerConfiguration"
+            id="org.eclipse.php.debug.core.zendDebugger"
+            name="Zend">
+      </phpDebugger>
+      <phpDebugger
+            debuggerConfiguration="org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerConfiguration"
+            id="org.eclipse.php.debug.core.xdebugDebugger"
+            name="XDebug">
+      </phpDebugger>
+   </extension>
 </plugin>

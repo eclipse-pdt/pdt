@@ -15,11 +15,11 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.debugger.IDebuggerInitializer;
-import org.eclipse.php.internal.debug.core.debugger.PHPSessionLaunchMapper;
-import org.eclipse.php.internal.debug.core.debugger.PHPWebServerDebuggerInitializer;
-import org.eclipse.php.internal.debug.core.model.DebugSessionIdGenerator;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
+import org.eclipse.php.internal.debug.core.zend.debugger.IDebuggerInitializer;
+import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
+import org.eclipse.php.internal.debug.core.zend.debugger.PHPWebServerDebuggerInitializer;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.PHPServerCoreMessages;
 import org.eclipse.php.internal.server.core.Server;
@@ -57,7 +57,8 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		// Check that the debug daemon is functional
-		if (!DaemonPlugin.getDefault().validateCommunicationDaemons()) {
+		// DEBUGGER - Make sure that the active debugger id is indeed Zend's debugger
+		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
 			monitor.setCanceled(true);
 			monitor.done();
 			return;
@@ -119,7 +120,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			boolean stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(proj));
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
 		}
-		int requestPort = PHPProjectPreferences.getDebugPort(proj);
+		int requestPort = PHPProjectPreferences.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
 		// Generate a session id for this launch and put it in the map
 		int sessionID = DebugSessionIdGenerator.generateSessionID();

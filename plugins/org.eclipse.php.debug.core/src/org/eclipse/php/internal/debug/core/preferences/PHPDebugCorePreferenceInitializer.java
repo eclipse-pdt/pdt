@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 
 /**
  * Sets default values for PHP Debug preferences
@@ -26,15 +27,15 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 		IEclipsePreferences node = new DefaultScope().getNode(PHPDebugPlugin.getDefault().getBundle().getSymbolicName());
 
 		// formatting preferences
-		node.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, false);
+		node.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
-		node.putInt(PHPDebugCorePreferenceNames.DEBUG_PORT, 10000);
+		node.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 10000);
 		node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "UTF-8");
 		node.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, "UTF-8");
 		node.put(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
-
+		node.put(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID); // The default is Zend's debugger
 		PHPDebugPlugin.getDefault().getPluginPreferences().setDefault(IPHPConstants.PHP_DEBUG_PARAMETERS_INITIALIZER, "org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
 	}
 }

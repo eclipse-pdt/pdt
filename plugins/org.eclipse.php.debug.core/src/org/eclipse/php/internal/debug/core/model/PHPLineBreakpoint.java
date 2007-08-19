@@ -31,7 +31,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
  */
 public class PHPLineBreakpoint extends LineBreakpoint {
 
-    protected org.eclipse.php.internal.debug.core.debugger.Breakpoint fBreakpoint;
+    protected org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint fBreakpoint;
     protected boolean fConditionChanged = false;
 
     public PHPLineBreakpoint() {
@@ -93,11 +93,11 @@ public class PHPLineBreakpoint extends LineBreakpoint {
             fileName = path.lastSegment();
         }
         Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
-        fBreakpoint = new org.eclipse.php.internal.debug.core.debugger.Breakpoint(fileName, (lineNumber.intValue()));
+        fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(fileName, (lineNumber.intValue()));
         fBreakpoint.setEnable(true);
     }
 
-    public org.eclipse.php.internal.debug.core.debugger.Breakpoint getRuntimeBreakpoint() {
+    public org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint getRuntimeBreakpoint() {
         return fBreakpoint;
     }
 

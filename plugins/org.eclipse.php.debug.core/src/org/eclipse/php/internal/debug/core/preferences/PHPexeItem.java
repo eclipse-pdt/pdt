@@ -21,22 +21,34 @@ public class PHPexeItem {
 	File phpEXE;
 	String version;
 	boolean editable = true;
+	String debuggerID;
+	boolean isDefault;
 
-	public PHPexeItem(String name, String path) {
+	public PHPexeItem(String name, String path, String debuggerID) {
 		this.name = name;
+		this.debuggerID = debuggerID;
 		setLocation(new File(path));
 	}
 
-	public PHPexeItem(String name, File phpExeFile, boolean editable) {
+	public PHPexeItem(String name, File phpExeFile, String debuggerID, boolean editable) {
 		this.name = name;
 		phpEXE = phpExeFile;
 		this.editable = editable;
 		location = phpExeFile.getParentFile();
+		this.debuggerID = debuggerID;
 	}
 
 	public PHPexeItem() {
 	}
 
+	public String getDebuggerID() {
+		return debuggerID;
+	}
+	
+	public void setDebuggerID(String debuggerID) {
+		this.debuggerID = debuggerID;
+	}
+	
 	public File getLocation() {
 		return location;
 	}
@@ -88,7 +100,30 @@ public class PHPexeItem {
 		this.version = version;
 	}
 
+	/**
+	 * Returns it this exe item is editable (e.g. a user defined item).
+	 * 
+	 * @return True, if this item can be edited.
+	 */
 	public boolean isEditable() {
 		return editable;
+	}
+
+	/**
+	 * Returns if this item is the default exe item.
+	 * 
+	 * @return if this item is the default exe item.
+	 */
+	public boolean isDefault() {
+		return isDefault;
+	}
+
+	/**
+	 * Set or un-set this item to be the default php exe item.
+	 *  
+	 * @param isDefault the value to set
+	 */
+	public void setDefault(boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 }

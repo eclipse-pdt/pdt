@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
-import org.eclipse.php.internal.debug.core.debugger.DebugError;
+import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 
 public interface IPHPConsoleEventListener {
 

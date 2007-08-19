@@ -101,8 +101,8 @@
 &lt;pre&gt;
 &lt;extension point=&quot;org.eclipse.php.internal.debug.core.phpDebugMessages&quot;&gt;
     &lt;message
-        class=&quot;org.eclipse.php.internal.debug.core.debugger.messages.AddBreakpointRequest&quot;
-        id=&quot;org.eclipse.php.internal.debug.core.debugger.messages.AddBreakpointRequest&quot;
+        class=&quot;org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointRequest&quot;
+        id=&quot;org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointRequest&quot;
         name=&quot;Add Breakpoint Request&quot;/&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;

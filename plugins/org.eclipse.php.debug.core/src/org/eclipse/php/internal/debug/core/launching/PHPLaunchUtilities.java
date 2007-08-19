@@ -10,9 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.ui.DebugUITools;
@@ -24,14 +29,15 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.communication.DebugConnectionThread;
-import org.eclipse.php.internal.debug.core.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
@@ -504,5 +510,129 @@ public class PHPLaunchUtilities {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Returns an array of system environment attributes from the given launch configuration. If empty, then
+	 * the current native environment attributes will be returned. From this we append any additional environment
+	 * variables we might want to add.
+	 * Note: Additional environments may override the native environment attributes, but disregarded
+	 * when an equivalent launch configuration attribute is set for the given launch.
+	 * 
+	 * @param configuration the launch configuration
+	 * @param additionalEnv additional environment strings
+	 * @return the complete environment
+	 * @throws CoreException rethrown exception
+	 */
+	public static String[] getEnvironment(ILaunchConfiguration configuration, String[] additionalEnv) throws CoreException {
+
+		if (additionalEnv == null) {
+			additionalEnv = new String[0];
+		}
+		Map<String, String> additionalEnvMap = asAttributesMap(additionalEnv);
+
+		String[] totalEnv = null;
+		String[] launchConfigurationEnvironment = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
+
+		if (launchConfigurationEnvironment != null) {
+			// The launch configuration tab has environment settings.
+			Map<String, String> envMap = asAttributesMap(launchConfigurationEnvironment);
+			// Make sure that these settings override any additional settings, so add them to the
+			// additional environments map.
+			additionalEnvMap.putAll(envMap);
+			totalEnv = asAttributesArray(additionalEnvMap);
+		} else {
+			// We have nothing in the environment tab, so we need to set currentEnv ourselves to the current environment
+			Map nativeEnvironment = DebugPlugin.getDefault().getLaunchManager().getNativeEnvironmentCasePreserved();
+			// Make sure we override any native environment with the additional environment values
+			nativeEnvironment.putAll(additionalEnvMap);
+			totalEnv = asAttributesArray(nativeEnvironment);
+		}
+		return totalEnv;
+	}
+
+	/*
+	 * Returns a map of Strings parsed from a given array of attributes in a form of 'key=value'.
+	 */
+	private static Map<String, String> asAttributesMap(String[] attributesArray) {
+		Map<String, String> map = new HashMap<String, String>();
+		if (attributesArray == null) {
+			return map;
+		}
+		for (String attribute : attributesArray) {
+			try {
+				int index = attribute.indexOf('=');
+				map.put(attribute.substring(0, index), attribute.substring(index + 1));
+			} catch (Exception e) {
+				Logger.logException("Error while parsing launch attribute '" + attribute + '\'', e);
+			}
+		}
+		return map;
+	}
+
+	/*
+	 * Returns an array of Strings in the form of 'key=value'
+	 */
+	private static String[] asAttributesArray(Map<String, String> attributesMap) {
+		String[] attributes = new String[attributesMap.size()];
+		int index = 0;
+		for (Map.Entry<String, String> entry : attributesMap.entrySet()) {
+			attributes[index++] = entry.getKey() + '=' + entry.getValue();
+		}
+		return attributes;
+	}
+
+	/**
+	 * Creates and returns a command line invocation string for the execution of the PHP script.
+	 * 
+	 * @param configuration
+	 * @param phpExe
+	 * @param phpConfigDir
+	 * @param scriptPath
+	 * @param phpIniLocation 
+	 * @return
+	 * @throws CoreException
+	 */
+	public static String[] getCommandLine(ILaunchConfiguration configuration, String phpExe, String phpConfigDir, String scriptPath, String phpIniLocation) throws CoreException {
+		String[] cmdLine = null;
+		String[] splitArgs = getProgramArguments(configuration);
+		if (!"".equals(phpIniLocation)) {
+			phpConfigDir = phpIniLocation;
+		}
+
+		// Important!!! 
+		// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
+		// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
+		phpConfigDir = (new File(phpConfigDir)).getParentFile().getAbsolutePath();
+
+		if (splitArgs.length == 0) {
+			cmdLine = new String[] { phpExe, "-c", phpConfigDir, scriptPath };
+		} else {
+			cmdLine = new String[splitArgs.length + 4];
+			cmdLine[0] = phpExe;
+			cmdLine[1] = "-c";
+			cmdLine[2] = phpConfigDir;
+			cmdLine[3] = scriptPath;
+			System.arraycopy(splitArgs, 0, cmdLine, 4, splitArgs.length);
+		}
+		return cmdLine;
+	}
+
+	/*
+	 * Returns the program arguments from the launch configuration. Program arguments will allow
+	 * variable substitution as well.
+	 * The arguments are extracted from the IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS configuration
+	 * attribute.
+	 * 
+	 * @param configuration the launch configuration
+	 * @return the program arguments
+	 * @throws CoreException rethrown exception
+	 */
+	private static String[] getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
+		String arguments = configuration.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null); //$NON-NLS-1$
+		if (arguments == null || arguments.trim().equals("")) { //$NON-NLS-1$
+			return new String[0];
+		}
+		return VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(arguments).split(" "); //$NON-NLS-1$
 	}
 }

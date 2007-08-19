@@ -17,7 +17,10 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
+import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.osgi.framework.BundleContext;
@@ -65,12 +68,23 @@ public class PHPDebugPlugin extends Plugin {
 		org.eclipse.php.internal.server.core.Activator.getDefault(); // TODO - Check if getInstance is needed
 		// check for default server
 		createDefaultPHPServer();
+
+		// TODO - XDebug - See if this can be removed and use a preferences initializer.
+		// It's important the the default setting will occur before loading the daemons.
+		XDebugPreferenceInit.setDefaults();
+
+		// Start all the daemons
+		DaemonPlugin.getDefault().startDaemons(null);
+
+		// TODO - XDebug - See if this can be removed
+		XDebugLaunchListener.getInstance();
 	}
 
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
+		XDebugLaunchListener.shutdown();
 		super.stop(context);
 		plugin = null;
 		DebugUIPlugin.getDefault().getPreferenceStore().setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES, fInitialAutoRemoveLaunches);
@@ -105,7 +119,17 @@ public class PHPDebugPlugin extends Plugin {
 	public static boolean getOpenInBrowserOption() {
 		Preferences prefs = getDefault().getPluginPreferences();
 		return prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER);
+	}
 
+	/**
+	 * Returns the debugger id that is currently in use.
+	 * 
+	 * @return The debugger id that is in use.
+	 * @since PDT 1.0
+	 */
+	public static String getCurrentDebuggerId() {
+		Preferences prefs = getDefault().getPluginPreferences();
+		return prefs.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
 	}
 
 	/**
@@ -128,9 +152,10 @@ public class PHPDebugPlugin extends Plugin {
 
 	}
 
+	// TODO - call for the getCurrentDebuggerId() and then get the default port for the debugger with the id
 	public static int getDebugPort() {
 		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getInt(PHPDebugCorePreferenceNames.DEBUG_PORT);
+		return prefs.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT);
 
 	}
 

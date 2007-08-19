@@ -22,7 +22,7 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
-import org.eclipse.php.internal.debug.core.debugger.RemoteDebugger;
+import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 
 public class BreakpointSet {
 
