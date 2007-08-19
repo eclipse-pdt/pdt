@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.debug.daemon.communication;
 
-
 /**
  * A communication daemon interface.
+ * 
+ * @author Shalom Gibly
  */
 public interface ICommunicationDaemon {
 	
@@ -57,4 +58,22 @@ public interface ICommunicationDaemon {
 	 * @return boolean <code>true</code> if it's enabled, <code>false</code> otherwise.
 	 */
 	public boolean isEnabled();
+	
+	/**
+	 * Returns the debugger ID that is using this communication daemon.
+	 * 
+	 * @return The debugger ID that is using this daemon.
+	 * @since PDT 1.0
+	 */
+	public String getDebuggerID();
+	
+	/**
+	 * Returns true if the daemon is a debugger daemon.
+	 * This method should return true if the daemon instance is a debugger daemon listener. 
+	 * Not all of the registered daemons are necessarily debugger daemons, thus, this method is required
+	 * to identify the ones that are debugger-related.
+	 * 
+	 * @return True, iff this daemon is a debugger daemon.
+	 */
+	public boolean isDebuggerDaemon();
 }
