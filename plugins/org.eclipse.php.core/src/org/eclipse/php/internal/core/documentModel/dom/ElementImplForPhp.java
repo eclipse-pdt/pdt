@@ -55,18 +55,24 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 		return cloned;
 	}
 
+	/**
+	 * @see ElementStyleImpl#setOwnerDocument(Document)
+	 * make this method package visible
+	 */
 	@Override
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
 
+	/**
+	 * @see setTagName(String)
+	 * make this method package visible
+	 */
 	@Override
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
 	}
 
-	/**
-	 */
 	@Override
 	public boolean isGlobalTag() {
 		return isPhpTag() ? false : super.isGlobalTag();
@@ -81,11 +87,22 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 
 	@Override
 	public INodeAdapter getExistingAdapter(Object type) {
-		if (type == ValidationAdapter.class && isPhpTag()) {
+
+		// no validation or validation propagation for PHP tags
+		if (isPhpTag() && ValidationAdapter.class.isAssignableFrom((Class) type)) {
 			return nullValidator;
 		}
 		return super.getExistingAdapter(type);
 	}
 
 	private final static ValidationComponent nullValidator = new NullValidator();
+
+	@Override
+	public String getPrefix() {
+		final String prefix = super.getPrefix();
+		if (prefix == null && isPhpTag()) {
+			return "";
+		}
+		return prefix;
+	}
 }
