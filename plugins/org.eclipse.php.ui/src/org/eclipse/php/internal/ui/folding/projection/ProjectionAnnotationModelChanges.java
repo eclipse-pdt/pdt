@@ -26,11 +26,10 @@ class ProjectionAnnotationModelChanges {
 	// org.eclipse.jst.jsp.ui.internal.projection
 	// org.eclipse.php.internal.ui.projection
 
-
-	private Node fNode;
-	private Annotation[] fDeletions;
-	private Map fAdditions;
-	private Annotation[] fModifications;
+	private final Node fNode;
+	private final Annotation[] fDeletions;
+	private final Map fAdditions;
+	private final Annotation[] fModifications;
 
 	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications) {
 		fNode = node;

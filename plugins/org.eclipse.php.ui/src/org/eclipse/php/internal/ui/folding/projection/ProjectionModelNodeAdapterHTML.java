@@ -31,6 +31,7 @@ import org.w3c.dom.Node;
 /**
  * Updates projection annotation model with projection annotations for this
  * adapter node's children
+ * @improtedFrom org.eclipse.wst.html.ui.internal.projection
  */
 public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	// copies of this class located in:
@@ -63,6 +64,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		 *      org.eclipse.swt.widgets.Canvas,
 		 *      org.eclipse.swt.graphics.Rectangle)
 		 */
+		@Override
 		public void paint(GC gc, Canvas canvas, Rectangle rectangle) {
 			/* workaround for BUG85874 */
 			/*
@@ -91,6 +93,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		 *
 		 * @see org.eclipse.jface.text.source.projection.ProjectionAnnotation#markCollapsed()
 		 */
+		@Override
 		public void markCollapsed() {
 			/* workaround for BUG85874 */
 			// do not mark collapsed if annotation is not visible
@@ -245,8 +248,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 						projectionAnnotations.put(newAnnotation, newPos);
 						// add to map containing annotations to add
 						additions.put(newAnnotation, newPos);
-					}
-					else {
+					} else {
 						// add to map containing all annotations for this
 						// adapter
 						projectionAnnotations.put(existing, newPos);

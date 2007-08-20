@@ -35,6 +35,7 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -57,181 +58,6 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	 * performance sake)
 	 */
 	private static final int MAX_SIBLINGS = 1000;
-
-	/**
-	 * Adds an adapter to node and its children
-	 *
-	 * @param node
-	 * @param childLevel
-	 */
-	private void addAdapterToNodeAndChildren(Node node, int childLevel) {
-		// stop adding initial adapters MAX_CHILDREN levels deep for
-		// performance sake
-		if (node instanceof INodeNotifier && childLevel < MAX_CHILDREN) {
-			final INodeNotifier notifier = (INodeNotifier) node;
-
-			// try and get the adapter for the current node and update the
-			// adapter with projection information
-			final ProjectionModelNodeAdapterPHP adapter = (ProjectionModelNodeAdapterPHP) notifier.getExistingAdapter(ProjectionModelNodeAdapterPHP.class);
-			if (adapter != null) {
-				adapter.updateAdapter(node, fViewer);
-			} else {
-				// just call getadapter so the adapter is created and
-				// automatically initialized
-				notifier.getAdapterFor(ProjectionModelNodeAdapterPHP.class);
-			}
-			final ProjectionModelNodeAdapterHTML adapter2 = (ProjectionModelNodeAdapterHTML) notifier.getExistingAdapter(ProjectionModelNodeAdapterHTML.class);
-			if (adapter2 != null) {
-				adapter2.updateAdapter(node);
-			} else {
-				// just call getadapter so the adapter is created and
-				// automatically initialized
-				notifier.getAdapterFor(ProjectionModelNodeAdapterHTML.class);
-			}
-			int siblingLevel = 0;
-			Node nextChild = node.getFirstChild();
-			while (nextChild != null && siblingLevel < MAX_SIBLINGS) {
-				final Node childNode = nextChild;
-				nextChild = childNode.getNextSibling();
-
-				addAdapterToNodeAndChildren(childNode, childLevel + 1);
-				++siblingLevel;
-			}
-		}
-	}
-
-	/**
-	 * Goes through every node and adds an adapter onto each for tracking
-	 * purposes
-	 */
-	private void addAllAdapters() {
-		final long start = System.currentTimeMillis();
-
-		if (fDocument != null) {
-			IStructuredModel sModel = null;
-			try {
-				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-				if (sModel != null) {
-					IndexedRegion startNode = sModel.getIndexedRegion(0);
-					if (startNode == null) {
-						assert sModel instanceof IDOMModel;
-						startNode = ((IDOMModel) sModel).getDocument();
-					}
-
-					if (startNode instanceof Node) {
-						int siblingLevel = 0;
-						Node nextSibling = (Node) startNode;
-						while (nextSibling != null && siblingLevel < MAX_SIBLINGS) {
-							final Node currentNode = nextSibling;
-							nextSibling = currentNode.getNextSibling();
-
-							addAdapterToNodeAndChildren(currentNode, 0);
-							++siblingLevel;
-						}
-					}
-				}
-			} finally {
-				if (sModel != null) {
-					sModel.releaseFromRead();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Get the ProjectionModelNodeAdapterFactoryHTML to use with this
-	 * provider.
-	 *
-	 * @return ProjectionModelNodeAdapterFactoryHTML
-	 */
-	private ProjectionModelNodeAdapterFactoryHTML getAdapterFactoryHTML(boolean createIfNeeded) {
-		final long start = System.currentTimeMillis();
-
-		ProjectionModelNodeAdapterFactoryHTML factory = null;
-		if (fDocument != null) {
-			IStructuredModel sModel = null;
-			try {
-				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-				if (sModel != null) {
-					final FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
-
-					// getting the projectionmodelnodeadapter for the first
-					// time
-					// so do some initializing
-					if (!factoryRegistry.contains(ProjectionModelNodeAdapterHTML.class) && createIfNeeded) {
-						final ProjectionModelNodeAdapterFactoryHTML newFactory = new ProjectionModelNodeAdapterFactoryHTML();
-
-						// add factory to factory registry
-						factoryRegistry.addFactory(newFactory);
-
-						// add factory to propogating adapter
-						final IDOMModel domModel = (IDOMModel) sModel;
-						final Document document = domModel.getDocument();
-						final PropagatingAdapter propagatingAdapter = (PropagatingAdapter) ((INodeNotifier) document).getAdapterFor(PropagatingAdapter.class);
-						if (propagatingAdapter != null) {
-							propagatingAdapter.addAdaptOnCreateFactory(newFactory);
-						}
-					}
-
-					// try and get the factory
-					factory = (ProjectionModelNodeAdapterFactoryHTML) factoryRegistry.getFactoryFor(ProjectionModelNodeAdapterHTML.class);
-				}
-			} finally {
-				if (sModel != null) {
-					sModel.releaseFromRead();
-				}
-			}
-		}
-
-		return factory;
-	}
-
-	/**
-	 * Get the ProjectionModelNodeAdapterFactoryJSP to use with this provider.
-	 *
-	 * @return ProjectionModelNodeAdapterFactoryJSP
-	 */
-	private ProjectionModelNodeAdapterFactoryPHP getAdapterFactoryPHP(boolean createIfNeeded) {
-		final long start = System.currentTimeMillis();
-
-		ProjectionModelNodeAdapterFactoryPHP factory = null;
-		if (fDocument != null) {
-			IStructuredModel sModel = null;
-			try {
-				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-				if (sModel != null) {
-					final FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
-
-					// getting the projectionmodelnodeadapter for the first
-					// time
-					// so do some initializing
-					if (!factoryRegistry.contains(ProjectionModelNodeAdapterPHP.class) && createIfNeeded) {
-						final ProjectionModelNodeAdapterFactoryPHP newFactory = new ProjectionModelNodeAdapterFactoryPHP();
-
-						// add factory to factory registry
-						factoryRegistry.addFactory(newFactory);
-
-						// add factory to propogating adapter
-						final IDOMModel domModel = (IDOMModel) sModel;
-						final Document document = domModel.getDocument();
-						final PropagatingAdapter propagatingAdapter = (PropagatingAdapter) ((INodeNotifier) document).getAdapterFor(PropagatingAdapter.class);
-						if (propagatingAdapter != null) {
-							propagatingAdapter.addAdaptOnCreateFactory(newFactory);
-						}
-					}
-
-					// try and get the factory
-					factory = (ProjectionModelNodeAdapterFactoryPHP) factoryRegistry.getFactoryFor(ProjectionModelNodeAdapterPHP.class);
-				}
-			} finally {
-				if (sModel != null) {
-					sModel.releaseFromRead();
-				}
-			}
-		}
-
-		return factory;
-	}
 
 	/**
 	 * Initialize this provider with the correct document. Assumes projection
@@ -435,8 +261,14 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		try {
 			final DOMModelForPHP viewerModel = (DOMModelForPHP) model;
 			if (viewerModel != null && viewerModel.getFileData() == fileData) {
-				// Update all the annotations in the document:
-				addAllAdapters();
+				final IDOMDocument document = viewerModel.getDocument();
+				// Update the PHP annotations
+				final INodeAdapter adapterFor = document.getAdapterFor(ProjectionModelNodeAdapterPHP.class);
+				if (adapterFor != null) {
+					assert adapterFor instanceof ProjectionModelNodeAdapterPHP : "wrong adapter";
+					final ProjectionModelNodeAdapterPHP phpAdapter = (ProjectionModelNodeAdapterPHP) adapterFor;
+					phpAdapter.updateAdapter(document);
+				}
 			}
 		} finally {
 			if (model != null) {
@@ -481,4 +313,200 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			initialize();
 		}
 	}
+
+	/**
+	 * Adds an adapter to node and its children
+	 *
+	 * @param node
+	 * @param childLevel
+	 */
+	private void addAdapterToNodeAndChildrenHTML(Node node, int childLevel) {
+		// stop adding initial adapters MAX_CHILDREN levels deep for
+		// performance sake
+		if (node instanceof INodeNotifier && childLevel < MAX_CHILDREN) {
+			final INodeNotifier notifier = (INodeNotifier) node;
+
+			// try and get the adapter for the current node and update the
+			// adapter with projection information
+			final ProjectionModelNodeAdapterHTML adapter2 = (ProjectionModelNodeAdapterHTML) notifier.getExistingAdapter(ProjectionModelNodeAdapterHTML.class);
+			if (adapter2 != null) {
+				adapter2.updateAdapter(node);
+			} else {
+				// just call getadapter so the adapter is created and
+				// automatically initialized
+				notifier.getAdapterFor(ProjectionModelNodeAdapterHTML.class);
+			}
+			int siblingLevel = 0;
+			Node nextChild = node.getFirstChild();
+			while (nextChild != null && siblingLevel < MAX_SIBLINGS) {
+				final Node childNode = nextChild;
+				nextChild = childNode.getNextSibling();
+
+				addAdapterToNodeAndChildrenHTML(childNode, childLevel + 1);
+				++siblingLevel;
+			}
+		}
+	}
+
+	/**
+	 * Goes through every node and adds an adapter onto each for tracking
+	 * purposes
+	 */
+	private void addAllAdapters() {
+		final long start = System.currentTimeMillis();
+
+		if (fDocument != null) {
+			IStructuredModel sModel = null;
+			try {
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				if (sModel != null) {
+					IndexedRegion startNode = sModel.getIndexedRegion(0);
+					if (startNode == null) {
+						assert sModel instanceof IDOMModel;
+						startNode = ((IDOMModel) sModel).getDocument();
+					}
+
+					if (startNode instanceof Node) {
+						int siblingLevel = 0;
+						Node nextSibling = (Node) startNode;
+
+						// adds the php adapter to the document  
+						addAdapterToDocumentPHP(nextSibling.getOwnerDocument());
+
+						while (nextSibling != null && siblingLevel < MAX_SIBLINGS) {
+							final Node currentNode = nextSibling;
+							nextSibling = currentNode.getNextSibling();
+
+							addAdapterToNodeAndChildrenHTML(currentNode, 0);
+							++siblingLevel;
+						}
+					}
+				}
+			} finally {
+				if (sModel != null) {
+					sModel.releaseFromRead();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Adds the php adpter to the document
+	 * @param document
+	 */
+	private void addAdapterToDocumentPHP(Document document) {
+		if (document == null) {
+			return;
+		}
+
+		assert document instanceof Document;
+		final INodeNotifier notifier = (INodeNotifier) document;
+
+		// try and get the adapter for the current node and update the
+		// adapter with projection information
+		final ProjectionModelNodeAdapterPHP adapter = (ProjectionModelNodeAdapterPHP) notifier.getExistingAdapter(ProjectionModelNodeAdapterPHP.class);
+		if (adapter != null) {
+			adapter.updateAdapter(document, fViewer);
+		} else {
+			// just call getadapter so the adapter is created and
+			// automatically initialized
+			notifier.getAdapterFor(ProjectionModelNodeAdapterPHP.class);
+		}
+	}
+
+	/**
+	 * Get the ProjectionModelNodeAdapterFactoryHTML to use with this
+	 * provider.
+	 *
+	 * @return ProjectionModelNodeAdapterFactoryHTML
+	 */
+	private ProjectionModelNodeAdapterFactoryHTML getAdapterFactoryHTML(boolean createIfNeeded) {
+		final long start = System.currentTimeMillis();
+
+		ProjectionModelNodeAdapterFactoryHTML factory = null;
+		if (fDocument != null) {
+			IStructuredModel sModel = null;
+			try {
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				if (sModel != null) {
+					final FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
+
+					// getting the projectionmodelnodeadapter for the first
+					// time
+					// so do some initializing
+					if (!factoryRegistry.contains(ProjectionModelNodeAdapterHTML.class) && createIfNeeded) {
+						final ProjectionModelNodeAdapterFactoryHTML newFactory = new ProjectionModelNodeAdapterFactoryHTML();
+
+						// add factory to factory registry
+						factoryRegistry.addFactory(newFactory);
+
+						// add factory to propogating adapter
+						final IDOMModel domModel = (IDOMModel) sModel;
+						final Document document = domModel.getDocument();
+						final PropagatingAdapter propagatingAdapter = (PropagatingAdapter) ((INodeNotifier) document).getAdapterFor(PropagatingAdapter.class);
+						if (propagatingAdapter != null) {
+							propagatingAdapter.addAdaptOnCreateFactory(newFactory);
+						}
+					}
+
+					// try and get the factory
+					factory = (ProjectionModelNodeAdapterFactoryHTML) factoryRegistry.getFactoryFor(ProjectionModelNodeAdapterHTML.class);
+				}
+			} finally {
+				if (sModel != null) {
+					sModel.releaseFromRead();
+				}
+			}
+		}
+
+		return factory;
+	}
+
+	/**
+	 * Get the ProjectionModelNodeAdapterFactoryJSP to use with this provider.
+	 *
+	 * @return ProjectionModelNodeAdapterFactoryJSP
+	 */
+	private ProjectionModelNodeAdapterFactoryPHP getAdapterFactoryPHP(boolean createIfNeeded) {
+		final long start = System.currentTimeMillis();
+
+		ProjectionModelNodeAdapterFactoryPHP factory = null;
+		if (fDocument != null) {
+			IStructuredModel sModel = null;
+			try {
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				if (sModel != null) {
+					final FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
+
+					// getting the projectionmodelnodeadapter for the first
+					// time
+					// so do some initializing
+					if (!factoryRegistry.contains(ProjectionModelNodeAdapterPHP.class) && createIfNeeded) {
+						final ProjectionModelNodeAdapterFactoryPHP newFactory = new ProjectionModelNodeAdapterFactoryPHP();
+
+						// add factory to factory registry
+						factoryRegistry.addFactory(newFactory);
+
+						// add factory to propogating adapter
+						final IDOMModel domModel = (IDOMModel) sModel;
+						final Document document = domModel.getDocument();
+						final PropagatingAdapter propagatingAdapter = (PropagatingAdapter) ((INodeNotifier) document).getAdapterFor(PropagatingAdapter.class);
+						if (propagatingAdapter != null) {
+							propagatingAdapter.addAdaptOnCreateFactory(newFactory);
+						}
+					}
+
+					// try and get the factory
+					factory = (ProjectionModelNodeAdapterFactoryPHP) factoryRegistry.getFactoryFor(ProjectionModelNodeAdapterPHP.class);
+				}
+			} finally {
+				if (sModel != null) {
+					sModel.releaseFromRead();
+				}
+			}
+		}
+
+		return factory;
+	}
+
 }

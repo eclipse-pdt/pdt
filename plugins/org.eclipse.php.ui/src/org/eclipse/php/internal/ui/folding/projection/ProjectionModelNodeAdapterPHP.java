@@ -83,22 +83,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 				return;
 			}
 
-			Node childNode = node.getFirstChild();
-			while (childNode != null) {
-
-				if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-					assert childNode instanceof ElementImplForPhp : "Bad element";
-					ElementImplForPhp childElement = (ElementImplForPhp) childNode;
-					if (childElement.isPhpTag()) {
-						int startOffset = childElement.getStartOffset();
-						int endOffset = childElement.getEndOffset();
-
-						createFileAnnotations(currentAnnotations, addedAnnotations, fileData, startOffset, endOffset);
-
-					}
-				}
-				childNode = childNode.getNextSibling();
-			}
+			createAnnotationsForChild(addedAnnotations, currentAnnotations, fileData, node.getFirstChild());
 
 			// in the end, want to delete anything leftover in old list, add
 			// everything in additions, and update everything in
@@ -129,6 +114,29 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		// save new list of annotations
 		previousAnnotations = currentAnnotations;
 
+	}
+
+	private final Node createAnnotationsForChild(final Map<ProjectionAnnotation, Position> addedAnnotations, final Map<ProjectionAnnotation, Position> currentAnnotations, PHPFileData fileData, Node childNode) {
+		while (childNode != null) {
+			if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+				assert childNode instanceof ElementImplForPhp : "Bad element";
+				ElementImplForPhp childElement = (ElementImplForPhp) childNode;
+				if (childElement.isPhpTag()) {
+					int startOffset = childElement.getStartOffset();
+					int endOffset = childElement.getEndOffset();
+
+					// adds the annotations for the specific node
+					createFileAnnotations(currentAnnotations, addedAnnotations, fileData, startOffset, endOffset);
+				}
+
+				// adds the annotations for the child nodes (recursively)
+				final Node firstChild = childElement.getFirstChild();
+				createAnnotationsForChild(addedAnnotations, currentAnnotations, fileData, childElement.getFirstChild());
+			}
+
+			childNode = childNode.getNextSibling();
+		}
+		return childNode;
 	}
 
 	private void createFileAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPFileData fileData, int startOffset, int endOffset) {
