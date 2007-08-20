@@ -58,14 +58,6 @@ public class PHPNature implements IProjectNature {
 		instanceStamp = instanceCount;
 	}
 
-	/*
-	 * Do nothing with a cvs ignore file for web projects, till a better solution is found from OTI
-	 */
-
-	public void addCVSIgnoreFile() {
-		//Do nothing
-	}
-
 	/**
 	 * Adds a builder to the build spec for the given project.
 	 */
