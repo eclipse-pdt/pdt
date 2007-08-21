@@ -35,11 +35,11 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
  */
 public class PHPDocTool {
 
-	public static PHPDocBlock createPhpDoc(CodeData codeData, IDocument document) {
-		return createPhpDoc(codeData, null, document);
+	public static PHPDocBlock createPhpDoc(CodeData codeData) {
+		return createPhpDoc(codeData, null);
 	}
 
-	public static PHPDocBlock createPhpDoc(CodeData codeData, String shortDescription, IDocument document) {
+	public static PHPDocBlock createPhpDoc(CodeData codeData, String shortDescription) {
 		PHPDocBlock block = createDocBlock(codeData);
 		if(shortDescription != null){
 			block.setShortDescription(shortDescription);
