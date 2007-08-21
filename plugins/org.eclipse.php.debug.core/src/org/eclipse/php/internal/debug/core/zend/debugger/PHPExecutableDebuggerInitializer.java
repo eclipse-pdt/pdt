@@ -109,8 +109,10 @@ public class PHPExecutableDebuggerInitializer {
 			display.asyncExec(new Runnable() {
 				public void run() {
 					String message = e.getLocalizedMessage();
-					message = message.replaceFirst(e.getClass().getName() + ": ", "");
-					MessageDialog.openError(display.getActiveShell(), "Error", NLS.bind("Error running PHP executable:\n\n{0}", message));
+					if (message != null) {
+						message = message.replaceFirst(e.getClass().getName() + ": ", "");
+						MessageDialog.openError(display.getActiveShell(), "Error", NLS.bind("Error running PHP executable:\n\n{0}", message));
+					}
 				}
 			});
 			DebugPlugin.log(e);

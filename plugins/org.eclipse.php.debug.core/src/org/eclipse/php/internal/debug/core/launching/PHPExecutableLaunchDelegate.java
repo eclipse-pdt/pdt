@@ -103,9 +103,16 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		if (monitor.isCanceled())
 			return;
 
-		if (fileNameString == null || fileNameString.equals(""))
+		if (fileNameString == null || fileNameString.equals("")) {
+			displayErrorMessage("Please set a valid PHP file for this launch.");
 			return;
+		}
 
+		if (phpExeString == null) {
+			displayErrorMessage("Please set a valid PHP executable for this launch.");
+			return;
+		}
+		
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		final IPath filePath = new Path(fileNameString);
 		IProject project = null;

@@ -97,6 +97,28 @@ public class PHPexes {
 	}
 
 	/**
+	 * Returns true if there are PHP executables registered to the given debugger.
+	 * 
+	 * @param debuggerId The debugger id.
+	 * @return True, if there are executables for this debugger; False, otherwise.
+	 * @see #hasItems()
+	 */
+	public boolean hasItems(String debuggerId) {
+		HashMap<String, PHPexeItem> map = items.get(debuggerId);
+		return map != null && map.size() > 0;
+	}
+
+	/**
+	 * Returns true if there are any registered PHP executables.
+	 * 
+	 * @return True, if there is at least one registered PHP executable; False, otherwise.
+	 * @see #hasItems(String)
+	 */
+	public boolean hasItems() {
+		return getAllItems().length > 0;
+	}
+
+	/**
 	 * Returns all the editable items.
 	 * 
 	 * @return An array of editable PHPExeItems.
@@ -106,11 +128,13 @@ public class PHPexes {
 		ArrayList<PHPexeItem> list = new ArrayList<PHPexeItem>();
 		for (String debuggerId : installedDebuggers) {
 			HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
-			Set<String> exeNames = installedExes.keySet();
-			for (String name : exeNames) {
-				PHPexeItem exeItem = installedExes.get(name);
-				if (exeItem.isEditable()) {
-					list.add(exeItem);
+			if (installedExes != null) {
+				Set<String> exeNames = installedExes.keySet();
+				for (String name : exeNames) {
+					PHPexeItem exeItem = installedExes.get(name);
+					if (exeItem.isEditable()) {
+						list.add(exeItem);
+					}
 				}
 			}
 		}
@@ -143,11 +167,13 @@ public class PHPexes {
 		Set<String> installedDebuggers = PHPDebuggersRegistry.getDebuggersIds();
 		for (String debuggerId : installedDebuggers) {
 			HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
-			Set<String> exeNames = installedExes.keySet();
-			for (String name : exeNames) {
-				PHPexeItem exeItem = installedExes.get(name);
-				if (exeFileName.equals(exeItem.getPhpEXE().toString())) {
-					return exeItem;
+			if (installedExes != null) {
+				Set<String> exeNames = installedExes.keySet();
+				for (String name : exeNames) {
+					PHPexeItem exeItem = installedExes.get(name);
+					if (exeFileName.equals(exeItem.getPhpEXE().toString())) {
+						return exeItem;
+					}
 				}
 			}
 		}
@@ -158,7 +184,7 @@ public class PHPexes {
 	 * Returns the PHPExeItems registered for the given debugger id.
 	 * 
 	 * @param debuggerId
-	 * @return An array of installed exe items for the given debugger; null if no such debugger is registered.
+	 * @return An array of installed exe items for the given debugger; null if no such debugger is registered, or the debugger does not have any executables.
 	 */
 	public PHPexeItem[] getItems(String debuggerId) {
 		HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
@@ -178,9 +204,12 @@ public class PHPexes {
 		ArrayList<PHPexeItem> allItems = new ArrayList<PHPexeItem>();
 		Set<String> debuggers = items.keySet();
 		for (String debugger : debuggers) {
-			Collection<PHPexeItem> exeItems = items.get(debugger).values();
-			for (PHPexeItem item : exeItems) {
-				allItems.add(item);
+			HashMap<String, PHPexeItem> debuggerItems = items.get(debugger);
+			if (debuggerItems != null) {
+				Collection<PHPexeItem> exeItems = debuggerItems.values();
+				for (PHPexeItem item : exeItems) {
+					allItems.add(item);
+				}
 			}
 		}
 		return allItems.toArray(new PHPexeItem[allItems.size()]);

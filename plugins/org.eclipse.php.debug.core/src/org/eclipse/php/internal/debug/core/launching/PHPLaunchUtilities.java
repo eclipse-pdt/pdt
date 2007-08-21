@@ -596,14 +596,17 @@ public class PHPLaunchUtilities {
 	public static String[] getCommandLine(ILaunchConfiguration configuration, String phpExe, String phpConfigDir, String scriptPath, String phpIniLocation) throws CoreException {
 		String[] cmdLine = null;
 		String[] splitArgs = getProgramArguments(configuration);
-		if (!"".equals(phpIniLocation)) {
+		if (!"".equals(phpIniLocation) && phpIniLocation != null) {
 			phpConfigDir = phpIniLocation;
 		}
 
 		// Important!!! 
 		// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
 		// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
-		phpConfigDir = (new File(phpConfigDir)).getParentFile().getAbsolutePath();
+		File configDirFile = new File(phpConfigDir);
+		if (!configDirFile.isDirectory()) {
+			phpConfigDir = (new File(phpConfigDir)).getParentFile().getAbsolutePath();
+		}
 
 		if (splitArgs.length == 0) {
 			cmdLine = new String[] { phpExe, "-c", phpConfigDir, scriptPath };
