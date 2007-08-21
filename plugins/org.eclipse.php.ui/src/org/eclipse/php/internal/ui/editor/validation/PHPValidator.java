@@ -61,7 +61,10 @@ public class PHPValidator implements IValidator, ISourceValidator {
 
 		this.document = document;
 
-		final IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+		if(!(document instanceof IStructuredDocument)){
+			throw new IllegalStateException("Document is set not structured");			
+		}
+		final IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead((IStructuredDocument)document);
 		if (model == null) {
 			throw new IllegalStateException("Error reading structure model in PhpValidator#validator()");
 		}
