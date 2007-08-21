@@ -292,7 +292,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		if (codeData == null) {
 			return null;
 		}
-		PHPDocBlock docBlock = PHPDocTool.createPhpDoc(codeData, shortDescription, document);
+		PHPDocBlock docBlock = PHPDocTool.createPhpDoc(codeData, shortDescription);
 		return PHPDocBlockSerialezer.instance().createDocBlockText(document, docBlock, offset, false);
 	}
 

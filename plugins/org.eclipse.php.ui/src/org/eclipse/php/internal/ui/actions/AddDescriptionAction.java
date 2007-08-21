@@ -64,7 +64,7 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 			if (codeData instanceof PHPFileData) {
 				handleFileDocBlock((PHPFileData)codeData, (IStructuredDocument)document);
 			}
-			PHPDocBlock docBlock = PHPDocTool.createPhpDoc(codeData, document);
+			PHPDocBlock docBlock = PHPDocTool.createPhpDoc(codeData);
 			int startPosition = getCodeDataOffset(codeData);
 			String dockBlockText = insertDocBlock(codeData, (IStructuredDocument)document, startPosition);
 			if(dockBlockText == null) {
@@ -174,7 +174,7 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 	}
 
 	private String insertDocBlock(CodeData codeData, IStructuredDocument document, int offset) {
-		PHPDocBlock docBlock = PHPDocTool.createPhpDoc(codeData, document);
+		PHPDocBlock docBlock = PHPDocTool.createPhpDoc(codeData);
 		String dockBlockText = PHPDocBlockSerialezer.instance().createDocBlockText(document, docBlock, offset, true);
 		try {
 			document.replace(offset, 0, dockBlockText);
