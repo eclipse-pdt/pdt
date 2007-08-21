@@ -55,7 +55,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	 * hence don't call the super @see ProjectionModelNodeAdapterHTML#updateAdapter(org.w3c.dom.Node, org.eclipse.jface.text.source.projection.ProjectionViewer)
 	 */
 	@Override
-	public synchronized void updateAdapter(Node node, ProjectionViewer viewer) {
+	public void updateAdapter(Node node, ProjectionViewer viewer) {
 
 		final Map<ProjectionAnnotation, Position> addedAnnotations = new HashMap<ProjectionAnnotation, Position>();
 		final Map<ProjectionAnnotation, Position> currentAnnotations = new HashMap<ProjectionAnnotation, Position>();
@@ -94,7 +94,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			}
 			ProjectionAnnotation[] modifyList = null;
 			if (!currentAnnotations.isEmpty()) {
-				modifyList = currentAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
+				// modifyList = currentAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
 
 			// specifically add all annotations to viewer
@@ -140,17 +140,18 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	}
 
 	private void createFileAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPFileData fileData, int startOffset, int endOffset) {
-		assert getAdapterFactory() != null : "provider can't be null - see setProvider()";
-		PHPClassData[] classes = fileData.getClasses();
+		final ProjectionModelNodeAdapterFactoryPHP adapterFactory = getAdapterFactory();
+		assert adapterFactory != null : "provider can't be null - see setProvider()";
 
 		// set the automatic folding according to preference
-		final boolean foldingPhpDoc = getAdapterFactory().isFoldingPhpDoc();
-		final boolean foldingFunctions = getAdapterFactory().isFoldingFunctions();
-		final boolean foldingClasses = getAdapterFactory().isFoldingClasses();
+		final boolean foldingPhpDoc = adapterFactory.isFoldingPhpDoc();
+		final boolean foldingFunctions = adapterFactory.isFoldingFunctions();
+		final boolean foldingClasses = adapterFactory.isFoldingClasses();
 
 		// adds the file doc block
 		createDocBlockAnnotations(currentAnnotations, addedAnnotations, fileData, startOffset, endOffset, foldingPhpDoc);
 
+		PHPClassData[] classes = fileData.getClasses();
 		for (PHPClassData classData : classes) {
 			createCodeDataAnnotations(currentAnnotations, addedAnnotations, classData, startOffset, endOffset, foldingClasses);
 			createDocBlockAnnotations(currentAnnotations, addedAnnotations, classData, startOffset, endOffset, foldingPhpDoc);

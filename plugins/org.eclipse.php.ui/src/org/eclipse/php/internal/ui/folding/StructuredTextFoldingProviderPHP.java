@@ -391,7 +391,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	}
 
 	/**
-	 * Adds the php adpter to the document
+	 * Adds the php adapter to the document
 	 * @param document
 	 */
 	private void addAdapterToDocumentPHP(Document document) {
@@ -399,7 +399,6 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			return;
 		}
 
-		assert document instanceof Document;
 		final INodeNotifier notifier = (INodeNotifier) document;
 
 		// try and get the adapter for the current node and update the
