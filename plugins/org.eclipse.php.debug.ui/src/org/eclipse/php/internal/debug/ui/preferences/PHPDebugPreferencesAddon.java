@@ -82,7 +82,11 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		boolean stopAtFirstLine = prefs.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
 		String debuggerName = PHPDebuggersRegistry.getDebuggerName(prefs.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID));
 		String serverName = ServersManager.getDefaultServer(null).getName();
-		String phpExe = PHPexes.getInstance().getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId()).getName();
+		PHPexes exes = PHPexes.getInstance();
+		String phpExeName = PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined;
+		if (exes.hasItems(PHPDebugPlugin.getCurrentDebuggerId())) {
+			phpExeName = exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId()).getName();
+		}
 		String transferEncoding = prefs.getString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 		String outputEncoding = prefs.getString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
 		loadDebuggers(fDefaultDebugger);
@@ -94,24 +98,37 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 			if (node != null && getProject(propertyPage) != null) {
 				String projectServerName = ServersManager.getDefaultServer(getProject(propertyPage)).getName();
 				if (!projectServerName.equals("")) { //$NON-NLS-1$
-					debuggerName = PHPDebuggersRegistry.getDebuggerName(node.get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID));
+					String debuggerId = node.get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin.getCurrentDebuggerId());
+					debuggerName = PHPDebuggersRegistry.getDebuggerName(debuggerId);
 					serverName = projectServerName;
 					stopAtFirstLine = node.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, stopAtFirstLine);
 					transferEncoding = node.get(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, ""); //$NON-NLS-1$
 					outputEncoding = node.get(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, ""); //$NON-NLS-1$
-					phpExe = node.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
-					loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getItems(node.get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin.getCurrentDebuggerId())));
+					phpExeName = node.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExeName);
+					// Check that if the project had a non-defined exe, and now there is one that is valid. we set
+					// it with the new valid default exe.
+					if (PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined.equals(phpExeName)) {
+						if (exes.hasItems(debuggerId)) {
+							phpExeName = exes.getDefaultItem(debuggerId).getName();
+							node.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExeName);
+							try {
+								node.flush();
+							} catch (BackingStoreException e) {
+							}
+						}
+					}
+					loadPHPExes(fDefaultPHPExe, exes.getItems(node.get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin.getCurrentDebuggerId())));
 					exeLoaded = true;
 				}
 			}
 		}
 		if (!exeLoaded) {
-			loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getItems(PHPDebugPlugin.getCurrentDebuggerId()));
+			loadPHPExes(fDefaultPHPExe, exes.getItems(PHPDebugPlugin.getCurrentDebuggerId()));
 		}
 		fStopAtFirstLine.setSelection(stopAtFirstLine);
 		fDefaultDebugger.select(fDefaultDebugger.indexOf(debuggerName));
 		fDefaultServer.select(fDefaultServer.indexOf(serverName));
-		fDefaultPHPExe.select(fDefaultPHPExe.indexOf(phpExe));
+		fDefaultPHPExe.select(fDefaultPHPExe.indexOf(phpExeName));
 		fDebugEncodingSettings.setIANATag(transferEncoding);
 		fOutputEncodingSettings.setIANATag(outputEncoding);
 	}
@@ -211,22 +228,26 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 
 	private void loadPHPExes(Combo combo, PHPexeItem[] items) {
 		combo.removeAll();
-		if (items != null) {
-			for (int i = 0; i < items.length; i++) {
-				combo.add(items[i].getName());
-			}
-			// select the default item for the current selected debugger
-			if (fDefaultDebugger.getItemCount() > 0) {
-				String defaultItemName = PHPexes.getInstance().getDefaultItem(getSelectedDebuggerId()).getName();
-				int index = combo.indexOf(defaultItemName);
-				if (index > -1) {
-					combo.select(index);
-				} else if (combo.getItemCount() > 0) {
-					// select first item in list
-					combo.select(0);
-				}
+		if (items == null || items.length == 0) {
+			combo.add(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
+			combo.select(0);
+			return;
+		}
+		for (int i = 0; i < items.length; i++) {
+			combo.add(items[i].getName());
+		}
+		// select the default item for the current selected debugger
+		if (fDefaultDebugger.getItemCount() > 0) {
+			String defaultItemName = PHPexes.getInstance().getDefaultItem(getSelectedDebuggerId()).getName();
+			int index = combo.indexOf(defaultItemName);
+			if (index > -1) {
+				combo.select(index);
+			} else if (combo.getItemCount() > 0) {
+				// select first item in list
+				combo.select(0);
 			}
 		}
+
 	}
 
 	private void loadServers(Combo combo) {

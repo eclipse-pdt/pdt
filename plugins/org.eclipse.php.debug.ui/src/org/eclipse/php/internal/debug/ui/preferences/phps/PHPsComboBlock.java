@@ -161,7 +161,12 @@ public class PHPsComboBlock implements ISelectionProvider {
 			public void widgetSelected(final SelectionEvent e) {
 				String selectedDebuggerID = getSelectedDebuggerId();
 				PHPexeItem[] items = exes.getItems(selectedDebuggerID);
-				List<PHPexeItem> itemsList = Arrays.asList(items);
+				List<PHPexeItem> itemsList;
+				if (items != null) {
+					itemsList = Arrays.asList(items);
+				} else {
+					itemsList = new ArrayList<PHPexeItem>(0);
+				}
 				setPHPexes(itemsList);
 				fireSelectionChanged();
 				signalExecutablesCombo();
@@ -212,13 +217,18 @@ public class PHPsComboBlock implements ISelectionProvider {
 				}
 			}
 		});
+		checkDeuggers();
+		fillDebuggers();
+		fillWithWorkspacePHPexes();
+	}
 
-		if (exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId()) == null) {
+	// Check if there are no executables available for debug.
+	// If so, display a notification and open the PHP Executables preferences page.
+	private void checkDeuggers() {
+		if (!exes.hasItems()) {
 			MessageDialog.openInformation(getShell(), PHPDebugUIMessages.PHPsComboBlock_NoPHPsTitle, PHPDebugUIMessages.PHPsComboBlock_noPHPsMessage);
 			new ShowPHPsPreferences().run(null);
 		}
-		fillDebuggers();
-		fillWithWorkspacePHPexes();
 	}
 
 	/**
@@ -260,9 +270,11 @@ public class PHPsComboBlock implements ISelectionProvider {
 		// fill with PHPexes
 		final List<PHPexeItem> standins = new ArrayList<PHPexeItem>();
 		final PHPexeItem[] types = exes.getItems(PHPDebugPlugin.getCurrentDebuggerId());
-		for (int i = 0; i < types.length; i++) {
-			final PHPexeItem type = types[i];
-			standins.add(type);
+		if (types != null) {
+			for (int i = 0; i < types.length; i++) {
+				final PHPexeItem type = types[i];
+				standins.add(type);
+			}
 		}
 		setPHPexes(standins);
 	}
@@ -307,7 +319,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	public PHPexeItem getPHPexe() {
 		final int index = fExecutablesCombo.getSelectionIndex();
-		if (index >= 0)
+		if (index >= 0 && !PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined.equals(fExecutablesCombo.getText()))
 			return (PHPexeItem) phpExecutables.get(index);
 		return null;
 	}
@@ -375,6 +387,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	public void setPHPexe(final PHPexeItem item) {
 		if (item == null)
+			// There are no PHP executables for this debugger
 			setSelection(new StructuredSelection());
 		else
 			setSelection(new StructuredSelection(item));
@@ -392,7 +405,13 @@ public class PHPsComboBlock implements ISelectionProvider {
 		int index = fDebuggersCombo.indexOf(PHPDebuggersRegistry.getDebuggerName(debuggerID));
 		if (index > -1) {
 			fDebuggersCombo.select(index);
-			setPHPexes(Arrays.asList(exes.getItems(debuggerID)));
+			PHPexeItem[] items = exes.getItems(debuggerID);
+			if (items != null) {
+				setPHPexes(Arrays.asList(items));
+			} else {
+				setPHPexes(new ArrayList<PHPexeItem>(0));
+			}
+
 		}
 	}
 
@@ -415,20 +434,24 @@ public class PHPsComboBlock implements ISelectionProvider {
 			}
 		});
 		// now make an array of names
-		final String[] names = new String[phpExecutables.size()];
+		String[] names = new String[phpExecutables.size()];
 		final Iterator<PHPexeItem> iter = phpExecutables.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
 			final PHPexeItem item = iter.next();
 			names[i] = item.getName() + " (" + item.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-
 			i++;
+		}
+		if (names.length == 0) {
+			names = new String[] { PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined };
 		}
 		fExecutablesCombo.setItems(names);
 		PHPexeItem defaultExe = exes.getDefaultItem(getSelectedDebuggerId());
 		if (defaultExe != null) {
 			String defaultName = defaultExe.getName() + " (" + defaultExe.getPhpEXE().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			fExecutablesCombo.select(fExecutablesCombo.indexOf(defaultName));
+		} else {
+			fExecutablesCombo.select(0);
 		}
 	}
 
@@ -479,6 +502,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 */
 	private class BlinkTask extends TimerTask {
 		int counter;
+
 		public void run() {
 			try {
 				if (counter++ < 6) {

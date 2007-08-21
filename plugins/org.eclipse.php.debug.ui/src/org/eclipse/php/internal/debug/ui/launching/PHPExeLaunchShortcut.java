@@ -227,7 +227,12 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	private static PHPexeItem getDefaultPHPExe(IProject project) {
 		// Take the default workspace item for the debugger's id.
 		String phpDebuggerId = PHPDebugPlugin.getCurrentDebuggerId();
-		String phpExe = PHPexes.getInstance().getDefaultItem(phpDebuggerId).getName();
+		PHPexeItem defaultItem = PHPexes.getInstance().getDefaultItem(phpDebuggerId);
+		if (defaultItem == null) {
+			// We have no executable defined for this debugger. 
+			return null;
+		}
+		String phpExe = defaultItem.getName();
 		if (project != null) {
 			// In case that the project is not null, check that we have project-specific settings for it.
 			// Otherwise, map it to the workspace default server.
