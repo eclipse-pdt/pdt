@@ -102,7 +102,7 @@ public class PHPValidator implements IValidator, ISourceValidator {
 			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
-		// if the validator was invoked before the project is created - exit
+		// ignore the case wbefore the project is created - exit
 		if (projectModel == null) {
 			return;
 		}
@@ -112,11 +112,12 @@ public class PHPValidator implements IValidator, ISourceValidator {
 
 		// now after the file data is updated - update the annotations
 		String fileName = ""; //$NON-NLS-1$
-		IPath filePath = file.getFullPath();
+		final IPath filePath = file.getFullPath();
 		if (filePath != null) {
 			fileName = filePath.toString();
 		}
 		final PHPFileData fileData = projectModel.getFileData(file.getFullPath().toString());
+
 		if (fileData == null) {
 			return;
 		}
