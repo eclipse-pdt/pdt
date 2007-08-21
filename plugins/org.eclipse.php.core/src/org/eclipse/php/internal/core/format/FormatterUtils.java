@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.format;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
@@ -41,7 +42,7 @@ public class FormatterUtils {
 			if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
 				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
 			}
-			
+
 			int regionStart = sdRegion.getStartOffset(tRegion);
 
 			// in case of container we have the extract the PhpScriptRegion
@@ -57,9 +58,19 @@ public class FormatterUtils {
 				ITextRegion innerRegion = scriptRegion.getPhpToken(regionOffset);
 				String partition = scriptRegion.getPartition(regionOffset);
 				// check if the offset is in the start of the php token
+				// because if so this means we're at PHP_DEFAULT partition type 
 				if (offset - (sdRegion.getStart() + regionStart + innerRegion.getStart()) == 0) {
+					String regionType = innerRegion.getType();
+					//except for cases we're inside the fragments of comments
+					if (PHPPartitionTypes.isPHPDocCommentState(regionType) || regionType != PHPRegionTypes.PHPDOC_COMMENT_START) {
+						return partition;
+					}
+					if (PHPPartitionTypes.isPHPMultiLineCommentState(regionType) || regionType != PHPRegionTypes.PHP_COMMENT_START) {
+						return partition;
+					}
+
 					return PHPPartitionTypes.PHP_DEFAULT;
-				}			
+				}
 				return partition;
 			}
 		} catch (final BadLocationException e) {
