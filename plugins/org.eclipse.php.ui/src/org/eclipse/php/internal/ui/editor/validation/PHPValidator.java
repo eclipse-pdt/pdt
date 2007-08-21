@@ -102,10 +102,13 @@ public class PHPValidator implements IValidator, ISourceValidator {
 			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
-		// update model
-		if (projectModel != null) {
-			projectModel.fileWasChanged(file, document);
+		// if the validator was invoked before the project is created - exit
+		if (projectModel == null) {
+			return;
 		}
+
+		// update model
+		projectModel.fileWasChanged(file, document);
 
 		// now after the file data is updated - update the annotations
 		String fileName = ""; //$NON-NLS-1$
