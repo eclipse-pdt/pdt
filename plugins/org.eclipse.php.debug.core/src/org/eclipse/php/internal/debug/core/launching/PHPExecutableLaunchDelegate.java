@@ -174,7 +174,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
 			boolean stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
-			final int requestPort = PHPProjectPreferences.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+			final int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
 			// Set Project Name
 			final String projectString = project.getFullPath().toString();

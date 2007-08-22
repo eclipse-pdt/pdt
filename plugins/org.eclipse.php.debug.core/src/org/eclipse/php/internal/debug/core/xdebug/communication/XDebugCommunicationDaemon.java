@@ -14,8 +14,6 @@
 package org.eclipse.php.internal.debug.core.xdebug.communication;
 
 import java.net.Socket;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
@@ -69,7 +67,7 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 	 * @return The port specified in the preferences.
 	 */
 	public int getReceiverPort() {
-		return PHPProjectPreferences.getDebugPort(XDEBUG_DEBUGGER_ID);
+		return PHPDebugPlugin.getDebugPort(XDEBUG_DEBUGGER_ID);
 	}
 
 	/**
@@ -109,34 +107,13 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 	}
 
 	/*
-	 * A property change listener which resets the server socket listener on every XDebug port or 
-	 * timeout change.
+	 * A property change listener which resets the server socket listener on every XDebug port change.
 	 */
 	private class PortChangeListener implements IPropertyChangeListener {
-		private TimerTask resetSocketTask;
-		private Timer timer = new Timer("XDebug Socket Reset Timer", true);
-
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(XDebugUIAttributeConstants.XDEBUG_PREF_PORT)) {
-				// To avoid the possibility that the connection will be reset twice in a raw, we use a timed task for the reset.
-				if (resetSocketTask == null) {
-					resetSocketTask = createTask();
-				} else {
-					resetSocketTask.cancel();
-					resetSocketTask = createTask();
-				}
-				timer.schedule(resetSocketTask, 50L);
+				resetSocket();
 			}
-		}
-
-		private TimerTask createTask() {
-			TimerTask task = new TimerTask() {
-				public void run() {
-					resetSocket();
-					resetSocketTask = null;
-				}
-			};
-			return task;
 		}
 	}
 }

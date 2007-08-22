@@ -53,21 +53,6 @@ public class PHPProjectPreferences {
 
 	}
 
-	/**
-	 * Returns the debug port defined for the given debugger id.
-	 *  
-	 * @param debuggerId The debugger id.
-	 * @return The debug port; -1 if no such debugger exists.
-	 */
-	public static int getDebugPort(String debuggerId) {
-		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerId);
-		if (debuggerConfiguration == null) {
-			return -1;
-		}
-		int port = debuggerConfiguration.getPort();
-		return port;
-	}
-
 	public static String getDefaultServerName(IProject project) {
 		Preferences prefs = getModelPreferences();
 		String serverName = prefs.getString(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);

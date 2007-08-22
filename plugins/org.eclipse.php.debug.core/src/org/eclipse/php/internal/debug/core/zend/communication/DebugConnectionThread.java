@@ -579,7 +579,7 @@ public class DebugConnectionThread implements Runnable {
 		String URL = launchConfiguration.getAttribute(Server.BASE_URL, "");
 		String contextRoot = launchConfiguration.getAttribute(Server.CONTEXT_ROOT, "");
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(launchDecorator.getProject());
-		int requestPort = PHPProjectPreferences.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 		boolean runWithDebug = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebug = false;
@@ -658,7 +658,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 		String workspaceRootPath = PHPDebugTarget.getWorkspaceRootPath(project.getWorkspace());
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
-		int requestPort = PHPProjectPreferences.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
 		IPath phpExe = new Path(phpExeString);
 		PHPProcess process = new PHPProcess(launch, phpExe.toOSString());

@@ -120,7 +120,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			boolean stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(proj));
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
 		}
-		int requestPort = PHPProjectPreferences.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
 		// Generate a session id for this launch and put it in the map
 		int sessionID = DebugSessionIdGenerator.generateSessionID();

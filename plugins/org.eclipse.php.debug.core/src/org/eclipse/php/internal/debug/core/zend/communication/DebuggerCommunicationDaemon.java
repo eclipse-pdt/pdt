@@ -65,7 +65,7 @@ public class DebuggerCommunicationDaemon extends AbstractDebuggerCommunicationDa
 	 * @return The port specified in the preferences.
 	 */
 	public int getReceiverPort() {
-		return PHPProjectPreferences.getDebugPort(ZEND_DEBUGGER_ID);
+		return PHPDebugPlugin.getDebugPort(ZEND_DEBUGGER_ID);
 	}
 
 	/**

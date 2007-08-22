@@ -17,8 +17,10 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
@@ -152,10 +154,19 @@ public class PHPDebugPlugin extends Plugin {
 
 	}
 
-	// TODO - call for the getCurrentDebuggerId() and then get the default port for the debugger with the id
-	public static int getDebugPort() {
-		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT);
+	/**
+	 * Returns the debugger port for the given debugger id. 
+	 * Return -1 if the debuggerId does not exist, or the debugger does not have a debug port.
+	 * 
+	 * @param debuggerId
+	 * @return The debug port, or -1.
+	 */
+	public static int getDebugPort(String debuggerId) {
+		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerId);
+		if (debuggerConfiguration == null) {
+			return -1;
+		}
+		return debuggerConfiguration.getPort();
 
 	}
 
