@@ -143,6 +143,20 @@ public class PHPDebuggersTable {
 		});
 	}
 
+	/**
+	 * Set the debuggers to their default values (ports etc.)
+	 */
+	public void performDefaults() {
+		AbstractDebuggerConfiguration[] debuggersConfigurations = PHPDebuggersRegistry.getDebuggersConfigurations();
+		if (debuggersConfigurations == null) {
+			return;
+		}
+		for (AbstractDebuggerConfiguration conf : debuggersConfigurations) {
+			conf.applyDefaults();
+		}
+		fPHPDebuggers.refresh();
+	}
+	
 	private void configureTableResizing(final Composite parent, final Composite buttons, final Table table, final TableColumn debuggerTypeColumn, final TableColumn debugPortColumn) {
 		parent.addControlListener(new ControlAdapter() {
 			public void controlResized(final ControlEvent e) {

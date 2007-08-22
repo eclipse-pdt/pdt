@@ -32,10 +32,10 @@ import org.eclipse.ui.IWorkbench;
  */
 public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferencePage {
 
-	private static final String PAGE_ID = "org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage";
-
 	protected Label fDefaultURLLabel;
 	protected Text fDefaultURLTextBox;
+
+	private PHPDebuggersTable table;
 
 	public PHPDebugPropertyPreferencePage() {
 		super();
@@ -89,6 +89,15 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 	}
 
 	/**
+	 * Overrides the super preformDefaults to make sure that the debuggers table also gets updated
+	 * to its default values.
+	 */
+	public void performDefaults() {
+		table.performDefaults();
+		super.performDefaults();
+	}
+	
+	/**
 	 * Creates the debuggers table.
 	 * The created table allows only viewing and modifying any existing debugger that is 
 	 * registered thought the phpDebuggers extension point.
@@ -96,7 +105,7 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 	 * @param composite
 	 */
 	protected void createDebuggersTable(Composite composite) {
-		PHPDebuggersTable table = new PHPDebuggersTable();
+		table = new PHPDebuggersTable();
 		table.createControl(composite);
 	}
 }
