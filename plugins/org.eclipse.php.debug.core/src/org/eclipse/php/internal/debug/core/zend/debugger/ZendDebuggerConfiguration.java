@@ -70,4 +70,13 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	public String getWebLaunchDelegateClass() {
 		return PHPWebPageLaunchDelegate.class.getName();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#applyDefaults()
+	 */
+	public void applyDefaults() {
+		setPort(preferences.getDefaultInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT));
+		preferences.setValue(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, preferences.getDefaultBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
+		save();
+	}
 }

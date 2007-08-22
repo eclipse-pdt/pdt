@@ -137,4 +137,10 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	public void save() {
 		PHPDebugPlugin.getDefault().savePluginPreferences();
 	}
+	
+	/**
+	 * Apply the default values for this debugger configuration and save them.
+	 * Note that the changes affecting the PDT immediately.
+	 */
+	public abstract void applyDefaults();
 }

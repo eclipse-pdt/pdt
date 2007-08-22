@@ -68,4 +68,13 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		return XDebugWebLaunchConfigurationDelegate.class.getName();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#applyDefaults()
+	 */
+	public void applyDefaults() {
+		setPort(preferences.getDefaultInt(XDebugUIAttributeConstants.XDEBUG_PREF_PORT));
+		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS));
+		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, preferences.getDefaultInt(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH));
+		save();
+	}
 }
