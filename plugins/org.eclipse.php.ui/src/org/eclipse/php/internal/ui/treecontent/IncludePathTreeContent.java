@@ -324,7 +324,6 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	 */
 	private static Object[] getIncludeModelChildren(final IPhpModel includePathModel) {
 		final IPath modelPath = INCLUDE_PATHS_ROOT_PATH.append(IncludeModelPathRootConverter.toString(includePathModel));
-		System.out.println();
 		if (!includePathTree.includes(modelPath)) {
 			validateRoot();
 			includePathTree.createElement(modelPath, includePathModel);
