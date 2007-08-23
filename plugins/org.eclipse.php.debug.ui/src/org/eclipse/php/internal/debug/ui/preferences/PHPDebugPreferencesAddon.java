@@ -238,7 +238,17 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		}
 		// select the default item for the current selected debugger
 		if (fDefaultDebugger.getItemCount() > 0) {
-			String defaultItemName = PHPexes.getInstance().getDefaultItem(getSelectedDebuggerId()).getName();
+			PHPexeItem defaultItem = PHPexes.getInstance().getDefaultItem(getSelectedDebuggerId());
+			String defaultItemName;
+			if (defaultItem != null) {
+				defaultItemName = defaultItem.getName();
+			} else {
+				defaultItemName = PHPDebugUIMessages.PHPDebuggersTable_notDefined;
+				if (combo.indexOf(defaultItemName) == -1) {
+					combo.add(defaultItemName, 0);
+					combo.select(0);
+				}
+			}
 			int index = combo.indexOf(defaultItemName);
 			if (index > -1) {
 				combo.select(index);
