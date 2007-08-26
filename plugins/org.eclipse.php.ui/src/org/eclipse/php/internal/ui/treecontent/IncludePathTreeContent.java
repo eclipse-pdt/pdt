@@ -277,8 +277,16 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		final IResource res = PHPModelUtil.getResource(fileData);
 		final IPath filePath = new Path(fileData.getName());
 		String filePathString = filePath.toOSString();
-		if (res != null)
-			filePathString = res.getLocation().toOSString();
+		if (res != null){
+			IPath location = res.getLocation();
+			if (location != null){
+				filePathString = location.toOSString();
+			}
+			else {
+				filePathString = res.getLocationURI().toString();
+			}
+			
+		}
 		for (int i = 0; i < modelPaths.length; ++i) {
 			final IPhpModel model = IncludeModelPathRootConverter.from(modelPaths[i].segment(1));
 			if (model == null)
