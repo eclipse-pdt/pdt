@@ -67,15 +67,29 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 	}
 
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
-		int contextInformationPosition= guessContextInformationPosition(viewer, offset);
+		int contextInformationPosition = guessContextInformationPosition(viewer, offset);
 		if (contextInformationPosition == -1) {
 			return null;
 		}
 		ICompletionProposal[] proposals = computeCompletionProposals(viewer, contextInformationPosition);
 		ArrayList contextInfo = new ArrayList();
-		for (int i=0; i<proposals.length; ++i) {
+		
+		//the following for loop is fix for bug #200119
+		//if we're getting more than one proposals - then we show show only the ones
+		//with the shortest name. (the only case it can happen is inside C'tor 
+		//when there are two classes and one name includes (actually starts with)the other  )
+		int shortestName = Integer.MAX_VALUE;
+		for (int i = 0; i < proposals.length; ++i) {
+			if (proposals[i].getContextInformation() != null) {
+				int nameLength = proposals[i].getDisplayString().length();
+				if (nameLength < shortestName) {
+					shortestName = nameLength;
+				}
+			}
+		}
+		for (int i = 0; i < proposals.length; ++i) {
 			IContextInformation info = proposals[i].getContextInformation();
-			if (info != null) {
+			if (info != null && proposals[i].getDisplayString().length() == shortestName) {
 				contextInfo.add(info);
 			}
 		}
@@ -102,53 +116,54 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 		}
 		return null;
 	}
-	
+
 	private int guessContextInformationPosition(ITextViewer viewer, int offset) {
-		int contextPosition= -1;
-		IDocument document= viewer.getDocument();
+		int contextPosition = -1;
+		IDocument document = viewer.getDocument();
 		try {
-			PHPCodeReader reader= new PHPCodeReader();
+			PHPCodeReader reader = new PHPCodeReader();
 			reader.configureBackwardReader(document, offset, true, true);
 
-			int nestingLevel= 0;
+			int nestingLevel = 0;
 
-			int curr= reader.read();
+			int curr = reader.read();
 			while (curr != PHPCodeReader.EOF) {
 
 				if (')' == (char) curr)
-					++ nestingLevel;
+					++nestingLevel;
 
 				else if ('(' == (char) curr) {
-					-- nestingLevel;
+					--nestingLevel;
 
 					if (nestingLevel < 0) {
 						// int start= reader.getOffset();
 						if (looksLikeMethod(reader)) {
 							// return start + 1;
-							return reader.getOffset()+1;
+							return reader.getOffset() + 1;
 						} else {
 							return -1;
 						}
 					}
 				}
 
-				curr= reader.read();
+				curr = reader.read();
 			}
 		} catch (IOException e) {
 		}
 		return contextPosition;
 	}
-	
+
 	private boolean looksLikeMethod(PHPCodeReader reader) throws IOException {
-		int curr= reader.read();
+		int curr = reader.read();
 		while (curr != PHPCodeReader.EOF && Character.isWhitespace((char) curr))
-			curr= reader.read();
+			curr = reader.read();
 
 		if (curr == PHPCodeReader.EOF)
 			return false;
 
 		return Character.isJavaIdentifierPart((char) curr) || Character.isJavaIdentifierStart((char) curr);
 	}
+
 	/**
 	 * The protocol here is that we know when it is an implicit request - since we ask for it in {@link PHPContentAssistant}
 	 * The explicit request comes fromn the editor and we don't control it.
@@ -156,7 +171,7 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 	 *  so we set it as implicit when we are asked for by PHPContentAssistant and unset it after the first request. 
 	 */
 	private boolean isExplicitRequest = false;
-	
+
 	public void explicitActivationRequest() {
 		isExplicitRequest = true;
 	}
