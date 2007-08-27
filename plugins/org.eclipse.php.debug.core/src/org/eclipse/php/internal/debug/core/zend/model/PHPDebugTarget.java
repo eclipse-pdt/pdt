@@ -37,7 +37,6 @@ import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
-import org.eclipse.php.internal.debug.core.zend.model.PHPResponseHandler.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -567,7 +566,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 					if (!fIsPHPCGI) {
 						if (resource instanceof ExternalFileDecorator) {
 							fileName = resource.toString();
-						}else if (resource instanceof IWorkspaceRoot) {
+						} else if (resource instanceof IWorkspaceRoot) {
 							if (IPHPConstants.STORAGE_TYPE_REMOTE.equals(marker.getAttribute(IPHPConstants.STORAGE_TYPE))) {
 								fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
 								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
@@ -1049,6 +1048,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	public String getContextRoot() {
 		return fContextRoot;
+	}
+
+	public String setContextRoot(String contextRoot) {
+		return fContextRoot = contextRoot;
 	}
 
 	public String getWorkspacePath() {

@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
@@ -109,13 +110,31 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		}
 		if (index > -1) {
 			return systemFileName.substring(0, index);
-		} 
-		// We probably have a server mapping directive that cause the htdocs calculation
-		// to fail.
-		// In this case, return an empty htdocs.
-		return "";
+		}
+		// We have a server mapping directive that cause the htdocs calculation
+		// to fail. Calc the document root according to the mapping.
+
+		// Set the context root to the path separator.
+		fDebugTarget.setContextRoot(String.valueOf(IPath.SEPARATOR));
+		// traverse the paths till we extract the document root (which includes the context root)
+		IPath uriPath = Path.fromOSString(uri);
+		IPath filePath = Path.fromOSString(systemFileName);
+		String lastUrlSegment = null;
+		for (int i = uriPath.segmentCount() - 1; i >= 0; i--) {
+			lastUrlSegment = uriPath.segment(i);
+			String filePathLastSegment = filePath.lastSegment();
+			if (lastUrlSegment.equals(filePathLastSegment)) {
+				filePath = filePath.removeLastSegments(1);
+			} else {
+				return filePath.toString();
+			}
+		}
+		if (lastUrlSegment == null) {
+			return "";
+		}
+		return filePath.toString() + IPath.SEPARATOR + lastUrlSegment;
 	}
-	
+
 	public void connectionEstablished() {
 		super.connectionEstablished();
 		StartLock startLock = fDebugTarget.getStartLock();
@@ -242,7 +261,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			// Check if the name exists in the workspace. 
 			// If not, keep the original name.
 			try {
-				if (! ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(rName)).exists()) {
+				if (!ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(rName)).exists()) {
 					rName = sName;
 				}
 			} catch (Exception e) {
