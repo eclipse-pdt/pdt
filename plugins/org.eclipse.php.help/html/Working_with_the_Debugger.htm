@@ -1,0 +1,683 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Working with the Debugger</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 { text-align:center; font-style:italic; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs3 { width:50%; }
+tr.whs4 { x-cell-content-align:top; }
+td.whs5 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+td.whs6 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+td.whs7 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+td.whs8 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; }
+ul.whs9 { list-style:square; }
+p.whs10 { text-align:right; x-condition:Online; }
+col.whs11 { width:7.093%; }
+col.whs12 { width:92.907%; }
+td.whs13 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs14 { font-size:6pt; }
+td.whs15 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs16 { font-weight:bold; }
+td.whs17 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs18 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs20 { list-style:decimal; }
+img_whs21 { border:none; width:39px; height:25px; float:none; border-style:none; }
+img_whs22 { border:none; width:315px; height:175px; float:none; border-style:none; }
+p.whs23 { margin-left:24px; }
+img_whs24 { border:none; width:25px; height:24px; float:none; border-style:none; }
+img_whs25 { border:none; width:27px; height:24px; float:none; border-style:none; }
+img_whs26 { border:none; width:395px; height:235px; float:none; border-style:none; }
+img_whs27 { border:none; width:292px; height:203px; float:none; border-style:none; }
+td.whs28 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+p.whs29 { x-condition:PDT; }
+img_whs30 { border:none; width:486px; height:408px; float:none; border-style:none; }
+img_whs31 { border:none; width:567px; height:131px; float:none; border-style:none; }
+img_whs32 { border:none; width:251px; height:99px; float:none; border-style:none; }
+table.whs33 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs34 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+td.whs35 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+img_whs36 { border:none; width:28px; height:18px; float:none; border-style:none; }
+p.whs37 { x-condition:Online; }
+div.whs38 { width:100%; }
+p.whs39 { text-align:center; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	addTocInfo("Welcome to the Online Help\nGetting Started\nBasic Tutorials\nWorking with the Debugger");
+addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
+addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
+
+	}
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Zend_IDE_Help.htm");
+addSearchFormHref("javascript:document.ehelpform.submit()");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<p class=PDThelp
+	style="x-condition: PDT;">Working 
+ with the Debugger</p>
+
+<p align="center" class="whs1">The purpose of this tutorial is to teach you how to debug 
+ files and applications both remotely and locally in order to gain maximum 
+ efficiency and accuracy from your files and projects.</p>
+
+<p class=Strong><a name=Contents>Contents</a></p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs3">
+
+<tr valign="top" class="whs4">
+<td width="50%" class="whs5">
+<p><a href="#Purpose_and_Usage">Purpose and Usage</a></td>
+<td width="50%" class="whs6">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="50%" class="whs7">
+<p><a href="#Debugging_PHP_Files">Debugging PHP Files (PHP Scripts)</a></td>
+<td colspan="1" rowspan="1" width="50%" class="whs8">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="50%" class="whs7">
+<p><span><a 
+ href="#Debugging_PHP_Applications"
+	style="x-condition: PDT;">Debugging PHP Applications (PHP Web Pages)</a></span></td>
+<td colspan="1" rowspan="1" width="50%" class="whs8">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="50%" class="whs7">
+<p>&nbsp;</p></td>
+<td colspan="1" rowspan="1" width="50%" class="whs8">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs4">
+<td width="50%" class="whs7">
+<p>&nbsp;</p></td>
+<td width="50%" class="whs8">
+<p>&nbsp;</td></tr>
+</table>
+
+&nbsp; 
+
+<h2><a name=Purpose_and_Usage>Purpose and Usage</a></h2>
+
+<p>The Zend Debugger can detect and diagnose errors in PHP code situated 
+ locally or on remote servers. The debugger allows you to control the execution 
+ of your program by setting breakpoints, suspending launched programs, 
+ stepping through your code, and examining the contents of variables.</p>
+
+<p>Debugging should be used at stages where your scripts and applications 
+ are formed sufficiently to be tried and tested.</p>
+
+<p>The Zend Debugger has two main features:</p>
+
+<ul type="square" class="whs9">
+	
+	<li class=kadov-p><p>Debugging PHP files (PHP Scripts) from your workspace 
+ </p></li>
+	
+	<li class=kadov-p><p>Debugging files, applications and projects (PHP 
+ Web Pages) on your server.</p></li>
+</ul>
+
+<p align="right" class="whs10"><a href="#Contents"
+					style="x-condition: Online;">Back to Top</a></p>
+
+<h2><a name=Debugging_PHP_Files>Debugging PHP Files (PHP Scripts)</a></h2>
+
+<p>Files on your workspace can be debugged <span style="x-condition: PDT;">locally using PDT's internal 
+ debugger.</span></p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs11">
+<col class="whs12">
+
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="7.093%" class="whs13">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs15">
+<p class="whs16">&nbsp;</td></tr>
+
+<tr valign="top" class="whs4">
+<td width="7.093%" class="whs17">
+<p class="whs14"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs18"></td>
+<td width="92.907%" class="whs19">
+<p class="whs16">This procedure demonstrates how to debug 
+ a file locally: </p>
+<ol type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p><a name=steps_1_3></a>Create a PHP file, called 
+ &quot;debug&quot;, and copy-paste the example code into it.<span style="x-condition: Online;"> 
+ (</span><a href="Debugger_Code_.htm"
+			style="x-condition: Online;">Click here to see the code</a><span 
+ style="x-condition: Online;">.)</span></p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Set a breakpoint at line 103 by double-clicking 
+ the marker bar to the left of the editor window.<span style="margin-left: 40px;"><br>
+	A blue ball will appear.</span></p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Save the file.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click the arrow next to the debug button <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs21"> on the toolbar and select Open Debug dialog –or- select Run 
+ | Open Debug dialog from the main menu.<br>
+	A Debug dialog will appear.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Double-click the PHP Script option to create a 
+ new debug configuration. </p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Enter a name for the new configuration.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Select the required PHP executable (PHP 4 or 5). 
+ This must match the PHP executable used for the project.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Under PHP File, click Browse and select the &quot;debug&quot; 
+ file.</p></li>
+	
+	</ol>
+<ol start="9" type="1" class="whs20">
+	
+	<li style="margin-left: -20px; x-condition: PDT;"
+		class=kadov-p><p>Ensure that the 'Break at First Line' Breakpoint 
+ checkbox is selected.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click Apply and then Debug.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click Yes if asked whether to open the PHP Debug 
+ Perspective.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>A number of views will open with information about 
+ your script.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>The Debug View is where the debugging process 
+ can be monitored and controlled.</p></li>
+</ol>
+<p class=picture><img src="debug_view.png" x-maintain-ratio="TRUE" width="315px" height="175px" border="0" class="img_whs22"></p>
+<p class="whs23">The debugging process will currently have 
+ stopped where your first &lt;?php label appears.</p>
+<ol start="14" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click the Resume icon <img src="resume_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs24"> to continue 
+ to the breakpoint.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click Step Into <img src="step_into_icon.png" x-maintain-ratio="TRUE" width="27px" height="24px" border="0" class="img_whs25">. The Debugger 
+ goes into the function defined in line 103 and advances to line 77.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>The Variable view will now display various information 
+ about the relevant variables and parameters through which the function 
+ was reached. </p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>In the editor window, place and hold the cursor 
+ over $worker_name, $worker_address, and $worker_phone. A tooltip appears 
+ displaying the variable values.</p></li>
+</ol>
+<p class=picture><img src="debug_tutorial_editor.png" x-maintain-ratio="TRUE" width="395px" height="235px" border="0" class="img_whs26"></p>
+<ol start="18" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click Step Return. <img src="debug_step_return_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs24"> The cursor returns 
+ to line 103.<br>
+	The Debug Output view will display the HTML output created up until 
+ the breakpoint, while the Browser Output view will show the current output 
+ to a browser.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>In the Debug view, click Resume <img src="resume_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs24"> &nbsp;until 
+ the debugging process is terminated.<br>
+	Notice that as the debugging process progresses, the Debug Output and 
+ Browser Output displays are updated.</p></li>
+</ol>
+<p class=picture><img src="debug_browser_output.png" x-maintain-ratio="TRUE" width="292px" height="203px" border="0" class="img_whs27"></p>
+<ol start="20" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>The console view will display any errors or warnings 
+ about your script. In this case, it will display a Notice about an undefined 
+ variable on line 105.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click on the PHP Perspective icon to return to 
+ normal editing mode.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>To run the debugging process again, click the 
+ arrow next to the debug icon <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs21"> on the toolbar and select 
+ your configuration -or- select Open Debug Dialog and double-click your 
+ configuration from the Debug dialog.</p></li>
+</ol></td></tr>
+
+<tr valign="top" class="whs4">
+<td rowspan="1" colspan="2" width="100%" class="whs28">
+<p>&nbsp;</td>
+</tr>
+</table>
+
+<p align="right" class="whs10"><a href="#Contents"
+					style="x-condition: Online;">Back to Top</a></p>
+
+<h2><a name=Debugging_PHP_Applications>Debugging PHP Applications (PHP 
+ Web Pages)</a></h2>
+
+<p><span style="x-condition: PDT;">PDT 
+ </span>also allows you to debug applications, projects or files that are 
+ already on the server. Using the debugging process, you can also create 
+ an application in <span 
+ style="x-condition: PDT;">PDT </span>and publish it to the server before 
+ debugging.</p>
+
+<p class=Note>Note:</p>
+
+<p class=NoteText>Your server must be running the Zend Debugger in order 
+ for remote debugging capabilities to function.<br>
+The Zend Debugger comes bundled with Zend Core and Zend Platform, but can 
+ also be downloaded as a separate component from <a href="http://downloads.zend.com/pdt/server-debugger/">http://downloads.zend.com/pdt/server-debugger</a>.</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs11">
+<col class="whs12">
+
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="7.093%" class="whs13">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs15">
+<p class="whs16">&nbsp;</td></tr>
+
+<tr valign="top" class="whs4">
+<td width="7.093%" class="whs17">
+<p class="whs14"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs18"></td>
+<td width="92.907%" class="whs19">
+<p class="whs16">This procedure demonstrates how to debug 
+ applications on a server:</p>
+<ol type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Create a new PHP file, called &quot;form1&quot;, 
+ with the following code:</p></li>
+</ol>
+<p class=code
+	style="margin-left: 0px;">&lt;html&gt;</p>
+<p class=code
+	style="margin-left: 0px;">&lt;body&gt;</p>
+<p class=code
+	style="margin-left: 0px;">&lt;form action=&quot;welcome.php&quot; method=&quot;post&quot;&gt;</p>
+<p class=code
+	style="margin-left: 0px;">Name: &lt;input type=&quot;text&quot; name=&quot;name&quot; 
+ /&gt;</p>
+<p class=code
+	style="margin-left: 0px;">Age: &lt;input type=&quot;text&quot; name=&quot;age&quot; 
+ /&gt;</p>
+<p class=code
+	style="margin-left: 0px;">&lt;input type=&quot;submit&quot; /&gt;</p>
+<p class=code
+	style="margin-left: 0px;">&lt;/form&gt;</p>
+<p class=code
+	style="margin-left: 0px;">&lt;/body&gt;</p>
+<p class=code
+	style="margin-left: 0px;">&lt;/html&gt;</p>
+<ol start="2" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Create a second PHP file, called &quot;welcome&quot;, 
+ with the following code:</p></li>
+</ol>
+<p class=code
+	style="margin-left: 0px;">&lt;html&gt;</p>
+<p class=code
+	style="margin-left: 0px;">&lt;body&gt;</p>
+<p class=code
+	style="margin-left: 0px;">Welcome &lt;?php echo $_POST[&quot;name&quot;]; 
+ ?&gt;.&lt;br /&gt;</p>
+<p class=code
+	style="margin-left: 0px;">You are &lt;?php echo $_POST[&quot;age&quot;]; 
+ ?&gt; years old.</p>
+<p class=code
+	style="margin-left: 0px;">&lt;/body&gt;</p>
+<p class=code
+	style="margin-left: 0px;">&lt;/html&gt;</p>
+<ol start="3" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Save both files.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p><a name=step_4></a>Click the arrow next to the 
+ debug button <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs21"> &nbsp;on 
+ the toolbar and select Open Debug dialog –or- right-click the file in 
+ PHP explorer or within the file's editor window and select Debug as | 
+ Open Debug dialog.<br>
+	A Debug dialog will appear.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Double-click on the PHP Web Page option to create 
+ a new debug configuration. </p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Enter a name for the new configuration. </p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Ensure that your server is selected from the list.<br>
+	If you have not configured a server, click New and enter:</p></li>
+</ol>
+<ol start="1" type="1" class="whs20">
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Your server's name.</p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Tthe URL of its document root. </p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>The location to which you would like to publish 
+ the files.</p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Mark the Publish Projects to this server checkbox.</p></li>
+</ol>
+<ol start="8" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>As the files still do not exist on the server, 
+ you will need to publish them before they are debugged by doing the following:</p></li>
+</ol>
+<ol start="1" type="1" class="whs20">
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Ensure that the Publish Projects to this Server 
+ checkbox is marked within the Server settings, and specify the Directory 
+ to which the files should be published. (To do this, click Configure under 
+ the Server category.) </p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Under the File/Project category, click Browse 
+ and select the &quot;form1&quot; file. This will be the file from which 
+ the debugger will start debugging.</p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Mark the Publish files to Server checkbox and, 
+ if necessary, add the root folder to which you would like to publish the 
+ file in the 'Publish To' box.</p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Ensure that the URL to which files will be published 
+ is correct.</p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>If this is not correct, unmark the Auto Generate 
+ checkbox and manually change the URL.</p></li>
+	
+	</ol>
+<ol start="6" type="1" class="whs20">
+	
+	<li style="list-style: lower-roman; /*begin!kadov{{*/ x-condition: PDT; /*}}end!kadov*/ "
+		type=i
+		class=kadov-p><p class="whs29">Under the Advanced tab, 
+ mark the 'Break at First Line' Breakpoint checkbox.</p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Click Apply and then Debug.</p></li>
+</ol>
+<p class=picture><img src="debug_configuration_webpage.png" x-maintain-ratio="TRUE" width="486px" height="408px" border="0" class="img_whs30"></p>
+<ol start="9" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p><span 
+ style="x-condition: PDT;">PDT</span> will now upload the files to your 
+ server and begin the debugging process.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click Yes when asked whether to open the PHP Debug 
+ Perspective.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>The Debug Perspective will open with several views 
+ relevant to the debugging process (See <a href="#Views_Information">step 
+ 17</a>, under &quot;Debugging a PHP File Remotely&quot;, above, for information 
+ on the different views.)</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>In the editor view, you will see the code for 
+ the &quot;form1&quot; file.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>In the Debug view, click Resume to resume the 
+ debugging process.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>The browser output will display a form asking 
+ you to enter your Name and Age.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Select the browser view (tabbed with the editor 
+ window). This will display the output of your script in a browser in 'real 
+ time'.<br>
+	Note that this is different from the Browser Output window.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>In the browser view, enter your Name and Age and 
+ click Submit Query.</p></li>
+</ol>
+<p class=picture><img src="debug_webpage_ouput.png" x-maintain-ratio="TRUE" width="567px" height="131px" border="0" class="img_whs31"></p>
+<ol start="17" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Another editor tab will open, with the script 
+ from the welcome.php file.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>In the Debug view, click Resume to resume the 
+ debugging process.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>The browser output and browser views will display 
+ the final result of your application:<br>
+	&quot;Welcome [Name].<br>
+	You are [Age] years old.&quot;</p></li>
+</ol>
+<p class=picture><img src="debug_webpage_browser_output.png" x-maintain-ratio="TRUE" width="251px" height="99px" border="0" class="img_whs32"></p>
+<ol start="20" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>The debugging process will have terminated.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click on the PHP Perspective Icon to return to 
+ normal editing mode.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>You may now make changes to your code and debug 
+ them without having to publish to the server, by executing the following 
+ steps:</p></li>
+</ol>
+<ol start="1" type="1" class="whs20">
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Make some changes in the script of the local copies 
+ of your file.</p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Open the debug dialog (see <a href="#step_4">step 
+ 4</a>, above). </p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Select your last debug configuration to open its 
+ settings. </p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Unmark the Publish Files to Server checkbox.</p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>Click Apply and Debug.</p></li>
+	
+	<li style="list-style: lower-roman;"
+		type=i
+		class=kadov-p><p>The debugging process will now be applied to your 
+ local files without them being published to the server. </p></li>
+</ol>
+<ol start="23" type="1" class="whs20">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>To run the debugging process again, click the 
+ arrow next to the debug icon <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs21"> on the toolbar and select 
+ your debugging configuration.</p></li>
+</ol></td></tr>
+
+<tr valign="top" class="whs4">
+<td rowspan="1" colspan="2" width="100%" class="whs28">
+<p>&nbsp;</td>
+</tr>
+</table>
+
+<p align="right" class="whs10"><a href="#Contents"
+					style="x-condition: Online;">Back to Top</a></p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs33">
+<col class="whs11">
+<col class="whs12">
+
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="7.093%" class="whs34">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs35">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs4">
+<td width="7.093%" class="whs17">
+<p class="whs14"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs36"></td>
+<td width="92.907%" class="whs19">
+<p class="whs16">Related Links:</p>
+<p class="whs37"><a href="Debugging.htm"><span style="x-condition: Online;">Debugging</span></a></p>
+<p class="whs37"><span 
+ style="x-condition: Online;">Debugging a PHP Script</span></p>
+<p class="whs37"><a href="Debug.htm"><span style="x-condition: Online;">Debug 
+ Preferences</span></a></p>
+<p class="whs37"><a href="Debugging_a_PHP_Web_Page.htm"><span 
+ style="x-condition: Online;">Debugging a PHP Web Page</span></a></p>
+<p class="whs37"><a href="Locally_Debugging_a_PHP_Script.htm"><span 
+ style="x-condition: Online;">Locally Debugging a PHP Script</span></a></p>
+<p class="whs37"><a href="Analyzing_Debugger_Results.htm"><span 
+ style="x-condition: Online;">Running and Analyzing Debugger Results</span></a></p>
+<p class="whs37"><a href="Run.htm"
+									style="x-condition: Online;">Run Menu</a></td></tr>
+
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="7.093%" class="whs17">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs19">
+<p>&nbsp;</td></tr>
+</table>
+
+<p align="right" class="whs10"><a href="#Contents"
+					style="x-condition: Online;">Back to Top</a></p>
+
+<div placeholder id="footer" class="whs38">
+ <p align="right" class="whs10"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
+	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs39">© 1999-2007 Zend Technologies, Ltd. All rights reserved.</p>
+</div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+<form method="POST" action="http://www.helpcommunity.com/ehelpapi.asp?cmd=WebSave" name="ehelpform" target="_top" style="display:'none';">
+<input type="hidden" name="data" value="2A0D0219000000576F726B696E6720776974682074686520446562756767657211020F0000004261736963205475746F7269616C73120219000000576F726B696E6720776974682074686520446562756767657213020D0000005A656E64204944452048656C701502110000005A656E645F4944455F48656C702E68746D1703740100003C3F786D6C2076657273696F6E3D22312E30223F3E0D0A3C21444F43545950452053595354454D20226568656C706F70742E647464223E0D0A3C46494C452D4F5054494F4E532046494C452D56455253494F4E3D2232222046494C452D4B45593D2233383733616238385F633161395F343337395F383037645F636237303636363263613734223E0D0A3C2F46494C452D4F5054494F4E533E0D0A3C4548454C502D4F5054494F4E5320464F524D41542D56455253494F4E3D22312E30223E0D0A203C4F5054494F4E5320454E41424C45443D225945532220454D4245444445443D2259455322204D41494E2D57494E444F572D4F4E4C593D224E4F2220434F4D4D554E4954592D4E4F544946593D224E4F222046495253542D504147453D224E4F542D534554223E0D0A203C2F4F5054494F4E533E0D0A203C425554544F4E2D4C4142454C3E5765625365617263680D0A203C2F425554544F4E2D4C4142454C3E0D0A3C2F4548454C502D4F5054494F4E533E18010400000002000000702A">
+</form>
+</body>
+</html>

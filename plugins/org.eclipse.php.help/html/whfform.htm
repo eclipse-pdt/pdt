@@ -1,0 +1,136 @@
+<html>
+<head>
+<title>Search Form</title>
+
+<meta name="generator" content="RoboHelp by eHelp Corporation   www.ehelp.com">
+<meta name="description" content="WebHelp 5.50">
+</head>
+<style>
+<!--
+body {margin:0;}
+-->
+</style>
+<body bgcolor="#c0c0c0">
+<script language="javascript" src="whver.js"></script>
+<script language="javascript1.2" src="whmsg.js"></script>
+<script language="javascript1.2" src="whproxy.js"></script>
+<script language="javascript1.2" src="whutils.js"></script>
+<script language="javascript1.2" src="whform.js"></script>
+<script language="javascript1.2">
+<!--
+var gstrInput = "";
+function ftsLookup(bCR)
+{
+	if (bCR)
+	{
+		var strInput = document.FtsInputForm.keywordField.value.toUpperCase();
+		if (strInput != "") {
+			var oMsg = new whMessage(WH_MSG_SEARCHFTSKEY, this, 1, strInput);
+			if (!SendMessage(oMsg))
+			{
+				gstrInput = strInput;
+			}
+			else
+				gstrInput = "";
+		}
+
+		if (gbMac) {
+			document.FtsInputForm.keywordField.focus();
+		}
+	}
+	return;
+}
+
+function beforeInit()
+{
+	var oParam = new Object();
+	oParam.sValue = "";
+	var oMsg = new whMessage(WH_MSG_GETSEARCHS, this, 1, oParam);
+	if (SendMessage(oMsg))
+	{
+		if (oParam.sValue != "" && oParam.sValue != "- Search -")
+		{
+			document.FtsInputForm.keywordField.value = oParam.sValue;
+			gfunLookUp(true);
+		}
+	}
+	init();	
+}
+
+function window_unload()
+{
+	UnRegisterListener2(this, WH_MSG_SHOWTOC);
+	UnRegisterListener2(this, WH_MSG_SHOWIDX);
+	UnRegisterListener2(this, WH_MSG_SHOWFTS);
+	UnRegisterListener2(this, WH_MSG_SHOWGLO);
+	UnRegisterListener2(this, WH_MSG_SEARCHTHIS);
+	UnRegisterListener2(this, WH_MSG_BACKUPSEARCH);
+}
+
+function onSendMessage(oMsg)
+{
+	if (oMsg.nMessageId == WH_MSG_SHOWFTS)
+	{
+		document.FtsInputForm.keywordField.focus();
+	}
+	else if (oMsg.nMessageId == WH_MSG_SHOWIDX ||
+		oMsg.nMessageId == WH_MSG_SHOWTOC || 
+		oMsg.nMessageId == WH_MSG_SHOWGLO)
+	{
+		document.FtsInputForm.keywordField.blur();
+	}
+	else if (oMsg.nMessageId == WH_MSG_SEARCHTHIS)
+	{
+		if (oMsg.oParam != "- Search -")
+		{
+			document.FtsInputForm.keywordField.value = oMsg.oParam;
+			gfunLookUp(true);
+		}
+	}
+	else if (oMsg.nMessageId == WH_MSG_BACKUPSEARCH)
+	{
+		if (gstrInput)
+		{
+			oMsg.oParam = gstrInput;
+			gstrInput = "";
+			return false;
+		}
+	}
+	return true;
+}
+
+if (window.gbWhForm)
+{
+	RegisterListener2(this, WH_MSG_SHOWTOC);
+	RegisterListener2(this, WH_MSG_SHOWIDX);
+	RegisterListener2(this, WH_MSG_SHOWFTS);
+	RegisterListener2(this, WH_MSG_SHOWGLO);
+	RegisterListener2(this, WH_MSG_SEARCHTHIS);
+	RegisterListener2(this, WH_MSG_BACKUPSEARCH);
+	gfunLookUp = ftsLookup;
+	gfunInit = null;
+	gstrFormName = "FtsInputForm"
+	gsTitle = "Type in the word(s) to search for:";
+	gsTitle = "Type in the word(s) to search for:";
+	setGoImage1("");
+	
+	
+	
+	
+	
+	
+	setGoText("Go");
+	setFont("Title", "Arial","9pt","#000000","normal","normal","none");
+	
+	
+	document.write(getFormHTML());
+	writeFormStyle();
+	window.onload = beforeInit;
+	window.onunload=window_unload;
+}
+else
+	document.location.reload();
+//-->
+</script>
+</body>
+</html>

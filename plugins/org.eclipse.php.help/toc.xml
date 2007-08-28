@@ -1,11 +1,93 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?NLS TYPE="org.eclipse.help.toc"?>
-
-<toc label="PDT User Guide" topic="html/toc.html">
-  <topic label="Getting Started" topic="html/gettingstarted.html">
-    <anchor id="gettingstarted"/>
+<?xml version="1.0" encoding="UTF-8" ?>
+<toc label="Table of Contents">
+ <topic label="Welcome to the Online Help" href="html/Zend_Neon_Help.htm">
+   <topic label="Contribute to the Documentation" href="html/Contribute_to_the_Documentation.htm"/>
+  <topic label="Getting Started" href="html/Getting_Started.htm">
+    <topic label="Quick Start" href="html/Quick_Start.htm"/>
+   <topic label="Basic Tutorials" href="html/Basic_Tutorial.htm">
+     <topic label="Working with Code Assist" href="html/Working_with_Code_Assist.htm"/>
+     <topic label="Working with the Debugger" href="html/Working_with_the_Debugger.htm"/>
+   </topic>
+   <topic label="Menus" href="html/Menus.htm">
+    <topic label="File" href="html/File.htm">
+      <topic label="New" href="html/New.htm"/>
+      <topic label="Import" href="html/Import.htm"/>
+      <topic label="Export" href="html/Export.htm"/>
+    </topic>
+     <topic label="Edit" href="html/Edit.htm"/>
+     <topic label="Source" href="html/Source.htm"/>
+     <topic label="Refactor" href="html/Refactor.htm"/>
+     <topic label="Navigate" href="html/Navigate.htm"/>
+     <topic label="Search" href="html/Search.htm"/>
+     <topic label="Project" href="html/Project.htm"/>
+     <topic label="Run" href="html/Run.htm"/>
+    <topic label="Window" href="html/Window.htm">
+      <topic label="Navigation" href="html/Navigation.htm"/>
+    </topic>
+     <topic label="Help" href="html/Help.htm"/>
+   </topic>
+   <topic label="PHP Preferences" href="html/Preferences.htm">
+     <topic label="PHP Preferences Page" href="html/PHP.htm"/>
+     <topic label="Appearance Preferences" href="html/Appearance.htm"/>
+    <topic label="Debug Preferences" href="html/Debug.htm">
+      <topic label="Launching Preferences" href="html/Launching.htm"/>
+    </topic>
+    <topic label="Editor Preferences" href="html/Editor.htm">
+      <topic label="Code Assist Preferences" href="html/Code_Assist.htm"/>
+      <topic label="Folding Preferences" href="html/Folding.htm"/>
+      <topic label="Hovers Preferences" href="html/Hovers.htm"/>
+      <topic label="Syntax Coloring Preferences" href="html/Syntax_Coloring.htm"/>
+      <topic label="Task Tags Preferences" href="html/Task_Tags.htm"/>
+      <topic label="Typing Preferences" href="html/Typing.htm"/>
+    </topic>
+     <topic label="Formatter Preferences" href="html/Formatter.htm"/>
+     <topic label="Path Variables Preferences" href="html/Path_Variables.htm"/>
+     <topic label="PHP Executables Preferences" href="html/PHP_Executables.htm"/>
+     <topic label="PHP Interpreter Preferences" href="html/PHP_Interpreter.htm"/>
+     <topic label="PHP Manual Preferences" href="html/PHP_Manual.htm"/>
+     <topic label="PHP Servers Preferences" href="html/PHP_Servers.htm"/>
+     <topic label="Templates Preferences" href="html/Templates.htm"/>
+   </topic>
   </topic>
-  <topic label="Concepts">
-    <anchor id="concepts"/>
+  <topic label="Concepts" href="html/Concepts.htm">
+    <topic label="PHP Support" href="html/PHP_Support.htm"/>
+    <topic label="Real Time Error Detection" href="html/Real_Time_Error_Detection.htm"/>
+    <topic label="Code Assist" href="html/Code_Assist_Concept.htm"/>
+    <topic label="PHP Manual Integration" href="html/PHP_Manual_Integration.htm"/>
+   <topic label="Commenting Code" href="html/Commenting_Code.htm">
+     <topic label="phpDoc Block Comments" href="html/phpDoc_Comments.htm"/>
+   </topic>
+    <topic label="JavaScript" href="html/JavaScript.htm"/>
+    <topic label="Code Folding" href="html/Code_Folding.htm"/>
+    <topic label="Automatic Completion" href="html/Automatic_Insertion.htm"/>
+    <topic label="Hover Support" href="html/Hover_Support.htm"/>
+    <topic label="Syntax Coloring" href="html/Syntax_Highlighting.htm"/>
+    <topic label="Matching Brackets" href="html/Matching_Brackets.htm"/>
   </topic>
+  <topic label="Tasks" href="html/Tasks.htm">
+    <topic label="Using Code Assist" href="html/Using_Code_Assist.htm"/>
+   <topic label="Using the Debugger" href="html/Debugging.htm">
+     <topic label="Locally Debugging a PHP Script" href="html/Locally_Debugging_a_PHP_Script.htm"/>
+     <topic label="Debugging a PHP Web Page" href="html/Debugging_a_PHP_Web_Page.htm"/>
+     <topic label="Running and Analyzing Debugger Results" href="html/Analyzing_Debugger_Results.htm"/>
+   </topic>
+   <topic label="Commenting PHP Code" href="html/How_to_Comment_and_Uncomment_PHP_Code.htm">
+     <topic label="Commenting PHP DocBlocks" href="html/Commenting_PHP_DocBlocks.htm"/>
+   </topic>
+    <topic label="Using JavaScript" href="html/Using_JavaScript.htm"/>
+    <topic label="Using Smart Goto Source" href="html/Using_Smart_Goto_Source.htm"/>
+    <topic label="Using Templates" href="html/Using_Templates.htm"/>
+    <topic label="Using Code Folding" href="html/Using_Code_Folding.htm"/>
+    <topic label="Formatting Code" href="html/Formatting_Code.htm"/>
+    <topic label="Searching for PHP Elements" href="html/Searching_for_PHP_Elements.htm"/>
+   <topic label="Easy File Creation" href="html/File_Creation.htm">
+     <topic label="Creating a PHP File Within a Project" href="html/Creating_a_PHP_File_within_a_Project.htm"/>
+     <topic label="Opening an External File" href="html/Opening_an_External_File_in_Neon.htm"/>
+   </topic>
+  </topic>
+  <topic label="Reference" href="html/Reference.htm">
+    <topic label="Useful Links" href="html/Useful_links.htm"/>
+    <topic label="Keymap" href="html/Keymap.htm"/>
+  </topic>
+ </topic>
 </toc>

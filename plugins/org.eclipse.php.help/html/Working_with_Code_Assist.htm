@@ -1,0 +1,640 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Working with Code Assist</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 { font-style:italic; text-align:center; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs3 { width:61.125%; }
+col.whs4 { width:38.875%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:61.125%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+td.whs7 { width:38.875%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+td.whs8 { width:61.125%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+td.whs9 { width:38.875%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; }
+p.whs10 { font-style:italic; }
+col.whs11 { width:4.659%; }
+col.whs12 { width:95.341%; }
+td.whs13 { width:4.659%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+img_whs14 { border:none; width:15px; height:13px; float:none; border-style:none; }
+td.whs15 { width:95.341%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+td.whs16 { width:4.659%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+img_whs17 { border:none; width:12px; height:12px; float:none; border-style:none; }
+td.whs18 { width:95.341%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; }
+img_whs19 { border:none; float:none; width:17px; height:20px; border-style:none; }
+img_whs20 { border:none; width:19px; height:18px; float:none; border-style:none; }
+img_whs21 { border:none; width:18px; height:17px; float:none; border-style:none; }
+img_whs22 { border:none; width:16px; height:19px; float:none; border-style:none; }
+td.whs23 { width:4.659%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; }
+img_whs24 { border:none; width:20px; height:16px; float:none; border-style:none; }
+col.whs25 { width:7.093%; }
+col.whs26 { width:92.907%; }
+td.whs27 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs28 { font-size:6pt; }
+td.whs29 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs30 { font-weight:bold; }
+td.whs31 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs32 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs33 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs34 { list-style:decimal; }
+img_whs35 { border:none; width:586px; height:217px; float:none; border-style:none; }
+td.whs36 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+p.whs37 { text-align:right; x-condition:Online; }
+img_whs38 { border:none; width:526px; height:79px; float:none; border-style:none; }
+img_whs39 { border:none; width:230px; height:124px; float:none; border-style:none; }
+table.whs40 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs41 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+td.whs42 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+img_whs43 { border:none; width:28px; height:18px; float:none; border-style:none; }
+p.whs44 { x-condition:Online; }
+div.whs45 { width:100%; }
+p.whs46 { text-align:center; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	addTocInfo("Welcome to the Online Help\nGetting Started\nBasic Tutorials\nWorking with Code Assist");
+addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
+addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
+
+	}
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Zend_IDE_Help.htm");
+addSearchFormHref("javascript:document.ehelpform.submit()");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<p class=PDThelp
+	style="x-condition: PDT;">Working 
+ with Code Assist</p>
+
+<p align="center" class="whs1">The purpose of this tutorial is to teach you how to use 
+ <span style="x-condition: PDT;">PDT's</span> 
+ Code Assist function in order to write code quickly, easily, and accurately.</p>
+
+<p class=Strong><a name=Contents>Contents</a></p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td width="61.125%" class="whs6">
+<p><a href="#Purpose_and_Usage">Purpose and Usage</a></td>
+<td width="38.875%" class="whs7">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="61.125%" class="whs8">
+<p><a href="#Activating_Code_Assist">Activating Code Assist</a></td>
+<td colspan="1" rowspan="1" width="38.875%" class="whs9">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="61.125%" class="whs8">
+<p><a href="#CA_Available_Same_Scope">Making Code Assist Elements Available 
+ Within the Same Scope</a></td>
+<td colspan="1" rowspan="1" width="38.875%" class="whs9">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="61.125%" class="whs8">
+<p><a href="#Function_Parameter_Hints">Function Parameter Hints </a></td>
+<td width="38.875%" class="whs9">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="61.125%" class="whs8">
+<p><a href="#Class_Type_Hints">Class Type Hints</a></td>
+<td colspan="1" rowspan="1" width="38.875%" class="whs9">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="61.125%" class="whs8">
+<p><a href="#Configuring_Code_Assist">Configuring Code Assist</a></td>
+<td width="38.875%" class="whs9">
+<p>&nbsp;</td></tr>
+</table>
+
+<p class="whs10">&nbsp;</p>
+
+<h2><a name=Purpose_and_Usage>Purpose and Usage</a></h2>
+
+<p>The Code Assist feature enables the selection and insertion of existing 
+ code elements to complete partially entered code.</p>
+
+<p>A list of possible code elements appears in relevant locations within 
+ your files according to the context of your cursor, which you can then 
+ select to be automatically entered into your code.</p>
+
+<p>&nbsp;</p>
+
+<p>Each type of code element will have a unique icon:</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs11">
+<col class="whs12">
+
+<tr valign="top" class="whs5">
+<td width="4.659%" class="whs13">
+<p><img src="code_assist_triangle.png" x-maintain-ratio="TRUE" width="15px" height="13px" border="0" class="img_whs14"></td>
+<td width="95.341%" class="whs15">
+<p>Reserved PHP Words</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="4.659%" class="whs16">
+<p><img src="code_assist_circle.png" x-maintain-ratio="TRUE" width="12px" height="12px" border="0" class="img_whs17"></td>
+<td width="95.341%" class="whs18">
+<p>Functions</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="4.659%" class="whs16">
+<p><img src="template_icon.png" x-maintain-ratio="TRUE" width="17px" height="20px" border="0" class="img_whs19"></td>
+<td width="95.341%" class="whs18">
+<p>Templates</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="4.659%" class="whs16">
+<p><img src="classes_icon.png" x-maintain-ratio="TRUE" width="19px" height="18px" border="0" class="img_whs20"></td>
+<td width="95.341%" class="whs18">
+<p>Classes</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="4.659%" class="whs16">
+<p><img src="interfaces_icon.png" x-maintain-ratio="TRUE" width="18px" height="17px" border="0" class="img_whs21"></td>
+<td width="95.341%" class="whs18">
+<p>Interfaces</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="4.659%" class="whs16">
+<p><img src="constants_icon.png" x-maintain-ratio="TRUE" width="16px" height="19px" border="0" class="img_whs22"></td>
+<td width="95.341%" class="whs18">
+<p>Constants</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="4.659%" class="whs23">
+<p><img src="variables_icon.png" x-maintain-ratio="TRUE" width="20px" height="16px" border="0" class="img_whs24"></td>
+<td width="95.341%" class="whs18">
+<p>Variables</td></tr>
+</table>
+
+<p class=FIgureCaption>&nbsp;</p>
+
+<p>Code Assist works with the following elements: PHP Classes, Functions, 
+ Variables, Constants, Keywords, Interfaces, Attributes, Values, Nested 
+ Functions, Names and Syntax, as well as all user defined Classes, Functions, 
+ and Constants.</p>
+
+<p class=Note>Note:</p>
+
+<p class=NoteText>Code Assist works with both PHP and HTML.</p>
+
+<h2><a name=Activating_Code_Assist>Activating Code Assist</a></h2>
+
+<p>By default, the Code Assist options will be automatically displayed 
+ once the first few characters of the code have been entered.</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs25">
+<col class="whs26">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs27">
+<p class="whs28">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs29">
+<p class="whs30">&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs31">
+<p class="whs28"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs32"></td>
+<td width="92.907%" class="whs33">
+<p class="whs30">The following procedure demonstrates using 
+ Code Assist:</p>
+<ol type="1" class="whs34">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Create a new PHP File called 'File1'.</p></li>
+</ol>
+<ol start="2" type="1" class="whs34">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>On the line beneath the opening PHP tag, type 
+ &quot;def&quot;.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>The Code Assist window will be displayed with 
+ a list of suitable code completion options:</p></li>
+</ol>
+<p class=picture><img src="code_assist_example.png" x-maintain-ratio="TRUE" width="586px" height="217px" border="0" class="img_whs35"></p>
+<p class=FIgureCaption><br>&nbsp;</p>
+<ol start="4" type="1" class="whs34">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Double-click the first define function from the 
+ Code Completion window, or press Enter.</p></li>
+</ol></td></tr>
+
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs36">
+<p>&quot;define()&quot; appears on the edit line.</td>
+</tr>
+</table>
+
+<p class=Note>Note:</p>
+
+<p class=NoteText>If the Code Assist window does not open automatically, 
+ place your cursor at the required location and press Ctrl+Space.</p>
+
+<p align="right" class="whs37"><a href="#Contents"
+					style="x-condition: Online;">Back to Top</a></p>
+
+<h2><a name=Function_Parameter_Hints>Function Parameter Hints</a> &nbsp;</h2>
+
+<p>When entering a function call, a Function Parameter Hint box will be 
+ displayed detailing the types of parameters that should be entered within 
+ the parentheses of the function call.</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs25">
+<col class="whs26">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs27">
+<p class="whs28">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs29">
+<p class="whs30">&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs31">
+<p class="whs28"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs32"></td>
+<td width="92.907%" class="whs33">
+<p><span style="font-weight: bold;"><B>The following procedure demonstrates 
+ using the Function Parameter Hint feature</B></span>:</p>
+<ol start="1" type="1" class="whs34">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Place your cursor between the parentheses of the 
+ above function call: &quot;define()&quot;</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Press Ctrl+Shift+Space.</p></li>
+</ol></td></tr>
+
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs36">
+<p>A function parameter hint box will be displayed indicating the types 
+ of parameters that should be inserted between the parentheses. </p>
+<p class=picture><img src="code_assist_function_parameter.png" x-maintain-ratio="TRUE" width="526px" height="79px" border="0" class="img_whs38"></p>
+<p>&nbsp;</td>
+</tr>
+</table>
+
+<p class=FIgureCaption
+	style="text-align: right; x-condition: Online;"
+	align=right><a href="#Contents"
+					style="x-condition: Online;">Back to Top</a></p>
+
+<h2><a name=CA_Available_Same_Scope>Making Code Assist Elements Available 
+ Within the Same Scope</a></h2>
+
+<h3>Added Code – Available within the same function and file</h3>
+
+<p>Elements within the same scope (e.g. within the same project, file or 
+ function) will be available for use with Code Assist.</p>
+
+<p>Variables belonging to different scopes are not available to each other 
+ via Code Assist.</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs25">
+<col class="whs26">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs27">
+<p class="whs28">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs29">
+<p class="whs30">&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs31">
+<p class="whs28"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs32"></td>
+<td width="92.907%" class="whs33">
+<p class="whs30">The following procedure demonstrates using 
+ Code Assist for inserting elements within the same function and file:</p>
+<ol type="1" class="whs34">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Edit your PHP File ('File1') so that it contains 
+ the following code:</p></li>
+</ol>
+<p class=code
+	style="margin-left: 12px;">&lt;?php</p>
+<p class=code
+	style="margin-left: 12px;">define('continent','africa');</p>
+<p class=code
+	style="margin-left: 12px;">$control = '';</p>
+<p class=code
+	style="margin-left: 12px;">$mail = 'int@eclipse.org';</p>
+<p class=code
+	style="margin-left: 12px;">function media() {</p>
+<p class=code
+	style="margin-left: 12px;">$music = '';</p>
+<p class=code
+	style="margin-left: 12px;">$messenger = '';</p>
+<p class=code
+	style="margin-left: 12px;">$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*--------- 
+ Location_1*/</p>
+<p class=code
+	style="margin-left: 12px;">}</p>
+<p class=code
+	style="margin-left: 12px;">$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* 
+ ---------Location_2*/</p>
+<p class=code
+	style="margin-left: 12px;">?&gt;</p>
+<ol start="2" type="1" class="whs34">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Place the cursor at the &quot;$&quot; marked by 
+ &quot;Location_1&quot;. This is within function &quot;media&quot;.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Type the letter &quot;m&quot;. The Code Assist 
+ window will be displayed with the variables &quot;$messenger&quot; and 
+ &quot;$media&quot;, which were defined within the function.<br>
+	Note that the variable $mail (not within the scope of &quot;media()&quot; 
+ ) is not available.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Next, place the cursor at the &quot;$&quot; marked 
+ by &quot;Location_2&quot;.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Type the letter &quot;m&quot;. The Code Assist 
+ window will be displayed with the variable $mail, which is within the 
+ same file.<br>
+	Note that media's variables - &nbsp;$music 
+ and $messenger &nbsp;- 
+ are not within the function 'media' and so are not displayed.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Select 'mail' from the Code Assist window to insert 
+ it into the script.</p></li>
+</ol></td></tr>
+
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs36">
+<p>&nbsp;</td>
+</tr>
+</table>
+
+<p align="right" class="whs37"><a href="#Contents"
+					style="x-condition: Online;">Back to Top</a></p>
+
+<h3>Added Code - Available Within the Same Project</h3>
+
+<p>Code elements defined in one file are also available for use by other 
+ files within the same project.</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs25">
+<col class="whs26">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs27">
+<p class="whs28">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs29">
+<p class="whs30">&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs31">
+<p class="whs28"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs32"></td>
+<td width="92.907%" class="whs33">
+<p class="whs30">The following steps demonstrate using Code 
+ Assist for inserting elements within the same project:</p>
+<ol type="1" class="whs34">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Within the same project as &quot;File1&quot;, 
+ create a new PHP file called &quot;File2&quot;.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>On the line beneath the opening PHP tag, type 
+ &quot;def&quot; and press Ctrl+Space to activate Code Assist. Select one 
+ of the define options and double-click it. </p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Between the parentheses, type &quot;cont&quot; 
+ and press Ctrl+Space to activate Code Assist. The element 'continent', 
+ defined in &quot;File1&quot;, will be available.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Double-click 'continent' to enter it into your 
+ code.</p></li>
+</ol></td></tr>
+
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs36">
+<p>When the element is highlighted, Code Assist displays the original location 
+ of the code element, its value ('africa') and all other information available.</p>
+<p class=picture><img src="code_assist_cont_info.png" x-maintain-ratio="TRUE" width="230px" height="124px" border="0" class="img_whs39"></p>
+</td>
+</tr>
+</table>
+
+<p align="right" class="whs37"><a href="#Contents"
+					style="x-condition: Online;">Back to Top</a></p>
+
+<h2><a name=Class_Type_Hints>Class Type Hints</a></h2>
+
+<p>By using a comment you can assign a variable its exact class value. 
+ This assignment will affect the code assist of this variable accordingly.</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs25">
+<col class="whs26">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs27">
+<p class="whs28">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs29">
+<p class="whs30">&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs31">
+<p class="whs28"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs32"></td>
+<td width="92.907%" class="whs33">
+<p><span style="font-weight: bold;"><B>To see and trial this feature:</B></span> 
+ </p>
+<ol type="1" class="whs34">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Create a new PHP file with the following code:</p></li>
+</ol>
+<p class=code
+	style="margin-left: 24px;">&lt;?php</p>
+<p class=code
+	style="margin-left: 24px;">function getClass() {</p>
+<p class=code
+	style="margin-left: 24px;">return new Test();</p>
+<p class=code
+	style="margin-left: 24px;">}</p>
+<p class=code
+	style="margin-left: 24px;">class Test {</p>
+<p class=code
+	style="margin-left: 24px;">function printValues($a, $b) {</p>
+<p class=code
+	style="margin-left: 24px;">echo &quot;Values: $a, $b&quot;;</p>
+<p class=code
+	style="margin-left: 24px;">}</p>
+<p class=code
+	style="margin-left: 24px;">}</p>
+<p class=code
+	style="margin-left: 24px;">$myVar = getClass();</p>
+<p class=code
+	style="margin-left: 24px;">/* @var $myVar Test */</p>
+<p class=code
+	style="margin-left: 24px;">$myVar-&gt;</p>
+<p class=code
+	style="margin-left: 24px;">?&gt;</p>
+<ol start="2" type="1" class="whs34">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Place your cursor after &nbsp;'$myVar-&gt;' 
+ (on the line above the closing PHP tag) and press Ctrl+Space to activate 
+ Code Assist. Code Assist will open with the function defined in 'Test' 
+ class (printValues($a, $b)). Double click it to enter it into your code.</p></li>
+</ol></td></tr>
+
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs36">
+<p>&nbsp;</td>
+</tr>
+</table>
+
+<p class=Note>Note: &nbsp;&nbsp;&nbsp;</p>
+
+<p class=NoteText>Without the comment, Code Assist will not be available 
+ for the function.</p>
+
+<p align="right" class="whs37"><a href="#Contents"
+					style="x-condition: Online;">Back to Top</a></p>
+
+<h2><a name=Configuring_Code_Assist>Configuring Code Assist</a></h2>
+
+<p>Code Assist options can be configured through the &nbsp;<a 
+ href="Code_Assist.htm">Code Assist Preferences 
+ page</a>, accessible from Window | Preferences | PHP | Editor | Code Assist.</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs40">
+<col class="whs25">
+<col class="whs26">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs41">
+<p class="whs28">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs42">
+<p>&nbsp;</td></tr>
+
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs31">
+<p class="whs28"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs43"></td>
+<td width="92.907%" class="whs33">
+<p class="whs30">Related Links</p>
+<p class="whs44"><a href="Using_Code_Assist.htm"><span style="x-condition: Online;">Using 
+ Code Assist</span></a></p>
+<p class="whs44"><a href="Code_Assist.htm"
+									style="x-condition: Online;">Code Assist 
+ Preferences</a></p>
+<p class="whs44"><a href="Basic_Tutorial.htm"
+									style="x-condition: Online;">Basic 
+ Tutorials</a></p>
+<p class="whs44"><a href="Hover_Support.htm"><span style="x-condition: Online;">Hover 
+ Support</span></a></p>
+<p class="whs44"><a href="Commenting_PHP_DocBlocks.htm"><span 
+ style="x-condition: Online;">Commenting PHP DocBlocks</span></a></p>
+<p class="whs44"><a href="Using_Templates.htm"
+									style="x-condition: Online;">Using 
+ Templates</a></td></tr>
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs31">
+<p class="whs28">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs33">
+<p>&nbsp;</td></tr>
+</table>
+
+<div placeholder id="footer" class="whs45">
+ <p align="right" class="whs37"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
+	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs46">© 1999-2007 Zend Technologies, Ltd. All rights reserved.</p>
+</div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+<form method="POST" action="http://www.helpcommunity.com/ehelpapi.asp?cmd=WebSave" name="ehelpform" target="_top" style="display:'none';">
+<input type="hidden" name="data" value="2A0D0218000000576F726B696E67207769746820436F64652041737369737411020F0000004261736963205475746F7269616C73120218000000576F726B696E67207769746820436F64652041737369737413020D0000005A656E64204944452048656C701502110000005A656E645F4944455F48656C702E68746D1703740100003C3F786D6C2076657273696F6E3D22312E30223F3E0D0A3C21444F43545950452053595354454D20226568656C706F70742E647464223E0D0A3C46494C452D4F5054494F4E532046494C452D56455253494F4E3D2232222046494C452D4B45593D2233383733616238385F633161395F343337395F383037645F636237303636363263613734223E0D0A3C2F46494C452D4F5054494F4E533E0D0A3C4548454C502D4F5054494F4E5320464F524D41542D56455253494F4E3D22312E30223E0D0A203C4F5054494F4E5320454E41424C45443D225945532220454D4245444445443D2259455322204D41494E2D57494E444F572D4F4E4C593D224E4F2220434F4D4D554E4954592D4E4F544946593D224E4F222046495253542D504147453D224E4F542D534554223E0D0A203C2F4F5054494F4E533E0D0A203C425554544F4E2D4C4142454C3E5765625365617263680D0A203C2F425554544F4E2D4C4142454C3E0D0A3C2F4548454C502D4F5054494F4E533E18010400000002000000702A">
+</form>
+</body>
+</html>

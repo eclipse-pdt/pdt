@@ -2,11 +2,14 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-  <extension point="org.eclipse.help.toc">
-     <toc  file="toc.xml"  primary="true">  </toc> 
-     <toc  file="tocconcepts.xml">          </toc>
-     <toc  file="tocgettingstarted.xml">    </toc>
- 
-  </extension>
-
-</plugin>
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml">
+      </toc>
+      <toc
+            file="maintoc.xml"
+            primary="true">
+      </toc>
+   </extension>
+   </plugin>
