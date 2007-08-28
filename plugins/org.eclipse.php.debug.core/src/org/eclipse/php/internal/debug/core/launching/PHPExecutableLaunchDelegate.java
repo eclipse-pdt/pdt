@@ -112,7 +112,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			displayErrorMessage("Please set a valid PHP executable for this launch.");
 			return;
 		}
-		
+
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		final IPath filePath = new Path(fileNameString);
 		IProject project = null;
@@ -249,8 +249,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			} else {
 				fileName = filePath.toOSString();
 			}
-			final String[] cmdLine = new String[] { phpExe.toOSString(), "-c", phpConfigDir, fileName };
-
+			final String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExe.toOSString(), phpConfigDir, fileName, phpIniLocation);
 			// Set library search path:
 			if (!WINDOWS) {
 				StringBuffer buf = new StringBuffer();
