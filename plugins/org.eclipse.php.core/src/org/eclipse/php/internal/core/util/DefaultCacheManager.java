@@ -107,12 +107,11 @@ public class DefaultCacheManager {
 			File path = location.toFile();
 			if (path != null) {
 				file = new File(path, CACHE_DIR_NAME);
-
-				if (!file.exists()) {
-					file.mkdirs();
-				}
 				projectToCacheDir.put(project, file);
 			}
+		}
+		if (!file.exists()) {
+		    file.mkdirs();
 		}
 		return file;
 	}
