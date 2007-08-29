@@ -3,7 +3,7 @@
 /**
  * Return the absolute value of the number 
  *
- * @return number
+ * @return int
  * @param  number int
  */
 function abs($number) {}
@@ -153,7 +153,7 @@ function apache_get_version() {}
 /**
  * Get an Apache subprocess_env variable 
  *
- * @return string
+ * @return bool
  * @param  variable string
  * @param  walk_to_top bool[optional]
  */
@@ -489,7 +489,7 @@ function array_pop($stack) {}
 /**
  * Returns the product of the array entries 
  *
- * @return number
+ * @return mixed
  * @param  input array
  */
 function array_product($input) {}
@@ -575,7 +575,7 @@ function array_splice($input, $offset, $length = null, $replacement = null) {}
 /**
  * Returns the sum of the array entries 
  *
- * @return number
+ * @return mixed
  * @param  input array
  */
 function array_sum($input) {}
@@ -731,7 +731,7 @@ function asort(&$array_arg, $sort_flags = null) {}
 /**
  * Checks if assertion is false 
  *
- * @return bool
+ * @return int
  * @param  assertion string|bool
  */
 function assert($assertion) {}
@@ -923,7 +923,7 @@ function bind_textdomain_codeset($domain, $codeset) {}
 /**
  * Returns the decimal equivalent of the binary number 
  *
- * @return number
+ * @return int
  * @param  binary_number string
  */
 function bindec($binary_number) {}
@@ -1049,7 +1049,7 @@ function bzclose($fp) {}
 /**
  * Compresses a string into BZip2 encoded data 
  *
- * @return mixed
+ * @return string
  * @param  source string
  * @param  blocksize100k int[optional]
  * @param  workfactor int[optional]
@@ -1059,7 +1059,7 @@ function bzcompress($source, $blocksize100k = null, $workfactor = null) {}
 /**
  * Decompresses BZip2 compressed data 
  *
- * @return mixed
+ * @return string
  * @param  source string
  * @param  small int[optional]
  */
@@ -1232,7 +1232,7 @@ function checkdate($month, $day, $year) {}
 /**
  * Check DNS records corresponding to a given Internet host name or IP address 
  *
- * @return bool
+ * @return int
  * @param  host string
  * @param  type string[optional]
  */
@@ -1369,7 +1369,7 @@ function com_event_sink($comobject, $sinkobject, $sinkinterface = null) {}
 /**
  * Returns a handle to an already running instance of a COM object 
  *
- * @return variant
+ * @return object
  * @param  progid string
  * @param  code_page int[optional]
  */
@@ -1513,7 +1513,7 @@ function count_chars($input, $mode = null) {}
 /**
  * Calculate the crc32 polynomial of a string 
  *
- * @return int
+ * @return string
  * @param  str string
  */
 function crc32($str) {}
@@ -1667,7 +1667,7 @@ function curl_error($ch) {}
 /**
  * Perform a cURL session 
  *
- * @return mixed
+ * @return bool
  * @param  ch resource
  */
 function curl_exec($ch) {}
@@ -1868,7 +1868,7 @@ function date_modify($object, $modify) {}
 /**
  * 
  *
- * @return int
+ * @return long
  * @param  object DateTime
  */
 function date_offset_get($object) {}
@@ -2058,10 +2058,18 @@ function db2_connect($database, $uid, $password, $options = null) {}
 /**
  * Returns the cursor type used by the indicated statement resource 
  *
- * @return int
+ * @return long
  * @param  stmt resource
  */
 function db2_cursor_type($stmt) {}
+
+/**
+ * Escapes a string for use in a SQL statement 
+ *
+ * @return string
+ * @param  unescaped_string string
+ */
+function db2_escape_string($unescaped_string) {}
 
 /**
  * Executes an SQL statement directly 
@@ -2130,7 +2138,7 @@ function db2_fetch_row($stmt, $row_number = null) {}
 /**
  * Returns the maximum number of bytes required to display a column 
  *
- * @return int
+ * @return long
  * @param  stmt resource
  * @param  column mixed
  */
@@ -2148,7 +2156,7 @@ function db2_field_name($stmt, $column) {}
 /**
  * Returns the position of the named column in a result set 
  *
- * @return int
+ * @return long
  * @param  stmt resource
  * @param  column mixed
  */
@@ -2157,7 +2165,7 @@ function db2_field_num($stmt, $column) {}
 /**
  * Returns the precision for the indicated column in a result set 
  *
- * @return int
+ * @return long
  * @param  stmt resource
  * @param  column mixed
  */
@@ -2166,7 +2174,7 @@ function db2_field_precision($stmt, $column) {}
 /**
  * Returns the scale of the indicated column in a result set 
  *
- * @return int
+ * @return long
  * @param  stmt resource
  * @param  column mixed
  */
@@ -2184,7 +2192,7 @@ function db2_field_type($stmt, $column) {}
 /**
  * Returns the width of the current value of the indicated column in a result set 
  *
- * @return int
+ * @return long
  * @param  stmt resource
  * @param  column mixed
  */
@@ -2229,6 +2237,34 @@ function db2_free_result($resource) {}
  * @param  stmt resource
  */
 function db2_free_stmt($stmt) {}
+
+/**
+ * Returns the current setting of the connection attribute provided 
+ *
+ * @return resource
+ * @param  connection resource
+ * @param  option string
+ */
+function db2_get_option($connection, $option) {}
+
+/**
+ * Returns the current setting of the connection attribute provided 
+ *
+ * @return resource
+ * @param  connection resource
+ * @param  option string
+ */
+function db2_getoption($connection, $option) {}
+
+/**
+ * Returns part of a lob, specifically lob_length of the column_number specified 
+ *
+ * @return resource
+ * @param  stmt resource
+ * @param  column_number unknown
+ * @param  lob_length unknown
+ */
+function db2_lob_read($stmt, $column_number, $lob_length) {}
 
 /**
  * Requests the next result set from a stored procedure 
@@ -2363,21 +2399,21 @@ function db2_server_info($connection) {}
  * Sets the specified option in the resource. TYPE field specifies the resource type (1 = Connection) 
  *
  * @return bool
- * @param  stmt resource
+ * @param  resc resource
  * @param  options array
  * @param  type int
  */
-function db2_set_option($stmt, $options, $type) {}
+function db2_set_option($resc, $options, $type) {}
 
 /**
  * Sets the specified option in the resource. TYPE field specifies the resource type (1 = Connection) 
  *
  * @return bool
- * @param  stmt resource
+ * @param  resc resource
  * @param  options array
  * @param  type int
  */
-function db2_setoption($stmt, $options, $type) {}
+function db2_setoption($resc, $options, $type) {}
 
 /**
  * Returns a result set listing the unique row identifier columns for a table 
@@ -2532,7 +2568,7 @@ function dba_insert($key, $value, $handle) {}
 /**
  * Splits an inifile key into an array of the form array(0=>group,1=>value_name) but returns false if input is false or null 
  *
- * @return mixed
+ * @return array|false
  * @param  key string
  */
 function dba_key_split($key) {}
@@ -2620,7 +2656,7 @@ function dbase_close($identifier) {}
 /**
  * Creates a new dBase-format database file 
  *
- * @return int
+ * @return bool
  * @param  filename string
  * @param  fields array
  */
@@ -2894,7 +2930,7 @@ function dngettext($domain, $msgid1, $msgid2, $count) {}
 /**
  * Check DNS records corresponding to a given Internet host name or IP address 
  *
- * @return bool
+ * @return int
  * @param  host string
  * @param  type string[optional]
  */
@@ -2913,7 +2949,7 @@ function dns_get_mx($hostname, $mxhosts, $weight = null) {}
 /**
  * Get any Resource Record corresponding to a given Internet host name 
  *
- * @return array
+ * @return array|false
  * @param  hostname string
  * @param  type int[optional]
  * @param  authns array
@@ -3491,7 +3527,7 @@ function dom_element_set_id_attribute_ns($namespaceURI, $localName, $isId) {}
 /**
  * Get a simplexml_element object from dom to allow for processing 
  *
- * @return DOMElement
+ * @return somNode
  * @param  node sxeobject
  */
 function dom_import_simplexml($node) {}
@@ -4088,7 +4124,7 @@ function fbird_backup($service_handle, $source_db, $dest_file, $options = null, 
 /**
  * Add data into created blob 
  *
- * @return void
+ * @return bool
  * @param  blob_handle resource
  * @param  data string
  */
@@ -4105,7 +4141,7 @@ function fbird_blob_cancel($blob_handle) {}
 /**
  * Close blob 
  *
- * @return mixed
+ * @return string
  * @param  blob_handle resource
  */
 function fbird_blob_close($blob_handle) {}
@@ -4250,7 +4286,7 @@ function fbird_errmsg() {}
 /**
  * Execute a previously prepared query 
  *
- * @return resource
+ * @return mixed
  * @param  query resource
  * @param  bind_arg mixed[optional]
  * @param  bind_arg mixed[optional]
@@ -4321,7 +4357,7 @@ function fbird_free_result($result) {}
 /**
  * Increments the named generator and returns its new value 
  *
- * @return mixed
+ * @return int
  * @param  generator string
  * @param  increment int[optional]
  * @param  link_identifier resource[optional]
@@ -4420,7 +4456,7 @@ function fbird_prepare($link_identifier = null, $query) {}
 /**
  * Execute a query 
  *
- * @return resource
+ * @return mixed
  * @param  link_identifier resource[optional]
  * @param  link_identifier resource[optional]
  * @param  query string
@@ -4561,7 +4597,7 @@ function fbsql_blob_size($blob_handle, $link_identifier = null) {}
 /**
  * Change the user for a session 
  *
- * @return resource
+ * @return int
  * @param  user string
  * @param  password string
  * @param  database string[optional]
@@ -4681,7 +4717,7 @@ function fbsql_db_status($database_name, $link_identifier = null) {}
 /**
  * Drop a database on the server 
  *
- * @return bool
+ * @return int
  * @param  database_name string
  * @param  link_identifier resource[optional]
  */
@@ -4715,7 +4751,7 @@ function fbsql_fetch_array($result, $result_type = null) {}
 /**
  * Detch a row of data. Returns an assoc array 
  *
- * @return array
+ * @return object
  * @param  result resource
  */
 function fbsql_fetch_assoc($result) {}
@@ -4766,7 +4802,7 @@ function fbsql_field_flags($result, $field_index = null) {}
 /**
  * Get the column length for a specified field_index 
  *
- * @return int
+ * @return mixed
  * @param  result int
  * @param  field_index int[optional]
  */
@@ -5206,7 +5242,7 @@ function fdf_get_status($fdfdoc) {}
 /**
  * Gets the value of a field as string 
  *
- * @return mixed
+ * @return string
  * @param  fdfdoc resource
  * @param  fieldname string
  * @param  which int[optional]
@@ -5575,7 +5611,7 @@ function filetype($filename) {}
 /**
  * 
  *
- * @return bool
+ * @return mixed
  * @param  type constant
  * @param  variable_name string
  */
@@ -5584,7 +5620,7 @@ function filter_has_var($type, $variable_name) {}
 /**
  * * Returns the filter ID belonging to a named filter 
  *
- * @return int
+ * @return unknown
  * @param  filtername string
  */
 function filter_id($filtername) {}
@@ -5612,7 +5648,7 @@ function filter_input_array($type, $options = null) {}
 /**
  * * Returns a list of all supported filters 
  *
- * @return array
+ * @return unknown
  */
 function filter_list() {}
 
@@ -6299,8 +6335,9 @@ function get_declared_interfaces() {}
  * Return an array containing the names and values of all defined constants 
  *
  * @return array
+ * @param  categorize mixed[optional]
  */
-function get_defined_constants() {}
+function get_defined_constants($categorize = null) {}
 
 /**
  * Returns an array of all defined functions 
@@ -6427,7 +6464,7 @@ function getallheaders() {}
 /**
  * Gets the current directory 
  *
- * @return string
+ * @return mixed
  */
 function getcwd() {}
 
@@ -6594,7 +6631,7 @@ function gettext($msgid) {}
 /**
  * Returns the current time as array 
  *
- * @return mixed
+ * @return array
  * @param  get_as_float bool[optional]
  */
 function gettimeofday($get_as_float = null) {}
@@ -7326,7 +7363,7 @@ function hebrevc($str, $max_chars_per_line = null) {}
 /**
  * Returns the decimal equivalent of the hexadecimal number 
  *
- * @return number
+ * @return int
  * @param  hexadecimal_number string
  */
 function hexdec($hexadecimal_number) {}
@@ -7334,7 +7371,7 @@ function hexdec($hexadecimal_number) {}
 /**
  * Syntax highlight a source file 
  *
- * @return int
+ * @return bool
  * @param  file_name string
  * @param  return bool[optional]
  */
@@ -7343,7 +7380,7 @@ function highlight_file($file_name, $return = null) {}
 /**
  * Syntax highlight a string or optionally return it 
  *
- * @return int
+ * @return bool
  * @param  string string
  * @param  return bool[optional]
  */
@@ -7365,9 +7402,10 @@ function html_entity_decode($string, $quote_style = null, $charset = null) {}
  * @return string
  * @param  string string
  * @param  quote_style int[optional]
- * @param  charset string[optional]
+ * @param  charset string
+ * @param  double_encode bool
  */
-function htmlentities($string, $quote_style = null, $charset = null) {}
+function htmlentities($string, $quote_style = null, $charset, $double_encode) {}
 
 /**
  * Convert special characters to HTML entities 
@@ -7375,9 +7413,10 @@ function htmlentities($string, $quote_style = null, $charset = null) {}
  * @return string
  * @param  string string
  * @param  quote_style int[optional]
- * @param  charset string[optional]
+ * @param  charset string
+ * @param  double_encode bool
  */
-function htmlspecialchars($string, $quote_style = null, $charset = null) {}
+function htmlspecialchars($string, $quote_style = null, $charset, $double_encode) {}
 
 /**
  * Convert special HTML entities back to characters 
@@ -7443,7 +7482,7 @@ function ibase_backup($service_handle, $source_db, $dest_file, $options = null, 
 /**
  * Add data into created blob 
  *
- * @return void
+ * @return bool
  * @param  blob_handle resource
  * @param  data string
  */
@@ -7460,7 +7499,7 @@ function ibase_blob_cancel($blob_handle) {}
 /**
  * Close blob 
  *
- * @return mixed
+ * @return string
  * @param  blob_handle resource
  */
 function ibase_blob_close($blob_handle) {}
@@ -7605,7 +7644,7 @@ function ibase_errmsg() {}
 /**
  * Execute a previously prepared query 
  *
- * @return resource
+ * @return mixed
  * @param  query resource
  * @param  bind_arg mixed[optional]
  * @param  bind_arg mixed[optional]
@@ -7676,7 +7715,7 @@ function ibase_free_result($result) {}
 /**
  * Increments the named generator and returns its new value 
  *
- * @return mixed
+ * @return int
  * @param  generator string
  * @param  increment int[optional]
  * @param  link_identifier resource[optional]
@@ -7775,7 +7814,7 @@ function ibase_prepare($link_identifier = null, $query) {}
 /**
  * Execute a query 
  *
- * @return resource
+ * @return mixed
  * @param  link_identifier resource[optional]
  * @param  link_identifier resource[optional]
  * @param  query string
@@ -7985,331 +8024,6 @@ function iconv_substr($str, $offset, $length = null, $charset) {}
 function idate($format, $timestamp = null) {}
 
 /**
- * Returns the number of rows affected by query identified by resultid 
- *
- * @return int
- * @param  resultid resource
- */
-function ifx_affected_rows($resultid) {}
-
-/**
- * Sets the default blob-mode for all select-queries  
- *
- * @return bool
- * @param  mode int
- */
-function ifx_blobinfile_mode($mode) {}
-
-/**
- * Sets the default byte-mode for all select-queries  
- *
- * @return bool
- * @param  mode int
- */
-function ifx_byteasvarchar($mode) {}
-
-/**
- * Close informix connection 
- *
- * @return bool
- * @param  connid resource[optional]
- */
-function ifx_close($connid = null) {}
-
-/**
- * Connects to database using userid/password, returns connection id 
- *
- * @return resource
- * @param  database string[optional]
- * @param  userid string[optional]
- * @param  password string[optional]
- */
-function ifx_connect($database = null, $userid = null, $password = null) {}
-
-/**
- * Duplicates the given blob-object 
- *
- * @return int
- * @param  bid int
- */
-function ifx_copy_blob($bid) {}
-
-/**
- * Creates a blob-object 
- *
- * @return int
- * @param  type int
- * @param  mode int
- * @param  param string
- */
-function ifx_create_blob($type, $mode, $param) {}
-
-/**
- * Creates a char-object 
- *
- * @return int
- * @param  param string
- */
-function ifx_create_char($param) {}
-
-/**
- * Executes a previously prepared query or opens a cursor for it 
- *
- * @return bool
- * @param  resultid resource
- */
-function ifx_do($resultid) {}
-
-/**
- * Returns the Informix error codes (SQLSTATE & SQLCODE) 
- *
- * @return string
- * @param  connection_id resource[optional]
- */
-function ifx_error($connection_id = null) {}
-
-/**
- * Returns the Informix errormessage associated with  
- *
- * @return string
- * @param  errorcode int[optional]
- */
-function ifx_errormsg($errorcode = null) {}
-
-/**
- * Fetches the next row or <position> row if using a scroll cursor 
- *
- * @return array
- * @param  resultid resource
- * @param  position mixed[optional]
- */
-function ifx_fetch_row($resultid, $position = null) {}
-
-/**
- * Returns an associative for query <resultid> array with fieldnames as key 
- *
- * @return array
- * @param  resultid resource
- */
-function ifx_fieldproperties($resultid) {}
-
-/**
- * Returns an associative array with fieldnames as key for query <resultid> 
- *
- * @return array
- * @param  resultid resource
- */
-function ifx_fieldtypes($resultid) {}
-
-/**
- * Deletes the blob-object 
- *
- * @return bool
- * @param  bid int
- */
-function ifx_free_blob($bid) {}
-
-/**
- * Deletes the char-object 
- *
- * @return bool
- * @param  bid int
- */
-function ifx_free_char($bid) {}
-
-/**
- * Releases resources for query associated with resultid 
- *
- * @return bool
- * @param  resultid resource
- */
-function ifx_free_result($resultid) {}
-
-/**
- * Returns the content of the blob-object 
- *
- * @return string
- * @param  bid int
- */
-function ifx_get_blob($bid) {}
-
-/**
- * Returns the content of the char-object 
- *
- * @return string
- * @param  bid int
- */
-function ifx_get_char($bid) {}
-
-/**
- * Returns the sqlerrd[] fields of the sqlca struct for query resultid 
- *
- * @return array
- * @param  resultid resource
- */
-function ifx_getsqlca($resultid) {}
-
-/**
- * Formats all rows of the resultid query into a html table 
- *
- * @return int
- * @param  resultid resource
- * @param  htmltableoptions string[optional]
- */
-function ifx_htmltbl_result($resultid, $htmltableoptions = null) {}
-
-/**
- * Sets the default return value of a NULL-value on a fetch-row  
- *
- * @return bool
- * @param  mode int
- */
-function ifx_nullformat($mode) {}
-
-/**
- * Returns the number of columns in query resultid 
- *
- * @return int
- * @param  resultid resource
- */
-function ifx_num_fields($resultid) {}
-
-/**
- * Returns the number of rows already fetched for query identified by resultid 
- *
- * @return int
- * @param  resultid resource
- */
-function ifx_num_rows($resultid) {}
-
-/**
- * Connects to database using userid/password, returns connection id 
- *
- * @return resource
- * @param  database string[optional]
- * @param  userid string[optional]
- * @param  password string[optional]
- */
-function ifx_pconnect($database = null, $userid = null, $password = null) {}
-
-/**
- * Prepare a query on a given connection 
- *
- * @return resource
- * @param  query string
- * @param  connid resource
- * @param  cursortype int[optional]
- * @param  idarray array[optional]
- */
-function ifx_prepare($query, $connid, $cursortype = null, $idarray = null) {}
-
-/**
- * Perform a query on a given connection 
- *
- * @return resource
- * @param  query string
- * @param  connid resource
- * @param  cursortype int[optional]
- * @param  idarray array[optional]
- */
-function ifx_query($query, $connid, $cursortype = null, $idarray = null) {}
-
-/**
- * Sets the default text-mode for all select-queries 
- *
- * @return bool
- * @param  mode int
- */
-function ifx_textasvarchar($mode) {}
-
-/**
- * Updates the content of the blob-object 
- *
- * @return bool
- * @param  bid int
- * @param  content string
- */
-function ifx_update_blob($bid, $content) {}
-
-/**
- * Updates the content of the char-object 
- *
- * @return bool
- * @param  bid int
- * @param  content string
- */
-function ifx_update_char($bid, $content) {}
-
-/**
- * Deletes the slob-object 
- *
- * @return bool
- * @param  bid int
- */
-function ifxus_close_slob($bid) {}
-
-/**
- * Creates a slob-object and opens it 
- *
- * @return int
- * @param  mode int
- */
-function ifxus_create_slob($mode) {}
-
-/**
- * Deletes the slob-object 
- *
- * @return bool
- * @param  bid int
- */
-function ifxus_free_slob($bid) {}
-
-/**
- * Opens an slob-object 
- *
- * @return int
- * @param  bid int
- * @param  mode int
- */
-function ifxus_open_slob($bid, $mode) {}
-
-/**
- * Reads nbytes of the slob-object 
- *
- * @return string
- * @param  bid int
- * @param  nbytes int
- */
-function ifxus_read_slob($bid, $nbytes) {}
-
-/**
- * Sets the current file or seek position of an open slob-object 
- *
- * @return int
- * @param  bid int
- * @param  mode int
- * @param  offset long
- */
-function ifxus_seek_slob($bid, $mode, $offset) {}
-
-/**
- * Returns the current file or seek position of an open slob-object 
- *
- * @return int
- * @param  bid int
- */
-function ifxus_tell_slob($bid) {}
-
-/**
- * Writes a string into the slob-object 
- *
- * @return int
- * @param  bid int
- * @param  content string
- */
-function ifxus_write_slob($bid, $content) {}
-
-/**
  * Set whether we want to ignore a user abort event or not 
  *
  * @return int
@@ -8320,7 +8034,7 @@ function ignore_user_abort($value) {}
 /**
  * Output WBMP image to browser or file 
  *
- * @return int
+ * @return bool
  * @param  im resource
  * @param  filename string[optional]
  * @param  threshold int[optional]
@@ -8575,7 +8289,7 @@ function imagecolortransparent($im, $col = null) {}
 /**
  * Apply a 3x3 convolution matrix, using coefficient div and offset 
  *
- * @return bool
+ * @return resource
  * @param  src_im resource
  * @param  matrix3x3 array
  * @param  div double
@@ -8970,6 +8684,22 @@ function imagegd2($im, $filename = null, $chunk_size = null, $type = null) {}
 function imagegif($im, $filename = null) {}
 
 /**
+ * Grab a screenshot 
+ *
+ * @return resource
+ */
+function imagegrabscreen() {}
+
+/**
+ * Grab a window or its client area using a windows handle (HWND property in COM instance) 
+ *
+ * @return resource
+ * @param  window_handle int
+ * @param  client_area int[optional]
+ */
+function imagegrabwindow($window_handle, $client_area = null) {}
+
+/**
  * Enable or disable interlace 
  *
  * @return int
@@ -9263,7 +8993,7 @@ function imagesy($im) {}
 /**
  * Convert a true colour image to a palette based image with a number of colours, optionally using dithering. 
  *
- * @return bool
+ * @return void
  * @param  im resource
  * @param  ditherFlag bool
  * @param  colorsWanted int
@@ -9316,7 +9046,7 @@ function imagewbmp($im, $filename = null, $foreground = null) {}
 /**
  * Output XBM image to browser or file 
  *
- * @return bool
+ * @return int
  * @param  im int
  * @param  filename string
  * @param  foreground int[optional]
@@ -10097,7 +9827,7 @@ function ip2long($ip_address) {}
 /**
  * Embed binary IPTC data into a JPEG image. 
  *
- * @return mixed
+ * @return array
  * @param  iptcdata string
  * @param  jpeg_file_name string
  * @param  spool int[optional]
@@ -10300,6 +10030,14 @@ function is_resource($var) {}
 function is_scalar($value) {}
 
 /**
+ * Checks if given value is a SoapFault object 
+ *
+ * @return bool
+ * @param  object mixed
+ */
+function is_soap_fault($object) {}
+
+/**
  * Returns true if variable is a string 
  *
  * @return bool
@@ -10363,8 +10101,9 @@ function iterator_count($it) {}
  *
  * @return array
  * @param  it Traversable
+ * @param  use_keys bool[optional]
  */
-function iterator_to_array($it) {}
+function iterator_to_array($it, $use_keys = true) {}
 
 /**
  * Create Java object 
@@ -10390,18 +10129,34 @@ function java_get_statistics() {}
 function java_get_version_info() {}
 
 /**
- * Clear last java exception 
+ * Clear last exception 
  *
  * @return void
  */
 function java_last_exception_clear() {}
 
 /**
- * Get last Java exception 
+ * Get last exception object 
  *
  * @return object
  */
 function java_last_exception_get() {}
+
+/**
+ * Reload Jar's that were dynamically loaded 
+ *
+ * @return array
+ * @param  new_jarpath string
+ */
+function java_reload($new_jarpath) {}
+
+/**
+ * Add to Java's classpath in runtime 
+ *
+ * @return array
+ * @param  new_classpath string
+ */
+function java_require($new_classpath) {}
 
 /**
  * Set encoding for PHP-Java data transfers 
@@ -10509,7 +10264,7 @@ function join($glue = null, $pieces) {}
 /**
  * Convert JPEG image to WBMP image 
  *
- * @return int
+ * @return bool
  * @param  f_org string
  * @param  f_dest string
  * @param  d_height int
@@ -10517,6 +10272,23 @@ function join($glue = null, $pieces) {}
  * @param  threshold int
  */
 function jpeg2wbmp($f_org, $f_dest, $d_height, $d_width, $threshold) {}
+
+/**
+ * Decodes the JSON representation into a PHP value 
+ *
+ * @return mixed
+ * @param  json string
+ * @param  assoc bool[optional]
+ */
+function json_decode($json, $assoc = null) {}
+
+/**
+ * Returns the JSON representation of a value 
+ *
+ * @return string
+ * @param  data mixed
+ */
+function json_encode($data) {}
 
 /**
  * Converts a julian calendar date to julian day count 
@@ -10618,7 +10390,7 @@ function ldap_close($link) {}
 /**
  * Determine if an entry has a specific value for one of its attributes 
  *
- * @return mixed
+ * @return bool
  * @param  link resource
  * @param  dn string
  * @param  attr string
@@ -10700,9 +10472,8 @@ function ldap_explode_dn($dn, $with_attrib) {}
  * @return string
  * @param  link resource
  * @param  result_entry resource
- * @param  ber int
  */
-function ldap_first_attribute($link, $result_entry, $ber) {}
+function ldap_first_attribute($link, $result_entry) {}
 
 /**
  * Return first result id 
@@ -10768,7 +10539,7 @@ function ldap_get_entries($link, $result) {}
 function ldap_get_option($link, $option, $retval) {}
 
 /**
- * Get all values from a result entry 
+ * Get all values with lengths from a result entry 
  *
  * @return array
  * @param  link resource
@@ -10848,9 +10619,8 @@ function ldap_modify($link, $dn, $entry) {}
  * @return string
  * @param  link resource
  * @param  result_entry resource
- * @param  ber resource
  */
-function ldap_next_attribute($link, $result_entry, $ber) {}
+function ldap_next_attribute($link, $result_entry) {}
 
 /**
  * Get next result entry 
@@ -10929,10 +10699,11 @@ function ldap_rename($link, $dn, $newrdn, $newparent, $deleteoldrdn) {}
  * @param  password string
  * @param  sasl_mech string
  * @param  sasl_realm string
+ * @param  sasl_authc_id string
  * @param  sasl_authz_id string
  * @param  props string
  */
-function ldap_sasl_bind($link, $binddn = null, $password, $sasl_mech, $sasl_realm, $sasl_authz_id, $props) {}
+function ldap_sasl_bind($link, $binddn = null, $password, $sasl_mech, $sasl_realm, $sasl_authc_id, $sasl_authz_id, $props) {}
 
 /**
  * Search LDAP tree under base_dn 
@@ -11032,14 +10803,14 @@ function libxml_clear_errors() {}
 /**
  * Retrieve array of errors 
  *
- * @return array
+ * @return object
  */
 function libxml_get_errors() {}
 
 /**
  * Retrieve last error from libxml 
  *
- * @return LibXMLError
+ * @return object
  */
 function libxml_get_last_error() {}
 
@@ -11054,7 +10825,7 @@ function libxml_set_streams_context($streams_context) {}
 /**
  * Disable libxml errors and allow user to fetch error information as needed 
  *
- * @return bool
+ * @return void
  * @param  use_errors boolean[optional]
  */
 function libxml_use_internal_errors($use_errors = null) {}
@@ -11062,7 +10833,7 @@ function libxml_use_internal_errors($use_errors = null) {}
 /**
  * Create a hard link 
  *
- * @return bool
+ * @return int
  * @param  target string
  * @param  link string
  */
@@ -11154,7 +10925,7 @@ function magic_quotes_runtime($new_setting) {}
 /**
  * Send an email message 
  *
- * @return bool
+ * @return int
  * @param  to string
  * @param  subject string
  * @param  message string
@@ -11253,7 +11024,7 @@ function mb_detect_encoding($str, $encoding_list = null, $strict = null) {}
 /**
  * Sets the current detect_order or Return the current detect_order as a array 
  *
- * @return mixed
+ * @return bool|array
  * @param  encoding_list mixed[optional]
  */
 function mb_detect_order($encoding_list = null) {}
@@ -11409,7 +11180,7 @@ function mb_http_input($type = null) {}
 /**
  * Sets the current output_encoding or returns the current output_encoding as a string 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function mb_http_output($encoding = null) {}
@@ -11417,7 +11188,7 @@ function mb_http_output($encoding = null) {}
 /**
  * Sets the current internal encoding or Returns the current internal encoding as a string 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function mb_internal_encoding($encoding = null) {}
@@ -11425,7 +11196,7 @@ function mb_internal_encoding($encoding = null) {}
 /**
  * Sets the current language or Returns the current language as a string 
  *
- * @return mixed
+ * @return string
  * @param  language string[optional]
  */
 function mb_language($language = null) {}
@@ -11433,7 +11204,7 @@ function mb_language($language = null) {}
 /**
  * Returns an array of all supported entity encodings 
  *
- * @return array
+ * @return mixed
  */
 function mb_list_encodings() {}
 
@@ -11482,7 +11253,7 @@ function mb_preferred_mime_name($encoding) {}
 /**
  * Returns the current encoding for regex as a string. 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function mb_regex_encoding($encoding = null) {}
@@ -11498,7 +11269,7 @@ function mb_regex_set_options($options = null) {}
 /**
  * 
  *
- * @return bool
+ * @return int
  * @param  to string
  * @param  subject string
  * @param  message string
@@ -11616,7 +11387,7 @@ function mb_strrichr($haystack, $needle, $part, $encoding) {}
 function mb_strripos($haystack, $needle, $offset = null, $encoding = null) {}
 
 /**
- * Find the last occurrence of a character in a string within another 
+ * Find position of last occurrence of a string within another 
  *
  * @return int
  * @param  haystack string
@@ -11806,7 +11577,7 @@ function mberegi_replace($pattern, $replacement, $string) {}
 /**
  * Returns the current encoding for regex as a string. 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function mbregex_encoding($encoding = null) {}
@@ -12355,36 +12126,6 @@ function mktime($hour = null, $min = null, $sec = null, $mon = null, $day = null
 function money_format($format, $value) {}
 
 /**
- * 
- *
- * @return void
- * @param  class string
- * @param  text string
- * @param  severe bool
- * @param  user_data mixed
- */
-function monitor_custom_event($class, $text, $severe, $user_data) {}
-
-/**
- * 
- *
- * @return void
- * @param  errno integer
- * @param  errstr string
- * @param  errfile string
- * @param  errline integer
- */
-function monitor_pass_error($errno, $errstr, $errfile, $errline) {}
-
-/**
- * 
- *
- * @return void
- * @param  hint string
- */
-function monitor_set_aggregation_hint($hint) {}
-
-/**
  * Move a file if and only if it was created by an upload 
  *
  * @return bool
@@ -12405,7 +12146,7 @@ function msg_get_queue($key, $perms = null) {}
 /**
  * Send a message of type msgtype (must be > 0) to a message queue 
  *
- * @return bool
+ * @return mixed
  * @param  queue resource
  * @param  desiredmsgtype int
  * @param  msgtype int
@@ -12484,7 +12225,7 @@ function msql_close($link_identifier = null) {}
 /**
  * Open a connection to an mSQL Server 
  *
- * @return resource
+ * @return int
  * @param  hostname string[optional]
  * @param  username string[optional]
  * @param  password string[optional]
@@ -12637,7 +12378,7 @@ function msql_field_seek($query, $field_offset) {}
 /**
  * Get name of the table the specified field is in 
  *
- * @return int
+ * @return string
  * @param  query resource
  * @param  field_offset int
  */
@@ -12682,7 +12423,7 @@ function msql_fieldname($query, $field_index) {}
 /**
  * Get name of the table the specified field is in 
  *
- * @return int
+ * @return string
  * @param  query resource
  * @param  field_offset int
  */
@@ -12802,7 +12543,7 @@ function msql_numrows($query) {}
 /**
  * Open a persistent connection to an mSQL Server 
  *
- * @return resource
+ * @return int
  * @param  hostname string[optional]
  * @param  username string[optional]
  * @param  password string[optional]
@@ -12897,7 +12638,7 @@ function mssql_close($conn_id = null) {}
 /**
  * Establishes a connection to a MS-SQL server 
  *
- * @return resource
+ * @return int
  * @param  servername string[optional]
  * @param  username string[optional]
  * @param  password string[optional]
@@ -13053,7 +12794,7 @@ function mssql_guid_string($binary, $short_format = null) {}
 /**
  * Initializes a stored procedure or a remote stored procedure  
  *
- * @return resource
+ * @return int
  * @param  sp_name string
  * @param  conn_id resource[optional]
  */
@@ -13118,7 +12859,7 @@ function mssql_num_rows($mssql_result_index) {}
 /**
  * Establishes a persistent connection to a MS-SQL server 
  *
- * @return resource
+ * @return int
  * @param  servername string[optional]
  * @param  username string[optional]
  * @param  password string[optional]
@@ -13129,7 +12870,7 @@ function mssql_pconnect($servername = null, $username = null, $password = null, 
 /**
  * Perform an SQL query on a MS-SQL server database 
  *
- * @return mixed
+ * @return resource
  * @param  query string
  * @param  conn_id resource[optional]
  * @param  batch_size int[optional]
@@ -13175,7 +12916,7 @@ function mssql_set_message_handler($error_func, $connection = null) {}
 /**
  * Send Sybase query 
  *
- * @return resource
+ * @return int
  * @param  query string
  * @param  link_id int[optional]
  */
@@ -13271,7 +13012,7 @@ function mysql_data_seek($result, $row_number) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -13291,7 +13032,7 @@ function mysql_db_query($database_name, $query, $link_identifier = null) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -13688,7 +13429,7 @@ function mysql_real_escape_string($to_be_escaped, $link_identifier = null) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -13714,6 +13455,15 @@ function mysql_select_db($database_name, $link_identifier = null) {}
 function mysql_selectdb($database_name, $link_identifier = null) {}
 
 /**
+ * sets client character set 
+ *
+ * @return bool
+ * @param  csname string
+ * @param  link_identifier int[optional]
+ */
+function mysql_set_charset($csname, $link_identifier = null) {}
+
+/**
  * Returns a string containing status information 
  *
  * @return string
@@ -13724,7 +13474,7 @@ function mysql_stat($link_identifier = null) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -13734,7 +13484,7 @@ function mysql_table_name($result, $row, $field = null) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -13761,7 +13511,7 @@ function mysql_unbuffered_query($query, $link_identifier = null) {}
 /**
  * Get number of affected rows in previous MySQL operation 
  *
- * @return int
+ * @return mixed
  * @param  link object
  */
 function mysqli_affected_rows($link) {}
@@ -13844,7 +13594,7 @@ function mysqli_commit($link) {}
 /**
  * Open a connection to a mysql server 
  *
- * @return mysqli
+ * @return object
  * @param  hostname string[optional]
  * @param  username string[optional]
  * @param  passwd string[optional]
@@ -13880,7 +13630,7 @@ function mysqli_data_seek($result, $offset) {}
 /**
  * 
  *
- * @return bool
+ * @return void
  * @param  debug string
  */
 function mysqli_debug($debug) {}
@@ -13888,7 +13638,7 @@ function mysqli_debug($debug) {}
 /**
  * 
  *
- * @return bool
+ * @return void
  * @param  link object
  */
 function mysqli_disable_reads_from_master($link) {}
@@ -13896,7 +13646,7 @@ function mysqli_disable_reads_from_master($link) {}
 /**
  * 
  *
- * @return bool
+ * @return void
  * @param  link object
  */
 function mysqli_disable_rpl_parse($link) {}
@@ -13929,7 +13679,7 @@ function mysqli_embedded_server_start($start, $arguments, $groups) {}
 /**
  * 
  *
- * @return bool
+ * @return void
  * @param  link object
  */
 function mysqli_enable_reads_from_master($link) {}
@@ -13937,7 +13687,7 @@ function mysqli_enable_reads_from_master($link) {}
 /**
  * 
  *
- * @return bool
+ * @return void
  * @param  link object
  */
 function mysqli_enable_rpl_parse($link) {}
@@ -13978,7 +13728,7 @@ function mysqli_execute($stmt) {}
 /**
  * Fetch results from a prepared statement into the bound variables 
  *
- * @return bool
+ * @return mixed
  * @param  stmt object
  */
 function mysqli_fetch($stmt) {}
@@ -13995,7 +13745,7 @@ function mysqli_fetch_array($result, $resulttype = null) {}
 /**
  * Fetch a result row as an associative array 
  *
- * @return array
+ * @return mixed
  * @param  result object
  */
 function mysqli_fetch_assoc($result) {}
@@ -14003,7 +13753,7 @@ function mysqli_fetch_assoc($result) {}
 /**
  * Get column information from a result and return as an object 
  *
- * @return object
+ * @return mixed
  * @param  result object
  */
 function mysqli_fetch_field($result) {}
@@ -14011,7 +13761,7 @@ function mysqli_fetch_field($result) {}
 /**
  * Fetch meta-data for a single field 
  *
- * @return object
+ * @return mixed
  * @param  result object
  * @param  offset int
  */
@@ -14020,7 +13770,7 @@ function mysqli_fetch_field_direct($result, $offset) {}
 /**
  * Return array of objects containing field meta-data 
  *
- * @return array
+ * @return mixed
  * @param  result object
  */
 function mysqli_fetch_fields($result) {}
@@ -14028,7 +13778,7 @@ function mysqli_fetch_fields($result) {}
 /**
  * Get the length of each output in a result 
  *
- * @return array
+ * @return mixed
  * @param  result object
  */
 function mysqli_fetch_lengths($result) {}
@@ -14036,7 +13786,7 @@ function mysqli_fetch_lengths($result) {}
 /**
  * Fetch a result row as an object 
  *
- * @return object
+ * @return mixed
  * @param  result object
  * @param  class_name string[optional]
  * @param  ctor_params NULL|array[optional]
@@ -14046,7 +13796,7 @@ function mysqli_fetch_object($result, $class_name = null, $ctor_params = null) {
 /**
  * Get a result row as an enumerated array 
  *
- * @return mixed
+ * @return array
  * @param  result object
  */
 function mysqli_fetch_row($result) {}
@@ -14062,7 +13812,7 @@ function mysqli_field_count($link) {}
 /**
  * 
  *
- * @return bool
+ * @return int
  * @param  result object
  * @param  fieldnr int
  */
@@ -14117,7 +13867,7 @@ function mysqli_get_host_info($link) {}
 /**
  * return result set from statement 
  *
- * @return mysqli_result
+ * @return mixed
  * @param  stmt object
  */
 function mysqli_get_metadata($stmt) {}
@@ -14165,14 +13915,14 @@ function mysqli_info($link) {}
 /**
  * Initialize mysqli and return a resource for use with mysql_real_connect 
  *
- * @return mysqli
+ * @return resource
  */
 function mysqli_init() {}
 
 /**
  * Get the ID generated from the previous INSERT operation 
  *
- * @return int
+ * @return mixed
  * @param  link object
  */
 function mysqli_insert_id($link) {}
@@ -14231,7 +13981,7 @@ function mysqli_num_fields($result) {}
 /**
  * Get number of rows in result 
  *
- * @return int
+ * @return mixed
  * @param  result object
  */
 function mysqli_num_rows($result) {}
@@ -14265,7 +14015,7 @@ function mysqli_ping($link) {}
 /**
  * Prepare a SQL statement for execution 
  *
- * @return mysqli_stmt
+ * @return mixed
  * @param  link object
  * @param  query string
  */
@@ -14357,7 +14107,7 @@ function mysqli_rpl_query_type($query) {}
 /**
  * Select a MySQL database 
  *
- * @return bool
+ * @return string
  * @param  link object
  * @param  dbname string
  */
@@ -14451,7 +14201,7 @@ function mysqli_ssl_set($link, $key, $cert, $ca, $capath, $cipher) {}
 /**
  * Get current system status 
  *
- * @return string
+ * @return mixed
  * @param  link object
  */
 function mysqli_stat($link) {}
@@ -14459,7 +14209,7 @@ function mysqli_stat($link) {}
 /**
  * Return the number of rows affected in the last query for the given link 
  *
- * @return int
+ * @return mixed
  * @param  stmt object
  */
 function mysqli_stmt_affected_rows($stmt) {}
@@ -14550,7 +14300,7 @@ function mysqli_stmt_execute($stmt) {}
 /**
  * Fetch results from a prepared statement into the bound variables 
  *
- * @return bool
+ * @return mixed
  * @param  stmt object
  */
 function mysqli_stmt_fetch($stmt) {}
@@ -14582,7 +14332,7 @@ function mysqli_stmt_get_warnings($link) {}
 /**
  * 
  *
- * @return mysqli_stmt
+ * @return mixed
  * @param  link object
  */
 function mysqli_stmt_init($link) {}
@@ -14598,7 +14348,7 @@ function mysqli_stmt_insert_id($stmt) {}
 /**
  * Return the number of rows in statements result set 
  *
- * @return int
+ * @return mixed
  * @param  stmt object
  */
 function mysqli_stmt_num_rows($stmt) {}
@@ -14631,7 +14381,7 @@ function mysqli_stmt_reset($stmt) {}
 /**
  * return result set from statement 
  *
- * @return mysqli_result
+ * @return mixed
  * @param  stmt object
  */
 function mysqli_stmt_result_metadata($stmt) {}
@@ -14665,7 +14415,7 @@ function mysqli_stmt_store_result($stmt) {}
 /**
  * Buffer result set on client 
  *
- * @return mysqli_result
+ * @return object
  * @param  link object
  */
 function mysqli_store_result($link) {}
@@ -14688,7 +14438,7 @@ function mysqli_thread_safe() {}
 /**
  * Directly retrieve query results - do not buffer results on client side 
  *
- * @return mysqli_result
+ * @return mixed
  * @param  link object
  */
 function mysqli_use_result($link) {}
@@ -14704,7 +14454,7 @@ function mysqli_warning_count($link) {}
 /**
  * Sort an array using case-insensitive natural sort 
  *
- * @return bool
+ * @return void
  * @param  array_arg array
  */
 function natcasesort(&$array_arg) {}
@@ -14712,7 +14462,7 @@ function natcasesort(&$array_arg) {}
 /**
  * Sort an array using natural sort 
  *
- * @return bool
+ * @return void
  * @param  array_arg array
  */
 function natsort(&$array_arg) {}
@@ -14910,14 +14660,14 @@ function ncurses_curs_set($visibility) {}
 /**
  * Saves terminals (program) mode 
  *
- * @return bool
+ * @return int
  */
 function ncurses_def_prog_mode() {}
 
 /**
  * Saves terminal (shell) mode
  *
- * @return bool
+ * @return int
  */
 function ncurses_def_shell_mode() {}
 
@@ -14949,14 +14699,14 @@ function ncurses_delay_output($milliseconds) {}
 /**
  * Deletes character at current position, move rest of line left 
  *
- * @return bool
+ * @return int
  */
 function ncurses_delch() {}
 
 /**
  * Deletes line at current position, move rest of screen up 
  *
- * @return bool
+ * @return int
  */
 function ncurses_deleteln() {}
 
@@ -14971,14 +14721,14 @@ function ncurses_delwin($window) {}
 /**
  * Writes all prepared refreshes to terminal 
  *
- * @return bool
+ * @return int
  */
 function ncurses_doupdate() {}
 
 /**
  * Activates keyboard input echo 
  *
- * @return bool
+ * @return int
  */
 function ncurses_echo() {}
 
@@ -15000,7 +14750,7 @@ function ncurses_end() {}
 /**
  * Erases terminal screen 
  *
- * @return bool
+ * @return int
  */
 function ncurses_erase() {}
 
@@ -15021,14 +14771,14 @@ function ncurses_filter() {}
 /**
  * Flashes terminal screen (visual bell) 
  *
- * @return bool
+ * @return int
  */
 function ncurses_flash() {}
 
 /**
  * Flushes keyboard input buffer 
  *
- * @return bool
+ * @return int
  */
 function ncurses_flushinp() {}
 
@@ -15085,14 +14835,14 @@ function ncurses_has_colors() {}
 /**
  * Checks for insert- and delete-capabilities 
  *
- * @return bool
+ * @return int
  */
 function ncurses_has_ic() {}
 
 /**
  * Checks for line insert- and delete-capabilities 
  *
- * @return bool
+ * @return int
  */
 function ncurses_has_il() {}
 
@@ -15131,7 +14881,7 @@ function ncurses_inch() {}
 /**
  * Initializes ncurses 
  *
- * @return void
+ * @return int
  */
 function ncurses_init() {}
 
@@ -15175,7 +14925,7 @@ function ncurses_insdelln($count) {}
 /**
  * Inserts a line, move rest of screen down 
  *
- * @return bool
+ * @return int
  */
 function ncurses_insertln() {}
 
@@ -15198,7 +14948,7 @@ function ncurses_instr(&$buffer) {}
 /**
  * Ncurses is in endwin mode, normal screen output may be performed 
  *
- * @return bool
+ * @return int
  */
 function ncurses_isendwin() {}
 
@@ -15440,7 +15190,7 @@ function ncurses_newpad($rows, $cols) {}
 /**
  * Creates a new window 
  *
- * @return resource
+ * @return int
  * @param  rows int
  * @param  cols int
  * @param  y int
@@ -15451,35 +15201,35 @@ function ncurses_newwin($rows, $cols, $y, $x) {}
 /**
  * Translates newline and carriage return / line feed 
  *
- * @return bool
+ * @return int
  */
 function ncurses_nl() {}
 
 /**
  * Switches terminal to cooked mode 
  *
- * @return bool
+ * @return int
  */
 function ncurses_nocbreak() {}
 
 /**
  * Switches off keyboard input echo 
  *
- * @return bool
+ * @return int
  */
 function ncurses_noecho() {}
 
 /**
  * Do not ranslate newline and carriage return / line feed 
  *
- * @return bool
+ * @return int
  */
 function ncurses_nonl() {}
 
 /**
  * Do not flush on signal characters
  *
- * @return void
+ * @return int
  */
 function ncurses_noqiflush() {}
 
@@ -15570,7 +15320,7 @@ function ncurses_qiflush() {}
 /**
  * Switches terminal into raw mode 
  *
- * @return bool
+ * @return int
  */
 function ncurses_raw() {}
 
@@ -15608,14 +15358,14 @@ function ncurses_reset_shell_mode() {}
 /**
  * Restores saved terminal state 
  *
- * @return bool
+ * @return int
  */
 function ncurses_resetty() {}
 
 /**
  * Saves terminal state 
  *
- * @return bool
+ * @return int
  */
 function ncurses_savetty() {}
 
@@ -15670,7 +15420,7 @@ function ncurses_show_panel($panel) {}
 /**
  * Returns current soft label keys attribute 
  *
- * @return bool
+ * @return int
  */
 function ncurses_slk_attr() {}
 
@@ -15701,7 +15451,7 @@ function ncurses_slk_attrset($intarg) {}
 /**
  * Clears soft label keys from screen 
  *
- * @return bool
+ * @return int
  */
 function ncurses_slk_clear() {}
 
@@ -15716,7 +15466,7 @@ function ncurses_slk_color($intarg) {}
 /**
  * Inits soft label keys 
  *
- * @return bool
+ * @return int
  * @param  intarg int
  */
 function ncurses_slk_init($intarg) {}
@@ -15724,21 +15474,21 @@ function ncurses_slk_init($intarg) {}
 /**
  * Copies soft label keys to virtual screen 
  *
- * @return bool
+ * @return int
  */
 function ncurses_slk_noutrefresh() {}
 
 /**
  * Copies soft label keys to screen 
  *
- * @return bool
+ * @return int
  */
 function ncurses_slk_refresh() {}
 
 /**
  * Restores soft label keys 
  *
- * @return bool
+ * @return int
  */
 function ncurses_slk_restore() {}
 
@@ -15755,7 +15505,7 @@ function ncurses_slk_set($labelnr, $label, $format) {}
 /**
  * Forces output when ncurses_slk_noutrefresh is performed 
  *
- * @return bool
+ * @return int
  */
 function ncurses_slk_touch() {}
 
@@ -15783,7 +15533,7 @@ function ncurses_start_color() {}
 /**
  * Returns a logical OR of all attribute flags supported by terminal 
  *
- * @return bool
+ * @return int
  */
 function ncurses_termattrs() {}
 
@@ -15829,7 +15579,7 @@ function ncurses_ungetch($keycode) {}
 /**
  * Pushes mouse event to queue 
  *
- * @return bool
+ * @return int
  * @param  mevent array
  */
 function ncurses_ungetmouse($mevent) {}
@@ -15844,7 +15594,7 @@ function ncurses_update_panels() {}
 /**
  * Assigns terminal default colors to color id -1 
  *
- * @return bool
+ * @return int
  */
 function ncurses_use_default_colors() {}
 
@@ -16119,7 +15869,7 @@ function number_format($number, $num_decimal_places = null, $dec_seperator = nul
 /**
  * Clean (delete) the current output buffer 
  *
- * @return void
+ * @return bool
  */
 function ob_clean() {}
 
@@ -16140,14 +15890,14 @@ function ob_end_flush() {}
 /**
  * Flush (send) contents of the output buffer. The last buffer content is sent to next buffer 
  *
- * @return void
+ * @return bool
  */
 function ob_flush() {}
 
 /**
  * Get current buffer contents and delete current output buffer 
  *
- * @return string
+ * @return bool
  */
 function ob_get_clean() {}
 
@@ -16161,7 +15911,7 @@ function ob_get_contents() {}
 /**
  * Get current buffer contents, flush (send) the output buffer, and delete current output buffer 
  *
- * @return string
+ * @return bool
  */
 function ob_get_flush() {}
 
@@ -16182,7 +15932,7 @@ function ob_get_level() {}
 /**
  * Return the status of the active or all output buffers 
  *
- * @return array
+ * @return false|array
  * @param  full_status bool[optional]
  */
 function ob_get_status($full_status = null) {}
@@ -16216,7 +15966,7 @@ function ob_implicit_flush($flag = null) {}
 /**
  * 
  *
- * @return array
+ * @return false|array
  */
 function ob_list_handlers() {}
 
@@ -16507,7 +16257,7 @@ function oci_lob_is_equal($lob1, $lob2) {}
 /**
  * Initialize a new collection 
  *
- * @return OCI-Collection
+ * @return object
  * @param  connection resource
  * @param  tdo string
  * @param  schema string[optional]
@@ -16535,7 +16285,7 @@ function oci_new_cursor($connection) {}
 /**
  * Initialize a new empty descriptor LOB/FILE (LOB is default) 
  *
- * @return OCI-Lob
+ * @return object
  * @param  connection resource
  * @param  type int[optional]
  */
@@ -16569,7 +16319,7 @@ function oci_parse($connection, $query) {}
 /**
  * Changes the password of an account 
  *
- * @return resource
+ * @return bool
  * @param  connection resource
  * @param  username string
  * @param  old_password string
@@ -16591,7 +16341,7 @@ function oci_pconnect($user, $pass, $db = null, $charset = null) {}
 /**
  * Return a single column of result data 
  *
- * @return mixed
+ * @return string
  * @param  stmt resource
  * @param  column mixed
  */
@@ -16895,7 +16645,7 @@ function ocilogon($user, $pass, $db = null, $charset = null, $session_mode = nul
 /**
  * Initialize a new collection 
  *
- * @return OCI-Collection
+ * @return object
  * @param  connection resource
  * @param  tdo string
  * @param  schema string[optional]
@@ -16913,7 +16663,7 @@ function ocinewcursor($connection) {}
 /**
  * Initialize a new empty descriptor LOB/FILE (LOB is default) 
  *
- * @return OCI-Lob
+ * @return object
  * @param  connection resource
  * @param  type int[optional]
  */
@@ -16949,7 +16699,7 @@ function ociparse($connection, $query) {}
 /**
  * Changes the password of an account 
  *
- * @return resource
+ * @return bool
  * @param  connection resource
  * @param  username string
  * @param  old_password string
@@ -16971,7 +16721,7 @@ function ociplogon($user, $pass, $db = null, $charset = null) {}
 /**
  * Return a single column of result data 
  *
- * @return mixed
+ * @return string
  * @param  stmt resource
  * @param  column mixed
  */
@@ -17049,7 +16799,7 @@ function ociwritelobtofile($filename = null, $start = null, $length = null) {}
 /**
  * Returns the decimal equivalent of an octal string 
  *
- * @return number
+ * @return int
  * @param  octal_number string
  */
 function octdec($octal_number) {}
@@ -17204,7 +16954,7 @@ function odbc_fetch_array($result, $rownumber = null) {}
 /**
  * Fetch one result row into an array 
  *
- * @return bool
+ * @return int
  * @param  result_id resource
  * @param  result_array array
  * @param  rownumber int[optional]
@@ -17492,7 +17242,7 @@ function odbc_tables($connection_id, $qualifier = null, $owner = null, $name = n
 /**
  * Open a directory and return a dir_handle 
  *
- * @return resource
+ * @return mixed
  * @param  path string
  * @param  context resource
  */
@@ -17547,7 +17297,7 @@ function openssl_csr_get_subject($csr) {}
 /**
  * Generates a privkey and CSR 
  *
- * @return mixed
+ * @return bool
  * @param  dn array
  * @param  privkey resource
  * @param  configargs array[optional]
@@ -17571,7 +17321,7 @@ function openssl_csr_sign($csr, $x509, $priv_key, $days, $config_args = null, $s
 /**
  * Returns a description of the last error, and alters the index of the error messages. Returns false when the are no more messages 
  *
- * @return string
+ * @return mixed
  */
 function openssl_error_string() {}
 
@@ -17586,7 +17336,7 @@ function openssl_free_key($key) {}
 /**
  * Gets private keys 
  *
- * @return resource
+ * @return int
  * @param  key string
  * @param  passphrase string[optional]
  */
@@ -17595,7 +17345,7 @@ function openssl_get_privatekey($key, $passphrase = null) {}
 /**
  * Gets public key from X.509 certificate 
  *
- * @return resource
+ * @return int
  * @param  cert mixed
  */
 function openssl_get_publickey($cert) {}
@@ -17610,6 +17360,40 @@ function openssl_get_publickey($cert) {}
  * @param  privkey mixed
  */
 function openssl_open($data, $opendata, $ekey, $privkey) {}
+
+/**
+ * Creates and exports a PKCS12 to a var 
+ *
+ * @return bool
+ * @param  x509 mixed
+ * @param  out string
+ * @param  priv_key mixed
+ * @param  pass string
+ * @param  args array
+ */
+function openssl_pkcs12_export($x509, &$out, $priv_key, $pass, $args) {}
+
+/**
+ * Creates and exports a PKCS to file 
+ *
+ * @return bool
+ * @param  x509 mixed
+ * @param  filename string
+ * @param  priv_key mixed
+ * @param  pass string
+ * @param  args array
+ */
+function openssl_pkcs12_export_to_file($x509, $filename, $priv_key, $pass, $args) {}
+
+/**
+ * Parses a PKCS12 to an array 
+ *
+ * @return bool
+ * @param  PKCS12 string
+ * @param  certs array
+ * @param  pass string
+ */
+function openssl_pkcs12_read($PKCS12, &$certs, $pass) {}
 
 /**
  * Decrypts the S/MIME message in the file name infilename and output the results to the file name outfilename.  recipcert is a CERT for one of the recipients. recipkey specifies the private key matching recipcert, if recipcert does not include the key 
@@ -17652,7 +17436,7 @@ function openssl_pkcs7_sign($infile, $outfile, $signcert, $signkey, $headers, $f
 /**
  * Verifys that the data block is intact, the signer is who they say they are, and returns the CERTs of the signers 
  *
- * @return mixed
+ * @return bool
  * @param  filename string
  * @param  flags long
  * @param  signerscerts string[optional]
@@ -17703,7 +17487,7 @@ function openssl_pkey_get_details($key) {}
 /**
  * Gets private keys 
  *
- * @return resource
+ * @return int
  * @param  key string
  * @param  passphrase string[optional]
  */
@@ -17712,7 +17496,7 @@ function openssl_pkey_get_private($key, $passphrase = null) {}
 /**
  * Gets public key from X.509 certificate 
  *
- * @return resource
+ * @return int
  * @param  cert mixed
  */
 function openssl_pkey_get_public($cert) {}
@@ -17884,12 +17668,12 @@ function ord($character) {}
 function output_add_rewrite_var($name, $value) {}
 
 /**
- * Check filename against the Zend Performance Suite's content cache rules 
+ * Check filename or url against the Zend Performance Suite's content cache rules 
  *
  * @return array
- * @param  filename string
+ * @param  filename_or_url string
  */
-function output_cache_check_file($filename) {}
+function output_cache_check_file($filename_or_url) {}
 
 /**
  * Disable content-caching of current page results (Zend Performance Suite) 
@@ -17976,7 +17760,7 @@ function output_cache_remove($filename) {}
 function output_cache_remove_key($key) {}
 
 /**
- * Remove all copies of the specified URL from the Zend Performance Suite's cache 
+ * Remove all copies of the specified URL or file from the Zend Performance Suite's cache 
  *
  * @return bool
  * @param  url string
@@ -18047,7 +17831,7 @@ function passthru($command, &$return_value) {}
 /**
  * Returns information about a certain string 
  *
- * @return mixed
+ * @return array
  * @param  path string
  * @param  options int
  */
@@ -18072,7 +17856,7 @@ function pcntl_alarm($seconds) {}
 /**
  * Executes specified program in current process space as defined by exec(2) 
  *
- * @return void
+ * @return bool
  * @param  path string
  * @param  args array[optional]
  * @param  envs array[optional]
@@ -18428,7 +18212,7 @@ function pg_fetch_object($result, $row = null, $class_name = null, $ctor_params 
 /**
  * Returns values from a result identifier 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row_number int[optional]
  * @param  field_name mixed
@@ -18514,7 +18298,7 @@ function pg_field_type($result, $field_number) {}
 /**
  * Returns the type oid for the given field 
  *
- * @return int
+ * @return string
  * @param  result resource
  * @param  field_number int
  */
@@ -18900,7 +18684,7 @@ function pg_options($connection = null) {}
 /**
  * Returns the value of a server parameter 
  *
- * @return string
+ * @return string|false
  * @param  connection resource[optional]
  * @param  param_name string
  */
@@ -18975,7 +18759,7 @@ function pg_query_params($connection = null, $query, $params) {}
 /**
  * Returns values from a result identifier 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row_number int[optional]
  * @param  field_name mixed
@@ -19163,6 +18947,13 @@ function pg_version($connection = null) {}
 function php_egg_logo_guid() {}
 
 /**
+ * Return the actual loaded ini filename 
+ *
+ * @return string
+ */
+function php_ini_loaded_file() {}
+
+/**
  * Return comma-separated string of .ini files parsed from the additional ini dir 
  *
  * @return string
@@ -19217,7 +19008,7 @@ function php_uname() {}
 /**
  * Prints the list of people who've contributed to the PHP project 
  *
- * @return bool
+ * @return void
  * @param  flag int[optional]
  */
 function phpcredits($flag = null) {}
@@ -19225,7 +19016,7 @@ function phpcredits($flag = null) {}
 /**
  * Output a page of useful information about PHP and the current request 
  *
- * @return bool
+ * @return void
  * @param  what int[optional]
  */
 function phpinfo($what = null) {}
@@ -19256,7 +19047,7 @@ function platform_get_cfg_var($option_name) {}
 /**
  * Convert PNG image to WBMP image 
  *
- * @return int
+ * @return bool
  * @param  f_org string
  * @param  f_dest string
  * @param  d_height int
@@ -19621,7 +19412,7 @@ function preg_quote($str, $delim_char = null) {}
 /**
  * Perform Perl-style regular expression replacement. 
  *
- * @return mixed
+ * @return string
  * @param  regex mixed
  * @param  replace mixed
  * @param  subject mixed
@@ -19633,7 +19424,7 @@ function preg_replace($regex, $replace, $subject, $limit = null, $count = null) 
 /**
  * Perform Perl-style regular expression replacement using replacement callback. 
  *
- * @return mixed
+ * @return string
  * @param  regex mixed
  * @param  callback mixed
  * @param  subject mixed
@@ -19664,7 +19455,7 @@ function prev($array_arg) {}
 /**
  * Prints out or returns information about the specified variable 
  *
- * @return bool
+ * @return mixed
  * @param  var mixed
  * @param  return bool[optional]
  */
@@ -19720,7 +19511,7 @@ function proc_open($command, $descriptorspec, &$pipes, $cwd = null, $env = null,
 /**
  * kill a process opened by proc_open 
  *
- * @return int
+ * @return bool
  * @param  process resource
  * @param  signal long[optional]
  */
@@ -20037,7 +19828,7 @@ function readline_add_history($prompt = null) {}
 /**
  * Initializes the readline callback interface and terminal, prints the prompt and returns immediately 
  *
- * @return bool
+ * @return void
  * @param  prompt string
  * @param  callback mixed
  */
@@ -20174,16 +19965,6 @@ function recode_string($request, $str) {}
 function registerNamespace($prefix, $uri) {}
 
 /**
- * Register a user-defined event handler function.  Returns false on error 
- *
- * @return bool
- * @param  handler_function callback
- * @param  handler_name string
- * @param  handler_type integer
- */
-function register_event_handler($handler_function, $handler_name, $handler_type) {}
-
-/**
  * Register a user-level function to be called on request termination 
  *
  * @return void
@@ -20248,14 +20029,14 @@ function reset($array_arg) {}
 /**
  * Restores the previously defined error handler function 
  *
- * @return bool
+ * @return void
  */
 function restore_error_handler() {}
 
 /**
  * Restores the previously defined exception handler function 
  *
- * @return bool
+ * @return void
  */
 function restore_exception_handler() {}
 
@@ -20495,7 +20276,7 @@ function session_set_cookie_params($lifetime, $path = null, $domain = null, $sec
 /**
  * Sets user-level functions 
  *
- * @return bool
+ * @return void
  * @param  open string
  * @param  close string
  * @param  read string
@@ -20556,7 +20337,7 @@ function setNamedItemNS($arg) {}
 /**
  * Sets a user-defined error handler function.  Returns the previously defined error handler, or false on error 
  *
- * @return mixed
+ * @return string
  * @param  error_handler string
  * @param  error_types int[optional]
  */
@@ -20607,7 +20388,7 @@ function set_socket_blocking($socket, $mode) {}
 /**
  * Sets the maximum time a script can run 
  *
- * @return void
+ * @return bool
  * @param  seconds int
  */
 function set_time_limit($seconds) {}
@@ -20797,7 +20578,7 @@ function shmop_write($shmid, $data, $offset) {}
 /**
  * Syntax highlight a source file 
  *
- * @return int
+ * @return bool
  * @param  file_name string
  * @param  return bool[optional]
  */
@@ -20824,7 +20605,7 @@ function similar_text($str1, $str2, $percent = null) {}
 /**
  * Get a simplexml_element object from dom to allow for processing 
  *
- * @return SimpleXMLElement
+ * @return simplemxml_element
  * @param  node domNode
  * @param  class_name string[optional]
  */
@@ -20833,7 +20614,7 @@ function simplexml_import_dom($node, $class_name = null) {}
 /**
  * Load a filename and return a simplexml_element object to allow for processing 
  *
- * @return object
+ * @return simplemxml_element
  * @param  filename string
  * @param  class_name string[optional]
  * @param  options int[optional]
@@ -20845,7 +20626,7 @@ function simplexml_load_file($filename, $class_name = null, $options = null, $ns
 /**
  * Load a string and return a simplexml_element object to allow for processing 
  *
- * @return object
+ * @return simplemxml_element
  * @param  data string
  * @param  class_name string[optional]
  * @param  options int[optional]
@@ -20882,7 +20663,7 @@ function sizeof($var, $mode = null) {}
 /**
  * Delay for a given number of seconds 
  *
- * @return int
+ * @return void
  * @param  seconds int
  */
 function sleep($seconds) {}
@@ -20890,7 +20671,7 @@ function sleep($seconds) {}
 /**
  * Adds a header to the current message. 
  *
- * @return string
+ * @return bool
  * @param  headerf string
  * @param  headerv string
  */
@@ -20899,7 +20680,7 @@ function smfi_addheader($headerf, $headerv) {}
 /**
  * Add a recipient to the message envelope. 
  *
- * @return string
+ * @return bool
  * @param  rcpt string
  */
 function smfi_addrcpt($rcpt) {}
@@ -20907,7 +20688,7 @@ function smfi_addrcpt($rcpt) {}
 /**
  * Changes a header's value for the current message. 
  *
- * @return string
+ * @return bool
  * @param  headerf string
  * @param  headerv string
  */
@@ -20916,7 +20697,7 @@ function smfi_chgheader($headerf, $headerv) {}
 /**
  * Removes the named recipient from the current message's envelope. 
  *
- * @return string
+ * @return bool
  * @param  rcpt string
  */
 function smfi_delrcpt($rcpt) {}
@@ -20932,7 +20713,7 @@ function smfi_getsymval($macro) {}
 /**
  * 
  *
- * @return string
+ * @return bool
  * @param  body string
  */
 function smfi_replacebody($body) {}
@@ -20940,7 +20721,7 @@ function smfi_replacebody($body) {}
 /**
  * Sets the flags describing the actions the filter may take. 
  *
- * @return string
+ * @return void
  * @param  flags long
  */
 function smfi_setflags($flags) {}
@@ -20948,7 +20729,7 @@ function smfi_setflags($flags) {}
 /**
  * 
  *
- * @return string
+ * @return bool
  * @param  rcode string
  * @param  xcode string
  * @param  message string
@@ -20958,7 +20739,7 @@ function smfi_setreply($rcode, $xcode, $message) {}
 /**
  * Sets the number of seconds libmilter will wait for an MTA connection before timing out a socket. 
  *
- * @return string
+ * @return void
  * @param  timeout long
  */
 function smfi_settimeout($timeout) {}
@@ -21129,7 +20910,7 @@ function snmp_get_valueretrieval() {}
 /**
  * Reads and parses a MIB file into the active MIB tree. 
  *
- * @return bool
+ * @return int
  * @param  filename string
  */
 function snmp_read_mib($filename) {}
@@ -21169,7 +20950,7 @@ function snmp_set_quick_print($quick_print) {}
 /**
  * Specify the method how the SNMP values will be returned 
  *
- * @return void
+ * @return int
  * @param  method int
  */
 function snmp_set_valueretrieval($method) {}
@@ -21213,7 +20994,7 @@ function snmprealwalk($host, $community, $object_id, $timeout = null, $retries =
 /**
  * Set the value of a SNMP object 
  *
- * @return bool
+ * @return int
  * @param  host string
  * @param  community string
  * @param  object_id string
@@ -21594,7 +21375,7 @@ function spl_autoload_extensions($file_extensions = null) {}
 /**
  * Return all registered __autoload() functionns 
  *
- * @return array
+ * @return false|array
  */
 function spl_autoload_functions() {}
 
@@ -21717,7 +21498,7 @@ function sqlite_column($result, $index_or_name, $decode_binary = null) {}
 /**
  * Registers an aggregate function for queries. 
  *
- * @return void
+ * @return bool
  * @param  db resource
  * @param  funcname string
  * @param  step_func mixed
@@ -21729,7 +21510,7 @@ function sqlite_create_aggregate($db, $funcname, $step_func, $finalize_func, $nu
 /**
  * Registers a "regular" function for queries. 
  *
- * @return void
+ * @return bool
  * @param  db resource
  * @param  funcname string
  * @param  callback mixed
@@ -21766,7 +21547,7 @@ function sqlite_escape_string($item) {}
 /**
  * Executes a result-less query against a given database 
  *
- * @return bool
+ * @return boolean
  * @param  query string
  * @param  db resource
  * @param  error_message string
@@ -21776,7 +21557,7 @@ function sqlite_exec($query, $db, &$error_message) {}
 /**
  * Opens a SQLite database and creates an object for it. Will create the database if it does not exist. 
  *
- * @return SQLiteDatabase
+ * @return object
  * @param  filename string
  * @param  mode int[optional]
  * @param  error_message string[optional]
@@ -21806,7 +21587,7 @@ function sqlite_fetch_array($result, $result_type = null, $decode_binary = null)
 /**
  * Return an array of column types from a particular table. 
  *
- * @return array
+ * @return resource
  * @param  table_name string
  * @param  db resource
  * @param  result_type int[optional]
@@ -22120,7 +21901,7 @@ function str_rot13($str) {}
 /**
  * Shuffles string. One permutation of all possible is created 
  *
- * @return string
+ * @return void
  * @param  str string
  */
 function str_shuffle($str) {}
@@ -22211,7 +21992,7 @@ function stream_bucket_make_writeable($brigade) {}
 /**
  * Create a new bucket for use on the current stream 
  *
- * @return object
+ * @return resource
  * @param  stream resource
  * @param  buffer string
  */
@@ -22273,7 +22054,7 @@ function stream_context_set_params($context, $options) {}
 /**
  * Reads up to maxlen bytes from source stream and writes them to dest stream. 
  *
- * @return int
+ * @return long
  * @param  source resource
  * @param  dest resource
  * @param  maxlen long[optional]
@@ -22323,7 +22104,7 @@ function stream_filter_remove($stream_filter) {}
 /**
  * Reads all remaining bytes (or up to maxlen bytes) from a stream and returns them as a string. 
  *
- * @return string
+ * @return long
  * @param  source resource
  * @param  maxlen long[optional]
  * @param  offset long[optional]
@@ -22368,6 +22149,14 @@ function stream_get_transports() {}
  * @return array
  */
 function stream_get_wrappers() {}
+
+/**
+ * 
+ *
+ * @return bool
+ * @param  stream|string_url resource
+ */
+function stream_is_local($stream) {}
 
 /**
  * Registers a custom URL protocol handler class 
@@ -22444,7 +22233,7 @@ function stream_socket_client($remoteaddress, &$errcode, &$errstring, $timeout, 
 /**
  * Enable or disable a specific kind of crypto on the stream 
  *
- * @return mixed
+ * @return int
  * @param  stream resource
  * @param  enable bool
  * @param  cryptokind int[optional]
@@ -22485,7 +22274,7 @@ function stream_socket_recvfrom($stream, $amount, $flags = null, &$remote_addr) 
 /**
  * Send data to a socket stream.  If target_addr is specified it must be in dotted quad (or [ipv6]) format 
  *
- * @return int
+ * @return long
  * @param  stream resouce
  * @param  data string
  * @param  flags long[optional]
@@ -22504,6 +22293,15 @@ function stream_socket_sendto($stream, $data, $flags = null, $target_addr = null
  * @param  context resource
  */
 function stream_socket_server($localaddress, &$errcode, &$errstring, $flags, $context) {}
+
+/**
+ * 
+ *
+ * @return int
+ * @param  stream resource
+ * @param  how int
+ */
+function stream_socket_shutdown($stream, $how) {}
 
 /**
  * Registers a custom URL protocol handler class 
@@ -22632,7 +22430,7 @@ function strncmp($str1, $str2, $len) {}
 /**
  * Search a string for any of a set of characters 
  *
- * @return string
+ * @return array
  * @param  haystack string
  * @param  char_list string
  */
@@ -22651,7 +22449,7 @@ function strpos($haystack, $needle, $offset = null) {}
 /**
  * Parse a time/date generated with strftime() 
  *
- * @return array
+ * @return string
  * @param  timestamp string
  * @param  format string
  */
@@ -22845,7 +22643,7 @@ function sybase_close($link_id = null) {}
 /**
  * Open Sybase server connection 
  *
- * @return resource
+ * @return int
  * @param  host string[optional]
  * @param  user string[optional]
  * @param  password string[optional]
@@ -22988,7 +22786,7 @@ function sybase_num_rows($result) {}
 /**
  * Open persistent Sybase connection 
  *
- * @return resource
+ * @return int
  * @param  host string[optional]
  * @param  user string[optional]
  * @param  password string[optional]
@@ -23000,7 +22798,7 @@ function sybase_pconnect($host = null, $user = null, $password = null, $charset 
 /**
  * Send Sybase query 
  *
- * @return mixed
+ * @return int
  * @param  query string
  * @param  link_id int[optional]
  */
@@ -23037,7 +22835,7 @@ function sybase_set_message_handler($error_func, $connection = null) {}
 /**
  * Send Sybase query 
  *
- * @return resource
+ * @return int
  * @param  query string
  * @param  link_id int[optional]
  */
@@ -23046,11 +22844,18 @@ function sybase_unbuffered_query($query, $link_id = null) {}
 /**
  * Create a symbolic link 
  *
- * @return bool
+ * @return int
  * @param  target string
  * @param  link string
  */
 function symlink($target, $link) {}
+
+/**
+ * Returns directory path used for temporary files 
+ *
+ * @return string
+ */
+function sys_get_temp_dir() {}
 
 /**
  * 
@@ -23071,7 +22876,7 @@ function syslog($priority, $message) {}
 /**
  * Execute an external program and display output 
  *
- * @return string
+ * @return int
  * @param  command string
  * @param  return_value int[optional]
  */
@@ -23120,7 +22925,7 @@ function tidy_access_count() {}
 /**
  * Execute configured cleanup and repair operations on parsed markup 
  *
- * @return bool
+ * @return boolean
  */
 function tidy_clean_repair() {}
 
@@ -23134,7 +22939,7 @@ function tidy_config_count() {}
 /**
  * Run configured diagnostics on parsed and repaired markup. 
  *
- * @return bool
+ * @return boolean
  */
 function tidy_diagnose() {}
 
@@ -23148,7 +22953,7 @@ function tidy_error_count() {}
 /**
  * Returns a TidyNode Object starting from the <BODY> tag of the tidy parse tree 
  *
- * @return tidyNode
+ * @return TidyNode
  * @param  tidy resource
  */
 function tidy_get_body($tidy) {}
@@ -23171,14 +22976,14 @@ function tidy_get_error_buffer($detailed = null) {}
 /**
  * Returns a TidyNode Object starting from the <HEAD> tag of the tidy parse tree 
  *
- * @return tidyNode
+ * @return TidyNode
  */
 function tidy_get_head() {}
 
 /**
  * Returns a TidyNode Object starting from the <HTML> tag of the tidy parse tree 
  *
- * @return tidyNode
+ * @return TidyNode
  */
 function tidy_get_html() {}
 
@@ -23215,7 +23020,7 @@ function tidy_get_release() {}
 /**
  * Returns a TidyNode Object representing the root of the tidy parse tree 
  *
- * @return tidyNode
+ * @return TidyNode
  */
 function tidy_get_root() {}
 
@@ -23237,21 +23042,21 @@ function tidy_getopt($option) {}
 /**
  * Indicates if the document is a XHTML document. 
  *
- * @return bool
+ * @return boolean
  */
 function tidy_is_xhtml() {}
 
 /**
  * Indicates if the document is a generic (non HTML/XHTML) XML document. 
  *
- * @return bool
+ * @return boolean
  */
 function tidy_is_xml() {}
 
 /**
  * Parse markup in file or URI 
  *
- * @return tidy
+ * @return boolean
  * @param  file string
  * @param  config_options mixed[optional]
  * @param  encoding string[optional]
@@ -23262,7 +23067,7 @@ function tidy_parse_file($file, $config_options = null, $encoding = null, $use_i
 /**
  * Parse a document stored in a string 
  *
- * @return tidy
+ * @return bool
  * @param  input string
  * @param  config_options mixed[optional]
  * @param  encoding string[optional]
@@ -23272,7 +23077,7 @@ function tidy_parse_string($input, $config_options = null, $encoding = null) {}
 /**
  * Repair a file using an optionally provided configuration file 
  *
- * @return string
+ * @return boolean
  * @param  filename string
  * @param  config_file mixed[optional]
  * @param  encoding string[optional]
@@ -23283,7 +23088,7 @@ function tidy_repair_file($filename, $config_file = null, $encoding = null, $use
 /**
  * Repair a string using an optionally provided configuration file 
  *
- * @return string
+ * @return boolean
  * @param  data string
  * @param  config_file mixed[optional]
  * @param  encoding string[optional]
@@ -23316,7 +23121,7 @@ function time_nanosleep($seconds, $nanoseconds) {}
 /**
  * Make the script sleep until the specified time 
  *
- * @return bool
+ * @return mixed
  * @param  timestamp float
  */
 function time_sleep_until($timestamp) {}
@@ -23356,7 +23161,7 @@ function timezone_name_get($object) {}
 /**
  * 
  *
- * @return int
+ * @return long
  * @param  object DateTimeZone
  * @param  object DateTime
  */
@@ -23414,7 +23219,7 @@ function touch($filename, $time = null, $atime = null) {}
 /**
  * Generates a user-level error/warning/notice message 
  *
- * @return bool
+ * @return void
  * @param  messsage string
  * @param  error_type int[optional]
  */
@@ -23510,14 +23315,6 @@ function unlink($filename, $context) {}
 function unpack($format, $input) {}
 
 /**
- * 
- *
- * @return boolean
- * @param  handle string
- */
-function unregister_event_handler($handle) {}
-
-/**
  * Unregisters a tick callback function 
  *
  * @return void
@@ -23550,9 +23347,17 @@ function urldecode($str) {}
 function urlencode($str) {}
 
 /**
- * Generates a user-level error/warning/notice message 
+ * 
  *
  * @return bool
+ * @param  on bool[optional]
+ */
+function use_soap_error_handler($on = null) {}
+
+/**
+ * Generates a user-level error/warning/notice message 
+ *
+ * @return void
  * @param  messsage string
  * @param  error_type int[optional]
  */
@@ -23637,7 +23442,7 @@ function variant_and($left, $right) {}
 /**
  * Convert a variant into a new variant object of another type 
  *
- * @return variant
+ * @return object
  * @param  variant object
  * @param  type int
  */
@@ -23666,7 +23471,7 @@ function variant_cmp($left, $right, $lcid = null, $flags = null) {}
 /**
  * Returns a variant date representation of a unix timestamp 
  *
- * @return variant
+ * @return object
  * @param  timestamp int
  */
 function variant_date_from_timestamp($timestamp) {}
@@ -23940,7 +23745,7 @@ function velocis_rollback($index) {}
 /**
  * Compares two "PHP-standardized" version number strings 
  *
- * @return mixed
+ * @return int
  * @param  ver1 string
  * @param  ver2 string
  * @param  oper string[optional]
@@ -23986,7 +23791,7 @@ function vsprintf($format, $args) {}
 /**
  * Serializes given variables and adds them to packet given by packet_id 
  *
- * @return bool
+ * @return int
  * @param  packet_id int
  * @param  var_names mixed
  * @vararg ... mixed
@@ -24012,7 +23817,7 @@ function wddx_packet_end($packet_id) {}
 /**
  * Starts a WDDX packet with optional comment and returns the packet id 
  *
- * @return resource
+ * @return int
  * @param  comment string[optional]
  */
 function wddx_packet_start($comment = null) {}
@@ -24127,7 +23932,7 @@ function xml_parser_create_ns($encoding = null, $sep = null) {}
 /**
  * Free an XML parser 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  */
 function xml_parser_free($parser) {}
@@ -24135,7 +23940,7 @@ function xml_parser_free($parser) {}
 /**
  * Get options from an XML parser 
  *
- * @return mixed
+ * @return int
  * @param  parser resource
  * @param  option int
  */
@@ -24144,7 +23949,7 @@ function xml_parser_get_option($parser, $option) {}
 /**
  * Set options in an XML parser 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  option int
  * @param  value mixed
@@ -24154,7 +23959,7 @@ function xml_parser_set_option($parser, $option, $value) {}
 /**
  * Set up character data handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -24163,7 +23968,7 @@ function xml_set_character_data_handler($parser, $hdl) {}
 /**
  * Set up default handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -24172,7 +23977,7 @@ function xml_set_default_handler($parser, $hdl) {}
 /**
  * Set up start and end element handlers 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  shdl string
  * @param  ehdl string
@@ -24182,7 +23987,7 @@ function xml_set_element_handler($parser, $shdl, $ehdl) {}
 /**
  * Set up character data handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -24191,7 +23996,7 @@ function xml_set_end_namespace_decl_handler($parser, $hdl) {}
 /**
  * Set up external entity reference handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -24200,7 +24005,7 @@ function xml_set_external_entity_ref_handler($parser, $hdl) {}
 /**
  * Set up notation declaration handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -24209,7 +24014,7 @@ function xml_set_notation_decl_handler($parser, $hdl) {}
 /**
  * Set up object which should be used for callbacks 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  obj object
  */
@@ -24218,7 +24023,7 @@ function xml_set_object($parser, &$obj) {}
 /**
  * Set up processing instruction (PI) handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -24227,7 +24032,7 @@ function xml_set_processing_instruction_handler($parser, $hdl) {}
 /**
  * Set up character data handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -24236,7 +24041,7 @@ function xml_set_start_namespace_decl_handler($parser, $hdl) {}
 /**
  * Set up unparsed entity declaration handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -24314,7 +24119,7 @@ function xmlrpc_server_add_introspection_data($server, $desc) {}
 /**
  * Parses XML requests and call methods 
  *
- * @return string
+ * @return mixed
  * @param  server resource
  * @param  xml string
  * @param  user_data mixed
@@ -24708,8 +24513,12 @@ function xmlwriter_write_dtd_element($xmlwriter, $name, $content) {}
  * @param  xmlwriter resource
  * @param  name string
  * @param  content string
+ * @param  pe int[optional]
+ * @param  pubid string[optional]
+ * @param  sysid string[optional]
+ * @param  ndataid string[optional]
  */
-function xmlwriter_write_dtd_entity($xmlwriter, $name, $content) {}
+function xmlwriter_write_dtd_entity($xmlwriter, $name, $content, $pe = null, $pubid = null, $sysid = null, $ndataid = null) {}
 
 /**
  * Write full element tag - returns FALSE on error 
@@ -24975,7 +24784,7 @@ function zip_close($zip) {}
 /**
  * Close a zip entry 
  *
- * @return bool
+ * @return void
  * @param  zip_ent resource
  */
 function zip_entry_close($zip_ent) {}
@@ -25025,7 +24834,7 @@ function zip_entry_open($zip_dp, $zip_entry, $mode = null) {}
 /**
  * Read from an open directory entry 
  *
- * @return string
+ * @return mixed
  * @param  zip_entry resource
  * @param  len int[optional]
  */
@@ -25034,7 +24843,7 @@ function zip_entry_read($zip_entry, $len = null) {}
 /**
  * Create new zip using source uri for output 
  *
- * @return mixed
+ * @return resource
  * @param  filename string
  */
 function zip_open($filename) {}
@@ -25042,7 +24851,7 @@ function zip_open($filename) {}
 /**
  * Returns the next file in the archive 
  *
- * @return mixed
+ * @return resource
  * @param  zip resource
  */
 function zip_read($zip) {}
@@ -25555,31 +25364,1395 @@ class ApacheRequest {
 
 };
 
-class PDO {
+class swfaction {
     /**
-     * Creates a new large object, returning its identifier.  Must be called inside a transaction. 
+     * Creates a new SWFAction object, compiling the given script 
+     *
+     * @return swfaction
+     * @param  string unknown
+     */
+    function __construct($string) {}
+
+};
+
+class swfbitmap {
+    /**
+     * Creates a new SWFBitmap object from jpg (with optional mask) or dbl file 
+     *
+     * @return swfbitmap
+     * @param  file mixed
+     * @param  maskfile mixed[optional]
+     */
+    function __construct($file, $maskfile = null) {}
+
+    /**
+     * Returns the width of this bitmap 
+     *
+     * @return float
+     */
+    function getWidth() {}
+
+    /**
+     * Returns the height of this bitmap 
+     *
+     * @return float
+     */
+    function getHeight() {}
+
+};
+
+class swfbutton {
+    /**
+     * Creates a new SWFButton object 
+     *
+     * @return swfbutton
+     */
+    function __construct() {}
+
+    /**
+     * Sets the character for this button's hit test state 
+     *
+     * @return void
+     * @param  SWFCharacter object
+     */
+    function setHit($SWFCharacter) {}
+
+    /**
+     * Sets the character for this button's over state 
+     *
+     * @return void
+     * @param  SWFCharacter object
+     */
+    function setOver($SWFCharacter) {}
+
+    /**
+     * Sets the character for this button's up state 
+     *
+     * @return void
+     * @param  SWFCharacter object
+     */
+    function setUp($SWFCharacter) {}
+
+    /**
+     * Sets the character for this button's down state 
+     *
+     * @return void
+     * @param  SWFCharacter object
+     */
+    function setDown($SWFCharacter) {}
+
+    /**
+     * Sets the character to display for the condition described in flags 
+     *
+     * @return void
+     * @param  SWFCharacter object
+     * @param  flags int
+     */
+    function addShape($SWFCharacter, $flags) {}
+
+    /**
+     * enable track as menu button behaviour 
+     *
+     * @return void
+     * @param  flag int
+     */
+    function setMenu($flag) {}
+
+    /**
+     * Sets the action to perform when button is pressed 
+     *
+     * @return void
+     * @param  SWFAction object
+     */
+    function setAction($SWFAction) {}
+
+    /**
+     * 
+     *
+     * @return SWFSoundInstance
+     * @param  sound SWFSound
+     * @param  flags int
+     */
+    function addASound($sound, $flags) {}
+
+    /**
+     * Sets the action to perform when conditions described in flags is met 
+     *
+     * @return void
+     * @param  SWFAction object
+     * @param  flags int
+     */
+    function addAction($SWFAction, $flags) {}
+
+};
+
+class swfdisplayitem {
+    /**
+     * Moves this SWFDisplayItem to movie coordinates (x, y) 
+     *
+     * @return void
+     * @param  x int
+     * @param  y int
+     */
+    function moveTo($x, $y) {}
+
+    /**
+     * Displaces this SWFDisplayItem by (dx, dy) in movie coordinates 
+     *
+     * @return void
+     * @param  dx float
+     * @param  dy float
+     */
+    function move($dx, $dy) {}
+
+    /**
+     * Scales this SWFDisplayItem by xScale in the x direction, yScale in the y, or both to xScale if only one arg 
+     *
+     * @return void
+     * @param  xScale float
+     * @param  yScale float[optional]
+     */
+    function scaleTo($xScale, $yScale = null) {}
+
+    /**
+     * Multiplies this SWFDisplayItem's current x scale by xScale, its y scale by yScale 
+     *
+     * @return void
+     * @param  xScale float
+     * @param  yScale float
+     */
+    function scale($xScale, $yScale) {}
+
+    /**
+     * Rotates this SWFDisplayItem the given (clockwise) degrees from its original orientation 
+     *
+     * @return void
+     * @param  degrees float
+     */
+    function rotateTo($degrees) {}
+
+    /**
+     * Rotates this SWFDisplayItem the given (clockwise) degrees from its current orientation 
+     *
+     * @return void
+     * @param  degrees float
+     */
+    function rotate($degrees) {}
+
+    /**
+     * Sets this SWFDisplayItem's x skew value to xSkew 
+     *
+     * @return void
+     * @param  xSkew float
+     */
+    function skewXTo($xSkew) {}
+
+    /**
+     * Adds xSkew to this SWFDisplayItem's x skew value 
+     *
+     * @return void
+     * @param  xSkew float
+     */
+    function skewX($xSkew) {}
+
+    /**
+     * Sets this SWFDisplayItem's y skew value to ySkew 
+     *
+     * @return void
+     * @param  ySkew float
+     */
+    function skewYTo($ySkew) {}
+
+    /**
+     * Adds ySkew to this SWFDisplayItem's y skew value 
+     *
+     * @return void
+     * @param  ySkew float
+     */
+    function skewY($ySkew) {}
+
+    /**
+     * Sets the item's transform matrix 
+     *
+     * @return void
+     * @param  a float
+     * @param  b float
+     * @param  c float
+     * @param  d float
+     * @param  x float
+     * @param  y float
+     */
+    function setMatrix($a, $b, $c, $d, $x, $y) {}
+
+    /**
+     * Sets this SWFDisplayItem's z-depth to depth.  Items with higher depth values are drawn on top of those with lower values 
+     *
+     * @return void
+     * @param  depth int
+     */
+    function setDepth($depth) {}
+
+    /**
+     * Sets this SWFDisplayItem's ratio to ratio.  Obviously only does anything if displayitem was created from an SWFMorph 
+     *
+     * @return void
+     * @param  ratio float
+     */
+    function setRatio($ratio) {}
+
+    /**
+     * Sets the add color part of this SWFDisplayItem's CXform to (r, g, b [, a]), a defaults to 0 
+     *
+     * @return void
+     * @param  r int
+     * @param  g int
+     * @param  b int
+     * @param  a int[optional]
+     */
+    function addColor($r, $g, $b, $a = null) {}
+
+    /**
+     * Sets the multiply color part of this SWFDisplayItem's CXform to (r, g, b [, a]), a defaults to 1.0 
+     *
+     * @return void
+     * @param  r float
+     * @param  g float
+     * @param  b float
+     * @param  a float[optional]
+     */
+    function multColor($r, $g, $b, $a = null) {}
+
+    /**
+     * Sets this SWFDisplayItem's name to name 
+     *
+     * @return void
+     * @param  name string
+     */
+    function setName($name) {}
+
+    /**
+     * Adds this SWFAction to the given SWFSprite instance 
+     *
+     * @return void
+     * @param  SWFAction object
+     * @param  flags int
+     */
+    function addAction($SWFAction, $flags) {}
+
+    /**
+     * defines a MASK layer at level 
+     *
+     * @return void
+     * @param  level int
+     */
+    function setMaskLevel($level) {}
+
+    /**
+     * another way of defining a MASK layer 
+     *
+     * @return void
+     */
+    function endMask() {}
+
+};
+
+class swffill {
+    /**
+     * Creates a new SWFFill object 
+     *
+     * @return swffill
+     */
+    function __construct() {}
+
+    /**
+     * Moves this SWFFill to shape coordinates (x,y) 
+     *
+     * @return void
+     * @param  x float
+     * @param  y float
+     */
+    function moveTo($x, $y) {}
+
+    /**
+     * Scales this SWFFill by xScale in the x direction, yScale in the y, or both to xScale if only one arg 
+     *
+     * @return void
+     * @param  xScale float
+     * @param  yScale float[optional]
+     */
+    function scaleTo($xScale, $yScale = null) {}
+
+    /**
+     * Rotates this SWFFill the given (clockwise) degrees from its original orientation 
+     *
+     * @return void
+     * @param  degrees float
+     */
+    function rotateTo($degrees) {}
+
+    /**
+     * Sets this SWFFill's x skew value to xSkew 
+     *
+     * @return void
+     * @param  xSkew float
+     */
+    function skewXTo($xSkew) {}
+
+    /**
+     * Sets this SWFFill's y skew value to ySkew 
+     *
+     * @return void
+     * @param  ySkew float
+     */
+    function skewYTo($ySkew) {}
+
+};
+
+class swffontcha {
+    /**
+     * adds characters to a font for exporting font 
+     *
+     * @return void
+     * @param  string unknown
+     */
+    function raddChars($string) {}
+
+};
+
+class swffontchar {
+    /**
+     * adds characters to a font for exporting font 
+     *
+     * @return void
+     * @param  string unknown
+     */
+    function addChars($string) {}
+
+};
+
+class swffont {
+    /**
+     * Creates a new SWFFont object from given file 
+     *
+     * @return swffont
+     * @param  filename string
+     */
+    function __construct($filename) {}
+
+    /**
+     * Calculates the width of the given string in this font at full height 
+     *
+     * @return float
+     * @param  str string
+     */
+    function getWidth($str) {}
+
+    /**
+     * Calculates the width of the given string in this font at full height 
+     *
+     * @return int
+     * @param  string unknown
+     */
+    function getUTF8Width($string) {}
+
+    /**
+     * Calculates the width of the given string in this font at full height 
+     *
+     * @return int
+     * @param  string unknown
+     */
+    function getWideWidth($string) {}
+
+    /**
+     * Returns the ascent of the font, or 0 if not available 
+     *
+     * @return float
+     */
+    function getAscent() {}
+
+    /**
+     * Returns the descent of the font, or 0 if not available 
+     *
+     * @return float
+     */
+    function getDescent() {}
+
+    /**
+     * Returns the leading of the font, or 0 if not available 
+     *
+     * @return float
+     */
+    function getLeading() {}
+
+    /**
+     * adds characters to a font required within textfields 
+     *
+     * @return void
+     * @param  string unknown
+     */
+    function addChars($string) {}
+
+    /**
+     * Returns the glyph shape of a char as a text string 
+     *
+     * @return string
+     * @param  code unknown
+     */
+    function getShape($code) {}
+
+};
+
+class swfgradient {
+    /**
+     * Creates a new SWFGradient object 
+     *
+     * @return swfgradient
+     */
+    function __construct() {}
+
+    /**
+     * Adds given entry to the gradient 
+     *
+     * @return void
+     * @param  ratio float
+     * @param  r int
+     * @param  g int
+     * @param  b int
+     * @param  a int[optional]
+     */
+    function addEntry($ratio, $r, $g, $b, $a = null) {}
+
+};
+
+class swfmorph {
+    /**
+     * Creates a new SWFMorph object 
+     *
+     * @return swfmorph
+     */
+    function __construct() {}
+
+    /**
+     * Return's this SWFMorph's start shape object 
+     *
+     * @return object
+     */
+    function getShape1() {}
+
+    /**
+     * Return's this SWFMorph's start shape object 
+     *
+     * @return object
+     */
+    function getShape2() {}
+
+};
+
+class swfsound {
+    /**
+     * Creates a new SWFSound object from given file 
+     *
+     * @return swfsound
+     * @param  filename string
+     * @param  flags int
+     */
+    function __construct($filename, $flags) {}
+
+};
+
+class swfmovie {
+    /**
+     * Creates swfmovie object according to the passed version 
+     *
+     * @return swfmovie
+     * @param  version int
+     */
+    function __construct($version) {}
+
+    /**
+     * 
+     *
+     * @return void
+     */
+    function nextframe() {}
+
+    /**
+     * Labels frame 
+     *
+     * @return void
+     * @param  label string
+     */
+    function labelframe($label) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  name string
+     */
+    function namedanchor($name) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  pasword string[optional]
+     */
+    function protect($pasword = null) {}
+
+    /**
+     * 
+     *
+     * @return object
+     * @param  SWFBlock object
+     */
+    function add($SWFBlock) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  SWFBlock object
+     */
+    function remove($SWFBlock) {}
+
+    /**
+     * 
+     *
+     * @return int
+     * @param  compression int[optional]
+     */
+    function output($compression = null) {}
+
+    /**
+     * 
+     *
+     * @return int
+     * @param  x stream
+     * @param  compression int[optional]
+     */
+    function saveToFile($x, $compression = null) {}
+
+    /**
+     * Saves the movie. 'where' can be stream and the movie will be saved there otherwise it is treated as string and written in file with that name 
+     *
+     * @return int
+     * @param  where mixed
+     * @param  compression int[optional]
+     */
+    function save($where, $compression = null) {}
+
+    /**
+     * Sets background color (r,g,b) 
+     *
+     * @return void
+     * @param  r int
+     * @param  g int
+     * @param  b int
+     */
+    function setBackground($r, $g, $b) {}
+
+    /**
+     * Sets movie rate 
+     *
+     * @return void
+     * @param  rate float
+     */
+    function setRate($rate) {}
+
+    /**
+     * Sets movie dimension 
+     *
+     * @return void
+     * @param  x float
+     * @param  y float
+     */
+    function setDimension($x, $y) {}
+
+    /**
+     * Sets number of frames 
+     *
+     * @return void
+     * @param  frames int
+     */
+    function setFrames($frames) {}
+
+    /**
+     * Sets sound stream of the SWF movie. The parameter can be stream or string. Retuens the number of frames. 
+     *
+     * @return int
+     * @param  file mixed
+     * @param  skip float[optional]
+     */
+    function streamMP3($file, $skip = null) {}
+
+};
+
+class swfshape {
+    /**
+     * Creates a new SWFShape object 
+     *
+     * @return swfshape
+     */
+    function __construct() {}
+
+    /**
+     * Sets the current line style for this SWFShape 
+     *
+     * @return void
+     * @param  width int
+     * @param  r int
+     * @param  g int
+     * @param  b int
+     * @param  a int[optional]
+     */
+    function setline($width, $r, $g, $b, $a = null) {}
+
+    /**
+     * Returns a fill object, for use with swfshape_setleftfill and swfshape_setrightfill. If 1 or 2 parameter(s) is (are) passed first should be object (from gradient class) and the second int (flags). Gradient fill is performed. If 3 or 4 parameters are passed : r, g, b [, a]. Solid fill is performed. 
+     *
+     * @return object
+     * @param  arg1 mixed
+     * @param  arg2 int
+     * @param  b int[optional]
+     * @param  a int[optional]
+     */
+    function addfill($arg1, $arg2, $b = null, $a = null) {}
+
+    /**
+     * Sets the right side fill style to fill in case only one parameter is passed. When 3 or 4 parameters are passed they are treated as : int r, int g, int b, int a . Solid fill is performed in this case before setting right side fill type. 
+     *
+     * @return void
+     * @param  arg1 int
+     * @param  g int[optional]
+     * @param  b int
+     * @param  a int[optional]
+     */
+    function setleftfill($arg1, $g = null, $b, $a = null) {}
+
+    /**
+     * Moves the pen to shape coordinates (x, y) 
+     *
+     * @return void
+     * @param  x float
+     * @param  y float
+     */
+    function movepento($x, $y) {}
+
+    /**
+     * Moves the pen from its current location by vector (x, y) 
+     *
+     * @return void
+     * @param  x float
+     * @param  y float
+     */
+    function movepen($x, $y) {}
+
+    /**
+     * Draws a line from the current pen position to shape coordinates (x, y) in the current line style 
+     *
+     * @return void
+     * @param  x float
+     * @param  y float
+     */
+    function drawlineto($x, $y) {}
+
+    /**
+     * Draws a line from the current pen position (x, y) to the point (x+dx, y+dy) in the current line style 
+     *
+     * @return void
+     * @param  dx float
+     * @param  dy float
+     */
+    function drawline($dx, $dy) {}
+
+    /**
+     * Draws a curve from the current pen position (x,y) to the point (bx, by) in the current line style, using point (ax, ay) as a control point. Or draws a cubic bezier to point (dx, dy) with control points (ax, ay) and (bx, by) 
+     *
+     * @return void
+     * @param  ax float
+     * @param  ay float
+     * @param  bx float
+     * @param  by float
+     * @param  dx float[optional]
+     * @param  dy float
+     */
+    function drawcurveto($ax, $ay, $bx, $by, $dx = null, $dy) {}
+
+    /**
+     * Draws a curve from the current pen position (x, y) to the point (x+bdx, y+bdy) in the current line style, using point (x+adx, y+ady) as a control point or draws a cubic bezier to point (x+cdx, x+cdy) with control points (x+adx, y+ady) and (x+bdx, y+bdy) 
+     *
+     * @return void
+     * @param  adx float
+     * @param  ady float
+     * @param  bdx float
+     * @param  bdy float
+     * @param  cdx float[optional]
+     * @param  cdy float
+     */
+    function drawcurve($adx, $ady, $bdx, $bdy, $cdx = null, $cdy) {}
+
+    /**
+     * Draws the first character in the given string into the shape using the glyph definition from the given font 
+     *
+     * @return void
+     * @param  font SWFFont
+     * @param  character string
+     * @param  size int[optional]
+     */
+    function drawglyph($font, $character, $size = null) {}
+
+    /**
+     * Draws a circle of radius r centered at the current location, in a counter-clockwise fashion 
+     *
+     * @return void
+     * @param  r float
+     */
+    function drawcircle($r) {}
+
+    /**
+     * Draws an arc of radius r centered at the current location, from angle startAngle to angle endAngle measured clockwise from 12 o'clock 
+     *
+     * @return void
+     * @param  r float
+     * @param  startAngle float
+     * @param  endAngle float
+     */
+    function drawarc($r, $startAngle, $endAngle) {}
+
+    /**
+     * Draws a cubic bezier curve using the current position and the three given points as control points 
+     *
+     * @return void
+     * @param  bx float
+     * @param  by float
+     * @param  cx float
+     * @param  cy float
+     * @param  dx float
+     * @param  dy float
+     */
+    function drawcubic($bx, $by, $cx, $cy, $dx, $dy) {}
+
+};
+
+class swfsprite {
+    /**
+     * Creates a new SWFSprite object 
+     *
+     * @return swfsprite
+     */
+    function __construct() {}
+
+    /**
+     * Adds the character to the sprite, returns a displayitem object 
+     *
+     * @return object
+     * @param  SWFCharacter object
+     */
+    function add($SWFCharacter) {}
+
+    /**
+     * Remove the named character from the sprite's display list 
+     *
+     * @return void
+     * @param  SWFDisplayItem object
+     */
+    function remove($SWFDisplayItem) {}
+
+    /**
+     * Moves the sprite to the next frame 
+     *
+     * @return void
+     */
+    function nextFrame() {}
+
+    /**
+     * Labels frame 
+     *
+     * @return void
+     * @param  label string
+     */
+    function labelFrame($label) {}
+
+    /**
+     * Sets the number of frames in this SWFSprite 
+     *
+     * @return void
+     * @param  frames int
+     */
+    function setFrames($frames) {}
+
+};
+
+class swftext {
+    /**
+     * Creates new SWFText object 
+     *
+     * @return swftext
+     */
+    function __construct() {}
+
+    /**
+     * Sets this SWFText object's current font to given font 
+     *
+     * @return void
+     * @param  font object
+     */
+    function setFont($font) {}
+
+    /**
+     * Sets this SWFText object's current height to given height 
+     *
+     * @return void
+     * @param  height float
+     */
+    function setHeight($height) {}
+
+    /**
+     * Sets this SWFText object's current letterspacing to given spacing 
+     *
+     * @return void
+     * @param  spacing float
+     */
+    function setSpacing($spacing) {}
+
+    /**
+     * Sets this SWFText object's current color to the given color 
+     *
+     * @return void
+     * @param  r int
+     * @param  g int
+     * @param  b int
+     * @param  a int[optional]
+     */
+    function setColor($r, $g, $b, $a = null) {}
+
+    /**
+     * Moves this SWFText object's current pen position to (x, y) in text coordinates 
+     *
+     * @return void
+     * @param  x float
+     * @param  y float
+     */
+    function moveTo($x, $y) {}
+
+    /**
+     * Writes the given text into this SWFText object at the current pen position, using the current font, height, spacing, and color 
+     *
+     * @return void
+     * @param  text string
+     */
+    function addString($text) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  text string
+     */
+    function addUTF8String($text) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  text string
+     */
+    function addWideString($text) {}
+
+    /**
+     * Calculates the width of the given string in this text objects current font and size 
+     *
+     * @return float
+     * @param  str string
+     */
+    function getWidth($str) {}
+
+    /**
+     * calculates the width of the given string in this text objects current font and size 
+     *
+     * @return double
+     * @param  string unknown
+     */
+    function getUTF8Width($string) {}
+
+    /**
+     * calculates the width of the given string in this text objects current font and size 
+     *
+     * @return double
+     * @param  string unknown
+     */
+    function getWideWidth($string) {}
+
+    /**
+     * Returns the ascent of the current font at its current size, or 0 if not available 
+     *
+     * @return float
+     */
+    function getAscent() {}
+
+    /**
+     * Returns the descent of the current font at its current size, or 0 if not available 
+     *
+     * @return float
+     */
+    function getDescent() {}
+
+    /**
+     * Returns the leading of the current font at its current size, or 0 if not available 
+     *
+     * @return float
+     */
+    function getLeading() {}
+
+};
+
+class swftextfield {
+    /**
+     * Creates a new SWFTextField object 
+     *
+     * @return swftextfield
+     * @param  flags int[optional]
+     */
+    function __construct($flags = null) {}
+
+    /**
+     * Sets the font for this textfield 
+     *
+     * @return void
+     * @param  font object
+     */
+    function setFont($font) {}
+
+    /**
+     * Sets the width and height of this textfield 
+     *
+     * @return void
+     * @param  width float
+     * @param  height float
+     */
+    function setBounds($width, $height) {}
+
+    /**
+     * Sets the alignment of this textfield 
+     *
+     * @return void
+     * @param  alignment int
+     */
+    function align($alignment) {}
+
+    /**
+     * Sets the font height of this textfield 
+     *
+     * @return void
+     * @param  height float
+     */
+    function setHeight($height) {}
+
+    /**
+     * Sets the left margin of this textfield 
+     *
+     * @return void
+     * @param  margin float
+     */
+    function setLeftMargin($margin) {}
+
+    /**
+     * Sets the right margin of this textfield 
+     *
+     * @return void
+     * @param  margin float
+     */
+    function setRightMargin($margin) {}
+
+    /**
+     * Sets both margins of this textfield 
+     *
+     * @return void
+     * @param  left float
+     * @param  right float
+     */
+    function setMargins($left, $right) {}
+
+    /**
+     * Sets the indentation of the first line of this textfield 
+     *
+     * @return void
+     * @param  indentation float
+     */
+    function setIndentation($indentation) {}
+
+    /**
+     * Sets the line spacing of this textfield 
+     *
+     * @return void
+     * @param  space float
+     */
+    function setLineSpacing($space) {}
+
+    /**
+     * Sets the color of this textfield 
+     *
+     * @return void
+     * @param  r int
+     * @param  g int
+     * @param  b int
+     * @param  a int[optional]
+     */
+    function setColor($r, $g, $b, $a = null) {}
+
+    /**
+     * Sets the variable name of this textfield 
+     *
+     * @return void
+     * @param  var_name string
+     */
+    function setName($var_name) {}
+
+    /**
+     * Adds the given string to this textfield 
+     *
+     * @return void
+     * @param  str string
+     */
+    function addString($str) {}
+
+    /**
+     * Sets the padding of this textfield 
+     *
+     * @return void
+     * @param  padding float
+     */
+    function setPadding($padding) {}
+
+    /**
+     * adds characters to a font that will be available within a textfield 
+     *
+     * @return void
+     * @param  string unknown
+     */
+    function addChars($string) {}
+
+};
+
+class SoapParam {
+    /**
+     * SoapParam constructor 
+     *
+     * @return SoapParam
+     * @param  data mixed
+     * @param  name string
+     */
+    function SoapParam($data, $name) {}
+
+};
+
+class SoapHeader {
+    /**
+     * SoapHeader constructor 
+     *
+     * @return SoapHeader
+     * @param  namespace string
+     * @param  name string
+     * @param  data mixed[optional]
+     * @param  mustUnderstand bool[optional]
+     * @param  actor mixed[optional]
+     */
+    function SoapHeader($namespace, $name, $data = null, $mustUnderstand = null, $actor = null) {}
+
+};
+
+class SoapFault {
+    /**
+     * SoapFault constructor 
+     *
+     * @return SoapFault
+     * @param  faultcode string
+     * @param  faultstring string
+     * @param  faultactor string[optional]
+     * @param  detail mixed[optional]
+     * @param  faultname string[optional]
+     * @param  headerfault mixed[optional]
+     */
+    function SoapFault($faultcode, $faultstring, $faultactor = null, $detail = null, $faultname = null, $headerfault = null) {}
+
+    /**
+     * 
+     *
+     * @return object
+     */
+    function __toString() {}
+
+};
+
+class SoapVar {
+    /**
+     * SoapVar constructor 
+     *
+     * @return SoapVar
+     * @param  data mixed
+     * @param  encoding int
+     * @param  type_name string[optional]
+     * @param  type_namespace string[optional]
+     * @param  node_name string[optional]
+     * @param  node_namespace string[optional]
+     */
+    function SoapVar($data, $encoding, $type_name = null, $type_namespace = null, $node_name = null, $node_namespace = null) {}
+
+};
+
+class SoapServer {
+    /**
+     * SoapServer constructor 
+     *
+     * @return SoapServer
+     * @param  wsdl mixed
+     * @param  options array[optional]
+     */
+    function SoapServer($wsdl, $options = null) {}
+
+    /**
+     * Sets persistence mode of SoapServer 
+     *
+     * @return object
+     * @param  mode int
+     */
+    function setPersistence($mode) {}
+
+    /**
+     * Sets class which will handle SOAP requests 
+     *
+     * @return void
+     * @param  class_name string
+     * @param  args mixed[optional]
+     */
+    function setClass($class_name, $args = null) {}
+
+    /**
+     * Sets object which will handle SOAP requests 
+     *
+     * @return void
+     * @param  object unknown
+     */
+    function setObject($object) {}
+
+    /**
+     * Returns list of defined functions 
+     *
+     * @return array
+     */
+    function getFunctions() {}
+
+    /**
+     * Adds one or several functions those will handle SOAP requests 
+     *
+     * @return void
+     * @param  functions mixed
+     */
+    function addFunction($functions) {}
+
+    /**
+     * Handles a SOAP request 
+     *
+     * @return void
+     * @param  soap_request string[optional]
+     */
+    function handle($soap_request = null) {}
+
+    /**
+     * Issue SoapFault indicating an error 
+     *
+     * @return unknown
+     * @param  code staring
+     * @param  string string
+     * @param  actor string[optional]
+     * @param  details mixed[optional]
+     * @param  name string[optional]
+     */
+    function fault($code, $string, $actor = null, $details = null, $name = null) {}
+
+    /**
+     * Adds one SOAP header into response 
+     *
+     * @return unknown
+     * @param  header SoapHeader
+     */
+    function addSoapHeader($header) {}
+
+};
+
+class SoapClient {
+    /**
+     * SoapClient constructor 
+     *
+     * @return SoapClient
+     * @param  wsdl mixed
+     * @param  options array[optional]
+     */
+    function SoapClient($wsdl, $options = null) {}
+
+    /**
+     * Calls a SOAP function 
+     *
+     * @return mixed
+     * @param  function_name string
+     * @param  arguments array
+     * @param  options array[optional]
+     * @param  input_headers array[optional]
+     * @param  output_headers array[optional]
+     */
+    function __call($function_name, $arguments, $options = null, $input_headers = null, $output_headers = null) {}
+
+    /**
+     * Returns list of SOAP functions 
+     *
+     * @return array
+     */
+    function __getFunctions() {}
+
+    /**
+     * Returns list of SOAP types 
+     *
+     * @return array
+     */
+    function __getTypes() {}
+
+    /**
+     * Returns last SOAP request 
      *
      * @return string
      */
-    function pgsqlLOBCreate() {}
+    function __getLastRequest() {}
 
     /**
-     * Opens an existing large object stream.  Must be called inside a transaction. 
+     * Returns last SOAP response 
      *
-     * @return resource
-     * @param  oid string
-     * @param  mode string[optional]
+     * @return object
      */
-    function pgsqlLOBOpen($oid, $mode = 'rb') {}
+    function __getLastResponse() {}
 
     /**
-     * Deletes the large object identified by oid.  Must be called inside a transaction. 
+     * Returns last SOAP request headers 
      *
-     * @return bool
-     * @param  oid string
+     * @return string
      */
-    function pgsqlLOBUnlink($oid) {}
+    function __getLastRequestHeaders() {}
 
+    /**
+     * Returns last SOAP response headers 
+     *
+     * @return string
+     */
+    function __getLastResponseHeaders() {}
+
+    /**
+     * SoapClient::__doRequest() 
+     *
+     * @return string
+     */
+    function __doRequest() {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  name string
+     * @param  value strung[optional]
+     */
+    function __setCookie($name, $value = null) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  SoapHeaders array
+     */
+    function __setSoapHeaders($SoapHeaders) {}
+
+    /**
+     * 
+     *
+     * @return string
+     * @param  new_location string[optional]
+     */
+    function __setLocation($new_location = null) {}
+
+    /**
+     * Returns array of cookies. 
+     *
+     * @return array
+     */
+    function __getCookies() {}
+
+};
+
+class tidyNode {
+    /**
+     * Returns true if this node has children 
+     *
+     * @return boolean
+     */
+    function hasChildren() {}
+
+    /**
+     * Returns true if this node has siblings 
+     *
+     * @return boolean
+     */
+    function hasSiblings() {}
+
+    /**
+     * Returns true if this node represents a comment 
+     *
+     * @return boolean
+     */
+    function isComment() {}
+
+    /**
+     * Returns true if this node is part of a HTML document 
+     *
+     * @return boolean
+     */
+    function isHtml() {}
+
+    /**
+     * Returns true if this node represents text (no markup) 
+     *
+     * @return boolean
+     */
+    function isText() {}
+
+    /**
+     * Returns true if this node is JSTE 
+     *
+     * @return boolean
+     */
+    function isJste() {}
+
+    /**
+     * Returns true if this node is ASP 
+     *
+     * @return boolean
+     */
+    function isAsp() {}
+
+    /**
+     * Returns true if this node is PHP 
+     *
+     * @return boolean
+     */
+    function isPhp() {}
+
+    /**
+     * Returns the parent node if available or NULL 
+     *
+     * @return tidyNode
+     */
+    function getParent() {}
+
+};
+
+class PDO {
     /**
      * 
      *
@@ -25594,7 +26767,7 @@ class PDO {
     /**
      * Prepares a statement for execution and returns a statement object 
      *
-     * @return PDOStatement
+     * @return object
      * @param  statment string
      * @param  options array[optional]
      */
@@ -25641,7 +26814,7 @@ class PDO {
     /**
      * Execute a query that does not return a row set, returning the number of affected rows 
      *
-     * @return int
+     * @return long
      * @param  query string
      */
     function exec($query) {}
@@ -25664,14 +26837,14 @@ class PDO {
     /**
      * Fetch extended error information associated with the last operation on the database handle 
      *
-     * @return array
+     * @return int
      */
     function errorInfo() {}
 
     /**
      * Prepare and execute $sql; returns the statement object for iteration 
      *
-     * @return bool
+     * @return object
      * @param  sql string
      * @param  args PDOStatement::setFetchMode()[optional]
      */
@@ -25701,14 +26874,406 @@ class PDO {
     function __sleep() {}
 
     /**
-     * Execute an external program 
+     * Creates a new large object, returning its identifier.  Must be called inside a transaction. 
      *
      * @return string
-     * @param  command string
-     * @param  output array[optional]
-     * @param  return_value int[optional]
      */
-    function exec($command, &$output, &$return_value) {}
+    function pgsqlLOBCreate() {}
+
+    /**
+     * Opens an existing large object stream.  Must be called inside a transaction. 
+     *
+     * @return resource
+     * @param  oid string
+     * @param  mode string[optional]
+     */
+    function pgsqlLOBOpen($oid, $mode = 'rb') {}
+
+    /**
+     * Deletes the large object identified by oid.  Must be called inside a transaction. 
+     *
+     * @return bool
+     * @param  oid string
+     */
+    function pgsqlLOBUnlink($oid) {}
+
+};
+
+class PDOStatement {
+    /**
+     * Execute a prepared statement, optionally binding parameters 
+     *
+     * @return bool
+     * @param  bound_input_params array[optional]
+     */
+    function execute($bound_input_params = null) {}
+
+    /**
+     * Fetches the next row and returns it, or false if there are no more rows 
+     *
+     * @return mixed
+     * @param  how int[optional]
+     * @param  orientation int[optional]
+     * @param  offset int[optional]
+     */
+    function fetch($how = PDO_FETCH_BOTH, $orientation = null, $offset = null) {}
+
+    /**
+     * Fetches the next row and returns it as an object. 
+     *
+     * @return mixed
+     * @param  class_name string
+     * @param  ctor_args NULL|array[optional]
+     */
+    function fetchObject($class_name, $ctor_args = null) {}
+
+    /**
+     * Returns a data of the specified column in the result set. 
+     *
+     * @return string
+     * @param  column_number int[optional]
+     */
+    function fetchColumn($column_number = null) {}
+
+    /**
+     * Returns an array of all of the results. 
+     *
+     * @return array
+     * @param  how int[optional]
+     * @param  class_name string[optional]
+     * @param  ctor_args NULL|array[optional]
+     */
+    function fetchAll($how = PDO_FETCH_BOTH, $class_name = null, $ctor_args = null) {}
+
+    /**
+     * bind an input parameter to the value of a PHP variable.  $paramno is the 1-based position of the placeholder in the SQL statement (but can be the parameter name for drivers that support named placeholders).  It should be called prior to execute(). 
+     *
+     * @return bool
+     * @param  paramno mixed
+     * @param  param mixed
+     * @param  type int[optional]
+     */
+    function bindValue($paramno, $param, $type = null) {}
+
+    /**
+     * bind a parameter to a PHP variable.  $paramno is the 1-based position of the placeholder in the SQL statement (but can be the parameter name for drivers that support named placeholders).  This isn't supported by all drivers.  It should be called prior to execute(). 
+     *
+     * @return bool
+     * @param  paramno mixed
+     * @param  param mixed
+     * @param  type int[optional]
+     * @param  maxlen int[optional]
+     * @param  driverdata mixed[optional]
+     */
+    function bindParam($paramno, &$param, $type = null, $maxlen = null, $driverdata = null) {}
+
+    /**
+     * bind a column to a PHP variable.  On each row fetch $param will contain the value of the corresponding column.  $column is the 1-based offset of the column, or the column name.  For portability, don't call this before execute(). 
+     *
+     * @return bool
+     * @param  column mixed
+     * @param  param mixed
+     * @param  type int[optional]
+     * @param  maxlen int[optional]
+     * @param  driverdata mixed[optional]
+     */
+    function bindColumn($column, &$param, $type = null, $maxlen = null, $driverdata = null) {}
+
+    /**
+     * Returns the number of rows in a result set, or the number of rows affected by the last execute().  It is not always meaningful. 
+     *
+     * @return int
+     */
+    function rowCount() {}
+
+    /**
+     * Fetch the error code associated with the last operation on the statement handle 
+     *
+     * @return string
+     */
+    function errorCode() {}
+
+    /**
+     * Fetch extended error information associated with the last operation on the statement handle 
+     *
+     * @return array
+     */
+    function errorInfo() {}
+
+    /**
+     * Set an attribute 
+     *
+     * @return bool
+     * @param  attribute long
+     * @param  value mixed
+     */
+    function setAttribute($attribute, $value) {}
+
+    /**
+     * Get an attribute 
+     *
+     * @return mixed
+     * @param  attribute long
+     */
+    function getAttribute($attribute) {}
+
+    /**
+     * Returns the number of columns in the result set 
+     *
+     * @return int
+     */
+    function columnCount() {}
+
+    /**
+     * Returns meta data for a numbered column 
+     *
+     * @return array
+     * @param  column int
+     */
+    function getColumnMeta($column) {}
+
+    /**
+     * Changes the default fetch mode for subsequent fetches (params have different meaning for different fetch modes) 
+     *
+     * @return bool
+     * @param  mode_ int
+     */
+    function setFetchMode($mode_) {}
+
+    /**
+     * Advances to the next rowset in a multi-rowset statement handle. Returns true if it succeded, false otherwise 
+     *
+     * @return bool
+     */
+    function nextRowset() {}
+
+    /**
+     * Closes the cursor, leaving the statement ready for re-execution. 
+     *
+     * @return bool
+     */
+    function closeCursor() {}
+
+    /**
+     * A utility for internals hackers to debug parameter internals 
+     *
+     * @return void
+     */
+    function debugDumpParams() {}
+
+    /**
+     * Prevents use of a PDOStatement instance that has been unserialized 
+     *
+     * @return int
+     */
+    function __wakeup() {}
+
+    /**
+     * Prevents serialization of a PDOStatement instance 
+     *
+     * @return int
+     */
+    function __sleep() {}
+
+};
+
+class XMLReader {
+    /**
+     * Closes xmlreader - current frees resources until xmlTextReaderClose is fixed in libxml 
+     *
+     * @return boolean
+     */
+    function close() {}
+
+    /**
+     * Get value of an attribute from current element 
+     *
+     * @return string
+     * @param  name string
+     */
+    function getAttribute($name) {}
+
+    /**
+     * Get value of an attribute at index from current element 
+     *
+     * @return string
+     * @param  index int
+     */
+    function getAttributeNo($index) {}
+
+    /**
+     * Get value of a attribute via name and namespace from current element 
+     *
+     * @return string
+     * @param  name string
+     * @param  namespaceURI string
+     */
+    function getAttributeNs($name, $namespaceURI) {}
+
+    /**
+     * Indicates whether given property (one of the parser option constants) is set or not on parser 
+     *
+     * @return boolean
+     * @param  property int
+     */
+    function getParserProperty($property) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     */
+    function isValid() {}
+
+    /**
+     * Return namespaceURI for associated prefix on current node 
+     *
+     * @return string
+     * @param  prefix string
+     */
+    function lookupNamespace($prefix) {}
+
+    /**
+     * Positions reader at specified attribute - Returns TRUE on success and FALSE on failure 
+     *
+     * @return boolean
+     * @param  name string
+     */
+    function moveToAttribute($name) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     * @param  index int
+     */
+    function moveToAttributeNo($index) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     * @param  name string
+     * @param  namespaceURI string
+     */
+    function moveToAttributeNs($name, $namespaceURI) {}
+
+    /**
+     * Moves the position of the current instance to the node that contains the current Attribute node. 
+     *
+     * @return boolean
+     */
+    function moveToElement() {}
+
+    /**
+     * Moves the position of the current instance to the first attribute associated with the current node. 
+     *
+     * @return boolean
+     */
+    function moveToFirstAttribute() {}
+
+    /**
+     * Moves the position of the current instance to the next attribute associated with the current node. 
+     *
+     * @return boolean
+     */
+    function moveToNextAttribute() {}
+
+    /**
+     * Moves the position of the current instance to the next node in the stream. 
+     *
+     * @return boolean
+     */
+    function read() {}
+
+    /**
+     * Moves the position of the current instance to the next node in the stream. 
+     *
+     * @return boolean
+     * @param  localname string[optional]
+     */
+    function next($localname = null) {}
+
+    /**
+     * Sets the URI that the the XMLReader will parse. 
+     *
+     * @return boolean
+     * @param  URI string
+     * @param  encoding string[optional]
+     * @param  options int[optional]
+     */
+    function open($URI, $encoding = null, $options = null) {}
+
+    /**
+     * Reads the contents of the current node, including child nodes and markup. 
+     *
+     * @return boolean
+     */
+    function readInnerXml() {}
+
+    /**
+     * Reads the contents of the current node, including child nodes and markup. 
+     *
+     * @return boolean
+     */
+    function readOuterXml() {}
+
+    /**
+     * Reads the contents of an element or a text node as a string. 
+     *
+     * @return boolean
+     */
+    function readString() {}
+
+    /**
+     * Use W3C XSD schema to validate the document as it is processed. Activation is only possible before the first Read(). 
+     *
+     * @return boolean
+     * @param  filename string
+     */
+    function setSchema($filename) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     * @param  property int
+     * @param  value boolean
+     */
+    function setParserProperty($property, $value) {}
+
+    /**
+     * Sets the string that the the XMLReader will parse. 
+     *
+     * @return boolean
+     * @param  filename string
+     */
+    function setRelaxNGSchema($filename) {}
+
+    /**
+     * Sets the string that the the XMLReader will parse. 
+     *
+     * @return boolean
+     * @param  source string
+     */
+    function setRelaxNGSchemaSource($source) {}
+
+    /**
+     * Sets the string that the the XMLReader will parse. 
+     *
+     * @return boolean
+     * @param  source string
+     * @param  encoding string[optional]
+     * @param  options int[optional]
+     */
+    function XML($source, $encoding = null, $options = null) {}
+
+    /**
+     * Moves the position of the current instance to the next node in the stream. 
+     *
+     * @return boolean
+     */
+    function expand() {}
 
 };
 
@@ -25728,6 +27293,447 @@ class DOMAttr {
      * @return boolean
      */
     function isId() {}
+
+};
+
+class DOMText {
+    /**
+     * 
+     *
+     * @return DOMText
+     * @param  value string[optional]
+     */
+    function __construct($value = null) {}
+
+    /**
+     * 
+     *
+     * @return DOMText
+     * @param  offset int
+     */
+    function splitText($offset) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     */
+    function isWhitespaceInElementContent() {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     */
+    function isElementContentWhitespace() {}
+
+    /**
+     * 
+     *
+     * @return DOMText
+     * @param  content string
+     */
+    function replaceWholeText($content) {}
+
+};
+
+class DOMDocumentFragment {
+    /**
+     * 
+     *
+     * @return DOMDocumentFragment
+     */
+    function __construct() {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  data string
+     */
+    function appendXML($data) {}
+
+};
+
+class DOMXPath {
+    /**
+     * 
+     *
+     * @return DOMXPath
+     * @param  doc DOMDocument
+     */
+    function __construct($doc) {}
+
+};
+
+class DOMNode {
+    /**
+     * Canonicalize nodes to a string 
+     *
+     * @return string
+     * @param  exclusive bool[optional]
+     * @param  with_comments bool[optional]
+     * @param  xpath array[optional]
+     * @param  ns_prefixes array[optional]
+     */
+    function C14N($exclusive = null, $with_comments = null, $xpath = null, $ns_prefixes = null) {}
+
+    /**
+     * Canonicalize nodes to a file 
+     *
+     * @return int
+     * @param  uri string
+     * @param  exclusive bool[optional]
+     * @param  with_comments bool[optional]
+     * @param  xpath array[optional]
+     * @param  ns_prefixes array[optional]
+     */
+    function C14NFile($uri, $exclusive = null, $with_comments = null, $xpath = null, $ns_prefixes = null) {}
+
+    /**
+     * Gets an xpath for a node 
+     *
+     * @return int
+     */
+    function getNodePath() {}
+
+    /**
+     * 
+     *
+     * @return domnode
+     * @param  newChild DomNode
+     * @param  refChild DomNode
+     */
+    function insertBefore($newChild, $refChild) {}
+
+    /**
+     * 
+     *
+     * @return DomNode
+     * @param  newChild DomNode
+     * @param  oldChild DomNode
+     */
+    function replaceChild($newChild, $oldChild) {}
+
+    /**
+     * 
+     *
+     * @return DomNode
+     * @param  oldChild DomNode
+     */
+    function removeChild($oldChild) {}
+
+    /**
+     * 
+     *
+     * @return DomNode
+     * @param  newChild DomNode
+     */
+    function appendChild($newChild) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     */
+    function hasChildNodes() {}
+
+    /**
+     * 
+     *
+     * @return DomNode
+     * @param  deep boolean
+     */
+    function cloneNode($deep) {}
+
+    /**
+     * 
+     *
+     * @return void
+     */
+    function normalize() {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     * @param  feature string
+     * @param  version string
+     */
+    function isSupported($feature, $version) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     */
+    function hasAttributes() {}
+
+    /**
+     * 
+     *
+     * @return short
+     * @param  other DomNode
+     */
+    function compareDocumentPosition($other) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     * @param  other DomNode
+     */
+    function isSameNode($other) {}
+
+    /**
+     * 
+     *
+     * @return string
+     * @param  namespaceURI string
+     */
+    function lookupPrefix($namespaceURI) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     * @param  namespaceURI string
+     */
+    function isDefaultNamespace($namespaceURI) {}
+
+    /**
+     * 
+     *
+     * @return string
+     * @param  prefix string
+     */
+    function lookupNamespaceUri($prefix) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     * @param  arg DomNode
+     */
+    function isEqualNode($arg) {}
+
+    /**
+     * 
+     *
+     * @return DomNode
+     * @param  feature string
+     * @param  version string
+     */
+    function getFeature($feature, $version) {}
+
+    /**
+     * 
+     *
+     * @return DomUserData
+     * @param  key string
+     * @param  data DomUserData
+     * @param  handler userdatahandler
+     */
+    function setUserData($key, $data, $handler) {}
+
+    /**
+     * 
+     *
+     * @return DomUserData
+     * @param  key string
+     */
+    function getUserData($key) {}
+
+};
+
+class DOMElement {
+    /**
+     * 
+     *
+     * @return DOMElement
+     * @param  name string
+     * @param  value string[optional]
+     * @param  uri string[optional]
+     */
+    function __construct($name, $value = null, $uri = null) {}
+
+    /**
+     * 
+     *
+     * @return string
+     * @param  name string
+     */
+    function getAttribute($name) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  name string
+     * @param  value string
+     */
+    function setAttribute($name, $value) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  name string
+     */
+    function removeAttribute($name) {}
+
+    /**
+     * 
+     *
+     * @return DOMAttr
+     * @param  name string
+     */
+    function getAttributeNode($name) {}
+
+    /**
+     * 
+     *
+     * @return DOMAttr
+     * @param  newAttr DOMAttr
+     */
+    function setAttributeNode($newAttr) {}
+
+    /**
+     * 
+     *
+     * @return DOMAttr
+     * @param  oldAttr DOMAttr
+     */
+    function removeAttributeNode($oldAttr) {}
+
+    /**
+     * 
+     *
+     * @return DOMNodeList
+     * @param  name string
+     */
+    function getElementsByTagName($name) {}
+
+    /**
+     * 
+     *
+     * @return string
+     * @param  namespaceURI string
+     * @param  localName string
+     */
+    function getAttributeNS($namespaceURI, $localName) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  namespaceURI string
+     * @param  qualifiedName string
+     * @param  value string
+     */
+    function setAttributeNS($namespaceURI, $qualifiedName, $value) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  namespaceURI string
+     * @param  localName string
+     */
+    function removeAttributeNS($namespaceURI, $localName) {}
+
+    /**
+     * 
+     *
+     * @return DOMAttr
+     * @param  namespaceURI string
+     * @param  localName string
+     */
+    function getAttributeNodeNS($namespaceURI, $localName) {}
+
+    /**
+     * 
+     *
+     * @return DOMAttr
+     * @param  newAttr DOMAttr
+     */
+    function setAttributeNodeNS($newAttr) {}
+
+    /**
+     * 
+     *
+     * @return DOMNodeList
+     * @param  namespaceURI string
+     * @param  localName string
+     */
+    function getElementsByTagNameNS($namespaceURI, $localName) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     * @param  name string
+     */
+    function hasAttribute($name) {}
+
+    /**
+     * 
+     *
+     * @return boolean
+     * @param  namespaceURI string
+     * @param  localName string
+     */
+    function hasAttributeNS($namespaceURI, $localName) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  name string
+     * @param  isId boolean
+     */
+    function setIdAttribute($name, $isId) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  namespaceURI string
+     * @param  localName string
+     * @param  isId boolean
+     */
+    function setIdAttributeNS($namespaceURI, $localName, $isId) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  idAttr attr
+     * @param  isId boolean
+     */
+    function setIdAttributeNode($idAttr, $isId) {}
+
+};
+
+class DOMComment {
+    /**
+     * 
+     *
+     * @return DOMComment
+     * @param  value string[optional]
+     */
+    function __construct($value = null) {}
+
+};
+
+class DOMCdataSection {
+    /**
+     * 
+     *
+     * @return DOMCdataSection
+     * @param  value string
+     */
+    function __construct($value) {}
 
 };
 
@@ -25767,7 +27773,7 @@ class DOMDocument {
     /**
      * Register extended class used to create base node type 
      *
-     * @return bool
+     * @return boolean
      * @param  baseclass string
      * @param  extendedclass string
      */
@@ -25988,444 +27994,242 @@ class DOMDocument {
 
 };
 
-class DOMElement {
+class SimpleXMLElement {
     /**
-     * 
+     * Runs XPath query on the XML data 
      *
-     * @return DOMElement
-     * @param  name string
-     * @param  value string[optional]
-     * @param  uri string[optional]
+     * @return array
+     * @param  path string
      */
-    function __construct($name, $value = null, $uri = null) {}
+    function xpath($path) {}
 
     /**
-     * 
-     *
-     * @return string
-     * @param  name string
-     */
-    function getAttribute($name) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  name string
-     * @param  value string
-     */
-    function setAttribute($name, $value) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  name string
-     */
-    function removeAttribute($name) {}
-
-    /**
-     * 
-     *
-     * @return DOMAttr
-     * @param  name string
-     */
-    function getAttributeNode($name) {}
-
-    /**
-     * 
-     *
-     * @return DOMAttr
-     * @param  newAttr DOMAttr
-     */
-    function setAttributeNode($newAttr) {}
-
-    /**
-     * 
-     *
-     * @return DOMAttr
-     * @param  oldAttr DOMAttr
-     */
-    function removeAttributeNode($oldAttr) {}
-
-    /**
-     * 
-     *
-     * @return DOMNodeList
-     * @param  name string
-     */
-    function getElementsByTagName($name) {}
-
-    /**
-     * 
-     *
-     * @return string
-     * @param  namespaceURI string
-     * @param  localName string
-     */
-    function getAttributeNS($namespaceURI, $localName) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  namespaceURI string
-     * @param  qualifiedName string
-     * @param  value string
-     */
-    function setAttributeNS($namespaceURI, $qualifiedName, $value) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  namespaceURI string
-     * @param  localName string
-     */
-    function removeAttributeNS($namespaceURI, $localName) {}
-
-    /**
-     * 
-     *
-     * @return DOMAttr
-     * @param  namespaceURI string
-     * @param  localName string
-     */
-    function getAttributeNodeNS($namespaceURI, $localName) {}
-
-    /**
-     * 
-     *
-     * @return DOMAttr
-     * @param  newAttr DOMAttr
-     */
-    function setAttributeNodeNS($newAttr) {}
-
-    /**
-     * 
-     *
-     * @return DOMNodeList
-     * @param  namespaceURI string
-     * @param  localName string
-     */
-    function getElementsByTagNameNS($namespaceURI, $localName) {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     * @param  name string
-     */
-    function hasAttribute($name) {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     * @param  namespaceURI string
-     * @param  localName string
-     */
-    function hasAttributeNS($namespaceURI, $localName) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  name string
-     * @param  isId boolean
-     */
-    function setIdAttribute($name, $isId) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  namespaceURI string
-     * @param  localName string
-     * @param  isId boolean
-     */
-    function setIdAttributeNS($namespaceURI, $localName, $isId) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  idAttr attr
-     * @param  isId boolean
-     */
-    function setIdAttributeNode($idAttr, $isId) {}
-
-};
-
-class DOMComment {
-    /**
-     * 
-     *
-     * @return DOMComment
-     * @param  value string[optional]
-     */
-    function __construct($value = null) {}
-
-};
-
-class DOMXPath {
-    /**
-     * 
-     *
-     * @return DOMXPath
-     * @param  doc DOMDocument
-     */
-    function __construct($doc) {}
-
-};
-
-class DOMNode {
-    /**
-     * Canonicalize nodes to a string 
-     *
-     * @return string
-     * @param  exclusive bool[optional]
-     * @param  with_comments bool[optional]
-     * @param  xpath array[optional]
-     * @param  ns_prefixes array[optional]
-     */
-    function C14N($exclusive = null, $with_comments = null, $xpath = null, $ns_prefixes = null) {}
-
-    /**
-     * Canonicalize nodes to a file 
-     *
-     * @return int
-     * @param  uri string
-     * @param  exclusive bool[optional]
-     * @param  with_comments bool[optional]
-     * @param  xpath array[optional]
-     * @param  ns_prefixes array[optional]
-     */
-    function C14NFile($uri, $exclusive = null, $with_comments = null, $xpath = null, $ns_prefixes = null) {}
-
-    /**
-     * Gets an xpath for a node 
-     *
-     * @return int
-     */
-    function getNodePath() {}
-
-    /**
-     * 
-     *
-     * @return domnode
-     * @param  newChild DomNode
-     * @param  refChild DomNode
-     */
-    function insertBefore($newChild, $refChild) {}
-
-    /**
-     * 
-     *
-     * @return DomNode
-     * @param  newChild DomNode
-     * @param  oldChild DomNode
-     */
-    function replaceChild($newChild, $oldChild) {}
-
-    /**
-     * 
-     *
-     * @return DomNode
-     * @param  oldChild DomNode
-     */
-    function removeChild($oldChild) {}
-
-    /**
-     * 
-     *
-     * @return DomNode
-     * @param  newChild DomNode
-     */
-    function appendChild($newChild) {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     */
-    function hasChildNodes() {}
-
-    /**
-     * 
-     *
-     * @return DomNode
-     * @param  deep boolean
-     */
-    function cloneNode($deep) {}
-
-    /**
-     * 
-     *
-     * @return void
-     */
-    function normalize() {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     * @param  feature string
-     * @param  version string
-     */
-    function isSupported($feature, $version) {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     */
-    function hasAttributes() {}
-
-    /**
-     * 
-     *
-     * @return short
-     * @param  other DomNode
-     */
-    function compareDocumentPosition($other) {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     * @param  other DomNode
-     */
-    function isSameNode($other) {}
-
-    /**
-     * 
-     *
-     * @return string
-     * @param  namespaceURI string
-     */
-    function lookupPrefix($namespaceURI) {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     * @param  namespaceURI string
-     */
-    function isDefaultNamespace($namespaceURI) {}
-
-    /**
-     * 
-     *
-     * @return string
-     * @param  prefix string
-     */
-    function lookupNamespaceUri($prefix) {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     * @param  arg DomNode
-     */
-    function isEqualNode($arg) {}
-
-    /**
-     * 
-     *
-     * @return DomNode
-     * @param  feature string
-     * @param  version string
-     */
-    function getFeature($feature, $version) {}
-
-    /**
-     * 
-     *
-     * @return DomUserData
-     * @param  key string
-     * @param  data DomUserData
-     * @param  handler userdatahandler
-     */
-    function setUserData($key, $data, $handler) {}
-
-    /**
-     * 
-     *
-     * @return DomUserData
-     * @param  key string
-     */
-    function getUserData($key) {}
-
-};
-
-class DOMCdataSection {
-    /**
-     * 
-     *
-     * @return DOMCdataSection
-     * @param  value string
-     */
-    function __construct($value) {}
-
-};
-
-class DOMText {
-    /**
-     * 
-     *
-     * @return DOMText
-     * @param  value string[optional]
-     */
-    function __construct($value = null) {}
-
-    /**
-     * 
-     *
-     * @return DOMText
-     * @param  offset int
-     */
-    function splitText($offset) {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     */
-    function isWhitespaceInElementContent() {}
-
-    /**
-     * 
-     *
-     * @return boolean
-     */
-    function isElementContentWhitespace() {}
-
-    /**
-     * 
-     *
-     * @return DOMText
-     * @param  content string
-     */
-    function replaceWholeText($content) {}
-
-};
-
-class DOMDocumentFragment {
-    /**
-     * 
-     *
-     * @return DOMDocumentFragment
-     */
-    function __construct() {}
-
-    /**
-     * 
+     * Creates a prefix/ns context for the next XPath query 
      *
      * @return bool
-     * @param  data string
+     * @param  prefix string
+     * @param  ns string
      */
-    function appendXML($data) {}
+    function registerXPathNamespace($prefix, $ns) {}
+
+    /**
+     * Return a well-formed XML string based on SimpleXML element 
+     *
+     * @return string
+     * @param  filename string[optional]
+     */
+    function asXML($filename = null) {}
+
+    /**
+     * Return all namespaces in use 
+     *
+     * @return string
+     * @param  recursve bool[optional]
+     */
+    function getNamespaces($recursve = null) {}
+
+    /**
+     * Return all namespaces registered with document 
+     *
+     * @return string
+     * @param  recursive bool[optional]
+     */
+    function getDocNamespaces($recursive = null) {}
+
+    /**
+     * Finds children of given node 
+     *
+     * @return object
+     * @param  ns string[optional]
+     * @param  is_prefix bool[optional]
+     */
+    function children($ns = null, $is_prefix = null) {}
+
+    /**
+     * Finds children of given node 
+     *
+     * @return object
+     */
+    function getName() {}
+
+    /**
+     * Identifies an element's attributes 
+     *
+     * @return array
+     * @param  ns string[optional]
+     * @param  is_prefix bool[optional]
+     */
+    function attributes($ns = null, $is_prefix = null) {}
+
+    /**
+     * Add Element with optional namespace information 
+     *
+     * @return void
+     * @param  qName string
+     * @param  value string[optional]
+     * @param  ns string[optional]
+     */
+    function addChild($qName, $value = null, $ns = null) {}
+
+    /**
+     * Add Attribute with optional namespace information 
+     *
+     * @return void
+     * @param  qName string
+     * @param  value string
+     * @param  ns string[optional]
+     */
+    function addAttribute($qName, $value, $ns = null) {}
+
+    /**
+     * SimpleXMLElement constructor 
+     *
+     * @return SimpleXMLElement
+     * @param  data string
+     * @param  options int[optional]
+     * @param  data_is_url bool[optional]
+     * @param  ns string[optional]
+     * @param  is_prefix bool[optional]
+     */
+    function __construct($data, $options = null, $data_is_url = null, $ns = null, $is_prefix = null) {}
+
+};
+
+class DateTime {
+    /**
+     * 
+     *
+     * @return DateTime
+     * @param  time string[optional]
+     * @param  object DateTimeZone
+     */
+    function __construct($time = null, $object) {}
+
+    /**
+     * 
+     *
+     * @return string
+     * @param  object DateTime
+     * @param  format string
+     */
+    function format($object, $format) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  modify string
+     */
+    function modify($object, $modify) {}
+
+    /**
+     * 
+     *
+     * @return DateTimeZone
+     * @param  object DateTime
+     */
+    function getTimezone($object) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  object DateTimeZone
+     */
+    function setTimezone($object, $object) {}
+
+    /**
+     * 
+     *
+     * @return long
+     * @param  object DateTime
+     */
+    function getOffset($object) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  hour long
+     * @param  minute long
+     * @param  second long
+     */
+    function setTime($object, $hour, $minute, $second) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  year long
+     * @param  month long
+     * @param  day long
+     */
+    function setDate($object, $year, $month, $day) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  object DateTime
+     * @param  year long
+     * @param  week long
+     * @param  day long
+     */
+    function setISODate($object, $year, $week, $day) {}
+
+};
+
+class DateTimeZone {
+    /**
+     * 
+     *
+     * @return DateTimeZone
+     * @param  timezone string
+     */
+    function __construct($timezone) {}
+
+    /**
+     * 
+     *
+     * @return string
+     * @param  object DateTimeZone
+     */
+    function getName($object) {}
+
+    /**
+     * 
+     *
+     * @return long
+     * @param  object DateTimeZone
+     * @param  object DateTime
+     */
+    function getOffset($object, $object) {}
+
+    /**
+     * 
+     *
+     * @return array
+     * @param  object DateTimeZone
+     */
+    function getTransitions($object) {}
+
+    /**
+     * 
+     *
+     * @return array
+     */
+    function listAbbreviations() {}
+
+    /**
+     * 
+     *
+     * @return array
+     */
+    function listIdentifiers() {}
 
 };
 
@@ -27360,270 +29164,69 @@ class ReflectionExtension {
 
 };
 
-class XMLReader {
+class COMPersistHelper {
     /**
-     * Closes xmlreader - current frees resources until xmlTextReaderClose is fixed in libxml 
-     *
-     * @return bool
-     */
-    function close() {}
-
-    /**
-     * Get value of an attribute from current element 
+     * Determines the filename into which an object will be saved, or false if none is set, via IPersistFile::GetCurFile 
      *
      * @return string
-     * @param  name string
      */
-    function getAttribute($name) {}
+    function GetCurFile() {}
 
     /**
-     * Get value of an attribute at index from current element 
-     *
-     * @return string
-     * @param  index int
-     */
-    function getAttributeNo($index) {}
-
-    /**
-     * Get value of a attribute via name and namespace from current element 
-     *
-     * @return string
-     * @param  name string
-     * @param  namespaceURI string
-     */
-    function getAttributeNs($name, $namespaceURI) {}
-
-    /**
-     * Indicates whether given property (one of the parser option constants) is set or not on parser 
-     *
-     * @return bool
-     * @param  property int
-     */
-    function getParserProperty($property) {}
-
-    /**
-     * 
-     *
-     * @return bool
-     */
-    function isValid() {}
-
-    /**
-     * Return namespaceURI for associated prefix on current node 
-     *
-     * @return bool
-     * @param  prefix string
-     */
-    function lookupNamespace($prefix) {}
-
-    /**
-     * Positions reader at specified attribute - Returns TRUE on success and FALSE on failure 
-     *
-     * @return bool
-     * @param  name string
-     */
-    function moveToAttribute($name) {}
-
-    /**
-     * 
-     *
-     * @return bool
-     * @param  index int
-     */
-    function moveToAttributeNo($index) {}
-
-    /**
-     * 
-     *
-     * @return bool
-     * @param  name string
-     * @param  namespaceURI string
-     */
-    function moveToAttributeNs($name, $namespaceURI) {}
-
-    /**
-     * Moves the position of the current instance to the node that contains the current Attribute node. 
-     *
-     * @return bool
-     */
-    function moveToElement() {}
-
-    /**
-     * Moves the position of the current instance to the first attribute associated with the current node. 
-     *
-     * @return bool
-     */
-    function moveToFirstAttribute() {}
-
-    /**
-     * Moves the position of the current instance to the next attribute associated with the current node. 
-     *
-     * @return bool
-     */
-    function moveToNextAttribute() {}
-
-    /**
-     * Moves the position of the current instance to the next node in the stream. 
-     *
-     * @return bool
-     */
-    function read() {}
-
-    /**
-     * Moves the position of the current instance to the next node in the stream. 
-     *
-     * @return bool
-     * @param  localname string[optional]
-     */
-    function next($localname = null) {}
-
-    /**
-     * Sets the URI that the the XMLReader will parse. 
-     *
-     * @return bool
-     * @param  URI string
-     * @param  encoding string[optional]
-     * @param  options int[optional]
-     */
-    function open($URI, $encoding = null, $options = null) {}
-
-    /**
-     * Reads the contents of the current node, including child nodes and markup. 
-     *
-     * @return boolean
-     */
-    function readInnerXml() {}
-
-    /**
-     * Reads the contents of the current node, including child nodes and markup. 
-     *
-     * @return boolean
-     */
-    function readOuterXml() {}
-
-    /**
-     * Reads the contents of an element or a text node as a string. 
-     *
-     * @return boolean
-     */
-    function readString() {}
-
-    /**
-     * Use W3C XSD schema to validate the document as it is processed. Activation is only possible before the first Read(). 
-     *
-     * @return boolean
-     * @param  filename string
-     */
-    function setSchema($filename) {}
-
-    /**
-     * 
-     *
-     * @return bool
-     * @param  property int
-     * @param  value boolean
-     */
-    function setParserProperty($property, $value) {}
-
-    /**
-     * Sets the string that the the XMLReader will parse. 
+     * Persist object data to file, via IPersistFile::Save 
      *
      * @return bool
      * @param  filename string
+     * @param  remember bool[optional]
      */
-    function setRelaxNGSchema($filename) {}
+    function SaveToFile($filename, $remember = null) {}
 
     /**
-     * Sets the string that the the XMLReader will parse. 
+     * Load object data from file, via IPersistFile::Load 
      *
      * @return bool
-     * @param  source string
+     * @param  filename string
+     * @param  flags int[optional]
      */
-    function setRelaxNGSchemaSource($source) {}
+    function LoadFromFile($filename, $flags = null) {}
 
     /**
-     * Sets the string that the the XMLReader will parse. 
+     * Gets maximum stream size required to store the object data, via IPersistStream::GetSizeMax (or IPersistStreamInit::GetSizeMax) 
      *
-     * @return boolean
-     * @param  source string
-     * @param  encoding string[optional]
-     * @param  options int[optional]
+     * @return int
      */
-    function XML($source, $encoding = null, $options = null) {}
+    function GetMaxStreamSize() {}
 
     /**
-     * Moves the position of the current instance to the next node in the stream. 
+     * Initializes the object to a default state, via IPersistStreamInit::InitNew 
      *
-     * @return DOMNode
+     * @return int
      */
-    function expand() {}
+    function InitNew() {}
 
     /**
-     * Move array argument's internal pointer to the next element and return it 
+     * Initializes an object from the stream where it was previously saved, via IPersistStream::Load or OleLoadFromStream 
      *
      * @return mixed
-     * @param  array_arg array
+     * @param  stream resource
      */
-    function next($array_arg) {}
-
-};
-
-class tidyNode {
-    /**
-     * Returns true if this node has children 
-     *
-     * @return bool
-     */
-    function hasChildren() {}
+    function LoadFromStream($stream) {}
 
     /**
-     * Returns true if this node has siblings 
+     * Saves the object to a stream, via IPersistStream::Save 
      *
-     * @return bool
+     * @return int
+     * @param  stream resource
      */
-    function hasSiblings() {}
+    function SaveToStream($stream) {}
 
     /**
-     * Returns true if this node represents a comment 
+     * Creates a persistence helper object, usually associated with a com_object 
      *
-     * @return bool
+     * @return COMPersistHelper
+     * @param  com_object object[optional]
      */
-    function isComment() {}
-
-    /**
-     * Returns true if this node is part of a HTML document 
-     *
-     * @return bool
-     */
-    function isHtml() {}
-
-    /**
-     * Returns true if this node represents text (no markup) 
-     *
-     * @return bool
-     */
-    function isText() {}
-
-    /**
-     * Returns true if this node is JSTE 
-     *
-     * @return bool
-     */
-    function isJste() {}
-
-    /**
-     * Returns true if this node is ASP 
-     *
-     * @return bool
-     */
-    function isAsp() {}
-
-    /**
-     * Returns true if this node is PHP 
-     *
-     * @return bool
-     */
-    function isPhp() {}
+    function __construct($com_object = null) {}
 
 };
 
@@ -27694,6 +29297,904 @@ class SplObjectStorage {
      */
     function next() {}
 
+    /**
+     * 
+     *
+     * @return string
+     */
+    function serialize() {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  serialized string
+     */
+    function unserialize($serialized) {}
+
+};
+
+class RecursiveIteratorIterator {
+    /**
+     * Creates a RecursiveIteratorIterator from a RecursiveIterator. 
+     *
+     * @return RecursiveIteratorIterator
+     * @param  it RecursiveIterator|IteratorAggregate
+     * @param  mode int[optional]
+     * @param  flags int[optional]
+     * @throws InvalidArgumentException
+     */
+    function __construct($it, $mode = RIT_LEAVES_ONLY, $flags = null) {}
+
+    /**
+     * Rewind the iterator to the first element of the top level inner iterator. 
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * Check whether the current position is valid 
+     *
+     * @return bool
+     */
+    function valid() {}
+
+    /**
+     * Access the current key 
+     *
+     * @return mixed
+     */
+    function key() {}
+
+    /**
+     * Access the current element value 
+     *
+     * @return mixed
+     */
+    function current() {}
+
+    /**
+     * Move forward to the next element 
+     *
+     * @return void
+     */
+    function next() {}
+
+    /**
+     * Get the current depth of the recursive iteration 
+     *
+     * @return int
+     */
+    function getDepth() {}
+
+    /**
+     * The current active sub iterator or the iterator at specified level 
+     *
+     * @return RecursiveIterator
+     * @param  level int[optional]
+     */
+    function getSubIterator($level = null) {}
+
+    /**
+     * The current active sub iterator 
+     *
+     * @return RecursiveIterator
+     */
+    function getInnerIterator() {}
+
+    /**
+     * Called when iteration begins (after first rewind() call) 
+     *
+     * @return RecursiveIterator
+     */
+    function beginIteration() {}
+
+    /**
+     * Called when iteration ends (when valid() first returns false 
+     *
+     * @return RecursiveIterator
+     */
+    function endIteration() {}
+
+    /**
+     * Called for each element to test whether it has children 
+     *
+     * @return bool
+     */
+    function callHasChildren() {}
+
+    /**
+     * Return children of current element 
+     *
+     * @return RecursiveIterator
+     */
+    function callGetChildren() {}
+
+    /**
+     * Called when recursing one level down 
+     *
+     * @return void
+     */
+    function beginChildren() {}
+
+    /**
+     * Called when end recursing one level 
+     *
+     * @return void
+     */
+    function endChildren() {}
+
+    /**
+     * Called when the next element is available 
+     *
+     * @return void
+     */
+    function nextElement() {}
+
+    /**
+     * Set the maximum allowed depth (or any depth if pmax_depth = -1] 
+     *
+     * @return void
+     * @param  max_depth unknown[optional]
+     */
+    function setMaxDepth($max_depth = -1) {}
+
+    /**
+     * Return the maximum accepted depth or false if any depth is allowed 
+     *
+     * @return int|false
+     */
+    function getMaxDepth() {}
+
+};
+
+class FilterIterator {
+    /**
+     * Create an Iterator from another iterator 
+     *
+     * @return FilterIterator
+     * @param  it Iterator
+     */
+    function __construct($it) {}
+
+    /**
+     * 
+     *
+     * @return Iterator
+     */
+    function getInnerIterator() {}
+
+    /**
+     * 
+     *
+     * @return bool
+     */
+    function valid() {}
+
+    /**
+     * 
+     *
+     * @return mixed
+     */
+    function key() {}
+
+    /**
+     * 
+     *
+     * @return mixed
+     */
+    function current() {}
+
+    /**
+     * Rewind the iterator 
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * Move the iterator forward 
+     *
+     * @return void
+     */
+    function next() {}
+
+};
+
+class ParentIterator {
+    /**
+     * 
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * 
+     *
+     * @return void
+     */
+    function next() {}
+
+    /**
+     * Create a ParentIterator from a RecursiveIterator 
+     *
+     * @return ParentIterator
+     * @param  it RecursiveIterator
+     */
+    function __construct($it) {}
+
+};
+
+class RecursiveFilterIterator {
+    /**
+     * Create a RecursiveFilterIterator from a RecursiveIterator 
+     *
+     * @return RecursiveFilterIterator
+     * @param  it RecursiveIterator
+     */
+    function __construct($it) {}
+
+    /**
+     * Check whether the inner iterator's current element has children 
+     *
+     * @return bool
+     */
+    function hasChildren() {}
+
+    /**
+     * Return the inner iterator's children contained in a RecursiveFilterIterator 
+     *
+     * @return RecursiveFilterIterator
+     */
+    function getChildren() {}
+
+};
+
+class RegexIterator {
+    /**
+     * Create an RegexIterator from another iterator and a regular expression 
+     *
+     * @return RegexIterator
+     * @param  it Iterator
+     * @param  regex string
+     * @param  mode int[optional]
+     * @param  flags int[optional]
+     * @param  preg_flags int[optional]
+     */
+    function __construct($it, $regex, $mode = null, $flags = null, $preg_flags = null) {}
+
+    /**
+     * Match (string)current() against regular expression 
+     *
+     * @return bool
+     */
+    function accept() {}
+
+    /**
+     * Returns current operation mode 
+     *
+     * @return bool
+     */
+    function getMode() {}
+
+    /**
+     * Set new operation mode 
+     *
+     * @return bool
+     * @param  new_mode int
+     */
+    function setMode($new_mode) {}
+
+    /**
+     * Returns current PREG flags (if in use or NULL) 
+     *
+     * @return bool
+     */
+    function getFlags() {}
+
+    /**
+     * Set operation flags 
+     *
+     * @return bool
+     * @param  new_flags int
+     */
+    function setFlags($new_flags) {}
+
+    /**
+     * Set PREG flags 
+     *
+     * @return bool
+     * @param  new_flags int
+     */
+    function setPregFlags($new_flags) {}
+
+};
+
+class RecursiveRegexIterator {
+    /**
+     * Create an RecursiveRegexIterator from another recursive iterator and a regular expression 
+     *
+     * @return RecursiveRegexIterator
+     * @param  it RecursiveIterator
+     * @param  regex string
+     * @param  mode int[optional]
+     * @param  flags int[optional]
+     * @param  preg_flags int[optional]
+     */
+    function __construct($it, $regex, $mode = null, $flags = null, $preg_flags = null) {}
+
+    /**
+     * Return the inner iterator's children contained in a RecursiveRegexIterator 
+     *
+     * @return RecursiveRegexIterator
+     */
+    function getChildren() {}
+
+};
+
+class LimitIterator {
+    /**
+     * Construct a LimitIterator from an Iterator with a given starting offset and optionally a maximum count 
+     *
+     * @return LimitIterator
+     * @param  it Iterator
+     * @param  offset int[optional]
+     * @param  count int
+     */
+    function __construct($it, $offset = null, $count) {}
+
+    /**
+     * Rewind the iterator to the specified starting offset 
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * Check whether the current element is valid 
+     *
+     * @return bool
+     */
+    function valid() {}
+
+    /**
+     * Move the iterator forward 
+     *
+     * @return void
+     */
+    function next() {}
+
+    /**
+     * Seek to the given position 
+     *
+     * @return void
+     * @param  position int
+     */
+    function seek($position) {}
+
+    /**
+     * Return the current position 
+     *
+     * @return int
+     */
+    function getPosition() {}
+
+};
+
+class CachingIterator {
+    /**
+     * Construct a CachingIterator from an Iterator 
+     *
+     * @return CachingIterator
+     * @param  it Iterator
+     * @param  flags unknown[optional]
+     */
+    function __construct($it, $flags = CIT_CALL_TOSTRING) {}
+
+    /**
+     * Rewind the iterator 
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * Check whether the current element is valid 
+     *
+     * @return bool
+     */
+    function valid() {}
+
+    /**
+     * Move the iterator forward 
+     *
+     * @return void
+     */
+    function next() {}
+
+    /**
+     * Check whether the inner iterator has a valid next element 
+     *
+     * @return bool
+     */
+    function hasNext() {}
+
+    /**
+     * Return the string representation of the current element 
+     *
+     * @return string
+     */
+    function __toString() {}
+
+    /**
+     * Set given index in cache 
+     *
+     * @return void
+     * @param  index mixed
+     * @param  newval mixed
+     */
+    function offsetSet($index, $newval) {}
+
+    /**
+     * Return the internal cache if used 
+     *
+     * @return string
+     * @param  index mixed
+     */
+    function offsetGet($index) {}
+
+    /**
+     * Unset given index in cache 
+     *
+     * @return void
+     * @param  index mixed
+     */
+    function offsetUnset($index) {}
+
+    /**
+     * Return whether the requested index exists 
+     *
+     * @return bool
+     * @param  index mixed
+     */
+    function offsetExists($index) {}
+
+    /**
+     * Return the cache 
+     *
+     * @return bool
+     */
+    function getCache() {}
+
+    /**
+     * Return the internal flags 
+     *
+     * @return int
+     */
+    function getFlags() {}
+
+    /**
+     * Set the internal flags 
+     *
+     * @return void
+     * @param  flags int
+     */
+    function setFlags($flags) {}
+
+    /**
+     * Number of cached elements 
+     *
+     * @return void
+     */
+    function count() {}
+
+};
+
+class RecursiveCachingIterator {
+    /**
+     * Create an iterator from a RecursiveIterator 
+     *
+     * @return RecursiveCachingIterator
+     * @param  it RecursiveIterator
+     * @param  flags unknown[optional]
+     */
+    function __construct($it, $flags = CIT_CALL_TOSTRING) {}
+
+    /**
+     * Check whether the current element of the inner iterator has children 
+     *
+     * @return bool
+     */
+    function hasChildren() {}
+
+    /**
+     * Return the inner iterator's children as a RecursiveCachingIterator 
+     *
+     * @return RecursiveCachingIterator
+     */
+    function getChildren() {}
+
+};
+
+class IteratorIterator {
+    /**
+     * Create an iterator from anything that is traversable 
+     *
+     * @return IteratorIterator
+     * @param  it Traversable
+     */
+    function __construct($it) {}
+
+};
+
+class NoRewindIterator {
+    /**
+     * Create an iterator from another iterator 
+     *
+     * @return NoRewindIterator
+     * @param  it Iterator
+     */
+    function __construct($it) {}
+
+    /**
+     * Prevent a call to inner iterators rewind() 
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * Return inner iterators valid() 
+     *
+     * @return bool
+     */
+    function valid() {}
+
+    /**
+     * Return inner iterators key() 
+     *
+     * @return mixed
+     */
+    function key() {}
+
+    /**
+     * Return inner iterators current() 
+     *
+     * @return mixed
+     */
+    function current() {}
+
+    /**
+     * Return inner iterators next() 
+     *
+     * @return void
+     */
+    function next() {}
+
+};
+
+class InfiniteIterator {
+    /**
+     * Create an iterator from another iterator 
+     *
+     * @return InfiniteIterator
+     * @param  it Iterator
+     */
+    function __construct($it) {}
+
+    /**
+     * Prevent a call to inner iterators rewind() (internally the current data will be fetched if valid()) 
+     *
+     * @return void
+     */
+    function next() {}
+
+};
+
+class EmptyIterator {
+    /**
+     * Does nothing  
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * Return false 
+     *
+     * @return false
+     */
+    function valid() {}
+
+    /**
+     * Throws exception BadMethodCallException 
+     *
+     * @return void
+     */
+    function key() {}
+
+    /**
+     * Throws exception BadMethodCallException 
+     *
+     * @return void
+     */
+    function current() {}
+
+    /**
+     * Does nothing 
+     *
+     * @return void
+     */
+    function next() {}
+
+};
+
+class AppendIterator {
+    /**
+     * Create an AppendIterator 
+     *
+     * @return AppendIterator
+     */
+    function __construct() {}
+
+    /**
+     * Append an iterator 
+     *
+     * @return void
+     * @param  it Iterator
+     */
+    function append($it) {}
+
+    /**
+     * Rewind to the first iterator and rewind the first iterator, too 
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * Check if the current state is valid 
+     *
+     * @return bool
+     */
+    function valid() {}
+
+    /**
+     * Forward to next element 
+     *
+     * @return void
+     */
+    function next() {}
+
+    /**
+     * Get index of iterator 
+     *
+     * @return int
+     */
+    function getIteratorIndex() {}
+
+    /**
+     * Get access to inner ArrayIterator 
+     *
+     * @return ArrayIterator
+     */
+    function getArrayIterator() {}
+
+};
+
+class ArrayObject {
+    /**
+     * 
+     *
+     * @return bool
+     * @param  index mixed
+     */
+    function offsetExists($index) {}
+
+    /**
+     * 
+     *
+     * @return mixed
+     * @param  index mixed
+     */
+    function offsetGet($index) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  index mixed
+     * @param  newval mixed
+     */
+    function offsetSet($index, $newval) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  newval mixed
+     */
+    function append($newval) {}
+
+    /**
+     * 
+     *
+     * @return void
+     * @param  index mixed
+     */
+    function offsetUnset($index) {}
+
+    /**
+     * 
+     *
+     * @return ArrayObject
+     * @param  ar array|object[optional]
+     * @param  flags int[optional]
+     * @param  iterator_class string[optional]
+     */
+    function __construct($ar = array(), $flags = null, $iterator_class = "ArrayIterator") {}
+
+    /**
+     * Set the class used in getIterator. 
+     *
+     * @return void
+     * @param  iterator_class string
+     */
+    function setIteratorClass($iterator_class) {}
+
+    /**
+     * Get the class used in getIterator. 
+     *
+     * @return string
+     */
+    function getIteratorClass() {}
+
+    /**
+     * Get flags 
+     *
+     * @return int
+     */
+    function getFlags() {}
+
+    /**
+     * Set flags 
+     *
+     * @return void
+     * @param  flags int
+     */
+    function setFlags($flags) {}
+
+    /**
+     * Replace the referenced array or object with a new one and return the old one (right now copy - to be changed) 
+     *
+     * @return Array|Object
+     * @param  ar Array|Object[optional]
+     */
+    function exchangeArray($ar = array()) {}
+
+    /**
+     * Create a new iterator from a ArrayObject instance 
+     *
+     * @return ArrayIterator
+     */
+    function getIterator() {}
+
+    /**
+     * 
+     *
+     * @return int
+     */
+    function count() {}
+
+    /**
+     * 
+     *
+     * @return int
+     */
+    function asort() {}
+
+    /**
+     * 
+     *
+     * @return int
+     */
+    function ksort() {}
+
+    /**
+     * 
+     *
+     * @return int
+     * @param  cmp_function callback
+     */
+    function uasort($cmp_function) {}
+
+    /**
+     * 
+     *
+     * @return int
+     * @param  cmp_function callback
+     */
+    function uksort($cmp_function) {}
+
+    /**
+     * 
+     *
+     * @return int
+     */
+    function natsort() {}
+
+    /**
+     * 
+     *
+     * @return int
+     */
+    function natcasesort() {}
+
+};
+
+class ArrayIterator {
+    /**
+     * Rewind array back to the start 
+     *
+     * @return void
+     */
+    function rewind() {}
+
+    /**
+     * Seek to position. 
+     *
+     * @return void
+     * @param  position int
+     */
+    function seek($position) {}
+
+    /**
+     * Return current array entry 
+     *
+     * @return mixed|NULL
+     */
+    function current() {}
+
+    /**
+     * Return current array key 
+     *
+     * @return mixed|NULL
+     */
+    function key() {}
+
+    /**
+     * Move to next entry 
+     *
+     * @return void
+     */
+    function next() {}
+
+    /**
+     * Check whether array contains more entries 
+     *
+     * @return bool
+     */
+    function valid() {}
+
+};
+
+class RecursiveArrayIterator {
+    /**
+     * Check whether current element has children (e.g. is an array) 
+     *
+     * @return bool
+     */
+    function hasChildren() {}
+
+    /**
+     * Create a sub iterator for the current element (same class as $this) 
+     *
+     * @return object
+     */
+    function getChildren() {}
+
 };
 
 class DirectoryIterator {
@@ -27748,6 +30249,14 @@ class DirectoryIterator {
     function getFilename() {}
 
     /**
+     * Returns filename component of current dir entry 
+     *
+     * @return string
+     * @param  suffix string[optional]
+     */
+    function getBasename($suffix = null) {}
+
+    /**
      * Returns true if current entry is '.' or  '..' 
      *
      * @return bool
@@ -27777,6 +30286,14 @@ class SplFileInfo {
      * @return string
      */
     function getFilename() {}
+
+    /**
+     * Returns filename component of path 
+     *
+     * @return string
+     * @param  suffix string[optional]
+     */
+    function getBasename($suffix = null) {}
 
     /**
      * Return path and filename 
@@ -27897,6 +30414,20 @@ class SplFileInfo {
      * @return bool
      */
     function isLink() {}
+
+    /**
+     * Return the target of a symbolic link 
+     *
+     * @return string
+     */
+    function getLinkTarget() {}
+
+    /**
+     * Return the resolved path 
+     *
+     * @return string
+     */
+    function getRealPath() {}
 
     /**
      * Open the current file 
@@ -28243,896 +30774,6 @@ class SplTempFileObject {
 
 };
 
-class ArrayObject {
-    /**
-     * 
-     *
-     * @return bool
-     * @param  index mixed
-     */
-    function offsetExists($index) {}
-
-    /**
-     * 
-     *
-     * @return mixed
-     * @param  index mixed
-     */
-    function offsetGet($index) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  index mixed
-     * @param  newval mixed
-     */
-    function offsetSet($index, $newval) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  newval mixed
-     */
-    function append($newval) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  index mixed
-     */
-    function offsetUnset($index) {}
-
-    /**
-     * 
-     *
-     * @return ArrayObject
-     * @param  ar array|object[optional]
-     * @param  flags int[optional]
-     * @param  iterator_class string[optional]
-     */
-    function __construct($ar = array(), $flags = null, $iterator_class = "ArrayIterator") {}
-
-    /**
-     * Set the class used in getIterator. 
-     *
-     * @return void
-     * @param  iterator_class string
-     */
-    function setIteratorClass($iterator_class) {}
-
-    /**
-     * Get the class used in getIterator. 
-     *
-     * @return string
-     */
-    function getIteratorClass() {}
-
-    /**
-     * Get flags 
-     *
-     * @return int
-     */
-    function getFlags() {}
-
-    /**
-     * Set flags 
-     *
-     * @return void
-     * @param  flags int
-     */
-    function setFlags($flags) {}
-
-    /**
-     * Replace the referenced array or object with a new one and return the old one (right now copy - to be changed) 
-     *
-     * @return Array|Object
-     * @param  ar Array|Object[optional]
-     */
-    function exchangeArray($ar = array()) {}
-
-    /**
-     * Create a new iterator from a ArrayObject instance 
-     *
-     * @return ArrayIterator
-     */
-    function getIterator() {}
-
-    /**
-     * 
-     *
-     * @return int
-     */
-    function count() {}
-
-    /**
-     * 
-     *
-     * @return int
-     */
-    function asort() {}
-
-    /**
-     * 
-     *
-     * @return int
-     */
-    function ksort() {}
-
-    /**
-     * 
-     *
-     * @return int
-     * @param  cmp_function callback
-     */
-    function uasort($cmp_function) {}
-
-    /**
-     * 
-     *
-     * @return int
-     * @param  cmp_function callback
-     */
-    function uksort($cmp_function) {}
-
-    /**
-     * 
-     *
-     * @return int
-     */
-    function natsort() {}
-
-    /**
-     * 
-     *
-     * @return int
-     */
-    function natcasesort() {}
-
-};
-
-class ArrayIterator {
-    /**
-     * Rewind array back to the start 
-     *
-     * @return void
-     */
-    function rewind() {}
-
-    /**
-     * Seek to position. 
-     *
-     * @return void
-     * @param  position int
-     */
-    function seek($position) {}
-
-    /**
-     * Return current array entry 
-     *
-     * @return mixed
-     */
-    function current() {}
-
-    /**
-     * Return current array key 
-     *
-     * @return mixed
-     */
-    function key() {}
-
-    /**
-     * Move to next entry 
-     *
-     * @return void
-     */
-    function next() {}
-
-    /**
-     * Check whether array contains more entries 
-     *
-     * @return bool
-     */
-    function valid() {}
-
-};
-
-class RecursiveArrayIterator {
-    /**
-     * Check whether current element has children (e.g. is an array) 
-     *
-     * @return bool
-     */
-    function hasChildren() {}
-
-    /**
-     * Create a sub iterator for the current element (same class as $this) 
-     *
-     * @return object
-     */
-    function getChildren() {}
-
-};
-
-class RecursiveIteratorIterator {
-    /**
-     * Creates a RecursiveIteratorIterator from a RecursiveIterator. 
-     *
-     * @return RecursiveIteratorIterator
-     * @param  it RecursiveIterator|IteratorAggregate
-     * @param  mode int[optional]
-     * @param  flags int[optional]
-     * @throws InvalidArgumentException
-     */
-    function __construct($it, $mode = RIT_LEAVES_ONLY, $flags = null) {}
-
-    /**
-     * Rewind the iterator to the first element of the top level inner iterator. 
-     *
-     * @return void
-     */
-    function rewind() {}
-
-    /**
-     * Check whether the current position is valid 
-     *
-     * @return bolean
-     */
-    function valid() {}
-
-    /**
-     * Access the current key 
-     *
-     * @return mixed
-     */
-    function key() {}
-
-    /**
-     * Access the current element value 
-     *
-     * @return mixed
-     */
-    function current() {}
-
-    /**
-     * Move forward to the next element 
-     *
-     * @return void
-     */
-    function next() {}
-
-    /**
-     * Get the current depth of the recursive iteration 
-     *
-     * @return int
-     */
-    function getDepth() {}
-
-    /**
-     * The current active sub iterator or the iterator at specified level 
-     *
-     * @return RecursiveIterator
-     * @param  level int[optional]
-     */
-    function getSubIterator($level = null) {}
-
-    /**
-     * The current active sub iterator 
-     *
-     * @return RecursiveIterator
-     */
-    function getInnerIterator() {}
-
-    /**
-     * Called when iteration begins (after first rewind() call) 
-     *
-     * @return RecursiveIterator
-     */
-    function beginIteration() {}
-
-    /**
-     * Called when iteration ends (when valid() first returns false 
-     *
-     * @return RecursiveIterator
-     */
-    function endIteration() {}
-
-    /**
-     * Called for each element to test whether it has children 
-     *
-     * @return bool
-     */
-    function callHasChildren() {}
-
-    /**
-     * Return children of current element 
-     *
-     * @return RecursiveIterator
-     */
-    function callGetChildren() {}
-
-    /**
-     * Called when recursing one level down 
-     *
-     * @return void
-     */
-    function beginChildren() {}
-
-    /**
-     * Called when end recursing one level 
-     *
-     * @return void
-     */
-    function endChildren() {}
-
-    /**
-     * Called when the next element is available 
-     *
-     * @return void
-     */
-    function nextElement() {}
-
-    /**
-     * Set the maximum allowed depth (or any depth if pmax_depth = -1] 
-     *
-     * @return void
-     * @param  max_depth unknown[optional]
-     */
-    function setMaxDepth($max_depth = -1) {}
-
-    /**
-     * Return the maximum accepted depth or false if any depth is allowed 
-     *
-     * @return int|false
-     */
-    function getMaxDepth() {}
-
-};
-
-class FilterIterator {
-    /**
-     * Create an Iterator from another iterator 
-     *
-     * @return FilterIterator
-     * @param  it Iterator
-     */
-    function __construct($it) {}
-
-    /**
-     * 
-     *
-     * @return Iterator
-     */
-    function getInnerIterator() {}
-
-    /**
-     * 
-     *
-     * @return bool
-     */
-    function valid() {}
-
-    /**
-     * 
-     *
-     * @return mixed
-     */
-    function key() {}
-
-    /**
-     * 
-     *
-     * @return mixed
-     */
-    function current() {}
-
-    /**
-     * Rewind the iterator 
-     *
-     * @return void
-     */
-    function rewind() {}
-
-    /**
-     * Move the iterator forward 
-     *
-     * @return void
-     */
-    function next() {}
-
-};
-
-class ParentIterator {
-    /**
-     * 
-     *
-     * @return void
-     */
-    function rewind() {}
-
-    /**
-     * 
-     *
-     * @return void
-     */
-    function next() {}
-
-    /**
-     * Create a ParentIterator from a RecursiveIterator 
-     *
-     * @return ParentIterator
-     * @param  it RecursiveIterator
-     */
-    function __construct($it) {}
-
-    /**
-     * Check whether the inner iterator's current element has children 
-     *
-     * @return bool
-     */
-    function hasChildren() {}
-
-    /**
-     * Return the inner iterator's children contained in a ParentIterator 
-     *
-     * @return ParentIterator
-     */
-    function getChildren() {}
-
-};
-
-class RecursiveFilterIterator {
-    /**
-     * Create a RecursiveFilterIterator from a RecursiveIterator 
-     *
-     * @return RecursiveFilterIterator
-     * @param  it RecursiveIterator
-     */
-    function __construct($it) {}
-
-    /**
-     * Check whether the inner iterator's current element has children 
-     *
-     * @return bool
-     */
-    function hasChildren() {}
-
-    /**
-     * Return the inner iterator's children contained in a RecursiveFilterIterator 
-     *
-     * @return RecursiveFilterIterator
-     */
-    function getChildren() {}
-
-};
-
-class RegexIterator {
-    /**
-     * Create an RegexIterator from another iterator and a regular expression 
-     *
-     * @return RegexIterator
-     * @param  it Iterator
-     * @param  regex string
-     * @param  mode int[optional]
-     * @param  flags int[optional]
-     * @param  preg_flags int[optional]
-     */
-    function __construct($it, $regex, $mode = null, $flags = null, $preg_flags = null) {}
-
-    /**
-     * Match (string)current() against regular expression 
-     *
-     * @return bool
-     */
-    function accept() {}
-
-    /**
-     * Returns current operation mode 
-     *
-     * @return bool
-     */
-    function getMode() {}
-
-    /**
-     * Set new operation mode 
-     *
-     * @return bool
-     * @param  new_mode int
-     */
-    function setMode($new_mode) {}
-
-    /**
-     * Returns current PREG flags (if in use or NULL) 
-     *
-     * @return bool
-     */
-    function getFlags() {}
-
-    /**
-     * Set operation flags 
-     *
-     * @return bool
-     * @param  new_flags int
-     */
-    function setFlags($new_flags) {}
-
-    /**
-     * Set PREG flags 
-     *
-     * @return bool
-     * @param  new_flags int
-     */
-    function setPregFlags($new_flags) {}
-
-};
-
-class RecursiveRegexIterator {
-    /**
-     * Create an RecursiveRegexIterator from another recursive iterator and a regular expression 
-     *
-     * @return RecursiveRegexIterator
-     * @param  it RecursiveIterator
-     * @param  regex string
-     * @param  mode int[optional]
-     * @param  flags int[optional]
-     * @param  preg_flags int[optional]
-     */
-    function __construct($it, $regex, $mode = null, $flags = null, $preg_flags = null) {}
-
-    /**
-     * Return the inner iterator's children contained in a RecursiveRegexIterator 
-     *
-     * @return RecursiveRegexIterator
-     */
-    function getChildren() {}
-
-};
-
-class LimitIterator {
-    /**
-     * Construct a LimitIterator from an Iterator with a given starting offset and optionally a maximum count 
-     *
-     * @return LimitIterator
-     * @param  it Iterator
-     * @param  offset int[optional]
-     * @param  count int
-     */
-    function __construct($it, $offset = null, $count) {}
-
-    /**
-     * Rewind the iterator to the specified starting offset 
-     *
-     * @return void
-     */
-    function rewind() {}
-
-    /**
-     * Check whether the current element is valid 
-     *
-     * @return bool
-     */
-    function valid() {}
-
-    /**
-     * Move the iterator forward 
-     *
-     * @return void
-     */
-    function next() {}
-
-    /**
-     * Seek to the given position 
-     *
-     * @return void
-     * @param  position int
-     */
-    function seek($position) {}
-
-    /**
-     * Return the current position 
-     *
-     * @return int
-     */
-    function getPosition() {}
-
-};
-
-class CachingIterator {
-    /**
-     * Construct a CachingIterator from an Iterator 
-     *
-     * @return CachingIterator
-     * @param  it Iterator
-     * @param  flags unknown[optional]
-     */
-    function __construct($it, $flags = CIT_CALL_TOSTRING) {}
-
-    /**
-     * Rewind the iterator 
-     *
-     * @return void
-     */
-    function rewind() {}
-
-    /**
-     * Check whether the current element is valid 
-     *
-     * @return bool
-     */
-    function valid() {}
-
-    /**
-     * Move the iterator forward 
-     *
-     * @return void
-     */
-    function next() {}
-
-    /**
-     * Check whether the inner iterator has a valid next element 
-     *
-     * @return bool
-     */
-    function hasNext() {}
-
-    /**
-     * Return the string representation of the current element 
-     *
-     * @return string
-     */
-    function __toString() {}
-
-    /**
-     * Set given index in cache 
-     *
-     * @return void
-     * @param  index mixed
-     * @param  newval mixed
-     */
-    function offsetSet($index, $newval) {}
-
-    /**
-     * Return the internal cache if used 
-     *
-     * @return string
-     * @param  index mixed
-     */
-    function offsetGet($index) {}
-
-    /**
-     * Unset given index in cache 
-     *
-     * @return void
-     * @param  index mixed
-     */
-    function offsetUnset($index) {}
-
-    /**
-     * Return whether the requested index exists 
-     *
-     * @return bool
-     * @param  index mixed
-     */
-    function offsetExists($index) {}
-
-    /**
-     * Return the cache 
-     *
-     * @return bool
-     */
-    function getCache() {}
-
-    /**
-     * Return the internal flags 
-     *
-     * @return int
-     */
-    function getFlags() {}
-
-    /**
-     * Set the internal flags 
-     *
-     * @return void
-     * @param  flags int
-     */
-    function setFlags($flags) {}
-
-};
-
-class RecursiveCachingIterator {
-    /**
-     * Create an iterator from a RecursiveIterator 
-     *
-     * @return RecursiveCachingIterator
-     * @param  it RecursiveIterator
-     * @param  flags unknown[optional]
-     */
-    function __construct($it, $flags = CIT_CALL_TOSTRING) {}
-
-    /**
-     * Check whether the current element of the inner iterator has children 
-     *
-     * @return bool
-     */
-    function hasChildren() {}
-
-    /**
-     * Return the inner iterator's children as a RecursiveCachingIterator 
-     *
-     * @return RecursiveCachingIterator
-     */
-    function getChildren() {}
-
-};
-
-class IteratorIterator {
-    /**
-     * Create an iterator from anything that is traversable 
-     *
-     * @return IteratorIterator
-     * @param  it Traversable
-     */
-    function __construct($it) {}
-
-};
-
-class NoRewindIterator {
-    /**
-     * Create an iterator from another iterator 
-     *
-     * @return NoRewindIterator
-     * @param  it Iterator
-     */
-    function __construct($it) {}
-
-    /**
-     * Prevent a call to inner iterators rewind() 
-     *
-     * @return void
-     */
-    function rewind() {}
-
-    /**
-     * Return inner iterators valid() 
-     *
-     * @return bool
-     */
-    function valid() {}
-
-    /**
-     * Return inner iterators key() 
-     *
-     * @return mixed
-     */
-    function key() {}
-
-    /**
-     * Return inner iterators current() 
-     *
-     * @return mixed
-     */
-    function current() {}
-
-    /**
-     * Return inner iterators next() 
-     *
-     * @return void
-     */
-    function next() {}
-
-};
-
-class InfiniteIterator {
-    /**
-     * Create an iterator from another iterator 
-     *
-     * @return InfiniteIterator
-     * @param  it Iterator
-     */
-    function __construct($it) {}
-
-    /**
-     * Prevent a call to inner iterators rewind() (internally the current data will be fetched if valid()) 
-     *
-     * @return void
-     */
-    function next() {}
-
-};
-
-class EmptyIterator {
-    /**
-     * Does nothing  
-     *
-     * @return void
-     */
-    function rewind() {}
-
-    /**
-     * Return false 
-     *
-     * @return false
-     */
-    function valid() {}
-
-    /**
-     * Throws exception BadMethodCallException 
-     *
-     * @return void
-     */
-    function key() {}
-
-    /**
-     * Throws exception BadMethodCallException 
-     *
-     * @return void
-     */
-    function current() {}
-
-    /**
-     * Does nothing 
-     *
-     * @return void
-     */
-    function next() {}
-
-};
-
-class AppendIterator {
-    /**
-     * Create an AppendIterator 
-     *
-     * @return AppendIterator
-     */
-    function __construct() {}
-
-    /**
-     * Append an iterator 
-     *
-     * @return void
-     * @param  it Iterator
-     */
-    function append($it) {}
-
-    /**
-     * Rewind to the first iterator and rewind the first iterator, too 
-     *
-     * @return void
-     */
-    function rewind() {}
-
-    /**
-     * Check if the current state is valid 
-     *
-     * @return bool
-     */
-    function valid() {}
-
-    /**
-     * Forward to next element 
-     *
-     * @return void
-     */
-    function next() {}
-
-    /**
-     * Get index of iterator 
-     *
-     * @return int
-     */
-    function getIteratorIndex() {}
-
-    /**
-     * Get access to inner ArrayIterator 
-     *
-     * @return ArrayIterator
-     */
-    function getArrayIterator() {}
-
-};
-
 class SimpleXMLIterator {
     /**
      * Rewind to first element 
@@ -29151,14 +30792,14 @@ class SimpleXMLIterator {
     /**
      * Get current element 
      *
-     * @return mixed
+     * @return SimpleXMLIterator
      */
     function current() {}
 
     /**
      * Get name of current child element 
      *
-     * @return mixed
+     * @return string
      */
     function key() {}
 
@@ -29179,7 +30820,7 @@ class SimpleXMLIterator {
     /**
      * Get child element iterator 
      *
-     * @return object
+     * @return SimpleXMLIterator
      */
     function getChildren() {}
 
@@ -29189,1772 +30830,6 @@ class SimpleXMLIterator {
      * @return int
      */
     function count() {}
-
-};
-
-class PDOStatement {
-    /**
-     * Execute a prepared statement, optionally binding parameters 
-     *
-     * @return bool
-     * @param  bound_input_params array[optional]
-     */
-    function execute($bound_input_params = null) {}
-
-    /**
-     * Fetches the next row and returns it, or false if there are no more rows 
-     *
-     * @return mixed
-     * @param  how int[optional]
-     * @param  orientation int[optional]
-     * @param  offset int[optional]
-     */
-    function fetch($how = PDO_FETCH_BOTH, $orientation = null, $offset = null) {}
-
-    /**
-     * Fetches the next row and returns it as an object. 
-     *
-     * @return mixed
-     * @param  class_name string
-     * @param  ctor_args NULL|array[optional]
-     */
-    function fetchObject($class_name, $ctor_args = null) {}
-
-    /**
-     * Returns a data of the specified column in the result set. 
-     *
-     * @return string
-     * @param  column_number int[optional]
-     */
-    function fetchColumn($column_number = null) {}
-
-    /**
-     * Returns an array of all of the results. 
-     *
-     * @return array
-     * @param  how int[optional]
-     * @param  class_name string[optional]
-     * @param  ctor_args NULL|array[optional]
-     */
-    function fetchAll($how = PDO_FETCH_BOTH, $class_name = null, $ctor_args = null) {}
-
-    /**
-     * bind an input parameter to the value of a PHP variable.  $paramno is the 1-based position of the placeholder in the SQL statement (but can be the parameter name for drivers that support named placeholders).  It should be called prior to execute(). 
-     *
-     * @return bool
-     * @param  paramno mixed
-     * @param  param mixed
-     * @param  type int[optional]
-     */
-    function bindValue($paramno, $param, $type = null) {}
-
-    /**
-     * bind a parameter to a PHP variable.  $paramno is the 1-based position of the placeholder in the SQL statement (but can be the parameter name for drivers that support named placeholders).  This isn't supported by all drivers.  It should be called prior to execute(). 
-     *
-     * @return bool
-     * @param  paramno mixed
-     * @param  param mixed
-     * @param  type int[optional]
-     * @param  maxlen int[optional]
-     * @param  driverdata mixed[optional]
-     */
-    function bindParam($paramno, &$param, $type = null, $maxlen = null, $driverdata = null) {}
-
-    /**
-     * bind a column to a PHP variable.  On each row fetch $param will contain the value of the corresponding column.  $column is the 1-based offset of the column, or the column name.  For portability, don't call this before execute(). 
-     *
-     * @return bool
-     * @param  column mixed
-     * @param  param mixed
-     * @param  type int[optional]
-     * @param  maxlen int[optional]
-     * @param  driverdata mixed[optional]
-     */
-    function bindColumn($column, &$param, $type = null, $maxlen = null, $driverdata = null) {}
-
-    /**
-     * Returns the number of rows in a result set, or the number of rows affected by the last execute().  It is not always meaningful. 
-     *
-     * @return int
-     */
-    function rowCount() {}
-
-    /**
-     * Fetch the error code associated with the last operation on the statement handle 
-     *
-     * @return string
-     */
-    function errorCode() {}
-
-    /**
-     * Fetch extended error information associated with the last operation on the statement handle 
-     *
-     * @return array
-     */
-    function errorInfo() {}
-
-    /**
-     * Set an attribute 
-     *
-     * @return bool
-     * @param  attribute long
-     * @param  value mixed
-     */
-    function setAttribute($attribute, $value) {}
-
-    /**
-     * Get an attribute 
-     *
-     * @return mixed
-     * @param  attribute long
-     */
-    function getAttribute($attribute) {}
-
-    /**
-     * Returns the number of columns in the result set 
-     *
-     * @return int
-     */
-    function columnCount() {}
-
-    /**
-     * Returns meta data for a numbered column 
-     *
-     * @return mixed
-     * @param  column int
-     */
-    function getColumnMeta($column) {}
-
-    /**
-     * Changes the default fetch mode for subsequent fetches (params have different meaning for different fetch modes) 
-     *
-     * @return bool
-     * @param  mode_ int
-     */
-    function setFetchMode($mode_) {}
-
-    /**
-     * Advances to the next rowset in a multi-rowset statement handle. Returns true if it succeded, false otherwise 
-     *
-     * @return bool
-     */
-    function nextRowset() {}
-
-    /**
-     * Closes the cursor, leaving the statement ready for re-execution. 
-     *
-     * @return bool
-     */
-    function closeCursor() {}
-
-    /**
-     * A utility for internals hackers to debug parameter internals 
-     *
-     * @return void
-     */
-    function debugDumpParams() {}
-
-    /**
-     * Prevents use of a PDOStatement instance that has been unserialized 
-     *
-     * @return int
-     */
-    function __wakeup() {}
-
-    /**
-     * Prevents serialization of a PDOStatement instance 
-     *
-     * @return int
-     */
-    function __sleep() {}
-
-};
-
-class SoapParam {
-    /**
-     * SoapParam constructor 
-     *
-     * @return SoapParam
-     * @param  data mixed
-     * @param  name string
-     */
-    function SoapParam($data, $name) {}
-
-};
-
-class SoapHeader {
-    /**
-     * SoapHeader constructor 
-     *
-     * @return SoapHeader
-     * @param  namespace string
-     * @param  name string
-     * @param  data mixed[optional]
-     * @param  mustUnderstand bool[optional]
-     * @param  actor mixed[optional]
-     */
-    function SoapHeader($namespace, $name, $data = null, $mustUnderstand = null, $actor = null) {}
-
-};
-
-class SoapFault {
-    /**
-     * SoapFault constructor 
-     *
-     * @return SoapFault
-     * @param  faultcode string
-     * @param  faultstring string
-     * @param  faultactor string[optional]
-     * @param  detail mixed[optional]
-     * @param  faultname string[optional]
-     * @param  headerfault mixed[optional]
-     */
-    function SoapFault($faultcode, $faultstring, $faultactor = null, $detail = null, $faultname = null, $headerfault = null) {}
-
-    /**
-     * 
-     *
-     * @return object
-     */
-    function __toString() {}
-
-};
-
-class SoapVar {
-    /**
-     * SoapVar constructor 
-     *
-     * @return SoapVar
-     * @param  data mixed
-     * @param  encoding int
-     * @param  type_name string[optional]
-     * @param  type_namespace string[optional]
-     * @param  node_name string[optional]
-     * @param  node_namespace string[optional]
-     */
-    function SoapVar($data, $encoding, $type_name = null, $type_namespace = null, $node_name = null, $node_namespace = null) {}
-
-};
-
-class SoapServer {
-    /**
-     * SoapServer constructor 
-     *
-     * @return SoapServer
-     * @param  wsdl mixed
-     * @param  options array[optional]
-     */
-    function SoapServer($wsdl, $options = null) {}
-
-    /**
-     * Sets persistence mode of SoapServer 
-     *
-     * @return void
-     * @param  mode int
-     */
-    function setPersistence($mode) {}
-
-    /**
-     * Sets class which will handle SOAP requests 
-     *
-     * @return void
-     * @param  class_name string
-     * @param  args mixed[optional]
-     */
-    function setClass($class_name, $args = null) {}
-
-    /**
-     * Sets object which will handle SOAP requests 
-     *
-     * @return void
-     * @param  object unknown
-     */
-    function setObject($object) {}
-
-    /**
-     * Returns list of defined functions 
-     *
-     * @return array
-     */
-    function getFunctions() {}
-
-    /**
-     * Adds one or several functions those will handle SOAP requests 
-     *
-     * @return void
-     * @param  functions mixed
-     */
-    function addFunction($functions) {}
-
-    /**
-     * Handles a SOAP request 
-     *
-     * @return void
-     * @param  soap_request string[optional]
-     */
-    function handle($soap_request = null) {}
-
-    /**
-     * Issue SoapFault indicating an error 
-     *
-     * @return void
-     * @param  code staring
-     * @param  string string
-     * @param  actor string[optional]
-     * @param  details mixed[optional]
-     * @param  name string[optional]
-     */
-    function fault($code, $string, $actor = null, $details = null, $name = null) {}
-
-};
-
-class SoapClient {
-    /**
-     * SoapClient constructor 
-     *
-     * @return SoapClient
-     * @param  wsdl mixed
-     * @param  options array[optional]
-     */
-    function SoapClient($wsdl, $options = null) {}
-
-    /**
-     * Calls a SOAP function 
-     *
-     * @return mixed
-     * @param  function_name string
-     * @param  arguments array[optional]
-     * @param  options array[optional]
-     * @param  input_headers array[optional]
-     * @param  output_headers array[optional]
-     */
-    function __call($function_name, $arguments = null, $options = null, $input_headers = null, $output_headers = null) {}
-
-    /**
-     * Returns list of SOAP functions 
-     *
-     * @return array
-     */
-    function __getFunctions() {}
-
-    /**
-     * Returns list of SOAP types 
-     *
-     * @return array
-     */
-    function __getTypes() {}
-
-    /**
-     * Returns last SOAP request 
-     *
-     * @return string
-     */
-    function __getLastRequest() {}
-
-    /**
-     * Returns last SOAP response 
-     *
-     * @return string
-     */
-    function __getLastResponse() {}
-
-    /**
-     * Returns last SOAP request headers 
-     *
-     * @return string
-     */
-    function __getLastRequestHeaders() {}
-
-    /**
-     * Returns last SOAP response headers 
-     *
-     * @return string
-     */
-    function __getLastResponseHeaders() {}
-
-    /**
-     * SoapClient::__doRequest() 
-     *
-     * @return string
-     */
-    function __doRequest() {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  name string
-     * @param  value strung[optional]
-     */
-    function __setCookie($name, $value = null) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  SoapHeaders array
-     */
-    function __setSoapHeaders($SoapHeaders) {}
-
-    /**
-     * 
-     *
-     * @return string
-     * @param  new_location string[optional]
-     */
-    function __setLocation($new_location = null) {}
-
-};
-
-class COMPersistHelper {
-    /**
-     * Determines the filename into which an object will be saved, or false if none is set, via IPersistFile::GetCurFile 
-     *
-     * @return string
-     */
-    function GetCurFile() {}
-
-    /**
-     * Persist object data to file, via IPersistFile::Save 
-     *
-     * @return bool
-     * @param  filename string
-     * @param  remember bool[optional]
-     */
-    function SaveToFile($filename, $remember = null) {}
-
-    /**
-     * Load object data from file, via IPersistFile::Load 
-     *
-     * @return bool
-     * @param  filename string
-     * @param  flags int[optional]
-     */
-    function LoadFromFile($filename, $flags = null) {}
-
-    /**
-     * Gets maximum stream size required to store the object data, via IPersistStream::GetSizeMax (or IPersistStreamInit::GetSizeMax) 
-     *
-     * @return int
-     */
-    function GetMaxStreamSize() {}
-
-    /**
-     * Initializes the object to a default state, via IPersistStreamInit::InitNew 
-     *
-     * @return int
-     */
-    function InitNew() {}
-
-    /**
-     * Initializes an object from the stream where it was previously saved, via IPersistStream::Load or OleLoadFromStream 
-     *
-     * @return mixed
-     * @param  stream resource
-     */
-    function LoadFromStream($stream) {}
-
-    /**
-     * Saves the object to a stream, via IPersistStream::Save 
-     *
-     * @return int
-     * @param  stream resource
-     */
-    function SaveToStream($stream) {}
-
-    /**
-     * Creates a persistence helper object, usually associated with a com_object 
-     *
-     * @return COMPersistHelper
-     * @param  com_object object[optional]
-     */
-    function __construct($com_object = null) {}
-
-};
-
-class swfaction {
-    /**
-     * Creates a new SWFAction object, compiling the given script 
-     *
-     * @return swfaction
-     * @param  string unknown
-     */
-    function __construct($string) {}
-
-};
-
-class swfbitmap {
-    /**
-     * Creates a new SWFBitmap object from jpg (with optional mask) or dbl file 
-     *
-     * @return swfbitmap
-     * @param  file mixed
-     * @param  maskfile mixed[optional]
-     */
-    function __construct($file, $maskfile = null) {}
-
-    /**
-     * Returns the width of this bitmap 
-     *
-     * @return float
-     */
-    function getWidth() {}
-
-    /**
-     * Returns the height of this bitmap 
-     *
-     * @return float
-     */
-    function getHeight() {}
-
-};
-
-class swfbutton {
-    /**
-     * Creates a new SWFButton object 
-     *
-     * @return swfbutton
-     */
-    function __construct() {}
-
-    /**
-     * Sets the character for this button's hit test state 
-     *
-     * @return void
-     * @param  SWFCharacter object
-     */
-    function setHit($SWFCharacter) {}
-
-    /**
-     * Sets the character for this button's over state 
-     *
-     * @return void
-     * @param  SWFCharacter object
-     */
-    function setOver($SWFCharacter) {}
-
-    /**
-     * Sets the character for this button's up state 
-     *
-     * @return void
-     * @param  SWFCharacter object
-     */
-    function setUp($SWFCharacter) {}
-
-    /**
-     * Sets the character for this button's down state 
-     *
-     * @return void
-     * @param  SWFCharacter object
-     */
-    function setDown($SWFCharacter) {}
-
-    /**
-     * Sets the character to display for the condition described in flags 
-     *
-     * @return void
-     * @param  SWFCharacter object
-     * @param  flags int
-     */
-    function addShape($SWFCharacter, $flags) {}
-
-    /**
-     * enable track as menu button behaviour 
-     *
-     * @return void
-     * @param  flag int
-     */
-    function setMenu($flag) {}
-
-    /**
-     * Sets the action to perform when button is pressed 
-     *
-     * @return void
-     * @param  SWFAction object
-     */
-    function setAction($SWFAction) {}
-
-    /**
-     * 
-     *
-     * @return SWFSoundInstance
-     * @param  sound SWFSound
-     * @param  flags int
-     */
-    function addASound($sound, $flags) {}
-
-    /**
-     * Sets the action to perform when conditions described in flags is met 
-     *
-     * @return void
-     * @param  SWFAction object
-     * @param  flags int
-     */
-    function addAction($SWFAction, $flags) {}
-
-};
-
-class swfdisplayitem {
-    /**
-     * Moves this SWFDisplayItem to movie coordinates (x, y) 
-     *
-     * @return void
-     * @param  x int
-     * @param  y int
-     */
-    function moveTo($x, $y) {}
-
-    /**
-     * Displaces this SWFDisplayItem by (dx, dy) in movie coordinates 
-     *
-     * @return void
-     * @param  dx float
-     * @param  dy float
-     */
-    function move($dx, $dy) {}
-
-    /**
-     * Scales this SWFDisplayItem by xScale in the x direction, yScale in the y, or both to xScale if only one arg 
-     *
-     * @return void
-     * @param  xScale float
-     * @param  yScale float[optional]
-     */
-    function scaleTo($xScale, $yScale = null) {}
-
-    /**
-     * Multiplies this SWFDisplayItem's current x scale by xScale, its y scale by yScale 
-     *
-     * @return void
-     * @param  xScale float
-     * @param  yScale float
-     */
-    function scale($xScale, $yScale) {}
-
-    /**
-     * Rotates this SWFDisplayItem the given (clockwise) degrees from its original orientation 
-     *
-     * @return void
-     * @param  degrees float
-     */
-    function rotateTo($degrees) {}
-
-    /**
-     * Rotates this SWFDisplayItem the given (clockwise) degrees from its current orientation 
-     *
-     * @return void
-     * @param  degrees float
-     */
-    function rotate($degrees) {}
-
-    /**
-     * Sets this SWFDisplayItem's x skew value to xSkew 
-     *
-     * @return void
-     * @param  xSkew float
-     */
-    function skewXTo($xSkew) {}
-
-    /**
-     * Adds xSkew to this SWFDisplayItem's x skew value 
-     *
-     * @return void
-     * @param  xSkew float
-     */
-    function skewX($xSkew) {}
-
-    /**
-     * Sets this SWFDisplayItem's y skew value to ySkew 
-     *
-     * @return void
-     * @param  ySkew float
-     */
-    function skewYTo($ySkew) {}
-
-    /**
-     * Adds ySkew to this SWFDisplayItem's y skew value 
-     *
-     * @return void
-     * @param  ySkew float
-     */
-    function skewY($ySkew) {}
-
-    /**
-     * Sets the item's transform matrix 
-     *
-     * @return void
-     * @param  a float
-     * @param  b float
-     * @param  c float
-     * @param  d float
-     * @param  x float
-     * @param  y float
-     */
-    function setMatrix($a, $b, $c, $d, $x, $y) {}
-
-    /**
-     * Sets this SWFDisplayItem's z-depth to depth.  Items with higher depth values are drawn on top of those with lower values 
-     *
-     * @return void
-     * @param  depth int
-     */
-    function setDepth($depth) {}
-
-    /**
-     * Sets this SWFDisplayItem's ratio to ratio.  Obviously only does anything if displayitem was created from an SWFMorph 
-     *
-     * @return void
-     * @param  ratio float
-     */
-    function setRatio($ratio) {}
-
-    /**
-     * Sets the add color part of this SWFDisplayItem's CXform to (r, g, b [, a]), a defaults to 0 
-     *
-     * @return void
-     * @param  r int
-     * @param  g int
-     * @param  b int
-     * @param  a int[optional]
-     */
-    function addColor($r, $g, $b, $a = null) {}
-
-    /**
-     * Sets the multiply color part of this SWFDisplayItem's CXform to (r, g, b [, a]), a defaults to 1.0 
-     *
-     * @return void
-     * @param  r float
-     * @param  g float
-     * @param  b float
-     * @param  a float[optional]
-     */
-    function multColor($r, $g, $b, $a = null) {}
-
-    /**
-     * Sets this SWFDisplayItem's name to name 
-     *
-     * @return void
-     * @param  name string
-     */
-    function setName($name) {}
-
-    /**
-     * Adds this SWFAction to the given SWFSprite instance 
-     *
-     * @return void
-     * @param  SWFAction object
-     * @param  flags int
-     */
-    function addAction($SWFAction, $flags) {}
-
-    /**
-     * defines a MASK layer at level 
-     *
-     * @return void
-     * @param  level int
-     */
-    function setMaskLevel($level) {}
-
-    /**
-     * another way of defining a MASK layer 
-     *
-     * @return void
-     */
-    function endMask() {}
-
-};
-
-class swffill {
-    /**
-     * Creates a new SWFFill object 
-     *
-     * @return swffill
-     */
-    function __construct() {}
-
-    /**
-     * Moves this SWFFill to shape coordinates (x,y) 
-     *
-     * @return void
-     * @param  x float
-     * @param  y float
-     */
-    function moveTo($x, $y) {}
-
-    /**
-     * Scales this SWFFill by xScale in the x direction, yScale in the y, or both to xScale if only one arg 
-     *
-     * @return void
-     * @param  xScale float
-     * @param  yScale float[optional]
-     */
-    function scaleTo($xScale, $yScale = null) {}
-
-    /**
-     * Rotates this SWFFill the given (clockwise) degrees from its original orientation 
-     *
-     * @return void
-     * @param  degrees float
-     */
-    function rotateTo($degrees) {}
-
-    /**
-     * Sets this SWFFill's x skew value to xSkew 
-     *
-     * @return void
-     * @param  xSkew float
-     */
-    function skewXTo($xSkew) {}
-
-    /**
-     * Sets this SWFFill's y skew value to ySkew 
-     *
-     * @return void
-     * @param  ySkew float
-     */
-    function skewYTo($ySkew) {}
-
-};
-
-class swffontcha {
-    /**
-     * adds characters to a font for exporting font 
-     *
-     * @return void
-     * @param  string unknown
-     */
-    function raddChars($string) {}
-
-};
-
-class swffontchar {
-    /**
-     * adds characters to a font for exporting font 
-     *
-     * @return void
-     * @param  string unknown
-     */
-    function addChars($string) {}
-
-};
-
-class swffont {
-    /**
-     * Creates a new SWFFont object from given file 
-     *
-     * @return swffont
-     * @param  filename string
-     */
-    function __construct($filename) {}
-
-    /**
-     * Calculates the width of the given string in this font at full height 
-     *
-     * @return float
-     * @param  str string
-     */
-    function getWidth($str) {}
-
-    /**
-     * Calculates the width of the given string in this font at full height 
-     *
-     * @return int
-     * @param  string unknown
-     */
-    function getUTF8Width($string) {}
-
-    /**
-     * Calculates the width of the given string in this font at full height 
-     *
-     * @return int
-     * @param  string unknown
-     */
-    function getWideWidth($string) {}
-
-    /**
-     * Returns the ascent of the font, or 0 if not available 
-     *
-     * @return float
-     */
-    function getAscent() {}
-
-    /**
-     * Returns the descent of the font, or 0 if not available 
-     *
-     * @return float
-     */
-    function getDescent() {}
-
-    /**
-     * Returns the leading of the font, or 0 if not available 
-     *
-     * @return float
-     */
-    function getLeading() {}
-
-    /**
-     * adds characters to a font required within textfields 
-     *
-     * @return void
-     * @param  string unknown
-     */
-    function addChars($string) {}
-
-    /**
-     * Returns the glyph shape of a char as a text string 
-     *
-     * @return string
-     * @param  code unknown
-     */
-    function getShape($code) {}
-
-};
-
-class swfgradient {
-    /**
-     * Creates a new SWFGradient object 
-     *
-     * @return swfgradient
-     */
-    function __construct() {}
-
-    /**
-     * Adds given entry to the gradient 
-     *
-     * @return void
-     * @param  ratio float
-     * @param  r int
-     * @param  g int
-     * @param  b int
-     * @param  a int[optional]
-     */
-    function addEntry($ratio, $r, $g, $b, $a = null) {}
-
-};
-
-class swfmorph {
-    /**
-     * Creates a new SWFMorph object 
-     *
-     * @return swfmorph
-     */
-    function __construct() {}
-
-    /**
-     * Return's this SWFMorph's start shape object 
-     *
-     * @return object
-     */
-    function getShape1() {}
-
-    /**
-     * Return's this SWFMorph's start shape object 
-     *
-     * @return object
-     */
-    function getShape2() {}
-
-};
-
-class swfsound {
-    /**
-     * Creates a new SWFSound object from given file 
-     *
-     * @return swfsound
-     * @param  filename string
-     * @param  flags int
-     */
-    function __construct($filename, $flags) {}
-
-};
-
-class swfmovie {
-    /**
-     * Creates swfmovie object according to the passed version 
-     *
-     * @return swfmovie
-     * @param  version int
-     */
-    function __construct($version) {}
-
-    /**
-     * 
-     *
-     * @return void
-     */
-    function nextframe() {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  SWFBlock object
-     */
-    function labelframe($SWFBlock) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  SWFBlock object
-     */
-    function add($SWFBlock) {}
-
-    /**
-     * 
-     *
-     * @return int
-     * @param  compression int[optional]
-     */
-    function output($compression = null) {}
-
-    /**
-     * 
-     *
-     * @return int
-     * @param  x stream
-     * @param  compression int[optional]
-     */
-    function saveToFile($x, $compression = null) {}
-
-    /**
-     * Saves the movie. 'where' can be stream and the movie will be saved there otherwise it is treated as string and written in file with that name 
-     *
-     * @return int
-     * @param  where mixed
-     * @param  compression int[optional]
-     */
-    function save($where, $compression = null) {}
-
-    /**
-     * Sets background color (r,g,b) 
-     *
-     * @return void
-     * @param  r int
-     * @param  g int
-     * @param  b int
-     */
-    function setBackground($r, $g, $b) {}
-
-    /**
-     * Sets movie rate 
-     *
-     * @return void
-     * @param  rate float
-     */
-    function setRate($rate) {}
-
-    /**
-     * Sets movie dimension 
-     *
-     * @return void
-     * @param  x float
-     * @param  y float
-     */
-    function setDimension($x, $y) {}
-
-    /**
-     * Sets number of frames 
-     *
-     * @return void
-     * @param  frames int
-     */
-    function setFrames($frames) {}
-
-    /**
-     * Sets sound stream of the SWF movie. The parameter can be stream or string. Retuens the number of frames. 
-     *
-     * @return int
-     * @param  file mixed
-     * @param  skip float[optional]
-     */
-    function streamMP3($file, $skip = null) {}
-
-};
-
-class swfshape {
-    /**
-     * Creates a new SWFShape object 
-     *
-     * @return swfshape
-     */
-    function __construct() {}
-
-    /**
-     * Sets the current line style for this SWFShape 
-     *
-     * @return void
-     * @param  width int
-     * @param  r int
-     * @param  g int
-     * @param  b int
-     * @param  a int[optional]
-     */
-    function setline($width, $r, $g, $b, $a = null) {}
-
-    /**
-     * Returns a fill object, for use with swfshape_setleftfill and swfshape_setrightfill. If 1 or 2 parameter(s) is (are) passed first should be object (from gradient class) and the second int (flags). Gradient fill is performed. If 3 or 4 parameters are passed : r, g, b [, a]. Solid fill is performed. 
-     *
-     * @return object
-     * @param  arg1 mixed
-     * @param  arg2 int
-     * @param  b int[optional]
-     * @param  a int[optional]
-     */
-    function addfill($arg1, $arg2, $b = null, $a = null) {}
-
-    /**
-     * Sets the right side fill style to fill in case only one parameter is passed. When 3 or 4 parameters are passed they are treated as : int r, int g, int b, int a . Solid fill is performed in this case before setting right side fill type. 
-     *
-     * @return void
-     * @param  arg1 int
-     * @param  g int[optional]
-     * @param  b int
-     * @param  a int[optional]
-     */
-    function setleftfill($arg1, $g = null, $b, $a = null) {}
-
-    /**
-     * Moves the pen to shape coordinates (x, y) 
-     *
-     * @return void
-     * @param  x float
-     * @param  y float
-     */
-    function movepento($x, $y) {}
-
-    /**
-     * Moves the pen from its current location by vector (x, y) 
-     *
-     * @return void
-     * @param  x float
-     * @param  y float
-     */
-    function movepen($x, $y) {}
-
-    /**
-     * Draws a line from the current pen position to shape coordinates (x, y) in the current line style 
-     *
-     * @return void
-     * @param  x float
-     * @param  y float
-     */
-    function drawlineto($x, $y) {}
-
-    /**
-     * Draws a line from the current pen position (x, y) to the point (x+dx, y+dy) in the current line style 
-     *
-     * @return void
-     * @param  dx float
-     * @param  dy float
-     */
-    function drawline($dx, $dy) {}
-
-    /**
-     * Draws a curve from the current pen position (x,y) to the point (bx, by) in the current line style, using point (ax, ay) as a control point. Or draws a cubic bezier to point (dx, dy) with control points (ax, ay) and (bx, by) 
-     *
-     * @return int
-     * @param  ax float
-     * @param  ay float
-     * @param  bx float
-     * @param  by float
-     * @param  dx float[optional]
-     * @param  dy float
-     */
-    function drawcurveto($ax, $ay, $bx, $by, $dx = null, $dy) {}
-
-    /**
-     * Draws a curve from the current pen position (x, y) to the point (x+bdx, y+bdy) in the current line style, using point (x+adx, y+ady) as a control point or draws a cubic bezier to point (x+cdx, x+cdy) with control points (x+adx, y+ady) and (x+bdx, y+bdy) 
-     *
-     * @return int
-     * @param  adx float
-     * @param  ady float
-     * @param  bdx float
-     * @param  bdy float
-     * @param  cdx float[optional]
-     * @param  cdy float
-     */
-    function drawcurve($adx, $ady, $bdx, $bdy, $cdx = null, $cdy) {}
-
-    /**
-     * Draws the first character in the given string into the shape using the glyph definition from the given font 
-     *
-     * @return void
-     * @param  font SWFFont
-     * @param  character string
-     * @param  size int[optional]
-     */
-    function drawglyph($font, $character, $size = null) {}
-
-    /**
-     * Draws a circle of radius r centered at the current location, in a counter-clockwise fashion 
-     *
-     * @return void
-     * @param  r float
-     */
-    function drawcircle($r) {}
-
-    /**
-     * Draws an arc of radius r centered at the current location, from angle startAngle to angle endAngle measured clockwise from 12 o'clock 
-     *
-     * @return void
-     * @param  r float
-     * @param  startAngle float
-     * @param  endAngle float
-     */
-    function drawarc($r, $startAngle, $endAngle) {}
-
-    /**
-     * Draws a cubic bezier curve using the current position and the three given points as control points 
-     *
-     * @return void
-     * @param  bx float
-     * @param  by float
-     * @param  cx float
-     * @param  cy float
-     * @param  dx float
-     * @param  dy float
-     */
-    function drawcubic($bx, $by, $cx, $cy, $dx, $dy) {}
-
-};
-
-class swfsprite {
-    /**
-     * Creates a new SWFSprite object 
-     *
-     * @return swfsprite
-     */
-    function __construct() {}
-
-    /**
-     * Adds the character to the sprite, returns a displayitem object 
-     *
-     * @return void
-     * @param  SWFCharacter object
-     */
-    function add($SWFCharacter) {}
-
-    /**
-     * Remove the named character from the sprite's display list 
-     *
-     * @return void
-     * @param  SWFDisplayItem object
-     */
-    function remove($SWFDisplayItem) {}
-
-    /**
-     * Moves the sprite to the next frame 
-     *
-     * @return void
-     */
-    function nextFrame() {}
-
-    /**
-     * Labels frame 
-     *
-     * @return void
-     * @param  label string
-     */
-    function labelFrame($label) {}
-
-    /**
-     * Sets the number of frames in this SWFSprite 
-     *
-     * @return void
-     * @param  frames int
-     */
-    function setFrames($frames) {}
-
-};
-
-class swftext {
-    /**
-     * Creates new SWFText object 
-     *
-     * @return swftext
-     */
-    function __construct() {}
-
-    /**
-     * Sets this SWFText object's current font to given font 
-     *
-     * @return void
-     * @param  font object
-     */
-    function setFont($font) {}
-
-    /**
-     * Sets this SWFText object's current height to given height 
-     *
-     * @return void
-     * @param  height float
-     */
-    function setHeight($height) {}
-
-    /**
-     * Sets this SWFText object's current letterspacing to given spacing 
-     *
-     * @return void
-     * @param  spacing float
-     */
-    function setSpacing($spacing) {}
-
-    /**
-     * Sets this SWFText object's current color to the given color 
-     *
-     * @return void
-     * @param  r int
-     * @param  g int
-     * @param  b int
-     * @param  a int[optional]
-     */
-    function setColor($r, $g, $b, $a = null) {}
-
-    /**
-     * Moves this SWFText object's current pen position to (x, y) in text coordinates 
-     *
-     * @return void
-     * @param  x float
-     * @param  y float
-     */
-    function moveTo($x, $y) {}
-
-    /**
-     * Writes the given text into this SWFText object at the current pen position, using the current font, height, spacing, and color 
-     *
-     * @return void
-     * @param  text string
-     */
-    function addString($text) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  text string
-     */
-    function addUTF8String($text) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  text string
-     */
-    function addWideString($text) {}
-
-    /**
-     * Calculates the width of the given string in this text objects current font and size 
-     *
-     * @return float
-     * @param  str string
-     */
-    function getWidth($str) {}
-
-    /**
-     * calculates the width of the given string in this text objects current font and size 
-     *
-     * @return double
-     * @param  string unknown
-     */
-    function getUTF8Width($string) {}
-
-    /**
-     * calculates the width of the given string in this text objects current font and size 
-     *
-     * @return double
-     * @param  string unknown
-     */
-    function getWideWidth($string) {}
-
-    /**
-     * Returns the ascent of the current font at its current size, or 0 if not available 
-     *
-     * @return float
-     */
-    function getAscent() {}
-
-    /**
-     * Returns the descent of the current font at its current size, or 0 if not available 
-     *
-     * @return float
-     */
-    function getDescent() {}
-
-    /**
-     * Returns the leading of the current font at its current size, or 0 if not available 
-     *
-     * @return float
-     */
-    function getLeading() {}
-
-};
-
-class swftextfield {
-    /**
-     * Creates a new SWFTextField object 
-     *
-     * @return swftextfield
-     * @param  flags int[optional]
-     */
-    function __construct($flags = null) {}
-
-    /**
-     * Sets the font for this textfield 
-     *
-     * @return void
-     * @param  font object
-     */
-    function setFont($font) {}
-
-    /**
-     * Sets the width and height of this textfield 
-     *
-     * @return void
-     * @param  width float
-     * @param  height float
-     */
-    function setBounds($width, $height) {}
-
-    /**
-     * Sets the alignment of this textfield 
-     *
-     * @return void
-     * @param  alignment int
-     */
-    function align($alignment) {}
-
-    /**
-     * Sets the font height of this textfield 
-     *
-     * @return void
-     * @param  height float
-     */
-    function setHeight($height) {}
-
-    /**
-     * Sets the left margin of this textfield 
-     *
-     * @return void
-     * @param  margin float
-     */
-    function setLeftMargin($margin) {}
-
-    /**
-     * Sets the right margin of this textfield 
-     *
-     * @return void
-     * @param  margin float
-     */
-    function setRightMargin($margin) {}
-
-    /**
-     * Sets both margins of this textfield 
-     *
-     * @return void
-     * @param  left float
-     * @param  right float
-     */
-    function setMargins($left, $right) {}
-
-    /**
-     * Sets the indentation of the first line of this textfield 
-     *
-     * @return void
-     * @param  indentation float
-     */
-    function setIndentation($indentation) {}
-
-    /**
-     * Sets the line spacing of this textfield 
-     *
-     * @return void
-     * @param  space float
-     */
-    function setLineSpacing($space) {}
-
-    /**
-     * Sets the color of this textfield 
-     *
-     * @return void
-     * @param  r int
-     * @param  g int
-     * @param  b int
-     * @param  a int[optional]
-     */
-    function setColor($r, $g, $b, $a = null) {}
-
-    /**
-     * Sets the variable name of this textfield 
-     *
-     * @return void
-     * @param  var_name string
-     */
-    function setName($var_name) {}
-
-    /**
-     * Adds the given string to this textfield 
-     *
-     * @return void
-     * @param  str string
-     */
-    function addString($str) {}
-
-    /**
-     * Sets the padding of this textfield 
-     *
-     * @return void
-     * @param  padding float
-     */
-    function setPadding($padding) {}
-
-    /**
-     * adds characters to a font that will be available within a textfield 
-     *
-     * @return void
-     * @param  string unknown
-     */
-    function addChars($string) {}
-
-};
-
-class DateTime {
-    /**
-     * 
-     *
-     * @return DateTime
-     * @param  time string[optional]
-     * @param  object DateTimeZone
-     */
-    function __construct($time = null, $object) {}
-
-    /**
-     * 
-     *
-     * @return string
-     * @param  object DateTime
-     * @param  format string
-     */
-    function format($object, $format) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  object DateTime
-     * @param  modify string
-     */
-    function modify($object, $modify) {}
-
-    /**
-     * 
-     *
-     * @return DateTimeZone
-     * @param  object DateTime
-     */
-    function getTimezone($object) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  object DateTime
-     * @param  object DateTimeZone
-     */
-    function setTimezone($object, $object) {}
-
-    /**
-     * 
-     *
-     * @return int
-     * @param  object DateTime
-     */
-    function getOffset($object) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  object DateTime
-     * @param  hour long
-     * @param  minute long
-     * @param  second long
-     */
-    function setTime($object, $hour, $minute, $second) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  object DateTime
-     * @param  year long
-     * @param  month long
-     * @param  day long
-     */
-    function setDate($object, $year, $month, $day) {}
-
-    /**
-     * 
-     *
-     * @return void
-     * @param  object DateTime
-     * @param  year long
-     * @param  week long
-     * @param  day long
-     */
-    function setISODate($object, $year, $week, $day) {}
-
-};
-
-class DateTimeZone {
-    /**
-     * 
-     *
-     * @return DateTimeZone
-     * @param  timezone string
-     */
-    function __construct($timezone) {}
-
-    /**
-     * 
-     *
-     * @return string
-     * @param  object DateTimeZone
-     */
-    function getName($object) {}
-
-    /**
-     * 
-     *
-     * @return int
-     * @param  object DateTimeZone
-     * @param  object DateTime
-     */
-    function getOffset($object, $object) {}
-
-    /**
-     * 
-     *
-     * @return array
-     * @param  object DateTimeZone
-     */
-    function getTransitions($object) {}
-
-    /**
-     * 
-     *
-     * @return array
-     */
-    function listAbbreviations() {}
-
-    /**
-     * 
-     *
-     * @return array
-     */
-    function listIdentifiers() {}
-
-};
-
-class SimpleXMLElement {
-    /**
-     * Runs XPath query on the XML data 
-     *
-     * @return array
-     * @param  path string
-     */
-    function xpath($path) {}
-
-    /**
-     * Creates a prefix/ns context for the next XPath query 
-     *
-     * @return bool
-     * @param  prefix string
-     * @param  ns string
-     */
-    function registerXPathNamespace($prefix, $ns) {}
-
-    /**
-     * Return a well-formed XML string based on SimpleXML element 
-     *
-     * @return mixed
-     * @param  filename string[optional]
-     */
-    function asXML($filename = null) {}
-
-    /**
-     * Return all namespaces in use 
-     *
-     * @return array
-     * @param  recursve bool[optional]
-     */
-    function getNamespaces($recursve = null) {}
-
-    /**
-     * Return all namespaces registered with document 
-     *
-     * @return array
-     * @param  recursive bool[optional]
-     */
-    function getDocNamespaces($recursive = null) {}
-
-    /**
-     * Finds children of given node 
-     *
-     * @return SimpleXMLElement
-     * @param  ns string[optional]
-     * @param  is_prefix bool[optional]
-     */
-    function children($ns = null, $is_prefix = null) {}
-
-    /**
-     * Finds children of given node 
-     *
-     * @return string
-     */
-    function getName() {}
-
-    /**
-     * Identifies an element's attributes 
-     *
-     * @return SimpleXMLElement
-     * @param  ns string[optional]
-     * @param  is_prefix bool[optional]
-     */
-    function attributes($ns = null, $is_prefix = null) {}
-
-    /**
-     * Add Element with optional namespace information 
-     *
-     * @return SimpleXMLElement
-     * @param  qName string
-     * @param  value string[optional]
-     * @param  ns string[optional]
-     */
-    function addChild($qName, $value = null, $ns = null) {}
-
-    /**
-     * Add Attribute with optional namespace information 
-     *
-     * @return void
-     * @param  qName string
-     * @param  value string
-     * @param  ns string[optional]
-     */
-    function addAttribute($qName, $value, $ns = null) {}
-
-    /**
-     * SimpleXMLElement constructor 
-     *
-     * @return SimpleXMLElement
-     * @param  data string
-     * @param  options int[optional]
-     * @param  data_is_url bool[optional]
-     * @param  ns string[optional]
-     * @param  is_prefix bool[optional]
-     */
-    function __construct($data, $options = null, $data_is_url = null, $ns = null, $is_prefix = null) {}
 
 };
 
@@ -31413,6 +31288,33 @@ class OCI_Collection {
 
 };
 
+class Directory {
+    /**
+     * Close directory connection identified by the dir_handle 
+     *
+     * @return void
+     * @param  dir_handle resource[optional]
+     */
+    function close($dir_handle = null) {}
+
+    /**
+     * Rewind dir_handle back to the start 
+     *
+     * @return void
+     * @param  dir_handle resource[optional]
+     */
+    function rewind($dir_handle = null) {}
+
+    /**
+     * Read directory entry from dir_handle 
+     *
+     * @return string
+     * @param  dir_handle resource[optional]
+     */
+    function read($dir_handle = null) {}
+
+};
+
 class XMLWriter {
     /**
      * Create new xmlwriter using source uri for output 
@@ -31756,6 +31658,38 @@ class XMLWriter {
     function writeDtdAttlist($xmlwriter, $name, $content) {}
 
     /**
+     * Create start DTD Entity - returns FALSE on error 
+     *
+     * @return bool
+     * @param  xmlwriter resource
+     * @param  name string
+     * @param  isparam bool
+     */
+    function startDtdEntity($xmlwriter, $name, $isparam) {}
+
+    /**
+     * End current DTD Entity - returns FALSE on error 
+     *
+     * @return bool
+     * @param  xmlwriter resource
+     */
+    function endDtdEntity($xmlwriter) {}
+
+    /**
+     * Write full DTD Entity tag - returns FALSE on error 
+     *
+     * @return bool
+     * @param  xmlwriter resource
+     * @param  name string
+     * @param  content string
+     * @param  pe int[optional]
+     * @param  pubid string[optional]
+     * @param  sysid string[optional]
+     * @param  ndataid string[optional]
+     */
+    function writeDtdEntity($xmlwriter, $name, $content, $pe = null, $pubid = null, $sysid = null, $ndataid = null) {}
+
+    /**
      * Output current buffer as string 
      *
      * @return string
@@ -31772,33 +31706,6 @@ class XMLWriter {
      * @param  empty bool[optional]
      */
     function flush($xmlwriter, $empty = null) {}
-
-};
-
-class Directory {
-    /**
-     * Close directory connection identified by the dir_handle 
-     *
-     * @return void
-     * @param  dir_handle resource[optional]
-     */
-    function close($dir_handle = null) {}
-
-    /**
-     * Rewind dir_handle back to the start 
-     *
-     * @return void
-     * @param  dir_handle resource[optional]
-     */
-    function rewind($dir_handle = null) {}
-
-    /**
-     * Read directory entry from dir_handle 
-     *
-     * @return string
-     * @param  dir_handle resource[optional]
-     */
-    function read($dir_handle = null) {}
 
 };
 
@@ -31835,7 +31742,7 @@ class SQLiteDatabase {
     /**
      * Executes a result-less query against a given database 
      *
-     * @return bool
+     * @return boolean
      * @param  query string
      * @param  db resource
      * @param  error_message string
@@ -31894,7 +31801,7 @@ class SQLiteDatabase {
     /**
      * Registers an aggregate function for queries. 
      *
-     * @return void
+     * @return bool
      * @param  db resource
      * @param  funcname string
      * @param  step_func mixed
@@ -31906,7 +31813,7 @@ class SQLiteDatabase {
     /**
      * Registers a "regular" function for queries. 
      *
-     * @return void
+     * @return bool
      * @param  db resource
      * @param  funcname string
      * @param  callback mixed
@@ -31934,7 +31841,7 @@ class SQLiteDatabase {
     /**
      * Return an array of column types from a particular table. 
      *
-     * @return array
+     * @return resource
      * @param  table_name string
      * @param  db resource
      * @param  result_type int[optional]
@@ -32264,7 +32171,7 @@ class mysqli {
     /**
      * Open a connection to a mysql server 
      *
-     * @return mysqli
+     * @return object
      * @param  hostname string[optional]
      * @param  username string[optional]
      * @param  passwd string[optional]
@@ -32277,7 +32184,7 @@ class mysqli {
     /**
      * 
      *
-     * @return bool
+     * @return void
      * @param  debug string
      */
     function debug($debug) {}
@@ -32285,7 +32192,7 @@ class mysqli {
     /**
      * 
      *
-     * @return bool
+     * @return void
      * @param  link object
      */
     function disable_reads_from_master($link) {}
@@ -32293,7 +32200,7 @@ class mysqli {
     /**
      * 
      *
-     * @return bool
+     * @return void
      * @param  link object
      */
     function disable_rpl_parse($link) {}
@@ -32309,7 +32216,7 @@ class mysqli {
     /**
      * 
      *
-     * @return bool
+     * @return void
      * @param  link object
      */
     function enable_reads_from_master($link) {}
@@ -32317,7 +32224,7 @@ class mysqli {
     /**
      * 
      *
-     * @return bool
+     * @return void
      * @param  link object
      */
     function enable_rpl_parse($link) {}
@@ -32356,7 +32263,7 @@ class mysqli {
     /**
      * Initialize mysqli and return a resource for use with mysql_real_connect 
      *
-     * @return mysqli
+     * @return resource
      */
     function init() {}
 
@@ -32407,7 +32314,7 @@ class mysqli {
     /**
      * Open a connection to a mysql server 
      *
-     * @return mysqli
+     * @return object
      * @param  hostname string[optional]
      * @param  username string[optional]
      * @param  passwd string[optional]
@@ -32454,7 +32361,7 @@ class mysqli {
     /**
      * Prepare a SQL statement for execution 
      *
-     * @return mysqli_stmt
+     * @return mixed
      * @param  link object
      * @param  query string
      */
@@ -32547,7 +32454,7 @@ class mysqli {
     /**
      * Select a MySQL database 
      *
-     * @return bool
+     * @return string
      * @param  link object
      * @param  dbname string
      */
@@ -32597,7 +32504,7 @@ class mysqli {
     /**
      * Get current system status 
      *
-     * @return string
+     * @return mixed
      * @param  link object
      */
     function stat($link) {}
@@ -32605,7 +32512,7 @@ class mysqli {
     /**
      * 
      *
-     * @return mysqli_stmt
+     * @return mixed
      * @param  link object
      */
     function stmt_init($link) {}
@@ -32613,7 +32520,7 @@ class mysqli {
     /**
      * Buffer result set on client 
      *
-     * @return mysqli_result
+     * @return object
      * @param  link object
      */
     function store_result($link) {}
@@ -32628,7 +32535,7 @@ class mysqli {
     /**
      * Directly retrieve query results - do not buffer results on client side 
      *
-     * @return mysqli_result
+     * @return mixed
      * @param  link object
      */
     function use_result($link) {}
@@ -32664,7 +32571,7 @@ class mysqli_result {
     /**
      * Get column information from a result and return as an object 
      *
-     * @return object
+     * @return mixed
      * @param  result object
      */
     function fetch_field($result) {}
@@ -32672,7 +32579,7 @@ class mysqli_result {
     /**
      * Return array of objects containing field meta-data 
      *
-     * @return array
+     * @return mixed
      * @param  result object
      */
     function fetch_fields($result) {}
@@ -32680,7 +32587,7 @@ class mysqli_result {
     /**
      * Fetch meta-data for a single field 
      *
-     * @return object
+     * @return mixed
      * @param  result object
      * @param  offset int
      */
@@ -32698,7 +32605,7 @@ class mysqli_result {
     /**
      * Fetch a result row as an associative array 
      *
-     * @return array
+     * @return mixed
      * @param  result object
      */
     function fetch_assoc($result) {}
@@ -32706,7 +32613,7 @@ class mysqli_result {
     /**
      * Fetch a result row as an object 
      *
-     * @return object
+     * @return mixed
      * @param  result object
      * @param  class_name string[optional]
      * @param  ctor_params NULL|array[optional]
@@ -32716,7 +32623,7 @@ class mysqli_result {
     /**
      * Get a result row as an enumerated array 
      *
-     * @return mixed
+     * @return array
      * @param  result object
      */
     function fetch_row($result) {}
@@ -32732,7 +32639,7 @@ class mysqli_result {
     /**
      * 
      *
-     * @return bool
+     * @return int
      * @param  result object
      * @param  fieldnr int
      */
@@ -32819,7 +32726,7 @@ class mysqli_stmt {
     /**
      * Fetch results from a prepared statement into the bound variables 
      *
-     * @return bool
+     * @return mixed
      * @param  stmt object
      */
     function fetch($stmt) {}
@@ -32835,7 +32742,7 @@ class mysqli_stmt {
     /**
      * return result set from statement 
      *
-     * @return mysqli_result
+     * @return mixed
      * @param  stmt object
      */
     function result_metadata($stmt) {}
@@ -32843,7 +32750,7 @@ class mysqli_stmt {
     /**
      * Return the number of rows in statements result set 
      *
-     * @return int
+     * @return mixed
      * @param  stmt object
      */
     function num_rows($stmt) {}
@@ -32861,7 +32768,7 @@ class mysqli_stmt {
     /**
      * Prepare a SQL statement for execution 
      *
-     * @return mysqli_stmt
+     * @return mixed
      * @param  link object
      * @param  query string
      */
@@ -33183,14 +33090,14 @@ class tidy {
     /**
      * Execute configured cleanup and repair operations on parsed markup 
      *
-     * @return bool
+     * @return boolean
      */
     function cleanRepair() {}
 
     /**
      * Repair a string using an optionally provided configuration file 
      *
-     * @return string
+     * @return boolean
      * @param  data string
      * @param  config_file mixed[optional]
      * @param  encoding string[optional]
@@ -33200,7 +33107,7 @@ class tidy {
     /**
      * Repair a file using an optionally provided configuration file 
      *
-     * @return string
+     * @return boolean
      * @param  filename string
      * @param  config_file mixed[optional]
      * @param  encoding string[optional]
@@ -33211,7 +33118,7 @@ class tidy {
     /**
      * Run configured diagnostics on parsed and repaired markup. 
      *
-     * @return bool
+     * @return boolean
      */
     function diagnose() {}
 
@@ -33255,42 +33162,42 @@ class tidy {
     /**
      * Indicates if the document is a XHTML document. 
      *
-     * @return bool
+     * @return boolean
      */
     function isXhtml() {}
 
     /**
      * Indicates if the document is a generic (non HTML/XHTML) XML document. 
      *
-     * @return bool
+     * @return boolean
      */
     function isXml() {}
 
     /**
      * Returns a TidyNode Object representing the root of the tidy parse tree 
      *
-     * @return tidyNode
+     * @return TidyNode
      */
     function root() {}
 
     /**
      * Returns a TidyNode Object starting from the <HEAD> tag of the tidy parse tree 
      *
-     * @return tidyNode
+     * @return TidyNode
      */
     function head() {}
 
     /**
      * Returns a TidyNode Object starting from the <HTML> tag of the tidy parse tree 
      *
-     * @return tidyNode
+     * @return TidyNode
      */
     function html() {}
 
     /**
      * Returns a TidyNode Object starting from the <BODY> tag of the tidy parse tree 
      *
-     * @return tidyNode
+     * @return TidyNode
      * @param  tidy resource
      */
     function body($tidy) {}
@@ -33420,6 +33327,7 @@ define("AF_UNIX", 0);
 define("ALL_MATCHES", 0);
 define("ALT_DIGITS", 0);
 define("AM_STR", 0);
+define("APACHE_MAP", 0);
 define("APLOG_ALERT", 0);
 define("APLOG_CRIT", 0);
 define("APLOG_DEBUG", 0);
@@ -33620,6 +33528,7 @@ define("CURLINFO_HEADER_SIZE", 0);
 define("CURLINFO_HTTP_CODE", 0);
 define("CURLINFO_NAMELOOKUP_TIME", 0);
 define("CURLINFO_PRETRANSFER_TIME", 0);
+define("CURLINFO_PRIVATE", 0);
 define("CURLINFO_REDIRECT_COUNT", 0);
 define("CURLINFO_REDIRECT_TIME", 0);
 define("CURLINFO_REQUEST_SIZE", 0);
@@ -33644,6 +33553,7 @@ define("CURLOPT_CAINFO", 0);
 define("CURLOPT_CAPATH", 0);
 define("CURLOPT_CLOSEPOLICY", 0);
 define("CURLOPT_CONNECTTIMEOUT", 0);
+define("CURLOPT_CONNECTTIMEOUT_MS", 0);
 define("CURLOPT_COOKIE", 0);
 define("CURLOPT_COOKIEFILE", 0);
 define("CURLOPT_COOKIEJAR", 0);
@@ -33665,6 +33575,7 @@ define("CURLOPT_FTPASCII", 0);
 define("CURLOPT_FTPLISTONLY", 0);
 define("CURLOPT_FTPPORT", 0);
 define("CURLOPT_FTPSSLAUTH", 0);
+define("CURLOPT_FTP_CREATE_MISSING_DIRS", 0);
 define("CURLOPT_FTP_SSL", 0);
 define("CURLOPT_FTP_USE_EPRT", 0);
 define("CURLOPT_FTP_USE_EPSV", 0);
@@ -33694,6 +33605,7 @@ define("CURLOPT_PORT", 0);
 define("CURLOPT_POST", 0);
 define("CURLOPT_POSTFIELDS", 0);
 define("CURLOPT_POSTQUOTE", 0);
+define("CURLOPT_PRIVATE", 0);
 define("CURLOPT_PROXY", 0);
 define("CURLOPT_PROXYAUTH", 0);
 define("CURLOPT_PROXYPORT", 0);
@@ -33721,8 +33633,10 @@ define("CURLOPT_SSL_CIPHER_LIST", 0);
 define("CURLOPT_SSL_VERIFYHOST", 0);
 define("CURLOPT_SSL_VERIFYPEER", 0);
 define("CURLOPT_STDERR", 0);
+define("CURLOPT_TCP_NODELAY", 0);
 define("CURLOPT_TIMECONDITION", 0);
 define("CURLOPT_TIMEOUT", 0);
+define("CURLOPT_TIMEOUT_MS", 0);
 define("CURLOPT_TIMEVALUE", 0);
 define("CURLOPT_TRANSFERTEXT", 0);
 define("CURLOPT_UNRESTRICTED_AUTH", 0);
@@ -33774,6 +33688,7 @@ define("DAY_4", 0);
 define("DAY_5", 0);
 define("DAY_6", 0);
 define("DAY_7", 0);
+define("DB2_ALL_IO", 0);
 define("DB2_AUTOCOMMIT_OFF", 0);
 define("DB2_AUTOCOMMIT_ON", 0);
 define("DB2_BINARY", 0);
@@ -33782,8 +33697,39 @@ define("DB2_CASE_NATURAL", 0);
 define("DB2_CASE_UPPER", 0);
 define("DB2_CHAR", 0);
 define("DB2_CONVERT", 0);
+define("DB2_DEFERRED_PREPARE_OFF", 0);
+define("DB2_DEFERRED_PREPARE_ON", 0);
 define("DB2_DOUBLE", 0);
+define("DB2_FIRST_IO", 0);
 define("DB2_FORWARD_ONLY", 0);
+define("DB2_I5_DBCS_ALLOC_OFF", 0);
+define("DB2_I5_DBCS_ALLOC_ON", 0);
+define("DB2_I5_FETCH_OFF", 0);
+define("DB2_I5_FETCH_ON", 0);
+define("DB2_I5_FMT_DMY", 0);
+define("DB2_I5_FMT_EUR", 0);
+define("DB2_I5_FMT_HMS", 0);
+define("DB2_I5_FMT_ISO", 0);
+define("DB2_I5_FMT_JIS", 0);
+define("DB2_I5_FMT_JOB", 0);
+define("DB2_I5_FMT_JUL", 0);
+define("DB2_I5_FMT_MDY", 0);
+define("DB2_I5_FMT_USA", 0);
+define("DB2_I5_FMT_YMD", 0);
+define("DB2_I5_NAMING_OFF", 0);
+define("DB2_I5_NAMING_ON", 0);
+define("DB2_I5_SEP_BLANK", 0);
+define("DB2_I5_SEP_COLON", 0);
+define("DB2_I5_SEP_COMMA", 0);
+define("DB2_I5_SEP_DASH", 0);
+define("DB2_I5_SEP_JOB", 0);
+define("DB2_I5_SEP_PERIOD", 0);
+define("DB2_I5_SEP_SLASH", 0);
+define("DB2_I5_TXN_NO_COMMIT", 0);
+define("DB2_I5_TXN_READ_COMMITTED", 0);
+define("DB2_I5_TXN_READ_UNCOMMITTED", 0);
+define("DB2_I5_TXN_REPEATABLE_READ", 0);
+define("DB2_I5_TXN_SERIALIZABLE", 0);
 define("DB2_LONG", 0);
 define("DB2_PARAM_FILE", 0);
 define("DB2_PARAM_IN", 0);
@@ -33975,6 +33921,7 @@ define("FETCH_COLUMN", 0);
 define("FETCH_FUNC", 0);
 define("FETCH_GROUP", 0);
 define("FETCH_INTO", 0);
+define("FETCH_KEY_PAIR", 0);
 define("FETCH_LAZY", 0);
 define("FETCH_NAMED", 0);
 define("FETCH_NUM", 0);
@@ -34066,6 +34013,11 @@ define("FT_PREFETCHTEXT", 0);
 define("FT_UID", 0);
 define("FULL_CACHE", 0);
 define("GD_BUNDLED", 0);
+define("GD_EXTRA_VERSION", 0);
+define("GD_MAJOR_VERSION", 0);
+define("GD_MINOR_VERSION", 0);
+define("GD_RELEASE_VERSION", 0);
+define("GD_VERSION", 0);
 define("GET_MATCH", 0);
 define("GLOB_BRACE", 0);
 define("GLOB_ERR", 0);
@@ -34077,6 +34029,7 @@ define("GLOB_ONLYDIR", 0);
 define("GMP_ROUND_MINUSINF", 0);
 define("GMP_ROUND_PLUSINF", 0);
 define("GMP_ROUND_ZERO", 0);
+define("GMP_VERSION", 0);
 define("GROUPING", 0);
 define("GSLC_SSL_NO_AUTH", 0);
 define("GSLC_SSL_ONEWAY_AUTH", 0);
@@ -34201,14 +34154,6 @@ define("ICONV_IMPL", 0);
 define("ICONV_MIME_DECODE_CONTINUE_ON_ERROR", 0);
 define("ICONV_MIME_DECODE_STRICT", 0);
 define("ICONV_VERSION", 0);
-define("IFX_HOLD", 0);
-define("IFX_LO_APPEND", 0);
-define("IFX_LO_BUFFER", 0);
-define("IFX_LO_NOBUFFER", 0);
-define("IFX_LO_RDONLY", 0);
-define("IFX_LO_RDWR", 0);
-define("IFX_LO_WRONLY", 0);
-define("IFX_SCROLL", 0);
 define("IMAGETYPE_BMP", 0);
 define("IMAGETYPE_GIF", 0);
 define("IMAGETYPE_IFF", 0);
@@ -34408,17 +34353,6 @@ define("MCRYPT_DEV_RANDOM", 0);
 define("MCRYPT_DEV_URANDOM", 0);
 define("MCRYPT_ENCRYPT", 0);
 define("MCRYPT_RAND", 0);
-define("MONITOR_EVENT_ALL", 0);
-define("MONITOR_EVENT_CUSTOM", 0);
-define("MONITOR_EVENT_DEVMEM", 0);
-define("MONITOR_EVENT_DEVSCRIPT", 0);
-define("MONITOR_EVENT_FUNCERROR", 0);
-define("MONITOR_EVENT_LOAD", 0);
-define("MONITOR_EVENT_LONGFUNCTION", 0);
-define("MONITOR_EVENT_LONGSCRIPT", 0);
-define("MONITOR_EVENT_MEMSIZE", 0);
-define("MONITOR_EVENT_OUTPUT", 0);
-define("MONITOR_EVENT_ZENDERROR", 0);
 define("MON_1", 0);
 define("MON_2", 0);
 define("MON_3", 0);
@@ -34947,6 +34881,7 @@ define("SOAP_PERSISTENCE_REQUEST", 0);
 define("SOAP_PERSISTENCE_SESSION", 0);
 define("SOAP_RPC", 0);
 define("SOAP_SINGLE_ELEMENT_ARRAYS", 0);
+define("SOAP_USE_XSI_ARRAY_TYPE", 0);
 define("SOAP_WAIT_ONE_WAY_CALLS", 0);
 define("SOCKET_E2BIG", 0);
 define("SOCKET_EACCES", 0);
@@ -35236,6 +35171,7 @@ define("STREAM_IPPROTO_IP", 0);
 define("STREAM_IPPROTO_RAW", 0);
 define("STREAM_IPPROTO_TCP", 0);
 define("STREAM_IPPROTO_UDP", 0);
+define("STREAM_IS_URL", 0);
 define("STREAM_MKDIR_RECURSIVE", 0);
 define("STREAM_MUST_SEEK", 0);
 define("STREAM_NOTIFY_AUTH_REQUIRED", 0);
@@ -35259,6 +35195,9 @@ define("STREAM_PF_UNIX", 0);
 define("STREAM_REPORT_ERRORS", 0);
 define("STREAM_SERVER_BIND", 0);
 define("STREAM_SERVER_LISTEN", 0);
+define("STREAM_SHUT_RD", 0);
+define("STREAM_SHUT_RDWR", 0);
+define("STREAM_SHUT_WR", 0);
 define("STREAM_SOCK_DGRAM", 0);
 define("STREAM_SOCK_RAW", 0);
 define("STREAM_SOCK_RDM", 0);
@@ -35555,7 +35494,6 @@ define("YESEXPR", 0);
 define("YESSTR", 0);
 define("ZPS_VERSION", 0);
 define("__CLASS__", 0);
-define("__COMPILER_HALT_OFFSET__", 0);
 define("__FILE__", 0);
 define("__FUNCTION__", 0);
 define("__LINE__", 0);
