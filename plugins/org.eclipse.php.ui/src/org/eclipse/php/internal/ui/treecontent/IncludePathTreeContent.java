@@ -197,7 +197,6 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		treeNode = new IncludesNode(INCLUDE_PATHS_NODE_NAME, image, INCLUDE_PATHS_NODE_ID, project, this);
 		PHPWorkspaceModelManager.getInstance().addModelListener(treeNode);
 		projectNodes.put(project, treeNode);
-		final PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(project, true); // in order to create include path model manager
 		final PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		options.addOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, treeNode);
 		return treeNode;
