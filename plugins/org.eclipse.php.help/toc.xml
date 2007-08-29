@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <toc label="Table of Contents">
- <topic label="Welcome to the Online Help" href="html/Zend_Neon_Help.htm">
+ <topic label="Welcome to the Online Help" href="html/Welcome.htm">
    <topic label="Contribute to the Documentation" href="html/Contribute_to_the_Documentation.htm"/>
   <topic label="Getting Started" href="html/Getting_Started.htm">
     <topic label="Quick Start" href="html/Quick_Start.htm"/>
@@ -57,7 +57,6 @@
    <topic label="Commenting Code" href="html/Commenting_Code.htm">
      <topic label="phpDoc Block Comments" href="html/phpDoc_Comments.htm"/>
    </topic>
-    <topic label="JavaScript" href="html/JavaScript.htm"/>
     <topic label="Code Folding" href="html/Code_Folding.htm"/>
     <topic label="Automatic Completion" href="html/Automatic_Insertion.htm"/>
     <topic label="Hover Support" href="html/Hover_Support.htm"/>
@@ -74,7 +73,6 @@
    <topic label="Commenting PHP Code" href="html/How_to_Comment_and_Uncomment_PHP_Code.htm">
      <topic label="Commenting PHP DocBlocks" href="html/Commenting_PHP_DocBlocks.htm"/>
    </topic>
-    <topic label="Using JavaScript" href="html/Using_JavaScript.htm"/>
     <topic label="Using Smart Goto Source" href="html/Using_Smart_Goto_Source.htm"/>
     <topic label="Using Templates" href="html/Using_Templates.htm"/>
     <topic label="Using Code Folding" href="html/Using_Code_Folding.htm"/>
@@ -86,7 +84,6 @@
    </topic>
   </topic>
   <topic label="Reference" href="html/Reference.htm">
-    <topic label="Useful Links" href="html/Useful_links.htm"/>
     <topic label="Keymap" href="html/Keymap.htm"/>
   </topic>
  </topic>
