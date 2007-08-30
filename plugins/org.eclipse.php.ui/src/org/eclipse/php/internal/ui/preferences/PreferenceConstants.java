@@ -24,6 +24,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.ui.texteditor.spelling.SpellingService;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
@@ -829,6 +830,9 @@ public class PreferenceConstants {
 
 		// Another current line color:
 		PreferenceConverter.setDefault(editorStore, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE_COLOR, new RGB(255, 255, 206));
+
+		// disabling the spelling detection till we find a way to refine it the run only on strings and comments.
+		editorStore.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED, false);
 
 		IPreferenceStore store = getPreferenceStore();
 
