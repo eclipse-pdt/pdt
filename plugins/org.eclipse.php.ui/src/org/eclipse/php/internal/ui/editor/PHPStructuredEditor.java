@@ -16,9 +16,7 @@ import java.util.*;
 
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -1243,11 +1241,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
 				if (changeId == IWorkbenchPage.CHANGE_EDITOR_CLOSE) {
 					if (partRef.getPart(false) == getEditorPart()) {
-						IFile file = getFile();
+						final IFile file = getFile();
 						if (file != null) {
 							ExternalFilesRegistry externalRegistry = ExternalFilesRegistry.getInstance();
 							if (file.exists()) {
-								PHPWorkspaceModelManager.getInstance().addFileToModel(getFile());
 								IProject proj = file.getProject();
 								try {
 									//remove the file from project model when it is an RSE project.
@@ -1255,7 +1252,22 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 									//when it is closed
 									if (proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) {
 										PHPWorkspaceModelManager.getInstance().getModelForProject(proj).removeFileFromModel(file);
+									} else {
+										//parse the file in case the editor was closed without saving
+
+										// making sure the project model exists (in case the editor closing is during PDT startup) 
+										if (PHPWorkspaceModelManager.getInstance().getModelForProject(proj) != null) {
+											WorkspaceJob job = new WorkspaceJob("") {
+												public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+													PHPWorkspaceModelManager.getInstance().addFileToModel(file);
+													return Status.OK_STATUS;
+												}
+											};
+											job.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+											job.schedule();
+										}
 									}
+
 								} catch (CoreException ce) {
 									Logger.logException(ce);
 									return;
@@ -1405,7 +1417,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
 			} else {
 				super.doSetInput(input);
-//				close(false);
+				//				close(false);
 			}
 		} else {
 			super.doSetInput(input);
@@ -1540,7 +1552,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * @param mark <code>true</code> if the action is cursor position dependent
 	 */
 	public void markAsCursorDependentAction(final String actionId, final boolean mark) {
-		Assert.isNotNull(actionId);
+		assert (actionId != null);
 		if (mark) {
 			if (!fCursorActions.contains(actionId))
 				fCursorActions.add(actionId);
@@ -1611,7 +1623,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * @param actionId the action id
 	 */
 	private void updateAction(final String actionId) {
-		Assert.isNotNull(actionId);
+		assert (actionId != null);
 		final IAction action = getAction(actionId);
 		if (action instanceof IUpdate)
 			((IUpdate) action).update();
