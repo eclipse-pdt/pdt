@@ -22,6 +22,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
+import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -204,6 +205,8 @@ public class PHPsComboBlock implements ISelectionProvider {
 		link.setFont(font);
 		data = new GridData(SWT.BEGINNING, SWT.CENTER, true, false);
 		data.horizontalSpan = 1;
+		PixelConverter pc = new PixelConverter(composite);
+		data.widthHint = pc.convertWidthInCharsToPixels(30);
 		link.setLayoutData(data);
 		link.setText(PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink);
 		link.addSelectionListener(new SelectionAdapter() {
