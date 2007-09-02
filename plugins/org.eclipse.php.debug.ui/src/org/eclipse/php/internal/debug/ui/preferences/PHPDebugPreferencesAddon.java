@@ -276,16 +276,24 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 
 	private void loadDebuggers(Combo combo) {
 		debuggersIds = PHPDebuggersRegistry.getDebuggersIds();
+		String defaultDebuggerID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 		combo.removeAll();
 		Iterator<String> debuggers = debuggersIds.iterator();
+		int defaultIndex = 0;
+		int index = 0;
 		while (debuggers.hasNext()) {
 			String id = debuggers.next();
+			if (defaultDebuggerID.equals(id)) {
+				defaultIndex = index;
+			} else {
+				index++;
+			}
 			String debuggerName = PHPDebuggersRegistry.getDebuggerName(id);
 			combo.add(debuggerName);
 		}
-		// select first item in list
+		// select the default item in list
 		if (combo.getItemCount() > 0) {
-			combo.select(0);
+			combo.select(defaultIndex);
 		}
 	}
 
