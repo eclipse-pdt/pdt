@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.resources.mapping.ResourceTraversal;
@@ -53,7 +54,7 @@ public abstract class PHPElementResourceMapping extends ResourceMapping {
 	}
 
 	public String getModelProviderId() {
-		return ""; // TODO - Migration to Eclipse 3.2 (Create org.eclipse.core.resources.modelProviders extention ??)
+		return ModelProvider.RESOURCE_MODEL_PROVIDER_ID;
 	}
 
 	//---- the factory code ---------------------------------------------------------------
