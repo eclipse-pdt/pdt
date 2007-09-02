@@ -21,6 +21,7 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.search.PHPSearchPage;
 import org.eclipse.php.internal.ui.search.SearchUtil;
 import org.eclipse.search.ui.ISearchPageScoreComputer;
@@ -109,8 +110,9 @@ public class PHPElementAdapterFactory implements IAdapterFactory, IContributorRe
 
 	public IResource getAdaptedResource(IAdaptable adaptable) {
 		Object je = getPHPElement(adaptable);
-		if (je != null)
+		if (je instanceof PHPFileData) {
 			return getResource(je);
+		}
 
 		return null;
 	}
