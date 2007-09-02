@@ -19,10 +19,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
 
 public class BreakpointSet {
 
@@ -102,8 +106,9 @@ public class BreakpointSet {
 			return true;
 		} else {
 			IProject project = resource.getProject();
-			if (fProject.equals(project))
+			if (fProject.equals(project) || fProject.equals(PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject())){
 				return true;
+			}
 			return fProjects.contains(project);
 		}
 	}
