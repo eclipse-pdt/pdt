@@ -99,10 +99,10 @@ public class PHPExecutableDebuggerInitializer {
 			// Prepare the command line.
 			String[] phpCmdArray = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExe, originalPHPConfigDir, fileName, phpIniLocation);
 
-			// Check if we need to change the executable path to a CLI executable to support the command arguments.
-			// If so, look for php-cli executable.
-			if (phpCmdArray.length > 4) {
-				phpCmdArray[0] = changeToCLI(phpCmdArray[0]);
+			// Check if we need to change the executable path to a CGI executable in case we don't
+			// need to support command arguments.
+			if (phpCmdArray.length == 4) {
+				phpCmdArray[0] = changeToCGI(phpCmdArray[0]);
 			}
 
 			// Execute the command line.
@@ -127,29 +127,29 @@ public class PHPExecutableDebuggerInitializer {
 	}
 
 	/*
-	 * Take the given PHP CGI executable path and change it to PHP CLI path.
-	 * We assume that there is a php-cli file in the same location. If we cannot find one, 
+	 * Take the given PHP CLI executable path and change it to PHP CGI path.
+	 * We assume that there is a php-cgi file in the same location. If we cannot find one, 
 	 * we return the given executable path.
 	 */
-	private String changeToCLI(String phpCGIPath) {
-		File cgi = new File(phpCGIPath);
+	private String changeToCGI(String phpCLIPath) {
+		File cgi = new File(phpCLIPath);
 		File parentFile = cgi.getParentFile();
 		File cli = null;
 		if (Platform.getOS().equals(Platform.OS_WIN32)) {
-			cli = new File(parentFile, "php-cli.exe");
+			cli = new File(parentFile, "php-cgi.exe");
 		} else {
 			// Check the case of the name
 			String name = cgi.getName();
 			if (Character.isUpperCase(name.charAt(0))) {
-				cli = new File(parentFile, name + "-CLI");
+				cli = new File(parentFile, name + "-CGI");
 			} else {
-				cli = new File(parentFile, name + "-cli");
+				cli = new File(parentFile, name + "-cgi");
 			}
 		}
 		if (cli.exists()) {
 			return cli.getAbsolutePath();
 		}
-		return phpCGIPath;
+		return phpCLIPath;
 	}
 
 	private String[] asAttributesArray(Map<String, String> attributesMap) {
