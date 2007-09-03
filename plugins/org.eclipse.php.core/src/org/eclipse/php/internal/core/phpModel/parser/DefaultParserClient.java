@@ -682,6 +682,14 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	}
 
 	private String innerGetPropertyType(String className, String propertyName, CodeData[] classes, CodeData[] functions) {
+		return innerGetPropertyType(className, propertyName, classes, functions, new HashMap<String, String>());
+	}
+	
+	/**
+	 * This function is an internal function developers should use the innerGetPropertyType version without the Map.
+	 * @param subClasses uses as a stopping condition in case there's a loop in the inheritance tree.   
+	 */
+	private String innerGetPropertyType(String className, String propertyName, CodeData[] classes, CodeData[] functions, Map<String, String> subClasses) {
 		for (int i = 0; i < classes.length; i++) {
 			PHPClassData currClass = (PHPClassData) classes[i];
 			if (currClass.getName().equals(className)) {
@@ -699,7 +707,11 @@ public abstract class DefaultParserClient extends ContextParserClient {
 				if (rv == null && currClass.getSuperClassData() != null) {
 					// trying to find in the ancestor
 					String superClassName = currClass.getSuperClassData().getName();
-					rv = innerGetPropertyType(superClassName, propertyName, classes, functions);
+					if(subClasses.containsKey(superClassName)){
+						return null;
+					}
+					subClasses.put(className, className);
+					rv = innerGetPropertyType(superClassName, propertyName, classes, functions, subClasses);
 				}
 				return rv;
 			}
