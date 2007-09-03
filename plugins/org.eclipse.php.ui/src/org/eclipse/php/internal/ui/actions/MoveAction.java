@@ -30,7 +30,6 @@ import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.MoveProjectAction;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 
@@ -75,6 +74,7 @@ public class MoveAction extends SelectionDispatchAction {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
 	}
 
+	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 
 		selectedResources = null;
@@ -92,7 +92,9 @@ public class MoveAction extends SelectionDispatchAction {
 			}
 			List elements = selection.toList();
 			IResource[] resources = ActionUtils.getResources(elements);
-			Object[] phpElements = ActionUtils.getPHPElements(elements);
+
+			// true - exclude php file data as it is resource and not element in this case 
+			Object[] phpElements = ActionUtils.getPHPElements(elements, true);
 
 			if (elements.size() != resources.length + phpElements.length)
 				setEnabled(false);
@@ -105,7 +107,7 @@ public class MoveAction extends SelectionDispatchAction {
 					}
 				}
 				if (enabled) {
-					List list = new ArrayList(Arrays.asList(resources));
+					List<IResource> list = new ArrayList<IResource>(Arrays.asList(resources));
 					for (int i = 0; i < phpElements.length; i++) {
 						if (phpElements[i] instanceof PHPFileData) {
 							IResource res = PHPModelUtil.getResource(phpElements[i]);
@@ -127,7 +129,7 @@ public class MoveAction extends SelectionDispatchAction {
 			selectedResources = StructuredSelection.EMPTY;
 			setEnabled(false);
 		}
-			
+
 		fReorgMoveAction.setSelection(selectedResources);
 	}
 
@@ -146,12 +148,14 @@ public class MoveAction extends SelectionDispatchAction {
 		return action;
 	}
 
+	@Override
 	public void run(IStructuredSelection selection) {
 		if (isEnabled())
 			fReorgMoveAction.run(selection);
 
 	}
 
+	@Override
 	public void run(ITextSelection selection) {
 		if (!ActionUtils.isProcessable(getShell(), fEditor))
 			return;
@@ -178,6 +182,7 @@ public class MoveAction extends SelectionDispatchAction {
 	/*
 	 * @see SelectionDispatchAction#update(ISelection)
 	 */
+	@Override
 	public void update(ISelection selection) {
 		super.update(selection);
 	}
