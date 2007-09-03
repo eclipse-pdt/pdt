@@ -28,6 +28,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
+import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -102,7 +103,7 @@ public class PHPExecutableDebuggerInitializer {
 			// Check if we need to change the executable path to a CGI executable in case we don't
 			// need to support command arguments.
 			if (phpCmdArray.length == 4) {
-				phpCmdArray[0] = changeToCGI(phpCmdArray[0]);
+				phpCmdArray[0] = PHPexes.changeToCGI(phpCmdArray[0]);
 			}
 
 			// Execute the command line.
@@ -124,32 +125,6 @@ public class PHPExecutableDebuggerInitializer {
 			});
 			DebugPlugin.log(e);
 		}
-	}
-
-	/*
-	 * Take the given PHP CLI executable path and change it to PHP CGI path.
-	 * We assume that there is a php-cgi file in the same location. If we cannot find one, 
-	 * we return the given executable path.
-	 */
-	private String changeToCGI(String phpCLIPath) {
-		File cgi = new File(phpCLIPath);
-		File parentFile = cgi.getParentFile();
-		File cli = null;
-		if (Platform.getOS().equals(Platform.OS_WIN32)) {
-			cli = new File(parentFile, "php-cgi.exe");
-		} else {
-			// Check the case of the name
-			String name = cgi.getName();
-			if (Character.isUpperCase(name.charAt(0))) {
-				cli = new File(parentFile, name + "-CGI");
-			} else {
-				cli = new File(parentFile, name + "-cgi");
-			}
-		}
-		if (cli.exists()) {
-			return cli.getAbsolutePath();
-		}
-		return phpCLIPath;
 	}
 
 	private String[] asAttributesArray(Map<String, String> attributesMap) {

@@ -66,6 +66,35 @@ public class PHPexes {
 	}
 
 	/**
+	 * Take the given PHP CLI executable path and change it to PHP CGI path.
+	 * We assume that there is a php-cgi file in the same location. If we cannot find one, 
+	 * we return the given executable path.
+	 * 
+	 * @param phpCLIPath
+	 * @return php CGI path (or the given CLI, if no such php executable exists)
+	 */
+	public static String changeToCGI(String phpCLIPath) {
+		File cgi = new File(phpCLIPath);
+		File parentFile = cgi.getParentFile();
+		File cli = null;
+		if (Platform.getOS().equals(Platform.OS_WIN32)) {
+			cli = new File(parentFile, "php-cgi.exe");
+		} else {
+			// Check the case of the name
+			String name = cgi.getName();
+			if (Character.isUpperCase(name.charAt(0))) {
+				cli = new File(parentFile, name + "-CGI");
+			} else {
+				cli = new File(parentFile, name + "-cgi");
+			}
+		}
+		if (cli.exists()) {
+			return cli.getAbsolutePath();
+		}
+		return phpCLIPath;
+	}
+
+	/**
 	 * Adds a {@link PHPexeItem} to the list of installed items that are assigned to its debugger id.
 	 * Note that the first inserted item will set to be the default one until a call to {@link #setDefaultItem(PHPexeItem)} is made.
 	 * 
