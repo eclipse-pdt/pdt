@@ -41,10 +41,10 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 
-		if (!mode.equals(ILaunchManager.DEBUG_MODE)) {
-			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			return;
-		}
+//		if (!mode.equals(ILaunchManager.DEBUG_MODE)) {
+//			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+//			return;
+//		}
 
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
@@ -141,12 +141,8 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 		wc.doSave();
 
-		String sessionID = DBGpSessionHandler.getInstance().generateSessionId();
-		String ideKey = DBGpSessionHandler.getInstance().getIDEKey();
+		
 
-		// create any environment variables, and build the command line  
-		String[] envVarString = createLaunchEnvironment(configuration, sessionID, ideKey);
-		String[] cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.toOSString());
 
 		// add process type to process attributes, basically the name of the exe that was launched
 		final Map<String, String> processAttributes = new HashMap<String, String>();
@@ -170,8 +166,21 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			return;
 		}
 
-		DBGpTarget target = new DBGpTarget(launch, null, phpFile.toOSString(), ideKey, sessionID, stopAtFirstLine);
-		DBGpSessionHandler.getInstance().addSessionListener(target);
+
+		// create any environment variables, and build the command line  
+		String[] envVarString = null;
+		String[] cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.toOSString());		
+		DBGpTarget target = null;
+		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+			String sessionID = DBGpSessionHandler.getInstance().generateSessionId();
+			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();			
+			target = new DBGpTarget(launch, phpFile.toOSString(), ideKey, sessionID, stopAtFirstLine);
+			DBGpSessionHandler.getInstance().addSessionListener(target);
+			envVarString = createDebugLaunchEnvironment(configuration, sessionID, ideKey);
+		}
+		else {
+			envVarString = PHPLaunchUtilities.getEnvironment(configuration, null);
+		}
 
 		// launch PHP with a working directory of the project directory + environment vars
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
@@ -190,14 +199,19 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 				throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.ID, 0, null, null));
 			}
-			target.setProcess(eclipseProcessWrapper);
-			launch.addDebugTarget(target);
-			subMonitor.subTask("waiting for XDebug session");
-			target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), GeneralUtils.createSessionPreferences(), monitor);
+			
+			if (mode.equals(ILaunchManager.DEBUG_MODE) && target != null) {
+				target.setProcess(eclipseProcessWrapper);
+				launch.addDebugTarget(target);
+				subMonitor.subTask("waiting for XDebug session");
+				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), GeneralUtils.createSessionPreferences(), monitor);
+			}
 
 		} else {
 			// we did not launch
-			DBGpSessionHandler.getInstance().removeSessionListener(target);
+			if (mode.equals(ILaunchManager.DEBUG_MODE)) {			
+				DBGpSessionHandler.getInstance().removeSessionListener(target);
+			}
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 		}
 		subMonitor.done();
@@ -211,7 +225,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 * @return string array containing the environment
 	 * @throws CoreException rethrown exception
 	 */
-	public String[] createLaunchEnvironment(ILaunchConfiguration configuration, String sessionID, String ideKey) throws CoreException {
+	public String[] createDebugLaunchEnvironment(ILaunchConfiguration configuration, String sessionID, String ideKey) throws CoreException {
 		// create XDebug required environment variables, need the
 		// session handler to start listening and generate a session id      
 

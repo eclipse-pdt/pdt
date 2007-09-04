@@ -19,6 +19,7 @@ import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
@@ -51,17 +52,14 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			monitor.done();
 			return;
 		}
-		if (!mode.equals(ILaunchManager.DEBUG_MODE)) {
-			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			return;
+		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+			if (XDebugLaunchListener.getInstance().isWebLaunchActive()) {
+				displayErrorMessage("Web Launch Already Running");
+				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+				return;
+			}
+			PHPLaunchUtilities.showDebugView();
 		}
-
-		if (XDebugLaunchListener.getInstance().isWebLaunchActive()) {
-			displayErrorMessage("Web Launch Already Running");
-			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			return;
-		}
-		PHPLaunchUtilities.showDebugView();
 
 		// Resolve the Server
 		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, ""));
@@ -118,18 +116,24 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// Generate a session id for this launch and start the listener
 		// then create the start and stop debug URLs
-		String ideKey = DBGpSessionHandler.getInstance().getIDEKey();
-		String sessionId = DBGpSessionHandler.getInstance().generateSessionId();
-		//		String baseURL = configuration.getAttribute(XDebugUIAttributeConstants.SERVER_CONFIG_URL, "");
+		String[] startStopURLs;
 		String baseURL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
-		String[] startStopURLs = generateStartStopURLs(baseURL, sessionId, ideKey);
-		final String startDebugURL = startStopURLs[0];
-		final String stopDebugURL = startStopURLs[1];
-
-		// create the debug target and launch 
-		DBGpTarget target = new DBGpTarget(launch, null, stopDebugURL, ideKey, null, stopAtFirstLine, browser[0]);
-		DBGpSessionHandler.getInstance().addSessionListener(target);
-
+		DBGpTarget target = null;
+		
+		if (mode.equals(ILaunchManager.DEBUG_MODE)) {		
+			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();
+			String sessionId = DBGpSessionHandler.getInstance().generateSessionId();
+			startStopURLs = generateStartStopDebugURLs(baseURL, sessionId, ideKey);
+			String launchScript = configuration.getAttribute(Server.FILE_NAME, (String) null);						
+			target = new DBGpTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
+			DBGpSessionHandler.getInstance().addSessionListener(target);			
+		}
+		else {
+			startStopURLs = new String[] {baseURL, null};
+		}
+		final String startURL = startStopURLs[0];
+		
+		// load the URL into the appropriate web browser
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
 		subMonitor.beginTask("Launching browser", 10);
 
@@ -137,9 +141,9 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			public void run() {
 				try {
 					if (openExternal) {
-						browser[0].openURL(new URL(startDebugURL));
+						browser[0].openURL(new URL(startURL));
 					} else {
-						DBGpUtils.openInternalBrowserView(startDebugURL);
+						DBGpUtils.openInternalBrowserView(startURL);
 					}
 				} catch (Exception t) {
 					Logger.logException("Error initializing the web browser.", t);
@@ -152,13 +156,21 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// did the external browser start ok ?
 		if (exception[0] == null) {
-			launch.addDebugTarget(target);
-			subMonitor.subTask("waiting for XDebug session");
-			target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), GeneralUtils.createSessionPreferences(), monitor);
+			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+				launch.addDebugTarget(target);
+				subMonitor.subTask("waiting for XDebug session");
+				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), GeneralUtils.createSessionPreferences(), monitor);
+			}
+			else {
+				// launched ok, so remove the launch from the debug view as we are not debugging.
+				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);				
+			}
 		} else {
 			// display an error about not being able to launch a browser
 			Logger.logException("we have an exception on the browser", exception[0]);
-			DBGpSessionHandler.getInstance().removeSessionListener(target);
+			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+				DBGpSessionHandler.getInstance().removeSessionListener(target);
+			}
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 		}
 		subMonitor.done();
@@ -192,7 +204,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 * @param ideKey the DBGp IDE Key
 	 * @return start and stop queries
 	 */
-	public String[] generateStartStopURLs(String baseURL, String sessionId, String ideKey) {
+	public String[] generateStartStopDebugURLs(String baseURL, String sessionId, String ideKey) {
 		String[] startStopURLs = new String[2];
 
 		if (baseURL.indexOf("?") > -1) {
