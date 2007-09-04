@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.AutoPathMapper;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
@@ -80,7 +81,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
    private static final int STATE_DISCONNECTED = 7; // disconnected
 
    // the script being run, or initial web script
-   private String progName;
+   private String scriptName;
 
    // launch object
    private ILaunch launch;
@@ -123,6 +124,8 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
 
    private int maxChildren = 0;
    
+   private AutoPathMapper autoMapper = null;
+   
    
    /**
     * Base constructor
@@ -145,12 +148,12 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     * @param stopAtStart
     * @throws CoreException
     */
-   public DBGpTarget(ILaunch launch, IProcess process, String scriptName, String ideKey,
+   public DBGpTarget(ILaunch launch, String scriptName, String ideKey,
          String sessionID, boolean stopAtStart) throws CoreException {
       this();
       this.stopAtStart = stopAtStart;
       this.launch = launch;
-      this.progName = scriptName;
+      this.scriptName = scriptName;
       this.ideKey = ideKey;
       this.webLaunch = false;
       this.sessionID = sessionID;
@@ -163,17 +166,17 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     * target that handles invocation via a web browser
     * 
     * @param launch
-    * @param relativefileNameOfScript
+    * @param workspaceRelativeScript
     * @param stopDebugURL
     * @param sessionID
     * @param stopAtStart
     */
-   public DBGpTarget(ILaunch launch, String relativefileNameOfScript, String stopDebugURL,
-         String ideKey, String sessionID, boolean stopAtStart, IWebBrowser browser) {
+   public DBGpTarget(ILaunch launch, String workspaceRelativeScript, String stopDebugURL,
+         String ideKey, boolean stopAtStart, IWebBrowser browser) {
       this();
       this.stopAtStart = stopAtStart;
       this.launch = launch;
-      this.progName = relativefileNameOfScript;
+      this.scriptName = workspaceRelativeScript;
       this.ideKey = ideKey;
       this.webLaunch = true;
       this.sessionID = null; // in the web launch we have no need for the session ID.
@@ -211,6 +214,8 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
                allThreads = new IThread[] {langThread};
                langThread.fireCreationEvent();
                DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
+               autoMapper = new AutoPathMapper();
+               autoMapper.init(scriptName, session.getInitialScript());
                initiateSession();
             }
             else {
@@ -311,15 +316,15 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     * @see org.eclipse.debug.core.model.IDebugTarget#getName()
     */
    public String getName() throws DebugException {
-      if (progName == null) {
-         if (process == null) {
-            progName = "Remote Launch";
-         }
-         else {
-            progName = "Unknown PHP Program";
+	  if (webLaunch) {
+		  return "Remote Launch";
+	  }
+	  else {
+		  if (scriptName == null) {
+            return "Unknown PHP Program";
          }
       }
-      return progName;
+      return scriptName;
    }
 
    /*
@@ -541,6 +546,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
          if (langThread != null) {
             langThread.fireTerminateEvent();
          }
+         stepping = false;
          fireTerminateEvent();
       }
    }
@@ -1076,6 +1082,11 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       String mappedFile = decodedFile;
       if (webLaunch) {
          IFileMapper mapper = FilenameMapperRegistry.getRegistry().getActiveMapper();
+         
+         // if no external mapper, see if we should use the automapper.
+         if (mapper == null && autoMapper.isMappingRequired()) {
+        	 mapper = autoMapper;
+         }
          if (mapper != null) {
 
             try {
@@ -1172,6 +1183,9 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       // file to the absolute path of the remote script.
       if (webLaunch) {
          IFileMapper mapper = FilenameMapperRegistry.getRegistry().getActiveMapper();
+         if (mapper == null && autoMapper.isMappingRequired()) {
+        	 mapper = autoMapper;
+         }         
          if (mapper != null) {
             try {
                String mappedFileName = mapper.mapWorkspaceFileToExternal(bp.getIFile(), launch
