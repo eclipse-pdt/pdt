@@ -173,9 +173,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		String fileName = null;
 		PHPFileData fileData = editorModel.getFileData(true);
-		if (fileData != null) {
-			fileName = fileData.getName();
+		if (fileData == null) {
+			return;
 		}
+		fileName = fileData.getName();
 
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
