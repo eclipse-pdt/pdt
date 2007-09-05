@@ -49,9 +49,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		return new PHPDOMModelUpdater(this);
 	}
 
-	// @GINO: PHP API's coming soon
-
-	/*
+	/**
 	 * Always get the latest version of FileData
 	 */
 	public PHPFileData getFileData() {
@@ -60,8 +58,12 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 	}
 
 	/**
+	 * Getting the latest fileData
+	 * 
 	 * @param forceCreation - if we want to create a model project as well
 	 * @return fileData
+	 * 
+	 * IMPORTANT: The fileData will not be created if the projectModel was not initiated first.
 	 */
 	public PHPFileData getFileData(boolean forceCreation) {
 		PHPFileData fileData = null;
@@ -73,7 +75,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 			}
 		}
 		if (fileData == null) {
-			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation(), forceCreation);
+			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation(), projectModel != null && forceCreation);
 			if (fileData != null) {
 				return fileData;
 			}
@@ -128,6 +130,8 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 	public IFile getIFile() {
 		String id = getId();
 		if (IModelManager.UNMANAGED_MODEL.equals(id)) {
+			//This ID is used in cases where DOMModel is build for text not coming
+			//from files. Like a part of a document or a file.
 			return null;
 		}
 
