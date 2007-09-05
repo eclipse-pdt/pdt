@@ -10,38 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.resources;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.net.URI;
 
-import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.internal.resources.WorkspaceRoot;
 import org.eclipse.core.internal.watson.IPathRequestor;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFileState;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceProxy;
-import org.eclipse.core.resources.IResourceProxyVisitor;
-import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourceAttributes;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -87,6 +63,16 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 				path = new Path(segment);
 			}
 		}
+
+		//A fix for a bug on Windows #202116
+		//handle the case in which user opens a network external file using absolute path such as \\SERVER\file.php
+		//we need to insert the '/' separator since the wrapped IFile has only one (/SERVER/file.php) while its
+		//URI from the EditorInput had 2. 
+		//This bug happens only on Windows since in Unix/Mac there's no device
+		if (device == null && (Platform.getOS().equals(Platform.OS_WIN32) || (File.separatorChar == '\\'))) {
+			path = new Path('/' + path.toString());
+			return path;
+		}
 		return path.setDevice(device);
 	}
 
@@ -97,7 +83,7 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * method call.
 	 * 
 	 * @see #getFullPath()
-	 * @return The absolute path in the local file system to this resourc
+	 * @return The absolute path in the local file system to this resource
 	 */
 	public IPath getLocation() {
 		IPath location = file.getLocation();
