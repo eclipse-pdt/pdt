@@ -415,6 +415,12 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	public void createPartControl(final Composite parent) {
 		getSite().getPage().addPartListener(fPartListener);
 		fViewer = createViewer(parent);
+		
+		PHPElementSorter sorter = new PHPElementSorter();
+		sorter.setUsingCategories(false);
+		sorter.setUsingLocation(true);
+		fViewer.setSorter(sorter);
+		
 		fViewer.getControl().addFocusListener(this);
 		fSelectionListener.setViewer(getViewer());
 		fSelectionListener.setResetEmptySelection(false);

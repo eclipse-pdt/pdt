@@ -10,25 +10,32 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.projectOutline;
 
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.ui.SuperClassLabelProvider;
 import org.eclipse.php.internal.ui.projectOutline.ProjectOutlineContentProvider.OutlineNode;
 import org.eclipse.php.internal.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.internal.ui.util.PHPElementLabels;
-import org.eclipse.php.internal.ui.util.TreeHierarchyLayoutProblemsDecorator;
+import org.eclipse.swt.graphics.Image;
 
 public class ProjectOutlineLabelProvider extends AppearanceAwareLabelProvider {
 
-//	private TreeHierarchyLayoutProblemsDecorator fProblemDecorator;
+	protected ILabelProvider superClassLabelProviderFragment = new SuperClassLabelProvider(this);
 
 	public ProjectOutlineLabelProvider(int textFlags, int imageFlags, ITreeContentProvider cp) {
 		super(textFlags, imageFlags);
-//		fProblemDecorator = new TreeHierarchyLayoutProblemsDecorator();
-		//addLabelDecorator(fProblemDecorator);
 	}
 
 	public String getText(Object element) {
+		if (element instanceof PHPCodeData) {
+			String text = superClassLabelProviderFragment.getText(element);
+			if (text != null) {
+				return text;
+			}
+			return super.getText(element);
+		}
 		if (element instanceof OutlineNode) {
 			OutlineNode outlineNode = (OutlineNode) element;
 			return outlineNode.getText();
@@ -48,4 +55,13 @@ public class ProjectOutlineLabelProvider extends AppearanceAwareLabelProvider {
 		return text + postfix;
 	}
 
+	public Image getImage(Object element) {
+		if (element instanceof PHPCodeData) {
+			Image image = superClassLabelProviderFragment.getImage(element);
+			if (image != null) {
+				return image;
+			}
+		}
+		return super.getImage(element);
+	}
 }
