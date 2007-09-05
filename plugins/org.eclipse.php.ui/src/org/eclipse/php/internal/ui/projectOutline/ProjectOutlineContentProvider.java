@@ -15,6 +15,7 @@ import java.util.*;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
@@ -23,8 +24,10 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.StandardPHPElementContentProvider;
+import org.eclipse.php.internal.ui.SuperClassTreeContentProvider;
 import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
 import org.eclipse.php.internal.ui.treecontent.TreeProvider;
+import org.eclipse.php.internal.ui.util.PHPElementSorter;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.swt.widgets.Control;
 
@@ -41,6 +44,8 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	private OutlineNode[] groupNodes;
 	private OutlineNode[] nodes;
 	private Timer timer;
+
+	private ITreeContentProvider superClassContentProvider = new SuperClassTreeContentProvider(this);
 
 	public ProjectOutlineContentProvider(final ProjectOutlinePart part, final boolean provideMembers) {
 		fPart = part;
@@ -97,9 +102,15 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				fStoredProject = project;
 			}
 			return groupNodes;
-		} else if (parentElement instanceof OutlineNode) {
+		}
+		if (parentElement instanceof OutlineNode) {
 			final OutlineNode outlineNode = (OutlineNode) parentElement;
 			return outlineNode.getChildren();
+		}
+		if (parentElement instanceof PHPCodeData) {
+			ArrayList children = new ArrayList(Arrays.asList(super.getChildrenInternal(parentElement)));
+			children.addAll(Arrays.asList(superClassContentProvider.getChildren(parentElement)));
+			return children.toArray();
 		}
 		return super.getChildrenInternal(parentElement);
 	}
@@ -117,12 +128,17 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	}
 
 	public boolean hasChildrenInternal(final Object element) {
-		if (element instanceof IProject)
+		if (element instanceof IProject) {
 			return true;
-		else if (element instanceof OutlineNode) {
+		}
+		if (element instanceof OutlineNode) {
 			final OutlineNode outlineNode = (OutlineNode) element;
 			return outlineNode.hasChildren();
 		}
+		if (element instanceof PHPCodeData && superClassContentProvider.hasChildren(element)) {
+			return true;
+		}
+
 		return super.hasChildrenInternal(element);
 	}
 
@@ -146,7 +162,12 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	 * @see org.eclipse.php.ui.StandardPHPElementContentProvider#internalGetParent(java.lang.Object)
 	 */
 	protected Object internalGetParent(final Object element) {
-		// TODO Auto-generated method stub
+		if (element instanceof PHPCodeData) {
+			Object parent = superClassContentProvider.getParent(element);
+			if (parent != null) {
+				return parent;
+			}
+		}
 		final Object parent = super.internalGetParent(element);
 		if (parent == fViewer.getInput() || parent instanceof PHPFileData) {
 			if (groupNodes == null) {
