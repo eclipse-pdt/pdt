@@ -9,13 +9,12 @@ public class PHPUIMessages {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.PHPUIMessages";
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 	private static ResourceBundle fResourceBundle;
-	private static final String BUNDLE_FOR_CONSTRUCTED_KEYS= "org.eclipse.ui.texteditor.ConstructedTextEditorMessages"; //$NON-NLS-1$
-	private static ResourceBundle fgBundleForConstructedKeys= ResourceBundle.getBundle(BUNDLE_FOR_CONSTRUCTED_KEYS);
-
+	private static final String BUNDLE_FOR_CONSTRUCTED_KEYS = "org.eclipse.ui.texteditor.ConstructedTextEditorMessages"; //$NON-NLS-1$
+	private static ResourceBundle fgBundleForConstructedKeys = ResourceBundle.getBundle(BUNDLE_FOR_CONSTRUCTED_KEYS);
 
 	private PHPUIMessages() {
 	}
-	
+
 	/**
 	 * Returns the message bundle which contains constructed keys.
 	 *
@@ -25,17 +24,16 @@ public class PHPUIMessages {
 	public static ResourceBundle getBundleForConstructedKeys() {
 		return fgBundleForConstructedKeys;
 	}
-	
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PHPUIMessages.class);
 	}
-	
+
 	public static ResourceBundle getResourceBundle() {
 		try {
 			if (fResourceBundle == null)
 				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
-		}
-		catch (MissingResourceException x) {
+		} catch (MissingResourceException x) {
 			fResourceBundle = null;
 		}
 		return fResourceBundle;
@@ -48,9 +46,9 @@ public class PHPUIMessages {
 			return "";
 		}
 	}
-	
+
 	// ----- Internal UI ------
-	
+
 	public static String CodeAssistPreferencePage_autoActivationDelay;
 	public static String CodeAssistPreferencePage_autoActivationDelayIntValue;
 	public static String CodeAssistPreferencePage_autoActivationDelayPositive;
@@ -133,7 +131,7 @@ public class PHPUIMessages {
 	public static String CPListLabelProvider_non_modifiable_attribute;
 
 	public static String LibrariesWorkbookPage_libraries_label;
-	public static String LibrariesWorkbookPage_libraries_remove_button;		
+	public static String LibrariesWorkbookPage_libraries_remove_button;
 	public static String LibrariesWorkbookPage_libraries_addvariable_button;
 	public static String LibrariesWorkbookPage_libraries_addlibrary_button;
 	public static String LibrariesWorkbookPage_libraries_addincludepathfolder_button;
@@ -252,14 +250,10 @@ public class PHPUIMessages {
 	public static String IncludePathVariablesPreferencePage_savechanges_title;
 	public static String IncludePathVariablesPreferencePage_savechanges_message;
 
-	
 	public static String IncludePathContainerSelectionPage_title;
 	public static String IncludePathContainerSelectionPage_description;
 	public static String MultipleFolderSelectionDialog_button;
 
-	
-	
-	
 	public static String OpenType_matchingResources;
 	public static String OpenType_instructionText;
 	public static String OpenType_DialogTitle;
@@ -267,16 +261,14 @@ public class PHPUIMessages {
 	public static String OpenType_ConstantsFilterCheckboxName;
 	public static String OpenType_FunctionsFilterCheckboxName;
 	public static String OpenType_ClassesFilterCheckboxName;
-	
-	
 
 	public static String PHPOutlinePage_Sort_label;
 	public static String PHPOutlinePage_Sort_tooltip;
 	public static String PHPOutlinePage_Sort_description;
 	public static String PHPOutlinePage_mode_php;
 	public static String PHPOutlinePage_mode_html;
-	public static String PHPOutlinePage_mode_mixed;	
-	public static String PHPOutlinePage_show_groups;	
+	public static String PHPOutlinePage_mode_mixed;
+	public static String PHPOutlinePage_show_groups;
 
 	public static String IncludePathDialogAccess_IncludePathFolderDialog_new_title;
 	public static String IncludePathDialogAccess_IncludePathFolderDialog_new_description;
@@ -287,7 +279,7 @@ public class PHPUIMessages {
 	public static String FoldingConfigurationBlock_error_not_exist;
 	public static String FoldingConfigurationBlock_info_no_preferences;
 	public static String typingPage_autoClose_title;
-	public static String typingPage_smartTab_title ;
+	public static String typingPage_smartTab_title;
 	public static String PHPEditorPreferencePage_typing_smartTab;
 	public static String SmartTypingConfigurationBlock_tabs_message_tooltip;
 	public static String SmartTypingConfigurationBlock_tabs_message_tab_text;
@@ -297,22 +289,23 @@ public class PHPUIMessages {
 	public static String typingPage_autoClose_braces;
 	public static String typingPage_autoClose_phpDoc_and_commens;
 	public static String typingPage_autoAdd_phpDoc_tags;
-	
+	public static String typingPage_autoAdd_phpClose_tags;
+
 	public static String newPhpFile_create;
 	public static String newPhpFile_openning;
 	public static String newPhpFile_wizard_templatePage_title;
 	public static String newPhpFile_wizard_templatePage_description;
 	public static String newPhpFile_wizard_templatePage_usePhpTemplate;
 	public static String newPhpFile_wizard_templatePage_phpTemplatesLocation;
-	
+
 	public static String PropertyAndPreferencePage_useprojectsettings_label;
 	public static String PropertyAndPreferencePage_useworkspacesettings_change;
 	public static String PropertyAndPreferencePage_showprojectspecificsettings_label;
-	
+
 	public static String ProjectSelectionDialog_title;
 	public static String ProjectSelectionDialog_desciption;
 	public static String ProjectSelectionDialog_filter;
-	
+
 	public static String TodoTaskPreferencePage_description;
 	public static String TodoTaskPreferencePage_title;
 	public static String TodoTaskConfigurationBlock_tasks_default;
@@ -340,7 +333,7 @@ public class PHPUIMessages {
 	public static String TodoTaskInputDialog_error_comma;
 	public static String TodoTaskInputDialog_error_entryExists;
 	public static String TodoTaskInputDialog_error_noSpace;
-	
+
 	public static String PHPTextHover_createTextHover;
 	public static String PHPTextHover_makeStickyHint;
 	public static String PHPEditorPreferencePage_hoverTab_title;
@@ -359,10 +352,10 @@ public class PHPUIMessages {
 	public static String PHPEditorHoverConfigurationBlock_insertModifierAndDelimiter;
 	public static String PHPEditorHoverConfigurationBlock_insertDelimiterAndModifier;
 	public static String PHPEditorHoverConfigurationBlock_showAffordance;
-	
+
 	public static String PHPFormatterPreferencePage_description;
 	public static String PHPFormatterPreferencePage_title;
-		
+
 	public static String Preferences_php_editor_useAspTagsAsPhp_label;
 
 	public static String PHPInterpreterPreferencePage_description;
@@ -371,7 +364,7 @@ public class PHPUIMessages {
 	public static String PHPVersionConfigurationBlock_needsbuild_title;
 	public static String PHPVersionConfigurationBlock_needsfullbuild_message;
 	public static String PHPVersionConfigurationBlock_needsprojectbuild_message;
-	
+
 	public static String PHPManualConfigurationBlock_new;
 	public static String PHPManualConfigurationBlock_edit;
 	public static String PHPManualConfigurationBlock_remove;
@@ -394,34 +387,33 @@ public class PHPUIMessages {
 	public static String NewPHPManualSiteDialog_windowsCHMFile;
 	public static String NewPHPManualSiteDialog_fileExtension;
 	public static String NewPHPManualSiteDialog_dirDoesntExist;
-	
-	
+
 	public static String PHPBasePreferencePage_description;
 	public static String PHPBasePreferencePage_doubleclick_action;
 	public static String PHPBasePreferencePage_doubleclick_gointo;
 	public static String PHPBasePreferencePage_doubleclick_expand;
-	
+
 	public static String PHPVersionGroup_OptionBlockTitle;
-    public static String PHPVersionGroup_EnableProjectSettings;
-    public static String PHPVersionGroup_ConfigWorkspaceSettings;
-    public static String PHPProjectCreationWizard_PageTile;
-    public static String PHPProjectCreationWizard_LoadPagesFailure;
-	
-    //  ----- Folding ------
-    
+	public static String PHPVersionGroup_EnableProjectSettings;
+	public static String PHPVersionGroup_ConfigWorkspaceSettings;
+	public static String PHPProjectCreationWizard_PageTile;
+	public static String PHPProjectCreationWizard_LoadPagesFailure;
+
+	//  ----- Folding ------
+
 	public static String DefaultPHPFoldingPreferenceBlock_title;
 	public static String DefaultPHPFoldingPreferenceBlock_classes;
 	public static String DefaultPHPFoldingPreferenceBlock_includes;
 	public static String DefaultPHPFoldingPreferenceBlock_functions;
 	public static String DefaultPHPFoldingPreferenceBlock_PHPdoc;
 	public static String EmptyPHPFoldingPreferenceBlock_emptyCaption;
-	
+
 	//  ----- Action messages ------
-	
+
 	public static String OpenWithMenu_label;
 	public static String RefactorMenu_label;
 	public static String SourceMenu_label;
-	
+
 	public static String OpenAction_label;
 	public static String OpenAction_tooltip;
 	public static String OpenAction_description;
@@ -432,7 +424,7 @@ public class PHPUIMessages {
 	public static String OpenAction_error_messageArgs;
 	public static String OpenAction_error_messageProblems;
 	public static String OpenAction_error_messageBadSelection;
-	
+
 	public static String ShowInExplorerViewAction_label;
 	public static String ShowInExplorerViewAction_description;
 	public static String ShowInExplorerViewAction_tooltip;
@@ -442,7 +434,7 @@ public class PHPUIMessages {
 	public static String ShowInNavigatorView_dialog_title;
 	public static String ShowInNavigatorView_dialog_message;
 	public static String ShowInNavigatorView_error_activation_failed;
-	
+
 	public static String FormatAllAction_label;
 	public static String FormatAllAction_tooltip;
 	public static String FormatAllAction_description;
@@ -455,14 +447,14 @@ public class PHPUIMessages {
 	public static String FormatAllAction_failedvalidateedit_message;
 	public static String FormatAllAction_noundo_title;
 	public static String FormatAllAction_noundo_message;
-	
+
 	public static String NewWizardsActionGroup_new;
 	public static String OpenProjectAction_dialog_title;
 	public static String OpenProjectAction_dialog_message;
 	public static String OpenProjectAction_error_message;
 	public static String OpenPHPPerspectiveAction_dialog_title;
 	public static String OpenPHPPerspectiveAction_error_open_failed;
-	
+
 	public static String RefreshAction_label;
 	public static String RefreshAction_toolTip;
 	public static String RefreshAction_progressMessage;
@@ -470,7 +462,7 @@ public class PHPUIMessages {
 	public static String RefreshAction_error_message;
 	public static String RefreshAction_locationDeleted_title;
 	public static String RefreshAction_locationDeleted_message;
-	
+
 	public static String ActionUtil_not_possible;
 	public static String SelectAllAction_label;
 	public static String SelectAllAction_tooltip;
@@ -491,7 +483,7 @@ public class PHPUIMessages {
 	public static String RenamePHPElementAction_exception;
 	public static String RenamePHPElementAction_not_available;
 	public static String RenamePHPElementAction_name;
-	
+
 	public static String OpenTypeAction_errorMessage;
 	public static String OpenTypeAction_errorTitle;
 
@@ -535,25 +527,25 @@ public class PHPUIMessages {
 	public static String CopyToClipboardAction_desc;
 
 	public static String BuildAction_label;
-	
+
 	public static String RemoveBlockCommentAction_label;
 	public static String AddBlockCommentAction_label;
 	public static String ToggleCommentAction_label;
 	public static String UncommentAction_label;
 	public static String CommentAction_label;
 	public static String OpenFunctionsManualAction_label;
-	
+
 	public static String ConfigureIncludePathAction_label;
 	public static String ConfigureIncludePathAction_tooltip;
 	public static String ConfigureIncludePathAction_description;
 
 //  ----- UI ------
-	
+
 	public static String PHPTemplateStore_error_message_nameEmpty;
 	public static String PHPTemplateStore_error_title;
-	
+
 //  ----- Working Set ------
-	
+
 	public static String AbstractWorkingSetPage_workingSet_name;
 	public static String AbstractWorkingSetPage_warning_nameMustNotBeEmpty;
 	public static String AbstractWorkingSetPage_warning_workingSetExists;
@@ -610,10 +602,10 @@ public class PHPUIMessages {
 	public static String OpenCloseWorkingSetAction_open_error_title;
 	public static String OpenCloseWorkingSetAction_open_error_message;
 	public static String OpenPropertiesWorkingSetAction_label;
-	public static String RemoveWorkingSetElementAction_label;	
-	
+	public static String RemoveWorkingSetElementAction_label;
+
 //  ----- Filter ------
-	
+
 	public static String CustomFiltersDialog_title;
 	public static String CustomFiltersDialog_patternInfo;
 	public static String CustomFiltersDialog_enableUserDefinedPattern;
@@ -626,9 +618,8 @@ public class PHPUIMessages {
 	public static String FilterDescriptor_filterCreationError_title;
 	public static String FilterDescriptor_filterCreationError_message;
 
-	
 //  ----- Explorer ------
-	
+
 	public static String DragAdapter_deleting;
 	public static String DragAdapter_problem;
 	public static String DragAdapter_problemTitle;
@@ -666,9 +657,8 @@ public class PHPUIMessages {
 	public static String CollapseAllAction_description;
 	public static String PHPExplorerPart_workspace;
 
-
 	// ------ Search -----
-	
+
 	public static String SearchLabelProvider_exact_singular;
 	public static String SearchLabelProvider_exact_noCount;
 	public static String SearchLabelProvider_exact_and_potential_plural;
@@ -775,7 +765,7 @@ public class PHPUIMessages {
 	public static String PHPElementAction_typeSelectionDialog_title;
 	public static String PHPElementAction_typeSelectionDialog_message;
 	public static String PHPElementAction_error_open_message;
-	
+
 	public static String PHPSearchResultPage_sortByName;
 	public static String PHPSearchResultPage_sortByPath;
 	public static String PHPSearchResultPage_open_editor_error_title;
@@ -827,36 +817,36 @@ public class PHPUIMessages {
 	public static String PHPEngine_searching;
 
 	// ----- Editor ---
-	
+
 	public static String PHP_Editor_FoldingMenu_name;
 	public static String PHPStructuredEditor_Source;
 	public static String ShowPHPDoc_label;
 	public static String HoverFocus_message;
 	public static String HoverFocus_decoration;
-	
+
 	public static String GotoMatchingBracket_label;
 	public static String GotoMatchingBracket_error_invalidSelection;
 	public static String GotoMatchingBracket_error_noMatchingBracket;
 	public static String GotoMatchingBracket_error_bracketOutsideSelectedElement;
-	
+
 	//PHP Editor Preference page
 	public static String PHPEditorPreferencePage_smartCaretPositioning;
 	public static String PHPEditorPreferencePage_prefEditorMessage;
 	public static String PHPEditorPreferencePage_prefEditorTooltip;
-	
+
 	public static String PHPAppearancePreferencePage_showMehodsReturnType;
 	public static String PHPAppearancePreferencePage_appearanceHeader;
-	
+
 	public static String ConvertToPDTProjectAction_convert_to_PDT_project_title;
 	public static String ConvertToPDTProjectAction_convert_to_PDT_project_tooltip;
 	public static String ConvertToPDTProjectAction_convert_to_PDT_project_description;
 	public static String ConvertToPDTProjectAction_converting_project_job_title;
-	
+
 	public static String RemoveFromIncludePathAction_remove_from_include_path_title;
 	public static String RemoveFromIncludePathAction_remove_from_include_path_tooltip;
 	public static String RemoveFromIncludePathAction_remove_from_include_path_desc;
 	public static String RemoveFromIncludePathAction_remove_from_include_path_job;
-	
+
 	public static String UntitledPHPEditor_saveError;
 	public static String UntitledPHPEditor_documentCannotBeSaved;
 

@@ -445,6 +445,15 @@ public class PreferenceConstants {
 	public final static String EDITOR_ADD_PHPDOC_TAGS = "autoAddPhpDocTags"; //$NON-NLS-1$
 
 	/**
+	 * A named preference that controls whether the 'close php close tag' feature is
+	 * enabled.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 */
+	public final static String EDITOR_ADD_PHPCLOSE_TAGS = "autoAddPhpCloseTags"; //$NON-NLS-1$
+
+	/**
 	 * A named preference that holds the color for the PHP comments
 	 * <p>
 	 * Value is of type <code>String</code>.
@@ -855,6 +864,7 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_CLOSE_STRINGS, true);
 		store.setDefault(EDITOR_CLOSE_PHPDOCS_AND_COMMENTS, true);
 		store.setDefault(EDITOR_ADD_PHPDOC_TAGS, true);
+		store.setDefault(EDITOR_ADD_PHPCLOSE_TAGS, true);
 
 		store.setDefault(FORMATTER_COMMENT_CLEARBLANKLINES, false);
 		store.setDefault(FORMATTER_COMMENT_FORMATHTML, true);
@@ -949,7 +959,7 @@ public class PreferenceConstants {
 
 		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer.toString(new PHPManualConfig(PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION, false)));
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
-		
+
 		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.NEVER);
 
 		// default locale
