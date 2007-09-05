@@ -1,5 +1,7 @@
 <project default="buildAll">
-
+	
+	<property file="build.properties"/>
+	
 	<target name="init" depends="preinit" />
 
 	<target name="preinit">
@@ -97,7 +99,7 @@
 		<property name="os" value="${env.BASEOS}" />
 		<property name="ws" value="${env.BASEWS}" />
 		<property name="arch" value="${env.BASEARCH}" />
-		<java jar="${buildDirectory}/plugins/org.eclipse.equinox.launcher.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}/../">
+		<java jar="${releng.basebuilder}/plugins/org.eclipse.equinox.launcher.jar" fork="true" jvm="${java-home}/bin/java" failonerror="true" maxmemory="256m" dir="${buildDirectory}/../">
 			<arg line="-Dosgi.ws=${ws} -Dosgi.os=${os} -Dosgi.arch=${arch} -data workspace" />
 			<arg line="-application org.eclipse.ant.core.antRunner -file test.xml" />
 			<arg line="-Dws=${ws} -Dos=${os} -Darch=${arch} -logger org.apache.tools.ant.DefaultLogger" />
