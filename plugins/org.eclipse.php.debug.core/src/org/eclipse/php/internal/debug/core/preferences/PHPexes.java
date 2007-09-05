@@ -13,13 +13,23 @@ package org.eclipse.php.internal.debug.core.preferences;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
-import org.eclipse.core.runtime.*;
-import org.eclipse.php.internal.core.util.UnixChmodUtil;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
@@ -351,9 +361,6 @@ public class PHPexes {
 								setDefaultItem(newItem);
 							}
 							itemFound = true;
-							if (!isWindows)
-								// Try to setup permissions of this file:
-								UnixChmodUtil.chmod(filename, UnixChmodUtil.S_IRWXU | UnixChmodUtil.S_IRGRP | UnixChmodUtil.S_IXGRP | UnixChmodUtil.S_IROTH | UnixChmodUtil.S_IXOTH);
 						}
 					} catch (final IOException e) {
 					}
