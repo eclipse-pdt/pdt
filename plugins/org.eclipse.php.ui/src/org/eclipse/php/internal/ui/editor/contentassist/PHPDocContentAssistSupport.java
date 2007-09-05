@@ -21,30 +21,27 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.*;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
-import org.eclipse.php.internal.core.util.text.TextSequenceUtilities;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
 public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 	private static final char TAG_SIGN = '@';
-	
+
 	private char[] autoActivationTriggers;
 
 	private CompletionProposalGroup phpDocCompletionProposalGroup = new PHPCompletionProposalGroup();
-	
+
 	protected IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event != null) {
@@ -52,13 +49,13 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			}
 		}
 	};
-	
+
 	protected void initPreferences(String prefKey) {
 		if (prefKey == null || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC.equals(prefKey)) {
 			autoActivationTriggers = PreferenceConstants.getPreferenceStore().getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC).trim().toCharArray();
 		}
 	}
-	
+
 	public PHPDocContentAssistSupport() {
 		// Initialize all preferences
 		initPreferences(null);
@@ -66,14 +63,12 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		// Listen to preferences changes
 		PreferenceConstants.getPreferenceStore().addPropertyChangeListener(WeakPropertyChangeListener.create(prefChangeListener, PreferenceConstants.getPreferenceStore()));
 	}
-	
+
 	public char[] getAutoactivationTriggers() {
 		return autoActivationTriggers;
 	}
 
 	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer, boolean explicit) throws BadLocationException {
-		final int originalOffset = viewer.getSelectedRange().x;
-		final boolean isStrict = originalOffset != offset ? true : false;
 
 		PHPProjectModel projectModel = editorModel.getProjectModel();
 
@@ -83,11 +78,6 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
-		String fileName = null;
-		PHPFileData fileData = editorModel.getFileData(true);
-		if (fileData != null) {
-			fileName = fileData.getName();
-		}
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
@@ -103,12 +93,12 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			return;
 
 		ITextRegionCollection container = sdRegion;
-		
-		if(textRegion instanceof ITextRegionContainer){
-			container = (ITextRegionContainer)textRegion;
+
+		if (textRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) textRegion;
 			textRegion = container.getRegionAtCharacterOffset(offset);
 		}
-		
+
 		if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
 			return;
 		}
@@ -143,17 +133,16 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		PhpScriptRegion phpScriptRegion = null;
 		String partitionType = null;
 		int internalOffset = 0;
-		ContextRegion internalPHPRegion = null;
 		if (textRegion instanceof PhpScriptRegion) {
 			phpScriptRegion = (PhpScriptRegion) textRegion;
 			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
-			//if we are at the begining of multi-line comment or docBlock then we should get completion.
-			if(partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC){
+			//if we are at the beginning of multi-line comment or docBlock then we should get completion.
+			if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC) {
 				String regionType = phpScriptRegion.getPhpToken(internalOffset).getType();
-				if(regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START ){
-					if(phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset){
+				if (regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START) {
+					if (phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset) {
 						partitionType = phpScriptRegion.getPartition(internalOffset - 1);
 					}
 				}
@@ -161,18 +150,12 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			if ((!partitionType.equals(PHPPartitionTypes.PHP_DOC))) {
 				return;
 			}
-			internalPHPRegion = (ContextRegion) phpScriptRegion.getPhpToken(internalOffset);
-		}
-		
-		IStructuredDocument document = sdRegion.getParentDocument();
-		// if there is no project model (the file is not part of a project)
-		// complete with language model only 
-		if (fileData == null || phpScriptRegion == null) {
+		} else {
 			return;
 		}
 
 		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(offset, sdRegion, false);
-		
+
 		int totalLength = statmentText.length();
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statmentText, totalLength); // read whitespace
 		int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, endPosition, true);
@@ -183,16 +166,19 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			// the current position is php doc block.
 			return;
 		}
-		if (isVariableCompletion(editorModel, fileData, offset, lastWord, selectionLength, haveSpacesAtEnd)) {
+
+		PHPFileData fileData = editorModel.getFileData(true);
+
+		if (fileData != null && isVariableCompletion(editorModel, fileData, offset, lastWord, selectionLength, haveSpacesAtEnd)) {
 			// the current position is a variable in a php doc block.
 			return;
 		}
-		if(explicit){
+		if (explicit) {
 			templateProposals = getTemplates(viewer, offset);
 		}
 	}
 
-	private boolean isInPhpDocCompletion( ITextViewer viewer, CharSequence statmentText, int offset, String tagName, int selectionLength, boolean hasSpacesAtEnd, boolean explicit) {
+	private boolean isInPhpDocCompletion(ITextViewer viewer, CharSequence statmentText, int offset, String tagName, int selectionLength, boolean hasSpacesAtEnd, boolean explicit) {
 		if (hasSpacesAtEnd) {
 			return false;
 		}
@@ -216,7 +202,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		CodeData[] tags = PHPDocLanguageModel.getPHPDocTags(tagName);
 		phpDocCompletionProposalGroup.setData(offset, tags, tagName, selectionLength);
 		completionProposalGroup = phpDocCompletionProposalGroup;
-		if(explicit){
+		if (explicit) {
 			templateProposals = getTemplates(viewer, offset);
 		}
 		return true;
