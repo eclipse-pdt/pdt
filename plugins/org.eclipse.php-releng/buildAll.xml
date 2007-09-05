@@ -74,6 +74,13 @@
 		<ant antfile="build.xml" target="main">
 			<property name="component" value="runtime" />
 		</ant>
+
+		<condition property="create-changelog" value="true">
+			<not>
+				<contains string="${buildType}" substring="N" />
+			</not>
+		</condition>
+		<antcall target="createChangelog" />
 	</target>
 
 	<target name="buildTest" depends="init, buildRuntime">
@@ -99,6 +106,12 @@
 		<move todir="${buildDirectory}/${buildLabel}/results">
 			<fileset dir="${buildDirectory}/../results/html/all" />
 		</move>
+	</target>
+
+	<target name="createChangelog" if="create-changelog">
+		<ant antfile="changelog/build.xml" target="run">
+			<property name="daysInPast" value="7" />
+		</ant>
 	</target>
 
 	<target name="publish" depends="init" description="Publish the results, but don't push.">

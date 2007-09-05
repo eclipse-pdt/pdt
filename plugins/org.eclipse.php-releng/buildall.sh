@@ -133,11 +133,4 @@ fi
 
 $vm/bin/java -jar ../org.eclipse.releng.basebuilder/plugins/org.eclipse.equinox.launcher.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $logger $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm $platformParams
 
-if [ "$buildType" != "N" ]
-then
-		cd changelog
-		./changelog.sh -ant ../../apache-ant-1.7.0 
-		cd ..
-fi
-
 #rm -rf ../org.eclipse.releng.basebuilder
