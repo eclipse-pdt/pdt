@@ -41,6 +41,7 @@ import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.preferences.phps.PHPexeDescriptor;
 import org.eclipse.php.internal.debug.ui.preferences.phps.PHPsComboBlock;
+import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
@@ -192,14 +193,19 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (getLaunchConfigurationDialog().getMode().equals(ILaunchManager.RUN_MODE))
 			setEnableDebugInfoOption(true);
 
-		final Composite mainComposite = new Composite(parent, SWT.NONE);
-		setControl(mainComposite);
+		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(parent, SWT.V_SCROLL | SWT.H_SCROLL);
+		final Composite mainComposite = new Composite(scrolledCompositeImpl, SWT.NONE);
+		setControl(scrolledCompositeImpl);
 		mainComposite.setFont(parent.getFont());
 		final GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		final GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		mainComposite.setLayout(layout);
 		mainComposite.setLayoutData(gridData);
+		
+		scrolledCompositeImpl.setContent(mainComposite);
+		scrolledCompositeImpl.setLayout(layout);
+		scrolledCompositeImpl.setFont(parent.getFont());
 
 		createLocationComponent(mainComposite);
 
