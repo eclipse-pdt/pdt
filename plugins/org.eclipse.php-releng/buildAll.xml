@@ -105,7 +105,7 @@
 			<arg line="-Dws=${ws} -Dos=${os} -Darch=${arch} -logger org.apache.tools.ant.DefaultLogger" />
 		</java>
 		<mkdir dir="${buildDirectory}/${buildLabel}/results" />
-		<move todir="${buildDirectory}/${buildLabel}/results">
+		<move todir="${buildDirectory}/${buildLabel}/results" failonerror="false">
 			<fileset dir="${buildDirectory}/../results/html/all" />
 		</move>
 	</target>
