@@ -105,7 +105,9 @@ public class PHPExecutableDebuggerInitializer {
 			if (phpCmdArray.length == 4) {
 				phpCmdArray[0] = PHPexes.changeToCGI(phpCmdArray[0]);
 			}
-
+			// Make sure that we have executable permissions on the file.
+			PHPexes.changePermissions(new File(phpCmdArray[0]));
+			
 			// Execute the command line.
 			Process p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDir);
 
