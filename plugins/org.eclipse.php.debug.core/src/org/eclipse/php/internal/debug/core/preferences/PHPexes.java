@@ -15,8 +15,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileInfo;
+import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.util.UnixChmodUtil;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 
@@ -89,9 +93,29 @@ public class PHPexes {
 			}
 		}
 		if (cli.exists()) {
+			changePermissions(cli);
 			return cli.getAbsolutePath();
 		}
+		changePermissions(new File(phpCLIPath));
 		return phpCLIPath;
+	}
+
+	/*
+	 * Change to executable permissions for non-windows machines.
+	 */
+	private static void changePermissions(File file) {
+		if (!Platform.getOS().equals(Platform.OS_WIN32)) {
+			LocalFile localFile = new LocalFile(file);
+			IFileInfo info = localFile.fetchInfo();
+			if (!info.getAttribute(EFS.ATTRIBUTE_EXECUTABLE)) {
+				info.setAttribute(EFS.ATTRIBUTE_EXECUTABLE, true);
+				try {
+					localFile.putInfo(info, EFS.SET_ATTRIBUTES, null);
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+			}
+		}
 	}
 
 	/**
