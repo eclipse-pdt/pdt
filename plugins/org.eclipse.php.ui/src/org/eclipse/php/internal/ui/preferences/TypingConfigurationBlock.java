@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.Messages;
@@ -32,12 +32,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
@@ -49,7 +44,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private OverlayPreferenceStore fStore;
 
-	private PreferencePage fMainPreferencePage;
+	private final PreferencePage fMainPreferencePage;
 
 	public TypingConfigurationBlock(PreferencePage mainPreferencePage, OverlayPreferenceStore store) {
 		Assert.isNotNull(mainPreferencePage);
@@ -117,6 +112,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_SMART_TAB));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
@@ -161,6 +157,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private String autoIndentDetails = "";
 	private Link formatterPageLink;
+
 	private void createAutoIndentMessage(final Composite composite) {
 		String linkTooltip = PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tooltip;
 		char indentChar = FormatPreferencesSupport.getInstance().getIndentationChar(null);
@@ -171,7 +168,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		} else {
 			int indentSize = FormatPreferencesSupport.getInstance().getIndentationSize(null);
 			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text, new String[] { Integer.toString(4), Integer.toString(indentSize), "space" });
-		} 
+		}
 
 		formatterPageLink = new Link(composite, SWT.NONE);
 		formatterPageLink.setText(autoIndentDetails);
@@ -180,6 +177,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		gd.widthHint = 300; // don't get wider initially
 		formatterPageLink.setLayoutData(gd);
 		formatterPageLink.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				PreferencesUtil.createPreferenceDialogOn(formatterPageLink.getShell(), "org.eclipse.php.ui.preferences.PHPFormatterPreferencePage", null, null); //$NON-NLS-1$
 			}
@@ -218,6 +216,10 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		label = PHPUIMessages.typingPage_autoAdd_phpDoc_tags;
 		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS, 0);
+
+		label = PHPUIMessages.typingPage_autoAdd_phpClose_tags;
+		addCheckBox(composite, label, PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS, 0);
+
 		createDependency(master, slave);
 	}
 
@@ -281,8 +283,8 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		((GridData) control.getLayoutData()).horizontalIndent += INDENT;
 	}
 
-	private Map fCheckBoxes = new HashMap();
-	private SelectionListener fCheckBoxListener = new SelectionListener() {
+	private final Map fCheckBoxes = new HashMap();
+	private final SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
@@ -292,10 +294,10 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		}
 	};
 
-	private ArrayList fMasterSlaveListeners = new ArrayList();
+	private final ArrayList fMasterSlaveListeners = new ArrayList();
 	protected static final int INDENT = 20;
 
-	private Map fTextFields = new HashMap();
+	private final Map fTextFields = new HashMap();
 
 	public void refreshValues() {
 		char indentChar = FormatPreferencesSupport.getInstance().getIndentationChar(null);

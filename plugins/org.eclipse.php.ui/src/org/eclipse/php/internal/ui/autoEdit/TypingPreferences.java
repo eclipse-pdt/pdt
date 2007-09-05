@@ -27,6 +27,7 @@ public class TypingPreferences {
 	static boolean closeCurlyBracket;
 	static boolean closePhpdoc;
 	static boolean addDocTags;
+	static boolean addPhpCloseTag;
 
 	static {
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
@@ -36,29 +37,34 @@ public class TypingPreferences {
 		closeCurlyBracket = store.getBoolean(PreferenceConstants.EDITOR_CLOSE_BRACES);
 		closePhpdoc = store.getBoolean(PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS);
 		addDocTags = store.getBoolean(PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS);
+		addPhpCloseTag = store.getBoolean(PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS);
 
 		store.addPropertyChangeListener(new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
 				String property = event.getProperty();
 				if (property == PreferenceConstants.EDITOR_CLOSE_STRINGS) {
-					closeQuotes = Boolean.valueOf((String)event.getNewValue()).booleanValue();
+					closeQuotes = Boolean.valueOf((String) event.getNewValue()).booleanValue();
 					return;
 				}
 				if (property == PreferenceConstants.EDITOR_CLOSE_BRACKETS) {
-					closeBrackets = Boolean.valueOf((String)event.getNewValue()).booleanValue();
+					closeBrackets = Boolean.valueOf((String) event.getNewValue()).booleanValue();
 					return;
 				}
 				if (property == PreferenceConstants.EDITOR_CLOSE_BRACES) {
-					closeCurlyBracket = Boolean.valueOf((String)event.getNewValue()).booleanValue();
+					closeCurlyBracket = Boolean.valueOf((String) event.getNewValue()).booleanValue();
 					return;
 				}
 				if (property == PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS) {
-					closePhpdoc = Boolean.valueOf((String)event.getNewValue()).booleanValue();
+					closePhpdoc = Boolean.valueOf((String) event.getNewValue()).booleanValue();
 					return;
 				}
 				if (property == PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS) {
-					addDocTags = Boolean.valueOf((String)event.getNewValue()).booleanValue();
+					addDocTags = Boolean.valueOf((String) event.getNewValue()).booleanValue();
+					return;
+				}
+				if (property == PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS) {
+					addPhpCloseTag = Boolean.valueOf((String) event.getNewValue()).booleanValue();
 					return;
 				}
 			}
