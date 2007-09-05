@@ -99,9 +99,9 @@ public class CodeDataResolver {
 	 */
 	public CodeData[] resolve(IStructuredDocument sDoc, int offset, DOMModelForPHP phpModel) {
 		final PHPProjectModel projectModel = phpModel.getProjectModel();
-		if (projectModel == null)
-			return EMPTY;
 		final PHPFileData fileData = phpModel.getFileData(true);
+		if (projectModel == null || fileData == null)
+			return EMPTY;
 		return resolve(sDoc, offset, projectModel, fileData);
 	}
 
