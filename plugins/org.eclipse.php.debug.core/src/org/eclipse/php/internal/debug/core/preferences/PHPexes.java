@@ -93,17 +93,15 @@ public class PHPexes {
 			}
 		}
 		if (cli.exists()) {
-			changePermissions(cli);
 			return cli.getAbsolutePath();
 		}
-		changePermissions(new File(phpCLIPath));
 		return phpCLIPath;
 	}
 
-	/*
+	/**
 	 * Change to executable permissions for non-windows machines.
 	 */
-	private static void changePermissions(File file) {
+	public static void changePermissions(File file) {
 		if (!Platform.getOS().equals(Platform.OS_WIN32)) {
 			LocalFile localFile = new LocalFile(file);
 			IFileInfo info = localFile.fetchInfo();

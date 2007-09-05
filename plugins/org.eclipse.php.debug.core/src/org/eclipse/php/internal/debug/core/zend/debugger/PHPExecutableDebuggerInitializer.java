@@ -105,6 +105,8 @@ public class PHPExecutableDebuggerInitializer {
 			if (phpCmdArray.length == 4) {
 				phpCmdArray[0] = PHPexes.changeToCGI(phpCmdArray[0]);
 			}
+			// Make sure that we have executable permissions on the file.
+			PHPexes.changePermissions(new File(phpCmdArray[0]));
 
 			// Execute the command line.
 			Process p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDir);
@@ -126,7 +128,7 @@ public class PHPExecutableDebuggerInitializer {
 			DebugPlugin.log(e);
 		}
 	}
-	
+
 	private String[] asAttributesArray(Map<String, String> attributesMap) {
 		String[] attributes = new String[attributesMap.size()];
 		int index = 0;
