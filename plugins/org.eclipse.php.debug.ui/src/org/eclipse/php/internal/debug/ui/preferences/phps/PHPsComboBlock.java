@@ -10,19 +10,30 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.preferences.phps;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
-import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -30,7 +41,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * A composite that displays installed PHP's in a combo box, with a 'PHP Executables' page link
@@ -136,7 +153,8 @@ public class PHPsComboBlock implements ISelectionProvider {
 		}
 		GridLayout layout = new GridLayout(2, false);
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		composite.setLayoutData(gridData);
 		composite.setFont(font);
 		fControl = composite;
 
@@ -155,7 +173,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 		// Add the debuggers combo
 		fDebuggersCombo = new Combo(topLeft, SWT.DROP_DOWN | SWT.READ_ONLY);
 		fDebuggersCombo.setFont(font);
-		data = new GridData(GridData.FILL_HORIZONTAL);
+		data = gridData;
 
 		fDebuggersCombo.setLayoutData(data);
 		fDebuggersCombo.addSelectionListener(new SelectionAdapter() {
@@ -183,7 +201,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 		layout = new GridLayout(2, false);
 		bottomLeft.setLayout(layout);
 		bottomLeft.setFont(font);
-		data = new GridData(GridData.FILL_HORIZONTAL);
+		data = gridData;
 		bottomLeft.setLayoutData(data);
 		// Add the label
 		Label executableLabel = new Label(bottomLeft, SWT.WRAP);
@@ -193,7 +211,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 		executableLabel.setLayoutData(data);
 		fExecutablesCombo = new Combo(bottomLeft, SWT.DROP_DOWN | SWT.READ_ONLY);
 		fExecutablesCombo.setFont(font);
-		data = new GridData(GridData.FILL_HORIZONTAL);
+		data = gridData;
 		fExecutablesCombo.setLayoutData(data);
 		fExecutablesCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
@@ -201,13 +219,13 @@ public class PHPsComboBlock implements ISelectionProvider {
 			}
 		});
 		// Add the php executables link to the right side of the composite
-		link = new Link(composite, SWT.NONE);
-		link.setFont(font);
-		data = new GridData(SWT.BEGINNING, SWT.CENTER, true, false);
+		Composite c2 = new Composite(composite, SWT.NONE);
+		c2.setLayout(new GridLayout());
+		data = new GridData();
 		data.horizontalSpan = 1;
-		PixelConverter pc = new PixelConverter(composite);
-		data.widthHint = pc.convertWidthInCharsToPixels(30);
-		link.setLayoutData(data);
+		c2.setLayoutData(data);
+		link = new Link(c2, SWT.NONE);
+		link.setFont(font);
 		link.setText(PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
