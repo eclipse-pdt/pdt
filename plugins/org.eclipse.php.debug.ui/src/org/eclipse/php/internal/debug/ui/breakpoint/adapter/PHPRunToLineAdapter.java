@@ -25,6 +25,9 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpElement;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider;
@@ -88,9 +91,17 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 							IDebugTarget debugTarget = (IDebugTarget) ((IAdaptable) target).getAdapter(IDebugTarget.class);
 							if (debugTarget != null) {
 								IFile file = getFile(textEditor);
-								IBreakpoint breakpoint = new PHPRunToLineBreakpoint(file, lineNumber);
-								RunToLineHandler handler = new RunToLineHandler(debugTarget, target, breakpoint);
-								handler.run(new NullProgressMonitor());
+								//TODO: we need a to call a debugger specific api, so an extension point is 
+								//required here for different debuggers to plug into.
+								if (debugTarget instanceof PHPDebugTarget) {
+									IBreakpoint breakpoint = new PHPRunToLineBreakpoint(file, lineNumber);
+									RunToLineHandler handler = new RunToLineHandler(debugTarget, target, breakpoint);
+									handler.run(new NullProgressMonitor());
+								}
+								else if (debugTarget instanceof DBGpTarget) { 
+									DBGpTarget t = (DBGpTarget) debugTarget;
+									t.runToLine(file, lineNumber);									
+								}
 								return;
 							}
 						}
@@ -113,7 +124,9 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 	 *      org.eclipse.debug.core.model.ISuspendResume)
 	 */
 	public boolean canRunToLine(IWorkbenchPart part, ISelection selection, ISuspendResume target) {
-		if (target instanceof PHPDebugElement) {
+		//TODO: PHP Debug elements should have a shared marker and test for here
+		//This will be an enhancement to the generic debug API.
+		if (target instanceof PHPDebugElement || target instanceof DBGpElement) {
 			// allow running to the line only when the target is suspended.
 			return target.isSuspended();
 		}
