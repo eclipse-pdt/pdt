@@ -51,6 +51,8 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		layout.addShowViewShortcut(ID_FUNCTIONS);
 		layout.addShowViewShortcut(ID_PROJECT_OUTLINE);
 		layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
+		
+		layout.addShowInPart(ID_EXPLORER);
 
 		// add extension shortcuts
 		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut"; //$NON-NLS-N$
