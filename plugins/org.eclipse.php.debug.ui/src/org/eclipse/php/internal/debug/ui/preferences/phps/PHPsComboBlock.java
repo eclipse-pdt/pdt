@@ -173,8 +173,9 @@ public class PHPsComboBlock implements ISelectionProvider {
 		// Add the debuggers combo
 		fDebuggersCombo = new Combo(topLeft, SWT.DROP_DOWN | SWT.READ_ONLY);
 		fDebuggersCombo.setFont(font);
-		data = gridData;
 
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.grabExcessHorizontalSpace = true;
 		fDebuggersCombo.setLayoutData(data);
 		fDebuggersCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
@@ -211,7 +212,8 @@ public class PHPsComboBlock implements ISelectionProvider {
 		executableLabel.setLayoutData(data);
 		fExecutablesCombo = new Combo(bottomLeft, SWT.DROP_DOWN | SWT.READ_ONLY);
 		fExecutablesCombo.setFont(font);
-		data = gridData;
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.grabExcessHorizontalSpace = true;
 		fExecutablesCombo.setLayoutData(data);
 		fExecutablesCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
@@ -219,12 +221,10 @@ public class PHPsComboBlock implements ISelectionProvider {
 			}
 		});
 		// Add the php executables link to the right side of the composite
-		Composite c2 = new Composite(composite, SWT.NONE);
-		c2.setLayout(new GridLayout());
+		link = new Link(composite, SWT.NONE);
 		data = new GridData();
 		data.horizontalSpan = 1;
-		c2.setLayoutData(data);
-		link = new Link(c2, SWT.NONE);
+		link.setLayoutData(data);
 		link.setFont(font);
 		link.setText(PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink);
 		link.addSelectionListener(new SelectionAdapter() {
@@ -238,6 +238,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 				}
 			}
 		});
+		
 		checkDeuggers();
 		fillDebuggers();
 		fillWithWorkspacePHPexes();
