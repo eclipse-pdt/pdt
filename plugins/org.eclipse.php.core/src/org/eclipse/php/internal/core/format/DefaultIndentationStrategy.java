@@ -15,6 +15,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -113,6 +114,36 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 		if (shouldNotConsiderAsIndentationBase(checkedLineBeginState, forLineEndState))
 			return false;
+
+		//Fix bug #201688
+		if (((checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (checkedLineBeginState == PHPPartitionTypes.PHP_DOC)) && (checkedLineBeginState == forLineEndState)) {
+			//the whole document
+			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(lineStart);
+			//the whole PHP script
+			ITextRegion phpScriptRegion = sdRegion.getRegionAtCharacterOffset(lineStart);
+			int phpContentStartOffset = sdRegion.getStartOffset(phpScriptRegion);
+
+			if (phpScriptRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) phpScriptRegion;
+				phpScriptRegion = container.getRegionAtCharacterOffset(lineStart);
+				phpContentStartOffset += phpScriptRegion.getStart();
+			}
+
+			if (phpScriptRegion instanceof PhpScriptRegion) {
+				PhpScriptRegion scriptRegion = (PhpScriptRegion) phpScriptRegion;
+				//the region we are trying to check if it is the indent base for the line we need to format
+				ContextRegion checkedRegion = (ContextRegion) scriptRegion.getPhpToken(lineStart - phpContentStartOffset);
+				//the current region we need to format
+				ContextRegion currentRegion = (ContextRegion) scriptRegion.getPhpToken(forOffset - phpContentStartOffset);
+				String checkedType = checkedRegion.getType();
+				String currentType = currentRegion.getType();
+				//if we are in the beginning of a comment (DOC or Multi comment) and we have before another
+				//Doc comment or Multi comment, the base line we'll be the beginning of the previous multi comment
+				if (currentType.equals(PHPRegionTypes.PHPDOC_COMMENT_START) || currentType.equals(PHPRegionTypes.PHP_COMMENT_START)) {
+					return checkedType.equals(PHPRegionTypes.PHPDOC_COMMENT_START) || checkedType.equals(PHPRegionTypes.PHP_COMMENT_START);
+				}
+			}
+		}
 
 		return lineShouldInedent(checkedLineBeginState, checkedLineEndState) || forLineEndState == checkedLineBeginState;
 	}
