@@ -35,14 +35,14 @@ img_whs18 { border:none; width:28px; height:33px; float:none; border-style:none;
 td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 ol.whs20 { list-style:decimal; }
 img_whs21 { border:none; width:39px; height:25px; float:none; border-style:none; }
-img_whs22 { border:none; width:315px; height:175px; float:none; border-style:none; }
-p.whs23 { margin-left:24px; }
-img_whs24 { border:none; width:25px; height:24px; float:none; border-style:none; }
-img_whs25 { border:none; width:27px; height:24px; float:none; border-style:none; }
-img_whs26 { border:none; width:395px; height:235px; float:none; border-style:none; }
-img_whs27 { border:none; width:292px; height:203px; float:none; border-style:none; }
-td.whs28 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-p.whs29 { x-condition:PDT; }
+img_whs22 { border:none; width:510px; height:398px; float:none; x-condition:PDT; border-style:none; }
+img_whs23 { border:none; width:315px; height:175px; float:none; border-style:none; }
+p.whs24 { margin-left:24px; }
+img_whs25 { border:none; width:25px; height:24px; float:none; border-style:none; }
+img_whs26 { border:none; width:27px; height:24px; float:none; border-style:none; }
+img_whs27 { border:none; width:395px; height:235px; float:none; border-style:none; }
+img_whs28 { border:none; width:292px; height:203px; float:none; border-style:none; }
+td.whs29 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
 img_whs30 { border:none; width:486px; height:408px; float:none; border-style:none; }
 img_whs31 { border:none; width:567px; height:131px; float:none; border-style:none; }
 img_whs32 { border:none; width:251px; height:99px; float:none; border-style:none; }
@@ -233,25 +233,31 @@ if (window.writeIntopicBar)
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Double-click the PHP Script option to create a 
- new debug configuration. </p></li>
+ new debug configuration.</p></li>
+</ol>
+<p class=picture>&nbsp;<span style="x-condition: PDT;"><img src="debug_phpscript_configuration.png" x-maintain-ratio="TRUE" width="510px" height="398px" border="0" class="img_whs22"></span></p>
+<ol start="6" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Enter a name for the new configuration.</p></li>
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>Select the required PHP executable (PHP 4 or 5). 
- This must match the PHP executable used for the project.</p></li>
+		class=kadov-p><p>From the PHP Debugger drop-down list, select whether 
+ to use the Zend Debugger or XDebug.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Select the required PHP executable. This must 
+ match the PHP executable used for the project.</p></li>
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Under PHP File, click Browse and select the &quot;debug&quot; 
  file.</p></li>
 	
-	</ol>
-<ol start="9" type="1" class="whs20">
-	
-	<li style="margin-left: -20px; x-condition: PDT;"
+	<li style="margin-left: -20px;"
 		class=kadov-p><p>Ensure that the 'Break at First Line' Breakpoint 
  checkbox is selected.</p></li>
+</ol>
+<ol start="9" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Click Apply and then Debug.</p></li>
@@ -268,17 +274,17 @@ if (window.writeIntopicBar)
 		class=kadov-p><p>The Debug View is where the debugging process 
  can be monitored and controlled.</p></li>
 </ol>
-<p class=picture><img src="debug_view.png" x-maintain-ratio="TRUE" width="315px" height="175px" border="0" class="img_whs22"></p>
-<p class="whs23">The debugging process will currently have 
+<p class=picture><img src="debug_view.png" x-maintain-ratio="TRUE" width="315px" height="175px" border="0" class="img_whs23"></p>
+<p class="whs24">The debugging process will currently have 
  stopped where your first &lt;?php label appears.</p>
-<ol start="14" type="1" class="whs20">
+<ol start="13" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>Click the Resume icon <img src="resume_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs24"> to continue 
+		class=kadov-p><p>Click the Resume icon <img src="resume_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs25"> to continue 
  to the breakpoint.</p></li>
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>Click Step Into <img src="step_into_icon.png" x-maintain-ratio="TRUE" width="27px" height="24px" border="0" class="img_whs25">. The Debugger 
+		class=kadov-p><p>Click Step Into <img src="step_into_icon.png" x-maintain-ratio="TRUE" width="27px" height="24px" border="0" class="img_whs26">. The Debugger 
  goes into the function defined in line 103 and advances to line 77.</p></li>
 	
 	<li style="margin-left: -20px;"
@@ -291,24 +297,24 @@ if (window.writeIntopicBar)
  over $worker_name, $worker_address, and $worker_phone. A tooltip appears 
  displaying the variable values.</p></li>
 </ol>
-<p class=picture><img src="debug_tutorial_editor.png" x-maintain-ratio="TRUE" width="395px" height="235px" border="0" class="img_whs26"></p>
-<ol start="18" type="1" class="whs20">
+<p class=picture><img src="debug_tutorial_editor.png" x-maintain-ratio="TRUE" width="395px" height="235px" border="0" class="img_whs27"></p>
+<ol start="17" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>Click Step Return. <img src="debug_step_return_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs24"> The cursor returns 
+		class=kadov-p><p>Click Step Return. <img src="debug_step_return_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs25"> The cursor returns 
  to line 103.<br>
 	The Debug Output view will display the HTML output created up until 
  the breakpoint, while the Browser Output view will show the current output 
  to a browser.</p></li>
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>In the Debug view, click Resume <img src="resume_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs24"> &nbsp;until 
+		class=kadov-p><p>In the Debug view, click Resume <img src="resume_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs25"> &nbsp;until 
  the debugging process is terminated.<br>
 	Notice that as the debugging process progresses, the Debug Output and 
  Browser Output displays are updated.</p></li>
 </ol>
-<p class=picture><img src="debug_browser_output.png" x-maintain-ratio="TRUE" width="292px" height="203px" border="0" class="img_whs27"></p>
-<ol start="20" type="1" class="whs20">
+<p class=picture><img src="debug_browser_output.png" x-maintain-ratio="TRUE" width="292px" height="203px" border="0" class="img_whs28"></p>
+<ol start="19" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>The console view will display any errors or warnings 
@@ -327,7 +333,7 @@ if (window.writeIntopicBar)
 </ol></td></tr>
 
 <tr valign="top" class="whs4">
-<td rowspan="1" colspan="2" width="100%" class="whs28">
+<td rowspan="1" colspan="2" width="100%" class="whs29">
 <p>&nbsp;</td>
 </tr>
 </table>
@@ -432,7 +438,11 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
  a new debug configuration. </p></li>
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>Enter a name for the new configuration. </p></li>
+		class=kadov-p><p>Enter a name for the new configuration.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Select the Debugger to use from the Server Debugger 
+ drop-down list. </p></li>
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Ensure that your server is selected from the list.<br>
@@ -457,7 +467,7 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 		type=i
 		class=kadov-p><p>Mark the Publish Projects to this server checkbox.</p></li>
 </ol>
-<ol start="8" type="1" class="whs20">
+<ol start="9" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>As the files still do not exist on the server, 
@@ -493,21 +503,15 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 		type=i
 		class=kadov-p><p>If this is not correct, unmark the Auto Generate 
  checkbox and manually change the URL.</p></li>
-	
-	</ol>
+</ol>
 <ol start="6" type="1" class="whs20">
-	
-	<li style="list-style: lower-roman; /*begin!kadov{{*/ x-condition: PDT; /*}}end!kadov*/ "
-		type=i
-		class=kadov-p><p class="whs29">Under the Advanced tab, 
- mark the 'Break at First Line' Breakpoint checkbox.</p></li>
 	
 	<li style="list-style: lower-roman;"
 		type=i
 		class=kadov-p><p>Click Apply and then Debug.</p></li>
 </ol>
 <p class=picture><img src="debug_configuration_webpage.png" x-maintain-ratio="TRUE" width="486px" height="408px" border="0" class="img_whs30"></p>
-<ol start="9" type="1" class="whs20">
+<ol start="10" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p><span 
@@ -547,7 +551,7 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
  click Submit Query.</p></li>
 </ol>
 <p class=picture><img src="debug_webpage_ouput.png" x-maintain-ratio="TRUE" width="567px" height="131px" border="0" class="img_whs31"></p>
-<ol start="17" type="1" class="whs20">
+<ol start="18" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Another editor tab will open, with the script 
@@ -564,7 +568,7 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 	You are [Age] years old.&quot;</p></li>
 </ol>
 <p class=picture><img src="debug_webpage_browser_output.png" x-maintain-ratio="TRUE" width="251px" height="99px" border="0" class="img_whs32"></p>
-<ol start="20" type="1" class="whs20">
+<ol start="21" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>The debugging process will have terminated.</p></li>
@@ -608,7 +612,7 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 		class=kadov-p><p>The debugging process will now be applied to your 
  local files without them being published to the server. </p></li>
 </ol>
-<ol start="23" type="1" class="whs20">
+<ol start="24" type="1" class="whs20">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>To run the debugging process again, click the 
@@ -617,7 +621,7 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 </ol></td></tr>
 
 <tr valign="top" class="whs4">
-<td rowspan="1" colspan="2" width="100%" class="whs28">
+<td rowspan="1" colspan="2" width="100%" class="whs29">
 <p>&nbsp;</td>
 </tr>
 </table>

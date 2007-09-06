@@ -31,7 +31,7 @@ img_whs10 { border:none; width:28px; height:33px; float:none; border-style:none;
 td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 ol.whs12 { list-style:decimal; }
 img_whs13 { border:none; width:39px; height:25px; float:none; border-style:none; }
-img_whs14 { border:none; width:515px; height:429px; float:none; border-style:none; }
+img_whs14 { border:none; width:510px; height:398px; float:none; border-style:none; }
 td.whs15 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
 p.whs16 { x-condition:Online; }
 table.whs17 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
@@ -108,8 +108,11 @@ if (window.writeIntopicBar)
  Debugging a PHP Script</p>
 
 <p>This procedure describes how to debug a PHP Script from your workspace 
- using <span 
- style="x-condition: PDT;">PDT's</span> internal debugger.</p>
+ using an internal debugger.</p>
+
+<p><span style="x-condition: PDT;">PDT </span>supports both the Zend Debugger and XDebug.</p>
+
+<p>&nbsp;</p>
 
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
 <col class="whs2">
@@ -145,24 +148,37 @@ if (window.writeIntopicBar)
 		class=kadov-p><p>Double-click the PHP Script option to create a 
  new debug configuration.</p></li>
 </ol>
-<p class=picture><img src="debug_phpscript_configuration.png" x-maintain-ratio="TRUE" width="515px" height="429px" border="0" class="img_whs14"></p>
+<p class=picture
+	style="x-condition: PDT;"><img src="debug_phpscript_configuration.png" x-maintain-ratio="TRUE" width="510px" height="398px" border="0" class="img_whs14"></p>
 <ol start="5" type="1" class="whs12">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Enter a name for the new configuration.</p></li>
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>Ensure that the PHP Executable option is selected 
- under the Debugger Location category and select the required PHP executable.<br>
+		class=kadov-p><p><span style="x-condition: PDT;">S</span>elect the required 
+ PHP executable.<br>
 	The PHP executable used must match the PHP Executable used when creating 
- the project.</p></li>
+ the project.<span style="x-condition: PDT;"><br>
+	If no PHP Executables are listed, click the PHP Executable link and 
+ add a PHP Executable in the </span><a HREF="PHP_Executables.htm"
+										style="x-condition: PDT;">PHP Executable 
+ Preferences</a><span style="x-condition: PDT;"> page. The PHP Executables 
+ must match the Debugger type.</span></p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Select the PHP Debugger to be used. <span style="x-condition: PDT;">PDT </span>supports 
+ both the Zend Debugger and XDebug.</p></li>
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Under PHP File, click Browse and select your file</p></li>
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>Marking both Breakpoint checkboxes will result 
- in the debugging process pausing at the first line.</p></li>
+		class=kadov-p><p>Marking the Breakpoint checkbox will result in 
+ the debugging process pausing at the first line.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click Apply and then Debug.</p></li>
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Click Yes if asked whether to open the PHP Debug 
