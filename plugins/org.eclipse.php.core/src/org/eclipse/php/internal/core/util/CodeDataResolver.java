@@ -23,13 +23,27 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegio
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
+import org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.parser.VariableContextBuilder;
+import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileDataUtilities;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableTypeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.util.ProjectResolver;
 
 public class CodeDataResolver {
@@ -233,7 +247,50 @@ public class CodeDataResolver {
 							}
 
 							PHPCodeContext context = ModelSupport.createContext(fileData, elementStart);
-							return filterExact(projectModel.getVariables(fileName, context, elementName, true), elementName);
+							CodeData[] res = filterExact(projectModel.getVariables(fileName, context, elementName, true), elementName);
+							
+							// Update variable position by assigning UserData:
+							if (res.length == 1 && res[0].getUserData() == null && res[0] instanceof PHPVariableData) {
+								PHPVariableData v = (PHPVariableData) res[0];
+								Object variableContext = VariableContextBuilder.createVariableContext(elementName, context);
+								
+								// Find last assignment of variable:
+								List instantiations = (List) fileData.getVariableTypeManager().getVariablesInstansiation().get(variableContext);
+								if (instantiations != null && instantiations.size() > 0) {
+									PHPVariableTypeData typeData = (PHPVariableTypeData) instantiations.get(instantiations.size() - 1);
+									int varStartPosition = typeData.getPosition();
+									
+									// Search backwards for the variable itself:
+									sRegion = sDoc.getRegionAtCharacterOffset(varStartPosition);
+									if (sRegion != null) {
+										tRegion = sRegion.getRegionAtCharacterOffset(varStartPosition);
+										container = sRegion;
+										if (tRegion instanceof ITextRegionContainer) {
+											container = (ITextRegionContainer) tRegion;
+											tRegion = container.getRegionAtCharacterOffset(varStartPosition);
+										}
+										if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+											phpScriptRegion = (PhpScriptRegion) tRegion;
+											tRegion = phpScriptRegion.getPhpToken(varStartPosition - container.getStartOffset() - phpScriptRegion.getStart());
+											ITextRegion prevRegion = tRegion;
+											do {
+												prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart()-1);
+												if (prevRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
+													break;
+												}
+											} while (prevRegion.getStart() > 0);
+											
+											if (prevRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
+												varStartPosition = container.getStartOffset() + phpScriptRegion.getStart() + prevRegion.getStart();
+												int varEndPosition = varStartPosition + elementName.length();
+												UserData userData = PHPCodeDataFactory.createUserData(fileName, varStartPosition, varEndPosition, varEndPosition, typeData.getLine());
+												res[0] = PHPCodeDataFactory.createPHPVariableData(v.getName(), v.getDocBlock(), userData);
+											}
+										}
+									}
+								}
+							}
+							return res;
 						}
 
 						// If we are at class constant definition:
