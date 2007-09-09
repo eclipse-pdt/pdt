@@ -268,7 +268,8 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			}
 			ProjectionAnnotation[] modifyList = null;
 			if (!projectionAnnotations.isEmpty()) {
-				modifyList = (ProjectionAnnotation[]) projectionAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
+				// this line causes PHP folding to flash, when editing an HTML tag which is a sibling to PHP element (bug #202740)
+				// modifyList = (ProjectionAnnotation[]) projectionAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
 
 			// specifically add all annotations to viewer
