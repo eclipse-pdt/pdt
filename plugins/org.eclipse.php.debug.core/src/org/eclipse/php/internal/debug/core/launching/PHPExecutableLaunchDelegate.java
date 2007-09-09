@@ -120,7 +120,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String absolutePath = null;
 		if (projectName == null) {
 			IResource res = workspaceRoot.findMember(filePath);
-			if (res == null && (!WINDOWS || filePath.getDevice() != null)) {
+			//Fix bug #202741
+			if (res == null && (!WINDOWS || ExternalFilesRegistry.getInstance().isEntryExist(filePath.toString())/*|| filePath.getDevice() != null*/)) {
 				// Get a dummy project because we are probably executing a file that is located out
 				// of the workspace.
 				dummyProject = ExternalFilesRegistry.getInstance().getExternalFilesProject();
@@ -336,9 +337,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			return super.saveBeforeLaunch(configuration, mode, monitor);
 		}
 		IPath path = Path.fromOSString(filePath);
+		
 		// find if the file is under UNTITLED_FOLDER_PATH always look like .../Untitled_Documents/filename.php
-		String parentDir = path.segment(path.segmentCount() - 2);
-		if (UNTITLED_FOLDER_PATH.equals(parentDir)) {
+		// note that if segment count == 1, no need to check since there's no parent folder
+		if ((path.segmentCount() > 1) && UNTITLED_FOLDER_PATH.equals(path.segment(path.segmentCount() - 2))) {
 			// means this is untitled file no need for save before launch
 			return true;
 		}
