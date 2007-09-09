@@ -22,8 +22,8 @@ import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
  * @see org.eclipse.jdt.ui.text.folding.DefaultJavaFoldingStructureProvider
  * @imported Roy, 2007
  */
-public final class CommentPosition extends Position implements IProjectionPosition {
-	CommentPosition(int offset, int length) {
+public final class CaptionedPosition extends Position implements IProjectionPosition {
+	CaptionedPosition(int offset, int length) {
 		super(offset, length);
 	}
 

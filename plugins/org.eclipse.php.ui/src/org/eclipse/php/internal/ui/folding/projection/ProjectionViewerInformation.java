@@ -12,11 +12,10 @@ package org.eclipse.php.internal.ui.folding.projection;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentExtension;
-import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.ui.Logger;
@@ -102,7 +101,7 @@ class ProjectionViewerInformation {
 	/**
 	 * List of projection annotation model changes that need to be applied
 	 */
-	private List fQueuedAnnotationChanges;
+	private List<ProjectionAnnotationModelChanges> fQueuedAnnotationChanges;
 
 	public ProjectionViewerInformation(ProjectionViewer viewer) {
 		fDocument = viewer.getDocument();
@@ -113,9 +112,9 @@ class ProjectionViewerInformation {
 		return fDocument;
 	}
 
-	private List getQueuedAnnotationChanges() {
+	private List<ProjectionAnnotationModelChanges> getQueuedAnnotationChanges() {
 		if (fQueuedAnnotationChanges == null) {
-			fQueuedAnnotationChanges = new LinkedList();
+			fQueuedAnnotationChanges = new LinkedList<ProjectionAnnotationModelChanges>();
 		}
 		return fQueuedAnnotationChanges;
 	}
@@ -133,14 +132,20 @@ class ProjectionViewerInformation {
 	 * projection annotation model.
 	 */
 	void applyAnnotationModelChanges() {
-		List queuedChanges = getQueuedAnnotationChanges();
+		List<ProjectionAnnotationModelChanges> queuedChanges = getQueuedAnnotationChanges();
 		// go through all the pending annotation changes and apply
 		// them to
 		// the projection annotation model
 		while (!queuedChanges.isEmpty()) {
-			ProjectionAnnotationModelChanges changes = (ProjectionAnnotationModelChanges) queuedChanges.remove(0);
+			ProjectionAnnotationModelChanges changes = queuedChanges.remove(0);
 			try {
-				fProjectionAnnotationModel.modifyAnnotations(changes.getDeletions(), changes.getAdditions(), changes.getModifications());
+				fProjectionAnnotationModel.modifyAnnotations(changes.getDeletions(), changes.getAdditions(), null);
+				Map modifications = changes.getModifications();
+				for (Object object : modifications.entrySet()) {
+					Map.Entry<ProjectionAnnotation, Position> entry = (Map.Entry<ProjectionAnnotation, Position>) object;
+					fProjectionAnnotationModel.modifyAnnotationPosition(entry.getKey(), entry.getValue());
+				}
+
 			} catch (RuntimeException e) {
 				// if anything goes wrong, log it be continue
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);

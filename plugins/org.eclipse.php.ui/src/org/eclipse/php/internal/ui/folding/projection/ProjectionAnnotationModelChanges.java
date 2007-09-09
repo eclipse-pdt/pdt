@@ -29,9 +29,9 @@ class ProjectionAnnotationModelChanges {
 	private final Node fNode;
 	private final Annotation[] fDeletions;
 	private final Map fAdditions;
-	private final Annotation[] fModifications;
+	private final Map fModifications;
 
-	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications) {
+	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Map modifications) {
 		fNode = node;
 		fDeletions = deletions;
 		fAdditions = additions;
@@ -46,7 +46,7 @@ class ProjectionAnnotationModelChanges {
 		return fDeletions;
 	}
 
-	public Annotation[] getModifications() {
+	public Map getModifications() {
 		return fModifications;
 	}
 

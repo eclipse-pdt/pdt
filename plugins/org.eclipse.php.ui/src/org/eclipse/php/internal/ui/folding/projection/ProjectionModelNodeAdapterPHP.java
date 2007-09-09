@@ -92,22 +92,17 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			if (!previousAnnotations.isEmpty()) {
 				oldList = previousAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
-			ProjectionAnnotation[] modifyList = null;
-			if (!currentAnnotations.isEmpty()) {
-				// modifyList = currentAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
-			}
-
 			// specifically add all annotations to viewer
 			if (viewer != null && !currentAnnotations.isEmpty()) {
 				fAdapterFactory.queueAnnotationModelChanges(node, null, currentAnnotations, null, viewer);
 			}
 
 			// only update when there is something to update
-			if (oldList != null && oldList.length > 0 || !addedAnnotations.isEmpty() || modifyList != null && modifyList.length > 0) {
-				fAdapterFactory.queueAnnotationModelChanges(node, oldList, addedAnnotations, modifyList);
+			if (oldList != null && oldList.length > 0 || !addedAnnotations.isEmpty() || currentAnnotations != null && currentAnnotations.size() > 0) {
+				fAdapterFactory.queueAnnotationModelChanges(node, oldList, addedAnnotations, currentAnnotations);
 			}
 
-			// next time don't obey preferences rules 
+			// next time don't obey preferences rules
 			shouldAutoCollapseAnnotations = false;
 		}
 
@@ -216,7 +211,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		assert document != null;
 
 		final IRegion alignRegion = alignRegion(startOffset, endOffset, document);
-		return new Position(alignRegion.getOffset(), alignRegion.getLength());
+		return new CaptionedPosition(alignRegion.getOffset(), alignRegion.getLength());
 	}
 
 	private Position createCommentPosition(int startOffset, int endOffset, IDocument document) {
@@ -232,21 +227,21 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	 * end of the document. <code>null</code> is returned if <code>region</code> is
 	 * <code>null</code> itself or does not comprise at least one line delimiter, as a single line
 	 * cannot be folded.
-	 * 
+	 *
 	 * @param region the region to align, may be <code>null</code>
 	 * @param document the folding context
 	 * @return a region equal or greater than <code>region</code> that is aligned with line
 	 *         offsets, <code>null</code> if the region is too small to be foldable (e.g. covers
 	 *         only one line)
 	 */
-	protected final IRegion alignRegion(int startOfset, int endOffsetOrg, IDocument document) {
+	protected final IRegion alignRegion(int startOffset, int endOffsetOrg, IDocument document) {
 		try {
 			final int length = document.getLength();
-			int start = document.getLineOfOffset(startOfset);
+			int start = document.getLineOfOffset(startOffset);
 			int end = document.getLineOfOffset(Math.min(length, endOffsetOrg));
 
 			if (start >= end)
-				return new Region(startOfset, 0);
+				return new Region(startOffset, 0);
 
 			int offset = document.getLineOffset(start);
 			int endOffset;
@@ -259,7 +254,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 
 		} catch (BadLocationException x) {
 			// concurrent modification
-			return new Region(startOfset, endOffsetOrg - startOfset);
+			return new Region(startOffset, endOffsetOrg - startOffset);
 		}
 	}
 
@@ -291,7 +286,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 
 	/**
 	 * Computes current annotations on given CodeDatas.
-	 * @param fileData 
+	 * @param fileData
 	 *
 	 * @param codeDatas
 	 * @param startOffset
