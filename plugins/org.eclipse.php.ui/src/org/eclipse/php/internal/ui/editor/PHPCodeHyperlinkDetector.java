@@ -14,10 +14,18 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -31,7 +39,11 @@ import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPCodeHyperlinkDetector implements IHyperlinkDetectorForPHP {
 
@@ -82,7 +94,7 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetectorForPHP {
 
 							// Check whether this string belongs to some kind of include/require structure:
 							//prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart() - 1);
-							if (prevRegion != null && isIncludeType(prevRegion.getType())) {
+							if (prevRegion != null/* && isIncludeType(prevRegion.getType())*/) {
 
 								int startOffset = container.getStartOffset() + phpScriptRegion.getStart() + phpToken.getStart();
 								int offsetLength = phpToken.getLength();
