@@ -24,7 +24,7 @@ public class ElementProjectionAnnotation extends ProjectionAnnotation {
 	public final Element element;
 
 	///////////////
-	// Constructors 
+	// Constructors
 	///////////////
 	private ElementProjectionAnnotation(Element element, boolean isCollapsed) {
 		super(isCollapsed);
@@ -36,13 +36,13 @@ public class ElementProjectionAnnotation extends ProjectionAnnotation {
 	}
 
 	///////////////
-	// Overridden 
+	// Overridden
 	///////////////
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((element == null) ? 0 : element.hashCode());
+		result = prime * result + (element == null ? 0 : element.hashCode());
 		return result;
 	}
 
@@ -61,7 +61,7 @@ public class ElementProjectionAnnotation extends ProjectionAnnotation {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer();

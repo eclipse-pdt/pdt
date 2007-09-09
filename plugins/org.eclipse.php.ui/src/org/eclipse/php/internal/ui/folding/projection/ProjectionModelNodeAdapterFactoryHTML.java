@@ -111,7 +111,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * @param additions
 	 * @param modifications
 	 */
-	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications) {
+	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Map modifications) {
 		queueAnnotationModelChanges(node, deletions, additions, modifications, null);
 	}
 
@@ -126,7 +126,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * @param modifications
 	 * @param viewer
 	 */
-	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications, ProjectionViewer viewer) {
+	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Map modifications, ProjectionViewer viewer) {
 		// create a change object for latest change and add to queue
 		ProjectionAnnotationModelChanges newChange = new ProjectionAnnotationModelChanges(node, deletions, additions, modifications);
 		if (fProjectionViewers != null) {

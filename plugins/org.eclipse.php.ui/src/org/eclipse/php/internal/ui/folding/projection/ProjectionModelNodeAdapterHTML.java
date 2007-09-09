@@ -268,8 +268,8 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			}
 			ProjectionAnnotation[] modifyList = null;
 			if (!projectionAnnotations.isEmpty()) {
-				// this line causes PHP folding to flash, when editing an HTML tag which is a sibling to PHP element (bug #202740)
-				// modifyList = (ProjectionAnnotation[]) projectionAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
+			// this line causes PHP folding to flash, when editing an HTML tag which is a sibling to PHP element (bug #202740)
+			// modifyList = (ProjectionAnnotation[]) projectionAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
 
 			// specifically add all annotations to viewer
@@ -279,7 +279,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 
 			// only update when there is something to update
 			if (oldList != null && oldList.length > 0 || !additions.isEmpty() || modifyList != null && modifyList.length > 0)
-				fAdapterFactory.queueAnnotationModelChanges(node, oldList, additions, modifyList);
+				fAdapterFactory.queueAnnotationModelChanges(node, oldList, additions, new HashMap());
 		}
 
 		// save new list of annotations
