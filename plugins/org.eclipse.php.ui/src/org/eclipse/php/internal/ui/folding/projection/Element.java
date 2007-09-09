@@ -17,17 +17,17 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
  * @author Roy, 2007
  */
 public class Element {
-	
+
 	/**
 	 * an element type
 	 */
 	public static enum ElementType {
-		FILE("File"), 
-		CLASS("Class"), 
-		FUNCTION("Function"), 
-		METHOD("Method"), 
-		FIELD("Field"), 
-		CONSTANT("Constant"), 
+		FILE("File"),
+		CLASS("Class"),
+		FUNCTION("Function"),
+		METHOD("Method"),
+		FIELD("Field"),
+		CONSTANT("Constant"),
 		DOC("PHP Doc");
 
 		private final String elementTypeName;
@@ -35,9 +35,9 @@ public class Element {
 		private ElementType(String elementTypeName) {
 			this.elementTypeName = elementTypeName;
 		}
-		
+
 		public String toString() {
-			return this.elementTypeName;			
+			return this.elementTypeName;
 		}
 	}
 
@@ -59,9 +59,9 @@ public class Element {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + (parent == null ? 0 : parent.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		result = prime * result + (type == null ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -145,8 +145,8 @@ public class Element {
 			return isPhpDoc ? createElement(element) : element;
 		}
 
-		public static final Element createElement(final Element documentedelement) {
-			return new Element(ElementType.DOC, null, documentedelement);
+		public static final Element createElement(final Element documentedElement) {
+			return new Element(ElementType.DOC, null, documentedElement);
 		}
 
 		public static Element createElement(PHPCodeData codeData, boolean isPhpDoc) {
@@ -175,7 +175,7 @@ public class Element {
 					element = createElement((PHPFunctionData) codeData, false);
 				}
 
-				// field element	
+				// field element
 			} else if (codeData instanceof PHPClassVarData) {
 				assert container != null;
 				element = createElement((PHPClassData) container, (PHPClassVarData) codeData, false);
@@ -192,6 +192,6 @@ public class Element {
 			return isPhpDoc ? createElement(element) : element;
 		}
 	}
-	
-	
+
+
 }
