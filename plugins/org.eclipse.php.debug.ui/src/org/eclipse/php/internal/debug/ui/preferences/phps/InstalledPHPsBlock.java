@@ -93,7 +93,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 				switch (columnIndex) {
 					case 0:
 						if (isDefault(element)) {
-							return phpExe.getName() + PHPDebugUIMessages.PHPsPreferencePage_WorkspaceDefault;
+							return phpExe.getName() + ' ' + PHPDebugUIMessages.PHPsPreferencePage_WorkspaceDefault;
 						}
 						return phpExe.getName();
 					case 1:
