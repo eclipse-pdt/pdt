@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
+import org.eclipse.ui.IPluginContribution;
+import org.eclipse.ui.activities.WorkbenchActivityHelper;
 
 /**
  * Registry class for the ICommunicationDaemon extensions.
@@ -95,8 +97,19 @@ public class CommunicationDaemonRegistry {
 			ArrayList<ICommunicationDaemon> pdtDaemons = new ArrayList<ICommunicationDaemon>(5);
 			ArrayList<ICommunicationDaemon> additionalDaemons = new ArrayList<ICommunicationDaemon>(5);
 			while (e.hasMoreElements()) {
-				CommunicationDaemonFactory initializerFactory = e.nextElement();
-				ICommunicationDaemon initializerDaemon = initializerFactory.createDaemon();
+				final CommunicationDaemonFactory initializerFactory = e.nextElement();
+				final ICommunicationDaemon initializerDaemon = initializerFactory.createDaemon();
+				boolean filter = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
+					public String getLocalId() {
+						return initializerDaemon.getDebuggerID();
+					}
+					public String getPluginId() {
+						return initializerFactory.element.getNamespaceIdentifier();
+					}
+				});
+				if (filter) {
+					continue;
+				}
 				if (DEFAULT_DEBUG_DAEMONS_NAMESPACE.equals(initializerFactory.element.getNamespaceIdentifier())) {
 					if (initializerDaemon.isEnabled()) {
 						pdtDaemons.add(initializerDaemon);
