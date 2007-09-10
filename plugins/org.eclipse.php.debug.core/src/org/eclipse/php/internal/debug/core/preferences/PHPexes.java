@@ -13,26 +13,17 @@ package org.eclipse.php.internal.debug.core.preferences;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
+import org.eclipse.ui.IPluginContribution;
+import org.eclipse.ui.activities.WorkbenchActivityHelper;
 
 /**
  * A managing class for all the registered PHP executables.
@@ -306,7 +297,18 @@ public class PHPexes {
 		for (int i = 0; i < locations.length; i++) {
 			final PHPexeItem item = new PHPexeItem(names[i], locations[i], debuggers[i]);
 			if (item.getPhpEXE() != null) {
-				addItem(item);
+				boolean filterItem = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
+					public String getLocalId() {
+						return item.getDebuggerID();
+					}
+
+					public String getPluginId() {
+						return PHPDebugPlugin.ID;
+					}
+				});
+				if (!filterItem) {
+					addItem(item);
+				}
 			}
 			// Set the default item.
 			if (Boolean.parseBoolean(defaults[i])) {
@@ -346,6 +348,20 @@ public class PHPexes {
 					location = location + ".exe"; //$NON-NLS-1$
 
 				final String pluginId = element.getDeclaringExtension().getNamespaceIdentifier();
+				final String finalDebuggerID = debuggerID;
+				// Filter the executable if needed.
+				boolean filterItem = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
+					public String getLocalId() {
+						return finalDebuggerID;
+					}
+
+					public String getPluginId() {
+						return PHPDebugPlugin.ID;
+					}
+				});
+				if (filterItem) {
+					continue;
+				}
 				URL url = FileLocator.find(Platform.getBundle(pluginId), new Path(location), new HashMap());
 				boolean itemFound = false;
 				if (url != null)

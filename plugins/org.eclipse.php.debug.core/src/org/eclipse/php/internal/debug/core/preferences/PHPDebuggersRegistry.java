@@ -25,6 +25,8 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.communication.CommunicationDaemonRegistry;
+import org.eclipse.ui.IPluginContribution;
+import org.eclipse.ui.activities.WorkbenchActivityHelper;
 
 /**
  * A registry class for all the PHP debuggers.
@@ -131,10 +133,21 @@ public class PHPDebuggersRegistry {
 	private void loadDebuggers() {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 		final IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
-		for (IConfigurationElement element : elements) {
+		for (final IConfigurationElement element : elements) {
 			if (DEBUGGER_TAG.equals(element.getName())) {
 				final String name = element.getAttribute(NAME_ATTRIBUTE);
 				final String id = element.getAttribute(ID_ATTRIBUTE);
+				boolean filter = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
+					public String getLocalId() {
+						return id;
+					}
+					public String getPluginId() {
+						return element.getNamespaceIdentifier();
+					}
+				});
+				if (filter) {
+					continue;
+				}
 				debuggers.put(id, name);
 				try {
 					AbstractDebuggerConfiguration configuration = (AbstractDebuggerConfiguration) element.createExecutableExtension(CONFIGURATION_CLASS_ATTRIBUTE);
