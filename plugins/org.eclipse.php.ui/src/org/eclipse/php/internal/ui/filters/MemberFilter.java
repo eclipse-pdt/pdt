@@ -13,7 +13,10 @@ package org.eclipse.php.internal.ui.filters;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 
@@ -64,9 +67,13 @@ public class MemberFilter extends ViewerFilter {
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (element instanceof PHPCodeData) {
 			PHPCodeData member = (PHPCodeData) element;
+			
+			if (member instanceof PHPClassData || member instanceof PHPClassConstData || (member instanceof PHPFunctionData && !(member.getContainer() instanceof PHPClassData))) {
+				// not a member
+				return true;
+			}
 
 			if (hasFilter(FILTER_VARIABLE) && member instanceof PHPVariableData) {
-
 				return false;
 			}
 
@@ -75,7 +82,7 @@ public class MemberFilter extends ViewerFilter {
 			if (hasFilter(FILTER_STATIC) && PHPModifier.isStatic(flags)) {
 				return false;
 			}
-			if (hasFilter(FILTER_NONPUBLIC) && !PHPModifier.isPublic(flags)) {
+			if (hasFilter(FILTER_NONPUBLIC) && (PHPModifier.isPrivate(flags) || PHPModifier.isProtected(flags))) {
 				return false;
 			}
 		}
