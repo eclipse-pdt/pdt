@@ -111,6 +111,8 @@ class ProjectionViewerInformation {
 	IDocument getDocument() {
 		return fDocument;
 	}
+	
+	
 
 	private List<ProjectionAnnotationModelChanges> getQueuedAnnotationChanges() {
 		if (fQueuedAnnotationChanges == null) {
@@ -143,7 +145,10 @@ class ProjectionViewerInformation {
 				Map modifications = changes.getModifications();
 				for (Object object : modifications.entrySet()) {
 					Map.Entry<ProjectionAnnotation, Position> entry = (Map.Entry<ProjectionAnnotation, Position>) object;
-					fProjectionAnnotationModel.modifyAnnotationPosition(entry.getKey(), entry.getValue());
+					Position position = fProjectionAnnotationModel.getPosition(entry.getKey());
+					if (!position.equals(entry.getValue())) {
+						fProjectionAnnotationModel.modifyAnnotationPosition(entry.getKey(), entry.getValue());
+					}
 				}
 
 			} catch (RuntimeException e) {
