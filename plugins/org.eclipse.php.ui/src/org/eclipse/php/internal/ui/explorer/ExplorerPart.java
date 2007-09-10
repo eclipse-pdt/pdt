@@ -180,7 +180,9 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		// We have to refresh the view, since if the editor has been updated
 		// while this view was hidden (another view was active in the same folder)
 		// - the view is not synchronized with the editor contents.
-		fContentProvider.postRefresh(fViewer.getInput());
+		if(partRef.getId().equals("org.eclipse.php.ui.explorer")){
+			fContentProvider.postRefresh(fViewer.getInput());
+		}
 	}
 
 
