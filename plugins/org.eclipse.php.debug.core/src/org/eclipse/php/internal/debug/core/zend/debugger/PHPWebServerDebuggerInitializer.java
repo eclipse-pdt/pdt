@@ -125,7 +125,16 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
 		} catch (IOException exc) {
 			Logger.logException("Unable to connect to URL " + url, exc);
-			String errorMessage = MessageFormat.format(PHPDebugCoreMessages.DebuggerConnection_Failed_1, new String[] { url.toString() });
+			String baseURL = url.toString();
+			int queryPartIndex = baseURL.indexOf('?');
+			if (queryPartIndex > -1) {
+				baseURL = baseURL.substring(0, queryPartIndex);
+			}
+			String filePath = url.getPath();
+			if (filePath.startsWith("/")) {
+				filePath = filePath.substring(1);
+			}
+			String errorMessage = MessageFormat.format(PHPDebugCoreMessages.DebuggerConnection_Failed_1, new String[] { baseURL, filePath });
 			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
 		} catch (Exception exc) {
 			Logger.logException("Unexpected exception communicating with server", exc);
