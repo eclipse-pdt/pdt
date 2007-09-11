@@ -241,7 +241,7 @@
 	<!-- Workbench validation                                       						  -->
 	<!--======================================================================================-->
 	<extension
-		id="HTMLValidator"
+		id="HTMLValidatorForPHP"
 		name="HTML Syntax Validator (for PHP Files)"
 		point="org.eclipse.wst.validation.validator">
 		<validator>
@@ -274,7 +274,7 @@
 				fullBuild="true"
 				incremental="true"
 				enabled="true"
-				class="org.eclipse.wst.html.internal.validation.HTMLValidator"/>
+				class="org.eclipse.wst.html.internal.validation.HTMLValidator:org.eclipse.php.core.phpsource"/>
 		</validator>
 	</extension>
 
