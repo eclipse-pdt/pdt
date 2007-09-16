@@ -19,11 +19,13 @@ public class SystemFilesFilter extends ViewerFilter {
 	/** (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (element instanceof IFile) {
 			IFile file = (IFile) element;
 			if (!PHPModelUtil.isPhpFile(file)) {
-				if (file.getName().startsWith(".")) {
+				final String name = file.getName();
+				if (name.startsWith(".") && !".htaccess".equals(name)) {
 					return false;
 				}
 			}
@@ -37,5 +39,4 @@ public class SystemFilesFilter extends ViewerFilter {
 
 		return true;
 	}
-
 }
