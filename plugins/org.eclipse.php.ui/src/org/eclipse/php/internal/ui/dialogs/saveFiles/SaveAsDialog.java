@@ -122,7 +122,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 		GridLayout parentLayout = (GridLayout) parent.getLayout();
 		parentLayout.makeColumnsEqualWidth = false;
 		
-		newProjectButton = createButton(parent, NEW_PROJ_ID, PHPUIMessages.getString("SaveAsDialog.createNewProject"), false); //$NON-NLS-1$
+		newProjectButton = createButton(parent, NEW_PROJ_ID, PHPUIMessages.getString("SaveAsDialog_createNewProject"), false); //$NON-NLS-1$
 		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}

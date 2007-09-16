@@ -355,6 +355,12 @@ public class PHPUIMessages {
 
 	public static String PHPFormatterPreferencePage_description;
 	public static String PHPFormatterPreferencePage_title;
+	public static String PHPFormatterConfigurationBlock_tabsLabel;
+	public static String PHPFormatterConfigurationBlock_spacesLabel;
+	public static String PHPFormatterConfigurationBlock_tabPolicyLabel;
+	public static String PHPFormatterConfigurationBlock_indentSizeLabel;
+	public static String PHPFormatterConfigurationBlock_indentSizeErrorMessage;
+
 
 	public static String Preferences_php_editor_useAspTagsAsPhp_label;
 
@@ -854,5 +860,7 @@ public class PHPUIMessages {
 	public static String PerspectiveManager_Switch_Dialog_Message;
 	public static String PerspectiveManager_PerspectiveError_Title;
 	public static String PerspectiveManager_PerspectiveError_Message;
+	
+	public static String SaveAsDialog_createNewProject;
 
 }
