@@ -849,5 +849,10 @@ public class PHPUIMessages {
 
 	public static String UntitledPHPEditor_saveError;
 	public static String UntitledPHPEditor_documentCannotBeSaved;
+	
+	public static String PerspectiveManager_Switch_Dialog_Title;
+	public static String PerspectiveManager_Switch_Dialog_Message;
+	public static String PerspectiveManager_PerspectiveError_Title;
+	public static String PerspectiveManager_PerspectiveError_Message;
 
 }
