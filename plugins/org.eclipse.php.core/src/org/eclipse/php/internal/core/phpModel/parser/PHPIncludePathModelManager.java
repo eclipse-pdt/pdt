@@ -11,19 +11,15 @@
 package org.eclipse.php.internal.core.phpModel.parser;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.internal.events.ResourceDelta;
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -63,6 +59,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	private IncludeCacheManager includeCacheManager;
 	private boolean initialized;
 	private IResourceChangeListener projectResourcesListener;
+	private List<IncludePathModelListener> modelListeners;
 
 	public PHPIncludePathModelManager() {
 		compositePhpModel = new CompositePhpModel() {
@@ -78,6 +75,31 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		projects = new ArrayList();
 		variables = new ArrayList();
 		modelsToCache = new HashMap();
+	}
+
+	/**
+	 * Adds listener of model addition/removal events
+	 * @param listener
+	 */
+	public void addIncludePathModelListener(IncludePathModelListener listener) {
+		if (modelListeners == null) {
+			modelListeners = new ArrayList<IncludePathModelListener>(1); // for now by default only one listener exists - IncludeNode from UI
+			modelListeners.add(listener);
+		} else if (!modelListeners.contains(listener)) {
+			modelListeners.add(listener);
+		}
+	}
+
+	/**
+	 * Removes listener of model addition/removal events
+	 * @param listener
+	 */
+	public void removeIncludePathModelListener(IncludePathModelListener listener) {
+		if (modelListeners == null) {
+			return;
+		} else {
+			modelListeners.remove(listener);
+		}
 	}
 
 	public IPhpModel getModel(String id) {
@@ -124,6 +146,18 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		innerAddLibrary(library);
 	}
 
+	/**
+	 * fires model removal event
+	 * @param model
+	 */
+	private void fireModelAdded(IPhpModel model) {
+		if(modelListeners == null)
+			return;
+		for (IncludePathModelListener listener : modelListeners) {
+			listener.includeModelAdded(model);
+		}
+	}
+
 	private void innerAddLibrary(File library) {
 		PHPIncludePathModel model = new PHPIncludePathModel(library.getPath(), PHPIncludePathModel.TYPE_LIBRARY);
 
@@ -138,16 +172,16 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 			recursiveParse(library, client, model, cacheModel);
 		}
 		compositePhpModel.addModel(model);
+		fireModelAdded(model);
 	}
 
 	private void recursiveParse(File folder, ParserClient client, PHPIncludePathModel model, PHPIncludePathModel cachedModel) {
 		File[] children = folder.listFiles();
 
-		for (int i = 0; i < children.length; i++) {
-			if (children[i].isDirectory()) {
-				recursiveParse(children[i], client, model, cachedModel);
-			} else if (children[i].isFile()) {
-				File file = children[i];
+		for (File file : children) {
+			if (file.isDirectory()) {
+				recursiveParse(file, client, model, cachedModel);
+			} else if (file.isFile()) {
 				if (isPhpFile(file.getName())) {
 					String fileName = file.getPath();
 					PHPFileData fileData = cachedModel.getFileData(fileName);
@@ -192,8 +226,8 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 			return false;
 		}
 		String ext = fileName.substring(index + 1);
-		for (int i = 0; i < validExtensions.length; i++) {
-			if (ext.equals(validExtensions[i])) {
+		for (String element : validExtensions) {
+			if (ext.equals(element)) {
 				return true;
 			}
 		}
@@ -213,50 +247,21 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		IPhpModel removed = compositePhpModel.remove(library.getPath());
 		if (removed != null) {
 			modelsToCache.remove(removed);
+			fireModelRemoved(removed);
 		}
 	}
 
-	//	class ZipInputStreamPermanentReader extends InputStreamReader {
-	//
-	//		public ZipInputStreamPermanentReader(InputStream in) {
-	//			super(in);
-	//		}
-	//
-	//		/* (non-Javadoc)
-	//		 * @see java.io.InputStreamReader#close()
-	//		 */
-	//		public void close() {
-	//			// don't close.
-	//		}
-	//	}
-
-	//	private void parseZip(File zipFile, ParserClient client) {
-	//		ZipInputStream is = null;
-	//		try {
-	//			is = new ZipInputStream(new FileInputStream(zipFile));
-	//			ZipEntry ze;
-	//			while ((ze = is.getNextEntry()) != null) {
-	//				if (!ze.isDirectory()) {
-	//					String fileName = ze.getName();
-	//					if (isPhpFile(fileName)) {
-	//						ParserExecuter executer = new ParserExecuter(parserManager, null, client, zipFile.getName() + File.separator + fileName, new ZipInputStreamPermanentReader(is), new Pattern[0], zipFile.lastModified(), UseAspTagsHandler.useAspTagsAsPhp(project));
-	//						executer.run();
-	//					}
-	//				}
-	//			}
-	//			is.close();
-	//		} catch (FileNotFoundException e) {
-	//			//handled before
-	//		} catch (IOException io) {
-	//			Logger.logException(io);
-	//		}
-	//		if (is != null) {
-	//			try {
-	//				is.close();
-	//			} catch (IOException e) {
-	//			}
-	//		}
-	//	}
+	/**
+	 * Fires model removal event
+	 * @param removed
+	 */
+	private void fireModelRemoved(IPhpModel removed) {
+		if(modelListeners == null)
+			return;
+		for (IncludePathModelListener listener : modelListeners) {
+			listener.includeModelRemoved(model);
+		}
+	}
 
 	private void updatePHPVersion(String oldVersion, String newVersion) {
 		setPHPVersion(newVersion);
@@ -265,12 +270,12 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		// Any model that already exists is skipped.
 		DefaultCacheManager cacheManager = DefaultCacheManager.instance();
 		IPhpModel[] models = compositePhpModel.getModels();
-		for (int i = 0; i < models.length; i++) {
-			File cacheFile = cacheManager.getSharedCacheFile(newVersion, models[i].getID());
+		for (IPhpModel element : models) {
+			File cacheFile = cacheManager.getSharedCacheFile(newVersion, element.getID());
 			if (!cacheFile.exists()) {
-				modelsToCache.put(models[i], models[i]);
+				modelsToCache.put(element, element);
 			} else {
-				modelsToCache.remove(models[i]);
+				modelsToCache.remove(element);
 			}
 		}
 	}
@@ -307,40 +312,40 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		File[] oldLibrariesList = new File[olds.size()];
 		olds.toArray(oldLibrariesList);
 
-		for (int i = 0; i < oldLibrariesList.length; i++) {
-			String currPath = oldLibrariesList[i].getPath();
+		for (File element : oldLibrariesList) {
+			String currPath = element.getPath();
 			boolean found = false;
-			for (int j = 0; j < newLibrariesList.length; j++) {
-				if (newLibrariesList[j].getPath().equals(currPath)) {
+			for (File element2 : newLibrariesList) {
+				if (element2.getPath().equals(currPath)) {
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				removeLibrary(oldLibrariesList[i]);
+				removeLibrary(element);
 			}
 		}
 	}
 
 	private void projectListChanged(IResource[] projects) {
-		for (int i = 0; i < projects.length; i++) {
-			addProject(projects[i]);
+		for (IResource element : projects) {
+			addProject(element);
 		}
 
 		IResource[] oldProjectsList = new IResource[this.projects.size()];
 		this.projects.toArray(oldProjectsList);
 
-		for (int i = 0; i < oldProjectsList.length; i++) {
-			String currName = oldProjectsList[i].getName();
+		for (IResource element : oldProjectsList) {
+			String currName = element.getName();
 			boolean found = false;
-			for (int j = 0; j < projects.length; j++) {
-				if (projects[j].getName().equals(currName)) {
+			for (IResource element2 : projects) {
+				if (element2.getName().equals(currName)) {
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				removeProject(oldProjectsList[i]);
+				removeProject(element);
 			}
 		}
 	}
@@ -471,19 +476,19 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		ArrayList projectsList = new ArrayList();
 		ArrayList variablesList = new ArrayList();
 
-		for (int i = 0; i < entries.length; i++) {
-			if (entries[i].getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-				if (entries[i].getContentKind() == IIncludePathEntry.K_BINARY) {
+		for (IIncludePathEntry element : entries) {
+			if (element.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+				if (element.getContentKind() == IIncludePathEntry.K_BINARY) {
 					// do nothing, support for zips was removed
 				} else {
-					liberaries.add(entries[i]);
+					liberaries.add(element);
 				}
-			} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-				if (entries[i].getResource() != null) { // if project exists
-					projectsList.add(entries[i]);
+			} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+				if (element.getResource() != null) { // if project exists
+					projectsList.add(element);
 				}
-			} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-				variablesList.add(entries[i]);
+			} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+				variablesList.add(element);
 			}
 		}
 		IPath[] paths = new IPath[liberaries.size()];
@@ -510,23 +515,22 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 
 	private void variablesListChanged(IPath[] paths) {
 
-		for (int i = 0; i < paths.length; i++) {
-			addVariable(paths[i]);
+		for (IPath element : paths) {
+			addVariable(element);
 		}
 		IPath[] oldVariablesList = new IPath[variables.size()];
 		variables.toArray(oldVariablesList);
 
-		for (int i = 0; i < oldVariablesList.length; i++) {
-			IPath currVar = oldVariablesList[i];
+		for (IPath currVar : oldVariablesList) {
 			boolean found = false;
-			for (int j = 0; j < paths.length; j++) {
-				if (paths[j].equals(currVar)) {
+			for (IPath element : paths) {
+				if (element.equals(currVar)) {
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				removeVariable(oldVariablesList[i]);
+				removeVariable(currVar);
 			}
 		}
 
@@ -540,9 +544,9 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	}
 
 	/*
-	 * Returns a new List that contains the values in the given list (path strings) as they should 
+	 * Returns a new List that contains the values in the given list (path strings) as they should
 	 * be named in the file system when they are written as cache files.
-	 * The returned list actually holds the cache file names (without the path). 
+	 * The returned list actually holds the cache file names (without the path).
 	 */
 	private List getAsCachedNames(List list) {
 		List newList = new ArrayList(list.size());
@@ -598,6 +602,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 				}
 			}
 		compositePhpModel.addModel(model);
+		fireModelAdded(model);
 	}
 
 	private File getVriableFile(String variableName) {
@@ -623,7 +628,9 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	}
 
 	private void innerRemoveVariable(IPath variable) {
-		compositePhpModel.remove(variable.toString());
+		IPhpModel model = compositePhpModel.remove(variable.toString());
+		if (model != null)
+			fireModelRemoved(model);
 	}
 
 	private class IncludePathListener implements IPhpProjectOptionChangeListener {
@@ -698,7 +705,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 
 			private void updateModel(IProject project) {
 				IPhpProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-				IPhpModel userModel = (projectModel == null) ? new PHPUserModel() : projectModel.getModel(PHPUserModel.ID);
+				IPhpModel userModel = projectModel == null ? new PHPUserModel() : projectModel.getModel(PHPUserModel.ID);
 
 				updateModelWrapper(userModel);
 			}
@@ -713,13 +720,13 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		public void resourceChanged(IResourceChangeEvent event) {
 			if (event.getType() == IResourceChangeEvent.POST_CHANGE && event.getSource() instanceof IWorkspace) {
 				IResourceDelta[] affectedChildren = event.getDelta().getAffectedChildren();
-				for (int i = 0; i < affectedChildren.length; i++) {
-					if ((affectedChildren[i].getFlags() & IResourceDelta.MOVED_TO) != 0) {
-						IProject projectMovedFrom = (IProject) affectedChildren[i].getResource();
-						IProject projectMovedTo = ResourcesPlugin.getWorkspace().getRoot().getProject(affectedChildren[i].getMovedToPath().lastSegment());
+				for (IResourceDelta element : affectedChildren) {
+					if ((element.getFlags() & IResourceDelta.MOVED_TO) != 0) {
+						IProject projectMovedFrom = (IProject) element.getResource();
+						IProject projectMovedTo = ResourcesPlugin.getWorkspace().getRoot().getProject(element.getMovedToPath().lastSegment());
 						handleProjectRename(projectMovedFrom, projectMovedTo);
-					} else if (affectedChildren[i].getKind() == IResourceDelta.REMOVED) {
-						IProject removedProject = (IProject) affectedChildren[i].getResource();
+					} else if (element.getKind() == IResourceDelta.REMOVED) {
+						IProject removedProject = (IProject) element.getResource();
 						handleProjectDeletion(removedProject);
 					}
 
@@ -732,7 +739,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 				handleProjectDeletion(from);
 			} else {
 				boolean removed = removeProject(from);
-				if(removed) {
+				if (removed) {
 					addProject(to);
 				}
 
@@ -762,9 +769,9 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 
 	public Object getExternalResource(PHPFileData fileData) {
 		IPhpModel[] models = compositePhpModel.getModels();
-		for (int i = 0; i < models.length; i++) {
-			if (contains(models[i], fileData)) {
-				String resourceName = models[i].getID();
+		for (IPhpModel element : models) {
+			if (contains(element, fileData)) {
+				String resourceName = element.getID();
 				Path path = new Path(resourceName);
 				if (variables.indexOf(path) != -1) {
 					File variableFile = getVriableFile(resourceName);
@@ -786,7 +793,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	}
 
 	private boolean contains(IPhpModel model, PHPFileData fileData) {
-		return (model.getFileData(fileData.getName()) != null);
+		return model.getFileData(fileData.getName()) != null;
 	}
 
 	/**
