@@ -1,98 +1,20 @@
 <?php
 
 /**
+ * Return the translation of msgid for the current domain, or msgid unaltered if a translation does not exist 
+ *
+ * @return string
+ * @param  msgid string
+ */
+function _($msgid) {}
+
+/**
  * Return the absolute value of the number 
  *
- * @return number
+ * @return int
  * @param  number int
  */
 function abs($number) {}
-
-/**
- * Obtain the contents of the black-list 
- *
- * @return array
- */
-function accelerator_get_blacklist() {}
-
-/**
- * Obtain the list of black-listed paths 
- *
- * @return array
- */
-function accelerator_get_blacklisted_paths() {}
-
-/**
- * Obtain configuration information for the Zend Performance Suite 
- *
- * @return array
- */
-function accelerator_get_configuration() {}
-
-/**
- * Get the scripts which are accelerated by the Zend Performance Suite 
- *
- * @return array
- */
-function accelerator_get_scripts() {}
-
-/**
- * Obtain the server's start time as recorded by the Zend Performance Suite 
- *
- * @return long
- */
-function accelerator_get_server_start_time() {}
-
-/**
- * Obtain statistics information regarding code acceleration in the Zend Performance Suite 
- *
- * @return array
- */
-function accelerator_get_statistics() {}
-
-/**
- * Obtain the list of URIs that were detected by the Zend Performance Suite 
- *
- * @return array
- */
-function accelerator_get_uris() {}
-
-/**
- * Obtain version information for the Zend Performance Suite 
- *
- * @return array
- */
-function accelerator_get_version_info() {}
-
-/**
- * Check accelerator license information 
- *
- * @return array
- */
-function accelerator_license_info() {}
-
-/**
- * Request that the contents of the Accelerator module in the ZPS be reset 
- *
- * @return void
- */
-function accelerator_reset() {}
-
-/**
- * Enable/disable code acceleration in the Zend Performance Suite 
- *
- * @return boolean
- * @param  status boolean
- */
-function accelerator_set_status($status) {}
-
-/**
- * Unlock the Zend Performance Suite API functions for usage 
- *
- * @return boolean
- * @param  password string
- */
-function accelerator_unlock_functions($password) {}
 
 /**
  * Return the arc cosine of the number in radians 
@@ -230,7 +152,7 @@ function apache_get_version() {}
 /**
  * Get an Apache subprocess_env variable 
  *
- * @return string
+ * @return bool
  * @param  variable string
  * @param  walk_to_top bool[optional]
  */
@@ -532,7 +454,7 @@ function array_splice($input, $offset, $length = null, $replacement = null) {}
 /**
  * Returns the sum of the array entries 
  *
- * @return number
+ * @return mixed
  * @param  input array
  */
 function array_sum($input) {}
@@ -610,7 +532,7 @@ function asort($array_arg, $sort_flags = null) {}
 /**
  * Checks if assertion is false 
  *
- * @return bool
+ * @return int
  * @param  assertion string|bool
  */
 function assert($assertion) {}
@@ -790,7 +712,7 @@ function bind_textdomain_codeset($domain, $codeset) {}
 /**
  * Returns the decimal equivalent of the binary number 
  *
- * @return number
+ * @return int
  * @param  binary_number string
  */
 function bindec($binary_number) {}
@@ -834,7 +756,7 @@ function birdstep_commit($index) {}
  * @return int
  * @param  server string
  * @param  user string
- * @param  pass string
+ * @param  pass sting
  */
 function birdstep_connect($server, $user, $pass) {}
 
@@ -904,93 +826,6 @@ function birdstep_result($index, $col) {}
  * @param  index int
  */
 function birdstep_rollback($index) {}
-
-/**
- * Close an open file pointer 
- *
- * @return bool
- * @param  fp resource
- */
-function bzclose($fp) {}
-
-/**
- * Compresses a string into BZip2 encoded data 
- *
- * @return mixed
- * @param  source string
- * @param  blocksize100k int[optional]
- * @param  workfactor int[optional]
- */
-function bzcompress($source, $blocksize100k = null, $workfactor = null) {}
-
-/**
- * Decompresses BZip2 compressed data 
- *
- * @return mixed
- * @param  source string
- * @param  small int[optional]
- */
-function bzdecompress($source, $small = null) {}
-
-/**
- * Returns the error number 
- *
- * @return int
- * @param  bz resource
- */
-function bzerrno($bz) {}
-
-/**
- * Returns the error number and error string in an associative array 
- *
- * @return array
- * @param  bz resource
- */
-function bzerror($bz) {}
-
-/**
- * Returns the error string 
- *
- * @return string
- * @param  bz resource
- */
-function bzerrstr($bz) {}
-
-/**
- * Flushes output 
- *
- * @return bool
- * @param  fp resource
- */
-function bzflush($fp) {}
-
-/**
- * Opens a new BZip2 stream 
- *
- * @return resource
- * @param  file|fp string|int
- * @param  mode string
- */
-function bzopen($file, $mode) {}
-
-/**
- * Reads up to length bytes from a BZip2 stream, or 1024 bytes if length is not specified 
- *
- * @return string
- * @param  bz int
- * @param  length int
- */
-function bzread($bz, $length) {}
-
-/**
- * Binary-safe file write 
- *
- * @return int
- * @param  fp resource
- * @param  str string
- * @param  length int[optional]
- */
-function bzwrite($fp, $str, $length = null) {}
 
 /**
  * Returns the number of days in a month for a given year and calendar 
@@ -1200,7 +1035,7 @@ function closelog() {}
 /**
  * Increases the reference counter on a COM object 
  *
- * @return void
+ * @return mixed
  * @param  module int
  */
 function com_addref($module) {}
@@ -1259,7 +1094,7 @@ function com_isenum($com_module) {}
 /**
  * Loads a COM module 
  *
- * @return resource
+ * @return int
  * @param  module_name string
  * @param  remote_host string[optional]
  * @param  codepage int[optional]
@@ -1329,7 +1164,7 @@ function com_propset($module, $property_name, $value) {}
 /**
  * Releases a COM object 
  *
- * @return void
+ * @return mixed
  * @param  module int
  */
 function com_release($module) {}
@@ -1510,7 +1345,7 @@ function cpdf_clip($pdfdoc) {}
 /**
  * Closes the pdf document 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  */
 function cpdf_close($pdfdoc) {}
@@ -1802,7 +1637,7 @@ function cpdf_scale($pdfdoc, $x_scale, $y_scale) {}
 /**
  * Sets hyperlink 
  *
- * @return bool
+ * @return void
  * @param  pdfdoc int
  * @param  xll float
  * @param  yll float
@@ -2196,7 +2031,7 @@ function crack_opendict($dictionary) {}
 /**
  * Calculate the crc32 polynomial of a string 
  *
- * @return int
+ * @return string
  * @param  str string
  */
 function crc32($str) {}
@@ -2334,7 +2169,7 @@ function curl_error($ch) {}
 /**
  * Perform a CURL session 
  *
- * @return mixed
+ * @return bool
  * @param  ch resource
  */
 function curl_exec($ch) {}
@@ -2361,7 +2196,7 @@ function curl_init($url = null) {}
  *
  * @return bool
  * @param  ch resource
- * @param  option int
+ * @param  option string
  * @param  value mixed
  */
 function curl_setopt($ch, $option, $value) {}
@@ -2369,7 +2204,7 @@ function curl_setopt($ch, $option, $value) {}
 /**
  * Return cURL version information. 
  *
- * @return array
+ * @return string
  */
 function curl_version() {}
 
@@ -2424,7 +2259,7 @@ function cyrus_connect($host = null, $port = null, $flags = null) {}
 /**
  * Send a query to a Cyrus IMAP server 
  *
- * @return array
+ * @return bool
  * @param  connection resource
  * @param  query string
  */
@@ -2461,7 +2296,7 @@ function dba_close($handle) {}
  *
  * @return bool
  * @param  key string
- * @param  handle resource
+ * @param  handle int
  */
 function dba_delete($key, $handle) {}
 
@@ -2470,7 +2305,7 @@ function dba_delete($key, $handle) {}
  *
  * @return bool
  * @param  key string
- * @param  handle resource
+ * @param  handle int
  */
 function dba_exists($key, $handle) {}
 
@@ -2480,7 +2315,7 @@ function dba_exists($key, $handle) {}
  * @return string
  * @param  key string
  * @param  skip int[optional]
- * @param  handle resource
+ * @param  handle int
  */
 function dba_fetch($key, $skip = null, $handle) {}
 
@@ -2488,7 +2323,7 @@ function dba_fetch($key, $skip = null, $handle) {}
  * Resets the internal key pointer and returns the first key 
  *
  * @return string
- * @param  handle resource
+ * @param  handle int
  */
 function dba_firstkey($handle) {}
 
@@ -2506,7 +2341,7 @@ function dba_handlers($full_info = null) {}
  * @return bool
  * @param  key string
  * @param  value string
- * @param  handle resource
+ * @param  handle int
  */
 function dba_insert($key, $value, $handle) {}
 
@@ -2521,7 +2356,7 @@ function dba_list() {}
  * Returns the next key 
  *
  * @return string
- * @param  handle resource
+ * @param  handle int
  */
 function dba_nextkey($handle) {}
 
@@ -2540,7 +2375,7 @@ function dba_open($path, $mode, $handlername = null) {}
  * Optimizes (e.g. clean up, vacuum) database 
  *
  * @return bool
- * @param  handle resource
+ * @param  handle int
  */
 function dba_optimize($handle) {}
 
@@ -2561,7 +2396,7 @@ function dba_popen($path, $mode, $handlername = null) {}
  * @return bool
  * @param  key string
  * @param  value string
- * @param  handle resource
+ * @param  handle int
  */
 function dba_replace($key, $value, $handle) {}
 
@@ -2569,7 +2404,7 @@ function dba_replace($key, $value, $handle) {}
  * Synchronizes database 
  *
  * @return bool
- * @param  handle resource
+ * @param  handle int
  */
 function dba_sync($handle) {}
 
@@ -2593,7 +2428,7 @@ function dbase_close($identifier) {}
 /**
  * Creates a new dBase-format database file 
  *
- * @return int
+ * @return bool
  * @param  filename string
  * @param  fields array
  */
@@ -2687,7 +2522,7 @@ function dbmclose($dbm_identifier) {}
 /**
  * Deletes the value for a key from a dbm database 
  *
- * @return bool
+ * @return int
  * @param  dbm_identifier int
  * @param  key string
  */
@@ -2696,7 +2531,7 @@ function dbmdelete($dbm_identifier, $key) {}
 /**
  * Tells if a value exists for a key in a dbm database 
  *
- * @return bool
+ * @return int
  * @param  dbm_identifier int
  * @param  key string
  */
@@ -2741,7 +2576,7 @@ function dbmnextkey($dbm_identifier, $key) {}
 /**
  * Opens a dbm database 
  *
- * @return resource
+ * @return int
  * @param  filename string
  * @param  mode string
  */
@@ -2779,7 +2614,7 @@ function dbx_compare($row_x, $row_y, $columnname, $flags = null) {}
 /**
  * Returns a dbx_link_object on success and returns 0 on failure 
  *
- * @return object
+ * @return dbx_link_object
  * @param  module_name string
  * @param  host string
  * @param  db string
@@ -2792,7 +2627,7 @@ function dbx_connect($module_name, $host, $db, $username, $password, $persistent
 /**
  * 
  *
- * @return string
+ * @return void
  * @param  dbx_link dbx_link_object
  */
 function dbx_error($dbx_link) {}
@@ -2809,7 +2644,7 @@ function dbx_esc($dbx_link, $sz) {}
 /**
  * Returns a dbx_link_object on success and returns 0 on failure 
  *
- * @return mixed
+ * @return dbx_result_object
  * @param  dbx_link dbx_link_object
  * @param  sql_statement string
  * @param  flags long[optional]
@@ -2819,7 +2654,7 @@ function dbx_query($dbx_link, $sql_statement, $flags = null) {}
 /**
  * Returns 0 on failure, 1 on success 
  *
- * @return bool
+ * @return int
  * @param  dbx_result object
  * @param  compare_function_name string
  */
@@ -2859,7 +2694,7 @@ function deaggregate($obj, $class = null) {}
 /**
  * Prints out a backtrace 
  *
- * @return array
+ * @return void
  */
 function debug_backtrace() {}
 
@@ -2870,13 +2705,6 @@ function debug_backtrace() {}
  * @param  var mixed
  */
 function debug_zval_dump($var) {}
-
-/**
- * Obtain the server's start time as recorded by the Zend Debugger 
- *
- * @return long
- */
-function debugger_get_server_start_time() {}
 
 /**
  * Returns a string containing a binary representation of the number 
@@ -2908,9 +2736,9 @@ function decoct($decimal_number) {}
  * @return bool
  * @param  constant_name string
  * @param  value mixed
- * @param  case_sensitive boolean[optional]
+ * @param  case_sensitive=true unknown
  */
-function define($constant_name, $value, $case_sensitive = true) {}
+function define($constant_name, $value, $case_sensitive=true) {}
 
 /**
  * Initializes all syslog-related variables 
@@ -3002,7 +2830,7 @@ function dio_stat($fd) {}
 /**
  * Perform a c library tcsetattr on fd 
  *
- * @return bool
+ * @return mixed
  * @param  fd resource
  * @param  args array
  */
@@ -3034,14 +2862,6 @@ function dio_write($fd, $data, $len) {}
  * @param  directory string
  */
 function dir($directory) {}
-
-/**
- * 
- *
- * @return boolean
- * @param  directive string
- */
-function directive_requires_restart($directive) {}
 
 /**
  * Returns the directory name component of the path 
@@ -3384,7 +3204,7 @@ function domxml_version() {}
 /**
  * Creates a tree of PHP objects from an XML document 
  *
- * @return DomDocument
+ * @return object
  * @param  xmltree string
  */
 function domxml_xmltree($xmltree) {}
@@ -3395,7 +3215,7 @@ function domxml_xmltree($xmltree) {}
 /**
  * Creates XSLT Stylesheet object from string 
  *
- * @return DomXsltStylesheet
+ * @return object
  * @param  xsltstylesheet string
  */
 function domxml_xslt_stylesheet($xsltstylesheet) {}
@@ -3403,7 +3223,7 @@ function domxml_xslt_stylesheet($xsltstylesheet) {}
 /**
  * Creates XSLT Stylesheet object from DOM Document object 
  *
- * @return DomXsltStylesheet
+ * @return object
  * @param  xmldoc object
  */
 function domxml_xslt_stylesheet_doc($xmldoc) {}
@@ -3411,7 +3231,7 @@ function domxml_xslt_stylesheet_doc($xmldoc) {}
 /**
  * Creates XSLT Stylesheet object from file 
  *
- * @return DomXsltStylesheet
+ * @return object
  * @param  filename string
  */
 function domxml_xslt_stylesheet_file($filename) {}
@@ -3419,7 +3239,7 @@ function domxml_xslt_stylesheet_file($filename) {}
 /**
  * Get XSLT library version 
  *
- * @return int
+ * @return string
  */
 function domxml_xslt_version() {}
 
@@ -3560,7 +3380,7 @@ function exif_imagetype($imagefile) {}
 /**
  * Reads header data from the JPEG/TIFF image filename and optionally reads the internal thumbnails 
  *
- * @return array
+ * @return array|false
  * @param  filename string
  * @param  sections_needed unknown[optional]
  * @param  sub_arrays unknown[optional]
@@ -3571,7 +3391,7 @@ function exif_read_data($filename, $sections_needed = null, $sub_arrays = null, 
 /**
  * Get headername for index or false if not defined 
  *
- * @return string
+ * @return string|false
  * @param  index unknown
  */
 function exif_tagname($index) {}
@@ -3579,7 +3399,7 @@ function exif_tagname($index) {}
 /**
  * Reads the embedded thumbnail 
  *
- * @return string
+ * @return string|false
  * @param  filename string
  * @param  width unknown[optional]
  * @param  height unknown
@@ -3669,7 +3489,7 @@ function fbsql_autocommit($link_identifier, $OnOff = null) {}
 /**
  * Get the size of a BLOB identified by blob_handle 
  *
- * @return int
+ * @return string
  * @param  blob_handle string
  * @param  link_identifier resource[optional]
  */
@@ -3678,7 +3498,7 @@ function fbsql_blob_size($blob_handle, $link_identifier = null) {}
 /**
  * Change the user for a session 
  *
- * @return resource
+ * @return int
  * @param  user string
  * @param  password string
  * @param  database string[optional]
@@ -3689,7 +3509,7 @@ function fbsql_change_user($user, $password, $database = null, $link_identifier 
 /**
  * Get the size of a CLOB identified by clob_handle 
  *
- * @return int
+ * @return string
  * @param  clob_handle string
  * @param  link_identifier resource[optional]
  */
@@ -3698,7 +3518,7 @@ function fbsql_clob_size($clob_handle, $link_identifier = null) {}
 /**
  * Close a connection to a database server 
  *
- * @return bool
+ * @return int
  * @param  link_identifier resource[optional]
  */
 function fbsql_close($link_identifier = null) {}
@@ -3751,7 +3571,7 @@ function fbsql_create_db($database_name, $link_identifier = null) {}
 /**
  * Move the internal row counter to the specified row_number 
  *
- * @return bool
+ * @return int
  * @param  result int
  * @param  row_number int
  */
@@ -3797,7 +3617,7 @@ function fbsql_db_status($database_name, $link_identifier = null) {}
 /**
  * Drop a database on the server 
  *
- * @return bool
+ * @return int
  * @param  database_name string
  * @param  link_identifier resource[optional]
  */
@@ -3831,7 +3651,7 @@ function fbsql_fetch_array($result, $result_type = null) {}
 /**
  * Detch a row of data. Returns an assoc array 
  *
- * @return array
+ * @return object
  * @param  result resource
  */
 function fbsql_fetch_assoc($result) {}
@@ -3882,7 +3702,7 @@ function fbsql_field_flags($result, $field_index = null) {}
 /**
  * Get the column length for a specified field_index 
  *
- * @return int
+ * @return string
  * @param  result int
  * @param  field_index int[optional]
  */
@@ -3987,7 +3807,7 @@ function fbsql_list_tables($database, $link_identifier = null) {}
 /**
  * Switch to the next result if multiple results are available 
  *
- * @return bool
+ * @return int
  * @param  result int
  */
 function fbsql_next_result($result) {}
@@ -4067,7 +3887,7 @@ function fbsql_result($result, $row = null, $field = null) {}
 /**
  * Rollback all statments since last commit 
  *
- * @return bool
+ * @return int
  * @param  link_identifier resource[optional]
  */
 function fbsql_rollback($link_identifier = null) {}
@@ -4186,7 +4006,7 @@ function fdf_add_template($fdfdoc, $newpage, $filename, $template, $rename) {}
 /**
  * Closes the FDF document 
  *
- * @return void
+ * @return bool
  * @param  fdfdoc resource
  */
 function fdf_close($fdfdoc) {}
@@ -4291,7 +4111,7 @@ function fdf_get_status($fdfdoc) {}
 /**
  * Gets the value of a field as string 
  *
- * @return mixed
+ * @return string
  * @param  fdfdoc resource
  * @param  fieldname string
  * @param  which int[optional]
@@ -4351,7 +4171,7 @@ function fdf_remove_item($fdfdoc, $fieldname, $item) {}
 /**
  * Writes out the FDF file 
  *
- * @return bool
+ * @return mixed
  * @param  fdfdoc resource
  * @param  filename string[optional]
  */
@@ -4360,7 +4180,7 @@ function fdf_save($fdfdoc, $filename = null) {}
 /**
  * Returns the FDF file as a string 
  *
- * @return string
+ * @return mixed
  * @param  fdfdoc resource
  */
 function fdf_save_string($fdfdoc) {}
@@ -4845,7 +4665,7 @@ function fseek($fp, $offset, $whence = null) {}
 /**
  * Open Internet or Unix domain socket connection 
  *
- * @return resource
+ * @return int
  * @param  hostname string
  * @param  port int
  * @param  errno int[optional]
@@ -4858,7 +4678,7 @@ function fsockopen($hostname, $port, $errno = null, $errstr = null, $timeout = n
 /**
  * Stat() on a filehandle 
  *
- * @return array
+ * @return int
  * @param  fp resource
  */
 function fstat($fp) {}
@@ -4900,7 +4720,7 @@ function ftp_chdir($stream, $directory) {}
 /**
  * Closes the FTP stream 
  *
- * @return bool
+ * @return void
  * @param  stream resource
  */
 function ftp_close($stream) {}
@@ -5017,7 +4837,7 @@ function ftp_nb_continue($stream) {}
 /**
  * Retrieves a file from the FTP server asynchronly and writes it to an open file 
  *
- * @return int
+ * @return bool
  * @param  stream resource
  * @param  fp resource
  * @param  remote_file string
@@ -5029,7 +4849,7 @@ function ftp_nb_fget($stream, $fp, $remote_file, $mode, $resumepos) {}
 /**
  * Stores a file from an open file to the FTP server nbronly 
  *
- * @return int
+ * @return bool
  * @param  stream resource
  * @param  remote_file string
  * @param  fp resource
@@ -5053,7 +4873,7 @@ function ftp_nb_get($stream, $local_file, $remote_file, $mode, $resume_pos) {}
 /**
  * Stores a file on the FTP server 
  *
- * @return int
+ * @return bool
  * @param  stream resource
  * @param  remote_file string
  * @param  local_file string
@@ -5103,7 +4923,7 @@ function ftp_pwd($stream) {}
 /**
  * Closes the FTP stream 
  *
- * @return bool
+ * @return void
  * @param  stream resource
  */
 function ftp_quit($stream) {}
@@ -5186,7 +5006,7 @@ function ftp_systype($stream) {}
 /**
  * Truncate file to 'size' length 
  *
- * @return bool
+ * @return int
  * @param  fp resource
  * @param  size int
  */
@@ -5240,20 +5060,12 @@ function fwrite($fp, $str, $length = null) {}
 function gd_info() {}
 
 /**
- * 
+ * Get information about the capabilities of a browser 
  *
- * @return mixed
- * @param  browser_name string[optional]
- * @param  return_array bool[optional]
+ * @return object
+ * @param  browser_name string
  */
-function get_browser($browser_name = null, $return_array = null) {}
-
-/**
- * Obtain the function call stack trace 
- *
- * @return array
- */
-function get_call_stack() {}
+function get_browser($browser_name) {}
 
 /**
  * Get the value of a PHP configuration option 
@@ -5424,7 +5236,7 @@ function getallheaders() {}
 /**
  * Gets the current directory 
  *
- * @return string
+ * @return mixed
  */
 function getcwd() {}
 
@@ -5487,7 +5299,7 @@ function getlastmod() {}
 /**
  * Get MX records corresponding to a given Internet host name 
  *
- * @return bool
+ * @return int
  * @param  hostname string
  * @param  mxhosts array
  * @param  weight array[optional]
@@ -5591,7 +5403,7 @@ function gettext($msgid) {}
 /**
  * Returns the current time as array 
  *
- * @return mixed
+ * @return array
  */
 function gettimeofday() {}
 
@@ -6091,7 +5903,7 @@ function gzinflate($data, $length = null) {}
 /**
  * Open a .gz-file and return a .gz-file pointer 
  *
- * @return resource
+ * @return int
  * @param  filename string
  * @param  mode string
  * @param  use_include_path int[optional]
@@ -6210,7 +6022,7 @@ function hebrevc($str, $max_chars_per_line = null) {}
 /**
  * Returns the decimal equivalent of the hexadecimal number 
  *
- * @return number
+ * @return int
  * @param  hexadecimal_number string
  */
 function hexdec($hexadecimal_number) {}
@@ -6218,7 +6030,7 @@ function hexdec($hexadecimal_number) {}
 /**
  * Syntax highlight a source file 
  *
- * @return int
+ * @return bool
  * @param  file_name string
  * @param  return bool[optional]
  */
@@ -6227,7 +6039,7 @@ function highlight_file($file_name, $return = null) {}
 /**
  * Syntax highlight a string or optionally return it 
  *
- * @return int
+ * @return bool
  * @param  string string
  * @param  return bool[optional]
  */
@@ -6291,7 +6103,7 @@ function hw_array2objrec($objarr) {}
 /**
  * Changes attributes of an object (obsolete) 
  *
- * @return bool
+ * @return void
  * @param  link int
  * @param  objid int
  * @param  attributes array
@@ -6319,7 +6131,7 @@ function hw_childrenobj($link, $objid) {}
 /**
  * Close connection to Hyperwave server 
  *
- * @return bool
+ * @return void
  * @param  link int
  */
 function hw_close($link) {}
@@ -6345,7 +6157,7 @@ function hw_connection_info($link) {}
 /**
  * Copies object 
  *
- * @return int
+ * @return void
  * @param  link int
  * @param  objrec array
  * @param  dest int
@@ -6355,7 +6167,7 @@ function hw_cp($link, $objrec, $dest) {}
 /**
  * Deletes object 
  *
- * @return bool
+ * @return void
  * @param  link int
  * @param  objid int
  */
@@ -6373,7 +6185,7 @@ function hw_docbyanchor($link, $anchorid) {}
 /**
  * Returns object record of document belonging to anchorid 
  *
- * @return string
+ * @return array
  * @param  link int
  * @param  anchorid int
  */
@@ -6407,7 +6219,7 @@ function hw_document_content($doc) {}
 /**
  * Sets/replaces content of document 
  *
- * @return bool
+ * @return int
  * @param  doc hwdoc
  * @param  content string
  */
@@ -6459,7 +6271,7 @@ function hw_dummy($link, $id, $msgid) {}
 /**
  * Modifies text document 
  *
- * @return bool
+ * @return void
  * @param  link int
  * @param  doc hwdoc
  */
@@ -6484,7 +6296,7 @@ function hw_errormsg($link) {}
 /**
  * Frees memory of document 
  *
- * @return bool
+ * @return void
  * @param  doc hwdoc
  */
 function hw_free_document($doc) {}
@@ -6564,7 +6376,7 @@ function hw_getchilddoccollobj($link, $objid) {}
 /**
  * Returns object record  
  *
- * @return mixed
+ * @return string
  * @param  link int
  * @param  objid int
  * @param  query string[optional]
@@ -6696,7 +6508,7 @@ function hw_getremote($link, $objid) {}
 /**
  * Returns the remote document or an array of object records 
  *
- * @return mixed
+ * @return [array|int]
  * @param  link int
  * @param  objrec string
  */
@@ -6705,7 +6517,7 @@ function hw_getremotechildren($link, $objrec) {}
 /**
  * Returns object id of source docuent by destination anchor 
  *
- * @return array
+ * @return int
  * @param  link int
  * @param  destid int
  */
@@ -6714,7 +6526,7 @@ function hw_getsrcbydestobj($link, $destid) {}
 /**
  * Returns text document. Links are relative to rootid if given 
  *
- * @return int
+ * @return hwdoc
  * @param  link int
  * @param  objid int
  * @param  rootid int[optional]
@@ -6732,7 +6544,7 @@ function hw_getusername($link) {}
 /**
  * Identifies at Hyperwave server 
  *
- * @return string
+ * @return void
  * @param  link int
  * @param  username string
  * @param  password string
@@ -6753,7 +6565,7 @@ function hw_incollections($link, $objids, $collids, $para) {}
 /**
  * Outputs info string 
  *
- * @return string
+ * @return void
  * @param  link int
  */
 function hw_info($link) {}
@@ -6761,7 +6573,7 @@ function hw_info($link) {}
 /**
  * Inserts collection 
  *
- * @return int
+ * @return void
  * @param  link int
  * @param  parentid int
  * @param  objarr array
@@ -6771,7 +6583,7 @@ function hw_inscoll($link, $parentid, $objarr) {}
 /**
  * Inserts document 
  *
- * @return int
+ * @return void
  * @param  link int
  * @param  parentid int
  * @param  objrec string
@@ -6782,7 +6594,7 @@ function hw_insdoc($link, $parentid, $objrec, $text = null) {}
 /**
  * Inserts only anchors into text 
  *
- * @return bool
+ * @return string
  * @param  hwdoc int
  * @param  anchorecs array
  * @param  dest array
@@ -6793,7 +6605,7 @@ function hw_insertanchors($hwdoc, $anchorecs, $dest, $urlprefixes = null) {}
 /**
  * Insert new document 
  *
- * @return int
+ * @return void
  * @param  link int
  * @param  parentid int
  * @param  doc hwdoc
@@ -6823,7 +6635,7 @@ function hw_mapid($link, $serverid, $destid) {}
 /**
  * Modifies attributes of an object 
  *
- * @return bool
+ * @return void
  * @param  link int
  * @param  objid int
  * @param  remattributes array
@@ -6835,7 +6647,7 @@ function hw_modifyobject($link, $objid, $remattributes, $addattributes, $mode = 
 /**
  * Moves object 
  *
- * @return int
+ * @return void
  * @param  link int
  * @param  objrec array
  * @param  from int
@@ -6846,7 +6658,7 @@ function hw_mv($link, $objrec, $from, $dest) {}
 /**
  * Create a new document 
  *
- * @return int
+ * @return hwdoc
  * @param  objrec string
  * @param  data string
  * @param  size int
@@ -6874,7 +6686,7 @@ function hw_objrec2array($objrec, $format = null) {}
 /**
  * Prints document 
  *
- * @return bool
+ * @return void
  * @param  doc hwdoc
  */
 function hw_output_document($doc) {}
@@ -6910,7 +6722,7 @@ function hw_pipecgi($link, $objid) {}
 /**
  * Returns document 
  *
- * @return int
+ * @return hwdoc
  * @param  link int
  * @param  objid int
  */
@@ -6926,7 +6738,7 @@ function hw_root() {}
 /**
  * Set the id to which links are calculated 
  *
- * @return int
+ * @return void
  * @param  link int
  * @param  rootid int
  */
@@ -6943,7 +6755,7 @@ function hw_stat($link) {}
 /**
  * Unlocks object 
  *
- * @return bool
+ * @return void
  * @param  link int
  * @param  objid int
  */
@@ -6982,9 +6794,8 @@ function i18n_convert($str, $to_encoding, $from_encoding = null) {}
  * @return string
  * @param  str string
  * @param  encoding_list mixed[optional]
- * @param  strict bool[optional]
  */
-function i18n_discover_encoding($str, $encoding_list = null, $strict = null) {}
+function i18n_discover_encoding($str, $encoding_list = null) {}
 
 /**
  * Returns the input encoding 
@@ -6997,7 +6808,7 @@ function i18n_http_input($type = null) {}
 /**
  * Sets the current output_encoding or returns the current output_encoding as a string 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function i18n_http_output($encoding = null) {}
@@ -7005,7 +6816,7 @@ function i18n_http_output($encoding = null) {}
 /**
  * Sets the current internal encoding or Returns the current internal encoding as a string 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function i18n_internal_encoding($encoding = null) {}
@@ -7036,9 +6847,8 @@ function i18n_mime_header_decode($string) {}
  * @param  charset string[optional]
  * @param  transfer_encoding string[optional]
  * @param  linefeed string[optional]
- * @param  indent int[optional]
  */
-function i18n_mime_header_encode($str, $charset = null, $transfer_encoding = null, $linefeed = null, $indent = null) {}
+function i18n_mime_header_encode($str, $charset = null, $transfer_encoding = null, $linefeed = null) {}
 
 /**
  * Add an user to security database (only for IB6 or later) 
@@ -7058,7 +6868,7 @@ function ibase_add_user($server, $dba_user_name, $dba_password, $user_name, $pas
 /**
  * Add data into created blob 
  *
- * @return void
+ * @return bool
  * @param  blob_id int
  * @param  data string
  */
@@ -7075,7 +6885,7 @@ function ibase_blob_cancel($blob_id) {}
 /**
  * Close blob 
  *
- * @return mixed
+ * @return bool
  * @param  blob_id int
  */
 function ibase_blob_close($blob_id) {}
@@ -7083,7 +6893,7 @@ function ibase_blob_close($blob_id) {}
 /**
  * Create blob for adding data 
  *
- * @return resource
+ * @return int
  * @param  link_identifier resource[optional]
  */
 function ibase_blob_create($link_identifier = null) {}
@@ -7117,7 +6927,7 @@ function ibase_blob_import($link_identifier = null, $file_id) {}
 /**
  * Return blob length and other useful info 
  *
- * @return array
+ * @return object
  * @param  blob_id_str string
  */
 function ibase_blob_info($blob_id_str) {}
@@ -7125,7 +6935,7 @@ function ibase_blob_info($blob_id_str) {}
 /**
  * Open blob for retriving data parts 
  *
- * @return resource
+ * @return int
  * @param  blob_id string
  */
 function ibase_blob_open($blob_id) {}
@@ -7334,7 +7144,7 @@ function iconv($in_charset, $out_charset, $str) {}
 /**
  * Get internal encoding and output encoding for ob_iconv_handler() 
  *
- * @return mixed
+ * @return array
  * @param  type string[optional]
  */
 function iconv_get_encoding($type = null) {}
@@ -7468,7 +7278,7 @@ function ifx_fieldtypes($resultid) {}
 /**
  * Deletes the blob-object 
  *
- * @return bool
+ * @return int
  * @param  bid int
  */
 function ifx_free_blob($bid) {}
@@ -7589,7 +7399,7 @@ function ifx_textasvarchar($mode) {}
 /**
  * Updates the content of the blob-object 
  *
- * @return bool
+ * @return int
  * @param  bid int
  * @param  content string
  */
@@ -7685,7 +7495,7 @@ function ignore_user_abort($value) {}
  * Output WBMP image to browser or file 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  * @param  filename string[optional]
  * @param  threshold int[optional]
  */
@@ -7702,26 +7512,17 @@ function image_type_to_mime_type($imagetype) {}
 /**
  * Turn alpha blending mode on or off for the given image 
  *
- * @return bool
+ * @return void
  * @param  im resource
  * @param  on bool
  */
 function imagealphablending($im, $on) {}
 
 /**
- * Should antialiased functions used or not
- *
- * @return bool
- * @param  im resource
- * @param  on bool
- */
-function imageantialias($im, $on) {}
-
-/**
  * Draw a partial ellipse 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  cx int
  * @param  cy int
  * @param  w int
@@ -7735,8 +7536,8 @@ function imagearc($im, $cx, $cy, $w, $h, $s, $e, $col) {}
 /**
  * Draw a character 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  font int
  * @param  x int
  * @param  y int
@@ -7748,8 +7549,8 @@ function imagechar($im, $font, $x, $y, $c, $col) {}
 /**
  * Draw a character rotated 90 degrees counter-clockwise 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  font int
  * @param  x int
  * @param  y int
@@ -7762,7 +7563,7 @@ function imagecharup($im, $font, $x, $y, $c, $col) {}
  * Allocate a color for an image 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  * @param  red int
  * @param  green int
  * @param  blue int
@@ -7785,7 +7586,7 @@ function imagecolorallocatealpha($im, $red, $green, $blue, $alpha) {}
  * Get the index of the color of a pixel 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  * @param  x int
  * @param  y int
  */
@@ -7795,7 +7596,7 @@ function imagecolorat($im, $x, $y) {}
  * Get the index of the closest color to the specified color 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  * @param  red int
  * @param  green int
  * @param  blue int
@@ -7818,7 +7619,7 @@ function imagecolorclosestalpha($im, $red, $green, $blue, $alpha) {}
  * Get the index of the color which has the hue, white and blackness nearest to the given color 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  * @param  red int
  * @param  green int
  * @param  blue int
@@ -7828,8 +7629,8 @@ function imagecolorclosesthwb($im, $red, $green, $blue) {}
 /**
  * De-allocate a color for an image 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  index int
  */
 function imagecolordeallocate($im, $index) {}
@@ -7838,7 +7639,7 @@ function imagecolordeallocate($im, $index) {}
  * Get the index of the specified color 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  * @param  red int
  * @param  green int
  * @param  blue int
@@ -7860,7 +7661,7 @@ function imagecolorexactalpha($im, $red, $green, $blue, $alpha) {}
 /**
  * Makes the colors of the palette version of an image more closely match the true color version 
  *
- * @return bool
+ * @return void
  * @param  im1 resource
  * @param  im2 resource
  */
@@ -7870,7 +7671,7 @@ function imagecolormatch($im1, $im2) {}
  * Get the index of the specified color or its closest possible alternative 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  * @param  red int
  * @param  green int
  * @param  blue int
@@ -7892,8 +7693,8 @@ function imagecolorresolvealpha($im, $red, $green, $blue, $alpha) {}
 /**
  * Set the color for the specified palette index 
  *
- * @return void
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  col int
  * @param  red int
  * @param  green int
@@ -7905,7 +7706,7 @@ function imagecolorset($im, $col, $red, $green, $blue) {}
  * Get the colors for an index 
  *
  * @return array
- * @param  im resource
+ * @param  im int
  * @param  col int
  */
 function imagecolorsforindex($im, $col) {}
@@ -7914,7 +7715,7 @@ function imagecolorsforindex($im, $col) {}
  * Find out the number of colors in an image's palette 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  */
 function imagecolorstotal($im) {}
 
@@ -7922,7 +7723,7 @@ function imagecolorstotal($im) {}
  * Define a color as transparent 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  * @param  col int[optional]
  */
 function imagecolortransparent($im, $col = null) {}
@@ -7930,9 +7731,9 @@ function imagecolortransparent($im, $col = null) {}
 /**
  * Copy part of an image 
  *
- * @return bool
- * @param  dst_im resource
- * @param  src_im resource
+ * @return int
+ * @param  dst_im int
+ * @param  src_im int
  * @param  dst_x int
  * @param  dst_y int
  * @param  src_x int
@@ -7945,9 +7746,9 @@ function imagecopy($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $sr
 /**
  * Merge one part of an image with another 
  *
- * @return bool
- * @param  src_im resource
- * @param  dst_im resource
+ * @return int
+ * @param  src_im int
+ * @param  dst_im int
  * @param  dst_x int
  * @param  dst_y int
  * @param  src_x int
@@ -7961,9 +7762,9 @@ function imagecopymerge($src_im, $dst_im, $dst_x, $dst_y, $src_x, $src_y, $src_w
 /**
  * Merge one part of an image with another 
  *
- * @return bool
- * @param  src_im resource
- * @param  dst_im resource
+ * @return int
+ * @param  src_im int
+ * @param  dst_im int
  * @param  dst_x int
  * @param  dst_y int
  * @param  src_x int
@@ -7977,9 +7778,9 @@ function imagecopymergegray($src_im, $dst_im, $dst_x, $dst_y, $src_x, $src_y, $s
 /**
  * Copy and resize part of an image using resampling to help ensure clarity 
  *
- * @return bool
- * @param  dst_im resource
- * @param  src_im resource
+ * @return int
+ * @param  dst_im int
+ * @param  src_im int
  * @param  dst_x int
  * @param  dst_y int
  * @param  src_x int
@@ -7994,9 +7795,9 @@ function imagecopyresampled($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $d
 /**
  * Copy and resize part of an image 
  *
- * @return bool
- * @param  dst_im resource
- * @param  src_im resource
+ * @return int
+ * @param  dst_im int
+ * @param  src_im int
  * @param  dst_x int
  * @param  dst_y int
  * @param  src_x int
@@ -8011,7 +7812,7 @@ function imagecopyresized($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $dst
 /**
  * Create a new image 
  *
- * @return resource
+ * @return int
  * @param  x_size int
  * @param  y_size int
  */
@@ -8020,7 +7821,7 @@ function imagecreate($x_size, $y_size) {}
 /**
  * Create a new image from GD file or URL 
  *
- * @return resource
+ * @return int
  * @param  filename string
  */
 function imagecreatefromgd($filename) {}
@@ -8028,7 +7829,7 @@ function imagecreatefromgd($filename) {}
 /**
  * Create a new image from GD2 file or URL 
  *
- * @return resource
+ * @return int
  * @param  filename string
  */
 function imagecreatefromgd2($filename) {}
@@ -8036,7 +7837,7 @@ function imagecreatefromgd2($filename) {}
 /**
  * Create a new image from a given part of GD2 file or URL 
  *
- * @return resource
+ * @return int
  * @param  filename string
  * @param  srcX int
  * @param  srcY int
@@ -8048,7 +7849,7 @@ function imagecreatefromgd2part($filename, $srcX, $srcY, $width, $height) {}
 /**
  * Create a new image from GIF file or URL 
  *
- * @return resource
+ * @return int
  * @param  filename string
  */
 function imagecreatefromgif($filename) {}
@@ -8056,7 +7857,7 @@ function imagecreatefromgif($filename) {}
 /**
  * Create a new image from JPEG file or URL 
  *
- * @return resource
+ * @return int
  * @param  filename string
  */
 function imagecreatefromjpeg($filename) {}
@@ -8064,7 +7865,7 @@ function imagecreatefromjpeg($filename) {}
 /**
  * Create a new image from PNG file or URL 
  *
- * @return resource
+ * @return int
  * @param  filename string
  */
 function imagecreatefrompng($filename) {}
@@ -8072,7 +7873,7 @@ function imagecreatefrompng($filename) {}
 /**
  * Create a new image from the image stream in the string 
  *
- * @return resource
+ * @return int
  * @param  image string
  */
 function imagecreatefromstring($image) {}
@@ -8080,7 +7881,7 @@ function imagecreatefromstring($image) {}
 /**
  * Create a new image from WBMP file or URL 
  *
- * @return resource
+ * @return int
  * @param  filename string
  */
 function imagecreatefromwbmp($filename) {}
@@ -8088,7 +7889,7 @@ function imagecreatefromwbmp($filename) {}
 /**
  * Create a new image from XBM file or URL 
  *
- * @return resource
+ * @return int
  * @param  filename string
  */
 function imagecreatefromxbm($filename) {}
@@ -8096,7 +7897,7 @@ function imagecreatefromxbm($filename) {}
 /**
  * Create a new image from XPM file or URL 
  *
- * @return resource
+ * @return int
  * @param  filename string
  */
 function imagecreatefromxpm($filename) {}
@@ -8104,7 +7905,7 @@ function imagecreatefromxpm($filename) {}
 /**
  * Create a new true color image 
  *
- * @return resource
+ * @return int
  * @param  x_size int
  * @param  y_size int
  */
@@ -8113,8 +7914,8 @@ function imagecreatetruecolor($x_size, $y_size) {}
 /**
  * Draw a dashed line 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  x1 int
  * @param  y1 int
  * @param  x2 int
@@ -8126,15 +7927,15 @@ function imagedashedline($im, $x1, $y1, $x2, $y2, $col) {}
 /**
  * Destroy an image 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  */
 function imagedestroy($im) {}
 
 /**
  * Draw an ellipse 
  *
- * @return bool
+ * @return void
  * @param  im resource
  * @param  cx int
  * @param  cy int
@@ -8147,8 +7948,8 @@ function imageellipse($im, $cx, $cy, $w, $h, $color) {}
 /**
  * Flood fill 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  x int
  * @param  y int
  * @param  col int
@@ -8158,8 +7959,8 @@ function imagefill($im, $x, $y, $col) {}
 /**
  * Draw a filled partial ellipse 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  cx int
  * @param  cy int
  * @param  w int
@@ -8174,7 +7975,7 @@ function imagefilledarc($im, $cx, $cy, $w, $h, $s, $e, $col, $style) {}
 /**
  * Draw an ellipse 
  *
- * @return bool
+ * @return void
  * @param  im resource
  * @param  cx int
  * @param  cy int
@@ -8187,8 +7988,8 @@ function imagefilledellipse($im, $cx, $cy, $w, $h, $color) {}
 /**
  * Draw a filled polygon 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  point array
  * @param  num_points int
  * @param  col int
@@ -8198,8 +7999,8 @@ function imagefilledpolygon($im, $point, $num_points, $col) {}
 /**
  * Draw a filled rectangle 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  x1 int
  * @param  y1 int
  * @param  x2 int
@@ -8211,8 +8012,8 @@ function imagefilledrectangle($im, $x1, $y1, $x2, $y2, $col) {}
 /**
  * Flood fill to specific color 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  x int
  * @param  y int
  * @param  border int
@@ -8240,21 +8041,21 @@ function imagefontwidth($font) {}
  * Give the bounding box of a text using fonts via freetype2 
  *
  * @return array
- * @param  size float
- * @param  angle float
+ * @param  size int
+ * @param  angle int
  * @param  font_file string
  * @param  text string
- * @param  extrainfo array[optional]
+ * @param  extrainfo array
  */
-function imageftbbox($size, $angle, $font_file, $text, $extrainfo = null) {}
+function imageftbbox($size, $angle, $font_file, $text, $extrainfo) {}
 
 /**
  * Write text to the image using fonts via freetype2 
  *
  * @return array
- * @param  im resource
- * @param  size float
- * @param  angle float
+ * @param  im int
+ * @param  size int
+ * @param  angle int
  * @param  x int
  * @param  y int
  * @param  col int
@@ -8267,8 +8068,8 @@ function imagefttext($im, $size, $angle, $x, $y, $col, $font_file, $text, $extra
 /**
  * Apply a gamma correction to a GD image 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  inputgamma float
  * @param  outputgamma float
  */
@@ -8277,8 +8078,8 @@ function imagegammacorrect($im, $inputgamma, $outputgamma) {}
 /**
  * Output GD image to browser or file 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  filename string[optional]
  */
 function imagegd($im, $filename = null) {}
@@ -8286,8 +8087,8 @@ function imagegd($im, $filename = null) {}
 /**
  * Output GD2 image to browser or file 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  filename string[optional]
  * @param  chunk_size int[optional]
  * @param  type int[optional]
@@ -8297,8 +8098,8 @@ function imagegd2($im, $filename = null, $chunk_size = null, $type = null) {}
 /**
  * Output GIF image to browser or file 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  filename string[optional]
  */
 function imagegif($im, $filename = null) {}
@@ -8307,7 +8108,7 @@ function imagegif($im, $filename = null) {}
  * Enable or disable interlace 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  * @param  interlace int[optional]
  */
 function imageinterlace($im, $interlace = null) {}
@@ -8315,16 +8116,16 @@ function imageinterlace($im, $interlace = null) {}
 /**
  * return true if the image uses truecolor 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  */
 function imageistruecolor($im) {}
 
 /**
  * Output JPEG image to browser or file 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  filename string[optional]
  * @param  quality int[optional]
  */
@@ -8333,7 +8134,7 @@ function imagejpeg($im, $filename = null, $quality = null) {}
 /**
  * Set the alpha blending flag to use the bundled libgd layering effects 
  *
- * @return bool
+ * @return void
  * @param  im resource
  * @param  effect int
  */
@@ -8342,8 +8143,8 @@ function imagelayereffect($im, $effect) {}
 /**
  * Draw a line 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  x1 int
  * @param  y1 int
  * @param  x2 int
@@ -8363,17 +8164,17 @@ function imageloadfont($filename) {}
 /**
  * Copy the palette from the src image onto the dst image 
  *
- * @return void
- * @param  dst resource
- * @param  src resource
+ * @return int
+ * @param  dst int
+ * @param  src int
  */
 function imagepalettecopy($dst, $src) {}
 
 /**
  * Output PNG image to browser or file 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  filename string[optional]
  */
 function imagepng($im, $filename = null) {}
@@ -8381,8 +8182,8 @@ function imagepng($im, $filename = null) {}
 /**
  * Draw a polygon 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  point array
  * @param  num_points int
  * @param  col int
@@ -8394,7 +8195,7 @@ function imagepolygon($im, $point, $num_points, $col) {}
  *
  * @return array
  * @param  text string
- * @param  font resource
+ * @param  font int
  * @param  size int
  * @param  space int[optional]
  * @param  tightness int
@@ -8414,7 +8215,7 @@ function imagepscopyfont($font_index) {}
  * To change a fonts character encoding vector 
  *
  * @return bool
- * @param  font_index resource
+ * @param  font_index int
  * @param  filename string
  */
 function imagepsencodefont($font_index, $filename) {}
@@ -8423,7 +8224,7 @@ function imagepsencodefont($font_index, $filename) {}
  * Extend or or condense (if extend < 1) a font 
  *
  * @return bool
- * @param  font_index resource
+ * @param  font_index int
  * @param  extend float
  */
 function imagepsextendfont($font_index, $extend) {}
@@ -8432,14 +8233,14 @@ function imagepsextendfont($font_index, $extend) {}
  * Free memory used by a font 
  *
  * @return bool
- * @param  font_index resource
+ * @param  font_index int
  */
 function imagepsfreefont($font_index) {}
 
 /**
  * Load a new font from specified file 
  *
- * @return resource
+ * @return int
  * @param  pathname string
  */
 function imagepsloadfont($pathname) {}
@@ -8448,7 +8249,7 @@ function imagepsloadfont($pathname) {}
  * Slant a font 
  *
  * @return bool
- * @param  font_index resource
+ * @param  font_index int
  * @param  slant float
  */
 function imagepsslantfont($font_index, $slant) {}
@@ -8457,9 +8258,9 @@ function imagepsslantfont($font_index, $slant) {}
  * Rasterize a string over an image 
  *
  * @return array
- * @param  image resource
+ * @param  image int
  * @param  text string
- * @param  font resource
+ * @param  font int
  * @param  size int
  * @param  xcoord int
  * @param  ycoord int
@@ -8473,8 +8274,8 @@ function imagepstext($image, $text, $font, $size, $xcoord, $ycoord, $space = nul
 /**
  * Draw a rectangle 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  x1 int
  * @param  y1 int
  * @param  x2 int
@@ -8486,8 +8287,8 @@ function imagerectangle($im, $x1, $y1, $x2, $y2, $col) {}
 /**
  * Rotate an image using a custom angle 
  *
- * @return resource
- * @param  src_im resource
+ * @return int
+ * @param  src_im int
  * @param  angle float
  * @param  bgdcolor int
  */
@@ -8496,16 +8297,25 @@ function imagerotate($src_im, $angle, $bgdcolor) {}
 /**
  * Include alpha channel to a saved image 
  *
- * @return bool
+ * @return void
  * @param  im resource
  * @param  on bool
  */
 function imagesavealpha($im, $on) {}
 
 /**
+ * Should antialiased functions used or not
+ *
+ * @return unknown
+ * @param  im int
+ * @param  on bool
+ */
+function imagesetantialias($im, $on) {}
+
+/**
  * Set the brush image to $brush when filling $image with the "IMG_COLOR_BRUSHED" color 
  *
- * @return bool
+ * @return int
  * @param  image resource
  * @param  brush resource
  */
@@ -8514,8 +8324,8 @@ function imagesetbrush($image, $brush) {}
 /**
  * Set a single pixel 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  x int
  * @param  y int
  * @param  col int
@@ -8525,7 +8335,7 @@ function imagesetpixel($im, $x, $y, $col) {}
 /**
  * Set the line drawing styles for use with imageline and IMG_COLOR_STYLED. 
  *
- * @return bool
+ * @return void
  * @param  im resource
  * @param  styles array
  */
@@ -8534,7 +8344,7 @@ function imagesetstyle($im, $styles) {}
 /**
  * Set line thickness for drawing lines, ellipses, rectangles, polygons etc. 
  *
- * @return bool
+ * @return void
  * @param  im resource
  * @param  thickness int
  */
@@ -8543,7 +8353,7 @@ function imagesetthickness($im, $thickness) {}
 /**
  * Set the tile image to $tile when filling $image with the "IMG_COLOR_TILED" color 
  *
- * @return bool
+ * @return int
  * @param  image resource
  * @param  tile resource
  */
@@ -8552,8 +8362,8 @@ function imagesettile($image, $tile) {}
 /**
  * Draw a string horizontally 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  font int
  * @param  x int
  * @param  y int
@@ -8565,8 +8375,8 @@ function imagestring($im, $font, $x, $y, $str, $col) {}
 /**
  * Draw a string vertically - rotated 90 degrees counter-clockwise 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  font int
  * @param  x int
  * @param  y int
@@ -8579,7 +8389,7 @@ function imagestringup($im, $font, $x, $y, $str, $col) {}
  * Get image width 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  */
 function imagesx($im) {}
 
@@ -8587,14 +8397,14 @@ function imagesx($im) {}
  * Get image height 
  *
  * @return int
- * @param  im resource
+ * @param  im int
  */
 function imagesy($im) {}
 
 /**
  * Convert a true colour image to a palette based image with a number of colours, optionally using dithering. 
  *
- * @return bool
+ * @return void
  * @param  im resource
  * @param  ditherFlag bool
  * @param  colorsWanted int
@@ -8605,8 +8415,8 @@ function imagetruecolortopalette($im, $ditherFlag, $colorsWanted) {}
  * Give the bounding box of a text using TrueType fonts 
  *
  * @return array
- * @param  size float
- * @param  angle float
+ * @param  size int
+ * @param  angle int
  * @param  font_file string
  * @param  text string
  */
@@ -8616,9 +8426,9 @@ function imagettfbbox($size, $angle, $font_file, $text) {}
  * Write text to the image using a TrueType font 
  *
  * @return array
- * @param  im resource
- * @param  size float
- * @param  angle float
+ * @param  im int
+ * @param  size int
+ * @param  angle int
  * @param  x int
  * @param  y int
  * @param  col int
@@ -8637,8 +8447,8 @@ function imagetypes() {}
 /**
  * Output WBMP image to browser or file 
  *
- * @return bool
- * @param  im resource
+ * @return int
+ * @param  im int
  * @param  filename string[optional]
  * @param  foreground int[optional]
  */
@@ -8702,7 +8512,7 @@ function imap_body($stream_id, $msg_no, $options = null) {}
  * @return object
  * @param  stream_id resource
  * @param  msg_no int
- * @param  section string
+ * @param  section int
  */
 function imap_bodystruct($stream_id, $msg_no, $section) {}
 
@@ -8802,7 +8612,7 @@ function imap_fetch_overview($stream_id, $msg_no, $options = null) {}
  * @return string
  * @param  stream_id resource
  * @param  msg_no int
- * @param  section string
+ * @param  section int
  * @param  options int[optional]
  */
 function imap_fetchbody($stream_id, $msg_no, $section, $options = null) {}
@@ -8957,7 +8767,7 @@ function imap_lsub($stream_id, $ref, $pattern) {}
 /**
  * Send an email message 
  *
- * @return bool
+ * @return int
  * @param  to string
  * @param  subject string
  * @param  message string
@@ -9354,7 +9164,7 @@ function ingres_fetch_array($result_type = null, $link = null) {}
 /**
  * Fetch a row of result into an object result_type can be II_NUM for enumerated object, II_ASSOC for associative object, or II_BOTH (default) 
  *
- * @return object
+ * @return array
  * @param  result_type int[optional]
  * @param  link resource[optional]
  */
@@ -9371,7 +9181,7 @@ function ingres_fetch_row($link = null) {}
 /**
  * Return the length of a field in a query result index must be >0 and <= ingres_num_fields() 
  *
- * @return int
+ * @return string
  * @param  index int
  * @param  link resource[optional]
  */
@@ -9389,7 +9199,7 @@ function ingres_field_name($index, $link = null) {}
 /**
  * Return true if the field is nullable and false otherwise index must be >0 and <= ingres_num_fields() 
  *
- * @return bool
+ * @return string
  * @param  index int
  * @param  link resource[optional]
  */
@@ -9398,7 +9208,7 @@ function ingres_field_nullable($index, $link = null) {}
 /**
  * Return the precision of a field in a query result index must be >0 and <= ingres_num_fields() 
  *
- * @return int
+ * @return string
  * @param  index int
  * @param  link resource[optional]
  */
@@ -9407,7 +9217,7 @@ function ingres_field_precision($index, $link = null) {}
 /**
  * Return the scale of a field in a query result index must be >0 and <= ingres_num_fields() 
  *
- * @return int
+ * @return string
  * @param  index int
  * @param  link resource[optional]
  */
@@ -9527,7 +9337,7 @@ function ip2long($ip_address) {}
 /**
  * Embed binary IPTC data into a JPEG image. 
  *
- * @return mixed
+ * @return array
  * @param  iptcdata string
  * @param  jpeg_file_name string
  * @param  spool int[optional]
@@ -9541,295 +9351,6 @@ function iptcembed($iptcdata, $jpeg_file_name, $spool = null) {}
  * @param  iptcdata string
  */
 function iptcparse($iptcdata) {}
-
-/**
- * Sets channel mode flags for user 
- *
- * @return bool
- * @param  connection int
- * @param  channel string
- * @param  mode_spec string
- * @param  nick string
- */
-function ircg_channel_mode($connection, $channel, $mode_spec, $nick) {}
-
-/**
- * Terminate IRC connection 
- *
- * @return bool
- * @param  connection int
- * @param  reason string
- */
-function ircg_disconnect($connection, $reason) {}
-
-/**
- * Decodes a list of JS-encoded parameters into a native array 
- *
- * @return array
- * @param  params string
- */
-function ircg_eval_ecmascript_params($params) {}
-
-/**
- * Returns the error from previous ircg operation 
- *
- * @return array
- * @param  connection int
- */
-function ircg_fetch_error_msg($connection) {}
-
-/**
- * Gets username for connection 
- *
- * @return string
- * @param  connection int
- */
-function ircg_get_username($connection) {}
-
-/**
- * Encodes HTML preserving output 
- *
- * @return string
- * @param  html_text string
- */
-function ircg_html_encode($html_text) {}
-
-/**
- * Adds a user to your ignore list on a server 
- *
- * @return void
- * @param  connection int
- * @param  nick string
- */
-function ircg_ignore_add($connection, $nick) {}
-
-/**
- * Removes a user from your ignore list 
- *
- * @return bool
- * @param  connection int
- * @param  nick string
- */
-function ircg_ignore_del($connection, $nick) {}
-
-/**
- * INVITEs nickname to channel 
- *
- * @return bool
- * @param  connection int
- * @param  channel string
- * @param  nickname string
- */
-function ircg_invite($connection, $channel, $nickname) {}
-
-/**
- * Checks connection status 
- *
- * @return bool
- * @param  connection int
- */
-function ircg_is_conn_alive($connection) {}
-
-/**
- * Joins a channel on a connected server 
- *
- * @return bool
- * @param  connection int
- * @param  channel string
- * @param  chan_key string[optional]
- */
-function ircg_join($connection, $channel, $chan_key = null) {}
-
-/**
- * Kicks user from channel 
- *
- * @return bool
- * @param  connection int
- * @param  channel string
- * @param  nick string
- * @param  reason string
- */
-function ircg_kick($connection, $channel, $nick, $reason) {}
-
-/**
- * List topic/user count of channel(s) 
- *
- * @return bool
- * @param  connection int
- * @param  channel string
- */
-function ircg_list($connection, $channel) {}
-
-/**
- * Selects a set of format strings for display of IRC messages 
- *
- * @return bool
- * @param  name string
- */
-function ircg_lookup_format_messages($name) {}
-
-/**
- * IRC network statistics 
- *
- * @return bool
- * @param  connection int
- */
-function ircg_lusers($connection) {}
-
-/**
- * Delivers a message to the IRC network 
- *
- * @return bool
- * @param  connection int
- * @param  recipient string
- * @param  message string
- * @param  loop_suppress bool[optional]
- */
-function ircg_msg($connection, $recipient, $message, $loop_suppress = null) {}
-
-/**
- * Queries visible usernames 
- *
- * @return bool
- * @param  connection int
- * @param  channel string
- * @param  target string[optional]
- */
-function ircg_names($connection, $channel, $target = null) {}
-
-/**
- * Changes the nickname 
- *
- * @return bool
- * @param  connection int
- * @param  newnick string
- */
-function ircg_nick($connection, $newnick) {}
-
-/**
- * Escapes special characters in nickname to be IRC-compliant 
- *
- * @return string
- * @param  nick string
- */
-function ircg_nickname_escape($nick) {}
-
-/**
- * Decodes encoded nickname 
- *
- * @return string
- * @param  nick string
- */
-function ircg_nickname_unescape($nick) {}
-
-/**
- * Sends a one-way communication NOTICE to a target 
- *
- * @return bool
- * @param  connection int
- * @param  recipient string
- * @param  message string
- */
-function ircg_notice($connection, $recipient, $message) {}
-
-/**
- * Elevates privileges to IRC OPER 
- *
- * @return bool
- * @param  connection int
- * @param  name string
- * @param  password string
- */
-function ircg_oper($connection, $name, $password) {}
-
-/**
- * Leaves a channel 
- *
- * @return bool
- * @param  connection int
- * @param  channel string
- */
-function ircg_part($connection, $channel) {}
-
-/**
- * Create a persistent IRC connection 
- *
- * @return resource
- * @param  username string
- * @param  server string[optional]
- * @param  port int[optional]
- * @param  format_msg_set_name string[optional]
- * @param  ctcp_set array[optional]
- * @param  user_details array[optional]
- * @param  bailout_on_trivial bool[optional]
- */
-function ircg_pconnect($username, $server = null, $port = null, $format_msg_set_name = null, $ctcp_set = null, $user_details = null, $bailout_on_trivial = null) {}
-
-/**
- * Registers a set of format strings for display of IRC messages 
- *
- * @return bool
- * @param  name string
- * @param  messages array
- */
-function ircg_register_format_messages($name, $messages) {}
-
-/**
- * Sets current connection for output 
- *
- * @return bool
- * @param  connection int
- */
-function ircg_set_current($connection) {}
-
-/**
- * Sets logfile for connection 
- *
- * @return bool
- * @param  connection int
- * @param  path string
- */
-function ircg_set_file($connection, $path) {}
-
-/**
- * Sets hostaction to be executed when connection dies 
- *
- * @return bool
- * @param  connection int
- * @param  host string
- * @param  port int
- * @param  data string
- */
-function ircg_set_on_die($connection, $host, $port, $data) {}
-
-/**
- * Sets topic for channel 
- *
- * @return bool
- * @param  connection int
- * @param  channel string
- * @param  topic string
- */
-function ircg_topic($connection, $channel, $topic) {}
-
-/**
- * Queries server for WHO information 
- *
- * @return bool
- * @param  connection int
- * @param  mask string
- * @param  ops_only bool[optional]
- */
-function ircg_who($connection, $mask, $ops_only = null) {}
-
-/**
- * Queries user information for nick on server 
- *
- * @return bool
- * @param  connection int
- * @param  nick string
- */
-function ircg_whois($connection, $nick) {}
 
 /**
  * Returns true if the object is of this class or has this class as one of its parents 
@@ -10019,6 +9540,14 @@ function is_resource($var) {}
 function is_scalar($value) {}
 
 /**
+ * Checks if given value is a SoapFault object 
+ *
+ * @return bool
+ * @param  object mixed
+ */
+function is_soap_fault($object) {}
+
+/**
  * Returns true if variable is a string 
  *
  * @return bool
@@ -10060,30 +9589,7 @@ function is_writable($filename) {}
 function is_writeable($filename) {}
 
 /**
- * Create Java object 
- *
- * @return object
- * @param  class string
- * @vararg ...
- */
-function java($class) {}
-
-/**
- * Get java server statistics 
- *
- * @return array
- */
-function java_get_statistics() {}
-
-/**
- * Get Java extension version information 
- *
- * @return array
- */
-function java_get_version_info() {}
-
-/**
- * Clear last java exception 
+ * Clear last java extension 
  *
  * @return void
  */
@@ -10095,30 +9601,6 @@ function java_last_exception_clear() {}
  * @return object
  */
 function java_last_exception_get() {}
-
-/**
- * Set encoding for PHP-Java data transfers 
- *
- * @return array
- * @param  encoding string
- */
-function java_set_encoding($encoding) {}
-
-/**
- * Set if search for Java classes and methods should be case-insensitive 
- *
- * @return void
- * @param  ignore bool
- */
-function java_set_ignore_case($ignore) {}
-
-/**
- * Set if exceptions should be thrown on errors 
- *
- * @return void
- * @param  ignore bool
- */
-function java_throw_exceptions($ignore) {}
 
 /**
  * Returns name or number of day of week from julian day count 
@@ -10159,10 +9641,8 @@ function jdtogregorian($juliandaycount) {}
  *
  * @return string
  * @param  juliandaycount int
- * @param  hebrew bool[optional]
- * @param  fl int[optional]
  */
-function jdtojewish($juliandaycount, $hebrew = null, $fl = null) {}
+function jdtojewish($juliandaycount) {}
 
 /**
  * Convert a julian day count to a julian calendar date 
@@ -10202,7 +9682,7 @@ function join($glue = null, $pieces) {}
 /**
  * Convert JPEG image to WBMP image 
  *
- * @return int
+ * @return void
  * @param  f_org string
  * @param  f_dest string
  * @param  d_height int
@@ -10302,7 +9782,7 @@ function ldap_close($link) {}
 /**
  * Determine if an entry has a specific value for one of its attributes 
  *
- * @return mixed
+ * @return bool
  * @param  link resource
  * @param  dn string
  * @param  attr string
@@ -10692,7 +10172,7 @@ function levenshtein($str1, $str2) {}
 /**
  * Create a hard link 
  *
- * @return bool
+ * @return int
  * @param  target string
  * @param  link string
  */
@@ -10773,789 +10253,6 @@ function lstat($filename) {}
 function ltrim($str, $character_mask = null) {}
 
 /**
- * Add an MCVE user using usersetup structure 
- *
- * @return int
- * @param  conn resource
- * @param  admin_password string
- * @param  usersetup int
- */
-function m_adduser($conn, $admin_password, $usersetup) {}
-
-/**
- * Add a value to user configuration structure 
- *
- * @return int
- * @param  usersetup resource
- * @param  argtype int
- * @param  argval string
- */
-function m_adduserarg($usersetup, $argtype, $argval) {}
-
-/**
- * Get unsettled batch totals 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- */
-function m_bt($conn, $username, $password) {}
-
-/**
- * Check to see if a transaction has completed 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_checkstatus($conn, $identifier) {}
-
-/**
- * Verify Password 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- */
-function m_chkpwd($conn, $username, $password) {}
-
-/**
- * Change the system administrator's password 
- *
- * @return int
- * @param  conn resource
- * @param  admin_password string
- * @param  new_password string
- */
-function m_chngpwd($conn, $admin_password, $new_password) {}
-
-/**
- * Number of complete authorizations in queue, returning an array of their identifiers 
- *
- * @return int
- * @param  conn resource
- * @param  array int
- */
-function m_completeauthorizations($conn, &$array) {}
-
-/**
- * Establish the connection to MCVE 
- *
- * @return int
- * @param  conn resource
- */
-function m_connect($conn) {}
-
-/**
- * Get a textual representation of why a connection failed 
- *
- * @return string
- * @param  conn resource
- */
-function m_connectionerror($conn) {}
-
-/**
- * Delete specified transaction from MCVE_CONN structure 
- *
- * @return bool
- * @param  conn resource
- * @param  identifier int
- */
-function m_deleteresponse($conn, $identifier) {}
-
-/**
- * Delete specified transaction from MCVE_CONN structure 
- *
- * @return bool
- * @param  conn resource
- * @param  identifier int
- */
-function m_deletetrans($conn, $identifier) {}
-
-/**
- * Deallocate data associated with usersetup structure 
- *
- * @return void
- * @param  usersetup resource
- */
-function m_deleteusersetup($usersetup) {}
-
-/**
- * Delete an MCVE user account 
- *
- * @return int
- * @param  conn resource
- * @param  admin_password string
- * @param  username string
- */
-function m_deluser($conn, $admin_password, $username) {}
-
-/**
- * Destroy the connection and MCVE_CONN structure 
- *
- * @return bool
- * @param  conn resource
- */
-function m_destroyconn($conn) {}
-
-/**
- * Free memory associated with IP/SSL connectivity 
- *
- * @return void
- */
-function m_destroyengine() {}
-
-/**
- * Disable an active MCVE user account 
- *
- * @return int
- * @param  conn resource
- * @param  admin_password string
- * @param  username string
- */
-function m_disableuser($conn, $admin_password, $username) {}
-
-/**
- * Edit MCVE user using usersetup structure 
- *
- * @return int
- * @param  conn resource
- * @param  admin_password string
- * @param  usersetup int
- */
-function m_edituser($conn, $admin_password, $usersetup) {}
-
-/**
- * Enable an inactive MCVE user account 
- *
- * @return int
- * @param  conn resource
- * @param  admin_password string
- * @param  username string
- */
-function m_enableuser($conn, $admin_password, $username) {}
-
-/**
- * Send a FORCE to MCVE.  (typically, a phone-authorization) 
- *
- * @return int
- * @param  conn resiurce
- * @param  username string
- * @param  password string
- * @param  trackdata string
- * @param  account string
- * @param  expdate string
- * @param  amount float
- * @param  authcode string
- * @param  comments string
- * @param  clerkid string
- * @param  stationid string
- * @param  ptrannum int
- */
-function m_force($conn, $username, $password, $trackdata, $account, $expdate, $amount, $authcode, $comments, $clerkid, $stationid, $ptrannum) {}
-
-/**
- * Get a specific cell from a comma delimited response by column name 
- *
- * @return string
- * @param  conn resource
- * @param  identifier int
- * @param  column string
- * @param  row int
- */
-function m_getcell($conn, $identifier, $column, $row) {}
-
-/**
- * Get a specific cell from a comma delimited response by column number 
- *
- * @return string
- * @param  conn resource
- * @param  identifier int
- * @param  column int
- * @param  row int
- */
-function m_getcellbynum($conn, $identifier, $column, $row) {}
-
-/**
- * Get the RAW comma delimited data returned from MCVE 
- *
- * @return string
- * @param  conn resource
- * @param  identifier int
- */
-function m_getcommadelimited($conn, $identifier) {}
-
-/**
- * Get the name of the column in a comma-delimited response 
- *
- * @return string
- * @param  conn resource
- * @param  identifier int
- * @param  column_num int
- */
-function m_getheader($conn, $identifier, $column_num) {}
-
-/**
- * Grab a value from usersetup structure 
- *
- * @return string
- * @param  usersetup resource
- * @param  argtype int
- */
-function m_getuserarg($usersetup, $argtype) {}
-
-/**
- * Get a user response parameter 
- *
- * @return string
- * @param  conn resource
- * @param  identifier long
- * @param  key int
- */
-function m_getuserparam($conn, $identifier, $key) {}
-
-/**
- * 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- * @param  type int
- * @param  account string
- * @param  clerkid string
- * @param  stationid string
- * @param  comments string
- * @param  ptrannum int
- * @param  startdate string
- * @param  enddate string
- */
-function m_gft($conn, $username, $password, $type, $account, $clerkid, $stationid, $comments, $ptrannum, $startdate, $enddate) {}
-
-/**
- * Audit MCVE for settled transactions 
- *
- * @return int
- * @param  conn int
- * @param  username string
- * @param  password string
- * @param  type int
- * @param  account string
- * @param  batch string
- * @param  clerkid string
- * @param  stationid string
- * @param  comments string
- * @param  ptrannum int
- * @param  startdate string
- * @param  enddate string
- */
-function m_gl($conn, $username, $password, $type, $account, $batch, $clerkid, $stationid, $comments, $ptrannum, $startdate, $enddate) {}
-
-/**
- * Audit MCVE for Unsettled Transactions 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- * @param  type int
- * @param  account string
- * @param  clerkid string
- * @param  stationid string
- * @param  comments string
- * @param  ptrannum int
- * @param  startdate string
- * @param  enddate string
- */
-function m_gut($conn, $username, $password, $type, $account, $clerkid, $stationid, $comments, $ptrannum, $startdate, $enddate) {}
-
-/**
- * Create and initialize an MCVE_CONN structure 
- *
- * @return resource
- */
-function m_initconn() {}
-
-/**
- * Ready the client for IP/SSL Communication 
- *
- * @return int
- * @param  location string
- */
-function m_initengine($location) {}
-
-/**
- * Initialize structure to store user data 
- *
- * @return resource
- */
-function m_initusersetup() {}
-
-/**
- * Checks to see if response is comma delimited 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_iscommadelimited($conn, $identifier) {}
-
-/**
- * List statistics for all users on MCVE system 
- *
- * @return int
- * @param  conn resource
- * @param  admin_password string
- */
-function m_liststats($conn, $admin_password) {}
-
-/**
- * List all users on MCVE system 
- *
- * @return int
- * @param  conn resource
- * @param  admin_password string
- */
-function m_listusers($conn, $admin_password) {}
-
-/**
- * 
- *
- * @return bool
- * @param  conn resource
- * @param  secs int
- */
-function m_maxconntimeout($conn, $secs) {}
-
-/**
- * Perform communication with MCVE (send/receive data)   Non-blocking 
- *
- * @return int
- * @param  conn resource
- */
-function m_monitor($conn) {}
-
-/**
- * Number of columns returned in a comma delimited response 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_numcolumns($conn, $identifier) {}
-
-/**
- * Number of rows returned in a comma delimited response 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_numrows($conn, $identifier) {}
-
-/**
- * Send an OVERRIDE to MCVE 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- * @param  trackdata string
- * @param  account string
- * @param  expdate string
- * @param  amount float
- * @param  street string
- * @param  zip string
- * @param  cv string
- * @param  comments string
- * @param  clerkid string
- * @param  stationid string
- * @param  ptrannum int
- */
-function m_override($conn, $username, $password, $trackdata, $account, $expdate, $amount, $street, $zip, $cv, $comments, $clerkid, $stationid, $ptrannum) {}
-
-/**
- * Parse the comma delimited response so m_getcell, etc will work 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_parsecommadelimited($conn, $identifier) {}
-
-/**
- * Send a ping request to MCVE 
- *
- * @return int
- * @param  conn resource
- */
-function m_ping($conn) {}
-
-/**
- * Send a PREAUTHORIZATION to MCVE 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- * @param  trackdata string
- * @param  account string
- * @param  expdate string
- * @param  amount float
- * @param  street string
- * @param  zip string
- * @param  cv string
- * @param  comments string
- * @param  clerkid string
- * @param  stationid string
- * @param  ptrannum int
- */
-function m_preauth($conn, $username, $password, $trackdata, $account, $expdate, $amount, $street, $zip, $cv, $comments, $clerkid, $stationid, $ptrannum) {}
-
-/**
- * Complete a PREAUTHORIZATION... Ready it for settlement 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- * @param  finalamount float
- * @param  sid int
- * @param  ptrannum int
- */
-function m_preauthcompletion($conn, $username, $password, $finalamount, $sid, $ptrannum) {}
-
-/**
- * Audit MCVE for a list of transactions in the outgoing queue 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- * @param  clerkid string
- * @param  stationid string
- * @param  comments string
- * @param  ptrannum int
- */
-function m_qc($conn, $username, $password, $clerkid, $stationid, $comments, $ptrannum) {}
-
-/**
- * Get a custom response parameter 
- *
- * @return string
- * @param  conn resource
- * @param  identifier long
- * @param  key string
- */
-function m_responseparam($conn, $identifier, $key) {}
-
-/**
- * Issue a RETURN or CREDIT to MCVE 
- *
- * @return int
- * @param  conn int
- * @param  username string
- * @param  password string
- * @param  trackdata string
- * @param  account string
- * @param  expdate string
- * @param  amount float
- * @param  comments string
- * @param  clerkid string
- * @param  stationid string
- * @param  ptrannum int
- */
-function m_return($conn, $username, $password, $trackdata, $account, $expdate, $amount, $comments, $clerkid, $stationid, $ptrannum) {}
-
-/**
- * Grab the exact return code from the transaction 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_returncode($conn, $identifier) {}
-
-/**
- * Check to see if the transaction was successful 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_returnstatus($conn, $identifier) {}
-
-/**
- * Send a SALE to MCVE 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- * @param  trackdata string
- * @param  account string
- * @param  expdate string
- * @param  amount float
- * @param  street string
- * @param  zip string
- * @param  cv string
- * @param  comments string
- * @param  clerkid string
- * @param  stationid string
- * @param  ptrannum int
- */
-function m_sale($conn, $username, $password, $trackdata, $account, $expdate, $amount, $street, $zip, $cv, $comments, $clerkid, $stationid, $ptrannum) {}
-
-/**
- * 
- *
- * @return int
- * @param  conn resource
- * @param  tf int
- */
-function m_setblocking($conn, $tf) {}
-
-/**
- * Set the connection method to Drop-File 
- *
- * @return int
- * @param  conn resource
- * @param  directory string
- */
-function m_setdropfile($conn, $directory) {}
-
-/**
- * Set the connection method to IP 
- *
- * @return int
- * @param  conn resource
- * @param  host string
- * @param  port int
- */
-function m_setip($conn, $host, $port) {}
-
-/**
- * Set the connection method to SSL 
- *
- * @return int
- * @param  conn resource
- * @param  host string
- * @param  port int
- */
-function m_setssl($conn, $host, $port) {}
-
-/**
- * 
- *
- * @return int
- * @param  conn resource
- * @param  sslkeyfile string
- * @param  sslcertfile string
- */
-function m_setssl_files($conn, $sslkeyfile, $sslcertfile) {}
-
-/**
- * 
- *
- * @return int
- * @param  conn resource
- * @param  seconds int
- */
-function m_settimeout($conn, $seconds) {}
-
-/**
- * Issue a settlement command to do a batch deposit 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- * @param  batch string
- */
-function m_settle($conn, $username, $password, $batch) {}
-
-/**
- * Get a textual representation of the return_avs 
- *
- * @return string
- * @param  code string
- */
-function m_text_avs($code) {}
-
-/**
- * Get a textual representation of the return_code 
- *
- * @return string
- * @param  code string
- */
-function m_text_code($code) {}
-
-/**
- * Get a textual representation of the return_cv 
- *
- * @return string
- * @param  code int
- */
-function m_text_cv($code) {}
-
-/**
- * Get the authorization number returned for the transaction (alpha-numeric) 
- *
- * @return string
- * @param  conn resource
- * @param  identifier int
- */
-function m_transactionauth($conn, $identifier) {}
-
-/**
- * Get the Address Verification return status 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_transactionavs($conn, $identifier) {}
-
-/**
- * Get the batch number associated with the transaction 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_transactionbatch($conn, $identifier) {}
-
-/**
- * Get the CVC2/CVV2/CID return status 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_transactioncv($conn, $identifier) {}
-
-/**
- * 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_transactionid($conn, $identifier) {}
-
-/**
- * Get the ITEM number in the associated batch for this transaction 
- *
- * @return int
- * @param  conn resource
- * @param  identifier int
- */
-function m_transactionitem($conn, $identifier) {}
-
-/**
- * Check to see if outgoing buffer is clear 
- *
- * @return int
- * @param  conn resource
- */
-function m_transactionssent($conn) {}
-
-/**
- * Get verbiage (text) return from MCVE or processing institution 
- *
- * @return string
- * @param  conn resource
- * @param  identifier int
- */
-function m_transactiontext($conn, $identifier) {}
-
-/**
- * Number of transactions in client-queue 
- *
- * @return int
- * @param  conn resource
- */
-function m_transinqueue($conn) {}
-
-/**
- * Start a new transaction 
- *
- * @return int
- * @param  conn resource
- */
-function m_transnew($conn) {}
-
-/**
- * Add a parameter to a transaction 
- *
- * @return int
- * @param  conn resource
- * @param  identifier long
- * @param  key int
- * @vararg ...
- */
-function m_transparam($conn, $identifier, $key) {}
-
-/**
- * Finalize and send the transaction 
- *
- * @return int
- * @param  conn resource
- * @param  identifier long
- */
-function m_transsend($conn, $identifier) {}
-
-/**
- * Get a list of all Unsettled batches 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- */
-function m_ub($conn, $username, $password) {}
-
-/**
- * Wait x microsecs 
- *
- * @return int
- * @param  microsecs long
- */
-function m_uwait($microsecs) {}
-
-/**
- * 
- *
- * @return bool
- * @param  conn resource
- * @param  tf int
- */
-function m_verifyconnection($conn, $tf) {}
-
-/**
- * 
- *
- * @return bool
- * @param  conn resource
- * @param  tf int
- */
-function m_verifysslcert($conn, $tf) {}
-
-/**
- * VOID a transaction in the settlement queue 
- *
- * @return int
- * @param  conn resource
- * @param  username string
- * @param  password string
- * @param  sid int
- * @param  ptrannum int
- */
-function m_void($conn, $username, $password, $sid, $ptrannum) {}
-
-/**
  * Set the current active configuration setting of magic_quotes_runtime and return previous 
  *
  * @return bool
@@ -11566,7 +10263,7 @@ function magic_quotes_runtime($new_setting) {}
 /**
  * Send an email message 
  *
- * @return bool
+ * @return int
  * @param  to string
  * @param  subject string
  * @param  message string
@@ -11584,15 +10281,6 @@ function mail($to, $subject, $message, $additional_headers = null, $additional_p
  * @vararg ... mixed
  */
 function max($arg1, $arg2 = null) {}
-
-/**
- * Check if the string is valid for the specified encoding 
- *
- * @return bool
- * @param  var string[optional]
- * @param  encoding string
- */
-function mb_check_encoding($var = null, $encoding) {}
 
 /**
  * Returns a case-folded version of sourcestring 
@@ -11658,14 +10346,13 @@ function mb_decode_numericentity($string, $convmap, $encoding = null) {}
  * @return string
  * @param  str string
  * @param  encoding_list mixed[optional]
- * @param  strict bool[optional]
  */
-function mb_detect_encoding($str, $encoding_list = null, $strict = null) {}
+function mb_detect_encoding($str, $encoding_list = null) {}
 
 /**
  * Sets the current detect_order or Return the current detect_order as a array 
  *
- * @return mixed
+ * @return bool|array
  * @param  encoding_list mixed[optional]
  */
 function mb_detect_order($encoding_list = null) {}
@@ -11678,9 +10365,8 @@ function mb_detect_order($encoding_list = null) {}
  * @param  charset string[optional]
  * @param  transfer_encoding string[optional]
  * @param  linefeed string[optional]
- * @param  indent int[optional]
  */
-function mb_encode_mimeheader($str, $charset = null, $transfer_encoding = null, $linefeed = null, $indent = null) {}
+function mb_encode_mimeheader($str, $charset = null, $transfer_encoding = null, $linefeed = null) {}
 
 /**
  * Converts specified characters to HTML numeric entities 
@@ -11805,7 +10491,7 @@ function mb_eregi_replace($pattern, $replacement, $string) {}
 /**
  * Returns the current settings of mbstring 
  *
- * @return mixed
+ * @return string
  * @param  type string[optional]
  */
 function mb_get_info($type = null) {}
@@ -11821,7 +10507,7 @@ function mb_http_input($type = null) {}
 /**
  * Sets the current output_encoding or returns the current output_encoding as a string 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function mb_http_output($encoding = null) {}
@@ -11829,7 +10515,7 @@ function mb_http_output($encoding = null) {}
 /**
  * Sets the current internal encoding or Returns the current internal encoding as a string 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function mb_internal_encoding($encoding = null) {}
@@ -11837,7 +10523,7 @@ function mb_internal_encoding($encoding = null) {}
 /**
  * Sets the current language or Returns the current language as a string 
  *
- * @return mixed
+ * @return string
  * @param  language string[optional]
  */
 function mb_language($language = null) {}
@@ -11871,7 +10557,7 @@ function mb_preferred_mime_name($encoding) {}
 /**
  * Returns the current encoding for regex as a string. 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function mb_regex_encoding($encoding = null) {}
@@ -11887,7 +10573,7 @@ function mb_regex_set_options($options = null) {}
 /**
  * 
  *
- * @return bool
+ * @return int
  * @param  to string
  * @param  subject string
  * @param  message string
@@ -12128,7 +10814,7 @@ function mberegi_replace($pattern, $replacement, $string) {}
 /**
  * Returns the current encoding for regex as a string. 
  *
- * @return mixed
+ * @return string
  * @param  encoding string[optional]
  */
 function mbregex_encoding($encoding = null) {}
@@ -12198,7 +10884,7 @@ function mbsubstr($str, $start, $length = null, $encoding = null) {}
 /**
  * Append a new event to the calendar stream 
  *
- * @return int
+ * @return string
  * @param  stream_id int
  */
 function mcal_append_event($stream_id) {}
@@ -12206,7 +10892,7 @@ function mcal_append_event($stream_id) {}
 /**
  * Close an MCAL stream 
  *
- * @return bool
+ * @return int
  * @param  stream_id int
  * @param  options int[optional]
  */
@@ -12215,7 +10901,7 @@ function mcal_close($stream_id, $options = null) {}
 /**
  * Create a new calendar 
  *
- * @return bool
+ * @return string
  * @param  stream_id int
  * @param  calendar string
  */
@@ -12276,7 +10962,7 @@ function mcal_days_in_month($month, $leap_year) {}
 /**
  * Delete calendar 
  *
- * @return bool
+ * @return string
  * @param  stream_id int
  * @param  calendar string
  */
@@ -12285,7 +10971,7 @@ function mcal_delete_calendar($stream_id, $calendar) {}
 /**
  * Delete an event 
  *
- * @return bool
+ * @return string
  * @param  stream_id int
  * @param  event_id int
  */
@@ -12294,7 +10980,7 @@ function mcal_delete_event($stream_id, $event_id) {}
 /**
  * Add an attribute and value to an event 
  *
- * @return bool
+ * @return string
  * @param  stream_id int
  * @param  attribute string
  * @param  value string
@@ -12304,7 +10990,7 @@ function mcal_event_add_attribute($stream_id, $attribute, $value) {}
 /**
  * Initialize a streams global event 
  *
- * @return void
+ * @return int
  * @param  stream_id int
  */
 function mcal_event_init($stream_id) {}
@@ -12312,7 +10998,7 @@ function mcal_event_init($stream_id) {}
 /**
  * Add an alarm to the streams global event 
  *
- * @return void
+ * @return int
  * @param  stream_id int
  * @param  alarm int
  */
@@ -12321,7 +11007,7 @@ function mcal_event_set_alarm($stream_id, $alarm) {}
 /**
  * Attach a category to an event 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  category string
  */
@@ -12330,7 +11016,7 @@ function mcal_event_set_category($stream_id, $category) {}
 /**
  * Add an class to the streams global event 
  *
- * @return void
+ * @return int
  * @param  stream_id int
  * @param  class int
  */
@@ -12339,7 +11025,7 @@ function mcal_event_set_class($stream_id, $class) {}
 /**
  * Attach a description to an event 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  description string
  */
@@ -12348,7 +11034,7 @@ function mcal_event_set_description($stream_id, $description) {}
 /**
  * Attach an end datetime to an event 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  year int
  * @param  month int
@@ -12362,7 +11048,7 @@ function mcal_event_set_end($stream_id, $year, $month, $day, $hour = null, $min,
 /**
  * Create a daily recurrence 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  year int
  * @param  month int
@@ -12374,7 +11060,7 @@ function mcal_event_set_recur_daily($stream_id, $year, $month, $day, $interval) 
 /**
  * Create a monthly by day recurrence 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  year int
  * @param  month int
@@ -12386,7 +11072,7 @@ function mcal_event_set_recur_monthly_mday($stream_id, $year, $month, $day, $int
 /**
  * Create a monthly by week recurrence 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  year int
  * @param  month int
@@ -12398,7 +11084,7 @@ function mcal_event_set_recur_monthly_wday($stream_id, $year, $month, $day, $int
 /**
  * Create a daily recurrence 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  */
 function mcal_event_set_recur_none($stream_id) {}
@@ -12406,7 +11092,7 @@ function mcal_event_set_recur_none($stream_id) {}
 /**
  * Create a weekly recurrence 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  year int
  * @param  month int
@@ -12419,7 +11105,7 @@ function mcal_event_set_recur_weekly($stream_id, $year, $month, $day, $interval,
 /**
  * Create a yearly recurrence 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  year int
  * @param  month int
@@ -12431,7 +11117,7 @@ function mcal_event_set_recur_yearly($stream_id, $year, $month, $day, $interval)
 /**
  * Attach a start datetime to an event 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  year int
  * @param  month int
@@ -12445,7 +11131,7 @@ function mcal_event_set_start($stream_id, $year, $month, $day, $hour = null, $mi
 /**
  * Attach a title to an event 
  *
- * @return void
+ * @return string
  * @param  stream_id int
  * @param  title string
  */
@@ -12454,7 +11140,7 @@ function mcal_event_set_title($stream_id, $title) {}
 /**
  * Delete all events marked for deletion 
  *
- * @return bool
+ * @return int
  * @param  stream_id int
  */
 function mcal_expunge($stream_id) {}
@@ -12470,7 +11156,7 @@ function mcal_fetch_current_stream_event($stream_id) {}
 /**
  * Fetch an event 
  *
- * @return object
+ * @return int
  * @param  stream_id int
  * @param  eventid int
  * @param  options int[optional]
@@ -12488,7 +11174,7 @@ function mcal_is_leap_year($year) {}
 /**
  * List alarms for a given time 
  *
- * @return array
+ * @return bool
  * @param  stream_id int
  * @param  year int
  * @param  month int
@@ -12533,7 +11219,7 @@ function mcal_open($calendar, $user, $password, $options = null) {}
 /**
  * Open a persistent MCAL stream to a calendar 
  *
- * @return int
+ * @return string
  * @param  calendar string
  * @param  user string
  * @param  password string
@@ -12544,7 +11230,7 @@ function mcal_popen($calendar, $user, $password, $options = null) {}
 /**
  * Rename a calendar 
  *
- * @return bool
+ * @return string
  * @param  stream_id int
  * @param  src_calendar string
  * @param  dest_calendar string
@@ -12554,7 +11240,7 @@ function mcal_rename_calendar($stream_id, $src_calendar, $dest_calendar) {}
 /**
  * Reopen MCAL stream to a new calendar 
  *
- * @return bool
+ * @return int
  * @param  stream_id int
  * @param  calendar string
  * @param  options int[optional]
@@ -12564,7 +11250,7 @@ function mcal_reopen($stream_id, $calendar, $options = null) {}
 /**
  * Snooze an alarm 
  *
- * @return bool
+ * @return string
  * @param  stream_id int
  * @param  uid int
  */
@@ -12573,7 +11259,7 @@ function mcal_snooze($stream_id, $uid) {}
 /**
  * Store changes to an event 
  *
- * @return int
+ * @return string
  * @param  stream_id int
  */
 function mcal_store_event($stream_id) {}
@@ -12925,6 +11611,779 @@ function mcrypt_module_self_test($algorithm, $lib_dir = null) {}
 function mcrypt_ofb($cipher, $key, $data, $mode, $iv) {}
 
 /**
+ * Add an MCVE user using usersetup structure 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  admin_password string
+ * @param  usersetup int
+ */
+function mcve_adduser($conn, $admin_password, $usersetup) {}
+
+/**
+ * Add a value to user configuration structure 
+ *
+ * @return int
+ * @param  usersetup resource
+ * @param  argtype int
+ * @param  argval string
+ */
+function mcve_adduserarg($usersetup, $argtype, $argval) {}
+
+/**
+ * Get unsettled batch totals 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ */
+function mcve_bt($conn, $username, $password) {}
+
+/**
+ * Check to see if a transaction has completed 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_checkstatus($conn, $identifier) {}
+
+/**
+ * Verify Password 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ */
+function mcve_chkpwd($conn, $username, $password) {}
+
+/**
+ * Change the system administrator's password 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  admin_password string
+ * @param  new_password string
+ */
+function mcve_chngpwd($conn, $admin_password, $new_password) {}
+
+/**
+ * Number of complete authorizations in queue, returning an array of their identifiers 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  array int
+ */
+function mcve_completeauthorizations($conn, &$array) {}
+
+/**
+ * Establish the connection to MCVE 
+ *
+ * @return int
+ * @param  conn resource
+ */
+function mcve_connect($conn) {}
+
+/**
+ * Get a textual representation of why a connection failed 
+ *
+ * @return string
+ * @param  conn resource
+ */
+function mcve_connectionerror($conn) {}
+
+/**
+ * Delete specified transaction from MCVE_CONN structure 
+ *
+ * @return bool
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_deleteresponse($conn, $identifier) {}
+
+/**
+ * Delete specified transaction from MCVE_CONN structure 
+ *
+ * @return bool
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_deletetrans($conn, $identifier) {}
+
+/**
+ * Deallocate data associated with usersetup structure 
+ *
+ * @return void
+ * @param  usersetup resource
+ */
+function mcve_deleteusersetup($usersetup) {}
+
+/**
+ * Delete an MCVE user account 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  admin_password string
+ * @param  username string
+ */
+function mcve_deluser($conn, $admin_password, $username) {}
+
+/**
+ * Destroy the connection and MCVE_CONN structure 
+ *
+ * @return void
+ * @param  conn resource
+ */
+function mcve_destroyconn($conn) {}
+
+/**
+ * Free memory associated with IP/SSL connectivity 
+ *
+ * @return void
+ */
+function mcve_destroyengine() {}
+
+/**
+ * Disable an active MCVE user account 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  admin_password string
+ * @param  username string
+ */
+function mcve_disableuser($conn, $admin_password, $username) {}
+
+/**
+ * Edit MCVE user using usersetup structure 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  admin_password string
+ * @param  usersetup int
+ */
+function mcve_edituser($conn, $admin_password, $usersetup) {}
+
+/**
+ * Enable an inactive MCVE user account 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  admin_password string
+ * @param  username string
+ */
+function mcve_enableuser($conn, $admin_password, $username) {}
+
+/**
+ * Send a FORCE to MCVE.  (typically, a phone-authorization) 
+ *
+ * @return int
+ * @param  conn resiurce
+ * @param  username string
+ * @param  password string
+ * @param  trackdata string
+ * @param  account string
+ * @param  expdate string
+ * @param  amount float
+ * @param  authcode string
+ * @param  comments string
+ * @param  clerkid string
+ * @param  stationid string
+ * @param  ptrannum int
+ */
+function mcve_force($conn, $username, $password, $trackdata, $account, $expdate, $amount, $authcode, $comments, $clerkid, $stationid, $ptrannum) {}
+
+/**
+ * Get a specific cell from a comma delimited response by column name 
+ *
+ * @return string
+ * @param  conn resource
+ * @param  identifier int
+ * @param  column string
+ * @param  row int
+ */
+function mcve_getcell($conn, $identifier, $column, $row) {}
+
+/**
+ * Get a specific cell from a comma delimited response by column number 
+ *
+ * @return string
+ * @param  conn resource
+ * @param  identifier int
+ * @param  column int
+ * @param  row int
+ */
+function mcve_getcellbynum($conn, $identifier, $column, $row) {}
+
+/**
+ * Get the RAW comma delimited data returned from MCVE 
+ *
+ * @return string
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_getcommadelimited($conn, $identifier) {}
+
+/**
+ * Get the name of the column in a comma-delimited response 
+ *
+ * @return string
+ * @param  conn resource
+ * @param  identifier int
+ * @param  column_num int
+ */
+function mcve_getheader($conn, $identifier, $column_num) {}
+
+/**
+ * Grab a value from usersetup structure 
+ *
+ * @return string
+ * @param  usersetup resource
+ * @param  argtype int
+ */
+function mcve_getuserarg($usersetup, $argtype) {}
+
+/**
+ * Get a user response parameter 
+ *
+ * @return string
+ * @param  conn resource
+ * @param  identifier long
+ * @param  key int
+ */
+function mcve_getuserparam($conn, $identifier, $key) {}
+
+/**
+ * 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ * @param  type int
+ * @param  account string
+ * @param  clerkid string
+ * @param  stationid string
+ * @param  comments string
+ * @param  ptrannum int
+ * @param  startdate string
+ * @param  enddate string
+ */
+function mcve_gft($conn, $username, $password, $type, $account, $clerkid, $stationid, $comments, $ptrannum, $startdate, $enddate) {}
+
+/**
+ * Audit MCVE for settled transactions 
+ *
+ * @return int
+ * @param  conn int
+ * @param  username string
+ * @param  password string
+ * @param  type int
+ * @param  account string
+ * @param  batch string
+ * @param  clerkid string
+ * @param  stationid string
+ * @param  comments string
+ * @param  ptrannum int
+ * @param  startdate string
+ * @param  enddate string
+ */
+function mcve_gl($conn, $username, $password, $type, $account, $batch, $clerkid, $stationid, $comments, $ptrannum, $startdate, $enddate) {}
+
+/**
+ * Audit MCVE for Unsettled Transactions 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ * @param  type int
+ * @param  account string
+ * @param  clerkid string
+ * @param  stationid string
+ * @param  comments string
+ * @param  ptrannum int
+ * @param  startdate string
+ * @param  enddate string
+ */
+function mcve_gut($conn, $username, $password, $type, $account, $clerkid, $stationid, $comments, $ptrannum, $startdate, $enddate) {}
+
+/**
+ * Create and initialize an MCVE_CONN structure 
+ *
+ * @return resource
+ */
+function mcve_initconn() {}
+
+/**
+ * Ready the client for IP/SSL Communication 
+ *
+ * @return int
+ * @param  location string
+ */
+function mcve_initengine($location) {}
+
+/**
+ * Initialize structure to store user data 
+ *
+ * @return resource
+ */
+function mcve_initusersetup() {}
+
+/**
+ * Checks to see if response is comma delimited 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_iscommadelimited($conn, $identifier) {}
+
+/**
+ * List statistics for all users on MCVE system 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  admin_password string
+ */
+function mcve_liststats($conn, $admin_password) {}
+
+/**
+ * List all users on MCVE system 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  admin_password string
+ */
+function mcve_listusers($conn, $admin_password) {}
+
+/**
+ * 
+ *
+ * @return bool
+ * @param  conn resource
+ * @param  secs int
+ */
+function mcve_maxconntimeout($conn, $secs) {}
+
+/**
+ * Perform communication with MCVE (send/receive data)   Non-blocking 
+ *
+ * @return int
+ * @param  conn resource
+ */
+function mcve_monitor($conn) {}
+
+/**
+ * Number of columns returned in a comma delimited response 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_numcolumns($conn, $identifier) {}
+
+/**
+ * Number of rows returned in a comma delimited response 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_numrows($conn, $identifier) {}
+
+/**
+ * Send an OVERRIDE to MCVE 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ * @param  trackdata string
+ * @param  account string
+ * @param  expdate string
+ * @param  amount float
+ * @param  street string
+ * @param  zip string
+ * @param  cv string
+ * @param  comments string
+ * @param  clerkid string
+ * @param  stationid string
+ * @param  ptrannum int
+ */
+function mcve_override($conn, $username, $password, $trackdata, $account, $expdate, $amount, $street, $zip, $cv, $comments, $clerkid, $stationid, $ptrannum) {}
+
+/**
+ * Parse the comma delimited response so mcve_getcell, etc will work 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_parsecommadelimited($conn, $identifier) {}
+
+/**
+ * Send a ping request to MCVE 
+ *
+ * @return int
+ * @param  conn resource
+ */
+function mcve_ping($conn) {}
+
+/**
+ * Send a PREAUTHORIZATION to MCVE 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ * @param  trackdata string
+ * @param  account string
+ * @param  expdate string
+ * @param  amount float
+ * @param  street string
+ * @param  zip string
+ * @param  cv string
+ * @param  comments string
+ * @param  clerkid string
+ * @param  stationid string
+ * @param  ptrannum int
+ */
+function mcve_preauth($conn, $username, $password, $trackdata, $account, $expdate, $amount, $street, $zip, $cv, $comments, $clerkid, $stationid, $ptrannum) {}
+
+/**
+ * Complete a PREAUTHORIZATION... Ready it for settlement 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ * @param  finalamount float
+ * @param  sid int
+ * @param  ptrannum int
+ */
+function mcve_preauthcompletion($conn, $username, $password, $finalamount, $sid, $ptrannum) {}
+
+/**
+ * Audit MCVE for a list of transactions in the outgoing queue 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ * @param  clerkid string
+ * @param  stationid string
+ * @param  comments string
+ * @param  ptrannum int
+ */
+function mcve_qc($conn, $username, $password, $clerkid, $stationid, $comments, $ptrannum) {}
+
+/**
+ * Get a custom response parameter 
+ *
+ * @return string
+ * @param  conn resource
+ * @param  identifier long
+ * @param  key string
+ */
+function mcve_responseparam($conn, $identifier, $key) {}
+
+/**
+ * Issue a RETURN or CREDIT to MCVE 
+ *
+ * @return int
+ * @param  conn int
+ * @param  username string
+ * @param  password string
+ * @param  trackdata string
+ * @param  account string
+ * @param  expdate string
+ * @param  amount float
+ * @param  comments string
+ * @param  clerkid string
+ * @param  stationid string
+ * @param  ptrannum int
+ */
+function mcve_return($conn, $username, $password, $trackdata, $account, $expdate, $amount, $comments, $clerkid, $stationid, $ptrannum) {}
+
+/**
+ * Grab the exact return code from the transaction 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_returncode($conn, $identifier) {}
+
+/**
+ * Check to see if the transaction was successful 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_returnstatus($conn, $identifier) {}
+
+/**
+ * Send a SALE to MCVE 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ * @param  trackdata string
+ * @param  account string
+ * @param  expdate string
+ * @param  amount float
+ * @param  street string
+ * @param  zip string
+ * @param  cv string
+ * @param  comments string
+ * @param  clerkid string
+ * @param  stationid string
+ * @param  ptrannum int
+ */
+function mcve_sale($conn, $username, $password, $trackdata, $account, $expdate, $amount, $street, $zip, $cv, $comments, $clerkid, $stationid, $ptrannum) {}
+
+/**
+ * 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  tf int
+ */
+function mcve_setblocking($conn, $tf) {}
+
+/**
+ * Set the connection method to Drop-File 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  directory string
+ */
+function mcve_setdropfile($conn, $directory) {}
+
+/**
+ * Set the connection method to IP 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  host string
+ * @param  port int
+ */
+function mcve_setip($conn, $host, $port) {}
+
+/**
+ * Set the connection method to SSL 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  host string
+ * @param  port int
+ */
+function mcve_setssl($conn, $host, $port) {}
+
+/**
+ * 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  seconds int
+ */
+function mcve_settimeout($conn, $seconds) {}
+
+/**
+ * Issue a settlement command to do a batch deposit 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ * @param  batch string
+ */
+function mcve_settle($conn, $username, $password, $batch) {}
+
+/**
+ * Get a textual representation of the return_avs 
+ *
+ * @return string
+ * @param  code string
+ */
+function mcve_text_avs($code) {}
+
+/**
+ * Get a textual representation of the return_code 
+ *
+ * @return string
+ * @param  code string
+ */
+function mcve_text_code($code) {}
+
+/**
+ * Get a textual representation of the return_cv 
+ *
+ * @return string
+ * @param  code int
+ */
+function mcve_text_cv($code) {}
+
+/**
+ * Get the authorization number returned for the transaction (alpha-numeric) 
+ *
+ * @return string
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_transactionauth($conn, $identifier) {}
+
+/**
+ * Get the Address Verification return status 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_transactionavs($conn, $identifier) {}
+
+/**
+ * Get the batch number associated with the transaction 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_transactionbatch($conn, $identifier) {}
+
+/**
+ * Get the CVC2/CVV2/CID return status 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_transactioncv($conn, $identifier) {}
+
+/**
+ * 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_transactionid($conn, $identifier) {}
+
+/**
+ * Get the ITEM number in the associated batch for this transaction 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_transactionitem($conn, $identifier) {}
+
+/**
+ * Check to see if outgoing buffer is clear 
+ *
+ * @return int
+ * @param  conn resource
+ */
+function mcve_transactionssent($conn) {}
+
+/**
+ * Get verbiage (text) return from MCVE or processing institution 
+ *
+ * @return string
+ * @param  conn resource
+ * @param  identifier int
+ */
+function mcve_transactiontext($conn, $identifier) {}
+
+/**
+ * Number of transactions in client-queue 
+ *
+ * @return int
+ * @param  conn resource
+ */
+function mcve_transinqueue($conn) {}
+
+/**
+ * Start a new transaction 
+ *
+ * @return int
+ * @param  conn resource
+ */
+function mcve_transnew($conn) {}
+
+/**
+ * Add a parameter to a transaction 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier long
+ * @param  key int
+ * @vararg ...
+ */
+function mcve_transparam($conn, $identifier, $key) {}
+
+/**
+ * Finalize and send the transaction 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  identifier long
+ */
+function mcve_transsend($conn, $identifier) {}
+
+/**
+ * Get a list of all Unsettled batches 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ */
+function mcve_ub($conn, $username, $password) {}
+
+/**
+ * Wait x microsecs 
+ *
+ * @return int
+ * @param  microsecs long
+ */
+function mcve_uwait($microsecs) {}
+
+/**
+ * 
+ *
+ * @return bool
+ * @param  conn resource
+ * @param  tf int
+ */
+function mcve_verifyconnection($conn, $tf) {}
+
+/**
+ * 
+ *
+ * @return bool
+ * @param  conn resource
+ * @param  tf int
+ */
+function mcve_verifysslcert($conn, $tf) {}
+
+/**
+ * VOID a transaction in the settlement queue 
+ *
+ * @return int
+ * @param  conn resource
+ * @param  username string
+ * @param  password string
+ * @param  sid int
+ * @param  ptrannum int
+ */
+function mcve_void($conn, $username, $password, $sid, $ptrannum) {}
+
+/**
  * Calculate the md5 hash of a string 
  *
  * @return string
@@ -13021,7 +12480,7 @@ function mhash_keygen_s2k($hash, $input_password, $salt, $bytes) {}
 /**
  * Returns a string containing the current time in seconds and microseconds 
  *
- * @return mixed
+ * @return string
  */
 function microtime() {}
 
@@ -13097,36 +12556,6 @@ function mktime($hour, $min, $sec, $mon, $day, $year) {}
  * @param  value float
  */
 function money_format($format, $value) {}
-
-/**
- * 
- *
- * @return void
- * @param  class string
- * @param  text string
- * @param  severe bool
- * @param  user_data mixed
- */
-function monitor_custom_event($class, $text, $severe, $user_data) {}
-
-/**
- * 
- *
- * @return void
- * @param  errno integer
- * @param  errstr string
- * @param  errfile string
- * @param  errline integer
- */
-function monitor_pass_error($errno, $errstr, $errfile, $errline) {}
-
-/**
- * 
- *
- * @return void
- * @param  hint string
- */
-function monitor_set_aggregation_hint($hint) {}
 
 /**
  * Move a file if and only if it was created by an upload 
@@ -13285,7 +12714,7 @@ function msession_set($session, $name, $value) {}
 /**
  * Set msession variables from an array
  *
- * @return void
+ * @return bool
  * @param  session string
  * @param  tuples array
  */
@@ -13346,17 +12775,9 @@ function msg_get_queue($key, $perms = null) {}
 /**
  * Send a message of type msgtype (must be > 0) to a message queue 
  *
- * @return bool
- * @param  queue resource
- * @param  desiredmsgtype long
- * @param  msgtype long
- * @param  maxsize long
- * @param  message mixed
- * @param  unserialize bool[optional]
- * @param  flags long[optional]
- * @param  errorcode long
+ * @return mixed
  */
-function msg_receive($queue, $desiredmsgtype, &$msgtype, $maxsize, $message, $unserialize = true, $flags = null, $errorcode) {}
+function msg_receive() {}
 
 /**
  * Destroy the queue 
@@ -13382,7 +12803,7 @@ function msg_send($queue, $msgtype, $message, $serialize = true, $blocking = tru
 /**
  * Set information for a message queue 
  *
- * @return bool
+ * @return array
  * @param  queue resource
  * @param  data array
  */
@@ -13399,7 +12820,7 @@ function msg_stat_queue($queue) {}
 /**
  * Send an SQL query to mSQL 
  *
- * @return resource
+ * @return int
  * @param  database_name string
  * @param  query string
  * @param  link_identifier int[optional]
@@ -13417,7 +12838,7 @@ function msql_affected_rows($query) {}
 /**
  * Close an mSQL connection 
  *
- * @return bool
+ * @return int
  * @param  link_identifier int[optional]
  */
 function msql_close($link_identifier = null) {}
@@ -13425,7 +12846,7 @@ function msql_close($link_identifier = null) {}
 /**
  * Open a connection to an mSQL Server 
  *
- * @return resource
+ * @return int
  * @param  hostname string[optional]
  * @param  username string[optional]
  * @param  password string[optional]
@@ -13435,7 +12856,7 @@ function msql_connect($hostname = null, $username = null, $password = null) {}
 /**
  * Create an mSQL database 
  *
- * @return bool
+ * @return int
  * @param  database_name string
  * @param  link_identifier int[optional]
  */
@@ -13444,7 +12865,7 @@ function msql_create_db($database_name, $link_identifier = null) {}
 /**
  * Create an mSQL database 
  *
- * @return bool
+ * @return int
  * @param  database_name string
  * @param  link_identifier int[optional]
  */
@@ -13453,7 +12874,7 @@ function msql_createdb($database_name, $link_identifier = null) {}
 /**
  * Move internal result pointer 
  *
- * @return bool
+ * @return int
  * @param  query int
  * @param  row_number int
  */
@@ -13462,7 +12883,7 @@ function msql_data_seek($query, $row_number) {}
 /**
  * Send an SQL query to mSQL 
  *
- * @return resource
+ * @return int
  * @param  database_name string
  * @param  query string
  * @param  link_identifier int[optional]
@@ -13472,7 +12893,7 @@ function msql_db_query($database_name, $query, $link_identifier = null) {}
 /**
  * Get result data 
  *
- * @return string
+ * @return int
  * @param  query int
  * @param  row int
  * @param  field mixed[optional]
@@ -13482,7 +12903,7 @@ function msql_dbname($query, $row, $field = null) {}
 /**
  * Drop (delete) an mSQL database 
  *
- * @return bool
+ * @return int
  * @param  database_name string
  * @param  link_identifier int[optional]
  */
@@ -13491,7 +12912,7 @@ function msql_drop_db($database_name, $link_identifier = null) {}
 /**
  * Drop (delete) an mSQL database 
  *
- * @return bool
+ * @return int
  * @param  database_name string
  * @param  link_identifier int[optional]
  */
@@ -13570,7 +12991,7 @@ function msql_field_name($query, $field_index) {}
 /**
  * Set result pointer to a specific field offset 
  *
- * @return bool
+ * @return int
  * @param  query int
  * @param  field_offset int
  */
@@ -13579,7 +13000,7 @@ function msql_field_seek($query, $field_offset) {}
 /**
  * Get name of the table the specified field is in 
  *
- * @return int
+ * @return string
  * @param  query int
  * @param  field_offset int
  */
@@ -13624,7 +13045,7 @@ function msql_fieldname($query, $field_index) {}
 /**
  * Get name of the table the specified field is in 
  *
- * @return int
+ * @return string
  * @param  query int
  * @param  field_offset int
  */
@@ -13642,7 +13063,7 @@ function msql_fieldtype($query, $field_offset) {}
 /**
  * Free result memory 
  *
- * @return bool
+ * @return int
  * @param  query int
  */
 function msql_free_result($query) {}
@@ -13650,7 +13071,7 @@ function msql_free_result($query) {}
 /**
  * Free result memory 
  *
- * @return bool
+ * @return int
  * @param  query int
  */
 function msql_freeresult($query) {}
@@ -13658,7 +13079,7 @@ function msql_freeresult($query) {}
 /**
  * List databases available on an mSQL server 
  *
- * @return resource
+ * @return int
  * @param  link_identifier int[optional]
  */
 function msql_list_dbs($link_identifier = null) {}
@@ -13666,7 +13087,7 @@ function msql_list_dbs($link_identifier = null) {}
 /**
  * List mSQL result fields 
  *
- * @return resource
+ * @return int
  * @param  database_name string
  * @param  table_name string
  * @param  link_identifier int[optional]
@@ -13676,7 +13097,7 @@ function msql_list_fields($database_name, $table_name, $link_identifier = null) 
 /**
  * List tables in an mSQL database 
  *
- * @return resource
+ * @return int
  * @param  database_name string
  * @param  link_identifier int[optional]
  */
@@ -13685,7 +13106,7 @@ function msql_list_tables($database_name, $link_identifier = null) {}
 /**
  * List databases available on an mSQL server 
  *
- * @return resource
+ * @return int
  * @param  link_identifier int[optional]
  */
 function msql_listdbs($link_identifier = null) {}
@@ -13693,7 +13114,7 @@ function msql_listdbs($link_identifier = null) {}
 /**
  * List mSQL result fields 
  *
- * @return resource
+ * @return int
  * @param  database_name string
  * @param  table_name string
  * @param  link_identifier int[optional]
@@ -13703,7 +13124,7 @@ function msql_listfields($database_name, $table_name, $link_identifier = null) {
 /**
  * List tables in an mSQL database 
  *
- * @return resource
+ * @return int
  * @param  database_name string
  * @param  link_identifier int[optional]
  */
@@ -13744,7 +13165,7 @@ function msql_numrows($query) {}
 /**
  * Open a persistent connection to an mSQL Server 
  *
- * @return resource
+ * @return int
  * @param  hostname string[optional]
  * @param  username string[optional]
  * @param  password string[optional]
@@ -13754,7 +13175,7 @@ function msql_pconnect($hostname = null, $username = null, $password = null) {}
 /**
  * Send an SQL query to mSQL 
  *
- * @return resource
+ * @return int
  * @param  query string
  * @param  link_identifier int[optional]
  */
@@ -13771,7 +13192,7 @@ function msql_regcase($string) {}
 /**
  * Get result data 
  *
- * @return string
+ * @return int
  * @param  query int
  * @param  row int
  * @param  field mixed[optional]
@@ -13781,7 +13202,7 @@ function msql_result($query, $row, $field = null) {}
 /**
  * Select an mSQL database 
  *
- * @return bool
+ * @return int
  * @param  database_name string
  * @param  link_identifier int[optional]
  */
@@ -13790,7 +13211,7 @@ function msql_select_db($database_name, $link_identifier = null) {}
 /**
  * Select an mSQL database 
  *
- * @return bool
+ * @return int
  * @param  database_name string
  * @param  link_identifier int[optional]
  */
@@ -13799,7 +13220,7 @@ function msql_selectdb($database_name, $link_identifier = null) {}
 /**
  * Get result data 
  *
- * @return string
+ * @return int
  * @param  query int
  * @param  row int
  * @param  field mixed[optional]
@@ -13832,13 +13253,12 @@ function mssql_close($conn_id = null) {}
 /**
  * Establishes a connection to a MS-SQL server 
  *
- * @return resource
+ * @return int
  * @param  servername string[optional]
  * @param  username string[optional]
  * @param  password string[optional]
- * @param  new_link bool[optional]
  */
-function mssql_connect($servername = null, $username = null, $password = null, $new_link = null) {}
+function mssql_connect($servername = null, $username = null, $password = null) {}
 
 /**
  * Moves the internal row pointer of the MS-SQL result associated with the specified result identifier to pointer to the specified row number 
@@ -13880,8 +13300,9 @@ function mssql_fetch_array($result_id, $result_type = null) {}
  *
  * @return array
  * @param  result_id resource
+ * @param  result_type int[optional]
  */
-function mssql_fetch_assoc($result_id) {}
+function mssql_fetch_assoc($result_id, $result_type = null) {}
 
 /**
  * Returns the next batch of records 
@@ -13914,8 +13335,9 @@ function mssql_fetch_object($result_id, $result_type = null) {}
  *
  * @return array
  * @param  result_id resource
+ * @param  result_type int[optional]
  */
-function mssql_fetch_row($result_id) {}
+function mssql_fetch_row($result_id, $result_type = null) {}
 
 /**
  * Get the length of a MS-SQL field 
@@ -13988,7 +13410,7 @@ function mssql_guid_string($binary, $short_format = null) {}
 /**
  * Initializes a stored procedure or a remote stored procedure  
  *
- * @return resource
+ * @return int
  * @param  sp_name string
  * @param  conn_id resource[optional]
  */
@@ -14053,18 +13475,17 @@ function mssql_num_rows($mssql_result_index) {}
 /**
  * Establishes a persistent connection to a MS-SQL server 
  *
- * @return resource
+ * @return int
  * @param  servername string[optional]
  * @param  username string[optional]
  * @param  password string[optional]
- * @param  new_link bool[optional]
  */
-function mssql_pconnect($servername = null, $username = null, $password = null, $new_link = null) {}
+function mssql_pconnect($servername = null, $username = null, $password = null) {}
 
 /**
  * Perform an SQL query on a MS-SQL server database 
  *
- * @return mixed
+ * @return resource
  * @param  query string
  * @param  conn_id resource[optional]
  * @param  batch_size int[optional]
@@ -14103,14 +13524,13 @@ function mssql_select_db($database_name, $conn_id = null) {}
  *
  * @return bool
  * @param  error_func mixed
- * @param  connection resource[optional]
  */
-function mssql_set_message_handler($error_func, $connection = null) {}
+function mssql_set_message_handler($error_func) {}
 
 /**
  * Send Sybase query 
  *
- * @return resource
+ * @return int
  * @param  query string
  * @param  link_id int[optional]
  */
@@ -14206,7 +13626,7 @@ function mysql_data_seek($result, $row_number) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -14226,7 +13646,7 @@ function mysql_db_query($database_name, $query, $link_identifier = null) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -14622,7 +14042,7 @@ function mysql_real_escape_string($to_be_escaped, $link_identifier = null) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -14658,7 +14078,7 @@ function mysql_stat($link_identifier = null) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -14668,7 +14088,7 @@ function mysql_table_name($result, $row, $field = null) {}
 /**
  * Gets result data 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row int
  * @param  field mixed[optional]
@@ -14695,7 +14115,7 @@ function mysql_unbuffered_query($query, $link_identifier = null) {}
 /**
  * Sort an array using case-insensitive natural sort 
  *
- * @return bool
+ * @return void
  * @param  array_arg array
  */
 function natcasesort($array_arg) {}
@@ -14703,7 +14123,7 @@ function natcasesort($array_arg) {}
 /**
  * Sort an array using natural sort 
  *
- * @return bool
+ * @return void
  * @param  array_arg array
  */
 function natsort($array_arg) {}
@@ -14924,7 +14344,7 @@ function ncurses_define_key($definition, $keycode) {}
 /**
  * Remove panel from the stack and delete it (but not the associated window) 
  *
- * @return bool
+ * @return int
  * @param  panel resource
  */
 function ncurses_del_panel($panel) {}
@@ -14954,7 +14374,7 @@ function ncurses_deleteln() {}
 /**
  * Deletes a ncurses window 
  *
- * @return bool
+ * @return int
  * @param  window resource
  */
 function ncurses_delwin($window) {}
@@ -15005,7 +14425,7 @@ function ncurses_erasechar() {}
 /**
  * 
  *
- * @return void
+ * @return int
  */
 function ncurses_filter() {}
 
@@ -15122,7 +14542,7 @@ function ncurses_inch() {}
 /**
  * Initializes ncurses 
  *
- * @return void
+ * @return int
  */
 function ncurses_init() {}
 
@@ -15228,7 +14648,7 @@ function ncurses_longname() {}
 /**
  * Enables/Disable 8-bit meta key information 
  *
- * @return int
+ * @return long
  * @param  window resource
  * @param  _8bit bool
  */
@@ -15431,7 +14851,7 @@ function ncurses_newpad($rows, $cols) {}
 /**
  * Creates a new window 
  *
- * @return resource
+ * @return int
  * @param  rows int
  * @param  cols int
  * @param  y int
@@ -15470,7 +14890,7 @@ function ncurses_nonl() {}
 /**
  * Do not flush on signal characters
  *
- * @return void
+ * @return int
  */
 function ncurses_noqiflush() {}
 
@@ -15494,7 +14914,7 @@ function ncurses_pair_content($pair, &$f, &$b) {}
 /**
  * Returns the panel above panel. If panel is null, returns the bottom panel in the stack 
  *
- * @return resource
+ * @return int
  * @param  panel resource
  */
 function ncurses_panel_above($panel) {}
@@ -15502,7 +14922,7 @@ function ncurses_panel_above($panel) {}
 /**
  * Returns the panel below panel. If panel is null, returns the top panel in the stack 
  *
- * @return resource
+ * @return int
  * @param  panel resource
  */
 function ncurses_panel_below($panel) {}
@@ -15510,7 +14930,7 @@ function ncurses_panel_below($panel) {}
 /**
  * Returns the window associated with panel 
  *
- * @return resource
+ * @return int
  * @param  panel resource
  */
 function ncurses_panel_window($panel) {}
@@ -15554,7 +14974,7 @@ function ncurses_putp($text) {}
 /**
  * Flushes on signal characters 
  *
- * @return void
+ * @return int
  */
 function ncurses_qiflush() {}
 
@@ -15707,7 +15127,7 @@ function ncurses_slk_color($intarg) {}
 /**
  * Inits soft label keys 
  *
- * @return bool
+ * @return int
  * @param  intarg int
  */
 function ncurses_slk_init($intarg) {}
@@ -15820,7 +15240,7 @@ function ncurses_ungetch($keycode) {}
 /**
  * Pushes mouse event to queue 
  *
- * @return bool
+ * @return int
  * @param  mevent array
  */
 function ncurses_ungetmouse($mevent) {}
@@ -15927,7 +15347,7 @@ function ncurses_wcolor_set($window, $color_pair) {}
 /**
  * Erase window contents 
  *
- * @return int
+ * @return long
  * @param  window resource
  */
 function ncurses_werase($window) {}
@@ -15998,6 +15418,60 @@ function ncurses_wrefresh($window) {}
 function ncurses_wvline($window, $charattr, $n) {}
 
 /**
+ * Make key from pass phrase in the snmpv3 session 
+ *
+ * @return int
+ * @param  snmp_session_*s struct
+ * @param  *pass char
+ */
+function netsnmp_session_gen_auth_key($snmp_session_*s, $*pass) {}
+
+/**
+ * Make key from pass phrase in the snmpv3 session 
+ *
+ * @return int
+ * @param  snmp_session_*s struct
+ * @param  *pass u_char
+ */
+function netsnmp_session_gen_sec_key($snmp_session_*s, $*pass) {}
+
+/**
+ * Set the authentication protocol in the snmpv3 session 
+ *
+ * @return int
+ * @param  snmp_session_*s struct
+ * @param  *prot char
+ */
+function netsnmp_session_set_auth_protocol($snmp_session_*s, $*prot) {}
+
+/**
+ * Set the security level in the snmpv3 session 
+ *
+ * @return int
+ * @param  snmp_session_*s struct
+ * @param  *level char
+ */
+function netsnmp_session_set_sec_level($snmp_session_*s, $*level) {}
+
+/**
+ * Set the security name in the snmpv3 session 
+ *
+ * @return int
+ * @param  snmp_session_*s struct
+ * @param  *name char
+ */
+function netsnmp_session_set_sec_name($snmp_session_*s, $*name) {}
+
+/**
+ * Set the security protocol in the snmpv3 session 
+ *
+ * @return int
+ * @param  snmp_session_*s struct
+ * @param  *prot char
+ */
+function netsnmp_session_set_sec_protocol($snmp_session_*s, $*prot) {}
+
+/**
  * Creates new xmldoc 
  *
  * @return object
@@ -16043,6 +15517,15 @@ function nl_langinfo($item) {}
  * Returns list of children nodes 
  *
  * @return int
+ * @param  **attributes zval
+ * @param  node int
+ */
+function node_attributes($**attributes, $node) {}
+
+/**
+ * Returns list of children nodes 
+ *
+ * @return int
  * @param  node int[optional]
  */
 function node_children($node = null) {}
@@ -16068,7 +15551,7 @@ function notes_body($server, $mailbox, $msg_number) {}
 /**
  * Creates a note using form form_name 
  *
- * @return bool
+ * @return string
  * @param  from_database_name string
  * @param  to_database_name string
  * @param  title string[optional]
@@ -16086,7 +15569,7 @@ function notes_create_db($database_name) {}
 /**
  * Creates a note using form form_name 
  *
- * @return bool
+ * @return string
  * @param  database_name string
  * @param  form_name string
  */
@@ -16103,7 +15586,7 @@ function notes_drop_db($database_name) {}
 /**
  * Returns a note id found in database_name 
  *
- * @return int
+ * @return bool
  * @param  database_name string
  * @param  name string
  * @param  type string[optional]
@@ -16131,7 +15614,7 @@ function notes_list_msgs($db) {}
 /**
  * Marks a note_id as read for the User user_name.  Note: user_name must be fully distinguished user name 
  *
- * @return bool
+ * @return string
  * @param  database_name string
  * @param  user_name string
  * @param  note_id string
@@ -16141,7 +15624,7 @@ function notes_mark_read($database_name, $user_name, $note_id) {}
 /**
  * Marks a note_id as unread for the User user_name.  Note: user_name must be fully distinguished user name 
  *
- * @return bool
+ * @return string
  * @param  database_name string
  * @param  user_name string
  * @param  note_id string
@@ -16160,7 +15643,7 @@ function notes_nav_create($database_name, $name) {}
 /**
  * Finds notes that match keywords in database_name.  The note(s) that are returned must be converted to base 16. Example base_convert($note_id, "10", "16") 
  *
- * @return array
+ * @return string
  * @param  database_name string
  * @param  keywords string
  */
@@ -16169,7 +15652,7 @@ function notes_search($database_name, $keywords) {}
 /**
  * Returns the unread note id's for the current User user_name.  Note: user_name must be fully distinguished user name 
  *
- * @return array
+ * @return string
  * @param  database_name string
  * @param  user_name string
  */
@@ -16178,7 +15661,7 @@ function notes_unread($database_name, $user_name) {}
 /**
  * Gets the Lotus Notes version 
  *
- * @return float
+ * @return string
  * @param  database_name string
  */
 function notes_version($database_name) {}
@@ -16198,14 +15681,6 @@ function nsapi_request_headers() {}
 function nsapi_response_headers() {}
 
 /**
- * Perform an NSAPI sub-request 
- *
- * @return bool
- * @param  uri string
- */
-function nsapi_virtual($uri) {}
-
-/**
  * Formats a number with grouped thousands 
  *
  * @return string
@@ -16219,7 +15694,7 @@ function number_format($number, $num_decimal_places = null, $dec_seperator = nul
 /**
  * Clean (delete) the current output buffer 
  *
- * @return void
+ * @return bool
  */
 function ob_clean() {}
 
@@ -16240,14 +15715,14 @@ function ob_end_flush() {}
 /**
  * Flush (send) contents of the output buffer. The last buffer content is sent to next buffer 
  *
- * @return void
+ * @return bool
  */
 function ob_flush() {}
 
 /**
  * Get current buffer contents and delete current output buffer 
  *
- * @return string
+ * @return bool
  */
 function ob_get_clean() {}
 
@@ -16261,14 +15736,14 @@ function ob_get_contents() {}
 /**
  * Get current buffer contents, flush (send) the output buffer, and delete current output buffer 
  *
- * @return string
+ * @return bool
  */
 function ob_get_flush() {}
 
 /**
  * Return the length of the output buffer 
  *
- * @return int
+ * @return string
  */
 function ob_get_length() {}
 
@@ -16282,7 +15757,7 @@ function ob_get_level() {}
 /**
  * Return the status of the active or all output buffers 
  *
- * @return array
+ * @return false|array
  * @param  full_status bool[optional]
  */
 function ob_get_status($full_status = null) {}
@@ -16316,7 +15791,7 @@ function ob_implicit_flush($flag = null) {}
 /**
  * 
  *
- * @return array
+ * @return false|array
  */
 function ob_list_handlers() {}
 
@@ -16406,7 +15881,7 @@ function ocicolumnsize($stmt, $col) {}
 /**
  * Tell the data type of a column 
  *
- * @return int
+ * @return mixed
  * @param  stmt int
  * @param  col int
  */
@@ -16664,7 +16139,7 @@ function ocistatementtype($stmt) {}
 /**
  * Returns the decimal equivalent of an octal string 
  *
- * @return number
+ * @return int
  * @param  octal_number string
  */
 function octdec($octal_number) {}
@@ -16672,8 +16147,8 @@ function octdec($octal_number) {}
 /**
  * Toggle autocommit mode or get status 
  *
- * @return mixed
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  OnOff int[optional]
  */
 function odbc_autocommit($connection_id, $OnOff = null) {}
@@ -16681,7 +16156,7 @@ function odbc_autocommit($connection_id, $OnOff = null) {}
 /**
  * Handle binary column data 
  *
- * @return bool
+ * @return int
  * @param  result_id int
  * @param  mode int
  */
@@ -16691,7 +16166,7 @@ function odbc_binmode($result_id, $mode) {}
  * Close an ODBC connection 
  *
  * @return void
- * @param  connection_id resource
+ * @param  connection_id int
  */
 function odbc_close($connection_id) {}
 
@@ -16705,8 +16180,8 @@ function odbc_close_all() {}
 /**
  * Returns a result identifier that can be used to fetch a list of columns and associated privileges for the specified table 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  catalog string
  * @param  schema string
  * @param  table string
@@ -16717,27 +16192,27 @@ function odbc_columnprivileges($connection_id, $catalog, $schema, $table, $colum
 /**
  * Returns a result identifier that can be used to fetch a list of column names in specified tables 
  *
- * @return resource
- * @param  connection_id resource
- * @param  qualifier string[optional]
- * @param  owner string[optional]
- * @param  table_name string[optional]
- * @param  column_name string[optional]
+ * @return int
+ * @param  connection_id int
+ * @param  qualifier string
+ * @param  owner string
+ * @param  table_name string
+ * @param  column_name string
  */
-function odbc_columns($connection_id, $qualifier = null, $owner = null, $table_name = null, $column_name = null) {}
+function odbc_columns($connection_id, $qualifier, $owner, $table_name, $column_name) {}
 
 /**
  * Commit an ODBC transaction 
  *
- * @return bool
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  */
 function odbc_commit($connection_id) {}
 
 /**
  * Connect to a datasource 
  *
- * @return resource
+ * @return int
  * @param  DSN string
  * @param  user string
  * @param  password string
@@ -16749,7 +16224,7 @@ function odbc_connect($DSN, $user, $password, $cursor_option = null) {}
  * Get cursor name 
  *
  * @return string
- * @param  result_id resource
+ * @param  result_id int
  */
 function odbc_cursor($result_id) {}
 
@@ -16757,7 +16232,7 @@ function odbc_cursor($result_id) {}
  * Return information about the currently connected data source 
  *
  * @return array
- * @param  connection_id resource
+ * @param  connection_id int
  * @param  fetch_type int
  */
 function odbc_data_source($connection_id, $fetch_type) {}
@@ -16765,8 +16240,8 @@ function odbc_data_source($connection_id, $fetch_type) {}
 /**
  * Prepare and execute an SQL statement 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  query string
  * @param  flags int[optional]
  */
@@ -16776,7 +16251,7 @@ function odbc_do($connection_id, $query, $flags = null) {}
  * Get the last error code 
  *
  * @return string
- * @param  connection_id resource[optional]
+ * @param  connection_id int[optional]
  */
 function odbc_error($connection_id = null) {}
 
@@ -16784,15 +16259,15 @@ function odbc_error($connection_id = null) {}
  * Get the last error message 
  *
  * @return string
- * @param  connection_id resource[optional]
+ * @param  connection_id int[optional]
  */
 function odbc_errormsg($connection_id = null) {}
 
 /**
  * Prepare and execute an SQL statement 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  query string
  * @param  flags int[optional]
  */
@@ -16801,8 +16276,8 @@ function odbc_exec($connection_id, $query, $flags = null) {}
 /**
  * Execute a prepared statement 
  *
- * @return bool
- * @param  result_id resource
+ * @return int
+ * @param  result_id int
  * @param  parameters_array array[optional]
  */
 function odbc_execute($result_id, $parameters_array = null) {}
@@ -16819,8 +16294,8 @@ function odbc_fetch_array($result, $rownumber = null) {}
 /**
  * Fetch one result row into an array 
  *
- * @return bool
- * @param  result_id resource
+ * @return int
+ * @param  result_id int
  * @param  result_array array
  * @param  rownumber int[optional]
  */
@@ -16838,8 +16313,8 @@ function odbc_fetch_object($result, $rownumber = null) {}
 /**
  * Fetch a row 
  *
- * @return bool
- * @param  result_id resource
+ * @return int
+ * @param  result_id int
  * @param  row_number int[optional]
  */
 function odbc_fetch_row($result_id, $row_number = null) {}
@@ -16848,7 +16323,7 @@ function odbc_fetch_row($result_id, $row_number = null) {}
  * Get the length (precision) of a column 
  *
  * @return int
- * @param  result_id resource
+ * @param  result_id int
  * @param  field_number int
  */
 function odbc_field_len($result_id, $field_number) {}
@@ -16857,7 +16332,7 @@ function odbc_field_len($result_id, $field_number) {}
  * Get a column name 
  *
  * @return string
- * @param  result_id resource
+ * @param  result_id int
  * @param  field_number int
  */
 function odbc_field_name($result_id, $field_number) {}
@@ -16866,7 +16341,7 @@ function odbc_field_name($result_id, $field_number) {}
  * Return column number 
  *
  * @return int
- * @param  result_id resource
+ * @param  result_id int
  * @param  field_name string
  */
 function odbc_field_num($result_id, $field_name) {}
@@ -16875,7 +16350,7 @@ function odbc_field_num($result_id, $field_name) {}
  * Get the length (precision) of a column 
  *
  * @return int
- * @param  result_id resource
+ * @param  result_id int
  * @param  field_number int
  */
 function odbc_field_precision($result_id, $field_number) {}
@@ -16884,7 +16359,7 @@ function odbc_field_precision($result_id, $field_number) {}
  * Get the scale of a column 
  *
  * @return int
- * @param  result_id resource
+ * @param  result_id int
  * @param  field_number int
  */
 function odbc_field_scale($result_id, $field_number) {}
@@ -16893,7 +16368,7 @@ function odbc_field_scale($result_id, $field_number) {}
  * Get the datatype of a column 
  *
  * @return string
- * @param  result_id resource
+ * @param  result_id int
  * @param  field_number int
  */
 function odbc_field_type($result_id, $field_number) {}
@@ -16901,8 +16376,8 @@ function odbc_field_type($result_id, $field_number) {}
 /**
  * Returns a result identifier to either a list of foreign keys in the specified table or a list of foreign keys in other tables that refer to the primary key in the specified table 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  pk_qualifier string
  * @param  pk_owner string
  * @param  pk_table string
@@ -16915,16 +16390,16 @@ function odbc_foreignkeys($connection_id, $pk_qualifier, $pk_owner, $pk_table, $
 /**
  * Free resources associated with a result 
  *
- * @return bool
- * @param  result_id resource
+ * @return int
+ * @param  result_id int
  */
 function odbc_free_result($result_id) {}
 
 /**
  * Returns a result identifier containing information about data types supported by the data source 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  data_type int[optional]
  */
 function odbc_gettypeinfo($connection_id, $data_type = null) {}
@@ -16932,7 +16407,7 @@ function odbc_gettypeinfo($connection_id, $data_type = null) {}
 /**
  * Handle LONG columns 
  *
- * @return bool
+ * @return int
  * @param  result_id int
  * @param  length int
  */
@@ -16942,7 +16417,7 @@ function odbc_longreadlen($result_id, $length) {}
  * Checks if multiple results are avaiable 
  *
  * @return bool
- * @param  result_id resource
+ * @param  result_id int
  */
 function odbc_next_result($result_id) {}
 
@@ -16950,7 +16425,7 @@ function odbc_next_result($result_id) {}
  * Get number of columns in a result 
  *
  * @return int
- * @param  result_id resource
+ * @param  result_id int
  */
 function odbc_num_fields($result_id) {}
 
@@ -16958,14 +16433,14 @@ function odbc_num_fields($result_id) {}
  * Get number of rows in a result 
  *
  * @return int
- * @param  result_id resource
+ * @param  result_id int
  */
 function odbc_num_rows($result_id) {}
 
 /**
  * Establish a persistent connection to a datasource 
  *
- * @return resource
+ * @return int
  * @param  DSN string
  * @param  user string
  * @param  password string
@@ -16976,8 +16451,8 @@ function odbc_pconnect($DSN, $user, $password, $cursor_option = null) {}
 /**
  * Prepares a statement for execution 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  query string
  */
 function odbc_prepare($connection_id, $query) {}
@@ -16985,8 +16460,8 @@ function odbc_prepare($connection_id, $query) {}
 /**
  * Returns a result identifier listing the column names that comprise the primary key for a table 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  qualifier string
  * @param  owner string
  * @param  table string
@@ -16996,8 +16471,8 @@ function odbc_primarykeys($connection_id, $qualifier, $owner, $table) {}
 /**
  * Returns a result identifier containing the list of input and output parameters, as well as the columns that make up the result set for the specified procedures 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  qualifier string[optional]
  * @param  owner string
  * @param  proc string
@@ -17008,8 +16483,8 @@ function odbc_procedurecolumns($connection_id, $qualifier = null, $owner, $proc,
 /**
  * Returns a result identifier containg the list of procedure names in a datasource 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  qualifier string[optional]
  * @param  owner string
  * @param  name string
@@ -17019,8 +16494,8 @@ function odbc_procedures($connection_id, $qualifier = null, $owner, $name) {}
 /**
  * Get result data 
  *
- * @return mixed
- * @param  result_id resource
+ * @return string
+ * @param  result_id int
  * @param  field mixed
  */
 function odbc_result($result_id, $field) {}
@@ -17029,7 +16504,7 @@ function odbc_result($result_id, $field) {}
  * Print result as HTML table 
  *
  * @return int
- * @param  result_id resource
+ * @param  result_id int
  * @param  format string[optional]
  */
 function odbc_result_all($result_id, $format = null) {}
@@ -17037,16 +16512,16 @@ function odbc_result_all($result_id, $format = null) {}
 /**
  * Rollback a transaction 
  *
- * @return bool
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  */
 function odbc_rollback($connection_id) {}
 
 /**
  * Sets connection or statement options 
  *
- * @return bool
- * @param  conn_id|result_id resource
+ * @return int
+ * @param  conn_id|result_id int
  * @param  which int
  * @param  option int
  * @param  value int
@@ -17056,8 +16531,8 @@ function odbc_setoption($conn_id, $which, $option, $value) {}
 /**
  * Returns a result identifier containing either the optimal set of columns that uniquely identifies a row in the table or columns that are automatically updated when any value in the row is updated by a transaction 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  type int
  * @param  qualifier string
  * @param  owner string
@@ -17070,8 +16545,8 @@ function odbc_specialcolumns($connection_id, $type, $qualifier, $owner, $table, 
 /**
  * Returns a result identifier that contains statistics about a single table and the indexes associated with the table 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  qualifier string
  * @param  owner string
  * @param  name string
@@ -17083,8 +16558,8 @@ function odbc_statistics($connection_id, $qualifier, $owner, $name, $unique, $ac
 /**
  * Returns a result identifier containing a list of tables and the privileges associated with each table 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  qualifier string
  * @param  owner string
  * @param  name string
@@ -17094,19 +16569,19 @@ function odbc_tableprivileges($connection_id, $qualifier, $owner, $name) {}
 /**
  * Call the SQLTables function 
  *
- * @return resource
- * @param  connection_id resource
+ * @return int
+ * @param  connection_id int
  * @param  qualifier string[optional]
- * @param  owner string[optional]
- * @param  name string[optional]
- * @param  table_types string[optional]
+ * @param  owner string
+ * @param  name string
+ * @param  table_types string
  */
-function odbc_tables($connection_id, $qualifier = null, $owner = null, $name = null, $table_types = null) {}
+function odbc_tables($connection_id, $qualifier = null, $owner, $name, $table_types) {}
 
 /**
  * Open a directory and return a dir_handle 
  *
- * @return resource
+ * @return mixed
  * @param  path string
  */
 function opendir($path) {}
@@ -17144,7 +16619,7 @@ function openssl_csr_export_to_file($csr, $outfilename, $notext = true) {}
 /**
  * Generates a privkey and CSR 
  *
- * @return mixed
+ * @return bool
  * @param  dn array
  * @param  privkey resource
  * @param  configargs array[optional]
@@ -17160,15 +16635,13 @@ function openssl_csr_new($dn, &$privkey, $configargs = null, $extraattribs) {}
  * @param  x509 mixed
  * @param  priv_key mixed
  * @param  days long
- * @param  config_args array[optional]
- * @param  serial long[optional]
  */
-function openssl_csr_sign($csr, $x509, $priv_key, $days, $config_args = null, $serial = null) {}
+function openssl_csr_sign($csr, $x509, $priv_key, $days) {}
 
 /**
  * Returns a description of the last error, and alters the index of the error messages. Returns false when the are no more messages 
  *
- * @return string
+ * @return mixed
  */
 function openssl_error_string() {}
 
@@ -17183,7 +16656,7 @@ function openssl_free_key($key) {}
 /**
  * Gets private keys 
  *
- * @return resource
+ * @return int
  * @param  key string
  * @param  passphrase string[optional]
  */
@@ -17192,7 +16665,7 @@ function openssl_get_privatekey($key, $passphrase = null) {}
 /**
  * Gets public key from X.509 certificate 
  *
- * @return resource
+ * @return int
  * @param  cert mixed
  */
 function openssl_get_publickey($cert) {}
@@ -17248,7 +16721,7 @@ function openssl_pkcs7_sign($infile, $outfile, $signcert, $signkey, $headers, $f
 /**
  * Verifys that the data block is intact, the signer is who they say they are, and returns the CERTs of the signers 
  *
- * @return mixed
+ * @return bool
  * @param  filename string
  * @param  flags long
  * @param  signerscerts string[optional]
@@ -17290,7 +16763,7 @@ function openssl_pkey_free($key) {}
 /**
  * Gets private keys 
  *
- * @return resource
+ * @return int
  * @param  key string
  * @param  passphrase string[optional]
  */
@@ -17299,7 +16772,7 @@ function openssl_pkey_get_private($key, $passphrase = null) {}
 /**
  * Gets public key from X.509 certificate 
  *
- * @return resource
+ * @return int
  * @param  cert mixed
  */
 function openssl_pkey_get_public($cert) {}
@@ -17455,7 +16928,7 @@ function openssl_x509_read($cert) {}
 /**
  * Bind a PHP variable to an Oracle parameter 
  *
- * @return bool
+ * @return int
  * @param  cursor int
  * @param  php_variable_name string
  * @param  sql_parameter_name string
@@ -17467,7 +16940,7 @@ function ora_bind($cursor, $php_variable_name, $sql_parameter_name, $length, $ty
 /**
  * Close an Oracle cursor 
  *
- * @return bool
+ * @return int
  * @param  cursor int
  */
 function ora_close($cursor) {}
@@ -17502,7 +16975,7 @@ function ora_columntype($cursor, $column) {}
 /**
  * Commit an Oracle transaction 
  *
- * @return bool
+ * @return int
  * @param  connection int
  */
 function ora_commit($connection) {}
@@ -17510,7 +16983,7 @@ function ora_commit($connection) {}
 /**
  * Disable automatic commit 
  *
- * @return bool
+ * @return int
  * @param  connection int
  */
 function ora_commitoff($connection) {}
@@ -17518,7 +16991,7 @@ function ora_commitoff($connection) {}
 /**
  * Enable automatic commit 
  *
- * @return bool
+ * @return int
  * @param  connection int
  */
 function ora_commiton($connection) {}
@@ -17526,7 +16999,7 @@ function ora_commiton($connection) {}
 /**
  * Parse and execute a statement and fetch first result row 
  *
- * @return resource
+ * @return int
  * @param  connection int
  * @param  cursor int
  */
@@ -17551,7 +17024,7 @@ function ora_errorcode($cursor_or_connection) {}
 /**
  * Execute a parsed statement 
  *
- * @return bool
+ * @return int
  * @param  cursor int
  */
 function ora_exec($cursor) {}
@@ -17559,7 +17032,7 @@ function ora_exec($cursor) {}
 /**
  * Fetch a row of result data from a cursor 
  *
- * @return bool
+ * @return int
  * @param  cursor int
  */
 function ora_fetch($cursor) {}
@@ -17577,7 +17050,7 @@ function ora_fetch_into($cursor, $result, $flags = null) {}
 /**
  * Get data from a fetched row 
  *
- * @return string
+ * @return mixed
  * @param  cursor int
  * @param  column int
  */
@@ -17586,7 +17059,7 @@ function ora_getcolumn($cursor, $column) {}
 /**
  * Close an Oracle connection 
  *
- * @return bool
+ * @return int
  * @param  connection int
  */
 function ora_logoff($connection) {}
@@ -17594,7 +17067,7 @@ function ora_logoff($connection) {}
 /**
  * Open an Oracle connection 
  *
- * @return resource
+ * @return int
  * @param  user string
  * @param  password string
  */
@@ -17619,7 +17092,7 @@ function ora_numrows($cursor) {}
 /**
  * Open an Oracle cursor 
  *
- * @return resource
+ * @return int
  * @param  connection int
  */
 function ora_open($connection) {}
@@ -17627,7 +17100,7 @@ function ora_open($connection) {}
 /**
  * Parse an Oracle SQL statement 
  *
- * @return bool
+ * @return int
  * @param  cursor int
  * @param  sql_statement string
  * @param  defer int[optional]
@@ -17637,7 +17110,7 @@ function ora_parse($cursor, $sql_statement, $defer = null) {}
 /**
  * Open a persistent Oracle connection 
  *
- * @return resource
+ * @return int
  * @param  user string
  * @param  password string
  */
@@ -17646,7 +17119,7 @@ function ora_plogon($user, $password) {}
 /**
  * Roll back an Oracle transaction 
  *
- * @return bool
+ * @return int
  * @param  connection int
  */
 function ora_rollback($connection) {}
@@ -17667,113 +17140,6 @@ function ord($character) {}
  * @param  value string
  */
 function output_add_rewrite_var($name, $value) {}
-
-/**
- * Check filename against the Zend Performance Suite's content cache rules 
- *
- * @return array
- * @param  filename string
- */
-function output_cache_check_file($filename) {}
-
-/**
- * Disable content-caching of current page results (Zend Performance Suite) 
- *
- * @return void
- */
-function output_cache_disable() {}
-
-/**
- * Disable compression of current page results (Zend Performance Suite) 
- *
- * @return void
- */
-function output_cache_disable_compression() {}
-
-/**
- * Start output caching (Zend Performance Suite) 
- *
- * @return bool
- * @param  key string
- * @param  lifetime int
- */
-function output_cache_exists($key, $lifetime) {}
-
-/**
- * Cache the result of a function call, or obtain previously-generated cache (Zend Performance Suite) 
- *
- * @return string
- * @param  key string
- * @param  function string
- * @param  lifetime int
- */
-function output_cache_fetch($key, $function, $lifetime) {}
-
-/**
- * Fetch value from Zend Performance Suite's cache by key 
- *
- * @return mixed
- * @param  key string
- * @param  lifetime int
- */
-function output_cache_get($key, $lifetime) {}
-
-/**
- * Get content cache statistics from the Zend Performance Suite
- *
- * @return array
- */
-function output_cache_get_statistics() {}
-
-/**
- * Cache the output of a function call, or obtain previously-generated cachbe (Zend Performance Suite) 
- *
- * @return string
- * @param  key string
- * @param  function string
- * @param  lifetime int
- */
-function output_cache_output($key, $function, $lifetime) {}
-
-/**
- * Store a value in the Zend Performance Suite's cache using a specified key 
- *
- * @return bool
- * @param  key string
- * @param  data mixed
- */
-function output_cache_put($key, $data) {}
-
-/**
- * Remove all copies of the specified file from the Zend Performance Suite's cache 
- *
- * @return bool
- * @param  filename string
- */
-function output_cache_remove($filename) {}
-
-/**
- * Remove all cached elements using the specified key from the Zend Performance Suite's cache 
- *
- * @return bool
- * @param  key string
- */
-function output_cache_remove_key($key) {}
-
-/**
- * Remove all copies of the specified URL from the Zend Performance Suite's cache 
- *
- * @return bool
- * @param  url string
- */
-function output_cache_remove_url($url) {}
-
-/**
- * Stop output caching (Zend Performance Suite) 
- *
- * @return void
- */
-function output_cache_stop() {}
 
 /**
  * Reset(clear) URL rewriter values 
@@ -17810,7 +17176,7 @@ function ovrimos_close($connection) {}
 /**
  * Commit an ovrimos transaction 
  *
- * @return bool
+ * @return int
  * @param  connection_id int
  */
 function ovrimos_commit($connection_id) {}
@@ -17855,7 +17221,7 @@ function ovrimos_exec($connection_id, $query) {}
 /**
  * Execute a prepared statement 
  *
- * @return bool
+ * @return int
  * @param  result_id int
  * @param  parameters_array array[optional]
  */
@@ -17864,7 +17230,7 @@ function ovrimos_execute($result_id, $parameters_array = null) {}
 /**
  * 
  *
- * @return bool
+ * @return int
  * @param  result_id int
  * @param  result_array array
  * @param  how string[optional]
@@ -17875,7 +17241,7 @@ function ovrimos_fetch_into($result_id, $result_array, $how = null, $rownumber =
 /**
  * 
  *
- * @return bool
+ * @return int
  * @param  result_id int
  * @param  how int[optional]
  * @param  row_number int[optional]
@@ -17912,7 +17278,7 @@ function ovrimos_field_num($result_id, $field_name) {}
 /**
  * Get the datatype of a column 
  *
- * @return int
+ * @return string
  * @param  result_id int
  * @param  field_number int
  */
@@ -17921,7 +17287,7 @@ function ovrimos_field_type($result_id, $field_number) {}
 /**
  * Free resources associated with a result 
  *
- * @return bool
+ * @return int
  * @param  result_id int
  */
 function ovrimos_free_result($result_id) {}
@@ -17929,7 +17295,7 @@ function ovrimos_free_result($result_id) {}
 /**
  * Handle LONG columns 
  *
- * @return bool
+ * @return int
  * @param  result_id int
  * @param  length int
  */
@@ -17981,7 +17347,7 @@ function ovrimos_result_all($result_id, $format = null) {}
 /**
  * Rollback a transaction 
  *
- * @return bool
+ * @return int
  * @param  connection_id int
  */
 function ovrimos_rollback($connection_id) {}
@@ -18029,7 +17395,7 @@ function parse_str($encoded_string, $result = null) {}
 /**
  * Parse a URL and return its components 
  *
- * @return mixed
+ * @return array
  * @param  url string
  */
 function parse_url($url) {}
@@ -18046,7 +17412,7 @@ function passthru($command, $return_value = null) {}
 /**
  * Returns information about a certain string 
  *
- * @return mixed
+ * @return array
  * @param  path string
  */
 function pathinfo($path) {}
@@ -18070,7 +17436,7 @@ function pcntl_alarm($seconds) {}
 /**
  * Executes specified program in current process space as defined by exec(2) 
  *
- * @return void
+ * @return bool
  * @param  path string
  * @param  args array[optional]
  * @param  envs array[optional]
@@ -19316,14 +18682,14 @@ function pdf_translate($pdfdoc, $x, $y) {}
 /**
  * Shuts down the Payflow Pro library 
  *
- * @return bool
+ * @return void
  */
 function pfpro_cleanup() {}
 
 /**
  * Initializes the Payflow Pro library 
  *
- * @return bool
+ * @return void
  */
 function pfpro_init() {}
 
@@ -19367,7 +18733,7 @@ function pfpro_version() {}
 /**
  * Open persistent Internet or Unix domain socket connection 
  *
- * @return resource
+ * @return int
  * @param  hostname string
  * @param  port int
  * @param  errno int[optional]
@@ -19582,7 +18948,7 @@ function pg_fetch_object($result, $row = null) {}
 /**
  * Returns values from a result identifier 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row_number int[optional]
  * @param  field_name mixed
@@ -19730,7 +19096,7 @@ function pg_freeresult($result) {}
 /**
  * Get asynchronous notification 
  *
- * @return array
+ * @return resource
  * @param  connection resource[optional]
  * @param  result_type unknown
  */
@@ -19739,7 +19105,7 @@ function pg_get_notify($connection = null, $result_type) {}
 /**
  * Get backend(server) pid 
  *
- * @return int
+ * @return resource
  * @param  connection resource[optional]
  */
 function pg_get_pid($connection = null) {}
@@ -20081,7 +19447,7 @@ function pg_query($connection = null, $query) {}
 /**
  * Returns values from a result identifier 
  *
- * @return string
+ * @return mixed
  * @param  result resource
  * @param  row_number int[optional]
  * @param  field_name mixed
@@ -20099,7 +19465,7 @@ function pg_result_error($result) {}
 /**
  * Set internal row offset 
  *
- * @return bool
+ * @return mixed
  * @param  result resource
  * @param  offset int
  */
@@ -20108,7 +19474,7 @@ function pg_result_seek($result, $offset) {}
 /**
  * Get status of query result 
  *
- * @return mixed
+ * @return int
  * @param  result resource
  * @param  result_type long
  */
@@ -20245,7 +19611,7 @@ function php_uname() {}
 /**
  * Prints the list of people who've contributed to the PHP project 
  *
- * @return bool
+ * @return void
  * @param  flag int[optional]
  */
 function phpcredits($flag = null) {}
@@ -20253,7 +19619,7 @@ function phpcredits($flag = null) {}
 /**
  * Output a page of useful information about PHP and the current request 
  *
- * @return bool
+ * @return void
  * @param  what int[optional]
  */
 function phpinfo($what = null) {}
@@ -20274,17 +19640,9 @@ function phpversion($extension = null) {}
 function pi() {}
 
 /**
- * Get the value of a PHP configuration option - but search in zend.ini first... 
- *
- * @return string
- * @param  option_name string
- */
-function platform_get_cfg_var($option_name) {}
-
-/**
  * Convert PNG image to WBMP image 
  *
- * @return int
+ * @return void
  * @param  f_org string
  * @param  f_dest string
  * @param  d_height int
@@ -20436,7 +19794,7 @@ function posix_getpwuid($uid) {}
 /**
  * Get system resource consumption limits (This is not a POSIX function, but a BSDism and a SVR4ism. We compile conditionally) 
  *
- * @return array
+ * @return int
  */
 function posix_getrlimit() {}
 
@@ -20584,9 +19942,8 @@ function preg_grep($regex, $input) {}
  * @param  subject string
  * @param  subpatterns array[optional]
  * @param  flags int[optional]
- * @param  offset int[optional]
  */
-function preg_match($pattern, $subject, $subpatterns = null, $flags = null, $offset = null) {}
+function preg_match($pattern, $subject, $subpatterns = null, $flags = null) {}
 
 /**
  * Perform a Perl-style global regular expression match 
@@ -20596,9 +19953,8 @@ function preg_match($pattern, $subject, $subpatterns = null, $flags = null, $off
  * @param  subject string
  * @param  subpatterns array
  * @param  flags int[optional]
- * @param  offset int[optional]
  */
-function preg_match_all($pattern, $subject, $subpatterns, $flags = null, $offset = null) {}
+function preg_match_all($pattern, $subject, $subpatterns, $flags = null) {}
 
 /**
  * Quote regular expression characters plus an optional character 
@@ -20612,7 +19968,7 @@ function preg_quote($str, $delim_char) {}
 /**
  * Perform Perl-style regular expression replacement. 
  *
- * @return mixed
+ * @return string
  * @param  regex mixed
  * @param  replace mixed
  * @param  subject mixed
@@ -20623,7 +19979,7 @@ function preg_replace($regex, $replace, $subject, $limit = null) {}
 /**
  * Perform Perl-style regular expression replacement using replacement callback. 
  *
- * @return mixed
+ * @return string
  * @param  regex mixed
  * @param  callback mixed
  * @param  subject mixed
@@ -20690,7 +20046,7 @@ function proc_open($command, $descriptorspec, &$pipes) {}
 /**
  * Adds a word to a personal list 
  *
- * @return bool
+ * @return int
  * @param  pspell int
  * @param  word string
  */
@@ -20699,7 +20055,7 @@ function pspell_add_to_personal($pspell, $word) {}
 /**
  * Adds a word to the current session 
  *
- * @return bool
+ * @return int
  * @param  pspell int
  * @param  word string
  */
@@ -20708,7 +20064,7 @@ function pspell_add_to_session($pspell, $word) {}
 /**
  * Returns true if word is valid 
  *
- * @return bool
+ * @return int
  * @param  pspell int
  * @param  word string
  */
@@ -20717,7 +20073,7 @@ function pspell_check($pspell, $word) {}
 /**
  * Clears the current session 
  *
- * @return bool
+ * @return int
  * @param  pspell int
  */
 function pspell_clear_session($pspell) {}
@@ -20736,7 +20092,7 @@ function pspell_config_create($language, $spelling = null, $jargon = null, $enco
 /**
  * Ignore words <= n chars 
  *
- * @return bool
+ * @return int
  * @param  conf int
  * @param  ignore int
  */
@@ -20745,7 +20101,7 @@ function pspell_config_ignore($conf, $ignore) {}
 /**
  * Select mode for config (PSPELL_FAST, PSPELL_NORMAL or PSPELL_BAD_SPELLERS) 
  *
- * @return bool
+ * @return int
  * @param  conf int
  * @param  mode long
  */
@@ -20754,7 +20110,7 @@ function pspell_config_mode($conf, $mode) {}
 /**
  * Use a personal dictionary for this config 
  *
- * @return bool
+ * @return int
  * @param  conf int
  * @param  personal string
  */
@@ -20763,7 +20119,7 @@ function pspell_config_personal($conf, $personal) {}
 /**
  * Use a personal dictionary with replacement pairs for this config 
  *
- * @return bool
+ * @return int
  * @param  conf int
  * @param  repl string
  */
@@ -20772,7 +20128,7 @@ function pspell_config_repl($conf, $repl) {}
 /**
  * Consider run-together words as valid components 
  *
- * @return bool
+ * @return int
  * @param  conf int
  * @param  runtogether bool
  */
@@ -20781,7 +20137,7 @@ function pspell_config_runtogether($conf, $runtogether) {}
 /**
  * Save replacement pairs when personal list is saved for this config 
  *
- * @return bool
+ * @return int
  * @param  conf int
  * @param  save bool
  */
@@ -20823,7 +20179,7 @@ function pspell_new_personal($personal, $language, $spelling = null, $jargon = n
 /**
  * Saves the current (personal) wordlist 
  *
- * @return bool
+ * @return int
  * @param  pspell int
  */
 function pspell_save_wordlist($pspell) {}
@@ -20831,7 +20187,7 @@ function pspell_save_wordlist($pspell) {}
 /**
  * Notify the dictionary of a user-selected replacement 
  *
- * @return bool
+ * @return int
  * @param  pspell int
  * @param  misspell string
  * @param  correct string
@@ -20865,7 +20221,7 @@ function qdom_error() {}
 /**
  * creates a tree of an xml string 
  *
- * @return QDomDocument
+ * @return object
  * @param  string unknown
  */
 function qdom_tree($string) {}
@@ -20931,7 +20287,7 @@ function rawurlencode($str) {}
 /**
  * Reads header data from the JPEG/TIFF image filename and optionally reads the internal thumbnails 
  *
- * @return array
+ * @return array|false
  * @param  filename string
  * @param  sections_needed unknown[optional]
  * @param  sub_arrays unknown[optional]
@@ -20976,7 +20332,7 @@ function readline($prompt = null) {}
 /**
  * Adds a line to the history 
  *
- * @return bool
+ * @return void
  * @param  prompt string[optional]
  */
 function readline_add_history($prompt = null) {}
@@ -20984,14 +20340,14 @@ function readline_add_history($prompt = null) {}
 /**
  * Clears the history 
  *
- * @return bool
+ * @return void
  */
 function readline_clear_history() {}
 
 /**
  * Readline completion function? 
  *
- * @return bool
+ * @return void
  * @param  funcname string
  */
 function readline_completion_function($funcname) {}
@@ -21015,7 +20371,7 @@ function readline_list_history() {}
 /**
  * Reads the history 
  *
- * @return bool
+ * @return int
  * @param  filename string[optional]
  * @param  from int[optional]
  * @param  to int[optional]
@@ -21025,7 +20381,7 @@ function readline_read_history($filename = null, $from = null, $to = null) {}
 /**
  * Writes the history 
  *
- * @return bool
+ * @return int
  * @param  filename string[optional]
  */
 function readline_write_history($filename = null) {}
@@ -21075,16 +20431,6 @@ function recode_file($request, $input, $output) {}
 function recode_string($request, $str) {}
 
 /**
- * Register a user-defined event handler function.  Returns false on error 
- *
- * @return bool
- * @param  handler_function callback
- * @param  handler_name string
- * @param  handler_type integer
- */
-function register_event_handler($handler_function, $handler_name, $handler_type) {}
-
-/**
  * Register a user-level function to be called on request termination 
  *
  * @return void
@@ -21101,13 +20447,6 @@ function register_shutdown_function($function_name) {}
  * @vararg ... mixed
  */
 function register_tick_function($function_name, $arg = null) {}
-
-/**
- * 
- *
- * @return boolean
- */
-function reload_zend_ini_file() {}
 
 /**
  * Rename a file 
@@ -21129,7 +20468,7 @@ function reset($array_arg) {}
 /**
  * Restores the previously defined error handler function 
  *
- * @return bool
+ * @return void
  */
 function restore_error_handler() {}
 
@@ -21194,7 +20533,7 @@ function rtrim($str, $character_mask = null) {}
 /**
  * Acquires the semaphore with the given id, blocking if necessary 
  *
- * @return bool
+ * @return int
  * @param  id int
  */
 function sem_acquire($id) {}
@@ -21202,7 +20541,7 @@ function sem_acquire($id) {}
 /**
  * Return an id for the semaphore with the given key, and allow max_acquire (default 1) processes to acquire it simultaneously 
  *
- * @return resource
+ * @return int
  * @param  key int
  * @param  max_acquire int[optional]
  * @param  perm int[optional]
@@ -21213,7 +20552,7 @@ function sem_get($key, $max_acquire = null, $perm = null, $auto_release = null) 
 /**
  * Releases the semaphore with the given id 
  *
- * @return bool
+ * @return int
  * @param  id int
  */
 function sem_release($id) {}
@@ -21221,7 +20560,7 @@ function sem_release($id) {}
 /**
  * Removes semaphore from Unix systems 
  *
- * @return bool
+ * @return int
  * @param  id int
  */
 function sem_remove($id) {}
@@ -21249,13 +20588,6 @@ function session_cache_expire($new_cache_expire = null) {}
  * @param  new_cache_limiter string[optional]
  */
 function session_cache_limiter($new_cache_limiter = null) {}
-
-/**
- * Write session data and end session 
- *
- * @return void
- */
-function session_commit() {}
 
 /**
  * Deserializes data and reinitializes the variables 
@@ -21356,7 +20688,7 @@ function session_set_cookie_params($lifetime, $path = null, $domain = null, $sec
 /**
  * Sets user-level functions 
  *
- * @return bool
+ * @return void
  * @param  open string
  * @param  close string
  * @param  read string
@@ -21398,7 +20730,7 @@ function session_write_close() {}
 /**
  * Sets a user-defined error handler function.  Returns the previously defined error handler, or false on error 
  *
- * @return mixed
+ * @return string
  * @param  error_handler string
  */
 function set_error_handler($error_handler) {}
@@ -21416,9 +20748,10 @@ function set_file_buffer($fp, $buffer) {}
  * Sets the include_path configuration option 
  *
  * @return string
- * @param  new_include_path string
+ * @param  varname string
+ * @param  newvalue string
  */
-function set_include_path($new_include_path) {}
+function set_include_path($varname, $newvalue) {}
 
 /**
  * Set the current active configuration setting of magic_quotes_runtime and return previous 
@@ -21440,7 +20773,7 @@ function set_socket_blocking($socket, $mode) {}
 /**
  * Sets the maximum time a script can run 
  *
- * @return void
+ * @return bool
  * @param  seconds int
  */
 function set_time_limit($seconds) {}
@@ -21494,7 +20827,7 @@ function sha1($str) {}
 function sha1_file($filename) {}
 
 /**
- * Execute command via shell and return complete output as string 
+ * Use pclose() for FILE* that has been opened via popen() 
  *
  * @return string
  * @param  cmd string
@@ -21514,7 +20847,7 @@ function shm_attach($key, $memsize = null, $perm = null) {}
 /**
  * Disconnects from shared memory segment 
  *
- * @return bool
+ * @return int
  * @param  shm_identifier int
  */
 function shm_detach($shm_identifier) {}
@@ -21531,7 +20864,7 @@ function shm_get_var($id, $variable_key) {}
 /**
  * Inserts or updates a variable in shared memory 
  *
- * @return bool
+ * @return int
  * @param  shm_identifier int
  * @param  variable_key int
  * @param  variable mixed
@@ -21541,7 +20874,7 @@ function shm_put_var($shm_identifier, $variable_key, $variable) {}
 /**
  * Removes shared memory from Unix systems 
  *
- * @return bool
+ * @return int
  * @param  shm_identifier int
  */
 function shm_remove($shm_identifier) {}
@@ -21549,7 +20882,7 @@ function shm_remove($shm_identifier) {}
 /**
  * Removes variable from shared memory 
  *
- * @return bool
+ * @return int
  * @param  id int
  * @param  variable_key int
  */
@@ -21613,7 +20946,7 @@ function shmop_write($shmid, $data, $offset) {}
 /**
  * Syntax highlight a source file 
  *
- * @return int
+ * @return bool
  * @param  file_name string
  * @param  return bool[optional]
  */
@@ -21665,60 +20998,10 @@ function sizeof($var, $mode = null) {}
 /**
  * Delay for a given number of seconds 
  *
- * @return int
+ * @return void
  * @param  seconds int
  */
 function sleep($seconds) {}
-
-/**
- * Fetch a SNMP object 
- *
- * @return string
- * @param  host string
- * @param  community string
- * @param  object_id string
- * @param  timeout int[optional]
- * @param  retries int[optional]
- */
-function snmp2_get($host, $community, $object_id, $timeout = null, $retries = null) {}
-
-/**
- * Return all objects including their respective object id withing the specified one 
- *
- * @return array
- * @param  host string
- * @param  community string
- * @param  object_id string
- * @param  timeout int[optional]
- * @param  retries int[optional]
- */
-function snmp2_real_walk($host, $community, $object_id, $timeout = null, $retries = null) {}
-
-/**
- * Set the value of a SNMP object 
- *
- * @return int
- * @param  host string
- * @param  community string
- * @param  object_id string
- * @param  type string
- * @param  value mixed
- * @param  timeout int[optional]
- * @param  retries int[optional]
- */
-function snmp2_set($host, $community, $object_id, $type, $value, $timeout = null, $retries = null) {}
-
-/**
- * Return all objects under the specified object id 
- *
- * @return array
- * @param  host string
- * @param  community string
- * @param  object_id string
- * @param  timeout int[optional]
- * @param  retries int[optional]
- */
-function snmp2_walk($host, $community, $object_id, $timeout = null, $retries = null) {}
 
 /**
  * Fetch the value of a SNMP object 
@@ -21831,7 +21114,7 @@ function snmp_set_quick_print($quick_print) {}
 /**
  * Specify the method how the SNMP values will be returned 
  *
- * @return void
+ * @return int
  * @param  method int
  */
 function snmp_set_valueretrieval($method) {}
@@ -21863,7 +21146,7 @@ function snmprealwalk($host, $community, $object_id, $timeout = null, $retries =
 /**
  * Set the value of a SNMP object 
  *
- * @return bool
+ * @return int
  * @param  host string
  * @param  community string
  * @param  object_id string
@@ -21985,7 +21268,7 @@ function socket_get_option($socket, $level, $optname) {}
 /**
  * Retrieves header/meta data from streams/file pointers 
  *
- * @return array
+ * @return resource
  * @param  fp resource
  */
 function socket_get_status($fp) {}
@@ -22290,14 +21573,6 @@ function socket_write($socket, $buf, $length) {}
 function socket_writev($socket, $iovec_id) {}
 
 /**
- * 
- *
- * @return bool
- * @param  result_id resource
- */
-function solid_fetch_prev($result_id) {}
-
-/**
  * Sort an array 
  *
  * @return bool
@@ -22401,7 +21676,7 @@ function sqlite_column($result, $index_or_name, $decode_binary = null) {}
 /**
  * Registers an aggregate function for queries. 
  *
- * @return void
+ * @return bool
  * @param  db resource
  * @param  funcname string
  * @param  step_func mixed
@@ -22413,7 +21688,7 @@ function sqlite_create_aggregate($db, $funcname, $step_func, $finalize_func, $nu
 /**
  * Registers a "regular" function for queries. 
  *
- * @return void
+ * @return bool
  * @param  db resource
  * @param  funcname string
  * @param  callback mixed
@@ -22450,7 +21725,7 @@ function sqlite_escape_string($item) {}
 /**
  * Executes a result-less query against a given database 
  *
- * @return bool
+ * @return boolean
  * @param  query string
  * @param  db resource
  * @param  error_message string
@@ -22460,7 +21735,7 @@ function sqlite_exec($query, $db, &$error_message) {}
 /**
  * Opens a SQLite database and creates an object for it. Will create the database if it does not exist. 
  *
- * @return SQLiteDatabase
+ * @return object
  * @param  filename string
  * @param  mode int[optional]
  * @param  error_message string[optional]
@@ -22490,7 +21765,7 @@ function sqlite_fetch_array($result, $result_type = null, $decode_binary = null)
 /**
  * Return an array of column types from a particular table. 
  *
- * @return array
+ * @return resource
  * @param  table_name string
  * @param  db resource
  * @param  result_type int[optional]
@@ -22790,7 +22065,7 @@ function str_rot13($str) {}
 /**
  * Shuffles string. One permutation of all possible is created 
  *
- * @return string
+ * @return void
  * @param  str string
  */
 function str_shuffle($str) {}
@@ -22890,7 +22165,7 @@ function stream_context_set_params($context, $options) {}
 /**
  * Append a filter to a stream 
  *
- * @return resource
+ * @return bool
  * @param  stream resource
  * @param  filtername string
  * @param  filterparams string
@@ -22900,7 +22175,7 @@ function stream_filter_append($stream, $filtername, $filterparams) {}
 /**
  * Prepend a filter to a stream 
  *
- * @return resource
+ * @return bool
  * @param  stream resource
  * @param  filtername string
  * @param  filterparams string
@@ -22910,7 +22185,7 @@ function stream_filter_prepend($stream, $filtername, $filterparams) {}
 /**
  * Retrieves header/meta data from streams/file pointers 
  *
- * @return array
+ * @return resource
  * @param  fp resource
  */
 function stream_get_meta_data($fp) {}
@@ -23192,7 +22467,7 @@ function substr_count($haystack, $needle) {}
 /**
  * Replaces part of a string with another string 
  *
- * @return mixed
+ * @return string
  * @param  str string
  * @param  repl string
  * @param  start int
@@ -23777,7 +23052,7 @@ function swf_startsymbol($objid) {}
 /**
  * Calculates the width of a string, str, using the current fontsize & current font 
  *
- * @return float
+ * @return void
  * @param  str string
  */
 function swf_textwidth($str) {}
@@ -23858,31 +23133,6 @@ function swfbutton_keypress($str) {}
 
 
 
-/**
- * 
- *
- * @return void
- * @param  SWFBlock object
- */
-function swfmovie_labelframe($SWFBlock) {}
-
-/**
- * 
- *
- * @return void
- */
-function swfmovie_nextframe() {}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -23944,7 +23194,7 @@ function sybase_close($link_id = null) {}
 /**
  * Open Sybase server connection 
  *
- * @return resource
+ * @return int
  * @param  host string[optional]
  * @param  user string[optional]
  * @param  password string[optional]
@@ -24087,7 +23337,7 @@ function sybase_num_rows($result) {}
 /**
  * Open persistent Sybase connection 
  *
- * @return resource
+ * @return int
  * @param  host string[optional]
  * @param  user string[optional]
  * @param  password string[optional]
@@ -24099,7 +23349,7 @@ function sybase_pconnect($host = null, $user = null, $password = null, $charset 
 /**
  * Send Sybase query 
  *
- * @return mixed
+ * @return int
  * @param  query string
  * @param  link_id int[optional]
  */
@@ -24129,14 +23379,13 @@ function sybase_select_db($database, $link_id = null) {}
  *
  * @return bool
  * @param  error_func mixed
- * @param  connection resource[optional]
  */
-function sybase_set_message_handler($error_func, $connection = null) {}
+function sybase_set_message_handler($error_func) {}
 
 /**
  * Send Sybase query 
  *
- * @return resource
+ * @return int
  * @param  query string
  * @param  link_id int[optional]
  */
@@ -24145,7 +23394,7 @@ function sybase_unbuffered_query($query, $link_id = null) {}
 /**
  * Create a symbolic link 
  *
- * @return bool
+ * @return int
  * @param  target string
  * @param  link string
  */
@@ -24163,7 +23412,7 @@ function syslog($priority, $message) {}
 /**
  * Execute an external program and display output 
  *
- * @return string
+ * @return int
  * @param  command string
  * @param  return_value int[optional]
  */
@@ -24245,7 +23494,7 @@ function touch($filename, $time = null, $atime = null) {}
 /**
  * Generates a user-level error/warning/notice message 
  *
- * @return bool
+ * @return void
  * @param  messsage string
  * @param  error_type int[optional]
  */
@@ -24288,7 +23537,7 @@ function ucwords($str) {}
 /**
  * Add mnoGoSearch search restrictions 
  *
- * @return bool
+ * @return int
  * @param  agent int
  * @param  var int
  * @param  val string
@@ -24298,7 +23547,7 @@ function udm_add_search_limit($agent, $var, $val) {}
 /**
  * Allocate mnoGoSearch session 
  *
- * @return resource
+ * @return int
  * @param  dbaddr string
  * @param  dbmode string[optional]
  */
@@ -24307,7 +23556,7 @@ function udm_alloc_agent($dbaddr, $dbmode = null) {}
 /**
  * Allocate mnoGoSearch session 
  *
- * @return resource
+ * @return int
  * @param  dbaddr array
  */
 function udm_alloc_agent_array($dbaddr) {}
@@ -24340,7 +23589,7 @@ function udm_cat_path($agent, $category) {}
 /**
  * Check if the given charset is known to mnogosearch 
  *
- * @return bool
+ * @return int
  * @param  agent int
  * @param  charset string
  */
@@ -24359,7 +23608,7 @@ function udm_check_stored($agent, $link, $doc_id) {}
 /**
  * Clear all mnoGoSearch search restrictions 
  *
- * @return bool
+ * @return int
  * @param  agent int
  */
 function udm_clear_search_limits($agent) {}
@@ -24401,7 +23650,7 @@ function udm_error($agent) {}
 /**
  * Perform search 
  *
- * @return resource
+ * @return int
  * @param  agent int
  * @param  query string
  */
@@ -24418,7 +23667,7 @@ function udm_free_agent($agent) {}
 /**
  * Free memory allocated for ispell data 
  *
- * @return bool
+ * @return int
  * @param  agent int
  */
 function udm_free_ispell_data($agent) {}
@@ -24426,7 +23675,7 @@ function udm_free_ispell_data($agent) {}
 /**
  * mnoGoSearch free result 
  *
- * @return bool
+ * @return int
  * @param  res int
  */
 function udm_free_res($res) {}
@@ -24480,7 +23729,7 @@ function udm_hash32($agent, $str) {}
 /**
  * Load ispell data 
  *
- * @return bool
+ * @return int
  * @param  agent int
  * @param  var int
  * @param  val1 string
@@ -24521,7 +23770,7 @@ function udm_parse_query_string($agent, $str) {}
 /**
  * Set mnoGoSearch agent session parameters 
  *
- * @return bool
+ * @return int
  * @param  agent int
  * @param  var int
  * @param  val string
@@ -24590,14 +23839,6 @@ function unlink($filename) {}
 function unpack($format, $input) {}
 
 /**
- * 
- *
- * @return boolean
- * @param  handle string
- */
-function unregister_event_handler($handle) {}
-
-/**
  * Unregisters a tick callback function 
  *
  * @return void
@@ -24630,9 +23871,17 @@ function urldecode($str) {}
 function urlencode($str) {}
 
 /**
- * Generates a user-level error/warning/notice message 
+ * 
  *
  * @return bool
+ * @param  on bool[optional]
+ */
+function use_soap_error_handler($on = null) {}
+
+/**
+ * Generates a user-level error/warning/notice message 
+ *
+ * @return void
  * @param  messsage string
  * @param  error_type int[optional]
  */
@@ -24718,7 +23967,7 @@ function velocis_commit($index) {}
  * @return int
  * @param  server string
  * @param  user string
- * @param  pass string
+ * @param  pass sting
  */
 function velocis_connect($server, $user, $pass) {}
 
@@ -24792,7 +24041,7 @@ function velocis_rollback($index) {}
 /**
  * Compares two "PHP-standardized" version number strings 
  *
- * @return mixed
+ * @return int
  * @param  ver1 string
  * @param  ver2 string
  * @param  oper string[optional]
@@ -24800,12 +24049,12 @@ function velocis_rollback($index) {}
 function version_compare($ver1, $ver2, $oper = null) {}
 
 /**
- * Perform an NSAPI sub-request 
+ * Perform an Apache sub-request 
  *
  * @return bool
- * @param  uri string
+ * @param  filename string
  */
-function virtual($uri) {}
+function virtual($filename) {}
 
 /**
  * Output a formatted string 
@@ -24855,7 +24104,7 @@ function wattrset($window, $attrs) {}
 /**
  * Serializes given variables and adds them to packet given by packet_id 
  *
- * @return bool
+ * @return int
  * @param  packet_id int
  * @param  var_names mixed
  * @vararg ... mixed
@@ -24881,7 +24130,7 @@ function wddx_packet_end($packet_id) {}
 /**
  * Starts a WDDX packet with optional comment and returns the packet id 
  *
- * @return resource
+ * @return int
  * @param  comment string[optional]
  */
 function wddx_packet_start($comment = null) {}
@@ -25012,7 +24261,7 @@ function xml_parser_create_ns($encoding = null, $sep = null) {}
 /**
  * Free an XML parser 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  */
 function xml_parser_free($parser) {}
@@ -25020,7 +24269,7 @@ function xml_parser_free($parser) {}
 /**
  * Get options from an XML parser 
  *
- * @return mixed
+ * @return int
  * @param  parser resource
  * @param  option int
  */
@@ -25029,7 +24278,7 @@ function xml_parser_get_option($parser, $option) {}
 /**
  * Set options in an XML parser 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  option int
  * @param  value mixed
@@ -25039,7 +24288,7 @@ function xml_parser_set_option($parser, $option, $value) {}
 /**
  * Set up character data handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -25048,7 +24297,7 @@ function xml_set_character_data_handler($parser, $hdl) {}
 /**
  * Set up default handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -25057,7 +24306,7 @@ function xml_set_default_handler($parser, $hdl) {}
 /**
  * Set up start and end element handlers 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  shdl string
  * @param  ehdl string
@@ -25067,7 +24316,7 @@ function xml_set_element_handler($parser, $shdl, $ehdl) {}
 /**
  * Set up character data handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -25076,7 +24325,7 @@ function xml_set_end_namespace_decl_handler($parser, $hdl) {}
 /**
  * Set up external entity reference handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -25085,7 +24334,7 @@ function xml_set_external_entity_ref_handler($parser, $hdl) {}
 /**
  * Set up notation declaration handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -25094,7 +24343,7 @@ function xml_set_notation_decl_handler($parser, $hdl) {}
 /**
  * Set up object which should be used for callbacks 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  obj object
  */
@@ -25103,7 +24352,7 @@ function xml_set_object($parser, &$obj) {}
 /**
  * Set up processing instruction (PI) handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -25112,7 +24361,7 @@ function xml_set_processing_instruction_handler($parser, $hdl) {}
 /**
  * Set up character data handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -25121,7 +24370,7 @@ function xml_set_start_namespace_decl_handler($parser, $hdl) {}
 /**
  * Set up unparsed entity declaration handler 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  hdl string
  */
@@ -25194,7 +24443,7 @@ function xmlrpc_get_type($value) {}
 /**
  * Determines if an array value represents an XMLRPC fault. 
  *
- * @return bool
+ * @return string
  * @param  array unknown
  */
 function xmlrpc_is_fault($array) {}
@@ -25219,7 +24468,7 @@ function xmlrpc_server_add_introspection_data($server, $desc) {}
 /**
  * Parses XML requests and call methods 
  *
- * @return string
+ * @return mixed
  * @param  server handle
  * @param  xml string
  * @param  user_data mixed
@@ -25230,14 +24479,14 @@ function xmlrpc_server_call_method($server, $xml, $user_data, $output_options = 
 /**
  * Creates an xmlrpc server 
  *
- * @return resource
+ * @return handle
  */
 function xmlrpc_server_create() {}
 
 /**
  * Destroys server resources 
  *
- * @return int
+ * @return void
  * @param  server handle
  */
 function xmlrpc_server_destroy($server) {}
@@ -25273,7 +24522,7 @@ function xmlrpc_set_type($value, $type) {}
 /**
  * Creates a tree of PHP objects from an XML document 
  *
- * @return DomDocument
+ * @return object
  * @param  xmltree string
  */
 function xmltree($xmltree) {}
@@ -25281,7 +24530,7 @@ function xmltree($xmltree) {}
 /**
  * Evaluates the XPath Location Path in the given string 
  *
- * @return XPathObject
+ * @return object
  * @param  xpathctx_handle object[optional]
  * @param  str string
  */
@@ -25290,7 +24539,7 @@ function xpath_eval($xpathctx_handle = null, $str) {}
 /**
  * Evaluates the XPath expression in the given string 
  *
- * @return XPathObject
+ * @return object
  * @param  xpathctx_handle object[optional]
  * @param  str string
  */
@@ -25306,7 +24555,7 @@ function xpath_init() {}
 /**
  * Creates new XPath context 
  *
- * @return XPathContext
+ * @return object
  * @param  doc_handle int[optional]
  */
 function xpath_new_context($doc_handle = null) {}
@@ -25333,7 +24582,7 @@ function xptr_eval($xpathctx_handle = null, $str) {}
 /**
  * Creates new XPath context 
  *
- * @return XPathContext
+ * @return object
  * @param  doc_handle int[optional]
  */
 function xptr_new_context($doc_handle = null) {}
@@ -25401,7 +24650,7 @@ function xslt_getopt($processor) {}
 /**
  * Perform the xslt transformation 
  *
- * @return mixed
+ * @return string
  * @param  processor resource
  * @param  xml string
  * @param  xslt string
@@ -25450,7 +24699,7 @@ function xslt_set_log($processor, $logfile) {}
 /**
  * sets the object in which to resolve callback functions 
  *
- * @return bool
+ * @return int
  * @param  parser resource
  * @param  obj object
  */
@@ -25477,7 +24726,7 @@ function xslt_set_scheme_handlers($processor, $handlers) {}
 /**
  * Set options on a given xsl processor 
  *
- * @return mixed
+ * @return int
  * @param  processor resource
  * @param  newmask int
  */
@@ -25494,7 +24743,7 @@ function yaz_addinfo($id) {}
 /**
  * Configure CCL package 
  *
- * @return void
+ * @return int
  * @param  id int
  * @param  package array
  */
@@ -25503,7 +24752,7 @@ function yaz_ccl_conf($id, $package) {}
 /**
  * Parse a CCL query 
  *
- * @return bool
+ * @return int
  * @param  id int
  * @param  query string
  * @param  res array
@@ -25513,7 +24762,7 @@ function yaz_ccl_parse($id, $query, $res) {}
 /**
  * Destory and close target 
  *
- * @return bool
+ * @return int
  * @param  id int
  */
 function yaz_close($id) {}
@@ -25521,7 +24770,7 @@ function yaz_close($id) {}
 /**
  * Create target with given zurl. Returns positive id if successful. 
  *
- * @return mixed
+ * @return int
  * @param  zurl_ string
  */
 function yaz_connect($zurl_) {}
@@ -25529,7 +24778,7 @@ function yaz_connect($zurl_) {}
 /**
  * Specify the databases within a session 
  *
- * @return bool
+ * @return int
  * @param  id int
  * @param  databases string
  */
@@ -25538,7 +24787,7 @@ function yaz_database($id, $databases) {}
 /**
  * Set Element-Set-Name for retrieval 
  *
- * @return bool
+ * @return int
  * @param  id int
  * @param  elementsetname string
  */
@@ -25563,7 +24812,7 @@ function yaz_error($id) {}
 /**
  * Inspects Extended Services Result 
  *
- * @return array
+ * @return int
  * @param  id int
  */
 function yaz_es_result($id) {}
@@ -25579,7 +24828,7 @@ function yaz_hits($id) {}
 /**
  * Sends Item Order request 
  *
- * @return void
+ * @return int
  * @param  id int
  * @param  package array
  */
@@ -25588,7 +24837,7 @@ function yaz_itemorder($id, $package) {}
 /**
  * Retrieve records 
  *
- * @return bool
+ * @return int
  * @param  id int
  */
 function yaz_present($id) {}
@@ -25596,7 +24845,7 @@ function yaz_present($id) {}
 /**
  * Set result set start point and number of records to request 
  *
- * @return void
+ * @return int
  * @param  id int
  * @param  start int
  * @param  number int
@@ -25616,7 +24865,7 @@ function yaz_record($id, $pos, $type) {}
 /**
  * Sends Scan Request 
  *
- * @return void
+ * @return int
  * @param  id int
  * @param  type unknown
  * @param  query unknown
@@ -25627,7 +24876,7 @@ function yaz_scan($id, $type, $query, $flags = null) {}
 /**
  * Inspects Scan Result 
  *
- * @return array
+ * @return int
  * @param  id int
  * @param  options array
  */
@@ -25636,7 +24885,7 @@ function yaz_scan_result($id, $options) {}
 /**
  * Set Schema for retrieval 
  *
- * @return void
+ * @return int
  * @param  id int
  * @param  schema string
  */
@@ -25645,7 +24894,7 @@ function yaz_schema($id, $schema) {}
 /**
  * Specify query of type for search - returns true if successful 
  *
- * @return bool
+ * @return int
  * @param  id int
  * @param  type string
  * @param  query string
@@ -25655,7 +24904,7 @@ function yaz_search($id, $type, $query) {}
 /**
  * Set result set sorting criteria 
  *
- * @return void
+ * @return int
  * @param  id int
  * @param  sortspec string
  */
@@ -25664,7 +24913,7 @@ function yaz_sort($id, $sortspec) {}
 /**
  * Set record syntax for retrieval 
  *
- * @return void
+ * @return int
  * @param  id int
  * @param  syntax string
  */
@@ -25673,7 +24922,7 @@ function yaz_syntax($id, $syntax) {}
 /**
  * Process events. 
  *
- * @return mixed
+ * @return int
  * @param  options array[optional]
  */
 function yaz_wait($options = null) {}
@@ -25767,134 +25016,11 @@ function yp_next($domain, $map, $key) {}
 function yp_order($domain, $map) {}
 
 /**
- * 
- *
- * @return int
- */
-function zend_current_obfuscation_level() {}
-
-/**
- * Get the value of a PHP configuration option - but search in zend.ini first... 
- *
- * @return string
- * @param  option_name string
- */
-function zend_get_cfg_var($option_name) {}
-
-/**
- * 
- *
- * @return int
- * @param  all bool[optional]
- */
-function zend_get_id($all = null) {}
-
-/**
- * Verifies license in filename, if it's valid - returns array of license fields, if not - returns error string 
- *
- * @return mixed
- * @param  filename string
- */
-function zend_get_license_info($filename) {}
-
-/**
- * Looks up the license in the path and returns it. If no license, returns error. 
- *
- * @return mixed
- * @param  path string
- */
-function zend_get_platform_license($path) {}
-
-/**
- * Returns the name of the current file being executed. 
- *
- * @return string
- */
-function zend_loader_current_file() {}
-
-/**
- * Returns true if the Zend Optimizer is configured to load Zend-encoded files. 
- *
- * @return boolean
- */
-function zend_loader_enabled() {}
-
-/**
- * Returns true if the current file is a Zend-encoded file. 
- *
- * @return boolean
- */
-function zend_loader_file_encoded() {}
-
-/**
- * Returns license if the current file has a valid license, false otherwise 
- *
- * @return array
- */
-function zend_loader_file_licensed() {}
-
-/**
- * Dynamically load a license for a Zend-encoded application 
- *
- * @return boolean
- * @param  license_file string
- * @param  override bool
- */
-function zend_loader_install_license($license_file, $override) {}
-
-/**
- * 
- *
- * @return int
- */
-function zend_loader_version() {}
-
-/**
  * Return the special ID used to request the Zend logo in phpinfo screens
  *
  * @return string
  */
 function zend_logo_guid() {}
-
-/**
- * 
- *
- * @return bool
- * @param  host string
- * @param  masks string
- * @param  delimiter string
- */
-function zend_match_hostmasks($host, $masks, $delimiter) {}
-
-/**
- * 
- *
- * @return string
- * @param  class_name string
- */
-function zend_obfuscate_class_name($class_name) {}
-
-/**
- * 
- *
- * @return string
- * @param  function_name string
- */
-function zend_obfuscate_function_name($function_name) {}
-
-/**
- * 
- *
- * @return int
- */
-function zend_optimizer_version() {}
-
-/**
- * 
- *
- * @return int
- */
-function zend_runtime_obfuscate() {}
 
 /**
  * Get the version of the Zend Engine 
@@ -25914,7 +25040,7 @@ function zip_close($zip) {}
 /**
  * Close a zip entry 
  *
- * @return bool
+ * @return void
  * @param  zip_ent resource
  */
 function zip_entry_close($zip_ent) {}
@@ -25972,7 +25098,7 @@ function zip_entry_read($zip_ent) {}
 /**
  * Open a new zip archive for reading 
  *
- * @return mixed
+ * @return resource
  * @param  filename string
  */
 function zip_open($filename) {}
@@ -25980,7 +25106,7 @@ function zip_open($filename) {}
 /**
  * Returns the next file in the archive 
  *
- * @return mixed
+ * @return resource
  * @param  zip resource
  */
 function zip_read($zip) {}
@@ -25988,32 +25114,9 @@ function zip_read($zip) {}
 /**
  * Returns the coding type used for output compression 
  *
- * @return string
+ * @return unknown
  */
 function zlib_get_coding_type() {}
-
-
-class stdClass {
-};
-
-/**
- * @return resource
- * @param  connection_string string
- * @param  connect_type int
- * @desc   Open a PostgreSQL connection
- */
-function pg_connect($connection_string, $connect_type) {}
-
-/**
- * @return resource
- * @param  host string
- * @param  port string
- * @param  options string[optional]
- * @param  tty string[optional]
- * @param  database string
- * @desc   Open a PostgreSQL connection
- */
-function pg_connect($host, $port, $options = null, $tty = null, $database) {}
 
 class OCI_Lob {
     /**
@@ -26156,7 +25259,7 @@ class swfshape {
     /**
      * Returns a new SWFShape object 
      *
-     * @return object
+     * @return class
      */
     function swfshape() {}
 
@@ -26173,26 +25276,29 @@ class swfshape {
     function setline($width, $r, $g, $b, $a = null) {}
 
     /**
-     * Returns a fill object, for use with swfshape_setleftfill and swfshape_setrightfill. If 1 or 2 parameter(s) is (are) passed first should be object (from gradient class) and the second int (flags). Gradient fill is performed. If 3 or 4 parameters are passed : r, g, b [, a]. Solid fill is performed. 
+     * Returns a fill object, for use with swfshape_setleftfill and swfshape_setrightfill 
      *
-     * @return object
-     * @param  arg1 mixed
-     * @param  arg2 int
-     * @param  b int[optional]
-     * @param  a int[optional]
+     * @return int
+     * @param  fill int
+     * @param  flags int
      */
-    function addfill($arg1, $arg2, $b = null, $a = null) {}
+    function addfill($fill, $flags) {}
 
     /**
-     * Sets the right side fill style to fill in case only one parameter is passed. When 3 or 4 parameters are passed they are treated as : int r, int g, int b, int a . Solid fill is performed in this case before setting right side fill type. 
+     * Sets the left side fill style to fill 
      *
      * @return void
-     * @param  arg1 int
-     * @param  g int[optional]
-     * @param  b int
-     * @param  a int[optional]
+     * @param  fill int
      */
-    function setleftfill($arg1, $g = null, $b, $a = null) {}
+    function setleftfill($fill) {}
+
+    /**
+     * Sets the right side fill style to fill 
+     *
+     * @return void
+     * @param  fill int
+     */
+    function setrightfill($fill) {}
 
     /**
      * Moves the pen to shape coordinates (x, y) 
@@ -26270,7 +25376,7 @@ class swfshape {
      * Draws a circle of radius r centered at the current location, in a counter-clockwise fashion 
      *
      * @return void
-     * @param  r float
+     * @param  r int
      */
     function drawcircle($r) {}
 
@@ -26278,7 +25384,7 @@ class swfshape {
      * Draws an arc of radius r centered at the current location, from angle startAngle to angle endAngle measured counterclockwise from 12 o'clock 
      *
      * @return void
-     * @param  r float
+     * @param  r int
      * @param  startAngle float
      * @param  endAngle float
      */
@@ -26311,8 +25417,8 @@ class swffill {
      * Moves this SWFFill to shape coordinates (x,y) 
      *
      * @return void
-     * @param  x float
-     * @param  y float
+     * @param  x int
+     * @param  y int
      */
     function moveto($x, $y) {}
 
@@ -26364,10 +25470,10 @@ class swfgradient {
      *
      * @return void
      * @param  ratio float
-     * @param  r int
-     * @param  g int
-     * @param  b int
-     * @param  a int[optional]
+     * @param  r string
+     * @param  g string
+     * @param  b string
+     * @param  a string[optional]
      */
     function addentry($ratio, $r, $g, $b, $a = null) {}
 
@@ -26378,22 +25484,22 @@ class swfbitmap {
      * Returns a new SWFBitmap object from jpg (with optional mask) or dbl file 
      *
      * @return class
-     * @param  file mixed
-     * @param  maskfile mixed[optional]
+     * @param  file unknown
+     * @param  maskfile unknown[optional]
      */
     function swfbitmap($file, $maskfile = null) {}
 
     /**
      * Returns the width of this bitmap 
      *
-     * @return float
+     * @return void
      */
     function getwidth() {}
 
     /**
      * Returns the height of this bitmap 
      *
-     * @return float
+     * @return void
      */
     function getheight() {}
 
@@ -26411,7 +25517,7 @@ class swftext {
      * Sets this SWFText object's current font to given font 
      *
      * @return void
-     * @param  font object
+     * @param  font class
      */
     function setfont($font) {}
 
@@ -26503,7 +25609,7 @@ class swftextfield {
      * Sets the font for this textfield 
      *
      * @return void
-     * @param  font object
+     * @param  font int
      */
     function setfont($font) {}
 
@@ -26536,9 +25642,9 @@ class swftextfield {
      * Sets the left margin of this textfield 
      *
      * @return void
-     * @param  margin float
+     * @param  float unknown
      */
-    function setleftmargin($margin) {}
+    function setleftmargin($float) {}
 
     /**
      * Sets the right margin of this textfield 
@@ -26606,7 +25712,7 @@ class swffont {
     /**
      * Returns a new SWFFont object from given file 
      *
-     * @return object
+     * @return class
      * @param  filename string
      */
     function swffont($filename) {}
@@ -26614,29 +25720,29 @@ class swffont {
     /**
      * Calculates the width of the given string in this font at full height 
      *
-     * @return float
-     * @param  str string
+     * @return int
+     * @param  string unknown
      */
-    function getwidth($str) {}
+    function getwidth($string) {}
 
     /**
      * Returns the ascent of the font, or 0 if not available 
      *
-     * @return float
+     * @return int
      */
     function getascent() {}
 
     /**
      * Returns the descent of the font, or 0 if not available 
      *
-     * @return float
+     * @return int
      */
     function getdescent() {}
 
     /**
      * Returns the leading of the font, or 0 if not available 
      *
-     * @return float
+     * @return int
      */
     function getleading() {}
 
@@ -26656,8 +25762,8 @@ class swfdisplayitem {
      * Displaces this SWFDisplayItem by (dx, dy) in movie coordinates 
      *
      * @return void
-     * @param  dx float
-     * @param  dy float
+     * @param  dx int
+     * @param  dy int
      */
     function move($dx, $dy) {}
 
@@ -26790,98 +25896,10 @@ class swfdisplayitem {
      * Adds this SWFAction to the given SWFSprite instance 
      *
      * @return void
-     * @param  SWFAction object
+     * @param  action SWFAction
      * @param  flags int
      */
-    function addaction($SWFAction, $flags) {}
-
-};
-
-class swfmovie {
-    /**
-     * Creates swfmovie object according to the passed version 
-     *
-     * @return object
-     * @param  version int
-     */
-    function swfmovie($version) {}
-
-    /**
-     * 
-     *
-     * @return object
-     * @param  SWFBlock object
-     */
-    function add($SWFBlock) {}
-
-    /**
-     * 
-     *
-     * @return int
-     * @param  compression int[optional]
-     */
-    function output($compression = null) {}
-
-    /**
-     * Saves the movie. 'where' can be stream and the movie will be saved there otherwise it is treated as string and written in file with that name 
-     *
-     * @return int
-     * @param  where mixed
-     * @param  compression int[optional]
-     */
-    function save($where, $compression = null) {}
-
-    /**
-     * 
-     *
-     * @return int
-     * @param  x stream
-     * @param  compression int[optional]
-     */
-    function savetofile($x, $compression = null) {}
-
-    /**
-     * Sets background color (r,g,b) 
-     *
-     * @return void
-     * @param  r int
-     * @param  g int
-     * @param  b int
-     */
-    function setbackground($r, $g, $b) {}
-
-    /**
-     * Sets movie rate 
-     *
-     * @return void
-     * @param  rate float
-     */
-    function setrate($rate) {}
-
-    /**
-     * Sets movie dimension 
-     *
-     * @return void
-     * @param  x float
-     * @param  y float
-     */
-    function setdimension($x, $y) {}
-
-    /**
-     * Sets number of frames 
-     *
-     * @return void
-     * @param  frames int
-     */
-    function setframes($frames) {}
-
-    /**
-     * Sets sound stream of the SWF movie. The parameter can be stream or string. 
-     *
-     * @return void
-     * @param  file mixed
-     */
-    function streammp3($file) {}
+    function addaction($action, $flags) {}
 
 };
 
@@ -26897,7 +25915,7 @@ class swfbutton {
      * Sets the character for this button's hit test state 
      *
      * @return void
-     * @param  SWFCharacter object
+     * @param  SWFCharacter unknown
      */
     function sethit($SWFCharacter) {}
 
@@ -26905,7 +25923,7 @@ class swfbutton {
      * Sets the character for this button's over state 
      *
      * @return void
-     * @param  SWFCharacter object
+     * @param  SWFCharacter unknown
      */
     function setover($SWFCharacter) {}
 
@@ -26913,7 +25931,7 @@ class swfbutton {
      * Sets the character for this button's up state 
      *
      * @return void
-     * @param  SWFCharacter object
+     * @param  SWFCharacter unknown
      */
     function setup($SWFCharacter) {}
 
@@ -26921,7 +25939,7 @@ class swfbutton {
      * Sets the character for this button's down state 
      *
      * @return void
-     * @param  SWFCharacter object
+     * @param  SWFCharacter unknown
      */
     function setdown($SWFCharacter) {}
 
@@ -26929,7 +25947,7 @@ class swfbutton {
      * Sets the action to perform when button is pressed 
      *
      * @return void
-     * @param  SWFAction object
+     * @param  SWFAction unknown
      */
     function setaction($SWFAction) {}
 
@@ -26937,19 +25955,19 @@ class swfbutton {
      * Sets the character to display for the condition described in flags 
      *
      * @return void
-     * @param  SWFCharacter object
+     * @param  character SWFCharacter
      * @param  flags int
      */
-    function addshape($SWFCharacter, $flags) {}
+    function addshape($character, $flags) {}
 
     /**
      * Sets the action to perform when conditions described in flags is met 
      *
      * @return void
-     * @param  SWFAction object
+     * @param  action SWFAction
      * @param  flags int
      */
-    function addaction($SWFAction, $flags) {}
+    function addaction($action, $flags) {}
 
 };
 
@@ -27000,7 +26018,7 @@ class swfsprite {
      * Adds the character to the sprite, returns a displayitem object 
      *
      * @return object
-     * @param  SWFCharacter object
+     * @param  SWFCharacter unknown
      */
     function add($SWFCharacter) {}
 
@@ -27008,7 +26026,7 @@ class swfsprite {
      * Remove the named character from the sprite's display list 
      *
      * @return void
-     * @param  SWFDisplayItem object
+     * @param  SWFDisplayItem unknown
      */
     function remove($SWFDisplayItem) {}
 
@@ -27018,14 +26036,6 @@ class swfsprite {
      * @return void
      */
     function nextframe() {}
-
-    /**
-     * Labels frame 
-     *
-     * @return void
-     * @param  label string
-     */
-    function labelframe($label) {}
 
     /**
      * Sets the number of frames in this SWFSprite 
@@ -27574,7 +26584,7 @@ class domdocument {
     /**
      * Creates new XPath context 
      *
-     * @return XPathContext
+     * @return object
      * @param  doc_handle int[optional]
      */
     function xpath_new_context($doc_handle = null) {}
@@ -27582,7 +26592,7 @@ class domdocument {
     /**
      * Creates new XPath context 
      *
-     * @return XPathContext
+     * @return object
      * @param  doc_handle int[optional]
      */
     function xptr_new_context($doc_handle = null) {}
@@ -27986,63 +26996,11 @@ class domentityreference {
 
 };
 
-class domnamespace {
-    /**
-     * Returns name of node 
-     *
-     * @return object
-     */
-    function node_name() {}
-
-    /**
-     * Returns the type of the node 
-     *
-     * @return int
-     */
-    function node_type() {}
-
-    /**
-     * Returns name of value 
-     *
-     * @return object
-     */
-    function node_value() {}
-
-    /**
-     * Returns namespace prefix of node 
-     *
-     * @return string
-     */
-    function prefix() {}
-
-    /**
-     * Returns namespace uri of node 
-     *
-     * @return string
-     */
-    function namespace_uri() {}
-
-    /**
-     * Returns document this node belongs to 
-     *
-     * @return object
-     */
-    function owner_document() {}
-
-    /**
-     * Returns parent of node 
-     *
-     * @return object
-     */
-    function parent_node() {}
-
-};
-
 class XPathContext {
     /**
      * Evaluates the XPath Location Path in the given string 
      *
-     * @return XPathObject
+     * @return object
      * @param  xpathctx_handle object[optional]
      * @param  str string
      */
@@ -28051,7 +27009,7 @@ class XPathContext {
     /**
      * Evaluates the XPath expression in the given string 
      *
-     * @return XPathObject
+     * @return object
      * @param  xpathctx_handle object[optional]
      * @param  str string
      */
@@ -28104,28 +27062,6 @@ class XsltStylesheet {
 
 };
 
-class java {
-    /**
-     * Create Java object 
-     *
-     * @return java
-     * @param  classname string
-     * @vararg ...
-     */
-    function java($classname) {}
-
-};
-
-class JavaException {
-    /**
-     * Get Java exception that led to this exception 
-     *
-     * @return object
-     */
-    function getCause() {}
-
-};
-
 class SQLiteDatabase {
     /**
      * Opens a SQLite database. Will create the database if it does not exist. 
@@ -28159,7 +27095,7 @@ class SQLiteDatabase {
     /**
      * Executes a result-less query against a given database 
      *
-     * @return bool
+     * @return boolean
      * @param  query string
      * @param  db resource
      * @param  error_message string
@@ -28218,7 +27154,7 @@ class SQLiteDatabase {
     /**
      * Registers an aggregate function for queries. 
      *
-     * @return void
+     * @return bool
      * @param  db resource
      * @param  funcname string
      * @param  step_func mixed
@@ -28230,7 +27166,7 @@ class SQLiteDatabase {
     /**
      * Registers a "regular" function for queries. 
      *
-     * @return void
+     * @return bool
      * @param  db resource
      * @param  funcname string
      * @param  callback mixed
@@ -28258,7 +27194,7 @@ class SQLiteDatabase {
     /**
      * Return an array of column types from a particular table. 
      *
-     * @return array
+     * @return resource
      * @param  table_name string
      * @param  db resource
      * @param  result_type int[optional]
@@ -28611,7 +27547,7 @@ class SoapServer {
     /**
      * Sets persistence mode of SoapServer 
      *
-     * @return void
+     * @return object
      * @param  mode int
      */
     function setPersistence($mode) {}
@@ -28624,6 +27560,14 @@ class SoapServer {
      * @param  args mixed[optional]
      */
     function setClass($class_name, $args = null) {}
+
+    /**
+     * Sets object which will handle SOAP requests 
+     *
+     * @return void
+     * @param  object unknown
+     */
+    function setObject($object) {}
 
     /**
      * Returns list of defined functions 
@@ -28651,7 +27595,7 @@ class SoapServer {
     /**
      * Issue SoapFault indicating an error 
      *
-     * @return void
+     * @return unknown
      * @param  code staring
      * @param  string string
      * @param  actor string[optional]
@@ -28659,6 +27603,14 @@ class SoapServer {
      * @param  name string[optional]
      */
     function fault($code, $string, $actor = null, $details = null, $name = null) {}
+
+    /**
+     * Adds one SOAP header into response 
+     *
+     * @return unknown
+     * @param  header SoapHeader
+     */
+    function addSoapHeader($header) {}
 
 };
 
@@ -28677,12 +27629,12 @@ class SoapClient {
      *
      * @return mixed
      * @param  function_name string
-     * @param  arguments array[optional]
+     * @param  arguments array
      * @param  options array[optional]
      * @param  input_headers array[optional]
      * @param  output_headers array[optional]
      */
-    function __call($function_name, $arguments = null, $options = null, $input_headers = null, $output_headers = null) {}
+    function __call($function_name, $arguments, $options = null, $input_headers = null, $output_headers = null) {}
 
     /**
      * Returns list of SOAP functions 
@@ -28708,7 +27660,7 @@ class SoapClient {
     /**
      * Returns last SOAP response 
      *
-     * @return string
+     * @return object
      */
     function __getLastResponse() {}
 
@@ -28741,6 +27693,13 @@ class SoapClient {
      * @param  value strung[optional]
      */
     function __setCookie($name, $value = null) {}
+
+    /**
+     * Returns array of cookies. 
+     *
+     * @return array
+     */
+    function __getCookies() {}
 
     /**
      * 
@@ -28783,6 +27742,7 @@ define("AF_INET", 0);
 define("AF_UNIX", 0);
 define("ALT_DIGITS", 0);
 define("AM_STR", 0);
+define("APACHE_MAP", 0);
 define("ASSERT_ACTIVE", 0);
 define("ASSERT_BAIL", 0);
 define("ASSERT_CALLBACK", 0);
@@ -28804,9 +27764,6 @@ define("CAL_EASTER_ROMAN", 0);
 define("CAL_FRENCH", 0);
 define("CAL_GREGORIAN", 0);
 define("CAL_JEWISH", 0);
-define("CAL_JEWISH_ADD_ALAFIM", 0);
-define("CAL_JEWISH_ADD_ALAFIM_GERESH", 0);
-define("CAL_JEWISH_ADD_GERESHAYIM", 0);
 define("CAL_JULIAN", 0);
 define("CAL_MONTH_FRENCH", 0);
 define("CAL_MONTH_GREGORIAN_LONG", 0);
@@ -28862,12 +27819,6 @@ define("CRYPT_EXT_DES", 0);
 define("CRYPT_MD5", 0);
 define("CRYPT_SALT_LENGTH", 0);
 define("CRYPT_STD_DES", 0);
-define("CURLAUTH_ANY", 0);
-define("CURLAUTH_ANYSAFE", 0);
-define("CURLAUTH_BASIC", 0);
-define("CURLAUTH_DIGEST", 0);
-define("CURLAUTH_GSSNEGOTIATE", 0);
-define("CURLAUTH_NTLM", 0);
 define("CURLCLOSEPOLICY_CALLBACK", 0);
 define("CURLCLOSEPOLICY_LEAST_RECENTLY_USED", 0);
 define("CURLCLOSEPOLICY_LEAST_TRAFFIC", 0);
@@ -28875,14 +27826,12 @@ define("CURLCLOSEPOLICY_OLDEST", 0);
 define("CURLCLOSEPOLICY_SLOWEST", 0);
 define("CURLE_ABORTED_BY_CALLBACK", 0);
 define("CURLE_BAD_CALLING_ORDER", 0);
-define("CURLE_BAD_CONTENT_ENCODING", 0);
 define("CURLE_BAD_FUNCTION_ARGUMENT", 0);
 define("CURLE_BAD_PASSWORD_ENTERED", 0);
 define("CURLE_COULDNT_CONNECT", 0);
 define("CURLE_COULDNT_RESOLVE_HOST", 0);
 define("CURLE_COULDNT_RESOLVE_PROXY", 0);
 define("CURLE_FAILED_INIT", 0);
-define("CURLE_FILESIZE_EXCEEDED", 0);
 define("CURLE_FILE_COULDNT_READ_FILE", 0);
 define("CURLE_FTP_ACCESS_DENIED", 0);
 define("CURLE_FTP_BAD_DOWNLOAD_RESUME", 0);
@@ -28896,7 +27845,6 @@ define("CURLE_FTP_COULDNT_STOR_FILE", 0);
 define("CURLE_FTP_COULDNT_USE_REST", 0);
 define("CURLE_FTP_PORT_FAILED", 0);
 define("CURLE_FTP_QUOTE_ERROR", 0);
-define("CURLE_FTP_SSL_FAILED", 0);
 define("CURLE_FTP_USER_PASSWORD_INCORRECT", 0);
 define("CURLE_FTP_WEIRD_227_FORMAT", 0);
 define("CURLE_FTP_WEIRD_PASS_REPLY", 0);
@@ -28905,13 +27853,11 @@ define("CURLE_FTP_WEIRD_SERVER_REPLY", 0);
 define("CURLE_FTP_WEIRD_USER_REPLY", 0);
 define("CURLE_FTP_WRITE_ERROR", 0);
 define("CURLE_FUNCTION_NOT_FOUND", 0);
-define("CURLE_GOT_NOTHING", 0);
 define("CURLE_HTTP_NOT_FOUND", 0);
 define("CURLE_HTTP_PORT_FAILED", 0);
 define("CURLE_HTTP_POST_ERROR", 0);
 define("CURLE_HTTP_RANGE_ERROR", 0);
 define("CURLE_LDAP_CANNOT_BIND", 0);
-define("CURLE_LDAP_INVALID_URL", 0);
 define("CURLE_LDAP_SEARCH_FAILED", 0);
 define("CURLE_LIBRARY_NOT_FOUND", 0);
 define("CURLE_MALFORMAT_USER", 0);
@@ -28921,15 +27867,7 @@ define("CURLE_OPERATION_TIMEOUTED", 0);
 define("CURLE_OUT_OF_MEMORY", 0);
 define("CURLE_PARTIAL_FILE", 0);
 define("CURLE_READ_ERROR", 0);
-define("CURLE_RECV_ERROR", 0);
-define("CURLE_SEND_ERROR", 0);
-define("CURLE_SHARE_IN_USE", 0);
-define("CURLE_SSL_CACERT", 0);
-define("CURLE_SSL_CERTPROBLEM", 0);
-define("CURLE_SSL_CIPHER", 0);
 define("CURLE_SSL_CONNECT_ERROR", 0);
-define("CURLE_SSL_ENGINE_NOTFOUND", 0);
-define("CURLE_SSL_ENGINE_SETFAILED", 0);
 define("CURLE_SSL_PEER_CERTIFICATE", 0);
 define("CURLE_TELNET_OPTION_SYNTAX", 0);
 define("CURLE_TOO_MANY_REDIRECTS", 0);
@@ -28985,7 +27923,6 @@ define("CURLOPT_FTPPORT", 0);
 define("CURLOPT_FTP_USE_EPSV", 0);
 define("CURLOPT_HEADER", 0);
 define("CURLOPT_HEADERFUNCTION", 0);
-define("CURLOPT_HTTPAUTH", 0);
 define("CURLOPT_HTTPGET", 0);
 define("CURLOPT_HTTPHEADER", 0);
 define("CURLOPT_HTTPPROXYTUNNEL", 0);
@@ -29008,7 +27945,6 @@ define("CURLOPT_POST", 0);
 define("CURLOPT_POSTFIELDS", 0);
 define("CURLOPT_POSTQUOTE", 0);
 define("CURLOPT_PROXY", 0);
-define("CURLOPT_PROXYAUTH", 0);
 define("CURLOPT_PROXYUSERPWD", 0);
 define("CURLOPT_PUT", 0);
 define("CURLOPT_QUOTE", 0);
@@ -29047,9 +27983,6 @@ define("CURL_HTTP_VERSION_NONE", 0);
 define("CURL_NETRC_IGNORED", 0);
 define("CURL_NETRC_OPTIONAL", 0);
 define("CURL_NETRC_REQUIRED", 0);
-define("CURL_TIMECOND_IFMODSINCE", 0);
-define("CURL_TIMECOND_IFUNMODSINCE", 0);
-define("CURL_TIMECOND_LASTMOD", 0);
 define("CURRENCY_SYMBOL", 0);
 define("CYRUS_CALLBACK_NOLITERAL", 0);
 define("CYRUS_CALLBACK_NUMBERED", 0);
@@ -29081,7 +28014,6 @@ define("DBX_RESULT_ASSOC", 0);
 define("DBX_RESULT_INDEX", 0);
 define("DBX_RESULT_INFO", 0);
 define("DBX_SYBASECT", 0);
-define("DEBUGGER_VERSION", 0);
 define("DECIMAL_POINT", 0);
 define("DEFAULT_INCLUDE_PATH", 0);
 define("DIRECTORY_SEPARATOR", 0);
@@ -29296,7 +28228,6 @@ define("IMG_JPG", 0);
 define("IMG_PNG", 0);
 define("IMG_WBMP", 0);
 define("IMG_XPM", 0);
-define("INF", 0);
 define("INFO_ALL", 0);
 define("INFO_CONFIGURATION", 0);
 define("INFO_CREDITS", 0);
@@ -29316,12 +28247,9 @@ define("INT_CURR_SYMBOL", 0);
 define("INT_FRAC_DIGITS", 0);
 define("IdletoOverDown", 0);
 define("IdletoOverUp", 0);
-define("LATT_HASCHILDREN", 0);
-define("LATT_HASNOCHILDREN", 0);
 define("LATT_MARKED", 0);
 define("LATT_NOINFERIORS", 0);
 define("LATT_NOSELECT", 0);
-define("LATT_REFERRAL", 0);
 define("LATT_UNMARKED", 0);
 define("LC_ALL", 0);
 define("LC_COLLATE", 0);
@@ -29466,7 +28394,6 @@ define("MCVE_STOREID", 0);
 define("MCVE_STREET", 0);
 define("MCVE_SUCCESS", 0);
 define("MCVE_TERMID", 0);
-define("MCVE_TIMEOUT", 0);
 define("MCVE_TIMEZONE", 0);
 define("MCVE_UNKNOWN", 0);
 define("MCVE_UNUSED", 0);
@@ -29478,15 +28405,12 @@ define("MC_ACCT", 0);
 define("MC_ADMIN", 0);
 define("MC_ADMIN_BT", 0);
 define("MC_ADMIN_CFH", 0);
-define("MC_ADMIN_CLOSEBATCH", 0);
 define("MC_ADMIN_CTH", 0);
-define("MC_ADMIN_FIELDEDIT", 0);
 define("MC_ADMIN_FORCESETTLE", 0);
 define("MC_ADMIN_GFT", 0);
 define("MC_ADMIN_GL", 0);
 define("MC_ADMIN_GUT", 0);
 define("MC_ADMIN_QC", 0);
-define("MC_ADMIN_RENUMBERBATCH", 0);
 define("MC_ADMIN_RS", 0);
 define("MC_ADMIN_SETBATCHNUM", 0);
 define("MC_ADMIN_UB", 0);
@@ -29495,170 +28419,66 @@ define("MC_APPRCODE", 0);
 define("MC_AUDITTYPE", 0);
 define("MC_BATCH", 0);
 define("MC_BDATE", 0);
-define("MC_CARDTYPES", 0);
-define("MC_CARD_ALL", 0);
-define("MC_CARD_AMEX", 0);
-define("MC_CARD_CB", 0);
-define("MC_CARD_DC", 0);
-define("MC_CARD_DISC", 0);
-define("MC_CARD_GIFT", 0);
-define("MC_CARD_JCB", 0);
-define("MC_CARD_MC", 0);
-define("MC_CARD_OTHER", 0);
-define("MC_CARD_VISA", 0);
 define("MC_CLERKID", 0);
 define("MC_COMMENTS", 0);
-define("MC_CURR", 0);
 define("MC_CUSTOM", 0);
 define("MC_CV", 0);
-define("MC_DESCLOC", 0);
-define("MC_DESCMERCH", 0);
-define("MC_DEVICETYPE", 0);
 define("MC_EDATE", 0);
-define("MC_ERRORCODE", 0);
-define("MC_EXAMOUNT", 0);
-define("MC_EXCHARGES", 0);
-define("MC_EXCHARGES_1WAY", 0);
-define("MC_EXCHARGES_GAS", 0);
-define("MC_EXCHARGES_GIFT", 0);
-define("MC_EXCHARGES_LATE", 0);
-define("MC_EXCHARGES_LAUND", 0);
-define("MC_EXCHARGES_MILE", 0);
-define("MC_EXCHARGES_MINI", 0);
-define("MC_EXCHARGES_NONE", 0);
-define("MC_EXCHARGES_OTHER", 0);
-define("MC_EXCHARGES_REST", 0);
-define("MC_EXCHARGES_TELE", 0);
-define("MC_EXCHARGES_VIOL", 0);
 define("MC_EXPDATE", 0);
 define("MC_FILE", 0);
-define("MC_INQUIRY", 0);
-define("MC_MARKER", 0);
-define("MC_MODE_ALL", 0);
-define("MC_MODE_AUTH", 0);
-define("MC_MODE_BOTH", 0);
-define("MC_MODE_SETTLE", 0);
-define("MC_NEWBATCH", 0);
-define("MC_ORIGTYPE", 0);
 define("MC_PASSWORD", 0);
-define("MC_PIN", 0);
-define("MC_PRIORITY", 0);
-define("MC_PRIO_HIGH", 0);
-define("MC_PRIO_LOW", 0);
-define("MC_PRIO_NORMAL", 0);
 define("MC_PTRANNUM", 0);
 define("MC_PWD", 0);
-define("MC_RATE", 0);
-define("MC_RENTERNAME", 0);
-define("MC_RETURNCITY", 0);
-define("MC_RETURNLOCATION", 0);
-define("MC_RETURNSTATE", 0);
 define("MC_STATIONID", 0);
 define("MC_STREET", 0);
-define("MC_SUB", 0);
-define("MC_TIMESTAMP", 0);
 define("MC_TRACKDATA", 0);
 define("MC_TRANTYPE", 0);
-define("MC_TRAN_ACTIVATE", 0);
 define("MC_TRAN_ADDUSER", 0);
 define("MC_TRAN_ADMIN", 0);
-define("MC_TRAN_BALANCEINQ", 0);
-define("MC_TRAN_CASHOUT", 0);
 define("MC_TRAN_CHKPWD", 0);
 define("MC_TRAN_CHNGPWD", 0);
-define("MC_TRAN_CLEARERRORLOG", 0);
-define("MC_TRAN_CREDIT", 0);
 define("MC_TRAN_DELUSER", 0);
 define("MC_TRAN_DISABLEUSER", 0);
 define("MC_TRAN_EDITUSER", 0);
 define("MC_TRAN_ENABLEUSER", 0);
-define("MC_TRAN_ERRORLOG", 0);
 define("MC_TRAN_EXPORT", 0);
 define("MC_TRAN_FORCE", 0);
-define("MC_TRAN_GETSUBACCTS", 0);
 define("MC_TRAN_GETUSERINFO", 0);
 define("MC_TRAN_IMPORT", 0);
-define("MC_TRAN_INCREMENTAL", 0);
-define("MC_TRAN_ISSUE", 0);
-define("MC_TRAN_IVRREQ", 0);
-define("MC_TRAN_IVRRESP", 0);
 define("MC_TRAN_LISTSTATS", 0);
 define("MC_TRAN_LISTUSERS", 0);
-define("MC_TRAN_MERCHRETURN", 0);
 define("MC_TRAN_OVERRIDE", 0);
 define("MC_TRAN_PING", 0);
 define("MC_TRAN_PREAUTH", 0);
 define("MC_TRAN_PREAUTHCOMPLETE", 0);
-define("MC_TRAN_REDEMPTION", 0);
-define("MC_TRAN_RELOAD", 0);
 define("MC_TRAN_RETURN", 0);
-define("MC_TRAN_REVERSAL", 0);
 define("MC_TRAN_SALE", 0);
 define("MC_TRAN_SETTLE", 0);
-define("MC_TRAN_SETTLERFR", 0);
-define("MC_TRAN_TIP", 0);
-define("MC_TRAN_TOREVERSAL", 0);
 define("MC_TRAN_VOID", 0);
 define("MC_TTID", 0);
 define("MC_USER", 0);
 define("MC_USERNAME", 0);
 define("MC_USER_AGENTID", 0);
-define("MC_USER_AUDDIV", 0);
 define("MC_USER_BANKID", 0);
-define("MC_USER_CADDIV", 0);
-define("MC_USER_CARDTYPES", 0);
 define("MC_USER_CHAINID", 0);
-define("MC_USER_CHFDIV", 0);
 define("MC_USER_CLIENTNUM", 0);
-define("MC_USER_DIVNUM", 0);
-define("MC_USER_DKKDIV", 0);
-define("MC_USER_GBPDIV", 0);
-define("MC_USER_HKDDIV", 0);
 define("MC_USER_INDCODE", 0);
-define("MC_USER_JPYDIV", 0);
 define("MC_USER_MERCHCAT", 0);
 define("MC_USER_MERCHID", 0);
 define("MC_USER_MERCHLOC", 0);
 define("MC_USER_MERNAME", 0);
-define("MC_USER_MODE", 0);
-define("MC_USER_NOKDIV", 0);
-define("MC_USER_NZDDIV", 0);
 define("MC_USER_PHONE", 0);
-define("MC_USER_PID", 0);
-define("MC_USER_PIDPWD", 0);
-define("MC_USER_PPROPERTY", 0);
 define("MC_USER_PROC", 0);
 define("MC_USER_PWD", 0);
-define("MC_USER_ROUTINGID", 0);
-define("MC_USER_SEKDIV", 0);
-define("MC_USER_SGDDIV", 0);
-define("MC_USER_SMID", 0);
-define("MC_USER_SMIDPWD", 0);
 define("MC_USER_STATECODE", 0);
 define("MC_USER_STOREID", 0);
-define("MC_USER_SUB", 0);
 define("MC_USER_TERMID", 0);
 define("MC_USER_TIMEZONE", 0);
-define("MC_USER_USDDIV", 0);
 define("MC_USER_USER", 0);
-define("MC_USER_VNUMBER", 0);
-define("MC_USER_ZARDIV", 0);
 define("MC_USER_ZIPCODE", 0);
-define("MC_VOIDORIGTYPE", 0);
 define("MC_ZIP", 0);
 define("MOD_COLOR", 0);
 define("MOD_MATRIX", 0);
-define("MONITOR_EVENT_ALL", 0);
-define("MONITOR_EVENT_CUSTOM", 0);
-define("MONITOR_EVENT_DEVMEM", 0);
-define("MONITOR_EVENT_DEVSCRIPT", 0);
-define("MONITOR_EVENT_FUNCERROR", 0);
-define("MONITOR_EVENT_LOAD", 0);
-define("MONITOR_EVENT_LONGFUNCTION", 0);
-define("MONITOR_EVENT_LONGSCRIPT", 0);
-define("MONITOR_EVENT_MEMSIZE", 0);
-define("MONITOR_EVENT_OUTPUT", 0);
-define("MONITOR_EVENT_ZENDERROR", 0);
 define("MON_1", 0);
 define("MON_2", 0);
 define("MON_3", 0);
@@ -29697,63 +28517,18 @@ define("MYSQL_NUM", 0);
 define("M_1_PI", 0);
 define("M_2_PI", 0);
 define("M_2_SQRTPI", 0);
-define("M_AGENTID", 0);
-define("M_AUTH", 0);
-define("M_BAD", 0);
-define("M_BANKID", 0);
-define("M_CALL", 0);
-define("M_CHAINID", 0);
-define("M_CLIENTNUM", 0);
-define("M_DENY", 0);
-define("M_DONE", 0);
-define("M_DUPL", 0);
 define("M_E", 0);
-define("M_ERROR", 0);
-define("M_FAIL", 0);
-define("M_FORCE", 0);
-define("M_GOOD", 0);
-define("M_INDCODE", 0);
 define("M_LN2", 0);
 define("M_LN10", 0);
 define("M_LOG2E", 0);
 define("M_LOG10E", 0);
-define("M_MERCHCAT", 0);
-define("M_MERCHID", 0);
-define("M_MERCHLOC", 0);
-define("M_MERNAME", 0);
-define("M_NEW", 0);
-define("M_OVERRIDE", 0);
-define("M_PENDING", 0);
 define("M_PI", 0);
 define("M_PI_2", 0);
 define("M_PI_4", 0);
-define("M_PKUP", 0);
-define("M_PREAUTH", 0);
-define("M_PROC", 0);
-define("M_PWD", 0);
-define("M_RETRY", 0);
-define("M_RETURN", 0);
-define("M_SALE", 0);
-define("M_SERVICEPHONE", 0);
-define("M_SETTLE", 0);
-define("M_SETUP", 0);
 define("M_SQRT1_2", 0);
 define("M_SQRT2", 0);
-define("M_STATECODE", 0);
-define("M_STOREID", 0);
-define("M_STREET", 0);
-define("M_SUCCESS", 0);
-define("M_TERMID", 0);
-define("M_TIMEOUT", 0);
-define("M_TIMEZONE", 0);
-define("M_UNKNOWN", 0);
-define("M_UNUSED", 0);
-define("M_USER", 0);
-define("M_ZIP", 0);
-define("M_ZIPCODE", 0);
 define("MenuEnter", 0);
 define("MenuExit", 0);
-define("NAN", 0);
 define("NEGATIVE_SIGN", 0);
 define("NIL", 0);
 define("NOEXPR", 0);
@@ -29798,18 +28573,6 @@ define("OPENSSL_NO_PADDING", 0);
 define("OPENSSL_PKCS1_OAEP_PADDING", 0);
 define("OPENSSL_PKCS1_PADDING", 0);
 define("OPENSSL_SSLV23_PADDING", 0);
-define("OPTIMIZER_VERSION", 0);
-define("OPT_ALL", 0);
-define("OPT_PASS_1", 0);
-define("OPT_PASS_2", 0);
-define("OPT_PASS_3", 0);
-define("OPT_PASS_4", 0);
-define("OPT_PASS_5", 0);
-define("OPT_PASS_6", 0);
-define("OPT_PASS_7", 0);
-define("OPT_PASS_8", 0);
-define("OPT_PASS_9", 0);
-define("OPT_PASS_10", 0);
 define("OP_ANONYMOUS", 0);
 define("OP_DEBUG", 0);
 define("OP_EXPUNGE", 0);
@@ -29867,10 +28630,7 @@ define("PHP_BINDIR", 0);
 define("PHP_CONFIG_FILE_PATH", 0);
 define("PHP_CONFIG_FILE_SCAN_DIR", 0);
 define("PHP_DATADIR", 0);
-define("PHP_EOL", 0);
 define("PHP_EXTENSION_DIR", 0);
-define("PHP_INT_MAX", 0);
-define("PHP_INT_SIZE", 0);
 define("PHP_LIBDIR", 0);
 define("PHP_LOCALSTATEDIR", 0);
 define("PHP_NORMAL_READ", 0);
@@ -29892,7 +28652,6 @@ define("PKCS7_NOINTERN", 0);
 define("PKCS7_NOSIGS", 0);
 define("PKCS7_NOVERIFY", 0);
 define("PKCS7_TEXT", 0);
-define("PLATFORM_VERSION", 0);
 define("PM_STR", 0);
 define("POSITIVE_SIGN", 0);
 define("PREG_GREP_INVERT", 0);
@@ -29996,6 +28755,7 @@ define("SOAP_PERSISTENCE_REQUEST", 0);
 define("SOAP_PERSISTENCE_SESSION", 0);
 define("SOAP_RPC", 0);
 define("SOAP_SINGLE_ELEMENT_ARRAYS", 0);
+define("SOAP_USE_XSI_ARRAY_TYPE", 0);
 define("SOAP_WAIT_ONE_WAY_CALLS", 0);
 define("SOCKET_E2BIG", 0);
 define("SOCKET_EACCES", 0);
@@ -30127,7 +28887,6 @@ define("SORTSUBJECT", 0);
 define("SORTTO", 0);
 define("SORT_ASC", 0);
 define("SORT_DESC", 0);
-define("SORT_LOCALE_STRING", 0);
 define("SORT_NUMERIC", 0);
 define("SORT_REGULAR", 0);
 define("SORT_STRING", 0);
@@ -30272,7 +29031,6 @@ define("TYPEAPPLICATION", 0);
 define("TYPEAUDIO", 0);
 define("TYPEIMAGE", 0);
 define("TYPEMESSAGE", 0);
-define("TYPEMODEL", 0);
 define("TYPEMULTIPART", 0);
 define("TYPEOTHER", 0);
 define("TYPETEXT", 0);
@@ -30444,8 +29202,6 @@ define("UDM_PARAM_CROSSWORDS", 0);
 define("UDM_PARAM_CROSS_WORDS", 0);
 define("UDM_PARAM_DATADIR", 0);
 define("UDM_PARAM_DETECT_CLONES", 0);
-define("UDM_PARAM_EXCERPT_PADDING", 0);
-define("UDM_PARAM_EXCERPT_SIZE", 0);
 define("UDM_PARAM_FIRST_DOC", 0);
 define("UDM_PARAM_FOUND", 0);
 define("UDM_PARAM_GROUPBYSITE", 0);
@@ -30468,13 +29224,11 @@ define("UDM_PARAM_PREFIXES", 0);
 define("UDM_PARAM_QSTRING", 0);
 define("UDM_PARAM_QUERY", 0);
 define("UDM_PARAM_REMOTE_ADDR", 0);
-define("UDM_PARAM_RESULTS_LIMIT", 0);
 define("UDM_PARAM_SEARCHD", 0);
 define("UDM_PARAM_SEARCHTIME", 0);
 define("UDM_PARAM_SEARCH_MODE", 0);
 define("UDM_PARAM_SEARCH_TIME", 0);
 define("UDM_PARAM_SITEID", 0);
-define("UDM_PARAM_SORT_ORDER", 0);
 define("UDM_PARAM_STOPFILE", 0);
 define("UDM_PARAM_STOPTABLE", 0);
 define("UDM_PARAM_STOP_FILE", 0);
@@ -30497,11 +29251,9 @@ define("UDM_PREFIX_ENABLED", 0);
 define("UDM_TRACK_DISABLED", 0);
 define("UDM_TRACK_ENABLED", 0);
 define("UNKNOWN_TYPE", 0);
-define("UPLOAD_ERR_CANT_WRITE", 0);
 define("UPLOAD_ERR_FORM_SIZE", 0);
 define("UPLOAD_ERR_INI_SIZE", 0);
 define("UPLOAD_ERR_NO_FILE", 0);
-define("UPLOAD_ERR_NO_TMP_DIR", 0);
 define("UPLOAD_ERR_OK", 0);
 define("UPLOAD_ERR_PARTIAL", 0);
 define("VT_ARRAY", 0);
@@ -30682,11 +29434,502 @@ define("YPERR_VERS", 0);
 define("YPERR_YPBIND", 0);
 define("YPERR_YPERR", 0);
 define("YPERR_YPSERV", 0);
-define("ZPS_VERSION", 0);
 define("__CLASS__", 0);
 define("__FILE__", 0);
 define("__FUNCTION__", 0);
 define("__LINE__", 0);
+// Constants for jobs status
+define('JOB_QUEUE_STATUS_SUCCESS', 1);             // Job was processed and succeeded
+define('JOB_QUEUE_STATUS_WAITING', 2);             // Job is waiting for being processed (was not scheduled)
+define('JOB_QUEUE_STATUS_SUSPENDED', 3);           // Job was suspended
+define('JOB_QUEUE_STATUS_SCHEDULED', 4);           // Job is scheduled and waiting in queue
+define('JOB_QUEUE_STATUS_WAITING_PREDECESSOR', 5); // Job is waiting for it's predecessor to be completed
+define('JOB_QUEUE_STATUS_IN_PROCESS', 6);          // Job is in process in Queue
+define('JOB_QUEUE_STATUS_EXECUTION_FAILED', 7);    // Job execution failed in the ZendEnabler
+define('JOB_QUEUE_STATUS_LOGICALLY_FAILED', 8);    // Job was processed and failed logically either
+                                                   // because of job_fail command or script parse or
+                                                   // fatal error
+
+// Constants for different priorities of jobs
+define('JOB_QUEUE_PRIORITY_LOW', 0);
+define('JOB_QUEUE_PRIORITY_NORMAL', 1);
+define('JOB_QUEUE_PRIORITY_HIGH', 2);
+define('JOB_QUEUE_PRIORITY_URGENT', 3);
+
+// Constants for saving global variables bit mask
+define('JOB_QUEUE_SAVE_POST', 1);
+define('JOB_QUEUE_SAVE_GET', 2);
+define('JOB_QUEUE_SAVE_COOKIE', 4);
+define('JOB_QUEUE_SAVE_SESSION', 8);
+define('JOB_QUEUE_SAVE_RAW_POST', 16);
+define('JOB_QUEUE_SAVE_SERVER', 32);
+define('JOB_QUEUE_SAVE_FILES', 64);
+define('JOB_QUEUE_SAVE_ENV', 128);
+
+
+/**
+ * causes a job to fail logically
+ * can be used to indicate an error in the script logic (e.g. database connection problem)
+ * @param string $error_string the error string to display 
+ */
+set_job_failed( $error_string );
+
+
+
+/**
+ * returns array containing following fields:
+ * "license_ok" - whether license allows use of JobQueue
+ * "expires" - license expiration date 
+ */
+jobqueue_license_info();
+
+
+class ZendAPI_Queue {
+    var $_jobqueue_url;
+    
+    /**
+     * Constructor for a job queue connection
+     *
+     * @param string $jobqueue_url Full address where the queue is in the form host:port
+     * @return zendapi_queue object
+     */
+    function zendapi_queue($queue_url) {}
+    
+    /**
+     * Open a connection to a job queue
+     *
+     * @param string $password For authentication, password must be specified to connect to a queue
+     * @param int $application_id Optional, if set, all subsequent calls to job related methods will use this application id (unless explicitly specified otherwise). I.e. When adding new job, 
+        unless this job already set an application id, the job will be assigned the queue application id
+     * @return bool Success
+     */
+    function login($password, $application_id=null) {}
+    
+    
+    /**
+     * Insert a new job to the queue, the Job is passed by reference because 
+        its new job ID and status will be set in the Job object
+         * If the returned job id is 0 it means the job could be added to the queue
+         *
+     * @param Job $job The Job we want to insert to the queue (by ref.)
+     * @return int The inserted job id
+     */
+    function addJob(&$job) {}
+    
+
+    /**
+     * Return a Job object that describing a job in the queue
+         *
+     * @param int $job_id The job id
+     * @return Job Object describing a job in the queue
+     */
+    function getJob($job_id) {}
+
+    /**
+     * Update an existing job in the queue with it's new properties. If job doesn't exists, 
+        a new job will be added. Job is passed by reference and it's updated from the queue.
+     *
+     * @param Job $job The Job object, the ID of the given job is the id of the job we try to update.
+        If the given Job doesn't have an assigned ID, a new job will be added
+     * @return int The id of the updated job
+     */
+    function updateJob(&$job) {}
+    
+    /**
+     * Remove a job from the queue
+     *
+     * @param int|array $job_id The job id or array of job ids we want to remove from the queue
+     * @return bool Success/Failure
+     */
+    function removeJob($job_id) {}
+
+    
+    /**
+     * Suspend a job in the queue (without removing it)
+     *
+     * @param int|array $job_id The job id or array of job ids we want to suspend
+     * @return bool Success/Failure
+     */
+    function suspendJob($job_id) {}
+
+
+    /**
+     * Resume a suspended job in the queue
+     *
+     * @param int|array $job_id The job id or array of job ids we want to resume
+     * @return bool Success/Failure (if the job wasn't suspended, the function will return false)
+     */
+    function resumeJob($job_id) {}
+
+
+    /**
+     * Requeue failed job back to the queue.
+     *
+     * @param job $job  job object to re-query
+     * @return bool - true or false.
+     */
+    function requeueJob($job) {}
+
+
+    /**
+     * returns job statistics
+         * @return array with the following:
+                         "total_complete_jobs"
+                         "total_incomplete_jobs"
+                         "average_time_in_queue"  [msec]
+                         "average_waiting_time"   [sec]
+                         "added_jobs_in_window"
+                         "activated_jobs_in_window"
+                         "completed_jobs_in_window"
+         * moving window size can be set through ini file
+         */
+    function getStatistics() {}
+
+
+    /**
+     * Returns whether a script exists in the document root
+     * @param string $path relative script path
+     * @return bool - TRUE if script exists in the document root FALSE otherwise
+     */
+    function isScriptExists($path) {}
+
+
+    /**
+     * Returns whether the queue is suspended
+     * @return bool - TRUE if job is suspended FALSE otherwise
+     */
+    function isSuspend() {}
+
+
+    /**
+     * Return a list of jobs in the queue according to the options given in the filter_options parameter, doesn't return jobs in "final states" (failed, complete)
+     * If application id is set for this queue, only jobs with this application id will be returned
+     *
+     * @param array $filter_options Array of optional filter options to filter the jobs we want to get 
+        from the queue. If not set, all jobs will be returned.<br>
+     *     Options can be: priority, application_id, name, status, recurring.
+     * @param int max_jobs  Maximum jobs to retrive. Default is -1, getting all jobs available.
+     * @param bool with_globals_and_output. Whether gets the global variables dataand job output.
+     *     Default is false.
+     * @return array. Jobs that satisfies filter_options.
+     */
+    function getJobsInQueue($filter_options=null, $max_jobs=-1, $with_globals_and_output=false) {}
+    
+
+    /**
+     * Return the number of jobs in the queue according to the options given in the filter_options parameter
+     * @param array $filter_options Array of optional filter options to filter the jobs we want to get from the queue. If not set, all jobs will be counted.<br>
+     *     Options can be: priority, application_id, host, name, status, recurring.
+     * @return int. Number of jobs that satisfy filter_options.
+     */
+    function getNumOfJobsInQueue($filter_options=null) {}
+
+
+    /**
+     * Return all the hosts that jobs were submitted from.
+     * @return array. 
+     */
+    function getAllhosts() {}
+
+
+    /**
+     * Return all the application ids exists in queue.
+     * @return array.
+     */
+    function getAllApplicationIDs() {}
+
+
+
+    /**
+     * Return finished jobs (either failed or successed) between time range allowing paging.
+     * Jobs are sorted by job id descending.
+     *
+     * @param int $status. Filter to jobs by status, 1-success, 0-failed either logical or execution.
+     * @param UNIX timestamp $start_time. Get only jobs finished after $start_time.
+     * @param UNIX timestamp $end_time. Get only jobs finished before $end_time.
+     * @param int $index. Get jobs starting from the $index-th place.
+     * @param int $count. Get only $count jobs.
+     * @param int $total. Pass by reference. Return the total number of jobs statisifed the query criteria. 
+     *
+     * @return array of jobs.
+     */
+    function getHistoricJobs($status, $start_time, $end_time, $index, $count, &$total) {}
+
+
+    /**
+     * Suspends queue operation
+     * @return bool - TRUE if successful FALSE otherwise
+     */
+    function suspendQueue() {}
+
+
+    /**
+     * Resumes queue operation
+     * @return bool - TRUE if successful FALSE otherwise
+     */
+    function resumeQueue() {}
+
+
+    /**
+     * Return description of the last error occured in the queue object. After every
+     *    method invoked an error string describing the error is store in the queue object.
+     * @return string.
+     */
+    function getLastError() {}
+
+
+    /**
+     * Sets a new maximum time for keeping historic jobs
+     * @return bool - TRUE if successful FALSE otherwise
+     */
+    function setMaxHistoryTime() {}
+}
+
+/**
+ * Describing a job in a queue
+ * In order to add/modify a job in the queue, a Job class must be created/retrieved and than saved in a queue
+ *
+ * For simplicity, a job can be added directly to a queue and without creating an instant of a Queue object
+ */
+class ZendAPI_Job {
+    
+    /**
+     * Unique id of the Job in the job queue
+     *
+     * @var int
+     */
+    var $_id;
+    
+    /**
+     * Full path of the script that this job calls when it's processed
+     *
+     * @var string
+     */
+    var $_script;
+    
+    /**
+     * The host that the job was submit from
+     *
+     * @var string
+     */
+    var $_host;
+
+    /**
+     * A short string describing the job
+     *
+     * @var string
+     */
+    var $_name;
+
+
+    /**
+     * The job output after executing
+     *
+     * @var string
+     */
+    var $_output;
+
+    /**
+     * The status of the job
+     * By default, the job status is waiting to being execute. 
+     * The status is determent by the queue and can not be modify by the user.
+     *
+     * @var int
+     */
+    var $_status = JOB_QUEUE_STATUS_WAITING;
+
+    /**
+     * The application id of the job
+     * If the application id is not set, this job may get an application id automatically from the queue 
+     * (if the queue was assigned one). By default it is null (which indicates no application id is assigned)
+     *
+     * @var string
+     */
+    var $_application_id = null;
+    
+    /**
+     * The priority of the job, options are the priority constants
+     * By default the priority is set to normal (JOB_QUEUE_PRIORITY_NORMAL)
+     *
+     * @var int
+     */
+    var $_priority = JOB_QUEUE_PRIORITY_NORMAL;
+    
+    /**
+     * Array holding all the variables that the user wants the job's script to have when it's called
+     * The structure is variable_name => variable_value
+        i.e. if the user_variables array is array('my_var' => 8), when the script is called,
+        a global variable called $my_var will have the int value of 8
+     * By default there are no variables that we want to add to the job's script
+     *
+     * @var array
+     */
+    var $_user_variables = array();
+    
+    /**
+     * Bit mask holding the global variables that the user want the job's script to have when it's called
+     * Options are prefixed with "JOB_QUEUE_SAVE_" and may be:
+        POST|GET|COOKIE|SESSION|RAW_POST|SERVER|FILES|ENV
+     * By default there are no global variables we want to add to the job's script
+     * i.e. In order to save the current GET and COOKIE global variables,
+        this property should be JOB_QUEUE_SAVE_GET|JOB_QUEUE_SAVE_COOKIE (or the integer 6)
+        In that case (of GET and COOKIE), when the job is added, the current $_GET and 
+        $_COOKIE variables  should be saved, and when the job's script is called,
+        those global variables should be populated
+     *
+     * @var int
+     */
+    var $_global_variables = 0;
+    
+    /**
+     * The job may have a dependency (another job that must be performed before this job)
+     * This property hold the id of the job that must be performed. if this variable is an array of integers,
+        it means that there are several jobs that must be performed before this job 
+     * By default there are no dependencies
+     *
+     * @var mixed (int|array)
+     */
+    var $_predecessor = null;
+    
+    /**
+     * The time that this job should be performed, this variables is the UNIX timestamp.
+     * If set to 0, it means that the job should be performed now (or at least as soon as possible)
+     * By default there is no scheduled time, which means we want to perform the job as soon as possible
+     *
+     * @var int
+     */
+    var $_scheduled_time = 0;
+    
+    /**
+     * The job running frequency in seconds. The job should run every _internal seconds
+     * This property applys only to recurrent job. 
+     * By default, its value is 0 e.g. run it only once.
+     *
+     * @var int
+     */
+         var $_interval = 0;
+
+    /**
+     * UNIX timestamp that it's the last time this job should occurs. If _interval was set, and _end_time
+     * was not, then this job will run forever.
+     * By default there is no end_time, so recurrent job will run forever. If the job is not recurrent
+     * (occurs only once) then the job will run at most once. If end_time has reached and the job was not
+     * execute yet, it will not run.
+     * 
+     * @var int
+     */
+     var $_end_time = null;
+
+
+    /**
+     * A bit that determine whether job can be deleted from history. When set, removeJob will not
+     * delete the job from history.
+     *
+     * @var int
+     */
+     var $_preserved = 0;
+
+    
+    /**
+     * Instantiate a Job object, describe all the information and properties of a job
+     *
+     * @param script $script relative path (relative to document root supplied in ini file) of the script this job should call when it's executing
+     * @return Job
+     */
+    function ZendAPI_Job($script) {}
+    
+
+    /**
+     * Add the job the the specified queue (without instantiating a JobQueue object)
+     * This function should be used for extreme simplicity of the user when adding a single job,
+            when the user want to insert more than one job and/or manipulating other jobs (or job tasks) 
+            he should create and use the JobQueue object
+     * Actually what this function do is to create a new JobQueue, login to it (with the given parameters), 
+            add this job to it and logout
+     * 
+     * @param string $jobqueue_url Full address of the queue we want to connect to
+     * @param string $password For authentication, the queue password
+     * @return int The added job id or false on failure
+     */
+    function addJobToQueue($jobqueue_url, $password) {}
+
+
+    /**
+     * Set a new priority to the job
+     *
+     * @param int $priority Priority options are constants with the "JOB_QUEUE_PRIORITY_" prefix
+     */
+    function setJobPriority($priority) {}
+    
+    // All properties SET functions
+    function setJobName($name) {}
+    function setScript($script) {}
+    function setApplicationID($app_id) {}
+    function setUserVariables($vars) {}
+    function setGlobalVariables($vars) {}
+    function setJobDependency($job_id) {}
+    function setScheduledTime($timestamp) {}
+    function setRecurrenceData($interval, $end_time=null) {}
+    function setPreserved($preserved)
+    
+    /**
+     * Get the job properties
+     *
+     * @return array The same format of job options array as in the Job constructor
+     */
+    function getProperties() {}
+
+    /**
+     * Get the job output
+     *
+     * @return An HTML representing the job output
+     */
+    function getOutput() {}
+    
+    // All properties GET functions
+    function getID() {}
+    function getHost() {}
+    function getScript() {}
+    function getJobPriority() {}
+    function getJobName() {}
+    function getApplicationID() {}
+    function getUserVariables() {}
+    function getGlobalVariables() {}
+    function getJobDependency() {}
+    function getScheduledTime() {}
+    function getInterval() {}
+    function getEndTime() {}
+    function getPreserved() {}
+
+    /**
+     * Get the current status of the job
+     * If this job was created and not returned from a queue (using the JobQueue::GetJob() function), 
+     *  the function will return false
+     * The status is one of the constants with the "JOB_QUEUE_STATUS_" prefix. 
+     * E.g. job was performed and failed, job is waiting etc.
+     *
+     * @return int
+     */
+    function getJobStatus() {}
+
+    /**
+     * Get how much seconds there are until the next time the job will run. 
+     * If the job is not recurrence or it past its end time, then return 0.
+     *
+     * @return int
+     */
+     function getTimeToNextRepeat() {}
+
+    /**
+     * For recurring job get the status of the last execution. For simple job,
+     * getLastPerformedStatus is equivalent to getJobStatus.
+     * jobs that haven't been executed yet will return STATUS_WAITING
+     * @return int
+     */
+     function getLastPerformedStatus() {}
+
+    
+}
 
 class stdClass {
 };
@@ -30710,6 +29953,290 @@ function pg_connect($connection_string, $connect_type) {}
  */
 function pg_connect($host, $port, $options = null, $tty = null, $database) {}
 
+
+
+/**
+ * Disable/enable the Code Acceleration functionality at run time.
+ * @param status bool If false, Acceleration is disabled, if true - enabled
+ * @return void
+ */ 
+function accelerator_set_status($status) {}
+
+/**
+ * Disables output caching for currently running scripts.
+ * @return void
+ */
+function output_cache_disable() {}
+
+/**
+ * Does not allow the cache to perform compression on the output of the current page.
+ * This output will not be compressed, even if the global set tings would normally allow
+ * compression on files of this type.
+ * @return void
+ */
+function output_cache_disable_compression() {}
+
+/**
+ * Gets the code’s return value from the cache if it is there, if not - run function and cache the value.
+ * @param key string cache key
+ * @param function string PHP expression
+ * @param lifetime int data lifetime in cache (seconds)
+ * @return string function's return
+ */
+function output_cache_fetch($key, $function, $lifetime) {}
+
+/**
+ * If they cache for the key exists, output it, otherwise capture expression output, cache and pass it out.
+ * @param key string cache key
+ * @param function string PHP expression
+ * @param lifetime int data lifetime in cache (seconds)
+ * @return expression output
+ */
+function output_cache_output($key, $function, $lifetime) {}
+
+/**
+ * Removes all the cache data for the given filename.
+ * @param filename string full script path on local filesystem
+ * @return bool true if OK, false if something went wrong
+ */
+function output_cache_remove($filename) {}
+
+/**
+ * Remove cache data for the script with given URL (all dependent data is removed)
+ * @param url string the local url for the script
+ * @return bool true if OK
+ */
+function output_cache_remove_url($url) {}
+
+/**
+ * Remove item from PHP API cache by key
+ * @param key string cache key as given to output_cache_get/output_cache_put
+ * @return bool true if OK
+ */
+function output_cache_remove_key($key) {}
+
+/**
+ * Puts data in cache according to the assigned key.
+ * @param key string cache key
+ * @param data mixed cached data (must not contain objects or resources)
+ * @return bool true if OK
+ */
+function output_cache_put($key, $data) {}
+
+/**
+ * Gets cached data according to the assigned key.
+ * @param key string cache key
+ * @param lifetime int cache validity time (seconds)
+ * @return mixed cached data if cache exists, false otherwise
+ */
+function output_cache_get($key, $lifetime) {}
+
+/**
+ * If data for assigned key exists, this function outputs it and returns a value of true.
+ * If not, it starts capturing the output. To be used in pair with output_cache_stop.
+ * @param key string cache key
+ * @param lifetime int cache validity time (seconds)
+ * @return bool true if cached data exists
+ */
+function output_cache_exists($key, $lifetime) {}
+
+/**
+ * If output was captured by output_cache_exists, this function stops the output capture and stores
+ * the data under the key that was given to output_cache_exists().
+ * @return void
+ */
+function output_cache_stop() {}
+
+
+/**
+ * Should be called from a custom error handler to pass the error to the monitor.
+ * The user function needs to accept two parameters: the error code, and a string describing the error.
+ * Then there are two optional parameters that may be supplied: the filename in which the error occurred
+ * and the line number  in which the error occurred.
+ * @param errno int
+ * @param errstr string
+ * @param errfile string
+ * @param errline integer
+ * @return void
+ */
+function monitor_pass_error($errno, $errstr, $errfile, $errline) {}
+
+/**
+ * Limited in the database to 255 chars
+ * @param hint string
+ * @return void
+ */
+function monitor_set_aggregation_hint($hint) {}
+
+/**
+ * Creates a custom event with class $class, text $text and possibly severity and other user data
+ * @param class string
+ * @param text string
+ * @param severe int[optional]
+ * @param user_data mixed[optional]
+ * @return void
+ */
+function monitor_custom_event($class, $text, $severe = null, $user_data = null) {}
+
+/**
+ * Create an HTTPERROR event
+ * @param error_code int the http error code to be associated with this event
+ * @param url string the URL to be associated with this event
+ * @param severe int[optional] the severety of the event: 0 - not severe, 1 - severe
+ * @return void
+ */
+function monitor_httperror_event($error_code, $url, $severe = null) {}
+
+/**
+ * Returns an array containing information about
+ * <li>module loading status (and cause of error if module failed to load)
+ * <li>module license status (and cause of error if license not valid)
+ * @return array 
+ */
+function monitor_license_info() {}
+
+/**
+ * Allow you to register a user function as an event handler.When a monitor event is triggerd
+ * all the user event handler are called and the return value from the handler is saved in
+ * an array keyed by the name the event handler was registered under. The event handlers
+ * results array is saved in the event_extra_data table.
+ * @param event_handler_func string The callback function that will be call when the event is triggered, object methods may also be invoked statically using t
+his function by passing array($objectname, $methodname) to the function parameter
+ * @param handler_register_name string[optional] The name this function is registered under - if none is supplied, the function will be registerd under it's own name
+ * @param event_type_mask int The mask of event types that the handler should be called on by default it's set to MONITOR_EVENT_ALL.
+ * @return bool TRUE on sucess and FALSE if an error occurs.
+ */
+function register_event_handler($event_handler_func, $handler_register_name, $event_type_mask) {}
+
+/**
+ * Allow you to unregister an event handler.
+ * @param handler_name string the name you registered with the handler you now wish to unregister.
+ * @return bool TRUE on sucess and FALSE if no handler we registered under the given name.
+ */
+function unregister_event_handler($handler_name) {}
+
+/**
+ * Send a file using ZDS
+ * @param filename string path to the file
+ * @param mime_type string[optional] MIME type of the file, if omitted, taken from configured MIME types file
+ * @param custom_headers string[optional] user defined headers that will be send instead of regular ZDS headers. few basic essential headers will be send anyway
+ * @return bool FALSE if sending file failed, does not return otherwise
+ */
+function zend_send_file($filename, $mime_type, $custom_headers) {}
+
+/**
+ * Send a buffer using ZDS
+ * @param buffer string the content that will be send
+ * @param mime_type string[optional] MIME type of the buffer, if omitted, taken from configured MIME types file
+ * @param custom_headers string[optional] user defined headers that will be send instead of regular ZDS headers. few basic essential headers will be send anyway
+ * @return bool FALSE if sending file failed, does not return otherwise
+ */
+function zend_send_buffer($buffer, $mime_type, $custom_headers) {}
+
+/**
+ * Return Java exception object for last exception
+ * @return object Java Exception object, if there was an exception, false otherwise
+ */
+function java_last_exception_get() {}
+
+/**
+ * Clear last Java exception object record.
+ * @return void
+ */
+function java_last_exception_clear() {}
+
+/**
+ * Set case sensitivity for Java calls.
+ * @param ignore bool if set, Java attribute and method names would be resolved disregarding case. NOTE: this does not make any Java functions case insensi
+tive, just things like $foo->bar and $foo->bar() would match Bar too.
+ * @return void
+ */
+function java_set_ignore_case($ignore) {}
+
+/**
+ * Set encoding for strings received by Java from PHP. Default is UTF-8.
+ * @param encoding string
+ * @return array
+ */
+function java_set_encoding($encoding) {}
+
+/**
+ * Control if exceptions are thrown on Java exception. Only for PHP5.
+ * @param throw bool If true, PHP exception is thrown when Java exception happens. If set to false, use java_last_exception_get() to check for exception.
+ * @return void
+ */
+function java_throw_exceptions($throw) {}
+
+/**
+ * Shown if loader is enabled
+ * @return bool
+ */
+function zend_loader_enabled() {}
+
+/**
+ * Returns true if the current file is a Zend-encoded file.
+ * @return bool
+ */
+function zend_loader_file_encoded() {}
+
+/**
+ * Returns license (array with fields) if the current file has a valid license and is encoded, otherwise it returns false.
+ * @return array 
+ */
+function zend_loader_file_licensed() {}
+
+/**
+ * Returns the name of the file currently being executed.
+ * @return string
+ */
+function zend_loader_current_file() {}
+
+/**
+ * Dynamically loads a license for applications encoded with Zend SafeGuard. The Override controls if it will override old licenses for the same product.
+ * @param license_file string
+ * @param override bool[optional]
+ * @return bool
+ */
+function zend_loader_install_license($license_file, $override) {}
+
+/**
+ * Obfuscate and return the given function name with the internal obfuscation function.
+ * @param function_name string
+ * @return string
+ */
+function zend_obfuscate_function_name($function_name) {}
+
+/**
+ * Obfuscate and return the given class name with the internal obfuscation function.
+ * @param class_name string
+ * @return string
+ */
+function zend_obfuscate_class_name($class_name) {}
+
+/**
+ * Returns the current obfuscation level support (set by zend_optimizer.obfuscation_level_support)
+ * @return int
+ */
+function zend_current_obfuscation_level() {}
+
+/**
+ * Start runtime-obfuscation support that allows limited mixing of obfuscated and un-obfuscated code.
+ * @return void
+ */
+function zend_runtime_obfuscate() {}
+
+/**
+ * Returns array of the host ids. If all_ids is true, then all IDs are returned, otehrwise only IDs considered "primary" are returned.
+ * @param all_ids bool[optional]
+ * @return array
+ */
+function zend_get_id($all_ids = false) {}
+
+/**
+ * Returns Optimizer version. Alias: zend_loader_version()
+ * @return string
+ */
+function zend_optimizer_version() {}
 
 
 ?>
