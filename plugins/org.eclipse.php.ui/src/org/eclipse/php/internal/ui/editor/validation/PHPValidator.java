@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -61,10 +62,17 @@ public class PHPValidator implements IValidator, ISourceValidator {
 
 		this.document = document;
 
-		if(!(document instanceof IStructuredDocument)){
-			throw new IllegalStateException("Document is set not structured");			
+		if (!(document instanceof IStructuredDocument)) {
+			throw new IllegalStateException("Document is set not structured");
 		}
-		final IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead((IStructuredDocument)document);
+
+		// check for read only files (such as include path files, etc.)
+		if (FileBufferModelManager.getInstance().calculateId(document) == null) {
+			this.document = null;
+			return;
+		}
+
+		final IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead((IStructuredDocument) document);
 		if (model == null) {
 			throw new IllegalStateException("Error reading structure model in PhpValidator#validator()");
 		}
