@@ -151,7 +151,7 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void update(PHPDebugTarget target) {
-    	if (swtBrowser != null) {
+    	if (swtBrowser != null && !swtBrowser.isDisposed()) {
 	        PHPDebugTarget oldTarget = fTarget;
 	        int oldcount = fUpdateCount;
 	        fTarget = target;
