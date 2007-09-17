@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PDT Help Plug-in (Incubation)
+Bundle-Name: PDT Help Plug-in
 Bundle-SymbolicName: org.eclipse.php.help; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.php.help.Activator
