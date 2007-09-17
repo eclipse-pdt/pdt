@@ -11,7 +11,10 @@
 package org.eclipse.php.internal.core.project.options;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,7 +43,7 @@ public class PHPProjectOptions {
 	private static final String LOCATION_INCLUDE_PATH = "Include Path";
 	private static final String OWNER_PHP_INCLUDE_PATH = "phpIncludePath";
 	private static final String OWNER_ATTRIBUTE = "Owner";
-	
+
 	public static final String BUILDER_ID = PHPCorePlugin.ID + ".PhpIncrementalProjectBuilder"; //$NON-NLS-1$
 	static final IIncludePathEntry[] EMPTY_INCLUDEPATH = {};
 
@@ -117,8 +120,8 @@ public class PHPProjectOptions {
 			optionChangeListeners = new ArrayList<IPhpProjectOptionChangeListener>();
 			optionsChangeListenersMap.put(optionKey, optionChangeListeners);
 		}
-
-		optionChangeListeners.add(optionChangeListener);
+		if (!optionChangeListeners.contains(optionChangeListener))
+			optionChangeListeners.add(optionChangeListener);
 	}
 
 	public void removeOptionChangeListener(final String optionKey, final IPhpProjectOptionChangeListener optionChangeListener) {
@@ -132,8 +135,7 @@ public class PHPProjectOptions {
 		List<IPhpProjectOptionChangeListener> optionChangeListeners = optionsChangeListenersMap.get(key);
 		if (optionChangeListeners == null)
 			return;
-		for (final Iterator<IPhpProjectOptionChangeListener> i = optionChangeListeners.iterator(); i.hasNext();) {
-			final IPhpProjectOptionChangeListener phpProjectOptionChangeListener = i.next();
+		for (IPhpProjectOptionChangeListener phpProjectOptionChangeListener : optionChangeListeners) {
 			phpProjectOptionChangeListener.notifyOptionChanged(oldValue, newValue);
 		}
 	}
@@ -203,7 +205,7 @@ public class PHPProjectOptions {
 			newIncludePathEntries.add(includePathEntries[i]);
 		}
 		try {
-			setRawIncludePath((IIncludePathEntry[]) newIncludePathEntries.toArray(new IIncludePathEntry[newIncludePathEntries.size()]), null);
+			setRawIncludePath(newIncludePathEntries.toArray(new IIncludePathEntry[newIncludePathEntries.size()]), null);
 			return;
 		} catch (final Exception e) {
 			PHPCorePlugin.log(e);
@@ -223,7 +225,7 @@ public class PHPProjectOptions {
 			}
 		}
 		try {
-			setRawIncludePath((IIncludePathEntry[]) newIncludePathEntries.toArray(new IIncludePathEntry[newIncludePathEntries.size()]), null);
+			setRawIncludePath(newIncludePathEntries.toArray(new IIncludePathEntry[newIncludePathEntries.size()]), null);
 		} catch (final Exception e) {
 			PHPCorePlugin.log(e);
 		}
@@ -363,8 +365,8 @@ public class PHPProjectOptions {
 
 	public void validateIncludePath() {
 		clearMarkers();
-		for (int i = 0; i < includePathEntries.length; i++) {
-			String message = includePathEntries[i].validate();
+		for (IIncludePathEntry element : includePathEntries) {
+			String message = element.validate();
 			if (message != null) {
 				addError(message);
 			}
@@ -386,9 +388,9 @@ public class PHPProjectOptions {
 	private void clearMarkers() {
 		try {
 			IMarker[] markers = project.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
-			for (int i = 0; i < markers.length; i++) {
-				if (OWNER_PHP_INCLUDE_PATH.equals(markers[i].getAttribute(OWNER_ATTRIBUTE))) {
-					markers[i].delete();
+			for (IMarker element : markers) {
+				if (OWNER_PHP_INCLUDE_PATH.equals(element.getAttribute(OWNER_ATTRIBUTE))) {
+					element.delete();
 				}
 			}
 		} catch (CoreException e) {

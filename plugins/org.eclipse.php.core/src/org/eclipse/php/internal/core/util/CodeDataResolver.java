@@ -349,8 +349,15 @@ public class CodeDataResolver {
 
 						// This can be only global constant, if we've reached here:
 						CodeData[] result = projectModel.getFilteredConstants(fileName, elementName);
-						if (result == null || result.length == 0)
+						if (result == null || result.length == 0) {
 							result = projectModel.getConstant(elementName);
+						}
+
+						// Return class if nothing else found.
+						if(result == null || result.length == 0) {
+							result = matchingClasses;
+						}
+
 						return result == null ? EMPTY : result;
 					}
 				}
