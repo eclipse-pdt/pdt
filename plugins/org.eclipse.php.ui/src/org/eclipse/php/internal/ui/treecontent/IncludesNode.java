@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
+import org.eclipse.php.internal.core.phpModel.parser.IncludePathModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
@@ -17,7 +18,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * Main Include Path node under project.
  */
-class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListener, ModelListener {
+class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListener, ModelListener, IncludePathModelListener {
 
 	private IncludePathTreeContent provider;
 
@@ -80,7 +81,7 @@ class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListene
 	/**
 	 * Refresh the whole tree.
 	 */
-	private void refresh() {
+	public void refresh() {
 		refresh(this);
 	}
 
@@ -157,4 +158,19 @@ class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListene
 		refresh(IncludePathTreeContent.includePathTree.getElementData(elementToRefresh));
 	}
 
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.phpModel.parser.IncludePathModelListener#includeModelAdded(org.eclipse.php.internal.core.phpModel.parser.IPhpModel)
+	 */
+	public void includeModelAdded(IPhpModel model) {
+		provider.getIncludeModelChildren(model);
+		refresh();
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.phpModel.parser.IncludePathModelListener#includeModelRemoved(org.eclipse.php.internal.core.phpModel.parser.IPhpModel)
+	 */
+	public void includeModelRemoved(IPhpModel model) {
+		// Nothing to do - refreshed from outside
+
+	}
 }

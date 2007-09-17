@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.*;
@@ -41,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
  * A content provider for include paths under projects. Shows files in file-system-like tree.
  * @author seva
  */
-public class IncludePathTreeContent implements IPHPTreeContentProvider {
+public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspaceModelListener {
 
 	private static final String INCLUDE_PATHS_NODE_ID = "org.eclipse.php.ui.treecontent.IncludesNode";
 	private static final String INCLUDE_PATHS_NODE_NAME = "Include Paths";
@@ -197,9 +198,30 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		treeNode = new IncludesNode(INCLUDE_PATHS_NODE_NAME, image, INCLUDE_PATHS_NODE_ID, project, this);
 		PHPWorkspaceModelManager.getInstance().addModelListener(treeNode);
 		projectNodes.put(project, treeNode);
+
+		// tree nodes to listen for include model events
+		final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+		if (projectModel != null) {
+			final PHPIncludePathModelManager includeModelManager = (PHPIncludePathModelManager) projectModel.getModel(PHPIncludePathModelManager.COMPOSITE_INCLUDE_PATH_MODEL_ID);
+			if (includeModelManager != null) {
+				includeModelManager.addIncludePathModelListener(treeNode);
+			}
+		}
+
 		final PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		options.addOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, treeNode);
 		return treeNode;
+	}
+
+	/**
+	 * @param treeNode
+	 */
+	private void updateIncludePathsNode(final IncludesNode treeNode) {
+		IProject project = (IProject) treeNode.getData();
+		final PHPProjectOptions options = PHPProjectOptions.forProject(project);
+		// handle issue of same instance for removed and re-added projects:
+		// the project is old, but options are new
+		options.addOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, treeNode);
 	}
 
 	/**
@@ -276,15 +298,14 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 		final IResource res = PHPModelUtil.getResource(fileData);
 		final IPath filePath = new Path(fileData.getName());
 		String filePathString = filePath.toOSString();
-		if (res != null){
+		if (res != null) {
 			IPath location = res.getLocation();
-			if (location != null){
+			if (location != null) {
 				filePathString = location.toOSString();
-			}
-			else {
+			} else {
 				filePathString = res.getLocationURI().toString();
 			}
-			
+
 		}
 		for (int i = 0; i < modelPaths.length; ++i) {
 			final IPhpModel model = IncludeModelPathRootConverter.from(modelPaths[i].segment(1));
@@ -329,7 +350,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	 * @param includePathModel
 	 * @return model children
 	 */
-	private static Object[] getIncludeModelChildren(final IPhpModel includePathModel) {
+	public static Object[] getIncludeModelChildren(final IPhpModel includePathModel) {
 		final IPath modelPath = INCLUDE_PATHS_ROOT_PATH.append(IncludeModelPathRootConverter.toString(includePathModel));
 		if (!includePathTree.includes(modelPath)) {
 			validateRoot();
@@ -412,6 +433,9 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	}
 
 	private Object[] getProjectChildren(final IProject project) {
+		// listen for project model additions, otherwise on workspace initialization there is no include model nodes
+		PHPWorkspaceModelManager.getInstance().addWorkspaceModelListener(project.getName(), this);
+
 		final PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		if (options != null)
 			return new Object[] { getTreeNode(project) };
@@ -451,6 +475,8 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 
 		if (treeNode == null)
 			treeNode = createIncludePathsNode(project);
+		else
+			updateIncludePathsNode(treeNode);
 		// generate the tree:
 		final Object[] models = getTreeNodeChildren(treeNode);
 		if (models.length > 0)
@@ -505,5 +531,44 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider {
 	private static void validateRoot() {
 		if (!includePathTree.includes(INCLUDE_PATHS_ROOT_PATH))
 			includePathTree.createElement(INCLUDE_PATHS_ROOT_PATH, INCLUDE_PATHS_ROOT_PATH.segment(1));
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.core.documentModel.IWorkspaceModelListener#projectModelAdded(org.eclipse.core.resources.IProject)
+	 */
+	public void projectModelAdded(IProject project) {
+		IncludesNode treeNode = getTreeNode(project);
+		final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+		if (projectModel != null) {
+			final PHPIncludePathModelManager includeModelManager = (PHPIncludePathModelManager) projectModel.getModel(PHPIncludePathModelManager.COMPOSITE_INCLUDE_PATH_MODEL_ID);
+			if (includeModelManager != null) {
+				includeModelManager.addIncludePathModelListener(treeNode);
+			}
+		}
+		treeNode.refresh();
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.core.documentModel.IWorkspaceModelListener#projectModelChanged(org.eclipse.core.resources.IProject)
+	 */
+	public void projectModelChanged(IProject project) {
+		// just in case - do the same as above:
+		projectModelAdded(project);
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.core.documentModel.IWorkspaceModelListener#projectModelRemoved(org.eclipse.core.resources.IProject)
+	 */
+	public void projectModelRemoved(IProject project) {
+		// cleen up
+		IncludesNode treeNode = getTreeNode(project);
+		final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+		if (projectModel != null) {
+			final PHPIncludePathModelManager includeModelManager = (PHPIncludePathModelManager) projectModel.getModel(PHPIncludePathModelManager.COMPOSITE_INCLUDE_PATH_MODEL_ID);
+			if (includeModelManager != null) {
+				includeModelManager.removeIncludePathModelListener(treeNode);
+			}
+		}
+		projectNodes.remove(project);
 	}
 }
