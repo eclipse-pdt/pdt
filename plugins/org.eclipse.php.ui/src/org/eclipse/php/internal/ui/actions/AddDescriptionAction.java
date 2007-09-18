@@ -23,12 +23,16 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.util.PHPDocBlockSerialezer;
 import org.eclipse.php.internal.ui.editor.util.PHPDocTool;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.*;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -51,9 +55,14 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 			UserData userData = codeData.getUserData();
 			String fileName = userData.getFileName();
 			IFile file = PHPUiPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
+			if (!file.exists() && ExternalFilesRegistry.getInstance().isEntryExist(fileName)){
+				file = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
+			}
 			IEditorPart editorPart;
+			IEditorInput input = EditorUtility.getEditorInput(codeData);
+			IWorkbenchPage page = PHPUiPlugin.getActivePage();
 			try {
-				editorPart = EditorUtility.openInEditor(file, true);
+				editorPart = IDE.openEditor(page, input, PHPUiConstants.PHP_EDITOR_ID);
 			} catch (PartInitException e) {
 				Logger.logException(e);
 				return;
