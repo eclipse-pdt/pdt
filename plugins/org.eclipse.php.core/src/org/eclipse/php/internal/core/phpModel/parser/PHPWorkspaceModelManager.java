@@ -123,7 +123,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 						// could be an OPEN or CLOSE
 						if (project.isOpen()) {
 							try {
-								if(project.hasNature(PHPNature.ID)){
+								if (project.hasNature(PHPNature.ID)) {
 									runBuild(project);
 								}
 							} catch (CoreException e) {
@@ -213,9 +213,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public final static PHPProjectModel getDefaultPHPProjectModel() {
 		if (defaultModel == null) {
 			defaultModel = new PHPProjectModel();
-			defaultModel.initialize(ExternalFilesRegistry.getInstance().getExternalFilesProject());
-			defaultModel.getPHPUserModel().addModelListener(PHPWorkspaceModelManager.getInstance());
-			PHPWorkspaceModelManager.getInstance().fireProjectModelAdded(defaultModel.getProject());
+			PHPWorkspaceModelManager.getInstance().putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
 		}
 		return defaultModel;
 	}
@@ -226,6 +224,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		IResource res = PHPModelUtil.getResource(fileData);
 		IProject project;
 		if (res != null) {
+			if (res instanceof ExternalFileDecorator) {
+				return getDefaultPHPProjectModel().getProject();
+			}
 			project = res.getProject();
 			if (project.isAccessible())
 				return project;
