@@ -170,7 +170,6 @@ class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListene
 	 * @see org.eclipse.php.internal.core.phpModel.parser.IncludePathModelListener#includeModelRemoved(org.eclipse.php.internal.core.phpModel.parser.IPhpModel)
 	 */
 	public void includeModelRemoved(IPhpModel model) {
-		// Nothing to do - refreshed from outside
 		refresh();
 	}
 }
