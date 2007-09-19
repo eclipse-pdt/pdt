@@ -63,6 +63,11 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 	 * Parent tree viewer.
 	 */
 	private TreeViewer treeViewer;
+
+
+	/**
+	 * Stores options for projects in order to successfully remove nodes as listeners from options {@link #projectModelRemoved(IProject)} and avoid memory leak
+	 */
 	private Map<IProject, PHPProjectOptions> projectOptions;
 
 	/* (non-Javadoc)
@@ -576,6 +581,8 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 				includeModelManager.removeIncludePathModelListener(treeNode);
 			}
 		}
+
+		// remove node from its project's options listeners list in order to avoid memory leak
 		PHPProjectOptions options = projectOptions.get(project);
 		if (options != null) {
 			IncludesNode node = projectNodes.get(project);
