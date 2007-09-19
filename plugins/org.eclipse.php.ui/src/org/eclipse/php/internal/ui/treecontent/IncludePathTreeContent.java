@@ -63,6 +63,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 	 * Parent tree viewer.
 	 */
 	private TreeViewer treeViewer;
+	private Map<IProject, PHPProjectOptions> projectOptions;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
@@ -210,6 +211,9 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 
 		final PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		options.addOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, treeNode);
+		if (projectOptions == null)
+			projectOptions = new HashMap<IProject, PHPProjectOptions>();
+		projectOptions.put(project, options);
 		return treeNode;
 	}
 
@@ -219,6 +223,9 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 	private void updateIncludePathsNode(final IncludesNode treeNode) {
 		IProject project = (IProject) treeNode.getData();
 		final PHPProjectOptions options = PHPProjectOptions.forProject(project);
+		if (options == null) {
+			return;
+		}
 		// handle issue of same instance for removed and re-added projects:
 		// the project is old, but options are new
 		options.addOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, treeNode);
@@ -569,6 +576,12 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 				includeModelManager.removeIncludePathModelListener(treeNode);
 			}
 		}
+		PHPProjectOptions options = projectOptions.get(project);
+		if (options != null) {
+			IncludesNode node = projectNodes.get(project);
+			options.removeOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, node);
+		}
 		projectNodes.remove(project);
+		projectOptions.remove(project);
 	}
 }
