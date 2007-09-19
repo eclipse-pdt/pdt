@@ -83,7 +83,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 */
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		shell.setText("");
+		shell.setText(""); //$NON-NLS-1$
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IIDEHelpContextIds.SAVE_AS_DIALOG);
 	}
 
@@ -96,10 +96,10 @@ public class SaveAsDialog extends TitleAreaDialog {
 		initializeControls();
 		validatePage();
 		resourceGroup.setFocus();
-		setTitle("");
+		setTitle(""); //$NON-NLS-1$
 		dlgTitleImage = IDEInternalWorkbenchImages.getImageDescriptor(IDEInternalWorkbenchImages.IMG_DLGBAN_SAVEAS_DLG).createImage();
 		setTitleImage(PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_WIZBAN_ADD_PHP_FILE));
-		setMessage("");
+		setMessage(""); //$NON-NLS-1$
 
 		return contents;
 	}
@@ -151,7 +151,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 			}
 		};
 
-		resourceGroup = new ResourceAndContainerGroup(composite, listener, "", "");
+		resourceGroup = new ResourceAndContainerGroup(composite, listener, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		resourceGroup.setAllowExistingResources(true);
 
 		return parentComposite;
@@ -208,8 +208,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		if (file.exists()) {
 			String[] buttons = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
-			String question = NLS.bind("", path.toOSString());
-			MessageDialog d = new MessageDialog(getShell(), "", null, question, MessageDialog.QUESTION, buttons, 0);
+			String question = "The file '"+file.getFullPath().toString()+"' already exists. Would you like to replace it ?"; //$NON-NLS-1$ //$NON-NLS-2$
+			MessageDialog d = new MessageDialog(getShell(), PHPUIMessages.getString("SaveAsDialog_saveFileMessage"), null, question, MessageDialog.QUESTION, buttons, 0); //$NON-NLS-1$
 			int overwrite = d.open();
 			switch (overwrite) {
 				case 0: // Yes
@@ -285,7 +285,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 			if (isValidProjectName.isOK()) {
 				IProject project = workspace.getRoot().getProject(projectName);
 				if (!project.isOpen()) {
-					setErrorMessage("");
+					setErrorMessage(""); //$NON-NLS-1$
 					return false;
 				}
 			}
