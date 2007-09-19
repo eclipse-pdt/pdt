@@ -252,7 +252,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			for (int i = 0; i < fileNameWithoutExtention.length(); i++) {
 				char ch = fileNameWithoutExtention.charAt(i);
 				if (!(Character.isJavaIdentifierPart(ch) || ch == '.')) {
-					updateStatus("File name contians illigal characters");
+					updateStatus("File name contians illegal characters");
 					return;
 				}
 			}
