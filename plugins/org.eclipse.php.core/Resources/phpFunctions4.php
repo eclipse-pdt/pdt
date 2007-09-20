@@ -30133,6 +30133,40 @@ function zend_send_file($filename, $mime_type, $custom_headers) {}
  */
 function zend_send_buffer($buffer, $mime_type, $custom_headers) {}
 
+
+class java {
+    /**
+     * Create Java object
+     *
+     * @return java
+     * @param  classname string
+     * @vararg ...
+     */
+    function java($classname) {}
+
+};
+
+class JavaException {
+    /**
+     * Get Java exception that led to this exception
+     *
+     * @return object
+     */
+    function getCause() {}
+
+};
+
+
+/**
+ * Create Java object
+ *
+ * @return object
+ * @param  class string
+ * @vararg ...
+ */
+function java($class) {}
+
+
 /**
  * Return Java exception object for last exception
  * @return object Java Exception object, if there was an exception, false otherwise
@@ -30166,6 +30200,23 @@ function java_set_encoding($encoding) {}
  * @return void
  */
 function java_throw_exceptions($throw) {}
+
+/**
+ * Reload Jar's that were dynamically loaded
+ *
+ * @return array
+ * @param  new_jarpath string
+ */
+function java_reload($new_jarpath) {}
+
+/**
+ * Add to Java's classpath in runtime
+ *
+ * @return array
+ * @param  new_classpath string
+ */
+function java_require($new_classpath) {}
+
 
 /**
  * Shown if loader is enabled
