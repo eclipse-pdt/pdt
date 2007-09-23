@@ -18,8 +18,7 @@ if (!$phpdoc_dir) {
 	die ("USAGE: $argv0 <PHP.net documentation directory>\n");
 }
 
-$quickref = read_quickref ("{$phpdoc_dir}/quickref.txt");
-$functions = parse_phpdoc_functions ($phpdoc_dir, &$quickref);
+$functions = parse_phpdoc_functions ($phpdoc_dir);
 
 print "<?php\n";
 $extensions = get_loaded_extensions();
@@ -29,24 +28,6 @@ foreach ($extensions as $extName) {
 print "?>";
 
 // === Functions ===
-/**
- * Reads file quickref.txt and returns array containing short description
- * for every PHP function in that file.
- * @return array (name => description)
- */
-function read_quickref ($quickref_txt) {
-	if (!is_file ($quickref_txt)) {
-		die ("File \"{$quickref_txt}\" doesn't exist!\n");
-	}
-	$lines = file ($quickref_txt);
-	foreach ($lines as $line) {
-		list ($name, $desc) = split (" - ", $line);
-		$name = make_funckey_from_str ($name);
-		$quickref[$name] = $desc;
-	}
-	return $quickref;
-}
-
 /**
  * Makes generic key from given function name
  * @param name string Function name
@@ -76,10 +57,9 @@ function make_funckey_from_ref ($ref) {
 /**
  * Parses PHP documentation
  * @param phpdoc_dir string PHP.net documentation directory
- * @param quickref &array reference to Quick Reference info array
  * @return array Function information gathered from the PHP.net documentation by parsing XML files
  */
-function parse_phpdoc_functions ($phpdoc_dir, &$quickref) {
+function parse_phpdoc_functions ($phpdoc_dir) {
 	$xml_files = array_merge (
 		glob ("{$phpdoc_dir}/en/reference/*/functions/*.xml"), 
 		glob ("{$phpdoc_dir}/en/reference/*/functions/*/*.xml") 
@@ -87,10 +67,11 @@ function parse_phpdoc_functions ($phpdoc_dir, &$quickref) {
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
 
-		if (preg_match ('@<refentry.*?xml:id=["\'](.*?)["\'].*?>.*<refname>(.*?)</refname>@s', $xml, $match)) {
+		if (preg_match ('@<refentry.*?xml:id=["\'](.*?)["\'].*?>.*?<refname>(.*?)</refname>.*?<refpurpose>(.*?)</refpurpose>@s', $xml, $match)) {
 
 			$refname = make_funckey_from_str ($match[2]);
 			$functions[$refname]['id'] = $match[1];
+			$functions[$refname]['quickref'] = trim($match[3]);
 
 			if (preg_match ('@<refsect1\s+role=["\']description["\']>(.*?)</refsect1>@s', $xml, $match)) {
 				$description = $match[1];
@@ -98,19 +79,19 @@ function parse_phpdoc_functions ($phpdoc_dir, &$quickref) {
 				$parameters = null;
 				$has_object_style = false;
 				if (preg_match ('@^(.*?)<classsynopsis>.*?<classname>(.*)</classname>.*?<methodsynopsis>.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>.*?</classsynopsis>(.*)$@s', $description, $match)) {
-					$functions[$refname]['classname'] = $match[2];
-					$functions[$refname]['returntype'] = $match[3];
-					$functions[$refname]['methodname'] = $match[4];
+					$functions[$refname]['classname'] = trim($match[2]);
+					$functions[$refname]['returntype'] = trim($match[3]);
+					$functions[$refname]['methodname'] = trim($match[4]);
 					$parameters = $match[5];
 					$description = $match[1].$match[6];
 					$has_object_style = true;
 				}
 				if (preg_match ('@<methodsynopsis>.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>@s', $description, $match)) {
 					if ($has_object_style) {
-						$function_alias = $match[2];
+						$function_alias = trim($match[2]);
 					} else {
-						$functions[$refname]['returntype'] = $match[1];
-						$functions[$refname]['methodname'] = $match[2];
+						$functions[$refname]['returntype'] = trim($match[1]);
+						$functions[$refname]['methodname'] = trim($match[2]);
 						$parameters = $match[3];
 					}
 				}
@@ -145,9 +126,6 @@ function parse_phpdoc_functions ($phpdoc_dir, &$quickref) {
 			// Create information for function alias
 			if ($function_alias) {
 				$functions[$function_alias] = $functions[$refname];
-				if ($quickref[$refname]) {
-					$quickref[$function_alias] = $quickref[$refname];
-				}
 			}
 		}
 	}
@@ -301,14 +279,16 @@ function print_parameters ($parameters) {
 				print "&";
 			}
 			print "\${$parameter['name']}";
-			if ($parameter['isnull']) {
-				print " = null";
-			} else if ($parameter['defaultvalue']) {
-				$value = $parameter['defaultvalue'];
-				if (!is_numeric ($value)) {
-					$value = "'{$value}'";
+			if ($parameter['isoptional']) {
+				if ($parameter['defaultvalue']) {
+					$value = $parameter['defaultvalue'];
+					if (!is_numeric ($value)) {
+						$value = "'{$value}'";
+					}
+					print " = {$value}";
+				} else {
+					print " = null";
 				}
-				print " = {$value}";
 			}
 		}
 	}
@@ -381,7 +361,6 @@ function print_modifiers ($ref) {
  * @param tabs integer[optional] number of tabs for indentation
  */
 function print_doccomment ($ref, $tabs = 0) {
-	global $quickref;
 	global $functions;
 
 	$docComment = $ref->getDocComment();
@@ -391,8 +370,8 @@ function print_doccomment ($ref, $tabs = 0) {
 	}
 	else if ($ref instanceof ReflectionFunctionAbstract) {
 		$funckey = make_funckey_from_ref ($ref);
-		$desc = $quickref[$funckey];
 		$returntype = $functions[$funckey]['returntype'];
+		$desc = $functions[$funckey]['quickref'];
 		$returndoc = newline_to_phpdoc ($functions[$funckey]['returndoc'], $tabs);
 
 		$paramsRef = $ref->getParameters();
@@ -403,9 +382,10 @@ function print_doccomment ($ref, $tabs = 0) {
 			print "/**\n";
 			if ($desc) {
 				print_tabs ($tabs);
-				print " * {$desc}";
+				print " * {$desc}\n";
+				print_tabs ($tabs);
+				print " * \n";
 			}
-
 			if ($parameters) {
 				foreach ($parameters as $parameter) {
 					print_tabs ($tabs);
