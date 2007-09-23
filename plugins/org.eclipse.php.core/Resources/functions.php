@@ -270,11 +270,10 @@ function print_parameters ($parameters) {
 			if ($i++ > 0) {
 				print ", ";
 			}
-			/*
-			if ($parameter['type']) {
-				print "{$parameter['type']} ";
+			$type = $parameter['type'];
+			if ($type && (class_exists ($type) || $type == "array")) {
+				print "{$type} ";
 			}
-			*/
 			if ($parameter['isreference']) {
 				print "&";
 			}
