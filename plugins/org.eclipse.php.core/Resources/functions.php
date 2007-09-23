@@ -383,8 +383,10 @@ function print_doccomment ($ref, $tabs = 0) {
 			if ($desc) {
 				print_tabs ($tabs);
 				print " * {$desc}\n";
+			}
+			if ($functions[$funckey]['id']) {
 				print_tabs ($tabs);
-				print " * \n";
+				print " * @url http://php.net/manual/en/{$functions[$funckey]['id']}.php\n";
 			}
 			if ($parameters) {
 				foreach ($parameters as $parameter) {
