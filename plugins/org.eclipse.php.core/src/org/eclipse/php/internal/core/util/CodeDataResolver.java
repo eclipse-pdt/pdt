@@ -143,7 +143,7 @@ public class CodeDataResolver {
 				if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 					PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
 					tRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
-
+					
 					// Determine element name:
 					int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
 					TextSequence statement = PHPTextSequenceUtilities.getStatment(elementStart + tRegion.getLength(), sRegion, true);
@@ -309,7 +309,7 @@ public class CodeDataResolver {
 						CodeData[] classDatas = getMatchingClasses(className, projectModel, fileName);
 
 						// Is it function or method:
-						if ("(".equals(nextWord)) {
+						if ("(".equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) {
 							CodeData[] result = null;
 							if (classDatas.length > 0) {
 								for (int i = 0; i < classDatas.length; ++i) {
