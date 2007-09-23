@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
@@ -306,37 +307,36 @@ public class ModelSupport {
 	}
 
 	public static CodeData[] removeRepeatedNames(CodeData[] sortedArray) {
-		if (sortedArray.length < 2) {
+		if (sortedArray == null || sortedArray.length < 2) {
 			return sortedArray;
 		}
-		int numberOfCodeDataRemoved = 0;
-		String baseName = sortedArray[0].getName();
-		for (int i = 1; i < sortedArray.length; i++) {
+		ArrayList<CodeData> newCodeDataList = new ArrayList<CodeData>();
+		String baseName = "";
+		for (int i = 0; i < sortedArray.length; i++) {
 			String curName = sortedArray[i].getName();
-			if (baseName.equals(curName)) {
-				sortedArray[i] = null;
-				numberOfCodeDataRemoved++;
-			} else {
-				baseName = curName;
+			if (!baseName.equals(curName)) {
+				newCodeDataList.add(sortedArray[i]);
 			}
+			baseName = curName;
 		}
 
-		CodeData[] rv = new CodeData[sortedArray.length - numberOfCodeDataRemoved];
-		int rvIndex = 0;
-		for (int i = 0; i < sortedArray.length; i++) {
-			if (sortedArray[i] != null) {
-				rv[rvIndex] = sortedArray[i];
-				rvIndex++;
-			}
-		}
+		CodeData[] rv = new CodeData[newCodeDataList.size()];
+		newCodeDataList.toArray(rv);
 		return rv;
+
 	}
 
 	public static CodeData[] mergeAndRemoveDuplicated(CodeData[] sortedArray1, CodeData[] sortedArray2) {
-		if (sortedArray1 == null || sortedArray1.length == 0) {
+		if (sortedArray1 == null) {
 			return sortedArray2;
 		}
-		if (sortedArray2 == null || sortedArray2.length == 0) {
+		if (sortedArray2 == null) {
+			return sortedArray1;
+		}
+		if (sortedArray1.length == 0) {
+			return sortedArray2;
+		}
+		if (sortedArray2.length == 0) {
 			return sortedArray1;
 		}
 		List result = new ArrayList(sortedArray1.length + sortedArray2.length);
@@ -370,10 +370,16 @@ public class ModelSupport {
 	}
 
 	public static CodeData[] merge(CodeData[] sortedArray1, CodeData[] sortedArray2) {
-		if (sortedArray1 == null || sortedArray1.length == 0) {
+		if (sortedArray1 == null) {
 			return sortedArray2;
 		}
-		if (sortedArray2 == null || sortedArray2.length == 0) {
+		if (sortedArray2 == null) {
+			return sortedArray1;
+		}
+		if (sortedArray1.length == 0) {
+			return sortedArray2;
+		}
+		if (sortedArray2.length == 0) {
 			return sortedArray1;
 		}
 		int size = sortedArray1.length + sortedArray2.length;
@@ -519,7 +525,6 @@ public class ModelSupport {
 			this.functionName = functionName;
 		}
 
-
 		public final String getContainerClassName() {
 			return className;
 		}
@@ -616,15 +621,15 @@ public class ModelSupport {
 			return docBlock != null && docBlock.hasTagOf(PHPDocTag.INTERNAL);
 		}
 	}
-	
+
 	/**
 	 * filters magic functions (constructors are considered as magic functions) 
 	 * @author guy.g
 	 *
 	 */
 	private static final class MegicFunctionFilter implements CodeDataFilter {
-		
-		private static final String[] magicFunction = {"__construct", "__destruct", "__call", "__get", "__set", "__isset", "__unset", "__sleep", "__wakeup", "__toString", "__clone", "__autoload" };
+
+		private static final String[] magicFunction = { "__construct", "__destruct", "__call", "__get", "__set", "__isset", "__unset", "__sleep", "__wakeup", "__toString", "__clone", "__autoload" };
 		boolean acceptMagicFunction;
 
 		/**
@@ -638,22 +643,22 @@ public class ModelSupport {
 			if (codeData instanceof PHPFunctionData) {
 				PHPFunctionData function = (PHPFunctionData) codeData;
 				String functionName = function.getName();
-				if(isMagicFunction(functionName)){
+				if (isMagicFunction(functionName)) {
 					return acceptMagicFunction;
 				}
-				
+
 				//if the function's name is the same as the class's name then it is a constructor. (PHP4 support)
 				PHPCodeData container = function.getContainer();
 				if (container instanceof PHPClassData) {
 					PHPClassData classData = (PHPClassData) container;
-					if(classData.getName().equals(functionName)){
+					if (classData.getName().equals(functionName)) {
 						return acceptMagicFunction;
 					}
 				}
-			
-		}
+
+			}
 			return !acceptMagicFunction;
-	}
+		}
 
 		/**
 		 * checking if the function name is one of the known magic functions  
@@ -662,7 +667,7 @@ public class ModelSupport {
 		private boolean isMagicFunction(String functionName) {
 			for (int i = 0; i < magicFunction.length; i++) {
 				String magicFunctionName = magicFunction[i];
-				if(magicFunctionName.equals(functionName)){
+				if (magicFunctionName.equals(functionName)) {
 					return true;
 				}
 			}
