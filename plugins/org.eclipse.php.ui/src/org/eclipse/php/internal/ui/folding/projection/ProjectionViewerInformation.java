@@ -146,7 +146,9 @@ class ProjectionViewerInformation {
 				for (Object object : modifications.entrySet()) {
 					Map.Entry<ProjectionAnnotation, Position> entry = (Map.Entry<ProjectionAnnotation, Position>) object;
 					Position position = fProjectionAnnotationModel.getPosition(entry.getKey());
-					if (!position.equals(entry.getValue())) {
+					if (position == null) {
+						fProjectionAnnotationModel.addAnnotation(entry.getKey(),entry.getValue());
+					} else if (!position.equals(entry.getValue())) {
 						fProjectionAnnotationModel.modifyAnnotationPosition(entry.getKey(), entry.getValue());
 					}
 				}
