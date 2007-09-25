@@ -504,6 +504,15 @@ public class EditorUtility {
 			if (localFile.exists()) {
 				IEditorInput editorInput = null;
 
+				// If this file is external - put it into the external files registry
+				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
+					IFile localIFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+					if (!localIFile.exists()) {
+						IFile externalFile = ExternalFileDecorator.createFile(fileName);
+						ExternalFilesRegistry.getInstance().addFileEntry(fileName, externalFile);
+					}
+				}
+				
 				// If this is external file:
 				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					editorInput = new FileStoreEditorInput(new LocalFile(localFile));
