@@ -10,14 +10,38 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.resources;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.net.URI;
 
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.internal.resources.WorkspaceRoot;
 import org.eclipse.core.internal.watson.IPathRequestor;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFileState;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -33,18 +57,24 @@ import org.eclipse.php.internal.core.documentModel.provisional.contenttype.Conte
  */
 public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICoreConstants, Cloneable, IPathRequestor {
 
-	private String device;
+	private IPath path;
 	private IFile file;
 	private IContentDescription dummyDescription;
 
 	/**
 	 * Constructs a new ExternalFileDecorator.
-	 * @param file The {@link IFile} to decorate.
-	 * @param device The device name for the {@link IFile}.
+	 * @param pathString Full path string
 	 */
-	ExternalFileDecorator(IFile file, String device) {
-		this.file = file;
-		this.device = device;
+	ExternalFileDecorator(String pathString) {
+		this.path = Path.fromOSString(pathString);
+		path = new Path(path.toOSString());
+		if (path.segmentCount() == 1) {
+			IPath p = new Path(path.getDevice());
+			p = p.append(ExternalFilesRegistry.getInstance().getExternalFilesProject().getFullPath());
+			path = p.append(path.segment(0));
+		}
+		
+		this.file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 	}
 
 	/**
@@ -55,25 +85,7 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * @return The file's full path.
 	 */
 	public IPath getFullPath() {
-		IPath path = file.getFullPath();
-		if (path.segmentCount() > 1) {
-			if (path.segment(0).equals(ExternalFilesRegistry.getInstance().getExternalFilesProject().getName())) {
-				path = path.removeFirstSegments(1);
-				String segment = java.io.File.separatorChar + path.segment(0);
-				path = new Path(segment);
-			}
-		}
-
-		//A fix for a bug on Windows #202116
-		//handle the case in which user opens a network external file using absolute path such as \\SERVER\file.php
-		//we need to insert the '/' separator since the wrapped IFile has only one (/SERVER/file.php) while its
-		//URI from the EditorInput had 2. 
-		//This bug happens only on Windows since in Unix/Mac there's no device
-		if (device == null && (Platform.getOS().equals(Platform.OS_WIN32) || (File.separatorChar == '\\'))) {
-			path = new Path('/' + path.toString());
-			return path;
-		}
-		return path.setDevice(device);
+		return path;
 	}
 
 	/** 
@@ -86,11 +98,7 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * @return The absolute path in the local file system to this resource
 	 */
 	public IPath getLocation() {
-		IPath location = file.getLocation();
-		if (location == null) {
-			location = getFullPath();
-		}
-		return location;
+		return path;
 	}
 
 	/**
@@ -959,17 +967,10 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * @return An {@link IFile} (new instance of {@link ExternalFileDecorator}).
 	 */
 	public synchronized static IFile createFile(String pathString) {
-		if (Platform.getOS() != Platform.OS_WIN32) {
+		if (File.separatorChar != '\\') {
 			pathString = pathString.replace('\\', '/');
 		}
-		IPath path = Path.fromOSString(pathString);
-		path = new Path(path.toOSString());
-		if (path.segmentCount() == 1) {
-			IPath p = new Path(path.getDevice());
-			p = p.append(ExternalFilesRegistry.getInstance().getExternalFilesProject().getFullPath());
-			path = p.append(path.segment(0));
-		}
-		return new ExternalFileDecorator(ResourcesPlugin.getWorkspace().getRoot().getFile(path), path.getDevice());
+		return new ExternalFileDecorator(pathString);
 	}
 
 	public int findMaxProblemSeverity(String type, boolean includeSubtypes, int depth) throws CoreException {
