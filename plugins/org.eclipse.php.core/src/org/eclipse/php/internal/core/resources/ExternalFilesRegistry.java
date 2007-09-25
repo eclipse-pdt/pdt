@@ -74,12 +74,27 @@ public class ExternalFilesRegistry {
 	}
 
 	/**
-	 * Determins whether this registry contains the given file representation in registry
-	 * @param iFilePath
+	 * Determines whether this registry contains the given file representation in registry
+	 * @param localPath
 	 * @return true/false
 	 */
 	public boolean isEntryExist(String localPath) {
 		return externalFilesRegistry.containsKey(localPath);
+	}
+	
+	/**
+	 * Determines whether this registry contains the given file representation in registry
+	 * @param localPath
+	 * @return true/false
+	 */
+	public boolean isEntryExist(IFile file) {
+		IFile[] files = getAllAsIFiles();
+		for (int i = 0; i < files.length; ++i) {
+			if (files[i].getFullPath().equals(file.getFullPath())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
