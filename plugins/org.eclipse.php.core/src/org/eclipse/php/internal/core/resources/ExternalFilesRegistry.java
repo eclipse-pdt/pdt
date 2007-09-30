@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Path;
 
 /**
  * This class wraps a simple registry of files that are opened in the Editor
@@ -79,7 +80,16 @@ public class ExternalFilesRegistry {
 	 * @return true/false
 	 */
 	public boolean isEntryExist(String localPath) {
-		return externalFilesRegistry.containsKey(localPath);
+		if (externalFilesRegistry.containsKey(localPath)) {
+			return true;
+		}
+		IFile[] files = getAllAsIFiles();
+		for (int i = 0; i < files.length; ++i) {
+			if (files[i].getFullPath().equals(new Path(localPath))) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
