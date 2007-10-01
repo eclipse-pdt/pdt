@@ -15,6 +15,9 @@
 
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+
 /**
  * @author guy
  */
@@ -125,9 +128,23 @@ public class DebugError implements Cloneable {
 	}
 
 	/**
-	 * Returns the file name.
+	 * Returns the file display name.
+	 * Note : This name should not be used as the source file path to open the file
+	 *        Use getFullPathName() instead.
 	 */
-	public String getFileName() {
+	public String getFileDisplayName() {
+		IPath filePath = new Path(fileName);
+		if (filePath.segmentCount() > 1 && filePath.segment(filePath.segmentCount() - 2).equals("Untitled_Documents")){
+			return filePath.lastSegment();
+		}
+		return fileName;
+	}
+	
+	/**
+	 * Returns the full path of the file
+	 * @return
+	 */
+	public String getFullPathName(){
 		return fileName;
 	}
 
@@ -168,7 +185,7 @@ public class DebugError implements Cloneable {
 		buffer.append(getCodeName());
 		if (lineNumber >= 0) {
 			buffer.append(": ");
-			buffer.append(getFileName());
+			buffer.append(getFileDisplayName());
 			buffer.append(" line ");
 			//            buffer.append(lineNumber + 1);
 			buffer.append(lineNumber);
