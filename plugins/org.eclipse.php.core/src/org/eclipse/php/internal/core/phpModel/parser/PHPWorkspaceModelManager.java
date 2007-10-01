@@ -320,7 +320,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public PHPFileData getModelForFile(IFile file, boolean forceCreation) {
 		PHPProjectModel projModel = getModelForProject(file.getProject(), forceCreation);
 		if (projModel == null) {
-			if (file instanceof ExternalFileWrapper && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+			if (file instanceof ExternalFileWrapper && ExternalFilesRegistry.getInstance().isEntryExist(file)) {
 				return getModelForExternalFile(file);
 			}
 			return null;
@@ -346,7 +346,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		PHPFileData result = null;
 		result = getModelForFile(filename, false);
 		if (result == null && file != null) {
-			if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+			if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
 				result = getModelForExternalFile(file);
 			}
 		}
