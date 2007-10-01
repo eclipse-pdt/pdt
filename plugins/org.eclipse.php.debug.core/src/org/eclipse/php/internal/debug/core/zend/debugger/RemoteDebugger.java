@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
@@ -95,11 +96,18 @@ public class RemoteDebugger implements IRemoteDebugger {
 		} else if (msg instanceof ParsingErrorNotification) {
 			ParsingErrorNotification parseError = (ParsingErrorNotification) msg;
 			String errorText = parseError.getErrorText();
-			String fileName = convertToSystemDependentFileName(parseError.getFileName());
+			String fileName = "";
+			Path errorFilePath = new Path(parseError.getFileName());
+			if ((errorFilePath.segmentCount() > 1) && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
+				fileName = errorFilePath.lastSegment();
+			} else {
+				fileName = convertToSystemDependentFileName(parseError.getFileName());
+			}
+
 			int lineNumber = parseError.getLineNumber();
 			int errorLevel = parseError.getErrorLevel();
 
-			DebugError debugError = new DebugError(errorLevel, fileName, lineNumber, errorText);
+			DebugError debugError = new DebugError(errorLevel, convertToSystemDependentFileName(parseError.getFileName()), lineNumber, errorText);
 			debugHandler.parsingErrorOccured(debugError);
 		} else if (msg instanceof DebuggerErrorNotification) {
 			DebuggerErrorNotification parseError = (DebuggerErrorNotification) msg;
