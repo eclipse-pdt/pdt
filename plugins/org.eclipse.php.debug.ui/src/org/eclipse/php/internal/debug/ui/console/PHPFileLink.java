@@ -9,7 +9,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.filesystem.FileStoreFactory;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.util.EditorUtility;
@@ -62,8 +62,8 @@ public class PHPFileLink implements IHyperlink {
 			if (fFile instanceof File) {
 				FileStoreEditorInput editorInput = new FileStoreEditorInput(new LocalFile((File) fFile));
 				editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_EDITOR_ID, false);
-			} else if (fFile instanceof ExternalFileDecorator) {
-				ExternalFileDecorator externalFile = (ExternalFileDecorator) fFile;
+			} else if (fFile instanceof ExternalFileWrapper) {
+				ExternalFileWrapper externalFile = (ExternalFileWrapper) fFile;
 				FileStoreEditorInput editorInput = new FileStoreEditorInput(FileStoreFactory.createFileStore(new File(externalFile.getFullPath().toString())));
 				editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_EDITOR_ID, false);
 			} else if (fFile instanceof IFile) {

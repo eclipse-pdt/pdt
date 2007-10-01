@@ -26,7 +26,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -77,7 +77,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				Map attributes = new HashMap();
 				String pathName = null;
 				if (input instanceof IURIEditorInput) {
-					if (res instanceof ExternalFileDecorator) {
+					if (res instanceof ExternalFileWrapper) {
 						pathName = res.getFullPath().toString();
 					} else {
 						pathName = URIUtil.toPath(((IURIEditorInput) input).getURI()).toString();

@@ -15,7 +15,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.ui.console.IConsole;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
@@ -86,7 +86,7 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 							if (externalFile.exists()) {
 								fileObject = externalFile;
 							} else {
-								fileObject = ExternalFileDecorator.createFile(fileName);
+								fileObject = ExternalFileWrapper.createFile(fileName);
 							}
 						}
 					}
