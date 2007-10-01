@@ -26,7 +26,7 @@ import org.eclipse.debug.ui.AbstractDebugView;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
@@ -564,7 +564,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 					}
 					String fileName;
 					if (!fIsPHPCGI) {
-						if (resource instanceof ExternalFileDecorator) {
+						if (resource instanceof ExternalFileWrapper) {
 							fileName = resource.toString();
 						} else if (resource instanceof IWorkspaceRoot) {
 							if (IPHPConstants.STORAGE_TYPE_REMOTE.equals(marker.getAttribute(IPHPConstants.STORAGE_TYPE))) {
@@ -586,7 +586,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 							//							fileName = resource.getProjectRelativePath().toString();
 						}
 					} else {
-						if (resource instanceof ExternalFileDecorator) {
+						if (resource instanceof ExternalFileWrapper) {
 							fileName = resource.toString();
 						} else if (resource instanceof IWorkspaceRoot) {
 							// If the breakpoint was set on a non-workspace file, make sure that the file name for the breakpoint
