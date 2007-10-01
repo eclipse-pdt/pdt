@@ -51,7 +51,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 
 public class PHPModelUtil {
@@ -433,7 +433,7 @@ public class PHPModelUtil {
 		
 		// handle SVN external file extension (e.g sample.php:12358)
 		// fixed bug 186064
-		if (file instanceof ExternalFileDecorator) {
+		if (file instanceof ExternalFileWrapper) {
 			int pos = ext.indexOf(':');
 			ext = pos > 0 ? ext.substring(0, pos) : ext;
 		}

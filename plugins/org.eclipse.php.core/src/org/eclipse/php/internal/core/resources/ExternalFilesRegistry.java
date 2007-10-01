@@ -130,11 +130,11 @@ public class ExternalFilesRegistry {
 	 * A zero sized array will be return if the registry does not hold any record.
 	 * @return 
 	 * 
-	 * @return An {@link IFile} array of {@link ExternalFileDecorator}s.
+	 * @return An {@link IFile} array of {@link ExternalFileWrapper}s.
 	 */
 	public IFile[] getAllAsIFiles() {
 		Collection coll = externalFilesRegistry.values();
-		IFile[] result = new ExternalFileDecorator[coll.size()];
+		IFile[] result = new ExternalFileWrapper[coll.size()];
 		coll.toArray(result);
 		return result;
 	}

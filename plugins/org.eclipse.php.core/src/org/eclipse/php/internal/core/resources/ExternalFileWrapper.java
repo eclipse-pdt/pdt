@@ -51,11 +51,11 @@ import org.eclipse.php.internal.core.documentModel.provisional.contenttype.Conte
 
 /**
  * An ExternalFileDecorator is an {@link IFile} wrapper that allows the setting of a device name.
- * This {@link ExternalFileDecorator} is useful when dealing with non-workspace files (externals).
+ * This {@link ExternalFileWrapper} is useful when dealing with non-workspace files (externals).
  * Note : Create instances of this class via the createFile() method.
  * @author shalom
  */
-public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICoreConstants, Cloneable, IPathRequestor {
+public class ExternalFileWrapper implements IFile, IAdaptable, IResource, ICoreConstants, Cloneable, IPathRequestor {
 
 	private IPath path;
 	private IFile file;
@@ -65,7 +65,7 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	 * Constructs a new ExternalFileDecorator.
 	 * @param pathString Full path string
 	 */
-	ExternalFileDecorator(String pathString) {
+	ExternalFileWrapper(String pathString) {
 		this.path = Path.fromOSString(pathString);
 		path = new Path(path.toOSString());
 		if (path.segmentCount() == 1) {
@@ -960,17 +960,17 @@ public class ExternalFileDecorator implements IFile, IAdaptable, IResource, ICor
 	}
 
 	/**
-	 * Creates and returns an {@link ExternalFileDecorator} for a file that has the given pathString.
+	 * Creates and returns an {@link ExternalFileWrapper} for a file that has the given pathString.
 	 * Use this to create NEW instances of the ExternalFileDecorator.
 	 * Note that the created file will not be automatically inserted into the ExternalFilesRegistry.
 	 * @param pathString A full path string. 
-	 * @return An {@link IFile} (new instance of {@link ExternalFileDecorator}).
+	 * @return An {@link IFile} (new instance of {@link ExternalFileWrapper}).
 	 */
 	public synchronized static IFile createFile(String pathString) {
 		if (File.separatorChar != '\\') {
 			pathString = pathString.replace('\\', '/');
 		}
-		return new ExternalFileDecorator(pathString);
+		return new ExternalFileWrapper(pathString);
 	}
 
 	public int findMaxProblemSeverity(String type, boolean includeSubtypes, int depth) throws CoreException {

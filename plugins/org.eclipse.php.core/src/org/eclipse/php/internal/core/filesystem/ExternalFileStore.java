@@ -23,13 +23,13 @@ import org.eclipse.core.filesystem.provider.FileStore;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 
 /**
  * An IFileStore that handles non-existing files (externals).
  * 
  * @author Shalom Gibly
- * @see ExternalFileDecorator
+ * @see ExternalFileWrapper
  */
 public class ExternalFileStore extends FileStore {
 

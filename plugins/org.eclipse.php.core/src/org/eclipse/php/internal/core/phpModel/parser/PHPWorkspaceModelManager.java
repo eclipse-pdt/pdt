@@ -23,7 +23,7 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.build.FullPhpProjectBuildVisitor;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
@@ -224,7 +224,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		IResource res = PHPModelUtil.getResource(fileData);
 		IProject project;
 		if (res != null) {
-			if (res instanceof ExternalFileDecorator) {
+			if (res instanceof ExternalFileWrapper) {
 				return getDefaultPHPProjectModel().getProject();
 			}
 			project = res.getProject();
@@ -320,7 +320,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public PHPFileData getModelForFile(IFile file, boolean forceCreation) {
 		PHPProjectModel projModel = getModelForProject(file.getProject(), forceCreation);
 		if (projModel == null) {
-			if (file instanceof ExternalFileDecorator && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+			if (file instanceof ExternalFileWrapper && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
 				return getModelForExternalFile(file);
 			}
 			return null;
@@ -341,7 +341,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 			file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
 		} else {
-			file = ExternalFileDecorator.createFile(path.toString());
+			file = ExternalFileWrapper.createFile(path.toString());
 		}
 		PHPFileData result = null;
 		result = getModelForFile(filename, false);
