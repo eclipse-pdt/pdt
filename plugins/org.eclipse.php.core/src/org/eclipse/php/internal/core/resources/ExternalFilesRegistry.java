@@ -2,6 +2,7 @@ package org.eclipse.php.internal.core.resources;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -19,7 +20,7 @@ import org.eclipse.core.runtime.Path;
 public class ExternalFilesRegistry {
 
 	private static final ExternalFilesRegistry instance = new ExternalFilesRegistry();
-	private final HashMap externalFilesRegistry = new HashMap();
+	private final HashMap<String, IFile> externalFilesRegistry = new HashMap<String, IFile>();
 	private final ListenerList listeners = new ListenerList();
 	private IProject externalFilesProject;
 
@@ -76,6 +77,7 @@ public class ExternalFilesRegistry {
 
 	/**
 	 * Determines whether this registry contains the given file representation in registry
+	 * Device must not be null
 	 * @param localPath
 	 * @return true/false
 	 */
@@ -83,24 +85,26 @@ public class ExternalFilesRegistry {
 		if (externalFilesRegistry.containsKey(localPath)) {
 			return true;
 		}
-		IFile[] files = getAllAsIFiles();
-		for (int i = 0; i < files.length; ++i) {
-			if (files[i].getFullPath().equals(new Path(localPath))) {
+		Collection<IFile> coll = externalFilesRegistry.values();
+		for (Iterator<IFile> iterator = coll.iterator(); iterator.hasNext();) {
+			IFile iFile = iterator.next();
+			if (iFile.getFullPath().equals(new Path(localPath))) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Determines whether this registry contains the given file representation in registry
 	 * @param localPath
 	 * @return true/false
 	 */
 	public boolean isEntryExist(IFile file) {
-		IFile[] files = getAllAsIFiles();
-		for (int i = 0; i < files.length; ++i) {
-			if (files[i].getFullPath().equals(file.getFullPath())) {
+		Collection<IFile> coll = externalFilesRegistry.values();
+		for (Iterator<IFile> iterator = coll.iterator(); iterator.hasNext();) {
+			IFile iFile = iterator.next();
+			if (iFile.getFullPath().equals(file.getFullPath())) {
 				return true;
 			}
 		}

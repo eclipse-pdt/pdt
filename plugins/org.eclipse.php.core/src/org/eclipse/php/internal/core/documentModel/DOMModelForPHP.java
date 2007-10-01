@@ -82,7 +82,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		// external file
-		if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+		if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
 			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
 			return fileData;
 		}
@@ -98,7 +98,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		IFile iFile = getIFile();
-		if (ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toString())) {
+		if (ExternalFilesRegistry.getInstance().isEntryExist(iFile)) {
 			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
@@ -119,7 +119,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 			}
 
 			// external file
-			else if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+			else if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
 				projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 				projectModel.fileWasChanged(file, getStructuredDocument());
 			}

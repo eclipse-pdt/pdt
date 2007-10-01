@@ -139,7 +139,7 @@ class ProjectParsingManager implements IProjectModelListener {
 				project = file.getProject();
 			}
 			//external file
-			else if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+			else if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
 				project = ExternalFilesRegistry.getInstance().getExternalFilesProject();
 			}
 			Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(project);

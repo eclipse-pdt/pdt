@@ -50,7 +50,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 
 /**
- * An ExternalFileDecorator is an {@link IFile} wrapper that allows the setting of a device name.
+ * The ExternalFileWrapper is an {@link IFile} wrapper that allows the setting of a device name.
  * This {@link ExternalFileWrapper} is useful when dealing with non-workspace files (externals).
  * Note : Create instances of this class via the createFile() method.
  * @author shalom
@@ -62,19 +62,19 @@ public class ExternalFileWrapper implements IFile, IAdaptable, IResource, ICoreC
 	private IContentDescription dummyDescription;
 
 	/**
-	 * Constructs a new ExternalFileDecorator.
+	 * Constructs a new ExternalFileWrapper.
 	 * @param pathString Full path string
 	 */
 	ExternalFileWrapper(String pathString) {
 		this.path = Path.fromOSString(pathString);
-		path = new Path(path.toOSString());
+		IPath p = new Path(path.toOSString());
 		if (path.segmentCount() == 1) {
-			IPath p = new Path(path.getDevice());
-			p = p.append(ExternalFilesRegistry.getInstance().getExternalFilesProject().getFullPath());
-			path = p.append(path.segment(0));
+			p = new Path(ExternalFilesRegistry.getInstance().getExternalFilesProject().getFullPath().toString());
+			p = p.append(path.segment(0));
+			p = p.setDevice(path.getDevice());
 		}
 		
-		this.file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		this.file = ResourcesPlugin.getWorkspace().getRoot().getFile(p);
 	}
 
 	/**
