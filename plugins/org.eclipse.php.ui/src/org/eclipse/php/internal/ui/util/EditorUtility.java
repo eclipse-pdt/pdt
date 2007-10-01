@@ -38,7 +38,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -258,7 +258,7 @@ public class EditorUtility {
 		}
 
 		//Another test whether this external file test is an UNTITLED DOCUMENT ,i.e the file does not really exist
-		if (resource instanceof ExternalFileDecorator) {
+		if (resource instanceof ExternalFileWrapper) {
 			File untitledDocumentDummyFile = resource.getFullPath().toFile();
 			//this file should not exist
 			if (untitledDocumentDummyFile.exists()) {
@@ -487,7 +487,7 @@ public class EditorUtility {
 				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					IFile localIFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 					if (!localIFile.exists()) {
-						IFile externalFile = ExternalFileDecorator.createFile(fileName);
+						IFile externalFile = ExternalFileWrapper.createFile(fileName);
 						ExternalFilesRegistry.getInstance().addFileEntry(fileName, externalFile);
 					}
 				}

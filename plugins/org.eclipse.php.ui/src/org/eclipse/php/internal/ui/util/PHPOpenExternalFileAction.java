@@ -24,7 +24,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;

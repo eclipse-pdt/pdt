@@ -46,7 +46,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -1382,7 +1382,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			} else {
 				// This is, probably, a remote storage:
 				externalPath = storage.getFullPath();
-				resource = ExternalFileDecorator.createFile(externalPath.toString());
+				resource = ExternalFileWrapper.createFile(externalPath.toString());
 			}
 		} else if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			// External file editor input. It's usually used when opening PHP file
@@ -1395,14 +1395,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			} else {
 				externalPath = URIUtil.toPath(((IURIEditorInput) input).getURI());
 			}
-			resource = ExternalFileDecorator.createFile(externalPath.toString());
+			resource = ExternalFileWrapper.createFile(externalPath.toString());
 		}
 
 		if (resource instanceof IFile) {
 			if (PHPModelUtil.isPhpFile((IFile) resource)) {
 				// Add file decorator entry to the list of external files:
-				if (externalPath != null && (resource instanceof ExternalFileDecorator)) {
-					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toString(), (ExternalFileDecorator) resource);
+				if (externalPath != null && (resource instanceof ExternalFileWrapper)) {
+					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toString(), (ExternalFileWrapper) resource);
 					isExternal = true;
 				}
 				// Remove an older record from the external files registry in case this editor
@@ -1505,7 +1505,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 		//could be that it is an external file BUT was already removed !, check :
 		else if (path.segmentCount() == 1) {
-			return ExternalFileDecorator.createFile(path.toString());
+			return ExternalFileWrapper.createFile(path.toString());
 		}
 
 		//handle case of workspace file AND/OR an external file with more than 1 segment
