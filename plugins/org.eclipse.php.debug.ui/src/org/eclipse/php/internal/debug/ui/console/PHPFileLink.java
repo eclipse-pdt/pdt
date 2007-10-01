@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.ui.console.FileLink;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
@@ -12,11 +13,13 @@ import org.eclipse.php.internal.core.filesystem.FileStoreFactory;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.console.IHyperlink;
 import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
@@ -64,8 +67,14 @@ public class PHPFileLink implements IHyperlink {
 				editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_EDITOR_ID, false);
 			} else if (fFile instanceof ExternalFileWrapper) {
 				ExternalFileWrapper externalFile = (ExternalFileWrapper) fFile;
-				FileStoreEditorInput editorInput = new FileStoreEditorInput(FileStoreFactory.createFileStore(new File(externalFile.getFullPath().toString())));
-				editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_EDITOR_ID, false);
+				IPath externalPath = externalFile.getFullPath();
+				if (externalPath.segmentCount() > 1 && externalPath.segment(externalPath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
+					NonExistingPHPFileEditorInput editorInput = new NonExistingPHPFileEditorInput(externalPath);
+					editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_UNTITLED_EDITOR_ID, false);
+				} else {
+					FileStoreEditorInput editorInput = new FileStoreEditorInput(FileStoreFactory.createFileStore(new File(externalFile.getFullPath().toString())));
+					editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_EDITOR_ID, false);
+				}
 			} else if (fFile instanceof IFile) {
 				editorPart = EditorUtility.openInEditor(new FileEditorInput((IFile) fFile), PHPUiConstants.PHP_EDITOR_ID, false);
 			} else {
