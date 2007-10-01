@@ -219,7 +219,7 @@
 		<antcall target="pushupdatesite" />
 	</target>
 
-	<property name="eclipse.version" value="3.2.0" />
+	<property name="eclipse.version" value="3.3.0" />
 	<path id="osgi.jar">
 		<fileset dir="${eclipse.home}/plugins">
 			<include name="org.eclipse.osgi_${eclipse.version}*.jar" />
