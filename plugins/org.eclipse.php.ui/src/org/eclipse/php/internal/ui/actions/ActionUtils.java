@@ -131,7 +131,7 @@ public class ActionUtils {
 		IResource resource = PHPModelUtil.getResource(element);
 		if (resource == null) {
 			return false;
-		} else if (ExternalFilesRegistry.getInstance().isEntryExist(resource.getFullPath().toString())) {
+		} else if ((resource instanceof IFile) && ExternalFilesRegistry.getInstance().isEntryExist((IFile)resource)) {
 			return true;
 		}
 		IProject resourceProject = resource.getProject();
