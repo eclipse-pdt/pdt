@@ -109,7 +109,7 @@ public class PHPValidator implements IValidator, ISourceValidator {
 
 		// get project model (or external one)
 		PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
-		if (ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toString())) {
+		if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
 			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
