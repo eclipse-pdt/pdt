@@ -252,7 +252,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void parsingErrorOccured(DebugError debugError) {
 		super.parsingErrorOccured(debugError);
-		String sName = debugError.getFileName();
+		String sName = debugError.getFullPathName();
 		int length;
 		String rName;
 		if (!fDebugTarget.isPHPCGI()) {
