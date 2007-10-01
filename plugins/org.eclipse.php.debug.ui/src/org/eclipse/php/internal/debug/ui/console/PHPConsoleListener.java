@@ -56,7 +56,7 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 
 		IHyperlink fileLink = null;
 		try {
-			String fileName = debugError.getFileName();
+			String fileName = debugError.getFullPathName();
 			int lineNumber = debugError.getLineNumber();
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileName));
 			if (file == null) {
