@@ -74,6 +74,7 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -1277,10 +1278,15 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							else {
 								String fileName = getModel().getBaseLocation();
 								if (externalRegistry.isEntryExist(fileName)) {
+									//if there are more than one editor opening the external file using "New Editor", do not remove it from model and registry
+									IEditorReference[] existingEditors = ((WorkbenchPage) PHPStructuredEditor.this.getSite().getWorkbenchWindow().getActivePage()).getEditorManager().findEditors(getEditorInput(), null, IWorkbenchPage.MATCH_INPUT);
+
 									// Make sure that the file has a full path before we try to remove it from the model.
-									IFile fileDecorator = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
-									PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
-									externalRegistry.removeFileEntry(fileName);
+									if (existingEditors.length == 1) { //a single editor
+										IFile fileDecorator = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
+										PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
+										externalRegistry.removeFileEntry(fileName);
+									}
 								}
 							}
 

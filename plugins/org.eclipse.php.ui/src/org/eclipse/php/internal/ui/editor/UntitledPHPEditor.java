@@ -34,7 +34,9 @@ import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
+import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.editors.text.NLSUtility;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -66,12 +68,20 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 	 * for the Untitled PHP document
 	 */
 	protected void doSetInput(IEditorInput input) throws CoreException {
+		//check if this input is already opened in an editor
+		//this can happen when user Right-Click an editor's tab and selects the "New Editor"
+		IEditorPart existingEditor = ((WorkbenchPage) this.getSite().getWorkbenchWindow().getActivePage()).getEditorManager().findEditor(input);
+
 		super.doSetInput(input);
 		final TextFileDocumentProvider documentProvider = (TextFileDocumentProvider) getDocumentProvider();
 		final IDocument document = documentProvider.getDocument(input);
-		String content = loadPHPTemplate();
-		document.set(content);
-		documentProvider.saveDocument(null, input, document, true);
+
+		//New Untitled document (after check it doest not already exist
+		if (existingEditor == null) {
+			String content = loadPHPTemplate();
+			document.set(content);
+			documentProvider.saveDocument(null, input, document, true);
+		}
 	}
 
 	//Load the last template name used in New HTML File wizard.
