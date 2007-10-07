@@ -17,12 +17,14 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.ui.text.PHPCodeReader;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -73,7 +75,7 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 		}
 		ICompletionProposal[] proposals = computeCompletionProposals(viewer, contextInformationPosition);
 		ArrayList contextInfo = new ArrayList();
-		
+
 		//the following for loop is fix for bug #200119
 		//if we're getting more than one proposals - then we show show only the ones
 		//with the shortest name. (the only case it can happen is inside C'tor 
@@ -90,10 +92,72 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 		for (int i = 0; i < proposals.length; ++i) {
 			IContextInformation info = proposals[i].getContextInformation();
 			if (info != null && proposals[i].getDisplayString().length() == shortestName) {
-				contextInfo.add(info);
+				ContextInformationWrapper contextInformation = new ContextInformationWrapper(info);
+				contextInformation.setContextInformationPosition(contextInformationPosition + 1); 
+				//the +1 is because guessContextInformationPosition() 
+				//returns the position of the '(' and the ContextInformationPosition needs the position after it.
+				contextInfo.add(contextInformation);
 			}
 		}
 		return (IContextInformation[]) contextInfo.toArray(new IContextInformation[contextInfo.size()]);
+	}
+
+	/**
+	 * This class purpose is to support {@link}IContextInformationExtension 
+	 * It suppose to resolve bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=204653 after wst will do their part in it.
+	 * @author guy.g
+	 *
+	 */
+	private static final class ContextInformationWrapper implements IContextInformation, IContextInformationExtension {
+
+		private final IContextInformation fContextInformation;
+		private int fPosition;
+
+		public ContextInformationWrapper(IContextInformation contextInformation) {
+			fContextInformation = contextInformation;
+		}
+
+		/*
+		 * @see IContextInformation#getContextDisplayString()
+		 */
+		public String getContextDisplayString() {
+			return fContextInformation.getContextDisplayString();
+		}
+
+		/*
+		* @see IContextInformation#getImage()
+		*/
+		public Image getImage() {
+			return fContextInformation.getImage();
+		}
+
+		/*
+		 * @see IContextInformation#getInformationDisplayString()
+		 */
+		public String getInformationDisplayString() {
+			return fContextInformation.getInformationDisplayString();
+		}
+
+		/*
+		 * @see IContextInformationExtension#getContextInformationPosition()
+		 */
+		public int getContextInformationPosition() {
+			return fPosition;
+		}
+
+		public void setContextInformationPosition(int position) {
+			fPosition = position;
+		}
+
+		/*
+		 * @see org.eclipse.jface.text.contentassist.IContextInformation#equals(java.lang.Object)
+		 */
+		public boolean equals(Object object) {
+			if (object instanceof ContextInformationWrapper)
+				return fContextInformation.equals(((ContextInformationWrapper) object).fContextInformation);
+			else
+				return fContextInformation.equals(object);
+		}
 	}
 
 	public char[] getCompletionProposalAutoActivationCharacters() {
