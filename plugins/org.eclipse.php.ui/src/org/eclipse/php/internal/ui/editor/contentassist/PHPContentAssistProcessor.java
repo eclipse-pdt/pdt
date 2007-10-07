@@ -118,7 +118,6 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 	}
 
 	private int guessContextInformationPosition(ITextViewer viewer, int offset) {
-		int contextPosition = -1;
 		IDocument document = viewer.getDocument();
 		try {
 			PHPCodeReader reader = new PHPCodeReader();
@@ -150,7 +149,7 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 			}
 		} catch (IOException e) {
 		}
-		return contextPosition;
+		return -1;
 	}
 
 	private boolean looksLikeMethod(PHPCodeReader reader) throws IOException {
