@@ -167,6 +167,12 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 	           		output = outputBuffer.toString();
 	           	} else {
 	           		// Not Suspended or Terminated
+	           		
+	        		//the following is a fix for bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=205688
+	        		//if the target is not suspended or terminated fTarget should get back its old value
+	        		//so that in the next time the function is called it will not consider this target
+	        		//as it was already set to the view
+	           		fTarget = oldTarget;
 	           		return;
 	           	}
 	        }
