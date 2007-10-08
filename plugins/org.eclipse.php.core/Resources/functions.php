@@ -200,6 +200,13 @@ function print_class ($classRef, $tabs = 0) {
 	}
 	print " {\n";
 
+	// process constants
+	$constsRef = $classRef->getConstants();
+	if (count ($constsRef) > 0) {
+		print_class_constants ($constsRef, $tabs + 1);
+		print "\n";
+	}
+
 	// process properties
 	$propertiesRef = $classRef->getProperties();
 	if (count ($propertiesRef) > 0) {
@@ -208,7 +215,7 @@ function print_class ($classRef, $tabs = 0) {
 		}
 		print "\n";
 	}
-	
+
 	// process methods
 	$methodsRef = $classRef->getMethods();
 	if (count ($methodsRef) > 0) {
@@ -339,6 +346,22 @@ function print_constants ($constants, $tabs = 0) {
 		}
 		print_tabs ($tabs);
 		print "define ('{$name}', {$value});\n";
+	}
+}
+
+
+/**
+ * Prints class constants in format of PHP code
+ * @param constants array containing constants, where key is a name of constant
+ * @param tabs integer[optional] number of tabs for indentation
+ */
+function print_class_constants ($constants, $tabs = 0) {
+	foreach ($constants as $name => $value) {
+		if (!is_numeric ($value)) {
+			$value = "'{$value}'";
+		}
+		print_tabs ($tabs);
+		print "const {$name} = {$value};\n";
 	}
 }
 
