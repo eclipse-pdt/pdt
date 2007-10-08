@@ -71,15 +71,20 @@ public class PHPFunctionsContentProvider implements ITreeContentProvider {
 
 	private Object[] getClassChildren(PHPClassData classData) {
 		ArrayList list = new ArrayList();
-		PHPFunctionData[] functions = classData.getFunctions();
-		if (functions != null)
-			for (int i = 0; i < functions.length; i++) {
-				list.add(functions[i]);
+		PHPClassConstData[] consts = classData.getConsts();
+		if (consts != null)
+			for (int i = 0; i < consts.length; ++i) {
+				list.add(consts[i]);
 			}
 		PHPVariableData[] vars = classData.getVars();
 		if (vars != null)
 			for (int i = 0; i < vars.length; i++) {
 				list.add(vars[i]);
+			}
+		PHPFunctionData[] functions = classData.getFunctions();
+		if (functions != null)
+			for (int i = 0; i < functions.length; i++) {
+				list.add(functions[i]);
 			}
 		return list.toArray();
 	}
