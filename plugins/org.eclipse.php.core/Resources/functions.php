@@ -408,7 +408,7 @@ function print_doccomment ($ref, $tabs = 0) {
 			}
 			if ($functions[$funckey]['id']) {
 				print_tabs ($tabs);
-				print " * @url http://php.net/manual/en/{$functions[$funckey]['id']}.php\n";
+				print " * @link http://php.net/manual/en/{$functions[$funckey]['id']}.php\n";
 			}
 			if ($parameters) {
 				foreach ($parameters as $parameter) {
