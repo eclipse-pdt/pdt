@@ -32,11 +32,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
 import org.eclipse.php.internal.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.internal.ui.util.PHPElementImageProvider;
@@ -60,12 +58,14 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartListener {
 
-	private PHPTreeViewer fViewer;
+	private TreeViewer fViewer;
 	private PHPFunctionsContentProvider fContentProvider;
 	private PHPFunctionsLabelProvider fLabelProvider;
 
@@ -151,8 +151,11 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		});
 	}
 
-	private PHPTreeViewer createViewer(Composite composite) {
-		return new PHPTreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+	private TreeViewer createViewer(Composite composite) {
+		PatternFilter patternFilter = new PatternFilter();
+        patternFilter.setIncludeLeadingWildcard(true);
+        FilteredTree filteredTree = new FilteredTree(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter);
+		return filteredTree.getViewer();
 	}
 
 	private void addMouseTrackListener() {
@@ -204,7 +207,9 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	}
 
 	public void setFocus() {
-		fViewer.getTree().setFocus();
+		if (fViewer != null && !fViewer.getTree().isDisposed()) {
+			fViewer.getTree().setFocus();
+		}
 	}
 
 	private void setProviders() {
