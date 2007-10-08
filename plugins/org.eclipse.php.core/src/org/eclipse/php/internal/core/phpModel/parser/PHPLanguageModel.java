@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
@@ -37,6 +38,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 
 public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
@@ -438,6 +440,23 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		}
 
 		public void handleClassVariablesDeclaration(String variables, int modifier, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
+			String classType = null;
+			if (docInfo != null) {
+				Iterator it = docInfo.getTags(PHPDocTag.VAR);
+				while (it.hasNext()) {
+					PHPDocTag varTag = (PHPDocTag) it.next();
+					String value = (varTag.getValue()).trim();
+					String[] values = value.split(" ");
+					classType = values[0];
+				}
+			}
+			StringTokenizer t = new StringTokenizer(variables, ",", false);
+			while (t.hasMoreTokens()) {
+				String var = t.nextToken().substring(1);
+				PHPClassVarData classVarData = PHPCodeDataFactory.createPHPClassVarData(var, modifier, classType, docInfo, null);
+				handleObjectInstansiation(var, classType, null, 0, 0, false);
+				classVarsList.add(classVarData);
+			}
 		}
 
 		public void handleClassConstDeclaration(String constName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
