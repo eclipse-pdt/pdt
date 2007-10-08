@@ -13,7 +13,12 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
@@ -21,7 +26,17 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 
 public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
@@ -224,6 +239,8 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 		private List functionsList = new ArrayList(3000);
 
+		private List classConstsList = new ArrayList();
+
 		private List classVarsList = new ArrayList();
 
 		private List classFunctionsList = new ArrayList();
@@ -233,23 +250,26 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		private List constansList = new ArrayList(2000);
 
 		private List functionParametersList = new ArrayList();
-		
+
 		public void dispose() {
 			functionsList.clear();
 			functionsList = null;
-			
+
+			classConstsList.clear();
+			classConstsList = null;
+
 			classVarsList.clear();
 			classVarsList = null;
-			
+
 			classFunctionsList.clear();
 			classFunctionsList = null;
-			
+
 			classesList.clear();
 			classesList = null;
-			
+
 			constansList.clear();
 			constansList = null;
-			
+
 			functionParametersList.clear();
 			functionParametersList = null;
 		}
@@ -382,6 +402,10 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			if (classesList.size() > 0) {
 				PHPCodeDataFactory.PHPClassDataImp classData = (PHPCodeDataFactory.PHPClassDataImp) classesList.get(classesList.size() - 1);
 				if (classData.getName().equals(className)) {
+					PHPClassConstData[] consts = new PHPClassConstData[classConstsList.size()];
+					classConstsList.toArray(consts);
+					Arrays.sort(consts);
+
 					PHPClassVarData[] vars = new PHPClassVarData[classVarsList.size()];
 					classVarsList.toArray(vars);
 					Arrays.sort(vars);
@@ -390,6 +414,9 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 					classFunctionsList.toArray(func);
 					Arrays.sort(func);
 
+					for (int i = 0; i < consts.length; ++i) {
+						((PHPCodeDataFactory.PHPClassConstDataImp) consts[i]).setContainer(classData);
+					}
 					for (int i = 0; i < vars.length; i++) {
 						((PHPCodeDataFactory.PHPClassVarDataImp) vars[i]).setContainer(classData);
 					}
@@ -397,11 +424,13 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 						((PHPCodeDataFactory.PHPFunctionDataImp) func[i]).setContainer(classData);
 					}
 
+					classData.setConsts(consts);
 					classData.setFunctions(func);
 					classData.setVars(vars);
 				}
 			}
 
+			classConstsList.clear();
 			classVarsList.clear();
 			classFunctionsList.clear();
 
@@ -412,6 +441,8 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		}
 
 		public void handleClassConstDeclaration(String constName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
+			PHPClassConstData classConstData = PHPCodeDataFactory.createPHPClassConstData(constName, docInfo, null);
+			classConstsList.add(classConstData);
 		}
 
 		public void handleIncludedFile(String includingType, String includeFileName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition, int lineNumber) {
