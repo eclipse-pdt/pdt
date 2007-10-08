@@ -19,6 +19,7 @@ if (!$phpdoc_dir) {
 }
 
 $functions = parse_phpdoc_functions ($phpdoc_dir);
+$classes = parse_phpdoc_classes ($phpdoc_dir);
 
 print "<?php\n";
 $extensions = get_loaded_extensions();
@@ -130,6 +131,34 @@ function parse_phpdoc_functions ($phpdoc_dir) {
 		}
 	}
 	return $functions;
+}
+
+/**
+ * Parses PHP documentation
+ * @param phpdoc_dir string PHP.net documentation directory
+ * @return array Class information gathered from the PHP.net documentation by parsing XML files
+ */
+function parse_phpdoc_classes ($phpdoc_dir) {
+	$xml_files = glob ("{$phpdoc_dir}/en/reference/*/reference.xml");
+	foreach ($xml_files as $xml_file) {
+		$xml = file_get_contents ($xml_file);
+		if (preg_match ('@<reference.*?xml:id=["\'](.*?)["\'].*?>@s', $xml, $match)) {
+			$id = $match[1];
+			if (preg_match_all ('@<title><classname>(.*?)</classname></title>@', $xml, $match)) {
+				for ($i = 0; $i < count($match[0]); ++$i) {
+					$class = $match[1][$i];
+					$refname = strtolower ($class);
+					$classes[$refname]['id'] = $id;
+					$classes[$refname]['name'] = $class;
+
+					if (preg_match ("@<title><classname>{$class}</classname></title>\s*<para>(.*?)</para>@s", $xml, $match2)) {
+						$classes[$refname]['doc'] = xml_to_phpdoc(trim($match2[1]));
+					}
+				}
+			}
+		}
+	}
+	return $classes;
 }
 
 /**
@@ -378,17 +407,47 @@ function print_modifiers ($ref) {
 }
 
 /**
+ * Makes PHP Manual URL from the given ID
+ * @param id PHP Element ID
+ * @return URL
+ */
+function make_url ($id) {
+	return "http://php.net/manual/en/{$id}.php";
+}
+
+/**
  * Prints PHPDOC comment before specified reflection object
  * @param ref Reflection some reflection object
  * @param tabs integer[optional] number of tabs for indentation
  */
 function print_doccomment ($ref, $tabs = 0) {
 	global $functions;
+	global $classes;
 
 	$docComment = $ref->getDocComment();
 	if ($docComment) {
 		print_tabs ($tabs);
 		print "{$docComment}\n";
+	}
+	else if ($ref instanceof ReflectionClass) {
+		$refname = strtolower($ref->getName());
+		if ($classes[$refname]) {
+			print_tabs ($tabs);
+			print "/**\n";
+			$doc = $classes[$refname]['doc'];
+			if ($doc) {
+				$doc = newline_to_phpdoc ($doc, $tabs);
+				print_tabs ($tabs);
+				print " * {$doc}\n";
+			}
+			if ($classes[$refname]['id']) {
+				print_Tabs ($tabs);
+				$url = make_url ($classes[$refname]['id']);
+				print " * @link {$url}\n";
+			}
+			print_tabs ($tabs);
+			print " */\n";
+		}
 	}
 	else if ($ref instanceof ReflectionFunctionAbstract) {
 		$funckey = make_funckey_from_ref ($ref);
@@ -408,7 +467,8 @@ function print_doccomment ($ref, $tabs = 0) {
 			}
 			if ($functions[$funckey]['id']) {
 				print_tabs ($tabs);
-				print " * @link http://php.net/manual/en/{$functions[$funckey]['id']}.php\n";
+				$url = make_url ($functions[$funckey]['id']);
+				print " * @link {$url}\n";
 			}
 			if ($parameters) {
 				foreach ($parameters as $parameter) {

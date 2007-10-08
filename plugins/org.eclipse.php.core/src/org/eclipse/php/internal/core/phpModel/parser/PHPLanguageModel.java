@@ -395,7 +395,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 				interfaces = PHPCodeDataFactory.EMPTY_INTERFACES_DATA_ARRAY;
 			}
 
-			PHPClassData classData = PHPCodeDataFactory.createPHPClassData(className, modifier, null, null, superClassData, interfaces, PHPCodeDataFactory.EMPTY_CLASS_VAR_DATA_ARRAY, PHPCodeDataFactory.EMPTY_CLASS_CONST_DATA_ARRAY, PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY);
+			PHPClassData classData = PHPCodeDataFactory.createPHPClassData(className, modifier, docInfo, null, superClassData, interfaces, PHPCodeDataFactory.EMPTY_CLASS_VAR_DATA_ARRAY, PHPCodeDataFactory.EMPTY_CLASS_CONST_DATA_ARRAY, PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY);
 
 			classesList.add(classData);
 		}

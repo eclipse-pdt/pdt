@@ -2,6 +2,9 @@
 
 // Start of libxml v.
 
+/**
+ * @link http://php.net/manual/en/ref.libxml.php
+ */
 class LibXMLError  {
 }
 
@@ -8966,6 +8969,11 @@ define ('FILTER_FLAG_NO_PRIV_RANGE', 8388608);
 
 // Start of dom v.20031129
 
+/**
+ * DOM operations raise exceptions under particular circumstances, i.e.,
+ *       when an operation is impossible to perform for logical reasons.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 final class DOMException extends Exception  {
 	protected $message;
 	public $code;
@@ -9003,6 +9011,9 @@ class DOMStringList  {
 
 }
 
+/**
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMNameList  {
 
 	public function getName () {}
@@ -9025,6 +9036,12 @@ class DOMImplementationSource  {
 
 }
 
+/**
+ * The DOMImplementation interface provides a number
+ *       of methods for performing operations that are independent of any 
+ *       particular instance of the document object model.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMImplementation  {
 
 	public function getFeature () {}
@@ -9060,6 +9077,9 @@ class DOMImplementation  {
 
 }
 
+/**
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMNode  {
 
 	/**
@@ -9187,6 +9207,10 @@ class DOMNode  {
 class DOMNameSpaceNode  {
 }
 
+/**
+ * Extends DOMNode.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMDocumentFragment extends DOMNode  {
 
 	public function __construct () {}
@@ -9321,6 +9345,10 @@ class DOMDocumentFragment extends DOMNode  {
 
 }
 
+/**
+ * Extends DOMNode.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMDocument extends DOMNode  {
 
 	/**
@@ -9703,6 +9731,9 @@ class DOMDocument extends DOMNode  {
 
 }
 
+/**
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMNodeList  {
 
 	/**
@@ -9715,6 +9746,9 @@ class DOMNodeList  {
 
 }
 
+/**
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMNamedNodeMap  {
 
 	/**
@@ -9752,6 +9786,10 @@ class DOMNamedNodeMap  {
 
 }
 
+/**
+ * Extends DOMNode.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMCharacterData extends DOMNode  {
 
 	/**
@@ -9921,6 +9959,11 @@ class DOMCharacterData extends DOMNode  {
 
 }
 
+/**
+ * Extends DOMNode. The DOMAttr
+ *       interface represents an attribute in an DOMElement object.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMAttr extends DOMNode  {
 
 	/**
@@ -10058,6 +10101,10 @@ class DOMAttr extends DOMNode  {
 
 }
 
+/**
+ * Extends DOMNode.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMElement extends DOMNode  {
 
 	/**
@@ -10344,6 +10391,10 @@ class DOMElement extends DOMNode  {
 
 }
 
+/**
+ * Extends DOMCharacterData.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMText extends DOMCharacterData  {
 
 	/**
@@ -10538,6 +10589,10 @@ class DOMText extends DOMCharacterData  {
 
 }
 
+/**
+ * Extends DOMCharacterData.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMComment extends DOMCharacterData  {
 
 	/**
@@ -10934,6 +10989,10 @@ class DOMCdataSection extends DOMText  {
 
 }
 
+/**
+ * Extends DOMNode
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMDocumentType extends DOMNode  {
 
 	/**
@@ -11058,9 +11117,17 @@ class DOMDocumentType extends DOMNode  {
 
 }
 
+/**
+ * Extends DOMNode
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMNotation  {
 }
 
+/**
+ * Extends DOMNode
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMEntity extends DOMNode  {
 
 	/**
@@ -11185,6 +11252,10 @@ class DOMEntity extends DOMNode  {
 
 }
 
+/**
+ * Extends DOMNode.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMEntityReference extends DOMNode  {
 
 	/**
@@ -11315,6 +11386,10 @@ class DOMEntityReference extends DOMNode  {
 
 }
 
+/**
+ * Extends DOMNode.
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMProcessingInstruction extends DOMNode  {
 
 	/**
@@ -11453,6 +11528,9 @@ class DOMStringExtend  {
 
 }
 
+/**
+ * @link http://php.net/manual/en/ref.dom.php
+ */
 class DOMXPath  {
 
 	/**
@@ -14403,6 +14481,13 @@ define ('MYSQL_CLIENT_IGNORE_SPACE', 256);
 
 // Start of PDO v.1.0.4dev
 
+/**
+ * Represents an error raised by PDO.  You should not throw a
+ *       PDOException from your own code.
+ *       See Exceptions for more
+ *       information about Exceptions in PHP.
+ * @link http://php.net/manual/en/ref.pdo.php
+ */
 class PDOException extends RuntimeException  {
 	protected $message;
 	protected $code;
@@ -14435,6 +14520,10 @@ class PDOException extends RuntimeException  {
 
 }
 
+/**
+ * Represents a connection between PHP and a database server.
+ * @link http://php.net/manual/en/ref.pdo.php
+ */
 class PDO  {
 	const PARAM_BOOL = 5;
 	const PARAM_NULL = 0;
@@ -14636,6 +14725,11 @@ class PDO  {
 
 }
 
+/**
+ * Represents a prepared statement and, after the statement is executed, an 
+ *       associated result set.
+ * @link http://php.net/manual/en/ref.pdo.php
+ */
 class PDOStatement implements Traversable {
 	public $queryString;
 
@@ -15667,6 +15761,9 @@ define ('T_DOUBLE_COLON', 375);
 
 // Start of xsl v.0.1
 
+/**
+ * @link http://php.net/manual/en/ref.xsl.php
+ */
 class XSLTProcessor  {
 
 	/**
@@ -17953,6 +18050,10 @@ function shmop_delete ($shmid) {}
 
 // Start of SQLite v.2.0-dev
 
+/**
+ * Represents an opened SQLite database.
+ * @link http://php.net/manual/en/ref.sqlite.php
+ */
 class SQLiteDatabase  {
 
 	/**
@@ -18002,6 +18103,10 @@ class SQLiteDatabase  {
 
 }
 
+/**
+ * Represents a buffered SQLite result set.
+ * @link http://php.net/manual/en/ref.sqlite.php
+ */
 final class SQLiteResult implements Iterator, Traversable, Countable {
 
 	public function fetch () {}
@@ -18040,6 +18145,10 @@ final class SQLiteResult implements Iterator, Traversable, Countable {
 
 }
 
+/**
+ * Represents an unbuffered SQLite result set.  Unbuffered results sets are sequential, forward-seeking only.
+ * @link http://php.net/manual/en/ref.sqlite.php
+ */
 final class SQLiteUnbuffered  {
 
 	public function fetch () {}
@@ -18515,6 +18624,9 @@ function shm_remove_var ($shm_identifier, $variable_key) {}
 
 // Start of xmlreader v.0.1
 
+/**
+ * @link http://php.net/manual/en/ref.xmlreader.php
+ */
 class XMLReader  {
 	const NONE = 0;
 	const ELEMENT = 1;
@@ -19273,7 +19385,7 @@ define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
 // End of calendar v.
 
-// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.15 2007/10/08 11:45:37 mspector Exp $
+// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.16 2007/10/08 13:37:57 mspector Exp $
 
 /**
  * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
@@ -19325,7 +19437,7 @@ function exif_imagetype ($filename) {}
 
 define ('EXIF_USE_MBSTRING', 0);
 
-// End of exif v.1.4 $Id: phpFunctions5.php,v 1.15 2007/10/08 11:45:37 mspector Exp $
+// End of exif v.1.4 $Id: phpFunctions5.php,v 1.16 2007/10/08 13:37:57 mspector Exp $
 
 // Start of gmp v.
 
@@ -20689,6 +20801,10 @@ final class mysqli_driver  {
 
 }
 
+/**
+ * Represents a connection between PHP and a MySQL database.
+ * @link http://php.net/manual/en/ref.mysqli.php
+ */
 class mysqli  {
 
 	public function autocommit () {}
@@ -20797,6 +20913,10 @@ final protected class mysqli_warning  {
 
 }
 
+/**
+ * Represents the result set obtained from a query against the database.
+ * @link http://php.net/manual/en/ref.mysqli.php
+ */
 class mysqli_result  {
 
 	public function mysqli_result () {}
@@ -20829,6 +20949,10 @@ class mysqli_result  {
 
 }
 
+/**
+ * Represents a prepared statement.
+ * @link http://php.net/manual/en/ref.mysqli.php
+ */
 class mysqli_stmt  {
 
 	public function mysqli_stmt () {}
@@ -22819,6 +22943,9 @@ define ('PGSQL_DML_STRING', 2048);
 
 // Start of soap v.
 
+/**
+ * @link http://php.net/manual/en/ref.soap.php
+ */
 class SoapClient  {
 
 	public function SoapClient () {}
@@ -22916,12 +23043,22 @@ class SoapClient  {
 
 }
 
+/**
+ * SoapVar is a special low-level class for encoding
+ *      parameters and returning values in non-WSDL mode. It's
+ *      just a data holder and does not have any special methods except the constructor. 
+ *      It's useful when you want to set the type property in SOAP request or response.
+ * @link http://php.net/manual/en/ref.soap.php
+ */
 class SoapVar  {
 
 	public function SoapVar () {}
 
 }
 
+/**
+ * @link http://php.net/manual/en/ref.soap.php
+ */
 class SoapServer  {
 
 	public function SoapServer () {}
@@ -22985,6 +23122,9 @@ class SoapServer  {
 
 }
 
+/**
+ * @link http://php.net/manual/en/ref.soap.php
+ */
 class SoapFault extends Exception  {
 	protected $message;
 	protected $code;
@@ -23018,12 +23158,26 @@ class SoapFault extends Exception  {
 
 }
 
+/**
+ * SoapParam is a special low-level class for naming 
+ *      parameters and returning values in non-WSDL mode. 
+ *      It's just a data holder and it does not have any special methods except 
+ *      its constructor.
+ * @link http://php.net/manual/en/ref.soap.php
+ */
 class SoapParam  {
 
 	public function SoapParam () {}
 
 }
 
+/**
+ * SoapHeader is a special low-level class for passing 
+ *      or returning SOAP headers. It's just a data holder and it does not have any 
+ *      special methods except its constructor. It can be used in the  method to pass a SOAP header or 
+ *      in a SOAP header handler to return the header in a SOAP response.
+ * @link http://php.net/manual/en/ref.soap.php
+ */
 class SoapHeader  {
 
 	public function SoapHeader () {}
@@ -23244,6 +23398,9 @@ class tidy  {
 
 }
 
+/**
+ * @link http://php.net/manual/en/ref.tidy.php
+ */
 final class tidyNode  {
 
 	/**
@@ -23585,6 +23742,9 @@ define ('TIDY_NODETYPE_XMLDECL', 13);
 
 // Start of xmlwriter v.0.1
 
+/**
+ * @link http://php.net/manual/en/ref.xmlwriter.php
+ */
 class XMLWriter  {
 
 	/**
