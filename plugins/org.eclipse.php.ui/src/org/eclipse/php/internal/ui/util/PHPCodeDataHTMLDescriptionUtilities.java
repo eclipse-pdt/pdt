@@ -18,7 +18,17 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 
 public class PHPCodeDataHTMLDescriptionUtilities {
 
@@ -130,15 +140,12 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		}
 		if (implement != null) {
 			descriptionText.append("<br><dt>Implements</dt>");
-			descriptionText.append("<dd>");
 			for (int i = 0; i < implement.length; i++) {
 				String interfaceName = implement[i];
+				descriptionText.append("<dd>");
 				descriptionText.append(interfaceName);
-				if (implement.length > 1 && i < implement.length - 1) {
-					descriptionText.append("<br>");
-				}
+				descriptionText.append("</dd>");
 			}
-			descriptionText.append("</dd>");
 		}
 		if (desc.length() > 0) {
 			descriptionText.append(getDescriptionTableRow(desc));
