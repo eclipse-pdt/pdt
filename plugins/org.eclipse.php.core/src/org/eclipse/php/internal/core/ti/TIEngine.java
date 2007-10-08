@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.php.internal.core.ti.evaluators.DefaultGoalEvaluatorFactory;
 import org.eclipse.php.internal.core.ti.evaluators.IGoalEvaluator;
 import org.eclipse.php.internal.core.ti.evaluators.IGoalEvaluatorFactory;
 import org.eclipse.php.internal.core.ti.goals.IGoal;
@@ -39,6 +40,10 @@ public class TIEngine {
 	private final IGoalEvaluatorFactory evaluatorFactory;
 	private IEvaluationStatisticsListener statisticsListener;
 
+	public TIEngine() {
+		this(new DefaultGoalEvaluatorFactory()); // default goal evaluator for PHP
+	}
+	
 	public TIEngine(IGoalEvaluatorFactory evaluatorFactory) {
 		this.evaluatorFactory = evaluatorFactory;
 	}
