@@ -21,23 +21,31 @@ import org.eclipse.php.internal.ui.util.PHPManualFactory;
 import org.eclipse.ui.texteditor.IUpdate;
 
 public class OpenFunctionsManualAction extends PHPEditorResolvingAction implements IUpdate {
+	
+	private String url;
 
 	public OpenFunctionsManualAction(ResourceBundle resourceBundle, PHPStructuredEditor editor) {
 		super(resourceBundle, "OpenFunctionsManualAction_", editor);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.actions.PHPEditorResolvingAction#doRun()
-	 */
-	@Override
 	protected void doRun() {
-		PHPManualFactory.getManual().showFunctionHelp((PHPCodeData) getCodeDatas()[0]); // XXX handle multiple elements
+		if (url != null) {
+			PHPManualFactory.getManual().showFunctionHelp(url); // XXX handle multiple elements
+		}
+	}
+	
+	protected boolean isValid() {
+		if (super.isValid()) {
+			url = PHPManualFactory.getManual().getURLForManual((PHPCodeData) getCodeDatas()[0]);
+			return url != null;
+		}
+		return false;
+	}
+	
+	public void update() {
+		setEnabled (getTextEditor() != null && isValid());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.actions.PHPEditorResolvingAction#filterCodeDatas(org.eclipse.php.internal.core.phpModel.phpElementData.CodeData[])
-	 */
-	@Override
 	protected CodeData[] filterCodeDatas(CodeData[] codeDatas) {
 		// only show help for built-in elements
 		List<CodeData> nonUserCodeData = new LinkedList();

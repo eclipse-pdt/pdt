@@ -72,7 +72,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	private Menu fContextMenu;
 	private String fWorkingSetName;
 
-	private Action showFunctionHelpAction;
+	private ShowFunctionHelpAction showFunctionHelpAction;
 	private FunctionsViewGroup actionGroup;
 
 	private boolean shouldRefresh = true;
@@ -129,7 +129,9 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 				ISelection selection = fViewer.getSelection();
 				if (!selection.isEmpty()) {
 					IStructuredSelection s = (IStructuredSelection) selection;
-					if (s.getFirstElement() instanceof PHPFunctionData) {
+					String url = PHPManualFactory.getManual().getURLForManual((PHPCodeData)s.getFirstElement());
+					if (url != null) {
+						showFunctionHelpAction.setURL(url);
 						mgr.add(showFunctionHelpAction);
 					}
 				}
@@ -354,17 +356,19 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	}
 
 	class ShowFunctionHelpAction extends Action {
+		private String url;
+		
 		public ShowFunctionHelpAction() {
 			super("Open Manual");
 		}
+		
+		public void setURL(String url) {
+			this.url = url;
+		}
 
 		public void run() {
-			ISelection selection = fViewer.getSelection();
-			if (!selection.isEmpty()) {
-				IStructuredSelection s = (IStructuredSelection) selection;
-				if (s.getFirstElement() instanceof PHPFunctionData) {
-					PHPManualFactory.getManual().showFunctionHelp((PHPFunctionData)s.getFirstElement());
-				}
+			if (url != null) {
+				PHPManualFactory.getManual().showFunctionHelp(url);
 			}
 		}
 	}

@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -18,7 +19,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -29,6 +32,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
@@ -43,6 +48,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class PHPManual implements IPropertyChangeListener {
 	
 	private static final String BROWSER_ID = "PHPManual.browser"; //$NON-NLS-1$
+	private static final Pattern HTTP_URL_PATTERN = Pattern.compile("http://[^\\s]*"); //$NON-NLS-1$
 	private static int browserCount = 0;
 	
 	private PHPManualSite site;
@@ -112,35 +118,62 @@ public class PHPManual implements IPropertyChangeListener {
 	}
 	
 	/**
-	 * This function launches browser and shows PHP manual page on the specified
-	 * PHP element.
+	 * This method tries to determine PHP manual URL for the specified PHP element
 	 * 
 	 * @param codeData PHP element code data
+	 * @return URL for the manual page
 	 */
-	public void showFunctionHelp(PHPCodeData codeData) {
+	public String getURLForManual (PHPCodeData codeData) {
 		if (codeData == null) {
 			throw new IllegalArgumentException();
 		}
 		
 		String path = null;
 		
-		if (codeData instanceof PHPFunctionData) {
-			PHPFunctionData funcData = (PHPFunctionData)codeData;
-			PHPCodeData container = funcData.getContainer();
-			if (container instanceof PHPClassData) {
-				String functionName = container.getName() + "::" + funcData.getName(); //$NON-NLS-1$
-				path = (String)getPHPEntityPathMap().get(functionName.toLowerCase());
-				if (path == null) {
-					path = buildPathForMethod(container.getName(),funcData.getName());
-				}
-			} else {
-				path = (String)getPHPEntityPathMap().get(funcData.getName().toLowerCase());
-				if (path == null) {
-					path = buildPathForMethod(null,funcData.getName());
+		PHPDocBlock docBlock = codeData.getDocBlock();
+		if (docBlock != null) {
+			Iterator i = docBlock.getTags(PHPDocTag.LINK);
+			while (i.hasNext()) {
+				PHPDocTag docTag = (PHPDocTag)i.next();
+				Matcher m = HTTP_URL_PATTERN.matcher(docTag.getValue().trim());
+				if (m.find()) {
+					try {
+						URL url = new URL(m.group());
+						path = new File(url.getFile()).getName();
+						int extIdx = path.lastIndexOf('.');
+						if (extIdx > 0) {
+							path = path.substring(0, extIdx);
+						}
+						break;
+					} catch (MalformedURLException e) {
+					}
 				}
 			}
-		} else if (codeData instanceof PHPKeywordData) {
-			path = (String)getPHPEntityPathMap().get(codeData.getName().toLowerCase());
+		}
+
+		if (path == null) {
+			if (codeData instanceof PHPFunctionData) {
+				PHPFunctionData funcData = (PHPFunctionData)codeData;
+				PHPCodeData container = funcData.getContainer();
+				if (container instanceof PHPClassData) {
+					String functionName = container.getName() + "::" + funcData.getName(); //$NON-NLS-1$
+					path = (String)getPHPEntityPathMap().get(functionName.toLowerCase());
+					if (path == null) {
+						path = buildPathForMethod(container.getName(),funcData.getName());
+					}
+				} else {
+					path = (String)getPHPEntityPathMap().get(funcData.getName().toLowerCase());
+					if (path == null) {
+						path = buildPathForMethod(null,funcData.getName());
+					}
+				}
+			} else if (codeData instanceof PHPKeywordData) {
+				path = (String)getPHPEntityPathMap().get(codeData.getName().toLowerCase());
+			}
+		}
+		
+		if (path == null) {
+			return null;
 		}
 		
 		StringBuffer url = new StringBuffer();
@@ -152,6 +185,13 @@ public class PHPManual implements IPropertyChangeListener {
 		url.append("."); //$NON-NLS-1$
 		url.append(site.getExtension());
 		
+		return url.toString();
+	}
+	
+	/**
+	 * This function launches browser and shows PHP manual page for the specified URL
+	 */
+	public void showFunctionHelp(String url) {
 		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 		IWebBrowser browser;
 		try {
@@ -161,10 +201,10 @@ public class PHPManual implements IPropertyChangeListener {
 				browser = browserSupport.createBrowser(BROWSER_ID);
 			}
 			
-			if (url.toString().startsWith("mk:")) {
-                browser.openURL(new URL(null, url.toString(), new MkHandler()));
+			if (url.startsWith("mk:")) {
+                browser.openURL(new URL(null, url, new MkHandler()));
             } else {
-                browser.openURL(new URL(url.toString()));
+                browser.openURL(new URL(url));
             }
 			
 		} catch (PartInitException e) {
