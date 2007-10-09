@@ -15,7 +15,10 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.text.AbstractInformationControlManager;
 import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewerExtension2;
@@ -24,6 +27,9 @@ import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.jface.text.information.IInformationPresenter;
+import org.eclipse.jface.text.information.IInformationProvider;
+import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -37,14 +43,19 @@ import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPCodeHyperlinkDetector;
+import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPDocContentAssistProcessor;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.text.PHPElementProvider;
+import org.eclipse.php.internal.ui.text.PHPOutlineInformationControl;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
@@ -60,7 +71,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private String[] configuredContentTypes;
 	private LineStyleProvider fLineStyleProvider;
 	private IPropertyChangeListener propertyChangeListener;
-
 	private final ArrayList detectors;
 
 	public PHPStructuredTextViewerConfiguration() {
@@ -78,7 +88,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				}
 			}
 		}
-
 	}
 
 	/*
@@ -406,5 +415,44 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		vector.add(""); //$NON-NLS-1$
 
 		return (String[]) vector.toArray(new String[vector.size()]);
+	}
+	
+	/**
+	 * Returns the outline presenter which will determine and shown
+	 * information requested for the current cursor position.
+	 *
+	 * @param sourceViewer the source viewer to be configured by this configuration
+	 * @return an information presenter
+	 * @since 2.1
+	 */
+	public IInformationPresenter getOutlinePresenter(ISourceViewer sourceViewer) {
+		InformationPresenter presenter;
+		presenter = new InformationPresenter(getOutlinePresenterControlCreator(sourceViewer, "org.eclipse.php.ui.edit.text.php.show.outline"));
+		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+		presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
+		IInformationProvider provider = new PHPElementProvider(((PHPStructuredTextViewer)sourceViewer).getTextEditor());
+		presenter.setInformationProvider(provider, PHPPartitionTypes.PHP_DEFAULT);
+		presenter.setSizeConstraints(50, 20, true, false);
+		return presenter;
+	}
+
+	/**
+	 * Returns the outline presenter control creator. The creator is a factory creating outline
+	 * presenter controls for the given source viewer. This implementation always returns a creator
+	 * for <code>PHPOutlineInformationControl</code> instances.
+	 *
+	 * @param sourceViewer the source viewer to be configured by this configuration
+	 * @param commandId the ID of the command that opens this control
+	 * @return an information control creator
+	 * @since 2.1
+	 */
+	private IInformationControlCreator getOutlinePresenterControlCreator(ISourceViewer sourceViewer, final String commandId) {
+		return new IInformationControlCreator() {
+			public IInformationControl createInformationControl(Shell parent) {
+				int shellStyle = SWT.RESIZE;
+				int treeStyle = SWT.V_SCROLL | SWT.H_SCROLL;
+				return new PHPOutlineInformationControl(parent, shellStyle, treeStyle, commandId);
+			}
+		};
 	}
 }

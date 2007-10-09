@@ -10,6 +10,7 @@ import org.eclipse.jface.text.formatter.FormattingContext;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
+import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
@@ -21,6 +22,7 @@ import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -36,10 +38,22 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_;
 	private SourceViewerConfiguration config;
+	private ITextEditor textEditor;
+	private IInformationPresenter fOutlinePresenter;
 
 	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 	}
+	
+	public PHPStructuredTextViewer(ITextEditor textEditor, Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
+		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
+		this.textEditor = textEditor;
+	}
+	
+	public ITextEditor getTextEditor() {
+		return textEditor;
+	}
+
 
 	/**
 	 * This method overrides WST since sometimes we get a subset of the document and NOT the whole document, although the case is FORMAT_DOCUMENT. In all other cases we call the parent method.
@@ -124,6 +138,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// PlatformStatusLineUtil.displayErrorMessage(err);
 			// PlatformStatusLineUtil.addOneTimeClearListener();
 			// }
+		} else if (operation == QUICK_ASSIST) {
+			if (fOutlinePresenter != null) {
+				fOutlinePresenter.showInformation();
+			}
 		} else {
 			super.doOperation(operation);
 		}
@@ -220,6 +238,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// 248036 - disable the content assist operation if no content assistant
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
 		}
+		
+		fOutlinePresenter= phpConfiguration.getOutlinePresenter(this);
+		if (fOutlinePresenter != null)
+			fOutlinePresenter.install(this);
 	}
 	
 	/**
