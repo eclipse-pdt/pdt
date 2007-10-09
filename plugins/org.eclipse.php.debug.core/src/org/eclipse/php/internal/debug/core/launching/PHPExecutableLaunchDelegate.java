@@ -15,10 +15,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
@@ -135,7 +132,14 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 			if (project == null) {
 				project = res.getProject();
-				absolutePath = res.getLocation().toString();
+				IPath location = res.getLocation();
+				if (location != null) {
+					absolutePath = location.toString();
+				} else if (res.getLocationURI() != null) {
+					absolutePath = res.getLocationURI().toString();
+				} else {
+					absolutePath = res.getFullPath().toString();
+				}
 			}
 			if (project == null) {
 				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));
@@ -337,7 +341,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			return super.saveBeforeLaunch(configuration, mode, monitor);
 		}
 		IPath path = Path.fromOSString(filePath);
-		
+
 		// find if the file is under UNTITLED_FOLDER_PATH always look like .../Untitled_Documents/filename.php
 		// note that if segment count == 1, no need to check since there's no parent folder
 		if ((path.segmentCount() > 1) && UNTITLED_FOLDER_PATH.equals(path.segment(path.segmentCount() - 2))) {
