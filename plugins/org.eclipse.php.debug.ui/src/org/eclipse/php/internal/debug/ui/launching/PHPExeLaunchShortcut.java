@@ -177,7 +177,15 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 					if (contentType.isAssociatedWith(file.getName())) {
 						phpPathString = file.getFullPath().toString();
-						phpFileLocation = file.getLocation().toString();
+						IPath location = file.getLocation();
+						//check for non null values - EFS issues
+						if (location != null) {
+							phpFileLocation = location.toString();
+						} else if (file.getLocationURI() != null) {
+							phpFileLocation = file.getLocationURI().toString();
+						} else {
+							phpFileLocation = file.getFullPath().toString();
+						}
 					}
 				}
 
@@ -295,7 +303,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	protected static ILaunchConfiguration createConfiguration(IProject phpProject, String phpPathString, String phpFileFullLocation, PHPexeItem defaultEXE, ILaunchConfigurationType configType) throws CoreException {
 		ILaunchConfiguration config = null;
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(phpPathString));
-		
+
 		// Set the delegate class according to selected executable.
 		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, defaultEXE.getDebuggerID());
 		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(defaultEXE.getDebuggerID());
