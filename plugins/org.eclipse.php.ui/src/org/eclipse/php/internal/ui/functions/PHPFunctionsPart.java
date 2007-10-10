@@ -153,7 +153,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 
 	private TreeViewer createViewer(Composite composite) {
 		PatternFilter patternFilter = new PatternFilter();
-        patternFilter.setIncludeLeadingWildcard(true);
+//        patternFilter.setIncludeLeadingWildcard(true);
         FilteredTree filteredTree = new FilteredTree(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter);
 		return filteredTree.getViewer();
 	}
