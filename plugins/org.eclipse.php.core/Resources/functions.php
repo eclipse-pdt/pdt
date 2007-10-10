@@ -23,6 +23,7 @@ $classes = parse_phpdoc_classes ($phpdoc_dir);
 
 $processedFunctions = array();
 $processedClasses = array();
+$processedConstants = array();
 
 print "<?php\n";
 $extensions = get_loaded_extensions();
@@ -41,6 +42,14 @@ $intClasses = get_declared_classes();
 foreach ($intClasses as $intClass) {
 	if (!$processedClasses[strtolower($intClass)]) {
 		print_class (new ReflectionClass ($intClass));
+	}
+}
+
+print "\n";
+$intConstants = get_defined_constants(true);
+foreach ($intConstants["internal"] as $name => $value) {
+	if (!$processedConstants[$name]) {
+		print_constant ($name, $value);
 	}
 }
 
@@ -394,12 +403,34 @@ function print_parameters_ref ($paramsRef) {
  */
 function print_constants ($constants, $tabs = 0) {
 	foreach ($constants as $name => $value) {
-		if (!is_numeric ($value)) {
-			$value = "'{$value}'";
-		}
-		print_tabs ($tabs);
-		print "define ('{$name}', {$value});\n";
+		print_constant ($name, $value, $tabs);
 	}
+}
+
+function print_constant ($name, $value = null, $tabs = 0) {
+	global $processedConstants;
+	$processedConstants [$name] = true;
+
+	if ($value === null) {
+		$value = constant ($name);
+	}
+	$value = escape_const_value ($value);
+
+	print_tabs ($tabs);
+	print "define ('{$name}', {$value});\n";
+}
+
+function escape_const_value ($value) {
+	if (!is_numeric ($value) && !is_bool ($value) && $value !== null) {
+		$value = '"'.addcslashes ($value, "\"\r\n\t").'"';
+	} else if ($value === null) {
+		$value = "null";
+	} else if ($value === false) {
+		$value = "false";
+	} else if ($value === true) {
+		$value = "true";
+	}
+	return $value;
 }
 
 
@@ -410,9 +441,7 @@ function print_constants ($constants, $tabs = 0) {
  */
 function print_class_constants ($constants, $tabs = 0) {
 	foreach ($constants as $name => $value) {
-		if (!is_numeric ($value)) {
-			$value = "'{$value}'";
-		}
+		$value = escape_const_value ($value);
 		print_tabs ($tabs);
 		print "const {$name} = {$value};\n";
 	}

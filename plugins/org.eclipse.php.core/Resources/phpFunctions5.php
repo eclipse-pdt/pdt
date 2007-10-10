@@ -46,7 +46,7 @@ function libxml_clear_errors () {}
 function libxml_get_errors () {}
 
 define ('LIBXML_VERSION', 20627);
-define ('LIBXML_DOTTED_VERSION', '2.6.27');
+define ('LIBXML_DOTTED_VERSION', "2.6.27");
 define ('LIBXML_NOENT', 2);
 define ('LIBXML_DTDLOAD', 4);
 define ('LIBXML_DTDATTR', 8);
@@ -309,7 +309,7 @@ define ('XML_OPTION_CASE_FOLDING', 1);
 define ('XML_OPTION_TARGET_ENCODING', 2);
 define ('XML_OPTION_SKIP_TAGSTART', 3);
 define ('XML_OPTION_SKIP_WHITE', 4);
-define ('XML_SAX_IMPL', 'libxml');
+define ('XML_SAX_IMPL', "libxml");
 
 // End of xml v.
 
@@ -632,7 +632,7 @@ define ('PREG_INTERNAL_ERROR', 1);
 define ('PREG_BACKTRACK_LIMIT_ERROR', 2);
 define ('PREG_RECURSION_LIMIT_ERROR', 3);
 define ('PREG_BAD_UTF8_ERROR', 4);
-define ('PCRE_VERSION', '7.2 2007-06-19');
+define ('PCRE_VERSION', "7.2 2007-06-19");
 
 // End of pcre v.
 
@@ -7926,8 +7926,8 @@ define ('CRYPT_STD_DES', 1);
 define ('CRYPT_EXT_DES', 0);
 define ('CRYPT_MD5', 1);
 define ('CRYPT_BLOWFISH', 1);
-define ('DIRECTORY_SEPARATOR', '/');
-define ('PATH_SEPARATOR', ':');
+define ('DIRECTORY_SEPARATOR', "/");
+define ('PATH_SEPARATOR', ":");
 define ('GLOB_BRACE', 1024);
 define ('GLOB_MARK', 2);
 define ('GLOB_NOSORT', 4);
@@ -11627,17 +11627,17 @@ define ('DOM_VALIDATION_ERR', 16);
 // Start of date v.5.2.4
 
 class DateTime  {
-	const ATOM = 'Y-m-d\TH:i:sP';
-	const COOKIE = 'l, d-M-y H:i:s T';
-	const ISO8601 = 'Y-m-d\TH:i:sO';
-	const RFC822 = 'D, d M y H:i:s O';
-	const RFC850 = 'l, d-M-y H:i:s T';
-	const RFC1036 = 'D, d M y H:i:s O';
-	const RFC1123 = 'D, d M Y H:i:s O';
-	const RFC2822 = 'D, d M Y H:i:s O';
-	const RFC3339 = 'Y-m-d\TH:i:sP';
-	const RSS = 'D, d M Y H:i:s O';
-	const W3C = 'Y-m-d\TH:i:sP';
+	const ATOM = "Y-m-d\TH:i:sP";
+	const COOKIE = "l, d-M-y H:i:s T";
+	const ISO8601 = "Y-m-d\TH:i:sO";
+	const RFC822 = "D, d M y H:i:s O";
+	const RFC850 = "l, d-M-y H:i:s T";
+	const RFC1036 = "D, d M y H:i:s O";
+	const RFC1123 = "D, d M Y H:i:s O";
+	const RFC2822 = "D, d M Y H:i:s O";
+	const RFC3339 = "Y-m-d\TH:i:sP";
+	const RSS = "D, d M Y H:i:s O";
+	const W3C = "Y-m-d\TH:i:sP";
 
 
 	public function __construct () {}
@@ -11993,17 +11993,17 @@ function date_sunset ($timestamp, $format = null, $latitude = null, $longitude =
  */
 function date_sun_info ($time, $latitude, $longitude) {}
 
-define ('DATE_ATOM', 'Y-m-d\TH:i:sP');
-define ('DATE_COOKIE', 'l, d-M-y H:i:s T');
-define ('DATE_ISO8601', 'Y-m-d\TH:i:sO');
-define ('DATE_RFC822', 'D, d M y H:i:s O');
-define ('DATE_RFC850', 'l, d-M-y H:i:s T');
-define ('DATE_RFC1036', 'D, d M y H:i:s O');
-define ('DATE_RFC1123', 'D, d M Y H:i:s O');
-define ('DATE_RFC2822', 'D, d M Y H:i:s O');
-define ('DATE_RFC3339', 'Y-m-d\TH:i:sP');
-define ('DATE_RSS', 'D, d M Y H:i:s O');
-define ('DATE_W3C', 'Y-m-d\TH:i:sP');
+define ('DATE_ATOM', "Y-m-d\TH:i:sP");
+define ('DATE_COOKIE', "l, d-M-y H:i:s T");
+define ('DATE_ISO8601', "Y-m-d\TH:i:sO");
+define ('DATE_RFC822', "D, d M y H:i:s O");
+define ('DATE_RFC850', "l, d-M-y H:i:s T");
+define ('DATE_RFC1036', "D, d M y H:i:s O");
+define ('DATE_RFC1123', "D, d M Y H:i:s O");
+define ('DATE_RFC2822', "D, d M Y H:i:s O");
+define ('DATE_RFC3339', "Y-m-d\TH:i:sP");
+define ('DATE_RSS', "D, d M Y H:i:s O");
+define ('DATE_W3C', "Y-m-d\TH:i:sP");
 define ('SUNFUNCS_RET_TIMESTAMP', 0);
 define ('SUNFUNCS_RET_STRING', 1);
 define ('SUNFUNCS_RET_DOUBLE', 2);
@@ -12682,7 +12682,7 @@ function openssl_public_decrypt ($data, &$decrypted, $key, $padding = null) {}
  */
 function openssl_error_string () {}
 
-define ('OPENSSL_VERSION_TEXT', 'OpenSSL 0.9.8d 28 Sep 2006');
+define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8d 28 Sep 2006");
 define ('OPENSSL_VERSION_NUMBER', 9470031);
 define ('X509_PURPOSE_SSL_CLIENT', 1);
 define ('X509_PURPOSE_SSL_SERVER', 2);
@@ -15846,9 +15846,9 @@ define ('XSL_CLONE_AUTO', 0);
 define ('XSL_CLONE_NEVER', -1);
 define ('XSL_CLONE_ALWAYS', 1);
 define ('LIBXSLT_VERSION', 10117);
-define ('LIBXSLT_DOTTED_VERSION', '1.1.17');
+define ('LIBXSLT_DOTTED_VERSION', "1.1.17");
 define ('LIBEXSLT_VERSION', 813);
-define ('LIBEXSLT_DOTTED_VERSION', '1.1.17');
+define ('LIBEXSLT_DOTTED_VERSION', "1.1.17");
 
 // End of xsl v.0.1
 
@@ -16987,11 +16987,11 @@ define ('IMG_FILTER_SELECTIVE_BLUR', 8);
 define ('IMG_FILTER_EMBOSS', 6);
 define ('IMG_FILTER_MEAN_REMOVAL', 9);
 define ('IMG_FILTER_SMOOTH', 10);
-define ('GD_VERSION', '2.0.35');
+define ('GD_VERSION', "2.0.35");
 define ('GD_MAJOR_VERSION', 2);
 define ('GD_MINOR_VERSION', 0);
 define ('GD_RELEASE_VERSION', 35);
-define ('GD_EXTRA_VERSION', '');
+define ('GD_EXTRA_VERSION', "");
 define ('PNG_NO_FILTER', 0);
 define ('PNG_FILTER_NONE', 8);
 define ('PNG_FILTER_SUB', 16);
@@ -17111,7 +17111,7 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
  */
 function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = null) {}
 
-define ('ICONV_IMPL', 'glibc');
+define ('ICONV_IMPL', "glibc");
 define ('ICONV_VERSION', 1.9);
 define ('ICONV_MIME_DECODE_STRICT', 1);
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
@@ -19385,7 +19385,7 @@ define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
 // End of calendar v.
 
-// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.17 2007/10/10 17:02:30 mspector Exp $
+// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.18 2007/10/10 17:26:13 mspector Exp $
 
 /**
  * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
@@ -19437,7 +19437,7 @@ function exif_imagetype ($filename) {}
 
 define ('EXIF_USE_MBSTRING', 0);
 
-// End of exif v.1.4 $Id: phpFunctions5.php,v 1.17 2007/10/10 17:02:30 mspector Exp $
+// End of exif v.1.4 $Id: phpFunctions5.php,v 1.18 2007/10/10 17:26:13 mspector Exp $
 
 // Start of gmp v.
 
@@ -19797,7 +19797,7 @@ function gmp_nextprime ($a) {}
 define ('GMP_ROUND_ZERO', 0);
 define ('GMP_ROUND_PLUSINF', 1);
 define ('GMP_ROUND_MINUSINF', 2);
-define ('GMP_VERSION', '4.2.1');
+define ('GMP_VERSION', "4.2.1");
 
 // End of gmp v.
 
@@ -20720,42 +20720,42 @@ define ('MCRYPT_DECRYPT', 1);
 define ('MCRYPT_DEV_RANDOM', 0);
 define ('MCRYPT_DEV_URANDOM', 1);
 define ('MCRYPT_RAND', 2);
-define ('MCRYPT_3DES', 'tripledes');
-define ('MCRYPT_ARCFOUR_IV', 'arcfour-iv');
-define ('MCRYPT_ARCFOUR', 'arcfour');
-define ('MCRYPT_BLOWFISH', 'blowfish');
-define ('MCRYPT_BLOWFISH_COMPAT', 'blowfish-compat');
-define ('MCRYPT_CAST_128', 'cast-128');
-define ('MCRYPT_CAST_256', 'cast-256');
-define ('MCRYPT_CRYPT', 'crypt');
-define ('MCRYPT_DES', 'des');
-define ('MCRYPT_ENIGNA', 'crypt');
-define ('MCRYPT_GOST', 'gost');
-define ('MCRYPT_LOKI97', 'loki97');
-define ('MCRYPT_PANAMA', 'panama');
-define ('MCRYPT_RC2', 'rc2');
-define ('MCRYPT_RIJNDAEL_128', 'rijndael-128');
-define ('MCRYPT_RIJNDAEL_192', 'rijndael-192');
-define ('MCRYPT_RIJNDAEL_256', 'rijndael-256');
-define ('MCRYPT_SAFER64', 'safer-sk64');
-define ('MCRYPT_SAFER128', 'safer-sk128');
-define ('MCRYPT_SAFERPLUS', 'saferplus');
-define ('MCRYPT_SERPENT', 'serpent');
-define ('MCRYPT_THREEWAY', 'threeway');
-define ('MCRYPT_TRIPLEDES', 'tripledes');
-define ('MCRYPT_TWOFISH', 'twofish');
-define ('MCRYPT_WAKE', 'wake');
-define ('MCRYPT_XTEA', 'xtea');
-define ('MCRYPT_IDEA', 'idea');
-define ('MCRYPT_MARS', 'mars');
-define ('MCRYPT_RC6', 'rc6');
-define ('MCRYPT_SKIPJACK', 'skipjack');
-define ('MCRYPT_MODE_CBC', 'cbc');
-define ('MCRYPT_MODE_CFB', 'cfb');
-define ('MCRYPT_MODE_ECB', 'ecb');
-define ('MCRYPT_MODE_NOFB', 'nofb');
-define ('MCRYPT_MODE_OFB', 'ofb');
-define ('MCRYPT_MODE_STREAM', 'stream');
+define ('MCRYPT_3DES', "tripledes");
+define ('MCRYPT_ARCFOUR_IV', "arcfour-iv");
+define ('MCRYPT_ARCFOUR', "arcfour");
+define ('MCRYPT_BLOWFISH', "blowfish");
+define ('MCRYPT_BLOWFISH_COMPAT', "blowfish-compat");
+define ('MCRYPT_CAST_128', "cast-128");
+define ('MCRYPT_CAST_256', "cast-256");
+define ('MCRYPT_CRYPT', "crypt");
+define ('MCRYPT_DES', "des");
+define ('MCRYPT_ENIGNA', "crypt");
+define ('MCRYPT_GOST', "gost");
+define ('MCRYPT_LOKI97', "loki97");
+define ('MCRYPT_PANAMA', "panama");
+define ('MCRYPT_RC2', "rc2");
+define ('MCRYPT_RIJNDAEL_128', "rijndael-128");
+define ('MCRYPT_RIJNDAEL_192', "rijndael-192");
+define ('MCRYPT_RIJNDAEL_256', "rijndael-256");
+define ('MCRYPT_SAFER64', "safer-sk64");
+define ('MCRYPT_SAFER128', "safer-sk128");
+define ('MCRYPT_SAFERPLUS', "saferplus");
+define ('MCRYPT_SERPENT', "serpent");
+define ('MCRYPT_THREEWAY', "threeway");
+define ('MCRYPT_TRIPLEDES', "tripledes");
+define ('MCRYPT_TWOFISH', "twofish");
+define ('MCRYPT_WAKE', "wake");
+define ('MCRYPT_XTEA', "xtea");
+define ('MCRYPT_IDEA', "idea");
+define ('MCRYPT_MARS', "mars");
+define ('MCRYPT_RC6', "rc6");
+define ('MCRYPT_SKIPJACK', "skipjack");
+define ('MCRYPT_MODE_CBC', "cbc");
+define ('MCRYPT_MODE_CFB', "cfb");
+define ('MCRYPT_MODE_ECB', "ecb");
+define ('MCRYPT_MODE_NOFB', "nofb");
+define ('MCRYPT_MODE_OFB', "ofb");
+define ('MCRYPT_MODE_STREAM', "stream");
 
 // End of mcrypt v.
 
@@ -23268,8 +23268,8 @@ define ('APACHE_MAP', 200);
 define ('SOAP_ENC_OBJECT', 301);
 define ('SOAP_ENC_ARRAY', 300);
 define ('XSD_1999_TIMEINSTANT', 401);
-define ('XSD_NAMESPACE', 'http://www.w3.org/2001/XMLSchema');
-define ('XSD_1999_NAMESPACE', 'http://www.w3.org/1999/XMLSchema');
+define ('XSD_NAMESPACE', "http://www.w3.org/2001/XMLSchema");
+define ('XSD_1999_NAMESPACE', "http://www.w3.org/1999/XMLSchema");
 define ('SOAP_SINGLE_ELEMENT_ARRAYS', 1);
 define ('SOAP_WAIT_ONE_WAY_CALLS', 2);
 define ('SOAP_USE_XSI_ARRAY_TYPE', 4);
@@ -24875,6 +24875,59 @@ class ErrorException extends Exception  {
 
 }
 
+define ('E_ERROR', 1);
+define ('E_RECOVERABLE_ERROR', 4096);
+define ('E_WARNING', 2);
+define ('E_PARSE', 4);
+define ('E_NOTICE', 8);
+define ('E_STRICT', 2048);
+define ('E_CORE_ERROR', 16);
+define ('E_CORE_WARNING', 32);
+define ('E_COMPILE_ERROR', 64);
+define ('E_COMPILE_WARNING', 128);
+define ('E_USER_ERROR', 256);
+define ('E_USER_WARNING', 512);
+define ('E_USER_NOTICE', 1024);
+define ('E_ALL', 6143);
+define ('TRUE', true);
+define ('FALSE', false);
+define ('NULL', null);
+define ('ZEND_THREAD_SAFE', false);
+define ('PHP_VERSION', "5.2.4");
+define ('PHP_OS', "Linux");
+define ('PHP_SAPI', "cli");
+define ('DEFAULT_INCLUDE_PATH', ".:/usr/local/Zend/Core/share/pear");
+define ('PEAR_INSTALL_DIR', "/usr/local/Zend/Core/share/pear");
+define ('PEAR_EXTENSION_DIR', "/usr/local/Zend/Core/lib/php/20060613");
+define ('PHP_EXTENSION_DIR', "/usr/local/Zend/Core/lib/php/20060613");
+define ('PHP_PREFIX', "/usr/local/Zend/Core");
+define ('PHP_BINDIR', "/usr/local/Zend/Core/bin");
+define ('PHP_LIBDIR', "/usr/local/Zend/Core/lib/php");
+define ('PHP_DATADIR', "/usr/local/Zend/Core/share/php");
+define ('PHP_SYSCONFDIR', "/usr/local/Zend/Core/etc");
+define ('PHP_LOCALSTATEDIR', "/usr/local/Zend/Core/var");
+define ('PHP_CONFIG_FILE_PATH', "/etc");
+define ('PHP_CONFIG_FILE_SCAN_DIR', "");
+define ('PHP_SHLIB_SUFFIX', "so");
+define ('PHP_EOL', "\n");
+define ('PHP_INT_MAX', 9223372036854775807);
+define ('PHP_INT_SIZE', 8);
+define ('PHP_OUTPUT_HANDLER_START', 1);
+define ('PHP_OUTPUT_HANDLER_CONT', 2);
+define ('PHP_OUTPUT_HANDLER_END', 4);
+define ('UPLOAD_ERR_OK', 0);
+define ('UPLOAD_ERR_INI_SIZE', 1);
+define ('UPLOAD_ERR_FORM_SIZE', 2);
+define ('UPLOAD_ERR_PARTIAL', 3);
+define ('UPLOAD_ERR_NO_FILE', 4);
+define ('UPLOAD_ERR_NO_TMP_DIR', 6);
+define ('UPLOAD_ERR_CANT_WRITE', 7);
+define ('UPLOAD_ERR_EXTENSION', 8);
+define ('ZEND_CORE_DIR', "/usr/local/Zend/Core");
+define ('STDIN', "Resource id #1");
+define ('STDOUT', "Resource id #2");
+define ('STDERR', "Resource id #3");
+
 
 // Start of Zend Extensions
 
@@ -25707,5 +25760,6 @@ function zend_optimizer_version() {}
 
 
 // End of Zend Extensions
+
 
 ?>
