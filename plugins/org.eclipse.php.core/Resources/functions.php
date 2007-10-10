@@ -21,11 +21,29 @@ if (!$phpdoc_dir) {
 $functions = parse_phpdoc_functions ($phpdoc_dir);
 $classes = parse_phpdoc_classes ($phpdoc_dir);
 
+$processedFunctions = array();
+$processedClasses = array();
+
 print "<?php\n";
 $extensions = get_loaded_extensions();
 foreach ($extensions as $extName) {	
 	print_extension (new ReflectionExtension ($extName));
 }
+
+$intFunctions = get_defined_functions();
+foreach ($intFunctions["internal"] as $intFunction) {
+	if (!$processedFunctions[strtolower($intFunction)]) {
+		print_function (new ReflectionFunction ($intFunction));
+	}
+}
+
+$intClasses = get_declared_classes();
+foreach ($intClasses as $intClass) {
+	if (!$processedClasses[strtolower($intClass)]) {
+		print_class (new ReflectionClass ($intClass));
+	}
+}
+
 print "?>";
 
 // === Functions ===
@@ -201,6 +219,9 @@ function print_extension ($extRef) {
  * @param tabs integer[optional] number of tabs for indentation
  */
 function print_class ($classRef, $tabs = 0) {
+	global $processedClasses;
+	$processedClasses [strtolower($classRef->getName())] = true;
+
 	print "\n";
 	print_doccomment ($classRef, $tabs);
 	print_tabs ($tabs);
@@ -271,6 +292,10 @@ function print_property ($propertyRef, $tabs = 0) {
 
 function print_function ($functionRef, $tabs = 0) {
 	global $functions;
+	global $processedFunctions;
+
+	$funckey = make_funckey_from_ref ($functionRef);
+	$processedFunctions[$funckey] = true;
 
 	print "\n";
 	print_doccomment ($functionRef, $tabs);
@@ -284,7 +309,6 @@ function print_function ($functionRef, $tabs = 0) {
 		print "&";
 	}
 	print "{$functionRef->getName()} (";
-	$funckey = make_funckey_from_ref ($functionRef);
 	$parameters = $functions[$funckey]['parameters'];
 	if ($parameters) {
 		print_parameters ($parameters);
