@@ -10,13 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -28,6 +30,7 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
+import org.eclipse.php.internal.ui.util.Resources;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 
@@ -144,10 +147,13 @@ public class RefreshAction extends SelectionDispatchAction {
 	private void checkLocationDeleted(IProject project) throws CoreException {
 		if (!project.exists())
 			return;
-		File location = project.getLocation().toFile();
-		if (!location.exists()) {
+		URI location= project.getLocationURI();
+		if (location == null)
+			return;
+		IFileStore store= EFS.getStore(location);
+		if (!store.fetchInfo().exists()) {
 			final String message = MessageFormat.format(PHPUIMessages.RefreshAction_locationDeleted_message, //$NON-NLS-1$
-				new Object[] { project.getName(), location.getAbsolutePath() });
+				new Object[] { project.getName(), Resources.getLocationString(project) });
 			final boolean[] result = new boolean[1];
 			// Must prompt user in UI thread (we're in the operation thread here).
 			getShell().getDisplay().syncExec(new Runnable() {
