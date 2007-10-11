@@ -474,27 +474,6 @@
 			description="%CodingActionSet.description"
 			visible="false"
 			id="org.eclipse.php.ui.CodingActionSet">
-			<!--Refactoring Menu:-->
-			<menu
-				label="%Refactoring.menu.label"
-				path="edit"
-				id="org.eclipse.php.ui.refactoring.menu">
-				<separator name="reorgGroup" />
-				<separator name="typeGroup" />
-			</menu>
-			<!--Reorganization group:-->
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.move.element"
-				label="%Refactoring.moveAction.label"
-				retarget="true"
-				menubarPath="org.eclipse.php.ui.refactoring.menu/reorgGroup"
-				id="org.eclipse.php.ui.actions.Move" />
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.rename.element"
-         		id="org.eclipse.php.ui.actions.Rename"
-         		label="%Refactoring.renameAction.label"
-         		menubarPath="org.eclipse.php.ui.refactoring.menu/reorgGroup"
-         		retarget="true"/>
 			<!--Source Menu:-->
 			<menu
 				label="%SourceMenu.label"
@@ -579,6 +558,33 @@
 				label="%openPHPSearchPageAction.label"
 				menubarPath="org.eclipse.search.menu/dialogGroup" />
 		</actionSet>
+  		<actionSet
+        		description="%RefactoringActionSet.description"
+        		id="org.eclipse.php.ui.RefactoringingActionSet"
+        		label="%RefactoringActionSet.label"
+        		visible="false">
+        		<!--Refactoring Menu:-->
+	   		<menu
+	   			label="%Refactoring.menu.label"
+				path="edit"
+				id="org.eclipse.php.ui.refactoring.menu">
+				<separator name="reorgGroup" />
+				<separator name="typeGroup" />
+	   		</menu>
+	   		<!--Reorganization group:-->
+			<action
+				definitionId="org.eclipse.php.ui.edit.text.move.element"
+				label="%Refactoring.moveAction.label"
+				retarget="true"
+				menubarPath="org.eclipse.php.ui.refactoring.menu/reorgGroup"
+				id="org.eclipse.php.ui.actions.Move" />
+			<action
+				definitionId="org.eclipse.php.ui.edit.text.rename.element"
+         		id="org.eclipse.php.ui.actions.Rename"
+         		label="%Refactoring.renameAction.label"
+         		menubarPath="org.eclipse.php.ui.refactoring.menu/reorgGroup"
+         		retarget="true"/>
+  		</actionSet>
 	</extension>
 
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
@@ -586,6 +592,9 @@
 			<part id="org.eclipse.php.ui.explorer" />
 		</actionSetPartAssociation>
 		<actionSetPartAssociation targetID="org.eclipse.php.ui.CodingActionSet">
+			<part id="org.eclipse.php.editor" />
+		</actionSetPartAssociation>
+		<actionSetPartAssociation targetID="org.eclipse.php.ui.RefactoringingActionSet">
 			<part id="org.eclipse.php.ui.explorer" />
 			<part id="org.eclipse.php.editor" />
 		</actionSetPartAssociation>
