@@ -620,18 +620,100 @@ function preg_grep ($pattern, array $input, $flags = null) {}
  */
 function preg_last_error () {}
 
+
+/**
+ * Orders results so that $matches[0] is an array of full pattern
+ *  matches, $matches[1] is an array of strings matched by the first
+ *  parenthesized subpattern, and so on. This flag is only used with
+ *  preg_match_all.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_PATTERN_ORDER', 1);
+
+/**
+ * Orders results so that $matches[0] is an array of first set of
+ *  matches, $matches[1] is an array of second set of matches, and so
+ *  on. This flag is only used with preg_match_all.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_SET_ORDER', 2);
+
+/**
+ * See the description of
+ *  PREG_SPLIT_OFFSET_CAPTURE. This flag is
+ *  available since PHP 4.3.0.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_OFFSET_CAPTURE', 256);
+
+/**
+ * This flag tells preg_split to return only non-empty
+ *  pieces.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_SPLIT_NO_EMPTY', 1);
+
+/**
+ * This flag tells preg_split to capture
+ *  parenthesized expression in the delimiter pattern as well. This flag
+ *  is available since PHP 4.0.5.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_SPLIT_DELIM_CAPTURE', 2);
+
+/**
+ * If this flag is set, for every occurring match the appendant string
+ *  offset will also be returned. Note that this changes the return
+ *  values in an array where every element is an array consisting of the
+ *  matched string at offset 0 and its string offset within subject at
+ *  offset 1. This flag is available since PHP 4.3.0
+ *  and is only used for preg_split.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_SPLIT_OFFSET_CAPTURE', 4);
 define ('PREG_GREP_INVERT', 1);
+
+/**
+ * Returned by preg_last_error if there were no
+ *  errors. Available since PHP 5.2.0.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_NO_ERROR', 0);
+
+/**
+ * Returned by preg_last_error if there was an
+ *  internal PCRE error. Available since PHP 5.2.0.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_INTERNAL_ERROR', 1);
+
+/**
+ * Returned by preg_last_error if backtrack limit was exhausted.
+ *  Available since PHP 5.2.0.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_BACKTRACK_LIMIT_ERROR', 2);
+
+/**
+ * Returned by preg_last_error if recursion limit was exhausted.
+ *  Available since PHP 5.2.0.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_RECURSION_LIMIT_ERROR', 3);
+
+/**
+ * Returned by preg_last_error if the last error was
+ *  caused by malformed UTF-8 data (only when running a regex in UTF-8 mode). Available
+ *  since PHP 5.2.0.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PREG_BAD_UTF8_ERROR', 4);
+
+/**
+ * PCRE version and release date (e.g. "7.0 18-Dec-2006"). Available since
+ *  PHP 5.2.4.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
 define ('PCRE_VERSION', "7.2 2007-06-19");
 
 // End of pcre v.
@@ -7804,18 +7886,82 @@ define ('LOCK_SH', 1);
 define ('LOCK_EX', 2);
 define ('LOCK_UN', 3);
 define ('LOCK_NB', 4);
+
+/**
+ * A connection with an external resource has been established.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_CONNECT', 2);
+
+/**
+ * Additional authorization is required to access the specified resource.
+ *  Typical issued with severity level of
+ *  STREAM_NOTIFY_SEVERITY_ERR.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_AUTH_REQUIRED', 3);
+
+/**
+ * Authorization has been completed (with or without success).
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_AUTH_RESULT', 10);
+
+/**
+ * The mime-type of resource has been identified,
+ *  refer to message for a description of the
+ *  discovered type.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_MIME_TYPE_IS', 4);
+
+/**
+ * The size of the resource has been discovered.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_FILE_SIZE_IS', 5);
+
+/**
+ * The external resource has redirected the stream to an alternate
+ *  location. Refer to message.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_REDIRECTED', 6);
+
+/**
+ * Indicates current progress of the stream transfer in
+ *  bytes_transferred and possibly
+ *  bytes_max as well.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_PROGRESS', 7);
+
+/**
+ * A generic error occurred on the stream, consult
+ *  message and message_code
+ *  for details.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_FAILURE', 9);
 define ('STREAM_NOTIFY_COMPLETED', 8);
 define ('STREAM_NOTIFY_RESOLVE', 1);
+
+/**
+ * Normal, non-error related, notification.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_SEVERITY_INFO', 0);
+
+/**
+ * Non critical error condition. Processing may continue.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_SEVERITY_WARN', 1);
+
+/**
+ * A critical error occurred. Processing cannot continue.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_SEVERITY_ERR', 2);
 define ('STREAM_FILTER_READ', 1);
 define ('STREAM_FILTER_WRITE', 2);
@@ -7831,8 +7977,26 @@ define ('STREAM_CRYPTO_METHOD_SSLv2_SERVER', 4);
 define ('STREAM_CRYPTO_METHOD_SSLv3_SERVER', 5);
 define ('STREAM_CRYPTO_METHOD_SSLv23_SERVER', 6);
 define ('STREAM_CRYPTO_METHOD_TLS_SERVER', 7);
+
+/**
+ * Used with stream_socket_shutdown to disable
+ *  further receptions. Added in PHP 5.2.1.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SHUT_RD', 0);
+
+/**
+ * Used with stream_socket_shutdown to disable
+ *  further transmissions. Added in PHP 5.2.1.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SHUT_WR', 1);
+
+/**
+ * Used with stream_socket_shutdown to disable
+ *  further receptions and transmissions. Added in PHP 5.2.1.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SHUT_RDWR', 2);
 define ('STREAM_PF_INET', 2);
 define ('STREAM_PF_INET6', 10);
@@ -7992,9 +8156,23 @@ define ('ASSERT_CALLBACK', 2);
 define ('ASSERT_BAIL', 3);
 define ('ASSERT_WARNING', 4);
 define ('ASSERT_QUIET_EVAL', 5);
+
+/**
+ * Flag indicating if the stream
+ *  used the include path.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_USE_PATH', 1);
 define ('STREAM_IGNORE_URL', 2);
 define ('STREAM_ENFORCE_SAFE_MODE', 4);
+
+/**
+ * Flag indicating if the wrapper
+ *  is responsible for raising errors using trigger_error 
+ *  during opening of the stream. If this flag is not set, you
+ *  should not raise any errors.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_REPORT_ERRORS', 8);
 define ('STREAM_MUST_SEEK', 16);
 define ('STREAM_URL_STAT_LINK', 1);
@@ -8971,7 +9149,7 @@ define ('FILTER_FLAG_NO_PRIV_RANGE', 8388608);
 
 /**
  * DOM operations raise exceptions under particular circumstances, i.e.,
- *       when an operation is impossible to perform for logical reasons.
+ *  when an operation is impossible to perform for logical reasons.
  * @link http://php.net/manual/en/ref.dom.php
  */
 final class DOMException extends Exception  {
@@ -9038,8 +9216,8 @@ class DOMImplementationSource  {
 
 /**
  * The DOMImplementation interface provides a number
- *       of methods for performing operations that are independent of any 
- *       particular instance of the document object model.
+ *  of methods for performing operations that are independent of any 
+ *  particular instance of the document object model.
  * @link http://php.net/manual/en/ref.dom.php
  */
 class DOMImplementation  {
@@ -9961,7 +10139,7 @@ class DOMCharacterData extends DOMNode  {
 
 /**
  * Extends DOMNode. The DOMAttr
- *       interface represents an attribute in an DOMElement object.
+ *  interface represents an attribute in an DOMElement object.
  * @link http://php.net/manual/en/ref.dom.php
  */
 class DOMAttr extends DOMNode  {
@@ -14482,10 +14660,10 @@ define ('MYSQL_CLIENT_IGNORE_SPACE', 256);
 // Start of PDO v.1.0.4dev
 
 /**
- * Represents an error raised by PDO.  You should not throw a
- *       PDOException from your own code.
- *       See Exceptions for more
- *       information about Exceptions in PHP.
+ * Represents an error raised by PDO. You should not throw a
+ *  PDOException from your own code.
+ *  See Exceptions for more
+ *  information about Exceptions in PHP.
  * @link http://php.net/manual/en/ref.pdo.php
  */
 class PDOException extends RuntimeException  {
@@ -14727,7 +14905,7 @@ class PDO  {
 
 /**
  * Represents a prepared statement and, after the statement is executed, an 
- *       associated result set.
+ *  associated result set.
  * @link http://php.net/manual/en/ref.pdo.php
  */
 class PDOStatement implements Traversable {
@@ -15080,7 +15258,7 @@ function posix_isatty ($fd) {}
 /**
  * Pathname of current directory
  * @link http://php.net/manual/en/function.posix-getcwd.php
- * @return string a string of the absolute pathname on success.  
+ * @return string a string of the absolute pathname on success. 
  */
 function posix_getcwd () {}
 
@@ -18146,7 +18324,7 @@ final class SQLiteResult implements Iterator, Traversable, Countable {
 }
 
 /**
- * Represents an unbuffered SQLite result set.  Unbuffered results sets are sequential, forward-seeking only.
+ * Represents an unbuffered SQLite result set. Unbuffered results sets are sequential, forward-seeking only.
  * @link http://php.net/manual/en/ref.sqlite.php
  */
 final class SQLiteUnbuffered  {
@@ -19385,7 +19563,7 @@ define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
 // End of calendar v.
 
-// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.18 2007/10/10 17:26:13 mspector Exp $
+// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.19 2007/10/11 10:15:38 mspector Exp $
 
 /**
  * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
@@ -19437,7 +19615,7 @@ function exif_imagetype ($filename) {}
 
 define ('EXIF_USE_MBSTRING', 0);
 
-// End of exif v.1.4 $Id: phpFunctions5.php,v 1.18 2007/10/10 17:26:13 mspector Exp $
+// End of exif v.1.4 $Id: phpFunctions5.php,v 1.19 2007/10/11 10:15:38 mspector Exp $
 
 // Start of gmp v.
 
@@ -22290,7 +22468,7 @@ function pg_send_query_params ($connection, $query, array $params) {}
  * @param connection resource
  * @param stmtname string
  * @param query string
- * @return bool true on success, false on failure.  Use pg_get_result
+ * @return bool true on success, false on failure. Use pg_get_result
  */
 function pg_send_prepare ($connection, $stmtname, $query) {}
 
@@ -22300,7 +22478,7 @@ function pg_send_prepare ($connection, $stmtname, $query) {}
  * @param connection resource
  * @param stmtname string
  * @param params array
- * @return bool true on success, false on failure.  Use pg_get_result
+ * @return bool true on success, false on failure. Use pg_get_result
  */
 function pg_send_execute ($connection, $stmtname, array $params) {}
 
@@ -23045,9 +23223,9 @@ class SoapClient  {
 
 /**
  * SoapVar is a special low-level class for encoding
- *      parameters and returning values in non-WSDL mode. It's
- *      just a data holder and does not have any special methods except the constructor. 
- *      It's useful when you want to set the type property in SOAP request or response.
+ *  parameters and returning values in non-WSDL mode. It's
+ *  just a data holder and does not have any special methods except the constructor. 
+ *  It's useful when you want to set the type property in SOAP request or response.
  * @link http://php.net/manual/en/ref.soap.php
  */
 class SoapVar  {
@@ -23160,9 +23338,9 @@ class SoapFault extends Exception  {
 
 /**
  * SoapParam is a special low-level class for naming 
- *      parameters and returning values in non-WSDL mode. 
- *      It's just a data holder and it does not have any special methods except 
- *      its constructor.
+ *  parameters and returning values in non-WSDL mode. 
+ *  It's just a data holder and it does not have any special methods except 
+ *  its constructor.
  * @link http://php.net/manual/en/ref.soap.php
  */
 class SoapParam  {
@@ -23173,9 +23351,9 @@ class SoapParam  {
 
 /**
  * SoapHeader is a special low-level class for passing 
- *      or returning SOAP headers. It's just a data holder and it does not have any 
- *      special methods except its constructor. It can be used in the  method to pass a SOAP header or 
- *      in a SOAP header handler to return the header in a SOAP response.
+ *  or returning SOAP headers. It's just a data holder and it does not have any 
+ *  special methods except its constructor. It can be used in the  method to pass a SOAP header or 
+ *  in a SOAP header handler to return the header in a SOAP response.
  * @link http://php.net/manual/en/ref.soap.php
  */
 class SoapHeader  {
@@ -24928,6 +25106,45 @@ define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
 
+/**
+ * The full path and filename of the file. If used inside an include,
+ *  the name of the included file is returned.
+ *  Since PHP 4.0.2, __FILE__ always contains an
+ *  absolute path whereas in older versions it contained relative path
+ *  under some circumstances.
+ * @link http://php.net/manual/en/language.constants.php
+ */
+define ('__FILE__', null);
+
+/**
+ * The current line number of the file.
+ * @link http://php.net/manual/en/language.constants.php
+ */
+define ('__LINE__', null);
+
+/**
+ * The class name. (Added in PHP 4.3.0) As of PHP 5 this constant 
+ *  returns the class name as it was declared (case-sensitive). In PHP
+ *  4 its value is always lowercased.
+ * @link http://php.net/manual/en/language.constants.php
+ */
+define ('__CLASS__', null);
+
+/**
+ * The function name. (Added in PHP 4.3.0) As of PHP 5 this constant 
+ *  returns the function name as it was declared (case-sensitive). In
+ *  PHP 4 its value is always lowercased.
+ * @link http://php.net/manual/en/language.constants.php
+ */
+define ('__FUNCTION__', null);
+
+/**
+ * The class method name. (Added in PHP 5.0.0) The method name is
+ *  returned as it was declared (case-sensitive).
+ * @link http://php.net/manual/en/language.constants.php
+ */
+define ('__METHOD__', null);
+
 
 // Start of Zend Extensions
 
@@ -25760,6 +25977,5 @@ function zend_optimizer_version() {}
 
 
 // End of Zend Extensions
-
 
 ?>
