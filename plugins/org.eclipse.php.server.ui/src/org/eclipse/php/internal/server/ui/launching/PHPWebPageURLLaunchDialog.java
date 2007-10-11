@@ -94,7 +94,7 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 			if (comboIndex > -1) {
 				combo.select(comboIndex);
 			} else {
-				combo.add(selectedURL);
+				combo.add(selectedURL, 0);
 				combo.select(0);
 			}
 		} catch (CoreException e) {
