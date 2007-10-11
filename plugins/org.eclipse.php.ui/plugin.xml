@@ -597,6 +597,7 @@
 		<actionSetPartAssociation targetID="org.eclipse.php.ui.RefactoringingActionSet">
 			<part id="org.eclipse.php.ui.explorer" />
 			<part id="org.eclipse.php.editor" />
+   			<part id="org.eclipse.php.ui.projectOutline" />
 		</actionSetPartAssociation>
 	</extension>
 
