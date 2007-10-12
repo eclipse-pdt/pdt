@@ -12,7 +12,7 @@ class LibXMLError  {
  * Set the streams context for the next libxml document load or write
  * @link http://php.net/manual/en/function.libxml-set-streams-context.php
  * @param streams_context resource
- * @return void
+ * @return void 
  */
 function libxml_set_streams_context ($streams_context) {}
 
@@ -20,7 +20,7 @@ function libxml_set_streams_context ($streams_context) {}
  * Disable libxml errors and allow user to fetch error information as needed
  * @link http://php.net/manual/en/function.libxml-use-internal-errors.php
  * @param use_errors bool[optional]
- * @return bool
+ * @return bool 
  */
 function libxml_use_internal_errors ($use_errors = null) {}
 
@@ -34,7 +34,7 @@ function libxml_get_last_error () {}
 /**
  * Clear libxml error buffer
  * @link http://php.net/manual/en/function.libxml-clear-errors.php
- * @return void
+ * @return void 
  */
 function libxml_clear_errors () {}
 
@@ -45,25 +45,132 @@ function libxml_clear_errors () {}
  */
 function libxml_get_errors () {}
 
+
+/**
+ * libxml version like 20605 or 20617
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_VERSION', 20627);
+
+/**
+ * libxml version like 2.6.5 or 2.6.17
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_DOTTED_VERSION', "2.6.27");
+
+/**
+ * Substitute entities
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_NOENT', 2);
+
+/**
+ * Load the external subset
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_DTDLOAD', 4);
+
+/**
+ * Default DTD attributes
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_DTDATTR', 8);
+
+/**
+ * Validate with the DTD
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_DTDVALID', 16);
+
+/**
+ * Suppress error reports
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_NOERROR', 32);
+
+/**
+ * Suppress warning reports
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_NOWARNING', 64);
+
+/**
+ * Remove blank nodes
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_NOBLANKS', 256);
+
+/**
+ * Implement XInclude substitution
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_XINCLUDE', 1024);
+
+/**
+ * Remove redundant namespaces declarations
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_NSCLEAN', 8192);
+
+/**
+ * Merge CDATA as text nodes
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_NOCDATA', 16384);
+
+/**
+ * Disable network access when loading documents
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_NONET', 2048);
+
+/**
+ * Activate small nodes allocation optimization. This may speed up your
+ * application without needing to change the code.
+ * Only available in Libxml &gt;= 2.6.21
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_COMPACT', 65536);
+
+/**
+ * Drop the XML declaration when saving a document
+ * Only available in Libxml &gt;= 2.6.21
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_NOXMLDECL', 2);
+
+/**
+ * Expand empty tags (e.g. &lt;br/&gt; to
+ * &lt;br&gt;&lt;/br&gt;)
+ * This option is currently just available in the
+ * and
+ * functions.
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_NOEMPTYTAG', 4);
+
+/**
+ * No errors
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_ERR_NONE', 0);
+
+/**
+ * A simple warning
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_ERR_WARNING', 1);
+
+/**
+ * A recoverable error
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_ERR_ERROR', 2);
+
+/**
+ * A fatal error
+ * @link http://php.net/manual/en/libxml.constants.php
+ */
 define ('LIBXML_ERR_FATAL', 3);
 
 // End of libxml v.
@@ -92,7 +199,7 @@ function xml_parser_create_ns ($encoding = null, $separator = null) {}
  * @link http://php.net/manual/en/function.xml-set-object.php
  * @param parser resource
  * @param object object
- * @return bool
+ * @return bool 
  */
 function xml_set_object ($parser, &$object) {}
 
@@ -102,7 +209,7 @@ function xml_set_object ($parser, &$object) {}
  * @param parser resource
  * @param start_element_handler callback
  * @param end_element_handler callback
- * @return bool
+ * @return bool 
  */
 function xml_set_element_handler ($parser, $start_element_handler, $end_element_handler) {}
 
@@ -111,7 +218,7 @@ function xml_set_element_handler ($parser, $start_element_handler, $end_element_
  * @link http://php.net/manual/en/function.xml-set-character-data-handler.php
  * @param parser resource
  * @param handler callback
- * @return bool
+ * @return bool 
  */
 function xml_set_character_data_handler ($parser, $handler) {}
 
@@ -120,7 +227,7 @@ function xml_set_character_data_handler ($parser, $handler) {}
  * @link http://php.net/manual/en/function.xml-set-processing-instruction-handler.php
  * @param parser resource
  * @param handler callback
- * @return bool
+ * @return bool 
  */
 function xml_set_processing_instruction_handler ($parser, $handler) {}
 
@@ -129,7 +236,7 @@ function xml_set_processing_instruction_handler ($parser, $handler) {}
  * @link http://php.net/manual/en/function.xml-set-default-handler.php
  * @param parser resource
  * @param handler callback
- * @return bool
+ * @return bool 
  */
 function xml_set_default_handler ($parser, $handler) {}
 
@@ -138,7 +245,7 @@ function xml_set_default_handler ($parser, $handler) {}
  * @link http://php.net/manual/en/function.xml-set-unparsed-entity-decl-handler.php
  * @param parser resource
  * @param handler callback
- * @return bool
+ * @return bool 
  */
 function xml_set_unparsed_entity_decl_handler ($parser, $handler) {}
 
@@ -147,7 +254,7 @@ function xml_set_unparsed_entity_decl_handler ($parser, $handler) {}
  * @link http://php.net/manual/en/function.xml-set-notation-decl-handler.php
  * @param parser resource
  * @param handler callback
- * @return bool
+ * @return bool 
  */
 function xml_set_notation_decl_handler ($parser, $handler) {}
 
@@ -156,7 +263,7 @@ function xml_set_notation_decl_handler ($parser, $handler) {}
  * @link http://php.net/manual/en/function.xml-set-external-entity-ref-handler.php
  * @param parser resource
  * @param handler callback
- * @return bool
+ * @return bool 
  */
 function xml_set_external_entity_ref_handler ($parser, $handler) {}
 
@@ -165,7 +272,7 @@ function xml_set_external_entity_ref_handler ($parser, $handler) {}
  * @link http://php.net/manual/en/function.xml-set-start-namespace-decl-handler.php
  * @param parser resource
  * @param handler callback
- * @return bool
+ * @return bool 
  */
 function xml_set_start_namespace_decl_handler ($parser, $handler) {}
 
@@ -174,7 +281,7 @@ function xml_set_start_namespace_decl_handler ($parser, $handler) {}
  * @link http://php.net/manual/en/function.xml-set-end-namespace-decl-handler.php
  * @param parser resource
  * @param handler callback
- * @return bool
+ * @return bool 
  */
 function xml_set_end_namespace_decl_handler ($parser, $handler) {}
 
@@ -195,7 +302,7 @@ function xml_parse ($parser, $data, $is_final = null) {}
  * @param data string
  * @param values array
  * @param index array[optional]
- * @return int
+ * @return int 
  */
 function xml_parse_into_struct ($parser, $data, array &$values, array &$index = null) {}
 
@@ -203,7 +310,7 @@ function xml_parse_into_struct ($parser, $data, array &$values, array &$index = 
  * Get XML parser error code
  * @link http://php.net/manual/en/function.xml-get-error-code.php
  * @param parser resource
- * @return int
+ * @return int 
  */
 function xml_get_error_code ($parser) {}
 
@@ -219,7 +326,7 @@ function xml_error_string ($code) {}
  * Get current line number for an XML parser
  * @link http://php.net/manual/en/function.xml-get-current-line-number.php
  * @param parser resource
- * @return int
+ * @return int 
  */
 function xml_get_current_line_number ($parser) {}
 
@@ -227,7 +334,7 @@ function xml_get_current_line_number ($parser) {}
  * Get current column number for an XML parser
  * @link http://php.net/manual/en/function.xml-get-current-column-number.php
  * @param parser resource
- * @return int
+ * @return int 
  */
 function xml_get_current_column_number ($parser) {}
 
@@ -235,7 +342,7 @@ function xml_get_current_column_number ($parser) {}
  * Get current byte index for an XML parser
  * @link http://php.net/manual/en/function.xml-get-current-byte-index.php
  * @param parser resource
- * @return int
+ * @return int 
  */
 function xml_get_current_byte_index ($parser) {}
 
@@ -243,7 +350,7 @@ function xml_get_current_byte_index ($parser) {}
  * Free an XML parser
  * @link http://php.net/manual/en/function.xml-parser-free.php
  * @param parser resource
- * @return bool
+ * @return bool 
  */
 function xml_parser_free ($parser) {}
 
@@ -253,7 +360,7 @@ function xml_parser_free ($parser) {}
  * @param parser resource
  * @param option int
  * @param value mixed
- * @return bool
+ * @return bool 
  */
 function xml_parser_set_option ($parser, $option, $value) {}
 
@@ -262,7 +369,7 @@ function xml_parser_set_option ($parser, $option, $value) {}
  * @link http://php.net/manual/en/function.xml-parser-get-option.php
  * @param parser resource
  * @param option int
- * @return mixed
+ * @return mixed 
  */
 function xml_parser_get_option ($parser, $option) {}
 
@@ -355,7 +462,7 @@ function wddx_packet_end ($packet_id) {}
  * @param packet_id resource
  * @param var_name mixed
  * @param ... mixed[optional]
- * @return bool
+ * @return bool 
  */
 function wddx_add_vars ($packet_id, $var_name) {}
 
@@ -397,7 +504,7 @@ function session_save_path ($path = null) {}
  * Get and/or set the current session id
  * @link http://php.net/manual/en/function.session-id.php
  * @param id string[optional]
- * @return string
+ * @return string 
  */
 function session_id ($id = null) {}
 
@@ -405,7 +512,7 @@ function session_id ($id = null) {}
  * Update the current session id with a newly generated one
  * @link http://php.net/manual/en/function.session-regenerate-id.php
  * @param delete_old_session bool[optional]
- * @return bool
+ * @return bool 
  */
 function session_regenerate_id ($delete_old_session = null) {}
 
@@ -413,7 +520,7 @@ function session_regenerate_id ($delete_old_session = null) {}
  * Decodes session data from a string
  * @link http://php.net/manual/en/function.session-decode.php
  * @param data string
- * @return bool
+ * @return bool 
  */
 function session_decode ($data) {}
 
@@ -422,7 +529,7 @@ function session_decode ($data) {}
  * @link http://php.net/manual/en/function.session-register.php
  * @param name mixed
  * @param ... mixed[optional]
- * @return bool
+ * @return bool 
  */
 function session_register ($name) {}
 
@@ -430,7 +537,7 @@ function session_register ($name) {}
  * Unregister a global variable from the current session
  * @link http://php.net/manual/en/function.session-unregister.php
  * @param name string
- * @return bool
+ * @return bool 
  */
 function session_unregister ($name) {}
 
@@ -438,7 +545,7 @@ function session_unregister ($name) {}
  * Find out whether a global variable is registered in a session
  * @link http://php.net/manual/en/function.session-is-registered.php
  * @param name string
- * @return bool
+ * @return bool 
  */
 function session_is_registered ($name) {}
 
@@ -452,21 +559,21 @@ function session_encode () {}
 /**
  * Initialize session data
  * @link http://php.net/manual/en/function.session-start.php
- * @return bool
+ * @return bool 
  */
 function session_start () {}
 
 /**
  * Destroys all data registered to a session
  * @link http://php.net/manual/en/function.session-destroy.php
- * @return bool
+ * @return bool 
  */
 function session_destroy () {}
 
 /**
  * Free all session variables
  * @link http://php.net/manual/en/function.session-unset.php
- * @return void
+ * @return void 
  */
 function session_unset () {}
 
@@ -479,7 +586,7 @@ function session_unset () {}
  * @param write callback
  * @param destroy callback
  * @param gc callback
- * @return bool
+ * @return bool 
  */
 function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc) {}
 
@@ -487,7 +594,7 @@ function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc) 
  * Get and/or set the current cache limiter
  * @link http://php.net/manual/en/function.session-cache-limiter.php
  * @param cache_limiter string[optional]
- * @return string the name of the current cache limiter. 
+ * @return string the name of the current cache limiter.
  */
 function session_cache_limiter ($cache_limiter = null) {}
 
@@ -507,7 +614,7 @@ function session_cache_expire ($new_cache_expire = null) {}
  * @param domain string[optional]
  * @param secure bool[optional]
  * @param httponly bool[optional]
- * @return void
+ * @return void 
  */
 function session_set_cookie_params ($lifetime, $path = null, $domain = null, $secure = null, $httponly = null) {}
 
@@ -521,7 +628,7 @@ function session_get_cookie_params () {}
 /**
  * Write session data and end session
  * @link http://php.net/manual/en/function.session-write-close.php
- * @return void
+ * @return void 
  */
 function session_write_close () {}
 
@@ -543,7 +650,7 @@ function session_commit () {}
  * @param matches array[optional]
  * @param flags int[optional]
  * @param offset int[optional]
- * @return int
+ * @return int 
  */
 function preg_match ($pattern, $subject, array &$matches = null, $flags = null, $offset = null) {}
 
@@ -567,7 +674,7 @@ function preg_match_all ($pattern, $subject, array &$matches, $flags = null, $of
  * @param subject mixed
  * @param limit int[optional]
  * @param count int[optional]
- * @return mixed
+ * @return mixed 
  */
 function preg_replace ($pattern, $replacement, $subject, $limit = null, &$count = null) {}
 
@@ -579,7 +686,7 @@ function preg_replace ($pattern, $replacement, $subject, $limit = null, &$count 
  * @param subject mixed
  * @param limit int[optional]
  * @param count int[optional]
- * @return mixed
+ * @return mixed 
  */
 function preg_replace_callback ($pattern, $callback, $subject, $limit = null, &$count = null) {}
 
@@ -623,51 +730,51 @@ function preg_last_error () {}
 
 /**
  * Orders results so that $matches[0] is an array of full pattern
- *  matches, $matches[1] is an array of strings matched by the first
- *  parenthesized subpattern, and so on. This flag is only used with
- *  preg_match_all.
+ * matches, $matches[1] is an array of strings matched by the first
+ * parenthesized subpattern, and so on. This flag is only used with
+ * preg_match_all.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_PATTERN_ORDER', 1);
 
 /**
  * Orders results so that $matches[0] is an array of first set of
- *  matches, $matches[1] is an array of second set of matches, and so
- *  on. This flag is only used with preg_match_all.
+ * matches, $matches[1] is an array of second set of matches, and so
+ * on. This flag is only used with preg_match_all.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_SET_ORDER', 2);
 
 /**
  * See the description of
- *  PREG_SPLIT_OFFSET_CAPTURE. This flag is
- *  available since PHP 4.3.0.
+ * PREG_SPLIT_OFFSET_CAPTURE. This flag is
+ * available since PHP 4.3.0.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_OFFSET_CAPTURE', 256);
 
 /**
  * This flag tells preg_split to return only non-empty
- *  pieces.
+ * pieces.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_SPLIT_NO_EMPTY', 1);
 
 /**
  * This flag tells preg_split to capture
- *  parenthesized expression in the delimiter pattern as well. This flag
- *  is available since PHP 4.0.5.
+ * parenthesized expression in the delimiter pattern as well. This flag
+ * is available since PHP 4.0.5.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_SPLIT_DELIM_CAPTURE', 2);
 
 /**
  * If this flag is set, for every occurring match the appendant string
- *  offset will also be returned. Note that this changes the return
- *  values in an array where every element is an array consisting of the
- *  matched string at offset 0 and its string offset within subject at
- *  offset 1. This flag is available since PHP 4.3.0
- *  and is only used for preg_split.
+ * offset will also be returned. Note that this changes the return
+ * values in an array where every element is an array consisting of the
+ * matched string at offset 0 and its string offset within subject at
+ * offset 1. This flag is available since PHP 4.3.0
+ * and is only used for preg_split.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_SPLIT_OFFSET_CAPTURE', 4);
@@ -675,43 +782,43 @@ define ('PREG_GREP_INVERT', 1);
 
 /**
  * Returned by preg_last_error if there were no
- *  errors. Available since PHP 5.2.0.
+ * errors. Available since PHP 5.2.0.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_NO_ERROR', 0);
 
 /**
  * Returned by preg_last_error if there was an
- *  internal PCRE error. Available since PHP 5.2.0.
+ * internal PCRE error. Available since PHP 5.2.0.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_INTERNAL_ERROR', 1);
 
 /**
  * Returned by preg_last_error if backtrack limit was exhausted.
- *  Available since PHP 5.2.0.
+ * Available since PHP 5.2.0.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_BACKTRACK_LIMIT_ERROR', 2);
 
 /**
  * Returned by preg_last_error if recursion limit was exhausted.
- *  Available since PHP 5.2.0.
+ * Available since PHP 5.2.0.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_RECURSION_LIMIT_ERROR', 3);
 
 /**
  * Returned by preg_last_error if the last error was
- *  caused by malformed UTF-8 data (only when running a regex in UTF-8 mode). Available
- *  since PHP 5.2.0.
+ * caused by malformed UTF-8 data (only when running a regex in UTF-8 mode). Available
+ * since PHP 5.2.0.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PREG_BAD_UTF8_ERROR', 4);
 
 /**
  * PCRE version and release date (e.g. "7.0 18-Dec-2006"). Available since
- *  PHP 5.2.4.
+ * PHP 5.2.4.
  * @link http://php.net/manual/en/pcre.constants.php
  */
 define ('PCRE_VERSION', "7.2 2007-06-19");
@@ -732,7 +839,7 @@ class SimpleXMLElement implements Traversable {
 	 * Return a well-formed XML string based on SimpleXML element
 	 * @link http://php.net/manual/en/function.simplexml-element-asXML.php
 	 * @param filename string[optional]
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function asXML ($filename = null) {}
 
@@ -751,7 +858,7 @@ class SimpleXMLElement implements Traversable {
 	 * @link http://php.net/manual/en/function.simplexml-element-registerXPathNamespace.php
 	 * @param prefix string
 	 * @param ns string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function registerXPathNamespace ($prefix, $ns) {}
 
@@ -760,7 +867,7 @@ class SimpleXMLElement implements Traversable {
 	 * @link http://php.net/manual/en/function.simplexml-element-attributes.php
 	 * @param ns string[optional]
 	 * @param is_prefix bool[optional]
-	 * @return SimpleXMLElement
+	 * @return SimpleXMLElement 
 	 */
 	public function attributes ($ns = null, $is_prefix = null) {}
 
@@ -769,7 +876,7 @@ class SimpleXMLElement implements Traversable {
 	 * @link http://php.net/manual/en/function.simplexml-element-children.php
 	 * @param ns string[optional]
 	 * @param is_prefix bool[optional]
-	 * @return SimpleXMLElement
+	 * @return SimpleXMLElement 
 	 */
 	public function children ($ns = null, $is_prefix = null) {}
 
@@ -777,7 +884,7 @@ class SimpleXMLElement implements Traversable {
 	 * Returns namespaces used in document
 	 * @link http://php.net/manual/en/function.simplexml-element-getNamespaces.php
 	 * @param recursive bool[optional]
-	 * @return array
+	 * @return array 
 	 */
 	public function getNamespaces ($recursive = null) {}
 
@@ -785,14 +892,14 @@ class SimpleXMLElement implements Traversable {
 	 * Returns namespaces declared in document
 	 * @link http://php.net/manual/en/function.simplexml-element-getDocNamespaces.php
 	 * @param recursive bool[optional]
-	 * @return array
+	 * @return array 
 	 */
 	public function getDocNamespaces ($recursive = null) {}
 
 	/**
 	 * Gets the name of the XML element
 	 * @link http://php.net/manual/en/function.simplexml-element-getName.php
-	 * @return string
+	 * @return string 
 	 */
 	public function getName () {}
 
@@ -802,7 +909,7 @@ class SimpleXMLElement implements Traversable {
 	 * @param name string
 	 * @param value string[optional]
 	 * @param namespace string[optional]
-	 * @return SimpleXMLElement
+	 * @return SimpleXMLElement 
 	 */
 	public function addChild ($name, $value = null, $namespace = null) {}
 
@@ -812,7 +919,7 @@ class SimpleXMLElement implements Traversable {
 	 * @param name string
 	 * @param value string
 	 * @param namespace string[optional]
-	 * @return void
+	 * @return void 
 	 */
 	public function addAttribute ($name, $value, $namespace = null) {}
 
@@ -2728,7 +2835,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * Return a well-formed XML string based on SimpleXML element
 	 * @link http://php.net/manual/en/function.simplexml-element-asXML.php
 	 * @param filename string[optional]
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function asXML ($filename = null) {}
 
@@ -2747,7 +2854,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * @link http://php.net/manual/en/function.simplexml-element-registerXPathNamespace.php
 	 * @param prefix string
 	 * @param ns string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function registerXPathNamespace ($prefix, $ns) {}
 
@@ -2756,7 +2863,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * @link http://php.net/manual/en/function.simplexml-element-attributes.php
 	 * @param ns string[optional]
 	 * @param is_prefix bool[optional]
-	 * @return SimpleXMLElement
+	 * @return SimpleXMLElement 
 	 */
 	public function attributes ($ns = null, $is_prefix = null) {}
 
@@ -2765,7 +2872,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * @link http://php.net/manual/en/function.simplexml-element-children.php
 	 * @param ns string[optional]
 	 * @param is_prefix bool[optional]
-	 * @return SimpleXMLElement
+	 * @return SimpleXMLElement 
 	 */
 	public function children ($ns = null, $is_prefix = null) {}
 
@@ -2773,7 +2880,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * Returns namespaces used in document
 	 * @link http://php.net/manual/en/function.simplexml-element-getNamespaces.php
 	 * @param recursive bool[optional]
-	 * @return array
+	 * @return array 
 	 */
 	public function getNamespaces ($recursive = null) {}
 
@@ -2781,14 +2888,14 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * Returns namespaces declared in document
 	 * @link http://php.net/manual/en/function.simplexml-element-getDocNamespaces.php
 	 * @param recursive bool[optional]
-	 * @return array
+	 * @return array 
 	 */
 	public function getDocNamespaces ($recursive = null) {}
 
 	/**
 	 * Gets the name of the XML element
 	 * @link http://php.net/manual/en/function.simplexml-element-getName.php
-	 * @return string
+	 * @return string 
 	 */
 	public function getName () {}
 
@@ -2798,7 +2905,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * @param name string
 	 * @param value string[optional]
 	 * @param namespace string[optional]
-	 * @return SimpleXMLElement
+	 * @return SimpleXMLElement 
 	 */
 	public function addChild ($name, $value = null, $namespace = null) {}
 
@@ -2808,7 +2915,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * @param name string
 	 * @param value string
 	 * @param namespace string[optional]
-	 * @return void
+	 * @return void 
 	 */
 	public function addAttribute ($name, $value, $namespace = null) {}
 
@@ -3432,7 +3539,7 @@ function sleep ($seconds) {}
  * Delay execution in microseconds
  * @link http://php.net/manual/en/function.usleep.php
  * @param micro_seconds int
- * @return void
+ * @return void 
  */
 function usleep ($micro_seconds) {}
 
@@ -3441,7 +3548,7 @@ function usleep ($micro_seconds) {}
  * @link http://php.net/manual/en/function.time-nanosleep.php
  * @param seconds int
  * @param nanoseconds int
- * @return mixed
+ * @return mixed 
  */
 function time_nanosleep ($seconds, $nanoseconds) {}
 
@@ -3449,7 +3556,7 @@ function time_nanosleep ($seconds, $nanoseconds) {}
  * Make the script sleep until the specified time
  * @link http://php.net/manual/en/function.time-sleep-until.php
  * @param timestamp float
- * @return bool
+ * @return bool 
  */
 function time_sleep_until ($timestamp) {}
 
@@ -3465,7 +3572,7 @@ function strptime ($date, $format) {}
 /**
  * Flush the output buffer
  * @link http://php.net/manual/en/function.flush.php
- * @return void
+ * @return void 
  */
 function flush () {}
 
@@ -3552,7 +3659,7 @@ function sha1_file ($filename, $raw_output = null) {}
  * @link http://php.net/manual/en/function.md5.php
  * @param str string
  * @param raw_output bool[optional]
- * @return string the hash as a 32-character hexadecimal number. 
+ * @return string the hash as a 32-character hexadecimal number.
  */
 function md5 ($str, $raw_output = null) {}
 
@@ -3569,7 +3676,7 @@ function md5_file ($filename, $raw_output = null) {}
  * Calculates the crc32 polynomial of a string
  * @link http://php.net/manual/en/function.crc32.php
  * @param str string
- * @return int
+ * @return int 
  */
 function crc32 ($str) {}
 
@@ -3587,7 +3694,7 @@ function iptcparse ($iptcblock) {}
  * @param iptcdata string
  * @param jpeg_file_name string
  * @param spool int[optional]
- * @return mixed
+ * @return mixed 
  */
 function iptcembed ($iptcdata, $jpeg_file_name, $spool = null) {}
 
@@ -3605,7 +3712,7 @@ function getimagesize ($filename, array &$imageinfo = null) {}
    exif_read_data, exif_thumbnail, exif_imagetype
  * @link http://php.net/manual/en/function.image-type-to-mime-type.php
  * @param imagetype int
- * @return string
+ * @return string 
  */
 function image_type_to_mime_type ($imagetype) {}
 
@@ -3614,7 +3721,7 @@ function image_type_to_mime_type ($imagetype) {}
  * @link http://php.net/manual/en/function.image-type-to-extension.php
  * @param imagetype int
  * @param include_dot bool[optional]
- * @return string
+ * @return string 
  */
 function image_type_to_extension ($imagetype, $include_dot = null) {}
 
@@ -3622,7 +3729,7 @@ function image_type_to_extension ($imagetype, $include_dot = null) {}
  * Outputs lots of PHP information
  * @link http://php.net/manual/en/function.phpinfo.php
  * @param what int[optional]
- * @return bool
+ * @return bool 
  */
 function phpinfo ($what = null) {}
 
@@ -3630,7 +3737,7 @@ function phpinfo ($what = null) {}
  * Gets the current PHP version
  * @link http://php.net/manual/en/function.phpversion.php
  * @param extension string[optional]
- * @return string
+ * @return string 
  */
 function phpversion ($extension = null) {}
 
@@ -3638,7 +3745,7 @@ function phpversion ($extension = null) {}
  * Prints out the credits for PHP
  * @link http://php.net/manual/en/function.phpcredits.php
  * @param flag int[optional]
- * @return bool
+ * @return bool 
  */
 function phpcredits ($flag = null) {}
 
@@ -3689,7 +3796,7 @@ function php_ini_loaded_file () {}
  * @link http://php.net/manual/en/function.strnatcmp.php
  * @param str1 string
  * @param str2 string
- * @return int
+ * @return int 
  */
 function strnatcmp ($str1, $str2) {}
 
@@ -3698,7 +3805,7 @@ function strnatcmp ($str1, $str2) {}
  * @link http://php.net/manual/en/function.strnatcasecmp.php
  * @param str1 string
  * @param str2 string
- * @return int
+ * @return int 
  */
 function strnatcasecmp ($str1, $str2) {}
 
@@ -3709,7 +3816,7 @@ function strnatcasecmp ($str1, $str2) {}
  * @param needle string
  * @param offset int[optional]
  * @param length int[optional]
- * @return int
+ * @return int 
  */
 function substr_count ($haystack, $needle, $offset = null, $length = null) {}
 
@@ -3775,7 +3882,7 @@ function strpos ($haystack, $needle, $offset = null) {}
  * @param haystack string
  * @param needle string
  * @param offset int[optional]
- * @return int
+ * @return int 
  */
 function stripos ($haystack, $needle, $offset = null) {}
 
@@ -3785,7 +3892,7 @@ function stripos ($haystack, $needle, $offset = null) {}
  * @param haystack string
  * @param needle string
  * @param offset int[optional]
- * @return int
+ * @return int 
  */
 function strrpos ($haystack, $needle, $offset = null) {}
 
@@ -3855,7 +3962,7 @@ function dirname ($path) {}
  * @link http://php.net/manual/en/function.pathinfo.php
  * @param path string
  * @param options int[optional]
- * @return mixed
+ * @return mixed 
  */
 function pathinfo ($path, $options = null) {}
 
@@ -3900,7 +4007,7 @@ function stristr ($haystack, $needle, $before_needle) {}
  * @link http://php.net/manual/en/function.strrchr.php
  * @param haystack string
  * @param needle string
- * @return string
+ * @return string 
  */
 function strrchr ($haystack, $needle) {}
 
@@ -3927,7 +4034,7 @@ function str_word_count ($string, $format = null, $charlist = null) {}
  * @link http://php.net/manual/en/function.str-split.php
  * @param string string
  * @param split_length int[optional]
- * @return array
+ * @return array 
  */
 function str_split ($string, $split_length = null) {}
 
@@ -3987,7 +4094,7 @@ function substr ($string, $start, $length = null) {}
  * @param replacement string
  * @param start int
  * @param length int[optional]
- * @return mixed
+ * @return mixed 
  */
 function substr_replace ($string, $replacement, $start, $length = null) {}
 
@@ -4057,7 +4164,7 @@ function rtrim ($str, $charlist = null) {}
  * @param replace mixed
  * @param subject mixed
  * @param count int[optional]
- * @return mixed
+ * @return mixed 
  */
 function str_replace ($search, $replace, $subject, &$count = null) {}
 
@@ -4086,7 +4193,7 @@ function str_repeat ($input, $multiplier) {}
  * @link http://php.net/manual/en/function.count-chars.php
  * @param string string
  * @param mode int[optional]
- * @return mixed
+ * @return mixed 
  */
 function count_chars ($string, $mode = null) {}
 
@@ -4105,7 +4212,7 @@ function chunk_split ($body, $chunklen = null, $end = null) {}
  * @link http://php.net/manual/en/function.trim.php
  * @param str string
  * @param charlist string[optional]
- * @return string
+ * @return string 
  */
 function trim ($str, $charlist = null) {}
 
@@ -4114,7 +4221,7 @@ function trim ($str, $charlist = null) {}
  * @link http://php.net/manual/en/function.ltrim.php
  * @param str string
  * @param charlist string[optional]
- * @return string
+ * @return string 
  */
 function ltrim ($str, $charlist = null) {}
 
@@ -4143,7 +4250,7 @@ function similar_text ($first, $second, &$percent = null) {}
  * @param delimiter string
  * @param string string
  * @param limit int[optional]
- * @return array
+ * @return array 
  */
 function explode ($delimiter, $string, $limit = null) {}
 
@@ -4169,7 +4276,7 @@ function setlocale ($category, $locale) {}
 /**
  * Get numeric formatting information
  * @link http://php.net/manual/en/function.localeconv.php
- * @return array
+ * @return array 
  */
 function localeconv () {}
 
@@ -4221,7 +4328,7 @@ function ord ($string) {}
  * @link http://php.net/manual/en/function.parse-str.php
  * @param str string
  * @param arr array[optional]
- * @return void
+ * @return void 
  */
 function parse_str ($str, array &$arr = null) {}
 
@@ -4286,7 +4393,7 @@ function vprintf ($format, array $args) {}
  * @link http://php.net/manual/en/function.vsprintf.php
  * @param format string
  * @param args array
- * @return string
+ * @return string 
  */
 function vsprintf ($format, array $args) {}
 
@@ -4326,7 +4433,7 @@ function sscanf ($str, $format) {}
  * @param handle resource
  * @param format string
  * @param ... mixed[optional]
- * @return mixed
+ * @return mixed 
  */
 function fscanf ($handle, $format) {}
 
@@ -4335,7 +4442,7 @@ function fscanf ($handle, $format) {}
  * @link http://php.net/manual/en/function.parse-url.php
  * @param url string
  * @param component int[optional]
- * @return mixed
+ * @return mixed 
  */
 function parse_url ($url, $component = null) {}
 
@@ -4393,7 +4500,7 @@ function readlink ($path) {}
  * Gets information about a link
  * @link http://php.net/manual/en/function.linkinfo.php
  * @param path string
- * @return int
+ * @return int 
  */
 function linkinfo ($path) {}
 
@@ -4402,7 +4509,7 @@ function linkinfo ($path) {}
  * @link http://php.net/manual/en/function.symlink.php
  * @param target string
  * @param link string
- * @return bool
+ * @return bool 
  */
 function symlink ($target, $link) {}
 
@@ -4411,7 +4518,7 @@ function symlink ($target, $link) {}
  * @link http://php.net/manual/en/function.link.php
  * @param target string
  * @param link string
- * @return bool
+ * @return bool 
  */
 function link ($target, $link) {}
 
@@ -4420,7 +4527,7 @@ function link ($target, $link) {}
  * @link http://php.net/manual/en/function.unlink.php
  * @param filename string
  * @param context resource[optional]
- * @return bool
+ * @return bool 
  */
 function unlink ($filename, $context = null) {}
 
@@ -4430,7 +4537,7 @@ function unlink ($filename, $context = null) {}
  * @param command string
  * @param output array[optional]
  * @param return_var int[optional]
- * @return string
+ * @return string 
  */
 function exec ($command, array &$output = null, &$return_var = null) {}
 
@@ -4447,7 +4554,7 @@ function system ($command, &$return_var = null) {}
  * Escape shell metacharacters
  * @link http://php.net/manual/en/function.escapeshellcmd.php
  * @param command string
- * @return string
+ * @return string 
  */
 function escapeshellcmd ($command) {}
 
@@ -4455,7 +4562,7 @@ function escapeshellcmd ($command) {}
  * Escape a string to be used as a shell argument
  * @link http://php.net/manual/en/function.escapeshellarg.php
  * @param arg string
- * @return string
+ * @return string 
  */
 function escapeshellarg ($arg) {}
 
@@ -4464,7 +4571,7 @@ function escapeshellarg ($arg) {}
  * @link http://php.net/manual/en/function.passthru.php
  * @param command string
  * @param return_var int[optional]
- * @return void
+ * @return void 
  */
 function passthru ($command, &$return_var = null) {}
 
@@ -4472,7 +4579,7 @@ function passthru ($command, &$return_var = null) {}
  * Execute command via shell and return the complete output as a string
  * @link http://php.net/manual/en/function.shell-exec.php
  * @param cmd string
- * @return string
+ * @return string 
  */
 function shell_exec ($cmd) {}
 
@@ -4510,7 +4617,7 @@ function proc_terminate ($process, $signal = null) {}
  * Get information about a process opened by <function>proc_open</function>
  * @link http://php.net/manual/en/function.proc-get-status.php
  * @param process resource
- * @return array
+ * @return array 
  */
 function proc_get_status ($process) {}
 
@@ -4518,7 +4625,7 @@ function proc_get_status ($process) {}
  * Change the priority of the current process
  * @link http://php.net/manual/en/function.proc-nice.php
  * @param increment int
- * @return bool
+ * @return bool 
  */
 function proc_nice ($increment) {}
 
@@ -4527,7 +4634,7 @@ function proc_nice ($increment) {}
  * @link http://php.net/manual/en/function.rand.php
  * @param min int[optional]
  * @param max int
- * @return int
+ * @return int 
  */
 function rand ($min = null, $max) {}
 
@@ -4535,14 +4642,14 @@ function rand ($min = null, $max) {}
  * Seed the random number generator
  * @link http://php.net/manual/en/function.srand.php
  * @param seed int[optional]
- * @return void
+ * @return void 
  */
 function srand ($seed = null) {}
 
 /**
  * Show largest possible random value
  * @link http://php.net/manual/en/function.getrandmax.php
- * @return int
+ * @return int 
  */
 function getrandmax () {}
 
@@ -4551,7 +4658,7 @@ function getrandmax () {}
  * @link http://php.net/manual/en/function.mt-rand.php
  * @param min int[optional]
  * @param max int
- * @return int
+ * @return int 
  */
 function mt_rand ($min = null, $max) {}
 
@@ -4559,7 +4666,7 @@ function mt_rand ($min = null, $max) {}
  * Seed the better random number generator
  * @link http://php.net/manual/en/function.mt-srand.php
  * @param seed int[optional]
- * @return void
+ * @return void 
  */
 function mt_srand ($seed = null) {}
 
@@ -4652,7 +4759,7 @@ function base64_decode ($data, $strict = null) {}
  * Encodes data with MIME base64
  * @link http://php.net/manual/en/function.base64-encode.php
  * @param data string
- * @return string
+ * @return string 
  */
 function base64_encode ($data) {}
 
@@ -4676,7 +4783,7 @@ function convert_uudecode ($data) {}
  * Absolute value
  * @link http://php.net/manual/en/function.abs.php
  * @param number mixed
- * @return number
+ * @return number 
  */
 function abs ($number) {}
 
@@ -4684,7 +4791,7 @@ function abs ($number) {}
  * Round fractions up
  * @link http://php.net/manual/en/function.ceil.php
  * @param value float
- * @return float
+ * @return float 
  */
 function ceil ($value) {}
 
@@ -4692,7 +4799,7 @@ function ceil ($value) {}
  * Round fractions down
  * @link http://php.net/manual/en/function.floor.php
  * @param value float
- * @return float
+ * @return float 
  */
 function floor ($value) {}
 
@@ -4701,7 +4808,7 @@ function floor ($value) {}
  * @link http://php.net/manual/en/function.round.php
  * @param val float
  * @param precision int[optional]
- * @return float
+ * @return float 
  */
 function round ($val, $precision = null) {}
 
@@ -4709,7 +4816,7 @@ function round ($val, $precision = null) {}
  * Sine
  * @link http://php.net/manual/en/function.sin.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function sin ($arg) {}
 
@@ -4717,7 +4824,7 @@ function sin ($arg) {}
  * Cosine
  * @link http://php.net/manual/en/function.cos.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function cos ($arg) {}
 
@@ -4725,7 +4832,7 @@ function cos ($arg) {}
  * Tangent
  * @link http://php.net/manual/en/function.tan.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function tan ($arg) {}
 
@@ -4733,7 +4840,7 @@ function tan ($arg) {}
  * Arc sine
  * @link http://php.net/manual/en/function.asin.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function asin ($arg) {}
 
@@ -4741,7 +4848,7 @@ function asin ($arg) {}
  * Arc cosine
  * @link http://php.net/manual/en/function.acos.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function acos ($arg) {}
 
@@ -4749,7 +4856,7 @@ function acos ($arg) {}
  * Arc tangent
  * @link http://php.net/manual/en/function.atan.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function atan ($arg) {}
 
@@ -4758,7 +4865,7 @@ function atan ($arg) {}
  * @link http://php.net/manual/en/function.atan2.php
  * @param y float
  * @param x float
- * @return float
+ * @return float 
  */
 function atan2 ($y, $x) {}
 
@@ -4766,7 +4873,7 @@ function atan2 ($y, $x) {}
  * Hyperbolic sine
  * @link http://php.net/manual/en/function.sinh.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function sinh ($arg) {}
 
@@ -4774,7 +4881,7 @@ function sinh ($arg) {}
  * Hyperbolic cosine
  * @link http://php.net/manual/en/function.cosh.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function cosh ($arg) {}
 
@@ -4782,7 +4889,7 @@ function cosh ($arg) {}
  * Hyperbolic tangent
  * @link http://php.net/manual/en/function.tanh.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function tanh ($arg) {}
 
@@ -4790,7 +4897,7 @@ function tanh ($arg) {}
  * Inverse hyperbolic sine
  * @link http://php.net/manual/en/function.asinh.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function asinh ($arg) {}
 
@@ -4798,7 +4905,7 @@ function asinh ($arg) {}
  * Inverse hyperbolic cosine
  * @link http://php.net/manual/en/function.acosh.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function acosh ($arg) {}
 
@@ -4806,7 +4913,7 @@ function acosh ($arg) {}
  * Inverse hyperbolic tangent
  * @link http://php.net/manual/en/function.atanh.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function atanh ($arg) {}
 
@@ -4815,7 +4922,7 @@ function atanh ($arg) {}
    when the value of number is close to zero
  * @link http://php.net/manual/en/function.expm1.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function expm1 ($arg) {}
 
@@ -4824,14 +4931,14 @@ function expm1 ($arg) {}
    the value of number is close to zero
  * @link http://php.net/manual/en/function.log1p.php
  * @param number float
- * @return float
+ * @return float 
  */
 function log1p ($number) {}
 
 /**
  * Get value of pi
  * @link http://php.net/manual/en/function.pi.php
- * @return float
+ * @return float 
  */
 function pi () {}
 
@@ -4839,7 +4946,7 @@ function pi () {}
  * Finds whether a value is a legal finite number
  * @link http://php.net/manual/en/function.is-finite.php
  * @param val float
- * @return bool
+ * @return bool 
  */
 function is_finite ($val) {}
 
@@ -4855,7 +4962,7 @@ function is_nan ($val) {}
  * Finds whether a value is infinite
  * @link http://php.net/manual/en/function.is-infinite.php
  * @param val float
- * @return bool
+ * @return bool 
  */
 function is_infinite ($val) {}
 
@@ -4864,7 +4971,7 @@ function is_infinite ($val) {}
  * @link http://php.net/manual/en/function.pow.php
  * @param base number
  * @param exp number
- * @return number
+ * @return number 
  */
 function pow ($base, $exp) {}
 
@@ -4872,7 +4979,7 @@ function pow ($base, $exp) {}
  * Calculates the exponent of <constant>e</constant>
  * @link http://php.net/manual/en/function.exp.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function exp ($arg) {}
 
@@ -4881,7 +4988,7 @@ function exp ($arg) {}
  * @link http://php.net/manual/en/function.log.php
  * @param arg float
  * @param base float[optional]
- * @return float
+ * @return float 
  */
 function log ($arg, $base = null) {}
 
@@ -4889,7 +4996,7 @@ function log ($arg, $base = null) {}
  * Base-10 logarithm
  * @link http://php.net/manual/en/function.log10.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function log10 ($arg) {}
 
@@ -4897,7 +5004,7 @@ function log10 ($arg) {}
  * Square root
  * @link http://php.net/manual/en/function.sqrt.php
  * @param arg float
- * @return float
+ * @return float 
  */
 function sqrt ($arg) {}
 
@@ -4906,7 +5013,7 @@ function sqrt ($arg) {}
  * @link http://php.net/manual/en/function.hypot.php
  * @param x float
  * @param y float
- * @return float
+ * @return float 
  */
 function hypot ($x, $y) {}
 
@@ -4914,7 +5021,7 @@ function hypot ($x, $y) {}
  * Converts the number in degrees to the radian equivalent
  * @link http://php.net/manual/en/function.deg2rad.php
  * @param number float
- * @return float
+ * @return float 
  */
 function deg2rad ($number) {}
 
@@ -4922,7 +5029,7 @@ function deg2rad ($number) {}
  * Converts the radian number to the equivalent number in degrees
  * @link http://php.net/manual/en/function.rad2deg.php
  * @param number float
- * @return float
+ * @return float 
  */
 function rad2deg ($number) {}
 
@@ -4930,7 +5037,7 @@ function rad2deg ($number) {}
  * Binary to decimal
  * @link http://php.net/manual/en/function.bindec.php
  * @param binary_string string
- * @return number
+ * @return number 
  */
 function bindec ($binary_string) {}
 
@@ -4938,7 +5045,7 @@ function bindec ($binary_string) {}
  * Hexadecimal to decimal
  * @link http://php.net/manual/en/function.hexdec.php
  * @param hex_string string
- * @return number
+ * @return number 
  */
 function hexdec ($hex_string) {}
 
@@ -4946,7 +5053,7 @@ function hexdec ($hex_string) {}
  * Octal to decimal
  * @link http://php.net/manual/en/function.octdec.php
  * @param octal_string string
- * @return number
+ * @return number 
  */
 function octdec ($octal_string) {}
 
@@ -4954,7 +5061,7 @@ function octdec ($octal_string) {}
  * Decimal to binary
  * @link http://php.net/manual/en/function.decbin.php
  * @param number int
- * @return string
+ * @return string 
  */
 function decbin ($number) {}
 
@@ -4962,7 +5069,7 @@ function decbin ($number) {}
  * Decimal to octal
  * @link http://php.net/manual/en/function.decoct.php
  * @param number int
- * @return string
+ * @return string 
  */
 function decoct ($number) {}
 
@@ -4970,7 +5077,7 @@ function decoct ($number) {}
  * Decimal to hexadecimal
  * @link http://php.net/manual/en/function.dechex.php
  * @param number int
- * @return string
+ * @return string 
  */
 function dechex ($number) {}
 
@@ -4980,7 +5087,7 @@ function dechex ($number) {}
  * @param number string
  * @param frombase int
  * @param tobase int
- * @return string
+ * @return string 
  */
 function base_convert ($number, $frombase, $tobase) {}
 
@@ -5000,7 +5107,7 @@ function number_format ($number, $num_decimal_places, $dec_seperator, $thousands
  * @link http://php.net/manual/en/function.fmod.php
  * @param x float
  * @param y float
- * @return float
+ * @return float 
  */
 function fmod ($x, $y) {}
 
@@ -5048,7 +5155,7 @@ function getenv ($varname) {}
  * Sets the value of an environment variable
  * @link http://php.net/manual/en/function.putenv.php
  * @param setting string
- * @return bool
+ * @return bool 
  */
 function putenv ($setting) {}
 
@@ -5057,7 +5164,7 @@ function putenv ($setting) {}
  * @link http://php.net/manual/en/function.getopt.php
  * @param options string
  * @param longopts array[optional]
- * @return array
+ * @return array 
  */
 function getopt ($options, array $longopts = null) {}
 
@@ -5072,7 +5179,7 @@ function sys_getloadavg () {}
  * Return current Unix timestamp with microseconds
  * @link http://php.net/manual/en/function.microtime.php
  * @param get_as_float bool[optional]
- * @return mixed
+ * @return mixed 
  */
 function microtime ($get_as_float = null) {}
 
@@ -5080,7 +5187,7 @@ function microtime ($get_as_float = null) {}
  * Get current time
  * @link http://php.net/manual/en/function.gettimeofday.php
  * @param return_float bool[optional]
- * @return mixed
+ * @return mixed 
  */
 function gettimeofday ($return_float = null) {}
 
@@ -5130,7 +5237,7 @@ function get_current_user () {}
  * Limits the maximum execution time
  * @link http://php.net/manual/en/function.set-time-limit.php
  * @param seconds int
- * @return void
+ * @return void 
  */
 function set_time_limit ($seconds) {}
 
@@ -5148,7 +5255,7 @@ function magic_quotes_runtime () {}
  * Sets the current active configuration setting of magic_quotes_runtime
  * @link http://php.net/manual/en/function.set-magic-quotes-runtime.php
  * @param new_setting int
- * @return bool
+ * @return bool 
  */
 function set_magic_quotes_runtime ($new_setting) {}
 
@@ -5171,7 +5278,7 @@ function get_magic_quotes_runtime () {}
  * @link http://php.net/manual/en/function.import-request-variables.php
  * @param types string
  * @param prefix string[optional]
- * @return bool
+ * @return bool 
  */
 function import_request_variables ($types, $prefix = null) {}
 
@@ -5182,7 +5289,7 @@ function import_request_variables ($types, $prefix = null) {}
  * @param message_type int[optional]
  * @param destination string[optional]
  * @param extra_headers string[optional]
- * @return bool
+ * @return bool 
  */
 function error_log ($message, $message_type = null, $destination = null, $extra_headers = null) {}
 
@@ -5219,7 +5326,7 @@ function call_user_func_array ($function, array $param_arr) {}
  * @param obj object
  * @param parameter mixed[optional]
  * @param ... mixed[optional]
- * @return mixed
+ * @return mixed 
  */
 function call_user_method ($method_name, &$obj, $parameter = null) {}
 
@@ -5229,7 +5336,7 @@ function call_user_method ($method_name, &$obj, $parameter = null) {}
  * @param method_name string
  * @param obj object
  * @param paramarr array
- * @return mixed
+ * @return mixed 
  */
 function call_user_method_array ($method_name, &$obj, array $paramarr) {}
 
@@ -5237,7 +5344,7 @@ function call_user_method_array ($method_name, &$obj, array $paramarr) {}
  * Generates a storable representation of a value
  * @link http://php.net/manual/en/function.serialize.php
  * @param value mixed
- * @return string a string containing a byte-stream representation of 
+ * @return string a string containing a byte-stream representation of
  */
 function serialize ($value) {}
 
@@ -5245,7 +5352,7 @@ function serialize ($value) {}
  * Creates a PHP value from a stored representation
  * @link http://php.net/manual/en/function.unserialize.php
  * @param str string
- * @return mixed
+ * @return mixed 
  */
 function unserialize ($str) {}
 
@@ -5254,7 +5361,7 @@ function unserialize ($str) {}
  * @link http://php.net/manual/en/function.var-dump.php
  * @param expression mixed
  * @param expression mixed[optional]
- * @return void
+ * @return void 
  */
 function var_dump ($expression, $expression = null) {}
 
@@ -5263,7 +5370,7 @@ function var_dump ($expression, $expression = null) {}
  * @link http://php.net/manual/en/function.var-export.php
  * @param expression mixed
  * @param return bool[optional]
- * @return mixed the variable representation when the return 
+ * @return mixed the variable representation when the return
  */
 function var_export ($expression, $return = null) {}
 
@@ -5271,7 +5378,7 @@ function var_export ($expression, $return = null) {}
  * Dumps a string representation of an internal zend value to output
  * @link http://php.net/manual/en/function.debug-zval-dump.php
  * @param variable mixed
- * @return void
+ * @return void 
  */
 function debug_zval_dump ($variable) {}
 
@@ -5280,7 +5387,7 @@ function debug_zval_dump ($variable) {}
  * @link http://php.net/manual/en/function.print-r.php
  * @param expression mixed
  * @param return bool[optional]
- * @return mixed
+ * @return mixed 
  */
 function print_r ($expression, $return = null) {}
 
@@ -5306,7 +5413,7 @@ function memory_get_peak_usage ($real_usage = null) {}
  * @param function callback
  * @param parameter mixed[optional]
  * @param ... mixed[optional]
- * @return void
+ * @return void 
  */
 function register_shutdown_function ($function, $parameter = null) {}
 
@@ -5316,7 +5423,7 @@ function register_shutdown_function ($function, $parameter = null) {}
  * @param function callback
  * @param arg mixed[optional]
  * @param ... mixed[optional]
- * @return bool
+ * @return bool 
  */
 function register_tick_function ($function, $arg = null) {}
 
@@ -5324,7 +5431,7 @@ function register_tick_function ($function, $arg = null) {}
  * De-register a function for execution on each tick
  * @link http://php.net/manual/en/function.unregister-tick-function.php
  * @param function_name string
- * @return void
+ * @return void 
  */
 function unregister_tick_function ($function_name) {}
 
@@ -5333,7 +5440,7 @@ function unregister_tick_function ($function_name) {}
  * @link http://php.net/manual/en/function.highlight-file.php
  * @param filename string
  * @param return bool[optional]
- * @return mixed
+ * @return mixed 
  */
 function highlight_file ($filename, $return = null) {}
 
@@ -5350,7 +5457,7 @@ function show_source ($file_name, $return) {}
  * @link http://php.net/manual/en/function.highlight-string.php
  * @param str string
  * @param return bool[optional]
- * @return mixed
+ * @return mixed 
  */
 function highlight_string ($str, $return = null) {}
 
@@ -5358,7 +5465,7 @@ function highlight_string ($str, $return = null) {}
  * Return source with stripped comments and whitespace
  * @link http://php.net/manual/en/function.php-strip-whitespace.php
  * @param filename string
- * @return string
+ * @return string 
  */
 function php_strip_whitespace ($filename) {}
 
@@ -5374,7 +5481,7 @@ function ini_get ($varname) {}
  * Gets all configuration options
  * @link http://php.net/manual/en/function.ini-get-all.php
  * @param extension string[optional]
- * @return array an associative array uses the directive name as the array key, 
+ * @return array an associative array uses the directive name as the array key,
  */
 function ini_get_all ($extension = null) {}
 
@@ -5399,7 +5506,7 @@ function ini_alter ($varname, $newvalue) {}
  * Restores the value of a configuration option
  * @link http://php.net/manual/en/function.ini-restore.php
  * @param varname string
- * @return void
+ * @return void 
  */
 function ini_restore ($varname) {}
 
@@ -5421,7 +5528,7 @@ function set_include_path ($new_include_path) {}
 /**
  * Restores the value of the include_path configuration option
  * @link http://php.net/manual/en/function.restore-include-path.php
- * @return void
+ * @return void 
  */
 function restore_include_path () {}
 
@@ -5435,7 +5542,7 @@ function restore_include_path () {}
  * @param domain string[optional]
  * @param secure bool[optional]
  * @param httponly bool[optional]
- * @return bool
+ * @return bool 
  */
 function setcookie ($name, $value = null, $expire = null, $path = null, $domain = null, $secure = null, $httponly = null) {}
 
@@ -5449,7 +5556,7 @@ function setcookie ($name, $value = null, $expire = null, $path = null, $domain 
  * @param domain string[optional]
  * @param secure bool[optional]
  * @param httponly bool[optional]
- * @return bool
+ * @return bool 
  */
 function setrawcookie ($name, $value = null, $expire = null, $path = null, $domain = null, $secure = null, $httponly = null) {}
 
@@ -5459,7 +5566,7 @@ function setrawcookie ($name, $value = null, $expire = null, $path = null, $doma
  * @param string string
  * @param replace bool[optional]
  * @param http_response_code int[optional]
- * @return void
+ * @return void 
  */
 function header ($string, $replace = null, $http_response_code = null) {}
 
@@ -5468,7 +5575,7 @@ function header ($string, $replace = null, $http_response_code = null) {}
  * @link http://php.net/manual/en/function.headers-sent.php
  * @param file string[optional]
  * @param line int[optional]
- * @return bool
+ * @return bool 
  */
 function headers_sent (&$file = null, &$line = null) {}
 
@@ -5506,7 +5613,7 @@ function ignore_user_abort ($setting = null) {}
  * @link http://php.net/manual/en/function.parse-ini-file.php
  * @param filename string
  * @param process_sections bool[optional]
- * @return array
+ * @return array 
  */
 function parse_ini_file ($filename, $process_sections = null) {}
 
@@ -5514,7 +5621,7 @@ function parse_ini_file ($filename, $process_sections = null) {}
  * Tells whether the file was uploaded via HTTP POST
  * @link http://php.net/manual/en/function.is-uploaded-file.php
  * @param filename string
- * @return bool
+ * @return bool 
  */
 function is_uploaded_file ($filename) {}
 
@@ -5523,7 +5630,7 @@ function is_uploaded_file ($filename) {}
  * @link http://php.net/manual/en/function.move-uploaded-file.php
  * @param filename string
  * @param destination string
- * @return bool
+ * @return bool 
  */
 function move_uploaded_file ($filename, $destination) {}
 
@@ -5595,7 +5702,7 @@ function getmxrr ($hostname, array &$mxhosts, array &$weight = null) {}
  * @param type int[optional]
  * @param authns array[optional]
  * @param addtl array
- * @return array
+ * @return array 
  */
 function dns_get_record ($hostname, $type = null, array &$authns = null, array &$addtl) {}
 
@@ -5604,7 +5711,7 @@ function dns_get_record ($hostname, $type = null, array &$authns = null, array &
  * @link http://php.net/manual/en/function.intval.php
  * @param var mixed
  * @param base int[optional]
- * @return int
+ * @return int 
  */
 function intval ($var, $base = null) {}
 
@@ -5612,7 +5719,7 @@ function intval ($var, $base = null) {}
  * Get float value of a variable
  * @link http://php.net/manual/en/function.floatval.php
  * @param var mixed
- * @return float
+ * @return float 
  */
 function floatval ($var) {}
 
@@ -5627,7 +5734,7 @@ function doubleval ($var) {}
  * Get string value of a variable
  * @link http://php.net/manual/en/function.strval.php
  * @param var mixed
- * @return string
+ * @return string 
  */
 function strval ($var) {}
 
@@ -5635,7 +5742,7 @@ function strval ($var) {}
  * Get the type of a variable
  * @link http://php.net/manual/en/function.gettype.php
  * @param var mixed
- * @return string
+ * @return string 
  */
 function gettype ($var) {}
 
@@ -5644,7 +5751,7 @@ function gettype ($var) {}
  * @link http://php.net/manual/en/function.settype.php
  * @param var mixed
  * @param type string
- * @return bool
+ * @return bool 
  */
 function settype (&$var, $type) {}
 
@@ -5683,7 +5790,7 @@ function is_long ($var) {}
  * Finds whether a variable is a float
  * @link http://php.net/manual/en/function.is-float.php
  * @param var mixed
- * @return bool true if var is a float, 
+ * @return bool true if var is a float,
  */
 function is_float ($var) {}
 
@@ -5691,7 +5798,7 @@ function is_float ($var) {}
  * Find whether the type of a variable is integer
  * @link http://php.net/manual/en/function.is-int.php
  * @param var mixed
- * @return bool true if var is an integer, 
+ * @return bool true if var is an integer,
  */
 function is_int ($var) {}
 
@@ -5736,7 +5843,7 @@ function is_string ($var) {}
  * Finds whether a variable is an array
  * @link http://php.net/manual/en/function.is-array.php
  * @param var mixed
- * @return bool true if var is an array, 
+ * @return bool true if var is an array,
  */
 function is_array ($var) {}
 
@@ -5744,7 +5851,7 @@ function is_array ($var) {}
  * Finds whether a variable is an object
  * @link http://php.net/manual/en/function.is-object.php
  * @param var mixed
- * @return bool true if var is an object, 
+ * @return bool true if var is an object,
  */
 function is_object ($var) {}
 
@@ -5762,7 +5869,7 @@ function is_scalar ($var) {}
  * @param var mixed
  * @param syntax_only bool[optional]
  * @param callable_name string[optional]
- * @return bool true if var is callable, false 
+ * @return bool true if var is callable, false
  */
 function is_callable ($var, $syntax_only = null, &$callable_name = null) {}
 
@@ -5782,7 +5889,7 @@ function ereg ($pattern, $string, array &$regs = null) {}
  * @param pattern string
  * @param replacement string
  * @param string string
- * @return string
+ * @return string 
  */
 function ereg_replace ($pattern, $replacement, $string) {}
 
@@ -5802,7 +5909,7 @@ function eregi ($pattern, $string, array &$regs = null) {}
  * @param pattern string
  * @param replacement string
  * @param string string
- * @return string
+ * @return string 
  */
 function eregi_replace ($pattern, $replacement, $string) {}
 
@@ -5846,7 +5953,7 @@ function sql_regcase ($string) {}
  * Loads a PHP extension at runtime
  * @link http://php.net/manual/en/function.dl.php
  * @param library string
- * @return int
+ * @return int 
  */
 function dl ($library) {}
 
@@ -5881,7 +5988,7 @@ function readfile ($filename, $use_include_path = null, $context = null) {}
  * Rewind the position of a file pointer
  * @link http://php.net/manual/en/function.rewind.php
  * @param handle resource
- * @return bool
+ * @return bool 
  */
 function rewind ($handle) {}
 
@@ -5890,7 +5997,7 @@ function rewind ($handle) {}
  * @link http://php.net/manual/en/function.rmdir.php
  * @param dirname string
  * @param context resource[optional]
- * @return bool
+ * @return bool 
  */
 function rmdir ($dirname, $context = null) {}
 
@@ -5898,7 +6005,7 @@ function rmdir ($dirname, $context = null) {}
  * Changes the current umask
  * @link http://php.net/manual/en/function.umask.php
  * @param mask int[optional]
- * @return int
+ * @return int 
  */
 function umask ($mask = null) {}
 
@@ -5906,7 +6013,7 @@ function umask ($mask = null) {}
  * Closes an open file pointer
  * @link http://php.net/manual/en/function.fclose.php
  * @param handle resource
- * @return bool
+ * @return bool 
  */
 function fclose ($handle) {}
 
@@ -5969,7 +6076,7 @@ function fopen ($filename, $mode, $use_include_path = null, $context = null) {}
  * Output all remaining data on a file pointer
  * @link http://php.net/manual/en/function.fpassthru.php
  * @param handle resource
- * @return int
+ * @return int 
  */
 function fpassthru ($handle) {}
 
@@ -5978,7 +6085,7 @@ function fpassthru ($handle) {}
  * @link http://php.net/manual/en/function.ftruncate.php
  * @param handle resource
  * @param size int
- * @return bool
+ * @return bool 
  */
 function ftruncate ($handle, $size) {}
 
@@ -5996,7 +6103,7 @@ function fstat ($handle) {}
  * @param handle resource
  * @param offset int
  * @param whence int[optional]
- * @return int
+ * @return int 
  */
 function fseek ($handle, $offset, $whence = null) {}
 
@@ -6012,7 +6119,7 @@ function ftell ($handle) {}
  * Flushes the output to a file
  * @link http://php.net/manual/en/function.fflush.php
  * @param handle resource
- * @return bool
+ * @return bool 
  */
 function fflush ($handle) {}
 
@@ -6022,7 +6129,7 @@ function fflush ($handle) {}
  * @param handle resource
  * @param string string
  * @param length int[optional]
- * @return int
+ * @return int 
  */
 function fwrite ($handle, $string, $length = null) {}
 
@@ -6042,7 +6149,7 @@ function fputs ($fp, $str, $length) {}
  * @param mode int[optional]
  * @param recursive bool[optional]
  * @param context resource[optional]
- * @return bool
+ * @return bool 
  */
 function mkdir ($pathname, $mode = null, $recursive = null, $context = null) {}
 
@@ -6052,7 +6159,7 @@ function mkdir ($pathname, $mode = null, $recursive = null, $context = null) {}
  * @param oldname string
  * @param newname string
  * @param context resource[optional]
- * @return bool
+ * @return bool 
  */
 function rename ($oldname, $newname, $context = null) {}
 
@@ -6061,7 +6168,7 @@ function rename ($oldname, $newname, $context = null) {}
  * @link http://php.net/manual/en/function.copy.php
  * @param source string
  * @param dest string
- * @return bool
+ * @return bool 
  */
 function copy ($source, $dest) {}
 
@@ -6099,7 +6206,7 @@ function file ($filename, $flags = null, $context = null) {}
  * @param context resource[optional]
  * @param offset int[optional]
  * @param maxlen int[optional]
- * @return string
+ * @return string 
  */
 function file_get_contents ($filename, $flags = null, $context = null, $offset = null, $maxlen = null) {}
 
@@ -6110,7 +6217,7 @@ function file_get_contents ($filename, $flags = null, $context = null, $offset =
  * @param data mixed
  * @param flags int[optional]
  * @param context resource[optional]
- * @return int
+ * @return int 
  */
 function file_put_contents ($filename, $data, $flags = null, $context = null) {}
 
@@ -6267,7 +6374,7 @@ function stream_socket_enable_crypto ($stream, $enable, $cryptokind, $sessionstr
  * @link http://php.net/manual/en/function.stream-socket-shutdown.php
  * @param stream resource
  * @param how int
- * @return bool
+ * @return bool 
  */
 function stream_socket_shutdown ($stream, $how) {}
 
@@ -6329,7 +6436,7 @@ function fputcsv ($handle, array $fields, $delimiter = null, $enclosure = null) 
  * @param handle resource
  * @param operation int
  * @param wouldblock int[optional]
- * @return bool
+ * @return bool 
  */
 function flock ($handle, $operation, &$wouldblock = null) {}
 
@@ -6483,7 +6590,7 @@ function socket_get_status ($fp) {}
  * Returns canonicalized absolute pathname
  * @link http://php.net/manual/en/function.realpath.php
  * @param path string
- * @return string the canonicalized absolute pathname on success. The resulting path 
+ * @return string the canonicalized absolute pathname on success. The resulting path
  */
 function realpath ($path) {}
 
@@ -6505,7 +6612,7 @@ function fnmatch ($pattern, $string, $flags = null) {}
  * @param errno int[optional]
  * @param errstr string[optional]
  * @param timeout float[optional]
- * @return resource
+ * @return resource 
  */
 function fsockopen ($hostname, $port = null, &$errno = null, &$errstr = null, $timeout = null) {}
 
@@ -6517,7 +6624,7 @@ function fsockopen ($hostname, $port = null, &$errno = null, &$errstr = null, $t
  * @param errno int[optional]
  * @param errstr string[optional]
  * @param timeout float[optional]
- * @return resource
+ * @return resource 
  */
 function pfsockopen ($hostname, $port = null, &$errno = null, &$errstr = null, $timeout = null) {}
 
@@ -6545,7 +6652,7 @@ function unpack ($format, $data) {}
  * @link http://php.net/manual/en/function.get-browser.php
  * @param user_agent string[optional]
  * @param return_array bool[optional]
- * @return mixed
+ * @return mixed 
  */
 function get_browser ($user_agent = null, $return_array = null) {}
 
@@ -6571,7 +6678,7 @@ function opendir ($path, $context = null) {}
  * Close directory handle
  * @link http://php.net/manual/en/function.closedir.php
  * @param dir_handle resource
- * @return void
+ * @return void 
  */
 function closedir ($dir_handle) {}
 
@@ -6579,7 +6686,7 @@ function closedir ($dir_handle) {}
  * Change directory
  * @link http://php.net/manual/en/function.chdir.php
  * @param directory string
- * @return bool
+ * @return bool 
  */
 function chdir ($directory) {}
 
@@ -6587,7 +6694,7 @@ function chdir ($directory) {}
  * Change the root directory
  * @link http://php.net/manual/en/function.chroot.php
  * @param directory string
- * @return bool
+ * @return bool 
  */
 function chroot ($directory) {}
 
@@ -6602,7 +6709,7 @@ function getcwd () {}
  * Rewind directory handle
  * @link http://php.net/manual/en/function.rewinddir.php
  * @param dir_handle resource
- * @return void
+ * @return void 
  */
 function rewinddir ($dir_handle) {}
 
@@ -6619,7 +6726,7 @@ function readdir ($dir_handle) {}
  * @link http://php.net/manual/en/class.dir.php
  * @param directory
  * @param context[optional]
- * @return string
+ * @return string 
  */
 function dir ($directory, $context) {}
 
@@ -6629,7 +6736,7 @@ function dir ($directory, $context) {}
  * @param directory string
  * @param sorting_order int[optional]
  * @param context resource[optional]
- * @return array an array of filenames on success, or false on 
+ * @return array an array of filenames on success, or false on
  */
 function scandir ($directory, $sorting_order = null, $context = null) {}
 
@@ -6781,7 +6888,7 @@ function is_link ($filename) {}
  * Gives information about a file
  * @link http://php.net/manual/en/function.stat.php
  * @param filename string
- * @return array
+ * @return array 
  */
 function stat ($filename) {}
 
@@ -6789,7 +6896,7 @@ function stat ($filename) {}
  * Gives information about a file or symbolic link
  * @link http://php.net/manual/en/function.lstat.php
  * @param filename string
- * @return array
+ * @return array 
  */
 function lstat ($filename) {}
 
@@ -6798,7 +6905,7 @@ function lstat ($filename) {}
  * @link http://php.net/manual/en/function.chown.php
  * @param filename string
  * @param user mixed
- * @return bool
+ * @return bool 
  */
 function chown ($filename, $user) {}
 
@@ -6807,7 +6914,7 @@ function chown ($filename, $user) {}
  * @link http://php.net/manual/en/function.chgrp.php
  * @param filename string
  * @param group mixed
- * @return bool
+ * @return bool 
  */
 function chgrp ($filename, $group) {}
 
@@ -6816,7 +6923,7 @@ function chgrp ($filename, $group) {}
  * @link http://php.net/manual/en/function.lchown.php
  * @param filename string
  * @param user mixed
- * @return bool
+ * @return bool 
  */
 function lchown ($filename, $user) {}
 
@@ -6825,7 +6932,7 @@ function lchown ($filename, $user) {}
  * @link http://php.net/manual/en/function.lchgrp.php
  * @param filename string
  * @param group mixed
- * @return bool
+ * @return bool 
  */
 function lchgrp ($filename, $group) {}
 
@@ -6834,7 +6941,7 @@ function lchgrp ($filename, $group) {}
  * @link http://php.net/manual/en/function.chmod.php
  * @param filename string
  * @param mode int
- * @return bool
+ * @return bool 
  */
 function chmod ($filename, $mode) {}
 
@@ -6844,14 +6951,14 @@ function chmod ($filename, $mode) {}
  * @param filename string
  * @param time int[optional]
  * @param atime int[optional]
- * @return bool
+ * @return bool 
  */
 function touch ($filename, $time = null, $atime = null) {}
 
 /**
  * Clears file status cache
  * @link http://php.net/manual/en/function.clearstatcache.php
- * @return void
+ * @return void 
  */
 function clearstatcache () {}
 
@@ -6859,7 +6966,7 @@ function clearstatcache () {}
  * Returns the total size of a directory
  * @link http://php.net/manual/en/function.disk-total-space.php
  * @param directory string
- * @return float the total number of bytes as a float. 
+ * @return float the total number of bytes as a float.
  */
 function disk_total_space ($directory) {}
 
@@ -6867,7 +6974,7 @@ function disk_total_space ($directory) {}
  * Returns available space in directory
  * @link http://php.net/manual/en/function.disk-free-space.php
  * @param directory string
- * @return float the number of available bytes as a float. 
+ * @return float the number of available bytes as a float.
  */
 function disk_free_space ($directory) {}
 
@@ -6894,7 +7001,7 @@ function mail ($to, $subject, $message, $additional_headers = null, $additional_
  * Calculate the hash value needed by EZMLM
  * @link http://php.net/manual/en/function.ezmlm-hash.php
  * @param addr string
- * @return int
+ * @return int 
  */
 function ezmlm_hash ($addr) {}
 
@@ -6904,7 +7011,7 @@ function ezmlm_hash ($addr) {}
  * @param ident string
  * @param option int
  * @param facility int
- * @return bool
+ * @return bool 
  */
 function openlog ($ident, $option, $facility) {}
 
@@ -6913,28 +7020,28 @@ function openlog ($ident, $option, $facility) {}
  * @link http://php.net/manual/en/function.syslog.php
  * @param priority int
  * @param message string
- * @return bool
+ * @return bool 
  */
 function syslog ($priority, $message) {}
 
 /**
  * Close connection to system logger
  * @link http://php.net/manual/en/function.closelog.php
- * @return bool
+ * @return bool 
  */
 function closelog () {}
 
 /**
  * Initializes all syslog related constants
  * @link http://php.net/manual/en/function.define-syslog-variables.php
- * @return void
+ * @return void 
  */
 function define_syslog_variables () {}
 
 /**
  * Combined linear congruential generator
  * @link http://php.net/manual/en/function.lcg-value.php
- * @return float
+ * @return float 
  */
 function lcg_value () {}
 
@@ -6953,35 +7060,35 @@ function metaphone ($str, $phones = null) {}
  * @param output_callback callback[optional]
  * @param chunk_size int[optional]
  * @param erase bool[optional]
- * @return bool
+ * @return bool 
  */
 function ob_start ($output_callback = null, $chunk_size = null, $erase = null) {}
 
 /**
  * Flush (send) the output buffer
  * @link http://php.net/manual/en/function.ob-flush.php
- * @return void
+ * @return void 
  */
 function ob_flush () {}
 
 /**
  * Clean (erase) the output buffer
  * @link http://php.net/manual/en/function.ob-clean.php
- * @return void
+ * @return void 
  */
 function ob_clean () {}
 
 /**
  * Flush (send) the output buffer and turn off output buffering
  * @link http://php.net/manual/en/function.ob-end-flush.php
- * @return bool
+ * @return bool 
  */
 function ob_end_flush () {}
 
 /**
  * Clean (erase) the output buffer and turn off output buffering
  * @link http://php.net/manual/en/function.ob-end-clean.php
- * @return bool
+ * @return bool 
  */
 function ob_end_clean () {}
 
@@ -7017,14 +7124,14 @@ function ob_get_level () {}
  * Get status of output buffers
  * @link http://php.net/manual/en/function.ob-get-status.php
  * @param full_status bool[optional]
- * @return array
+ * @return array 
  */
 function ob_get_status ($full_status = null) {}
 
 /**
  * Return the contents of the output buffer
  * @link http://php.net/manual/en/function.ob-get-contents.php
- * @return string
+ * @return string 
  */
 function ob_get_contents () {}
 
@@ -7032,14 +7139,14 @@ function ob_get_contents () {}
  * Turn implicit flush on/off
  * @link http://php.net/manual/en/function.ob-implicit-flush.php
  * @param flag int[optional]
- * @return void
+ * @return void 
  */
 function ob_implicit_flush ($flag = null) {}
 
 /**
  * List all output handlers in use
  * @link http://php.net/manual/en/function.ob-list-handlers.php
- * @return array
+ * @return array 
  */
 function ob_list_handlers () {}
 
@@ -7208,7 +7315,7 @@ function key (&$arg) {}
  * Find lowest value
  * @link http://php.net/manual/en/function.min.php
  * @param values array
- * @return mixed
+ * @return mixed 
  */
 function min (array $values) {}
 
@@ -7216,7 +7323,7 @@ function min (array $values) {}
  * Find highest value
  * @link http://php.net/manual/en/function.max.php
  * @param values array
- * @return mixed
+ * @return mixed 
  */
 function max (array $values) {}
 
@@ -7362,7 +7469,7 @@ function array_merge ($arr1, $arr2) {}
  * @link http://php.net/manual/en/function.array-merge-recursive.php
  * @param array1 array
  * @param ... array[optional]
- * @return array
+ * @return array 
  */
 function array_merge_recursive (array $array1) {}
 
@@ -7456,7 +7563,7 @@ function array_unique ($arg) {}
  * @param array1 array
  * @param array2 array
  * @param ... array[optional]
- * @return array an array containing all of the values in 
+ * @return array an array containing all of the values in
  */
 function array_intersect (array $array1, array $array2) {}
 
@@ -7466,7 +7573,7 @@ function array_intersect (array $array1, array $array2) {}
  * @param array1 array
  * @param array2 array
  * @param ... array[optional]
- * @return array an associative array containing all the values of 
+ * @return array an associative array containing all the values of
  */
 function array_intersect_key (array $array1, array $array2) {}
 
@@ -7496,7 +7603,7 @@ function array_uintersect ($arr1, $arr2, $callback_data_compare_func) {}
  * @param array1 array
  * @param array2 array
  * @param ... array[optional]
- * @return array an associative array containing all the values in 
+ * @return array an associative array containing all the values in
  */
 function array_intersect_assoc (array $array1, array $array2) {}
 
@@ -7536,7 +7643,7 @@ function array_uintersect_uassoc ($arr1, $arr2, $callback_data_compare_func, $ca
  * @param array1 array
  * @param array2 array
  * @param ... array[optional]
- * @return array
+ * @return array 
  */
 function array_diff (array $array1, array $array2) {}
 
@@ -7667,7 +7774,7 @@ function array_combine (array $keys, array $values) {}
  * @link http://php.net/manual/en/function.array-key-exists.php
  * @param key mixed
  * @param search array
- * @return bool
+ * @return bool 
  */
 function array_key_exists ($key, array $search) {}
 
@@ -7696,7 +7803,7 @@ function key_exists ($key, $search) {}
  * Checks if assertion is &false;
  * @link http://php.net/manual/en/function.assert.php
  * @param assertion mixed
- * @return bool
+ * @return bool 
  */
 function assert ($assertion) {}
 
@@ -7715,7 +7822,7 @@ function assert_options ($what, $value = null) {}
  * @param version1 string
  * @param version2 string
  * @param operator string[optional]
- * @return mixed
+ * @return mixed 
  */
 function version_compare ($version1, $version2, $operator = null) {}
 
@@ -7724,7 +7831,7 @@ function version_compare ($version1, $version2, $operator = null) {}
  * @link http://php.net/manual/en/function.ftok.php
  * @param pathname string
  * @param proj string
- * @return int
+ * @return int 
  */
 function ftok ($pathname, $proj) {}
 
@@ -7755,7 +7862,7 @@ function stream_filter_register ($filtername, $classname) {}
  * Return a bucket object from the brigade for operating on
  * @link http://php.net/manual/en/function.stream-bucket-make-writeable.php
  * @param brigade resource
- * @return object
+ * @return object 
  */
 function stream_bucket_make_writeable ($brigade) {}
 
@@ -7764,7 +7871,7 @@ function stream_bucket_make_writeable ($brigade) {}
  * @link http://php.net/manual/en/function.stream-bucket-prepend.php
  * @param brigade resource
  * @param bucket resource
- * @return void
+ * @return void 
  */
 function stream_bucket_prepend ($brigade, $bucket) {}
 
@@ -7773,7 +7880,7 @@ function stream_bucket_prepend ($brigade, $bucket) {}
  * @link http://php.net/manual/en/function.stream-bucket-append.php
  * @param brigade resource
  * @param bucket resource
- * @return void
+ * @return void 
  */
 function stream_bucket_append ($brigade, $bucket) {}
 
@@ -7782,7 +7889,7 @@ function stream_bucket_append ($brigade, $bucket) {}
  * @link http://php.net/manual/en/function.stream-bucket-new.php
  * @param stream resource
  * @param buffer string
- * @return object
+ * @return object 
  */
 function stream_bucket_new ($stream, $buffer) {}
 
@@ -7791,14 +7898,14 @@ function stream_bucket_new ($stream, $buffer) {}
  * @link http://php.net/manual/en/function.output-add-rewrite-var.php
  * @param name string
  * @param value string
- * @return bool
+ * @return bool 
  */
 function output_add_rewrite_var ($name, $value) {}
 
 /**
  * Reset URL rewriter values
  * @link http://php.net/manual/en/function.output-reset-rewrite-vars.php
- * @return bool
+ * @return bool 
  */
 function output_reset_rewrite_vars () {}
 
@@ -7870,6 +7977,11 @@ define ('STR_PAD_BOTH', 2);
 define ('PATHINFO_DIRNAME', 1);
 define ('PATHINFO_BASENAME', 2);
 define ('PATHINFO_EXTENSION', 4);
+
+/**
+ * Since PHP 5.2.0.
+ * @link http://php.net/manual/en/filesystem.constants.php
+ */
 define ('PATHINFO_FILENAME', 8);
 define ('CHAR_MAX', 127);
 define ('LC_CTYPE', 0);
@@ -7895,8 +8007,8 @@ define ('STREAM_NOTIFY_CONNECT', 2);
 
 /**
  * Additional authorization is required to access the specified resource.
- *  Typical issued with severity level of
- *  STREAM_NOTIFY_SEVERITY_ERR.
+ * Typical issued with severity level of
+ * STREAM_NOTIFY_SEVERITY_ERR.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_NOTIFY_AUTH_REQUIRED', 3);
@@ -7909,8 +8021,8 @@ define ('STREAM_NOTIFY_AUTH_RESULT', 10);
 
 /**
  * The mime-type of resource has been identified,
- *  refer to message for a description of the
- *  discovered type.
+ * refer to message for a description of the
+ * discovered type.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_NOTIFY_MIME_TYPE_IS', 4);
@@ -7923,27 +8035,38 @@ define ('STREAM_NOTIFY_FILE_SIZE_IS', 5);
 
 /**
  * The external resource has redirected the stream to an alternate
- *  location. Refer to message.
+ * location. Refer to message.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_NOTIFY_REDIRECTED', 6);
 
 /**
  * Indicates current progress of the stream transfer in
- *  bytes_transferred and possibly
- *  bytes_max as well.
+ * bytes_transferred and possibly
+ * bytes_max as well.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_NOTIFY_PROGRESS', 7);
 
 /**
  * A generic error occurred on the stream, consult
- *  message and message_code
- *  for details.
+ * message and message_code
+ * for details.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_NOTIFY_FAILURE', 9);
+
+/**
+ * There is no more data available on the stream.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_COMPLETED', 8);
+
+/**
+ * A remote address required for this stream has been resolved, or the resolution
+ * failed. See severity for an indication of which happened.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_NOTIFY_RESOLVE', 1);
 
 /**
@@ -7963,11 +8086,52 @@ define ('STREAM_NOTIFY_SEVERITY_WARN', 1);
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_NOTIFY_SEVERITY_ERR', 2);
+
+/**
+ * Used with stream_filter_append and
+ * stream_filter_prepend to indicate
+ * that the specified filter should only be applied when
+ * reading
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_FILTER_READ', 1);
+
+/**
+ * Used with stream_filter_append and
+ * stream_filter_prepend to indicate
+ * that the specified filter should only be applied when
+ * writing
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_FILTER_WRITE', 2);
+
+/**
+ * This constant is equivalent to 
+ * STREAM_FILTER_READ | STREAM_FILTER_WRITE
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_FILTER_ALL', 3);
+
+/**
+ * Client socket opened with stream_socket_client
+ * should remain persistent between page loads.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_CLIENT_PERSISTENT', 1);
+
+/**
+ * Open client socket asynchronously. This option must be used
+ * together with the STREAM_CLIENT_CONNECT flag.
+ * Used with stream_socket_client.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_CLIENT_ASYNC_CONNECT', 2);
+
+/**
+ * Open client socket connection. Client sockets should always
+ * include this flag. Used with stream_socket_client.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_CLIENT_CONNECT', 4);
 define ('STREAM_CRYPTO_METHOD_SSLv2_CLIENT', 0);
 define ('STREAM_CRYPTO_METHOD_SSLv3_CLIENT', 1);
@@ -7980,52 +8144,177 @@ define ('STREAM_CRYPTO_METHOD_TLS_SERVER', 7);
 
 /**
  * Used with stream_socket_shutdown to disable
- *  further receptions. Added in PHP 5.2.1.
+ * further receptions. Added in PHP 5.2.1.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_SHUT_RD', 0);
 
 /**
  * Used with stream_socket_shutdown to disable
- *  further transmissions. Added in PHP 5.2.1.
+ * further transmissions. Added in PHP 5.2.1.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_SHUT_WR', 1);
 
 /**
  * Used with stream_socket_shutdown to disable
- *  further receptions and transmissions. Added in PHP 5.2.1.
+ * further receptions and transmissions. Added in PHP 5.2.1.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_SHUT_RDWR', 2);
+
+/**
+ * Internet Protocol Version 4 (IPv4).
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_PF_INET', 2);
+
+/**
+ * Internet Protocol Version 6 (IPv6).
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_PF_INET6', 10);
+
+/**
+ * Unix system internal protocols.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_PF_UNIX', 1);
+
+/**
+ * Provides a IP socket.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_IPPROTO_IP', 0);
+
+/**
+ * Provides a TCP socket.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_IPPROTO_TCP', 6);
+
+/**
+ * Provides a UDP socket.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_IPPROTO_UDP', 17);
+
+/**
+ * Provides a ICMP socket.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_IPPROTO_ICMP', 1);
+
+/**
+ * Provides a RAW socket.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_IPPROTO_RAW', 255);
+
+/**
+ * Provides sequenced, two-way byte streams with a transmission mechanism
+ * for out-of-band data (TCP, for example).
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SOCK_STREAM', 1);
+
+/**
+ * Provides datagrams, which are connectionless messages (UDP, for
+ * example).
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SOCK_DGRAM', 2);
+
+/**
+ * Provides a raw socket, which provides access to internal network
+ * protocols and interfaces. Usually this type of socket is just available
+ * to the root user.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SOCK_RAW', 3);
+
+/**
+ * Provides a sequenced packet stream socket.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SOCK_SEQPACKET', 5);
+
+/**
+ * Provides a RDM (Reliably-delivered messages) socket.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SOCK_RDM', 4);
 define ('STREAM_PEEK', 2);
 define ('STREAM_OOB', 1);
+
+/**
+ * Tells a stream created with stream_socket_server
+ * to bind to the specified target. Server sockets should always include this flag.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SERVER_BIND', 4);
+
+/**
+ * Tells a stream created with stream_socket_server
+ * and bound using the STREAM_SERVER_BIND flag to start
+ * listening on the socket. Connection-orientated transports (such as TCP)
+ * must use this flag, otherwise the server socket will not be enabled.
+ * Using this flag for connect-less transports (such as UDP) is an error.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_SERVER_LISTEN', 8);
+
+/**
+ * Search for filename in
+ * include_path (since PHP 5).
+ * @link http://php.net/manual/en/filesystem.constants.php
+ */
 define ('FILE_USE_INCLUDE_PATH', 1);
+
+/**
+ * Strip EOL characters (since PHP 5).
+ * @link http://php.net/manual/en/filesystem.constants.php
+ */
 define ('FILE_IGNORE_NEW_LINES', 2);
+
+/**
+ * Skip empty lines (since PHP 5).
+ * @link http://php.net/manual/en/filesystem.constants.php
+ */
 define ('FILE_SKIP_EMPTY_LINES', 4);
+
+/**
+ * Append content to existing file.
+ * @link http://php.net/manual/en/filesystem.constants.php
+ */
 define ('FILE_APPEND', 8);
 define ('FILE_NO_DEFAULT_CONTEXT', 16);
 define ('FNM_NOESCAPE', 2);
 define ('FNM_PATHNAME', 1);
 define ('FNM_PERIOD', 4);
 define ('FNM_CASEFOLD', 16);
+
+/**
+ * Return Code indicating that the
+ * userspace filter returned buckets in $out.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('PSFS_PASS_ON', 2);
+
+/**
+ * Return Code indicating that the
+ * userspace filter did not return buckets in $out
+ * (i.e. No data available).
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('PSFS_FEED_ME', 1);
+
+/**
+ * Return Code indicating that the
+ * userspace filter encountered an unrecoverable error
+ * (i.e. Invalid data received).
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('PSFS_ERR_FATAL', 0);
 define ('PSFS_FLAG_NORMAL', 0);
 define ('PSFS_FLAG_FLUSH_INC', 1);
@@ -8141,13 +8430,61 @@ define ('EXTR_PREFIX_INVALID', 4);
 define ('EXTR_PREFIX_IF_EXISTS', 5);
 define ('EXTR_IF_EXISTS', 6);
 define ('EXTR_REFS', 256);
+
+/**
+ * SORT_ASC is used with
+ * array_multisort to sort in ascending order.
+ * @link http://php.net/manual/en/array.constants.php
+ */
 define ('SORT_ASC', 4);
+
+/**
+ * SORT_DESC is used with
+ * array_multisort to sort in descending order.
+ * @link http://php.net/manual/en/array.constants.php
+ */
 define ('SORT_DESC', 3);
+
+/**
+ * SORT_REGULAR is used to compare items normally.
+ * @link http://php.net/manual/en/array.constants.php
+ */
 define ('SORT_REGULAR', 0);
+
+/**
+ * SORT_NUMERIC is used to compare items numerically.
+ * @link http://php.net/manual/en/array.constants.php
+ */
 define ('SORT_NUMERIC', 1);
+
+/**
+ * SORT_STRING is used to compare items as strings.
+ * @link http://php.net/manual/en/array.constants.php
+ */
 define ('SORT_STRING', 2);
+
+/**
+ * SORT_LOCALE_STRING is used to compare items as
+ * strings, based on the current locale. Added in PHP 4.4.0 and 5.0.2.
+ * @link http://php.net/manual/en/array.constants.php
+ */
 define ('SORT_LOCALE_STRING', 5);
+
+/**
+ * CASE_LOWER is used with
+ * array_change_key_case and is used to convert array
+ * keys to lower case. This is also the default case for
+ * array_change_key_case.
+ * @link http://php.net/manual/en/array.constants.php
+ */
 define ('CASE_LOWER', 0);
+
+/**
+ * CASE_UPPER is used with
+ * array_change_key_case and is used to convert array
+ * keys to upper case.
+ * @link http://php.net/manual/en/array.constants.php
+ */
 define ('CASE_UPPER', 1);
 define ('COUNT_NORMAL', 0);
 define ('COUNT_RECURSIVE', 1);
@@ -8159,7 +8496,7 @@ define ('ASSERT_QUIET_EVAL', 5);
 
 /**
  * Flag indicating if the stream
- *  used the include path.
+ * used the include path.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_USE_PATH', 1);
@@ -8168,12 +8505,27 @@ define ('STREAM_ENFORCE_SAFE_MODE', 4);
 
 /**
  * Flag indicating if the wrapper
- *  is responsible for raising errors using trigger_error 
- *  during opening of the stream. If this flag is not set, you
- *  should not raise any errors.
+ * is responsible for raising errors using trigger_error 
+ * during opening of the stream. If this flag is not set, you
+ * should not raise any errors.
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('STREAM_REPORT_ERRORS', 8);
+
+/**
+ * This flag is useful when your extension really must be able to randomly
+ * seek around in a stream. Some streams may not be seekable in their
+ * native form, so this flag asks the streams API to check to see if the
+ * stream does support seeking. If it does not, it will copy the stream
+ * into temporary storage (which may be a temporary file or a memory
+ * stream) which does support seeking.
+ * Please note that this flag is not useful when you want to seek the
+ * stream and write to it, because the stream you are accessing might
+ * not be bound to the actual resource you requested.
+ * If the requested resource is network based, this flag will cause the
+ * opener to block until the whole contents have been downloaded.
+ * @link http://php.net/manual/en/internals2.ze1.streams.constants.php
+ */
 define ('STREAM_MUST_SEEK', 16);
 define ('STREAM_URL_STAT_LINK', 1);
 define ('STREAM_URL_STAT_QUIET', 2);
@@ -8215,6 +8567,11 @@ define ('DNS_ALL', 251713587);
 
 // Start of Reflection v.0.1
 
+/**
+ * ReflectionException extends the standard Exception and is thrown by Reflection
+ * API. No specific methods or properties are introduced.
+ * @link http://php.net/manual/en/language.oop5.reflection.php
+ */
 class ReflectionException extends Exception  {
 	protected $message;
 	protected $code;
@@ -8261,6 +8618,11 @@ class Reflection  {
 
 }
 
+/**
+ * Reflector is an interface implemented by all
+ * exportable Reflection classes.
+ * @link http://php.net/manual/en/language.oop5.reflection.php
+ */
 interface Reflector  {
 
 	abstract public static function export () {}
@@ -8309,6 +8671,11 @@ abstract class ReflectionFunctionAbstract implements Reflector {
 
 }
 
+/**
+ * The ReflectionFunction class lets you
+ * reverse-engineer functions.
+ * @link http://php.net/manual/en/language.oop5.reflection.php
+ */
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector {
 	const IS_DEPRECATED = 262144;
 
@@ -8374,6 +8741,11 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 
 }
 
+/**
+ * The ReflectionParameter class retrieves
+ * information about a function's or method's parameters.
+ * @link http://php.net/manual/en/language.oop5.reflection.php
+ */
 class ReflectionParameter implements Reflector {
 	public $name;
 
@@ -8419,6 +8791,11 @@ class ReflectionParameter implements Reflector {
 
 }
 
+/**
+ * The ReflectionMethod class lets you
+ * reverse-engineer class methods.
+ * @link http://php.net/manual/en/language.oop5.reflection.php
+ */
 class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	const IS_STATIC = 1;
 	const IS_PUBLIC = 256;
@@ -8514,6 +8891,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 
 }
 
+/**
+ * The ReflectionClass class lets
+ * you reverse-engineer classes.
+ * @link http://php.net/manual/en/language.oop5.reflection.php
+ */
 class ReflectionClass implements Reflector {
 	const IS_IMPLICIT_ABSTRACT = 16;
 	const IS_EXPLICIT_ABSTRACT = 32;
@@ -8660,6 +9042,11 @@ class ReflectionClass implements Reflector {
 
 }
 
+/**
+ * The ReflectionObject class lets
+ * you reverse-engineer objects.
+ * @link http://php.net/manual/en/language.oop5.reflection.php
+ */
 class ReflectionObject extends ReflectionClass implements Reflector {
 	const IS_IMPLICIT_ABSTRACT = 16;
 	const IS_EXPLICIT_ABSTRACT = 32;
@@ -8806,6 +9193,11 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 
 }
 
+/**
+ * The ReflectionProperty class lets you
+ * reverse-engineer class properties.
+ * @link http://php.net/manual/en/language.oop5.reflection.php
+ */
 class ReflectionProperty implements Reflector {
 	const IS_STATIC = 1;
 	const IS_PUBLIC = 256;
@@ -8862,6 +9254,12 @@ class ReflectionProperty implements Reflector {
 
 }
 
+/**
+ * The ReflectionExtension class lets you
+ * reverse-engineer extensions. You can retrieve all loaded extensions
+ * at runtime using the get_loaded_extensions.
+ * @link http://php.net/manual/en/language.oop5.reflection.php
+ */
 class ReflectionExtension implements Reflector {
 	public $name;
 
@@ -8992,7 +9390,7 @@ function hash_update ($context, $data) {}
  * @param context resource
  * @param handle resource
  * @param length int[optional]
- * @return int
+ * @return int 
  */
 function hash_update_stream ($context, $handle, $length = null) {}
 
@@ -9002,7 +9400,7 @@ function hash_update_stream ($context, $handle, $length = null) {}
  * @param context resource
  * @param filename string
  * @param context resource[optional]
- * @return bool
+ * @return bool 
  */
 function hash_update_file ($context, $filename, $context = null) {}
 
@@ -9022,6 +9420,13 @@ function hash_final ($context, $raw_output = null) {}
  */
 function hash_algos () {}
 
+
+/**
+ * Optional flag for hash_init.
+ * Indicates that the HMAC digest-keying algorithm should be
+ * applied to the current hashing context.
+ * @link http://php.net/manual/en/hash.constants.php
+ */
 define ('HASH_HMAC', 1);
 
 // End of hash v.1.0
@@ -9035,7 +9440,7 @@ define ('HASH_HMAC', 1);
  * @param variable_name string
  * @param filter int[optional]
  * @param options mixed[optional]
- * @return mixed
+ * @return mixed 
  */
 function filter_input ($type, $variable_name, $filter = null, $options = null) {}
 
@@ -9054,7 +9459,7 @@ function filter_var ($variable, $filter = null, $options = null) {}
  * @link http://php.net/manual/en/function.filter-input-array.php
  * @param type int
  * @param definition mixed[optional]
- * @return mixed
+ * @return mixed 
  */
 function filter_input_array ($type, $definition = null) {}
 
@@ -9063,7 +9468,7 @@ function filter_input_array ($type, $definition = null) {}
  * @link http://php.net/manual/en/function.filter-var-array.php
  * @param data array
  * @param definition mixed[optional]
- * @return mixed
+ * @return mixed 
  */
 function filter_var_array (array $data, $definition = null) {}
 
@@ -9079,7 +9484,7 @@ function filter_list () {}
  * @link http://php.net/manual/en/function.filter-has-var.php
  * @param type int
  * @param variable_name string
- * @return bool
+ * @return bool 
  */
 function filter_has_var ($type, $variable_name) {}
 
@@ -9087,60 +9492,318 @@ function filter_has_var ($type, $variable_name) {}
  * Returns the filter ID belonging to a named filter
  * @link http://php.net/manual/en/function.filter-id.php
  * @param filtername string
- * @return int
+ * @return int 
  */
 function filter_id ($filtername) {}
 
+
+/**
+ * POST variables.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('INPUT_POST', 0);
+
+/**
+ * GET variables.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('INPUT_GET', 1);
+
+/**
+ * COOKIE variables.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('INPUT_COOKIE', 2);
+
+/**
+ * ENV variables.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('INPUT_ENV', 4);
+
+/**
+ * SERVER variables.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('INPUT_SERVER', 5);
+
+/**
+ * SESSION variables.
+ * (not implemented yet)
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('INPUT_SESSION', 6);
+
+/**
+ * REQUEST variables.
+ * (not implemented yet)
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('INPUT_REQUEST', 99);
+
+/**
+ * No flags.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_NONE', 0);
+
+/**
+ * Flag used to require scalar as input
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_REQUIRE_SCALAR', 33554432);
+
+/**
+ * Require an array as input.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_REQUIRE_ARRAY', 16777216);
+
+/**
+ * Always returns an array.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FORCE_ARRAY', 67108864);
+
+/**
+ * Use NULL instead of FALSE on failure.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_NULL_ON_FAILURE', 134217728);
+
+/**
+ * ID of "int" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_VALIDATE_INT', 257);
+
+/**
+ * ID of "boolean" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_VALIDATE_BOOLEAN', 258);
+
+/**
+ * ID of "float" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_VALIDATE_FLOAT', 259);
+
+/**
+ * ID of "validate_regexp" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_VALIDATE_REGEXP', 272);
+
+/**
+ * ID of "validate_url" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_VALIDATE_URL', 273);
+
+/**
+ * ID of "validate_email" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_VALIDATE_EMAIL', 274);
+
+/**
+ * ID of "validate_ip" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_VALIDATE_IP', 275);
+
+/**
+ * ID of default ("string") filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_DEFAULT', 516);
+
+/**
+ * ID of "unsafe_raw" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_UNSAFE_RAW', 516);
+
+/**
+ * ID of "string" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_SANITIZE_STRING', 513);
+
+/**
+ * ID of "stripped" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_SANITIZE_STRIPPED', 513);
+
+/**
+ * ID of "encoded" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_SANITIZE_ENCODED', 514);
+
+/**
+ * ID of "special_chars" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_SANITIZE_SPECIAL_CHARS', 515);
+
+/**
+ * ID of "email" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_SANITIZE_EMAIL', 517);
+
+/**
+ * ID of "url" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_SANITIZE_URL', 518);
+
+/**
+ * ID of "number_int" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_SANITIZE_NUMBER_INT', 519);
+
+/**
+ * ID of "number_float" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_SANITIZE_NUMBER_FLOAT', 520);
+
+/**
+ * ID of "magic_quotes" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_SANITIZE_MAGIC_QUOTES', 521);
+
+/**
+ * ID of "callback" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_CALLBACK', 1024);
+
+/**
+ * Allow octal notation (0[0-7]+) in "int" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_ALLOW_OCTAL', 1);
+
+/**
+ * Allow hex notation (0x[0-9a-fA-F]+) in "int" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_ALLOW_HEX', 2);
+
+/**
+ * Strip characters with ASCII value less than 32.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_STRIP_LOW', 4);
+
+/**
+ * Strip characters with ASCII value greater than 127.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_STRIP_HIGH', 8);
+
+/**
+ * Encode characters with ASCII value less than 32.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_ENCODE_LOW', 16);
+
+/**
+ * Encode characters with ASCII value greater than 127.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_ENCODE_HIGH', 32);
+
+/**
+ * Encode &amp;.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_ENCODE_AMP', 64);
+
+/**
+ * Don't encode ' and ".
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_NO_ENCODE_QUOTES', 128);
+
+/**
+ * (No use for now.)
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_EMPTY_STRING_NULL', 256);
+
+/**
+ * Allow fractional part in "number_float" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_ALLOW_FRACTION', 4096);
+
+/**
+ * Allow thousand separator (,) in "number_float" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_ALLOW_THOUSAND', 8192);
+
+/**
+ * Allow scientific notation (e, E) in
+ * "number_float" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_ALLOW_SCIENTIFIC', 16384);
+
+/**
+ * Require scheme in "validate_url" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_SCHEME_REQUIRED', 65536);
+
+/**
+ * Require host in "validate_url" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_HOST_REQUIRED', 131072);
+
+/**
+ * Require path in "validate_url" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_PATH_REQUIRED', 262144);
+
+/**
+ * Require query in "validate_url" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_QUERY_REQUIRED', 524288);
+
+/**
+ * Allow only IPv4 address in "validate_ip" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_IPV4', 1048576);
+
+/**
+ * Allow only IPv6 address in "validate_ip" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_IPV6', 2097152);
+
+/**
+ * Deny reserved addresses in "validate_ip" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_NO_RES_RANGE', 4194304);
+
+/**
+ * Deny private addresses in "validate_ip" filter.
+ * @link http://php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_NO_PRIV_RANGE', 8388608);
 
 // End of filter v.0.11.0
@@ -9149,7 +9812,7 @@ define ('FILTER_FLAG_NO_PRIV_RANGE', 8388608);
 
 /**
  * DOM operations raise exceptions under particular circumstances, i.e.,
- *  when an operation is impossible to perform for logical reasons.
+ * when an operation is impossible to perform for logical reasons.
  * @link http://php.net/manual/en/ref.dom.php
  */
 final class DOMException extends Exception  {
@@ -9216,8 +9879,8 @@ class DOMImplementationSource  {
 
 /**
  * The DOMImplementation interface provides a number
- *  of methods for performing operations that are independent of any 
- *  particular instance of the document object model.
+ * of methods for performing operations that are independent of any 
+ * particular instance of the document object model.
  * @link http://php.net/manual/en/ref.dom.php
  */
 class DOMImplementation  {
@@ -9229,7 +9892,7 @@ class DOMImplementation  {
 	 * @link http://php.net/manual/en/function.dom-domimplementation-hasfeature.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasFeature ($feature, $version) {}
 
@@ -9239,7 +9902,7 @@ class DOMImplementation  {
 	 * @param qualifiedName string[optional]
 	 * @param publicId string[optional]
 	 * @param systemId string[optional]
-	 * @return DOMDocumentType
+	 * @return DOMDocumentType 
 	 */
 	public function createDocumentType ($qualifiedName = null, $publicId = null, $systemId = null) {}
 
@@ -9249,7 +9912,7 @@ class DOMImplementation  {
 	 * @param namespaceURI string[optional]
 	 * @param qualifiedName string[optional]
 	 * @param doctype DOMDocumentType[optional]
-	 * @return DOMDocument
+	 * @return DOMDocument 
 	 */
 	public function createDocument ($namespaceURI = null, $qualifiedName = null, DOMDocumentType $doctype = null) {}
 
@@ -9265,7 +9928,7 @@ class DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -9274,7 +9937,7 @@ class DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -9282,7 +9945,7 @@ class DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -9290,14 +9953,14 @@ class DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -9305,14 +9968,14 @@ class DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -9321,14 +9984,14 @@ class DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -9338,7 +10001,7 @@ class DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -9346,7 +10009,7 @@ class DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -9354,7 +10017,7 @@ class DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -9362,7 +10025,7 @@ class DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -9397,7 +10060,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * Append raw XML data
 	 * @link http://php.net/manual/en/function.dom-domdocumentfragment-appendxml.php
 	 * @param data string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function appendXML ($data) {}
 
@@ -9406,7 +10069,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -9415,7 +10078,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -9423,7 +10086,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -9431,14 +10094,14 @@ class DOMDocumentFragment extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -9446,14 +10109,14 @@ class DOMDocumentFragment extends DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -9462,14 +10125,14 @@ class DOMDocumentFragment extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -9479,7 +10142,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -9487,7 +10150,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -9495,7 +10158,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -9503,7 +10166,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -9541,7 +10204,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Create new document fragment
 	 * @link http://php.net/manual/en/function.dom-domdocument-createdocumentfragment.php
-	 * @return DOMDocumentFragment
+	 * @return DOMDocumentFragment 
 	 */
 	public function createDocumentFragment () {}
 
@@ -9549,7 +10212,7 @@ class DOMDocument extends DOMNode  {
 	 * Create new text node
 	 * @link http://php.net/manual/en/function.dom-domdocument-createtextnode.php
 	 * @param content string
-	 * @return DOMText
+	 * @return DOMText 
 	 */
 	public function createTextNode ($content) {}
 
@@ -9557,7 +10220,7 @@ class DOMDocument extends DOMNode  {
 	 * Create new comment node
 	 * @link http://php.net/manual/en/function.dom-domdocument-createcomment.php
 	 * @param data string
-	 * @return DOMComment
+	 * @return DOMComment 
 	 */
 	public function createComment ($data) {}
 
@@ -9565,7 +10228,7 @@ class DOMDocument extends DOMNode  {
 	 * Create new cdata node
 	 * @link http://php.net/manual/en/function.dom-domdocument-createcdatasection.php
 	 * @param data string
-	 * @return DOMCDATASection
+	 * @return DOMCDATASection 
 	 */
 	public function createCDATASection ($data) {}
 
@@ -9574,7 +10237,7 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domdocument-createprocessinginstruction.php
 	 * @param target string
 	 * @param data string[optional]
-	 * @return DOMProcessingInstruction
+	 * @return DOMProcessingInstruction 
 	 */
 	public function createProcessingInstruction ($target, $data = null) {}
 
@@ -9582,7 +10245,7 @@ class DOMDocument extends DOMNode  {
 	 * Create new attribute
 	 * @link http://php.net/manual/en/function.dom-domdocument-createattribute.php
 	 * @param name string
-	 * @return DOMAttr
+	 * @return DOMAttr 
 	 */
 	public function createAttribute ($name) {}
 
@@ -9590,7 +10253,7 @@ class DOMDocument extends DOMNode  {
 	 * Create new entity reference node
 	 * @link http://php.net/manual/en/function.dom-domdocument-createentityreference.php
 	 * @param name string
-	 * @return DOMEntityReference
+	 * @return DOMEntityReference 
 	 */
 	public function createEntityReference ($name) {}
 
@@ -9598,7 +10261,7 @@ class DOMDocument extends DOMNode  {
 	 * Searches for all elements with given tag name
 	 * @link http://php.net/manual/en/function.dom-domdocument-getelementsbytagname.php
 	 * @param name string
-	 * @return DOMNodeList
+	 * @return DOMNodeList 
 	 */
 	public function getElementsByTagName ($name) {}
 
@@ -9607,7 +10270,7 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domdocument-importnode.php
 	 * @param importedNode DOMNode
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function importNode (DOMNode $importedNode, $deep = null) {}
 
@@ -9617,7 +10280,7 @@ class DOMDocument extends DOMNode  {
 	 * @param namespaceURI string
 	 * @param qualifiedName string
 	 * @param value string[optional]
-	 * @return DOMElement
+	 * @return DOMElement 
 	 */
 	public function createElementNS ($namespaceURI, $qualifiedName, $value = null) {}
 
@@ -9626,7 +10289,7 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domdocument-createattributens.php
 	 * @param namespaceURI string
 	 * @param qualifiedName string
-	 * @return DOMAttr
+	 * @return DOMAttr 
 	 */
 	public function createAttributeNS ($namespaceURI, $qualifiedName) {}
 
@@ -9635,7 +10298,7 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domdocument-getelementsbytagnamens.php
 	 * @param namespaceURI string
 	 * @param localName string
-	 * @return DOMNodeList
+	 * @return DOMNodeList 
 	 */
 	public function getElementsByTagNameNS ($namespaceURI, $localName) {}
 
@@ -9652,7 +10315,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Normalizes the document
 	 * @link http://php.net/manual/en/function.dom-domdocument-normalizedocument.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalizeDocument () {}
 
@@ -9663,7 +10326,7 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domdocument-load.php
 	 * @param filename string
 	 * @param options int[optional]
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function load ($filename, $options = null) {}
 
@@ -9681,7 +10344,7 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domdocument-loadxml.php
 	 * @param source string
 	 * @param options int[optional]
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function loadXML ($source, $options = null) {}
 
@@ -9703,7 +10366,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Validates the document based on its DTD
 	 * @link http://php.net/manual/en/function.dom-domdocument-validate.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function validate () {}
 
@@ -9719,7 +10382,7 @@ class DOMDocument extends DOMNode  {
 	 * Load HTML from a string
 	 * @link http://php.net/manual/en/function.dom-domdocument-loadhtml.php
 	 * @param source string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function loadHTML ($source) {}
 
@@ -9727,7 +10390,7 @@ class DOMDocument extends DOMNode  {
 	 * Load HTML from a file
 	 * @link http://php.net/manual/en/function.dom-domdocument-loadhtmlfile.php
 	 * @param filename string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function loadHTMLFile ($filename) {}
 
@@ -9750,7 +10413,7 @@ class DOMDocument extends DOMNode  {
 	 * Validates a document based on a schema
 	 * @link http://php.net/manual/en/function.dom-domdocument-schemavalidate.php
 	 * @param filename string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function schemaValidate ($filename) {}
 
@@ -9758,7 +10421,7 @@ class DOMDocument extends DOMNode  {
 	 * Validates a document based on a schema
 	 * @link http://php.net/manual/en/function.dom-domdocument-schemavalidatesource.php
 	 * @param source string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function schemaValidateSource ($source) {}
 
@@ -9766,7 +10429,7 @@ class DOMDocument extends DOMNode  {
 	 * Performs relaxNG validation on the document
 	 * @link http://php.net/manual/en/function.dom-domdocument-relaxngvalidate.php
 	 * @param filename string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function relaxNGValidate ($filename) {}
 
@@ -9774,7 +10437,7 @@ class DOMDocument extends DOMNode  {
 	 * Performs relaxNG validation on the document
 	 * @link http://php.net/manual/en/function.dom-domdocument-relaxngvalidatesource.php
 	 * @param source string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function relaxNGValidateSource ($source) {}
 
@@ -9783,7 +10446,7 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domdocument-registernodeclass.php
 	 * @param baseclass string
 	 * @param extendedclass string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function registerNodeClass ($baseclass, $extendedclass) {}
 
@@ -9792,7 +10455,7 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -9801,7 +10464,7 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -9809,7 +10472,7 @@ class DOMDocument extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -9817,14 +10480,14 @@ class DOMDocument extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -9832,14 +10495,14 @@ class DOMDocument extends DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -9848,14 +10511,14 @@ class DOMDocument extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -9865,7 +10528,7 @@ class DOMDocument extends DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -9873,7 +10536,7 @@ class DOMDocument extends DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -9881,7 +10544,7 @@ class DOMDocument extends DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -9889,7 +10552,7 @@ class DOMDocument extends DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -9918,7 +10581,7 @@ class DOMNodeList  {
 	 * Retrieves a node specified by index
 	 * @link http://php.net/manual/en/function.dom-domnodelist-item.php
 	 * @param index int
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function item ($index) {}
 
@@ -9933,7 +10596,7 @@ class DOMNamedNodeMap  {
 	 * Retrieves a node specified by name
 	 * @link http://php.net/manual/en/function.dom-domnamednodemap-getnameditem.php
 	 * @param name string
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function getNamedItem ($name) {}
 
@@ -9945,7 +10608,7 @@ class DOMNamedNodeMap  {
 	 * Retrieves a node specified by index
 	 * @link http://php.net/manual/en/function.dom-domnamednodemap-item.php
 	 * @param index int
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function item ($index) {}
 
@@ -9954,7 +10617,7 @@ class DOMNamedNodeMap  {
 	 * @link http://php.net/manual/en/function.dom-domnamednodemap-getnameditemns.php
 	 * @param namespaceURI string
 	 * @param localName string
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function getNamedItemNS ($namespaceURI, $localName) {}
 
@@ -9975,7 +10638,7 @@ class DOMCharacterData extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-substringdata.php
 	 * @param offset int
 	 * @param count int
-	 * @return string
+	 * @return string 
 	 */
 	public function substringData ($offset, $count) {}
 
@@ -9983,7 +10646,7 @@ class DOMCharacterData extends DOMNode  {
 	 * Append the string to the end of the character data of the node
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-appenddata.php
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function appendData ($data) {}
 
@@ -9992,7 +10655,7 @@ class DOMCharacterData extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-insertdata.php
 	 * @param offset int
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function insertData ($offset, $data) {}
 
@@ -10001,7 +10664,7 @@ class DOMCharacterData extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-deletedata.php
 	 * @param offset int
 	 * @param count int
-	 * @return void
+	 * @return void 
 	 */
 	public function deleteData ($offset, $count) {}
 
@@ -10011,7 +10674,7 @@ class DOMCharacterData extends DOMNode  {
 	 * @param offset int
 	 * @param count int
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function replaceData ($offset, $count, $data) {}
 
@@ -10020,7 +10683,7 @@ class DOMCharacterData extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -10029,7 +10692,7 @@ class DOMCharacterData extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -10037,7 +10700,7 @@ class DOMCharacterData extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -10045,14 +10708,14 @@ class DOMCharacterData extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -10060,14 +10723,14 @@ class DOMCharacterData extends DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -10076,14 +10739,14 @@ class DOMCharacterData extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -10093,7 +10756,7 @@ class DOMCharacterData extends DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -10101,7 +10764,7 @@ class DOMCharacterData extends DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -10109,7 +10772,7 @@ class DOMCharacterData extends DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -10117,7 +10780,7 @@ class DOMCharacterData extends DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -10139,7 +10802,7 @@ class DOMCharacterData extends DOMNode  {
 
 /**
  * Extends DOMNode. The DOMAttr
- *  interface represents an attribute in an DOMElement object.
+ * interface represents an attribute in an DOMElement object.
  * @link http://php.net/manual/en/ref.dom.php
  */
 class DOMAttr extends DOMNode  {
@@ -10147,7 +10810,7 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Checks if attribute is a defined ID
 	 * @link http://php.net/manual/en/function.dom-domattr-isid.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isId () {}
 
@@ -10162,7 +10825,7 @@ class DOMAttr extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -10171,7 +10834,7 @@ class DOMAttr extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -10179,7 +10842,7 @@ class DOMAttr extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -10187,14 +10850,14 @@ class DOMAttr extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -10202,14 +10865,14 @@ class DOMAttr extends DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -10218,14 +10881,14 @@ class DOMAttr extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -10235,7 +10898,7 @@ class DOMAttr extends DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -10243,7 +10906,7 @@ class DOMAttr extends DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -10251,7 +10914,7 @@ class DOMAttr extends DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -10259,7 +10922,7 @@ class DOMAttr extends DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -10289,7 +10952,7 @@ class DOMElement extends DOMNode  {
 	 * Returns value of attribute
 	 * @link http://php.net/manual/en/function.dom-domelement-getattribute.php
 	 * @param name string
-	 * @return string
+	 * @return string 
 	 */
 	public function getAttribute ($name) {}
 
@@ -10298,7 +10961,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domelement-setattribute.php
 	 * @param name string
 	 * @param value string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function setAttribute ($name, $value) {}
 
@@ -10306,7 +10969,7 @@ class DOMElement extends DOMNode  {
 	 * Removes attribute
 	 * @link http://php.net/manual/en/function.dom-domelement-removeattribute.php
 	 * @param name string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function removeAttribute ($name) {}
 
@@ -10314,7 +10977,7 @@ class DOMElement extends DOMNode  {
 	 * Returns attribute node
 	 * @link http://php.net/manual/en/function.dom-domelement-getattributenode.php
 	 * @param name string
-	 * @return DOMAttr
+	 * @return DOMAttr 
 	 */
 	public function getAttributeNode ($name) {}
 
@@ -10330,7 +10993,7 @@ class DOMElement extends DOMNode  {
 	 * Removes attribute
 	 * @link http://php.net/manual/en/function.dom-domelement-removeattributenode.php
 	 * @param oldnode DOMAttr
-	 * @return bool
+	 * @return bool 
 	 */
 	public function removeAttributeNode (DOMAttr $oldnode) {}
 
@@ -10338,7 +11001,7 @@ class DOMElement extends DOMNode  {
 	 * Gets elements by tagname
 	 * @link http://php.net/manual/en/function.dom-domelement-getelementsbytagname.php
 	 * @param name string
-	 * @return DOMNodeList
+	 * @return DOMNodeList 
 	 */
 	public function getElementsByTagName ($name) {}
 
@@ -10347,7 +11010,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domelement-getattributens.php
 	 * @param namespaceURI string
 	 * @param localName string
-	 * @return string
+	 * @return string 
 	 */
 	public function getAttributeNS ($namespaceURI, $localName) {}
 
@@ -10357,7 +11020,7 @@ class DOMElement extends DOMNode  {
 	 * @param namespaceURI string
 	 * @param qualifiedName string
 	 * @param value string
-	 * @return void
+	 * @return void 
 	 */
 	public function setAttributeNS ($namespaceURI, $qualifiedName, $value) {}
 
@@ -10366,7 +11029,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domelement-removeattributens.php
 	 * @param namespaceURI string
 	 * @param localName string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function removeAttributeNS ($namespaceURI, $localName) {}
 
@@ -10375,7 +11038,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domelement-getattributenodens.php
 	 * @param namespaceURI string
 	 * @param localName string
-	 * @return DOMAttr
+	 * @return DOMAttr 
 	 */
 	public function getAttributeNodeNS ($namespaceURI, $localName) {}
 
@@ -10392,7 +11055,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domelement-getelementsbytagnamens.php
 	 * @param namespaceURI string
 	 * @param localName string
-	 * @return DOMNodeList
+	 * @return DOMNodeList 
 	 */
 	public function getElementsByTagNameNS ($namespaceURI, $localName) {}
 
@@ -10400,7 +11063,7 @@ class DOMElement extends DOMNode  {
 	 * Checks to see if attribute exists
 	 * @link http://php.net/manual/en/function.dom-domelement-hasattribute.php
 	 * @param name string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttribute ($name) {}
 
@@ -10409,7 +11072,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domelement-hasattributens.php
 	 * @param namespaceURI string
 	 * @param localName string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributeNS ($namespaceURI, $localName) {}
 
@@ -10418,7 +11081,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domelement-setidattribute.php
 	 * @param name string
 	 * @param isId bool
-	 * @return void
+	 * @return void 
 	 */
 	public function setIdAttribute ($name, $isId) {}
 
@@ -10428,7 +11091,7 @@ class DOMElement extends DOMNode  {
 	 * @param namespaceURI string
 	 * @param localName string
 	 * @param isId bool
-	 * @return void
+	 * @return void 
 	 */
 	public function setIdAttributeNS ($namespaceURI, $localName, $isId) {}
 
@@ -10437,7 +11100,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domelement-setidattributenode.php
 	 * @param attr DOMAttr
 	 * @param isId bool
-	 * @return void
+	 * @return void 
 	 */
 	public function setIdAttributeNode (DOMAttr $attr, $isId) {}
 
@@ -10452,7 +11115,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -10461,7 +11124,7 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -10469,7 +11132,7 @@ class DOMElement extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -10477,14 +11140,14 @@ class DOMElement extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -10492,14 +11155,14 @@ class DOMElement extends DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -10508,14 +11171,14 @@ class DOMElement extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -10525,7 +11188,7 @@ class DOMElement extends DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -10533,7 +11196,7 @@ class DOMElement extends DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -10541,7 +11204,7 @@ class DOMElement extends DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -10549,7 +11212,7 @@ class DOMElement extends DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -10579,14 +11242,14 @@ class DOMText extends DOMCharacterData  {
 	 * Breaks this node into two nodes at the specified offset
 	 * @link http://php.net/manual/en/function.dom-domtext-splittext.php
 	 * @param offset int
-	 * @return DOMText
+	 * @return DOMText 
 	 */
 	public function splitText ($offset) {}
 
 	/**
 	 * Indicates whether this text node contains whitespace
 	 * @link http://php.net/manual/en/function.dom-domtext-iswhitespaceinelementcontent.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isWhitespaceInElementContent () {}
 
@@ -10605,7 +11268,7 @@ class DOMText extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-substringdata.php
 	 * @param offset int
 	 * @param count int
-	 * @return string
+	 * @return string 
 	 */
 	public function substringData ($offset, $count) {}
 
@@ -10613,7 +11276,7 @@ class DOMText extends DOMCharacterData  {
 	 * Append the string to the end of the character data of the node
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-appenddata.php
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function appendData ($data) {}
 
@@ -10622,7 +11285,7 @@ class DOMText extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-insertdata.php
 	 * @param offset int
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function insertData ($offset, $data) {}
 
@@ -10631,7 +11294,7 @@ class DOMText extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-deletedata.php
 	 * @param offset int
 	 * @param count int
-	 * @return void
+	 * @return void 
 	 */
 	public function deleteData ($offset, $count) {}
 
@@ -10641,7 +11304,7 @@ class DOMText extends DOMCharacterData  {
 	 * @param offset int
 	 * @param count int
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function replaceData ($offset, $count, $data) {}
 
@@ -10650,7 +11313,7 @@ class DOMText extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -10659,7 +11322,7 @@ class DOMText extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -10667,7 +11330,7 @@ class DOMText extends DOMCharacterData  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -10675,14 +11338,14 @@ class DOMText extends DOMCharacterData  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -10690,14 +11353,14 @@ class DOMText extends DOMCharacterData  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -10706,14 +11369,14 @@ class DOMText extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -10723,7 +11386,7 @@ class DOMText extends DOMCharacterData  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -10731,7 +11394,7 @@ class DOMText extends DOMCharacterData  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -10739,7 +11402,7 @@ class DOMText extends DOMCharacterData  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -10747,7 +11410,7 @@ class DOMText extends DOMCharacterData  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -10784,7 +11447,7 @@ class DOMComment extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-substringdata.php
 	 * @param offset int
 	 * @param count int
-	 * @return string
+	 * @return string 
 	 */
 	public function substringData ($offset, $count) {}
 
@@ -10792,7 +11455,7 @@ class DOMComment extends DOMCharacterData  {
 	 * Append the string to the end of the character data of the node
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-appenddata.php
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function appendData ($data) {}
 
@@ -10801,7 +11464,7 @@ class DOMComment extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-insertdata.php
 	 * @param offset int
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function insertData ($offset, $data) {}
 
@@ -10810,7 +11473,7 @@ class DOMComment extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-deletedata.php
 	 * @param offset int
 	 * @param count int
-	 * @return void
+	 * @return void 
 	 */
 	public function deleteData ($offset, $count) {}
 
@@ -10820,7 +11483,7 @@ class DOMComment extends DOMCharacterData  {
 	 * @param offset int
 	 * @param count int
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function replaceData ($offset, $count, $data) {}
 
@@ -10829,7 +11492,7 @@ class DOMComment extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -10838,7 +11501,7 @@ class DOMComment extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -10846,7 +11509,7 @@ class DOMComment extends DOMCharacterData  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -10854,14 +11517,14 @@ class DOMComment extends DOMCharacterData  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -10869,14 +11532,14 @@ class DOMComment extends DOMCharacterData  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -10885,14 +11548,14 @@ class DOMComment extends DOMCharacterData  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -10902,7 +11565,7 @@ class DOMComment extends DOMCharacterData  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -10910,7 +11573,7 @@ class DOMComment extends DOMCharacterData  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -10918,7 +11581,7 @@ class DOMComment extends DOMCharacterData  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -10926,7 +11589,7 @@ class DOMComment extends DOMCharacterData  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -10985,14 +11648,14 @@ class DOMCdataSection extends DOMText  {
 	 * Breaks this node into two nodes at the specified offset
 	 * @link http://php.net/manual/en/function.dom-domtext-splittext.php
 	 * @param offset int
-	 * @return DOMText
+	 * @return DOMText 
 	 */
 	public function splitText ($offset) {}
 
 	/**
 	 * Indicates whether this text node contains whitespace
 	 * @link http://php.net/manual/en/function.dom-domtext-iswhitespaceinelementcontent.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isWhitespaceInElementContent () {}
 
@@ -11005,7 +11668,7 @@ class DOMCdataSection extends DOMText  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-substringdata.php
 	 * @param offset int
 	 * @param count int
-	 * @return string
+	 * @return string 
 	 */
 	public function substringData ($offset, $count) {}
 
@@ -11013,7 +11676,7 @@ class DOMCdataSection extends DOMText  {
 	 * Append the string to the end of the character data of the node
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-appenddata.php
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function appendData ($data) {}
 
@@ -11022,7 +11685,7 @@ class DOMCdataSection extends DOMText  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-insertdata.php
 	 * @param offset int
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function insertData ($offset, $data) {}
 
@@ -11031,7 +11694,7 @@ class DOMCdataSection extends DOMText  {
 	 * @link http://php.net/manual/en/function.dom-domcharacterdata-deletedata.php
 	 * @param offset int
 	 * @param count int
-	 * @return void
+	 * @return void 
 	 */
 	public function deleteData ($offset, $count) {}
 
@@ -11041,7 +11704,7 @@ class DOMCdataSection extends DOMText  {
 	 * @param offset int
 	 * @param count int
 	 * @param data string
-	 * @return void
+	 * @return void 
 	 */
 	public function replaceData ($offset, $count, $data) {}
 
@@ -11050,7 +11713,7 @@ class DOMCdataSection extends DOMText  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -11059,7 +11722,7 @@ class DOMCdataSection extends DOMText  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -11067,7 +11730,7 @@ class DOMCdataSection extends DOMText  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -11075,14 +11738,14 @@ class DOMCdataSection extends DOMText  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -11090,14 +11753,14 @@ class DOMCdataSection extends DOMText  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -11106,14 +11769,14 @@ class DOMCdataSection extends DOMText  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -11123,7 +11786,7 @@ class DOMCdataSection extends DOMText  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -11131,7 +11794,7 @@ class DOMCdataSection extends DOMText  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -11139,7 +11802,7 @@ class DOMCdataSection extends DOMText  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -11147,7 +11810,7 @@ class DOMCdataSection extends DOMText  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -11178,7 +11841,7 @@ class DOMDocumentType extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -11187,7 +11850,7 @@ class DOMDocumentType extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -11195,7 +11858,7 @@ class DOMDocumentType extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -11203,14 +11866,14 @@ class DOMDocumentType extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -11218,14 +11881,14 @@ class DOMDocumentType extends DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -11234,14 +11897,14 @@ class DOMDocumentType extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -11251,7 +11914,7 @@ class DOMDocumentType extends DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -11259,7 +11922,7 @@ class DOMDocumentType extends DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -11267,7 +11930,7 @@ class DOMDocumentType extends DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -11275,7 +11938,7 @@ class DOMDocumentType extends DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -11313,7 +11976,7 @@ class DOMEntity extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -11322,7 +11985,7 @@ class DOMEntity extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -11330,7 +11993,7 @@ class DOMEntity extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -11338,14 +12001,14 @@ class DOMEntity extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -11353,14 +12016,14 @@ class DOMEntity extends DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -11369,14 +12032,14 @@ class DOMEntity extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -11386,7 +12049,7 @@ class DOMEntity extends DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -11394,7 +12057,7 @@ class DOMEntity extends DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -11402,7 +12065,7 @@ class DOMEntity extends DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -11410,7 +12073,7 @@ class DOMEntity extends DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -11447,7 +12110,7 @@ class DOMEntityReference extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -11456,7 +12119,7 @@ class DOMEntityReference extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -11464,7 +12127,7 @@ class DOMEntityReference extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -11472,14 +12135,14 @@ class DOMEntityReference extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -11487,14 +12150,14 @@ class DOMEntityReference extends DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -11503,14 +12166,14 @@ class DOMEntityReference extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -11520,7 +12183,7 @@ class DOMEntityReference extends DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -11528,7 +12191,7 @@ class DOMEntityReference extends DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -11536,7 +12199,7 @@ class DOMEntityReference extends DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -11544,7 +12207,7 @@ class DOMEntityReference extends DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -11581,7 +12244,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-insertbefore.php
 	 * @param newnode DOMNode
 	 * @param refnode DOMNode[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
@@ -11590,7 +12253,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-replacechild.php
 	 * @param newnode DOMNode
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
@@ -11598,7 +12261,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * Removes child from list of children
 	 * @link http://php.net/manual/en/function.dom-domnode-removechild.php
 	 * @param oldnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function removeChild (DOMNode $oldnode) {}
 
@@ -11606,14 +12269,14 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * Adds new child at the end of the children
 	 * @link http://php.net/manual/en/function.dom-domnode-appendchild.php
 	 * @param newnode DOMNode
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function appendChild (DOMNode $newnode) {}
 
 	/**
 	 * Checks if node has children
 	 * @link http://php.net/manual/en/function.dom-domnode-haschildnodes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasChildNodes () {}
 
@@ -11621,14 +12284,14 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * Clones a node
 	 * @link http://php.net/manual/en/function.dom-domnode-clonenode.php
 	 * @param deep bool[optional]
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function cloneNode ($deep = null) {}
 
 	/**
 	 * Normalizes the node
 	 * @link http://php.net/manual/en/function.dom-domnode-normalize.php
-	 * @return void
+	 * @return void 
 	 */
 	public function normalize () {}
 
@@ -11637,14 +12300,14 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @link http://php.net/manual/en/function.dom-domnode-issupported.php
 	 * @param feature string
 	 * @param version string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSupported ($feature, $version) {}
 
 	/**
 	 * Checks if node has attributes
 	 * @link http://php.net/manual/en/function.dom-domnode-hasattributes.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasAttributes () {}
 
@@ -11654,7 +12317,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * Indicates if two nodes are the same node
 	 * @link http://php.net/manual/en/function.dom-domnode-issamenode.php
 	 * @param node DOMNode
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isSameNode (DOMNode $node) {}
 
@@ -11662,7 +12325,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupprefix.php
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
@@ -11670,7 +12333,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://php.net/manual/en/function.dom-domnode-isdefaultnamespace.php
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
@@ -11678,7 +12341,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://php.net/manual/en/function.dom-domnode-lookupnamespaceuri.php
 	 * @param prefix string
-	 * @return string
+	 * @return string 
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -11722,7 +12385,7 @@ class DOMXPath  {
 	 * @link http://php.net/manual/en/function.dom-domxpath-registernamespace.php
 	 * @param prefix string
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function registerNamespace ($prefix, $namespaceURI) {}
 
@@ -11731,7 +12394,7 @@ class DOMXPath  {
 	 * @link http://php.net/manual/en/function.dom-domxpath-query.php
 	 * @param expression string
 	 * @param contextnode DOMNode[optional]
-	 * @return DOMNodeList a DOMNodeList containing all nodes matching 
+	 * @return DOMNodeList a DOMNodeList containing all nodes matching
 	 */
 	public function query ($expression, DOMNode $contextnode = null) {}
 
@@ -11740,7 +12403,7 @@ class DOMXPath  {
 	 * @link http://php.net/manual/en/function.dom-domxpath-evaluate.php
 	 * @param expression string
 	 * @param contextnode DOMNode[optional]
-	 * @return mixed a typed result if possible or a DOMNodeList 
+	 * @return mixed a typed result if possible or a DOMNodeList
 	 */
 	public function evaluate ($expression, DOMNode $contextnode = null) {}
 
@@ -11750,54 +12413,274 @@ class DOMXPath  {
  * Gets a DOMElement object from a SimpleXMLElement object
  * @link http://php.net/manual/en/function.dom-import-simplexml.php
  * @param node SimpleXMLElement
- * @return DOMElement
+ * @return DOMElement 
  */
 function dom_import_simplexml (SimpleXMLElement $node) {}
 
+
+/**
+ * 1
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ELEMENT_NODE', 1);
+
+/**
+ * 2
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NODE', 2);
+
+/**
+ * 3
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_TEXT_NODE', 3);
+
+/**
+ * 4
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_CDATA_SECTION_NODE', 4);
+
+/**
+ * 5
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ENTITY_REF_NODE', 5);
+
+/**
+ * 6
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ENTITY_NODE', 6);
+
+/**
+ * 7
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_PI_NODE', 7);
+
+/**
+ * 8
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_COMMENT_NODE', 8);
+
+/**
+ * 9
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_DOCUMENT_NODE', 9);
+
+/**
+ * 10
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_DOCUMENT_TYPE_NODE', 10);
+
+/**
+ * 11
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_DOCUMENT_FRAG_NODE', 11);
+
+/**
+ * 12
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_NOTATION_NODE', 12);
+
+/**
+ * 13
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_HTML_DOCUMENT_NODE', 13);
+
+/**
+ * 14
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_DTD_NODE', 14);
+
+/**
+ * 15
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ELEMENT_DECL_NODE', 15);
+
+/**
+ * 16
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_DECL_NODE', 16);
+
+/**
+ * 17
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ENTITY_DECL_NODE', 17);
+
+/**
+ * 18
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_NAMESPACE_DECL_NODE', 18);
+
+/**
+ * 2
+ * @link http://php.net/manual/en/domxml.constants.php
+ */
 define ('XML_LOCAL_NAMESPACE', 18);
+
+/**
+ * 1
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_CDATA', 1);
+
+/**
+ * 2
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_ID', 2);
+
+/**
+ * 3
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_IDREF', 3);
+
+/**
+ * 4
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_IDREFS', 4);
+
+/**
+ * 5
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_ENTITY', 6);
+
+/**
+ * 7
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NMTOKEN', 7);
+
+/**
+ * 8
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NMTOKENS', 8);
+
+/**
+ * 9
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_ENUMERATION', 9);
+
+/**
+ * 10
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NOTATION', 10);
 define ('DOM_PHP_ERR', 0);
+
+/**
+ * 1
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_INDEX_SIZE_ERR', 1);
+
+/**
+ * 2
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOMSTRING_SIZE_ERR', 2);
+
+/**
+ * 3
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_HIERARCHY_REQUEST_ERR', 3);
+
+/**
+ * 4
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_WRONG_DOCUMENT_ERR', 4);
+
+/**
+ * 5
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_INVALID_CHARACTER_ERR', 5);
+
+/**
+ * 6
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_NO_DATA_ALLOWED_ERR', 6);
+
+/**
+ * 7
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_NO_MODIFICATION_ALLOWED_ERR', 7);
+
+/**
+ * 8
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_NOT_FOUND_ERR', 8);
+
+/**
+ * 9
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_NOT_SUPPORTED_ERR', 9);
+
+/**
+ * 10
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_INUSE_ATTRIBUTE_ERR', 10);
+
+/**
+ * 11
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_INVALID_STATE_ERR', 11);
+
+/**
+ * 12
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_SYNTAX_ERR', 12);
+
+/**
+ * 13
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_INVALID_MODIFICATION_ERR', 13);
+
+/**
+ * 14
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_NAMESPACE_ERR', 14);
+
+/**
+ * 15
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_INVALID_ACCESS_ERR', 15);
+
+/**
+ * 16
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_VALIDATION_ERR', 16);
 
 // End of dom v.20031129
@@ -11868,7 +12751,7 @@ function strtotime ($time, $now = null) {}
  * @link http://php.net/manual/en/function.date.php
  * @param format string
  * @param timestamp int[optional]
- * @return string a formatted date string. If a non-numeric value is used for 
+ * @return string a formatted date string. If a non-numeric value is used for
  */
 function date ($format, $timestamp = null) {}
 
@@ -11886,7 +12769,7 @@ function idate ($format, $timestamp = null) {}
  * @link http://php.net/manual/en/function.gmdate.php
  * @param format string
  * @param timestamp int[optional]
- * @return string a formatted date string. If a non-numeric value is used for 
+ * @return string a formatted date string. If a non-numeric value is used for
  */
 function gmdate ($format, $timestamp = null) {}
 
@@ -11900,7 +12783,7 @@ function gmdate ($format, $timestamp = null) {}
  * @param day int[optional]
  * @param year int[optional]
  * @param is_dst int[optional]
- * @return int
+ * @return int 
  */
 function mktime ($hour = null, $minute = null, $second = null, $month = null, $day = null, $year = null, $is_dst = null) {}
 
@@ -11933,7 +12816,7 @@ function checkdate ($month, $day, $year) {}
  * @link http://php.net/manual/en/function.strftime.php
  * @param format string
  * @param timestamp int[optional]
- * @return string
+ * @return string 
  */
 function strftime ($format, $timestamp = null) {}
 
@@ -11942,14 +12825,14 @@ function strftime ($format, $timestamp = null) {}
  * @link http://php.net/manual/en/function.gmstrftime.php
  * @param format string
  * @param timestamp int[optional]
- * @return string
+ * @return string 
  */
 function gmstrftime ($format, $timestamp = null) {}
 
 /**
  * Return current Unix timestamp
  * @link http://php.net/manual/en/function.time.php
- * @return int
+ * @return int 
  */
 function time () {}
 
@@ -11958,7 +12841,7 @@ function time () {}
  * @link http://php.net/manual/en/function.localtime.php
  * @param timestamp int[optional]
  * @param is_associative bool[optional]
- * @return array
+ * @return array 
  */
 function localtime ($timestamp = null, $is_associative = null) {}
 
@@ -12124,7 +13007,7 @@ function timezone_abbreviations_list () {}
  * Sets the default timezone used by all date/time functions in a script
  * @link http://php.net/manual/en/function.date-default-timezone-set.php
  * @param timezone_identifier string
- * @return bool
+ * @return bool 
  */
 function date_default_timezone_set ($timezone_identifier) {}
 
@@ -12171,19 +13054,89 @@ function date_sunset ($timestamp, $format = null, $latitude = null, $longitude =
  */
 function date_sun_info ($time, $latitude, $longitude) {}
 
+
+/**
+ * Atom (example: 2005-08-15T15:52:01+00:00)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_ATOM', "Y-m-d\TH:i:sP");
+
+/**
+ * HTTP Cookies (example: Monday, 15-Aug-05 15:52:01 UTC)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_COOKIE', "l, d-M-y H:i:s T");
+
+/**
+ * ISO-8601 (example: 2005-08-15T15:52:01+0000)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_ISO8601', "Y-m-d\TH:i:sO");
+
+/**
+ * RFC 822 (example: Mon, 15 Aug 05 15:52:01 +0000)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_RFC822', "D, d M y H:i:s O");
+
+/**
+ * RFC 850 (example: Monday, 15-Aug-05 15:52:01 UTC)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_RFC850', "l, d-M-y H:i:s T");
+
+/**
+ * RFC 1036 (example: Mon, 15 Aug 05 15:52:01 +0000)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_RFC1036', "D, d M y H:i:s O");
+
+/**
+ * RFC 1123 (example: Mon, 15 Aug 2005 15:52:01 +0000)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_RFC1123', "D, d M Y H:i:s O");
+
+/**
+ * RFC 2822 (Mon, 15 Aug 2005 15:52:01 +0000)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_RFC2822', "D, d M Y H:i:s O");
+
+/**
+ * Same as DATE_ATOM (since PHP 5.1.3)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_RFC3339', "Y-m-d\TH:i:sP");
+
+/**
+ * RSS (Mon, 15 Aug 2005 15:52:01 +0000)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_RSS', "D, d M Y H:i:s O");
+
+/**
+ * World Wide Web Consortium (example: 2005-08-15T15:52:01+00:00)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('DATE_W3C', "Y-m-d\TH:i:sP");
+
+/**
+ * Timestamp
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('SUNFUNCS_RET_TIMESTAMP', 0);
+
+/**
+ * Hours:minutes (example: 08:02)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('SUNFUNCS_RET_STRING', 1);
+
+/**
+ * Hours as floating point number (example 8.75)
+ * @link http://php.net/manual/en/datetime.constants.php
+ */
 define ('SUNFUNCS_RET_DOUBLE', 2);
 
 // End of date v.5.2.4
@@ -12202,7 +13155,7 @@ function ctype_alnum ($text) {}
  * Check for alphabetic character(s)
  * @link http://php.net/manual/en/function.ctype-alpha.php
  * @param text string
- * @return bool true if every character in text is 
+ * @return bool true if every character in text is
  */
 function ctype_alpha ($text) {}
 
@@ -12210,7 +13163,7 @@ function ctype_alpha ($text) {}
  * Check for control character(s)
  * @link http://php.net/manual/en/function.ctype-cntrl.php
  * @param text string
- * @return bool true if every character in text is 
+ * @return bool true if every character in text is
  */
 function ctype_cntrl ($text) {}
 
@@ -12218,7 +13171,7 @@ function ctype_cntrl ($text) {}
  * Check for numeric character(s)
  * @link http://php.net/manual/en/function.ctype-digit.php
  * @param text string
- * @return bool true if every character in text is 
+ * @return bool true if every character in text is
  */
 function ctype_digit ($text) {}
 
@@ -12226,7 +13179,7 @@ function ctype_digit ($text) {}
  * Check for lowercase character(s)
  * @link http://php.net/manual/en/function.ctype-lower.php
  * @param text string
- * @return bool true if every character in text is 
+ * @return bool true if every character in text is
  */
 function ctype_lower ($text) {}
 
@@ -12234,7 +13187,7 @@ function ctype_lower ($text) {}
  * Check for any printable character(s) except space
  * @link http://php.net/manual/en/function.ctype-graph.php
  * @param text string
- * @return bool true if every character in text is 
+ * @return bool true if every character in text is
  */
 function ctype_graph ($text) {}
 
@@ -12242,7 +13195,7 @@ function ctype_graph ($text) {}
  * Check for printable character(s)
  * @link http://php.net/manual/en/function.ctype-print.php
  * @param text string
- * @return bool true if every character in text 
+ * @return bool true if every character in text
  */
 function ctype_print ($text) {}
 
@@ -12251,7 +13204,7 @@ function ctype_print ($text) {}
    alphanumeric character
  * @link http://php.net/manual/en/function.ctype-punct.php
  * @param text string
- * @return bool true if every character in text 
+ * @return bool true if every character in text
  */
 function ctype_punct ($text) {}
 
@@ -12259,7 +13212,7 @@ function ctype_punct ($text) {}
  * Check for whitespace character(s)
  * @link http://php.net/manual/en/function.ctype-space.php
  * @param text string
- * @return bool true if every character in text 
+ * @return bool true if every character in text
  */
 function ctype_space ($text) {}
 
@@ -12267,7 +13220,7 @@ function ctype_space ($text) {}
  * Check for uppercase character(s)
  * @link http://php.net/manual/en/function.ctype-upper.php
  * @param text string
- * @return bool true if every character in text is 
+ * @return bool true if every character in text is
  */
 function ctype_upper ($text) {}
 
@@ -12275,7 +13228,7 @@ function ctype_upper ($text) {}
  * Check for character(s) representing a hexadecimal digit
  * @link http://php.net/manual/en/function.ctype-xdigit.php
  * @param text string
- * @return bool true if every character in text is 
+ * @return bool true if every character in text is
  */
 function ctype_xdigit ($text) {}
 
@@ -12304,7 +13257,7 @@ function readgzfile ($filename, $use_include_path = null) {}
  * Rewind the position of a gz-file pointer
  * @link http://php.net/manual/en/function.gzrewind.php
  * @param zp resource
- * @return bool
+ * @return bool 
  */
 function gzrewind ($zp) {}
 
@@ -12312,7 +13265,7 @@ function gzrewind ($zp) {}
  * Close an open gz-file pointer
  * @link http://php.net/manual/en/function.gzclose.php
  * @param zp resource
- * @return bool
+ * @return bool 
  */
 function gzclose ($zp) {}
 
@@ -12328,7 +13281,7 @@ function gzeof ($zp) {}
  * Get character from gz-file pointer
  * @link http://php.net/manual/en/function.gzgetc.php
  * @param zp resource
- * @return string
+ * @return string 
  */
 function gzgetc ($zp) {}
 
@@ -12337,7 +13290,7 @@ function gzgetc ($zp) {}
  * @link http://php.net/manual/en/function.gzgets.php
  * @param zp resource
  * @param length int
- * @return string
+ * @return string 
  */
 function gzgets ($zp, $length) {}
 
@@ -12347,7 +13300,7 @@ function gzgets ($zp, $length) {}
  * @param zp resource
  * @param length int
  * @param allowable_tags string[optional]
- * @return string
+ * @return string 
  */
 function gzgetss ($zp, $length, $allowable_tags = null) {}
 
@@ -12356,7 +13309,7 @@ function gzgetss ($zp, $length, $allowable_tags = null) {}
  * @link http://php.net/manual/en/function.gzread.php
  * @param zp resource
  * @param length int
- * @return string
+ * @return string 
  */
 function gzread ($zp, $length) {}
 
@@ -12374,7 +13327,7 @@ function gzopen ($filename, $mode, $use_include_path = null) {}
  * Output all remaining data on a gz-file pointer
  * @link http://php.net/manual/en/function.gzpassthru.php
  * @param zp resource
- * @return int
+ * @return int 
  */
 function gzpassthru ($zp) {}
 
@@ -12383,7 +13336,7 @@ function gzpassthru ($zp) {}
  * @link http://php.net/manual/en/function.gzseek.php
  * @param zp resource
  * @param offset int
- * @return int
+ * @return int 
  */
 function gzseek ($zp, $offset) {}
 
@@ -12391,7 +13344,7 @@ function gzseek ($zp, $offset) {}
  * Tell gz-file pointer read/write position
  * @link http://php.net/manual/en/function.gztell.php
  * @param zp resource
- * @return int
+ * @return int 
  */
 function gztell ($zp) {}
 
@@ -12401,7 +13354,7 @@ function gztell ($zp) {}
  * @param zp resource
  * @param string string
  * @param length int[optional]
- * @return int the number of (uncompressed) bytes written to the given gz-file 
+ * @return int the number of (uncompressed) bytes written to the given gz-file
  */
 function gzwrite ($zp, $string, $length = null) {}
 
@@ -12416,7 +13369,7 @@ function gzputs () {}
  * @link http://php.net/manual/en/function.gzfile.php
  * @param filename string
  * @param use_include_path int[optional]
- * @return array
+ * @return array 
  */
 function gzfile ($filename, $use_include_path = null) {}
 
@@ -12425,7 +13378,7 @@ function gzfile ($filename, $use_include_path = null) {}
  * @link http://php.net/manual/en/function.gzcompress.php
  * @param data string
  * @param level int[optional]
- * @return string
+ * @return string 
  */
 function gzcompress ($data, $level = null) {}
 
@@ -12434,7 +13387,7 @@ function gzcompress ($data, $level = null) {}
  * @link http://php.net/manual/en/function.gzuncompress.php
  * @param data string
  * @param length int[optional]
- * @return string
+ * @return string 
  */
 function gzuncompress ($data, $length = null) {}
 
@@ -12443,7 +13396,7 @@ function gzuncompress ($data, $length = null) {}
  * @link http://php.net/manual/en/function.gzdeflate.php
  * @param data string
  * @param level int[optional]
- * @return string
+ * @return string 
  */
 function gzdeflate ($data, $level = null) {}
 
@@ -12452,7 +13405,7 @@ function gzdeflate ($data, $level = null) {}
  * @link http://php.net/manual/en/function.gzinflate.php
  * @param data string
  * @param length int[optional]
- * @return string
+ * @return string 
  */
 function gzinflate ($data, $length = null) {}
 
@@ -12462,7 +13415,7 @@ function gzinflate ($data, $length = null) {}
  * @param data string
  * @param level int[optional]
  * @param encoding_mode int[optional]
- * @return string
+ * @return string 
  */
 function gzencode ($data, $level = null, $encoding_mode = null) {}
 
@@ -12471,14 +13424,14 @@ function gzencode ($data, $level = null, $encoding_mode = null) {}
  * @link http://php.net/manual/en/function.ob-gzhandler.php
  * @param buffer string
  * @param mode int
- * @return string
+ * @return string 
  */
 function ob_gzhandler ($buffer, $mode) {}
 
 /**
  * Returns the coding type used for output compression
  * @link http://php.net/manual/en/function.zlib-get-coding-type.php
- * @return string
+ * @return string 
  */
 function zlib_get_coding_type () {}
 
@@ -12493,7 +13446,7 @@ define ('FORCE_DEFLATE', 2);
  * Frees a private key
  * @link http://php.net/manual/en/function.openssl-pkey-free.php
  * @param key resource
- * @return void
+ * @return void 
  */
 function openssl_pkey_free ($key) {}
 
@@ -12512,7 +13465,7 @@ function openssl_pkey_new (array $configargs = null) {}
  * @param out string
  * @param passphrase string[optional]
  * @param configargs array[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_pkey_export ($key, &$out, $passphrase = null, array $configargs = null) {}
 
@@ -12523,7 +13476,7 @@ function openssl_pkey_export ($key, &$out, $passphrase = null, array $configargs
  * @param outfilename string
  * @param passphrase string[optional]
  * @param configargs array[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_pkey_export_to_file ($key, $outfilename, $passphrase = null, array $configargs = null) {}
 
@@ -12548,7 +13501,7 @@ function openssl_pkey_get_public ($certificate) {}
  * Returns an array with the key details (bits, pkey, type)
  * @link http://php.net/manual/en/function.openssl-pkey-get-details.php
  * @param key resource
- * @return array
+ * @return array 
  */
 function openssl_pkey_get_details ($key) {}
 
@@ -12556,7 +13509,7 @@ function openssl_pkey_get_details ($key) {}
  * Free key resource
  * @link http://php.net/manual/en/function.openssl-free-key.php
  * @param key_identifier resource
- * @return void
+ * @return void 
  */
 function openssl_free_key ($key_identifier) {}
 
@@ -12585,7 +13538,7 @@ function openssl_x509_read ($x509certdata) {}
  * Free certificate resource
  * @link http://php.net/manual/en/function.openssl-x509-free.php
  * @param x509cert resource
- * @return void
+ * @return void 
  */
 function openssl_x509_free ($x509cert) {}
 
@@ -12594,7 +13547,7 @@ function openssl_x509_free ($x509cert) {}
  * @link http://php.net/manual/en/function.openssl-x509-parse.php
  * @param x509cert mixed
  * @param shortnames bool[optional]
- * @return array
+ * @return array 
  */
 function openssl_x509_parse ($x509cert, $shortnames = null) {}
 
@@ -12624,7 +13577,7 @@ function openssl_x509_check_private_key ($cert, $key) {}
  * @param x509 mixed
  * @param output string
  * @param notext bool[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_x509_export ($x509, &$output, $notext = null) {}
 
@@ -12634,7 +13587,7 @@ function openssl_x509_export ($x509, &$output, $notext = null) {}
  * @param x509 mixed
  * @param outfilename string
  * @param notext bool[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_x509_export_to_file ($x509, $outfilename, $notext = null) {}
 
@@ -12669,7 +13622,7 @@ function openssl_csr_new (array $dn, &$privkey, array $configargs = null, array 
  * @param csr resource
  * @param out string
  * @param notext bool[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_csr_export ($csr, &$out, $notext = null) {}
 
@@ -12679,7 +13632,7 @@ function openssl_csr_export ($csr, &$out, $notext = null) {}
  * @param csr resource
  * @param outfilename string
  * @param notext bool[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_csr_export_to_file ($csr, $outfilename, $notext = null) {}
 
@@ -12701,7 +13654,7 @@ function openssl_csr_sign ($csr, $cacert, $priv_key, $days, array $configargs = 
  * @link http://php.net/manual/en/function.openssl-csr-get-subject.php
  * @param csr mixed
  * @param use_shortnames bool[optional]
- * @return array
+ * @return array 
  */
 function openssl_csr_get_subject ($csr, $use_shortnames = null) {}
 
@@ -12710,7 +13663,7 @@ function openssl_csr_get_subject ($csr, $use_shortnames = null) {}
  * @link http://php.net/manual/en/function.openssl-csr-get-public-key.php
  * @param csr mixed
  * @param use_shortnames bool[optional]
- * @return resource
+ * @return resource 
  */
 function openssl_csr_get_public_key ($csr, $use_shortnames = null) {}
 
@@ -12721,7 +13674,7 @@ function openssl_csr_get_public_key ($csr, $use_shortnames = null) {}
  * @param signature string
  * @param priv_key_id mixed
  * @param signature_alg int[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_sign ($data, &$signature, $priv_key_id, $signature_alg = null) {}
 
@@ -12754,7 +13707,7 @@ function openssl_seal ($data, &$sealed_data, array &$env_keys, array $pub_key_id
  * @param open_data string
  * @param env_key string
  * @param priv_key_id mixed
- * @return bool
+ * @return bool 
  */
 function openssl_open ($sealed_data, &$open_data, $env_key, $priv_key_id) {}
 
@@ -12778,7 +13731,7 @@ function openssl_pkcs7_verify ($filename, $flags, $outfilename = null, array $ca
  * @param outfilename string
  * @param recipcert mixed
  * @param recipkey mixed[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_pkcs7_decrypt ($infilename, $outfilename, $recipcert, $recipkey = null) {}
 
@@ -12792,7 +13745,7 @@ function openssl_pkcs7_decrypt ($infilename, $outfilename, $recipcert, $recipkey
  * @param headers array
  * @param flags int[optional]
  * @param extracerts string[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_pkcs7_sign ($infilename, $outfilename, $signcert, $privkey, array $headers, $flags = null, $extracerts = null) {}
 
@@ -12805,7 +13758,7 @@ function openssl_pkcs7_sign ($infilename, $outfilename, $signcert, $privkey, arr
  * @param headers array
  * @param flags int[optional]
  * @param cipherid int[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_pkcs7_encrypt ($infile, $outfile, $recipcerts, array $headers, $flags = null, $cipherid = null) {}
 
@@ -12816,7 +13769,7 @@ function openssl_pkcs7_encrypt ($infile, $outfile, $recipcerts, array $headers, 
  * @param crypted string
  * @param key mixed
  * @param padding int[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_private_encrypt ($data, &$crypted, $key, $padding = null) {}
 
@@ -12827,7 +13780,7 @@ function openssl_private_encrypt ($data, &$crypted, $key, $padding = null) {}
  * @param decrypted string
  * @param key mixed
  * @param padding int[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_private_decrypt ($data, &$decrypted, $key, $padding = null) {}
 
@@ -12838,7 +13791,7 @@ function openssl_private_decrypt ($data, &$decrypted, $key, $padding = null) {}
  * @param crypted string
  * @param key mixed
  * @param padding int[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_public_encrypt ($data, &$crypted, $key, $padding = null) {}
 
@@ -12849,7 +13802,7 @@ function openssl_public_encrypt ($data, &$crypted, $key, $padding = null) {}
  * @param decrypted string
  * @param key mixed
  * @param padding int[optional]
- * @return bool
+ * @return bool 
  */
 function openssl_public_decrypt ($data, &$decrypted, $key, $padding = null) {}
 
@@ -12869,6 +13822,12 @@ define ('X509_PURPOSE_SMIME_SIGN', 4);
 define ('X509_PURPOSE_SMIME_ENCRYPT', 5);
 define ('X509_PURPOSE_CRL_SIGN', 6);
 define ('X509_PURPOSE_ANY', 7);
+
+/**
+ * Used as default algorithm by openssl_sign and
+ * openssl_verify.
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('OPENSSL_ALGO_SHA1', 1);
 define ('OPENSSL_ALGO_MD5', 2);
 define ('OPENSSL_ALGO_MD4', 3);
@@ -12906,7 +13865,7 @@ define ('OPENSSL_KEYTYPE_EC', 3);
  * @param left_operand string
  * @param right_operand string
  * @param scale int[optional]
- * @return string
+ * @return string 
  */
 function bcadd ($left_operand, $right_operand, $scale = null) {}
 
@@ -12916,7 +13875,7 @@ function bcadd ($left_operand, $right_operand, $scale = null) {}
  * @param left_operand string
  * @param right_operand string
  * @param scale int[optional]
- * @return string
+ * @return string 
  */
 function bcsub ($left_operand, $right_operand, $scale = null) {}
 
@@ -12936,7 +13895,7 @@ function bcmul ($left_operand, $right_operand, $scale = null) {}
  * @param left_operand string
  * @param right_operand string
  * @param scale int[optional]
- * @return string the result of the division as a string, or &null; if 
+ * @return string the result of the division as a string, or &null; if
  */
 function bcdiv ($left_operand, $right_operand, $scale = null) {}
 
@@ -12945,7 +13904,7 @@ function bcdiv ($left_operand, $right_operand, $scale = null) {}
  * @link http://php.net/manual/en/function.bcmod.php
  * @param left_operand string
  * @param modulus string
- * @return string the modulus as a string, or &null; if 
+ * @return string the modulus as a string, or &null; if
  */
 function bcmod ($left_operand, $modulus) {}
 
@@ -12964,7 +13923,7 @@ function bcpow ($left_operand, $right_operand, $scale = null) {}
  * @link http://php.net/manual/en/function.bcsqrt.php
  * @param operand string
  * @param scale int[optional]
- * @return string the square root as a string, or &null; if 
+ * @return string the square root as a string, or &null; if
  */
 function bcsqrt ($operand, $scale = null) {}
 
@@ -12972,7 +13931,7 @@ function bcsqrt ($operand, $scale = null) {}
  * Set default scale parameter for all bc math functions
  * @link http://php.net/manual/en/function.bcscale.php
  * @param scale int
- * @return bool
+ * @return bool 
  */
 function bcscale ($scale) {}
 
@@ -13021,7 +13980,7 @@ function curl_copy_handle ($ch) {}
  * Gets cURL version information
  * @link http://php.net/manual/en/function.curl-version.php
  * @param age int[optional]
- * @return array an associative array with the following elements: 
+ * @return array an associative array with the following elements:
  */
 function curl_version ($age = null) {}
 
@@ -13031,7 +13990,7 @@ function curl_version ($age = null) {}
  * @param ch resource
  * @param option int
  * @param value mixed
- * @return bool
+ * @return bool 
  */
 function curl_setopt ($ch, $option, $value) {}
 
@@ -13048,7 +14007,7 @@ function curl_setopt_array ($ch, array $options) {}
  * Perform a cURL session
  * @link http://php.net/manual/en/function.curl-exec.php
  * @param ch resource
- * @return mixed
+ * @return mixed 
  */
 function curl_exec ($ch) {}
 
@@ -13057,7 +14016,7 @@ function curl_exec ($ch) {}
  * @link http://php.net/manual/en/function.curl-getinfo.php
  * @param ch resource
  * @param opt int[optional]
- * @return mixed
+ * @return mixed 
  */
 function curl_getinfo ($ch, $opt = null) {}
 
@@ -13081,7 +14040,7 @@ function curl_errno ($ch) {}
  * Close a cURL session
  * @link http://php.net/manual/en/function.curl-close.php
  * @param ch resource
- * @return void
+ * @return void 
  */
 function curl_close ($ch) {}
 
@@ -13106,7 +14065,7 @@ function curl_multi_add_handle ($mh, $ch) {}
  * @link http://php.net/manual/en/function.curl-multi-remove-handle.php
  * @param mh resource
  * @param ch resource
- * @return int
+ * @return int 
  */
 function curl_multi_remove_handle ($mh, $ch) {}
 
@@ -13115,7 +14074,7 @@ function curl_multi_remove_handle ($mh, $ch) {}
  * @link http://php.net/manual/en/function.curl-multi-select.php
  * @param mh resource
  * @param timeout float[optional]
- * @return int
+ * @return int 
  */
 function curl_multi_select ($mh, $timeout = null) {}
 
@@ -13124,7 +14083,7 @@ function curl_multi_select ($mh, $timeout = null) {}
  * @link http://php.net/manual/en/function.curl-multi-exec.php
  * @param mh resource
  * @param still_running int
- * @return int
+ * @return int 
  */
 function curl_multi_exec ($mh, &$still_running) {}
 
@@ -13132,7 +14091,7 @@ function curl_multi_exec ($mh, &$still_running) {}
  * Return the content of a cURL handle if <constant>CURLOPT_RETURNTRANSFER</constant> is set
  * @link http://php.net/manual/en/function.curl-multi-getcontent.php
  * @param ch resource
- * @return string
+ * @return string 
  */
 function curl_multi_getcontent ($ch) {}
 
@@ -13141,7 +14100,7 @@ function curl_multi_getcontent ($ch) {}
  * @link http://php.net/manual/en/function.curl-multi-info-read.php
  * @param mh resource
  * @param msgs_in_queue int[optional]
- * @return array
+ * @return array 
  */
 function curl_multi_info_read ($mh, $msgs_in_queue = null) {}
 
@@ -13149,7 +14108,7 @@ function curl_multi_info_read ($mh, $msgs_in_queue = null) {}
  * Close a set of cURL handles
  * @link http://php.net/manual/en/function.curl-multi-close.php
  * @param mh resource
- * @return void
+ * @return void 
  */
 function curl_multi_close ($mh) {}
 
@@ -13173,6 +14132,12 @@ define ('CURLOPT_POST', 47);
 define ('CURLOPT_FTPLISTONLY', 48);
 define ('CURLOPT_FTPAPPEND', 50);
 define ('CURLOPT_NETRC', 51);
+
+/**
+ * This constant is not available when opendbase_dir or safe_mode are
+ * enabled.
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLOPT_FOLLOWLOCATION', 52);
 define ('CURLOPT_PUT', 54);
 define ('CURLOPT_USERPWD', 10005);
@@ -13188,7 +14153,17 @@ define ('CURLOPT_LOW_SPEED_LIMIT', 19);
 define ('CURLOPT_LOW_SPEED_TIME', 20);
 define ('CURLOPT_RESUME_FROM', 21);
 define ('CURLOPT_COOKIE', 10022);
+
+/**
+ * Available since PHP 5.1.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLOPT_COOKIESESSION', 96);
+
+/**
+ * Available since PHP 5.1.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLOPT_AUTOREFERER', 58);
 define ('CURLOPT_SSLCERT', 10025);
 define ('CURLOPT_SSLCERTPASSWD', 10026);
@@ -13241,6 +14216,11 @@ define ('CURLOPT_ENCODING', 10102);
 define ('CURLOPT_PROXYPORT', 59);
 define ('CURLOPT_UNRESTRICTED_AUTH', 105);
 define ('CURLOPT_FTP_USE_EPRT', 106);
+
+/**
+ * Available since PHP 5.2.1
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLOPT_TCP_NODELAY', 121);
 define ('CURLOPT_HTTP200ALIASES', 10104);
 define ('CURL_TIMECOND_IFMODSINCE', 1);
@@ -13255,6 +14235,11 @@ define ('CURLAUTH_ANY', -1);
 define ('CURLAUTH_ANYSAFE', -2);
 define ('CURLOPT_PROXYAUTH', 111);
 define ('CURLOPT_FTP_CREATE_MISSING_DIRS', 110);
+
+/**
+ * Available since PHP 5.2.4
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLOPT_PRIVATE', 10103);
 define ('CURLCLOSEPOLICY_LEAST_RECENTLY_USED', 2);
 define ('CURLCLOSEPOLICY_LEAST_TRAFFIC', 3);
@@ -13281,7 +14266,17 @@ define ('CURLINFO_STARTTRANSFER_TIME', 3145745);
 define ('CURLINFO_CONTENT_TYPE', 1048594);
 define ('CURLINFO_REDIRECT_TIME', 3145747);
 define ('CURLINFO_REDIRECT_COUNT', 2097172);
+
+/**
+ * Available since PHP 5.1.3
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLINFO_HEADER_OUT', 2);
+
+/**
+ * Available since PHP 5.2.4
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLINFO_PRIVATE', 1048597);
 define ('CURL_VERSION_IPV6', 1);
 define ('CURL_VERSION_KERBEROS4', 2);
@@ -13368,14 +14363,59 @@ define ('CURLM_BAD_EASY_HANDLE', 2);
 define ('CURLM_OUT_OF_MEMORY', 3);
 define ('CURLM_INTERNAL_ERROR', 4);
 define ('CURLMSG_DONE', 1);
+
+/**
+ * Available since PHP 5.1.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLOPT_FTPSSLAUTH', 129);
+
+/**
+ * Available since PHP 5.1.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLFTPAUTH_DEFAULT', 0);
+
+/**
+ * Available since PHP 5.1.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLFTPAUTH_SSL', 1);
+
+/**
+ * Available since PHP 5.1.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLFTPAUTH_TLS', 2);
+
+/**
+ * Available since PHP 5.2.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLOPT_FTP_SSL', 119);
+
+/**
+ * Available since PHP 5.2.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLFTPSSL_NONE', 0);
+
+/**
+ * Available since PHP 5.2.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLFTPSSL_TRY', 1);
+
+/**
+ * Available since PHP 5.2.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLFTPSSL_CONTROL', 2);
+
+/**
+ * Available since PHP 5.2.0
+ * @link http://php.net/manual/en/curl.constants.php
+ */
 define ('CURLFTPSSL_ALL', 3);
 
 // End of curl v.
@@ -13408,7 +14448,7 @@ function ftp_ssl_connect ($host, $port = null, $timeout = null) {}
  * @param ftp_stream resource
  * @param username string
  * @param password string
- * @return bool
+ * @return bool 
  */
 function ftp_login ($ftp_stream, $username, $password) {}
 
@@ -13424,7 +14464,7 @@ function ftp_pwd ($ftp_stream) {}
  * Changes to the parent directory
  * @link http://php.net/manual/en/function.ftp-cdup.php
  * @param ftp_stream resource
- * @return bool
+ * @return bool 
  */
 function ftp_cdup ($ftp_stream) {}
 
@@ -13433,7 +14473,7 @@ function ftp_cdup ($ftp_stream) {}
  * @link http://php.net/manual/en/function.ftp-chdir.php
  * @param ftp_stream resource
  * @param directory string
- * @return bool
+ * @return bool 
  */
 function ftp_chdir ($ftp_stream, $directory) {}
 
@@ -13469,7 +14509,7 @@ function ftp_mkdir ($ftp_stream, $directory) {}
  * @link http://php.net/manual/en/function.ftp-rmdir.php
  * @param ftp_stream resource
  * @param directory string
- * @return bool
+ * @return bool 
  */
 function ftp_rmdir ($ftp_stream, $directory) {}
 
@@ -13489,7 +14529,7 @@ function ftp_chmod ($ftp_stream, $mode, $filename) {}
  * @param ftp_stream resource
  * @param filesize int
  * @param result string[optional]
- * @return bool
+ * @return bool 
  */
 function ftp_alloc ($ftp_stream, $filesize, &$result = null) {}
 
@@ -13525,7 +14565,7 @@ function ftp_systype ($ftp_stream) {}
  * @link http://php.net/manual/en/function.ftp-pasv.php
  * @param ftp_stream resource
  * @param pasv bool
- * @return bool
+ * @return bool 
  */
 function ftp_pasv ($ftp_stream, $pasv) {}
 
@@ -13537,7 +14577,7 @@ function ftp_pasv ($ftp_stream, $pasv) {}
  * @param remote_file string
  * @param mode int
  * @param resumepos int[optional]
- * @return bool
+ * @return bool 
  */
 function ftp_get ($ftp_stream, $local_file, $remote_file, $mode, $resumepos = null) {}
 
@@ -13549,7 +14589,7 @@ function ftp_get ($ftp_stream, $local_file, $remote_file, $mode, $resumepos = nu
  * @param remote_file string
  * @param mode int
  * @param resumepos int[optional]
- * @return bool
+ * @return bool 
  */
 function ftp_fget ($ftp_stream, $handle, $remote_file, $mode, $resumepos = null) {}
 
@@ -13561,7 +14601,7 @@ function ftp_fget ($ftp_stream, $handle, $remote_file, $mode, $resumepos = null)
  * @param local_file string
  * @param mode int
  * @param startpos int[optional]
- * @return bool
+ * @return bool 
  */
 function ftp_put ($ftp_stream, $remote_file, $local_file, $mode, $startpos = null) {}
 
@@ -13573,7 +14613,7 @@ function ftp_put ($ftp_stream, $remote_file, $local_file, $mode, $startpos = nul
  * @param handle resource
  * @param mode int
  * @param startpos int[optional]
- * @return bool
+ * @return bool 
  */
 function ftp_fput ($ftp_stream, $remote_file, $handle, $mode, $startpos = null) {}
 
@@ -13591,7 +14631,7 @@ function ftp_size ($ftp_stream, $remote_file) {}
  * @link http://php.net/manual/en/function.ftp-mdtm.php
  * @param ftp_stream resource
  * @param remote_file string
- * @return int the last modified time as a Unix timestamp on success, or -1 on 
+ * @return int the last modified time as a Unix timestamp on success, or -1 on
  */
 function ftp_mdtm ($ftp_stream, $remote_file) {}
 
@@ -13601,7 +14641,7 @@ function ftp_mdtm ($ftp_stream, $remote_file) {}
  * @param ftp_stream resource
  * @param oldname string
  * @param newname string
- * @return bool
+ * @return bool 
  */
 function ftp_rename ($ftp_stream, $oldname, $newname) {}
 
@@ -13610,7 +14650,7 @@ function ftp_rename ($ftp_stream, $oldname, $newname) {}
  * @link http://php.net/manual/en/function.ftp-delete.php
  * @param ftp_stream resource
  * @param path string
- * @return bool
+ * @return bool 
  */
 function ftp_delete ($ftp_stream, $path) {}
 
@@ -13619,7 +14659,7 @@ function ftp_delete ($ftp_stream, $path) {}
  * @link http://php.net/manual/en/function.ftp-site.php
  * @param ftp_stream resource
  * @param command string
- * @return bool
+ * @return bool 
  */
 function ftp_site ($ftp_stream, $command) {}
 
@@ -13627,7 +14667,7 @@ function ftp_site ($ftp_stream, $command) {}
  * Closes an FTP connection
  * @link http://php.net/manual/en/function.ftp-close.php
  * @param ftp_stream resource
- * @return bool
+ * @return bool 
  */
 function ftp_close ($ftp_stream) {}
 
@@ -13646,7 +14686,7 @@ function ftp_set_option ($ftp_stream, $option, $value) {}
  * @link http://php.net/manual/en/function.ftp-get-option.php
  * @param ftp_stream resource
  * @param option int
- * @return mixed the value on success or false if the given 
+ * @return mixed the value on success or false if the given
  */
 function ftp_get_option ($ftp_stream, $option) {}
 
@@ -13717,11 +14757,42 @@ define ('FTP_ASCII', 1);
 define ('FTP_TEXT', 1);
 define ('FTP_BINARY', 2);
 define ('FTP_IMAGE', 2);
+
+/**
+ * Automatically determine resume position and start position for GET and PUT requests
+ * (only works if FTP_AUTOSEEK is enabled)
+ * @link http://php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_AUTORESUME', -1);
+
+/**
+ * See ftp_set_option for information.
+ * @link http://php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_TIMEOUT_SEC', 0);
+
+/**
+ * See ftp_set_option for information.
+ * @link http://php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_AUTOSEEK', 1);
+
+/**
+ * Asynchronous transfer has failed
+ * @link http://php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_FAILED', 0);
+
+/**
+ * Asynchronous transfer has finished
+ * @link http://php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_FINISHED', 1);
+
+/**
+ * Asynchronous transfer is still active
+ * @link http://php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_MOREDATA', 2);
 
 // End of ftp v.
@@ -13749,7 +14820,7 @@ function ldap_close () {}
  * @param link_identifier resource
  * @param bind_rdn string[optional]
  * @param bind_password string[optional]
- * @return bool
+ * @return bool 
  */
 function ldap_bind ($link_identifier, $bind_rdn = null, $bind_password = null) {}
 
@@ -13757,7 +14828,7 @@ function ldap_bind ($link_identifier, $bind_rdn = null, $bind_password = null) {
  * Unbind from LDAP directory
  * @link http://php.net/manual/en/function.ldap-unbind.php
  * @param link_identifier resource
- * @return bool
+ * @return bool 
  */
 function ldap_unbind ($link_identifier) {}
 
@@ -13810,7 +14881,7 @@ function ldap_search ($link_identifier, $base_dn, $filter, array $attributes = n
  * Free result memory
  * @link http://php.net/manual/en/function.ldap-free-result.php
  * @param result_identifier resource
- * @return bool
+ * @return bool 
  */
 function ldap_free_result ($result_identifier) {}
 
@@ -13931,7 +15002,7 @@ function ldap_dn2ufn ($dn) {}
  * @param link_identifier resource
  * @param dn string
  * @param entry array
- * @return bool
+ * @return bool 
  */
 function ldap_add ($link_identifier, $dn, array $entry) {}
 
@@ -13940,7 +15011,7 @@ function ldap_add ($link_identifier, $dn, array $entry) {}
  * @link http://php.net/manual/en/function.ldap-delete.php
  * @param link_identifier resource
  * @param dn string
- * @return bool
+ * @return bool 
  */
 function ldap_delete ($link_identifier, $dn) {}
 
@@ -13950,7 +15021,7 @@ function ldap_delete ($link_identifier, $dn) {}
  * @param link_identifier resource
  * @param dn string
  * @param entry array
- * @return bool
+ * @return bool 
  */
 function ldap_modify ($link_identifier, $dn, array $entry) {}
 
@@ -13960,7 +15031,7 @@ function ldap_modify ($link_identifier, $dn, array $entry) {}
  * @param link_identifier resource
  * @param dn string
  * @param entry array
- * @return bool
+ * @return bool 
  */
 function ldap_mod_add ($link_identifier, $dn, array $entry) {}
 
@@ -13970,7 +15041,7 @@ function ldap_mod_add ($link_identifier, $dn, array $entry) {}
  * @param link_identifier resource
  * @param dn string
  * @param entry array
- * @return bool
+ * @return bool 
  */
 function ldap_mod_replace ($link_identifier, $dn, array $entry) {}
 
@@ -13980,7 +15051,7 @@ function ldap_mod_replace ($link_identifier, $dn, array $entry) {}
  * @param link_identifier resource
  * @param dn string
  * @param entry array
- * @return bool
+ * @return bool 
  */
 function ldap_mod_del ($link_identifier, $dn, array $entry) {}
 
@@ -13988,7 +15059,7 @@ function ldap_mod_del ($link_identifier, $dn, array $entry) {}
  * Return the LDAP error number of the last LDAP command
  * @link http://php.net/manual/en/function.ldap-errno.php
  * @param link_identifier resource
- * @return int
+ * @return int 
  */
 function ldap_errno ($link_identifier) {}
 
@@ -14025,7 +15096,7 @@ function ldap_compare ($link_identifier, $dn, $attribute, $value) {}
  * @param link resource
  * @param result resource
  * @param sortfilter string
- * @return bool
+ * @return bool 
  */
 function ldap_sort ($link, $result, $sortfilter) {}
 
@@ -14037,7 +15108,7 @@ function ldap_sort ($link, $result, $sortfilter) {}
  * @param newrdn string
  * @param newparent string
  * @param deleteoldrdn bool
- * @return bool
+ * @return bool 
  */
 function ldap_rename ($link_identifier, $dn, $newrdn, $newparent, $deleteoldrdn) {}
 
@@ -14047,7 +15118,7 @@ function ldap_rename ($link_identifier, $dn, $newrdn, $newparent, $deleteoldrdn)
  * @param link_identifier resource
  * @param option int
  * @param retval mixed
- * @return bool
+ * @return bool 
  */
 function ldap_get_option ($link_identifier, $option, &$retval) {}
 
@@ -14057,7 +15128,7 @@ function ldap_get_option ($link_identifier, $option, &$retval) {}
  * @param link_identifier resource
  * @param option int
  * @param newval mixed
- * @return bool
+ * @return bool 
  */
 function ldap_set_option ($link_identifier, $option, $newval) {}
 
@@ -14066,7 +15137,7 @@ function ldap_set_option ($link_identifier, $option, $newval) {}
  * @link http://php.net/manual/en/function.ldap-first-reference.php
  * @param link resource
  * @param result resource
- * @return resource
+ * @return resource 
  */
 function ldap_first_reference ($link, $result) {}
 
@@ -14075,7 +15146,7 @@ function ldap_first_reference ($link, $result) {}
  * @link http://php.net/manual/en/function.ldap-next-reference.php
  * @param link resource
  * @param entry resource
- * @return resource
+ * @return resource 
  */
 function ldap_next_reference ($link, $entry) {}
 
@@ -14085,7 +15156,7 @@ function ldap_next_reference ($link, $entry) {}
  * @param link resource
  * @param entry resource
  * @param referrals array
- * @return bool
+ * @return bool 
  */
 function ldap_parse_reference ($link, $entry, array &$referrals) {}
 
@@ -14098,7 +15169,7 @@ function ldap_parse_reference ($link, $entry, array &$referrals) {}
  * @param matcheddn string[optional]
  * @param errmsg string[optional]
  * @param referrals array[optional]
- * @return bool
+ * @return bool 
  */
 function ldap_parse_result ($link, $result, &$errcode, &$matcheddn = null, &$errmsg = null, array &$referrals = null) {}
 
@@ -14106,7 +15177,7 @@ function ldap_parse_result ($link, $result, &$errcode, &$matcheddn = null, &$err
  * Start TLS
  * @link http://php.net/manual/en/function.ldap-start-tls.php
  * @param link resource
- * @return bool
+ * @return bool 
  */
 function ldap_start_tls ($link) {}
 
@@ -14115,7 +15186,7 @@ function ldap_start_tls ($link) {}
  * @link http://php.net/manual/en/function.ldap-set-rebind-proc.php
  * @param link resource
  * @param callback callback
- * @return bool
+ * @return bool 
  */
 function ldap_set_rebind_proc ($link, $callback) {}
 
@@ -14236,7 +15307,7 @@ function mysql_connect ($server = null, $username = null, $password = null, $new
  * @param username string[optional]
  * @param password string[optional]
  * @param client_flags int[optional]
- * @return resource a MySQL persistent link identifier on success, or false on 
+ * @return resource a MySQL persistent link identifier on success, or false on
  */
 function mysql_pconnect ($server = null, $username = null, $password = null, $client_flags = null) {}
 
@@ -14244,7 +15315,7 @@ function mysql_pconnect ($server = null, $username = null, $password = null, $cl
  * Close MySQL connection
  * @link http://php.net/manual/en/function.mysql-close.php
  * @param link_identifier resource[optional]
- * @return bool
+ * @return bool 
  */
 function mysql_close ($link_identifier = null) {}
 
@@ -14253,7 +15324,7 @@ function mysql_close ($link_identifier = null) {}
  * @link http://php.net/manual/en/function.mysql-select-db.php
  * @param database_name string
  * @param link_identifier resource[optional]
- * @return bool
+ * @return bool 
  */
 function mysql_select_db ($database_name, $link_identifier = null) {}
 
@@ -14262,7 +15333,7 @@ function mysql_select_db ($database_name, $link_identifier = null) {}
  * @link http://php.net/manual/en/function.mysql-query.php
  * @param query string
  * @param link_identifier resource[optional]
- * @return resource
+ * @return resource 
  */
 function mysql_query ($query, $link_identifier = null) {}
 
@@ -14271,7 +15342,7 @@ function mysql_query ($query, $link_identifier = null) {}
  * @link http://php.net/manual/en/function.mysql-unbuffered-query.php
  * @param query string
  * @param link_identifier resource[optional]
- * @return resource
+ * @return resource 
  */
 function mysql_unbuffered_query ($query, $link_identifier = null) {}
 
@@ -14298,7 +15369,7 @@ function mysql_list_dbs ($link_identifier = null) {}
  * @link http://php.net/manual/en/function.mysql-list-tables.php
  * @param database string
  * @param link_identifier resource[optional]
- * @return resource
+ * @return resource 
  */
 function mysql_list_tables ($database, $link_identifier = null) {}
 
@@ -14308,7 +15379,7 @@ function mysql_list_tables ($database, $link_identifier = null) {}
  * @param database_name string
  * @param table_name string
  * @param link_identifier resource[optional]
- * @return resource
+ * @return resource 
  */
 function mysql_list_fields ($database_name, $table_name, $link_identifier = null) {}
 
@@ -14316,7 +15387,7 @@ function mysql_list_fields ($database_name, $table_name, $link_identifier = null
  * List MySQL processes
  * @link http://php.net/manual/en/function.mysql-list-processes.php
  * @param link_identifier resource[optional]
- * @return resource
+ * @return resource 
  */
 function mysql_list_processes ($link_identifier = null) {}
 
@@ -14348,7 +15419,7 @@ function mysql_affected_rows ($link_identifier = null) {}
  * Get the ID generated from the previous INSERT operation
  * @link http://php.net/manual/en/function.mysql-insert-id.php
  * @param link_identifier resource[optional]
- * @return int
+ * @return int 
  */
 function mysql_insert_id ($link_identifier = null) {}
 
@@ -14358,7 +15429,7 @@ function mysql_insert_id ($link_identifier = null) {}
  * @param result resource
  * @param row int
  * @param field mixed[optional]
- * @return string
+ * @return string 
  */
 function mysql_result ($result, $row, $field = null) {}
 
@@ -14366,7 +15437,7 @@ function mysql_result ($result, $row, $field = null) {}
  * Get number of rows in result
  * @link http://php.net/manual/en/function.mysql-num-rows.php
  * @param result resource
- * @return int
+ * @return int 
  */
 function mysql_num_rows ($result) {}
 
@@ -14382,7 +15453,7 @@ function mysql_num_fields ($result) {}
  * Get a result row as an enumerated array
  * @link http://php.net/manual/en/function.mysql-fetch-row.php
  * @param result resource
- * @return array an numerical array of strings that corresponds to the fetched row, or 
+ * @return array an numerical array of strings that corresponds to the fetched row, or
  */
 function mysql_fetch_row ($result) {}
 
@@ -14399,7 +15470,7 @@ function mysql_fetch_array ($result, $result_type = null) {}
  * Fetch a result row as an associative array
  * @link http://php.net/manual/en/function.mysql-fetch-assoc.php
  * @param result resource
- * @return array an associative array of strings that corresponds to the fetched row, or 
+ * @return array an associative array of strings that corresponds to the fetched row, or
  */
 function mysql_fetch_assoc ($result) {}
 
@@ -14418,7 +15489,7 @@ function mysql_fetch_object ($result, $class_name = null, array $params = null) 
  * @link http://php.net/manual/en/function.mysql-data-seek.php
  * @param result resource
  * @param row_number int
- * @return bool
+ * @return bool 
  */
 function mysql_data_seek ($result, $row_number) {}
 
@@ -14426,7 +15497,7 @@ function mysql_data_seek ($result, $row_number) {}
  * Get the length of each output in a result
  * @link http://php.net/manual/en/function.mysql-fetch-lengths.php
  * @param result resource
- * @return array
+ * @return array 
  */
 function mysql_fetch_lengths ($result) {}
 
@@ -14435,7 +15506,7 @@ function mysql_fetch_lengths ($result) {}
  * @link http://php.net/manual/en/function.mysql-fetch-field.php
  * @param result resource
  * @param field_offset int[optional]
- * @return object an object containing field information. The properties 
+ * @return object an object containing field information. The properties
  */
 function mysql_fetch_field ($result, $field_offset = null) {}
 
@@ -14444,7 +15515,7 @@ function mysql_fetch_field ($result, $field_offset = null) {}
  * @link http://php.net/manual/en/function.mysql-field-seek.php
  * @param result resource
  * @param field_offset int
- * @return bool
+ * @return bool 
  */
 function mysql_field_seek ($result, $field_offset) {}
 
@@ -14452,7 +15523,7 @@ function mysql_field_seek ($result, $field_offset) {}
  * Free result memory
  * @link http://php.net/manual/en/function.mysql-free-result.php
  * @param result resource
- * @return bool
+ * @return bool 
  */
 function mysql_free_result ($result) {}
 
@@ -14461,7 +15532,7 @@ function mysql_free_result ($result) {}
  * @link http://php.net/manual/en/function.mysql-field-name.php
  * @param result resource
  * @param field_offset int
- * @return string
+ * @return string 
  */
 function mysql_field_name ($result, $field_offset) {}
 
@@ -14470,7 +15541,7 @@ function mysql_field_name ($result, $field_offset) {}
  * @link http://php.net/manual/en/function.mysql-field-table.php
  * @param result resource
  * @param field_offset int
- * @return string
+ * @return string 
  */
 function mysql_field_table ($result, $field_offset) {}
 
@@ -14479,7 +15550,7 @@ function mysql_field_table ($result, $field_offset) {}
  * @link http://php.net/manual/en/function.mysql-field-len.php
  * @param result resource
  * @param field_offset int
- * @return int
+ * @return int 
  */
 function mysql_field_len ($result, $field_offset) {}
 
@@ -14488,7 +15559,7 @@ function mysql_field_len ($result, $field_offset) {}
  * @link http://php.net/manual/en/function.mysql-field-type.php
  * @param result resource
  * @param field_offset int
- * @return string
+ * @return string 
  */
 function mysql_field_type ($result, $field_offset) {}
 
@@ -14522,7 +15593,7 @@ function mysql_real_escape_string ($unescaped_string, $link_identifier = null) {
  * Get current system status
  * @link http://php.net/manual/en/function.mysql-stat.php
  * @param link_identifier resource[optional]
- * @return string a string with the status for uptime, threads, queries, open tables, 
+ * @return string a string with the status for uptime, threads, queries, open tables,
  */
 function mysql_stat ($link_identifier = null) {}
 
@@ -14530,7 +15601,7 @@ function mysql_stat ($link_identifier = null) {}
  * Return the current thread ID
  * @link http://php.net/manual/en/function.mysql-thread-id.php
  * @param link_identifier resource[optional]
- * @return int
+ * @return int 
  */
 function mysql_thread_id ($link_identifier = null) {}
 
@@ -14546,14 +15617,14 @@ function mysql_client_encoding ($link_identifier = null) {}
  * Ping a server connection or reconnect if there is no connection
  * @link http://php.net/manual/en/function.mysql-ping.php
  * @param link_identifier resource[optional]
- * @return bool true if the connection to the server MySQL server is working, 
+ * @return bool true if the connection to the server MySQL server is working,
  */
 function mysql_ping ($link_identifier = null) {}
 
 /**
  * Get MySQL client info
  * @link http://php.net/manual/en/function.mysql-get-client-info.php
- * @return string
+ * @return string 
  */
 function mysql_get_client_info () {}
 
@@ -14561,7 +15632,7 @@ function mysql_get_client_info () {}
  * Get MySQL host info
  * @link http://php.net/manual/en/function.mysql-get-host-info.php
  * @param link_identifier resource[optional]
- * @return string a string describing the type of MySQL connection in use for the 
+ * @return string a string describing the type of MySQL connection in use for the
  */
 function mysql_get_host_info ($link_identifier = null) {}
 
@@ -14594,7 +15665,7 @@ function mysql_info ($link_identifier = null) {}
  * @link http://php.net/manual/en/function.mysql-set-charset.php
  * @param charset string
  * @param link_identifier resource[optional]
- * @return bool
+ * @return bool 
  */
 function mysql_set_charset ($charset, $link_identifier = null) {}
 
@@ -14641,7 +15712,7 @@ function mysql_dbname () {}
  * @link http://php.net/manual/en/function.mysql-tablename.php
  * @param result resource
  * @param i int
- * @return string
+ * @return string 
  */
 function mysql_tablename ($result, $i) {}
 
@@ -14661,9 +15732,9 @@ define ('MYSQL_CLIENT_IGNORE_SPACE', 256);
 
 /**
  * Represents an error raised by PDO. You should not throw a
- *  PDOException from your own code.
- *  See Exceptions for more
- *  information about Exceptions in PHP.
+ * PDOException from your own code.
+ * See Exceptions for more
+ * information about Exceptions in PHP.
  * @link http://php.net/manual/en/ref.pdo.php
  */
 class PDOException extends RuntimeException  {
@@ -14799,28 +15870,28 @@ class PDO  {
 	 * @link http://php.net/manual/en/function.PDO-prepare.php
 	 * @param statement string
 	 * @param driver_options array[optional]
-	 * @return PDOStatement
+	 * @return PDOStatement 
 	 */
 	public function prepare ($statement, array $driver_options = null) {}
 
 	/**
 	 * Initiates a transaction
 	 * @link http://php.net/manual/en/function.PDO-beginTransaction.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function beginTransaction () {}
 
 	/**
 	 * Commits a transaction
 	 * @link http://php.net/manual/en/function.PDO-commit.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function commit () {}
 
 	/**
 	 * Rolls back a transaction
 	 * @link http://php.net/manual/en/function.PDO-rollBack.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function rollBack () {}
 
@@ -14829,7 +15900,7 @@ class PDO  {
 	 * @link http://php.net/manual/en/function.PDO-setAttribute.php
 	 * @param attribute int
 	 * @param value mixed
-	 * @return bool
+	 * @return bool 
 	 */
 	public function setAttribute ($attribute, $value) {}
 
@@ -14837,7 +15908,7 @@ class PDO  {
 	 * Execute an SQL statement and return the number of affected rows
 	 * @link http://php.net/manual/en/function.PDO-exec.php
 	 * @param statement string
-	 * @return int
+	 * @return int 
 	 */
 	public function exec ($statement) {}
 
@@ -14847,7 +15918,7 @@ class PDO  {
 	 * @param statement string
 	 * @param PDO::FETCH_INTO int
 	 * @param object object
-	 * @return PDOStatement
+	 * @return PDOStatement 
 	 */
 	public function query ($statement, $PDO::FETCH_INTO, $object) {}
 
@@ -14855,7 +15926,7 @@ class PDO  {
 	 * Returns the ID of the last inserted row or sequence value
 	 * @link http://php.net/manual/en/function.PDO-lastInsertId.php
 	 * @param name string[optional]
-	 * @return string
+	 * @return string 
 	 */
 	public function lastInsertId ($name = null) {}
 
@@ -14869,7 +15940,7 @@ class PDO  {
 	/**
 	 * Fetch extended error information associated with the last operation on the database handle
 	 * @link http://php.net/manual/en/function.PDO-errorInfo.php
-	 * @return array
+	 * @return array 
 	 */
 	public function errorInfo () {}
 
@@ -14877,7 +15948,7 @@ class PDO  {
 	 * Retrieve a database connection attribute
 	 * @link http://php.net/manual/en/function.PDO-getAttribute.php
 	 * @param attribute int
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function getAttribute ($attribute) {}
 
@@ -14897,7 +15968,7 @@ class PDO  {
 	/**
 	 * Return an array of available PDO drivers
 	 * @link http://php.net/manual/en/function.PDO-getAvailableDrivers.php
-	 * @return array
+	 * @return array 
 	 */
 	public static function getAvailableDrivers () {}
 
@@ -14905,7 +15976,7 @@ class PDO  {
 
 /**
  * Represents a prepared statement and, after the statement is executed, an 
- *  associated result set.
+ * associated result set.
  * @link http://php.net/manual/en/ref.pdo.php
  */
 class PDOStatement implements Traversable {
@@ -14916,7 +15987,7 @@ class PDOStatement implements Traversable {
 	 * Executes a prepared statement
 	 * @link http://php.net/manual/en/function.PDOStatement-execute.php
 	 * @param input_parameters array[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function execute (array $input_parameters = null) {}
 
@@ -14926,7 +15997,7 @@ class PDOStatement implements Traversable {
 	 * @param fetch_style int[optional]
 	 * @param cursor_orientation int[optional]
 	 * @param cursor_offset int[optional]
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function fetch ($fetch_style = null, $cursor_orientation = null, $cursor_offset = null) {}
 
@@ -14938,7 +16009,7 @@ class PDOStatement implements Traversable {
 	 * @param data_type int[optional]
 	 * @param length int[optional]
 	 * @param driver_options mixed[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function bindParam ($parameter, &$variable, $data_type = null, $length = null, $driver_options = null) {}
 
@@ -14948,7 +16019,7 @@ class PDOStatement implements Traversable {
 	 * @param column mixed
 	 * @param param mixed
 	 * @param type int[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function bindColumn ($column, &$param, $type = null) {}
 
@@ -14958,7 +16029,7 @@ class PDOStatement implements Traversable {
 	 * @param parameter mixed
 	 * @param value mixed
 	 * @param data_type int[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function bindValue ($parameter, $value, $data_type = null) {}
 
@@ -14973,7 +16044,7 @@ class PDOStatement implements Traversable {
 	 * Returns a single column from the next row of a result set
 	 * @link http://php.net/manual/en/function.PDOStatement-fetchColumn.php
 	 * @param column_number int[optional]
-	 * @return string
+	 * @return string 
 	 */
 	public function fetchColumn ($column_number = null) {}
 
@@ -14983,7 +16054,7 @@ class PDOStatement implements Traversable {
 	 * @param fetch_style int[optional]
 	 * @param column_index int[optional]
 	 * @param ctor_args array[optional]
-	 * @return array
+	 * @return array 
 	 */
 	public function fetchAll ($fetch_style = null, $column_index = null, array $ctor_args = null) {}
 
@@ -14999,14 +16070,14 @@ class PDOStatement implements Traversable {
 	/**
 	 * Fetch the SQLSTATE associated with the last operation on the statement handle
 	 * @link http://php.net/manual/en/function.PDOStatement-errorCode.php
-	 * @return string
+	 * @return string 
 	 */
 	public function errorCode () {}
 
 	/**
 	 * Fetch extended error information associated with the last operation on the statement handle
 	 * @link http://php.net/manual/en/function.PDOStatement-errorInfo.php
-	 * @return array
+	 * @return array 
 	 */
 	public function errorInfo () {}
 
@@ -15015,7 +16086,7 @@ class PDOStatement implements Traversable {
 	 * @link http://php.net/manual/en/function.PDOStatement-setAttribute.php
 	 * @param attribute int
 	 * @param value mixed
-	 * @return bool
+	 * @return bool 
 	 */
 	public function setAttribute ($attribute, $value) {}
 
@@ -15054,14 +16125,14 @@ class PDOStatement implements Traversable {
 	/**
 	 * Advances to the next rowset in a multi-rowset statement handle
 	 * @link http://php.net/manual/en/function.PDOStatement-nextRowset.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function nextRowset () {}
 
 	/**
 	 * Closes the cursor, enabling the statement to be executed again.
 	 * @link http://php.net/manual/en/function.PDOStatement-closeCursor.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function closeCursor () {}
 
@@ -15087,7 +16158,7 @@ function pdo_drivers () {}
  * @link http://php.net/manual/en/function.posix-kill.php
  * @param pid int
  * @param sig int
- * @return bool
+ * @return bool 
  */
 function posix_kill ($pid, $sig) {}
 
@@ -15116,7 +16187,7 @@ function posix_getuid () {}
  * Set the UID of the current process
  * @link http://php.net/manual/en/function.posix-setuid.php
  * @param uid int
- * @return bool
+ * @return bool 
  */
 function posix_setuid ($uid) {}
 
@@ -15131,7 +16202,7 @@ function posix_geteuid () {}
  * Set the effective UID of the current process
  * @link http://php.net/manual/en/function.posix-seteuid.php
  * @param uid int
- * @return bool
+ * @return bool 
  */
 function posix_seteuid ($uid) {}
 
@@ -15146,7 +16217,7 @@ function posix_getgid () {}
  * Set the GID of the current process
  * @link http://php.net/manual/en/function.posix-setgid.php
  * @param gid int
- * @return bool
+ * @return bool 
  */
 function posix_setgid ($gid) {}
 
@@ -15161,7 +16232,7 @@ function posix_getegid () {}
  * Set the effective GID of the current process
  * @link http://php.net/manual/en/function.posix-setegid.php
  * @param gid int
- * @return bool
+ * @return bool 
  */
 function posix_setegid ($gid) {}
 
@@ -15198,7 +16269,7 @@ function posix_setsid () {}
  * @link http://php.net/manual/en/function.posix-setpgid.php
  * @param pid int
  * @param pgid int
- * @return bool
+ * @return bool 
  */
 function posix_setpgid ($pid, $pgid) {}
 
@@ -15235,7 +16306,7 @@ function posix_times () {}
 /**
  * Get path name of controlling terminal
  * @link http://php.net/manual/en/function.posix-ctermid.php
- * @return string
+ * @return string 
  */
 function posix_ctermid () {}
 
@@ -15243,7 +16314,7 @@ function posix_ctermid () {}
  * Determine terminal device name
  * @link http://php.net/manual/en/function.posix-ttyname.php
  * @param fd int
- * @return string
+ * @return string 
  */
 function posix_ttyname ($fd) {}
 
@@ -15258,7 +16329,7 @@ function posix_isatty ($fd) {}
 /**
  * Pathname of current directory
  * @link http://php.net/manual/en/function.posix-getcwd.php
- * @return string a string of the absolute pathname on success. 
+ * @return string a string of the absolute pathname on success.
  */
 function posix_getcwd () {}
 
@@ -15267,7 +16338,7 @@ function posix_getcwd () {}
  * @link http://php.net/manual/en/function.posix-mkfifo.php
  * @param pathname string
  * @param mode int
- * @return bool
+ * @return bool 
  */
 function posix_mkfifo ($pathname, $mode) {}
 
@@ -15278,7 +16349,7 @@ function posix_mkfifo ($pathname, $mode) {}
  * @param mode int
  * @param major int[optional]
  * @param minor int[optional]
- * @return bool
+ * @return bool 
  */
 function posix_mknod ($pathname, $mode, $major = null, $minor = null) {}
 
@@ -15287,7 +16358,7 @@ function posix_mknod ($pathname, $mode, $major = null, $minor = null) {}
  * @link http://php.net/manual/en/function.posix-access.php
  * @param file string
  * @param mode int[optional]
- * @return bool
+ * @return bool 
  */
 function posix_access ($file, $mode = null) {}
 
@@ -15295,7 +16366,7 @@ function posix_access ($file, $mode = null) {}
  * Return info about a group by name
  * @link http://php.net/manual/en/function.posix-getgrnam.php
  * @param name string
- * @return array
+ * @return array 
  */
 function posix_getgrnam ($name) {}
 
@@ -15303,7 +16374,7 @@ function posix_getgrnam ($name) {}
  * Return info about a group by group id
  * @link http://php.net/manual/en/function.posix-getgrgid.php
  * @param gid int
- * @return array
+ * @return array 
  */
 function posix_getgrgid ($gid) {}
 
@@ -15311,7 +16382,7 @@ function posix_getgrgid ($gid) {}
  * Return info about a user by username
  * @link http://php.net/manual/en/function.posix-getpwnam.php
  * @param username string
- * @return array
+ * @return array 
  */
 function posix_getpwnam ($username) {}
 
@@ -15352,18 +16423,63 @@ function posix_strerror ($errno) {}
  * @link http://php.net/manual/en/function.posix-initgroups.php
  * @param name string
  * @param base_group_id int
- * @return bool
+ * @return bool 
  */
 function posix_initgroups ($name, $base_group_id) {}
 
+
+/**
+ * Check whether the file exists.
+ * @link http://php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_F_OK', 0);
+
+/**
+ * Check whether the file exists and has execute permissions.
+ * @link http://php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_X_OK', 1);
+
+/**
+ * Check whether the file exists and has write permissions.
+ * @link http://php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_W_OK', 2);
+
+/**
+ * Check whether the file exists and has read permissions.
+ * @link http://php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_R_OK', 4);
+
+/**
+ * Normal file
+ * @link http://php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFREG', 32768);
+
+/**
+ * Character special file
+ * @link http://php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFCHR', 8192);
+
+/**
+ * Block special file
+ * @link http://php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFBLK', 24576);
+
+/**
+ * FIFO (named pipe) special file
+ * @link http://php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFIFO', 4096);
+
+/**
+ * Socket
+ * @link http://php.net/manual/en/posix.constants.php
+ */
 define ('POSIX_S_IFSOCK', 49152);
 
 // End of posix v.
@@ -15378,7 +16494,7 @@ define ('POSIX_S_IFSOCK', 49152);
  * @param except array
  * @param tv_sec int
  * @param tv_usec int[optional]
- * @return int
+ * @return int 
  */
 function socket_select (array &$read, array &$write, array &$except, $tv_sec, $tv_usec = null) {}
 
@@ -15388,7 +16504,7 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
  * @param domain int
  * @param type int
  * @param protocol int
- * @return resource
+ * @return resource 
  */
 function socket_create ($domain, $type, $protocol) {}
 
@@ -15397,7 +16513,7 @@ function socket_create ($domain, $type, $protocol) {}
  * @link http://php.net/manual/en/function.socket-create-listen.php
  * @param port int
  * @param backlog int[optional]
- * @return resource
+ * @return resource 
  */
 function socket_create_listen ($port, $backlog = null) {}
 
@@ -15408,7 +16524,7 @@ function socket_create_listen ($port, $backlog = null) {}
  * @param type int
  * @param protocol int
  * @param fd array
- * @return bool
+ * @return bool 
  */
 function socket_create_pair ($domain, $type, $protocol, array &$fd) {}
 
@@ -15424,7 +16540,7 @@ function socket_accept ($socket) {}
  * Sets nonblocking mode for file descriptor fd
  * @link http://php.net/manual/en/function.socket-set-nonblock.php
  * @param socket resource
- * @return bool
+ * @return bool 
  */
 function socket_set_nonblock ($socket) {}
 
@@ -15432,7 +16548,7 @@ function socket_set_nonblock ($socket) {}
  * Sets blocking mode on a socket resource
  * @link http://php.net/manual/en/function.socket-set-block.php
  * @param socket resource
- * @return bool
+ * @return bool 
  */
 function socket_set_block ($socket) {}
 
@@ -15441,7 +16557,7 @@ function socket_set_block ($socket) {}
  * @link http://php.net/manual/en/function.socket-listen.php
  * @param socket resource
  * @param backlog int[optional]
- * @return bool
+ * @return bool 
  */
 function socket_listen ($socket, $backlog = null) {}
 
@@ -15449,7 +16565,7 @@ function socket_listen ($socket, $backlog = null) {}
  * Closes a socket resource
  * @link http://php.net/manual/en/function.socket-close.php
  * @param socket resource
- * @return void
+ * @return void 
  */
 function socket_close ($socket) {}
 
@@ -15469,7 +16585,7 @@ function socket_write ($socket, $buffer, $length = null) {}
  * @param socket resource
  * @param length int
  * @param type int[optional]
- * @return string
+ * @return string 
  */
 function socket_read ($socket, $length, $type = null) {}
 
@@ -15479,7 +16595,7 @@ function socket_read ($socket, $length, $type = null) {}
  * @param socket resource
  * @param addr string
  * @param port int[optional]
- * @return bool
+ * @return bool 
  */
 function socket_getsockname ($socket, &$addr, &$port = null) {}
 
@@ -15489,7 +16605,7 @@ function socket_getsockname ($socket, &$addr, &$port = null) {}
  * @param socket resource
  * @param address string
  * @param port int[optional]
- * @return bool
+ * @return bool 
  */
 function socket_getpeername ($socket, &$address, &$port = null) {}
 
@@ -15499,7 +16615,7 @@ function socket_getpeername ($socket, &$address, &$port = null) {}
  * @param socket resource
  * @param address string
  * @param port int[optional]
- * @return bool
+ * @return bool 
  */
 function socket_connect ($socket, $address, $port = null) {}
 
@@ -15517,7 +16633,7 @@ function socket_strerror ($errno) {}
  * @param socket resource
  * @param address string
  * @param port int[optional]
- * @return bool
+ * @return bool 
  */
 function socket_bind ($socket, $address, $port = null) {}
 
@@ -15528,7 +16644,7 @@ function socket_bind ($socket, $address, $port = null) {}
  * @param buf string
  * @param len int
  * @param flags int
- * @return int
+ * @return int 
  */
 function socket_recv ($socket, &$buf, $len, $flags) {}
 
@@ -15539,7 +16655,7 @@ function socket_recv ($socket, &$buf, $len, $flags) {}
  * @param buf string
  * @param len int
  * @param flags int
- * @return int
+ * @return int 
  */
 function socket_send ($socket, $buf, $len, $flags) {}
 
@@ -15552,7 +16668,7 @@ function socket_send ($socket, $buf, $len, $flags) {}
  * @param flags int
  * @param name string
  * @param port int[optional]
- * @return int
+ * @return int 
  */
 function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {}
 
@@ -15565,7 +16681,7 @@ function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {
  * @param flags int
  * @param addr string
  * @param port int[optional]
- * @return int
+ * @return int 
  */
 function socket_sendto ($socket, $buf, $len, $flags, $addr, $port = null) {}
 
@@ -15586,7 +16702,7 @@ function socket_get_option ($socket, $level, $optname) {}
  * @param level int
  * @param optname int
  * @param optval mixed
- * @return bool
+ * @return bool 
  */
 function socket_set_option ($socket, $level, $optname, $optval) {}
 
@@ -15595,7 +16711,7 @@ function socket_set_option ($socket, $level, $optname, $optval) {}
  * @link http://php.net/manual/en/function.socket-shutdown.php
  * @param socket resource
  * @param how int[optional]
- * @return bool
+ * @return bool 
  */
 function socket_shutdown ($socket, $how = null) {}
 
@@ -15603,7 +16719,7 @@ function socket_shutdown ($socket, $how = null) {}
  * Returns the last error on the socket
  * @link http://php.net/manual/en/function.socket-last-error.php
  * @param socket resource[optional]
- * @return int
+ * @return int 
  */
 function socket_last_error ($socket = null) {}
 
@@ -15611,7 +16727,7 @@ function socket_last_error ($socket = null) {}
  * Clears the error on the socket or the last error code
  * @link http://php.net/manual/en/function.socket-clear-error.php
  * @param socket resource[optional]
- * @return void
+ * @return void 
  */
 function socket_clear_error ($socket = null) {}
 
@@ -15775,7 +16891,7 @@ function sem_get ($key, $max_acquire = null, $perm = null, $auto_release = null)
  * Acquire a semaphore
  * @link http://php.net/manual/en/function.sem-acquire.php
  * @param sem_identifier resource
- * @return bool
+ * @return bool 
  */
 function sem_acquire ($sem_identifier) {}
 
@@ -15783,7 +16899,7 @@ function sem_acquire ($sem_identifier) {}
  * Release a semaphore
  * @link http://php.net/manual/en/function.sem-release.php
  * @param sem_identifier resource
- * @return bool
+ * @return bool 
  */
 function sem_release ($sem_identifier) {}
 
@@ -15791,7 +16907,7 @@ function sem_release ($sem_identifier) {}
  * Remove a semaphore
  * @link http://php.net/manual/en/function.sem-remove.php
  * @param sem_identifier resource
- * @return bool
+ * @return bool 
  */
 function sem_remove ($sem_identifier) {}
 
@@ -15803,7 +16919,7 @@ function sem_remove ($sem_identifier) {}
  * Split given source into PHP tokens
  * @link http://php.net/manual/en/function.token-get-all.php
  * @param source string
- * @return array
+ * @return array 
  */
 function token_get_all ($source) {}
 
@@ -15811,7 +16927,7 @@ function token_get_all ($source) {}
  * Get the symbolic name of a given PHP token
  * @link http://php.net/manual/en/function.token-name.php
  * @param token int
- * @return string
+ * @return string 
  */
 function token_name ($token) {}
 
@@ -15948,7 +17064,7 @@ class XSLTProcessor  {
 	 * Import stylesheet
 	 * @link http://php.net/manual/en/function.xsl-xsltprocessor-import-stylesheet.php
 	 * @param stylesheet DOMDocument
-	 * @return void
+	 * @return void 
 	 */
 	public function importStylesheet (DOMDocument $stylesheet) {}
 
@@ -15956,7 +17072,7 @@ class XSLTProcessor  {
 	 * Transform to a DOMDocument
 	 * @link http://php.net/manual/en/function.xsl-xsltprocessor-transform-to-doc.php
 	 * @param doc DOMNode
-	 * @return DOMDocument
+	 * @return DOMDocument 
 	 */
 	public function transformToDoc (DOMNode $doc) {}
 
@@ -15973,7 +17089,7 @@ class XSLTProcessor  {
 	 * Transform to XML
 	 * @link http://php.net/manual/en/function.xsl-xsltprocessor-transform-to-xml.php
 	 * @param doc DOMDocument
-	 * @return string
+	 * @return string 
 	 */
 	public function transformToXml (DOMDocument $doc) {}
 
@@ -15982,7 +17098,7 @@ class XSLTProcessor  {
 	 * @link http://php.net/manual/en/function.xsl-xsltprocessor-set-parameter.php
 	 * @param namespace string
 	 * @param options array
-	 * @return bool
+	 * @return bool 
 	 */
 	public function setParameter ($namespace, array $options) {}
 
@@ -15991,7 +17107,7 @@ class XSLTProcessor  {
 	 * @link http://php.net/manual/en/function.xsl-xsltprocessor-get-parameter.php
 	 * @param namespaceURI string
 	 * @param localName string
-	 * @return string
+	 * @return string 
 	 */
 	public function getParameter ($namespaceURI, $localName) {}
 
@@ -16000,14 +17116,14 @@ class XSLTProcessor  {
 	 * @link http://php.net/manual/en/function.xsl-xsltprocessor-remove-parameter.php
 	 * @param namespaceURI string
 	 * @param localName string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function removeParameter ($namespaceURI, $localName) {}
 
 	/**
 	 * Determine if PHP has EXSLT support
 	 * @link http://php.net/manual/en/function.xsl-xsltprocessor-has-exslt-support.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function hasExsltSupport () {}
 
@@ -16015,7 +17131,7 @@ class XSLTProcessor  {
 	 * Enables the ability to use PHP functions as XSLT functions
 	 * @link http://php.net/manual/en/function.xsl-xsltprocessor-register-php-functions.php
 	 * @param restrict mixed[optional]
-	 * @return void
+	 * @return void 
 	 */
 	public function registerPHPFunctions ($restrict = null) {}
 
@@ -16023,9 +17139,29 @@ class XSLTProcessor  {
 define ('XSL_CLONE_AUTO', 0);
 define ('XSL_CLONE_NEVER', -1);
 define ('XSL_CLONE_ALWAYS', 1);
+
+/**
+ * libxslt version like 10117. Available as of PHP 5.1.2.
+ * @link http://php.net/manual/en/xsl.constants.php
+ */
 define ('LIBXSLT_VERSION', 10117);
+
+/**
+ * libxslt version like 1.1.17. Available as of PHP 5.1.2.
+ * @link http://php.net/manual/en/xsl.constants.php
+ */
 define ('LIBXSLT_DOTTED_VERSION', "1.1.17");
+
+/**
+ * libexslt version like 813. Available as of PHP 5.1.2.
+ * @link http://php.net/manual/en/xsl.constants.php
+ */
 define ('LIBEXSLT_VERSION', 813);
+
+/**
+ * libexslt version like 1.1.17. Available as of PHP 5.1.2.
+ * @link http://php.net/manual/en/xsl.constants.php
+ */
 define ('LIBEXSLT_DOTTED_VERSION', "1.1.17");
 
 // End of xsl v.0.1
@@ -16037,7 +17173,7 @@ define ('LIBEXSLT_DOTTED_VERSION', "1.1.17");
  * @link http://php.net/manual/en/function.bzopen.php
  * @param filename string
  * @param mode string
- * @return resource
+ * @return resource 
  */
 function bzopen ($filename, $mode) {}
 
@@ -16064,7 +17200,7 @@ function bzwrite ($bz, $data, $length = null) {}
  * Force a write of all buffered data
  * @link http://php.net/manual/en/function.bzflush.php
  * @param bz resource
- * @return int
+ * @return int 
  */
 function bzflush ($bz) {}
 
@@ -16072,7 +17208,7 @@ function bzflush ($bz) {}
  * Close a bzip2 file
  * @link http://php.net/manual/en/function.bzclose.php
  * @param bz resource
- * @return int
+ * @return int 
  */
 function bzclose ($bz) {}
 
@@ -16096,7 +17232,7 @@ function bzerrstr ($bz) {}
  * Returns the bzip2 error number and error string in an array
  * @link http://php.net/manual/en/function.bzerror.php
  * @param bz resource
- * @return array an associative array, with the error code in the 
+ * @return array an associative array, with the error code in the
  */
 function bzerror ($bz) {}
 
@@ -16106,7 +17242,7 @@ function bzerror ($bz) {}
  * @param source string
  * @param blocksize int[optional]
  * @param workfactor int[optional]
- * @return mixed
+ * @return mixed 
  */
 function bzcompress ($source, $blocksize = null, $workfactor = null) {}
 
@@ -16115,7 +17251,7 @@ function bzcompress ($source, $blocksize = null, $workfactor = null) {}
  * @link http://php.net/manual/en/function.bzdecompress.php
  * @param source string
  * @param small int[optional]
- * @return mixed
+ * @return mixed 
  */
 function bzdecompress ($source, $small = null) {}
 
@@ -16141,7 +17277,7 @@ function gd_info () {}
  * @param start int
  * @param end int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagearc ($image, $cx, $cy, $width, $height, $start, $end, $color) {}
 
@@ -16154,7 +17290,7 @@ function imagearc ($image, $cx, $cy, $width, $height, $start, $end, $color) {}
  * @param width int
  * @param height int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imageellipse ($image, $cx, $cy, $width, $height, $color) {}
 
@@ -16167,7 +17303,7 @@ function imageellipse ($image, $cx, $cy, $width, $height, $color) {}
  * @param y int
  * @param c string
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagechar ($image, $font, $x, $y, $c, $color) {}
 
@@ -16180,7 +17316,7 @@ function imagechar ($image, $font, $x, $y, $c, $color) {}
  * @param y int
  * @param c string
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagecharup ($image, $font, $x, $y, $c, $color) {}
 
@@ -16201,7 +17337,7 @@ function imagecolorat ($image, $x, $y) {}
  * @param red int
  * @param green int
  * @param blue int
- * @return int
+ * @return int 
  */
 function imagecolorallocate ($image, $red, $green, $blue) {}
 
@@ -16210,7 +17346,7 @@ function imagecolorallocate ($image, $red, $green, $blue) {}
  * @link http://php.net/manual/en/function.imagepalettecopy.php
  * @param destination resource
  * @param source resource
- * @return void
+ * @return void 
  */
 function imagepalettecopy ($destination, $source) {}
 
@@ -16218,7 +17354,7 @@ function imagepalettecopy ($destination, $source) {}
  * Create a new image from the image stream in the string
  * @link http://php.net/manual/en/function.imagecreatefromstring.php
  * @param data string
- * @return resource
+ * @return resource 
  */
 function imagecreatefromstring ($data) {}
 
@@ -16240,7 +17376,7 @@ function imagecolorclosest ($image, $red, $green, $blue) {}
  * @param red int
  * @param green int
  * @param blue int
- * @return int
+ * @return int 
  */
 function imagecolorclosesthwb ($image, $red, $green, $blue) {}
 
@@ -16249,7 +17385,7 @@ function imagecolorclosesthwb ($image, $red, $green, $blue) {}
  * @link http://php.net/manual/en/function.imagecolordeallocate.php
  * @param image resource
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagecolordeallocate ($image, $color) {}
 
@@ -16283,7 +17419,7 @@ function imagecolorexact ($image, $red, $green, $blue) {}
  * @param red int
  * @param green int
  * @param blue int
- * @return void
+ * @return void 
  */
 function imagecolorset ($image, $index, $red, $green, $blue) {}
 
@@ -16292,7 +17428,7 @@ function imagecolorset ($image, $index, $red, $green, $blue) {}
  * @link http://php.net/manual/en/function.imagecolortransparent.php
  * @param image resource
  * @param color int[optional]
- * @return int
+ * @return int 
  */
 function imagecolortransparent ($image, $color = null) {}
 
@@ -16324,7 +17460,7 @@ function imagecolorsforindex ($image, $index) {}
  * @param src_y int
  * @param src_w int
  * @param src_h int
- * @return bool
+ * @return bool 
  */
 function imagecopy ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h) {}
 
@@ -16340,7 +17476,7 @@ function imagecopy ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $s
  * @param src_w int
  * @param src_h int
  * @param pct int
- * @return bool
+ * @return bool 
  */
 function imagecopymerge ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct) {}
 
@@ -16356,7 +17492,7 @@ function imagecopymerge ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_
  * @param src_w int
  * @param src_h int
  * @param pct int
- * @return bool
+ * @return bool 
  */
 function imagecopymergegray ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct) {}
 
@@ -16373,7 +17509,7 @@ function imagecopymergegray ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $
  * @param dst_h int
  * @param src_w int
  * @param src_h int
- * @return bool
+ * @return bool 
  */
 function imagecopyresized ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {}
 
@@ -16409,7 +17545,7 @@ function imageistruecolor ($image) {}
  * @param image resource
  * @param dither bool
  * @param ncolors int
- * @return bool
+ * @return bool 
  */
 function imagetruecolortopalette ($image, $dither, $ncolors) {}
 
@@ -16418,7 +17554,7 @@ function imagetruecolortopalette ($image, $dither, $ncolors) {}
  * @link http://php.net/manual/en/function.imagesetthickness.php
  * @param image resource
  * @param thickness int
- * @return bool
+ * @return bool 
  */
 function imagesetthickness ($image, $thickness) {}
 
@@ -16434,7 +17570,7 @@ function imagesetthickness ($image, $thickness) {}
  * @param end int
  * @param color int
  * @param style int
- * @return bool
+ * @return bool 
  */
 function imagefilledarc ($image, $cx, $cy, $width, $height, $start, $end, $color, $style) {}
 
@@ -16447,7 +17583,7 @@ function imagefilledarc ($image, $cx, $cy, $width, $height, $start, $end, $color
  * @param width int
  * @param height int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagefilledellipse ($image, $cx, $cy, $width, $height, $color) {}
 
@@ -16456,7 +17592,7 @@ function imagefilledellipse ($image, $cx, $cy, $width, $height, $color) {}
  * @link http://php.net/manual/en/function.imagealphablending.php
  * @param image resource
  * @param blendmode bool
- * @return bool
+ * @return bool 
  */
 function imagealphablending ($image, $blendmode) {}
 
@@ -16465,7 +17601,7 @@ function imagealphablending ($image, $blendmode) {}
  * @link http://php.net/manual/en/function.imagesavealpha.php
  * @param image resource
  * @param saveflag bool
- * @return bool
+ * @return bool 
  */
 function imagesavealpha ($image, $saveflag) {}
 
@@ -16477,7 +17613,7 @@ function imagesavealpha ($image, $saveflag) {}
  * @param green int
  * @param blue int
  * @param alpha int
- * @return int
+ * @return int 
  */
 function imagecolorallocatealpha ($image, $red, $green, $blue, $alpha) {}
 
@@ -16530,7 +17666,7 @@ function imagecolorexactalpha ($image, $red, $green, $blue, $alpha) {}
  * @param dst_h int
  * @param src_w int
  * @param src_h int
- * @return bool
+ * @return bool 
  */
 function imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {}
 
@@ -16541,7 +17677,7 @@ function imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $sr
  * @param angle float
  * @param bgd_color int
  * @param ignore_transparent int[optional]
- * @return resource
+ * @return resource 
  */
 function imagerotate ($source_image, $angle, $bgd_color, $ignore_transparent = null) {}
 
@@ -16550,7 +17686,7 @@ function imagerotate ($source_image, $angle, $bgd_color, $ignore_transparent = n
  * @link http://php.net/manual/en/function.imageantialias.php
  * @param image resource
  * @param on bool
- * @return bool
+ * @return bool 
  */
 function imageantialias ($image, $on) {}
 
@@ -16559,7 +17695,7 @@ function imageantialias ($image, $on) {}
  * @link http://php.net/manual/en/function.imagesettile.php
  * @param image resource
  * @param tile resource
- * @return bool
+ * @return bool 
  */
 function imagesettile ($image, $tile) {}
 
@@ -16568,7 +17704,7 @@ function imagesettile ($image, $tile) {}
  * @link http://php.net/manual/en/function.imagesetbrush.php
  * @param image resource
  * @param brush resource
- * @return bool
+ * @return bool 
  */
 function imagesetbrush ($image, $brush) {}
 
@@ -16577,7 +17713,7 @@ function imagesetbrush ($image, $brush) {}
  * @link http://php.net/manual/en/function.imagesetstyle.php
  * @param image resource
  * @param style array
- * @return bool
+ * @return bool 
  */
 function imagesetstyle ($image, array $style) {}
 
@@ -16625,7 +17761,7 @@ function imagecreatefromxbm ($filename) {}
  * Create a new image from GD file or URL
  * @link http://php.net/manual/en/function.imagecreatefromgd.php
  * @param filename string
- * @return resource
+ * @return resource 
  */
 function imagecreatefromgd ($filename) {}
 
@@ -16633,7 +17769,7 @@ function imagecreatefromgd ($filename) {}
  * Create a new image from GD2 file or URL
  * @link http://php.net/manual/en/function.imagecreatefromgd2.php
  * @param filename string
- * @return resource
+ * @return resource 
  */
 function imagecreatefromgd2 ($filename) {}
 
@@ -16645,7 +17781,7 @@ function imagecreatefromgd2 ($filename) {}
  * @param srcY int
  * @param width int
  * @param height int
- * @return resource
+ * @return resource 
  */
 function imagecreatefromgd2part ($filename, $srcX, $srcY, $width, $height) {}
 
@@ -16656,7 +17792,7 @@ function imagecreatefromgd2part ($filename, $srcX, $srcY, $width, $height) {}
  * @param filename string[optional]
  * @param quality int[optional]
  * @param filters int[optional]
- * @return bool
+ * @return bool 
  */
 function imagepng ($image, $filename = null, $quality = null, $filters = null) {}
 
@@ -16665,7 +17801,7 @@ function imagepng ($image, $filename = null, $quality = null, $filters = null) {
  * @link http://php.net/manual/en/function.imagegif.php
  * @param image resource
  * @param filename string[optional]
- * @return bool
+ * @return bool 
  */
 function imagegif ($image, $filename = null) {}
 
@@ -16675,7 +17811,7 @@ function imagegif ($image, $filename = null) {}
  * @param image resource
  * @param filename string[optional]
  * @param quality int[optional]
- * @return bool
+ * @return bool 
  */
 function imagejpeg ($image, $filename = null, $quality = null) {}
 
@@ -16685,7 +17821,7 @@ function imagejpeg ($image, $filename = null, $quality = null) {}
  * @param image resource
  * @param filename string[optional]
  * @param foreground int[optional]
- * @return bool
+ * @return bool 
  */
 function imagewbmp ($image, $filename = null, $foreground = null) {}
 
@@ -16694,7 +17830,7 @@ function imagewbmp ($image, $filename = null, $foreground = null) {}
  * @link http://php.net/manual/en/function.imagegd.php
  * @param image resource
  * @param filename string[optional]
- * @return bool
+ * @return bool 
  */
 function imagegd ($image, $filename = null) {}
 
@@ -16705,7 +17841,7 @@ function imagegd ($image, $filename = null) {}
  * @param filename string[optional]
  * @param chunk_size int[optional]
  * @param type int[optional]
- * @return bool
+ * @return bool 
  */
 function imagegd2 ($image, $filename = null, $chunk_size = null, $type = null) {}
 
@@ -16713,7 +17849,7 @@ function imagegd2 ($image, $filename = null, $chunk_size = null, $type = null) {
  * Destroy an image
  * @link http://php.net/manual/en/function.imagedestroy.php
  * @param image resource
- * @return bool
+ * @return bool 
  */
 function imagedestroy ($image) {}
 
@@ -16723,7 +17859,7 @@ function imagedestroy ($image) {}
  * @param image resource
  * @param inputgamma float
  * @param outputgamma float
- * @return bool
+ * @return bool 
  */
 function imagegammacorrect ($image, $inputgamma, $outputgamma) {}
 
@@ -16734,7 +17870,7 @@ function imagegammacorrect ($image, $inputgamma, $outputgamma) {}
  * @param x int
  * @param y int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagefill ($image, $x, $y, $color) {}
 
@@ -16745,7 +17881,7 @@ function imagefill ($image, $x, $y, $color) {}
  * @param points array
  * @param num_points int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagefilledpolygon ($image, array $points, $num_points, $color) {}
 
@@ -16758,7 +17894,7 @@ function imagefilledpolygon ($image, array $points, $num_points, $color) {}
  * @param x2 int
  * @param y2 int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagefilledrectangle ($image, $x1, $y1, $x2, $y2, $color) {}
 
@@ -16770,7 +17906,7 @@ function imagefilledrectangle ($image, $x1, $y1, $x2, $y2, $color) {}
  * @param y int
  * @param border int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagefilltoborder ($image, $x, $y, $border, $color) {}
 
@@ -16808,7 +17944,7 @@ function imageinterlace ($image, $interlace = null) {}
  * @param x2 int
  * @param y2 int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imageline ($image, $x1, $y1, $x2, $y2, $color) {}
 
@@ -16816,7 +17952,7 @@ function imageline ($image, $x1, $y1, $x2, $y2, $color) {}
  * Load a new font
  * @link http://php.net/manual/en/function.imageloadfont.php
  * @param file string
- * @return int
+ * @return int 
  */
 function imageloadfont ($file) {}
 
@@ -16827,7 +17963,7 @@ function imageloadfont ($file) {}
  * @param points array
  * @param num_points int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagepolygon ($image, array $points, $num_points, $color) {}
 
@@ -16840,7 +17976,7 @@ function imagepolygon ($image, array $points, $num_points, $color) {}
  * @param x2 int
  * @param y2 int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagerectangle ($image, $x1, $y1, $x2, $y2, $color) {}
 
@@ -16851,7 +17987,7 @@ function imagerectangle ($image, $x1, $y1, $x2, $y2, $color) {}
  * @param x int
  * @param y int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagesetpixel ($image, $x, $y, $color) {}
 
@@ -16864,7 +18000,7 @@ function imagesetpixel ($image, $x, $y, $color) {}
  * @param y int
  * @param string string
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagestring ($image, $font, $x, $y, $string, $color) {}
 
@@ -16877,7 +18013,7 @@ function imagestring ($image, $font, $x, $y, $string, $color) {}
  * @param y int
  * @param string string
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagestringup ($image, $font, $x, $y, $string, $color) {}
 
@@ -16885,7 +18021,7 @@ function imagestringup ($image, $font, $x, $y, $string, $color) {}
  * Get image width
  * @link http://php.net/manual/en/function.imagesx.php
  * @param image resource
- * @return int
+ * @return int 
  */
 function imagesx ($image) {}
 
@@ -16893,7 +18029,7 @@ function imagesx ($image) {}
  * Get image height
  * @link http://php.net/manual/en/function.imagesy.php
  * @param image resource
- * @return int
+ * @return int 
  */
 function imagesy ($image) {}
 
@@ -16906,7 +18042,7 @@ function imagesy ($image) {}
  * @param x2 int
  * @param y2 int
  * @param color int
- * @return bool
+ * @return bool 
  */
 function imagedashedline ($image, $x1, $y1, $x2, $y2, $color) {}
 
@@ -16917,7 +18053,7 @@ function imagedashedline ($image, $x1, $y1, $x2, $y2, $color) {}
  * @param angle float
  * @param fontfile string
  * @param text string
- * @return array
+ * @return array 
  */
 function imagettfbbox ($size, $angle, $fontfile, $text) {}
 
@@ -16944,7 +18080,7 @@ function imagettftext ($image, $size, $angle, $x, $y, $color, $fontfile, $text) 
  * @param font_file string
  * @param text string
  * @param extrainfo array[optional]
- * @return array
+ * @return array 
  */
 function imageftbbox ($size, $angle, $font_file, $text, array $extrainfo = null) {}
 
@@ -16960,7 +18096,7 @@ function imageftbbox ($size, $angle, $font_file, $text, array $extrainfo = null)
  * @param font_file string
  * @param text string
  * @param extrainfo array[optional]
- * @return array
+ * @return array 
  */
 function imagefttext ($image, $size, $angle, $x, $y, $col, $font_file, $text, array $extrainfo = null) {}
 
@@ -16968,7 +18104,7 @@ function imagefttext ($image, $size, $angle, $x, $y, $col, $font_file, $text, ar
  * Load a PostScript Type 1 font from file
  * @link http://php.net/manual/en/function.imagepsloadfont.php
  * @param filename string
- * @return resource
+ * @return resource 
  */
 function imagepsloadfont ($filename) {}
 
@@ -16976,7 +18112,7 @@ function imagepsloadfont ($filename) {}
  * Free memory used by a PostScript Type 1 font
  * @link http://php.net/manual/en/function.imagepsfreefont.php
  * @param fontindex resource
- * @return bool
+ * @return bool 
  */
 function imagepsfreefont ($fontindex) {}
 
@@ -16985,7 +18121,7 @@ function imagepsfreefont ($fontindex) {}
  * @link http://php.net/manual/en/function.imagepsencodefont.php
  * @param font_index resource
  * @param encodingfile string
- * @return bool
+ * @return bool 
  */
 function imagepsencodefont ($font_index, $encodingfile) {}
 
@@ -16994,7 +18130,7 @@ function imagepsencodefont ($font_index, $encodingfile) {}
  * @link http://php.net/manual/en/function.imagepsextendfont.php
  * @param font_index int
  * @param extend float
- * @return bool
+ * @return bool 
  */
 function imagepsextendfont ($font_index, $extend) {}
 
@@ -17003,7 +18139,7 @@ function imagepsextendfont ($font_index, $extend) {}
  * @link http://php.net/manual/en/function.imagepsslantfont.php
  * @param font_index resource
  * @param slant float
- * @return bool
+ * @return bool 
  */
 function imagepsslantfont ($font_index, $slant) {}
 
@@ -17022,7 +18158,7 @@ function imagepsslantfont ($font_index, $slant) {}
  * @param tightness int[optional]
  * @param angle float[optional]
  * @param antialias_steps int[optional]
- * @return array
+ * @return array 
  */
 function imagepstext ($image, $text, $font, $size, $foreground, $background, $x, $y, $space = null, $tightness = null, $angle = null, $antialias_steps = null) {}
 
@@ -17054,7 +18190,7 @@ function imagetypes () {}
  * @param dest_height int
  * @param dest_width int
  * @param threshold int
- * @return bool
+ * @return bool 
  */
 function jpeg2wbmp ($jpegname, $wbmpname, $dest_height, $dest_width, $threshold) {}
 
@@ -17066,7 +18202,7 @@ function jpeg2wbmp ($jpegname, $wbmpname, $dest_height, $dest_width, $threshold)
  * @param dest_height int
  * @param dest_width int
  * @param threshold int
- * @return bool
+ * @return bool 
  */
 function png2wbmp ($pngname, $wbmpname, $dest_height, $dest_width, $threshold) {}
 
@@ -17076,7 +18212,7 @@ function png2wbmp ($pngname, $wbmpname, $dest_height, $dest_width, $threshold) {
  * @param image resource
  * @param filename string[optional]
  * @param threshold int[optional]
- * @return bool
+ * @return bool 
  */
 function image2wbmp ($image, $filename = null, $threshold = null) {}
 
@@ -17085,7 +18221,7 @@ function image2wbmp ($image, $filename = null, $threshold = null) {}
  * @link http://php.net/manual/en/function.imagelayereffect.php
  * @param image resource
  * @param effect int
- * @return bool
+ * @return bool 
  */
 function imagelayereffect ($image, $effect) {}
 
@@ -17094,7 +18230,7 @@ function imagelayereffect ($image, $effect) {}
  * @link http://php.net/manual/en/function.imagecolormatch.php
  * @param image1 resource
  * @param image2 resource
- * @return bool
+ * @return bool 
  */
 function imagecolormatch ($image1, $image2) {}
 
@@ -17104,7 +18240,7 @@ function imagecolormatch ($image1, $image2) {}
  * @param image resource
  * @param filename string
  * @param foreground int[optional]
- * @return bool
+ * @return bool 
  */
 function imagexbm ($image, $filename, $foreground = null) {}
 
@@ -17116,7 +18252,7 @@ function imagexbm ($image, $filename, $foreground = null) {}
  * @param arg1 int[optional]
  * @param arg2 int[optional]
  * @param arg3 int[optional]
- * @return bool
+ * @return bool 
  */
 function imagefilter ($image, $filtertype, $arg1 = null, $arg2 = null, $arg3 = null) {}
 
@@ -17127,7 +18263,7 @@ function imagefilter ($image, $filtertype, $arg1 = null, $arg2 = null, $arg3 = n
  * @param matrix array
  * @param div float
  * @param offset float
- * @return bool
+ * @return bool 
  */
 function imageconvolution ($image, array $matrix, $div, $offset) {}
 
@@ -17197,7 +18333,7 @@ function iconv ($in_charset, $out_charset, $str) {}
  * @link http://php.net/manual/en/function.ob-iconv-handler.php
  * @param contents string
  * @param status int
- * @return string
+ * @return string 
  */
 function ob_iconv_handler ($contents, $status) {}
 
@@ -17214,7 +18350,7 @@ function iconv_get_encoding ($type = null) {}
  * @link http://php.net/manual/en/function.iconv-set-encoding.php
  * @param type string
  * @param charset string
- * @return bool
+ * @return bool 
  */
 function iconv_set_encoding ($type, $charset) {}
 
@@ -17285,7 +18421,7 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
  * @param encoded_headers string
  * @param mode int[optional]
  * @param charset string[optional]
- * @return array
+ * @return array 
  */
 function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = null) {}
 
@@ -17391,7 +18527,7 @@ function mb_strpos () {}
  * @param needle string
  * @param offset int[optional]
  * @param encoding string[optional]
- * @return int
+ * @return int 
  */
 function mb_strrpos ($haystack, $needle, $offset = null, $encoding = null) {}
 
@@ -17402,7 +18538,7 @@ function mb_strrpos ($haystack, $needle, $offset = null, $encoding = null) {}
  * @param needle string
  * @param offset int[optional]
  * @param encoding string[optional]
- * @return int
+ * @return int 
  */
 function mb_stripos ($haystack, $needle, $offset = null, $encoding = null) {}
 
@@ -17413,7 +18549,7 @@ function mb_stripos ($haystack, $needle, $offset = null, $encoding = null) {}
  * @param needle string
  * @param offset int[optional]
  * @param encoding string[optional]
- * @return int
+ * @return int 
  */
 function mb_strripos ($haystack, $needle, $offset = null, $encoding = null) {}
 
@@ -17560,7 +18696,7 @@ function mb_get_info () {}
  * @link http://php.net/manual/en/function.mb-check-encoding.php
  * @param var string[optional]
  * @param encoding string[optional]
- * @return bool
+ * @return bool 
  */
 function mb_check_encoding ($var = null, $encoding = null) {}
 
@@ -18061,7 +19197,7 @@ class SWFVideoStream  {
  * Set cubic threshold
  * @link http://php.net/manual/en/function.ming-setcubicthreshold.php
  * @param threshold int
- * @return void
+ * @return void 
  */
 function ming_setcubicthreshold ($threshold) {}
 
@@ -18069,7 +19205,7 @@ function ming_setcubicthreshold ($threshold) {}
  * Set scale
  * @link http://php.net/manual/en/function.ming-setscale.php
  * @param scale int
- * @return void
+ * @return void 
  */
 function ming_setscale ($scale) {}
 
@@ -18077,7 +19213,7 @@ function ming_setscale ($scale) {}
  * Sets the SWF version
  * @link http://php.net/manual/en/function.ming-useswfversion.php
  * @param version int
- * @return void
+ * @return void 
  */
 function ming_useswfversion ($version) {}
 
@@ -18085,7 +19221,7 @@ function ming_useswfversion ($version) {}
  * Returns the action flag for keyPress(char)
  * @link http://php.net/manual/en/function.ming-keypress.php
  * @param char string
- * @return int
+ * @return int 
  */
 function ming_keypress ($char) {}
 
@@ -18093,7 +19229,7 @@ function ming_keypress ($char) {}
  * Use constant pool
  * @link http://php.net/manual/en/function.ming-useconstants.php
  * @param use int
- * @return void
+ * @return void 
  */
 function ming_useconstants ($use) {}
 
@@ -18101,7 +19237,7 @@ function ming_useconstants ($use) {}
  * Sets the SWF output compression
  * @link http://php.net/manual/en/function.ming-setswfcompression.php
  * @param level int
- * @return void
+ * @return void 
  */
 function ming_setswfcompression ($level) {}
 
@@ -18176,7 +19312,7 @@ define ('SWF_SOUND_STEREO', 1);
  * @param flags string
  * @param mode int
  * @param size int
- * @return int
+ * @return int 
  */
 function shmop_open ($key, $flags, $mode, $size) {}
 
@@ -18194,7 +19330,7 @@ function shmop_read ($shmid, $start, $count) {}
  * Close shared memory block
  * @link http://php.net/manual/en/function.shmop-close.php
  * @param shmid int
- * @return void
+ * @return void 
  */
 function shmop_close ($shmid) {}
 
@@ -18212,7 +19348,7 @@ function shmop_size ($shmid) {}
  * @param shmid int
  * @param data string
  * @param offset int
- * @return int
+ * @return int 
  */
 function shmop_write ($shmid, $data, $offset) {}
 
@@ -18220,7 +19356,7 @@ function shmop_write ($shmid, $data, $offset) {}
  * Delete shared memory block
  * @link http://php.net/manual/en/function.shmop-delete.php
  * @param shmid int
- * @return bool
+ * @return bool 
  */
 function shmop_delete ($shmid) {}
 
@@ -18406,7 +19542,7 @@ function sqlite_popen ($filename, $mode = null, &$error_message = null) {}
  * Closes an open SQLite database
  * @link http://php.net/manual/en/function.sqlite-close.php
  * @param dbhandle resource
- * @return void
+ * @return void 
  */
 function sqlite_close ($dbhandle) {}
 
@@ -18416,7 +19552,7 @@ function sqlite_close ($dbhandle) {}
  * @param query string
  * @param result_type int[optional]
  * @param error_msg string[optional]
- * @return SQLiteResult
+ * @return SQLiteResult 
  */
 function sqlite_query ($query, $result_type = null, &$error_msg = null) {}
 
@@ -18425,7 +19561,7 @@ function sqlite_query ($query, $result_type = null, &$error_msg = null) {}
  * @link http://php.net/manual/en/function.sqlite-exec.php
  * @param query string
  * @param error_msg string[optional]
- * @return bool
+ * @return bool 
  */
 function sqlite_exec ($query, &$error_msg = null) {}
 
@@ -18445,7 +19581,7 @@ function sqlite_array_query ($query, $result_type = null, $decode_binary = null)
  * @param query string
  * @param first_row_only bool[optional]
  * @param decode_binary bool[optional]
- * @return array
+ * @return array 
  */
 function sqlite_single_query ($query, $first_row_only = null, $decode_binary = null) {}
 
@@ -18464,7 +19600,7 @@ function sqlite_fetch_array ($result_type = null, $decode_binary = null) {}
  * @param class_name string[optional]
  * @param ctor_params array[optional]
  * @param decode_binary bool[optional]
- * @return object
+ * @return object 
  */
 function sqlite_fetch_object ($class_name = null, array $ctor_params = null, $decode_binary = null) {}
 
@@ -18472,7 +19608,7 @@ function sqlite_fetch_object ($class_name = null, array $ctor_params = null, $de
  * Fetches the first column of a result set as a string
  * @link http://php.net/manual/en/function.sqlite-fetch-single.php
  * @param decode_binary bool[optional]
- * @return string
+ * @return string 
  */
 function sqlite_fetch_single ($decode_binary = null) {}
 
@@ -18505,21 +19641,21 @@ function sqlite_current ($result_type = null, $decode_binary = null) {}
  * @link http://php.net/manual/en/function.sqlite-column.php
  * @param index_or_name mixed
  * @param decode_binary bool[optional]
- * @return mixed
+ * @return mixed 
  */
 function sqlite_column ($index_or_name, $decode_binary = null) {}
 
 /**
  * Returns the version of the linked SQLite library
  * @link http://php.net/manual/en/function.sqlite-libversion.php
- * @return string
+ * @return string 
  */
 function sqlite_libversion () {}
 
 /**
  * Returns the encoding of the linked SQLite library
  * @link http://php.net/manual/en/function.sqlite-libencoding.php
- * @return string
+ * @return string 
  */
 function sqlite_libencoding () {}
 
@@ -18527,28 +19663,28 @@ function sqlite_libencoding () {}
  * Returns the number of rows that were changed by the most
    recent SQL statement
  * @link http://php.net/manual/en/function.sqlite-changes.php
- * @return int
+ * @return int 
  */
 function sqlite_changes () {}
 
 /**
  * Returns the rowid of the most recently inserted row
  * @link http://php.net/manual/en/function.sqlite-last-insert-rowid.php
- * @return int
+ * @return int 
  */
 function sqlite_last_insert_rowid () {}
 
 /**
  * Returns the number of rows in a buffered result set
  * @link http://php.net/manual/en/function.sqlite-num-rows.php
- * @return int
+ * @return int 
  */
 function sqlite_num_rows () {}
 
 /**
  * Returns the number of fields in a result set
  * @link http://php.net/manual/en/function.sqlite-num-fields.php
- * @return int
+ * @return int 
  */
 function sqlite_num_fields () {}
 
@@ -18615,7 +19751,7 @@ function sqlite_has_prev () {}
  * Escapes a string for use as a query parameter
  * @link http://php.net/manual/en/function.sqlite-escape-string.php
  * @param item string
- * @return string
+ * @return string 
  */
 function sqlite_escape_string ($item) {}
 
@@ -18623,14 +19759,14 @@ function sqlite_escape_string ($item) {}
  * Set busy timeout duration, or disable busy handlers
  * @link http://php.net/manual/en/function.sqlite-busy-timeout.php
  * @param milliseconds int
- * @return void
+ * @return void 
  */
 function sqlite_busy_timeout ($milliseconds) {}
 
 /**
  * Returns the error code of the last error for a database
  * @link http://php.net/manual/en/function.sqlite-last-error.php
- * @return int
+ * @return int 
  */
 function sqlite_last_error () {}
 
@@ -18638,7 +19774,7 @@ function sqlite_last_error () {}
  * Returns the textual description of an error code
  * @link http://php.net/manual/en/function.sqlite-error-string.php
  * @param error_code int
- * @return string
+ * @return string 
  */
 function sqlite_error_string ($error_code) {}
 
@@ -18659,7 +19795,7 @@ function sqlite_unbuffered_query ($query, $result_type = null, &$error_msg = nul
  * @param step_func callback
  * @param finalize_func callback
  * @param num_args int[optional]
- * @return void
+ * @return void 
  */
 function sqlite_create_aggregate ($function_name, $step_func, $finalize_func, $num_args = null) {}
 
@@ -18669,7 +19805,7 @@ function sqlite_create_aggregate ($function_name, $step_func, $finalize_func, $n
  * @param function_name string
  * @param callback callback
  * @param num_args int[optional]
- * @return void
+ * @return void 
  */
 function sqlite_create_function ($function_name, $callback, $num_args = null) {}
 
@@ -18687,7 +19823,7 @@ function sqlite_factory ($filename, $mode = null, &$error_message = null) {}
  * Encode binary data before returning it from an UDF
  * @link http://php.net/manual/en/function.sqlite-udf-encode-binary.php
  * @param data string
- * @return string
+ * @return string 
  */
 function sqlite_udf_encode_binary ($data) {}
 
@@ -18695,7 +19831,7 @@ function sqlite_udf_encode_binary ($data) {}
  * Decode binary data passed as parameters to an UDF
  * @link http://php.net/manual/en/function.sqlite-udf-decode-binary.php
  * @param data string
- * @return string
+ * @return string 
  */
 function sqlite_udf_decode_binary ($data) {}
 
@@ -18708,36 +19844,184 @@ function sqlite_udf_decode_binary ($data) {}
  */
 function sqlite_fetch_column_types ($table_name, $result_type = null) {}
 
+
+/**
+ * Columns are returned into the array having both a numerical index
+ * and the field name as the array index.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_BOTH', 3);
+
+/**
+ * Columns are returned into the array having a numerical index to the
+ * fields. This index starts with 0, the first field in the result.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NUM', 2);
+
+/**
+ * Columns are returned into the array having the field name as the array
+ * index.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_ASSOC', 1);
+
+/**
+ * Successful result.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_OK', 0);
+
+/**
+ * SQL error or missing database.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_ERROR', 1);
+
+/**
+ * An internal logic error in SQLite.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_INTERNAL', 2);
+
+/**
+ * Access permission denied.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_PERM', 3);
+
+/**
+ * Callback routine requested an abort.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_ABORT', 4);
+
+/**
+ * The database file is locked.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_BUSY', 5);
+
+/**
+ * A table in the database is locked.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_LOCKED', 6);
+
+/**
+ * Memory allocation failed.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NOMEM', 7);
+
+/**
+ * Attempt to write a readonly database.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_READONLY', 8);
+
+/**
+ * Operation terminated internally.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_INTERRUPT', 9);
+
+/**
+ * Disk I/O error occurred.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_IOERR', 10);
+
+/**
+ * The database disk image is malformed.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_CORRUPT', 11);
+
+/**
+ * (Internal) Table or record not found.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NOTFOUND', 12);
+
+/**
+ * Insertion failed because database is full.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_FULL', 13);
+
+/**
+ * Unable to open the database file.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_CANTOPEN', 14);
+
+/**
+ * Database lock protocol error.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_PROTOCOL', 15);
+
+/**
+ * (Internal) Database table is empty.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_EMPTY', 16);
+
+/**
+ * The database schema changed.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_SCHEMA', 17);
+
+/**
+ * Too much data for one row of a table.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_TOOBIG', 18);
+
+/**
+ * Abort due to constraint violation.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_CONSTRAINT', 19);
+
+/**
+ * Data type mismatch.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_MISMATCH', 20);
+
+/**
+ * Library used incorrectly.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_MISUSE', 21);
+
+/**
+ * Uses of OS features not supported on host.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NOLFS', 22);
+
+/**
+ * Authorized failed.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_AUTH', 23);
 define ('SQLITE_NOTADB', 26);
 define ('SQLITE_FORMAT', 24);
+
+/**
+ * Internal process has another row ready.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_ROW', 100);
+
+/**
+ * Internal process has finished executing.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_DONE', 101);
 
 // End of SQLite v.2.0-dev
@@ -18758,7 +20042,7 @@ function shm_attach ($key, $memsize = null, $perm = null) {}
  * Removes shared memory from Unix systems
  * @link http://php.net/manual/en/function.shm-remove.php
  * @param shm_identifier int
- * @return bool
+ * @return bool 
  */
 function shm_remove ($shm_identifier) {}
 
@@ -18766,7 +20050,7 @@ function shm_remove ($shm_identifier) {}
  * Disconnects from shared memory segment
  * @link http://php.net/manual/en/function.shm-detach.php
  * @param shm_identifier int
- * @return bool
+ * @return bool 
  */
 function shm_detach ($shm_identifier) {}
 
@@ -18776,7 +20060,7 @@ function shm_detach ($shm_identifier) {}
  * @param shm_identifier int
  * @param variable_key int
  * @param variable mixed
- * @return bool
+ * @return bool 
  */
 function shm_put_var ($shm_identifier, $variable_key, $variable) {}
 
@@ -18794,7 +20078,7 @@ function shm_get_var ($shm_identifier, $variable_key) {}
  * @link http://php.net/manual/en/function.shm-remove-var.php
  * @param shm_identifier int
  * @param variable_key int
- * @return bool
+ * @return bool 
  */
 function shm_remove_var ($shm_identifier, $variable_key) {}
 
@@ -18833,7 +20117,7 @@ class XMLReader  {
 	/**
 	 * Close the XMLReader input
 	 * @link http://php.net/manual/en/function.xmlreader-close.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function close () {}
 
@@ -18841,7 +20125,7 @@ class XMLReader  {
 	 * Get the value of a named attribute
 	 * @link http://php.net/manual/en/function.xmlreader-getattribute.php
 	 * @param name string
-	 * @return string
+	 * @return string 
 	 */
 	public function getAttribute ($name) {}
 
@@ -18849,7 +20133,7 @@ class XMLReader  {
 	 * Get the value of an attribute by index
 	 * @link http://php.net/manual/en/function.xmlreader-getattributeno.php
 	 * @param index int
-	 * @return string
+	 * @return string 
 	 */
 	public function getAttributeNo ($index) {}
 
@@ -18858,7 +20142,7 @@ class XMLReader  {
 	 * @link http://php.net/manual/en/function.xmlreader-getattributens.php
 	 * @param localName string
 	 * @param namespaceURI string
-	 * @return string
+	 * @return string 
 	 */
 	public function getAttributeNs ($localName, $namespaceURI) {}
 
@@ -18866,14 +20150,14 @@ class XMLReader  {
 	 * Indicates if specified property has been set
 	 * @link http://php.net/manual/en/function.xmlreader-getparserproperty.php
 	 * @param property int
-	 * @return bool
+	 * @return bool 
 	 */
 	public function getParserProperty ($property) {}
 
 	/**
 	 * Indicates if the parsed document is valid
 	 * @link http://php.net/manual/en/function.xmlreader-isvalid.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function isValid () {}
 
@@ -18881,7 +20165,7 @@ class XMLReader  {
 	 * Lookup namespace for a prefix
 	 * @link http://php.net/manual/en/function.xmlreader-lookupnamespace.php
 	 * @param prefix string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function lookupNamespace ($prefix) {}
 
@@ -18889,7 +20173,7 @@ class XMLReader  {
 	 * Move cursor to an attribute by index
 	 * @link http://php.net/manual/en/function.xmlreader-movetoattributeno.php
 	 * @param index int
-	 * @return bool
+	 * @return bool 
 	 */
 	public function moveToAttributeNo ($index) {}
 
@@ -18897,7 +20181,7 @@ class XMLReader  {
 	 * Move cursor to a named attribute
 	 * @link http://php.net/manual/en/function.xmlreader-movetoattribute.php
 	 * @param name string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function moveToAttribute ($name) {}
 
@@ -18906,28 +20190,28 @@ class XMLReader  {
 	 * @link http://php.net/manual/en/function.xmlreader-movetoattributens.php
 	 * @param localName string
 	 * @param namespaceURI string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function moveToAttributeNs ($localName, $namespaceURI) {}
 
 	/**
 	 * Position cursor on the parent Element of current Attribute
 	 * @link http://php.net/manual/en/function.xmlreader-movetoelement.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function moveToElement () {}
 
 	/**
 	 * Position cursor on the first Attribute
 	 * @link http://php.net/manual/en/function.xmlreader-movetofirstattribute.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function moveToFirstAttribute () {}
 
 	/**
 	 * Position cursor on the next Attribute
 	 * @link http://php.net/manual/en/function.xmlreader-movetonextattribute.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function moveToNextAttribute () {}
 
@@ -18937,14 +20221,14 @@ class XMLReader  {
 	 * @param URI string
 	 * @param encoding string[optional]
 	 * @param options int[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function open ($URI, $encoding = null, $options = null) {}
 
 	/**
 	 * Move to next node in document
 	 * @link http://php.net/manual/en/function.xmlreader-read.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function read () {}
 
@@ -18952,7 +20236,7 @@ class XMLReader  {
 	 * Move cursor to next node skipping all subtrees
 	 * @link http://php.net/manual/en/function.xmlreader-next.php
 	 * @param localname string[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function next ($localname = null) {}
 
@@ -18972,7 +20256,7 @@ class XMLReader  {
 	 * @link http://php.net/manual/en/function.xmlreader-setparserproperty.php
 	 * @param property int
 	 * @param value bool
-	 * @return bool
+	 * @return bool 
 	 */
 	public function setParserProperty ($property, $value) {}
 
@@ -18980,7 +20264,7 @@ class XMLReader  {
 	 * Set the filename or URI for a RelaxNG Schema
 	 * @link http://php.net/manual/en/function.xmlreader-setrelaxngschema.php
 	 * @param filename string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function setRelaxNGSchema ($filename) {}
 
@@ -18988,7 +20272,7 @@ class XMLReader  {
 	 * Set the data containing a RelaxNG Schema
 	 * @link http://php.net/manual/en/function.xmlreader-setrelaxngschemasource.php
 	 * @param source string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function setRelaxNGSchemaSource ($source) {}
 
@@ -18998,14 +20282,14 @@ class XMLReader  {
 	 * @param source string
 	 * @param encoding string[optional]
 	 * @param options int[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function XML ($source, $encoding = null, $options = null) {}
 
 	/**
 	 * Returns a copy of the current node as a DOM object
 	 * @link http://php.net/manual/en/function.xmlreader-expand.php
-	 * @return DOMNode
+	 * @return DOMNode 
 	 */
 	public function expand () {}
 
@@ -19072,7 +20356,7 @@ class ZipArchive  {
 	/**
 	 * Close the active archive (opened or newly created)
 	 * @link http://php.net/manual/en/function.ziparchive-close.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function close () {}
 
@@ -19080,7 +20364,7 @@ class ZipArchive  {
 	 * Add a new directory
 	 * @link http://php.net/manual/en/function.ziparchive-addemptydir.php
 	 * @param dirname string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function addEmptyDir ($dirname) {}
 
@@ -19089,7 +20373,7 @@ class ZipArchive  {
 	 * @link http://php.net/manual/en/function.ziparchive-addfromstring.php
 	 * @param localname string
 	 * @param contents string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function addFromString ($localname, $contents) {}
 
@@ -19098,7 +20382,7 @@ class ZipArchive  {
 	 * @link http://php.net/manual/en/function.ziparchive-addfile.php
 	 * @param filename string
 	 * @param localname string[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function addFile ($filename, $localname = null) {}
 
@@ -19107,7 +20391,7 @@ class ZipArchive  {
 	 * @link http://php.net/manual/en/function.ziparchive-renameindex.php
 	 * @param index int
 	 * @param newname string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function renameIndex ($index, $newname) {}
 
@@ -19116,7 +20400,7 @@ class ZipArchive  {
 	 * @link http://php.net/manual/en/function.ziparchive-renamename.php
 	 * @param name string
 	 * @param newname string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function renameName ($name, $newname) {}
 
@@ -19124,7 +20408,7 @@ class ZipArchive  {
 	 * Set the comment of a ZIP archive
 	 * @link http://php.net/manual/en/function.ziparchive-setarchivecomment.php
 	 * @param comment string
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function setArchiveComment ($comment) {}
 
@@ -19140,7 +20424,7 @@ class ZipArchive  {
 	 * @link http://php.net/manual/en/function.ziparchive-setcommentindex.php
 	 * @param index int
 	 * @param comment string
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function setCommentIndex ($index, $comment) {}
 
@@ -19149,7 +20433,7 @@ class ZipArchive  {
 	 * @link http://php.net/manual/en/function.ziparchive-setCommentName.php
 	 * @param name string
 	 * @param comment string
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function setCommentName ($name, $comment) {}
 
@@ -19175,7 +20459,7 @@ class ZipArchive  {
 	 * delete an entry in the archive using its index
 	 * @link http://php.net/manual/en/function.ziparchive-deleteindex.php
 	 * @param index int
-	 * @return bool
+	 * @return bool 
 	 */
 	public function deleteIndex ($index) {}
 
@@ -19183,7 +20467,7 @@ class ZipArchive  {
 	 * delete an entry in the archive using its name
 	 * @link http://php.net/manual/en/function.ziparchive-deletename.php
 	 * @param name string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function deleteName ($name) {}
 
@@ -19225,14 +20509,14 @@ class ZipArchive  {
 	/**
 	 * Revert all global changes done in the archive.
 	 * @link http://php.net/manual/en/function.ziparchive-unchangearchive.php
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function unchangeArchive () {}
 
 	/**
 	 * Undo all changes done in the archive.
 	 * @link http://php.net/manual/en/function.ziparchive-unchangeall.php
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function unchangeAll () {}
 
@@ -19240,7 +20524,7 @@ class ZipArchive  {
 	 * Revert all changes done to an entry at the given index.
 	 * @link http://php.net/manual/en/function.ziparchive-unchangeindex.php
 	 * @param index int
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function unchangeIndex ($index) {}
 
@@ -19248,7 +20532,7 @@ class ZipArchive  {
 	 * Revert all changes done to an entry with the given name.
 	 * @link http://php.net/manual/en/function.ziparchive-unchangename.php
 	 * @param name string
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function unchangeName ($name) {}
 
@@ -19257,7 +20541,7 @@ class ZipArchive  {
 	 * @link http://php.net/manual/en/function.ziparchive-extractto.php
 	 * @param destination string
 	 * @param entries mixed[optional]
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function extractTo ($destination, $entries = null) {}
 
@@ -19301,7 +20585,7 @@ function zip_open ($filename) {}
  * Close a ZIP file archive
  * @link http://php.net/manual/en/function.zip-close.php
  * @param zip resource
- * @return void
+ * @return void 
  */
 function zip_close ($zip) {}
 
@@ -19319,7 +20603,7 @@ function zip_read ($zip) {}
  * @param zip resource
  * @param zip_entry resource
  * @param mode string[optional]
- * @return bool
+ * @return bool 
  */
 function zip_entry_open ($zip, $zip_entry, $mode = null) {}
 
@@ -19327,7 +20611,7 @@ function zip_entry_open ($zip, $zip_entry, $mode = null) {}
  * Close a directory entry
  * @link http://php.net/manual/en/function.zip-entry-close.php
  * @param zip_entry resource
- * @return bool
+ * @return bool 
  */
 function zip_entry_close ($zip_entry) {}
 
@@ -19344,7 +20628,7 @@ function zip_entry_read ($zip_entry, $length = null) {}
  * Retrieve the actual file size of a directory entry
  * @link http://php.net/manual/en/function.zip-entry-filesize.php
  * @param zip_entry resource
- * @return int
+ * @return int 
  */
 function zip_entry_filesize ($zip_entry) {}
 
@@ -19352,7 +20636,7 @@ function zip_entry_filesize ($zip_entry) {}
  * Retrieve the name of a directory entry
  * @link http://php.net/manual/en/function.zip-entry-name.php
  * @param zip_entry resource
- * @return string
+ * @return string 
  */
 function zip_entry_name ($zip_entry) {}
 
@@ -19360,7 +20644,7 @@ function zip_entry_name ($zip_entry) {}
  * Retrieve the compressed size of a directory entry
  * @link http://php.net/manual/en/function.zip-entry-compressedsize.php
  * @param zip_entry resource
- * @return int
+ * @return int 
  */
 function zip_entry_compressedsize ($zip_entry) {}
 
@@ -19368,7 +20652,7 @@ function zip_entry_compressedsize ($zip_entry) {}
  * Retrieve the compression method of a directory entry
  * @link http://php.net/manual/en/function.zip-entry-compressionmethod.php
  * @param zip_entry resource
- * @return string
+ * @return string 
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
@@ -19380,7 +20664,7 @@ function zip_entry_compressionmethod ($zip_entry) {}
  * Converts Julian Day Count to Gregorian date
  * @link http://php.net/manual/en/function.jdtogregorian.php
  * @param julianday int
- * @return string
+ * @return string 
  */
 function jdtogregorian ($julianday) {}
 
@@ -19390,7 +20674,7 @@ function jdtogregorian ($julianday) {}
  * @param month int
  * @param day int
  * @param year int
- * @return int
+ * @return int 
  */
 function gregoriantojd ($month, $day, $year) {}
 
@@ -19398,7 +20682,7 @@ function gregoriantojd ($month, $day, $year) {}
  * Converts a Julian Day Count to a Julian Calendar Date
  * @link http://php.net/manual/en/function.jdtojulian.php
  * @param julianday int
- * @return string
+ * @return string 
  */
 function jdtojulian ($julianday) {}
 
@@ -19408,7 +20692,7 @@ function jdtojulian ($julianday) {}
  * @param month int
  * @param day int
  * @param year int
- * @return int
+ * @return int 
  */
 function juliantojd ($month, $day, $year) {}
 
@@ -19418,7 +20702,7 @@ function juliantojd ($month, $day, $year) {}
  * @param juliandaycount int
  * @param hebrew bool[optional]
  * @param fl int[optional]
- * @return string
+ * @return string 
  */
 function jdtojewish ($juliandaycount, $hebrew = null, $fl = null) {}
 
@@ -19428,7 +20712,7 @@ function jdtojewish ($juliandaycount, $hebrew = null, $fl = null) {}
  * @param month int
  * @param day int
  * @param year int
- * @return int
+ * @return int 
  */
 function jewishtojd ($month, $day, $year) {}
 
@@ -19436,7 +20720,7 @@ function jewishtojd ($month, $day, $year) {}
  * Converts a Julian Day Count to the French Republican Calendar
  * @link http://php.net/manual/en/function.jdtofrench.php
  * @param juliandaycount int
- * @return string
+ * @return string 
  */
 function jdtofrench ($juliandaycount) {}
 
@@ -19446,7 +20730,7 @@ function jdtofrench ($juliandaycount) {}
  * @param month int
  * @param day int
  * @param year int
- * @return int
+ * @return int 
  */
 function frenchtojd ($month, $day, $year) {}
 
@@ -19455,7 +20739,7 @@ function frenchtojd ($month, $day, $year) {}
  * @link http://php.net/manual/en/function.jddayofweek.php
  * @param julianday int
  * @param mode int[optional]
- * @return mixed
+ * @return mixed 
  */
 function jddayofweek ($julianday, $mode = null) {}
 
@@ -19464,7 +20748,7 @@ function jddayofweek ($julianday, $mode = null) {}
  * @link http://php.net/manual/en/function.jdmonthname.php
  * @param julianday int
  * @param mode int
- * @return string
+ * @return string 
  */
 function jdmonthname ($julianday, $mode) {}
 
@@ -19472,7 +20756,7 @@ function jdmonthname ($julianday, $mode) {}
  * Get Unix timestamp for midnight on Easter of a given year
  * @link http://php.net/manual/en/function.easter-date.php
  * @param year int[optional]
- * @return int
+ * @return int 
  */
 function easter_date ($year = null) {}
 
@@ -19481,7 +20765,7 @@ function easter_date ($year = null) {}
  * @link http://php.net/manual/en/function.easter-days.php
  * @param year int[optional]
  * @param method int[optional]
- * @return int
+ * @return int 
  */
 function easter_days ($year = null, $method = null) {}
 
@@ -19489,7 +20773,7 @@ function easter_days ($year = null, $method = null) {}
  * Convert Unix timestamp to Julian Day
  * @link http://php.net/manual/en/function.unixtojd.php
  * @param timestamp int[optional]
- * @return int
+ * @return int 
  */
 function unixtojd ($timestamp = null) {}
 
@@ -19497,7 +20781,7 @@ function unixtojd ($timestamp = null) {}
  * Convert Julian Day to Unix timestamp
  * @link http://php.net/manual/en/function.jdtounix.php
  * @param jday int
- * @return int
+ * @return int 
  */
 function jdtounix ($jday) {}
 
@@ -19508,7 +20792,7 @@ function jdtounix ($jday) {}
  * @param month int
  * @param day int
  * @param year int
- * @return int
+ * @return int 
  */
 function cal_to_jd ($calendar, $month, $day, $year) {}
 
@@ -19527,7 +20811,7 @@ function cal_from_jd ($jd, $calendar) {}
  * @param calendar int
  * @param month int
  * @param year int
- * @return int
+ * @return int 
  */
 function cal_days_in_month ($calendar, $month, $year) {}
 
@@ -19535,7 +20819,7 @@ function cal_days_in_month ($calendar, $month, $year) {}
  * Returns information about a particular calendar
  * @link http://php.net/manual/en/function.cal-info.php
  * @param calendar int[optional]
- * @return array
+ * @return array 
  */
 function cal_info ($calendar = null) {}
 
@@ -19563,7 +20847,7 @@ define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
 // End of calendar v.
 
-// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.19 2007/10/11 10:15:38 mspector Exp $
+// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.20 2007/10/12 09:17:39 mspector Exp $
 
 /**
  * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
@@ -19572,7 +20856,7 @@ define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
  * @param sections string[optional]
  * @param arrays bool[optional]
  * @param thumbnail bool[optional]
- * @return array
+ * @return array 
  */
 function exif_read_data ($filename, $sections = null, $arrays = null, $thumbnail = null) {}
 
@@ -19601,7 +20885,7 @@ function exif_tagname ($index) {}
  * @param width int[optional]
  * @param height int[optional]
  * @param imagetype int[optional]
- * @return string the embedded thumbnail, or false if the image contains no 
+ * @return string the embedded thumbnail, or false if the image contains no
  */
 function exif_thumbnail ($filename, &$width = null, &$height = null, &$imagetype = null) {}
 
@@ -19609,13 +20893,13 @@ function exif_thumbnail ($filename, &$width = null, &$height = null, &$imagetype
  * Determine the type of an image
  * @link http://php.net/manual/en/function.exif-imagetype.php
  * @param filename string
- * @return int
+ * @return int 
  */
 function exif_imagetype ($filename) {}
 
 define ('EXIF_USE_MBSTRING', 0);
 
-// End of exif v.1.4 $Id: phpFunctions5.php,v 1.19 2007/10/11 10:15:38 mspector Exp $
+// End of exif v.1.4 $Id: phpFunctions5.php,v 1.20 2007/10/12 09:17:39 mspector Exp $
 
 // Start of gmp v.
 
@@ -19624,7 +20908,7 @@ define ('EXIF_USE_MBSTRING', 0);
  * @link http://php.net/manual/en/function.gmp-init.php
  * @param number mixed
  * @param base int[optional]
- * @return resource
+ * @return resource 
  */
 function gmp_init ($number, $base = null) {}
 
@@ -19632,7 +20916,7 @@ function gmp_init ($number, $base = null) {}
  * Convert GMP number to integer
  * @link http://php.net/manual/en/function.gmp-intval.php
  * @param gmpnumber resource
- * @return int
+ * @return int 
  */
 function gmp_intval ($gmpnumber) {}
 
@@ -19641,7 +20925,7 @@ function gmp_intval ($gmpnumber) {}
  * @link http://php.net/manual/en/function.gmp-strval.php
  * @param gmpnumber resource
  * @param base int[optional]
- * @return string
+ * @return string 
  */
 function gmp_strval ($gmpnumber, $base = null) {}
 
@@ -19650,7 +20934,7 @@ function gmp_strval ($gmpnumber, $base = null) {}
  * @link http://php.net/manual/en/function.gmp-add.php
  * @param a resource
  * @param b resource
- * @return resource
+ * @return resource 
  */
 function gmp_add ($a, $b) {}
 
@@ -19659,7 +20943,7 @@ function gmp_add ($a, $b) {}
  * @link http://php.net/manual/en/function.gmp-sub.php
  * @param a resource
  * @param b resource
- * @return resource
+ * @return resource 
  */
 function gmp_sub ($a, $b) {}
 
@@ -19668,7 +20952,7 @@ function gmp_sub ($a, $b) {}
  * @link http://php.net/manual/en/function.gmp-mul.php
  * @param a resource
  * @param b resource
- * @return resource
+ * @return resource 
  */
 function gmp_mul ($a, $b) {}
 
@@ -19688,7 +20972,7 @@ function gmp_div_qr ($n, $d, $round = null) {}
  * @param a resource
  * @param b resource
  * @param round int[optional]
- * @return resource
+ * @return resource 
  */
 function gmp_div_q ($a, $b, $round = null) {}
 
@@ -19698,7 +20982,7 @@ function gmp_div_q ($a, $b, $round = null) {}
  * @param n resource
  * @param d resource
  * @param round int[optional]
- * @return resource
+ * @return resource 
  */
 function gmp_div_r ($n, $d, $round = null) {}
 
@@ -19716,7 +21000,7 @@ function gmp_div ($a, $b, $round) {}
  * @link http://php.net/manual/en/function.gmp-mod.php
  * @param n resource
  * @param d resource
- * @return resource
+ * @return resource 
  */
 function gmp_mod ($n, $d) {}
 
@@ -19725,7 +21009,7 @@ function gmp_mod ($n, $d) {}
  * @link http://php.net/manual/en/function.gmp-divexact.php
  * @param n resource
  * @param d resource
- * @return resource
+ * @return resource 
  */
 function gmp_divexact ($n, $d) {}
 
@@ -19749,7 +21033,7 @@ function gmp_abs ($a) {}
  * Factorial
  * @link http://php.net/manual/en/function.gmp-fact.php
  * @param a int
- * @return resource
+ * @return resource 
  */
 function gmp_fact ($a) {}
 
@@ -19757,7 +21041,7 @@ function gmp_fact ($a) {}
  * Calculate square root
  * @link http://php.net/manual/en/function.gmp-sqrt.php
  * @param a resource
- * @return resource
+ * @return resource 
  */
 function gmp_sqrt ($a) {}
 
@@ -19774,7 +21058,7 @@ function gmp_sqrtrem ($a) {}
  * @link http://php.net/manual/en/function.gmp-pow.php
  * @param base resource
  * @param exp int
- * @return resource
+ * @return resource 
  */
 function gmp_pow ($base, $exp) {}
 
@@ -19784,7 +21068,7 @@ function gmp_pow ($base, $exp) {}
  * @param base resource
  * @param exp resource
  * @param mod resource
- * @return resource
+ * @return resource 
  */
 function gmp_powm ($base, $exp, $mod) {}
 
@@ -19801,7 +21085,7 @@ function gmp_perfect_square ($a) {}
  * @link http://php.net/manual/en/function.gmp-prob-prime.php
  * @param a resource
  * @param reps int[optional]
- * @return int
+ * @return int 
  */
 function gmp_prob_prime ($a, $reps = null) {}
 
@@ -19810,7 +21094,7 @@ function gmp_prob_prime ($a, $reps = null) {}
  * @link http://php.net/manual/en/function.gmp-gcd.php
  * @param a resource
  * @param b resource
- * @return resource
+ * @return resource 
  */
 function gmp_gcd ($a, $b) {}
 
@@ -19819,7 +21103,7 @@ function gmp_gcd ($a, $b) {}
  * @link http://php.net/manual/en/function.gmp-gcdext.php
  * @param a resource
  * @param b resource
- * @return array
+ * @return array 
  */
 function gmp_gcdext ($a, $b) {}
 
@@ -19828,7 +21112,7 @@ function gmp_gcdext ($a, $b) {}
  * @link http://php.net/manual/en/function.gmp-invert.php
  * @param a resource
  * @param b resource
- * @return resource
+ * @return resource 
  */
 function gmp_invert ($a, $b) {}
 
@@ -19837,7 +21121,7 @@ function gmp_invert ($a, $b) {}
  * @link http://php.net/manual/en/function.gmp-jacobi.php
  * @param a resource
  * @param p resource
- * @return int
+ * @return int 
  */
 function gmp_jacobi ($a, $p) {}
 
@@ -19846,7 +21130,7 @@ function gmp_jacobi ($a, $p) {}
  * @link http://php.net/manual/en/function.gmp-legendre.php
  * @param a resource
  * @param p resource
- * @return int
+ * @return int 
  */
 function gmp_legendre ($a, $p) {}
 
@@ -19871,7 +21155,7 @@ function gmp_sign ($a) {}
  * Random number
  * @link http://php.net/manual/en/function.gmp-random.php
  * @param limiter int
- * @return resource
+ * @return resource 
  */
 function gmp_random ($limiter) {}
 
@@ -19880,7 +21164,7 @@ function gmp_random ($limiter) {}
  * @link http://php.net/manual/en/function.gmp-and.php
  * @param a resource
  * @param b resource
- * @return resource
+ * @return resource 
  */
 function gmp_and ($a, $b) {}
 
@@ -19889,7 +21173,7 @@ function gmp_and ($a, $b) {}
  * @link http://php.net/manual/en/function.gmp-or.php
  * @param a resource
  * @param b resource
- * @return resource
+ * @return resource 
  */
 function gmp_or ($a, $b) {}
 
@@ -19906,7 +21190,7 @@ function gmp_com ($a) {}
  * @link http://php.net/manual/en/function.gmp-xor.php
  * @param a resource
  * @param b resource
- * @return resource
+ * @return resource 
  */
 function gmp_xor ($a, $b) {}
 
@@ -19916,7 +21200,7 @@ function gmp_xor ($a, $b) {}
  * @param a resource
  * @param index int
  * @param set_clear bool[optional]
- * @return void
+ * @return void 
  */
 function gmp_setbit (&$a, $index, $set_clear = null) {}
 
@@ -19925,7 +21209,7 @@ function gmp_setbit (&$a, $index, $set_clear = null) {}
  * @link http://php.net/manual/en/function.gmp-clrbit.php
  * @param a resource
  * @param index int
- * @return void
+ * @return void 
  */
 function gmp_clrbit (&$a, $index) {}
 
@@ -19951,7 +21235,7 @@ function gmp_scan1 ($a, $start) {}
  * Population count
  * @link http://php.net/manual/en/function.gmp-popcount.php
  * @param a resource
- * @return int
+ * @return int 
  */
 function gmp_popcount ($a) {}
 
@@ -19960,7 +21244,7 @@ function gmp_popcount ($a) {}
  * @link http://php.net/manual/en/function.gmp-hamdist.php
  * @param a resource
  * @param b resource
- * @return int
+ * @return int 
  */
 function gmp_hamdist ($a, $b) {}
 
@@ -19968,13 +21252,18 @@ function gmp_hamdist ($a, $b) {}
  * Find next prime number
  * @link http://php.net/manual/en/function.gmp-nextprime.php
  * @param a int
- * @return resource
+ * @return resource 
  */
 function gmp_nextprime ($a) {}
 
 define ('GMP_ROUND_ZERO', 0);
 define ('GMP_ROUND_PLUSINF', 1);
 define ('GMP_ROUND_MINUSINF', 2);
+
+/**
+ * The GMP library version
+ * @link http://php.net/manual/en/gmp.constants.php
+ */
 define ('GMP_VERSION', "4.2.1");
 
 // End of gmp v.
@@ -20000,7 +21289,7 @@ function imap_open ($mailbox, $username, $password, $options = null, $n_retries 
  * @param mailbox string
  * @param options int[optional]
  * @param n_retries int[optional]
- * @return bool
+ * @return bool 
  */
 function imap_reopen ($imap_stream, $mailbox, $options = null, $n_retries = null) {}
 
@@ -20009,7 +21298,7 @@ function imap_reopen ($imap_stream, $mailbox, $options = null, $n_retries = null
  * @link http://php.net/manual/en/function.imap-close.php
  * @param imap_stream resource
  * @param flag int[optional]
- * @return bool
+ * @return bool 
  */
 function imap_close ($imap_stream, $flag = null) {}
 
@@ -20017,7 +21306,7 @@ function imap_close ($imap_stream, $flag = null) {}
  * Gets the number of messages in the current mailbox
  * @link http://php.net/manual/en/function.imap-num-msg.php
  * @param imap_stream resource
- * @return int
+ * @return int 
  */
 function imap_num_msg ($imap_stream) {}
 
@@ -20064,7 +21353,7 @@ function imap_rfc822_parse_headers ($headers, $defaulthost = null) {}
  * @param mailbox string
  * @param host string
  * @param personal string
- * @return string a string properly formatted email address as defined in 
+ * @return string a string properly formatted email address as defined in
  */
 function imap_rfc822_write_address ($mailbox, $host, $personal) {}
 
@@ -20116,7 +21405,7 @@ function imap_fetchbody ($imap_stream, $msg_number, $part_number, $options = nul
  * @param msg_number int
  * @param part_number string[optional]
  * @param options int[optional]
- * @return bool
+ * @return bool 
  */
 function imap_savebody ($imap_stream, $file, $msg_number, $part_number = null, $options = null) {}
 
@@ -20164,7 +21453,7 @@ function imap_delete ($imap_stream, $msg_number, $options = null) {}
  * @param imap_stream resource
  * @param msg_number int
  * @param flags int[optional]
- * @return bool
+ * @return bool 
  */
 function imap_undelete ($imap_stream, $msg_number, $flags = null) {}
 
@@ -20183,7 +21472,7 @@ function imap_check ($imap_stream) {}
  * @param msglist string
  * @param mailbox string
  * @param options int[optional]
- * @return bool
+ * @return bool 
  */
 function imap_mail_copy ($imap_stream, $msglist, $mailbox, $options = null) {}
 
@@ -20194,7 +21483,7 @@ function imap_mail_copy ($imap_stream, $msglist, $mailbox, $options = null) {}
  * @param msglist string
  * @param mailbox string
  * @param options int[optional]
- * @return bool
+ * @return bool 
  */
 function imap_mail_move ($imap_stream, $msglist, $mailbox, $options = null) {}
 
@@ -20212,7 +21501,7 @@ function imap_mail_compose (array $envelope, array $body) {}
  * @link http://php.net/manual/en/function.imap-createmailbox.php
  * @param imap_stream resource
  * @param mailbox string
- * @return bool
+ * @return bool 
  */
 function imap_createmailbox ($imap_stream, $mailbox) {}
 
@@ -20222,7 +21511,7 @@ function imap_createmailbox ($imap_stream, $mailbox) {}
  * @param imap_stream resource
  * @param old_mbox string
  * @param new_mbox string
- * @return bool
+ * @return bool 
  */
 function imap_renamemailbox ($imap_stream, $old_mbox, $new_mbox) {}
 
@@ -20231,7 +21520,7 @@ function imap_renamemailbox ($imap_stream, $old_mbox, $new_mbox) {}
  * @link http://php.net/manual/en/function.imap-deletemailbox.php
  * @param imap_stream resource
  * @param mailbox string
- * @return bool
+ * @return bool 
  */
 function imap_deletemailbox ($imap_stream, $mailbox) {}
 
@@ -20240,7 +21529,7 @@ function imap_deletemailbox ($imap_stream, $mailbox) {}
  * @link http://php.net/manual/en/function.imap-subscribe.php
  * @param imap_stream resource
  * @param mailbox string
- * @return bool
+ * @return bool 
  */
 function imap_subscribe ($imap_stream, $mailbox) {}
 
@@ -20249,7 +21538,7 @@ function imap_subscribe ($imap_stream, $mailbox) {}
  * @link http://php.net/manual/en/function.imap-unsubscribe.php
  * @param imap_stream string
  * @param mailbox string
- * @return bool
+ * @return bool 
  */
 function imap_unsubscribe ($imap_stream, $mailbox) {}
 
@@ -20260,7 +21549,7 @@ function imap_unsubscribe ($imap_stream, $mailbox) {}
  * @param mailbox string
  * @param message string
  * @param options string[optional]
- * @return bool
+ * @return bool 
  */
 function imap_append ($imap_stream, $mailbox, $message, $options = null) {}
 
@@ -20318,7 +21607,7 @@ function imap_utf8 ($mime_encoded_text) {}
  * @param imap_stream resource
  * @param mailbox string
  * @param options int
- * @return object
+ * @return object 
  */
 function imap_status ($imap_stream, $mailbox, $options) {}
 
@@ -20337,7 +21626,7 @@ function imap_mailboxmsginfo ($imap_stream) {}
  * @param sequence string
  * @param flag string
  * @param options int[optional]
- * @return bool
+ * @return bool 
  */
 function imap_setflag_full ($imap_stream, $sequence, $flag, $options = null) {}
 
@@ -20348,7 +21637,7 @@ function imap_setflag_full ($imap_stream, $sequence, $flag, $options = null) {}
  * @param sequence string
  * @param flag string
  * @param options string[optional]
- * @return bool
+ * @return bool 
  */
 function imap_clearflag_full ($imap_stream, $sequence, $flag, $options = null) {}
 
@@ -20370,7 +21659,7 @@ function imap_sort ($imap_stream, $criteria, $reverse, $options = null, $search_
  * @link http://php.net/manual/en/function.imap-uid.php
  * @param imap_stream resource
  * @param msg_number int
- * @return int
+ * @return int 
  */
 function imap_uid ($imap_stream, $msg_number) {}
 
@@ -20379,7 +21668,7 @@ function imap_uid ($imap_stream, $msg_number) {}
  * @link http://php.net/manual/en/function.imap-msgno.php
  * @param imap_stream resource
  * @param uid int
- * @return int the message sequence number for the given 
+ * @return int the message sequence number for the given
  */
 function imap_msgno ($imap_stream, $uid) {}
 
@@ -20423,7 +21712,7 @@ function imap_alerts () {}
 /**
  * Returns all of the IMAP errors that have occured
  * @link http://php.net/manual/en/function.imap-errors.php
- * @return array
+ * @return array 
  */
 function imap_errors () {}
 
@@ -20465,7 +21754,7 @@ function imap_utf7_encode ($data) {}
  * Decode MIME header elements
  * @link http://php.net/manual/en/function.imap-mime-header-decode.php
  * @param text string
- * @return array
+ * @return array 
  */
 function imap_mime_header_decode ($text) {}
 
@@ -20474,7 +21763,7 @@ function imap_mime_header_decode ($text) {}
  * @link http://php.net/manual/en/function.imap-thread.php
  * @param imap_stream resource
  * @param options int[optional]
- * @return array
+ * @return array 
  */
 function imap_thread ($imap_stream, $options = null) {}
 
@@ -20483,7 +21772,7 @@ function imap_thread ($imap_stream, $options = null) {}
  * @link http://php.net/manual/en/function.imap-timeout.php
  * @param timeout_type int
  * @param timeout int[optional]
- * @return mixed
+ * @return mixed 
  */
 function imap_timeout ($timeout_type, $timeout = null) {}
 
@@ -20511,7 +21800,7 @@ function imap_get_quotaroot ($imap_stream, $quota_root) {}
  * @param imap_stream resource
  * @param quota_root string
  * @param quota_limit int
- * @return bool
+ * @return bool 
  */
 function imap_set_quota ($imap_stream, $quota_root, $quota_limit) {}
 
@@ -20522,7 +21811,7 @@ function imap_set_quota ($imap_stream, $quota_root, $quota_limit) {}
  * @param mailbox string
  * @param id string
  * @param rights string
- * @return bool
+ * @return bool 
  */
 function imap_setacl ($imap_stream, $mailbox, $id, $rights) {}
 
@@ -20531,7 +21820,7 @@ function imap_setacl ($imap_stream, $mailbox, $id, $rights) {}
  * @link http://php.net/manual/en/function.imap-getacl.php
  * @param imap_stream resource
  * @param mailbox string
- * @return array
+ * @return array 
  */
 function imap_getacl ($imap_stream, $mailbox) {}
 
@@ -20545,7 +21834,7 @@ function imap_getacl ($imap_stream, $mailbox) {}
  * @param cc string[optional]
  * @param bcc string[optional]
  * @param rpath string[optional]
- * @return bool
+ * @return bool 
  */
 function imap_mail ($to, $subject, $message, $additional_headers = null, $cc = null, $bcc = null, $rpath = null) {}
 
@@ -20607,27 +21896,90 @@ define ('IMAP_READTIMEOUT', 2);
 define ('IMAP_WRITETIMEOUT', 3);
 define ('IMAP_CLOSETIMEOUT', 4);
 define ('OP_DEBUG', 1);
+
+/**
+ * Open mailbox read-only
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('OP_READONLY', 2);
+
+/**
+ * Don't use or update a .newsrc for news 
+ * (NNTP only)
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('OP_ANONYMOUS', 4);
 define ('OP_SHORTCACHE', 8);
 define ('OP_SILENT', 16);
 define ('OP_PROTOTYPE', 32);
+
+/**
+ * For IMAP and NNTP names, open a connection but don't open a mailbox.
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('OP_HALFOPEN', 64);
 define ('OP_EXPUNGE', 128);
 define ('OP_SECURE', 256);
+
+/**
+ * silently expunge the mailbox before closing when
+ * calling imap_close
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('CL_EXPUNGE', 32768);
+
+/**
+ * The parameter is a UID
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('FT_UID', 1);
+
+/**
+ * Do not set the \Seen flag if not already set
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('FT_PEEK', 2);
 define ('FT_NOT', 4);
+
+/**
+ * The return string is in internal format, will not canonicalize to CRLF.
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('FT_INTERNAL', 8);
 define ('FT_PREFETCHTEXT', 32);
+
+/**
+ * The sequence argument contains UIDs instead of sequence numbers
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('ST_UID', 1);
 define ('ST_SILENT', 2);
 define ('ST_SET', 4);
+
+/**
+ * the sequence numbers contain UIDS
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('CP_UID', 1);
+
+/**
+ * Delete the messages from the current mailbox after copying
+ * with imap_mail_copy
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('CP_MOVE', 2);
+
+/**
+ * Return UIDs instead of sequence numbers
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('SE_UID', 1);
 define ('SE_FREE', 2);
+
+/**
+ * Don't prefetch searched messages
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('SE_NOPREFETCH', 4);
 define ('SO_FREE', 8);
 define ('SO_NOSERVER', 16);
@@ -20637,19 +21989,84 @@ define ('SA_UNSEEN', 4);
 define ('SA_UIDNEXT', 8);
 define ('SA_UIDVALIDITY', 16);
 define ('SA_ALL', 31);
+
+/**
+ * This mailbox has no "children" (there are no
+ * mailboxes below this one).
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('LATT_NOINFERIORS', 1);
+
+/**
+ * This is only a container, not a mailbox - you
+ * cannot open it.
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('LATT_NOSELECT', 2);
+
+/**
+ * This mailbox is marked. Only used by UW-IMAPD.
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('LATT_MARKED', 4);
+
+/**
+ * This mailbox is not marked. Only used by
+ * UW-IMAPD.
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('LATT_UNMARKED', 8);
 define ('LATT_REFERRAL', 16);
 define ('LATT_HASCHILDREN', 32);
 define ('LATT_HASNOCHILDREN', 64);
+
+/**
+ * Sort criteria for imap_sort:
+ * message Date
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('SORTDATE', 0);
+
+/**
+ * Sort criteria for imap_sort:
+ * arrival date
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('SORTARRIVAL', 1);
+
+/**
+ * Sort criteria for imap_sort:
+ * mailbox in first From address
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('SORTFROM', 2);
+
+/**
+ * Sort criteria for imap_sort:
+ * message subject
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('SORTSUBJECT', 3);
+
+/**
+ * Sort criteria for imap_sort:
+ * mailbox in first To address
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('SORTTO', 4);
+
+/**
+ * Sort criteria for imap_sort:
+ * mailbox in first cc address
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('SORTCC', 5);
+
+/**
+ * Sort criteria for imap_sort:
+ * size of message in octets
+ * @link http://php.net/manual/en/imap.constants.php
+ */
 define ('SORTSIZE', 6);
 define ('TYPETEXT', 0);
 define ('TYPEMULTIPART', 1);
@@ -21178,7 +22595,7 @@ class mysqli_stmt  {
  * Gets the number of affected rows in a previous MySQL operation
  * @link http://php.net/manual/en/function.mysqli-affected-rows.php
  * @param link mysqli
- * @return int
+ * @return int 
  */
 function mysqli_affected_rows (mysqli $link) {}
 
@@ -21186,7 +22603,7 @@ function mysqli_affected_rows (mysqli $link) {}
  * Turns on or off auto-commiting database modifications
  * @link http://php.net/manual/en/function.mysqli-autocommit.php
  * @param mode bool
- * @return bool
+ * @return bool 
  */
 function mysqli_autocommit ($mode) {}
 
@@ -21196,28 +22613,28 @@ function mysqli_autocommit ($mode) {}
  * @param user string
  * @param password string
  * @param database string
- * @return bool
+ * @return bool 
  */
 function mysqli_change_user ($user, $password, $database) {}
 
 /**
  * Returns the default character set for the database connection
  * @link http://php.net/manual/en/function.mysqli-character-set-name.php
- * @return string
+ * @return string 
  */
 function mysqli_character_set_name () {}
 
 /**
  * Closes a previously opened database connection
  * @link http://php.net/manual/en/function.mysqli-close.php
- * @return bool
+ * @return bool 
  */
 function mysqli_close () {}
 
 /**
  * Commits the current transaction
  * @link http://php.net/manual/en/function.mysqli-commit.php
- * @return bool
+ * @return bool 
  */
 function mysqli_commit () {}
 
@@ -21237,14 +22654,14 @@ function mysqli_connect ($host = null, $username = null, $passwd = null, $dbname
 /**
  * Returns the error code from last connect call
  * @link http://php.net/manual/en/function.mysqli-connect-errno.php
- * @return int
+ * @return int 
  */
 function mysqli_connect_errno () {}
 
 /**
  * Returns a string description of the last connect error
  * @link http://php.net/manual/en/function.mysqli-connect-error.php
- * @return string
+ * @return string 
  */
 function mysqli_connect_error () {}
 
@@ -21252,7 +22669,7 @@ function mysqli_connect_error () {}
  * Adjusts the result pointer to an arbitary row in the result
  * @link http://php.net/manual/en/function.mysqli-data-seek.php
  * @param offset int
- * @return bool
+ * @return bool 
  */
 function mysqli_data_seek ($offset) {}
 
@@ -21267,7 +22684,7 @@ function mysqli_debug ($message) {}
 /**
  * Disable reads from master
  * @link http://php.net/manual/en/function.mysqli-disable-reads-from-master.php
- * @return void
+ * @return void 
  */
 function mysqli_disable_reads_from_master () {}
 
@@ -21275,14 +22692,14 @@ function mysqli_disable_reads_from_master () {}
  * Disable RPL parse
  * @link http://php.net/manual/en/function.mysqli-disable-rpl-parse.php
  * @param link mysqli
- * @return bool
+ * @return bool 
  */
 function mysqli_disable_rpl_parse (mysqli $link) {}
 
 /**
  * Dump debugging information into the log
  * @link http://php.net/manual/en/function.mysqli-dump-debug-info.php
- * @return bool
+ * @return bool 
  */
 function mysqli_dump_debug_info () {}
 
@@ -21290,7 +22707,7 @@ function mysqli_dump_debug_info () {}
  * Enable reads from master
  * @link http://php.net/manual/en/function.mysqli-enable-reads-from-master.php
  * @param link mysqli
- * @return bool
+ * @return bool 
  */
 function mysqli_enable_reads_from_master (mysqli $link) {}
 
@@ -21298,13 +22715,13 @@ function mysqli_enable_reads_from_master (mysqli $link) {}
  * Enable RPL parse
  * @link http://php.net/manual/en/function.mysqli-enable-rpl-parse.php
  * @param link mysqli
- * @return bool
+ * @return bool 
  */
 function mysqli_enable_rpl_parse (mysqli $link) {}
 
 /**
  * @link http://php.net/manual/en/function.mysqli-embedded-server-end.php
- * @return void
+ * @return void 
  */
 function mysqli_embedded_server_end () {}
 
@@ -21313,7 +22730,7 @@ function mysqli_embedded_server_end () {}
  * @param start bool
  * @param arguments array
  * @param groups array
- * @return bool
+ * @return bool 
  */
 function mysqli_embedded_server_start ($start, array $arguments, array $groups) {}
 
@@ -21321,7 +22738,7 @@ function mysqli_embedded_server_start ($start, array $arguments, array $groups) 
  * Returns the error code for the most recent function call
  * @link http://php.net/manual/en/function.mysqli-errno.php
  * @param link mysqli
- * @return int
+ * @return int 
  */
 function mysqli_errno (mysqli $link) {}
 
@@ -21329,14 +22746,14 @@ function mysqli_errno (mysqli $link) {}
  * Returns a string description of the last error
  * @link http://php.net/manual/en/function.mysqli-error.php
  * @param link mysqli
- * @return string
+ * @return string 
  */
 function mysqli_error (mysqli $link) {}
 
 /**
  * Executes a prepared Query
  * @link http://php.net/manual/en/function.mysqli-stmt-execute.php
- * @return bool
+ * @return bool 
  */
 function mysqli_stmt_execute () {}
 
@@ -21372,7 +22789,7 @@ function mysqli_fetch_field_direct ($fieldnr) {}
  * Returns the lengths of the columns of the current row in the result set
  * @link http://php.net/manual/en/function.mysqli-fetch-lengths.php
  * @param result mysqli_result
- * @return array
+ * @return array 
  */
 function mysqli_fetch_lengths (mysqli_result $result) {}
 
@@ -21403,14 +22820,14 @@ function mysqli_fetch_object ($class_name = null, array $params = null) {}
 /**
  * Get a result row as an enumerated array
  * @link http://php.net/manual/en/function.mysqli-fetch-row.php
- * @return mixed
+ * @return mixed 
  */
 function mysqli_fetch_row () {}
 
 /**
  * Returns the number of columns for the most recent query
  * @link http://php.net/manual/en/function.mysqli-field-count.php
- * @return int
+ * @return int 
  */
 function mysqli_field_count () {}
 
@@ -21433,7 +22850,7 @@ function mysqli_field_tell (mysqli_result $result) {}
 /**
  * Frees the memory associated with a result
  * @link http://php.net/manual/en/function.mysqli-free-result.php
- * @return void
+ * @return void 
  */
 function mysqli_free_result () {}
 
@@ -21441,21 +22858,21 @@ function mysqli_free_result () {}
  * Returns a character set object
  * @link http://php.net/manual/en/function.mysqli-get-charset.php
  * @param link mysqli
- * @return object
+ * @return object 
  */
 function mysqli_get_charset (mysqli $link) {}
 
 /**
  * Returns the MySQL client version as a string
  * @link http://php.net/manual/en/function.mysqli-get-client-info.php
- * @return string
+ * @return string 
  */
 function mysqli_get_client_info () {}
 
 /**
  * Get MySQL client info
  * @link http://php.net/manual/en/function.mysqli-get-client-version.php
- * @return int
+ * @return int 
  */
 function mysqli_get_client_version () {}
 
@@ -21463,7 +22880,7 @@ function mysqli_get_client_version () {}
  * Returns a string representing the type of connection used
  * @link http://php.net/manual/en/function.mysqli-get-host-info.php
  * @param link mysqli
- * @return string
+ * @return string 
  */
 function mysqli_get_host_info (mysqli $link) {}
 
@@ -21479,7 +22896,7 @@ function mysqli_get_proto_info (mysqli $link) {}
  * Returns the version of the MySQL server
  * @link http://php.net/manual/en/function.mysqli-get-server-info.php
  * @param link mysqli
- * @return string
+ * @return string 
  */
 function mysqli_get_server_info (mysqli $link) {}
 
@@ -21487,14 +22904,14 @@ function mysqli_get_server_info (mysqli $link) {}
  * Returns the version of the MySQL server as an integer
  * @link http://php.net/manual/en/function.mysqli-get-server-version.php
  * @param link mysqli
- * @return int
+ * @return int 
  */
 function mysqli_get_server_version (mysqli $link) {}
 
 /**
  * @link http://php.net/manual/en/function.mysqli-get-warnings.php
  * @param link mysqli
- * @return object
+ * @return object 
  */
 function mysqli_get_warnings (mysqli $link) {}
 
@@ -21509,7 +22926,7 @@ function mysqli_init () {}
  * Retrieves information about the most recently executed query
  * @link http://php.net/manual/en/function.mysqli-info.php
  * @param link mysqli
- * @return string
+ * @return string 
  */
 function mysqli_info (mysqli $link) {}
 
@@ -21517,7 +22934,7 @@ function mysqli_info (mysqli $link) {}
  * Returns the auto generated id used in the last query
  * @link http://php.net/manual/en/function.mysqli-insert-id.php
  * @param link mysqli
- * @return int
+ * @return int 
  */
 function mysqli_insert_id (mysqli $link) {}
 
@@ -21525,7 +22942,7 @@ function mysqli_insert_id (mysqli $link) {}
  * Asks the server to kill a MySQL thread
  * @link http://php.net/manual/en/function.mysqli-kill.php
  * @param processid int
- * @return bool
+ * @return bool 
  */
 function mysqli_kill ($processid) {}
 
@@ -21533,7 +22950,7 @@ function mysqli_kill ($processid) {}
  * Unsets user defined handler for load local infile command
  * @link http://php.net/manual/en/function.mysqli-set-local-infile-default.php
  * @param link mysqli
- * @return void
+ * @return void 
  */
 function mysqli_set_local_infile_default (mysqli $link) {}
 
@@ -21542,7 +22959,7 @@ function mysqli_set_local_infile_default (mysqli $link) {}
  * @link http://php.net/manual/en/function.mysqli-set-local-infile-handler.php
  * @param link mysqli
  * @param read_func callback
- * @return bool
+ * @return bool 
  */
 function mysqli_set_local_infile_handler (mysqli $link, $read_func) {}
 
@@ -21551,7 +22968,7 @@ function mysqli_set_local_infile_handler (mysqli $link, $read_func) {}
  * @link http://php.net/manual/en/function.mysqli-master-query.php
  * @param link mysqli
  * @param query string
- * @return bool
+ * @return bool 
  */
 function mysqli_master_query (mysqli $link, $query) {}
 
@@ -21559,7 +22976,7 @@ function mysqli_master_query (mysqli $link, $query) {}
  * Check if there are any more query results from a multi query
  * @link http://php.net/manual/en/function.mysqli-more-results.php
  * @param link mysqli
- * @return bool
+ * @return bool 
  */
 function mysqli_more_results (mysqli $link) {}
 
@@ -21575,7 +22992,7 @@ function mysqli_multi_query ($query) {}
  * Prepare next result from multi_query
  * @link http://php.net/manual/en/function.mysqli-next-result.php
  * @param link mysqli
- * @return bool
+ * @return bool 
  */
 function mysqli_next_result (mysqli $link) {}
 
@@ -21583,7 +23000,7 @@ function mysqli_next_result (mysqli $link) {}
  * Get the number of fields in a result
  * @link http://php.net/manual/en/function.mysqli-num-fields.php
  * @param result mysqli_result
- * @return int
+ * @return int 
  */
 function mysqli_num_fields (mysqli_result $result) {}
 
@@ -21600,14 +23017,14 @@ function mysqli_num_rows (mysqli_result $result) {}
  * @link http://php.net/manual/en/function.mysqli-options.php
  * @param option int
  * @param value mixed
- * @return bool
+ * @return bool 
  */
 function mysqli_options ($option, $value) {}
 
 /**
  * Pings a server connection, or tries to reconnect if the connection has gone down
  * @link http://php.net/manual/en/function.mysqli-ping.php
- * @return bool
+ * @return bool 
  */
 function mysqli_ping () {}
 
@@ -21615,7 +23032,7 @@ function mysqli_ping () {}
  * Prepare a SQL statement for execution
  * @link http://php.net/manual/en/function.mysqli-prepare.php
  * @param query string
- * @return mysqli_stmt
+ * @return mysqli_stmt 
  */
 function mysqli_prepare ($query) {}
 
@@ -21623,7 +23040,7 @@ function mysqli_prepare ($query) {}
  * Enables or disables internal report functions
  * @link http://php.net/manual/en/function.mysqli-report.php
  * @param flags int
- * @return bool
+ * @return bool 
  */
 function mysqli_report ($flags) {}
 
@@ -21632,7 +23049,7 @@ function mysqli_report ($flags) {}
  * @link http://php.net/manual/en/function.mysqli-query.php
  * @param query string
  * @param resultmode int[optional]
- * @return mixed
+ * @return mixed 
  */
 function mysqli_query ($query, $resultmode = null) {}
 
@@ -21646,7 +23063,7 @@ function mysqli_query ($query, $resultmode = null) {}
  * @param port int[optional]
  * @param socket string[optional]
  * @param flags int[optional]
- * @return bool
+ * @return bool 
  */
 function mysqli_real_connect ($host = null, $username = null, $passwd = null, $dbname = null, $port = null, $socket = null, $flags = null) {}
 
@@ -21662,14 +23079,14 @@ function mysqli_real_escape_string ($escapestr) {}
  * Execute an SQL query
  * @link http://php.net/manual/en/function.mysqli-real-query.php
  * @param query string
- * @return bool
+ * @return bool 
  */
 function mysqli_real_query ($query) {}
 
 /**
  * Rolls back current transaction
  * @link http://php.net/manual/en/function.mysqli-rollback.php
- * @return bool
+ * @return bool 
  */
 function mysqli_rollback () {}
 
@@ -21677,7 +23094,7 @@ function mysqli_rollback () {}
  * Check if RPL parse is enabled
  * @link http://php.net/manual/en/function.mysqli-rpl-parse-enabled.php
  * @param link mysqli
- * @return int
+ * @return int 
  */
 function mysqli_rpl_parse_enabled (mysqli $link) {}
 
@@ -21685,7 +23102,7 @@ function mysqli_rpl_parse_enabled (mysqli $link) {}
  * RPL probe
  * @link http://php.net/manual/en/function.mysqli-rpl-probe.php
  * @param link mysqli
- * @return bool
+ * @return bool 
  */
 function mysqli_rpl_probe (mysqli $link) {}
 
@@ -21693,7 +23110,7 @@ function mysqli_rpl_probe (mysqli $link) {}
  * Returns RPL query type
  * @link http://php.net/manual/en/function.mysqli-rpl-query-type.php
  * @param query string
- * @return int
+ * @return int 
  */
 function mysqli_rpl_query_type ($query) {}
 
@@ -21701,7 +23118,7 @@ function mysqli_rpl_query_type ($query) {}
  * Selects the default database for database queries
  * @link http://php.net/manual/en/function.mysqli-select-db.php
  * @param dbname string
- * @return bool
+ * @return bool 
  */
 function mysqli_select_db ($dbname) {}
 
@@ -21709,7 +23126,7 @@ function mysqli_select_db ($dbname) {}
  * Sets the default client character set
  * @link http://php.net/manual/en/function.mysqli-set-charset.php
  * @param charset string
- * @return bool
+ * @return bool 
  */
 function mysqli_set_charset ($charset) {}
 
@@ -21717,7 +23134,7 @@ function mysqli_set_charset ($charset) {}
  * @link http://php.net/manual/en/function.mysqli-stmt-attr-get.php
  * @param stmt mysqli_stmt
  * @param attr int
- * @return int
+ * @return int 
  */
 function mysqli_stmt_attr_get (mysqli_stmt $stmt, $attr) {}
 
@@ -21726,7 +23143,7 @@ function mysqli_stmt_attr_get (mysqli_stmt $stmt, $attr) {}
  * @param stmt mysqli_stmt
  * @param attr int
  * @param mode int
- * @return bool
+ * @return bool 
  */
 function mysqli_stmt_attr_set (mysqli_stmt $stmt, $attr, $mode) {}
 
@@ -21734,7 +23151,7 @@ function mysqli_stmt_attr_set (mysqli_stmt $stmt, $attr, $mode) {}
  * Returns the number of field in the given statement
  * @link http://php.net/manual/en/function.mysqli-stmt-field-count.php
  * @param stmt mysqli_stmt
- * @return int
+ * @return int 
  */
 function mysqli_stmt_field_count (mysqli_stmt $stmt) {}
 
@@ -21749,7 +23166,7 @@ function mysqli_stmt_init () {}
  * Prepare a SQL statement for execution
  * @link http://php.net/manual/en/function.mysqli-stmt-prepare.php
  * @param query string
- * @return mixed
+ * @return mixed 
  */
 function mysqli_stmt_prepare ($query) {}
 
@@ -21765,7 +23182,7 @@ function mysqli_stmt_result_metadata () {}
  * @link http://php.net/manual/en/function.mysqli-stmt-send-long-data.php
  * @param param_nr int
  * @param data string
- * @return bool
+ * @return bool 
  */
 function mysqli_stmt_send_long_data ($param_nr, $data) {}
 
@@ -21775,7 +23192,7 @@ function mysqli_stmt_send_long_data ($param_nr, $data) {}
  * @param types string
  * @param var1 mixed
  * @param ... mixed[optional]
- * @return bool
+ * @return bool 
  */
 function mysqli_stmt_bind_param ($types, &$var1) {}
 
@@ -21784,28 +23201,28 @@ function mysqli_stmt_bind_param ($types, &$var1) {}
  * @link http://php.net/manual/en/function.mysqli-stmt-bind-result.php
  * @param var1 mixed
  * @param ... mixed[optional]
- * @return bool
+ * @return bool 
  */
 function mysqli_stmt_bind_result (&$var1) {}
 
 /**
  * Fetch results from a prepared statement into the bound variables
  * @link http://php.net/manual/en/function.mysqli-stmt-fetch.php
- * @return bool
+ * @return bool 
  */
 function mysqli_stmt_fetch () {}
 
 /**
  * Frees stored result memory for the given statement handle
  * @link http://php.net/manual/en/function.mysqli-stmt-free-result.php
- * @return void
+ * @return void 
  */
 function mysqli_stmt_free_result () {}
 
 /**
  * @link http://php.net/manual/en/function.mysqli-stmt-get-warnings.php
  * @param stmt mysqli_stmt
- * @return object
+ * @return object 
  */
 function mysqli_stmt_get_warnings (mysqli_stmt $stmt) {}
 
@@ -21813,14 +23230,14 @@ function mysqli_stmt_get_warnings (mysqli_stmt $stmt) {}
  * Get the ID generated from the previous INSERT operation
  * @link http://php.net/manual/en/function.mysqli-stmt-insert-id.php
  * @param stmt mysqli_stmt
- * @return mixed
+ * @return mixed 
  */
 function mysqli_stmt_insert_id (mysqli_stmt $stmt) {}
 
 /**
  * Resets a prepared statement
  * @link http://php.net/manual/en/function.mysqli-stmt-reset.php
- * @return bool
+ * @return bool 
  */
 function mysqli_stmt_reset () {}
 
@@ -21836,7 +23253,7 @@ function mysqli_stmt_param_count (mysqli_stmt $stmt) {}
  * Send the query and return
  * @link http://php.net/manual/en/function.mysqli-send-query.php
  * @param query string
- * @return bool
+ * @return bool 
  */
 function mysqli_send_query ($query) {}
 
@@ -21845,7 +23262,7 @@ function mysqli_send_query ($query) {}
  * @link http://php.net/manual/en/function.mysqli-slave-query.php
  * @param link mysqli
  * @param query string
- * @return bool
+ * @return bool 
  */
 function mysqli_slave_query (mysqli $link, $query) {}
 
@@ -21865,14 +23282,14 @@ function mysqli_sqlstate (mysqli $link) {}
  * @param ca string
  * @param capath string
  * @param cipher string
- * @return bool
+ * @return bool 
  */
 function mysqli_ssl_set ($key, $cert, $ca, $capath, $cipher) {}
 
 /**
  * Gets the current system status
  * @link http://php.net/manual/en/function.mysqli-stat.php
- * @return string
+ * @return string 
  */
 function mysqli_stat () {}
 
@@ -21881,14 +23298,14 @@ function mysqli_stat () {}
   inserted by the last executed statement
  * @link http://php.net/manual/en/function.mysqli-stmt-affected-rows.php
  * @param stmt mysqli_stmt
- * @return int
+ * @return int 
  */
 function mysqli_stmt_affected_rows (mysqli_stmt $stmt) {}
 
 /**
  * Closes a prepared statement
  * @link http://php.net/manual/en/function.mysqli-stmt-close.php
- * @return bool
+ * @return bool 
  */
 function mysqli_stmt_close () {}
 
@@ -21896,7 +23313,7 @@ function mysqli_stmt_close () {}
  * Seeks to an arbitray row in statement result set
  * @link http://php.net/manual/en/function.mysqli-stmt-data-seek.php
  * @param offset int
- * @return void
+ * @return void 
  */
 function mysqli_stmt_data_seek ($offset) {}
 
@@ -21904,7 +23321,7 @@ function mysqli_stmt_data_seek ($offset) {}
  * Returns the error code for the most recent statement call
  * @link http://php.net/manual/en/function.mysqli-stmt-errno.php
  * @param stmt mysqli_stmt
- * @return int
+ * @return int 
  */
 function mysqli_stmt_errno (mysqli_stmt $stmt) {}
 
@@ -21912,7 +23329,7 @@ function mysqli_stmt_errno (mysqli_stmt $stmt) {}
  * Returns a string description for last statement error
  * @link http://php.net/manual/en/function.mysqli-stmt-error.php
  * @param stmt mysqli_stmt
- * @return string
+ * @return string 
  */
 function mysqli_stmt_error (mysqli_stmt $stmt) {}
 
@@ -21920,7 +23337,7 @@ function mysqli_stmt_error (mysqli_stmt $stmt) {}
  * Return the number of rows in statements result set
  * @link http://php.net/manual/en/function.mysqli-stmt-num-rows.php
  * @param stmt mysqli_stmt
- * @return int
+ * @return int 
  */
 function mysqli_stmt_num_rows (mysqli_stmt $stmt) {}
 
@@ -21942,7 +23359,7 @@ function mysqli_store_result () {}
 /**
  * Transfers a result set from a prepared statement
  * @link http://php.net/manual/en/function.mysqli-stmt-store-result.php
- * @return bool
+ * @return bool 
  */
 function mysqli_stmt_store_result () {}
 
@@ -21957,7 +23374,7 @@ function mysqli_thread_id (mysqli $link) {}
 /**
  * Returns whether thread safety is given or not
  * @link http://php.net/manual/en/function.mysqli-thread-safe.php
- * @return bool
+ * @return bool 
  */
 function mysqli_thread_safe () {}
 
@@ -21972,7 +23389,7 @@ function mysqli_use_result () {}
  * Returns the number of warnings from the last query for the given link
  * @link http://php.net/manual/en/function.mysqli-warning-count.php
  * @param link mysqli
- * @return int
+ * @return int 
  */
 function mysqli_warning_count (mysqli $link) {}
 
@@ -22115,7 +23532,7 @@ define ('MYSQLI_REPORT_OFF', 0);
 /**
  * Forks the currently running process
  * @link http://php.net/manual/en/function.pcntl-fork.php
- * @return int
+ * @return int 
  */
 function pcntl_fork () {}
 
@@ -22125,7 +23542,7 @@ function pcntl_fork () {}
  * @param pid int
  * @param status int
  * @param options int[optional]
- * @return int
+ * @return int 
  */
 function pcntl_waitpid ($pid, &$status, $options = null) {}
 
@@ -22134,7 +23551,7 @@ function pcntl_waitpid ($pid, &$status, $options = null) {}
  * @link http://php.net/manual/en/function.pcntl-wait.php
  * @param status int
  * @param options int[optional]
- * @return int
+ * @return int 
  */
 function pcntl_wait (&$status, $options = null) {}
 
@@ -22144,7 +23561,7 @@ function pcntl_wait (&$status, $options = null) {}
  * @param signo int
  * @param handler callback
  * @param restart_syscalls bool[optional]
- * @return bool
+ * @return bool 
  */
 function pcntl_signal ($signo, $handler, $restart_syscalls = null) {}
 
@@ -22219,7 +23636,7 @@ function pcntl_alarm ($seconds) {}
  * @link http://php.net/manual/en/function.pcntl-getpriority.php
  * @param pid int[optional]
  * @param process_identifier int[optional]
- * @return int
+ * @return int 
  */
 function pcntl_getpriority ($pid = null, $process_identifier = null) {}
 
@@ -22229,7 +23646,7 @@ function pcntl_getpriority ($pid = null, $process_identifier = null) {}
  * @param priority int
  * @param pid int[optional]
  * @param process_identifier int[optional]
- * @return bool
+ * @return bool 
  */
 function pcntl_setpriority ($priority, $pid = null, $process_identifier = null) {}
 
@@ -22286,7 +23703,7 @@ define ('PRIO_PROCESS', 0);
  * @link http://php.net/manual/en/function.pg-connect.php
  * @param connection_string string
  * @param connect_type int[optional]
- * @return resource
+ * @return resource 
  */
 function pg_connect ($connection_string, $connect_type = null) {}
 
@@ -22295,7 +23712,7 @@ function pg_connect ($connection_string, $connect_type = null) {}
  * @link http://php.net/manual/en/function.pg-pconnect.php
  * @param connection_string string
  * @param connect_type int[optional]
- * @return resource
+ * @return resource 
  */
 function pg_pconnect ($connection_string, $connect_type = null) {}
 
@@ -22303,7 +23720,7 @@ function pg_pconnect ($connection_string, $connect_type = null) {}
  * Closes a PostgreSQL connection
  * @link http://php.net/manual/en/function.pg-close.php
  * @param connection resource[optional]
- * @return bool
+ * @return bool 
  */
 function pg_close ($connection = null) {}
 
@@ -22311,7 +23728,7 @@ function pg_close ($connection = null) {}
  * Get connection status
  * @link http://php.net/manual/en/function.pg-connection-status.php
  * @param connection resource
- * @return int
+ * @return int 
  */
 function pg_connection_status ($connection) {}
 
@@ -22327,7 +23744,7 @@ function pg_connection_busy ($connection) {}
  * Reset connection (reconnect)
  * @link http://php.net/manual/en/function.pg-connection-reset.php
  * @param connection resource
- * @return bool
+ * @return bool 
  */
 function pg_connection_reset ($connection) {}
 
@@ -22335,7 +23752,7 @@ function pg_connection_reset ($connection) {}
  * Returns the host name associated with the connection
  * @link http://php.net/manual/en/function.pg-host.php
  * @param connection resource[optional]
- * @return string
+ * @return string 
  */
 function pg_host ($connection = null) {}
 
@@ -22343,7 +23760,7 @@ function pg_host ($connection = null) {}
  * Get the database name
  * @link http://php.net/manual/en/function.pg-dbname.php
  * @param connection resource[optional]
- * @return string
+ * @return string 
  */
 function pg_dbname ($connection = null) {}
 
@@ -22351,7 +23768,7 @@ function pg_dbname ($connection = null) {}
  * Return the port number associated with the connection
  * @link http://php.net/manual/en/function.pg-port.php
  * @param connection resource[optional]
- * @return int
+ * @return int 
  */
 function pg_port ($connection = null) {}
 
@@ -22359,7 +23776,7 @@ function pg_port ($connection = null) {}
  * Return the TTY name associated with the connection
  * @link http://php.net/manual/en/function.pg-tty.php
  * @param connection resource[optional]
- * @return string
+ * @return string 
  */
 function pg_tty ($connection = null) {}
 
@@ -22367,7 +23784,7 @@ function pg_tty ($connection = null) {}
  * Get the options associated with the connection
  * @link http://php.net/manual/en/function.pg-options.php
  * @param connection resource[optional]
- * @return string
+ * @return string 
  */
 function pg_options ($connection = null) {}
 
@@ -22375,7 +23792,7 @@ function pg_options ($connection = null) {}
  * Returns an array with client, protocol and server version (when available)
  * @link http://php.net/manual/en/function.pg-version.php
  * @param connection resource[optional]
- * @return array an array with client, protocol 
+ * @return array an array with client, protocol
  */
 function pg_version ($connection = null) {}
 
@@ -22383,7 +23800,7 @@ function pg_version ($connection = null) {}
  * Ping database connection
  * @link http://php.net/manual/en/function.pg-ping.php
  * @param connection resource[optional]
- * @return bool
+ * @return bool 
  */
 function pg_ping ($connection = null) {}
 
@@ -22392,7 +23809,7 @@ function pg_ping ($connection = null) {}
  * @link http://php.net/manual/en/function.pg-parameter-status.php
  * @param connection resource
  * @param param_name string
- * @return string
+ * @return string 
  */
 function pg_parameter_status ($connection, $param_name) {}
 
@@ -22400,7 +23817,7 @@ function pg_parameter_status ($connection, $param_name) {}
  * Returns the current in-transaction status of the server.
  * @link http://php.net/manual/en/function.pg-transaction-status.php
  * @param connection resource
- * @return int
+ * @return int 
  */
 function pg_transaction_status ($connection) {}
 
@@ -22408,7 +23825,7 @@ function pg_transaction_status ($connection) {}
  * Execute a query
  * @link http://php.net/manual/en/function.pg-query.php
  * @param query string
- * @return resource
+ * @return resource 
  */
 function pg_query ($query) {}
 
@@ -22418,7 +23835,7 @@ function pg_query ($query) {}
  * @param connection resource
  * @param query string
  * @param params array
- * @return resource
+ * @return resource 
  */
 function pg_query_params ($connection, $query, array $params) {}
 
@@ -22429,7 +23846,7 @@ function pg_query_params ($connection, $query, array $params) {}
  * @param connection resource
  * @param stmtname string
  * @param query string
- * @return resource
+ * @return resource 
  */
 function pg_prepare ($connection, $stmtname, $query) {}
 
@@ -22439,7 +23856,7 @@ function pg_prepare ($connection, $stmtname, $query) {}
  * @param connection resource
  * @param stmtname string
  * @param params array
- * @return resource
+ * @return resource 
  */
 function pg_execute ($connection, $stmtname, array $params) {}
 
@@ -22448,7 +23865,7 @@ function pg_execute ($connection, $stmtname, array $params) {}
  * @link http://php.net/manual/en/function.pg-send-query.php
  * @param connection resource
  * @param query string
- * @return bool
+ * @return bool 
  */
 function pg_send_query ($connection, $query) {}
 
@@ -22458,7 +23875,7 @@ function pg_send_query ($connection, $query) {}
  * @param connection resource
  * @param query string
  * @param params array
- * @return bool
+ * @return bool 
  */
 function pg_send_query_params ($connection, $query, array $params) {}
 
@@ -22486,7 +23903,7 @@ function pg_send_execute ($connection, $stmtname, array $params) {}
  * Cancel an asynchronous query
  * @link http://php.net/manual/en/function.pg-cancel-query.php
  * @param connection resource
- * @return bool
+ * @return bool 
  */
 function pg_cancel_query ($connection) {}
 
@@ -22496,7 +23913,7 @@ function pg_cancel_query ($connection) {}
  * @param result resource
  * @param row int
  * @param field mixed
- * @return string
+ * @return string 
  */
 function pg_fetch_result ($result, $row, $field) {}
 
@@ -22506,7 +23923,7 @@ function pg_fetch_result ($result, $row, $field) {}
  * @param result resource
  * @param row int[optional]
  * @param result_type int[optional]
- * @return array
+ * @return array 
  */
 function pg_fetch_row ($result, $row = null, $result_type = null) {}
 
@@ -22515,7 +23932,7 @@ function pg_fetch_row ($result, $row = null, $result_type = null) {}
  * @link http://php.net/manual/en/function.pg-fetch-assoc.php
  * @param result resource
  * @param row int[optional]
- * @return array
+ * @return array 
  */
 function pg_fetch_assoc ($result, $row = null) {}
 
@@ -22525,7 +23942,7 @@ function pg_fetch_assoc ($result, $row = null) {}
  * @param result resource
  * @param row int[optional]
  * @param result_type int[optional]
- * @return array
+ * @return array 
  */
 function pg_fetch_array ($result, $row = null, $result_type = null) {}
 
@@ -22535,7 +23952,7 @@ function pg_fetch_array ($result, $row = null, $result_type = null) {}
  * @param result resource
  * @param row int[optional]
  * @param result_type int[optional]
- * @return object
+ * @return object 
  */
 function pg_fetch_object ($result, $row = null, $result_type = null) {}
 
@@ -22543,7 +23960,7 @@ function pg_fetch_object ($result, $row = null, $result_type = null) {}
  * Fetches all rows from a result as an array
  * @link http://php.net/manual/en/function.pg-fetch-all.php
  * @param result resource
- * @return array
+ * @return array 
  */
 function pg_fetch_all ($result) {}
 
@@ -22552,7 +23969,7 @@ function pg_fetch_all ($result) {}
  * @link http://php.net/manual/en/function.pg-fetch-all-columns.php
  * @param result resource
  * @param column int[optional]
- * @return array
+ * @return array 
  */
 function pg_fetch_all_columns ($result, $column = null) {}
 
@@ -22560,7 +23977,7 @@ function pg_fetch_all_columns ($result, $column = null) {}
  * Returns number of affected records (tuples)
  * @link http://php.net/manual/en/function.pg-affected-rows.php
  * @param result resource
- * @return int
+ * @return int 
  */
 function pg_affected_rows ($result) {}
 
@@ -22568,7 +23985,7 @@ function pg_affected_rows ($result) {}
  * Get asynchronous query result
  * @link http://php.net/manual/en/function.pg-get-result.php
  * @param connection resource[optional]
- * @return resource
+ * @return resource 
  */
 function pg_get_result ($connection = null) {}
 
@@ -22577,7 +23994,7 @@ function pg_get_result ($connection = null) {}
  * @link http://php.net/manual/en/function.pg-result-seek.php
  * @param result resource
  * @param offset int
- * @return bool
+ * @return bool 
  */
 function pg_result_seek ($result, $offset) {}
 
@@ -22586,7 +24003,7 @@ function pg_result_seek ($result, $offset) {}
  * @link http://php.net/manual/en/function.pg-result-status.php
  * @param result resource
  * @param type int[optional]
- * @return mixed
+ * @return mixed 
  */
 function pg_result_status ($result, $type = null) {}
 
@@ -22594,7 +24011,7 @@ function pg_result_status ($result, $type = null) {}
  * Free result memory
  * @link http://php.net/manual/en/function.pg-free-result.php
  * @param result resource
- * @return bool
+ * @return bool 
  */
 function pg_free_result ($result) {}
 
@@ -22602,7 +24019,7 @@ function pg_free_result ($result) {}
  * Returns the last row's OID
  * @link http://php.net/manual/en/function.pg-last-oid.php
  * @param result resource
- * @return string
+ * @return string 
  */
 function pg_last_oid ($result) {}
 
@@ -22610,7 +24027,7 @@ function pg_last_oid ($result) {}
  * Returns the number of rows in a result
  * @link http://php.net/manual/en/function.pg-num-rows.php
  * @param result resource
- * @return int
+ * @return int 
  */
 function pg_num_rows ($result) {}
 
@@ -22618,7 +24035,7 @@ function pg_num_rows ($result) {}
  * Returns the number of fields in a result
  * @link http://php.net/manual/en/function.pg-num-fields.php
  * @param result resource
- * @return int
+ * @return int 
  */
 function pg_num_fields ($result) {}
 
@@ -22627,7 +24044,7 @@ function pg_num_fields ($result) {}
  * @link http://php.net/manual/en/function.pg-field-name.php
  * @param result resource
  * @param field_number int
- * @return string
+ * @return string 
  */
 function pg_field_name ($result, $field_number) {}
 
@@ -22636,7 +24053,7 @@ function pg_field_name ($result, $field_number) {}
  * @link http://php.net/manual/en/function.pg-field-num.php
  * @param result resource
  * @param field_name string
- * @return int
+ * @return int 
  */
 function pg_field_num ($result, $field_name) {}
 
@@ -22645,7 +24062,7 @@ function pg_field_num ($result, $field_name) {}
  * @link http://php.net/manual/en/function.pg-field-size.php
  * @param result resource
  * @param field_number int
- * @return int
+ * @return int 
  */
 function pg_field_size ($result, $field_number) {}
 
@@ -22654,7 +24071,7 @@ function pg_field_size ($result, $field_number) {}
  * @link http://php.net/manual/en/function.pg-field-type.php
  * @param result resource
  * @param field_number int
- * @return string
+ * @return string 
  */
 function pg_field_type ($result, $field_number) {}
 
@@ -22663,7 +24080,7 @@ function pg_field_type ($result, $field_number) {}
  * @link http://php.net/manual/en/function.pg-field-type-oid.php
  * @param result resource
  * @param field_number int
- * @return int
+ * @return int 
  */
 function pg_field_type_oid ($result, $field_number) {}
 
@@ -22673,7 +24090,7 @@ function pg_field_type_oid ($result, $field_number) {}
  * @param result resource
  * @param row_number int
  * @param field_name_or_number mixed
- * @return int
+ * @return int 
  */
 function pg_field_prtlen ($result, $row_number, $field_name_or_number) {}
 
@@ -22693,7 +24110,7 @@ function pg_field_is_null ($result, $row, $field) {}
  * @param result resource
  * @param field_number int
  * @param oid_only bool[optional]
- * @return mixed
+ * @return mixed 
  */
 function pg_field_table ($result, $field_number, $oid_only = null) {}
 
@@ -22702,7 +24119,7 @@ function pg_field_table ($result, $field_number, $oid_only = null) {}
  * @link http://php.net/manual/en/function.pg-get-notify.php
  * @param connection resource
  * @param result_type int[optional]
- * @return array
+ * @return array 
  */
 function pg_get_notify ($connection, $result_type = null) {}
 
@@ -22710,7 +24127,7 @@ function pg_get_notify ($connection, $result_type = null) {}
  * Gets the backend's process ID
  * @link http://php.net/manual/en/function.pg-get-pid.php
  * @param connection resource
- * @return int
+ * @return int 
  */
 function pg_get_pid ($connection) {}
 
@@ -22727,7 +24144,7 @@ function pg_result_error ($result) {}
  * @link http://php.net/manual/en/function.pg-result-error-field.php
  * @param result resource
  * @param fieldcode int
- * @return string
+ * @return string 
  */
 function pg_result_error_field ($result, $fieldcode) {}
 
@@ -22735,7 +24152,7 @@ function pg_result_error_field ($result, $fieldcode) {}
  * Get the last error message string of a connection
  * @link http://php.net/manual/en/function.pg-last-error.php
  * @param connection resource[optional]
- * @return string
+ * @return string 
  */
 function pg_last_error ($connection = null) {}
 
@@ -22743,7 +24160,7 @@ function pg_last_error ($connection = null) {}
  * Returns the last notice message from PostgreSQL server
  * @link http://php.net/manual/en/function.pg-last-notice.php
  * @param connection resource
- * @return string
+ * @return string 
  */
 function pg_last_notice ($connection) {}
 
@@ -22751,7 +24168,7 @@ function pg_last_notice ($connection) {}
  * Send a NULL-terminated string to PostgreSQL backend
  * @link http://php.net/manual/en/function.pg-put-line.php
  * @param data string
- * @return bool
+ * @return bool 
  */
 function pg_put_line ($data) {}
 
@@ -22759,7 +24176,7 @@ function pg_put_line ($data) {}
  * Sync with PostgreSQL backend
  * @link http://php.net/manual/en/function.pg-end-copy.php
  * @param connection resource[optional]
- * @return bool
+ * @return bool 
  */
 function pg_end_copy ($connection = null) {}
 
@@ -22770,7 +24187,7 @@ function pg_end_copy ($connection = null) {}
  * @param table_name string
  * @param delimiter string[optional]
  * @param null_as string[optional]
- * @return array
+ * @return array 
  */
 function pg_copy_to ($connection, $table_name, $delimiter = null, $null_as = null) {}
 
@@ -22782,7 +24199,7 @@ function pg_copy_to ($connection, $table_name, $delimiter = null, $null_as = nul
  * @param rows array
  * @param delimiter string[optional]
  * @param null_as string[optional]
- * @return bool
+ * @return bool 
  */
 function pg_copy_from ($connection, $table_name, array $rows, $delimiter = null, $null_as = null) {}
 
@@ -22792,7 +24209,7 @@ function pg_copy_from ($connection, $table_name, array $rows, $delimiter = null,
  * @param pathname string
  * @param mode string[optional]
  * @param connection resource[optional]
- * @return bool
+ * @return bool 
  */
 function pg_trace ($pathname, $mode = null, $connection = null) {}
 
@@ -22800,7 +24217,7 @@ function pg_trace ($pathname, $mode = null, $connection = null) {}
  * Disable tracing of a PostgreSQL connection
  * @link http://php.net/manual/en/function.pg-untrace.php
  * @param connection resource[optional]
- * @return bool
+ * @return bool 
  */
 function pg_untrace ($connection = null) {}
 
@@ -22808,7 +24225,7 @@ function pg_untrace ($connection = null) {}
  * Create a large object
  * @link http://php.net/manual/en/function.pg-lo-create.php
  * @param connection resource[optional]
- * @return int
+ * @return int 
  */
 function pg_lo_create ($connection = null) {}
 
@@ -22817,7 +24234,7 @@ function pg_lo_create ($connection = null) {}
  * @link http://php.net/manual/en/function.pg-lo-unlink.php
  * @param connection resource
  * @param oid int
- * @return bool
+ * @return bool 
  */
 function pg_lo_unlink ($connection, $oid) {}
 
@@ -22827,7 +24244,7 @@ function pg_lo_unlink ($connection, $oid) {}
  * @param connection resource
  * @param oid int
  * @param mode string
- * @return resource
+ * @return resource 
  */
 function pg_lo_open ($connection, $oid, $mode) {}
 
@@ -22835,7 +24252,7 @@ function pg_lo_open ($connection, $oid, $mode) {}
  * Close a large object
  * @link http://php.net/manual/en/function.pg-lo-close.php
  * @param large_object resource
- * @return bool
+ * @return bool 
  */
 function pg_lo_close ($large_object) {}
 
@@ -22844,7 +24261,7 @@ function pg_lo_close ($large_object) {}
  * @link http://php.net/manual/en/function.pg-lo-read.php
  * @param large_object resource
  * @param len int[optional]
- * @return string
+ * @return string 
  */
 function pg_lo_read ($large_object, $len = null) {}
 
@@ -22854,7 +24271,7 @@ function pg_lo_read ($large_object, $len = null) {}
  * @param large_object resource
  * @param data string
  * @param len int[optional]
- * @return int
+ * @return int 
  */
 function pg_lo_write ($large_object, $data, $len = null) {}
 
@@ -22862,7 +24279,7 @@ function pg_lo_write ($large_object, $data, $len = null) {}
  * Reads an entire large object and send straight to browser
  * @link http://php.net/manual/en/function.pg-lo-read-all.php
  * @param large_object resource
- * @return int
+ * @return int 
  */
 function pg_lo_read_all ($large_object) {}
 
@@ -22871,7 +24288,7 @@ function pg_lo_read_all ($large_object) {}
  * @link http://php.net/manual/en/function.pg-lo-import.php
  * @param connection resource
  * @param pathname string
- * @return int
+ * @return int 
  */
 function pg_lo_import ($connection, $pathname) {}
 
@@ -22881,7 +24298,7 @@ function pg_lo_import ($connection, $pathname) {}
  * @param connection resource
  * @param oid int
  * @param pathname string
- * @return bool
+ * @return bool 
  */
 function pg_lo_export ($connection, $oid, $pathname) {}
 
@@ -22891,7 +24308,7 @@ function pg_lo_export ($connection, $oid, $pathname) {}
  * @param large_object resource
  * @param offset int
  * @param whence int[optional]
- * @return bool
+ * @return bool 
  */
 function pg_lo_seek ($large_object, $offset, $whence = null) {}
 
@@ -22899,7 +24316,7 @@ function pg_lo_seek ($large_object, $offset, $whence = null) {}
  * Returns current seek position a of large object
  * @link http://php.net/manual/en/function.pg-lo-tell.php
  * @param large_object resource
- * @return int
+ * @return int 
  */
 function pg_lo_tell ($large_object) {}
 
@@ -22908,7 +24325,7 @@ function pg_lo_tell ($large_object) {}
  * @link http://php.net/manual/en/function.pg-escape-string.php
  * @param connection resource[optional]
  * @param data string
- * @return string
+ * @return string 
  */
 function pg_escape_string ($connection = null, $data) {}
 
@@ -22917,7 +24334,7 @@ function pg_escape_string ($connection = null, $data) {}
  * @link http://php.net/manual/en/function.pg-escape-bytea.php
  * @param connection resource[optional]
  * @param data string
- * @return string
+ * @return string 
  */
 function pg_escape_bytea ($connection = null, $data) {}
 
@@ -22925,7 +24342,7 @@ function pg_escape_bytea ($connection = null, $data) {}
  * Unescape binary for bytea type
  * @link http://php.net/manual/en/function.pg-unescape-bytea.php
  * @param data string
- * @return string
+ * @return string 
  */
 function pg_unescape_bytea ($data) {}
 
@@ -22935,7 +24352,7 @@ function pg_unescape_bytea ($data) {}
  * @link http://php.net/manual/en/function.pg-set-error-verbosity.php
  * @param connection resource
  * @param verbosity int
- * @return int
+ * @return int 
  */
 function pg_set_error_verbosity ($connection, $verbosity) {}
 
@@ -22943,7 +24360,7 @@ function pg_set_error_verbosity ($connection, $verbosity) {}
  * Gets the client encoding
  * @link http://php.net/manual/en/function.pg-client-encoding.php
  * @param connection resource[optional]
- * @return string
+ * @return string 
  */
 function pg_client_encoding ($connection = null) {}
 
@@ -22960,7 +24377,7 @@ function pg_set_client_encoding ($encoding) {}
  * @link http://php.net/manual/en/function.pg-meta-data.php
  * @param connection resource
  * @param table_name string
- * @return array
+ * @return array 
  */
 function pg_meta_data ($connection, $table_name) {}
 
@@ -22971,7 +24388,7 @@ function pg_meta_data ($connection, $table_name) {}
  * @param table_name string
  * @param assoc_array array
  * @param options int[optional]
- * @return array
+ * @return array 
  */
 function pg_convert ($connection, $table_name, array $assoc_array, $options = null) {}
 
@@ -22982,7 +24399,7 @@ function pg_convert ($connection, $table_name, array $assoc_array, $options = nu
  * @param table_name string
  * @param assoc_array array
  * @param options int[optional]
- * @return mixed
+ * @return mixed 
  */
 function pg_insert ($connection, $table_name, array $assoc_array, $options = null) {}
 
@@ -22994,7 +24411,7 @@ function pg_insert ($connection, $table_name, array $assoc_array, $options = nul
  * @param data array
  * @param condition array
  * @param options int[optional]
- * @return mixed
+ * @return mixed 
  */
 function pg_update ($connection, $table_name, array $data, array $condition, $options = null) {}
 
@@ -23005,7 +24422,7 @@ function pg_update ($connection, $table_name, array $data, array $condition, $op
  * @param table_name string
  * @param assoc_array array
  * @param options int[optional]
- * @return mixed
+ * @return mixed 
  */
 function pg_delete ($connection, $table_name, array $assoc_array, $options = null) {}
 
@@ -23016,7 +24433,7 @@ function pg_delete ($connection, $table_name, array $assoc_array, $options = nul
  * @param table_name string
  * @param assoc_array array
  * @param options int[optional]
- * @return mixed
+ * @return mixed 
  */
 function pg_select ($connection, $table_name, array $assoc_array, $options = null) {}
 
@@ -23070,46 +24487,315 @@ function pg_clientencoding () {}
 
 function pg_setclientencoding () {}
 
+
+/**
+ * Passed to pg_connect to force the creation of a new connection,
+ * rather then re-using an existing identical connection.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_CONNECT_FORCE_NEW', 2);
+
+/**
+ * Passed to pg_fetch_array. Return an associative array of field
+ * names and values.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_ASSOC', 1);
+
+/**
+ * Passed to pg_fetch_array. Return a numerically indexed array of field
+ * numbers and values.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_NUM', 2);
+
+/**
+ * Passed to pg_fetch_array. Return an array of field values
+ * that is both numerically indexed (by field number) and associated (by field name).
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_BOTH', 3);
+
+/**
+ * Returned by pg_connection_status indicating that the database
+ * connection is in an invalid state.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_CONNECTION_BAD', 1);
+
+/**
+ * Returned by pg_connection_status indicating that the database
+ * connection is in a valid state.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_CONNECTION_OK', 0);
+
+/**
+ * Returned by pg_transaction_status. Connection is
+ * currently idle, not in a transaction.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_TRANSACTION_IDLE', 0);
+
+/**
+ * Returned by pg_transaction_status. A command
+ * is in progress on the connection. A query has been sent via the connection
+ * and not yet completed.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_TRANSACTION_ACTIVE', 1);
+
+/**
+ * Returned by pg_transaction_status. The connection
+ * is idle, in a transaction block.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_TRANSACTION_INTRANS', 2);
+
+/**
+ * Returned by pg_transaction_status. The connection
+ * is idle, in a failed transaction block.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_TRANSACTION_INERROR', 3);
+
+/**
+ * Returned by pg_transaction_status. The connection
+ * is bad.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_TRANSACTION_UNKNOWN', 4);
+
+/**
+ * Passed to pg_set_error_verbosity.
+ * Specified that returned messages include severity, primary text, 
+ * and position only; this will normally fit on a single line.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_ERRORS_TERSE', 0);
+
+/**
+ * Passed to pg_set_error_verbosity.
+ * The default mode produces messages that include the above 
+ * plus any detail, hint, or context fields (these may span 
+ * multiple lines).
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_ERRORS_DEFAULT', 1);
+
+/**
+ * Passed to pg_set_error_verbosity.
+ * The verbose mode includes all available fields.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_ERRORS_VERBOSE', 2);
+
+/**
+ * Passed to pg_lo_seek. Seek operation is to begin
+ * from the start of the object.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_SEEK_SET', 0);
+
+/**
+ * Passed to pg_lo_seek. Seek operation is to begin
+ * from the current position.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_SEEK_CUR', 1);
+
+/**
+ * Passed to pg_lo_seek. Seek operation is to begin
+ * from the end of the object.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_SEEK_END', 2);
+
+/**
+ * Passed to pg_result_status. Indicates that
+ * numerical result code is desired.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_STATUS_LONG', 1);
+
+/**
+ * Passed to pg_result_status. Indicates that
+ * textual result command tag is desired.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_STATUS_STRING', 2);
+
+/**
+ * Returned by pg_result_status. The string sent to the server
+ * was empty.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_EMPTY_QUERY', 0);
+
+/**
+ * Returned by pg_result_status. Successful completion of a 
+ * command returning no data.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_COMMAND_OK', 1);
+
+/**
+ * Returned by pg_result_status. Successful completion of a command 
+ * returning data (such as a SELECT or SHOW).
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_TUPLES_OK', 2);
+
+/**
+ * Returned by pg_result_status. Copy Out (from server) data 
+ * transfer started.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_COPY_OUT', 3);
+
+/**
+ * Returned by pg_result_status. Copy In (to server) data 
+ * transfer started.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_COPY_IN', 4);
+
+/**
+ * Returned by pg_result_status. The server's response 
+ * was not understood.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_BAD_RESPONSE', 5);
+
+/**
+ * Returned by pg_result_status. A nonfatal error 
+ * (a notice or warning) occurred.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_NONFATAL_ERROR', 6);
+
+/**
+ * Returned by pg_result_status. A fatal error 
+ * occurred.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_FATAL_ERROR', 7);
+
+/**
+ * Passed to pg_result_error_field.
+ * The severity; the field contents are ERROR, 
+ * FATAL, or PANIC (in an error message), or 
+ * WARNING, NOTICE, DEBUG, 
+ * INFO, or LOG (in a notice message), or a localized 
+ * translation of one of these. Always present.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_SEVERITY', 83);
+
+/**
+ * Passed to pg_result_error_field.
+ * The SQLSTATE code for the error. The SQLSTATE code identifies the type of error 
+ * that has occurred; it can be used by front-end applications to perform specific 
+ * operations (such as error handling) in response to a particular database error. 
+ * This field is not localizable, and is always present.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_SQLSTATE', 67);
+
+/**
+ * Passed to pg_result_error_field.
+ * The primary human-readable error message (typically one line). Always present.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_MESSAGE_PRIMARY', 77);
+
+/**
+ * Passed to pg_result_error_field.
+ * Detail: an optional secondary error message carrying more detail about the problem. May run to multiple lines.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_MESSAGE_DETAIL', 68);
+
+/**
+ * Passed to pg_result_error_field.
+ * Hint: an optional suggestion what to do about the problem. This is intended to differ from detail in that it
+ * offers advice (potentially inappropriate) rather than hard facts. May run to multiple lines.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_MESSAGE_HINT', 72);
+
+/**
+ * Passed to pg_result_error_field.
+ * A string containing a decimal integer indicating an error cursor position as an index into the original 
+ * statement string. The first character has index 1, and positions are measured in characters not bytes.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_STATEMENT_POSITION', 80);
+
+/**
+ * Passed to pg_result_error_field.
+ * This is defined the same as the PG_DIAG_STATEMENT_POSITION field, but 
+ * it is used when the cursor position refers to an internally generated 
+ * command rather than the one submitted by the client. The 
+ * PG_DIAG_INTERNAL_QUERY field will always appear when this 
+ * field appears.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_INTERNAL_POSITION', 112);
+
+/**
+ * Passed to pg_result_error_field.
+ * The text of a failed internally-generated command. This could be, for example, a 
+ * SQL query issued by a PL/pgSQL function.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_INTERNAL_QUERY', 113);
+
+/**
+ * Passed to pg_result_error_field.
+ * An indication of the context in which the error occurred. Presently 
+ * this includes a call stack traceback of active procedural language 
+ * functions and internally-generated queries. The trace is one entry 
+ * per line, most recent first.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_CONTEXT', 87);
+
+/**
+ * Passed to pg_result_error_field.
+ * The file name of the PostgreSQL source-code location where the error 
+ * was reported.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_SOURCE_FILE', 70);
+
+/**
+ * Passed to pg_result_error_field.
+ * The line number of the PostgreSQL source-code location where the 
+ * error was reported.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_SOURCE_LINE', 76);
+
+/**
+ * Passed to pg_result_error_field.
+ * The name of the PostgreSQL source-code function reporting the error.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_DIAG_SOURCE_FUNCTION', 82);
+
+/**
+ * Passed to pg_convert.
+ * Ignore conversion of &null; into SQL NOT NULL columns.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_CONV_IGNORE_DEFAULT', 2);
+
+/**
+ * Passed to pg_convert.
+ * Use SQL NULL in place of an empty string.
+ * @link http://php.net/manual/en/pgsql.constants.php
+ */
 define ('PGSQL_CONV_FORCE_NULL', 4);
 define ('PGSQL_CONV_IGNORE_NOT_NULL', 8);
 define ('PGSQL_DML_NO_CONV', 256);
@@ -23136,7 +24822,7 @@ class SoapClient  {
 	 * @param options array[optional]
 	 * @param input_headers array[optional]
 	 * @param output_headers array[optional]
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function __call ($function_name, array $arguments, array $options = null, array $input_headers = null, array $output_headers = null) {}
 
@@ -23148,49 +24834,49 @@ class SoapClient  {
 	 * @param options array[optional]
 	 * @param input_headers mixed[optional]
 	 * @param output_headers array[optional]
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function __soapCall ($function_name, array $arguments, array $options = null, $input_headers = null, array &$output_headers = null) {}
 
 	/**
 	 * Returns last SOAP request
 	 * @link http://php.net/manual/en/function.soap-soapclient-getlastrequest.php
-	 * @return string
+	 * @return string 
 	 */
 	public function __getLastRequest () {}
 
 	/**
 	 * Returns last SOAP response.
 	 * @link http://php.net/manual/en/function.soap-soapclient-getlastresponse.php
-	 * @return string
+	 * @return string 
 	 */
 	public function __getLastResponse () {}
 
 	/**
 	 * Returns last SOAP request headers
 	 * @link http://php.net/manual/en/function.soap-soapclient-getlastrequestheaders.php
-	 * @return string
+	 * @return string 
 	 */
 	public function __getLastRequestHeaders () {}
 
 	/**
 	 * Returns last SOAP response headers.
 	 * @link http://php.net/manual/en/function.soap-soapclient-getlastresponseheaders.php
-	 * @return string
+	 * @return string 
 	 */
 	public function __getLastResponseHeaders () {}
 
 	/**
 	 * Returns list of SOAP functions
 	 * @link http://php.net/manual/en/function.soap-soapclient-getfunctions.php
-	 * @return array
+	 * @return array 
 	 */
 	public function __getFunctions () {}
 
 	/**
 	 * Returns list of SOAP types
 	 * @link http://php.net/manual/en/function.soap-soapclient-gettypes.php
-	 * @return array
+	 * @return array 
 	 */
 	public function __getTypes () {}
 
@@ -23202,7 +24888,7 @@ class SoapClient  {
 	 * @param action string
 	 * @param version int
 	 * @param one_way int[optional]
-	 * @return string
+	 * @return string 
 	 */
 	public function __doRequest ($request, $location, $action, $version, $one_way = null) {}
 
@@ -23211,7 +24897,7 @@ class SoapClient  {
 	 * @link http://php.net/manual/en/function.soap-soapclient-setcookie.php
 	 * @param name string
 	 * @param value string[optional]
-	 * @return void
+	 * @return void 
 	 */
 	public function __setCookie ($name, $value = null) {}
 
@@ -23223,9 +24909,9 @@ class SoapClient  {
 
 /**
  * SoapVar is a special low-level class for encoding
- *  parameters and returning values in non-WSDL mode. It's
- *  just a data holder and does not have any special methods except the constructor. 
- *  It's useful when you want to set the type property in SOAP request or response.
+ * parameters and returning values in non-WSDL mode. It's
+ * just a data holder and does not have any special methods except the constructor. 
+ * It's useful when you want to set the type property in SOAP request or response.
  * @link http://php.net/manual/en/ref.soap.php
  */
 class SoapVar  {
@@ -23245,7 +24931,7 @@ class SoapServer  {
 	 * Sets persistence mode of SoapServer
 	 * @link http://php.net/manual/en/function.soap-soapserver-setpersistence.php
 	 * @param mode int
-	 * @return void
+	 * @return void 
 	 */
 	public function setPersistence ($mode) {}
 
@@ -23255,7 +24941,7 @@ class SoapServer  {
 	 * @param class_name string
 	 * @param args mixed[optional]
 	 * @param ... mixed[optional]
-	 * @return void
+	 * @return void 
 	 */
 	public function setClass ($class_name, $args = null) {}
 
@@ -23265,14 +24951,14 @@ class SoapServer  {
 	 * Adds one or several functions those will handle SOAP requests
 	 * @link http://php.net/manual/en/function.soap-soapserver-addfunction.php
 	 * @param functions mixed
-	 * @return void
+	 * @return void 
 	 */
 	public function addFunction ($functions) {}
 
 	/**
 	 * Returns list of defined functions
 	 * @link http://php.net/manual/en/function.soap-soapserver-getfunctions.php
-	 * @return array
+	 * @return array 
 	 */
 	public function getFunctions () {}
 
@@ -23280,7 +24966,7 @@ class SoapServer  {
 	 * Handles a SOAP request
 	 * @link http://php.net/manual/en/function.soap-soapserver-handle.php
 	 * @param soap_request string[optional]
-	 * @return void
+	 * @return void 
 	 */
 	public function handle ($soap_request = null) {}
 
@@ -23292,7 +24978,7 @@ class SoapServer  {
 	 * @param actor string[optional]
 	 * @param details mixed[optional]
 	 * @param name string[optional]
-	 * @return void
+	 * @return void 
 	 */
 	public function fault ($code, $string, $actor = null, $details = null, $name = null) {}
 
@@ -23338,9 +25024,9 @@ class SoapFault extends Exception  {
 
 /**
  * SoapParam is a special low-level class for naming 
- *  parameters and returning values in non-WSDL mode. 
- *  It's just a data holder and it does not have any special methods except 
- *  its constructor.
+ * parameters and returning values in non-WSDL mode. 
+ * It's just a data holder and it does not have any special methods except 
+ * its constructor.
  * @link http://php.net/manual/en/ref.soap.php
  */
 class SoapParam  {
@@ -23351,9 +25037,9 @@ class SoapParam  {
 
 /**
  * SoapHeader is a special low-level class for passing 
- *  or returning SOAP headers. It's just a data holder and it does not have any 
- *  special methods except its constructor. It can be used in the  method to pass a SOAP header or 
- *  in a SOAP header handler to return the header in a SOAP response.
+ * or returning SOAP headers. It's just a data holder and it does not have any 
+ * special methods except its constructor. It can be used in the method to pass a SOAP header or 
+ * in a SOAP header handler to return the header in a SOAP response.
  * @link http://php.net/manual/en/ref.soap.php
  */
 class SoapHeader  {
@@ -23366,7 +25052,7 @@ class SoapHeader  {
  * Set whether to use the SOAP error handler and return the former value
  * @link http://php.net/manual/en/function.use-soap-error-handler.php
  * @param handler bool[optional]
- * @return bool
+ * @return bool 
  */
 function use_soap_error_handler ($handler = null) {}
 
@@ -23374,7 +25060,7 @@ function use_soap_error_handler ($handler = null) {}
  * Checks if SOAP call was failed
  * @link http://php.net/manual/en/function.is-soap-fault.php
  * @param obj mixed
- * @return bool
+ * @return bool 
  */
 function is_soap_fault ($obj) {}
 
@@ -23441,6 +25127,11 @@ define ('XSD_UNSIGNEDBYTE', 142);
 define ('XSD_POSITIVEINTEGER', 143);
 define ('XSD_NMTOKENS', 144);
 define ('XSD_ANYTYPE', 145);
+
+/**
+ * Added in PHP 5.1.0.
+ * @link http://php.net/manual/en/soap.constants.php
+ */
 define ('XSD_ANYXML', 147);
 define ('APACHE_MAP', 200);
 define ('SOAP_ENC_OBJECT', 301);
@@ -23449,6 +25140,11 @@ define ('XSD_1999_TIMEINSTANT', 401);
 define ('XSD_NAMESPACE', "http://www.w3.org/2001/XMLSchema");
 define ('XSD_1999_NAMESPACE', "http://www.w3.org/1999/XMLSchema");
 define ('SOAP_SINGLE_ELEMENT_ARRAYS', 1);
+
+/**
+ * Added in PHP 5.1.0.
+ * @link http://php.net/manual/en/soap.constants.php
+ */
 define ('SOAP_WAIT_ONE_WAY_CALLS', 2);
 define ('SOAP_USE_XSI_ARRAY_TYPE', 4);
 define ('WSDL_CACHE_NONE', 0);
@@ -23478,7 +25174,7 @@ function msg_get_queue ($key, $perms = null) {}
  * @param serialize bool[optional]
  * @param blocking bool[optional]
  * @param errorcode int[optional]
- * @return bool
+ * @return bool 
  */
 function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = null, &$errorcode = null) {}
 
@@ -23493,7 +25189,7 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
  * @param unserialize bool[optional]
  * @param flags int[optional]
  * @param errorcode int[optional]
- * @return bool
+ * @return bool 
  */
 function msg_receive ($queue, $desiredmsgtype, &$msgtype, $maxsize, &$message, $unserialize = null, $flags = null, &$errorcode = null) {}
 
@@ -23501,7 +25197,7 @@ function msg_receive ($queue, $desiredmsgtype, &$msgtype, $maxsize, &$message, $
  * Destroy a message queue
  * @link http://php.net/manual/en/function.msg-remove-queue.php
  * @param queue resource
- * @return bool
+ * @return bool 
  */
 function msg_remove_queue ($queue) {}
 
@@ -23509,7 +25205,7 @@ function msg_remove_queue ($queue) {}
  * Returns information from the message queue data structure
  * @link http://php.net/manual/en/function.msg-stat-queue.php
  * @param queue resource
- * @return array
+ * @return array 
  */
 function msg_stat_queue ($queue) {}
 
@@ -23518,7 +25214,7 @@ function msg_stat_queue ($queue) {}
  * @link http://php.net/manual/en/function.msg-set-queue.php
  * @param queue resource
  * @param data array
- * @return bool
+ * @return bool 
  */
 function msg_set_queue ($queue, array $data) {}
 
@@ -23929,14 +25625,14 @@ class XMLWriter  {
 	 * Create new xmlwriter using source uri for output
 	 * @link http://php.net/manual/en/function.xmlwriter-open-uri.php
 	 * @param uri string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function openUri ($uri) {}
 
 	/**
 	 * Create new xmlwriter using memory for string output
 	 * @link http://php.net/manual/en/function.xmlwriter-open-memory.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function openMemory () {}
 
@@ -23944,7 +25640,7 @@ class XMLWriter  {
 	 * Toggle indentation on/off
 	 * @link http://php.net/manual/en/function.xmlwriter-set-indent.php
 	 * @param indent bool
-	 * @return bool
+	 * @return bool 
 	 */
 	public function setIndent ($indent) {}
 
@@ -23952,21 +25648,21 @@ class XMLWriter  {
 	 * Set string used for indenting
 	 * @link http://php.net/manual/en/function.xmlwriter-set-indent-string.php
 	 * @param indentString string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function setIndentString ($indentString) {}
 
 	/**
 	 * Create start comment
 	 * @link http://php.net/manual/en/function.xmlwriter-start-comment.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startComment () {}
 
 	/**
 	 * Create end comment
 	 * @link http://php.net/manual/en/function.xmlwriter-end-comment.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endComment () {}
 
@@ -23974,14 +25670,14 @@ class XMLWriter  {
 	 * Create start attribute
 	 * @link http://php.net/manual/en/function.xmlwriter-start-attribute.php
 	 * @param name string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startAttribute ($name) {}
 
 	/**
 	 * End attribute
 	 * @link http://php.net/manual/en/function.xmlwriter-end-attribute.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endAttribute () {}
 
@@ -23990,7 +25686,7 @@ class XMLWriter  {
 	 * @link http://php.net/manual/en/function.xmlwriter-write-attribute.php
 	 * @param name string
 	 * @param value string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeAttribute ($name, $value) {}
 
@@ -24000,7 +25696,7 @@ class XMLWriter  {
 	 * @param prefix string
 	 * @param name string
 	 * @param uri string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startAttributeNs ($prefix, $name, $uri) {}
 
@@ -24011,7 +25707,7 @@ class XMLWriter  {
 	 * @param name string
 	 * @param uri string
 	 * @param content string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeAttributeNs ($prefix, $name, $uri, $content) {}
 
@@ -24019,21 +25715,21 @@ class XMLWriter  {
 	 * Create start element tag
 	 * @link http://php.net/manual/en/function.xmlwriter-start-element.php
 	 * @param name string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startElement ($name) {}
 
 	/**
 	 * End current element
 	 * @link http://php.net/manual/en/function.xmlwriter-end-element.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endElement () {}
 
 	/**
 	 * End current element
 	 * @link http://php.net/manual/en/function.xmlwriter-full-end-element.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function fullEndElement () {}
 
@@ -24043,7 +25739,7 @@ class XMLWriter  {
 	 * @param prefix string
 	 * @param name string
 	 * @param uri string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startElementNs ($prefix, $name, $uri) {}
 
@@ -24052,7 +25748,7 @@ class XMLWriter  {
 	 * @link http://php.net/manual/en/function.xmlwriter-write-element.php
 	 * @param name string
 	 * @param content string[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeElement ($name, $content = null) {}
 
@@ -24063,7 +25759,7 @@ class XMLWriter  {
 	 * @param name string
 	 * @param uri string
 	 * @param content string[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeElementNs ($prefix, $name, $uri, $content = null) {}
 
@@ -24071,14 +25767,14 @@ class XMLWriter  {
 	 * Create start PI tag
 	 * @link http://php.net/manual/en/function.xmlwriter-start-pi.php
 	 * @param target string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startPi ($target) {}
 
 	/**
 	 * End current PI
 	 * @link http://php.net/manual/en/function.xmlwriter-end-pi.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endPi () {}
 
@@ -24087,21 +25783,21 @@ class XMLWriter  {
 	 * @link http://php.net/manual/en/function.xmlwriter-write-pi.php
 	 * @param target string
 	 * @param content string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writePi ($target, $content) {}
 
 	/**
 	 * Create start CDATA tag
 	 * @link http://php.net/manual/en/function.xmlwriter-start-cdata.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startCdata () {}
 
 	/**
 	 * End current CDATA
 	 * @link http://php.net/manual/en/function.xmlwriter-end-cdata.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endCdata () {}
 
@@ -24109,7 +25805,7 @@ class XMLWriter  {
 	 * Write full CDATA tag
 	 * @link http://php.net/manual/en/function.xmlwriter-write-cdata.php
 	 * @param content string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeCdata ($content) {}
 
@@ -24117,7 +25813,7 @@ class XMLWriter  {
 	 * Write text
 	 * @link http://php.net/manual/en/function.xmlwriter-text.php
 	 * @param content string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function text ($content) {}
 
@@ -24125,7 +25821,7 @@ class XMLWriter  {
 	 * Write a raw XML text
 	 * @link http://php.net/manual/en/function.xmlwriter-write-raw.php
 	 * @param content string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeRaw ($content) {}
 
@@ -24135,14 +25831,14 @@ class XMLWriter  {
 	 * @param version string[optional]
 	 * @param encoding string[optional]
 	 * @param standalone string[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startDocument ($version = null, $encoding = null, $standalone = null) {}
 
 	/**
 	 * End current document
 	 * @link http://php.net/manual/en/function.xmlwriter-end-document.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endDocument () {}
 
@@ -24150,7 +25846,7 @@ class XMLWriter  {
 	 * Write full comment tag
 	 * @link http://php.net/manual/en/function.xmlwriter-write-comment.php
 	 * @param content string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeComment ($content) {}
 
@@ -24160,14 +25856,14 @@ class XMLWriter  {
 	 * @param qualifiedName string
 	 * @param publicId string[optional]
 	 * @param systemId string[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startDtd ($qualifiedName, $publicId = null, $systemId = null) {}
 
 	/**
 	 * End current DTD
 	 * @link http://php.net/manual/en/function.xmlwriter-end-dtd.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endDtd () {}
 
@@ -24178,7 +25874,7 @@ class XMLWriter  {
 	 * @param publicId string[optional]
 	 * @param systemId string[optional]
 	 * @param subset string[optional]
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeDtd ($name, $publicId = null, $systemId = null, $subset = null) {}
 
@@ -24186,14 +25882,14 @@ class XMLWriter  {
 	 * Create start DTD element
 	 * @link http://php.net/manual/en/function.xmlwriter-start-dtd-element.php
 	 * @param qualifiedName string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startDtdElement ($qualifiedName) {}
 
 	/**
 	 * End current DTD element
 	 * @link http://php.net/manual/en/function.xmlwriter-end-dtd-element.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endDtdElement () {}
 
@@ -24202,7 +25898,7 @@ class XMLWriter  {
 	 * @link http://php.net/manual/en/function.xmlwriter-write-dtd-element.php
 	 * @param name string
 	 * @param content string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeDtdElement ($name, $content) {}
 
@@ -24210,14 +25906,14 @@ class XMLWriter  {
 	 * Create start DTD AttList
 	 * @link http://php.net/manual/en/function.xmlwriter-start-dtd-attlist.php
 	 * @param name string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startDtdAttlist ($name) {}
 
 	/**
 	 * End current DTD AttList
 	 * @link http://php.net/manual/en/function.xmlwriter-end-dtd-attlist.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endDtdAttlist () {}
 
@@ -24226,7 +25922,7 @@ class XMLWriter  {
 	 * @link http://php.net/manual/en/function.xmlwriter-write-dtd-attlist.php
 	 * @param name string
 	 * @param content string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeDtdAttlist ($name, $content) {}
 
@@ -24235,14 +25931,14 @@ class XMLWriter  {
 	 * @link http://php.net/manual/en/function.xmlwriter-start-dtd-entity.php
 	 * @param name string
 	 * @param isparam bool
-	 * @return bool
+	 * @return bool 
 	 */
 	public function startDtdEntity ($name, $isparam) {}
 
 	/**
 	 * End current DTD Entity
 	 * @link http://php.net/manual/en/function.xmlwriter-end-dtd-entity.php
-	 * @return bool
+	 * @return bool 
 	 */
 	public function endDtdEntity () {}
 
@@ -24251,7 +25947,7 @@ class XMLWriter  {
 	 * @link http://php.net/manual/en/function.xmlwriter-write-dtd-entity.php
 	 * @param name string
 	 * @param content string
-	 * @return bool
+	 * @return bool 
 	 */
 	public function writeDtdEntity ($name, $content) {}
 
@@ -24267,7 +25963,7 @@ class XMLWriter  {
 	 * Flush current buffer
 	 * @link http://php.net/manual/en/function.xmlwriter-flush.php
 	 * @param empty bool[optional]
-	 * @return mixed
+	 * @return mixed 
 	 */
 	public function flush ($empty = null) {}
 
@@ -24277,14 +25973,14 @@ class XMLWriter  {
  * Create new xmlwriter using source uri for output
  * @link http://php.net/manual/en/function.xmlwriter-open-uri.php
  * @param uri string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_open_uri ($uri) {}
 
 /**
  * Create new xmlwriter using memory for string output
  * @link http://php.net/manual/en/function.xmlwriter-open-memory.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_open_memory () {}
 
@@ -24292,7 +25988,7 @@ function xmlwriter_open_memory () {}
  * Toggle indentation on/off
  * @link http://php.net/manual/en/function.xmlwriter-set-indent.php
  * @param indent bool
- * @return bool
+ * @return bool 
  */
 function xmlwriter_set_indent ($indent) {}
 
@@ -24300,21 +25996,21 @@ function xmlwriter_set_indent ($indent) {}
  * Set string used for indenting
  * @link http://php.net/manual/en/function.xmlwriter-set-indent-string.php
  * @param indentString string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_set_indent_string ($indentString) {}
 
 /**
  * Create start comment
  * @link http://php.net/manual/en/function.xmlwriter-start-comment.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_comment () {}
 
 /**
  * Create end comment
  * @link http://php.net/manual/en/function.xmlwriter-end-comment.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_comment () {}
 
@@ -24322,14 +26018,14 @@ function xmlwriter_end_comment () {}
  * Create start attribute
  * @link http://php.net/manual/en/function.xmlwriter-start-attribute.php
  * @param name string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_attribute ($name) {}
 
 /**
  * End attribute
  * @link http://php.net/manual/en/function.xmlwriter-end-attribute.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_attribute () {}
 
@@ -24338,7 +26034,7 @@ function xmlwriter_end_attribute () {}
  * @link http://php.net/manual/en/function.xmlwriter-write-attribute.php
  * @param name string
  * @param value string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_attribute ($name, $value) {}
 
@@ -24348,7 +26044,7 @@ function xmlwriter_write_attribute ($name, $value) {}
  * @param prefix string
  * @param name string
  * @param uri string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_attribute_ns ($prefix, $name, $uri) {}
 
@@ -24359,7 +26055,7 @@ function xmlwriter_start_attribute_ns ($prefix, $name, $uri) {}
  * @param name string
  * @param uri string
  * @param content string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_attribute_ns ($prefix, $name, $uri, $content) {}
 
@@ -24367,21 +26063,21 @@ function xmlwriter_write_attribute_ns ($prefix, $name, $uri, $content) {}
  * Create start element tag
  * @link http://php.net/manual/en/function.xmlwriter-start-element.php
  * @param name string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_element ($name) {}
 
 /**
  * End current element
  * @link http://php.net/manual/en/function.xmlwriter-end-element.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_element () {}
 
 /**
  * End current element
  * @link http://php.net/manual/en/function.xmlwriter-full-end-element.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_full_end_element () {}
 
@@ -24391,7 +26087,7 @@ function xmlwriter_full_end_element () {}
  * @param prefix string
  * @param name string
  * @param uri string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_element_ns ($prefix, $name, $uri) {}
 
@@ -24400,7 +26096,7 @@ function xmlwriter_start_element_ns ($prefix, $name, $uri) {}
  * @link http://php.net/manual/en/function.xmlwriter-write-element.php
  * @param name string
  * @param content string[optional]
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_element ($name, $content = null) {}
 
@@ -24411,7 +26107,7 @@ function xmlwriter_write_element ($name, $content = null) {}
  * @param name string
  * @param uri string
  * @param content string[optional]
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_element_ns ($prefix, $name, $uri, $content = null) {}
 
@@ -24419,14 +26115,14 @@ function xmlwriter_write_element_ns ($prefix, $name, $uri, $content = null) {}
  * Create start PI tag
  * @link http://php.net/manual/en/function.xmlwriter-start-pi.php
  * @param target string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_pi ($target) {}
 
 /**
  * End current PI
  * @link http://php.net/manual/en/function.xmlwriter-end-pi.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_pi () {}
 
@@ -24435,21 +26131,21 @@ function xmlwriter_end_pi () {}
  * @link http://php.net/manual/en/function.xmlwriter-write-pi.php
  * @param target string
  * @param content string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_pi ($target, $content) {}
 
 /**
  * Create start CDATA tag
  * @link http://php.net/manual/en/function.xmlwriter-start-cdata.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_cdata () {}
 
 /**
  * End current CDATA
  * @link http://php.net/manual/en/function.xmlwriter-end-cdata.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_cdata () {}
 
@@ -24457,7 +26153,7 @@ function xmlwriter_end_cdata () {}
  * Write full CDATA tag
  * @link http://php.net/manual/en/function.xmlwriter-write-cdata.php
  * @param content string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_cdata ($content) {}
 
@@ -24465,7 +26161,7 @@ function xmlwriter_write_cdata ($content) {}
  * Write text
  * @link http://php.net/manual/en/function.xmlwriter-text.php
  * @param content string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_text ($content) {}
 
@@ -24473,7 +26169,7 @@ function xmlwriter_text ($content) {}
  * Write a raw XML text
  * @link http://php.net/manual/en/function.xmlwriter-write-raw.php
  * @param content string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_raw ($content) {}
 
@@ -24483,14 +26179,14 @@ function xmlwriter_write_raw ($content) {}
  * @param version string[optional]
  * @param encoding string[optional]
  * @param standalone string[optional]
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_document ($version = null, $encoding = null, $standalone = null) {}
 
 /**
  * End current document
  * @link http://php.net/manual/en/function.xmlwriter-end-document.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_document () {}
 
@@ -24498,7 +26194,7 @@ function xmlwriter_end_document () {}
  * Write full comment tag
  * @link http://php.net/manual/en/function.xmlwriter-write-comment.php
  * @param content string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_comment ($content) {}
 
@@ -24508,14 +26204,14 @@ function xmlwriter_write_comment ($content) {}
  * @param qualifiedName string
  * @param publicId string[optional]
  * @param systemId string[optional]
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_dtd ($qualifiedName, $publicId = null, $systemId = null) {}
 
 /**
  * End current DTD
  * @link http://php.net/manual/en/function.xmlwriter-end-dtd.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_dtd () {}
 
@@ -24526,7 +26222,7 @@ function xmlwriter_end_dtd () {}
  * @param publicId string[optional]
  * @param systemId string[optional]
  * @param subset string[optional]
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_dtd ($name, $publicId = null, $systemId = null, $subset = null) {}
 
@@ -24534,14 +26230,14 @@ function xmlwriter_write_dtd ($name, $publicId = null, $systemId = null, $subset
  * Create start DTD element
  * @link http://php.net/manual/en/function.xmlwriter-start-dtd-element.php
  * @param qualifiedName string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_dtd_element ($qualifiedName) {}
 
 /**
  * End current DTD element
  * @link http://php.net/manual/en/function.xmlwriter-end-dtd-element.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_dtd_element () {}
 
@@ -24550,7 +26246,7 @@ function xmlwriter_end_dtd_element () {}
  * @link http://php.net/manual/en/function.xmlwriter-write-dtd-element.php
  * @param name string
  * @param content string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_dtd_element ($name, $content) {}
 
@@ -24558,14 +26254,14 @@ function xmlwriter_write_dtd_element ($name, $content) {}
  * Create start DTD AttList
  * @link http://php.net/manual/en/function.xmlwriter-start-dtd-attlist.php
  * @param name string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_dtd_attlist ($name) {}
 
 /**
  * End current DTD AttList
  * @link http://php.net/manual/en/function.xmlwriter-end-dtd-attlist.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_dtd_attlist () {}
 
@@ -24574,7 +26270,7 @@ function xmlwriter_end_dtd_attlist () {}
  * @link http://php.net/manual/en/function.xmlwriter-write-dtd-attlist.php
  * @param name string
  * @param content string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_dtd_attlist ($name, $content) {}
 
@@ -24583,14 +26279,14 @@ function xmlwriter_write_dtd_attlist ($name, $content) {}
  * @link http://php.net/manual/en/function.xmlwriter-start-dtd-entity.php
  * @param name string
  * @param isparam bool
- * @return bool
+ * @return bool 
  */
 function xmlwriter_start_dtd_entity ($name, $isparam) {}
 
 /**
  * End current DTD Entity
  * @link http://php.net/manual/en/function.xmlwriter-end-dtd-entity.php
- * @return bool
+ * @return bool 
  */
 function xmlwriter_end_dtd_entity () {}
 
@@ -24599,7 +26295,7 @@ function xmlwriter_end_dtd_entity () {}
  * @link http://php.net/manual/en/function.xmlwriter-write-dtd-entity.php
  * @param name string
  * @param content string
- * @return bool
+ * @return bool 
  */
 function xmlwriter_write_dtd_entity ($name, $content) {}
 
@@ -24615,7 +26311,7 @@ function xmlwriter_output_memory ($flush = null) {}
  * Flush current buffer
  * @link http://php.net/manual/en/function.xmlwriter-flush.php
  * @param empty bool[optional]
- * @return mixed
+ * @return mixed 
  */
 function xmlwriter_flush ($empty = null) {}
 
@@ -24654,7 +26350,7 @@ function func_get_args () {}
  * Get string length
  * @link http://php.net/manual/en/function.strlen.php
  * @param string string
- * @return int
+ * @return int 
  */
 function strlen ($string) {}
 
@@ -24717,7 +26413,7 @@ function error_reporting ($level = null) {}
  * @param name string
  * @param value mixed
  * @param case_insensitive bool[optional]
- * @return bool
+ * @return bool 
  */
 function define ($name, $value, $case_insensitive = null) {}
 
@@ -24777,7 +26473,7 @@ function class_exists ($class_name, $autoload = null) {}
  * @link http://php.net/manual/en/function.interface-exists.php
  * @param interface_name string
  * @param autoload bool[optional]
- * @return bool true if the interface given by 
+ * @return bool true if the interface given by
  */
 function interface_exists ($interface_name, $autoload = null) {}
 
@@ -24807,7 +26503,7 @@ function get_required_files () {}
  * @link http://php.net/manual/en/function.is-subclass-of.php
  * @param object mixed
  * @param class_name string
- * @return bool
+ * @return bool 
  */
 function is_subclass_of ($object, $class_name) {}
 
@@ -24849,7 +26545,7 @@ function get_class_methods ($class_name) {}
  * @link http://php.net/manual/en/function.trigger-error.php
  * @param error_msg string
  * @param error_type int[optional]
- * @return bool
+ * @return bool 
  */
 function trigger_error ($error_msg, $error_type = null) {}
 
@@ -24871,7 +26567,7 @@ function set_error_handler ($error_handler, $error_types = null) {}
 /**
  * Restores the previous error handler function
  * @link http://php.net/manual/en/function.restore-error-handler.php
- * @return bool
+ * @return bool 
  */
 function restore_error_handler () {}
 
@@ -24886,7 +26582,7 @@ function set_exception_handler ($exception_handler) {}
 /**
  * Restores the previously defined exception handler function
  * @link http://php.net/manual/en/function.restore-exception-handler.php
- * @return bool
+ * @return bool 
  */
 function restore_exception_handler () {}
 
@@ -24914,7 +26610,7 @@ function get_defined_functions () {}
 /**
  * Returns an array of all defined variables
  * @link http://php.net/manual/en/function.get-defined-vars.php
- * @return array
+ * @return array 
  */
 function get_defined_vars () {}
 
@@ -24931,7 +26627,7 @@ function create_function ($args, $code) {}
  * Returns the resource type
  * @link http://php.net/manual/en/function.get-resource-type.php
  * @param handle resource
- * @return string
+ * @return string 
  */
 function get_resource_type ($handle) {}
 
@@ -24954,7 +26650,7 @@ function extension_loaded ($name) {}
  * Returns an array with the names of the functions of a module
  * @link http://php.net/manual/en/function.get-extension-funcs.php
  * @param module_name string
- * @return array an array with all the functions, or false if 
+ * @return array an array with all the functions, or false if
  */
 function get_extension_funcs ($module_name) {}
 
@@ -24962,7 +26658,7 @@ function get_extension_funcs ($module_name) {}
  * Returns an associative array with the names of all the constants and their values
  * @link http://php.net/manual/en/function.get-defined-constants.php
  * @param categorize mixed[optional]
- * @return array
+ * @return array 
  */
 function get_defined_constants ($categorize = null) {}
 
@@ -24976,7 +26672,7 @@ function debug_backtrace () {}
 /**
  * Prints a backtrace
  * @link http://php.net/manual/en/function.debug-print-backtrace.php
- * @return void
+ * @return void 
  */
 function debug_print_backtrace () {}
 
@@ -25053,19 +26749,114 @@ class ErrorException extends Exception  {
 
 }
 
+
+/**
+ * Fatal run-time errors. These indicate errors that can not be
+ * recovered from, such as a memory allocation problem.
+ * Execution of the script is halted.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_ERROR', 1);
+
+/**
+ * Catchable fatal error. It indicates that a probably dangerous error
+ * occured, but did not leave the Engine in an unstable state. If the error
+ * is not caught by a user defined handle (see also
+ * set_error_handler), the application aborts as it
+ * was an E_ERROR.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_RECOVERABLE_ERROR', 4096);
+
+/**
+ * Run-time warnings (non-fatal errors). Execution of the script is not
+ * halted.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_WARNING', 2);
+
+/**
+ * Compile-time parse errors. Parse errors should only be generated by
+ * the parser.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_PARSE', 4);
+
+/**
+ * Run-time notices. Indicate that the script encountered something that
+ * could indicate an error, but could also happen in the normal course of
+ * running a script.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_NOTICE', 8);
+
+/**
+ * Run-time notices. Enable to have PHP suggest changes
+ * to your code which will ensure the best interoperability
+ * and forward compatibility of your code.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_STRICT', 2048);
+
+/**
+ * Fatal errors that occur during PHP's initial startup. This is like an
+ * E_ERROR, except it is generated by the core of PHP.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_CORE_ERROR', 16);
+
+/**
+ * Warnings (non-fatal errors) that occur during PHP's initial startup.
+ * This is like an E_WARNING, except it is generated
+ * by the core of PHP.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_CORE_WARNING', 32);
+
+/**
+ * Fatal compile-time errors. This is like an E_ERROR,
+ * except it is generated by the Zend Scripting Engine.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_COMPILE_ERROR', 64);
+
+/**
+ * Compile-time warnings (non-fatal errors). This is like an
+ * E_WARNING, except it is generated by the Zend
+ * Scripting Engine.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_COMPILE_WARNING', 128);
+
+/**
+ * User-generated error message. This is like an
+ * E_ERROR, except it is generated in PHP code by
+ * using the PHP function trigger_error.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_USER_ERROR', 256);
+
+/**
+ * User-generated warning message. This is like an
+ * E_WARNING, except it is generated in PHP code by
+ * using the PHP function trigger_error.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_USER_WARNING', 512);
+
+/**
+ * User-generated notice message. This is like an
+ * E_NOTICE, except it is generated in PHP code by
+ * using the PHP function trigger_error.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_USER_NOTICE', 1024);
+
+/**
+ * All errors and warnings, as supported, except of level
+ * E_STRICT in PHP &lt; 6.
+ * @link http://php.net/manual/en/errorfunc.constants.php
+ */
 define ('E_ALL', 6143);
 define ('TRUE', true);
 define ('FALSE', false);
@@ -25108,10 +26899,10 @@ define ('STDERR', "Resource id #3");
 
 /**
  * The full path and filename of the file. If used inside an include,
- *  the name of the included file is returned.
- *  Since PHP 4.0.2, __FILE__ always contains an
- *  absolute path whereas in older versions it contained relative path
- *  under some circumstances.
+ * the name of the included file is returned.
+ * Since PHP 4.0.2, __FILE__ always contains an
+ * absolute path whereas in older versions it contained relative path
+ * under some circumstances.
  * @link http://php.net/manual/en/language.constants.php
  */
 define ('__FILE__', null);
@@ -25124,23 +26915,23 @@ define ('__LINE__', null);
 
 /**
  * The class name. (Added in PHP 4.3.0) As of PHP 5 this constant 
- *  returns the class name as it was declared (case-sensitive). In PHP
- *  4 its value is always lowercased.
+ * returns the class name as it was declared (case-sensitive). In PHP
+ * 4 its value is always lowercased.
  * @link http://php.net/manual/en/language.constants.php
  */
 define ('__CLASS__', null);
 
 /**
  * The function name. (Added in PHP 4.3.0) As of PHP 5 this constant 
- *  returns the function name as it was declared (case-sensitive). In
- *  PHP 4 its value is always lowercased.
+ * returns the function name as it was declared (case-sensitive). In
+ * PHP 4 its value is always lowercased.
  * @link http://php.net/manual/en/language.constants.php
  */
 define ('__FUNCTION__', null);
 
 /**
  * The class method name. (Added in PHP 5.0.0) The method name is
- *  returned as it was declared (case-sensitive).
+ * returned as it was declared (case-sensitive).
  * @link http://php.net/manual/en/language.constants.php
  */
 define ('__METHOD__', null);

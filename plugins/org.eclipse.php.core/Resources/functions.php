@@ -174,10 +174,15 @@ function parse_phpdoc_functions ($phpdoc_dir) {
  * @return array Class information gathered from the PHP.net documentation by parsing XML files
  */
 function parse_phpdoc_classes ($phpdoc_dir) {
-	$xml_files = glob ("{$phpdoc_dir}/en/reference/*/reference.xml");
+	$xml_files = array_merge (
+		glob ("{$phpdoc_dir}/en/reference/*/reference.xml"),
+		glob ("{$phpdoc_dir}/en/reference/*/classes.xml"),
+		glob ("{$phpdoc_dir}/en/language/*/*.xml"),
+		glob ("{$phpdoc_dir}/en/language/*.xml")
+	);
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
-		if (preg_match ('@<reference.*?xml:id=["\'](.*?)["\'].*?>@s', $xml, $match)) {
+		if (preg_match ('@xml:id=["\'](.*?)["\']@', $xml, $match)) {
 			$id = $match[1];
 			if (preg_match_all ('@<title><classname>(.*?)</classname></title>@', $xml, $match)) {
 				for ($i = 0; $i < count($match[0]); ++$i) {
@@ -187,7 +192,7 @@ function parse_phpdoc_classes ($phpdoc_dir) {
 					$classesDoc[$refname]['name'] = $class;
 
 					if (preg_match ("@<title><classname>{$class}</classname></title>\s*<para>(.*?)</para>@s", $xml, $match2)) {
-						$classesDoc[$refname]['doc'] = xml_to_phpdoc(trim($match2[1]));
+						$classesDoc[$refname]['doc'] = xml_to_phpdoc($match2[1]);
 					}
 				}
 			}
@@ -196,24 +201,29 @@ function parse_phpdoc_classes ($phpdoc_dir) {
 	return $classesDoc;
 }
 
+/**
+ * Parses PHP documentation
+ * @param phpdoc_dir string PHP.net documentation directory
+ * @return array Constant information gathered from the PHP.net documentation by parsing XML files
+ */
 function parse_phpdoc_constants ($phpdoc_dir) {
 	exec ("find ".addslashes($phpdoc_dir)." -name \"*constants.xml\"", $xml_files);
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
 		if (preg_match ('@xml:id=["\'](.*?)["\']@', $xml, $match)) {
 			$id = $match[1];
-			if (preg_match_all ('@<term>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>\s*</term>.*?<listitem>(.*?)</listitem>@', $xml, $match)) {
+			if (preg_match_all ('@<term>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</term>.*?<listitem>(.*?)</listitem>@s', $xml, $match)) {
 				for ($i = 0; $i < count($match[0]); ++$i) {
 					$constant = $match[1][$i];
 					$constantsDoc[$constant]['id'] = $id;
-					$constantsDoc[$constant]['doc'] = xml_to_phpdoc(trim($match[2][$i]));
+					$constantsDoc[$constant]['doc'] = xml_to_phpdoc($match[2][$i]);
 				}
 			}
-			if (preg_match_all ('@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>\s*</entry>\s*<entry>(.*?)</entry>@s', $xml, $match)) {
+			if (preg_match_all ('@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>(.*?)</entry>@s', $xml, $match)) {
 				for ($i = 0; $i < count($match[0]); ++$i) {
 					$constant = $match[1][$i];
 					$constantsDoc[$constant]['id'] = $id;
-					$constantsDoc[$constant]['doc'] = xml_to_phpdoc(trim($match[2][$i]));
+					$constantsDoc[$constant]['doc'] = xml_to_phpdoc($match[2][$i]);
 				}
 			}
 		}
@@ -597,7 +607,7 @@ function print_doccomment ($ref, $tabs = 0) {
 			}
 			if ($returntype) {
 				print_tabs ($tabs);
-				print " * @return {$returntype}{$returndoc}\n";
+				print " * @return {$returntype} {$returndoc}\n";
 			}
 			print_tabs ($tabs);
 			print " */\n";
@@ -613,8 +623,10 @@ function print_doccomment ($ref, $tabs = 0) {
 function xml_to_phpdoc ($str) {
 	$str = str_replace ("&true;", "true", $str);
 	$str = str_replace ("&false;", "false", $str);
-	$str = preg_replace ("@  *@", " ", $str);
 	$str = strip_tags ($str);
+	$str = preg_replace ("/  */", " ", $str);
+	$str = preg_replace ("/[\r\n][\t ]/", "\n", $str);
+	$str = trim ($str);
 	return $str;
 }
 
