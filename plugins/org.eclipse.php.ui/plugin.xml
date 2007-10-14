@@ -107,22 +107,22 @@
 
 	<extension point="org.eclipse.ui.views">
 		<category
-			name="PHP Tools"
+			name="%category.name.0"
 			id="org.eclipse.php.ui.views" />
 		<view
-			name="PHP Explorer"
+			name="%view.name.0"
 			category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.ui.explorer.ExplorerPart"
 			icon="icons/full/obj16/php_explorer.gif"
 			id="org.eclipse.php.ui.explorer" />
 		<view
-			name="PHP Functions"
+			name="%view.name.1"
 			category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.ui.functions.PHPFunctionsPart"
 			icon="icons/full/obj16/phpfile.gif"
 			id="org.eclipse.php.ui.functions" />
 		<view
-			name="PHP Project Outline"
+			name="%view.name.2"
 			category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.ui.projectOutline.ProjectOutlinePart"
 			id="org.eclipse.php.ui.projectOutline"
@@ -155,7 +155,7 @@
 			id="org.eclipse.php.ui.wizards.PHPFileCreationWizard"
 			category="org.eclipse.php.project.ui"
 			class="org.eclipse.php.internal.ui.wizards.PHPFileCreationWizard"
-			name="PHP File"
+			name="%wizard.name.0"
 			icon="icons/full/obj16/add_php_file.gif" />
 		<primaryWizard id="org.eclipse.ui.wizards.new.folder" />
   <wizard
@@ -165,7 +165,7 @@
         hasPages="false"
         icon="icons/full/obj16/add_php_file.gif"
         id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"
-        name="Untitled PHP Document">
+        name="%wizard.name.1">
   </wizard>
 	</extension>
 
@@ -184,7 +184,7 @@
         default="true"
         icon="icons/full/obj16/phpfile.gif"
         id="org.eclipse.php.editor"
-        name="PHP Editor"
+        name="%editor.name.0"
         symbolicFontName="org.eclipse.wst.sse.ui.textfont">
 			<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource" />
 		</editor>
@@ -192,7 +192,7 @@
         class="org.eclipse.php.internal.ui.editor.UntitledPHPEditor"
         icon="icons/full/obj16/phpfile.gif"
         id="org.eclipse.php.untitledPhpEditor"
-        name="Untitiled PHP Document Editor"
+        name="%editor.name.1"
         symbolicFontName="org.eclipse.wst.sse.ui.textfont">
   </editor>
 	</extension>
@@ -362,7 +362,7 @@
 			objectClass="org.eclipse.core.resources.IProject" />
 		<page
 			objectClass="org.eclipse.core.resources.IProject"
-			name="PHP Include Path"
+			name="%page.name.0"
 			class="org.eclipse.php.internal.ui.preferences.includepath.IncludePathPropertyPage"
 			id="org.eclipse.php.ui.propertyPages.IncludePathPropertyPage">
 			<filter
@@ -489,13 +489,13 @@
 			<action
 				definitionId="org.eclipse.wst.sse.ui.format.active.elements"
 				id="FormatActiveElements"
-				label="Format Active Elements"
+				label="%action.label.0"
 				retarget="true"
 				menubarPath="org.eclipse.php.ui.source.menu/formatGroup" />
 			<action
 				definitionId="org.eclipse.wst.sse.ui.format.document"
 				id="FormatDocument"
-				label="Format Document"
+				label="%action.label.1"
 				retarget="true"
 				menubarPath="org.eclipse.php.ui.source.menu/formatGroup" />
 			<action
@@ -528,7 +528,7 @@
 				id="org.eclipse.php.ui.actions.Comment" />
 			<action
 				definitionId="org.eclipse.php.ui.edit.OpenFunctionsManualAction"
-				label="Open PHP Manual"
+				label="%action.label.2"
 				retarget="true"
 				id="org.eclipse.php.ui.actions.OpenFunctionsManualAction" />
 		</actionSet>
@@ -697,7 +697,7 @@
 			id="org.eclipse.php.ui.edit.text.open.editor" />
 		<command
 			name="%OpenDeclaration.name"
-			description="OpenDeclaration.description"
+			description="%OpenDeclaration.description"
 			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.php.ui.edit.text.OpenDeclaration" />
 		<command
@@ -712,9 +712,9 @@
 			id="org.eclipse.php.ui.edit.OpenFunctionsManualAction" />
 		<command
 			categoryId="org.eclipse.ui.category.edit"
-			description="Show Tooltip Description"
+			description="%ActionDefinition.showJavadoc.description"
 			id="org.eclipse.php.ui.edit.text.show.phpdoc"
-			name="Show Tooltip Description" />
+			name="%ActionDefinition.showJavadoc.name" />
 		<command
 			categoryId="org.eclipse.ui.category.navigate"
 			description="%ActionDefinition.gotoMatchingBracket.description"
@@ -722,7 +722,7 @@
 			name="%ActionDefinition.gotoMatchingBracket.name" />
   		<command
         	id="org.eclipse.php.ui.NewUntitledPHPDocumentAction"
-        	name="New Untitled PHP Document" />
+        	name="%command.name.1" />
 
 	</extension>
 
@@ -1265,7 +1265,7 @@
         adaptable="true"
         class="org.eclipse.php.internal.ui.util.ProblemsLabelDecorator"
         id="org.eclipse.php.ui.problemsDecorator"
-        label="PHP Problem Decorator"
+        label="%decorator.label.0"
         lightweight="true"
         location="BOTTOM_LEFT"
         objectClass="org.eclipse.core.resources.IResource"
