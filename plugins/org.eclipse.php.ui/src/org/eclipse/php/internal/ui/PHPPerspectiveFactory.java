@@ -44,8 +44,8 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		//Adding the default views for the perspective
 		addViews(layout);
 
-		layout.addPerspectiveShortcut(PERSPECTIVE_ID); //$NON-NLS-N$
-		layout.addPerspectiveShortcut("org.eclipse.php.debug.ui.PHPDebugPerspective"); //$NON-NLS-N$ //$NON-NLS-1$
+		layout.addPerspectiveShortcut(PERSPECTIVE_ID); 
+		layout.addPerspectiveShortcut("org.eclipse.php.debug.ui.PHPDebugPerspective");  //$NON-NLS-1$
 
 		layout.addShowViewShortcut(ID_EXPLORER);
 		layout.addShowViewShortcut(ID_FUNCTIONS);
@@ -55,17 +55,17 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		layout.addShowInPart(ID_EXPLORER);
 
 		// add extension shortcuts
-		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut"; //$NON-NLS-N$ //$NON-NLS-1$
+		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut";  //$NON-NLS-1$
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(phpPerspectiveShortcut);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			String perspectiveId = element.getAttribute("perspectiveId"); //$NON-NLS-N$ //$NON-NLS-1$
+			String perspectiveId = element.getAttribute("perspectiveId");  //$NON-NLS-1$
 			if (PERSPECTIVE_ID.equals(perspectiveId)) {
-				String type = element.getAttribute("type"); //$NON-NLS-N$ //$NON-NLS-1$
-				String additionId = element.getAttribute("additionId"); //$NON-NLS-N$ //$NON-NLS-1$
-				if (type.equals("Show View")) { //$NON-NLS-N$ //$NON-NLS-1$
+				String type = element.getAttribute("type");  //$NON-NLS-1$
+				String additionId = element.getAttribute("additionId");  //$NON-NLS-1$
+				if (type.equals("Show View")) {  //$NON-NLS-1$
 					layout.addShowViewShortcut(additionId);
-				} else if (type.equals("Open Perspective")) { //$NON-NLS-N$ //$NON-NLS-1$
+				} else if (type.equals("Open Perspective")) {  //$NON-NLS-1$
 					layout.addPerspectiveShortcut(additionId);
 				}
 			}

@@ -606,12 +606,12 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable  {
 
 //				newDoc= new Document(s != null ? s : ""); //$NON-NLS-1$
 				newDoc = StructuredDocumentFactory.getNewStructuredDocumentInstance(new PhpSourceParser());
-				newDoc.set(s != null ? s : "");
+				newDoc.set(s != null ? s : ""); //$NON-NLS-1$
 				// newDoc= new Document(s != null ? s : ""); //$NON-NLS-1$
 				IDocumentPartitioner partitioner = getDocumentPartitioner();
 				if (partitioner != null) {
 					if (newDoc instanceof JobSafeStructuredDocument) {
-						((JobSafeStructuredDocument) newDoc).setDocumentPartitioner("org.eclipse.wst.sse.core.default_structured_text_partitioning", partitioner);
+						((JobSafeStructuredDocument) newDoc).setDocumentPartitioner("org.eclipse.wst.sse.core.default_structured_text_partitioning", partitioner); //$NON-NLS-1$
 					} else {
 						newDoc.setDocumentPartitioner(partitioner);
 					}
