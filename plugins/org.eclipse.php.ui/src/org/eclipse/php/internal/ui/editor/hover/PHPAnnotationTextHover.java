@@ -40,7 +40,7 @@ public class PHPAnnotationTextHover extends AbstractPHPTextHover {
 							PHPProjectModel projectModel = editorModel.getProjectModel();
 							concatenatedInfo.append(PHPCodeDataHTMLDescriptionUtilities.getHTMLHyperlinkDescriptionText(codeData, projectModel));
 							if (i + 1 != codeDatas.length)
-								concatenatedInfo.append("\n");
+								concatenatedInfo.append("\n"); //$NON-NLS-1$
 						}
 						return concatenatedInfo.toString();
 					}

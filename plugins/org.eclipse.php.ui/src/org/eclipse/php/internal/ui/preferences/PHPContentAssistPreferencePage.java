@@ -20,7 +20,7 @@ import org.eclipse.php.internal.ui.PHPUiConstants;
 public class PHPContentAssistPreferencePage extends AbstractMultiBlockPreferencePage {
 
 	protected void setDescription() {
-		setDescription("");
+		setDescription(""); //$NON-NLS-1$
 	}
 
 	protected void setPreferenceStore() {

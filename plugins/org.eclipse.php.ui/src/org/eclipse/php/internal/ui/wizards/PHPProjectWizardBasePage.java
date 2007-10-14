@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.preferences.PHPVersionConfigurationBlock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -29,8 +30,8 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements IPr
 
 	public PHPProjectWizardBasePage(IDataModel dataModel, String pageName) {
 		super(dataModel, pageName);		
-		setTitle("New PHP Project"); 
-		setDescription("Create a PHP project");
+		setTitle(PHPUIMessages.getString("PHPProjectWizardBasePage.0"));  //$NON-NLS-1$
+		setDescription(PHPUIMessages.getString("PHPProjectWizardBasePage.1")); //$NON-NLS-1$
 		setPageComplete(false);
 	}
 

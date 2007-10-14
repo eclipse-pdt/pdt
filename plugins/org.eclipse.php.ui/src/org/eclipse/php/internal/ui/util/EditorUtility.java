@@ -242,7 +242,7 @@ public class EditorUtility {
 				// If this is external file:
 				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
 					//first check maybe it is an untitled PHP document
-					if ((path.segmentCount() > 1) && path.segment(path.segmentCount() - 2).equals("Untitled_Documents")) {
+					if ((path.segmentCount() > 1) && path.segment(path.segmentCount() - 2).equals("Untitled_Documents")) { //$NON-NLS-1$
 						return new NonExistingPHPFileEditorInput(path);
 					}
 					return new FileStoreEditorInput(new LocalFile(externalSource));

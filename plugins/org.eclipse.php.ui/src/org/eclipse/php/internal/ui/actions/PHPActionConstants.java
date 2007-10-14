@@ -106,6 +106,6 @@ public class PHPActionConstants {
 	 * Edit menu: name of standard Show PHPDoc global action
 	 * (value <code>"org.eclipse.jdt.php.actions.ShowPHPDoc"</code>).
 	 */
-	public static final String SHOW_PHP_DOC = "org.eclipse.php.ui.actions.ShowPHPDoc";
+	public static final String SHOW_PHP_DOC = "org.eclipse.php.ui.actions.ShowPHPDoc"; //$NON-NLS-1$
 
 }

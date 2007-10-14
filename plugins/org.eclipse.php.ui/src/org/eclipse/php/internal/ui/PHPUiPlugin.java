@@ -52,16 +52,16 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	// The shared instance.
 	private static PHPUiPlugin plugin;
 
-	public static final String ID = "org.eclipse.php.ui";
+	public static final String ID = "org.eclipse.php.ui"; //$NON-NLS-1$
 	public static final int INTERNAL_ERROR = 10001;
 
 	public static final boolean isDebugMode;
 
-	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective";
+	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
 
 	static {
-		String value = Platform.getDebugOption("org.eclipse.php.ui/debug");
-		isDebugMode = value != null && value.equalsIgnoreCase("true");
+		String value = Platform.getDebugOption("org.eclipse.php.ui/debug"); //$NON-NLS-1$
+		isDebugMode = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
 	private ImageDescriptorRegistry fImageDescriptorRegistry;
@@ -114,7 +114,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.php.ui", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.php.ui", path); //$NON-NLS-1$
 	}
 
 	public static Shell getActiveWorkbenchShell() {

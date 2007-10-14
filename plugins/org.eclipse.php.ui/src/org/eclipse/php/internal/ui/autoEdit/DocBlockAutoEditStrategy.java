@@ -52,7 +52,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 
 public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
-	private static final String lineStart = "* ";
+	private static final String lineStart = "* "; //$NON-NLS-1$
 
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (TypingPreferences.closePhpdoc && command.text != null && TextUtilities.endsWith(document.getLegalLineDelimiters(), command.text) != -1) {
@@ -76,21 +76,21 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			boolean isDocBlock = true;
 			// if this is the first line of the docBlock
 			int docStart;
-			if ((docStart = trimedLine.indexOf("/*")) != -1) {
+			if ((docStart = trimedLine.indexOf("/*")) != -1) { //$NON-NLS-1$
 				if (command.offset + command.length < startOffset + docStart + 2)
 					return;
 				isFirstLine = true;
-				if (trimedLine.indexOf("/**") != docStart) {
+				if (trimedLine.indexOf("/**") != docStart) { //$NON-NLS-1$
 					isDocBlock = false;
 				}
 			}
-			Matcher m = Pattern.compile("/\\*.*\\*/").matcher(trimedLine);
+			Matcher m = Pattern.compile("/\\*.*\\*/").matcher(trimedLine); //$NON-NLS-1$
 			if (m.find())
 				return;
 			if (isFirstLine) {
 				blanks += ' ';
 				command.text += blanks;
-				int startIndex = line.indexOf("/*");
+				int startIndex = line.indexOf("/*"); //$NON-NLS-1$
 				final String partitionType = FormatterUtils.getPartitionType(document, startOffset + startIndex - 1);
 				if (partitionType == PHPPartitionTypes.PHP_DEFAULT || partitionType == PHPPartitionTypes.PHP_DOC || partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
 					int placeCaretAt = handleDocBlockStart(document, command, blanks, isDocBlock);
@@ -98,7 +98,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 						document.replace(command.offset, command.length, command.text);
 						command.offset = placeCaretAt;
 						command.length = 0;
-						command.text = "";
+						command.text = ""; //$NON-NLS-1$
 						document.getUndoManager().disableUndoManagement();
 						document.replace(command.offset, command.length, command.text);
 						document.getUndoManager().enableUndoManagement();
@@ -106,7 +106,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				}
 				return;
 			}
-			boolean lastLint = document.get(startOffset, command.offset - startOffset).endsWith("*/");
+			boolean lastLint = document.get(startOffset, command.offset - startOffset).endsWith("*/"); //$NON-NLS-1$
 			if (!lastLint) { // only if the line starts with * then we add * to the new line
 				if (trimedLine.length() > 0 && trimedLine.charAt(0) == '*') {
 					command.text = command.text + blanks + lineStart;
@@ -119,9 +119,9 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 	private String getBlanks(String line) {
 		int start;
-		start = line.indexOf("/*");
+		start = line.indexOf("/*"); //$NON-NLS-1$
 		if (start < 0)
-			start = line.indexOf("*");
+			start = line.indexOf("*"); //$NON-NLS-1$
 		if (start >= 0) {
 			StringBuffer blanks = new StringBuffer(start);
 			for (int i = 0; i < start; ++i)
@@ -131,7 +131,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 					blanks.append(' ');
 			return blanks.toString();
 		} else {
-			return " ";
+			return " "; //$NON-NLS-1$
 		}
 
 	}
@@ -148,11 +148,11 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			int lineStart = lineInfo.getOffset();
 			String line = document.get(lineStart, command.offset - lineStart);
 
-			Matcher m = Pattern.compile("\\/\\*+").matcher(line);
+			Matcher m = Pattern.compile("\\/\\*+").matcher(line); //$NON-NLS-1$
 			m.find();
 			String commentStart = line.substring(m.start(), m.end());
 			int commentStartLength = commentStart.length();
-			command.text += "* ";
+			command.text += "* "; //$NON-NLS-1$
 			rvPosition = command.offset + command.text.length();
 			int selectionEnd = command.offset + command.length;
 			if (isInsideExistingDocBlock(document, selectionEnd)) {
@@ -170,11 +170,11 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 			if (isDocBlock && TypingPreferences.addDocTags) {
 				//taking off the text after the /** in order to find the closest codeData
-				document.replace(lineStart + 3, lineEnd - lineStart - 3, "");
+				document.replace(lineStart + 3, lineEnd - lineStart - 3, ""); //$NON-NLS-1$
 				lineEnd = lineStart + 3; //now the end of the line is the end of the comment start
 				command.offset = lineEnd;
 
-				if (lineContent.equals("")) { //this is a patch in order to make PHPDescriptionTool add a default shortDescription
+				if (lineContent.equals("")) { //this is a patch in order to make PHPDescriptionTool add a default shortDescription //$NON-NLS-1$
 					lineContent = null;
 				}
 
@@ -195,7 +195,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 						ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 						//25 - stands for the shortDescription length
 						//E - stands for the first latter in the shortDescription
-						Display.getDefault().asyncExec(new SelectText(command.offset + command.text.indexOf("E"), 25, textEditor));
+						Display.getDefault().asyncExec(new SelectText(command.offset + command.text.indexOf("E"), 25, textEditor)); //$NON-NLS-1$
 						return -1;
 					}
 					return rvPosition + lineContent.length();
@@ -205,7 +205,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				command.offset = lineStart + commentStartLength;
 			}
 			lineStart += commentStartLength;
-			if (lineContent != null && !lineContent.equals("")) {
+			if (lineContent != null && !lineContent.equals("")) { //$NON-NLS-1$
 				command.text += lineContent;
 				rvPosition = lineStart + command.text.length();
 			}
@@ -215,7 +215,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		} finally {
 			document.getUndoManager().enableUndoManagement();
 		}
-		command.text += document.getLineDelimiter() + blanks + "*/";
+		command.text += document.getLineDelimiter() + blanks + "*/"; //$NON-NLS-1$
 		return rvPosition;
 	}
 

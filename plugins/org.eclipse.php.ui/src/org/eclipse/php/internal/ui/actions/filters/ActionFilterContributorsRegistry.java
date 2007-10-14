@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
@@ -56,7 +57,7 @@ class ActionFilterContributorsRegistry {
 		final IConfigurationElement element = (IConfigurationElement)contributorElements.get(id);
 		if (element != null) {
 			final IActionFilterContributor contributor[] = new IActionFilterContributor[1]; 
-			SafeRunner.run(new SafeRunnable("Error creating class for extension-point " + EXTENSION_POINT) {
+			SafeRunner.run(new SafeRunnable(PHPUIMessages.getString("ActionFilterContributorsRegistry.0") + EXTENSION_POINT) { //$NON-NLS-1$
 				public void run() throws Exception {
 					contributor[0] = (IActionFilterContributor)element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}

@@ -66,7 +66,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 	}
 
 	private final boolean closeTagAppears(String source, int startFrom) {
-		return source.indexOf("?>", startFrom) != -1;
+		return source.indexOf("?>", startFrom) != -1; //$NON-NLS-1$
 	}
 
 	/**

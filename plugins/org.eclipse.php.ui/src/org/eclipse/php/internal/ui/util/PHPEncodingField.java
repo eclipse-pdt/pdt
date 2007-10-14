@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelSynchHelper;
@@ -21,7 +22,7 @@ public class PHPEncodingField {
 	EncodingSettings encodingSettings;
 
 	public PHPEncodingField(Composite parent, DataModelSynchHelper synchHelper) {
-		encodingSettings = new PhpEncodingSettings(parent, "Default PHP encoding:");
+		encodingSettings = new PhpEncodingSettings(parent, PHPUIMessages.getString("PHPEncodingField.0")); //$NON-NLS-1$
 		if (synchHelper != null)
 			synchHelper.synchCombo(encodingSettings.getEncodingCombo(), PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING, new Control[] {});
 

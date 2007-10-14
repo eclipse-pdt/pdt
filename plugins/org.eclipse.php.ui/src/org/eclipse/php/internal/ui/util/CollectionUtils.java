@@ -1,10 +1,6 @@
 package org.eclipse.php.internal.ui.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;

@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class PHPWizardPagesRegistry {
 
@@ -43,7 +44,7 @@ public class PHPWizardPagesRegistry {
 		final List elementsList = (List) instance.pages.get(id);
 		if (elementsList != null) {
 			final List pagesList = new LinkedList();
-			SafeRunner.run(new SafeRunnable("Error creating pages for extension point " + EXTENSION_POINT) {
+			SafeRunner.run(new SafeRunnable(PHPUIMessages.getString("PHPWizardPagesRegistry.0") + EXTENSION_POINT) { //$NON-NLS-1$
 				public void run() throws Exception {
 					Iterator i = elementsList.iterator();
 					while (i.hasNext()) {
@@ -66,7 +67,7 @@ public class PHPWizardPagesRegistry {
 		final List elementsList = (List) instance.pages.get(id);
 		if (elementsList != null) {
 			final List pagesList = new LinkedList();
-			SafeRunner.run(new SafeRunnable("Error creating pages for extension point " + EXTENSION_POINT) {
+			SafeRunner.run(new SafeRunnable(PHPUIMessages.getString("PHPWizardPagesRegistry.0") + EXTENSION_POINT) { //$NON-NLS-1$
 				public void run() throws Exception {
 					Iterator i = elementsList.iterator();
 					while (i.hasNext()) {

@@ -12,64 +12,20 @@ package org.eclipse.php.internal.ui.editor;
 
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextOperationTarget;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.ITextViewerExtension4;
-import org.eclipse.jface.text.ITextViewerExtension5;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHoverExtension;
-import org.eclipse.jface.text.source.ICharacterPairMatcher;
-import org.eclipse.jface.text.source.ILineRange;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.ISourceViewerExtension3;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -96,19 +52,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.actions.AddBlockCommentActionDelegate;
-import org.eclipse.php.internal.ui.actions.BlockCommentAction;
-import org.eclipse.php.internal.ui.actions.CompositeActionGroup;
-import org.eclipse.php.internal.ui.actions.EditExternalBreakpointAction;
-import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.ManageExternalBreakpointAction;
-import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
-import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
-import org.eclipse.php.internal.ui.actions.RefactorActionGroup;
-import org.eclipse.php.internal.ui.actions.RemoveBlockCommentActionDelegate;
-import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
-import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
@@ -119,40 +63,19 @@ import org.eclipse.php.internal.ui.text.PHPWordIterator;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ST;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.TextChangeListener;
-import org.eclipse.swt.custom.TextChangedEvent;
-import org.eclipse.swt.custom.TextChangingEvent;
+import org.eclipse.swt.custom.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener2;
-import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.IURIEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.texteditor.ChainedPreferenceStore;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.ui.texteditor.ResourceAction;
-import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.ui.texteditor.TextNavigationAction;
-import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -270,7 +193,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				/*
 				 * XXX: This is a hack to avoid API changes at the end of 3.2,
 				 */
-				if ("org.eclipse.jface.text.source.projection.ProjectionAnnotationHover".equals(annotationHover.getClass().getName()))
+				if ("org.eclipse.jface.text.source.projection.ProjectionAnnotationHover".equals(annotationHover.getClass().getName())) //$NON-NLS-1$
 					controlCreator = new IInformationControlCreator() {
 						public IInformationControl createInformationControl(final Shell shell) {
 							final int shellStyle = SWT.RESIZE | SWT.TOOL | getOrientation();
@@ -1168,13 +1091,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action); //$NON-NLS-1$
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true); //$NON-NLS-1$
 		
-		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true);
+		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true); //$NON-NLS-1$
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
 		
-		resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowOutline.", this, ISourceViewer.QUICK_ASSIST);
-		resAction.setActionDefinitionId("org.eclipse.pdt.ui.edit.text.php.show.outline");
+		resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowOutline.", this, ISourceViewer.QUICK_ASSIST); //$NON-NLS-1$
+		resAction.setActionDefinitionId("org.eclipse.pdt.ui.edit.text.php.show.outline"); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
 		
 		if (isExternal) {
@@ -1339,7 +1262,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 										// making sure the project model exists (in case the editor closing is during PDT startup) 
 										if (PHPWorkspaceModelManager.getInstance().getModelForProject(proj) != null) {
-											WorkspaceJob job = new WorkspaceJob("") {
+											WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
 												public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 													PHPWorkspaceModelManager.getInstance().addFileToModel(file);
 													return Status.OK_STATUS;
@@ -1682,7 +1605,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							}
 
 							while (region.getEnd() != phpScriptRegion.getLength()) {
-								final String text = document.get(sdRegionStart + phpScriptRegion.getStart() + region.getStart(), region.getTextLength()).trim().replaceAll("[\"']+", "");
+								final String text = document.get(sdRegionStart + phpScriptRegion.getStart() + region.getStart(), region.getTextLength()).trim().replaceAll("[\"']+", ""); //$NON-NLS-1$ //$NON-NLS-2$
 								if (elementName.equals(text)) {
 									start = sdRegionStart + phpScriptRegion.getStart() + region.getStart();
 									length = region.getTextLength();

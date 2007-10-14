@@ -21,7 +21,6 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.MoveFilesAndFoldersOperation;
-import org.eclipse.ui.actions.MoveProjectAction;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 

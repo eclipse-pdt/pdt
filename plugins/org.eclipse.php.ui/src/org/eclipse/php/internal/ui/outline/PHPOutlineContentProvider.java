@@ -287,7 +287,7 @@ public class PHPOutlineContentProvider extends JFaceNodeContentProvider implemen
 				for (int i = 0; i < groupNodes.length; i++)
 					groupNodes[i].setFileData(fileData);
 			else
-				groupNodes = new GroupNode[] { new GroupNode(GROUP_INCLUDES, "include files", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData) };
+				groupNodes = new GroupNode[] { new GroupNode(GROUP_INCLUDES, "include files", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else
 			groupNodes = null;
 		return groupNodes;

@@ -8,6 +8,7 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -19,7 +20,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
  */
 public class PhpTemplateFileResolver extends TemplateVariableResolver {
 	public PhpTemplateFileResolver() {
-		super("file", "resolving a current file name");
+		super(PHPUIMessages.getString("PhpTemplateFileResolver.0"), PHPUIMessages.getString("PhpTemplateFileResolver.1")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected String resolve(TemplateContext context) {
@@ -42,7 +43,7 @@ public class PhpTemplateFileResolver extends TemplateVariableResolver {
 				return null;
 			}
 			String fileName = fileData.getName();
-			if (fileName == null || fileName.equals("")) {
+			if (fileName == null || fileName.equals("")) { //$NON-NLS-1$
 				return null;
 			}
 			return fileName;

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class IPListElement {
 
@@ -82,7 +83,7 @@ public class IPListElement {
 				//				} catch (PHPModelException e) {
 				//				}		
 				//				break;
-				throw new RuntimeException("implement me");
+				throw new RuntimeException(PHPUIMessages.getString("IPListElement.0")); //$NON-NLS-1$
 			default:
 		}
 
@@ -240,7 +241,7 @@ public class IPListElement {
 		//			return (initializer != null && initializer.canUpdateIncludePathContainer(fPath, fProject));
 		//		}
 		//		return false;
-		throw new RuntimeException("implement me");
+		throw new RuntimeException(PHPUIMessages.getString("IPListElement.0")); //$NON-NLS-1$
 	}
 
 	public boolean isInNonModifiableContainer() {

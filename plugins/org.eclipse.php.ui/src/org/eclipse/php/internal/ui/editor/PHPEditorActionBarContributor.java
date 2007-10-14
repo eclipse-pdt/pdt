@@ -56,8 +56,8 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	/** The global actions to be connected with PHP editor actions */
 	private final static String[] PHPEDITOR_ACTIONS = { "org.eclipse.php.ui.actions.RemoveBlockComment", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
-		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$
-		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, "FormatActiveElements",
+		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$ //$NON-NLS-2$
+		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, "FormatActiveElements", //$NON-NLS-1$
 		IPHPEditorActionDefinitionIds.RENAME_ELEMENT,
 		IPHPEditorActionDefinitionIds.MOVE_ELEMENT
 		
@@ -89,10 +89,10 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fOpenDeclaration = new RetargetTextEditorAction(b, "OpenAction_declaration_"); //$NON-NLS-1$
 		fOpenDeclaration.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
 		
-		fRename = new RetargetTextEditorAction(b,"");
+		fRename = new RetargetTextEditorAction(b,""); //$NON-NLS-1$
 		fRename.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
 		
-		fMove = new RetargetTextEditorAction(b,"");
+		fMove = new RetargetTextEditorAction(b,""); //$NON-NLS-1$
 		fMove.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		
 		
@@ -109,7 +109,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		super.contributeToMenu(menu);
 
 		IMenuManager gotoMenu = menu.findMenuUsingPath("navigate/goTo"); //$NON-NLS-1$
-		menu.findMenuUsingPath("source");
+		menu.findMenuUsingPath("source"); //$NON-NLS-1$
 		if (gotoMenu != null) {
 			gotoMenu.add(new Separator("additions2")); //$NON-NLS-1$
 			gotoMenu.appendToGroup("additions2", fGotoMatchingBracket); //$NON-NLS-1$
@@ -143,10 +143,10 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		if (part instanceof ITextEditor)
 			editor = (ITextEditor) part;
 
-		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc"));
+		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc")); //$NON-NLS-1$
 		fGotoMatchingBracket.setAction(getAction(editor, GotoMatchingBracketAction.GOTO_MATCHING_BRACKET));
-		fFormatDocument.setAction(getAction(editor, "FormatDocument"));
-		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements"));
+		fFormatDocument.setAction(getAction(editor, "FormatDocument")); //$NON-NLS-1$
+		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements")); //$NON-NLS-1$
 		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
 		
 		if (part instanceof PHPStructuredEditor) {

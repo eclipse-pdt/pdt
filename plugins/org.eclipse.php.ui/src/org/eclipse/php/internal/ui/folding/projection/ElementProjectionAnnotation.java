@@ -65,11 +65,11 @@ public class ElementProjectionAnnotation extends ProjectionAnnotation {
 	@Override
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer();
-		buffer.append("[Annotation: ");
+		buffer.append("[Annotation: "); //$NON-NLS-1$
 		buffer.append(this.element.toString());
-		buffer.append(", collapse: ");
+		buffer.append(", collapse: "); //$NON-NLS-1$
 		buffer.append(isCollapsed());
-		buffer.append("]");
+		buffer.append("]"); //$NON-NLS-1$
 		return buffer.toString();
 	}
 }

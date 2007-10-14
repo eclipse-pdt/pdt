@@ -30,9 +30,9 @@ import org.eclipse.ui.*;
 public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 
 	private IWorkbenchWindow fWindow;
-	private final static String UNTITLED_EDITOR_ID = "org.eclipse.php.untitledPhpEditor";
-	private final static String UNTITLED_FOLDER_PATH = "/Untitled_Documents";
-	private final static String UNTITLED_PHP_DOC_PREFIX = "PHPDocument";
+	private final static String UNTITLED_EDITOR_ID = "org.eclipse.php.untitledPhpEditor"; //$NON-NLS-1$
+	private final static String UNTITLED_FOLDER_PATH = "/Untitled_Documents"; //$NON-NLS-1$
+	private final static String UNTITLED_PHP_DOC_PREFIX = "PHPDocument"; //$NON-NLS-1$
 
 	public UntitledPHPDocumentWizard() {
 	}

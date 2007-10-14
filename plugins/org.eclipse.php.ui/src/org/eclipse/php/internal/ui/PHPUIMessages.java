@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import org.eclipse.osgi.util.NLS;
 
 public class PHPUIMessages {
-	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.PHPUIMessages";
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.PHPUIMessages"; //$NON-NLS-1$
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 	private static ResourceBundle fResourceBundle;
 	private static final String BUNDLE_FOR_CONSTRUCTED_KEYS = "org.eclipse.ui.texteditor.ConstructedTextEditorMessages"; //$NON-NLS-1$
@@ -43,7 +43,7 @@ public class PHPUIMessages {
 		try {
 			return RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 

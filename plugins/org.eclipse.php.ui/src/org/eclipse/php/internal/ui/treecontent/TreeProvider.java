@@ -13,12 +13,9 @@ package org.eclipse.php.internal.ui.treecontent;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 
@@ -39,7 +36,7 @@ public class TreeProvider {
 		fElement=element;
 	    String target=element.getAttribute(TARGET_ID_ATTRIBUTE);
 	    if (target!=null&& target.trim().length()>0)
-	    	targetIDs=target.split(",");
+	    	targetIDs=target.split(","); //$NON-NLS-1$
 	}
 	
 	
@@ -81,7 +78,7 @@ public class TreeProvider {
 
 	private IPHPTreeContentProvider createProvider() {
 		final IPHPTreeContentProvider[] result = new IPHPTreeContentProvider[1];
-		String message = "error createing phpTreeProvider";
+		String message = PHPUIMessages.getString("TreeProvider.1"); //$NON-NLS-1$
 		ISafeRunnable code = new SafeRunnable(message) {
 			/*
 			 * @see org.eclipse.core.runtime.ISafeRunnable#run()

@@ -140,7 +140,7 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 
 	private Group createComposite(Composite parent, int numColumns) {
 		Group group = new Group(parent, SWT.NONE);
-		group.setText(" Formatting ");
+		group.setText(PHPUIMessages.getString("PHPFormatterConfigurationBlock.0")); //$NON-NLS-1$
 
 		//GridLayout
 		GridLayout layout = new GridLayout();

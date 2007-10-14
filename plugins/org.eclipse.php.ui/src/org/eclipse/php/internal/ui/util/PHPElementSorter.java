@@ -17,23 +17,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.viewers.ContentViewer;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPIncludeFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -113,7 +100,7 @@ public class PHPElementSorter extends ViewerSorter {
 		if (element instanceof PHPCodeData) {
 			if (element instanceof PHPFunctionData) {
 				PHPFunctionData function = (PHPFunctionData) element;
-				if (function.getContainer() instanceof PHPClassData && ("__construct".equals(function.getName()) || "__destruct".equals(function.getName()))) {
+				if (function.getContainer() instanceof PHPClassData && ("__construct".equals(function.getName()) || "__destruct".equals(function.getName()))) { //$NON-NLS-1$ //$NON-NLS-2$
 					return getMemberCategory(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX);
 				}
 				if (PHPModifier.isStatic(((PHPFunctionData) element).getModifiers())) {

@@ -56,7 +56,7 @@ public class PhpTemplateProposal extends TemplateProposal implements ICompletion
 		IStructuredDocument document = (IStructuredDocument) viewer.getDocument();
 		String originalTemplate = getTemplate().getPattern();
 
-		String blanks = "";
+		String blanks = ""; //$NON-NLS-1$
 
 		int lineNumber = document.getLineOfOffset(offset);
 		IRegion lineRegion;
@@ -71,14 +71,14 @@ public class PhpTemplateProposal extends TemplateProposal implements ICompletion
 
 		String docLineDelimiter = document.getLineDelimiter();
 
-		String lineDelimiter = "\n";
+		String lineDelimiter = "\n"; //$NON-NLS-1$
 		StringBuffer sb = new StringBuffer();
 
 		// Look for document line delimiter or "\n" in the template
 		// and add to each occurance found the appropriate indentation
-		Pattern p = Pattern.compile(docLineDelimiter + "|" + lineDelimiter);
+		Pattern p = Pattern.compile(docLineDelimiter + "|" + lineDelimiter); //$NON-NLS-1$
 		Matcher m = p.matcher(originalTemplate);
-		String matchedDelimiter = "";
+		String matchedDelimiter = ""; //$NON-NLS-1$
 		boolean result = m.find();
 		while (result) {
 			matchedDelimiter = m.group(0);

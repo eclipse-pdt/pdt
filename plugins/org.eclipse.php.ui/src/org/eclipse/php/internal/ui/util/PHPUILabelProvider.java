@@ -124,7 +124,7 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 					break;
 			}
 			if (result == null)
-				result = "";
+				result = ""; //$NON-NLS-1$
 		}
 		if (result.length() == 0 && (element instanceof IStorage)) {
 			result = fStorageLabelProvider.getText(element);

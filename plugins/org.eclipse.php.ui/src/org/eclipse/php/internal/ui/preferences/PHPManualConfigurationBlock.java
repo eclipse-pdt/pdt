@@ -305,7 +305,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 	 */
 	public static void initFromPreferences(IPreferenceStore store, List configs) {
 		String storedConfigsString = store.getString(PreferenceConstants.PHP_MANUAL_SITES);
-		if (storedConfigsString != null && !"".equals(storedConfigsString)) {
+		if (storedConfigsString != null && !"".equals(storedConfigsString)) { //$NON-NLS-1$
 			StringTokenizer sitesTokenizer = new StringTokenizer(storedConfigsString, PREFERENCES_DELIMITER);
 			PHPManualConfig config;
 			do {
@@ -332,7 +332,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 	 */
 	public static PHPManualConfig getActiveManualSite(IPreferenceStore store, List configs) {
 		String storedConfigString = store.getString(PreferenceConstants.PHP_MANUAL_SITE);
-		if (storedConfigString != null && !"".equals(storedConfigString)) {
+		if (storedConfigString != null && !"".equals(storedConfigString)) { //$NON-NLS-1$
 			PHPManualConfig config = PHPManualConfigSerializer.fromString(storedConfigString);
 			for (Iterator i = configs.iterator(); i.hasNext();) {
 				Object next = i.next();

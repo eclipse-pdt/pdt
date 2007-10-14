@@ -21,6 +21,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.folding.projection.ProjectionModelNodeAdapterFactoryHTML;
 import org.eclipse.php.internal.ui.folding.projection.ProjectionModelNodeAdapterFactoryPHP;
@@ -257,7 +258,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		}
 
 		final IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-		assert model instanceof DOMModelForPHP : "Incompatible model or null";
+		assert model instanceof DOMModelForPHP : PHPUIMessages.getString("StructuredTextFoldingProviderPHP.0"); //$NON-NLS-1$
 		try {
 			final DOMModelForPHP viewerModel = (DOMModelForPHP) model;
 			if (viewerModel != null && viewerModel.getFileData() == fileData) {
@@ -265,7 +266,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 				// Update the PHP annotations
 				final INodeAdapter adapterFor = document.getAdapterFor(ProjectionModelNodeAdapterPHP.class);
 				if (adapterFor != null) {
-					assert adapterFor instanceof ProjectionModelNodeAdapterPHP : "wrong adapter";
+					assert adapterFor instanceof ProjectionModelNodeAdapterPHP : PHPUIMessages.getString("StructuredTextFoldingProviderPHP.1"); //$NON-NLS-1$
 					final ProjectionModelNodeAdapterPHP phpAdapter = (ProjectionModelNodeAdapterPHP) adapterFor;
 					phpAdapter.updateAdapter(document);
 				}

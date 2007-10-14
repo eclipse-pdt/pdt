@@ -12,7 +12,6 @@ package org.eclipse.php.internal.ui.actions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
@@ -27,7 +26,6 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.Logger;
@@ -145,7 +143,7 @@ public class RenameResourceAction extends SelectionDispatchAction {
 				IBreakpoint breakpoint = (IBreakpoint) breakpointsIterator.next();
 				Map oldAttributesMap = (Map) attributesIterator.next();
 				try {
-					IMarker newMarker = ResourcesPlugin.getWorkspace().getRoot().getFile(path).createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker");
+					IMarker newMarker = ResourcesPlugin.getWorkspace().getRoot().getFile(path).createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker"); //$NON-NLS-1$
 					// Fix the breakpoint's tooltip string before applying the old attributes to the new marker.
 					String oldMessge = (String) oldAttributesMap.get(IMarker.MESSAGE);
 					if (oldMessge != null) {

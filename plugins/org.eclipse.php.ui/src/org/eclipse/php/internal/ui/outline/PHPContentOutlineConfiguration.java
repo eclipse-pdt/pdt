@@ -47,7 +47,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		action.addPropertyChangeListener(new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals("checked")) {
+				if (event.getProperty().equals("checked")) { //$NON-NLS-1$
 					boolean checked = ((Boolean) event.getNewValue()).booleanValue();
 					if (sortAction != null) {
 						sortAction.setEnabled(!checked);
@@ -115,7 +115,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
-		final IContributionItem showGroupsItem = new ActionContributionItem(new ShowGroupsAction("Show Groups", viewer));
+		final IContributionItem showGroupsItem = new ActionContributionItem(new ShowGroupsAction("Show Groups", viewer)); //$NON-NLS-1$
 		// fixed bug 174653
 		// use only the toggleLinking menu and dispose the others
 		IContributionItem[] menuContributions = super.createMenuContributions(viewer);

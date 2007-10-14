@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.preferences.IPHPPreferencePageBlock;
 import org.eclipse.swt.SWT;
@@ -114,7 +115,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 
 		if (getProject() != null) {
 			fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK);
-			fEnableProjectSettings.setText("Enable project specific settings");
+			fEnableProjectSettings.setText(PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.0")); //$NON-NLS-1$
 			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 			boolean enabledForProject = createPreferenceScopes()[0].getNode(getPreferenceNodeQualifier()).getBoolean(getProjectSettingsKey(), false);
 			fEnableProjectSettings.setSelection(enabledForProject);
@@ -132,9 +133,9 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 		 * properties
 		 */
 		if (getProject() != null) {
-			fProjectSettingsLink.setText("<a>" + "Configure Workspace Settings..." + "</a>"); //$NON-NLS-1$//$NON-NLS-3$
+			fProjectSettingsLink.setText("<a>" + PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.1") + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 		} else {
-			fProjectSettingsLink.setText("<a>" + "Configure Project Specific Settings..." + "</a>"); //$NON-NLS-1$//$NON-NLS-3$
+			fProjectSettingsLink.setText("<a>" + PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.2") + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 		}
 
 		updateLinkEnablement();
@@ -230,7 +231,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 				return area;
 			}
 		};
-		dialog.setMessage("Select the project to configure:");
+		dialog.setMessage(PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.3")); //$NON-NLS-1$
 		dialog.setContentProvider(new IStructuredContentProvider() {
 			public void dispose() {
 			}
@@ -244,7 +245,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 		});
 		dialog.setLabelProvider(new DecoratingLabelProvider(new WorkbenchLabelProvider(), PHPUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator()));
 		dialog.setInput(ResourcesPlugin.getWorkspace());
-		dialog.setTitle("Project Specific Configuration");
+		dialog.setTitle(PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.4")); //$NON-NLS-1$
 		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length > 0) {

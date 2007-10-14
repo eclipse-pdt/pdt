@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.folding;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
@@ -83,7 +84,7 @@ public final class PHPFoldingStructureProviderDescriptor {
 			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) fElement.createExecutableExtension(PREFERENCES_CLASS);
 			return prefs;
 		} else {
-			throw new IllegalStateException("Preference class not found");
+			throw new IllegalStateException(PHPUIMessages.getString("PHPFoldingStructureProviderDescriptor.0")); //$NON-NLS-1$
 		}
 	}
 

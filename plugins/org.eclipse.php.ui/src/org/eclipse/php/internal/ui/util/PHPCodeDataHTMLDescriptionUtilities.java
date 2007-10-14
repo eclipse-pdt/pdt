@@ -18,22 +18,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class PHPCodeDataHTMLDescriptionUtilities {
 
-	private static Pattern dolar_pattern = Pattern.compile("\\$");
-	private static Pattern unknown_type_pattern = Pattern.compile("unknown_type\\ ");
+	private static Pattern dolar_pattern = Pattern.compile("\\$"); //$NON-NLS-1$
+	private static Pattern unknown_type_pattern = Pattern.compile("unknown_type\\ "); //$NON-NLS-1$
 	private static StringBuffer descriptionText = new StringBuffer();
 	private static StringBuffer helpBuffer = new StringBuffer();
 
@@ -133,18 +123,18 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 			descriptionText.append(getLocationTableRow(fileName));
 		}
 		if (superClassName != null) {
-			descriptionText.append("<br><dt>Extends</dt>");
-			descriptionText.append("<dd>");
+			descriptionText.append("<br><dt>Extends</dt>"); //$NON-NLS-1$
+			descriptionText.append("<dd>"); //$NON-NLS-1$
 			descriptionText.append(superClassName);
-			descriptionText.append("</dd>");
+			descriptionText.append("</dd>"); //$NON-NLS-1$
 		}
 		if (implement != null) {
-			descriptionText.append("<br><dt>Implements</dt>");
+			descriptionText.append("<br><dt>Implements</dt>"); //$NON-NLS-1$
 			for (int i = 0; i < implement.length; i++) {
 				String interfaceName = implement[i];
-				descriptionText.append("<dd>");
+				descriptionText.append("<dd>"); //$NON-NLS-1$
 				descriptionText.append(interfaceName);
-				descriptionText.append("</dd>");
+				descriptionText.append("</dd>"); //$NON-NLS-1$
 			}
 		}
 		if (desc.length() > 0) {
@@ -202,10 +192,10 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 			descriptionText.append(getLocationTableRow(fileName));
 		}
 		if (value != null && value.length() > 0) {
-			descriptionText.append("<br><dt>Value</dt>");
-			descriptionText.append("<dd>");
+			descriptionText.append("<br><dt>Value</dt>"); //$NON-NLS-1$
+			descriptionText.append("<dd>"); //$NON-NLS-1$
 			descriptionText.append(value);
-			descriptionText.append("</dd>");
+			descriptionText.append("</dd>"); //$NON-NLS-1$
 		}
 		if (desc.length() > 0) {
 			descriptionText.append(getDescriptionTableRow(desc));
@@ -243,24 +233,24 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 
 	private static String getLocationTableRow(String fileName) {
 		helpBuffer.delete(0, helpBuffer.length());
-		helpBuffer.append("<br><dt>Location</dt> ");
-		helpBuffer.append("<dd>");
+		helpBuffer.append("<br><dt>Location</dt> "); //$NON-NLS-1$
+		helpBuffer.append("<dd>"); //$NON-NLS-1$
 		helpBuffer.append(fileName);
-		helpBuffer.append("</dd>");
+		helpBuffer.append("</dd>"); //$NON-NLS-1$
 		return helpBuffer.toString();
 	}
 
 	private static String getSeeAlsoTagTableRows(Iterator it, PHPProjectModel projectModel, PHPCodeData phpCodeData) {
 		helpBuffer.delete(0, helpBuffer.length());
-		helpBuffer.append("<br><dt>See Also</dt>");
-		helpBuffer.append("<dd>");
+		helpBuffer.append("<br><dt>See Also</dt>"); //$NON-NLS-1$
+		helpBuffer.append("<dd>"); //$NON-NLS-1$
 
 		UserData userData = phpCodeData.getUserData();
 		String fileName = userData != null ? userData.getFileName() : null;
 
 		PHPDocTag see = (PHPDocTag) it.next();
 		String arg = see.getValue();
-		String[] args = arg.split(",");
+		String[] args = arg.split(","); //$NON-NLS-1$
 
 		for (int i = 0; i < args.length; i++) {
 			String ref = args[i];
@@ -292,7 +282,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 				if (fileName != null) {
 					PHPCodeContext context = ModelSupport.createContext(phpCodeData);
 					ref_orig = ref;
-					if (ref.startsWith("$")) {
+					if (ref.startsWith("$")) { //$NON-NLS-1$
 						ref_orig = ref.substring(1);
 					}
 					CodeData[] data = projectModel.getVariables(fileName, context, ref_orig, true);
@@ -316,39 +306,39 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 			// didn't find it...
 			helpBuffer.append(ref);
 		}
-		helpBuffer.append("</dd>");
+		helpBuffer.append("</dd>"); //$NON-NLS-1$
 		return helpBuffer.toString();
 	}
 
 	private static String getDeprecatedTagTableRow(Iterator it) {
 		helpBuffer.delete(0, helpBuffer.length());
-		helpBuffer.append("<br><dt>Deprecated</dt>");
-		helpBuffer.append("<dd>");
+		helpBuffer.append("<br><dt>Deprecated</dt>"); //$NON-NLS-1$
+		helpBuffer.append("<dd>"); //$NON-NLS-1$
 		PHPDocTag deprecated = (PHPDocTag) it.next();
 		helpBuffer.append(deprecated.getValue());
-		helpBuffer.append("</dd>");
+		helpBuffer.append("</dd>"); //$NON-NLS-1$
 		return helpBuffer.toString();
 	}
 
 	private static String getReturnTagTableRows(Iterator it) {
 		helpBuffer.delete(0, helpBuffer.length());
-		helpBuffer.append("<br><dt>Returns</dt>");
+		helpBuffer.append("<br><dt>Returns</dt>"); //$NON-NLS-1$
 		PHPDocTag returns = (PHPDocTag) it.next();
 		String arg = returns.getValue();
-		helpBuffer.append("<dd>");
+		helpBuffer.append("<dd>"); //$NON-NLS-1$
 		helpBuffer.append(arg);
-		helpBuffer.append("</dd>");
+		helpBuffer.append("</dd>"); //$NON-NLS-1$
 		return helpBuffer.toString();
 	}
 
 	private static String getThrowTagTableRows(Iterator it) {
 		helpBuffer.delete(0, helpBuffer.length());
-		helpBuffer.append("<br><dt>Throws</dt>");
+		helpBuffer.append("<br><dt>Throws</dt>"); //$NON-NLS-1$
 		PHPDocTag throwTag = (PHPDocTag) it.next();
 		String arg = throwTag.getValue();
-		helpBuffer.append("<dd>");
+		helpBuffer.append("<dd>"); //$NON-NLS-1$
 		helpBuffer.append(arg);
-		helpBuffer.append("</dd>");
+		helpBuffer.append("</dd>"); //$NON-NLS-1$
 		return helpBuffer.toString();
 	}
 
@@ -357,16 +347,16 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		while (it.hasNext()) {
 			PHPDocTag param = (PHPDocTag) it.next();
 			String arg = param.getValue();
-			arg = dolar_pattern.matcher(arg).replaceAll("");
-			arg = unknown_type_pattern.matcher(arg).replaceAll("");
-			if (arg.split(" ").length > 1) {
-				helpBuffer.append("<dd>");
+			arg = dolar_pattern.matcher(arg).replaceAll(""); //$NON-NLS-1$
+			arg = unknown_type_pattern.matcher(arg).replaceAll(""); //$NON-NLS-1$
+			if (arg.split(" ").length > 1) { //$NON-NLS-1$
+				helpBuffer.append("<dd>"); //$NON-NLS-1$
 				helpBuffer.append(arg);
-				helpBuffer.append("</dd>");
+				helpBuffer.append("</dd>"); //$NON-NLS-1$
 			}
 		}
 		if (helpBuffer.toString().length() > 0) {
-			String prefix = "<br><dt>Parameters</dt>";
+			String prefix = "<br><dt>Parameters</dt>"; //$NON-NLS-1$
 			helpBuffer = helpBuffer.insert(0, prefix.toCharArray(), 0, prefix.length());
 		}
 		return helpBuffer.toString();
@@ -374,26 +364,26 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 
 	private static String getDescriptionTableRow(String description) {
 		helpBuffer.delete(0, helpBuffer.length());
-		description = description.replaceAll("\\n", "<br>");
-		helpBuffer.append("<br><dt>Description</dt>");
-		helpBuffer.append("<dd>");
+		description = description.replaceAll("\\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
+		helpBuffer.append("<br><dt>Description</dt>"); //$NON-NLS-1$
+		helpBuffer.append("<dd>"); //$NON-NLS-1$
 		helpBuffer.append(description);
-		helpBuffer.append("</dd>");
+		helpBuffer.append("</dd>"); //$NON-NLS-1$
 		return helpBuffer.toString();
 	}
 
 	private static String getClassNameTableRow(String className, PHPProjectModel projectModel) {
 		helpBuffer.delete(0, helpBuffer.length());
-		helpBuffer.append("<br><dt>Class</dt>");
-		helpBuffer.append("<dd>");
+		helpBuffer.append("<br><dt>Class</dt>"); //$NON-NLS-1$
+		helpBuffer.append("<dd>"); //$NON-NLS-1$
 		helpBuffer.append(className);
-		helpBuffer.append("</dd>");
+		helpBuffer.append("</dd>"); //$NON-NLS-1$
 		return helpBuffer.toString();
 	}
 
 	public static String getHTMLHyperlinkDescriptionText(CodeData codeData, PHPProjectModel projectModel) {
 		if (!(codeData instanceof PHPCodeData)) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		if (codeData instanceof PHPFunctionData) {
 			return PHPCodeDataHTMLDescriptionUtilities.createFunctionDescriptionText((PHPCodeData) codeData, projectModel);
@@ -413,6 +403,6 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		if (codeData instanceof PHPClassConstData) {
 			return PHPCodeDataHTMLDescriptionUtilities.createPHPClassConstDescriptionText((PHPClassConstData) codeData, projectModel);
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 }

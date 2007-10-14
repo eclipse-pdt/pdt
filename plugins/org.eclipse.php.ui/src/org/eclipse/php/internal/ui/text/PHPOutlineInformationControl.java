@@ -117,7 +117,7 @@ public class PHPOutlineInformationControl extends AbstractInformationControl {
 
 		String keySequence= sequences[0].format();
 
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/*

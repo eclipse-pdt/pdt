@@ -10,13 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.workingset;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -25,12 +19,7 @@ import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.ui.ILocalWorkingSetManager;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.IWorkingSetManager;
-import org.eclipse.ui.IWorkingSetUpdater;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 
 public class WorkingSetModel {
 

@@ -26,8 +26,6 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.StandardPHPElementContentProvider;
 import org.eclipse.php.internal.ui.SuperClassTreeContentProvider;
 import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
-import org.eclipse.php.internal.ui.treecontent.TreeProvider;
-import org.eclipse.php.internal.ui.util.PHPElementSorter;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.swt.widgets.Control;
 
@@ -118,7 +116,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 	private OutlineNode[] getOutlineChildren(final IProject project) {
 		final PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
 		if (nodes == null) {
-			nodes = new OutlineNode[] { new OutlineNode(CONSTANTS, "Constants", projectModel, fPart), new OutlineNode(CLASSES, "Classes", projectModel, fPart), new OutlineNode(FUNCTIONS, "Functions", projectModel, fPart) };
+			nodes = new OutlineNode[] { new OutlineNode(CONSTANTS, "Constants", projectModel, fPart), new OutlineNode(CLASSES, "Classes", projectModel, fPart), new OutlineNode(FUNCTIONS, "Functions", projectModel, fPart) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
 			for (int i = 0; i < nodes.length; ++i) {
 				nodes[i].setModel(projectModel);

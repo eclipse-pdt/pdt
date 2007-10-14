@@ -24,17 +24,17 @@ import org.eclipse.ui.console.IConsoleConstants;
  */
 public class PHPPerspectiveFactory implements IPerspectiveFactory {
 
-	static final String TOP_LEFT_LOCATION = "topLeft";
-	static final String BOTTOM_LEFT_LOCATION = "bottomLeft";
-	static final String TOP_RIGHT_LOCATION = "topRight";
-	static final String BOTTOM_LOCATION = "bottom";
+	static final String TOP_LEFT_LOCATION = "topLeft"; //$NON-NLS-1$
+	static final String BOTTOM_LEFT_LOCATION = "bottomLeft"; //$NON-NLS-1$
+	static final String TOP_RIGHT_LOCATION = "topRight"; //$NON-NLS-1$
+	static final String BOTTOM_LOCATION = "bottom"; //$NON-NLS-1$
 
-	static final String PERSPECTIVE_ID = "org.eclipse.php.perspective";
+	static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
 
 	//other view id's
-	static final String ID_EXPLORER = "org.eclipse.php.ui.explorer";
-	static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions";
-	static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline";
+	static final String ID_EXPLORER = "org.eclipse.php.ui.explorer"; //$NON-NLS-1$
+	static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions"; //$NON-NLS-1$
+	static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline"; //$NON-NLS-1$
 	static final String ID_Debug_INFO_FOLDER = "org.eclipse.php.debug.ui.debugInfoFolder"; //$NON-NLS-1$
 	static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
 	static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
@@ -45,7 +45,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		addViews(layout);
 
 		layout.addPerspectiveShortcut(PERSPECTIVE_ID); //$NON-NLS-N$
-		layout.addPerspectiveShortcut("org.eclipse.php.debug.ui.PHPDebugPerspective"); //$NON-NLS-N$
+		layout.addPerspectiveShortcut("org.eclipse.php.debug.ui.PHPDebugPerspective"); //$NON-NLS-N$ //$NON-NLS-1$
 
 		layout.addShowViewShortcut(ID_EXPLORER);
 		layout.addShowViewShortcut(ID_FUNCTIONS);
@@ -55,17 +55,17 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		layout.addShowInPart(ID_EXPLORER);
 
 		// add extension shortcuts
-		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut"; //$NON-NLS-N$
+		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut"; //$NON-NLS-N$ //$NON-NLS-1$
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(phpPerspectiveShortcut);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			String perspectiveId = element.getAttribute("perspectiveId"); //$NON-NLS-N$
+			String perspectiveId = element.getAttribute("perspectiveId"); //$NON-NLS-N$ //$NON-NLS-1$
 			if (PERSPECTIVE_ID.equals(perspectiveId)) {
-				String type = element.getAttribute("type"); //$NON-NLS-N$
-				String additionId = element.getAttribute("additionId"); //$NON-NLS-N$
-				if (type.equals("Show View")) { //$NON-NLS-N$
+				String type = element.getAttribute("type"); //$NON-NLS-N$ //$NON-NLS-1$
+				String additionId = element.getAttribute("additionId"); //$NON-NLS-N$ //$NON-NLS-1$
+				if (type.equals("Show View")) { //$NON-NLS-N$ //$NON-NLS-1$
 					layout.addShowViewShortcut(additionId);
-				} else if (type.equals("Open Perspective")) { //$NON-NLS-N$
+				} else if (type.equals("Open Perspective")) { //$NON-NLS-N$ //$NON-NLS-1$
 					layout.addPerspectiveShortcut(additionId);
 				}
 			}

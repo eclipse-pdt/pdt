@@ -10,15 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.SimplePHPCodeDataVisitor;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 
 public class PHPContextInfoRendererVisitor extends SimplePHPCodeDataVisitor {
@@ -49,7 +41,7 @@ public class PHPContextInfoRendererVisitor extends SimplePHPCodeDataVisitor {
 		PHPFunctionData.PHPFunctionParameter[] parameters = codeData.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			if (i != 0) {
-				buffer.append(", ");
+				buffer.append(", "); //$NON-NLS-1$
 			}
 			visit(parameters[i]);
 		}
@@ -87,22 +79,22 @@ public class PHPContextInfoRendererVisitor extends SimplePHPCodeDataVisitor {
 		String classType = codeData.getClassType();
 		if (classType != null && classType.length() != 0) {
 			buffer.append(classType);
-			buffer.append(" ");
+			buffer.append(" "); //$NON-NLS-1$
 		} else {
 			// buffer.append("unknown");
 			// buffer.append(" ");
 		}
 		if (codeData.isConst()) {
-			buffer.append("const ");
+			buffer.append("const "); //$NON-NLS-1$
 		}
 		if (codeData.isReference()) {
-			buffer.append("&");
+			buffer.append("&"); //$NON-NLS-1$
 		}
-		buffer.append("$");
+		buffer.append("$"); //$NON-NLS-1$
 		buffer.append(codeData.getName());
 		String defaultValue = codeData.getDefaultValue();
 		if (defaultValue != null && defaultValue.length() != 0) {
-			buffer.append(" = ");
+			buffer.append(" = "); //$NON-NLS-1$
 			buffer.append(defaultValue);
 		}
 	}

@@ -14,11 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextHoverExtension;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;

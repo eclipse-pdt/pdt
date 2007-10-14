@@ -628,7 +628,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		}
 
 		public String toString() {
-			return "[AnnotatedPosition (" + getOffset() + ", " + getLength() + ")]";
+			return "[AnnotatedPosition (" + getOffset() + ", " + getLength() + ")]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 

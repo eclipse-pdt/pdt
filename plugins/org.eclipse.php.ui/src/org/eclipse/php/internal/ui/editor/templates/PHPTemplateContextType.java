@@ -15,13 +15,7 @@ import org.eclipse.jface.text.templates.GlobalTemplateVariables;
 import org.eclipse.jface.text.templates.TemplateBuffer;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateContextType;
-import org.eclipse.php.internal.ui.editor.templates.resolver.PhpTemplateArrayVariableResolver;
-import org.eclipse.php.internal.ui.editor.templates.resolver.PhpTemplateClassContainerResolver;
-import org.eclipse.php.internal.ui.editor.templates.resolver.PhpTemplateClassResolver;
-import org.eclipse.php.internal.ui.editor.templates.resolver.PhpTemplateFileResolver;
-import org.eclipse.php.internal.ui.editor.templates.resolver.PhpTemplateFunctionContainerResolver;
-import org.eclipse.php.internal.ui.editor.templates.resolver.PhpTemplateNumberVariableResolver;
-import org.eclipse.php.internal.ui.editor.templates.resolver.PhpTemplateVariableResolver;
+import org.eclipse.php.internal.ui.editor.templates.resolver.*;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.wst.xml.ui.internal.templates.EncodingTemplateVariableResolverXML;
 

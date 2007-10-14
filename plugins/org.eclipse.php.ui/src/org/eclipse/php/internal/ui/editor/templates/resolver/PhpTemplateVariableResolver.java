@@ -21,6 +21,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableTypeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariablesTypeManager;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -28,10 +29,10 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 public class PhpTemplateVariableResolver extends TemplateVariableResolver {
 
-	private static final String DEFAULT_VAR = "var";
+	private static final String DEFAULT_VAR = "var"; //$NON-NLS-1$
 
 	public PhpTemplateVariableResolver() {
-		super("variable", "resolving a php variable");
+		super("variable", PHPUIMessages.getString("PhpTemplateVariableResolver.2")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected String[] resolveAll(TemplateContext context) {

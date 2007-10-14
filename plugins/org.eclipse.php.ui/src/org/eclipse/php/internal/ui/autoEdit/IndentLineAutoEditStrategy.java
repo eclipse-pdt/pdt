@@ -10,12 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DocumentCommand;
-import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -83,7 +78,7 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 				document.replace(command.offset, command.length, command.text);
 				//consuming the command
 				command.length = 0;
-				command.text = "";
+				command.text = ""; //$NON-NLS-1$
 				command.offset = futureCaretPosition;
 				//moving the caret position
 				document.getUndoManager().disableUndoManagement();

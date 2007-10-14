@@ -21,6 +21,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -28,10 +29,10 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 public class PhpTemplateNumberVariableResolver extends TemplateVariableResolver {
 
-	private static final String DEFAULT_VAR = "index";
+	private static final String DEFAULT_VAR = "index"; //$NON-NLS-1$
 
 	public PhpTemplateNumberVariableResolver() {
-		super("number_variable", "resolving a php number variable");
+		super("number_variable", PHPUIMessages.getString("PhpTemplateNumberVariableResolver.2")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected String[] resolveAll(TemplateContext context) {

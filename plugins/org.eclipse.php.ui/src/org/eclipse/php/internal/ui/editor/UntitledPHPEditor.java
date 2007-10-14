@@ -96,7 +96,7 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 		if (template != null) {
 			return template.getPattern();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/**

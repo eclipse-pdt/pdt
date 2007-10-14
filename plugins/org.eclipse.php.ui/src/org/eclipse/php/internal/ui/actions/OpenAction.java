@@ -132,7 +132,7 @@ public class OpenAction extends SelectionDispatchAction {
 					OpenActionUtil.open(element, activateOnOpen);
 				}
 			} catch (PartInitException x) {
-				MessageDialog.openError(getShell(), PHPUIMessages.OpenAction_error_messageProblems, "");
+				MessageDialog.openError(getShell(), PHPUIMessages.OpenAction_error_messageProblems, ""); //$NON-NLS-1$
 
 			}
 		}

@@ -122,7 +122,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	private void run(PHPCodeData element) throws CoreException {
 		if (!ActionUtils.isProcessable(getShell(), element))
 			return;
-		throw new RuntimeException("implement me");
+		throw new RuntimeException(PHPUIMessages.getString("RenamePHPElementAction.0")); //$NON-NLS-1$
 	}
 
 	private static boolean isRenameAvailable(PHPCodeData element) throws CoreException {

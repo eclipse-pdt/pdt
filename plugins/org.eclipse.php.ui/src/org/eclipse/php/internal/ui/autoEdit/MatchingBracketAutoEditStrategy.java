@@ -63,7 +63,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 		int commandLength = command.length;
 		char c = command.text.charAt(0);
 		boolean extraCharWasAdded = false;
-		String removedText = "";
+		String removedText = ""; //$NON-NLS-1$
 
 		try {
 			if (currentPosition + commandLength < document.getLength()) {
@@ -92,11 +92,11 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 				//making the change in ther documet ourselfs and consuming the original command
 				document.replace(currentPosition, commandLength, command.text);
 				document.getUndoManager().disableUndoManagement();
-				document.replace(currentPosition + 1, 0, "");
+				document.replace(currentPosition + 1, 0, ""); //$NON-NLS-1$
 				document.getUndoManager().enableUndoManagement();
 				command.offset++; //this will cause the caret to be set between the brackets.
 				command.length = 0;
-				command.text = "";
+				command.text = ""; //$NON-NLS-1$
 			}
 
 		} catch (Exception exc) {
@@ -214,7 +214,7 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 					if (matcher.match(document, endSelection + 1) != null || document.getLength() == endSelection + 1) {
 						if (command.length == 0) {
 							command.offset++;
-							command.text = "";
+							command.text = ""; //$NON-NLS-1$
 						} else {
 							command.length++;
 						}

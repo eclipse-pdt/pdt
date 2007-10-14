@@ -42,7 +42,7 @@ public class PHPElementContainerLabelProvider extends LabelProvider {
 			PHPCodeData container = PHPModelUtil.getPHPFileContainer(codeData);
 			return getText(container, buf);
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 
 	}
 }

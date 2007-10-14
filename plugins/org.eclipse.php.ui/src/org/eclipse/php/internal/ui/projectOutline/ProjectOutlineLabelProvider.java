@@ -18,7 +18,6 @@ import org.eclipse.php.internal.ui.SuperClassLabelProvider;
 import org.eclipse.php.internal.ui.projectOutline.ProjectOutlineContentProvider.OutlineNode;
 import org.eclipse.php.internal.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.internal.ui.util.PHPElementLabels;
-import org.eclipse.php.internal.ui.util.TreeHierarchyLayoutProblemsDecorator;
 import org.eclipse.swt.graphics.Image;
 
 public class ProjectOutlineLabelProvider extends AppearanceAwareLabelProvider {
@@ -45,12 +44,12 @@ public class ProjectOutlineLabelProvider extends AppearanceAwareLabelProvider {
 	}
 
 	public String getTooltipText(Object element) {
-		String postfix = "";
+		String postfix = ""; //$NON-NLS-1$
 		if (element instanceof PHPCodeData) {
 			PHPCodeData codeData = (PHPCodeData) element;
 			UserData userData = codeData.getUserData();
 			if (userData != null)
-				postfix = " (" + userData.getFileName() + ")";
+				postfix = " (" + userData.getFileName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		String text = PHPElementLabels.getTooltipTextLabel(element);
 		return text + postfix;

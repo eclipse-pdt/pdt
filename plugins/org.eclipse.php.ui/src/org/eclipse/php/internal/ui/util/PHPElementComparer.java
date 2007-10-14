@@ -55,9 +55,9 @@ public class PHPElementComparer implements IPHPTreeElementComparer {
 		if (element instanceof PHPCodeData) {
 			PHPCodeData codeData = (PHPCodeData) element;
 			String s;
-			String containerName = codeData.getContainer() != null ? codeData.getContainer().getName() : "";
+			String containerName = codeData.getContainer() != null ? codeData.getContainer().getName() : ""; //$NON-NLS-1$
 			if (codeData.isUserCode()) {
-				s = codeData.getUserData().getFileName() + ":::" + codeData.getName() + ":::" + containerName;
+				s = codeData.getUserData().getFileName() + ":::" + codeData.getName() + ":::" + containerName; //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				s = codeData.getName();
 			}

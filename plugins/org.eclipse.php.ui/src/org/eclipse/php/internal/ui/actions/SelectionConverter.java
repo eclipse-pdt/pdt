@@ -176,13 +176,13 @@ public class SelectionConverter {
 			return EMPTY_RESULT;
 		}
 		text = text.trim();
-		if ("".equals(text)) {
+		if ("".equals(text)) { //$NON-NLS-1$
 			return EMPTY_RESULT;
 		}
 
 		ArrayList codeDatas = new ArrayList();
 
-		if (input instanceof PHPFileData && text.matches("^[\\w]+$")) {
+		if (input instanceof PHPFileData && text.matches("^[\\w]+$")) { //$NON-NLS-1$
 			PHPWorkspaceModelManager modelManager = PHPWorkspaceModelManager.getInstance();
 			IProject project = modelManager.getProjectForFileData((PHPFileData) input, null);
 			PHPProjectModel model = modelManager.getModelForProject(project);

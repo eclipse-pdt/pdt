@@ -10,14 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.phpCodeData;
 
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPIncludeFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
 public class AddPHPDocActionFilterContributor implements IActionFilterContributor {

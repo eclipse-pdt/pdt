@@ -13,25 +13,15 @@ package org.eclipse.php.internal.ui.actions;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.BadPartitioningException;
-import org.eclipse.jface.text.IDocumentExtension3;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.text.undo.DocumentUndoManagerRegistry;
-import org.eclipse.text.undo.IDocumentUndoManager;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 
 /**

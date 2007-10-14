@@ -264,7 +264,7 @@ public class PHPElementLabels {
 			IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) element);
 			buf.append(project.getName());
 		} else if (element instanceof PHPWorkspaceModelManager) {
-			buf.append("PHP Model");
+			buf.append("PHP Model"); //$NON-NLS-1$
 		} else if (element instanceof IResource) {
 			buf.append(((IResource) element).getName());
 		} else if (element instanceof IPhpModel) {
@@ -370,22 +370,22 @@ public class PHPElementLabels {
 			for (int i = 0; i < nParams; i++) {
 				if (i > 0) {
 					buf.append(COMMA_STRING); //$NON-NLS-1$
-					buf.append(" ");
+					buf.append(" "); //$NON-NLS-1$
 				}
 				if (getFlag(flags, M_PARAMETER_TYPES)) {
 					String t = parameters[i].getClassType();
 					if (t == null) {
-						t = "";
+						t = ""; //$NON-NLS-1$
 					} else {
-						t += " ";
+						t += " "; //$NON-NLS-1$
 					}
 					buf.append(t);
 				}
 				if (getFlag(flags, M_PARAMETER_NAMES)) {
-					buf.append("$" + parameters[i].getName());
+					buf.append("$" + parameters[i].getName()); //$NON-NLS-1$
 					String defaultValue = parameters[i].getDefaultValue();
-					if (defaultValue != null && !defaultValue.equals("")) {
-						buf.append(" = " + defaultValue);
+					if (defaultValue != null && !defaultValue.equals("")) { //$NON-NLS-1$
+						buf.append(" = " + defaultValue); //$NON-NLS-1$
 					}
 				}
 
@@ -529,7 +529,7 @@ public class PHPElementLabels {
 		if (resourceFile != null && resourceFile.exists()) {
 			buf.append(cu.getComparableName());
 		} else {
-			int indexOfZip = cu.getName().indexOf(".zip");
+			int indexOfZip = cu.getName().indexOf(".zip"); //$NON-NLS-1$
 			if (indexOfZip != -1) {
 				// start the file label after the ".zip/" 				
 				//				String name = cu.getName().substring(indexOfZip += 5, cu.getName().length());
@@ -587,7 +587,7 @@ public class PHPElementLabels {
 		buf.append(classData.getName());
 
 		if (classData.getDocBlock() != null) {
-			buf.append("\n" + classData.getDocBlock().getShortDescription());
+			buf.append("\n" + classData.getDocBlock().getShortDescription()); //$NON-NLS-1$
 		}
 	}
 
@@ -601,10 +601,10 @@ public class PHPElementLabels {
 				buf.append(COMMA_STRING); //$NON-NLS-1$
 			}
 			buf.append(parameters[i].getClassType());
-			buf.append(" $" + parameters[i].getName());
+			buf.append(" $" + parameters[i].getName()); //$NON-NLS-1$
 			String defaultValue = parameters[i].getDefaultValue();
-			if (!defaultValue.equals("")) {
-				buf.append(" = " + defaultValue);
+			if (!defaultValue.equals("")) { //$NON-NLS-1$
+				buf.append(" = " + defaultValue); //$NON-NLS-1$
 			}
 
 		}
@@ -614,7 +614,7 @@ public class PHPElementLabels {
 		buf.append(DECL_STRING);
 		buf.append(method.getReturnType());
 		if (method.getDocBlock() != null) {
-			buf.append("\n" + method.getDocBlock().getShortDescription());
+			buf.append("\n" + method.getDocBlock().getShortDescription()); //$NON-NLS-1$
 		}
 	}
 
@@ -643,7 +643,7 @@ public class PHPElementLabels {
 		} else if (obj != null && obj.equals(PHPFunctionsContentProvider.CONSTANTS_NODE_NAME)) {
 			return obj.toString();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 }

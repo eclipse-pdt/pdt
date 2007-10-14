@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DocumentCommand;
-import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
@@ -26,7 +22,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy implements IAutoEditStrategy {
 
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
-		if (command.text != null && command.text.endsWith("{")) {
+		if (command.text != null && command.text.endsWith("{")) { //$NON-NLS-1$
 			autoIndentBeforeCurlyOpen((IStructuredDocument) document, command);
 		}
 	}

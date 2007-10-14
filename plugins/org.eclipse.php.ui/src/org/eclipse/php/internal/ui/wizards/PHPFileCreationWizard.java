@@ -25,15 +25,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 
 public class PHPFileCreationWizard extends Wizard implements INewWizard {
@@ -87,7 +80,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			return false;
 		} catch (InvocationTargetException e) {
 			Throwable realException = e.getTargetException();
-			MessageDialog.openError(getShell(), "Error", realException.getMessage());
+			MessageDialog.openError(getShell(), PHPUIMessages.getString("PHPFileCreationWizard.0"), realException.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		return true;
@@ -121,7 +114,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IResource resource = root.findMember(new Path(containerName));
 			if (!resource.exists() || !(resource instanceof IContainer)) {
-				throwCoreException("Container \"" + containerName + "\" does not exist.");
+				throwCoreException(PHPUIMessages.getString("PHPFileCreationWizard.1") + containerName + PHPUIMessages.getString("PHPFileCreationWizard.2")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			IContainer container = (IContainer) resource;
 			final IFile file = container.getFile(new Path(fileName));
@@ -178,14 +171,14 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 */
 		private static InputStream openContentStream(String contents) {
 			if (contents == null) {
-				contents = "";
+				contents = ""; //$NON-NLS-1$
 			}
 
 			return new ByteArrayInputStream(contents.getBytes());
 		}
 
 		private static void throwCoreException(String message) throws CoreException {
-			IStatus status = new Status(IStatus.ERROR, "TestProject", IStatus.OK, message, null);
+			IStatus status = new Status(IStatus.ERROR, PHPUIMessages.getString("PHPFileCreationWizard.4"), IStatus.OK, message, null); //$NON-NLS-1$
 			throw new CoreException(status);
 		}
 	}

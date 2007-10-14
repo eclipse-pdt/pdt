@@ -34,7 +34,7 @@ public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferenc
 	}
 
 	protected void setDescription() {
-		setDescription("");
+		setDescription(""); //$NON-NLS-1$
 
 	}
 

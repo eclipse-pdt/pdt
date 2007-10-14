@@ -48,7 +48,7 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
         gd = new GridData(GridData.FILL_HORIZONTAL);
         useSmartSubWordNavigation = new Button(firstComposite, SWT.CHECK | SWT.LEFT);
         useSmartSubWordNavigation.setLayoutData(gd);
-        useSmartSubWordNavigation.setText("Smart caret positioning in PHP names (Overrides basic behavior)");
+        useSmartSubWordNavigation.setText(PHPUIMessages.getString("PHPEditorPreferencePage.0")); //$NON-NLS-1$
     }
 
     protected void performDefaults() {

@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 

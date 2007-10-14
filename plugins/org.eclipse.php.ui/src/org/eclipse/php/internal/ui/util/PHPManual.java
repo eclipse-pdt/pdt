@@ -30,12 +30,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -114,7 +109,7 @@ public class PHPManual implements IPropertyChangeListener {
 			buf.append("-"); //$NON-NLS-1$
 		}
 		buf.append(Pattern.compile("([A-Z])").matcher(methodName).replaceAll("-$1").replaceAll("_", "-")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$)
-		return buf.toString().toLowerCase().replaceAll("-+", "-");
+		return buf.toString().toLowerCase().replaceAll("-+", "-"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	/**
@@ -201,7 +196,7 @@ public class PHPManual implements IPropertyChangeListener {
 				browser = browserSupport.createBrowser(BROWSER_ID);
 			}
 			
-			if (url.startsWith("mk:")) {
+			if (url.startsWith("mk:")) { //$NON-NLS-1$
                 browser.openURL(new URL(null, url, new MkHandler()));
             } else {
                 browser.openURL(new URL(url));

@@ -483,7 +483,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper.getColorString(124, 165, 213) + " | true";
+	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper.getColorString(124, 165, 213) + " | true"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls if correction indicators are shown in the UI.
@@ -733,13 +733,13 @@ public class PreferenceConstants {
 	/**
 	 * A named preference that controls whether smart Home/End in PHP code is enabled
 	 */
-	public static final String USE_SMART_HOME_END = "useSmartHomeEnd";
+	public static final String USE_SMART_HOME_END = "useSmartHomeEnd"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether smart navigation in PHP code is enabled
 	 * on sub-words
 	 */
-	public static final String USE_SUB_WORD_NAVIGATION = "editorSubWordNavigation";
+	public static final String USE_SUB_WORD_NAVIGATION = "editorSubWordNavigation"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether folding is enabled in the PHP editor.
@@ -908,8 +908,8 @@ public class PreferenceConstants {
 		store.setDefault(CODEASSIST_AUTOACTIVATION, true);
 		store.setDefault(CODEASSIST_AUTOACTIVATION_SIZE_LIMIT, 500);
 		store.setDefault(CODEASSIST_AUTOACTIVATION_DELAY, 200);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>");
-		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@");
+		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>"); //$NON-NLS-1$
+		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@"); //$NON-NLS-1$
 		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, true); //$NON-NLS-1$
 		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, true); //$NON-NLS-1$
 		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, true); //$NON-NLS-1$
@@ -928,7 +928,7 @@ public class PreferenceConstants {
 
 		// PHP options
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION, PHPVersion.PHP5);
-		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_ROOT_CONTEXT, "");
+		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_ROOT_CONTEXT, ""); //$NON-NLS-1$
 
 		//Smart home/end
 		store.setDefault(USE_SMART_HOME_END, true);
@@ -963,7 +963,7 @@ public class PreferenceConstants {
 		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.NEVER);
 
 		// default locale
-		if ((store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE)).equals("")) {
+		if ((store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE)).equals("")) { //$NON-NLS-1$
 			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, Locale.getDefault().toString());
 			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
 		}

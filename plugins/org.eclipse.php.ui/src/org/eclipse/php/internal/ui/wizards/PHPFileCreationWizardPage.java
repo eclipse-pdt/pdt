@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -53,17 +54,17 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	//	private Combo encodingCombo;
 	//	EncodingSettings encodingSettings;
 
-	protected static final String UTF_8 = "UTF 8";
-	protected static final String NO_TEMPLATE = "-- none -- ";
+	protected static final String UTF_8 = "UTF 8"; //$NON-NLS-1$
+	protected static final String NO_TEMPLATE = "-- none -- "; //$NON-NLS-1$
 
 	/**
 	 * Constructor for SampleNewWizardPage.
 	 * @param pageName
 	 */
 	public PHPFileCreationWizardPage(final ISelection selection) {
-		super("wizardPage");
-		setTitle("New PHP file");
-		setDescription("Create a new PHP file");
+		super("wizardPage"); //$NON-NLS-1$
+		setTitle(PHPUIMessages.getString("PHPFileCreationWizardPage.3")); //$NON-NLS-1$
+		setDescription(PHPUIMessages.getString("PHPFileCreationWizardPage.4")); //$NON-NLS-1$
 		setImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_FILE);
 		this.selection = selection;
 	}
@@ -78,7 +79,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
 		Label label = new Label(container, SWT.NULL);
-		label.setText("Source Folder");
+		label.setText(PHPUIMessages.getString("PHPFileCreationWizardPage.5")); //$NON-NLS-1$
 
 		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -91,7 +92,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		});
 
 		final Button button = new Button(container, SWT.PUSH);
-		button.setText("Browse");
+		button.setText(PHPUIMessages.getString("PHPFileCreationWizardPage.6")); //$NON-NLS-1$
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				handleBrowse();
@@ -99,7 +100,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		});
 
 		label = new Label(container, SWT.NULL);
-		label.setText("File Name");
+		label.setText(PHPUIMessages.getString("PHPFileCreationWizardPage.7")); //$NON-NLS-1$
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		fileText.setFocus();
@@ -192,7 +193,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			//					encodingSettings.setIANATag(defaultEncoding);
 			//				}
 		}
-		setInitialFileName("newfile.php");
+		setInitialFileName(PHPUIMessages.getString("PHPFileCreationWizardPage.8")); //$NON-NLS-1$
 	}
 
 	protected void setInitialFileName(final String fileName) {
@@ -207,7 +208,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	 */
 
 	private void handleBrowse() {
-		final ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, "Select New File Folder");
+		final ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, PHPUIMessages.getString("PHPFileCreationWizardPage.9")); //$NON-NLS-1$
 		dialog.showClosedProjects(false);
 		if (dialog.open() == Window.OK) {
 			final Object[] result = dialog.getResult();
@@ -224,26 +225,26 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		final String fileName = getFileName();
 
 		if (container.length() == 0) {
-			updateStatus("Folder must be specified");
+			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.10")); //$NON-NLS-1$
 			return;
 		}
 		final IContainer containerFolder = getContainer(container);
 		if (containerFolder == null || !containerFolder.exists()) {
-			updateStatus("Selected folder does not exist");
+			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.11")); //$NON-NLS-1$
 			return;
 		}
 		if (!containerFolder.getProject().isOpen()) {
-			updateStatus("Selected folder is in closed project");
+			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.12")); //$NON-NLS-1$
 			return;
 		}
-		if (fileName != null && !fileName.equals("") && containerFolder.getFile(new Path(fileName)).exists()) {
-			updateStatus("Specified file already exists");
+		if (fileName != null && !fileName.equals("") && containerFolder.getFile(new Path(fileName)).exists()) { //$NON-NLS-1$
+			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.14")); //$NON-NLS-1$
 			return;
 		}
 
 		int dotIndex = fileName.lastIndexOf('.');
 		if (fileName.length() == 0 || dotIndex == 0) {
-			updateStatus("File name must be specified");
+			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.15")); //$NON-NLS-1$
 			return;
 		}
 
@@ -252,7 +253,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			for (int i = 0; i < fileNameWithoutExtention.length(); i++) {
 				char ch = fileNameWithoutExtention.charAt(i);
 				if (!(Character.isJavaIdentifierPart(ch) || ch == '.' || ch == '-')) {
-					updateStatus("File name contains illegal characters");
+					updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.16")); //$NON-NLS-1$
 					return;
 				}
 			}
@@ -263,12 +264,12 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			// fixed bug 195274
 			// get the extensions from content type
 			final String[] fileExtensions = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-			StringBuffer buffer = new StringBuffer("The file name must end in one of the following extensions [");
+			StringBuffer buffer = new StringBuffer(PHPUIMessages.getString("PHPFileCreationWizardPage.17")); //$NON-NLS-1$
 			buffer.append(fileExtensions[0]);
 			for (String extension : fileExtensions) {
-				buffer.append(", ").append(extension);
+				buffer.append(", ").append(extension); //$NON-NLS-1$
 			}
-			buffer.append("]");
+			buffer.append("]"); //$NON-NLS-1$
 			updateStatus(buffer.toString());
 			return;
 		}

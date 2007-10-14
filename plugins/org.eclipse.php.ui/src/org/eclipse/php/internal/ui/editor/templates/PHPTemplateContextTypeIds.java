@@ -12,7 +12,7 @@ package org.eclipse.php.internal.ui.editor.templates;
 
 public interface PHPTemplateContextTypeIds {
 
-	static final String PHP = "php";
-	static final String PHPDOC = "phpdoc";
-	static final String NEW_PHP = "newPhp";
+	static final String PHP = "php"; //$NON-NLS-1$
+	static final String PHPDOC = "phpdoc"; //$NON-NLS-1$
+	static final String NEW_PHP = "newPhp"; //$NON-NLS-1$
 }

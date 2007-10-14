@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class PHPManualSiteDescriptor {
 
@@ -28,13 +29,13 @@ public class PHPManualSiteDescriptor {
 	private static final String DIRECTOR_ATTRIBUTE = "director"; //$NON-NLS-1$
 	private static final String EXTENSION_ATTRIBUTE = "extension"; //$NON-NLS-1$
 
-	public static final String DEFAULT_PHP_MANUAL_SITE = "http://www.php.net/manual/en/";
+	public static final String DEFAULT_PHP_MANUAL_SITE = PHPUIMessages.getString("PHPManualSiteDescriptor.URL"); //$NON-NLS-1$
 
-	public static final String DEFAULT_PHP_MANUAL_EXTENSION = "php";
+	public static final String DEFAULT_PHP_MANUAL_EXTENSION = "php"; //$NON-NLS-1$
 
-	public static final String DEFAULT_PHP_MANUAL_LABEL = "PHP.net";
+	public static final String DEFAULT_PHP_MANUAL_LABEL = "PHP.net"; //$NON-NLS-1$
 
-	public static final String DEFAULT_PHP_MANUAL_DIRECTOR = "org.eclipse.php.ui.phpManualDirector";
+	public static final String DEFAULT_PHP_MANUAL_DIRECTOR = "org.eclipse.php.ui.phpManualDirector"; //$NON-NLS-1$
 
 	private IConfigurationElement fElement;
 

@@ -10,18 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.preferences.IPHPPreferencePageBlock;
 
@@ -125,7 +121,7 @@ public class PHPPreferencePageBlocksRegistry {
 		}
 
 		public IPHPPreferencePageBlock createPHPPreferencePageBlock() {
-			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point " + PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) {
+			SafeRunner.run(new SafeRunnable(PHPUIMessages.getString("PHPPreferencePageBlocksRegistry.0") + PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) { //$NON-NLS-1$ //$NON-NLS-2$
 				public void run() throws Exception {
 					preferencesPageBlock = (IPHPPreferencePageBlock) element.createExecutableExtension(CLASS_ATTRIBUTE);
 					preferencesPageBlock.setComparableName(element.getAttribute(NAME_ATTRIBUTE));

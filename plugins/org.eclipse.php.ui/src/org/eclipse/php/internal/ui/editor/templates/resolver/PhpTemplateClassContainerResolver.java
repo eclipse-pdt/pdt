@@ -16,6 +16,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -25,7 +26,7 @@ public class PhpTemplateClassContainerResolver extends TemplateVariableResolver 
 
 	public static final String NO_CLASS = "no_class_scope"; //$NON-NLS-1$
 	public PhpTemplateClassContainerResolver() {
-		super("class_container", "resolving a php class name");
+		super("class_container", PHPUIMessages.getString("PhpTemplateClassContainerResolver.1")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected String resolve(TemplateContext context) {
@@ -49,7 +50,7 @@ public class PhpTemplateClassContainerResolver extends TemplateVariableResolver 
 			}
 			PHPCodeContext phpCodeContext = ModelSupport.createContext(fileData, phpTemplateContext.getStart());
 			String className = phpCodeContext.getContainerClassName();
-			if (className == null || className.equals("")) {
+			if (className == null || className.equals("")) { //$NON-NLS-1$
 				return NO_CLASS;
 			}
 			

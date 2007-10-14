@@ -158,6 +158,6 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	 */
 	public static final String GOTO_MATCHING_BRACKET = "org.eclipse.php.ui.editor.goto.matching.bracket"; //$NON-NLS-1$
 
-	public static final String OPEN_DECLARATION = "org.eclipse.php.ui.actions.OpenDeclaration";
+	public static final String OPEN_DECLARATION = "org.eclipse.php.ui.actions.OpenDeclaration"; //$NON-NLS-1$
 
 }

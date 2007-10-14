@@ -49,13 +49,13 @@ public class NonExistingPHPFileEditorInput implements IEditorInput, ILocationPro
 		IFileStore fileStore = null;
 
 		String pathName = fullPath.toString();
-		if (pathName.endsWith(".php")) {
+		if (pathName.endsWith(".php")) { //$NON-NLS-1$
 			fileStore = EFS.getLocalFileSystem().getStore(fullPath.removeLastSegments(1));
 			fName = fullPath.lastSegment(); //$NON-NLS-1$
 		} else {
 			fileStore = EFS.getLocalFileSystem().getStore(fullPath);
 			++fgNonExisting;
-			fName = "PHPDocument" + fgNonExisting + ".php"; //$NON-NLS-1$
+			fName = "PHPDocument" + fgNonExisting + ".php"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		Assert.isTrue(EFS.SCHEME_FILE.equals(fileStore.getFileSystem().getScheme()));
 		fFileStore = fileStore;
@@ -120,7 +120,7 @@ public class NonExistingPHPFileEditorInput implements IEditorInput, ILocationPro
 		if (element instanceof NonExistingPHPFileEditorInput) {
 			NonExistingPHPFileEditorInput input = (NonExistingPHPFileEditorInput) element;
 			String path = input.fFileStore.toURI().getPath();
-			if (path.endsWith(".php")) {
+			if (path.endsWith(".php")) { //$NON-NLS-1$
 				return new Path(path);
 			} else {
 				return new Path(path + File.separatorChar + fName);

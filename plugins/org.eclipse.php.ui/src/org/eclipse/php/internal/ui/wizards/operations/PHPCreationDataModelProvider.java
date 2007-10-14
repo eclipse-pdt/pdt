@@ -22,6 +22,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.wizards.PHPWizardPagesRegistry;
 import org.eclipse.php.internal.ui.wizards.WizardPageFactory;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelPropertyDescriptor;
@@ -32,7 +33,7 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 
 	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP4, PHPVersion.PHP5 };
 
-	public static final String[] PHP_VERSION_DESCRIPTIONS = { "PHP 4", "PHP 5 or greater" };
+	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.getString("PHPCreationDataModelProvider.0"), PHPUIMessages.getString("PHPCreationDataModelProvider.1") }; //$NON-NLS-1$ //$NON-NLS-2$
 	
 	private static final String ID = "org.eclipse.php.ui.wizards.PHPProjectCreationWizard"; //$NON-NLS-1$
 	
@@ -105,7 +106,7 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 
 	public Object getDefaultProperty(String propertyName) {
 		if (propertyName.equals(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING))
-			return "";
+			return ""; //$NON-NLS-1$
 		return super.getDefaultProperty(propertyName);
 	}
 
@@ -125,7 +126,7 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 	protected IProject getProject() {		
 		IProject project= super.getProject();
 		if (project==null)
-			project=ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY");
+			project=ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY"); //$NON-NLS-1$
 		return project;
 	}
 

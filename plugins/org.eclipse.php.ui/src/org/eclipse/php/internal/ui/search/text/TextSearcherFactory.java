@@ -40,7 +40,7 @@ public class TextSearcherFactory {
 	}
 	
 	public final static TextSearcher createSearcher(IResource resource, ResultVisitor visitor, Pattern searchPattern) {
-		final TextSearchScope searchScope = TextSearchScope.newSearchScope(new IResource[] { resource } , Pattern.compile(".*"), true);
+		final TextSearchScope searchScope = TextSearchScope.newSearchScope(new IResource[] { resource } , Pattern.compile(".*"), true); //$NON-NLS-1$
 		return createSearcher(searchScope, visitor, searchPattern);
 	}
 

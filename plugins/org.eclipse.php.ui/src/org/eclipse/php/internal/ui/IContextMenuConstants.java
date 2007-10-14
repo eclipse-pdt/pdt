@@ -77,7 +77,7 @@ public interface IContextMenuConstants {
 	 * 
 	 * @since 2.0
 	 */
-	public static final String GROUP_SOURCE = "group.source";
+	public static final String GROUP_SOURCE = "group.source"; //$NON-NLS-1$
 
 	/**
 	 * Pop-up menu: name of group for additional actions (value <code>"additions"</code>).

@@ -28,7 +28,7 @@ import org.osgi.framework.Bundle;
 public class Logger {
 	private static final String PLUGIN_ID = PHPUiPlugin.ID;
 
-	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter";
+	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
 
 	public static final int OK = IStatus.OK; // 0
 	public static final int INFO = IStatus.INFO; // 1
@@ -66,7 +66,7 @@ public class Logger {
 			case ERROR:
 				severity = IStatus.ERROR;
 		}
-		message = (message != null) ? message : "null";
+		message = (message != null) ? message : "null"; //$NON-NLS-1$
 		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
 		if (bundle != null)
@@ -82,7 +82,7 @@ public class Logger {
 	 */
 	protected static void _trace(String category, String message, Throwable exception) {
 		if (isTracing(category)) {
-			message = (message != null) ? message : "null";
+			message = (message != null) ? message : "null"; //$NON-NLS-1$
 			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, message, exception);
 			Bundle bundle = Platform.getBundle(PLUGIN_ID);
 			if (bundle != null)
@@ -108,7 +108,7 @@ public class Logger {
 
 		String traceFilter = Platform.getDebugOption(PLUGIN_ID + TRACEFILTER_LOCATION);
 		if (traceFilter != null) {
-			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ",");
+			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$
 			while (tokenizer.hasMoreTokens()) {
 				String cat = tokenizer.nextToken().trim();
 				if (category.equals(cat)) {

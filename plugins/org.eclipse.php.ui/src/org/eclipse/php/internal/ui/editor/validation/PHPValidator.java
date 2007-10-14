@@ -23,6 +23,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -57,13 +58,13 @@ public class PHPValidator implements IValidator, ISourceValidator {
 
 	public void connect(IDocument document) {
 		if (document == null) {
-			throw new IllegalStateException("Document is set to null");
+			throw new IllegalStateException(PHPUIMessages.getString("PHPValidator.0")); //$NON-NLS-1$
 		}
 
 		this.document = document;
 
 		if (!(document instanceof IStructuredDocument)) {
-			throw new IllegalStateException("Document is set not structured");
+			throw new IllegalStateException(PHPUIMessages.getString("PHPValidator.1")); //$NON-NLS-1$
 		}
 
 		// check for read only files (such as include path files, etc.)
@@ -74,7 +75,7 @@ public class PHPValidator implements IValidator, ISourceValidator {
 
 		final IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead((IStructuredDocument) document);
 		if (model == null) {
-			throw new IllegalStateException("Error reading structure model in PhpValidator#validator()");
+			throw new IllegalStateException(PHPUIMessages.getString("PHPValidator.2")); //$NON-NLS-1$
 		}
 
 		try {
@@ -84,7 +85,7 @@ public class PHPValidator implements IValidator, ISourceValidator {
 
 			this.file = phpDomModel.getIFile();
 			if (file == null) {
-				throw new IllegalStateException("File not found for php model, named: " + phpDomModel.getBaseLocation());
+				throw new IllegalStateException(PHPUIMessages.getString("PHPValidator.3") + phpDomModel.getBaseLocation()); //$NON-NLS-1$
 			}
 
 		} finally {

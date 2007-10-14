@@ -155,7 +155,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	}
 
-	private String autoIndentDetails = "";
+	private String autoIndentDetails = ""; //$NON-NLS-1$
 	private Link formatterPageLink;
 
 	private void createAutoIndentMessage(final Composite composite) {
@@ -167,7 +167,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text, new String[] { Integer.toString(4) });
 		} else {
 			int indentSize = FormatPreferencesSupport.getInstance().getIndentationSize(null);
-			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text, new String[] { Integer.toString(4), Integer.toString(indentSize), "space" });
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text, new String[] { Integer.toString(4), Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}
 
 		formatterPageLink = new Link(composite, SWT.NONE);
@@ -307,7 +307,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text, new String[] { Integer.toString(4) });
 		} else {
 			int indentSize = FormatPreferencesSupport.getInstance().getIndentationSize(null);
-			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text, new String[] { Integer.toString(4), Integer.toString(indentSize), "space" });
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text, new String[] { Integer.toString(4), Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}
 		formatterPageLink.setText(autoIndentDetails);
 	}

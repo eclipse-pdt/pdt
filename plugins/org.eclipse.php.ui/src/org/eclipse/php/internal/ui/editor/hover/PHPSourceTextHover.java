@@ -99,7 +99,7 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 					List hoverInfos = new ArrayList(codeDatas.length);
 					for (int i = 0; i < codeDatas.length; ++i) {
 						CodeData codeData = codeDatas[i];
-						String hoverInfo = "";
+						String hoverInfo = ""; //$NON-NLS-1$
 						if (!(codeData instanceof PHPVariableData)) {
 							UserData userData = codeData.getUserData();
 							if (userData != null) {
@@ -151,7 +151,7 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 		for (Iterator i = hoverInfos.iterator(); i.hasNext();) {
 			concatenatedInfo.append(i.next());
 			if (i.hasNext())
-				concatenatedInfo.append("\n");
+				concatenatedInfo.append("\n"); //$NON-NLS-1$
 		}
 		return concatenatedInfo.toString();
 	}

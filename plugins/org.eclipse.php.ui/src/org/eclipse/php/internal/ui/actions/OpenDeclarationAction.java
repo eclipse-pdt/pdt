@@ -12,7 +12,7 @@ import org.eclipse.ui.texteditor.IUpdate;
 public class OpenDeclarationAction extends PHPEditorResolvingAction implements IUpdate {
 
 	public OpenDeclarationAction(ResourceBundle resourceBundle, PHPStructuredEditor editor) {
-		super(resourceBundle, "OpenAction_declaration_", editor);
+		super(resourceBundle, "OpenAction_declaration_", editor); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)

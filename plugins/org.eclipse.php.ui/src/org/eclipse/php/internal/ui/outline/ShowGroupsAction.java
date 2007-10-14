@@ -15,12 +15,13 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 
 public class ShowGroupsAction extends Action {
 
-	public static final String PREF_SHOW_GROUPS = "ShowGroupsAction.show";
+	public static final String PREF_SHOW_GROUPS = "ShowGroupsAction.show"; //$NON-NLS-1$
 
 	private TreeViewer treeViewer;
 
@@ -28,7 +29,7 @@ public class ShowGroupsAction extends Action {
 		super(label, AS_CHECK_BOX); //$NON-NLS-1$
 		this.treeViewer = treeViewer;
 		PHPPluginImages.setLocalImageDescriptors(this, "showGroups.gif"); //$NON-NLS-1$
-		setToolTipText("Show Groups");
+		setToolTipText(PHPUIMessages.getString("ShowGroupsAction.1")); //$NON-NLS-1$
 		PHPUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {

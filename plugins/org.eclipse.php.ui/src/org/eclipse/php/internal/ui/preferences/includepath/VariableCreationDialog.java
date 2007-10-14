@@ -23,12 +23,7 @@ import org.eclipse.php.internal.core.project.options.includepath.IncludePathVari
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.wizards.fields.DialogField;
-import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
-import org.eclipse.php.internal.ui.wizards.fields.IStringButtonAdapter;
-import org.eclipse.php.internal.ui.wizards.fields.LayoutUtil;
-import org.eclipse.php.internal.ui.wizards.fields.StringButtonDialogField;
-import org.eclipse.php.internal.ui.wizards.fields.StringDialogField;
+import org.eclipse.php.internal.ui.wizards.fields.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;

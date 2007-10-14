@@ -14,20 +14,7 @@ package org.eclipse.php.internal.ui.editor.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.phpModel.phpElementData.BasicPHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPIncludeFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 /**
  * @author guy.g

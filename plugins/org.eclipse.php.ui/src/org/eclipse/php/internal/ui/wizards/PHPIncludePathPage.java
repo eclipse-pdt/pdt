@@ -45,7 +45,7 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 	}
 
 	public IProject getDummyProject() {
-		return ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project");
+		return ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project"); //$NON-NLS-1$
 	}
 	
 	protected void setSize(Composite composite) {

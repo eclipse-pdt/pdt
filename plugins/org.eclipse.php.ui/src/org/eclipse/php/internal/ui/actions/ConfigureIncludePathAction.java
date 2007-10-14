@@ -26,8 +26,8 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class ConfigureIncludePathAction extends SelectionDispatchAction {
 
-	public static final String ID_INCLUDES_NODE = "org.eclipse.php.ui.treecontent.IncludesNode";									   
-	private static final String INCLUDEPATH_PREFERENCES_PAGE_ID = "org.eclipse.php.ui.propertyPages.IncludePathPropertyPage";
+	public static final String ID_INCLUDES_NODE = "org.eclipse.php.ui.treecontent.IncludesNode";									    //$NON-NLS-1$
+	private static final String INCLUDEPATH_PREFERENCES_PAGE_ID = "org.eclipse.php.ui.propertyPages.IncludePathPropertyPage"; //$NON-NLS-1$
 	
 	private IProject project;
 

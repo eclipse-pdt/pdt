@@ -60,7 +60,7 @@ import org.eclipse.ui.part.ViewPart;
 
 public class ProjectOutlinePart extends ViewPart implements IMenuListener, FocusListener {
 
-	final String MEMENTO_KEY_PROJECT = "ProjectOutlinePart.storedProjectName";
+	final String MEMENTO_KEY_PROJECT = "ProjectOutlinePart.storedProjectName"; //$NON-NLS-1$
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
@@ -269,7 +269,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	class UpdateViewJob extends Job {//implements Runnable {
 
 		public UpdateViewJob() {
-			super("updateViewJob");
+			super(PHPUIMessages.getString("ProjectOutlinePart.1")); //$NON-NLS-1$
 			setSystem(true);
 		}
 

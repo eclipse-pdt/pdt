@@ -10,16 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.SimplePHPCodeDataVisitor;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.contentassist.ContentAssistSupport.PHPTagData;
 import org.eclipse.php.internal.ui.util.PHPElementImageDescriptor;
@@ -69,28 +60,28 @@ public class PHPCompletionRendererVisitor extends SimplePHPCodeDataVisitor {
 		}
 		buffer.append(codeData.getName());
 
-		buffer.append("(");
+		buffer.append("("); //$NON-NLS-1$
 		PHPFunctionData.PHPFunctionParameter[] parameters = codeData.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			if (i != 0) {
-				buffer.append(", ");
+				buffer.append(", "); //$NON-NLS-1$
 			}
 			visit(parameters[i]);
 		}
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 
 		String rt = codeData.getReturnType().trim();
-		rt = (rt.split(" ", 2))[0];
+		rt = (rt.split(" ", 2))[0]; //$NON-NLS-1$
 
 		// we must have a space before the return vlaue;
-		rt = "  " + rt;
+		rt = "  " + rt; //$NON-NLS-1$
 
 		buffer.append(rt);
 	}
 
 	public void visit(PHPTagData codeData) {
 		image = PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_KEYWORD);
-		buffer.append("php");
+		buffer.append("php"); //$NON-NLS-1$
 	}
 
 	public void visit(PHPClassVarData codeData) {
@@ -142,23 +133,23 @@ public class PHPCompletionRendererVisitor extends SimplePHPCodeDataVisitor {
 
 		String classType = codeData.getClassType();
 		if (classType != null && classType.length() != 0) {
-			buffer.append(classType).append(" ");
+			buffer.append(classType).append(" "); //$NON-NLS-1$
 		}
 		if (codeData.isConst()) {
-			buffer.append("const ");
+			buffer.append("const "); //$NON-NLS-1$
 		}
 		if (codeData.isReference()) {
-			buffer.append("&");
+			buffer.append("&"); //$NON-NLS-1$
 		}
 		// add the $ sign only in case of the parameter is with prefix (e.g. const)
 		// fixed bug 196114
 		if (buffer.length() > 0) {
-			buffer.append("$");
+			buffer.append("$"); //$NON-NLS-1$
 		}
 		buffer.append(codeData.getName());
 		String defaultValue = codeData.getDefaultValue();
 		if (defaultValue != null && defaultValue.length() != 0) {
-			buffer.append(" = ").append(defaultValue);
+			buffer.append(" = ").append(defaultValue); //$NON-NLS-1$
 		}
 
 	}

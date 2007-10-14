@@ -25,17 +25,9 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.internal.ui.PHPElementLabelProvider;
-import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.PHPUiConstants;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.*;
 import org.eclipse.swt.SWTError;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchSite;
@@ -126,7 +118,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 			if (resources.length != 0)
 				result.add(ResourceTransfer.getInstance());
 			if (phpElements.length != 0) {
-				throw new RuntimeException("implement me");
+				throw new RuntimeException(PHPUIMessages.getString("CopyToClipboardAction.0")); //$NON-NLS-1$
 				//				result.add(PHPElementTransfer.getInstance());
 			}
 			if (fileNames.length != 0)

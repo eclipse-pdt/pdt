@@ -16,6 +16,7 @@ import java.util.Map;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -115,7 +116,7 @@ public class ProjectionModelNodeAdapterFactoryPHP extends ProjectionModelNodeAda
 				return entry.getKey();
 			}
 		}
-		throw new IllegalStateException("Viewer should exist");
+		throw new IllegalStateException(PHPUIMessages.getString("ProjectionModelNodeAdapterFactoryPHP.0")); //$NON-NLS-1$
 	}
 
 }

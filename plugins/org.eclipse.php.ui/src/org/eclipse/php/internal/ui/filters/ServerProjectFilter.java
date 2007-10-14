@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
  */
 public class ServerProjectFilter extends ViewerFilter {
 
-	public static final String SERVER_PROJECT_NAME="Servers";
-	public static final String RUNTIME_NAME=".settings/org.eclipse.wst.server.core.prefs";
+	public static final String SERVER_PROJECT_NAME="Servers"; //$NON-NLS-1$
+	public static final String RUNTIME_NAME=".settings/org.eclipse.wst.server.core.prefs"; //$NON-NLS-1$
 	/*
 	 * @see ViewerFilter
 	 */

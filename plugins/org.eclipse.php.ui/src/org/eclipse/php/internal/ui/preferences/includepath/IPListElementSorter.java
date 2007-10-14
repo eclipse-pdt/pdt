@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences.includepath;
 
-import org.eclipse.jface.viewers.ContentViewer;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 
 public class IPListElementSorter extends ViewerSorter {

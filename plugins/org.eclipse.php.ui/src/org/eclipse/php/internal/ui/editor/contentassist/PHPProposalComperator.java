@@ -34,7 +34,7 @@ public class PHPProposalComperator implements Comparator {
 	public int compare(Object o1, Object o2) {
 		// type checking
 		if (!(o1 instanceof ICompletionProposal && o2 instanceof ICompletionProposal)) {
-			throw new IllegalArgumentException("PHPProposalComperator can get only ICompletionProposal");
+			throw new IllegalArgumentException("PHPProposalComperator can get only ICompletionProposal"); //$NON-NLS-1$
 		}
 		
 		ICompletionProposal element1 = (ICompletionProposal) o1;

@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.util;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 
 /**
  * @author guy.g
@@ -29,9 +30,9 @@ public class ElementCreationProxy {
 	
 	public Object getObject() {
 		if (elementObject == null) {
-			SafeRunner.run(new SafeRunnable("Error creation " + element.getName() + " for extension-point " + extensionPointName) {
+			SafeRunner.run(new SafeRunnable(PHPUIMessages.getString("ElementCreationProxy.0") + element.getName() + PHPUIMessages.getString("ElementCreationProxy.1") + extensionPointName) { //$NON-NLS-1$ //$NON-NLS-2$
 				public void run() throws Exception {
-					elementObject = element.createExecutableExtension("class");
+					elementObject = element.createExecutableExtension("class"); //$NON-NLS-1$
 				}
 			});
 		}

@@ -117,7 +117,7 @@ public class PHPOutlineLabelProvider extends AppearanceAwareLabelProvider {
 										idTypedAttribute = attr;
 									} else if (attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) {
 										requiredAttribute.add(attr);
-									} else if (node.getNodeName().equals("script") && attrName.equalsIgnoreCase("src")) {
+									} else if (node.getNodeName().equals("script") && attrName.equalsIgnoreCase("src")) { //$NON-NLS-1$ //$NON-NLS-2$
 										requiredAttribute.add(attr);
 									} else {
 										hasId = hasId || attrName.equals("id"); //$NON-NLS-1$

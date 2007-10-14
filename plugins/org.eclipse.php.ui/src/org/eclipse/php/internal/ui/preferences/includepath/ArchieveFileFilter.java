@@ -26,7 +26,7 @@ public class ArchieveFileFilter extends ViewerFilter {
 
 	private List fExcludes;
 	private boolean fRecursive;
-	private static String[] fFilterExtensions = {"*.zip", "*.jar"}; //defaults 
+	private static String[] fFilterExtensions = {"*.zip", "*.jar"}; //defaults  //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * @param excludedFiles Excluded files will not pass the filter.

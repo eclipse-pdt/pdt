@@ -10,12 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.generic;
 
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.CompositeFilter;
 import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.IFilter;
 import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.IFilterChangeListener;

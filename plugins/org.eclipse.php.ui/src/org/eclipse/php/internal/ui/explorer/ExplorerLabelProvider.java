@@ -51,12 +51,12 @@ public class ExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		if (text != null)
 			return text;
 		String label = super.getText(element);
-		if (label != null && label.startsWith("_lzx_")) {
+		if (label != null && label.startsWith("_lzx_")) { //$NON-NLS-1$
 			label = label.substring(5);
-			if (label.startsWith("Lz"))
-				label = "<" + label.substring(2) + ">";
+			if (label.startsWith("Lz")) //$NON-NLS-1$
+				label = "<" + label.substring(2) + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 			else
-				label = "<_____   id=" + label + ">";
+				label = "<_____   id=" + label + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		return label;

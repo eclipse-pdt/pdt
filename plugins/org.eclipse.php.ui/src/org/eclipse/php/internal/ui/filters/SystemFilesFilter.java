@@ -25,14 +25,14 @@ public class SystemFilesFilter extends ViewerFilter {
 			IFile file = (IFile) element;
 			if (!PHPModelUtil.isPhpFile(file)) {
 				final String name = file.getName();
-				if (name.startsWith(".") && !".htaccess".equals(name)) {
+				if (name.startsWith(".") && !".htaccess".equals(name)) { //$NON-NLS-1$ //$NON-NLS-2$
 					return false;
 				}
 			}
 		}
 		if (element instanceof IFolder) {
 			IFolder folder = (IFolder) element;
-			if (folder.getName().startsWith(".")) {
+			if (folder.getName().startsWith(".")) { //$NON-NLS-1$
 				return false;
 			}
 		}

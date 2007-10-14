@@ -15,9 +15,6 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.ui.actions.SelectionConverter;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.IEditorPart;
 

@@ -15,13 +15,7 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.ITextDoubleClickStrategy;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
@@ -76,11 +70,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	public PHPStructuredTextViewerConfiguration() {
 		detectors = new ArrayList();
 		detectors.add(new PHPCodeHyperlinkDetector());
-		String detectorsExtensionName = "org.eclipse.php.ui.phpHyperlinkDetector";
+		String detectorsExtensionName = "org.eclipse.php.ui.phpHyperlinkDetector"; //$NON-NLS-1$
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(detectorsExtensionName);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("detector")) {
+			if (element.getName().equals("detector")) { //$NON-NLS-1$
 				ElementCreationProxy ecProxy = new ElementCreationProxy(element, detectorsExtensionName);
 				IHyperlinkDetectorForPHP detector = (IHyperlinkDetectorForPHP) ecProxy.getObject();
 				if (detector != null) {
@@ -153,12 +147,12 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		processors = new ArrayList();
 		processors.add(new PHPContentAssistProcessor());
 		processors.add(new PHPDocContentAssistProcessor());
-		String processorsExtensionName = "org.eclipse.php.ui.phpContentAssistProcessor";
+		String processorsExtensionName = "org.eclipse.php.ui.phpContentAssistProcessor"; //$NON-NLS-1$
 
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(processorsExtensionName);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("processor")) {
+			if (element.getName().equals("processor")) { //$NON-NLS-1$
 				ElementCreationProxy ecProxy = new ElementCreationProxy(element, processorsExtensionName);
 				IContentAssistProcessor processor = (IContentAssistProcessor) ecProxy.getObject();
 				if (processor != null) {
@@ -235,11 +229,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private StructuredContentAssistant getPHPContentAssistantExtension() {
 		StructuredContentAssistant rv = null;
-		String extensionName = "org.eclipse.php.ui.phpContentAssistant";
+		String extensionName = "org.eclipse.php.ui.phpContentAssistant"; //$NON-NLS-1$
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionName);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("contentAssistant")) {
+			if (element.getName().equals("contentAssistant")) { //$NON-NLS-1$
 				ElementCreationProxy ecProxy = new ElementCreationProxy(element, extensionName);
 				StructuredContentAssistant contentAssistant = (StructuredContentAssistant) ecProxy.getObject();
 				if (contentAssistant != null) {
@@ -252,7 +246,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	@Override
 	public String[] getDefaultPrefixes(ISourceViewer sourceViewer, String contentType) {
-		return new String[] { "//", "#", "" }; //$NON-NLS-1$ //$NON-NLS-2$
+		return new String[] { "//", "#", "" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/*
@@ -333,11 +327,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		IContentFormatter usedFormatter = null;
 
-		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterProcessor";
+		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("processor")) {
+			if (element.getName().equals("processor")) { //$NON-NLS-1$
 				ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
 				usedFormatter = (IContentFormatter) ecProxy.getObject();
 			}
@@ -427,7 +421,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 */
 	public IInformationPresenter getOutlinePresenter(ISourceViewer sourceViewer) {
 		InformationPresenter presenter;
-		presenter = new InformationPresenter(getOutlinePresenterControlCreator(sourceViewer, "org.eclipse.php.ui.edit.text.php.show.outline"));
+		presenter = new InformationPresenter(getOutlinePresenterControlCreator(sourceViewer, "org.eclipse.php.ui.edit.text.php.show.outline")); //$NON-NLS-1$
 		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
 		IInformationProvider provider = new PHPElementProvider(((PHPStructuredTextViewer)sourceViewer).getTextEditor());

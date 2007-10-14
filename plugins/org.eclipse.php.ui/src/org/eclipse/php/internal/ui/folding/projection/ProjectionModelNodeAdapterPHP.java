@@ -20,6 +20,7 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.w3c.dom.Node;
@@ -62,7 +63,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 
 		if (node != null && node instanceof NodeImpl) {
 			NodeImpl element = (NodeImpl) node;
-			assert element.getModel() instanceof DOMModelForPHP : "Incompatible model";
+			assert element.getModel() instanceof DOMModelForPHP : PHPUIMessages.getString("ProjectionModelNodeAdapterPHP.0"); //$NON-NLS-1$
 			DOMModelForPHP phpModel = (DOMModelForPHP) element.getModel();
 			document = phpModel.getStructuredDocument();
 
@@ -114,7 +115,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	private final Node createAnnotationsForChild(final Map<ProjectionAnnotation, Position> addedAnnotations, final Map<ProjectionAnnotation, Position> currentAnnotations, PHPFileData fileData, Node childNode) {
 		while (childNode != null) {
 			if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-				assert childNode instanceof ElementImplForPhp : "Bad element";
+				assert childNode instanceof ElementImplForPhp : PHPUIMessages.getString("ProjectionModelNodeAdapterPHP.1"); //$NON-NLS-1$
 				ElementImplForPhp childElement = (ElementImplForPhp) childNode;
 				if (childElement.isPhpTag()) {
 					int startOffset = childElement.getStartOffset();
@@ -136,7 +137,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 
 	private void createFileAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPFileData fileData, int startOffset, int endOffset) {
 		final ProjectionModelNodeAdapterFactoryPHP adapterFactory = getAdapterFactory();
-		assert adapterFactory != null : "provider can't be null - see setProvider()";
+		assert adapterFactory != null : PHPUIMessages.getString("ProjectionModelNodeAdapterPHP.2"); //$NON-NLS-1$
 
 		// set the automatic folding according to preference
 		final boolean foldingPhpDoc = adapterFactory.isFoldingPhpDoc();
@@ -329,7 +330,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	 * @return
 	 */
 	private ProjectionAnnotation getExistingAnnotation(ProjectionAnnotation projectionAnnotation) {
-		assert projectionAnnotation != null : "projectionAnnotation should be not null";
+		assert projectionAnnotation != null : PHPUIMessages.getString("ProjectionModelNodeAdapterPHP.3"); //$NON-NLS-1$
 		if (!previousAnnotations.isEmpty()) {
 			for (ProjectionAnnotation annotation : previousAnnotations.keySet()) {
 				if (projectionAnnotation.equals(annotation)) {
@@ -341,7 +342,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	}
 
 	private ProjectionModelNodeAdapterFactoryPHP getAdapterFactory() {
-		assert fAdapterFactory instanceof ProjectionModelNodeAdapterFactoryPHP : "Factory must be ProjectionModelNodeAdapterFactoryPHP";
+		assert fAdapterFactory instanceof ProjectionModelNodeAdapterFactoryPHP : PHPUIMessages.getString("ProjectionModelNodeAdapterPHP.4"); //$NON-NLS-1$
 		return (ProjectionModelNodeAdapterFactoryPHP) fAdapterFactory;
 	}
 }

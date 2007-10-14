@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DocumentCommand;
-import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.CaseDefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -34,12 +30,12 @@ public class CaseDefaultAutoEditStrategy extends CaseDefaultIndentationStrategy 
 		}
 		String checkWord = null;
 		String addedWord = null;
-		if (command.text.endsWith("t")) {
-			checkWord = "defaul";
-			addedWord = "default";
-		} else if (command.text.endsWith("e")) {
-			checkWord = "cas";
-			addedWord = "case";
+		if (command.text.endsWith("t")) { //$NON-NLS-1$
+			checkWord = "defaul"; //$NON-NLS-1$
+			addedWord = "default"; //$NON-NLS-1$
+		} else if (command.text.endsWith("e")) { //$NON-NLS-1$
+			checkWord = "cas"; //$NON-NLS-1$
+			addedWord = "case"; //$NON-NLS-1$
 		} else {
 			return;
 		}

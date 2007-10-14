@@ -14,14 +14,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 
 /**
@@ -109,7 +104,7 @@ public class SaveFilesHandler {
 		}
 
 		public void run() {
-			monitor.beginTask("Saving edited files", dirtyEditors.size());
+			monitor.beginTask(PHPUIMessages.getString("SaveFilesHandler.0"), dirtyEditors.size()); //$NON-NLS-1$
 			for (Iterator i = dirtyEditors.iterator(); i.hasNext();) {
 				if (monitor.isCanceled()) {
 					return;

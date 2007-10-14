@@ -52,11 +52,11 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 	private IPHPFormatterConfigurationBlockWrapper getFormatterPreferencesBlock() {
 		IPHPFormatterConfigurationBlockWrapper prefBlock = null;
 
-		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterPrefBlock";
+		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterPrefBlock"; //$NON-NLS-1$
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("block")) {
+			if (element.getName().equals("block")) { //$NON-NLS-1$
 				ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
 				prefBlock = (IPHPFormatterConfigurationBlockWrapper) ecProxy.getObject();
 			}

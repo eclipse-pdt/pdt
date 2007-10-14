@@ -46,9 +46,9 @@ public class FunctionsViewGroup extends ViewActionGroup {
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
 		showPHP4FunctionsAction = new ViewAction(this, PHP4); //$NON-NLS-1$
-		showPHP4FunctionsAction.setText("PHP 4");
+		showPHP4FunctionsAction.setText("PHP 4"); //$NON-NLS-1$
 		showPHP5FunctionsAction = new ViewAction(this, PHP5); //$NON-NLS-1$
-		showPHP5FunctionsAction.setText("PHP 5");
+		showPHP5FunctionsAction.setText("PHP 5"); //$NON-NLS-1$
 
 		menu.add(showPHP4FunctionsAction);
 		menu.add(showPHP5FunctionsAction);

@@ -123,7 +123,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			ITextRegion preTextRegion = container.getRegionAtCharacterOffset(offset - 1);
 			IStructuredDocumentRegion preSdRegion = null;
 			if (preTextRegion != null || ((preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null)) {
-				if (preTextRegion.getType() == "") {
+				if (preTextRegion.getType() == "") { //$NON-NLS-1$
 					// TODO needs to be fixed. The problem is what to do if the cursor is exatly between problematic regions, e.g. single line comment and quoted string?? 
 				}
 			}
@@ -212,7 +212,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		if (haveSpacesAtEnd) {
 			return false;
 		}
-		if (tagName.startsWith("$")) {
+		if (tagName.startsWith("$")) { //$NON-NLS-1$
 			tagName = tagName.substring(1);
 
 			PHPCodeContext context = ModelSupport.createContext(fileData, offset);

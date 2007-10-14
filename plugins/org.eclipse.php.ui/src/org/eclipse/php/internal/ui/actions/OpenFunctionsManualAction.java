@@ -25,7 +25,7 @@ public class OpenFunctionsManualAction extends PHPEditorResolvingAction implemen
 	private String url;
 
 	public OpenFunctionsManualAction(ResourceBundle resourceBundle, PHPStructuredEditor editor) {
-		super(resourceBundle, "OpenFunctionsManualAction_", editor);
+		super(resourceBundle, "OpenFunctionsManualAction_", editor); //$NON-NLS-1$
 	}
 
 	protected void doRun() {

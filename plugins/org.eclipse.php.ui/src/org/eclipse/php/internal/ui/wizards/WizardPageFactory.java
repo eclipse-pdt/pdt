@@ -29,7 +29,7 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
  */
 public abstract class WizardPageFactory extends WizardPage {
 
-	protected static String fPageName = "WizardName";
+	protected static String fPageName = "WizardName"; //$NON-NLS-1$
 
 	protected WizardPageFactory(String pageName) {
 		super(pageName);

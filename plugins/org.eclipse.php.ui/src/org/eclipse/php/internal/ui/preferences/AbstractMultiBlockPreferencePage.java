@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.php.internal.ui.PHPUiPlugin;

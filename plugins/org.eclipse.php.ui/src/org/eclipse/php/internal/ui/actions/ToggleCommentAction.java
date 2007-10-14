@@ -15,18 +15,12 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextOperationTarget;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -84,7 +78,7 @@ public class ToggleCommentAction extends TextEditorAction {
 		Shell shell= editor.getSite().getShell();
 		if (!fOperationTarget.canDoOperation(operationCode)) {
 			if (shell != null)
-				MessageDialog.openError(shell, "Error", "Error commenting code");
+				MessageDialog.openError(shell, PHPUIMessages.getString("ToggleCommentAction.0"), PHPUIMessages.getString("ToggleCommentAction.1")); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 

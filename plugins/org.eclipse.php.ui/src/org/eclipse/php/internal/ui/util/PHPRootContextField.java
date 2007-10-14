@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -25,7 +26,7 @@ public class PHPRootContextField {
 
 	public PHPRootContextField(Composite parent, DataModelSynchHelper synchHelper) {
 		Label rootContextLabel = new Label(parent, SWT.NULL);
-		rootContextLabel.setText("Context Root:");
+		rootContextLabel.setText(PHPUIMessages.getString("PHPRootContextField.0")); //$NON-NLS-1$
 
 		rootContext = new Text(parent, SWT.BORDER);
 
@@ -40,7 +41,7 @@ public class PHPRootContextField {
 	}
 
 	public void setDefaultValue() {
-		rootContext.setText("");
+		rootContext.setText(""); //$NON-NLS-1$
 	}
 
 	public String getValue() {

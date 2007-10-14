@@ -60,9 +60,9 @@ public class StatusLineMessageTimerManager {
 				public void run() {
 					if (StatusLineMessageTimerManager.statusLineManager == statusLineManager && message == StatusLineMessageTimerManager.message) {
 						if (isError) {
-							StatusLineMessageTimerManager.statusLineManager.setErrorMessage("");
+							StatusLineMessageTimerManager.statusLineManager.setErrorMessage(""); //$NON-NLS-1$
 						} else {
-							StatusLineMessageTimerManager.statusLineManager.setMessage("");
+							StatusLineMessageTimerManager.statusLineManager.setMessage(""); //$NON-NLS-1$
 						}
 					}
 				}

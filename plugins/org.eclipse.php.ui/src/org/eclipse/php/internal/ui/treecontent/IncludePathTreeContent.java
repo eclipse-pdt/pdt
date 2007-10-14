@@ -44,10 +44,10 @@ import org.eclipse.swt.graphics.Image;
  */
 public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspaceModelListener {
 
-	private static final String INCLUDE_PATHS_NODE_ID = "org.eclipse.php.ui.treecontent.IncludesNode";
-	private static final String INCLUDE_PATHS_NODE_NAME = "Include Paths";
+	private static final String INCLUDE_PATHS_NODE_ID = "org.eclipse.php.ui.treecontent.IncludesNode"; //$NON-NLS-1$
+	private static final String INCLUDE_PATHS_NODE_NAME = "Include Paths"; //$NON-NLS-1$
 
-	static final IPath INCLUDE_PATHS_ROOT_PATH = new Path("\0IncludePaths");
+	static final IPath INCLUDE_PATHS_ROOT_PATH = new Path("\0IncludePaths"); //$NON-NLS-1$
 
 	/**
 	 * Stores tree of all the includes. Main elements are In
@@ -477,7 +477,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 		final String id = includePathModel.getID();
 		final IPath location = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
 		if (location != null)
-			return id + " (" + IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID()).toOSString() + ")";
+			return id + " (" + IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID()).toOSString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		return id;
 	}
 

@@ -22,13 +22,13 @@ public class Element {
 	 * an element type
 	 */
 	public static enum ElementType {
-		FILE("File"),
-		CLASS("Class"),
-		FUNCTION("Function"),
-		METHOD("Method"),
-		FIELD("Field"),
-		CONSTANT("Constant"),
-		DOC("PHP Doc");
+		FILE("File"), //$NON-NLS-1$
+		CLASS("Class"), //$NON-NLS-1$
+		FUNCTION("Function"), //$NON-NLS-1$
+		METHOD("Method"), //$NON-NLS-1$
+		FIELD("Field"), //$NON-NLS-1$
+		CONSTANT("Constant"), //$NON-NLS-1$
+		DOC("PHP Doc"); //$NON-NLS-1$
 
 		private final String elementTypeName;
 
@@ -93,14 +93,14 @@ public class Element {
 
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer();
-		buffer.append("[Element ");
+		buffer.append("[Element "); //$NON-NLS-1$
 		buffer.append(type.toString());
-		buffer.append(": ");
-		buffer.append(", Name: ");
+		buffer.append(": "); //$NON-NLS-1$
+		buffer.append(", Name: "); //$NON-NLS-1$
 		buffer.append(name);
-		buffer.append(", Parent: ");
+		buffer.append(", Parent: "); //$NON-NLS-1$
 		buffer.append(parent);
-		buffer.append("]");
+		buffer.append("]"); //$NON-NLS-1$
 		return buffer.toString();
 	}
 
@@ -186,7 +186,7 @@ public class Element {
 				element = createElement((PHPClassData) container, (PHPClassConstData) codeData, false);
 
 			} else {
-				throw new IllegalStateException("Internal Error: CodeData is not supported as folded element");
+				throw new IllegalStateException("Internal Error: CodeData is not supported as folded element"); //$NON-NLS-1$
 			}
 
 			return isPhpDoc ? createElement(element) : element;

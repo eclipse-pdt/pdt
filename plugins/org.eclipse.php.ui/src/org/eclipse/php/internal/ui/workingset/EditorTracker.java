@@ -10,13 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.workingset;
 
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPageListener;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.*;
 
 public abstract class EditorTracker implements IWindowListener, IPageListener, IPartListener {
 

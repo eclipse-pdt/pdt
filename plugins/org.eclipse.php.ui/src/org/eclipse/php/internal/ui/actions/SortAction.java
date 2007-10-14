@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
 
 public class SortAction extends Action {
 
-	public static final String PREF_IS_SORTED = "SortingAction.isChecked";
+	public static final String PREF_IS_SORTED = "SortingAction.isChecked"; //$NON-NLS-1$
 	private TreeViewer treeViewer;
 	private PHPElementSorter fSorter;
 

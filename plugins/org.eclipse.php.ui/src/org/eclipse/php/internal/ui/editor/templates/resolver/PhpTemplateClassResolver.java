@@ -16,6 +16,7 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -23,10 +24,10 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 public class PhpTemplateClassResolver extends TemplateVariableResolver {
 
-	private static final String DEFAULT_VAR = "Object";
+	private static final String DEFAULT_VAR = "Object"; //$NON-NLS-1$
 
 	public PhpTemplateClassResolver() {
-		super("class", "resolving a php class");
+		super("class", PHPUIMessages.getString("PhpTemplateClassResolver.2")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected String[] resolveAll(TemplateContext context) {

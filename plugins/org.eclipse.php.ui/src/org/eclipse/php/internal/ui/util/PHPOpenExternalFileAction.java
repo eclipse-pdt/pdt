@@ -24,8 +24,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.editors.text.EditorsUI;
@@ -128,7 +128,7 @@ public class PHPOpenExternalFileAction extends Action implements IWorkbenchWindo
 					gotoLine(editorPart, currentFilePath, lineNumber);
 				}
 			} catch (PartInitException e) {
-				Logger.logException("Failed opening file called externally", e);
+				Logger.logException(PHPUIMessages.getString("PHPOpenExternalFileAction.0"), e); //$NON-NLS-1$
 			}
 		} else {
 			if (++numberOfFilesNotFound > 1)

@@ -28,16 +28,16 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 	private int lastIndentSize = 0;
-	private String lastIndentString = "";
+	private String lastIndentString = ""; //$NON-NLS-1$
 	private StringBuffer helpBuffer = new StringBuffer();
 	private IStructuredDocument document;
 	private DocumentCommand command;
 	private IndentLineAutoEditStrategy autoIndentLineStrategy = new IndentLineAutoEditStrategy();
 
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
-		if ((command.text != null) && command.text.equals("\t")) {
+		if ((command.text != null) && command.text.equals("\t")) { //$NON-NLS-1$
 			//override original tab command
-			command.text = "";
+			command.text = ""; //$NON-NLS-1$
 			
 			this.command = command;
 			this.document = (IStructuredDocument) document;
@@ -231,7 +231,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			int indentSize = FormatPreferencesSupport.getInstance().getIndentationSize(document);
 			command.text += getIndentationString(indentSize);
 		} else {
-			command.text += "\t";
+			command.text += "\t"; //$NON-NLS-1$
 		}
 	}
 

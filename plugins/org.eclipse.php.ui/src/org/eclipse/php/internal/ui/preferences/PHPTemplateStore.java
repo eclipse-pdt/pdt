@@ -4,8 +4,6 @@
  */
 package org.eclipse.php.internal.ui.preferences;
 
-import java.text.MessageFormat;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;

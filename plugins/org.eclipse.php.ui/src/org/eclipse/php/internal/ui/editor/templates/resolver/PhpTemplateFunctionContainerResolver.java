@@ -16,6 +16,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -23,9 +24,9 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 public class PhpTemplateFunctionContainerResolver extends TemplateVariableResolver {
 
-	public static final String NO_FUNCTION = "no_function_scope";
+	public static final String NO_FUNCTION = "no_function_scope"; //$NON-NLS-1$
 	public PhpTemplateFunctionContainerResolver() {
-		super("function_container", "resolving a php function name");
+		super("function_container", PHPUIMessages.getString("PhpTemplateFunctionContainerResolver.2")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected String resolve(TemplateContext context) {
@@ -49,7 +50,7 @@ public class PhpTemplateFunctionContainerResolver extends TemplateVariableResolv
 			}
 			PHPCodeContext phpCodeContext = ModelSupport.createContext(fileData, phpTemplateContext.getStart());
 			String functionName = phpCodeContext.getContainerFunctionName();
-			if (functionName == null || functionName.equals("")) {
+			if (functionName == null || functionName.equals("")) { //$NON-NLS-1$
 				return NO_FUNCTION;
 			}
 			

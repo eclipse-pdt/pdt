@@ -23,6 +23,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.WorkspaceRunnableAdapter;
 import org.eclipse.swt.graphics.Image;
@@ -151,7 +152,7 @@ public class FragmentedWizard implements IWizard {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
-				MessageDialog.openError(shell, "Error", message);
+				MessageDialog.openError(shell, PHPUIMessages.getString("FragmentedWizard.0"), message); //$NON-NLS-1$
 			}
 		});
 	}
@@ -166,7 +167,7 @@ public class FragmentedWizard implements IWizard {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
-				ErrorDialog.openError(shell, "Error", message, status);
+				ErrorDialog.openError(shell, PHPUIMessages.getString("FragmentedWizard.1"), message, status); //$NON-NLS-1$
 			}
 		});
 	}

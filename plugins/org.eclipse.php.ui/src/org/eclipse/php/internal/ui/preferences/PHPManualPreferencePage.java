@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 public class PHPManualPreferencePage extends AbstractConfigurationBlockPreferencePage {
@@ -24,7 +25,7 @@ public class PHPManualPreferencePage extends AbstractConfigurationBlockPreferenc
 	}
 
 	protected void setDescription() {
-		setDescription("PHP Manual Sites");
+		setDescription(PHPUIMessages.getString("PHPManualPreferencePage.0")); //$NON-NLS-1$
 	}
 
 	protected void setPreferenceStore() {

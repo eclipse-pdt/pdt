@@ -22,7 +22,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class PHPFunctionsContentProvider implements ITreeContentProvider {
 
-	public static final String CONSTANTS_NODE_NAME = "constants";
+	public static final String CONSTANTS_NODE_NAME = "constants"; //$NON-NLS-1$
 	protected static final Object[] NO_CHILDREN = new Object[0];
 	private PHPLanguageModel model;
 

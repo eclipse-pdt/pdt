@@ -60,7 +60,7 @@ public class SuperClassLabelProvider implements ILabelProvider {
 					superClassData = PHPModelUtil.discoverInterface(container, superClassNameData.getName());
 				}
 				if (superClassData != null)
-					return "Extends: " + provider.getText(superClassData);
+					return "Extends: " + provider.getText(superClassData); //$NON-NLS-1$
 			}
 		} else if (element instanceof PHPInterfaceNameData) {
 			final PHPInterfaceNameData interfaceNameData = (PHPInterfaceNameData) element;
@@ -68,7 +68,7 @@ public class SuperClassLabelProvider implements ILabelProvider {
 			if (container != null) {
 				final PHPClassData interfaceData = PHPModelUtil.discoverInterface(container, interfaceNameData.getName());
 				if (interfaceData != null)
-					return "Implements: " + provider.getText(interfaceData);
+					return "Implements: " + provider.getText(interfaceData); //$NON-NLS-1$
 			}
 		}
 		return null;

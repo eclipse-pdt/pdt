@@ -17,7 +17,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 
 public class ChangeOutlineModeAction extends Action {
 
-	public static final String PREF_OUTLINEMODE="ChangeOutlineModeAction.selectedMode";
+	public static final String PREF_OUTLINEMODE="ChangeOutlineModeAction.selectedMode"; //$NON-NLS-1$
 
 	
 	private int mode;

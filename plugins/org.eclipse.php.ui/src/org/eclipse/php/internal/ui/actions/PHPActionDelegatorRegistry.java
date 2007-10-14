@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.ui.actions.IRenamePHPElementActionFactory;
 import org.eclipse.ui.IActionDelegate;
 
@@ -58,7 +59,7 @@ public class PHPActionDelegatorRegistry {
 						action = (IPHPActionDelegator) element.createExecutableExtension(CLASS_ATTRIBUTE);
 						topPriority = currentPriority;
 					} catch (CoreException e) {
-						Logger.logException("Failed instantiating action class " + element.getAttribute(CLASS_ATTRIBUTE), e);
+						Logger.logException(PHPUIMessages.getString("PHPActionDelegatorRegistry.0") + element.getAttribute(CLASS_ATTRIBUTE), e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -88,7 +89,7 @@ public class PHPActionDelegatorRegistry {
 						action = (IRenamePHPElementActionFactory) element.createExecutableExtension(CLASS_ATTRIBUTE);
 						topPriority = currentPriority;
 					} catch (CoreException e) {
-						Logger.logException("Failed instantiating action class " + element.getAttribute(CLASS_ATTRIBUTE), e);
+						Logger.logException(PHPUIMessages.getString("PHPActionDelegatorRegistry.1") + element.getAttribute(CLASS_ATTRIBUTE), e); //$NON-NLS-1$
 					}
 				}
 			}

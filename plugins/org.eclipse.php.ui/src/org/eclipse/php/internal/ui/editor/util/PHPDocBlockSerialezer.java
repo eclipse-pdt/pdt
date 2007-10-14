@@ -29,13 +29,13 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 public class PHPDocBlockSerialezer {
 
 	private static PHPDocBlockSerialezer instance;
-	private static final String DOCBLOCK_START = "/**";
-	private static final String DOCBLOCK_END = " */";
-	private static final String CENTERED_ASTERISK = " * ";
-	private static final String RIGHT_ASTERISK = " *";
-	private static Pattern pattern = Pattern.compile("\n");
+	private static final String DOCBLOCK_START = "/**"; //$NON-NLS-1$
+	private static final String DOCBLOCK_END = " */"; //$NON-NLS-1$
+	private static final String CENTERED_ASTERISK = " * "; //$NON-NLS-1$
+	private static final String RIGHT_ASTERISK = " *"; //$NON-NLS-1$
+	private static Pattern pattern = Pattern.compile("\n"); //$NON-NLS-1$
 
-	private static String lineDelimiter = "";
+	private static String lineDelimiter = ""; //$NON-NLS-1$
 
 	public static PHPDocBlockSerialezer instance() {
 		if (instance == null) {

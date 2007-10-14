@@ -100,7 +100,7 @@ public class IncludeDropAction extends FileDropAction {
 		int lineEndOffset = -1;
 		try {
 			IRegion lineInformation = document.getLineInformation(line);
-			String lineString = document.get(lineInformation.getOffset(), lineInformation.getLength()).replaceAll("[\n\r]+", "");
+			String lineString = document.get(lineInformation.getOffset(), lineInformation.getLength()).replaceAll("[\n\r]+", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			lineEndOffset = lineInformation.getOffset() + lineString.length();
 
 		} catch (BadLocationException e) {
@@ -130,7 +130,7 @@ public class IncludeDropAction extends FileDropAction {
 			if (shrinkPaths) {
 				fileName = PHPModelUtil.getRelativeLocation(project, fileName);
 			}
-			string.append(MessageFormat.format("include_once ''{0}'';", new Object[] { fileName }));
+			string.append(MessageFormat.format("include_once ''{0}'';", new Object[] { fileName })); //$NON-NLS-1$
 			string.append(document.getLineDelimiter());
 		}
 		try {

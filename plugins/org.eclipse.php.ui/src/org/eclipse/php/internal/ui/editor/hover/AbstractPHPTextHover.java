@@ -12,17 +12,9 @@ package org.eclipse.php.internal.ui.editor.hover;
 
 import java.util.regex.Pattern;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHoverExtension;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
@@ -33,16 +25,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.keys.IBindingService;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 
 public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverExtension {
 
-	protected Pattern tab = Pattern.compile("\t");
+	protected Pattern tab = Pattern.compile("\t"); //$NON-NLS-1$
 	protected IEditorPart fEditor;
 	private IBindingService fBindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 

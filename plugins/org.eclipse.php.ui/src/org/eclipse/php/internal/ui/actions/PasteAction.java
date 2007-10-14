@@ -75,7 +75,7 @@ public class PasteAction extends SelectionDispatchAction {
 		protected final PHPCodeData[] getClipboardPHPElements(TransferData[] availableDataTypes) {
 			if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING)
 				return EMPTY_PHPELEMENTS;
-			throw new RuntimeException("implement me");
+			throw new RuntimeException(PHPUIMessages.getString("PasteAction.0")); //$NON-NLS-1$
 			//			Transfer transfer= PHPElementTransfer.getInstance();
 			//			if (isAvailable(transfer, availableDataTypes)) {
 			//				return (Object[])getContents(fClipboard2, transfer, getShell());

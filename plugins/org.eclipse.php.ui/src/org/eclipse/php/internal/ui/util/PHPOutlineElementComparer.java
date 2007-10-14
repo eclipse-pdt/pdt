@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.IElementComparer;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.ui.util.IPHPTreeElementComparer;
 
 /**
@@ -32,10 +33,10 @@ public class PHPOutlineElementComparer implements IElementComparer {
 	public PHPOutlineElementComparer() {
 		ArrayList comparers = new ArrayList();
 		comparers.add(new PHPElementComparer());
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpTreeElementComparers");
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.ui.phpTreeElementComparers"); //$NON-NLS-1$
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
-			if (element.getName().equals("comparer")) {
+			if (element.getName().equals("comparer")) { //$NON-NLS-1$
 				ComparerProxy modelManagerProxy = new ComparerProxy(element);
 				IPHPTreeElementComparer comparer = modelManagerProxy.getComparer();
 				comparers.add(comparer);
@@ -83,9 +84,9 @@ public class PHPOutlineElementComparer implements IElementComparer {
 
 		public IPHPTreeElementComparer getComparer() {
 			if (comparer == null) {
-				SafeRunner.run(new SafeRunnable("Error creation comparer for extension-point org.eclipse.php.ui.phpOutlineElementComparers") {
+				SafeRunner.run(new SafeRunnable(PHPUIMessages.getString("PHPOutlineElementComparer.2")) { //$NON-NLS-1$
 					public void run() throws Exception {
-						comparer = (IPHPTreeElementComparer) element.createExecutableExtension("class");
+						comparer = (IPHPTreeElementComparer) element.createExecutableExtension("class"); //$NON-NLS-1$
 					}
 				});
 			}
