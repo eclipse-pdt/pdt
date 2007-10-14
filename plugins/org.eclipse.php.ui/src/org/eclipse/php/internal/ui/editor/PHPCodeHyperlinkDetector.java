@@ -102,8 +102,11 @@ public class PHPCodeHyperlinkDetector implements IHyperlinkDetectorForPHP {
 									final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editor);
 									if (phpEditor != null) {
 										IFile currentFile = phpEditor.getFile();
-										IProject currentProject = currentFile.getProject();
-										IFile file = currentProject.getFile(path);
+										IFile file = currentFile.getParent().getFile(path);
+										if (file == null || !file.exists()) {
+											IProject currentProject = currentFile.getProject();
+											file = currentProject.getFile(path);
+										}
 										if (file != null && file.exists()) {
 											return new IHyperlink[] { new WorkspaceFileHyperlink(new Region(startOffset, offsetLength), file) };
 										}
