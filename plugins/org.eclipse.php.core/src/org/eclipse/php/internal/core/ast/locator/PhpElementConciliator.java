@@ -22,7 +22,7 @@ import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
  */
 public class PhpElementConciliator {
 
-	private static final String THIS = "this"; ////$NON-NLS-N$
+	private static final String THIS = "this"; ////$NON-NLS-1$
 
 	public static final int CONCILIATOR_UNKNOWN = 0;
 	public static final int CONCILIATOR_GLOBAL_VARIABLE = 1;
