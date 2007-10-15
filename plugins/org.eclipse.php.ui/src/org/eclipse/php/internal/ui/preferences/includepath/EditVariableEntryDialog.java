@@ -59,7 +59,7 @@ public class EditVariableEntryDialog extends StatusDialog {
 	 */
 	public EditVariableEntryDialog(Shell parent, IPath initialEntry, IPath[] existingEntries) {
 		super(parent);
-		setTitle(PHPUIMessages.EditVariableEntryDialog_title);
+		setTitle(PHPUIMessages.getString("EditVariableEntryDialog_title"));
 
 		fExistingEntries = new HashSet();
 		if (existingEntries != null) {
@@ -75,9 +75,9 @@ public class EditVariableEntryDialog extends StatusDialog {
 
 		fFileNameField = new VariablePathDialogField(adapter);
 		fFileNameField.setDialogFieldListener(adapter);
-		fFileNameField.setLabelText(PHPUIMessages.EditVariableEntryDialog_filename_varlabel);
-		fFileNameField.setButtonLabel(PHPUIMessages.EditVariableEntryDialog_filename_external_varbutton);
-		fFileNameField.setVariableButtonLabel(PHPUIMessages.EditVariableEntryDialog_filename_variable_button);
+		fFileNameField.setLabelText(PHPUIMessages.getString("EditVariableEntryDialog_filename_varlabel"));
+		fFileNameField.setButtonLabel(PHPUIMessages.getString("EditVariableEntryDialog_filename_external_varbutton"));
+		fFileNameField.setVariableButtonLabel(PHPUIMessages.getString("EditVariableEntryDialog_filename_variable_button"));
 		String initialString = initialEntry != null ? initialEntry.toString() : ""; //$NON-NLS-1$
 		fFileNameField.setText(initialString);
 	}
@@ -159,8 +159,8 @@ public class EditVariableEntryDialog extends StatusDialog {
 
 		String currVariable = currPath.segment(0);
 		ZipFileSelectionDialog dialog = new ZipFileSelectionDialog(getShell(), false, true);
-		dialog.setTitle(PHPUIMessages.EditVariableEntryDialog_extvardialog_title);
-		dialog.setMessage(PHPUIMessages.EditVariableEntryDialog_extvardialog_description);
+		dialog.setTitle(PHPUIMessages.getString("EditVariableEntryDialog_extvardialog_title"));
+		dialog.setMessage(PHPUIMessages.getString("EditVariableEntryDialog_extvardialog_description"));
 		dialog.setInput(fFileVariablePath.toFile());
 		dialog.setInitialSelection(initialSelection);
 		if (dialog.open() == Window.OK) {
@@ -215,39 +215,39 @@ public class EditVariableEntryDialog extends StatusDialog {
 
 		String fileName = fFileNameField.getText();
 		if (fileName.length() == 0) {
-			status.setError(PHPUIMessages.EditVariableEntryDialog_filename_empty);
+			status.setError(PHPUIMessages.getString("EditVariableEntryDialog_filename_empty"));
 			return status;
 		} else {
 			if (!Path.EMPTY.isValidPath(fileName)) {
-				status.setError(PHPUIMessages.EditVariableEntryDialog_filename_error_notvalid);
+				status.setError(PHPUIMessages.getString("EditVariableEntryDialog_filename_error_notvalid"));
 				return status;
 			}
 			IPath filePath = Path.fromOSString(fileName);
 			IPath resolvedPath;
 
 			if (filePath.getDevice() != null) {
-				status.setError(PHPUIMessages.EditVariableEntryDialog_filename_error_deviceinpath);
+				status.setError(PHPUIMessages.getString("EditVariableEntryDialog_filename_error_deviceinpath"));
 				return status;
 			}
 			String varName = filePath.segment(0);
 			if (varName == null) {
-				status.setError(PHPUIMessages.EditVariableEntryDialog_filename_error_notvalid);
+				status.setError(PHPUIMessages.getString("EditVariableEntryDialog_filename_error_notvalid"));
 				return status;
 			}
 			fFileVariablePath = PHPProjectOptions.getIncludePathVariable(varName);
 			if (fFileVariablePath == null) {
-				status.setError(PHPUIMessages.EditVariableEntryDialog_filename_error_varnotexists);
+				status.setError(PHPUIMessages.getString("EditVariableEntryDialog_filename_error_varnotexists"));
 				return status;
 			}
 			resolvedPath = fFileVariablePath.append(filePath.removeFirstSegments(1));
 
 			if (resolvedPath.isEmpty()) {
-				status.setWarning(PHPUIMessages.EditVariableEntryDialog_filename_warning_varempty);
+				status.setWarning(PHPUIMessages.getString("EditVariableEntryDialog_filename_warning_varempty"));
 				return status;
 			}
 			File file = resolvedPath.toFile();
 			if (!file.isFile()) {
-				String message = MessageFormat.format(PHPUIMessages.EditVariableEntryDialog_filename_error_filenotexists, new String[] { resolvedPath.toOSString() });
+				String message = MessageFormat.format(PHPUIMessages.getString("EditVariableEntryDialog_filename_error_filenotexists"), new String[] { resolvedPath.toOSString() });
 				status.setInfo(message);
 				return status;
 			}
@@ -283,7 +283,7 @@ public class EditVariableEntryDialog extends StatusDialog {
 		if (!status.matches(IStatus.ERROR)) {
 			IPath path = getPath();
 			if (fExistingEntries.contains(path)) {
-				String message = PHPUIMessages.EditVariableEntryDialog_filename_error_alreadyexists;
+				String message = PHPUIMessages.getString("EditVariableEntryDialog_filename_error_alreadyexists");
 				status = new StatusInfo(IStatus.ERROR, message);
 			}
 		}

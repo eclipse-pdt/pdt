@@ -54,7 +54,7 @@ public class StatusBarUpdater implements ISelectionChangedListener {
 
 			int nElements = selection.size();
 			if (nElements > 1) {
-				return MessageFormat.format(PHPUIMessages.StatusBarUpdater_num_elements_selected, new Object[] { String.valueOf(nElements) });
+				return MessageFormat.format(PHPUIMessages.getString("StatusBarUpdater_num_elements_selected"), new Object[] { String.valueOf(nElements) });
 			} else {
 				Object elem = selection.getFirstElement();
 				if (elem instanceof PHPCodeData || elem instanceof PHPWorkspaceModelManager || elem instanceof PHPProjectModel) {

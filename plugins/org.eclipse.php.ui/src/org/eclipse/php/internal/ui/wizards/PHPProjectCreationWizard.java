@@ -101,7 +101,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		setWindowTitle(PHPUIMessages.PHPProjectCreationWizard_PageTile);
+		setWindowTitle(PHPUIMessages.getString("PHPProjectCreationWizard_PageTile"));
 		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
 	}
 

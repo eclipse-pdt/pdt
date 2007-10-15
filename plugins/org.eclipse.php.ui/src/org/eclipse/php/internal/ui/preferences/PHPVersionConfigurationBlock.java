@@ -71,7 +71,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 
 	private void createUseAspTagsContent(Composite composite) {
 		useAspTagsButton = new Button(composite, SWT.CHECK);
-		useAspTagsButton.setText(PHPUIMessages.Preferences_php_editor_useAspTagsAsPhp_label);
+		useAspTagsButton.setText(PHPUIMessages.getString("Preferences_php_editor_useAspTagsAsPhp_label"));
 		useAspTagsButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				setUseAspTagsValue(Boolean.toString(useAspTagsButton.getSelection()));
@@ -97,7 +97,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		
 		
 		nameLabel = new Label(composite, SWT.NONE);
-		nameLabel.setText(PHPUIMessages.PHPVersionComboName);
+		nameLabel.setText(PHPUIMessages.getString("PHPVersionComboName"));
 
 		GC gc = new GC(nameLabel);
 		gc.setFont(nameLabel.getFont());
@@ -170,12 +170,12 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	}
 
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
-		String title= PHPUIMessages.PHPVersionConfigurationBlock_needsbuild_title; 
+		String title= PHPUIMessages.getString("PHPVersionConfigurationBlock_needsbuild_title"); 
 		String message;
 		if (workspaceSettings) {
-			message= PHPUIMessages.PHPVersionConfigurationBlock_needsfullbuild_message; 
+			message= PHPUIMessages.getString("PHPVersionConfigurationBlock_needsfullbuild_message"); 
 		} else {
-			message= PHPUIMessages.PHPVersionConfigurationBlock_needsprojectbuild_message; 
+			message= PHPUIMessages.getString("PHPVersionConfigurationBlock_needsprojectbuild_message"); 
 		}
 		return new String[] { title, message };
 //		return null;

@@ -45,9 +45,9 @@ public class SelectWorkingSetAction extends Action {
 	}
 
 	private SelectWorkingSetAction(WorkingSetFilterActionGroup actionGroup) {
-		super(PHPUIMessages.SelectWorkingSetAction_text);
+		super(PHPUIMessages.getString("SelectWorkingSetAction_text"));
 		Assert.isNotNull(actionGroup);
-		setToolTipText(PHPUIMessages.SelectWorkingSetAction_toolTip);
+		setToolTipText(PHPUIMessages.getString("SelectWorkingSetAction_toolTip"));
 		fActionGroup = actionGroup;
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.SELECT_WORKING_SET_ACTION);
 	}

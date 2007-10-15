@@ -165,8 +165,8 @@ public final class IncludePathDialogAccess {
 			lastUsedPath = ""; //$NON-NLS-1$
 		}
 		DirectoryDialog dialog = new DirectoryDialog(shell, SWT.SINGLE);
-		dialog.setText(PHPUIMessages.IncludePathDialogAccess_IncludePathFolderDialog_new_title);
-		dialog.setMessage(PHPUIMessages.IncludePathDialogAccess_IncludePathFolderDialog_new_description);
+		dialog.setText(PHPUIMessages.getString("IncludePathDialogAccess_IncludePathFolderDialog_new_title"));
+		dialog.setMessage(PHPUIMessages.getString("IncludePathDialogAccess_IncludePathFolderDialog_new_description"));
 		dialog.setFilterPath(lastUsedPath);
 		
 		String res = dialog.open();
@@ -198,7 +198,7 @@ public final class IncludePathDialogAccess {
 		String lastUsedPath = initialEntry.removeLastSegments(1).toOSString();
 
 		DirectoryDialog dialog = new DirectoryDialog(shell, SWT.SINGLE);
-		dialog.setText(PHPUIMessages.IncludePathDialogAccess_0);
+		dialog.setText(PHPUIMessages.getString("IncludePathDialogAccess_0"));
 		dialog.setFilterPath(lastUsedPath);
 
 		String res = dialog.open();
@@ -226,8 +226,8 @@ public final class IncludePathDialogAccess {
 		if (usedEntries == null) {
 			throw new IllegalArgumentException();
 		}
-		String title = PHPUIMessages.IncludePathDialogAccess_ExistingPHPFolderDialog_new_title;
-		String message = PHPUIMessages.IncludePathDialogAccess_ExistingPHPFolderDialog_new_description;
+		String title = PHPUIMessages.getString("IncludePathDialogAccess_ExistingPHPFolderDialog_new_title");
+		String message = PHPUIMessages.getString("IncludePathDialogAccess_ExistingPHPFolderDialog_new_description");
 		return internalChooseFolderEntry(shell, initialSelection, usedEntries, title, message);
 	}
 
@@ -247,8 +247,8 @@ public final class IncludePathDialogAccess {
 		if (usedEntries == null) {
 			throw new IllegalArgumentException();
 		}
-		String title = PHPUIMessages.IncludePathDialogAccess_ExistingSourceFolderDialog_new_title;
-		String message = PHPUIMessages.IncludePathDialogAccess_ExistingSourceFolderDialog_new_description;
+		String title = PHPUIMessages.getString("IncludePathDialogAccess_ExistingSourceFolderDialog_new_title");
+		String message = PHPUIMessages.getString("IncludePathDialogAccess_ExistingSourceFolderDialog_new_description");
 		return internalChooseFolderEntry(shell, initialSelection, usedEntries, title, message);
 	}
 

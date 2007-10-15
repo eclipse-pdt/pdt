@@ -45,14 +45,14 @@ public class IncludePathContainerDefaultPage extends WizardPage implements IIncl
 	 */
 	public IncludePathContainerDefaultPage() {
 		super("IncludePathContainerDefaultPage"); //$NON-NLS-1$
-		setTitle(PHPUIMessages.IncludePathContainerDefaultPage_title);
-		setDescription(PHPUIMessages.IncludePathContainerDefaultPage_description);
+		setTitle(PHPUIMessages.getString("IncludePathContainerDefaultPage_title"));
+		setDescription(PHPUIMessages.getString("IncludePathContainerDefaultPage_description"));
 		setImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_LIBRARY);
 
 		fUsedPaths = new ArrayList();
 
 		fEntryField = new StringDialogField();
-		fEntryField.setLabelText(PHPUIMessages.IncludePathContainerDefaultPage_path_label);
+		fEntryField.setLabelText(PHPUIMessages.getString("IncludePathContainerDefaultPage_path_label"));
 		fEntryField.setDialogFieldListener(new IDialogFieldListener() {
 			public void dialogFieldChanged(DialogField field) {
 				validatePath();
@@ -65,15 +65,15 @@ public class IncludePathContainerDefaultPage extends WizardPage implements IIncl
 		StatusInfo status = new StatusInfo();
 		String str = fEntryField.getText();
 		if (str.length() == 0) {
-			status.setError(PHPUIMessages.IncludePathContainerDefaultPage_path_error_enterpath);
+			status.setError(PHPUIMessages.getString("IncludePathContainerDefaultPage_path_error_enterpath"));
 		} else if (!Path.ROOT.isValidPath(str)) {
-			status.setError(PHPUIMessages.IncludePathContainerDefaultPage_path_error_invalidpath);
+			status.setError(PHPUIMessages.getString("IncludePathContainerDefaultPage_path_error_invalidpath"));
 		} else {
 			IPath path = new Path(str);
 			if (path.segmentCount() == 0) {
-				status.setError(PHPUIMessages.IncludePathContainerDefaultPage_path_error_needssegment);
+				status.setError(PHPUIMessages.getString("IncludePathContainerDefaultPage_path_error_needssegment"));
 			} else if (fUsedPaths.contains(path)) {
-				status.setError(PHPUIMessages.IncludePathContainerDefaultPage_path_error_alreadyexists);
+				status.setError(PHPUIMessages.getString("IncludePathContainerDefaultPage_path_error_alreadyexists"));
 			}
 		}
 		updateStatus(status);

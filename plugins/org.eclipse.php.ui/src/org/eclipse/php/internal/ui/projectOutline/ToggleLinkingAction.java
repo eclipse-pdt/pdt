@@ -30,9 +30,9 @@ public class ToggleLinkingAction extends Action {
 	 * Constructs a new action.
 	 */
 	public ToggleLinkingAction(ProjectOutlinePart part) {
-		super(PHPUIMessages.ToggleLinkingAction_label);
-		setDescription(PHPUIMessages.ToggleLinkingAction_description);
-		setToolTipText(PHPUIMessages.ToggleLinkingAction_tooltip);
+		super(PHPUIMessages.getString("ToggleLinkingAction_label"));
+		setDescription(PHPUIMessages.getString("ToggleLinkingAction_description"));
+		setToolTipText(PHPUIMessages.getString("ToggleLinkingAction_tooltip"));
 		PHPPluginImages.setLocalImageDescriptors(this, "synced.gif"); //$NON-NLS-1$		
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.LINK_EDITOR_ACTION);
 

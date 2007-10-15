@@ -312,8 +312,8 @@ public class PasteAction extends SelectionDispatchAction {
 		Assert.isNotNull(clipboard);
 		fClipboard = clipboard;
 
-		setText(PHPUIMessages.PasteAction_text);
-		setDescription(PHPUIMessages.PasteAction_desc);
+		setText(PHPUIMessages.getString("PasteAction_text"));
+		setDescription(PHPUIMessages.getString("PasteAction_desc"));
 
 		ISharedImages workbenchImages = PHPUiPlugin.getDefault().getWorkbench().getSharedImages();
 		setDisabledImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
@@ -369,7 +369,7 @@ public class PasteAction extends SelectionDispatchAction {
 					return;// one is enough
 				}
 			}
-			MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), PHPUIMessages.RefactoringAction_refactoring, PHPUIMessages.RefactoringAction_disabled);
+			MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), PHPUIMessages.getString("RefactoringAction_refactoring"), PHPUIMessages.getString("RefactoringAction_disabled"));
 		} catch (CoreException e) {
 			PHPUiPlugin.log(e);
 		} catch (InvocationTargetException e) {

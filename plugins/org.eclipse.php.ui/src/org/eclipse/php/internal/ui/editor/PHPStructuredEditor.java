@@ -471,7 +471,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		super.addContextMenuActions(menu);
 
 		if (getSourceViewer().isEditable()) {
-			final String label = PHPUIMessages.PHPStructuredEditor_Source;
+			final String label = PHPUIMessages.getString("PHPStructuredEditor_Source");
 			final MenuManager subMenu = new MenuManager(label, "org.eclipse.php.ui.source.menu"); //$NON-NLS-1$
 			subMenu.add(new GroupMarker("editGroup")); //$NON-NLS-1$
 			addAction(subMenu, "org.eclipse.php.ui.actions.ToggleCommentAction"); //$NON-NLS-1$
@@ -1146,7 +1146,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		int selectionLength = Math.abs(selection.getLength());
 		if (selectionLength > 1) {
-			setStatusLineErrorMessage(PHPUIMessages.GotoMatchingBracket_error_invalidSelection);
+			setStatusLineErrorMessage(PHPUIMessages.getString("GotoMatchingBracket_error_invalidSelection"));
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -1158,7 +1158,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		IRegion region = fBracketMatcher.match(document, sourceCaretOffset);
 		if (region == null) {
-			setStatusLineErrorMessage(PHPUIMessages.GotoMatchingBracket_error_noMatchingBracket);
+			setStatusLineErrorMessage(PHPUIMessages.getString("GotoMatchingBracket_error_noMatchingBracket"));
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -1184,7 +1184,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		if (!visible) {
-			setStatusLineErrorMessage(PHPUIMessages.GotoMatchingBracket_error_bracketOutsideSelectedElement);
+			setStatusLineErrorMessage(PHPUIMessages.getString("GotoMatchingBracket_error_bracketOutsideSelectedElement"));
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}

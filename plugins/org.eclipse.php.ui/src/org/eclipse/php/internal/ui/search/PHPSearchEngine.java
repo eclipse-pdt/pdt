@@ -99,7 +99,7 @@ public class PHPSearchEngine {
 		if (monitor != null && monitor.isCanceled())
 			throw new OperationCanceledException();
 		if (monitor != null) {
-			monitor.beginTask(PHPUIMessages.PHPEngine_searching, IProgressMonitor.UNKNOWN);
+			monitor.beginTask(PHPUIMessages.getString("PHPEngine_searching"), IProgressMonitor.UNKNOWN);
 		}
 		for (int i = 0; i < projectsInScope.length; i++) {
 			if (monitor != null && monitor.isCanceled())

@@ -36,7 +36,7 @@ public class PHPEditorHoverPreferencePage extends AbstractConfigurationBlockPref
 	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigurationBlockPreferencePage#setDescription()
 	 */
 	protected void setDescription() {
-		String description= PHPUIMessages.PHPEditorPreferencePage_hoverTab_title; 
+		String description= PHPUIMessages.getString("PHPEditorPreferencePage_hoverTab_title"); 
 		setDescription(description);
 	}
 	

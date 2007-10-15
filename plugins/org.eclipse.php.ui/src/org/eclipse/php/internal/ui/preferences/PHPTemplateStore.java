@@ -28,8 +28,8 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 	public void add(TemplatePersistenceData data) {
 		Template template = data.getTemplate();
 		if (template.getName().equals("")) { //$NON-NLS-1$
-			String title = PHPUIMessages.PHPTemplateStore_error_title;
-			String message = PHPUIMessages.PHPTemplateStore_error_message_nameEmpty;
+			String title = PHPUIMessages.getString("PHPTemplateStore_error_title");
+			String message = PHPUIMessages.getString("PHPTemplateStore_error_message_nameEmpty");
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
 			return;
 		}

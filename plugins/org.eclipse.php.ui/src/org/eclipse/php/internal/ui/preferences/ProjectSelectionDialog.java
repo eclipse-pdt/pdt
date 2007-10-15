@@ -50,8 +50,8 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 
 	public ProjectSelectionDialog(Shell parentShell, Set projectsWithSpecifics) {
 		super(parentShell);
-		setTitle(PHPUIMessages.ProjectSelectionDialog_title);
-		setMessage(PHPUIMessages.ProjectSelectionDialog_desciption);
+		setTitle(PHPUIMessages.getString("ProjectSelectionDialog_title"));
+		setMessage(PHPUIMessages.getString("ProjectSelectionDialog_desciption"));
 		fProjectsWithSpecifics = projectsWithSpecifics;
 
 		int shellStyle = getShellStyle();
@@ -99,7 +99,7 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 		fTableViewer.getControl().setFont(font);
 
 		Button checkbox = new Button(composite, SWT.CHECK);
-		checkbox.setText(PHPUIMessages.ProjectSelectionDialog_filter);
+		checkbox.setText(PHPUIMessages.getString("ProjectSelectionDialog_filter"));
 		checkbox.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false));
 		checkbox.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {

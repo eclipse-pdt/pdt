@@ -37,8 +37,8 @@ public class ReorgMoveAction extends Action implements IPHPMoveActionDelegator {
 	}	
 	
 	public void init() {
-		setText(PHPUIMessages.ReorgMoveAction_3);
-		setDescription(PHPUIMessages.ReorgMoveAction_4);		
+		setText(PHPUIMessages.getString("ReorgMoveAction_3"));
+		setDescription(PHPUIMessages.getString("ReorgMoveAction_4"));		
 		fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
 	}

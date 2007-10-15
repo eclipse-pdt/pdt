@@ -35,10 +35,10 @@ public class SortAction extends Action {
 
 		this.treeViewer = treeViewer;
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.SORTING_OUTLINE_ACTION);
-		setText(PHPUIMessages.PHPOutlinePage_Sort_label);
+		setText(PHPUIMessages.getString("PHPOutlinePage_Sort_label"));
 		PHPPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.gif"); //$NON-NLS-1$
-		setToolTipText(PHPUIMessages.PHPOutlinePage_Sort_tooltip);
-		setDescription(PHPUIMessages.PHPOutlinePage_Sort_description);
+		setToolTipText(PHPUIMessages.getString("PHPOutlinePage_Sort_tooltip"));
+		setDescription(PHPUIMessages.getString("PHPOutlinePage_Sort_description"));
 		treeViewer.setSorter(fSorter);
 
 		boolean checked = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_IS_SORTED); //$NON-NLS-1$

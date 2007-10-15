@@ -29,9 +29,9 @@ public class RemoveFromIncludePathAction extends SelectionDispatchAction {
 
 	public RemoveFromIncludePathAction(IWorkbenchSite site) {
 		super(site);
-		setText(PHPUIMessages.RemoveFromIncludePathAction_remove_from_include_path_title);
-		setToolTipText(PHPUIMessages.RemoveFromIncludePathAction_remove_from_include_path_tooltip);
-		setDescription(PHPUIMessages.RemoveFromIncludePathAction_remove_from_include_path_desc);
+		setText(PHPUIMessages.getString("RemoveFromIncludePathAction_remove_from_include_path_title"));
+		setToolTipText(PHPUIMessages.getString("RemoveFromIncludePathAction_remove_from_include_path_tooltip"));
+		setDescription(PHPUIMessages.getString("RemoveFromIncludePathAction_remove_from_include_path_desc"));
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +79,7 @@ public class RemoveFromIncludePathAction extends SelectionDispatchAction {
 			}
 			if (project != null) {
 				final PHPProjectOptions options = PHPProjectOptions.forProject(project);
-				WorkspaceJob configureIncludePathJob = new WorkspaceJob(PHPUIMessages.RemoveFromIncludePathAction_remove_from_include_path_job) {
+				WorkspaceJob configureIncludePathJob = new WorkspaceJob(PHPUIMessages.getString("RemoveFromIncludePathAction_remove_from_include_path_job")) {
 					public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 						IIncludePathEntry[] includePathEntries = options.readRawIncludePath();
 						List newIncludePathEntries = new LinkedList();

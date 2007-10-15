@@ -38,7 +38,7 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 
 		// only used when page is shown programatically
-		setTitle(PHPUIMessages.PHPFormatterPreferencePage_title);
+		setTitle(PHPUIMessages.getString("PHPFormatterPreferencePage_title"));
 	}
 
 	public void createControl(Composite parent) {

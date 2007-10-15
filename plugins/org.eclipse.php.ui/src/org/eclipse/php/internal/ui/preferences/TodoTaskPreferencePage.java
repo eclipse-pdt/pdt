@@ -30,10 +30,10 @@ public class TodoTaskPreferencePage extends PropertyAndPreferencePage {
 
 	public TodoTaskPreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
-		setDescription(PHPUIMessages.TodoTaskPreferencePage_description);
+		setDescription(PHPUIMessages.getString("TodoTaskPreferencePage_description"));
 
 		// only used when page is shown programatically
-		setTitle(PHPUIMessages.TodoTaskPreferencePage_title);
+		setTitle(PHPUIMessages.getString("TodoTaskPreferencePage_title"));
 	}
 
 	/*

@@ -77,7 +77,7 @@ public class EditorUtility {
 		final String newModifierString = Action.findModifierString(modifier);
 		if (modifierString.length() == 0)
 			return newModifierString;
-		return MessageFormat.format(PHPUIMessages.EditorUtility_concatModifierStrings, new String[] { modifierString, newModifierString });
+		return MessageFormat.format(PHPUIMessages.getString("EditorUtility_concatModifierStrings"), new String[] { modifierString, newModifierString });
 	}
 
 	private static ZipEntryStorageEditorInput createZipEntryStorageEditorInput(final ZipFile zipFile, final PHPCodeData element, final IProject project) {

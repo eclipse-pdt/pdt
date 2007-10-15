@@ -84,7 +84,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 						// do nothing.
 					}
 				}
-				if (fAutoRepeatOnFailure || MessageDialog.openQuestion(fShell, PHPUIMessages.CopyToClipboardAction_4, PHPUIMessages.CopyToClipboardAction_5))
+				if (fAutoRepeatOnFailure || MessageDialog.openQuestion(fShell, PHPUIMessages.getString("CopyToClipboardAction_4"), PHPUIMessages.getString("CopyToClipboardAction_5")))
 					copyToClipboard(resources, fileNames, names, phpElements, repeat + 1);
 			}
 		}
@@ -169,8 +169,8 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 
 	public CopyToClipboardAction(IWorkbenchSite site, Clipboard clipboard, SelectionDispatchAction pasteAction) {
 		super(site);
-		setText(PHPUIMessages.CopyToClipboardAction_text);
-		setDescription(PHPUIMessages.CopyToClipboardAction_desc);
+		setText(PHPUIMessages.getString("CopyToClipboardAction_text"));
+		setDescription(PHPUIMessages.getString("CopyToClipboardAction_desc"));
 		org.eclipse.core.runtime.Assert.isNotNull(clipboard);
 		fClipboard = clipboard;
 		fPasteAction = pasteAction;

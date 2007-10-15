@@ -111,7 +111,7 @@ public class NewContainerDialog extends StatusDialog {
 
 		String pathStr = fContainerDialogField.getText();
 		if (pathStr.length() == 0) {
-			fContainerFieldStatus.setError(PHPUIMessages.NewContainerDialog_error_enterpath);
+			fContainerFieldStatus.setError(PHPUIMessages.getString("NewContainerDialog_error_enterpath"));
 			return;
 		}
 		IPath path = fCurrProject.getFullPath().append(pathStr);
@@ -119,12 +119,12 @@ public class NewContainerDialog extends StatusDialog {
 
 		IStatus pathValidation = workspace.validatePath(path.toString(), IResource.FOLDER);
 		if (!pathValidation.isOK()) {
-			fContainerFieldStatus.setError(MessageFormat.format(PHPUIMessages.NewContainerDialog_error_invalidpath, new String[] { pathValidation.getMessage() }));
+			fContainerFieldStatus.setError(MessageFormat.format(PHPUIMessages.getString("NewContainerDialog_error_invalidpath"), new String[] { pathValidation.getMessage() }));
 			return;
 		}
 		IFolder folder = fCurrProject.getFolder(pathStr);
 		if (isFolderExisting(folder)) {
-			fContainerFieldStatus.setError(PHPUIMessages.NewContainerDialog_error_pathexists);
+			fContainerFieldStatus.setError(PHPUIMessages.getString("NewContainerDialog_error_pathexists"));
 			return;
 		}
 		fContainerFieldStatus.setOK();

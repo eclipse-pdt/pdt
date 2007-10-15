@@ -49,8 +49,8 @@ public class IncludePathContainerSelectionPage extends WizardPage {
 	 */
 	protected IncludePathContainerSelectionPage(IncludePathContainerDescriptor[] containerPages) {
 		super("IncludePathContainerWizardPage"); //$NON-NLS-1$
-		setTitle(PHPUIMessages.IncludePathContainerSelectionPage_title);
-		setDescription(PHPUIMessages.IncludePathContainerSelectionPage_description);
+		setTitle(PHPUIMessages.getString("IncludePathContainerSelectionPage_title"));
+		setDescription(PHPUIMessages.getString("IncludePathContainerSelectionPage_description"));
 		setImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_LIBRARY);
 
 		fContainers = containerPages;

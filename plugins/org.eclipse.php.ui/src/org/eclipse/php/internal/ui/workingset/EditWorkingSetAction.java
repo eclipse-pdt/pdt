@@ -46,9 +46,9 @@ public class EditWorkingSetAction extends Action {
 	}
 
 	private EditWorkingSetAction(WorkingSetFilterActionGroup actionGroup) {
-		super(PHPUIMessages.EditWorkingSetAction_text);
+		super(PHPUIMessages.getString("EditWorkingSetAction_text"));
 		Assert.isNotNull(actionGroup);
-		setToolTipText(PHPUIMessages.EditWorkingSetAction_toolTip);
+		setToolTipText(PHPUIMessages.getString("EditWorkingSetAction_toolTip"));
 		setEnabled(actionGroup.getWorkingSet() != null);
 		fActionGroup = actionGroup;
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.EDIT_WORKING_SET_ACTION);
@@ -67,8 +67,8 @@ public class EditWorkingSetAction extends Action {
 		}
 		IWorkingSetEditWizard wizard = manager.createWorkingSetEditWizard(workingSet);
 		if (wizard == null) {
-			String title = PHPUIMessages.EditWorkingSetAction_error_nowizard_title;
-			String message = PHPUIMessages.EditWorkingSetAction_error_nowizard_message;
+			String title = PHPUIMessages.getString("EditWorkingSetAction_error_nowizard_title");
+			String message = PHPUIMessages.getString("EditWorkingSetAction_error_nowizard_message");
 			MessageDialog.openError(shell, title, message);
 			return;
 		}

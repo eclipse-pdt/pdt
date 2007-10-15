@@ -29,7 +29,7 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 
 		// only used when page is shown programatically
-		setTitle(PHPUIMessages.PHPInterpreterPreferencePage_title);
+		setTitle(PHPUIMessages.getString("PHPInterpreterPreferencePage_title"));
 	}
 
 	/*

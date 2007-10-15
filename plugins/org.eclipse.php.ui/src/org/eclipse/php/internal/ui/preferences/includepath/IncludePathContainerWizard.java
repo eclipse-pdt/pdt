@@ -61,9 +61,9 @@ public class IncludePathContainerWizard extends Wizard {
 
 		String title;
 		if (entryToEdit == null) {
-			title = PHPUIMessages.IncludePathContainerWizard_new_title;
+			title = PHPUIMessages.getString("IncludePathContainerWizard_new_title");
 		} else {
-			title = PHPUIMessages.IncludePathContainerWizard_edit_title;
+			title = PHPUIMessages.getString("IncludePathContainerWizard_edit_title");
 		}
 		setWindowTitle(title);
 	}
@@ -172,8 +172,8 @@ public class IncludePathContainerWizard extends Wizard {
 	}
 
 	private void handlePageCreationFailed(CoreException e) {
-		String title = PHPUIMessages.IncludePathContainerWizard_pagecreationerror_title;
-		String message = PHPUIMessages.IncludePathContainerWizard_pagecreationerror_message;
+		String title = PHPUIMessages.getString("IncludePathContainerWizard_pagecreationerror_title");
+		String message = PHPUIMessages.getString("IncludePathContainerWizard_pagecreationerror_message");
 		ExceptionHandler.handle(e, getShell(), title, message);
 	}
 

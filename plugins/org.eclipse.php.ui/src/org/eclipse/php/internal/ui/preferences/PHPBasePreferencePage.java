@@ -42,7 +42,7 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 	public PHPBasePreferencePage() {
 		super();
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
-		setDescription(PHPUIMessages.PHPBasePreferencePage_description);
+		setDescription(PHPUIMessages.getString("PHPBasePreferencePage_description"));
 
 		fRadioButtons = new ArrayList();
 		fCheckBoxes = new ArrayList();
@@ -83,9 +83,9 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 		Group doubleClickGroup = new Group(result, SWT.NONE);
 		doubleClickGroup.setLayout(new GridLayout());
 		doubleClickGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		doubleClickGroup.setText(PHPUIMessages.PHPBasePreferencePage_doubleclick_action);
-		addRadioButton(doubleClickGroup, PHPUIMessages.PHPBasePreferencePage_doubleclick_gointo, DOUBLE_CLICK, DOUBLE_CLICK_GOES_INTO);
-		addRadioButton(doubleClickGroup, PHPUIMessages.PHPBasePreferencePage_doubleclick_expand, DOUBLE_CLICK, DOUBLE_CLICK_EXPANDS);
+		doubleClickGroup.setText(PHPUIMessages.getString("PHPBasePreferencePage_doubleclick_action"));
+		addRadioButton(doubleClickGroup, PHPUIMessages.getString("PHPBasePreferencePage_doubleclick_gointo"), DOUBLE_CLICK, DOUBLE_CLICK_GOES_INTO);
+		addRadioButton(doubleClickGroup, PHPUIMessages.getString("PHPBasePreferencePage_doubleclick_expand"), DOUBLE_CLICK, DOUBLE_CLICK_EXPANDS);
 		Dialog.applyDialogFont(result);
 		return result;
 	}

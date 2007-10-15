@@ -42,9 +42,9 @@ public class OpenAction extends SelectionDispatchAction {
 	 */
 	public OpenAction(IWorkbenchSite site) {
 		super(site);
-		setText(PHPUIMessages.OpenAction_label);
-		setToolTipText(PHPUIMessages.OpenAction_tooltip);
-		setDescription(PHPUIMessages.OpenAction_description);
+		setText(PHPUIMessages.getString("OpenAction_label"));
+		setToolTipText(PHPUIMessages.getString("OpenAction_tooltip"));
+		setDescription(PHPUIMessages.getString("OpenAction_description"));
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_ACTION);
 	}
 
@@ -92,11 +92,11 @@ public class OpenAction extends SelectionDispatchAction {
 	public void run(ITextSelection selection) {
 		if (!ActionUtils.isProcessable(getShell(), fEditor))
 			return;
-		PHPCodeData element = SelectionConverter.codeResolve(fEditor, getShell(), getDialogTitle(), PHPUIMessages.OpenAction_select_element);
+		PHPCodeData element = SelectionConverter.codeResolve(fEditor, getShell(), getDialogTitle(), PHPUIMessages.getString("OpenAction_select_element"));
 		if (element == null) {
 			IEditorStatusLine statusLine = (IEditorStatusLine) fEditor.getAdapter(IEditorStatusLine.class);
 			if (statusLine != null)
-				statusLine.setMessage(true, PHPUIMessages.OpenAction_error_messageBadSelection, null);
+				statusLine.setMessage(true, PHPUIMessages.getString("OpenAction_error_messageBadSelection"), null);
 			getShell().getDisplay().beep();
 			return;
 		}
@@ -132,7 +132,7 @@ public class OpenAction extends SelectionDispatchAction {
 					OpenActionUtil.open(element, activateOnOpen);
 				}
 			} catch (PartInitException x) {
-				MessageDialog.openError(getShell(), PHPUIMessages.OpenAction_error_messageProblems, ""); //$NON-NLS-1$
+				MessageDialog.openError(getShell(), PHPUIMessages.getString("OpenAction_error_messageProblems"), ""); //$NON-NLS-1$
 
 			}
 		}
@@ -149,7 +149,7 @@ public class OpenAction extends SelectionDispatchAction {
 	}
 
 	private String getDialogTitle() {
-		return PHPUIMessages.OpenAction_error_title;
+		return PHPUIMessages.getString("OpenAction_error_title");
 	}
 	
 }

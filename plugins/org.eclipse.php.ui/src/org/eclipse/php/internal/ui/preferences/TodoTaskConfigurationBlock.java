@@ -89,16 +89,16 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 			if (columnIndex == 0) {
 				String name = task.name;
 				if (isDefaultTask(task)) {
-					name = MessageFormat.format(PHPUIMessages.TodoTaskConfigurationBlock_tasks_default, new Object[] { name });
+					name = MessageFormat.format(PHPUIMessages.getString("TodoTaskConfigurationBlock_tasks_default"), new Object[] { name });
 				}
 				return name;
 			} else {
 				if (PRIORITY_HIGH.equals(task.priority)) {
-					return PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_high_priority;
+					return PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_high_priority");
 				} else if (PRIORITY_NORMAL.equals(task.priority)) {
-					return PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_normal_priority;
+					return PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_normal_priority");
 				} else if (PRIORITY_LOW.equals(task.priority)) {
-					return PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_low_priority;
+					return PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_low_priority");
 				}
 				return ""; //$NON-NLS-1$
 			}
@@ -134,19 +134,19 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		super(context, project, getKeys(), container);
 
 		TaskTagAdapter adapter = new TaskTagAdapter();
-		String[] buttons = new String[] { PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_add_button, PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_edit_button, PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_remove_button, null,
-			PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_setdefault_button, };
+		String[] buttons = new String[] { PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_add_button"), PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_edit_button"), PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_remove_button"), null,
+			PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_setdefault_button"), };
 		fTodoTasksList = new ListDialogField(adapter, buttons, new TodoTaskLabelProvider());
 		fTodoTasksList.setDialogFieldListener(adapter);
 		fTodoTasksList.setRemoveButtonIndex(IDX_REMOVE);
 
-		String[] columnsHeaders = new String[] { PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_name_column, PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_priority_column, };
+		String[] columnsHeaders = new String[] { PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_name_column"), PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_priority_column"), };
 
 		fTodoTasksList.setTableColumns(new ListDialogField.ColumnsDescription(columnsHeaders, true));
 		fTodoTasksList.setViewerSorter(new TodoTaskSorter());
 
 		fCaseSensitiveCheckBox = new SelectionButtonDialogField(SWT.CHECK);
-		fCaseSensitiveCheckBox.setLabelText(PHPUIMessages.TodoTaskConfigurationBlock_casesensitive_label);
+		fCaseSensitiveCheckBox.setLabelText(PHPUIMessages.getString("TodoTaskConfigurationBlock_casesensitive_label"));
 		fCaseSensitiveCheckBox.setDialogFieldListener(adapter);
 
 		unpackTodoTasks();
@@ -295,12 +295,12 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	}
 	
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
-		String title = PHPUIMessages.TodoTaskConfigurationBlock_needsbuild_title;
+		String title = PHPUIMessages.getString("TodoTaskConfigurationBlock_needsbuild_title");
 		String message;
 		if (fProject == null) {
-			message = PHPUIMessages.TodoTaskConfigurationBlock_needsfullbuild_message;
+			message = PHPUIMessages.getString("TodoTaskConfigurationBlock_needsfullbuild_message");
 		} else {
-			message = PHPUIMessages.TodoTaskConfigurationBlock_needsprojectbuild_message;
+			message = PHPUIMessages.getString("TodoTaskConfigurationBlock_needsprojectbuild_message");
 		}
 		return new String[] { title, message };
 	}

@@ -129,8 +129,8 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 
 	private void internalRun() {
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), new PHPElementLabelProvider());
-		dialog.setTitle(PHPUIMessages.OpenProjectAction_dialog_title);
-		dialog.setMessage(PHPUIMessages.OpenProjectAction_dialog_message);
+		dialog.setTitle(PHPUIMessages.getString("OpenProjectAction_dialog_title"));
+		dialog.setMessage(PHPUIMessages.getString("OpenProjectAction_dialog_message"));
 		dialog.setElements(getClosedProjects());
 		dialog.setMultipleSelection(true);
 		int result = dialog.open();
@@ -141,7 +141,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		try {
 			PlatformUI.getWorkbench().getProgressService().run(true, true, new WorkbenchRunnableAdapter(runnable));
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, getShell(), PHPUIMessages.OpenProjectAction_dialog_title, PHPUIMessages.OpenProjectAction_error_message);
+			ExceptionHandler.handle(e, getShell(), PHPUIMessages.getString("OpenProjectAction_dialog_title"), PHPUIMessages.getString("OpenProjectAction_error_message"));
 		} catch (InterruptedException e) {
 		}
 	}
@@ -157,7 +157,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 						project.open(new SubProgressMonitor(monitor, 1));
 					} catch (CoreException e) {
 						if (errorStatus == null)
-							errorStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR, PHPUIMessages.OpenProjectAction_error_message, e);
+							errorStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR, PHPUIMessages.getString("OpenProjectAction_error_message"), e);
 						errorStatus.merge(e.getStatus());
 					}
 				}

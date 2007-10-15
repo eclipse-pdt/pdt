@@ -26,7 +26,7 @@ public class ConfigureWorkingSetAction extends Action {
 	private WorkingSetModel fWorkingSetModel;
 
 	public ConfigureWorkingSetAction(IWorkbenchPartSite site) {
-		super(PHPUIMessages.ConfigureWorkingSetAction_label);
+		super(PHPUIMessages.getString("ConfigureWorkingSetAction_label"));
 		fSite = site;
 	}
 

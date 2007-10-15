@@ -40,8 +40,8 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 		fStoredSettings = null;
 
 		// title only used when page is shown programatically
-		setTitle(PHPUIMessages.IncludePathVariablesPreferencePage_title);
-		setDescription(PHPUIMessages.IncludePathVariablesPreferencePage_description);
+		setTitle(PHPUIMessages.getString("IncludePathVariablesPreferencePage_title"));
+		setDescription(PHPUIMessages.getString("IncludePathVariablesPreferencePage_description"));
 		noDefaultAndApplyButton();
 	}
 
@@ -96,8 +96,8 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 			}
 		} else {
 			if (fVariableBlock.hasChanges()) {
-				String title = PHPUIMessages.IncludePathVariablesPreferencePage_savechanges_title;
-				String message = PHPUIMessages.IncludePathVariablesPreferencePage_savechanges_message;
+				String title = PHPUIMessages.getString("IncludePathVariablesPreferencePage_savechanges_title");
+				String message = PHPUIMessages.getString("IncludePathVariablesPreferencePage_savechanges_message");
 				if (MessageDialog.openQuestion(getShell(), title, message)) {
 					performOk();
 				}

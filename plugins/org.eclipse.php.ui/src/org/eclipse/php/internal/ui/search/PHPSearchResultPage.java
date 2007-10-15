@@ -122,16 +122,16 @@ public class PHPSearchResultPage extends AbstractTextSearchViewPage implements I
 			IDE.gotoMarker(editor, marker);
 			marker.delete();
 		} catch (CoreException e) {
-			throw new PartInitException(PHPUIMessages.PHPSearchResultPage_error_marker, e);
+			throw new PartInitException(PHPUIMessages.getString("PHPSearchResultPage_error_marker"), e);
 		}
 	}
 
 	private void initGroupingActions() {
-		fGroupProjectAction = new GroupAction(PHPUIMessages.PHPSearchResultPage_groupby_project, PHPUIMessages.PHPSearchResultPage_groupby_project_tooltip, this, PHPSearchTreeContentProvider.LEVEL_PROJECT);
+		fGroupProjectAction = new GroupAction(PHPUIMessages.getString("PHPSearchResultPage_groupby_project"), PHPUIMessages.getString("PHPSearchResultPage_groupby_project_tooltip"), this, PHPSearchTreeContentProvider.LEVEL_PROJECT);
 		PHPPluginImages.setLocalImageDescriptors(fGroupProjectAction, "group_by_project.gif"); //$NON-NLS-1$
-		fGroupFileAction = new GroupAction(PHPUIMessages.PHPSearchResultPage_groupby_file, PHPUIMessages.PHPSearchResultPage_groupby_file_tooltip, this, PHPSearchTreeContentProvider.LEVEL_FILE);
+		fGroupFileAction = new GroupAction(PHPUIMessages.getString("PHPSearchResultPage_groupby_file"), PHPUIMessages.getString("PHPSearchResultPage_groupby_file_tooltip"), this, PHPSearchTreeContentProvider.LEVEL_FILE);
 		PHPPluginImages.setLocalImageDescriptors(fGroupFileAction, "group_by_file.gif"); //$NON-NLS-1$
-		fGroupTypeAction = new GroupAction(PHPUIMessages.PHPSearchResultPage_groupby_type, PHPUIMessages.PHPSearchResultPage_groupby_type_tooltip, this, PHPSearchTreeContentProvider.LEVEL_TYPE);
+		fGroupTypeAction = new GroupAction(PHPUIMessages.getString("PHPSearchResultPage_groupby_type"), PHPUIMessages.getString("PHPSearchResultPage_groupby_type_tooltip"), this, PHPSearchTreeContentProvider.LEVEL_TYPE);
 		PHPPluginImages.setLocalImageDescriptors(fGroupTypeAction, "group_by_type.gif"); //$NON-NLS-1$
 	}
 

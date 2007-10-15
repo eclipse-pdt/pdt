@@ -122,7 +122,7 @@ public class OpenEditorActionGroup extends ActionGroup {
 			return;
 
 		// Create a menu.
-		IMenuManager submenu = new MenuManager(PHPUIMessages.OpenWithMenu_label);
+		IMenuManager submenu = new MenuManager(PHPUIMessages.getString("OpenWithMenu_label"));
 		submenu.add(new OpenWithMenu(fSite.getPage(), (IFile) resource));
 
 		// Add the submenu.

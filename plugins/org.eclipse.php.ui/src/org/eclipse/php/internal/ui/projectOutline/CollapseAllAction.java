@@ -21,9 +21,9 @@ class CollapseAllAction extends Action {
 	private ProjectOutlinePart fOutlinePart;
 
 	CollapseAllAction(ProjectOutlinePart part) {
-		super(PHPUIMessages.CollapseAllAction_label);
-		setDescription(PHPUIMessages.CollapseAllAction_description);
-		setToolTipText(PHPUIMessages.CollapseAllAction_tooltip);
+		super(PHPUIMessages.getString("CollapseAllAction_label"));
+		setDescription(PHPUIMessages.getString("CollapseAllAction_description"));
+		setToolTipText(PHPUIMessages.getString("CollapseAllAction_tooltip"));
 		PHPPluginImages.setLocalImageDescriptors(this, "collapseall.gif"); //$NON-NLS-1$
 
 		fOutlinePart = part;

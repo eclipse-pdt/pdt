@@ -712,7 +712,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		String result;
 		if (!(element instanceof IResource)) {
 			if (element instanceof PHPWorkspaceModelManager) {
-				result = PHPUIMessages.PHPExplorerPart_workspace;
+				result = PHPUIMessages.getString("PHPExplorerPart_workspace");
 			} else if (element instanceof PHPCodeData) {
 				result = PHPElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
 			} else {
@@ -721,7 +721,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		} else {
 			IPath path = ((IResource) element).getFullPath();
 			if (path.isRoot()) {
-				result = PHPUIMessages.PHPExplorer_title;
+				result = PHPUIMessages.getString("PHPExplorer_title");
 			} else {
 				result = path.makeRelative().toString();
 			}
@@ -730,10 +730,10 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		if (fWorkingSetName == null)
 			return result;
 
-		String wsstr = MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip, new String[] { fWorkingSetName });
+		String wsstr = MessageFormat.format(PHPUIMessages.getString("PHPExplorer_toolTip"), new String[] { fWorkingSetName });
 		if (result.length() == 0)
 			return wsstr;
-		return MessageFormat.format(PHPUIMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
+		return MessageFormat.format(PHPUIMessages.getString("PHPExplorer_toolTip2"), new String[] { result, fWorkingSetName });
 	}
 
 	void updateTitle() {

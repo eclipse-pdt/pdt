@@ -83,7 +83,7 @@ public class PhpTypeFilterComposite extends Composite {
 		//		label.setText("Filter by type:");
 
 		Group group = new Group(this, SWT.NONE);
-		group.setText(PHPUIMessages.OpenType_GroupFilterTitle);
+		group.setText(PHPUIMessages.getString("OpenType_GroupFilterTitle"));
 		//		Composite group = new Composite(this, SWT.NONE);
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.marginBottom = 0;
@@ -104,21 +104,21 @@ public class PhpTypeFilterComposite extends Composite {
 	private void createConstantsCheckBox(Composite composite) {
 		composite = createbuttonComposite(composite);
 		constantsButton = new Button(composite, SWT.CHECK);
-		constantsButton.setText(PHPUIMessages.OpenType_ConstantsFilterCheckboxName);
+		constantsButton.setText(PHPUIMessages.getString("OpenType_ConstantsFilterCheckboxName"));
 		constantsButton.setSelection(this.phpTypeFilterReadModel.getSelectConstants());
 	}
 
 	private void createFunctionsCheckBox(Composite composite) {
 		composite = createbuttonComposite(composite);
 		functionsButton = new Button(composite, SWT.CHECK);
-		functionsButton.setText(PHPUIMessages.OpenType_FunctionsFilterCheckboxName);
+		functionsButton.setText(PHPUIMessages.getString("OpenType_FunctionsFilterCheckboxName"));
 		functionsButton.setSelection(this.phpTypeFilterReadModel.getSelectFunctions());
 	}
 
 	private void createClassCheckBox(Composite composite) {
 		composite = createbuttonComposite(composite);
 		classesButton = new Button(composite, SWT.CHECK);
-		classesButton.setText(PHPUIMessages.OpenType_ClassesFilterCheckboxName);
+		classesButton.setText(PHPUIMessages.getString("OpenType_ClassesFilterCheckboxName"));
 		classesButton.setSelection(this.phpTypeFilterReadModel.getSelectClasss());
 	}
 

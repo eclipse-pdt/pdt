@@ -66,14 +66,14 @@ public class IPVariableElementLabelProvider extends LabelProvider implements ICo
 			StringBuffer buf = new StringBuffer(name);
 			if (curr.isReserved()) {
 				buf.append(' ');
-				buf.append(PHPUIMessages.CPVariableElementLabelProvider_reserved);
+				buf.append(PHPUIMessages.getString("CPVariableElementLabelProvider_reserved"));
 			}
 			if (path != null) {
 				buf.append(" - "); //$NON-NLS-1$
 				if (!path.isEmpty()) {
 					buf.append(path.toOSString());
 				} else {
-					buf.append(PHPUIMessages.CPVariableElementLabelProvider_empty);
+					buf.append(PHPUIMessages.getString("CPVariableElementLabelProvider_empty"));
 				}
 			}
 			return buf.toString();

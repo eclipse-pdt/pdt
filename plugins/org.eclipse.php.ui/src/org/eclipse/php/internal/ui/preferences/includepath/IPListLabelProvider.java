@@ -41,9 +41,9 @@ public class IPListLabelProvider extends LabelProvider {
 	private ImageDescriptorRegistry fRegistry;
 
 	public IPListLabelProvider() {
-		fNewLabel = PHPUIMessages.CPListLabelProvider_new;
-		fClassLabel = PHPUIMessages.CPListLabelProvider_container;
-		fCreateLabel = PHPUIMessages.CPListLabelProvider_willbecreated;
+		fNewLabel = PHPUIMessages.getString("CPListLabelProvider_new");
+		fClassLabel = PHPUIMessages.getString("CPListLabelProvider_container");
+		fCreateLabel = PHPUIMessages.getString("CPListLabelProvider_willbecreated");
 		fRegistry = PHPUiPlugin.getImageDescriptorRegistry();
 
 		fZipIcon = PHPPluginImages.DESC_OBJS_ZIP;
@@ -64,7 +64,7 @@ public class IPListLabelProvider extends LabelProvider {
 			IPListElementAttribute attribute = (IPListElementAttribute) element;
 			String text = getCPListElementAttributeText(attribute);
 			if (attribute.isInNonModifiableContainer()) {
-				return MessageFormat.format(PHPUIMessages.CPListLabelProvider_non_modifiable_attribute, new String[]{text});
+				return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_non_modifiable_attribute"), new String[]{text});
 			}
 			return text;
 		} else if (element instanceof IPUserLibraryElement) {
@@ -76,13 +76,13 @@ public class IPListLabelProvider extends LabelProvider {
 	public String getCPUserLibraryText(IPUserLibraryElement element) {
 		String name = element.getName();
 		if (element.isSystemLibrary()) {
-			name = MessageFormat.format(PHPUIMessages.CPListLabelProvider_systemlibrary, new Object[] { name });
+			name = MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_systemlibrary"), new Object[] { name });
 		}
 		return name;
 	}
 
 	public String getCPListElementAttributeText(IPListElementAttribute attrib) {
-		String notAvailable = PHPUIMessages.CPListLabelProvider_none;
+		String notAvailable = PHPUIMessages.getString("CPListLabelProvider_none");
 		String key = attrib.getKey();
 		return notAvailable;
 	}
@@ -124,7 +124,7 @@ public class IPListLabelProvider extends LabelProvider {
 				IncludePathContainerInitializer initializer = PHPProjectOptions.getIncludePathContainerInitializer(path.segment(0));
 				if (initializer != null) {
 					String description = initializer.getDescription(path, cpentry.getProject());
-					return MessageFormat.format(PHPUIMessages.CPListLabelProvider_unbound_library, new Object[] { description });
+					return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_unbound_library"), new Object[] { description });
 				}
 				return path.toString();
 			case IIncludePathEntry.IPE_SOURCE: {
@@ -143,14 +143,14 @@ public class IPListLabelProvider extends LabelProvider {
 			default:
 		// pass
 		}
-		return PHPUIMessages.CPListLabelProvider_unknown_element_label;
+		return PHPUIMessages.getString("CPListLabelProvider_unknown_element_label");
 	}
 
 	private String getPathString(IPath path, boolean isExternal) {
 		if (ArchieveFileFilter.isZipPath(path)) {
 			IPath appendedPath = path.removeLastSegments(1);
 			String appended = isExternal ? appendedPath.toOSString() : appendedPath.makeRelative().toString();
-			return MessageFormat.format(PHPUIMessages.CPListLabelProvider_twopart, new String[] { path.lastSegment(), appended });
+			return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_twopart"), new String[] { path.lastSegment(), appended });
 		} else {
 			return isExternal ? path.toOSString() : path.makeRelative().toString();
 		}
@@ -161,7 +161,7 @@ public class IPListLabelProvider extends LabelProvider {
 		IPath entryPath = PHPProjectOptions.getIncludePathVariable(path.segment(0));
 		if (entryPath != null) {
 			String appended = entryPath.append(path.removeFirstSegments(1)).toOSString();
-			return MessageFormat.format(PHPUIMessages.CPListLabelProvider_twopart, new String[] { name, appended });
+			return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_twopart"), new String[] { name, appended });
 		} else {
 			return name;
 		}

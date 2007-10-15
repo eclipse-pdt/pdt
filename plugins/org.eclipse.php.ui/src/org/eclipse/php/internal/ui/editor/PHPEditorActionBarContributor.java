@@ -70,7 +70,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
 		ResourceBundle b = PHPUIMessages.getBundleForConstructedKeys();
 
-		fRetargetShowPHPDoc = new RetargetAction(PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages.ShowPHPDoc_label);
+		fRetargetShowPHPDoc = new RetargetAction(PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages.getString("ShowPHPDoc_label"));
 		fRetargetShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		markAsPartListener(fRetargetShowPHPDoc);
 

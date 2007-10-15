@@ -71,7 +71,7 @@ public class ExplorerViewActionGroup extends ViewActionGroup {
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 		fMenuManager = actionBars.getMenuManager();
-		IMenuManager showMenu = new MenuManager(PHPUIMessages.ViewActionGroup_show_label);
+		IMenuManager showMenu = new MenuManager(PHPUIMessages.getString("ViewActionGroup_show_label"));
 		fillShowMenu(showMenu);
 		fMenuManager.add(showMenu);
 		fMenuManager.add(new Separator(IWorkingSetActionGroup.ACTION_GROUP));
@@ -82,10 +82,10 @@ public class ExplorerViewActionGroup extends ViewActionGroup {
 
 	private void fillShowMenu(IMenuManager menu) {
 		ViewAction projects = new ViewAction(this, SHOW_PROJECTS);
-		projects.setText(PHPUIMessages.ViewActionGroup_projects_label);
+		projects.setText(PHPUIMessages.getString("ViewActionGroup_projects_label"));
 		menu.add(projects);
 		ViewAction workingSets = new ViewAction(this, SHOW_WORKING_SETS);
-		workingSets.setText(PHPUIMessages.ViewActionGroup_workingSets_label);
+		workingSets.setText(PHPUIMessages.getString("ViewActionGroup_workingSets_label"));
 		menu.add(workingSets);
 		if (fMode == SHOW_PROJECTS) {
 			projects.setChecked(true);

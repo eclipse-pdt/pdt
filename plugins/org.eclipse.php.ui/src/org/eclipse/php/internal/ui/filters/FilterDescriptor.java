@@ -244,7 +244,7 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 			if (FILTER_TAG.equals(element.getName())) {
 
 				final FilterDescriptor[] desc = new FilterDescriptor[1];
-				Platform.run(new SafeRunnable(PHPUIMessages.FilterDescriptor_filterDescriptionCreationError_message) {
+				Platform.run(new SafeRunnable(PHPUIMessages.getString("FilterDescriptor_filterDescriptionCreationError_message")) {
 					public void run() throws Exception {
 						desc[0] = new FilterDescriptor(element);
 					}

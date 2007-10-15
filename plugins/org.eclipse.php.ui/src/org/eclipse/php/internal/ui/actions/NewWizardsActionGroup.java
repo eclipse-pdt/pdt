@@ -50,7 +50,7 @@ public class NewWizardsActionGroup extends ActionGroup {
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (sel.size() <= 1 && isNewTarget(sel.getFirstElement())) {
-				IMenuManager newMenu = new MenuManager(PHPUIMessages.NewWizardsActionGroup_new);
+				IMenuManager newMenu = new MenuManager(PHPUIMessages.getString("NewWizardsActionGroup_new"));
 				menu.appendToGroup(IContextMenuConstants.GROUP_NEW, newMenu);
 				new PHPNewWizardMenu(newMenu, fSite.getWorkbenchWindow(), false);
 			}

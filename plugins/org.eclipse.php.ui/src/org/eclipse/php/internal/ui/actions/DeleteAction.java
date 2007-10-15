@@ -32,8 +32,8 @@ public class DeleteAction extends SelectionDispatchAction {
 
 	public DeleteAction(IWorkbenchSite site) {
 		super(site);
-		setText(PHPUIMessages.DeleteAction_text);
-		setDescription(PHPUIMessages.DeleteAction_desc);
+		setText(PHPUIMessages.getString("DeleteAction_text"));
+		setDescription(PHPUIMessages.getString("DeleteAction_desc"));
 		ISharedImages workbenchImages = PHPUiPlugin.getDefault().getWorkbench().getSharedImages();
 		setDisabledImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
 		setImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));

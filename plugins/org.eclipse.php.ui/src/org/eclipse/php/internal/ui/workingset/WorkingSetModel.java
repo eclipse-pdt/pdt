@@ -217,7 +217,7 @@ public class WorkingSetModel {
 			addListenersToWorkingSetManagers();
 			fActiveWorkingSets = new ArrayList(2);
 
-			IWorkingSet others = fLocalWorkingSetManager.createWorkingSet(PHPUIMessages.WorkingSetModel_others_name, new IAdaptable[0]);
+			IWorkingSet others = fLocalWorkingSetManager.createWorkingSet(PHPUIMessages.getString("WorkingSetModel_others_name"), new IAdaptable[0]);
 			others.setId(OthersWorkingSetUpdater.ID);
 			fLocalWorkingSetManager.addWorkingSet(others);
 			fActiveWorkingSets.add(others);

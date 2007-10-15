@@ -150,7 +150,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		/* check box for new editors */
 		fFoldingCheckbox= new Button(composite, SWT.CHECK);
-		fFoldingCheckbox.setText(PHPUIMessages.FoldingConfigurationBlock_enable);
+		fFoldingCheckbox.setText(PHPUIMessages.getString("FoldingConfigurationBlock_enable"));
 		gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
 		fFoldingCheckbox.setLayoutData(gd);
 		fFoldingCheckbox.addSelectionListener(new SelectionListener() {
@@ -179,7 +179,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			Label comboLabel= new Label(comboComp, SWT.CENTER);
 			gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_CENTER);
 			comboLabel.setLayoutData(gd);
-			comboLabel.setText(PHPUIMessages.FoldingConfigurationBlock_combo_caption);
+			comboLabel.setText(PHPUIMessages.getString("FoldingConfigurationBlock_combo_caption"));
 
 			label= new Label(composite, SWT.CENTER);
 			gd= new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
@@ -275,7 +275,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		if (desc == null) {
 			// safety in case there is no such descriptor
-			String message= PHPUIMessages.FoldingConfigurationBlock_error_not_exist;
+			String message= PHPUIMessages.getString("FoldingConfigurationBlock_error_not_exist");
 			PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(), IStatus.OK, message, null));
 			prefs= new ErrorPreferences(message);
 		} else {
@@ -295,7 +295,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		if (control == null) {
 			control= prefs.createControl(fGroup);
 			if (control == null) {
-				String message= PHPUIMessages.FoldingConfigurationBlock_info_no_preferences;
+				String message= PHPUIMessages.getString("FoldingConfigurationBlock_info_no_preferences");
 				control= new ErrorPreferences(message).createControl(fGroup);
 			} else {
 				fProviderControls.put(id, control);

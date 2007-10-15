@@ -49,7 +49,7 @@ public class BuildActionGroup extends ActionGroup {
 		ISelectionProvider provider = fSite.getSelectionProvider();
 
 		fBuildAction = new BuildAction(shell, IncrementalProjectBuilder.INCREMENTAL_BUILD);
-		fBuildAction.setText(PHPUIMessages.BuildAction_label);
+		fBuildAction.setText(PHPUIMessages.getString("BuildAction_label"));
 		fBuildAction.setActionDefinitionId("org.eclipse.ui.project.buildProject"); //$NON-NLS-1$
 
 		fRefreshAction = new RefreshAction(fSite);

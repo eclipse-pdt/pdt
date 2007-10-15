@@ -584,7 +584,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	private String getExampleText() {
-		return PHPUIMessages.ColorPage_CodeExample_0;
+		return PHPUIMessages.getString("ColorPage_CodeExample_0");
 	}
 
 	private String getNamedStyleAtOffset(int offset) {
@@ -743,16 +743,16 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	private void initStyleToDescriptionMap() {
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_NORMAL_COLOR, PHPUIMessages.ColorPage_Normal);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR, PHPUIMessages.ColorPage_BoundryMaker);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_KEYWORD_COLOR, PHPUIMessages.ColorPage_Keyword);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_VARIABLE_COLOR, PHPUIMessages.ColorPage_Variable);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_STRING_COLOR, PHPUIMessages.ColorPage_String);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_NUMBER_COLOR, PHPUIMessages.ColorPage_Number);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_HEREDOC_COLOR, PHPUIMessages.ColorPage_Heredoc);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_COMMENT_COLOR, PHPUIMessages.ColorPage_Comment);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_PHPDOC_COLOR, PHPUIMessages.ColorPage_Phpdoc);
-		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_TASK_COLOR, PHPUIMessages.ColorPage_TaskTag);
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_NORMAL_COLOR, PHPUIMessages.getString("ColorPage_Normal"));
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR, PHPUIMessages.getString("ColorPage_BoundryMaker"));
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_KEYWORD_COLOR, PHPUIMessages.getString("ColorPage_Keyword"));
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_VARIABLE_COLOR, PHPUIMessages.getString("ColorPage_Variable"));
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_STRING_COLOR, PHPUIMessages.getString("ColorPage_String"));
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_NUMBER_COLOR, PHPUIMessages.getString("ColorPage_Number"));
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_HEREDOC_COLOR, PHPUIMessages.getString("ColorPage_Heredoc"));
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_COMMENT_COLOR, PHPUIMessages.getString("ColorPage_Comment"));
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_PHPDOC_COLOR, PHPUIMessages.getString("ColorPage_Phpdoc"));
+		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_TASK_COLOR, PHPUIMessages.getString("ColorPage_TaskTag"));
 	}
 
 	protected void performDefaults() {

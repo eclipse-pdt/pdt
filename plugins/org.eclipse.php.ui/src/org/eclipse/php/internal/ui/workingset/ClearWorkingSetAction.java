@@ -24,9 +24,9 @@ public class ClearWorkingSetAction extends Action {
 	private WorkingSetFilterActionGroup fActionGroup;
 
 	public ClearWorkingSetAction(WorkingSetFilterActionGroup actionGroup) {
-		super(PHPUIMessages.ClearWorkingSetAction_text);
+		super(PHPUIMessages.getString("ClearWorkingSetAction_text"));
 		Assert.isNotNull(actionGroup);
-		setToolTipText(PHPUIMessages.ClearWorkingSetAction_toolTip);
+		setToolTipText(PHPUIMessages.getString("ClearWorkingSetAction_toolTip"));
 		setEnabled(actionGroup.getWorkingSet() != null);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.CLEAR_WORKING_SET_ACTION);
 		fActionGroup = actionGroup;

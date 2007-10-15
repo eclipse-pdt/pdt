@@ -53,23 +53,23 @@ public class TodoTaskInputDialog extends StatusDialog {
 		}
 
 		if (task == null) {
-			setTitle(PHPUIMessages.TodoTaskInputDialog_new_title);
+			setTitle(PHPUIMessages.getString("TodoTaskInputDialog_new_title"));
 		} else {
-			setTitle(PHPUIMessages.TodoTaskInputDialog_edit_title);
+			setTitle(PHPUIMessages.getString("TodoTaskInputDialog_edit_title"));
 		}
 
 		CompilerTodoTaskInputAdapter adapter = new CompilerTodoTaskInputAdapter();
 
 		fNameDialogField = new StringDialogField();
-		fNameDialogField.setLabelText(PHPUIMessages.TodoTaskInputDialog_name_label);
+		fNameDialogField.setLabelText(PHPUIMessages.getString("TodoTaskInputDialog_name_label"));
 		fNameDialogField.setDialogFieldListener(adapter);
 
 		fNameDialogField.setText((task != null) ? task.name : ""); //$NON-NLS-1$
 
-		String[] items = new String[] { PHPUIMessages.TodoTaskInputDialog_priority_high, PHPUIMessages.TodoTaskInputDialog_priority_normal, PHPUIMessages.TodoTaskInputDialog_priority_low };
+		String[] items = new String[] { PHPUIMessages.getString("TodoTaskInputDialog_priority_high"), PHPUIMessages.getString("TodoTaskInputDialog_priority_normal"), PHPUIMessages.getString("TodoTaskInputDialog_priority_low") };
 
 		fPriorityDialogField = new ComboDialogField(SWT.READ_ONLY);
-		fPriorityDialogField.setLabelText(PHPUIMessages.TodoTaskInputDialog_priority_label);
+		fPriorityDialogField.setLabelText(PHPUIMessages.getString("TodoTaskInputDialog_priority_label"));
 		fPriorityDialogField.setItems(items);
 		if (task != null) {
 			if (PHPCoreConstants.TASK_PRIORITY_HIGH.equals(task.priority)) {
@@ -127,14 +127,14 @@ public class TodoTaskInputDialog extends StatusDialog {
 		StatusInfo status = new StatusInfo();
 		String newText = fNameDialogField.getText();
 		if (newText.length() == 0) {
-			status.setError(PHPUIMessages.TodoTaskInputDialog_error_enterName);
+			status.setError(PHPUIMessages.getString("TodoTaskInputDialog_error_enterName"));
 		} else {
 			if (newText.indexOf(',') != -1) {
-				status.setError(PHPUIMessages.TodoTaskInputDialog_error_comma);
+				status.setError(PHPUIMessages.getString("TodoTaskInputDialog_error_comma"));
 			} else if (fExistingNames.contains(newText)) {
-				status.setError(PHPUIMessages.TodoTaskInputDialog_error_entryExists);
+				status.setError(PHPUIMessages.getString("TodoTaskInputDialog_error_entryExists"));
 			} else if (Character.isWhitespace(newText.charAt(0)) || Character.isWhitespace(newText.charAt(newText.length() - 1))) {
-				status.setError(PHPUIMessages.TodoTaskInputDialog_error_noSpace);
+				status.setError(PHPUIMessages.getString("TodoTaskInputDialog_error_noSpace"));
 			}
 		}
 		updateStatus(status);

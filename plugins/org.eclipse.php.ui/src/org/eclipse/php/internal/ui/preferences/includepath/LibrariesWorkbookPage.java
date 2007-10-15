@@ -61,13 +61,13 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 		fPageContainer = pageContainer;
 		fSWTControl = null;
 
-		String[] buttonLabels = new String[] { PHPUIMessages.LibrariesWorkbookPage_libraries_addvariable_button, PHPUIMessages.LibrariesWorkbookPage_libraries_addincludepathfolder_button, PHPUIMessages.LibrariesWorkbookPage_libraries_edit_button, PHPUIMessages.LibrariesWorkbookPage_libraries_remove_button };
+		String[] buttonLabels = new String[] { PHPUIMessages.getString("LibrariesWorkbookPage_libraries_addvariable_button"), PHPUIMessages.getString("LibrariesWorkbookPage_libraries_addincludepathfolder_button"), PHPUIMessages.getString("LibrariesWorkbookPage_libraries_edit_button"), PHPUIMessages.getString("LibrariesWorkbookPage_libraries_remove_button") };
 
 		LibrariesAdapter adapter = new LibrariesAdapter();
 
 		fLibrariesList = new TreeListDialogField(adapter, buttonLabels, new IPListLabelProvider());
 		fLibrariesList.setDialogFieldListener(adapter);
-		fLibrariesList.setLabelText(PHPUIMessages.LibrariesWorkbookPage_libraries_label);
+		fLibrariesList.setLabelText(PHPUIMessages.getString("LibrariesWorkbookPage_libraries_label"));
 
 		fLibrariesList.enableButton(IDX_REMOVE, false);
 		fLibrariesList.enableButton(IDX_EDIT, false);
@@ -213,8 +213,8 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 		HashSet modified = new HashSet();
 		fixNestingConflicts(newEntries, fIncludePathList.getElements(), modified);
 		if (!modified.isEmpty()) {
-			String title = PHPUIMessages.LibrariesWorkbookPage_exclusion_added_title;
-			String message = PHPUIMessages.LibrariesWorkbookPage_exclusion_added_message;
+			String title = PHPUIMessages.getString("LibrariesWorkbookPage_exclusion_added_title");
+			String message = PHPUIMessages.getString("LibrariesWorkbookPage_exclusion_added_message");
 			MessageDialog.openInformation(getShell(), title, message);
 		}
 	}
@@ -334,8 +334,8 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 			PlatformUI.getWorkbench().getProgressService().run(true, true, new WorkbenchRunnableAdapter(runnable));
 
 		} catch (InvocationTargetException e) {
-			String title = PHPUIMessages.LibrariesWorkbookPage_configurecontainer_error_title;
-			String message = PHPUIMessages.LibrariesWorkbookPage_configurecontainer_error_message;
+			String title = PHPUIMessages.getString("LibrariesWorkbookPage_configurecontainer_error_title");
+			String message = PHPUIMessages.getString("LibrariesWorkbookPage_configurecontainer_error_message");
 			ExceptionHandler.handle(e, getShell(), title, message);
 		} catch (InterruptedException e) {
 			// 
@@ -435,12 +435,12 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 	}
 
 	private IPListElement[] openNewFolderDialog(IPListElement existing) {
-		String title = (existing == null) ? PHPUIMessages.LibrariesWorkbookPage_NewIncludePathDialog_new_title : PHPUIMessages.LibrariesWorkbookPage_NewIncludePathDialog_edit_title;
+		String title = (existing == null) ? PHPUIMessages.getString("LibrariesWorkbookPage_NewIncludePathDialog_new_title") : PHPUIMessages.getString("LibrariesWorkbookPage_NewIncludePathDialog_edit_title");
 		IProject currProject = fCurrJProject.getProject();
 
 		NewContainerDialog dialog = new NewContainerDialog(getShell(), title, currProject, getUsedContainers(existing), existing);
 		IPath projpath = currProject.getFullPath();
-		dialog.setMessage(MessageFormat.format(PHPUIMessages.LibrariesWorkbookPage_NewIncludePathDialog_description, new String[] { projpath.toString() }));
+		dialog.setMessage(MessageFormat.format(PHPUIMessages.getString("LibrariesWorkbookPage_NewIncludePathDialog_description"), new String[] { projpath.toString() }));
 		if (dialog.open() == Window.OK) {
 			IFolder folder = dialog.getFolder();
 			return new IPListElement[] { newCPLibraryElement(folder) };

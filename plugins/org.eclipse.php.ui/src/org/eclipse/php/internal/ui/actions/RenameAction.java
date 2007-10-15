@@ -47,7 +47,7 @@ public class RenameAction extends SelectionDispatchAction {
 	 */
 	public RenameAction(IWorkbenchSite site) {
 		super(site);
-		setText(PHPUIMessages.RenameAction_text);
+		setText(PHPUIMessages.getString("RenameAction_text"));
 
 		// gets the right factory to the element rename refactoring
 		final IRenamePHPElementActionFactory actionDelegatorFactory = PHPActionDelegatorRegistry.getActionDelegatorFactory(RENAME_ELEMENT_ACTION_ID);
@@ -144,6 +144,6 @@ public class RenameAction extends SelectionDispatchAction {
 		if (fRenamePHPElement.canRun())
 			fRenamePHPElement.run(selection);
 		else
-			MessageDialog.openInformation(getShell(), PHPUIMessages.RenameAction_rename, PHPUIMessages.RenameAction_unavailable);
+			MessageDialog.openInformation(getShell(), PHPUIMessages.getString("RenameAction_rename"), PHPUIMessages.getString("RenameAction_unavailable"));
 	}
 }

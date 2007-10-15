@@ -44,7 +44,7 @@ public class VariablePathDialogField extends StringButtonDialogField {
 			int shellStyle = getShellStyle();
 			setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
 
-			setTitle(PHPUIMessages.VariablePathDialogField_variabledialog_title);
+			setTitle(PHPUIMessages.getString("VariablePathDialogField_variabledialog_title"));
 			fVariableBlock = new VariableBlock(false, variableSelection);
 		}
 

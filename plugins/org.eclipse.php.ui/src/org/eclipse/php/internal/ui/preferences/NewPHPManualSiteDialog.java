@@ -73,9 +73,9 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		this.edited = edited;
 
 		if (edited != null) {
-			setTitle(PHPUIMessages.NewPHPManualSiteDialog_updateTitle);
+			setTitle(PHPUIMessages.getString("NewPHPManualSiteDialog_updateTitle"));
 		} else {
-			setTitle(PHPUIMessages.NewPHPManualSiteDialog_newTitle);
+			setTitle(PHPUIMessages.getString("NewPHPManualSiteDialog_newTitle"));
 		}
 	}
 
@@ -119,7 +119,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		data.horizontalSpan = 2;
 		siteNameGroup.setLayoutData(data);
 		Label label = new Label(siteNameGroup, SWT.NONE);
-		label.setText(PHPUIMessages.NewPHPManualSiteDialog_name);
+		label.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_name"));
 
 		name = new Text(siteNameGroup, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -194,7 +194,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		dirBrowseButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				DirectoryDialog dialog = new DirectoryDialog(PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
-				dialog.setText(PHPUIMessages.NewPHPManualSiteDialog_chooseDir);
+				dialog.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_chooseDir"));
 				String directoryAsString = dialog.open();
 				if (directoryAsString == null) {
 					return;
@@ -319,7 +319,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 
 		if (name.getText().trim().length() == 0) {
 			okButton.setEnabled(false);
-			this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.NewPHPManualSiteDialog_siteNotSpecified, null));
+			this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_siteNotSpecified"), null));
 			return;
 		}
 
@@ -337,7 +337,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 				result = new PHPManualConfig(name.getText(), urlStr, fileExtCombo.getText(), false);
 			} catch (Exception e) {
 				okButton.setEnabled(false);
-				this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.NewPHPManualSiteDialog_incorrectUrl, null));
+				this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_incorrectUrl"), null));
 				return;
 			}
 		} else if (localDirectoryBtn.getSelection()) {
@@ -368,7 +368,7 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 				PHPManualConfig config = (PHPManualConfig) configs.get(i);
 				if (config.getLabel().equals(name.getText().trim())) {
 					okButton.setEnabled(false);
-					this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.NewPHPManualSiteDialog_nameAlreadyInUse, null));
+					this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_nameAlreadyInUse"), null));
 					return true;
 				}
 			}

@@ -42,8 +42,8 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	protected IContributionItem[] createMenuContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
-		final IContributionItem showPHPItem = new ActionContributionItem(new ChangeOutlineModeAction(PHPUIMessages.PHPOutlinePage_mode_php, PHPOutlineContentProvider.MODE_PHP, viewer));
-		ChangeOutlineModeAction action = new ChangeOutlineModeAction(PHPUIMessages.PHPOutlinePage_mode_html, PHPOutlineContentProvider.MODE_HTML, viewer);
+		final IContributionItem showPHPItem = new ActionContributionItem(new ChangeOutlineModeAction(PHPUIMessages.getString("PHPOutlinePage_mode_php"), PHPOutlineContentProvider.MODE_PHP, viewer));
+		ChangeOutlineModeAction action = new ChangeOutlineModeAction(PHPUIMessages.getString("PHPOutlinePage_mode_html"), PHPOutlineContentProvider.MODE_HTML, viewer);
 		action.addPropertyChangeListener(new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {

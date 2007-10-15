@@ -121,11 +121,11 @@ public class CoreUtility {
 			}
 			try {
 				if (fProject != null) {
-					monitor.beginTask(MessageFormat.format(PHPUIMessages.CoreUtility_buildproject_taskname, new Object[] {fProject.getName()}), 2); 
+					monitor.beginTask(MessageFormat.format(PHPUIMessages.getString("CoreUtility_buildproject_taskname"), new Object[] {fProject.getName()}), 2); 
 					fProject.build(IncrementalProjectBuilder.FULL_BUILD, new SubProgressMonitor(monitor,1));
 					PHPUiPlugin.getWorkspace().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new SubProgressMonitor(monitor,1));
 				} else {
-					monitor.beginTask(PHPUIMessages.CoreUtility_buildall_taskname, 2); 
+					monitor.beginTask(PHPUIMessages.getString("CoreUtility_buildall_taskname"), 2); 
 					PHPUiPlugin.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD, new SubProgressMonitor(monitor, 2));
 				}
 			} catch (CoreException e) {
@@ -148,7 +148,7 @@ public class CoreUtility {
 	 * @param project The project to build or <code>null</code> to build the workspace.
 	 */
 	public static Job getBuildJob(final IProject project) {
-		Job buildJob= new BuildJob(PHPUIMessages.CoreUtility_job_title, project);
+		Job buildJob= new BuildJob(PHPUIMessages.getString("CoreUtility_job_title"), project);
 		buildJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 		buildJob.setUser(true);
 		return buildJob;

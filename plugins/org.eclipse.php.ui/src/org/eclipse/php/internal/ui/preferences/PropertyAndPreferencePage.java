@@ -107,12 +107,12 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 
 			fUseProjectSettings = new SelectionButtonDialogField(SWT.CHECK);
 			fUseProjectSettings.setDialogFieldListener(listener);
-			fUseProjectSettings.setLabelText(PHPUIMessages.PropertyAndPreferencePage_useprojectsettings_label);
+			fUseProjectSettings.setLabelText(PHPUIMessages.getString("PropertyAndPreferencePage_useprojectsettings_label"));
 			fUseProjectSettings.doFillIntoGrid(composite, 1);
 			LayoutUtil.setHorizontalGrabbing(fUseProjectSettings.getSelectionButton(null));
 
 			if (offerLink()) {
-				fChangeWorkspaceSettings = createLink(composite, PHPUIMessages.PropertyAndPreferencePage_useworkspacesettings_change);
+				fChangeWorkspaceSettings = createLink(composite, PHPUIMessages.getString("PropertyAndPreferencePage_useworkspacesettings_change"));
 				fChangeWorkspaceSettings.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 			} else {
 				LayoutUtil.setHorizontalSpan(fUseProjectSettings.getSelectionButton(null), 2);
@@ -122,7 +122,7 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 			horizontalLine.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 2, 1));
 			horizontalLine.setFont(composite.getFont());
 		} else if (supportsProjectSpecificOptions() && offerLink()) {
-			fChangeWorkspaceSettings = createLink(parent, PHPUIMessages.PropertyAndPreferencePage_showprojectspecificsettings_label);
+			fChangeWorkspaceSettings = createLink(parent, PHPUIMessages.getString("PropertyAndPreferencePage_showprojectspecificsettings_label"));
 			fChangeWorkspaceSettings.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false));
 		}
 

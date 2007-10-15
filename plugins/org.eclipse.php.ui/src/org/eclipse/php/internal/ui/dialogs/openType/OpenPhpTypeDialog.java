@@ -178,7 +178,7 @@ public class OpenPhpTypeDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText(title != null
 			? title
-			: PHPUIMessages.OpenType_DialogTitle);
+			: PHPUIMessages.getString("OpenType_DialogTitle"));
 	}
 
 	public PHPCodeData getSelectedElement() {

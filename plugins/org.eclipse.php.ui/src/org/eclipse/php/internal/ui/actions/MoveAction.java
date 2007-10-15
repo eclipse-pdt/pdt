@@ -69,7 +69,7 @@ public class MoveAction extends SelectionDispatchAction {
 	 */
 	private void initMoveAction() {
 		fReorgMoveAction = PHPActionDelegatorRegistry.getActionDelegator(MOVE_ACTION_ID);
-		setText(PHPUIMessages.MoveAction_text);
+		setText(PHPUIMessages.getString("MoveAction_text"));
 		update(getSelection());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.MOVE_ACTION);
 	}
@@ -163,7 +163,7 @@ public class MoveAction extends SelectionDispatchAction {
 		if (tryReorgMove(selection))
 			return;
 
-		MessageDialog.openInformation(getShell(), PHPUIMessages.MoveAction_Move, PHPUIMessages.MoveAction_select);
+		MessageDialog.openInformation(getShell(), PHPUIMessages.getString("MoveAction_Move"), PHPUIMessages.getString("MoveAction_select"));
 	}
 
 	private boolean tryReorgMove(ITextSelection selection) {

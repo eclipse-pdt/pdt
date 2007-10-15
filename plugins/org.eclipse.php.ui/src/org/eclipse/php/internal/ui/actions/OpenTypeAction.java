@@ -47,7 +47,7 @@ public class OpenTypeAction implements IWorkbenchWindowActionDelegate {
 			IEditorPart part = EditorUtility.openInEditor(codeData);
 			EditorUtility.revealInEditor(part, codeData);
 		} catch (PartInitException e) {
-			ExceptionHandler.handle(e, PHPUIMessages.OpenTypeAction_errorTitle, PHPUIMessages.OpenTypeAction_errorMessage);
+			ExceptionHandler.handle(e, PHPUIMessages.getString("OpenTypeAction_errorTitle"), PHPUIMessages.getString("OpenTypeAction_errorMessage"));
 		}
 	}
 

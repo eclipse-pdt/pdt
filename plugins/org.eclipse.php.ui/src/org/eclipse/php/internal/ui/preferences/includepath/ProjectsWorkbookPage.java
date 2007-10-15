@@ -55,13 +55,13 @@ public class ProjectsWorkbookPage extends IncludePathBasePage {
 		fPageContainer = pageContainer;
 		fSWTControl = null;
 
-		String[] buttonLabels = new String[] { PHPUIMessages.ProjectsWorkbookPage_projects_add_button, null, PHPUIMessages.ProjectsWorkbookPage_projects_edit_button, PHPUIMessages.ProjectsWorkbookPage_projects_remove_button };
+		String[] buttonLabels = new String[] { PHPUIMessages.getString("ProjectsWorkbookPage_projects_add_button"), null, PHPUIMessages.getString("ProjectsWorkbookPage_projects_edit_button"), PHPUIMessages.getString("ProjectsWorkbookPage_projects_remove_button") };
 
 		ProjectsAdapter adapter = new ProjectsAdapter();
 
 		fProjectsList = new TreeListDialogField(adapter, buttonLabels, new IPListLabelProvider());
 		fProjectsList.setDialogFieldListener(adapter);
-		fProjectsList.setLabelText(PHPUIMessages.ProjectsWorkbookPage_projects_label);
+		fProjectsList.setLabelText(PHPUIMessages.getString("ProjectsWorkbookPage_projects_label"));
 
 		fProjectsList.enableButton(IDX_REMOVE, false);
 		fProjectsList.enableButton(IDX_EDIT, false);
@@ -340,8 +340,8 @@ public class ProjectsWorkbookPage extends IncludePathBasePage {
 		Object[] selectArr = selectable.toArray();
 		new PHPElementSorter().sort(null, selectArr);
 
-		ListSelectionDialog dialog = new ListSelectionDialog(getShell(), Arrays.asList(selectArr), new ListContentProvider(), new PHPUILabelProvider(), PHPUIMessages.ProjectsWorkbookPage_chooseProjects_message);
-		dialog.setTitle(PHPUIMessages.ProjectsWorkbookPage_chooseProjects_title);
+		ListSelectionDialog dialog = new ListSelectionDialog(getShell(), Arrays.asList(selectArr), new ListContentProvider(), new PHPUILabelProvider(), PHPUIMessages.getString("ProjectsWorkbookPage_chooseProjects_message"));
+		dialog.setTitle(PHPUIMessages.getString("ProjectsWorkbookPage_chooseProjects_title"));
 		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			IPListElement[] cpElements = new IPListElement[result.length];

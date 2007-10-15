@@ -28,7 +28,7 @@ public class CutAction extends SelectionDispatchAction {
 
 	public CutAction(IWorkbenchSite site, Clipboard clipboard, SelectionDispatchAction pasteAction) {
 		super(site);
-		setText(PHPUIMessages.CutAction_text);
+		setText(PHPUIMessages.getString("CutAction_text"));
 		fCopyToClipboardAction = new CopyToClipboardAction(site, clipboard, pasteAction);
 
 		ISharedImages workbenchImages = PHPUiPlugin.getDefault().getWorkbench().getSharedImages();

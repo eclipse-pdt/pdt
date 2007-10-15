@@ -28,7 +28,7 @@ public class GotoMatchingBracketAction extends Action {
 	private final PHPStructuredEditor fEditor;
 	
 	public GotoMatchingBracketAction(PHPStructuredEditor editor) {
-		super(PHPUIMessages.GotoMatchingBracket_label);
+		super(PHPUIMessages.getString("GotoMatchingBracket_label"));
 		Assert.isNotNull(editor);
 		fEditor= editor;
 		setEnabled(true);

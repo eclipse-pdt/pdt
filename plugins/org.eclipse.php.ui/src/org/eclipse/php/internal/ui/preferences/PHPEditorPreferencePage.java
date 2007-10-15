@@ -43,7 +43,7 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
         gd = new GridData(GridData.FILL_HORIZONTAL);
         useSmartHomeEndCB = new Button(firstComposite, SWT.CHECK | SWT.LEFT);
         useSmartHomeEndCB.setLayoutData(gd);
-        useSmartHomeEndCB.setText(PHPUIMessages.PHPEditorPreferencePage_smartCaretPositioning);
+        useSmartHomeEndCB.setText(PHPUIMessages.getString("PHPEditorPreferencePage_smartCaretPositioning"));
 
         gd = new GridData(GridData.FILL_HORIZONTAL);
         useSmartSubWordNavigation = new Button(firstComposite, SWT.CHECK | SWT.LEFT);
@@ -66,7 +66,7 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 
     private void createHeader(Composite contents) {
         final Shell shell = contents.getShell();
-        String text = PHPUIMessages.PHPEditorPreferencePage_prefEditorMessage;
+        String text = PHPUIMessages.getString("PHPEditorPreferencePage_prefEditorMessage");
         Link link = new Link(contents, SWT.NONE);
         link.setText(text);
         link.addSelectionListener(new SelectionAdapter() {
@@ -76,7 +76,7 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
         });
         // TODO replace by link-specific tooltips when
         // bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=88866 gets fixed
-        link.setToolTipText(PHPUIMessages.PHPEditorPreferencePage_prefEditorTooltip);
+        link.setToolTipText(PHPUIMessages.getString("PHPEditorPreferencePage_prefEditorTooltip"));
 
         GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
         gridData.widthHint = 150; // only expand further if anyone else requires it

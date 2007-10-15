@@ -31,7 +31,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 	protected Button determineObjTypeFromOtherFilesCheckBox;
 
 	public void setCompositeAddon(Composite parent) {
-		Composite composite = createSubsection(parent, PHPUIMessages.CodeAssistPreferencePage_optionsSectionLabel);
+		Composite composite = createSubsection(parent, PHPUIMessages.getString("CodeAssistPreferencePage_optionsSectionLabel"));
 		Composite radioButtonsComposite = new Composite(composite, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.marginWidth = 0;
@@ -42,20 +42,20 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 		radioButtonsComposite.setLayoutData(gridData);
 
 		completionInsertRadioButton = new Button(radioButtonsComposite, SWT.RADIO | SWT.LEFT);
-		completionInsertRadioButton.setText(PHPUIMessages.CodeAssistPreferencePage_completionInserts);
+		completionInsertRadioButton.setText(PHPUIMessages.getString("CodeAssistPreferencePage_completionInserts"));
 		completionInsertRadioButton.setLayoutData(new GridData());
 		completionInsertRadioButton.setData(PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
 		add(completionInsertRadioButton);
 
 		completionOverrideRadioButton = new Button(radioButtonsComposite, SWT.RADIO | SWT.LEFT);
-		completionOverrideRadioButton.setText(PHPUIMessages.CodeAssistPreferencePage_completionOverwrites);
+		completionOverrideRadioButton.setText(PHPUIMessages.getString("CodeAssistPreferencePage_completionOverwrites"));
 		completionOverrideRadioButton.setLayoutData(new GridData());
 
 		add(completionOverrideRadioButton);
 
-		insertSingleproposalsCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_insertSignleProposals, PreferenceConstants.CODEASSIST_AUTOINSERT, 0);
-		showVariableFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_showVariablesFromOtherFiles, PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
-		determineObjTypeFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_determineObjTypeFromOtherFiles, PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, 0);
+		insertSingleproposalsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_insertSignleProposals"), PreferenceConstants.CODEASSIST_AUTOINSERT, 0);
+		showVariableFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showVariablesFromOtherFiles"), PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
+		determineObjTypeFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_determineObjTypeFromOtherFiles"), PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, 0);
 
 	}
 

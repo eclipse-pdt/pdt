@@ -40,9 +40,9 @@ public class ConfigureIncludePathAction extends SelectionDispatchAction {
 	 */
 	public ConfigureIncludePathAction(IWorkbenchSite site) {
 		super(site);
-		setText(PHPUIMessages.ConfigureIncludePathAction_label);
-		setToolTipText(PHPUIMessages.ConfigureIncludePathAction_tooltip);
-		setDescription(PHPUIMessages.ConfigureIncludePathAction_description);
+		setText(PHPUIMessages.getString("ConfigureIncludePathAction_label"));
+		setToolTipText(PHPUIMessages.getString("ConfigureIncludePathAction_tooltip"));
+		setDescription(PHPUIMessages.getString("ConfigureIncludePathAction_description"));
 		//PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_ACTION);
 	}
 

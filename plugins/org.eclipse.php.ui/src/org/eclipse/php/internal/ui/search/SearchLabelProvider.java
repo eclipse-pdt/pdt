@@ -94,24 +94,24 @@ public abstract class SearchLabelProvider extends PHPElementLabelProvider {
 		if (matchCount < 2) {
 			if (matchCount == 1 && hasChildren(element)) {
 				if (potentialCount > 0)
-					return Messages.format(PHPUIMessages.SearchLabelProvider_potential_singular, elementName);
-				return Messages.format(PHPUIMessages.SearchLabelProvider_exact_singular, elementName);
+					return Messages.format(PHPUIMessages.getString("SearchLabelProvider_potential_singular"), elementName);
+				return Messages.format(PHPUIMessages.getString("SearchLabelProvider_exact_singular"), elementName);
 			}
 			if (potentialCount > 0)
-				return Messages.format(PHPUIMessages.SearchLabelProvider_potential_noCount, elementName);
-			return Messages.format(PHPUIMessages.SearchLabelProvider_exact_noCount, elementName);
+				return Messages.format(PHPUIMessages.getString("SearchLabelProvider_potential_noCount"), elementName);
+			return Messages.format(PHPUIMessages.getString("SearchLabelProvider_exact_noCount"), elementName);
 		} else {
 			int exactCount = matchCount - potentialCount;
 
 			if (potentialCount > 0 && exactCount > 0) {
 				String[] args = new String[] { elementName, String.valueOf(matchCount), String.valueOf(exactCount), String.valueOf(potentialCount) };
-				return Messages.format(PHPUIMessages.SearchLabelProvider_exact_and_potential_plural, args);
+				return Messages.format(PHPUIMessages.getString("SearchLabelProvider_exact_and_potential_plural"), args);
 			} else if (exactCount == 0) {
 				String[] args = new String[] { elementName, String.valueOf(matchCount) };
-				return Messages.format(PHPUIMessages.SearchLabelProvider_potential_plural, args);
+				return Messages.format(PHPUIMessages.getString("SearchLabelProvider_potential_plural"), args);
 			}
 			String[] args = new String[] { elementName, String.valueOf(matchCount) };
-			return Messages.format(PHPUIMessages.SearchLabelProvider_exact_plural, args);
+			return Messages.format(PHPUIMessages.getString("SearchLabelProvider_exact_plural"), args);
 		}
 	}
 

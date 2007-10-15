@@ -71,7 +71,7 @@ public class RefactorActionGroup extends ActionGroup {
 	private static class NoActionAvailable extends Action {
 		public NoActionAvailable() {
 			setEnabled(false);
-			setText(PHPUIMessages.RefactorActionGroup_no_refactoring_available);
+			setText(PHPUIMessages.getString("RefactorActionGroup_no_refactoring_available"));
 		}
 	}
 
@@ -205,7 +205,7 @@ public class RefactorActionGroup extends ActionGroup {
 	}
 
 	private void addRefactorSubmenu(IMenuManager menu) {
-		String menuText = PHPUIMessages.RefactorMenu_label;
+		String menuText = PHPUIMessages.getString("RefactorMenu_label");
 
 		IMenuManager refactorSubmenu = (IMenuManager) menu.find(MENU_ID);
 		if (refactorSubmenu == null)

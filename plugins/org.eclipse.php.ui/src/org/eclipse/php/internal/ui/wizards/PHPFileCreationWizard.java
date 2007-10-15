@@ -110,7 +110,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 */
 		public static void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
 			// create a sample file
-			monitor.beginTask(NLS.bind(PHPUIMessages.newPhpFile_create, fileName), 2);
+			monitor.beginTask(NLS.bind(PHPUIMessages.getString("newPhpFile_create"), fileName), 2);
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IResource resource = root.findMember(new Path(containerName));
 			if (!resource.exists() || !(resource instanceof IContainer)) {
@@ -153,7 +153,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			}*/
 
 			monitor.worked(1);
-			monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning, fileName));
+			monitor.setTaskName(NLS.bind(PHPUIMessages.getString("newPhpFile_openning"), fileName));
 			wizard.getShell().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

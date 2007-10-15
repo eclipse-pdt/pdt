@@ -50,7 +50,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 
 	class ShowFilterDialogAction extends Action {
 		ShowFilterDialogAction() {
-			setText(PHPUIMessages.OpenCustomFiltersDialogAction_text);
+			setText(PHPUIMessages.getString("OpenCustomFiltersDialogAction_text"));
 			setImageDescriptor(PHPPluginImages.DESC_ELCL_FILTER);
 			setDisabledImageDescriptor(PHPPluginImages.DESC_DLCL_FILTER);
 		}

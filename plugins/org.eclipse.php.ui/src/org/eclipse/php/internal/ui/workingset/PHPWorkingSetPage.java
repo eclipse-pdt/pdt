@@ -54,7 +54,7 @@ import org.eclipse.ui.dialogs.IWorkingSetPage;
  */
 public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
-	final private static String PAGE_TITLE = PHPUIMessages.PHPWorkingSetPage_title;
+	final private static String PAGE_TITLE = PHPUIMessages.getString("PHPWorkingSetPage_title");
 	final private static String PAGE_ID = "phpWorkingSetPage"; //$NON-NLS-1$
 
 	private Text fWorkingSetName;
@@ -69,7 +69,7 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	 */
 	public PHPWorkingSetPage() {
 		super(PAGE_ID, PAGE_TITLE, PHPPluginImages.DESC_WIZBAN_ADD_LIBRARY);
-		setDescription(PHPUIMessages.PHPWorkingSetPage_workingSet_description);
+		setDescription(PHPUIMessages.getString("PHPWorkingSetPage_workingSet_description"));
 		fFirstCheck = true;
 	}
 
@@ -85,7 +85,7 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		setControl(composite);
 
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(PHPUIMessages.PHPWorkingSetPage_workingSet_name);
+		label.setText(PHPUIMessages.getString("PHPWorkingSetPage_workingSet_name"));
 		GridData gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
@@ -99,7 +99,7 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		fWorkingSetName.setFocus();
 
 		label = new Label(composite, SWT.WRAP);
-		label.setText(PHPUIMessages.PHPWorkingSetPage_workingSet_content);
+		label.setText(PHPUIMessages.getString("PHPWorkingSetPage_workingSet_content"));
 		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
@@ -149,8 +149,8 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 
 		Button selectAllButton = new Button(buttonComposite, SWT.PUSH);
-		selectAllButton.setText(PHPUIMessages.PHPWorkingSetPage_selectAll_label);
-		selectAllButton.setToolTipText(PHPUIMessages.PHPWorkingSetPage_selectAll_toolTip);
+		selectAllButton.setText(PHPUIMessages.getString("PHPWorkingSetPage_selectAll_label"));
+		selectAllButton.setToolTipText(PHPUIMessages.getString("PHPWorkingSetPage_selectAll_toolTip"));
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				fTree.setCheckedElements(fTreeContentProvider.getElements(fTree.getInput()));
@@ -161,8 +161,8 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		SWTUtil.setButtonDimensionHint(selectAllButton);
 
 		Button deselectAllButton = new Button(buttonComposite, SWT.PUSH);
-		deselectAllButton.setText(PHPUIMessages.PHPWorkingSetPage_deselectAll_label);
-		deselectAllButton.setToolTipText(PHPUIMessages.PHPWorkingSetPage_deselectAll_toolTip);
+		deselectAllButton.setText(PHPUIMessages.getString("PHPWorkingSetPage_deselectAll_label"));
+		deselectAllButton.setToolTipText(PHPUIMessages.getString("PHPWorkingSetPage_deselectAll_toolTip"));
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				fTree.setCheckedElements(new Object[0]);
@@ -244,14 +244,14 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		String newText = fWorkingSetName.getText();
 
 		if (newText.equals(newText.trim()) == false)
-			errorMessage = PHPUIMessages.PHPWorkingSetPage_warning_nameWhitespace;
+			errorMessage = PHPUIMessages.getString("PHPWorkingSetPage_warning_nameWhitespace");
 		if (newText.equals("")) { //$NON-NLS-1$
 			if (fFirstCheck) {
 				setPageComplete(false);
 				fFirstCheck = false;
 				return;
 			} else
-				errorMessage = PHPUIMessages.PHPWorkingSetPage_warning_nameMustNotBeEmpty;
+				errorMessage = PHPUIMessages.getString("PHPWorkingSetPage_warning_nameMustNotBeEmpty");
 		}
 
 		fFirstCheck = false;
@@ -260,12 +260,12 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 			for (int i = 0; i < workingSets.length; i++) {
 				if (newText.equals(workingSets[i].getName())) {
-					errorMessage = PHPUIMessages.PHPWorkingSetPage_warning_workingSetExists;
+					errorMessage = PHPUIMessages.getString("PHPWorkingSetPage_warning_workingSetExists");
 				}
 			}
 		}
 		if (errorMessage == null && !hasCheckedElement())
-			errorMessage = PHPUIMessages.PHPWorkingSetPage_warning_resourceMustBeChecked;
+			errorMessage = PHPUIMessages.getString("PHPWorkingSetPage_warning_resourceMustBeChecked");
 
 		setErrorMessage(errorMessage);
 		setPageComplete(errorMessage == null);

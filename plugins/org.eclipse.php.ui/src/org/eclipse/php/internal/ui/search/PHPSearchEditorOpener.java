@@ -125,7 +125,7 @@ public class PHPSearchEditorOpener {
 					else
 						fEditor= null;
 				} catch (PartInitException ex) {
-					MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), PHPUIMessages.Search_Error_openEditor_title, PHPUIMessages.Search_Error_openEditor_message); 
+					MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), PHPUIMessages.getString("Search_Error_openEditor_title"), PHPUIMessages.getString("Search_Error_openEditor_message")); 
 					return null;
 				}
 			}

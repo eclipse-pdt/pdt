@@ -89,11 +89,11 @@ public class IncludePathBlock {
 
 		IncludePathAdapter adapter = new IncludePathAdapter();
 
-		String[] buttonLabels = new String[] { PHPUIMessages.IncludePathsBlock_includepath_up_button, PHPUIMessages.IncludePathsBlock_includepath_down_button };
+		String[] buttonLabels = new String[] { PHPUIMessages.getString("IncludePathsBlock_includepath_up_button"), PHPUIMessages.getString("IncludePathsBlock_includepath_down_button") };
 
 		fIncludePathList = new ListDialogField(null, buttonLabels, new IPListLabelProvider());
 		fIncludePathList.setDialogFieldListener(adapter);
-		fIncludePathList.setLabelText(PHPUIMessages.IncludePathsBlock_includepath_label);
+		fIncludePathList.setLabelText(PHPUIMessages.getString("IncludePathsBlock_includepath_label"));
 		fIncludePathList.setUpButtonIndex(0);
 		fIncludePathList.setDownButtonIndex(1);
 
@@ -130,14 +130,14 @@ public class IncludePathBlock {
 
 		fProjectsPage = new ProjectsWorkbookPage(fIncludePathList, fPageContainer);
 		item = new TabItem(folder, SWT.NONE);
-		item.setText(PHPUIMessages.IncludePathsBlock_tab_projects);
+		item.setText(PHPUIMessages.getString("IncludePathsBlock_tab_projects"));
 		item.setImage(projectImage);
 		item.setData(fProjectsPage);
 		item.setControl(fProjectsPage.getControl(folder));
 
 		fLibrariesPage = new LibrariesWorkbookPage(fIncludePathList, fPageContainer);
 		item = new TabItem(folder, SWT.NONE);
-		item.setText(PHPUIMessages.IncludePathsBlock_tab_libraries);
+		item.setText(PHPUIMessages.getString("IncludePathsBlock_tab_libraries"));
 		item.setImage(PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY));
 		item.setData(fLibrariesPage);
 		item.setControl(fLibrariesPage.getControl(folder));
@@ -148,7 +148,7 @@ public class IncludePathBlock {
 
 		IncludePathOrderingWorkbookPage ordpage = new IncludePathOrderingWorkbookPage(fIncludePathList);
 		item = new TabItem(folder, SWT.NONE);
-		item.setText(PHPUIMessages.IncludePathsBlock_tab_order);
+		item.setText(PHPUIMessages.getString("IncludePathsBlock_tab_order"));
 		item.setImage(cpoImage);
 		item.setData(ordpage);
 		item.setControl(ordpage.getControl(folder));
@@ -374,9 +374,9 @@ public class IncludePathBlock {
 
 		if (nEntriesMissing > 0) {
 			if (nEntriesMissing == 1) {
-				fIncludePathStatus.setWarning(MessageFormat.format(PHPUIMessages.IncludePathsBlock_warning_EntryMissing, new String[] { entryMissing.getPath().toString() }));
+				fIncludePathStatus.setWarning(MessageFormat.format(PHPUIMessages.getString("IncludePathsBlock_warning_EntryMissing"), new String[] { entryMissing.getPath().toString() }));
 			} else {
-				fIncludePathStatus.setWarning(MessageFormat.format(PHPUIMessages.IncludePathsBlock_warning_EntriesMissing, new String[] { String.valueOf(nEntriesMissing) }));
+				fIncludePathStatus.setWarning(MessageFormat.format(PHPUIMessages.getString("IncludePathsBlock_warning_EntriesMissing"), new String[] { String.valueOf(nEntriesMissing) }));
 			}
 		}
 
@@ -392,7 +392,7 @@ public class IncludePathBlock {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor.beginTask(PHPUIMessages.IncludePathsBlock_operationdesc_project, 10);
+		monitor.beginTask(PHPUIMessages.getString("IncludePathsBlock_operationdesc_project"), 10);
 
 		// create the project
 		try {
@@ -437,7 +437,7 @@ public class IncludePathBlock {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor.setTaskName(PHPUIMessages.IncludePathsBlock_operationdesc_php);
+		monitor.setTaskName(PHPUIMessages.getString("IncludePathsBlock_operationdesc_php"));
 		monitor.beginTask("", 10); //$NON-NLS-1$
 		try {
 

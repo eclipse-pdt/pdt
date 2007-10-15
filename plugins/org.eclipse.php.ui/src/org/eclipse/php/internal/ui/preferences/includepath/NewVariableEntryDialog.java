@@ -84,13 +84,13 @@ public class NewVariableEntryDialog extends StatusDialog {
 
 	public NewVariableEntryDialog(Shell parent) {
 		super(parent);
-		setTitle(PHPUIMessages.NewVariableEntryDialog_title);
+		setTitle(PHPUIMessages.getString("NewVariableEntryDialog_title"));
 
 		int shellStyle = getShellStyle();
 		setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
 		updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$
 
-		String[] buttonLabels = new String[] { PHPUIMessages.NewVariableEntryDialog_vars_extend, };
+		String[] buttonLabels = new String[] { PHPUIMessages.getString("NewVariableEntryDialog_vars_extend"), };
 
 		VariablesAdapter adapter = new VariablesAdapter();
 
@@ -98,7 +98,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 
 		fVariablesList = new ListDialogField(adapter, buttonLabels, labelProvider);
 		fVariablesList.setDialogFieldListener(adapter);
-		fVariablesList.setLabelText(PHPUIMessages.NewVariableEntryDialog_vars_label);
+		fVariablesList.setLabelText(PHPUIMessages.getString("NewVariableEntryDialog_vars_label"));
 
 		fVariablesList.enableButton(IDX_EXTEND, false);
 
@@ -112,7 +112,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 		});
 
 		fConfigButton = new SelectionButtonDialogField(SWT.PUSH);
-		fConfigButton.setLabelText(PHPUIMessages.NewVariableEntryDialog_configbutton_label);
+		fConfigButton.setLabelText(PHPUIMessages.getString("NewVariableEntryDialog_configbutton_label"));
 		fConfigButton.setDialogFieldListener(adapter);
 
 		initializeElements();
@@ -205,20 +205,20 @@ public class NewVariableEntryDialog extends StatusDialog {
 				IPVariableElement curr = (IPVariableElement) selected.get(i);
 				fResultPaths[i] = new Path(curr.getName());
 				if (!curr.getPath().toFile().exists()) {
-					status.setError(PHPUIMessages.NewVariableEntryDialog_variable_non_existent_location); //$NON-NLS-1$
+					status.setError(PHPUIMessages.getString("NewVariableEntryDialog_variable_non_existent_location")); //$NON-NLS-1$
 					isValidSelection = false;
 				}
 				else if (!curr.getPath().toFile().isFile()) {
-					status.setInfo(PHPUIMessages.NewVariableEntryDialog_info_isfolder);
+					status.setInfo(PHPUIMessages.getString("NewVariableEntryDialog_info_isfolder"));
 					canExtend = true;
 				}
 			}
 		} else {
 			isValidSelection = false;
-			status.setInfo(PHPUIMessages.NewVariableEntryDialog_info_noselection);
+			status.setInfo(PHPUIMessages.getString("NewVariableEntryDialog_info_noselection"));
 		}
 		if (isValidSelection && nSelected > 1) {
-			String str = MessageFormat.format(PHPUIMessages.NewVariableEntryDialog_info_selected, new String[] { String.valueOf(nSelected) });
+			String str = MessageFormat.format(PHPUIMessages.getString("NewVariableEntryDialog_info_selected"), new String[] { String.valueOf(nSelected) });
 			status.setInfo(str);
 		}
 		fCanExtend = nSelected == 1 && canExtend;
@@ -236,8 +236,8 @@ public class NewVariableEntryDialog extends StatusDialog {
 		File file = elem.getPath().toFile();
 
 		ZipFileSelectionDialog dialog = new ZipFileSelectionDialog(getShell(), true, true);
-		dialog.setTitle(PHPUIMessages.NewVariableEntryDialog_ExtensionDialog_title);
-		dialog.setMessage(MessageFormat.format(PHPUIMessages.NewVariableEntryDialog_ExtensionDialog_description, new String[] { elem.getName() }));
+		dialog.setTitle(PHPUIMessages.getString("NewVariableEntryDialog_ExtensionDialog_title"));
+		dialog.setMessage(MessageFormat.format(PHPUIMessages.getString("NewVariableEntryDialog_ExtensionDialog_description"), new String[] { elem.getName() }));
 		dialog.setInput(file);
 		if (dialog.open() == Window.OK) {
 			Object[] selected = dialog.getResult();

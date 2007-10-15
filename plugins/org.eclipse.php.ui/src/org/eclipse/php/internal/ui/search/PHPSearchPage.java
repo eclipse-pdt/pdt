@@ -254,7 +254,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 	private Button fCaseSensitive;
 
 	private Button[] fSearchFor;
-	private String[] fSearchForText = { PHPUIMessages.SearchPage_searchFor_class, PHPUIMessages.SearchPage_searchFor_function, PHPUIMessages.SearchPage_searchFor_constant };
+	private String[] fSearchForText = { PHPUIMessages.getString("SearchPage_searchFor_class"), PHPUIMessages.getString("SearchPage_searchFor_function"), PHPUIMessages.getString("SearchPage_searchFor_constant") };
 
 	//---- Action Handling ------------------------------------------------
 
@@ -270,11 +270,11 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 		int searchScope = getContainer().getSelectedScope();
 		switch (searchScope) {
 			case ISearchPageContainer.WORKSPACE_SCOPE:
-				scopeDescription = PHPUIMessages.WorkspaceScope;
+				scopeDescription = PHPUIMessages.getString("WorkspaceScope");
 				scope = factory.createWorkspaceSearchScope(getSearchFor());
 				break;
 			case ISearchPageContainer.SELECTION_SCOPE:
-				scopeDescription = PHPUIMessages.SelectionScope;
+				scopeDescription = PHPUIMessages.getString("SelectionScope");
 				scope = factory.createSelectedPHPSearchScope(getSearchFor(), getContainer().getSelection());
 				break;
 			case ISearchPageContainer.SELECTED_PROJECTS_SCOPE:
@@ -282,11 +282,11 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 				IProject[] projects = PHPSearchScopeFactory.getInstance().getProjects(scope);
 				if (projects.length >= 1) {
 					if (projects.length == 1)
-						scopeDescription = Messages.format(PHPUIMessages.EnclosingProjectScope, projects[0].getName());
+						scopeDescription = Messages.format(PHPUIMessages.getString("EnclosingProjectScope"), projects[0].getName());
 					else
-						scopeDescription = Messages.format(PHPUIMessages.EnclosingProjectsScope, projects[0].getName());
+						scopeDescription = Messages.format(PHPUIMessages.getString("EnclosingProjectsScope"), projects[0].getName());
 				} else
-					scopeDescription = Messages.format(PHPUIMessages.EnclosingProjectScope, ""); //$NON-NLS-1$
+					scopeDescription = Messages.format(PHPUIMessages.getString("EnclosingProjectScope"), ""); //$NON-NLS-1$
 				break;
 			case ISearchPageContainer.WORKING_SET_SCOPE:
 				IWorkingSet[] workingSets = getContainer().getSelectedWorkingSets();
@@ -294,7 +294,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 				if (workingSets == null || workingSets.length < 1) {
 					return false;
 				}
-				scopeDescription = Messages.format(PHPUIMessages.WorkingSetScope, SearchUtil.toString(workingSets));
+				scopeDescription = Messages.format(PHPUIMessages.getString("WorkingSetScope"), SearchUtil.toString(workingSets));
 				scope = factory.createWorkingSetSearchScope(getSearchFor(), getContainer().getSelectedWorkingSets());
 				//				SearchUtil.updateLRUWorkingSets(getContainer().getSelectedWorkingSets());
 
@@ -412,7 +412,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 
 		// Pattern text + info
 		Label label = new Label(result, SWT.LEFT);
-		label.setText(PHPUIMessages.SearchPage_expression_label);
+		label.setText(PHPUIMessages.getString("SearchPage_expression_label"));
 		label.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 2, 1));
 
 		// Pattern combo
@@ -436,7 +436,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 
 		// Ignore case checkbox		
 		fCaseSensitive = new Button(result, SWT.CHECK);
-		fCaseSensitive.setText(PHPUIMessages.SearchPage_expression_caseSensitive);
+		fCaseSensitive.setText(PHPUIMessages.getString("SearchPage_expression_caseSensitive"));
 		fCaseSensitive.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				fIsCaseSensitive = fCaseSensitive.getSelection();
@@ -514,7 +514,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 
 	private Control createSearchFor(Composite parent) {
 		Group result = new Group(parent, SWT.NONE);
-		result.setText(PHPUIMessages.SearchPage_searchFor_label);
+		result.setText(PHPUIMessages.getString("SearchPage_searchFor_label"));
 		result.setLayout(new GridLayout(3, true));
 
 		fSearchFor = new Button[fSearchForText.length];

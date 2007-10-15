@@ -75,7 +75,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		try {
 			run(element);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, PHPUIMessages.RenamePHPElementAction_name, PHPUIMessages.RenamePHPElementAction_exception);
+			ExceptionHandler.handle(e, PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_exception"));
 		}
 	}
 
@@ -93,9 +93,9 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 				return;
 			}
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, PHPUIMessages.RenamePHPElementAction_name, PHPUIMessages.RenamePHPElementAction_exception);
+			ExceptionHandler.handle(e, PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_exception"));
 		}
-		MessageDialog.openInformation(getShell(), PHPUIMessages.RenamePHPElementAction_name, PHPUIMessages.RenamePHPElementAction_not_available);
+		MessageDialog.openInformation(getShell(), PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_not_available"));
 	}
 
 	public boolean canRun() {
@@ -111,7 +111,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	}
 
 	private PHPCodeData getPHPElement() {
-		PHPCodeData[] elements = SelectionConverter.codeResolveHandled(fEditor, getShell(), PHPUIMessages.RenamePHPElementAction_name);
+		PHPCodeData[] elements = SelectionConverter.codeResolveHandled(fEditor, getShell(), PHPUIMessages.getString("RenamePHPElementAction_name"));
 		if (elements == null || elements.length != 1)
 			return null;
 		return elements[0];

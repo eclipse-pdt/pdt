@@ -73,8 +73,8 @@ public class CustomFiltersDialog extends SelectionDialog {
 	}
 
 	protected void configureShell(Shell shell) {
-		setTitle(PHPUIMessages.CustomFiltersDialog_title);
-		setMessage(PHPUIMessages.CustomFiltersDialog_filterList_label);
+		setTitle(PHPUIMessages.getString("CustomFiltersDialog_title"));
+		setMessage(PHPUIMessages.getString("CustomFiltersDialog_filterList_label"));
 		super.configureShell(shell);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IPHPHelpContextIds.CUSTOM_FILTERS_DIALOG);
 	}
@@ -101,7 +101,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		// Checkbox
 		fEnableUserDefinedPatterns = new Button(group, SWT.CHECK);
 		fEnableUserDefinedPatterns.setFocus();
-		fEnableUserDefinedPatterns.setText(PHPUIMessages.CustomFiltersDialog_enableUserDefinedPattern);
+		fEnableUserDefinedPatterns.setText(PHPUIMessages.getString("CustomFiltersDialog_enableUserDefinedPattern"));
 
 		// Pattern	field
 		fUserDefinedPatterns = new Text(group, SWT.SINGLE | SWT.BORDER);
@@ -113,7 +113,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 		// Info text
 		final Label info = new Label(group, SWT.LEFT);
-		info.setText(PHPUIMessages.CustomFiltersDialog_patternInfo);
+		info.setText(PHPUIMessages.getString("CustomFiltersDialog_patternInfo"));
 
 		// Enabling / disabling of pattern group
 		fEnableUserDefinedPatterns.setSelection(fEnablePatterns);
@@ -142,7 +142,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		new Label(parent, SWT.NONE);
 
 		Label info = new Label(parent, SWT.LEFT);
-		info.setText(PHPUIMessages.CustomFiltersDialog_filterList_label);
+		info.setText(PHPUIMessages.getString("CustomFiltersDialog_filterList_label"));
 
 		fCheckBoxList = CheckboxTableViewer.newCheckList(parent, SWT.BORDER);
 		GridData data = new GridData(GridData.FILL_BOTH);
@@ -161,7 +161,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 		// Description
 		info = new Label(parent, SWT.LEFT);
-		info.setText(PHPUIMessages.CustomFiltersDialog_description_label);
+		info.setText(PHPUIMessages.getString("CustomFiltersDialog_description_label"));
 		final Text description = new Text(parent, SWT.LEFT | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.heightHint = convertHeightInCharsToPixels(3);
@@ -204,7 +204,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		composite.setData(data);
 
 		// Select All button
-		String label = PHPUIMessages.CustomFiltersDialog_SelectAllButton_label;
+		String label = PHPUIMessages.getString("CustomFiltersDialog_SelectAllButton_label");
 		Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, label, false);
 		SelectionListener listener = new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -217,7 +217,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		selectButton.addSelectionListener(listener);
 
 		// De-select All button
-		label = PHPUIMessages.CustomFiltersDialog_DeselectAllButton_label;
+		label = PHPUIMessages.getString("CustomFiltersDialog_DeselectAllButton_label");
 		Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, label, false);
 		listener = new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {

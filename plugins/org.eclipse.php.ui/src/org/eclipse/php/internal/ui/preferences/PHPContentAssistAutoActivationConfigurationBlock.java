@@ -31,8 +31,8 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 	protected Text autoActivationTriggersPHPDoc;
 
 	public void setCompositeAddon(Composite parent) {
-		Composite composite = createSubsection(parent, PHPUIMessages.CodeAssistPreferencePage_autoActivationSectionLabel);
-		autoActivationCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_enableAutoActivation, PreferenceConstants.CODEASSIST_AUTOACTIVATION, 0);
+		Composite composite = createSubsection(parent, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationSectionLabel"));
+		autoActivationCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_enableAutoActivation"), PreferenceConstants.CODEASSIST_AUTOACTIVATION, 0);
 		autoActivationCheckBox.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
@@ -49,12 +49,12 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 			}
 		});
 
-		autoActivationDelay = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationDelay, PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY, 4, 20, new PositiveIntegerStringValidator(PHPUIMessages.CodeAssistPreferencePage_autoActivationDelayIntValue,
-			PHPUIMessages.CodeAssistPreferencePage_autoActivationDelayIntValue, PHPUIMessages.CodeAssistPreferencePage_autoActivationDelayPositive));
+		autoActivationDelay = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelay"), PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY, 4, 20, new PositiveIntegerStringValidator(PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"),
+			PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"), PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayPositive")));
 
-		autoActivationTriggersPHP = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationTriggersPHP, PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, 4, 20);
+		autoActivationTriggersPHP = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationTriggersPHP"), PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, 4, 20);
 
-		autoActivationTriggersPHPDoc = addLabelledTextField(composite, PHPUIMessages.CodeAssistPreferencePage_autoActivationTriggersPHPDoc, PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, 4, 20);
+		autoActivationTriggersPHPDoc = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationTriggersPHPDoc"), PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, 4, 20);
 		autoActivationTriggersPHPDoc.setEnabled(false);
 
 	}

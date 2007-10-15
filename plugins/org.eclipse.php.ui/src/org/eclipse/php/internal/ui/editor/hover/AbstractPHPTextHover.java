@@ -90,7 +90,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 		if (keySequence == null)
 			return null;
 
-		return NLS.bind(PHPUIMessages.HoverFocus_message, keySequence);
+		return NLS.bind(PHPUIMessages.getString("HoverFocus_message"), keySequence);
 	}
 
 	/*

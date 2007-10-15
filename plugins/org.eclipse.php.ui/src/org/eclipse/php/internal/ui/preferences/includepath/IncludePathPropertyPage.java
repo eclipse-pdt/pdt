@@ -94,9 +94,9 @@ public class IncludePathPropertyPage extends PropertyPage implements IStatusChan
 		if (fIncludePathsBlock != null) {
 			if (!visible) {
 				if (fIncludePathsBlock.hasChangesInDialog()) {
-					String title = PHPUIMessages.IncludePathsPropertyPage_unsavedchanges_title;
-					String message = PHPUIMessages.IncludePathsPropertyPage_unsavedchanges_message;
-					String[] buttonLabels = new String[] { PHPUIMessages.IncludePathsPropertyPage_unsavedchanges_button_save, PHPUIMessages.IncludePathsPropertyPage_unsavedchanges_button_discard, PHPUIMessages.IncludePathsPropertyPage_unsavedchanges_button_ignore };
+					String title = PHPUIMessages.getString("IncludePathsPropertyPage_unsavedchanges_title");
+					String message = PHPUIMessages.getString("IncludePathsPropertyPage_unsavedchanges_message");
+					String[] buttonLabels = new String[] { PHPUIMessages.getString("IncludePathsPropertyPage_unsavedchanges_button_save"), PHPUIMessages.getString("IncludePathsPropertyPage_unsavedchanges_button_discard"), PHPUIMessages.getString("IncludePathsPropertyPage_unsavedchanges_button_ignore") };
 					MessageDialog dialog = new MessageDialog(getShell(), title, null, message, MessageDialog.QUESTION, buttonLabels, 0);
 					int res = dialog.open();
 					if (res == 0) {
@@ -132,7 +132,7 @@ public class IncludePathPropertyPage extends PropertyPage implements IStatusChan
 	 */
 	private Control createWithoutPHP(Composite parent) {
 		Label label = new Label(parent, SWT.LEFT);
-		label.setText(PHPUIMessages.IncludePathsPropertyPage_no_php_project_message);
+		label.setText(PHPUIMessages.getString("IncludePathsPropertyPage_no_php_project_message"));
 
 		fIncludePathsBlock = null;
 		setValid(true);
@@ -144,7 +144,7 @@ public class IncludePathPropertyPage extends PropertyPage implements IStatusChan
 	 */
 	private Control createForClosedProject(Composite parent) {
 		Label label = new Label(parent, SWT.LEFT);
-		label.setText(PHPUIMessages.IncludePathsPropertyPage_closed_project_message);
+		label.setText(PHPUIMessages.getString("IncludePathsPropertyPage_closed_project_message"));
 
 		fIncludePathsBlock = null;
 		setValid(true);
@@ -183,7 +183,7 @@ public class IncludePathPropertyPage extends PropertyPage implements IStatusChan
 					}
 				};
 				WorkbenchRunnableAdapter op = new WorkbenchRunnableAdapter(runnable);
-				op.runAsUserJob(PHPUIMessages.IncludePathsPropertyPage_job_title, null);
+				op.runAsUserJob(PHPUIMessages.getString("IncludePathsPropertyPage_job_title"), null);
 			}
 		}
 		return true;

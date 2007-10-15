@@ -24,9 +24,9 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 	
 	public ConvertToPDTProjectAction(IWorkbenchSite site) {
 		super(site);
-		setText(PHPUIMessages.ConvertToPDTProjectAction_convert_to_PDT_project_title);
-		setToolTipText(PHPUIMessages.ConvertToPDTProjectAction_convert_to_PDT_project_tooltip);
-		setDescription(PHPUIMessages.ConvertToPDTProjectAction_convert_to_PDT_project_description);
+		setText(PHPUIMessages.getString("ConvertToPDTProjectAction_convert_to_PDT_project_title"));
+		setToolTipText(PHPUIMessages.getString("ConvertToPDTProjectAction_convert_to_PDT_project_tooltip"));
+		setDescription(PHPUIMessages.getString("ConvertToPDTProjectAction_convert_to_PDT_project_description"));
 	}
 	
 	public void selectionChanged(IStructuredSelection selection) {
@@ -55,7 +55,7 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 	public void run(IStructuredSelection selection) {
 		final IProject[] projects = getProjectsFromSelection(selection);
 		if (projects.length > 0) {
-			WorkspaceJob convertJob = new WorkspaceJob(PHPUIMessages.ConvertToPDTProjectAction_converting_project_job_title) {
+			WorkspaceJob convertJob = new WorkspaceJob(PHPUIMessages.getString("ConvertToPDTProjectAction_converting_project_job_title")) {
 				public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 					
 					for (int i = 0; i < projects.length; ++i) {
