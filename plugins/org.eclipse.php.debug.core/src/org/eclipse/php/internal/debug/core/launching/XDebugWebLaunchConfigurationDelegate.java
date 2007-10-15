@@ -214,7 +214,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 
 		startStopURLs[0] = baseURL + "XDEBUG_SESSION_START=" + ideKey + "&KEY=" + sessionId;
-		startStopURLs[1] = baseURL + "XDEBUG_SESSION_STOP=" + ideKey + "&KEY=" + sessionId;
+		startStopURLs[1] = baseURL + "XDEBUG_SESSION_STOP_NO_EXEC=" + ideKey + "&KEY=" + sessionId;
 		return startStopURLs;
 	}
 }

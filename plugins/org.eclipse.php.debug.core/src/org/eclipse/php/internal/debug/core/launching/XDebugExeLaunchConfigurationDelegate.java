@@ -91,7 +91,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// Set Project Name as this is required by the source lookup computer delegate
 		final String projectString = project.getFullPath().toString();
-		ILaunchConfigurationWorkingCopy wc;
+		ILaunchConfigurationWorkingCopy wc = null;
 		if (configuration.isWorkingCopy()) {
 			wc = (ILaunchConfigurationWorkingCopy) configuration;
 		} else {

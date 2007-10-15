@@ -252,8 +252,8 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       setState(STATE_STARTED_SUSPENDED);
 
       try {
+         negotiateDBGpFeatures();    	  
          loadPredefinedBreakpoints();
-         negotiateDBGpFeatures();
          if (!stopAtStart) {
             //resume();
 
