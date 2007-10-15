@@ -40,7 +40,7 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 	 * @return <code>null</code>
 	 */
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
-		monitor.beginTask(CoreMessages.PHPIncrementalProjectBuilder_0, extensions.length);
+		monitor.beginTask(CoreMessages.getString("PHPIncrementalProjectBuilder_0"), extensions.length);
 		for (int i = 0; i < extensions.length; ++i) {
 			IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
 			if (extensions[i].isEnabled()) {

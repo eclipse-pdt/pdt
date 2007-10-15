@@ -275,7 +275,7 @@ public class PHPProjectOptions {
 				final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
 			} catch (final Exception e) {
-				throw new IOException(CoreMessages.PHPProjectOptions_1);
+				throw new IOException(CoreMessages.getString("PHPProjectOptions_1"));
 			} finally {
 				reader.close();
 			}
@@ -315,13 +315,13 @@ public class PHPProjectOptions {
 				final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
 			} catch (final Exception e) {
-				throw new IOException(CoreMessages.PHPProjectOptions_1);
+				throw new IOException(CoreMessages.getString("PHPProjectOptions_1"));
 			} finally {
 				reader.close();
 			}
 
 			if (!cpElement.getNodeName().equalsIgnoreCase(TAG_OPTIONS))
-				throw new IOException(CoreMessages.PHPProjectOptions_1);
+				throw new IOException(CoreMessages.getString("PHPProjectOptions_1"));
 			NodeList list = cpElement.getElementsByTagName(TAG_OPTION);
 			int length = list.getLength();
 			for (int i = 0; i < length; ++i) {

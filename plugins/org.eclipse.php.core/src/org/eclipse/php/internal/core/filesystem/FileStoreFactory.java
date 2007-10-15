@@ -40,7 +40,7 @@ public class FileStoreFactory {
 	 */
 	public static IFileStore createFileStore(File file) throws IllegalArgumentException {
 		if (file == null) {
-			throw new IllegalArgumentException(CoreMessages.FileStoreFactory_0);
+			throw new IllegalArgumentException(CoreMessages.getString("FileStoreFactory_0"));
 		}
 		if (file.exists()) {
 			return new LocalFile(file);

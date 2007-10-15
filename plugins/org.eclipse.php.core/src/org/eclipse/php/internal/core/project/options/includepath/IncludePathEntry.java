@@ -16,9 +16,20 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.internal.resources.XMLWriter;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.php.internal.core.CoreMessages;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
@@ -178,7 +189,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 				entry = newContainerEntry(path, resource, isExported);
 				break;
 			default:
-				throw new AssertionError(CoreMessages.bind(CoreMessages.includePath_unknownKind, sEntryKind));
+				throw new AssertionError(NLS.bind(CoreMessages.getString("includePath_unknownKind"), sEntryKind));
 		}
 		return entry;
 	}
@@ -303,7 +314,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 			if (changedReferences) {
 				IProject[] referenceProjects = (IProject[]) referenced.toArray(new IProject[referenced.size()]);
 				projectDescription.setReferencedProjects(referenceProjects);
-				WorkspaceJob job = new WorkspaceJob(CoreMessages.IncludePathEntry_2) {
+				WorkspaceJob job = new WorkspaceJob(CoreMessages.getString("IncludePathEntry_2")) {
 					public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 						project.setDescription(projectDescription, monitor);
 						return Status.OK_STATUS;
@@ -405,19 +416,19 @@ public class IncludePathEntry implements IIncludePathEntry {
 
 			case IIncludePathEntry.IPE_PROJECT:
 				if (resource == null || !resource.exists())
-					message = CoreMessages.IncludePathEntry_4 + path.toOSString();
+					message = CoreMessages.getString("IncludePathEntry_4") + path.toOSString();
 				break;
 			case IIncludePathEntry.IPE_LIBRARY:
 			case IIncludePathEntry.IPE_JRE:
 				if (resource == null || !resource.exists()) {
 					File file = new File(path.toOSString());
 					if (!file.exists())
-						message = CoreMessages.IncludePathEntry_5 + path.toOSString();
+						message = CoreMessages.getString("IncludePathEntry_5") + path.toOSString();
 				}
 				break;
 			case IIncludePathEntry.IPE_SOURCE:
 				if (resource == null || !resource.exists())
-					message = CoreMessages.IncludePathEntry_6 + path.toOSString();
+					message = CoreMessages.getString("IncludePathEntry_6") + path.toOSString();
 				break;
 			case IIncludePathEntry.IPE_VARIABLE:
 				//				if (resource == null || !resource.exists())
@@ -426,7 +437,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 			case IIncludePathEntry.IPE_CONTAINER:
 				break;
 			default:
-				throw new AssertionError(CoreMessages.bind(CoreMessages.includePath_unknownKind, "")); //$NON-NLS-1$
+				throw new AssertionError(NLS.bind(CoreMessages.getString("includePath_unknownKind"), "")); //$NON-NLS-1$
 		}
 		return message;
 	}

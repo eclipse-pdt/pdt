@@ -136,7 +136,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public void runBuild(final IProject project) {
-		WorkspaceJob cleanJob = new WorkspaceJob(NLS.bind(CoreMessages.PHPWorkspaceModelManager_4, project.getName())) {
+		WorkspaceJob cleanJob = new WorkspaceJob(NLS.bind(CoreMessages.getString("PHPWorkspaceModelManager_4"), project.getName())) {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
@@ -154,12 +154,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	private void runBuild() {
-		WorkspaceJob cleanJob = new WorkspaceJob(CoreMessages.PHPWorkspaceModelManager_5) {
+		WorkspaceJob cleanJob = new WorkspaceJob(CoreMessages.getString("PHPWorkspaceModelManager_5")) {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-					monitor.beginTask(CoreMessages.PHPWorkspaceModelManager_5, projects.length);
+					monitor.beginTask(CoreMessages.getString("PHPWorkspaceModelManager_5"), projects.length);
 
 					for (IProject project : projects) {
 						if (!project.isOpen()) {

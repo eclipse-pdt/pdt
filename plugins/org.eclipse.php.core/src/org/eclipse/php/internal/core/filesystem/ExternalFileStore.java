@@ -58,7 +58,7 @@ public class ExternalFileStore extends FileStore {
 	 */
 	protected ExternalFileStore(File file) throws IllegalArgumentException {
 		if (file.exists()) {
-			throw new IllegalArgumentException(CoreMessages.ExternalFileStore_0);
+			throw new IllegalArgumentException(CoreMessages.getString("ExternalFileStore_0"));
 		}
 		this.file = file;
 		this.filePath = file.getPath();

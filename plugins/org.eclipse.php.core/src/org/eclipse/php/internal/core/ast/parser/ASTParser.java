@@ -149,7 +149,7 @@ public class ASTParser {
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
 			return lexer5;
 		} else {
-			throw new IllegalArgumentException(CoreMessages.ASTParser_1 + phpVersion);
+			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") + phpVersion);
 		}
 	}
 
@@ -159,7 +159,7 @@ public class ASTParser {
 		} else if (VERSION_PHP5.equals(phpVersion)) {
 			return PHP_AST_PARSER5;
 		} else {
-			throw new IllegalArgumentException(CoreMessages.ASTParser_1 + phpVersion);
+			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") + phpVersion);
 		}
 
 	}

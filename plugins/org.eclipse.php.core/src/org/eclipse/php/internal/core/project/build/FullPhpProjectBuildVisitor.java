@@ -66,7 +66,7 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 		if (!PHPModelUtil.isPhpFile(file)) {
 			return;
 		}
-		monitor.subTask(NLS.bind(CoreMessages.FullPhpProjectBuildVisitor_0, file.getFullPath().toPortableString()));
+		monitor.subTask(NLS.bind(CoreMessages.getString("FullPhpProjectBuildVisitor_0"), file.getFullPath().toPortableString()));
 
 		PHPWorkspaceModelManager.getInstance().addFileToModel(file);		
 		validator.markFile(file);

@@ -36,7 +36,7 @@ public class PHPProjectBuildJobWrapper {
 	}
 
 	public void runJob() {
-    	WorkspaceJob cleanJob = new WorkspaceJob(CoreMessages.PHPProjectBuildJobWrapper_0) {
+    	WorkspaceJob cleanJob = new WorkspaceJob(CoreMessages.getString("PHPProjectBuildJobWrapper_0")) {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					project.build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);

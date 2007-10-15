@@ -98,16 +98,16 @@ public class FileUtils {
 	  static public void setContents(File file, String contents)
 	                                 throws FileNotFoundException, IOException {
 	    if (file == null) {
-	      throw new IllegalArgumentException(CoreMessages.FileUtils_2);
+	      throw new IllegalArgumentException(CoreMessages.getString("FileUtils_2"));
 	    }
 	    if (!file.exists()) {
-	      throw new FileNotFoundException (CoreMessages.FileUtils_3 + file);
+	      throw new FileNotFoundException (CoreMessages.getString("FileUtils_3") + file);
 	    }
 	    if (!file.isFile()) {
-	      throw new IllegalArgumentException(CoreMessages.FileUtils_4 + file);
+	      throw new IllegalArgumentException(CoreMessages.getString("FileUtils_4") + file);
 	    }
 	    if (!file.canWrite()) {
-	      throw new IllegalArgumentException(CoreMessages.FileUtils_5 + file);
+	      throw new IllegalArgumentException(CoreMessages.getString("FileUtils_5") + file);
 	    }
 
 	    Writer output = null;

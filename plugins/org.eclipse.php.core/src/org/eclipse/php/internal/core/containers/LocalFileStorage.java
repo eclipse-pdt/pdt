@@ -69,7 +69,7 @@ public class LocalFileStorage extends PlatformObject implements IStorage {
         try {
             return new FileInputStream(getFile());
         } catch (IOException e) {
-            throw new CoreException(new Status(IStatus.ERROR, PHPCorePlugin.getPluginId(), PHPCorePlugin.INTERNAL_ERROR, CoreMessages.zipEntryStorage_error, e)); //$NON-NLS-1$
+            throw new CoreException(new Status(IStatus.ERROR, PHPCorePlugin.getPluginId(), PHPCorePlugin.INTERNAL_ERROR, CoreMessages.getString("zipEntryStorage_error"), e)); //$NON-NLS-1$
         }
     }
 
