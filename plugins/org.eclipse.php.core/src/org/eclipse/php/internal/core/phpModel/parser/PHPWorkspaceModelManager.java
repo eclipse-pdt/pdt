@@ -76,8 +76,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	private void initGlobalModelListeners() {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.workspaceModelListener");
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
+		for (IConfigurationElement element : elements) {
 			if (element.getName().equals("workspaceModelListener")) {
 				WorkspaceModelListenerProxy modelListenerProxy = new WorkspaceModelListenerProxy(element);
 				IWorkspaceModelListener listener = modelListenerProxy.getListener();
@@ -114,8 +113,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					return;
 				}
 				IResourceDelta[] affectedChildren = resourceDelta.getAffectedChildren(IResourceDelta.CHANGED);
-				for (int i = 0; i < affectedChildren.length; i++) {
-					resourceDelta = affectedChildren[i];
+				for (IResourceDelta element : affectedChildren) {
+					resourceDelta = element;
 					IResource resource = resourceDelta.getResource();
 					IProject project = (IProject) resource;
 					int eventFlags = resourceDelta.getFlags();
@@ -161,8 +160,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					monitor.beginTask("Building PHP projects ...", projects.length);
 
-					for (int i = 0; i < projects.length; i++) {
-						IProject project = projects[i];
+					for (IProject project : projects) {
 						if (!project.isOpen()) {
 							continue;
 						}
@@ -199,10 +197,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public void shutdown() {
 		// serialize the Models
 		IProject[] projects = listProjects();
-		for (int i = 0; i < projects.length; i++) {
+		for (IProject element : projects) {
 			// By removing each of the models we cause for a model dispose.
 			// The model dispose, in its turn, will save a cache snapshot of its state.
-			removeModel(projects[i]);
+			removeModel(element);
 		}
 		// remove as listener
 		// IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -428,7 +426,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		int i = 0;
 		PHPProjectModel[] projects = new PHPProjectModel[models.size()];
 		for (Iterator iter = models.values().iterator(); iter.hasNext();) {
-			projects[i++] = ((PHPProjectModel) iter.next());
+			projects[i++] = (PHPProjectModel) iter.next();
 		}
 		return projects;
 	}
@@ -481,29 +479,29 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	public void fileDataChanged(PHPFileData fileData) {
 		ModelListener[] iterator = getModelListenersIteratorCopy();
-		for (int i = 0; i < iterator.length; i++) {
-			iterator[i].fileDataChanged(fileData);
+		for (ModelListener element : iterator) {
+			element.fileDataChanged(fileData);
 		}
 	}
 
 	public void fileDataAdded(PHPFileData fileData) {
 		ModelListener[] iterator = getModelListenersIteratorCopy();
-		for (int i = 0; i < iterator.length; i++) {
-			iterator[i].fileDataAdded(fileData);
+		for (ModelListener element : iterator) {
+			element.fileDataAdded(fileData);
 		}
 	}
 
 	public void fileDataRemoved(PHPFileData fileData) {
 		ModelListener[] iterator = getModelListenersIteratorCopy();
-		for (int i = 0; i < iterator.length; i++) {
-			iterator[i].fileDataRemoved(fileData);
+		for (ModelListener element : iterator) {
+			element.fileDataRemoved(fileData);
 		}
 	}
 
 	public void dataCleared() {
 		ModelListener[] iterator = getModelListenersIteratorCopy();
-		for (int i = 0; i < iterator.length; i++) {
-			iterator[i].dataCleared();
+		for (ModelListener element : iterator) {
+			element.dataCleared();
 		}
 	}
 
@@ -545,7 +543,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		}
 
 		PHPProjectModel projectModel = getModelForProject(file.getProject());
-		if ((projectModel == null) && !file.exists()) {
+		if (projectModel == null && !file.exists()) {
 			projectModel = getDefaultPHPProjectModel();
 			// distinguish between include path and external files:
 			if (projectModel.getFileData(file.getFullPath().toString()) == null) {
@@ -559,7 +557,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	/**
-	 * Global listeners 
+	 * Global listeners
 	 */
 
 	/**
@@ -593,8 +591,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	public void fireProjectModelAdded(IProject project) {
 		final IWorkspaceModelListener[] globalListeners = getGlobalWorkspaceModelListeners();
-		for (int i = 0; i < globalListeners.length; i++) {
-			IWorkspaceModelListener workspaceModelListener = globalListeners[i];
+		for (IWorkspaceModelListener workspaceModelListener : globalListeners) {
 			workspaceModelListener.projectModelAdded(project);
 		}
 
@@ -611,8 +608,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	public void fireProjectModelRemoved(IProject project) {
 		final IWorkspaceModelListener[] globalListeners = getGlobalWorkspaceModelListeners();
-		for (int i = 0; i < globalListeners.length; i++) {
-			IWorkspaceModelListener workspaceModelListener = globalListeners[i];
+		for (IWorkspaceModelListener workspaceModelListener : globalListeners) {
 			workspaceModelListener.projectModelRemoved(project);
 		}
 
@@ -629,8 +625,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	public void fireProjectModelChanged(IProject project) {
 		final IWorkspaceModelListener[] globalListeners = getGlobalWorkspaceModelListeners();
-		for (int i = 0; i < globalListeners.length; i++) {
-			IWorkspaceModelListener workspaceModelListener = globalListeners[i];
+		for (IWorkspaceModelListener workspaceModelListener : globalListeners) {
 			workspaceModelListener.projectModelChanged(project);
 		}
 
