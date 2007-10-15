@@ -42,13 +42,13 @@ public class Include extends Expression {
 	public static String getType(int type) {
 		switch (type) {
 			case IT_REQUIRE:
-				return "require";
+				return "require"; //$NON-NLS-1$
 			case IT_REQUIRE_ONCE:
-				return "require_once";
+				return "require_once"; //$NON-NLS-1$
 			case IT_INCLUDE:
-				return "include";
+				return "include"; //$NON-NLS-1$
 			case IT_INCLUDE_ONCE:
-				return "include_once";
+				return "include_once"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -73,11 +73,11 @@ public class Include extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<Include");
+		buffer.append(tab).append("<Include"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" kind='").append(getType(includeType)).append("'>\n");
+		buffer.append(" kind='").append(getType(includeType)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		expr.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</Include>");
+		buffer.append("\n").append(tab).append("</Include>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {

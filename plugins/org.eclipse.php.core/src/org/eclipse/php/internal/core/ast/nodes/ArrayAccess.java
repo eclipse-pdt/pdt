@@ -71,25 +71,25 @@ public class ArrayAccess extends Variable {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ArrayAccess");
+		buffer.append(tab).append("<ArrayAccess"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" type='").append(getArrayType(arrayType)).append("'>\n");
+		buffer.append(" type='").append(getArrayType(arrayType)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		getVariableName().toString(buffer, TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("<Index>\n");
+		buffer.append("\n").append(TAB).append(tab).append("<Index>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (index != null) {
 			index.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</Index>\n");
-		buffer.append(tab).append("</ArrayAccess>");
+		buffer.append(TAB).append(tab).append("</Index>\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</ArrayAccess>"); //$NON-NLS-1$
 	}
 
 	public static String getArrayType(int type) {
 		switch (type) {
 			case VARIABLE_ARRAY:
-				return "array";
+				return "array"; //$NON-NLS-1$
 			case VARIABLE_HASHTABLE:
-				return "hashtable";
+				return "hashtable"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}

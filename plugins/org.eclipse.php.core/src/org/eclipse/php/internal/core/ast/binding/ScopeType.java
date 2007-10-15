@@ -21,22 +21,22 @@ public class ScopeType {
 	/**
 	 * Represents a global scope type
 	 */
-	public static final ScopeType GLOBAL_SCOPE = new ScopeType("global");
+	public static final ScopeType GLOBAL_SCOPE = new ScopeType("global"); //$NON-NLS-1$
 
 	/**
 	 * Represents a function scope type
 	 */
-	public static final ScopeType FUNCTION_SCOPE = new ScopeType("function");
+	public static final ScopeType FUNCTION_SCOPE = new ScopeType("function"); //$NON-NLS-1$
 
 	/**
 	 * Represents a class scope type 
 	 */
-	public static final ScopeType CLASS_SCOPE = new ScopeType("class");
+	public static final ScopeType CLASS_SCOPE = new ScopeType("class"); //$NON-NLS-1$
 
 	/**
 	 * Represents a method scope type (class function)
 	 */
-	public static final ScopeType METHOD_SCOPE = new ScopeType("method");
+	public static final ScopeType METHOD_SCOPE = new ScopeType("method"); //$NON-NLS-1$
 
 	private final String toString;
 

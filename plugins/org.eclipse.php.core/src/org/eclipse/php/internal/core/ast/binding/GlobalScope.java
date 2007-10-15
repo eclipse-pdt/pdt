@@ -71,18 +71,18 @@ public class GlobalScope extends ScopeBase {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<Scope");
+		buffer.append(tab).append("<Scope"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">");
+		buffer.append(">"); //$NON-NLS-1$
 
 		super.toString(buffer, tab + TAB);
-		buffer.append("\n");
+		buffer.append("\n"); //$NON-NLS-1$
 
 		final Scope child = getChild();
 		if (child != null) {
 			child.toString(buffer, tab + TAB);
 		}
 
-		buffer.append(tab).append("</Scope>\n");
+		buffer.append(tab).append("</Scope>\n"); //$NON-NLS-1$
 	}
 }

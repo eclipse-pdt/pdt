@@ -71,9 +71,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 */
 	public IntHashtable(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0)
-			throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
+			throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity); //$NON-NLS-1$
 		if (loadFactor <= 0 || Float.isNaN(loadFactor))
-			throw new IllegalArgumentException("Illegal Load: " + loadFactor);
+			throw new IllegalArgumentException("Illegal Load: " + loadFactor); //$NON-NLS-1$
 
 		if (initialCapacity == 0)
 			initialCapacity = 1;
@@ -429,14 +429,14 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		StringBuffer buf = new StringBuffer();
 		Iterator it = entrySet().iterator();
 
-		buf.append("{");
+		buf.append("{"); //$NON-NLS-1$
 		for (int i = 0; i <= max; i++) {
 			Map.Entry e = (Map.Entry) (it.next());
-			buf.append(e.getKey() + "=" + e.getValue());
+			buf.append(e.getKey() + "=" + e.getValue()); //$NON-NLS-1$
 			if (i < max)
-				buf.append(", ");
+				buf.append(", "); //$NON-NLS-1$
 		}
-		buf.append("}");
+		buf.append("}"); //$NON-NLS-1$
 		return buf.toString();
 	}
 
@@ -763,7 +763,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		}
 
 		public String toString() {
-			return key/*.toString()*/+ "=" + value.toString();
+			return key/*.toString()*/+ "=" + value.toString(); //$NON-NLS-1$
 		}
 	}
 
@@ -833,7 +833,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 				//return type == KEYS ? e.key : (type == VALUES ? e.value : e);
 				return type == VALUES ? e.value : e;
 			}
-			throw new NoSuchElementException("Hashtable Enumerator");
+			throw new NoSuchElementException("Hashtable Enumerator"); //$NON-NLS-1$
 		}
 
 		// Iterator methods
@@ -851,7 +851,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			if (!iterator)
 				throw new UnsupportedOperationException();
 			if (lastReturned == null)
-				throw new IllegalStateException("Hashtable Enumerator");
+				throw new IllegalStateException("Hashtable Enumerator"); //$NON-NLS-1$
 			if (modCount != expectedModCount)
 				throw new ConcurrentModificationException();
 
@@ -894,7 +894,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		}
 
 		public Object nextElement() {
-			throw new NoSuchElementException("Hashtable Enumerator");
+			throw new NoSuchElementException("Hashtable Enumerator"); //$NON-NLS-1$
 		}
 	}
 
@@ -911,11 +911,11 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		}
 
 		public Object next() {
-			throw new NoSuchElementException("Hashtable Iterator");
+			throw new NoSuchElementException("Hashtable Iterator"); //$NON-NLS-1$
 		}
 
 		public void remove() {
-			throw new IllegalStateException("Hashtable Iterator");
+			throw new IllegalStateException("Hashtable Iterator"); //$NON-NLS-1$
 		}
 
 	}

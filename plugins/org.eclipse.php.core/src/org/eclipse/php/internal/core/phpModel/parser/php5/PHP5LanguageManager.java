@@ -16,7 +16,7 @@ import org.eclipse.php.internal.core.phpModel.parser.*;
 
 public class PHP5LanguageManager implements PHPLanguageManager {
 
-	private static final String PHP5_FUNCTIONS_PATH = "Resources/phpFunctions5.php";
+	private static final String PHP5_FUNCTIONS_PATH = "Resources/phpFunctions5.php"; //$NON-NLS-1$
 
 	private PHPLanguageModel languageModel;
 

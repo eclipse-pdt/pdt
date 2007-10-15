@@ -40,8 +40,8 @@ public class MarkerContributor {
 	private MarkerContributor() {
 	}
 
-	private static String ID = "org.eclipse.php.core.documentModel.validate.PHPProblemsMarker";
-	private static String PHP_PROBLEM_MARKER_TYPE = PHPCorePlugin.ID + ".phpproblemmarker";
+	private static String ID = "org.eclipse.php.core.documentModel.validate.PHPProblemsMarker"; //$NON-NLS-1$
+	private static String PHP_PROBLEM_MARKER_TYPE = PHPCorePlugin.ID + ".phpproblemmarker"; //$NON-NLS-1$
 
 	private static String[] owners = new String[] { ID };
 
@@ -128,7 +128,7 @@ public class MarkerContributor {
 				String type = markers[i].getType();
 				if (type.equals(IPHPMarker.TASK)) {
 					PHPTask task = (PHPTask) markers[i];
-					String descr = task.getTaskName() + " " + task.getDescription();
+					String descr = task.getTaskName() + " " + task.getDescription(); //$NON-NLS-1$
 					UserData userData = task.getUserData();
 					int prio = getPriority(task.getTaskName(), tags, caseSensitive);
 					try {

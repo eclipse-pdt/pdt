@@ -72,23 +72,23 @@ public class ClassConstantDeclaration extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ClassConstantDeclaration");
+		buffer.append(tab).append("<ClassConstantDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		for (int i = 0; i < variableNames.length; i++) {
-			buffer.append(tab).append(TAB).append("<VariableName>\n");
+			buffer.append(tab).append(TAB).append("<VariableName>\n"); //$NON-NLS-1$
 			variableNames[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
-			buffer.append(tab).append(TAB).append("</VariableName>\n");
-			buffer.append(tab).append(TAB).append("<InitialValue>\n");
+			buffer.append("\n"); //$NON-NLS-1$
+			buffer.append(tab).append(TAB).append("</VariableName>\n"); //$NON-NLS-1$
+			buffer.append(tab).append(TAB).append("<InitialValue>\n"); //$NON-NLS-1$
 			Expression expr = constantValues[i];
 			if (expr != null) {
 				expr.toString(buffer, TAB + TAB + tab);
-				buffer.append("\n");
+				buffer.append("\n"); //$NON-NLS-1$
 			}
-			buffer.append(tab).append(TAB).append("</InitialValue>\n");
+			buffer.append(tab).append(TAB).append("</InitialValue>\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</ClassConstantDeclaration>");
+		buffer.append(tab).append("</ClassConstantDeclaration>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

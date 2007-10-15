@@ -27,9 +27,9 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	 * Adding the support to php comments
 	 */
 	protected StructuredDocumentEvent checkForComments() {
-		StructuredDocumentEvent result = checkForCriticalKey("/*");
+		StructuredDocumentEvent result = checkForCriticalKey("/*"); //$NON-NLS-1$
 		if (result == null) {
-			result = checkForCriticalKey("*/");
+			result = checkForCriticalKey("*/"); //$NON-NLS-1$
 		}
 		return result != null ? result : super.checkForComments();
 	}

@@ -24,7 +24,7 @@ public class reduce_action extends parse_action {
       /* sanity check */
       if (prod == null)
 	throw new internal_error(
-	  "Attempt to create a reduce_action with a null production");
+	  "Attempt to create a reduce_action with a null production"); //$NON-NLS-1$
 
       _reduce_with = prod;
     }
@@ -78,7 +78,7 @@ public class reduce_action extends parse_action {
   /** Convert to string. */
   public String toString() 
     {
-      return "REDUCE(with prod " + reduce_with().index() + ")";
+      return "REDUCE(with prod " + reduce_with().index() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
   /*-----------------------------------------------------------*/

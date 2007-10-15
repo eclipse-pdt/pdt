@@ -17,11 +17,11 @@ package org.eclipse.php.internal.core.ti.types;
  */
 public class SimpleType implements IEvaluatedType {
 
-	public final static SimpleType INTEGER = new SimpleType("integer");
-	public final static SimpleType FLOAT = new SimpleType("float");
-	public final static SimpleType STRING = new SimpleType("string");
-	public final static SimpleType BOOLEAN = new SimpleType("boolean");
-	public final static SimpleType ARRAY = new SimpleType("array");
+	public final static SimpleType INTEGER = new SimpleType("integer"); //$NON-NLS-1$
+	public final static SimpleType FLOAT = new SimpleType("float"); //$NON-NLS-1$
+	public final static SimpleType STRING = new SimpleType("string"); //$NON-NLS-1$
+	public final static SimpleType BOOLEAN = new SimpleType("boolean"); //$NON-NLS-1$
+	public final static SimpleType ARRAY = new SimpleType("array"); //$NON-NLS-1$
 	
 	private String name;
 	

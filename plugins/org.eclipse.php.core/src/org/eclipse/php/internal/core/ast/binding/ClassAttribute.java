@@ -28,7 +28,7 @@ public class ClassAttribute extends Attribute {
 	}
 
 	public String toString() {
-		return AttributeType.CLASS_ATTRIBUTE.toString() + "(" + name + ")";
+		return AttributeType.CLASS_ATTRIBUTE.toString() + "(" + name + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 

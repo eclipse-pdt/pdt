@@ -37,15 +37,15 @@ public class CompositeAttribute extends Attribute {
 	 */
 	public String toString() {
 		StringBuffer buffer = new StringBuffer(getType().toString());
-		buffer.append("(");
+		buffer.append("("); //$NON-NLS-1$
 		for (Iterator iter = attributes.iterator(); iter.hasNext();) {
 			Attribute element = (Attribute) iter.next();
 			buffer.append(element.toString());
 			if (iter.hasNext()) {
-				buffer.append(", ");
+				buffer.append(", "); //$NON-NLS-1$
 			}
 		}
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 		
 		return buffer.toString();
 	}

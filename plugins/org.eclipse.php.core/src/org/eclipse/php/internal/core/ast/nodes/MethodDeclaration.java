@@ -53,12 +53,12 @@ public class MethodDeclaration extends BodyDeclaration {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<MethodDeclaration");
+		buffer.append(tab).append("<MethodDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" modifier='").append(getModifierString()).append("'>\n");
+		buffer.append(" modifier='").append(getModifierString()).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		function.toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append("</MethodDeclaration>");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</MethodDeclaration>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

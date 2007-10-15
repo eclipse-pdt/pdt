@@ -28,6 +28,6 @@ public class UnknownType implements IEvaluatedType {
 	}
 
 	public String toString() {
-		return "Unknown";
+		return "Unknown"; //$NON-NLS-1$
 	}
 }

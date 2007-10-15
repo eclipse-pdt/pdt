@@ -186,7 +186,7 @@ public class PhpFormatter implements IStructuredFormatter {
 			final int formattedTextEnd = formattedLineStart + formattedLineInformation.getLength();
 			final int originalTextEnd = orginalLineStart + originalLineLength;
 			if (formattedTextEnd != originalTextEnd) {
-				document.replace(formattedTextEnd, originalTextEnd - formattedTextEnd, "");
+				document.replace(formattedTextEnd, originalTextEnd - formattedTextEnd, ""); //$NON-NLS-1$
 				// in case there is no text in the line just quit (since the formatted of empty line is empty line)
 				if (formattedLineStart == formattedTextEnd) {
 					return;

@@ -94,8 +94,8 @@ public class parse_action_table {
 	      /* give a warning if they haven't been turned off */
 	      if (!emit.nowarn)
 		{
-		  System.err.println("*** Production \"" + 
-				  prod.to_simple_string() + "\" never reduced");
+		  System.err.println("*** Production \"" +  //$NON-NLS-1$
+				  prod.to_simple_string() + "\" never reduced"); //$NON-NLS-1$
 		  lexer.warning_count++;
 		}
 	    }
@@ -110,31 +110,31 @@ public class parse_action_table {
       String result;
       int cnt;
 
-      result = "-------- ACTION_TABLE --------\n";
+      result = "-------- ACTION_TABLE --------\n"; //$NON-NLS-1$
       for (int row = 0; row < num_states(); row++)
 	{
-	  result += "From state #" + row + "\n";
+	  result += "From state #" + row + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 	  cnt = 0;
 	  for (int col = 0; col < under_state[row].size(); col++)
 	    {
 	      /* if the action is not an error print it */ 
 	      if (under_state[row].under_term[col].kind() != parse_action.ERROR)
 		{
-		  result += " [term " + col + ":" + under_state[row].under_term[col] + "]";
+		  result += " [term " + col + ":" + under_state[row].under_term[col] + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		  /* end the line after the 2nd one */
 		  cnt++;
 		  if (cnt == 2)
 		    {
-		      result += "\n";
+		      result += "\n"; //$NON-NLS-1$
 		      cnt = 0;
 		    }
 		}
 	    }
           /* finish the line if we haven't just done that */
-	  if (cnt != 0) result += "\n";
+	  if (cnt != 0) result += "\n"; //$NON-NLS-1$
 	}
-      result += "------------------------------";
+      result += "------------------------------"; //$NON-NLS-1$
 
       return result;
     }

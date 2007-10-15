@@ -144,7 +144,7 @@ public class PhpElementConciliator {
 		}
 
 		final Identifier identifier = (Identifier) functionInvocation.getFunctionName().getFunctionName();
-		return "define".equalsIgnoreCase(identifier.getName());
+		return "define".equalsIgnoreCase(identifier.getName()); //$NON-NLS-1$
 	}
 
 	/**
@@ -298,7 +298,7 @@ public class PhpElementConciliator {
 				Variable var = (Variable) variableName;
 				if (var.isDollared() && var.getVariableName().getType() == ASTNode.IDENTIFIER) {
 					final Identifier id = (Identifier) var.getVariableName();
-					if (id.getName().equals("GLOBALS")) {
+					if (id.getName().equals("GLOBALS")) { //$NON-NLS-1$
 						return true;
 					}
 				}
@@ -489,7 +489,7 @@ public class PhpElementConciliator {
 
 				final Identifier identifier = (Identifier) functionName;
 				final Expression[] parameters = functionInvocation.getParameters();
-				if (!"define".equalsIgnoreCase(identifier.getName()) || parameters == null || parameters.length == 0) {
+				if (!"define".equalsIgnoreCase(identifier.getName()) || parameters == null || parameters.length == 0) { //$NON-NLS-1$
 					return;
 				}
 

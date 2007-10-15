@@ -62,23 +62,23 @@ public class UnaryOperation extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<UnaryOperation");
+		buffer.append(tab).append("<UnaryOperation"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" operator='").append(getOperator(operator)).append("'>\n");
+		buffer.append(" operator='").append(getOperator(operator)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		expr.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</UnaryOperation>");
+		buffer.append("\n").append(tab).append("</UnaryOperation>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static String getOperator(int operator) {
 		switch (operator) {
 			case OP_PLUS:
-				return "+";
+				return "+"; //$NON-NLS-1$
 			case OP_MINUS:
-				return "-";
+				return "-"; //$NON-NLS-1$
 			case OP_NOT:
-				return "!";
+				return "!"; //$NON-NLS-1$
 			case OP_TILDA:
-				return "~";
+				return "~"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}

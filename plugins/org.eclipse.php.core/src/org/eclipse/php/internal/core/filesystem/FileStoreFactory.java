@@ -17,6 +17,7 @@ import java.io.File;
 
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
+import org.eclipse.php.internal.core.CoreMessages;
 
 /**
  * The FileStoreFactory is a factory for the creation of {@link IFileStore} instances.
@@ -39,7 +40,7 @@ public class FileStoreFactory {
 	 */
 	public static IFileStore createFileStore(File file) throws IllegalArgumentException {
 		if (file == null) {
-			throw new IllegalArgumentException("Could not create a file store.\nThe given file is null.");
+			throw new IllegalArgumentException(CoreMessages.FileStoreFactory_0);
 		}
 		if (file.exists()) {
 			return new LocalFile(file);

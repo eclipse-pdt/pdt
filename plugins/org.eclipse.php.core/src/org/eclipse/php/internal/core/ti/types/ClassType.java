@@ -50,6 +50,6 @@ public class ClassType implements IClassType {
 	}
 
 	public String toString() {
-		return "Class " + typeDecl.getName().getName();
+		return "Class " + typeDecl.getName().getName(); //$NON-NLS-1$
 	}
 }

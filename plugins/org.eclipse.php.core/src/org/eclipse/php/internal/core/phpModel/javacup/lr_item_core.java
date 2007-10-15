@@ -39,13 +39,13 @@ public class lr_item_core {
 
       if (prod == null)
 	throw new internal_error(
-	  "Attempt to create an lr_item_core with a null production");
+	  "Attempt to create an lr_item_core with a null production"); //$NON-NLS-1$
 
       _the_production = prod;
 
       if (pos < 0 || pos > _the_production.rhs_length())
 	throw new internal_error(
-	  "Attempt to create an lr_item_core with a bad dot position");
+	  "Attempt to create an lr_item_core with a bad dot position"); //$NON-NLS-1$
 
       _dot_pos = pos;
 
@@ -151,7 +151,7 @@ public class lr_item_core {
     {
       if (dot_at_end()) 
 	throw new internal_error(
-	  "Attempt to shift past end of an lr_item_core");
+	  "Attempt to shift past end of an lr_item_core"); //$NON-NLS-1$
 
       return new lr_item_core(_the_production, _dot_pos+1);
     }
@@ -225,39 +225,39 @@ public class lr_item_core {
 	  _the_production.lhs().the_symbol().name() != null)
 	result = _the_production.lhs().the_symbol().name();
       else
-	result = "$$NULL$$";
+	result = "$$NULL$$"; //$NON-NLS-1$
 
-      result += " ::= ";
+      result += " ::= "; //$NON-NLS-1$
 
       for (int i = 0; i<_the_production.rhs_length(); i++)
 	{
 	  /* do we need the dot before this one? */
 	  if (i == _dot_pos)
-	    result += "(*) ";
+	    result += "(*) "; //$NON-NLS-1$
 	  
 	  /* print the name of the part */
 	  if (_the_production.rhs(i) == null)
 	    {
-	      result += "$$NULL$$ ";
+	      result += "$$NULL$$ "; //$NON-NLS-1$
 	    }
 	  else
 	    {
 	      part = _the_production.rhs(i);
 	      if (part == null)
-		result += "$$NULL$$ ";
+		result += "$$NULL$$ "; //$NON-NLS-1$
 	      else if (part.is_action())
-		result += "{ACTION} ";
+		result += "{ACTION} "; //$NON-NLS-1$
 	      else if (((symbol_part)part).the_symbol() != null &&
                        ((symbol_part)part).the_symbol().name() != null)
-		result += ((symbol_part)part).the_symbol().name() + " ";
+		result += ((symbol_part)part).the_symbol().name() + " "; //$NON-NLS-1$
 	      else
-		result += "$$NULL$$ ";
+		result += "$$NULL$$ "; //$NON-NLS-1$
 	    }
 	}
 
       /* put the dot after if needed */
       if (_dot_pos == _the_production.rhs_length())
-	result += "(*) ";
+	result += "(*) "; //$NON-NLS-1$
 
       return result;
     }

@@ -331,7 +331,7 @@ public class PhpTokenContainer {
 		}
 
 		public final String toString() {
-			return "[" + getOffset() + "] - " + this.state.getTopState();
+			return "[" + getOffset() + "] - " + this.state.getTopState(); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -343,7 +343,7 @@ public class PhpTokenContainer {
 	protected final void checkBadLocation(int offset) throws BadLocationException {
 		ITextRegion lastRegion = getLastToken();
 		if (offset < 0 || lastRegion.getEnd() < offset) {
-			throw new BadLocationException("offset " + offset + " is out of [0, " + lastRegion.getEnd() + "]");
+			throw new BadLocationException("offset " + offset + " is out of [0, " + lastRegion.getEnd() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 

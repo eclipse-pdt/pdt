@@ -18,57 +18,57 @@ public class AttributeType {
 	/**
 	 * Represents a zval container 
 	 */
-	public static final AttributeType VARIABLE_ATTRIBUTE = new AttributeType("variable");
+	public static final AttributeType VARIABLE_ATTRIBUTE = new AttributeType("variable"); //$NON-NLS-1$
 
 	/**
 	 * Represents a constant 
 	 */
-	public static final AttributeType CONSTANT_ATTRIBUTE = new AttributeType("constant");
+	public static final AttributeType CONSTANT_ATTRIBUTE = new AttributeType("constant"); //$NON-NLS-1$
 
 	/**
 	 * Represents a function 
 	 */
-	public static final AttributeType FUNCTION_ATTRIBUTE = new AttributeType("function");
+	public static final AttributeType FUNCTION_ATTRIBUTE = new AttributeType("function"); //$NON-NLS-1$
 
 	/**
 	 * Represents a function 
 	 */
-	public static final AttributeType CLASS_ATTRIBUTE = new AttributeType("class");
+	public static final AttributeType CLASS_ATTRIBUTE = new AttributeType("class"); //$NON-NLS-1$
 
 	/**
 	 * Represents multiple attributes
 	 */
-	public static final AttributeType COMPOSITE_ATTRIBUTE = new AttributeType("multiple");
+	public static final AttributeType COMPOSITE_ATTRIBUTE = new AttributeType("multiple"); //$NON-NLS-1$
 
 	/**
 	 * Represents array attributes
 	 */
-	public static final AttributeType ARRAY_ATTRIBUTE = new AttributeType("array");
+	public static final AttributeType ARRAY_ATTRIBUTE = new AttributeType("array"); //$NON-NLS-1$
 
 	/**
 	 * Represents null attribute
 	 */
-	public static final AttributeType NULL_ATTRIBUTE = new AttributeType("null");
+	public static final AttributeType NULL_ATTRIBUTE = new AttributeType("null"); //$NON-NLS-1$
 
 	/**
 	 * Represents int attribute
 	 */
-	public static final AttributeType INT_ATTRIBUTE = new AttributeType("int");
+	public static final AttributeType INT_ATTRIBUTE = new AttributeType("int"); //$NON-NLS-1$
 
 	/**
 	 * Represents string attribute
 	 */
-	public static final AttributeType STRING_ATTRIBUTE = new AttributeType("string");
+	public static final AttributeType STRING_ATTRIBUTE = new AttributeType("string"); //$NON-NLS-1$
 
 	/**
 	 * Represents bool attribute
 	 */
-	public static final AttributeType BOOL_ATTRIBUTE = new AttributeType("bool");
+	public static final AttributeType BOOL_ATTRIBUTE = new AttributeType("bool"); //$NON-NLS-1$
 
 	/**
 	 * Represents real attribute
 	 */
-	public static final AttributeType REAL_ATTRIBUTE = new AttributeType("real");
+	public static final AttributeType REAL_ATTRIBUTE = new AttributeType("real"); //$NON-NLS-1$
 
 	private final String toString;
 

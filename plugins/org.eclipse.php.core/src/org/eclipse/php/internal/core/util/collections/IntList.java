@@ -76,7 +76,7 @@ public class IntList implements Cloneable {
 	 */
 	public int remove(int index) {
 		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException("index must be at range 0.." + size + ". got index " + index);
+			throw new IndexOutOfBoundsException("index must be at range 0.." + size + ". got index " + index); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		int result = data[index];
 		for (int i = index; i < size; i++) {
@@ -101,7 +101,7 @@ public class IntList implements Cloneable {
 	 */
 	public void add(int index, int val) {
 		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException("index must be at range 0.." + size + ". got index " + index);
+			throw new IndexOutOfBoundsException("index must be at range 0.." + size + ". got index " + index); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		size++;
 		verifySizeBeforeAdding();
@@ -124,7 +124,7 @@ public class IntList implements Cloneable {
 	 */
 	public int get(int index) {
 		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException("index must be at range 0.." + size + ". got index " + index);
+			throw new IndexOutOfBoundsException("index must be at range 0.." + size + ". got index " + index); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return this.data[index];
 	}
@@ -213,7 +213,7 @@ public class IntList implements Cloneable {
 	public String toString() {
 		StringBuffer sb = new StringBuffer(50);
 		for (int i = 0; i <= size; i++) {
-			sb.append(" stack[" + i + "]= " + data[i]);
+			sb.append(" stack[" + i + "]= " + data[i]); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return sb.toString();
 	}

@@ -30,7 +30,7 @@ import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
 
 public class PHPNature implements IProjectNature {
-	public static final String ID = PHPCorePlugin.ID + ".PHPNature";
+	public static final String ID = PHPCorePlugin.ID + ".PHPNature"; //$NON-NLS-1$
 
 	public static final String PROJECTTYPE_VALUE = "PHP"; //$NON-NLS-1$
 	public static final String VALIDATION_BUILDER_ID = ValidationPlugin.VALIDATION_BUILDER_ID;

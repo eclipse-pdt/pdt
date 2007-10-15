@@ -16,7 +16,7 @@ public class internal_error extends Exception
 	for cases when we can't actually throw the exception.  */
     public void crash()
       {
-	System.err.println("JavaCUP Fatal Internal Error Detected");
+	System.err.println("JavaCUP Fatal Internal Error Detected"); //$NON-NLS-1$
 	System.err.println(getMessage());
 	printStackTrace();
 	System.exit(-1);

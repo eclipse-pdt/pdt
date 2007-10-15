@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
@@ -75,9 +76,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	private void initGlobalModelListeners() {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.workspaceModelListener");
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.workspaceModelListener"); //$NON-NLS-1$
 		for (IConfigurationElement element : elements) {
-			if (element.getName().equals("workspaceModelListener")) {
+			if (element.getName().equals("workspaceModelListener")) { //$NON-NLS-1$
 				WorkspaceModelListenerProxy modelListenerProxy = new WorkspaceModelListenerProxy(element);
 				IWorkspaceModelListener listener = modelListenerProxy.getListener();
 				addWorkspaceModelListener(listener);
@@ -95,9 +96,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 		public IWorkspaceModelListener getListener() {
 			if (listener == null) {
-				SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.internal.core.workspaceModelListener") {
+				SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.internal.core.workspaceModelListener") { //$NON-NLS-1$
 					public void run() throws Exception {
-						listener = (IWorkspaceModelListener) element.createExecutableExtension("class");
+						listener = (IWorkspaceModelListener) element.createExecutableExtension("class"); //$NON-NLS-1$
 					}
 				});
 			}
@@ -135,7 +136,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public void runBuild(final IProject project) {
-		WorkspaceJob cleanJob = new WorkspaceJob(NLS.bind("Building PHP project: {0} ...", project.getName())) {
+		WorkspaceJob cleanJob = new WorkspaceJob(NLS.bind(CoreMessages.PHPWorkspaceModelManager_4, project.getName())) {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
@@ -153,12 +154,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	private void runBuild() {
-		WorkspaceJob cleanJob = new WorkspaceJob("Building PHP projects ...") {
+		WorkspaceJob cleanJob = new WorkspaceJob(CoreMessages.PHPWorkspaceModelManager_5) {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-					monitor.beginTask("Building PHP projects ...", projects.length);
+					monitor.beginTask(CoreMessages.PHPWorkspaceModelManager_5, projects.length);
 
 					for (IProject project : projects) {
 						if (!project.isOpen()) {
@@ -276,7 +277,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					String projectPath = projects[i].getLocation().toOSString();
 					String modelFilename;
 					if (filenameOS.startsWith(projectPath)) {
-						modelFilename = new Path(StringUtils.replace(filenameOS, projectPath, "")).toPortableString();
+						modelFilename = new Path(StringUtils.replace(filenameOS, projectPath, "")).toPortableString(); //$NON-NLS-1$
 					} else {
 						modelFilename = filenameOS;
 					}
@@ -565,7 +566,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	 */
 	public synchronized void addWorkspaceModelListener(IWorkspaceModelListener listener) {
 		if (listener == null) {
-			throw new IllegalArgumentException("Error registering IWorkspaceModelListener");
+			throw new IllegalArgumentException("Error registering IWorkspaceModelListener"); //$NON-NLS-1$
 		}
 		globalWorkspaceModelListeners.add(listener);
 	}
@@ -576,7 +577,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	 */
 	public synchronized void removeWorkspaceModelListener(IWorkspaceModelListener listener) {
 		if (listener == null) {
-			throw new IllegalArgumentException("Error registering IWorkspaceModelListener");
+			throw new IllegalArgumentException("Error registering IWorkspaceModelListener"); //$NON-NLS-1$
 		}
 		globalWorkspaceModelListeners.remove(listener);
 	}

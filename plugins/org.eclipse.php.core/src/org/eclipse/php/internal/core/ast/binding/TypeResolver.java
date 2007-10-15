@@ -60,7 +60,7 @@ public class TypeResolver extends AbstractVisitor {
 	}
 
 	private void throwException(ASTNode node) {
-		throw new UnsupportedOperationException("cannot resolve: " + node.getStart() + ", type: " + node.getType());
+		throw new UnsupportedOperationException("cannot resolve: " + node.getStart() + ", type: " + node.getType()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void visit(ArrayAccess indexedVariable) {
@@ -388,14 +388,14 @@ public class TypeResolver extends AbstractVisitor {
 				this.evaluatedAttribute = Attribute.REAL_ATTRIBUTE;
 				break;
 			case Scalar.TYPE_STRING:
-				if ("true".equals(scalar.getStringValue()) || "false".equals(scalar.getStringValue())) {
+				if ("true".equals(scalar.getStringValue()) || "false".equals(scalar.getStringValue())) { //$NON-NLS-1$ //$NON-NLS-2$
 					this.evaluatedAttribute = Attribute.BOOL_ATTRIBUTE;
 				} else {
 					this.evaluatedAttribute = Attribute.STRING_ATTRIBUTE;
 				}
 				break;
 			case Scalar.TYPE_SYSTEM:
-				if ("__LINE__".endsWith(scalar.getStringValue())) {
+				if ("__LINE__".endsWith(scalar.getStringValue())) { //$NON-NLS-1$
 					this.evaluatedAttribute = Attribute.INT_ATTRIBUTE;
 				} else {
 					this.evaluatedAttribute = Attribute.STRING_ATTRIBUTE;

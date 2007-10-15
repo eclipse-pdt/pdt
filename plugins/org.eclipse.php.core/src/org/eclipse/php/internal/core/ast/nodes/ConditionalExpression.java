@@ -63,19 +63,19 @@ public class ConditionalExpression extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ConditionalExpression");
+		buffer.append(tab).append("<ConditionalExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(TAB).append(tab).append("<Condition>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Condition>\n"); //$NON-NLS-1$
 		condition.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</Condition>\n");
-		buffer.append(TAB).append(tab).append("<IfTrue>\n");
+		buffer.append("\n").append(TAB).append(tab).append("</Condition>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(TAB).append(tab).append("<IfTrue>\n"); //$NON-NLS-1$
 		ifTrue.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</IfTrue>\n");
-		buffer.append(TAB).append(tab).append("<IfFalse>\n");
+		buffer.append("\n").append(TAB).append(tab).append("</IfTrue>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(TAB).append(tab).append("<IfFalse>\n"); //$NON-NLS-1$
 		ifFalse.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</IfFalse>\n");
-		buffer.append(tab).append("</ConditionalExpression>");
+		buffer.append("\n").append(TAB).append(tab).append("</IfFalse>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(tab).append("</ConditionalExpression>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

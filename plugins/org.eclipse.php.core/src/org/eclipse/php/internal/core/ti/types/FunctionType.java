@@ -29,6 +29,6 @@ public class FunctionType implements IFunctionType {
 	}
 
 	public String toString() {
-		return "Function " + functionDecl.getFunctionName().getName();
+		return "Function " + functionDecl.getFunctionName().getName(); //$NON-NLS-1$
 	}
 }

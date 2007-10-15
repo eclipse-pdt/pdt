@@ -91,27 +91,27 @@ public class FunctionDeclaration extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<FunctionDeclaration");
+		buffer.append(tab).append("<FunctionDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isReference='").append(isReference).append("'>\n");
-		buffer.append(TAB).append(tab).append("<FunctionName>\n");
+		buffer.append(" isReference='").append(isReference).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(TAB).append(tab).append("<FunctionName>\n"); //$NON-NLS-1$
 		functionName.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n");
-		buffer.append(TAB).append(tab).append("</FunctionName>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("</FunctionName>\n"); //$NON-NLS-1$
 
-		buffer.append(TAB).append(tab).append("<FormalParameters>\n");
+		buffer.append(TAB).append(tab).append("<FormalParameters>\n"); //$NON-NLS-1$
 		for (int i = 0; i < formalParameters.length; i++) {
 			formalParameters[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</FormalParameters>\n");
-		buffer.append(TAB).append(tab).append("<FunctionBody>\n");
+		buffer.append(TAB).append(tab).append("</FormalParameters>\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<FunctionBody>\n"); //$NON-NLS-1$
 		if (body != null) {
 			body.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</FunctionBody>\n");
-		buffer.append(tab).append("</FunctionDeclaration>");
+		buffer.append(TAB).append(tab).append("</FunctionBody>\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</FunctionDeclaration>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

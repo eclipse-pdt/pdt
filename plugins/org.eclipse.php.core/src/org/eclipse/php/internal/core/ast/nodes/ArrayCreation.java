@@ -65,14 +65,14 @@ public class ArrayCreation extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ArrayCreation");
+		buffer.append(tab).append("<ArrayCreation"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		for (int i = 0; i < elements.length; i++) {
 			elements[i].toString(buffer, TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</ArrayCreation>");
+		buffer.append(tab).append("</ArrayCreation>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

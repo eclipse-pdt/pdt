@@ -8,10 +8,10 @@ import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
 public class IncludePathEntryDescriptor implements IXMLPreferencesStorable {
 	
-	private String entryKind = "";
-	private String contentKind = "";
-	private String path = "";
-	private String resourceName = "";
+	private String entryKind = ""; //$NON-NLS-1$
+	private String contentKind = ""; //$NON-NLS-1$
+	private String path = ""; //$NON-NLS-1$
+	private String resourceName = ""; //$NON-NLS-1$
 	private boolean isExported = false;
 	private boolean createdReference = false;
 	
@@ -95,23 +95,23 @@ public class IncludePathEntryDescriptor implements IXMLPreferencesStorable {
 	public void restoreFromMap(HashMap map) {
 		HashMap entry = (HashMap) map.get("javabridge_entry"); //$NON-NLS-1$
 		if (entry != null) {		
-			entryKind = (String) entry.get("entryKind");
-			contentKind = (String) entry.get("contentKind");
-			path = (String) entry.get("path");
-			resourceName = (String) entry.get("resourceName");
-			isExported = (Boolean.valueOf( (String) entry.get("isExported")) ).booleanValue();
-			createdReference = (Boolean.valueOf( (String) entry.get("referenceWasCreated")) ).booleanValue();
+			entryKind = (String) entry.get("entryKind"); //$NON-NLS-1$
+			contentKind = (String) entry.get("contentKind"); //$NON-NLS-1$
+			path = (String) entry.get("path"); //$NON-NLS-1$
+			resourceName = (String) entry.get("resourceName"); //$NON-NLS-1$
+			isExported = (Boolean.valueOf( (String) entry.get("isExported")) ).booleanValue(); //$NON-NLS-1$
+			createdReference = (Boolean.valueOf( (String) entry.get("referenceWasCreated")) ).booleanValue(); //$NON-NLS-1$
 		}
 	}
 
 	public HashMap storeToMap() {
 		HashMap map = new HashMap(6);
-		map.put("entryKind", entryKind);
-		map.put("contentKind", contentKind);
-		map.put("path", path);
-		map.put("resourceName", resourceName);
-		map.put("isExported", new Boolean(isExported));
-		map.put("referenceWasCreated", new Boolean(createdReference));
+		map.put("entryKind", entryKind); //$NON-NLS-1$
+		map.put("contentKind", contentKind); //$NON-NLS-1$
+		map.put("path", path); //$NON-NLS-1$
+		map.put("resourceName", resourceName); //$NON-NLS-1$
+		map.put("isExported", new Boolean(isExported)); //$NON-NLS-1$
+		map.put("referenceWasCreated", new Boolean(createdReference)); //$NON-NLS-1$
 		
 		HashMap entry = new HashMap(1);
 		entry.put("javabridge_entry", map); //$NON-NLS-1$

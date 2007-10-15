@@ -67,8 +67,8 @@ public class IncludePathVariableManager {
 			if (paths[i] != null) {
 				variables.put(names[i], paths[i]);
 				if (i > 0) {
-					namesString.append(",");
-					pathsString.append(",");
+					namesString.append(","); //$NON-NLS-1$
+					pathsString.append(","); //$NON-NLS-1$
 				}
 				namesString.append(names[i]);
 				pathsString.append(paths[i].toOSString());
@@ -117,10 +117,10 @@ public class IncludePathVariableManager {
 		String pathsString = preferenceStore.getString(PHPCoreConstants.INCLUDE_PATH_VARIABLE_PATHS);
 		String[] names = {};
 		if (namesString.length() > 0)
-			names = namesString.split(",");
+			names = namesString.split(","); //$NON-NLS-1$
 		String[] paths = {};
 		if (pathsString.length() > 0)
-			paths = pathsString.split(",");
+			paths = pathsString.split(","); //$NON-NLS-1$
 		// Not good since empty paths are allowed!!!
 		// assert (names.length == paths.length); 
 		for (int i = 0; i < names.length; i++) {
@@ -128,7 +128,7 @@ public class IncludePathVariableManager {
 			if (i < paths.length) {
 				path = paths[i];
 			} else {
-				path = "";
+				path = ""; //$NON-NLS-1$
 			}
 			variables.put(names[i], new Path(path));
 		}

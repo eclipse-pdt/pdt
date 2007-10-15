@@ -12,8 +12,8 @@ package org.eclipse.php.internal.core.phpModel.parser;
 
 public interface PHPVersion {
 
-	public String PHP4 = "php4";
+	public String PHP4 = "php4"; //$NON-NLS-1$
 
-	public String PHP5 = "php5";
+	public String PHP5 = "php5"; //$NON-NLS-1$
 
 }

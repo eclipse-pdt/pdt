@@ -17,8 +17,8 @@ package org.eclipse.php.internal.core.phpModel.parser;
  */
 public abstract class IncludingType {
 
-	public static final String REQUIRE = "require";
-	public static final String REQUIRE_ONCE = "require_once";
-	public static final String INCLUDE = "include";
-	public static final String INCLUDE_ONCE = "include_once";
+	public static final String REQUIRE = "require"; //$NON-NLS-1$
+	public static final String REQUIRE_ONCE = "require_once"; //$NON-NLS-1$
+	public static final String INCLUDE = "include"; //$NON-NLS-1$
+	public static final String INCLUDE_ONCE = "include_once"; //$NON-NLS-1$
 }

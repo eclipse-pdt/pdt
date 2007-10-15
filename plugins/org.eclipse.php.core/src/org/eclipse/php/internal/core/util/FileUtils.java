@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.php.internal.core.CoreMessages;
 
 /**
  * File Utilities class.
@@ -30,7 +31,7 @@ public class FileUtils {
 	 * @return True, if the file exists; False, otherwise.
 	 */
 	public static boolean fileExists(String filePath) {
-		if (filePath == null || "".equals(filePath)) {
+		if (filePath == null || "".equals(filePath)) { //$NON-NLS-1$
 			return false;
 		}
 		boolean fileExists = false;
@@ -61,7 +62,7 @@ public class FileUtils {
 
 	      while (( line = input.readLine()) != null){
 	        contents.append(line);
-	        contents.append(System.getProperty("line.separator"));
+	        contents.append(System.getProperty("line.separator")); //$NON-NLS-1$
 	      }
 	    }
 	    catch (FileNotFoundException ex) {
@@ -97,16 +98,16 @@ public class FileUtils {
 	  static public void setContents(File file, String contents)
 	                                 throws FileNotFoundException, IOException {
 	    if (file == null) {
-	      throw new IllegalArgumentException("File should not be null.");
+	      throw new IllegalArgumentException(CoreMessages.FileUtils_2);
 	    }
 	    if (!file.exists()) {
-	      throw new FileNotFoundException ("File does not exist: " + file);
+	      throw new FileNotFoundException (CoreMessages.FileUtils_3 + file);
 	    }
 	    if (!file.isFile()) {
-	      throw new IllegalArgumentException("Should not be a directory: " + file);
+	      throw new IllegalArgumentException(CoreMessages.FileUtils_4 + file);
 	    }
 	    if (!file.canWrite()) {
-	      throw new IllegalArgumentException("File cannot be written: " + file);
+	      throw new IllegalArgumentException(CoreMessages.FileUtils_5 + file);
 	    }
 
 	    Writer output = null;

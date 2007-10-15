@@ -149,12 +149,12 @@ public final class PHPFileDataUtilities {
 
 	public static String getVariableType(PHPFileData fileData, String variableName, int position, int line, IPhpModel model, boolean showObjectsFromOtherFiles) {
 		String className;
-		if ("$this".equals(variableName)) {
+		if ("$this".equals(variableName)) { //$NON-NLS-1$
 			PHPClassData classData = getContainerClassDada(fileData, position);
 			if (classData != null) {
 				className = classData.getName();
 			} else {
-				className = ""; // we are not inside a class.
+				className = ""; // we are not inside a class. //$NON-NLS-1$
 			}
 		} else {
 			int currentLine = line + 1;
@@ -176,7 +176,7 @@ public final class PHPFileDataUtilities {
 		boolean useAspTags = UseAspTagsHandler.useAspTagsAsPhp(project);
 		String phpVersion = preferencesSupport.getPreferencesValue(Keys.PHP_VERSION, PHPVersion.PHP5, project);
 
-		return getFileData(reader, "tmp", 0, phpVersion, tasksPatterns, useAspTags);
+		return getFileData(reader, "tmp", 0, phpVersion, tasksPatterns, useAspTags); //$NON-NLS-1$
 	}
 
 	public static PHPFileData getFileData(Reader reader, String fileName, long lastModified, String phpVersion, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) {

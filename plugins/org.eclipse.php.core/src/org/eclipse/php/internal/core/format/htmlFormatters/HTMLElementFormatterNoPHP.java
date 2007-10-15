@@ -179,7 +179,7 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 		if (node instanceof Element) {
 			attr = ((Element)node).getAttributeNode("style");//$NON-NLS-1$
 		}
-		if (attr == null || attr.getValue().indexOf("<?") == -1) {
+		if (attr == null || attr.getValue().indexOf("<?") == -1) { //$NON-NLS-1$
 			super.formatNode(node, contraints);	 
 		} else {
 			formatChildNodes(node, contraints);

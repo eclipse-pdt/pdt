@@ -65,14 +65,14 @@ public class GlobalStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<GlobalStatement");
+		buffer.append(tab).append("<GlobalStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		for (int i = 0; i < variables.length; i++) {
 			variables[i].toString(buffer, TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</GlobalStatement>");
+		buffer.append(tab).append("</GlobalStatement>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

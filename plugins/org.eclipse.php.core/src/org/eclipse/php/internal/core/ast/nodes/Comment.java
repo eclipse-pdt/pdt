@@ -48,20 +48,20 @@ public class Comment extends ASTNode {
 	public static String getCommentType(int type) {
 		switch (type) {
 			case TYPE_SINGLE_LINE:
-				return "singleLine";
+				return "singleLine"; //$NON-NLS-1$
 			case TYPE_MULTILINE:
-				return "multiLine";
+				return "multiLine"; //$NON-NLS-1$
 			case TYPE_PHPDOC:
-				return "phpDoc";
+				return "phpDoc"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<Comment");
+		buffer.append(tab).append("<Comment"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" commentType='").append(getCommentType(commentType)).append("'/>");
+		buffer.append(" commentType='").append(getCommentType(commentType)).append("'/>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {

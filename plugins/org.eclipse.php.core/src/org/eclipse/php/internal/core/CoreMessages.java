@@ -8,18 +8,18 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.util;
+package org.eclipse.php.internal.core;
 
 
 import java.text.MessageFormat;
 
 import org.eclipse.osgi.util.NLS;
 
-public final class Messages extends NLS {
+public final class CoreMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.php.internal.core.util.messages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.core.CoreMessages";//$NON-NLS-1$
 
-	private Messages() {
+	private CoreMessages() {
 		// Do not instantiate
 	}
 
@@ -77,9 +77,29 @@ public final class Messages extends NLS {
 	public static String restrictedAccess_project;
 	public static String restrictedAccess_library;
     public static String zipEntryStorage_error;
+    public static String ASTParser_1;
+	public static String ExternalFileStore_0;
+	public static String FileStoreFactory_0;
+	public static String FileUtils_2;
+	public static String FileUtils_3;
+	public static String FileUtils_4;
+	public static String FileUtils_5;
+	public static String FullPhpProjectBuildVisitor_0;
+	public static String IncludePathEntry_2;
+	public static String IncludePathEntry_4;
+	public static String IncludePathEntry_5;
+	public static String IncludePathEntry_6;
+	public static String PHPIncrementalProjectBuilder_0;
+	public static String PHPProjectBuildJobWrapper_0;
+	public static String PHPProjectOptions_1;
+	public static String PHPWorkspaceModelManager_4;
+	public static String PHPWorkspaceModelManager_5;
+	public static String PHPWorkspaceModelManager_7;
+	public static String PHPWorkspaceModelManager_8;
+	public static String PHPWorkspaceModelManager_9;
 
 	static {
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+		NLS.initializeMessages(BUNDLE_NAME, CoreMessages.class);
 	}
 	
 	/**

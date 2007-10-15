@@ -50,19 +50,19 @@ public class CastExpression extends Expression {
 	public static String getCastType(int type) {
 		switch (type) {
 			case TYPE_INT:
-				return "int";
+				return "int"; //$NON-NLS-1$
 			case TYPE_REAL:
-				return "real";
+				return "real"; //$NON-NLS-1$
 			case TYPE_STRING:
-				return "string";
+				return "string"; //$NON-NLS-1$
 			case TYPE_ARRAY:
-				return "array";
+				return "array"; //$NON-NLS-1$
 			case TYPE_OBJECT:
-				return "object";
+				return "object"; //$NON-NLS-1$
 			case TYPE_BOOL:
-				return "bool";
+				return "bool"; //$NON-NLS-1$
 			case TYPE_UNSET:
-				return "unset";
+				return "unset"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -87,11 +87,11 @@ public class CastExpression extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<CastExpression");
+		buffer.append(tab).append("<CastExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" castType='").append(getCastType(castType)).append("'>\n");
+		buffer.append(" castType='").append(getCastType(castType)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		expr.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</CastExpression>");
+		buffer.append("\n").append(tab).append("</CastExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {

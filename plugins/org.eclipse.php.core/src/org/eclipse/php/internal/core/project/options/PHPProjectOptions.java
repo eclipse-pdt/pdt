@@ -23,10 +23,7 @@ import org.eclipse.core.internal.resources.XMLWriter;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.php.internal.core.IncludePathContainerInitializer;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.*;
 import org.eclipse.php.internal.core.project.IIncludePathContainer;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -40,9 +37,9 @@ import org.xml.sax.InputSource;
 
 public class PHPProjectOptions {
 
-	private static final String LOCATION_INCLUDE_PATH = "Include Path";
-	private static final String OWNER_PHP_INCLUDE_PATH = "phpIncludePath";
-	private static final String OWNER_ATTRIBUTE = "Owner";
+	private static final String LOCATION_INCLUDE_PATH = "Include Path"; //$NON-NLS-1$
+	private static final String OWNER_PHP_INCLUDE_PATH = "phpIncludePath"; //$NON-NLS-1$
+	private static final String OWNER_ATTRIBUTE = "Owner"; //$NON-NLS-1$
 
 	public static final String BUILDER_ID = PHPCorePlugin.ID + ".PhpIncrementalProjectBuilder"; //$NON-NLS-1$
 	static final IIncludePathEntry[] EMPTY_INCLUDEPATH = {};
@@ -278,7 +275,7 @@ public class PHPProjectOptions {
 				final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
 			} catch (final Exception e) {
-				throw new IOException("Bad project options file format");
+				throw new IOException(CoreMessages.PHPProjectOptions_1);
 			} finally {
 				reader.close();
 			}
@@ -318,13 +315,13 @@ public class PHPProjectOptions {
 				final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
 			} catch (final Exception e) {
-				throw new IOException("Bad project options file format");
+				throw new IOException(CoreMessages.PHPProjectOptions_1);
 			} finally {
 				reader.close();
 			}
 
 			if (!cpElement.getNodeName().equalsIgnoreCase(TAG_OPTIONS))
-				throw new IOException("Bad project options file format");
+				throw new IOException(CoreMessages.PHPProjectOptions_1);
 			NodeList list = cpElement.getElementsByTagName(TAG_OPTION);
 			int length = list.getLength();
 			for (int i = 0; i < length; ++i) {

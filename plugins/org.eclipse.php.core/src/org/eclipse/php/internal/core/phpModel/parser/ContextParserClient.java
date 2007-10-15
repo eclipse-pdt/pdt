@@ -16,7 +16,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
 
 public class ContextParserClient implements ParserClient {
 
-	private static final String EMPTY_STRING = "";
+	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	private String className;
 	private String functionName;
 	private PHPCodeContext context;

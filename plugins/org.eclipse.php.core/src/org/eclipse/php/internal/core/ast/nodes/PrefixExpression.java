@@ -56,19 +56,19 @@ public class PrefixExpression extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<PrefixExpression");
+		buffer.append(tab).append("<PrefixExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" operator='").append(getOperator(operator)).append("'>\n");
+		buffer.append(" operator='").append(getOperator(operator)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		variable.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</PrefixExpression>");
+		buffer.append("\n").append(tab).append("</PrefixExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static String getOperator(int operator) {
 		switch (operator) {
 			case OP_DEC:
-				return "--";
+				return "--"; //$NON-NLS-1$
 			case OP_INC:
-				return "++";
+				return "++"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}

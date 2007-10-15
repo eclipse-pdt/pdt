@@ -112,7 +112,7 @@ public abstract class AbstractCodeData implements CodeData {
 		if (getUserData() == null) {
 			return name;
 		}
-		return name + " (in " + getUserData().getFileName() + ")";
+		return name + " (in " + getUserData().getFileName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

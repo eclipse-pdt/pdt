@@ -81,12 +81,12 @@ public class Variable extends VariableBase {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<Variable");
+		buffer.append(tab).append("<Variable"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isDollared='").append(isDollared).append("'>\n");
+		buffer.append(" isDollared='").append(isDollared).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		variableName.toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append("</Variable>");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</Variable>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

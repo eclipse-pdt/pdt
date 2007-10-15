@@ -61,18 +61,18 @@ public class CatchClause extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<CatchClause");
+		buffer.append(tab).append("<CatchClause"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(TAB).append(tab).append("<ClassName>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<ClassName>\n"); //$NON-NLS-1$
 		className.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n");
-		buffer.append(TAB).append(tab).append("</ClassName>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("</ClassName>\n"); //$NON-NLS-1$
 		variable.toString(buffer, TAB + tab);
-		buffer.append("\n");
+		buffer.append("\n"); //$NON-NLS-1$
 		statement.toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append("</CatchClause>");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</CatchClause>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

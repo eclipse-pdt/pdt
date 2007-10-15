@@ -18,7 +18,7 @@ import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 
 public class PHPDOMModelParser extends XMLModelParser {
 
-	public static final String PHP_TAG_NAME = "PHP";
+	public static final String PHP_TAG_NAME = "PHP"; //$NON-NLS-1$
 
 	public PHPDOMModelParser(DOMModelImpl model) {
 		super(model);

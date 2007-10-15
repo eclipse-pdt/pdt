@@ -88,7 +88,7 @@ public abstract class ScopeBase implements Scope {
 
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer();
-		toString(buffer, "");
+		toString(buffer, ""); //$NON-NLS-1$
 		return buffer.toString();
 	}
 
@@ -96,7 +96,7 @@ public abstract class ScopeBase implements Scope {
 	 * Appends the start, length parameters to the buffer
 	 */
 	protected void appendInterval(StringBuffer buffer) {
-		buffer.append(" start='").append(start).append("' length='").append(length).append("'");
+		buffer.append(" start='").append(start).append("' length='").append(length).append("'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
@@ -104,12 +104,12 @@ public abstract class ScopeBase implements Scope {
 	 */
 	public void toString(StringBuffer buffer, String tab) {
 		for (Iterator iter = entryMap.entrySet().iterator(); iter.hasNext();) {
-			buffer.append("\n").append(TAB).append(tab).append("<Entry");
+			buffer.append("\n").append(TAB).append(tab).append("<Entry"); //$NON-NLS-1$ //$NON-NLS-2$
 			Map.Entry entry = (Map.Entry) iter.next();
 			final String name = (String) entry.getKey();
 			final Attribute attribute = (Attribute) entry.getValue();
-			buffer.append(" key='").append(name).append("' value='").append(attribute.toString()).append("'");
-			buffer.append("/>");
+			buffer.append(" key='").append(name).append("' value='").append(attribute.toString()).append("'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			buffer.append("/>"); //$NON-NLS-1$
 		}
 	}
 }

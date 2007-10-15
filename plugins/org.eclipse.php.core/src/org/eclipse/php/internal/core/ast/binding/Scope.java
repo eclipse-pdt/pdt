@@ -17,7 +17,7 @@ import org.eclipse.php.internal.core.ast.nodes.VariableBase;
  */
 public interface Scope {
 
-	public static final String TAB = "\t";
+	public static final String TAB = "\t"; //$NON-NLS-1$
 
 	/**
 	 * @return the parent Scope, null for the enclosing global scope 

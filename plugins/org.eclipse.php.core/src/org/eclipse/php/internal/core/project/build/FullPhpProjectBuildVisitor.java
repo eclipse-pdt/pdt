@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.documentModel.markers.MarkerContributor;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -65,7 +66,7 @@ public class FullPhpProjectBuildVisitor implements IResourceVisitor {
 		if (!PHPModelUtil.isPhpFile(file)) {
 			return;
 		}
-		monitor.subTask(NLS.bind("Parsing: {0} ...", file.getFullPath().toPortableString()));
+		monitor.subTask(NLS.bind(CoreMessages.FullPhpProjectBuildVisitor_0, file.getFullPath().toPortableString()));
 
 		PHPWorkspaceModelManager.getInstance().addFileToModel(file);		
 		validator.markFile(file);

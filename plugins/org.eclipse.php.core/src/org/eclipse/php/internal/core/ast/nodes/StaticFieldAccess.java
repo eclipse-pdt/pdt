@@ -52,14 +52,14 @@ public class StaticFieldAccess extends StaticDispatch {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<StaticFieldAccess");
+		buffer.append(tab).append("<StaticFieldAccess"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(TAB).append(tab).append("<ClassName>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<ClassName>\n"); //$NON-NLS-1$
 		getClassName().toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</ClassName>\n");
+		buffer.append("\n").append(TAB).append(tab).append("</ClassName>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		field.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</StaticFieldAccess>");
+		buffer.append("\n").append(tab).append("</StaticFieldAccess>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {

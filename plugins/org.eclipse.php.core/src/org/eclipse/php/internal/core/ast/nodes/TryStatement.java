@@ -75,16 +75,16 @@ public class TryStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<TryStatement");
+		buffer.append(tab).append("<TryStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		tryStatement.toString(buffer, TAB + tab);
-		buffer.append("\n");
+		buffer.append("\n"); //$NON-NLS-1$
 		for (int i = 0; i < catchClauses.length; i++) {
 			catchClauses[i].toString(buffer, TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</TryStatement>");
+		buffer.append(tab).append("</TryStatement>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

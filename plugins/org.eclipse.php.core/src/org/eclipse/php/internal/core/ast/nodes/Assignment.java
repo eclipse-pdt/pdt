@@ -65,29 +65,29 @@ public class Assignment extends Expression {
 	public static String getOperator(int operator) {
 		switch (operator) {
 			case OP_EQUAL:
-				return "=";
+				return "="; //$NON-NLS-1$
 			case OP_PLUS_EQUAL:
-				return "+=";
+				return "+="; //$NON-NLS-1$
 			case OP_MINUS_EQUAL:
-				return "-=";
+				return "-="; //$NON-NLS-1$
 			case OP_MUL_EQUAL:
-				return "*=";
+				return "*="; //$NON-NLS-1$
 			case OP_DIV_EQUAL:
-				return "/=";
+				return "/="; //$NON-NLS-1$
 			case OP_MOD_EQUAL:
-				return "%=";
+				return "%="; //$NON-NLS-1$
 			case OP_CONCAT_EQUAL:
-				return ".=";
+				return ".="; //$NON-NLS-1$
 			case OP_AND_EQUAL:
-				return "&amp;=";
+				return "&amp;="; //$NON-NLS-1$
 			case OP_OR_EQUAL:
-				return "|=";
+				return "|="; //$NON-NLS-1$
 			case OP_XOR_EQUAL:
-				return "^=";
+				return "^="; //$NON-NLS-1$
 			case OP_SL_EQUAL:
-				return "<<=";
+				return "<<="; //$NON-NLS-1$
 			case OP_SR_EQUAL:
-				return ">>=";
+				return ">>="; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -115,14 +115,14 @@ public class Assignment extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<Assignment");
+		buffer.append(tab).append("<Assignment"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" operator='").append(getXmlStringValue(getOperator(operator))).append("'>\n");
+		buffer.append(" operator='").append(getXmlStringValue(getOperator(operator))).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		variable.toString(buffer, TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("<Value>\n");
+		buffer.append("\n").append(TAB).append(tab).append("<Value>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		value.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</Value>\n");
-		buffer.append(tab).append("</Assignment>");
+		buffer.append("\n").append(TAB).append(tab).append("</Value>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(tab).append("</Assignment>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

@@ -56,13 +56,13 @@ public class InstanceOfExpression extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<InstanceofExpression");
+		buffer.append(tab).append("<InstanceofExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		expr.toString(buffer, TAB + tab);
-		buffer.append("\n");
+		buffer.append("\n"); //$NON-NLS-1$
 		className.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</InstanceofExpression>");
+		buffer.append("\n").append(tab).append("</InstanceofExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {

@@ -277,7 +277,7 @@ public abstract class CompositePhpModel implements IPhpModel {
 	public String getVariableType(String fileName, PHPCodeContext context, String variableName, int line, boolean showObjectsFromOtherFiles) {
 		for (int i = 0; i < models.length; i++) {
 			String res = models[i].getVariableType(fileName, context, variableName, line, showObjectsFromOtherFiles);
-			if (res != null && !res.equals("")) {
+			if (res != null && !res.equals("")) { //$NON-NLS-1$
 				return res;
 			}
 		}

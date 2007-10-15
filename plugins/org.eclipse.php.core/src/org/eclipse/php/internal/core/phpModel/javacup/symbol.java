@@ -28,10 +28,10 @@ public abstract class symbol {
    public symbol(String nm, String tp)
      {
        /* sanity check */
-       if (nm == null) nm = "";
+       if (nm == null) nm = ""; //$NON-NLS-1$
 
        /* apply default if no type given */
-       if (tp == null) tp = "Object";
+       if (tp == null) tp = "Object"; //$NON-NLS-1$
 
        _name = nm;
        _stack_type = tp;

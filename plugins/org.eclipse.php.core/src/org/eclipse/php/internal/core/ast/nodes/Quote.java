@@ -52,11 +52,11 @@ public class Quote extends Expression {
 	public static String getType(int type) {
 		switch (type) {
 			case QT_QUOTE:
-				return "quote";
+				return "quote"; //$NON-NLS-1$
 			case QT_SINGLE:
-				return "single";
+				return "single"; //$NON-NLS-1$
 			case QT_HEREDOC:
-				return "heredoc";
+				return "heredoc"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -87,14 +87,14 @@ public class Quote extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<Quote");
+		buffer.append(tab).append("<Quote"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" type='").append(getType(quoteType)).append("'>\n");
+		buffer.append(" type='").append(getType(quoteType)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (int i = 0; i < expressions.length; i++) {
 			expressions[i].toString(buffer, TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</Quote>");
+		buffer.append(tab).append("</Quote>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

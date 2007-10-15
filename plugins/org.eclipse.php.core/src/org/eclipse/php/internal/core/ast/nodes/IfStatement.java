@@ -80,24 +80,24 @@ public class IfStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<IfStatement");
+		buffer.append(tab).append("<IfStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(TAB).append(tab).append("<Condition>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Condition>\n"); //$NON-NLS-1$
 		condition.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n");
-		buffer.append(TAB).append(tab).append("</Condition>\n");
-		buffer.append(TAB).append(tab).append("<TrueStatement>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("</Condition>\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<TrueStatement>\n"); //$NON-NLS-1$
 		trueStatement.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n");
-		buffer.append(TAB).append(tab).append("</TrueStatement>\n");
-		buffer.append(TAB).append(tab).append("<FalseStatement>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("</TrueStatement>\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<FalseStatement>\n"); //$NON-NLS-1$
 		if (falseStatement != null) {
 			falseStatement.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</FalseStatement>\n");
-		buffer.append(tab).append("</IfStatement>");
+		buffer.append(TAB).append(tab).append("</FalseStatement>\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</IfStatement>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

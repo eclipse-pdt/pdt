@@ -28,11 +28,11 @@ public class ReflectionVariable extends Variable {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ReflectionVariable");
+		buffer.append(tab).append("<ReflectionVariable"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		getVariableName().toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</ReflectionVariable>");
+		buffer.append("\n").append(tab).append("</ReflectionVariable>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {

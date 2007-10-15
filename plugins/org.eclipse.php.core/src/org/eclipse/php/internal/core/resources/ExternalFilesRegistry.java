@@ -25,7 +25,7 @@ public class ExternalFilesRegistry {
 	private IProject externalFilesProject;
 
 	private ExternalFilesRegistry() {
-		externalFilesProject = ResourcesPlugin.getWorkspace().getRoot().getProject("external_" + System.currentTimeMillis());
+		externalFilesProject = ResourcesPlugin.getWorkspace().getRoot().getProject("external_" + System.currentTimeMillis()); //$NON-NLS-1$
 	}
 
 	public static ExternalFilesRegistry getInstance() {

@@ -57,16 +57,16 @@ public class DoStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<DoStatement");
+		buffer.append(tab).append("<DoStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		action.toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(TAB).append(tab).append("<Condition>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Condition>\n"); //$NON-NLS-1$
 		condition.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n");
-		buffer.append(TAB).append(tab).append("</Condition>\n");
-		buffer.append(tab).append("</DoStatement>");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("</Condition>\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</DoStatement>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

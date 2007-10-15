@@ -16,10 +16,10 @@ import org.eclipse.php.internal.core.ti.IContext;
 public interface IGoal {
 	
 	public enum State {
-		DONE("Done"),
-		WAITING("Waiting"),
-		PRUNED("Pruned"),
-		RECURSIVE("Recursive"),
+		DONE("Done"), //$NON-NLS-1$
+		WAITING("Waiting"), //$NON-NLS-1$
+		PRUNED("Pruned"), //$NON-NLS-1$
+		RECURSIVE("Recursive"), //$NON-NLS-1$
 		;
 		
 		private String name;

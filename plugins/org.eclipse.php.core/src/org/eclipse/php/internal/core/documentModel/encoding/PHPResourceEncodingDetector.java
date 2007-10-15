@@ -27,8 +27,8 @@ import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
  */
 public class PHPResourceEncodingDetector implements IResourceCharsetDetector {
 
-	private static final String UTF_8 = "UTF-8";
-	private static final String UTF_8_JAVA = "UTF8";
+	private static final String UTF_8 = "UTF-8"; //$NON-NLS-1$
+	private static final String UTF_8_JAVA = "UTF8"; //$NON-NLS-1$
 
 	public String getEncoding() throws IOException {
 		return UTF_8;

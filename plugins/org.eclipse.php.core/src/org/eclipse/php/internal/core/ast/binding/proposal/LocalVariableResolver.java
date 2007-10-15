@@ -14,7 +14,7 @@ import org.eclipse.php.internal.core.ast.nodes.Variable;
    local scopes (ie, methods and functions.)
    
    @author samweber
-   @version $Revision: 1.1 $
+   @version $Revision: 1.2 $
  */
 public class LocalVariableResolver implements VariableResolver 
 {
@@ -22,9 +22,9 @@ public class LocalVariableResolver implements VariableResolver
   private static final HashSet<String> _supers =
     new HashSet<String>();
   {
-    final String[] names = {"_GET", "_POST", "_FILES", "_COOKIE",
-                             "_REQUEST", "_SESSION", "_SERVER", "_ENV",
-                             "GLOBALS"};
+    final String[] names = {"_GET", "_POST", "_FILES", "_COOKIE", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                             "_REQUEST", "_SESSION", "_SERVER", "_ENV", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                             "GLOBALS"}; //$NON-NLS-1$
     for (final String n: names)
       {
         _supers.add(n);
@@ -187,18 +187,18 @@ public class LocalVariableResolver implements VariableResolver
 
   public String toString()
   {
-    String r = "LocalVariableResolver: "+super.toString()+" "+(_indeterminate?"INDETERMINATE":"determinate")+" ";
-    r+= "Globals(";
+    String r = "LocalVariableResolver: "+super.toString()+" "+(_indeterminate?"INDETERMINATE":"determinate")+" "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    r+= "Globals("; //$NON-NLS-1$
     for (final String g:_globals)
       {
-        r+=g+",";
+        r+=g+","; //$NON-NLS-1$
       }
-    r+=") Undetermined (";
+    r+=") Undetermined ("; //$NON-NLS-1$
     for (final String u:_undetermined)
       {
-        r += u+",";
+        r += u+","; //$NON-NLS-1$
       }
-    return r+")";
+    return r+")"; //$NON-NLS-1$
   }
 
 

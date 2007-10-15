@@ -24,7 +24,7 @@ public class shift_action extends parse_action {
       /* sanity check */
       if (shft_to == null)
 	throw new internal_error(
-	  "Attempt to create a shift_action to a null state");
+	  "Attempt to create a shift_action to a null state"); //$NON-NLS-1$
 
       _shift_to = shft_to;
     }
@@ -77,7 +77,7 @@ public class shift_action extends parse_action {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string. */
-  public String toString() {return "SHIFT(to state " + shift_to().index() + ")";}
+  public String toString() {return "SHIFT(to state " + shift_to().index() + ")";} //$NON-NLS-1$ //$NON-NLS-2$
 
   /*-----------------------------------------------------------*/
 

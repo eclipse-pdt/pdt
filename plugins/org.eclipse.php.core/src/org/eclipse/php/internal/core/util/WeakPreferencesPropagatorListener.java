@@ -28,7 +28,7 @@ public class WeakPreferencesPropagatorListener extends WeakObject implements IPr
 	private static ReferenceQueue q = new ReferenceQueue();
 	private static Class parameterTypes[] = new Class[] { IPreferencesPropagatorListener.class, String.class };
 	private static Object parameterValues[] = new Object[] { null, null };
-	private static String removeListenerMethodName = "removePropagatorListener";
+	private static String removeListenerMethodName = "removePropagatorListener"; //$NON-NLS-1$
 
 	public static WeakPreferencesPropagatorListener create(IPreferencesPropagatorListener l, String key, Object target) {
 		removeRedundantReferences();

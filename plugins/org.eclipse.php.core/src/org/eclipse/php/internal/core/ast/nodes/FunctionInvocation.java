@@ -72,18 +72,18 @@ public class FunctionInvocation extends VariableBase {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<FunctionInvocation");
+		buffer.append(tab).append("<FunctionInvocation"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		functionName.toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(TAB).append(tab).append("<Parameters>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Parameters>\n"); //$NON-NLS-1$
 		for (int i = 0; parameters != null && i < parameters.length; i++) {
 			parameters[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</Parameters>\n");
-		buffer.append(tab).append("</FunctionInvocation>");
+		buffer.append(TAB).append(tab).append("</Parameters>\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</FunctionInvocation>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

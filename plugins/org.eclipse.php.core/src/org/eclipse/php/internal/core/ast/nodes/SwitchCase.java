@@ -85,20 +85,20 @@ public class SwitchCase extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<SwitchCase");
+		buffer.append(tab).append("<SwitchCase"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isDefault='").append(isDefault).append("'>\n");
-		buffer.append(TAB).append(tab).append("<Value>\n");
+		buffer.append(" isDefault='").append(isDefault).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(TAB).append(tab).append("<Value>\n"); //$NON-NLS-1$
 		if (value != null) {
 			value.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</Value>\n");
+		buffer.append(TAB).append(tab).append("</Value>\n"); //$NON-NLS-1$
 		for (int i = 0; i < actions.length; i++) {
 			actions[i].toString(buffer, TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</SwitchCase>");
+		buffer.append(tab).append("</SwitchCase>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

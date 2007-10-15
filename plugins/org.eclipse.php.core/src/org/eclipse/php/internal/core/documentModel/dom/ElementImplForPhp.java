@@ -101,7 +101,7 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 	public String getPrefix() {
 		final String prefix = super.getPrefix();
 		if (prefix == null && isPhpTag()) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		return prefix;
 	}

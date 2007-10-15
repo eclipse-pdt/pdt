@@ -106,7 +106,7 @@ public class ProgramScope extends AbstractVisitor implements Scope {
 				attachVariable(start, attribute, (Variable) variable);
 				break;
 			default:
-				throw new IllegalArgumentException("Bad assignment");
+				throw new IllegalArgumentException("Bad assignment"); //$NON-NLS-1$
 		}
 	}
 
@@ -168,34 +168,34 @@ public class ProgramScope extends AbstractVisitor implements Scope {
 
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer();
-		toString(buffer, "");
+		toString(buffer, ""); //$NON-NLS-1$
 		return buffer.toString();
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ProgramScope>\n");
+		buffer.append(tab).append("<ProgramScope>\n"); //$NON-NLS-1$
 
-		buffer.append(TAB).append(tab).append("<RootGlobalScope>\n");
+		buffer.append(TAB).append(tab).append("<RootGlobalScope>\n"); //$NON-NLS-1$
 		rootGlobalScope.toString(buffer, TAB + TAB + tab);
-		buffer.append(TAB).append(tab).append("</RootGlobalScope>\n");
+		buffer.append(TAB).append(tab).append("</RootGlobalScope>\n"); //$NON-NLS-1$
 
-		buffer.append(TAB).append(tab).append("<ClassScopes>\n");
+		buffer.append(TAB).append(tab).append("<ClassScopes>\n"); //$NON-NLS-1$
 		for (Iterator iter = classScopes.values().iterator(); iter.hasNext();) {
 			Scope scope = (Scope) iter.next();
 			scope.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</ClassScopes>\n");
+		buffer.append(TAB).append(tab).append("</ClassScopes>\n"); //$NON-NLS-1$
 
-		buffer.append(TAB).append(tab).append("<FunctionScopes>\n");
+		buffer.append(TAB).append(tab).append("<FunctionScopes>\n"); //$NON-NLS-1$
 		for (Iterator iter = functionScopes.values().iterator(); iter.hasNext();) {
 			Scope scope = (Scope) iter.next();
 			scope.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</FunctionScopes>\n");
+		buffer.append(TAB).append(tab).append("</FunctionScopes>\n"); //$NON-NLS-1$
 
-		buffer.append(tab).append("</ProgramScope>");
+		buffer.append(tab).append("</ProgramScope>"); //$NON-NLS-1$
 	}
 
 	private void updateScope(int start, String identifier, Attribute attribute) {

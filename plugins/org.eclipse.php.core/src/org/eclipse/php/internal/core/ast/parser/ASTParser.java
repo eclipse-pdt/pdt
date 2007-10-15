@@ -14,6 +14,7 @@ import java.io.*;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.Scanner;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
@@ -44,7 +45,7 @@ public class ASTParser {
 	private static final PhpAstLexer4 PHP_AST_LEXER4 = new PhpAstLexer4(ASTParser.EMPTY_STRING_READER);
 
 	// empty buffer
-	private static final StringReader EMPTY_STRING_READER = new StringReader("");
+	private static final StringReader EMPTY_STRING_READER = new StringReader(""); //$NON-NLS-1$
 
 	/**
 	 * @param phpCode String - represents the source code of the PHP program
@@ -148,7 +149,7 @@ public class ASTParser {
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
 			return lexer5;
 		} else {
-			throw new IllegalArgumentException("unrecognized version " + phpVersion);
+			throw new IllegalArgumentException(CoreMessages.ASTParser_1 + phpVersion);
 		}
 	}
 
@@ -158,7 +159,7 @@ public class ASTParser {
 		} else if (VERSION_PHP5.equals(phpVersion)) {
 			return PHP_AST_PARSER5;
 		} else {
-			throw new IllegalArgumentException("unrecognized version " + phpVersion);
+			throw new IllegalArgumentException(CoreMessages.ASTParser_1 + phpVersion);
 		}
 
 	}

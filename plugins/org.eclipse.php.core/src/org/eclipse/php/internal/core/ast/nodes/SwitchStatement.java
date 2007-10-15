@@ -65,15 +65,15 @@ public class SwitchStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<SwitchStatement");
+		buffer.append(tab).append("<SwitchStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(TAB).append(tab).append("<Expression>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Expression>\n"); //$NON-NLS-1$
 		expr.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n");
-		buffer.append(TAB).append(tab).append("</Expression>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("</Expression>\n"); //$NON-NLS-1$
 		statement.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</SwitchStatement>");
+		buffer.append("\n").append(tab).append("</SwitchStatement>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {

@@ -35,7 +35,7 @@ public final class Key {
 		// check if the node preferences existence before get its keys
 		IEclipsePreferences node = getNode(context, manager);
 		try {
-			if (node.nodeExists("")) {
+			if (node.nodeExists("")) { //$NON-NLS-1$
 				return node.get(fKey, null);
 			}
 		} catch (BackingStoreException e) {

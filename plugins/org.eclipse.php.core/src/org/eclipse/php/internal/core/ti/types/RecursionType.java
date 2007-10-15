@@ -23,6 +23,6 @@ public class RecursionType implements IEvaluatedType {
 	}
 
 	public String toString() {
-		return "recursion type call";
+		return "recursion type call"; //$NON-NLS-1$
 	}
 }

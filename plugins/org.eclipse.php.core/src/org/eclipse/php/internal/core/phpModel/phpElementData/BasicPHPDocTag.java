@@ -34,67 +34,67 @@ public class BasicPHPDocTag implements PHPDocTag {
 	public static String getName(int id) {
 		switch (id) {
 			case ABSTRACT:
-				return "abstract";
+				return "abstract"; //$NON-NLS-1$
 			case AUTHOR:
-				return "author";
+				return "author"; //$NON-NLS-1$
 			case ACCESS:
-				return "access";
+				return "access"; //$NON-NLS-1$
 			case CATEGORY:
-				return "category";
+				return "category"; //$NON-NLS-1$
 			case COPYRIGHT:
-				return "copyright";
+				return "copyright"; //$NON-NLS-1$
 			case DEPRECATED:
-				return "deprecated";
+				return "deprecated"; //$NON-NLS-1$
 			case EXAMPLE:
-				return "example";
+				return "example"; //$NON-NLS-1$
 			case FINAL:
-				return "final";
+				return "final"; //$NON-NLS-1$
 			case FILESOURCE:
-				return "filesource";
+				return "filesource"; //$NON-NLS-1$
 			case GLOBAL:
-				return "global";
+				return "global"; //$NON-NLS-1$
 			case IGNORE:
-				return "ignore";
+				return "ignore"; //$NON-NLS-1$
 			case INTERNAL:
-				return "internal";
+				return "internal"; //$NON-NLS-1$
 			case LICENSE:
-				return "license";
+				return "license"; //$NON-NLS-1$
 			case LINK:
-				return "link";
+				return "link"; //$NON-NLS-1$
 			case NAME:
-				return "name";
+				return "name"; //$NON-NLS-1$
 			case RETURN:
-				return "return";
+				return "return"; //$NON-NLS-1$
 			case PACKAGE:
-				return "package";
+				return "package"; //$NON-NLS-1$
 			case PARAM:
-				return "param";
+				return "param"; //$NON-NLS-1$
 			case SEE:
-				return "see";
+				return "see"; //$NON-NLS-1$
 			case SINCE:
-				return "since";
+				return "since"; //$NON-NLS-1$
 			case STATIC:
-				return "static";
+				return "static"; //$NON-NLS-1$
 			case STATICVAR:
-				return "staticvar";
+				return "staticvar"; //$NON-NLS-1$
 			case SUBPACKAGE:
-				return "subpackage";
+				return "subpackage"; //$NON-NLS-1$
 			case THROWS:
-				return "throws";
+				return "throws"; //$NON-NLS-1$
 			case TODO:
-				return "todo";
+				return "todo"; //$NON-NLS-1$
 			case TUTORIAL:
-				return "tutorial";
+				return "tutorial"; //$NON-NLS-1$
 			case USES:
-				return "uses";
+				return "uses"; //$NON-NLS-1$
 			case VAR:
-				return "var";
+				return "var"; //$NON-NLS-1$
 			case VERSION:
-				return "version";
+				return "version"; //$NON-NLS-1$
 			case DESC:
-				return "desc";
+				return "desc"; //$NON-NLS-1$
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public static int getID(String name) {
@@ -108,44 +108,44 @@ public class BasicPHPDocTag implements PHPDocTag {
 	private static HashMap getNameToID() {
 		if (nameToID == null) {
 			nameToID = new HashMap();
-			nameToID.put("abstract", new Integer(ABSTRACT));
-			nameToID.put("access", new Integer(ACCESS));
-			nameToID.put("author", new Integer(AUTHOR));
-			nameToID.put("category", new Integer(CATEGORY));
-			nameToID.put("copyright", new Integer(COPYRIGHT));
-			nameToID.put("deprecated", new Integer(DEPRECATED));
-			nameToID.put("desc", new Integer(DESC));
-			nameToID.put("example", new Integer(EXAMPLE));
-			nameToID.put("final", new Integer(FINAL));
-			nameToID.put("filesource", new Integer(FILESOURCE));
-			nameToID.put("global", new Integer(GLOBAL));
-			nameToID.put("ignore", new Integer(IGNORE));
-			nameToID.put("internal", new Integer(INTERNAL));
-			nameToID.put("license", new Integer(LICENSE));
-			nameToID.put("link", new Integer(LINK));
-			nameToID.put("name", new Integer(NAME));
-			nameToID.put("return", new Integer(RETURN));
-			nameToID.put("package", new Integer(PACKAGE));
-			nameToID.put("param", new Integer(PARAM));
-			nameToID.put("see", new Integer(SEE));
-			nameToID.put("since", new Integer(SINCE));
-			nameToID.put("static", new Integer(STATIC));
-			nameToID.put("staticvar", new Integer(STATICVAR));
-			nameToID.put("subpackage", new Integer(SUBPACKAGE));
-			nameToID.put("throws", new Integer(THROWS));
-			nameToID.put("todo", new Integer(TODO));
-			nameToID.put("tutorial", new Integer(TUTORIAL));
-			nameToID.put("uses", new Integer(USES));
-			nameToID.put("var", new Integer(VAR));
-			nameToID.put("version", new Integer(VERSION));
+			nameToID.put("abstract", new Integer(ABSTRACT)); //$NON-NLS-1$
+			nameToID.put("access", new Integer(ACCESS)); //$NON-NLS-1$
+			nameToID.put("author", new Integer(AUTHOR)); //$NON-NLS-1$
+			nameToID.put("category", new Integer(CATEGORY)); //$NON-NLS-1$
+			nameToID.put("copyright", new Integer(COPYRIGHT)); //$NON-NLS-1$
+			nameToID.put("deprecated", new Integer(DEPRECATED)); //$NON-NLS-1$
+			nameToID.put("desc", new Integer(DESC)); //$NON-NLS-1$
+			nameToID.put("example", new Integer(EXAMPLE)); //$NON-NLS-1$
+			nameToID.put("final", new Integer(FINAL)); //$NON-NLS-1$
+			nameToID.put("filesource", new Integer(FILESOURCE)); //$NON-NLS-1$
+			nameToID.put("global", new Integer(GLOBAL)); //$NON-NLS-1$
+			nameToID.put("ignore", new Integer(IGNORE)); //$NON-NLS-1$
+			nameToID.put("internal", new Integer(INTERNAL)); //$NON-NLS-1$
+			nameToID.put("license", new Integer(LICENSE)); //$NON-NLS-1$
+			nameToID.put("link", new Integer(LINK)); //$NON-NLS-1$
+			nameToID.put("name", new Integer(NAME)); //$NON-NLS-1$
+			nameToID.put("return", new Integer(RETURN)); //$NON-NLS-1$
+			nameToID.put("package", new Integer(PACKAGE)); //$NON-NLS-1$
+			nameToID.put("param", new Integer(PARAM)); //$NON-NLS-1$
+			nameToID.put("see", new Integer(SEE)); //$NON-NLS-1$
+			nameToID.put("since", new Integer(SINCE)); //$NON-NLS-1$
+			nameToID.put("static", new Integer(STATIC)); //$NON-NLS-1$
+			nameToID.put("staticvar", new Integer(STATICVAR)); //$NON-NLS-1$
+			nameToID.put("subpackage", new Integer(SUBPACKAGE)); //$NON-NLS-1$
+			nameToID.put("throws", new Integer(THROWS)); //$NON-NLS-1$
+			nameToID.put("todo", new Integer(TODO)); //$NON-NLS-1$
+			nameToID.put("tutorial", new Integer(TUTORIAL)); //$NON-NLS-1$
+			nameToID.put("uses", new Integer(USES)); //$NON-NLS-1$
+			nameToID.put("var", new Integer(VAR)); //$NON-NLS-1$
+			nameToID.put("version", new Integer(VERSION)); //$NON-NLS-1$
 		}
 		return nameToID;
 	}
 
 	public String toString() {
-		StringBuffer b = new StringBuffer("@");
+		StringBuffer b = new StringBuffer("@"); //$NON-NLS-1$
 		b.append(getName(getID()));
-		b.append(" ");
+		b.append(" "); //$NON-NLS-1$
 		if (getValue() != null) {
 			b.append(getValue().toString());
 		}

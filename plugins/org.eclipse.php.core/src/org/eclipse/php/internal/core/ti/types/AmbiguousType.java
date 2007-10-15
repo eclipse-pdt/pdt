@@ -34,14 +34,14 @@ public class AmbiguousType implements IEvaluatedType {
 	}
 	
 	public String toString() {
-		StringBuilder buf = new StringBuilder("Ambiguous (");
+		StringBuilder buf = new StringBuilder("Ambiguous ("); //$NON-NLS-1$
 		for (int i = 0; i < possibleTypes.length; ++i) {
 			if (i > 0) {
-				buf.append(" | ");
+				buf.append(" | "); //$NON-NLS-1$
 			}
 			buf.append(possibleTypes[i].toString());
 		}
-		buf.append(")");
+		buf.append(")"); //$NON-NLS-1$
 		return buf.toString();
 	}
 }

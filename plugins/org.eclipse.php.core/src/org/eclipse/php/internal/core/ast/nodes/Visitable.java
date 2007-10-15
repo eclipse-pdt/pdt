@@ -17,7 +17,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public interface Visitable {
 
-	public static final String TAB = "\t";
+	public static final String TAB = "\t"; //$NON-NLS-1$
 
 	/**
 	 * Visit only the actual node

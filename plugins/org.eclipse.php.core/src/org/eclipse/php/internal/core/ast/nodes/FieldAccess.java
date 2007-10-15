@@ -51,16 +51,16 @@ public class FieldAccess extends Dispatch {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<FieldAccess");
+		buffer.append(tab).append("<FieldAccess"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(TAB).append(tab).append("<Dispatcher>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Dispatcher>\n"); //$NON-NLS-1$
 		getDispatcher().toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</Dispatcher>\n");
-		buffer.append(TAB).append(tab).append("<Property>\n");
+		buffer.append("\n").append(TAB).append(tab).append("</Dispatcher>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(TAB).append(tab).append("<Property>\n"); //$NON-NLS-1$
 		field.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</Property>\n");
-		buffer.append(tab).append("</FieldAccess>");
+		buffer.append("\n").append(TAB).append(tab).append("</Property>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(tab).append("</FieldAccess>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

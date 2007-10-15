@@ -95,42 +95,42 @@ public class ClassDeclaration extends TypeDeclaration {
 	public static String getModifier(int modifier) {
 		switch (modifier) {
 			case MODIFIER_NONE:
-				return "";
+				return ""; //$NON-NLS-1$
 			case MODIFIER_ABSTRACT:
-				return "abstract";
+				return "abstract"; //$NON-NLS-1$
 			case MODIFIER_FINAL:
-				return "final";
+				return "final"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ClassDeclaration");
+		buffer.append(tab).append("<ClassDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" modifier='").append(getModifier(modifier)).append("'>\n");
-		buffer.append(tab).append(TAB).append("<ClassName>\n");
+		buffer.append(" modifier='").append(getModifier(modifier)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(tab).append(TAB).append("<ClassName>\n"); //$NON-NLS-1$
 		getName().toString(buffer, TAB + TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append(TAB).append("</ClassName>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append(TAB).append("</ClassName>\n"); //$NON-NLS-1$
 
-		buffer.append(tab).append(TAB).append("<SuperClassName>\n");
+		buffer.append(tab).append(TAB).append("<SuperClassName>\n"); //$NON-NLS-1$
 		if (superClass != null) {
 			superClass.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append(TAB).append("</SuperClassName>\n");
+		buffer.append(tab).append(TAB).append("</SuperClassName>\n"); //$NON-NLS-1$
 
-		buffer.append(tab).append(TAB).append("<Interfaces>\n");
+		buffer.append(tab).append(TAB).append("<Interfaces>\n"); //$NON-NLS-1$
 		Identifier[] interfaces = getInterfaces();
 		for (int i = 0; interfaces != null && i < interfaces.length; i++) {
 			interfaces[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append(TAB).append("</Interfaces>\n");
+		buffer.append(tab).append(TAB).append("</Interfaces>\n"); //$NON-NLS-1$
 		getBody().toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append("</ClassDeclaration>");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</ClassDeclaration>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

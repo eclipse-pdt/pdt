@@ -12,13 +12,13 @@ package org.eclipse.php.internal.core.phpModel.phpElementData;
 
 public interface IPHPMarker {
 
-	public static String ERROR = "ERROR";
+	public static String ERROR = "ERROR"; //$NON-NLS-1$
 
-	public static String WARNING = "WARNING";
+	public static String WARNING = "WARNING"; //$NON-NLS-1$
 
-	public static String INFO = "INFO";
+	public static String INFO = "INFO"; //$NON-NLS-1$
 
-	public static String TASK = "TASK";
+	public static String TASK = "TASK"; //$NON-NLS-1$
 
 	public String getType();
 	

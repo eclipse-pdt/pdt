@@ -26,7 +26,7 @@ public class CodeBuilder implements Visitor {
 			String[] files = dir.list();
 			for (int i = 0; i < files.length; i++) {
 				String filename = files[i];
-				codeBuilder.str = readFile(inputDir + "/" + filename);
+				codeBuilder.str = readFile(inputDir + "/" + filename); //$NON-NLS-1$
 
 				StringReader reader = new StringReader(codeBuilder.str);
 				Program program = ASTParser.parse(reader);
@@ -35,7 +35,7 @@ public class CodeBuilder implements Visitor {
 
 				System.out.println(buffer.toString());
 
-				printOutputfile(outputDir + "/" + filename);
+				printOutputfile(outputDir + "/" + filename); //$NON-NLS-1$
 
 			}
 		} catch (Exception e) {
@@ -74,13 +74,13 @@ public class CodeBuilder implements Visitor {
 		arrayAccess.getVariableName().accept(this);
 		if (arrayAccess.getIndex() != null) {
 			if (arrayAccess.getArrayType() == ArrayAccess.VARIABLE_ARRAY) { //array type
-				buffer.append("[");
+				buffer.append("["); //$NON-NLS-1$
 				arrayAccess.getIndex().accept(this);
-				buffer.append("]");
+				buffer.append("]"); //$NON-NLS-1$
 			} else if (arrayAccess.getArrayType() == ArrayAccess.VARIABLE_HASHTABLE) { //hashtable type
-				buffer.append("{");
+				buffer.append("{"); //$NON-NLS-1$
 				arrayAccess.getIndex().accept(this);
-				buffer.append("}");
+				buffer.append("}"); //$NON-NLS-1$
 			} else {
 				throw new IllegalArgumentException();
 			}
@@ -88,19 +88,19 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(ArrayCreation arrayCreation) {
-		buffer.append("array(");
+		buffer.append("array("); //$NON-NLS-1$
 		ArrayElement[] elements = arrayCreation.getElements();
 		for (int i = 0; i < elements.length; i++) {
 			elements[i].accept(this);
-			buffer.append(",");
+			buffer.append(","); //$NON-NLS-1$
 		}
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 	}
 
 	public void visit(ArrayElement arrayElement) {
 		if (arrayElement.getKey() != null) {
 			arrayElement.getKey().accept(this);
-			buffer.append("=>");
+			buffer.append("=>"); //$NON-NLS-1$
 		}
 		arrayElement.getValue().accept(this);
 	}
@@ -117,19 +117,19 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(BackTickExpression backTickExpression) {
-		buffer.append("`");
+		buffer.append("`"); //$NON-NLS-1$
 		Expression[] expressions = backTickExpression.getExpressions();
 		for (int i = 0; i < expressions.length; i++) {
 			expressions[i].accept(this);
 		}
-		buffer.append("`");
+		buffer.append("`"); //$NON-NLS-1$
 	}
 
 	public void visit(Block block) {
 		if (block.isCurly()) {
-			buffer.append("{\n");
+			buffer.append("{\n"); //$NON-NLS-1$
 		} else {
-			buffer.append(":\n");
+			buffer.append(":\n"); //$NON-NLS-1$
 		}
 
 		Statement[] statements = block.getStatements();
@@ -138,66 +138,66 @@ public class CodeBuilder implements Visitor {
 		}
 
 		if (block.isCurly()) {
-			buffer.append("\n}\n");
+			buffer.append("\n}\n"); //$NON-NLS-1$
 		} else {
-			buffer.append("end;\n");
+			buffer.append("end;\n"); //$NON-NLS-1$
 		}
 	}
 
 	public void visit(BreakStatement breakStatement) {
-		buffer.append("break ");
+		buffer.append("break "); //$NON-NLS-1$
 		if (breakStatement.getExpr() != null) {
 			breakStatement.getExpr().accept(this);
 		}
-		buffer.append(";\n");
+		buffer.append(";\n"); //$NON-NLS-1$
 	}
 
 	public void visit(CastExpression castExpression) {
-		buffer.append("(");
+		buffer.append("("); //$NON-NLS-1$
 		buffer.append(CastExpression.getCastType(castExpression.getCastType()));
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 		castExpression.getExpr().accept(this);
 	}
 
 	public void visit(CatchClause catchClause) {
-		buffer.append("catch (");
+		buffer.append("catch ("); //$NON-NLS-1$
 		catchClause.getClassName().accept(this);
-		buffer.append(" ");
+		buffer.append(" "); //$NON-NLS-1$
 		catchClause.getVariable().accept(this);
-		buffer.append(") ");
+		buffer.append(") "); //$NON-NLS-1$
 		catchClause.getStatement().accept(this);
 	}
 
 	public void visit(ClassConstantDeclaration classConstantDeclaration) {
-		buffer.append("const ");
+		buffer.append("const "); //$NON-NLS-1$
 		boolean isFirst = true;
 		Identifier[] variableNames = classConstantDeclaration.getVariableNames();
 		Expression[] constantValues = classConstantDeclaration.getConstantValues();
 		for (int i = 0; i < variableNames.length; i++) {
 			if (!isFirst) {
-				buffer.append(",");
+				buffer.append(","); //$NON-NLS-1$
 			}
 			variableNames[i].accept(this);
-			buffer.append(" = ");
+			buffer.append(" = "); //$NON-NLS-1$
 			constantValues[i].accept(this);
 			isFirst = false;
 		}
-		buffer.append(";\n");
+		buffer.append(";\n"); //$NON-NLS-1$
 	}
 
 	public void visit(ClassDeclaration classDeclaration) {
-		buffer.append("class ");
+		buffer.append("class "); //$NON-NLS-1$
 		classDeclaration.getName().accept(this);
 		if (classDeclaration.getSuperClass() != null) {
-			buffer.append(" extends ");
+			buffer.append(" extends "); //$NON-NLS-1$
 			classDeclaration.getSuperClass().accept(this);
 		}
 		Identifier[] interfaces = classDeclaration.getInterfaces();
 		if (interfaces != null && interfaces.length != 0) {
-			buffer.append(" implements ");
+			buffer.append(" implements "); //$NON-NLS-1$
 			interfaces[0].accept(this);
 			for (int i = 1; i < interfaces.length; i++) {
-				buffer.append(" , ");
+				buffer.append(" , "); //$NON-NLS-1$
 				interfaces[i].accept(this);
 			}
 		}
@@ -205,17 +205,17 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(ClassInstanceCreation classInstanceCreation) {
-		buffer.append("new ");
+		buffer.append("new "); //$NON-NLS-1$
 		classInstanceCreation.getClassName().accept(this);
 		Expression[] ctorParams = classInstanceCreation.getCtorParams();
 		if (ctorParams.length != 0) {
-			buffer.append("(");
+			buffer.append("("); //$NON-NLS-1$
 			ctorParams[0].accept(this);
 			for (int i = 1; i < ctorParams.length; i++) {
-				buffer.append(",");
+				buffer.append(","); //$NON-NLS-1$
 				ctorParams[i].accept(this);
 			}
-			buffer.append(")");
+			buffer.append(")"); //$NON-NLS-1$
 		}
 	}
 
@@ -224,7 +224,7 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(CloneExpression cloneExpression) {
-		buffer.append("clone ");
+		buffer.append("clone "); //$NON-NLS-1$
 		cloneExpression.getExpr().accept(this);
 	}
 
@@ -234,67 +234,67 @@ public class CodeBuilder implements Visitor {
 
 	public void visit(ConditionalExpression conditionalExpression) {
 		conditionalExpression.getCondition().accept(this);
-		buffer.append(" ? ");
+		buffer.append(" ? "); //$NON-NLS-1$
 		conditionalExpression.getIfTrue().accept(this);
-		buffer.append(" : ");
+		buffer.append(" : "); //$NON-NLS-1$
 		conditionalExpression.getIfFalse().accept(this);
 	}
 
 	public void visit(ContinueStatement continueStatement) {
-		buffer.append("continue ");
+		buffer.append("continue "); //$NON-NLS-1$
 		if (continueStatement.getExpr() != null) {
 			continueStatement.getExpr().accept(this);
 		}
-		buffer.append(";\n");
+		buffer.append(";\n"); //$NON-NLS-1$
 	}
 
 	public void visit(DeclareStatement declareStatement) {
-		buffer.append("declare (");
+		buffer.append("declare ("); //$NON-NLS-1$
 		boolean isFirst = true;
 		Identifier[] directiveNames = declareStatement.getDirectiveNames();
 		Expression[] directiveValues = declareStatement.getDirectiveValues();
 		for (int i = 0; i < directiveNames.length; i++) {
 			if (!isFirst) {
-				buffer.append(",");
+				buffer.append(","); //$NON-NLS-1$
 			}
 			directiveNames[i].accept(this);
-			buffer.append(" = ");
+			buffer.append(" = "); //$NON-NLS-1$
 			directiveValues[i].accept(this);
 			isFirst = false;
 		}
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 		declareStatement.getAction().accept(this);
 	}
 
 	public void visit(DoStatement doStatement) {
-		buffer.append("do ");
+		buffer.append("do "); //$NON-NLS-1$
 		doStatement.getAction().accept(this);
-		buffer.append("while (");
+		buffer.append("while ("); //$NON-NLS-1$
 		doStatement.getCondition().accept(this);
-		buffer.append(");\n");
+		buffer.append(");\n"); //$NON-NLS-1$
 	}
 
 	public void visit(EchoStatement echoStatement) {
-		buffer.append("echo ");
+		buffer.append("echo "); //$NON-NLS-1$
 		Expression[] expressions = echoStatement.getExpressions();
 		for (int i = 0; i < expressions.length; i++) {
 			expressions[i].accept(this);
 		}
-		buffer.append(";\n ");
+		buffer.append(";\n "); //$NON-NLS-1$
 	}
 
 	public void visit(EmptyStatement emptyStatement) {
-		buffer.append(";\n");
+		buffer.append(";\n"); //$NON-NLS-1$
 	}
 
 	public void visit(ExpressionStatement expressionStatement) {
 		expressionStatement.getExpr().accept(this);
-		buffer.append(";\n");
+		buffer.append(";\n"); //$NON-NLS-1$
 	}
 
 	public void visit(FieldAccess fieldAccess) {
 		fieldAccess.getDispatcher().accept(this);
-		buffer.append("->");
+		buffer.append("->"); //$NON-NLS-1$
 		fieldAccess.getField().accept(this);
 	}
 
@@ -302,26 +302,26 @@ public class CodeBuilder implements Visitor {
 		Variable[] variableNames = fieldsDeclaration.getVariableNames();
 		Expression[] initialValues = fieldsDeclaration.getInitialValues();
 		for (int i = 0; i < variableNames.length; i++) {
-			buffer.append(fieldsDeclaration.getModifierString() + " ");
+			buffer.append(fieldsDeclaration.getModifierString() + " "); //$NON-NLS-1$
 			variableNames[i].accept(this);
 			if (initialValues[i] != null) {
-				buffer.append(" = ");
+				buffer.append(" = "); //$NON-NLS-1$
 				initialValues[i].accept(this);
 			}
-			buffer.append(";\n");
+			buffer.append(";\n"); //$NON-NLS-1$
 		}
 	}
 
 	public void visit(ForEachStatement forEachStatement) {
-		buffer.append("foreach (");
+		buffer.append("foreach ("); //$NON-NLS-1$
 		forEachStatement.getExpression().accept(this);
-		buffer.append(" as ");
+		buffer.append(" as "); //$NON-NLS-1$
 		if (forEachStatement.getKey() != null) {
 			forEachStatement.getKey().accept(this);
-			buffer.append(" => ");
+			buffer.append(" => "); //$NON-NLS-1$
 		}
 		forEachStatement.getValue().accept(this);
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 		forEachStatement.getStatement().accept(this);
 	}
 
@@ -337,50 +337,50 @@ public class CodeBuilder implements Visitor {
 
 	public void visit(ForStatement forStatement) {
 		boolean isFirst = true;
-		buffer.append("for (");
+		buffer.append("for ("); //$NON-NLS-1$
 		Expression[] initializations = forStatement.getInitializations();
 		Expression[] conditions = forStatement.getConditions();
 		Expression[] increasements = forStatement.getIncreasements();
 		for (int i = 0; i < initializations.length; i++) {
 			if (!isFirst) {
-				buffer.append(",");
+				buffer.append(","); //$NON-NLS-1$
 			}
 			initializations[i].accept(this);
 			isFirst = false;
 		}
 		isFirst = true;
-		buffer.append(" ; ");
+		buffer.append(" ; "); //$NON-NLS-1$
 		for (int i = 0; i < conditions.length; i++) {
 			if (!isFirst) {
-				buffer.append(",");
+				buffer.append(","); //$NON-NLS-1$
 			}
 			conditions[i].accept(this);
 			isFirst = false;
 		}
 		isFirst = true;
-		buffer.append(" ; ");
+		buffer.append(" ; "); //$NON-NLS-1$
 		for (int i = 0; i < increasements.length; i++) {
 			if (!isFirst) {
-				buffer.append(",");
+				buffer.append(","); //$NON-NLS-1$
 			}
 			increasements[i].accept(this);
 			isFirst = false;
 		}
-		buffer.append(" ) ");
+		buffer.append(" ) "); //$NON-NLS-1$
 		forStatement.getAction().accept(this);
 	}
 
 	public void visit(FunctionDeclaration functionDeclaration) {
 		functionDeclaration.getFunctionName().accept(this);
-		buffer.append("(");
+		buffer.append("("); //$NON-NLS-1$
 		FormalParameter[] formalParameters = functionDeclaration.getFormalParameters();
 		if (formalParameters.length != 0) {
 			formalParameters[0].accept(this);
 			for (int i = 1; i < formalParameters.length; i++) {
-				buffer.append(",");
+				buffer.append(","); //$NON-NLS-1$
 				formalParameters[i].accept(this);
 			}
-			buffer.append(")");
+			buffer.append(")"); //$NON-NLS-1$
 		}
 		if (functionDeclaration.getBody() != null) {
 			functionDeclaration.getBody().accept(this);
@@ -389,16 +389,16 @@ public class CodeBuilder implements Visitor {
 
 	public void visit(FunctionInvocation functionInvocation) {
 		functionInvocation.getFunctionName().accept(this);
-		buffer.append("(");
+		buffer.append("("); //$NON-NLS-1$
 		Expression[] parameters = functionInvocation.getParameters();
 		if (parameters.length != 0) {
 			parameters[0].accept(this);
 			for (int i = 1; i < parameters.length; i++) {
-				buffer.append(",");
+				buffer.append(","); //$NON-NLS-1$
 				parameters[i].accept(this);
 			}
 		}
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 	}
 
 	public void visit(FunctionName functionName) {
@@ -406,17 +406,17 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(GlobalStatement globalStatement) {
-		buffer.append("global ");
+		buffer.append("global "); //$NON-NLS-1$
 		boolean isFirst = true;
 		Variable[] variables = globalStatement.getVariables();
 		for (int i = 0; i < variables.length; i++) {
 			if (!isFirst) {
-				buffer.append(", ");
+				buffer.append(", "); //$NON-NLS-1$
 			}
 			variables[i].accept(this);
 			isFirst = false;
 		}
-		buffer.append(";\n ");
+		buffer.append(";\n "); //$NON-NLS-1$
 	}
 
 	public void visit(Identifier identifier) {
@@ -424,26 +424,26 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(IfStatement ifStatement) {
-		buffer.append("if(");
+		buffer.append("if("); //$NON-NLS-1$
 		ifStatement.getCondition().accept(this);
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 		ifStatement.getTrueStatement().accept(this);
 		if (ifStatement.getFalseStatement() != null) {
-			buffer.append("else");
+			buffer.append("else"); //$NON-NLS-1$
 			ifStatement.getFalseStatement().accept(this);
 		}
 	}
 
 	public void visit(IgnoreError ignoreError) {
-		buffer.append("@");
+		buffer.append("@"); //$NON-NLS-1$
 		ignoreError.getExpr().accept(this);
 	}
 
 	public void visit(Include include) {
 		buffer.append(Include.getType(include.getIncludeType()));
-		buffer.append(" (");
+		buffer.append(" ("); //$NON-NLS-1$
 		include.getExpr().accept(this);
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 	}
 
 	public void visit(InfixExpression infixExpression) {
@@ -458,19 +458,19 @@ public class CodeBuilder implements Visitor {
 
 	public void visit(InstanceOfExpression instanceOfExpression) {
 		instanceOfExpression.getExpr().accept(this);
-		buffer.append(" instanceof ");
+		buffer.append(" instanceof "); //$NON-NLS-1$
 		instanceOfExpression.getClassName().accept(this);
 	}
 
 	public void visit(InterfaceDeclaration interfaceDeclaration) {
-		buffer.append("interface ");
+		buffer.append("interface "); //$NON-NLS-1$
 		interfaceDeclaration.getName().accept(this);
-		buffer.append(" extends ");
+		buffer.append(" extends "); //$NON-NLS-1$
 		boolean isFirst = true;
 		Identifier[] interfaces = interfaceDeclaration.getInterfaces();
 		for (int i = 0; interfaces != null && i < interfaces.length; i++) {
 			if (!isFirst) {
-				buffer.append(", ");
+				buffer.append(", "); //$NON-NLS-1$
 			}
 			interfaces[i].accept(this);
 			isFirst = false;
@@ -479,17 +479,17 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(ListVariable listVariable) {
-		buffer.append("list(");
+		buffer.append("list("); //$NON-NLS-1$
 		boolean isFirst = true;
 		VariableBase[] variables = listVariable.getVariables();
 		for (int i = 0; i < variables.length; i++) {
 			if (!isFirst) {
-				buffer.append(", ");
+				buffer.append(", "); //$NON-NLS-1$
 			}
 			variables[i].accept(this);
 			isFirst = false;
 		}
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 	}
 
 	public void visit(MethodDeclaration methodDeclaration) {
@@ -498,16 +498,16 @@ public class CodeBuilder implements Visitor {
 
 	public void visit(MethodInvocation methodInvocation) {
 		methodInvocation.getDispatcher().accept(this);
-		buffer.append("->");
+		buffer.append("->"); //$NON-NLS-1$
 		methodInvocation.getMethod().accept(this);
 	}
 
 	public void visit(ParenthesisExpression parenthesisExpression) {
-		buffer.append("(");
+		buffer.append("("); //$NON-NLS-1$
 		if (parenthesisExpression.getExpr() != null) {
 			parenthesisExpression.getExpr().accept(this);
 		}
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 		
 	}
 
@@ -529,28 +529,28 @@ public class CodeBuilder implements Visitor {
 
 			if (!isHtml && !isPhpState) {
 				// html -> php
-				buffer.append("<?php\n");
+				buffer.append("<?php\n"); //$NON-NLS-1$
 				statements[i].accept(this);
 				isPhpState = true;
 			} else if (!isHtml && isPhpState) {
 				// php -> php
 				statements[i].accept(this);
-				buffer.append("\n");
+				buffer.append("\n"); //$NON-NLS-1$
 			} else if (isHtml && isPhpState) {
 				// php -> html
-				buffer.append("?>\n");
+				buffer.append("?>\n"); //$NON-NLS-1$
 				statements[i].accept(this);
-				buffer.append("\n");
+				buffer.append("\n"); //$NON-NLS-1$
 				isPhpState = false;
 			} else {
 				// html first
 				statements[i].accept(this);
-				buffer.append("\n");
+				buffer.append("\n"); //$NON-NLS-1$
 			}
 		}
 
 		if (isPhpState) {
-			buffer.append("?>\n");
+			buffer.append("?>\n"); //$NON-NLS-1$
 		}
 
 		Collection comments = program.getComments();
@@ -563,38 +563,38 @@ public class CodeBuilder implements Visitor {
 	public void visit(Quote quote) {
 		switch (quote.getQuoteType()) {
 			case 0:
-				buffer.append("\"");
+				buffer.append("\""); //$NON-NLS-1$
 				acceptQuoteExpression(quote.getExpressions());
-				buffer.append("\"");
+				buffer.append("\""); //$NON-NLS-1$
 				break;
 			case 1:
-				buffer.append("\'");
+				buffer.append("\'"); //$NON-NLS-1$
 				acceptQuoteExpression(quote.getExpressions());
-				buffer.append("\'");
+				buffer.append("\'"); //$NON-NLS-1$
 				break;
 			case 2:
-				buffer.append("<<<Heredoc\n");
+				buffer.append("<<<Heredoc\n"); //$NON-NLS-1$
 				acceptQuoteExpression(quote.getExpressions());
-				buffer.append("\nHeredoc");
+				buffer.append("\nHeredoc"); //$NON-NLS-1$
 		}
 	}
 
 	public void visit(Reference reference) {
-		buffer.append("&");
+		buffer.append("&"); //$NON-NLS-1$
 		reference.getExpression().accept(this);
 	}
 
 	public void visit(ReflectionVariable reflectionVariable) {
-		buffer.append("$");
+		buffer.append("$"); //$NON-NLS-1$
 		reflectionVariable.getVariableName().accept(this);
 	}
 
 	public void visit(ReturnStatement returnStatement) {
-		buffer.append("return ");
+		buffer.append("return "); //$NON-NLS-1$
 		if (returnStatement.getExpr() != null) {
 			returnStatement.getExpr().accept(this);
 		}
-		buffer.append(";\n");
+		buffer.append(";\n"); //$NON-NLS-1$
 	}
 
 	public void visit(Scalar scalar) {
@@ -607,41 +607,41 @@ public class CodeBuilder implements Visitor {
 
 	public void visit(StaticConstantAccess staticFieldAccess) {
 		staticFieldAccess.getClassName().accept(this);
-		buffer.append("::");
+		buffer.append("::"); //$NON-NLS-1$
 		staticFieldAccess.getConstant().accept(this);
 	}
 
 	public void visit(StaticFieldAccess staticFieldAccess) {
 		staticFieldAccess.getClassName().accept(this);
-		buffer.append("::");
+		buffer.append("::"); //$NON-NLS-1$
 		staticFieldAccess.getField().accept(this);
 	}
 
 	public void visit(StaticMethodInvocation staticMethodInvocation) {
 		staticMethodInvocation.getClassName().accept(this);
-		buffer.append("::");
+		buffer.append("::"); //$NON-NLS-1$
 		staticMethodInvocation.getMethod().accept(this);
 	}
 
 	public void visit(StaticStatement staticStatement) {
-		buffer.append("static ");
+		buffer.append("static "); //$NON-NLS-1$
 		boolean isFirst = true;
 		Expression[] expressions = staticStatement.getExpressions();
 		for (int i = 0; i < expressions.length; i++) {
 			if (!isFirst) {
-				buffer.append(", ");
+				buffer.append(", "); //$NON-NLS-1$
 			}
 			expressions[i].accept(this);
 			isFirst = false;
 		}
-		buffer.append(";\n");
+		buffer.append(";\n"); //$NON-NLS-1$
 	}
 
 	public void visit(SwitchCase switchCase) {
 
 		if (switchCase.getValue() != null) {
 			switchCase.getValue().accept(this);
-			buffer.append(":\n");
+			buffer.append(":\n"); //$NON-NLS-1$
 		}
 		Statement[] actions = switchCase.getActions();
 		for (int i = 0; i < actions.length; i++) {
@@ -650,9 +650,9 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(SwitchStatement switchStatement) {
-		buffer.append("switch (");
+		buffer.append("switch ("); //$NON-NLS-1$
 		switchStatement.getExpr().accept(this);
-		buffer.append(")");
+		buffer.append(")"); //$NON-NLS-1$
 		switchStatement.getStatement().accept(this);
 	}
 
@@ -661,7 +661,7 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(TryStatement tryStatement) {
-		buffer.append("try ");
+		buffer.append("try "); //$NON-NLS-1$
 		tryStatement.getTryStatement().accept(this);
 		CatchClause[] catchClauses = tryStatement.getCatchClauses();
 		for (int i = 0; i < catchClauses.length; i++) {
@@ -679,9 +679,9 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(WhileStatement whileStatement) {
-		buffer.append("while (");
+		buffer.append("while ("); //$NON-NLS-1$
 		whileStatement.getCondition().accept(this);
-		buffer.append(")\n");
+		buffer.append(")\n"); //$NON-NLS-1$
 		whileStatement.getAction().accept(this);
 	}
 }

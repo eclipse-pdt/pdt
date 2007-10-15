@@ -84,23 +84,23 @@ public class FieldsDeclaration extends BodyDeclaration {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<FieldsDeclaration");
+		buffer.append(tab).append("<FieldsDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" modifier='").append(getModifierString()).append("'>\n");
+		buffer.append(" modifier='").append(getModifierString()).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (int i = 0; i < variableNames.length; i++) {
-			buffer.append(tab).append(TAB).append("<VariableName>\n");
+			buffer.append(tab).append(TAB).append("<VariableName>\n"); //$NON-NLS-1$
 			variableNames[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
-			buffer.append(tab).append(TAB).append("</VariableName>\n");
-			buffer.append(tab).append(TAB).append("<InitialValue>\n");
+			buffer.append("\n"); //$NON-NLS-1$
+			buffer.append(tab).append(TAB).append("</VariableName>\n"); //$NON-NLS-1$
+			buffer.append(tab).append(TAB).append("<InitialValue>\n"); //$NON-NLS-1$
 			Expression expr = initialValues[i];
 			if (expr != null) {
 				expr.toString(buffer, TAB + TAB + tab);
-				buffer.append("\n");
+				buffer.append("\n"); //$NON-NLS-1$
 			}
-			buffer.append(tab).append(TAB).append("</InitialValue>\n");
+			buffer.append(tab).append(TAB).append("</InitialValue>\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</FieldsDeclaration>");
+		buffer.append(tab).append("</FieldsDeclaration>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

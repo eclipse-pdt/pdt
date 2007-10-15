@@ -173,7 +173,7 @@ public class CodeDataResolver {
 						PHPClassData classData = fileData != null ? PHPFileDataUtilities.getContainerClassDada(fileData, offset) : null;
 
 						// If we are in function declaration:
-						if ("function".equalsIgnoreCase(prevWord)) {
+						if ("function".equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
 							if (classData != null) {
 								return toArray(projectModel.getClassFunctionData(fileName, classData.getName(), elementName));
 							}
@@ -181,22 +181,22 @@ public class CodeDataResolver {
 						}
 
 						// If we are in class declaration:
-						if ("class".equalsIgnoreCase(prevWord) || "interface".equalsIgnoreCase(prevWord)) {
+						if ("class".equalsIgnoreCase(prevWord) || "interface".equalsIgnoreCase(prevWord)) { //$NON-NLS-1$ //$NON-NLS-2$
 							return toArray(projectModel.getClass(fileName, elementName));
 						}
 
 						CodeData[] matchingClasses = getMatchingClasses(elementName, projectModel, fileName);
 
 						// Class instantiation:
-						if ("new".equalsIgnoreCase(prevWord)) {
+						if ("new".equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
 							return matchingClasses;
 						}
 
 						// Handle extends and implements:
 						// Check that the statement suites the condition. If class or interface keywords don't appear in the beginning of the statement or they are alone there.
-						if (statement.length() > 6 && ("class".equals(statement.subSequence(0, 5).toString()) || statement.length() > 10 && "interface".equals(statement.subSequence(0, 9).toString()))) {
+						if (statement.length() > 6 && ("class".equals(statement.subSequence(0, 5).toString()) || statement.length() > 10 && "interface".equals(statement.subSequence(0, 9).toString()))) { //$NON-NLS-1$ //$NON-NLS-2$
 
-							if ("extends".equalsIgnoreCase(prevWord) || "implements".equalsIgnoreCase(prevWord)) {
+							if ("extends".equalsIgnoreCase(prevWord) || "implements".equalsIgnoreCase(prevWord)) { //$NON-NLS-1$ //$NON-NLS-2$
 								return matchingClasses;
 							}
 
@@ -209,7 +209,7 @@ public class CodeDataResolver {
 							final int preListWordStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statement, preListWordEnd, false);
 							final String preListWord = statement.subSequence(preListWordStart, preListWordEnd).toString();
 
-							if ("extends".equalsIgnoreCase(preListWord) || "implements".equalsIgnoreCase(preListWord)) {
+							if ("extends".equalsIgnoreCase(preListWord) || "implements".equalsIgnoreCase(preListWord)) { //$NON-NLS-1$ //$NON-NLS-2$
 								return matchingClasses;
 							}
 						}
@@ -221,7 +221,7 @@ public class CodeDataResolver {
 						}
 
 						// If this is variable:
-						if (elementName.charAt(0) == '$' && !"::".equals(trigger)) {
+						if (elementName.charAt(0) == '$' && !"::".equals(trigger)) { //$NON-NLS-1$
 							// Don't show escaped variables within PHP string:
 							if (PHPPartitionTypes.isPHPQuotesState(tRegion.getType())) {
 								try {
@@ -238,10 +238,10 @@ public class CodeDataResolver {
 
 							// If we are in var definition:
 							if (classData != null) {
-								if ("var".equalsIgnoreCase(prevWord) || "private".equalsIgnoreCase(prevWord) || "static".equalsIgnoreCase(prevWord) || "public".equalsIgnoreCase(prevWord) || "protected".equalsIgnoreCase(prevWord)) {
+								if ("var".equalsIgnoreCase(prevWord) || "private".equalsIgnoreCase(prevWord) || "static".equalsIgnoreCase(prevWord) || "public".equalsIgnoreCase(prevWord) || "protected".equalsIgnoreCase(prevWord)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 									return filterExact(classData.getVars(), elementName);
 								}
-								if ("this".equalsIgnoreCase(elementName)) {
+								if ("this".equalsIgnoreCase(elementName)) { //$NON-NLS-1$
 									return toArray(classData);
 								}
 							}
@@ -295,13 +295,13 @@ public class CodeDataResolver {
 
 						// If we are at class constant definition:
 						if (classData != null) {
-							if ("const".equalsIgnoreCase(prevWord)) {
+							if ("const".equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
 								return filterExact(classData.getConsts(), elementName);
 							}
 						}
 
 						// We are at class trigger:
-						if ("::".equals(nextWord)) {
+						if ("::".equals(nextWord)) { //$NON-NLS-1$
 							return matchingClasses;
 						}
 
@@ -309,7 +309,7 @@ public class CodeDataResolver {
 						CodeData[] classDatas = getMatchingClasses(className, projectModel, fileName);
 
 						// Is it function or method:
-						if ("(".equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) {
+						if ("(".equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) { //$NON-NLS-1$
 							CodeData[] result = null;
 							if (classDatas.length > 0) {
 								for (int i = 0; i < classDatas.length; ++i) {
@@ -326,7 +326,7 @@ public class CodeDataResolver {
 						if (classDatas.length > 0) {
 							// Check whether this is a class constant:
 							if (startPosition > 0) {
-								if ("::".equals(trigger) && elementName.charAt(0) != '$') {
+								if ("::".equals(trigger) && elementName.charAt(0) != '$') { //$NON-NLS-1$
 									CodeData[] result = null;
 									for (int i = 0; i < classDatas.length; ++i) {
 										result = ModelSupport.merge(result, toArray(projectModel.getClassConstsData(fileName, className, elementName)));
@@ -416,8 +416,8 @@ public class CodeDataResolver {
 		boolean isClassTriger = false;
 
 		String triggerText = statement.subSequence(startPosition - 2, startPosition).toString();
-		if ("->".equals(triggerText)) {
-		} else if ("::".equals(triggerText)) {
+		if ("->".equals(triggerText)) { //$NON-NLS-1$
+		} else if ("::".equals(triggerText)) { //$NON-NLS-1$
 			isClassTriger = true;
 		} else {
 			return null;
@@ -456,7 +456,7 @@ public class CodeDataResolver {
 		int classNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, propertyEndPosition, true);
 		String className = statmentText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
-			if (className.equals("self")) {
+			if (className.equals("self")) { //$NON-NLS-1$
 				PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset - 6); // the
 				// offset
 				// before
@@ -464,7 +464,7 @@ public class CodeDataResolver {
 				if (classData != null) {
 					return classData.getName();
 				}
-			} else if (className.equals("parent")) {
+			} else if (className.equals("parent")) { //$NON-NLS-1$
 				PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset - 8); // the
 				// offset
 				// before
@@ -527,7 +527,7 @@ public class CodeDataResolver {
 	 * finding the type of the class variable.
 	 */
 	private String getVarType(PHPProjectModel projectModel, PHPFileData fileData, String className, String varName, int statmentStart, int line) {
-		String tempType = PHPFileDataUtilities.getVariableType(fileData.getName(), "this;*" + varName, statmentStart, line, projectModel.getPHPUserModel(), true);
+		String tempType = PHPFileDataUtilities.getVariableType(fileData.getName(), "this;*" + varName, statmentStart, line, projectModel.getPHPUserModel(), true); //$NON-NLS-1$
 		if (tempType != null) {
 			return tempType;
 		}

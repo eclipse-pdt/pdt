@@ -59,14 +59,14 @@ public class BreakStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<BreakStatement");
+		buffer.append(tab).append("<BreakStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		if (expr != null) {
 			expr.toString(buffer, TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</BreakStatement>");
+		buffer.append(tab).append("</BreakStatement>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

@@ -20,7 +20,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class ModelSupport {
 
-	private static final String EMPTY_STRING = "";
+	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	public static final CodeDataFilter STATIC_VARIABLES_FILTER = new StaticVariablesFilter(true);
 	public static final CodeDataFilter NOT_STATIC_VARIABLES_FILTER = new StaticVariablesFilter(false);
 	public static final CodeDataFilter STATIC_FUNCTIONS_FILTER = new StaticFunctionsFilter(true);
@@ -311,7 +311,7 @@ public class ModelSupport {
 			return sortedArray;
 		}
 		ArrayList<CodeData> newCodeDataList = new ArrayList<CodeData>();
-		String baseName = "";
+		String baseName = ""; //$NON-NLS-1$
 		for (int i = 0; i < sortedArray.length; i++) {
 			String curName = sortedArray[i].getName();
 			if (!baseName.equals(curName)) {
@@ -629,7 +629,7 @@ public class ModelSupport {
 	 */
 	private static final class MegicFunctionFilter implements CodeDataFilter {
 
-		private static final String[] magicFunction = { "__construct", "__destruct", "__call", "__get", "__set", "__isset", "__unset", "__sleep", "__wakeup", "__toString", "__clone", "__autoload" };
+		private static final String[] magicFunction = { "__construct", "__destruct", "__call", "__get", "__set", "__isset", "__unset", "__sleep", "__wakeup", "__toString", "__clone", "__autoload" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
 		boolean acceptMagicFunction;
 
 		/**

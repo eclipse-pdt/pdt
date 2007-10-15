@@ -91,18 +91,18 @@ public class PHPModelUtil {
 				while (phpElement != null && !(phpElement instanceof PHPFileData))
 					phpElement = ((PHPCodeData) phpElement).getContainer();
 			if (phpElement == null)
-				return "";
+				return ""; //$NON-NLS-1$
 			IResource res;
 			IPath path;
 			if ((res = getResource(phpElement)) != null && (path = res.getFullPath()) != null)
 				return path.toPortableString();
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
 	public static PHPCodeData getElementAt(final PHPCodeData elementData, final int offset) {
 		// why?
-		throw new RuntimeException("test me");
+		throw new RuntimeException("test me"); //$NON-NLS-1$
 	}
 
 	public static Object getExternalResource(final Object element, final IProject project) {
@@ -291,7 +291,7 @@ public class PHPModelUtil {
 		String fileName = null;
 		if (fileData != null)
 			fileName = fileData.getName();
-		if (fileName.equals(""))
+		if (fileName.equals("")) //$NON-NLS-1$
 			fileName = null;
 		PHPClassData superClassData = null;
 		IPhpModel model = null;
@@ -339,7 +339,7 @@ public class PHPModelUtil {
 			String fileName = null;
 			if (fileData != null)
 				fileName = fileData.getName();
-			if (fileName.equals(""))
+			if (fileName.equals("")) //$NON-NLS-1$
 				fileName = null;
 			PHPClassData interfaceClassData = null;
 			// first try to find in the same user model:
@@ -552,7 +552,7 @@ public class PHPModelUtil {
 				IPhpModel includeModel = getIncludeModelForFile((PHPProjectModel)model, fileData);
 				IPath path = getIncludeModelLocation(includeModel);
 				if (includeModel.getFileData(location) == fileData) {
-					return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString();
+					return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString(); //$NON-NLS-1$
 				}
 			}
 		} else {

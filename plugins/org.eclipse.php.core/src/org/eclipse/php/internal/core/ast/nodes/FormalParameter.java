@@ -101,26 +101,26 @@ public class FormalParameter extends ASTNode {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<FormalParameter");
+		buffer.append(tab).append("<FormalParameter"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isMandatory='").append(isMandatory).append("'>\n");
-		buffer.append(TAB).append(tab).append("<Type>\n");
+		buffer.append(" isMandatory='").append(isMandatory).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(TAB).append(tab).append("<Type>\n"); //$NON-NLS-1$
 		if (parameterType != null) {
 			parameterType.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</Type>\n");
-		buffer.append(TAB).append(tab).append("<ParameterName>\n");
+		buffer.append(TAB).append(tab).append("</Type>\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<ParameterName>\n"); //$NON-NLS-1$
 		parameterName.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n");
-		buffer.append(TAB).append(tab).append("</ParameterName>\n");
-		buffer.append(TAB).append(tab).append("<DefaultValue>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("</ParameterName>\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<DefaultValue>\n"); //$NON-NLS-1$
 		if (defaultValue != null) {
 			defaultValue.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</DefaultValue>\n");
-		buffer.append(tab).append("</FormalParameter>");
+		buffer.append(TAB).append(tab).append("</DefaultValue>\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</FormalParameter>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

@@ -217,7 +217,7 @@ public class lalr_item_set {
   protected void not_null(Object obj) throws internal_error
     {
       if (obj == null) 
-	throw new internal_error("Null object used in set operation");
+	throw new internal_error("Null object used in set operation"); //$NON-NLS-1$
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -359,12 +359,12 @@ public class lalr_item_set {
     {
       StringBuffer result = new StringBuffer();
 
-      result.append("{\n");
+      result.append("{\n"); //$NON-NLS-1$
       for (Enumeration e=all(); e.hasMoreElements(); ) 
  	{
- 	  result.append("  " + (lalr_item)e.nextElement() + "\n");
+ 	  result.append("  " + (lalr_item)e.nextElement() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
  	}
-       result.append("}");
+       result.append("}"); //$NON-NLS-1$
 
        return result.toString();
     }

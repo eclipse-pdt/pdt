@@ -31,7 +31,7 @@ import java.util.Hashtable;
    name/scope will be represented by at most one instance.
 
    @author samweber
-   @version $Revision: 1.1 $
+   @version $Revision: 1.2 $
 */
 
 public class ResolvedVariable
@@ -65,7 +65,7 @@ public class ResolvedVariable
   /** The private constructor. */
   private ResolvedVariable(ScopeKind kind, String name)
   {
-    assert (null != name):"ResolvedVariable created with null name.";
+    assert (null != name):"ResolvedVariable created with null name."; //$NON-NLS-1$
     _scope = kind;
     _name = name;
     switch (kind)
@@ -108,7 +108,7 @@ public class ResolvedVariable
 
   public String toString()
   {
-    return "("+_scope+","+_name+")";
+    return "("+_scope+","+_name+")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   /** Given a scope and a variable name, returns the corresponging
@@ -139,7 +139,7 @@ public class ResolvedVariable
           }
         break;
        default:
-          throw new AssertionError("Nonexistent scope value");
+          throw new AssertionError("Nonexistent scope value"); //$NON-NLS-1$
       }
     if (null == r)
       {
@@ -155,26 +155,26 @@ public class ResolvedVariable
   /** A test method. */
   public static void printContents()
   {
-    System.out.println("Globals:");
+    System.out.println("Globals:"); //$NON-NLS-1$
     for (final ResolvedVariable r:_globals.values())
       {
-        System.out.println("  "+r);
+        System.out.println("  "+r); //$NON-NLS-1$
       }
-    System.out.println("Locals:");
+    System.out.println("Locals:"); //$NON-NLS-1$
     for (final ResolvedVariable r:_locals.values())
       {
-        System.out.println("  "+r);
+        System.out.println("  "+r); //$NON-NLS-1$
       }
-    System.out.println("Undetermined:");
+    System.out.println("Undetermined:"); //$NON-NLS-1$
     if (null == _undetermined)
       {
-        System.out.println("  None.");
+        System.out.println("  None."); //$NON-NLS-1$
       }
     else
       {
         for (final ResolvedVariable r:_undetermined.values())
           {
-            System.out.println("  "+r);
+            System.out.println("  "+r); //$NON-NLS-1$
           }
       }
     

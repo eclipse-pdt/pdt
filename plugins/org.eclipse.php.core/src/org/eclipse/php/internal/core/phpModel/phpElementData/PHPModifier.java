@@ -135,34 +135,34 @@ public class PHPModifier {
 		StringBuffer sb = new StringBuffer();
 
 		if ((mod & PUBLIC) != 0) {
-			sb.append("public ");
+			sb.append("public "); //$NON-NLS-1$
 		}
 		if ((mod & PROTECTED) != 0) {
-			sb.append("protected ");
+			sb.append("protected "); //$NON-NLS-1$
 		}
 		if ((mod & PRIVATE) != 0) {
-			sb.append("private ");
+			sb.append("private "); //$NON-NLS-1$
 		}
 
 		//Canonical order
 		if ((mod & ABSTRACT) != 0) {
-			sb.append("abstract ");
+			sb.append("abstract "); //$NON-NLS-1$
 		}
 		if ((mod & STATIC) != 0) {
-			sb.append("static ");
+			sb.append("static "); //$NON-NLS-1$
 		}
 		if ((mod & FINAL) != 0) {
-			sb.append("final ");
+			sb.append("final "); //$NON-NLS-1$
 		}
 		if ((mod & INTERFACE) != 0) {
-			sb.append("interface ");
+			sb.append("interface "); //$NON-NLS-1$
 		}
 
 		int len;
 		if ((len = sb.length()) > 0) { /* trim trailing space */
 			return sb.toString().substring(0, len - 1);
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 }

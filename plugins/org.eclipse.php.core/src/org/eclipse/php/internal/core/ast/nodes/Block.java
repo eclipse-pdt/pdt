@@ -77,14 +77,14 @@ public class Block extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<Block");
+		buffer.append(tab).append("<Block"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isCurly='").append(isCurly).append("'>\n");
+		buffer.append(" isCurly='").append(isCurly).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (int i = 0; i < statements.length; i++) {
 			statements[i].toString(buffer, TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</Block>");
+		buffer.append(tab).append("</Block>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

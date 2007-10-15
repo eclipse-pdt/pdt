@@ -88,24 +88,24 @@ public class ForEachStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ForEachStatement");
+		buffer.append(tab).append("<ForEachStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(TAB).append(tab).append("<Expression>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Expression>\n"); //$NON-NLS-1$
 		expression.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</Expression>\n");
-		buffer.append(TAB).append(tab).append("<Key>\n");
+		buffer.append("\n").append(TAB).append(tab).append("</Expression>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(TAB).append(tab).append("<Key>\n"); //$NON-NLS-1$
 		if (key != null) {
 			key.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</Key>\n");
-		buffer.append(TAB).append(tab).append("<Value>\n");
+		buffer.append(TAB).append(tab).append("</Key>\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Value>\n"); //$NON-NLS-1$
 		value.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</Value>\n");
+		buffer.append("\n").append(TAB).append(tab).append("</Value>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		statement.toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append("</ForEachStatement>");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</ForEachStatement>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

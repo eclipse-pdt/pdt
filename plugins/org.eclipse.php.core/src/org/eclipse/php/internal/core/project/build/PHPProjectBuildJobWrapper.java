@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.ui.IEditorInput;
@@ -35,7 +36,7 @@ public class PHPProjectBuildJobWrapper {
 	}
 
 	public void runJob() {
-    	WorkspaceJob cleanJob = new WorkspaceJob("Building after php version changed ...") {
+    	WorkspaceJob cleanJob = new WorkspaceJob(CoreMessages.PHPProjectBuildJobWrapper_0) {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
 					project.build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);

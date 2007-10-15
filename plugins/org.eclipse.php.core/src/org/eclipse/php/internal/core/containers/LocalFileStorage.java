@@ -23,8 +23,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.util.Messages;
 
 /**
  * Implementation of storage for a local file (<code>java.io.File</code>).
@@ -69,7 +69,7 @@ public class LocalFileStorage extends PlatformObject implements IStorage {
         try {
             return new FileInputStream(getFile());
         } catch (IOException e) {
-            throw new CoreException(new Status(IStatus.ERROR, PHPCorePlugin.getPluginId(), PHPCorePlugin.INTERNAL_ERROR, Messages.zipEntryStorage_error, e)); //$NON-NLS-1$
+            throw new CoreException(new Status(IStatus.ERROR, PHPCorePlugin.getPluginId(), PHPCorePlugin.INTERNAL_ERROR, CoreMessages.zipEntryStorage_error, e)); //$NON-NLS-1$
         }
     }
 

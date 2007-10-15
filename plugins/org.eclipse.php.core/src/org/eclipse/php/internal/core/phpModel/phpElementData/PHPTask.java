@@ -12,7 +12,7 @@ package org.eclipse.php.internal.core.phpModel.phpElementData;
 
 public class PHPTask extends PHPMarker {
 
-	public static final String RULER_PHP_TASK = "rulerPHPTask";
+	public static final String RULER_PHP_TASK = "rulerPHPTask"; //$NON-NLS-1$
 	private String taskName;
 	
 	public PHPTask(String taskName, String description, UserData userData) {

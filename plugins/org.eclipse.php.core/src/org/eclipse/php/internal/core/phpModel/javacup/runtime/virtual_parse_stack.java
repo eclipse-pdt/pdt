@@ -32,7 +32,7 @@ public class virtual_parse_stack {
       /* sanity check */
       if (shadowing_stack == null)
 	throw new Exception(
-	  "Internal parser error: attempt to create null virtual stack");
+	  "Internal parser error: attempt to create null virtual stack"); //$NON-NLS-1$
 
       /* set up our internals */
       real_stack = shadowing_stack;
@@ -112,7 +112,7 @@ public class virtual_parse_stack {
     {
       if (vstack.empty())
 	throw new Exception(
-		  "Internal parser error: top() called on empty virtual stack");
+		  "Internal parser error: top() called on empty virtual stack"); //$NON-NLS-1$
 
       return ((Integer)vstack.peek()).intValue();
     }
@@ -124,7 +124,7 @@ public class virtual_parse_stack {
     {
       if (vstack.empty())
 	throw new Exception(
-		  "Internal parser error: pop from empty virtual stack");
+		  "Internal parser error: pop from empty virtual stack"); //$NON-NLS-1$
 
       /* pop it */
       vstack.pop();

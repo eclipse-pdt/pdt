@@ -68,23 +68,23 @@ public class InterfaceDeclaration extends TypeDeclaration {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<InterfaceDeclaration");
+		buffer.append(tab).append("<InterfaceDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(tab).append(TAB).append("<InterfaceName>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(tab).append(TAB).append("<InterfaceName>\n"); //$NON-NLS-1$
 		getName().toString(buffer, TAB + TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append(TAB).append("</InterfaceName>\n");
-		buffer.append(tab).append(TAB).append("<Interfaces>\n");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append(TAB).append("</InterfaceName>\n"); //$NON-NLS-1$
+		buffer.append(tab).append(TAB).append("<Interfaces>\n"); //$NON-NLS-1$
 		Identifier[] interfaces = getInterfaces();
 		for (int i = 0; interfaces != null && i < interfaces.length; i++) {
 			interfaces[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append(TAB).append("</Interfaces>\n");
+		buffer.append(tab).append(TAB).append("</Interfaces>\n"); //$NON-NLS-1$
 		getBody().toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append("</InterfaceDeclaration>");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</InterfaceDeclaration>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

@@ -39,9 +39,9 @@ public class EmptyStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<EmptyStatement");
+		buffer.append(tab).append("<EmptyStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append("/>");
+		buffer.append("/>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

@@ -111,7 +111,7 @@ public abstract class ASTNode implements Visitable {
 
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer();
-		toString(buffer, "");
+		toString(buffer, ""); //$NON-NLS-1$
 		return buffer.toString();
 	}
 
@@ -119,7 +119,7 @@ public abstract class ASTNode implements Visitable {
 	 * Appends the start, length parameters to the buffer
 	 */
 	protected void appendInterval(StringBuffer buffer) {
-		buffer.append(" start='").append(start).append("' length='").append(length).append("'");
+		buffer.append(" start='").append(start).append("' length='").append(length).append("'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
@@ -129,10 +129,10 @@ public abstract class ASTNode implements Visitable {
 	 */
 	protected static String getXmlStringValue(String input) {
 		String escapedString = input;
-		escapedString = escapedString.replaceAll("&", "&amp;");
-		escapedString = escapedString.replaceAll(">", "&gt;");
-		escapedString = escapedString.replaceAll("<", "&lt;");
-		escapedString = escapedString.replaceAll("'", "&apos;");
+		escapedString = escapedString.replaceAll("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
+		escapedString = escapedString.replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
+		escapedString = escapedString.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
+		escapedString = escapedString.replaceAll("'", "&apos;"); //$NON-NLS-1$ //$NON-NLS-2$
 		return escapedString;
 	}
 

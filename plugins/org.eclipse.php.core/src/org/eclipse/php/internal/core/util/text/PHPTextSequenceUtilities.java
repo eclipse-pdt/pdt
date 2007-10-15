@@ -25,13 +25,13 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPTextSequenceUtilities {
 
-	private static final Pattern COMMENT_START_PATTERN = Pattern.compile("(/[*])|(//)");
-	private static final Pattern COMMENT_END_PATTERN = Pattern.compile("[*]/");
-	private static final String START_COMMENT = "/*";
+	private static final Pattern COMMENT_START_PATTERN = Pattern.compile("(/[*])|(//)"); //$NON-NLS-1$
+	private static final Pattern COMMENT_END_PATTERN = Pattern.compile("[*]/"); //$NON-NLS-1$
+	private static final String START_COMMENT = "/*"; //$NON-NLS-1$
 //	private static final String END_COMMENT = "*/";
 	private static final char END_LINE = '\n';
-	private static final Pattern FUNCTION_PATTERN = Pattern.compile("function\\s", Pattern.CASE_INSENSITIVE);
-	private static final Pattern CLASS_PATTERN = Pattern.compile("(class|interface)\\s", Pattern.CASE_INSENSITIVE);
+	private static final Pattern FUNCTION_PATTERN = Pattern.compile("function\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private static final Pattern CLASS_PATTERN = Pattern.compile("(class|interface)\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	private PHPTextSequenceUtilities() {
 	}

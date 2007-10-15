@@ -65,7 +65,7 @@ public class nonassoc_action extends parse_action {
   /** Convert to string. */
   public String toString() 
     {
-      return "NONASSOC";
+      return "NONASSOC"; //$NON-NLS-1$
     }
 
   /*-----------------------------------------------------------*/

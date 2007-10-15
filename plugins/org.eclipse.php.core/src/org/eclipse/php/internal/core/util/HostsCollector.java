@@ -22,7 +22,7 @@ public class HostsCollector {
 	}
 
 	public static String getHosts() {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		try {
 			ArrayList localHosts = new ArrayList();
 			ArrayList allIPs = new ArrayList();
@@ -40,7 +40,7 @@ public class HostsCollector {
 						continue;
 					}
 
-					if (name.equalsIgnoreCase("lo") || name.equalsIgnoreCase("localhost")) {
+					if (name.equalsIgnoreCase("lo") || name.equalsIgnoreCase("localhost")) { //$NON-NLS-1$ //$NON-NLS-2$
 						localHosts.add(inetAddress);
 					} else {
 						allIPs.add(inetAddress);
@@ -52,11 +52,11 @@ public class HostsCollector {
 			if (allIPs.size() > 0) {
 				for (int i = 0; i < allIPs.size(); i++) {
 					if (i > 0) {
-						result += "%2C";
+						result += "%2C"; //$NON-NLS-1$
 					}
 					InetAddress inetAddress = (InetAddress) allIPs.get(i);
 					String s = inetAddress.toString();
-					if (s.startsWith("/")) {
+					if (s.startsWith("/")) { //$NON-NLS-1$
 						s = s.substring(1);
 					}
 					result += s;
@@ -66,7 +66,7 @@ public class HostsCollector {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 
 	}
 

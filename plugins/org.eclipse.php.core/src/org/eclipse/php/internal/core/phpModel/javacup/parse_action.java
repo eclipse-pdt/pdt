@@ -87,7 +87,7 @@ public class parse_action {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to string. */
-  public String toString() {return "ERROR";}
+  public String toString() {return "ERROR";} //$NON-NLS-1$
 
   /*-----------------------------------------------------------*/
 }

@@ -22,6 +22,6 @@ public class ErrorDefinedType implements IEvaluatedType {
 	}
 
 	public String toString() {
-		return "Error Defined";
+		return "Error Defined"; //$NON-NLS-1$
 	}
 }

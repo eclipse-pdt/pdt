@@ -37,7 +37,7 @@ public class terminal extends symbol {
 	// initializers, so we do a crash instead
 	// was:
 	// throw new internal_error("Duplicate terminal (" + nm + ") created");
-	(new internal_error("Duplicate terminal (" + nm + ") created")).crash();
+	(new internal_error("Duplicate terminal (" + nm + ") created")).crash(); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* assign a unique index */
       _index = next_index++;
@@ -125,12 +125,12 @@ public class terminal extends symbol {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Special terminal for end of input. */
-  public static final terminal EOF = new terminal("EOF");
+  public static final terminal EOF = new terminal("EOF"); //$NON-NLS-1$
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** special terminal used for error recovery */
-  public static final terminal error = new terminal("error");
+  public static final terminal error = new terminal("error"); //$NON-NLS-1$
 
   /*-----------------------------------------------------------*/
   /*--- General Methods ---------------------------------------*/
@@ -147,7 +147,7 @@ public class terminal extends symbol {
   /** Convert to a string. */
   public String toString()
     {
-      return super.toString() + "[" + index() + "]";
+      return super.toString() + "[" + index() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/

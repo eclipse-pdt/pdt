@@ -75,24 +75,24 @@ public class DeclareStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<DeclareStatement");
+		buffer.append(tab).append("<DeclareStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(tab).append(TAB).append("<Directives>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(tab).append(TAB).append("<Directives>\n"); //$NON-NLS-1$
 		for (int i = 0; i < directiveNames.length; i++) {
-			buffer.append(tab).append(TAB).append(TAB).append("<Name>\n");
+			buffer.append(tab).append(TAB).append(TAB).append("<Name>\n"); //$NON-NLS-1$
 			directiveNames[i].toString(buffer, TAB + TAB + TAB + tab);
-			buffer.append("\n");
-			buffer.append(tab).append(TAB).append(TAB).append("</Name>\n");
-			buffer.append(tab).append(TAB).append(TAB).append("<Value>\n");
+			buffer.append("\n"); //$NON-NLS-1$
+			buffer.append(tab).append(TAB).append(TAB).append("</Name>\n"); //$NON-NLS-1$
+			buffer.append(tab).append(TAB).append(TAB).append("<Value>\n"); //$NON-NLS-1$
 			directiveValues[i].toString(buffer, TAB + TAB + TAB + tab);
-			buffer.append("\n");
-			buffer.append(tab).append(TAB).append(TAB).append("</Value>\n");
+			buffer.append("\n"); //$NON-NLS-1$
+			buffer.append(tab).append(TAB).append(TAB).append("</Value>\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append(TAB).append("</Directives>\n");
+		buffer.append(tab).append(TAB).append("</Directives>\n"); //$NON-NLS-1$
 		action.toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append("</DeclareStatement>");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</DeclareStatement>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

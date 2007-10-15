@@ -73,17 +73,17 @@ public class ClassInstanceCreation extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ClassInstanceCreation");
+		buffer.append(tab).append("<ClassInstanceCreation"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		className.toString(buffer, TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("<ConstructorParameters>\n");
+		buffer.append("\n").append(TAB).append(tab).append("<ConstructorParameters>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (int i = 0; i < ctorParams.length; i++) {
 			ctorParams[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</ConstructorParameters>\n");
-		buffer.append(tab).append("</ClassInstanceCreation>");
+		buffer.append(TAB).append(tab).append("</ConstructorParameters>\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</ClassInstanceCreation>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

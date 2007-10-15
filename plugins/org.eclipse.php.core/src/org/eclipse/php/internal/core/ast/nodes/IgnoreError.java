@@ -52,11 +52,11 @@ public class IgnoreError extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<IgnoreError");
+		buffer.append(tab).append("<IgnoreError"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		expr.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</IgnoreError>");
+		buffer.append("\n").append(tab).append("</IgnoreError>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {

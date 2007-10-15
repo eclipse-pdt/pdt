@@ -47,9 +47,9 @@ public class Identifier extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<Identifier");
+		buffer.append(tab).append("<Identifier"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" name='").append(name).append("'/>");
+		buffer.append(" name='").append(name).append("'/>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

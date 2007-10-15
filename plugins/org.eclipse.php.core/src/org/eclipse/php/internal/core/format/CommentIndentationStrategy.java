@@ -51,7 +51,7 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 			final String blanks = FormatterUtils.getLineBlanks(document, previousLine);
 			// add the indentation of jthe previous line and a single space in addition
 			result.append(blanks);
-			result.append(" ");
+			result.append(" "); //$NON-NLS-1$
 		} else {
 			super.placeMatchingBlanks(document, result, lineNumber, forOffset);
 		}

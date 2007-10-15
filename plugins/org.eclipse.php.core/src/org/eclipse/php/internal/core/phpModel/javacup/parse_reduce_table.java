@@ -62,10 +62,10 @@ public class parse_reduce_table {
       lalr_state goto_st;
       int cnt;
 
-      result = "-------- REDUCE_TABLE --------\n";
+      result = "-------- REDUCE_TABLE --------\n"; //$NON-NLS-1$
       for (int row = 0; row < num_states(); row++)
 	{
-	  result += "From state #" + row + "\n";
+	  result += "From state #" + row + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 	  cnt = 0;
 	  for (int col = 0; col < under_state[row].size(); col++)
 	    {
@@ -75,22 +75,22 @@ public class parse_reduce_table {
 	      /* if it has action in it, print it */
 	      if (goto_st != null)
 		{
-		  result += " [non term " + col + "->"; 
-		  result += "state " + goto_st.index() + "]";
+		  result += " [non term " + col + "->";  //$NON-NLS-1$ //$NON-NLS-2$
+		  result += "state " + goto_st.index() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 
 		  /* end the line after the 3rd one */
 		  cnt++;
 		  if (cnt == 3)
 		    {
-		      result += "\n";
+		      result += "\n"; //$NON-NLS-1$
 		      cnt = 0;
 		    }
 		}
 	    }
           /* finish the line if we haven't just done that */
-	  if (cnt != 0) result += "\n";
+	  if (cnt != 0) result += "\n"; //$NON-NLS-1$
 	}
-      result += "-----------------------------";
+      result += "-----------------------------"; //$NON-NLS-1$
 
       return result;
     }

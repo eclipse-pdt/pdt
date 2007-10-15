@@ -23,6 +23,7 @@ import org.eclipse.core.filesystem.provider.FileStore;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 
 /**
@@ -57,7 +58,7 @@ public class ExternalFileStore extends FileStore {
 	 */
 	protected ExternalFileStore(File file) throws IllegalArgumentException {
 		if (file.exists()) {
-			throw new IllegalArgumentException("ExternalFileStore should be used for non-existing files only.");
+			throw new IllegalArgumentException(CoreMessages.ExternalFileStore_0);
 		}
 		this.file = file;
 		this.filePath = file.getPath();

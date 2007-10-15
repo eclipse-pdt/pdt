@@ -89,53 +89,53 @@ public class InfixExpression extends Expression {
 	public static String getOperator(int operator) {
 		switch (operator) {
 			case OP_IS_IDENTICAL:
-				return "===";
+				return "==="; //$NON-NLS-1$
 			case OP_IS_NOT_IDENTICAL:
-				return "!==";
+				return "!=="; //$NON-NLS-1$
 			case OP_IS_EQUAL:
-				return "==";
+				return "=="; //$NON-NLS-1$
 			case OP_IS_NOT_EQUAL:
-				return "!=";
+				return "!="; //$NON-NLS-1$
 			case OP_RGREATER:
-				return "<";
+				return "<"; //$NON-NLS-1$
 			case OP_IS_SMALLER_OR_EQUAL:
-				return "<=";
+				return "<="; //$NON-NLS-1$
 			case OP_LGREATER:
-				return ">";
+				return ">"; //$NON-NLS-1$
 			case OP_IS_GREATER_OR_EQUAL:
-				return ">=";
+				return ">="; //$NON-NLS-1$
 			case OP_BOOL_OR:
-				return "||";
+				return "||"; //$NON-NLS-1$
 			case OP_BOOL_AND:
-				return "&&";
+				return "&&"; //$NON-NLS-1$
 			case OP_STRING_OR:
-				return "or";
+				return "or"; //$NON-NLS-1$
 			case OP_STRING_AND:
-				return "and";
+				return "and"; //$NON-NLS-1$
 			case OP_STRING_XOR:
-				return "xor";
+				return "xor"; //$NON-NLS-1$
 			case OP_OR:
-				return "|";
+				return "|"; //$NON-NLS-1$
 			case OP_AND:
-				return "&";
+				return "&"; //$NON-NLS-1$
 			case OP_XOR:
-				return "^";
+				return "^"; //$NON-NLS-1$
 			case OP_CONCAT:
-				return ".";
+				return "."; //$NON-NLS-1$
 			case OP_PLUS:
-				return "+";
+				return "+"; //$NON-NLS-1$
 			case OP_MINUS:
-				return "-";
+				return "-"; //$NON-NLS-1$
 			case OP_MUL:
-				return "*";
+				return "*"; //$NON-NLS-1$
 			case OP_DIV:
-				return "/";
+				return "/"; //$NON-NLS-1$
 			case OP_MOD:
-				return "%";
+				return "%"; //$NON-NLS-1$
 			case OP_SL:
-				return "<<";
+				return "<<"; //$NON-NLS-1$
 			case OP_SR:
-				return ">>";
+				return ">>"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -163,13 +163,13 @@ public class InfixExpression extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<InfixExpression");
+		buffer.append(tab).append("<InfixExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" operator='").append(getXmlStringValue(getOperator(operator))).append("'>\n");
+		buffer.append(" operator='").append(getXmlStringValue(getOperator(operator))).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		left.toString(buffer, TAB + tab);
-		buffer.append("\n");
+		buffer.append("\n"); //$NON-NLS-1$
 		right.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</InfixExpression>");
+		buffer.append("\n").append(tab).append("</InfixExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {

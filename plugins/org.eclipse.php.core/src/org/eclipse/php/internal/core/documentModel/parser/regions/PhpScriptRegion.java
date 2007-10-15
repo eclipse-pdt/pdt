@@ -40,7 +40,7 @@ import org.eclipse.wst.xml.core.internal.Logger;
  */
 public class PhpScriptRegion extends ForeignRegion {
 
-	private static final String PHP_SCRIPT = "PHP Script";
+	private static final String PHP_SCRIPT = "PHP Script"; //$NON-NLS-1$
 	private final PhpTokenContainer tokensContaier = new PhpTokenContainer();
 	private final IProject project;
 
@@ -112,7 +112,7 @@ public class PhpScriptRegion extends ForeignRegion {
 				return null;
 			}
 			// checks for odd quotes
-			final String deletedText = lengthToReplace == 0 ? "" : flatnode.getParentDocument().get(requestStart, lengthToReplace);
+			final String deletedText = lengthToReplace == 0 ? "" : flatnode.getParentDocument().get(requestStart, lengthToReplace); //$NON-NLS-1$
 			final int length = changes.length();
 			if (startQuoted(deletedText) || startQuoted(changes)) {
 				return null;
@@ -339,7 +339,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	 */
 	private class DocumentReader extends Reader {
 
-		private static final String BAD_LOCATION_ERROR = "Bad location error ";
+		private static final String BAD_LOCATION_ERROR = "Bad location error "; //$NON-NLS-1$
 		
 		final private IStructuredDocument parent;
 		final private int startPhpRegion;
@@ -428,7 +428,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	 */
 	public class BlockDocumentReader extends Reader {
 
-		private static final String BAD_LOCATION_ERROR = "Bad location error ";
+		private static final String BAD_LOCATION_ERROR = "Bad location error "; //$NON-NLS-1$
 		
 		final private IDocument parent;
 		private int startPhpRegion;

@@ -101,20 +101,20 @@ public class Program extends ASTNode {
 	 * create program node in XML format.
 	 */
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append("<Program");
+		buffer.append("<Program"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n").append(TAB).append("<Statements>\n");
+		buffer.append(">\n").append(TAB).append("<Statements>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (int i = 0; statements != null && i < statements.length; i++) {
 			statements[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append("</Statements>\n").append(TAB).append("<Comments>\n");
+		buffer.append(TAB).append("</Statements>\n").append(TAB).append("<Comments>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		for (Iterator iter = getComments().iterator(); iter.hasNext();) {
 			Comment comment = (Comment) iter.next();
 			comment.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append("</Comments>\n").append("</Program>");
+		buffer.append(TAB).append("</Comments>\n").append("</Program>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private static Map createCommentsMap(List commentList) {

@@ -19,22 +19,22 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public abstract class PHPPartitionTypes {
 
-	public static final String PHP_DEFAULT = "org.eclipse.php.PHP_DEFAULT";
-	public static final String PHP_SINGLE_LINE_COMMENT = "org.eclipse.php.PHP_SINGLE_LINE_COMMENT";
-	public static final String PHP_MULTI_LINE_COMMENT = "org.eclipse.php.PHP_MULTI_LINE_COMMENT";
-	public static final String PHP_DOC = "org.eclipse.php.PHP_DOC";
-	public static final String PHP_QUOTED_STRING = "org.eclipse.php.PHP_QUOTED_STRING";
+	public static final String PHP_DEFAULT = "org.eclipse.php.PHP_DEFAULT"; //$NON-NLS-1$
+	public static final String PHP_SINGLE_LINE_COMMENT = "org.eclipse.php.PHP_SINGLE_LINE_COMMENT"; //$NON-NLS-1$
+	public static final String PHP_MULTI_LINE_COMMENT = "org.eclipse.php.PHP_MULTI_LINE_COMMENT"; //$NON-NLS-1$
+	public static final String PHP_DOC = "org.eclipse.php.PHP_DOC"; //$NON-NLS-1$
+	public static final String PHP_QUOTED_STRING = "org.eclipse.php.PHP_QUOTED_STRING"; //$NON-NLS-1$
 
 	public static boolean isPHPCommentState(final String type) {
 		return type == null ? false : isPHPMultiLineCommentState(type) || isPHPLineCommentState(type) || isPHPDocState(type);
 	}
 
 	public static boolean isPHPDocState(final String type) {
-		return type == null ? false : type.startsWith("PHPDOC");
+		return type == null ? false : type.startsWith("PHPDOC"); //$NON-NLS-1$
 	}
 
 	public static boolean isPHPDocTagState(final String type) {
-		return isPHPDocState(type) && !type.startsWith("PHPDOC_COMMENT");
+		return isPHPDocState(type) && !type.startsWith("PHPDOC_COMMENT"); //$NON-NLS-1$
 	}
 
 	public static boolean isPHPLineCommentState(final String type) {

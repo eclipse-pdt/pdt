@@ -214,7 +214,7 @@ public class IncludeCacheManager {
 		Map map = null;
 		try {
 			if (includeXMLFile.exists()) {
-				map = MapXMLReader.readMap(new InputSource(new InputStreamReader(new FileInputStream(includeXMLFile), "UTF8")));
+				map = MapXMLReader.readMap(new InputSource(new InputStreamReader(new FileInputStream(includeXMLFile), "UTF8"))); //$NON-NLS-1$
 				// The stream is closed by the parser...
 			}
 		} catch (Exception e) {

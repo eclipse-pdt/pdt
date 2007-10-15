@@ -104,30 +104,30 @@ public class ForStatement extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ForStatement");
+		buffer.append(tab).append("<ForStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
-		buffer.append(TAB).append(tab).append("<Initializations>\n");
+		buffer.append(">\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Initializations>\n"); //$NON-NLS-1$
 		for (int i = 0; i < initializations.length; i++) {
 			initializations[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</Initializations>\n");
-		buffer.append(TAB).append(tab).append("<Conditions>\n");
+		buffer.append(TAB).append(tab).append("</Initializations>\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Conditions>\n"); //$NON-NLS-1$
 		for (int i = 0; i < conditions.length; i++) {
 			conditions[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</Conditions>\n");
-		buffer.append(TAB).append(tab).append("<Increasements>\n");
+		buffer.append(TAB).append(tab).append("</Conditions>\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Increasements>\n"); //$NON-NLS-1$
 		for (int i = 0; i < increasements.length; i++) {
 			increasements[i].toString(buffer, TAB + TAB + tab);
-			buffer.append("\n");
+			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(TAB).append(tab).append("</Increasements>\n");
+		buffer.append(TAB).append(tab).append("</Increasements>\n"); //$NON-NLS-1$
 		action.toString(buffer, TAB + tab);
-		buffer.append("\n");
-		buffer.append(tab).append("</ForStatement>");
+		buffer.append("\n"); //$NON-NLS-1$
+		buffer.append(tab).append("</ForStatement>"); //$NON-NLS-1$
 	}
 
 	public int getType() {

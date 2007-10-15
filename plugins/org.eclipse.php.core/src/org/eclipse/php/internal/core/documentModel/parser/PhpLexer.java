@@ -147,7 +147,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	
 	public void getText(final int start, final int length, final Segment s) {
 		if (start + length > getYy_endRead())
-			throw new RuntimeException("bad segment !!");
+			throw new RuntimeException("bad segment !!"); //$NON-NLS-1$
 		s.array = getYy_buffer();
 		s.offset = start;
 		s.count = length;
@@ -188,7 +188,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 
 	public String lexToTokenAt(final int offset) throws IOException {
 		if (firstPos + offset < getYy_markedPos())
-			throw new RuntimeException("Bad offset");
+			throw new RuntimeException("Bad offset"); //$NON-NLS-1$
 		String t = yylex();
 		while (getYy_markedPos() < firstPos + offset && t != null)
 			t = yylex();
@@ -418,8 +418,8 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 
 		public String toString() {
 			final StateStack stack = getActiveStack();
-			final String stackStr = stack == null ? "null" : stack.toString();
-			return "Stack: " + stackStr + ", currState: " + lexicalState;
+			final String stackStr = stack == null ? "null" : stack.toString(); //$NON-NLS-1$
+			return "Stack: " + stackStr + ", currState: " + lexicalState; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 	}

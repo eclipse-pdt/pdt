@@ -27,7 +27,7 @@ import org.eclipse.php.core.project.build.IPHPBuilderExtension;
  */
 public class PHPBuilderExtensionsRegistry {
 
-	private static final String DEFAULT_EXTENSION_ID = "org.eclipse.php.core.project.build.DefaultPHPBuilderExtension";
+	private static final String DEFAULT_EXTENSION_ID = "org.eclipse.php.core.project.build.DefaultPHPBuilderExtension"; //$NON-NLS-1$
 	private static final String EXTENSION_NAME = "phpBuilderExtensions"; //$NON-NLS-1$
 	private static final String BUILDER_ELEMENT = "builder"; //$NON-NLS-1$
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
@@ -61,7 +61,7 @@ public class PHPBuilderExtensionsRegistry {
 		}
 
 		if (defaultExtension == null) {
-			PHPCorePlugin.log(new IllegalStateException("no default project builder extension"));
+			PHPCorePlugin.log(new IllegalStateException("no default project builder extension")); //$NON-NLS-1$
 			return;
 		}
 

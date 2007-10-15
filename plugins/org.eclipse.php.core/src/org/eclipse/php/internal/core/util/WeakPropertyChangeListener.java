@@ -26,7 +26,7 @@ public class WeakPropertyChangeListener extends WeakObject implements IPropertyC
 	private static ReferenceQueue q = new ReferenceQueue();
 	private static Class parameterTypes[] = new Class[] { IPropertyChangeListener.class };
 	private static Object parameterValues[] = new Object[] { null };
-	private static String removeListenerMethodName = "removePropertyChangeListener";
+	private static String removeListenerMethodName = "removePropertyChangeListener"; //$NON-NLS-1$
 
 	public static WeakPropertyChangeListener create(IPropertyChangeListener l, Object target) {
 		removeRedundantReferences();

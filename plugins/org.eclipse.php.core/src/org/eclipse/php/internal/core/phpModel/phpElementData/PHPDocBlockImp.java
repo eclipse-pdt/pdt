@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 public class PHPDocBlockImp implements PHPDocBlock {
 
-	private static final String DEFAULT_DESCRIPTION_TEXT = "Enter description here...";
+	private static final String DEFAULT_DESCRIPTION_TEXT = "Enter description here..."; //$NON-NLS-1$
 
 	private String shortDescription;
 	private String longDescription;
@@ -41,7 +41,7 @@ public class PHPDocBlockImp implements PHPDocBlock {
 
 	public String getLongDescription() {
 		if (longDescription == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		return longDescription;
 	}

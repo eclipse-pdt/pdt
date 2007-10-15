@@ -49,11 +49,11 @@ public class CloneExpression extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<CloneExpression");
+		buffer.append(tab).append("<CloneExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		expr.toString(buffer, TAB + tab);
-		buffer.append("\n").append(tab).append("</CloneExpression>");
+		buffer.append("\n").append(tab).append("</CloneExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public int getType() {
