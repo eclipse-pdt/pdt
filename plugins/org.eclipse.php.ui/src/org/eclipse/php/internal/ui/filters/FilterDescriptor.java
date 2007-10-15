@@ -106,7 +106,7 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 			return null;
 
 		final ViewerFilter[] result = new ViewerFilter[1];
-		String message = MessageFormat.format(PHPUIMessages.FilterDescriptor_filterCreationError_message, new Object[] { getId() });
+		String message = MessageFormat.format(PHPUIMessages.getString("FilterDescriptor_filterCreationError_message"), new Object[] { getId() });
 		ISafeRunnable code = new SafeRunnable(message) {
 			/*
 			 * @see org.eclipse.core.runtime.ISafeRunnable#run()
