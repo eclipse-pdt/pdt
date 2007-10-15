@@ -26,7 +26,7 @@ public class PHPUIMessages {
 	}
 
 	static {
-		//NLS.initializeMessages(BUNDLE_NAME, PHPUIMessages.class);
+		NLS.initializeMessages(BUNDLE_NAME, PHPUIMessages.class);
 	}
 
 	public static ResourceBundle getResourceBundle() {
