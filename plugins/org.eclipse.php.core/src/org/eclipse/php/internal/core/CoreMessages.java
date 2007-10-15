@@ -74,8 +74,6 @@ public final class CoreMessages extends NLS {
 	public static String path_nullPath;
 	public static String path_mustBeAbsolute;
 	public static String cache_invalidLoadFactor;
-	public static String restrictedAccess_project;
-	public static String restrictedAccess_library;
     public static String zipEntryStorage_error;
     public static String ASTParser_1;
 	public static String ExternalFileStore_0;
