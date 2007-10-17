@@ -555,5 +555,13 @@
           class="org.eclipse.php.internal.debug.ui.hovers.XDebugTextHover"
           id="org.eclipse.php.xdebug.ui.hover.XDebugTextHover">
     	</hover>
-    </extension> 
+    </extension>
+ <extension
+       point="org.eclipse.php.debug.core.pathEntryFilters">
+    <filter
+          class="org.eclipse.php.internal.debug.ui.pathmapper.PathEntrySelector"
+          id="org.eclipse.php.debug.ui.pathEntrySelector"
+          name="Path Entry Selector Dialog">
+    </filter>
+ </extension> 
 </plugin>
