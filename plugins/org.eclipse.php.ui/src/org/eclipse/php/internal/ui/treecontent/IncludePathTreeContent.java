@@ -64,7 +64,6 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 	 */
 	private TreeViewer treeViewer;
 
-
 	/**
 	 * Stores options for projects in order to successfully remove nodes as listeners from options {@link #projectModelRemoved(IProject)} and avoid memory leak
 	 */
@@ -485,9 +484,12 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 
 		IncludesNode treeNode = projectNodes.get(project);
 
-		if (treeNode == null)
+		if (treeNode == null) {
+			if (!project.isAccessible()) {
+				return null;
+			}
 			treeNode = createIncludePathsNode(project);
-		else
+		} else
 			updateIncludePathsNode(treeNode);
 		// generate the tree:
 		final Object[] models = getTreeNodeChildren(treeNode);
@@ -583,12 +585,17 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 		}
 
 		// remove node from its project's options listeners list in order to avoid memory leak
-		PHPProjectOptions options = projectOptions.get(project);
-		if (options != null) {
-			IncludesNode node = projectNodes.get(project);
-			options.removeOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, node);
+		if (projectOptions != null) {
+			PHPProjectOptions options = projectOptions.get(project);
+			if (options != null) {
+				if (projectNodes != null) {
+					IncludesNode node = projectNodes.get(project);
+					options.removeOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, node);
+				}
+			}
+			projectOptions.remove(project);
 		}
-		projectNodes.remove(project);
-		projectOptions.remove(project);
+		if (projectNodes != null)
+			projectNodes.remove(project);
 	}
 }
