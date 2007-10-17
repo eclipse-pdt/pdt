@@ -155,7 +155,7 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 	 * @see org.eclipse.debug.core.model.IValueModification#supportsValueModification()
 	 */
 	public boolean supportsValueModification() {
-		return value.isModifiable();
+		return value.isModifiable() && getFullName() != null && getFullName().trim().length() != 0;
 	}
 
 	/*
