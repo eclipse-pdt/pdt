@@ -129,7 +129,30 @@ ${cursor}</template>
 </template>
 
 <template
+	name="function"
+	description="%description.php.functionStatement"
+	id="org.eclipse.php.ui.editor.templates.php.functionStatement"
+	context="php"
+	enabled="true">function ${}()
+{
+	${cursor};
+}
+</template>
+
+<template
 	name="cls"
+	description="%description.php.class"
+	id="org.eclipse.php.ui.editor.templates.php.class"
+	context="php"
+	enabled="true">class ${class_name} {
+	function ${function_name}() {
+		${cursor};
+	}
+}
+</template>
+
+<template
+	name="class"
 	description="%description.php.class"
 	id="org.eclipse.php.ui.editor.templates.php.class"
 	context="php"
