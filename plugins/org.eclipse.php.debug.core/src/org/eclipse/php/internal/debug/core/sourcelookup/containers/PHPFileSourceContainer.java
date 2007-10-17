@@ -22,11 +22,11 @@ public class PHPFileSourceContainer extends AbstractSourceContainer {
 
     private File fFile;
     private LocalFileStorage fStorage;
-    private IProject project;       
+//    private IProject project;
 
     public PHPFileSourceContainer(File file, IProject project) {
         fFile = file;
-        this.project = project;
+//        this.project = project;
         fStorage = new LocalFileStorage(fFile);
         fStorage.setProject(project);
     }

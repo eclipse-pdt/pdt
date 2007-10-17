@@ -10,16 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
-import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceSearchEngine;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
 
@@ -51,10 +47,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
         fPC = lineNumber;
         fId = id;
         fThread = (PHPThread) thread;
-        PHPDebugTarget debugTarget = (PHPDebugTarget)fThread.getDebugTarget();
-        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(debugTarget.getProjectName());
-        IFile file = PHPSourceSearchEngine.getResource(rName, project);
-        fResName = file.getProjectRelativePath().toString();
+        fResName = rName;
     }
 
     public PHPStackFrame(IThread thread, String fileName, String funcName, int lineNumber, int id, StackLayer layer, String rName) {

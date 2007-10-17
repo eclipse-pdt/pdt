@@ -36,14 +36,12 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
     }
 
     protected ISourceContainer[] createSourceContainers() throws CoreException {
-
         String variableName = fPath.toString();
-        File file = getVriableFile(variableName);
+        File file = getVariableFile(variableName);
         ISourceContainer[] container = new ISourceContainer[1];
         if (file.isDirectory()) {
             container[0] = new PHPDirectorySourceContainer(file, false, project);
         } else {
-
             String fileName = file.getName();
             if (fileName.toLowerCase().endsWith(".zip")) { //$NON-NLS-1$
                 container[0] = new PHPExternalArchiveSourceContainer(file.getPath(), false, project);
@@ -51,7 +49,6 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
                 container[0] = new PHPFileSourceContainer(file, project);
             }
         }
-
         return container;
     }
 
@@ -64,7 +61,7 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
         return null;
     }
 
-    private File getVriableFile(String variableName) {
+    private File getVariableFile(String variableName) {
         int index = variableName.indexOf('/');
         String extention = ""; //$NON-NLS-1$
         if (index != -1) {

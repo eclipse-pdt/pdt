@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.core.zend.model;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -25,11 +26,15 @@ import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.model.SimpleDebugHandler;
+import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
 import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.server.core.Server;
 
 /**
  * A PHP debug server handler.
@@ -56,6 +61,22 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void sessionStarted(String fileName, String uri, String query, String options) {
 		super.sessionStarted(fileName, uri, query, options);
+		
+		try {
+			PathEntry pathEntry = null;
+			String file = fDebugTarget.getLaunch().getLaunchConfiguration().getAttribute(Server.FILE_NAME, (String) null);
+			if (file != null) {
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
+				if (resource != null) {
+					pathEntry = new PathEntry(file, PathEntry.Type.WORKSPACE, resource.getParent());
+				}
+			}
+			if (pathEntry != null) {
+				PathMapper.getInstance().addEntry(fileName, pathEntry);
+			}
+		} catch (CoreException e) {
+		}
+		
 		String sFileName = RemoteDebugger.convertToSystemIndependentFileName(fileName);
 
 		fDebugTarget.setLastFileName(sFileName);
@@ -252,23 +273,30 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void parsingErrorOccured(DebugError debugError) {
 		super.parsingErrorOccured(debugError);
-		String sName = debugError.getFileName();
-		int length;
-		String rName;
+		String sName = debugError.getFullPathName();
+//		int length;
+		String rName = sName;
 		if (!fDebugTarget.isPHPCGI()) {
-			length = fDebugTarget.getHTDocs().length() + fDebugTarget.getContextRoot().length();
-			rName = sName.substring(length);
-			// Check if the name exists in the workspace. 
-			// If not, keep the original name.
 			try {
-				if (!ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(rName)).exists()) {
-					rName = sName;
+				PathEntry entry = DebugSearchEngine.find(sName, fDebugTarget.getProject());
+				if (entry != null) {
+					rName = entry.getResolvedPath();
 				}
 			} catch (Exception e) {
-				rName = sName;
 			}
+//			length = fDebugTarget.getHTDocs().length() + fDebugTarget.getContextRoot().length();
+//			rName = sName.substring(length);
+//			// Check if the name exists in the workspace. 
+//			// If not, keep the original name.
+//			try {
+//				if (!ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(rName)).exists()) {
+//					rName = sName;
+//				}
+//			} catch (Exception e) {
+//				rName = sName;
+//			}
 		} else {
-			length = fDebugTarget.getWorkspacePath().length() + fDebugTarget.getProjectName().length();
+//			length = fDebugTarget.getWorkspacePath().length() + fDebugTarget.getProjectName().length();
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IFile file = root.getFileForLocation(new Path(sName));
 			if (file != null) {
@@ -277,8 +305,6 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				} else {
 					rName = ".." + file.getFullPath().toOSString();
 				}
-			} else {
-				rName = sName;
 			}
 		}
 		String dFileName = RemoteDebugger.convertToSystemIndependentFileName(rName);

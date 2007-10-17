@@ -21,7 +21,16 @@ import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.zend.debugger.*;
+import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpression;
+import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
+import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
+import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
+import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
+import org.eclipse.php.internal.debug.core.zend.debugger.PHPstack;
+import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
 
 public class ContextManager {
 
@@ -29,7 +38,7 @@ public class ContextManager {
 	private IRemoteDebugger fDebugger;
 	private StackLayer[] fPreviousLayers;
 	private IStackFrame[] fPreviousFrames = null;
-	private Map fStackVariables;
+	private Map<String, Expression[]> fStackVariables;
 
 	private int fSuspendCount;
 	private IVariable[] fVariables;
@@ -39,7 +48,7 @@ public class ContextManager {
 		fTarget = target;
 		fSuspendCount = target.getSuspendCount();
 		fDebugger = debugger;
-		fStackVariables = new HashMap();
+		fStackVariables = new HashMap<String, Expression[]>();
 	}
 
 	public IStackFrame[] getStackFrames(int length, String context, boolean isWindows) throws DebugException {
@@ -180,10 +189,18 @@ public class ContextManager {
 	}
 
 	private String getLocalFileName(String filename, String context, int length, boolean isWindows) {
+		try {
+			PathEntry localFile = DebugSearchEngine.find(filename, fTarget.getProject());
+			if (localFile != null) {
+				return localFile.getResolvedPath();
+			}
+		} catch (Exception e) {
+		}
+		
 		// First, check if the file name is located in one of the include paths.
 		// If so, ignore the given length and return the local file name after trimming
 		// the path from its beginning.
-		// (Fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=171414)
+		// Fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=171414
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fTarget.getProjectName());
 		if (project != null) {
 			PHPProjectOptions options = PHPProjectOptions.forProject(project);

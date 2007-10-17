@@ -28,17 +28,17 @@ import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 
     private IProject project;
-    private ILaunchConfiguration configuration;
+//    private ILaunchConfiguration configuration;
 
     public PHPCompositeSourceContainer(IProject project, ILaunchConfiguration configuration) {
         this.project = project;
-        this.configuration = configuration;
+//        this.configuration = configuration;
     }
 
     protected ISourceContainer[] createSourceContainers() throws CoreException {
 
-        ArrayList containers = new ArrayList();
-        ISourceContainer projectContainer = new ProjectSourceContainer(project, false);
+        ArrayList<ISourceContainer> containers = new ArrayList<ISourceContainer>();
+        ISourceContainer projectContainer = new PHPProjectSourceContainer(project, false);
         containers.add(projectContainer);
         PHPProjectOptions options = PHPProjectOptions.forProject(project);
         if (options != null) {
