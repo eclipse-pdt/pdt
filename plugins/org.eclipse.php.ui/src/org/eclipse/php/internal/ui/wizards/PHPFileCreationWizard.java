@@ -132,7 +132,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * @see {@link #createFile(Wizard, String, String, IProgressMonitor, String, String)}
 		 */
 		public static void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
-			createFile(wizard, containerName, fileName, monitor, null);
+			createFile(wizard, containerName, fileName, monitor, contents, null);
 		}
 
 		/**
