@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.php.ui; singleton:=true
 Bundle-Version: 1.0.1.qualifier
-Bundle-Name: PDT UI Plug-in
+Bundle-Name: %Bundle-Name.1
 Bundle-Activator: org.eclipse.php.internal.ui.PHPUiPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -95,4 +95,4 @@ Export-Package: org.eclipse.php.internal.ui,
  org.eclipse.php.ui.treecontent,
  org.eclipse.php.ui.util,
  org.eclipse.php.ui.wizards
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.1

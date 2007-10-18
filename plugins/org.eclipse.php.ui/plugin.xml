@@ -67,7 +67,7 @@
 			class="org.eclipse.php.internal.ui.PHPPerspectiveFactory"
 			icon="icons/full/obj16/php_perspective.gif"
 			id="org.eclipse.php.perspective"
-			name="PHP" />
+			name="%perspective.name.0" />
 	</extension>
 
 	<!--PHP Perspective Extensions Definition:-->
@@ -136,7 +136,7 @@
 
 	<extension point="org.eclipse.ui.newWizards">
 		<category
-			name="PHP"
+			name="%category.name.1"
 			id="org.eclipse.php.project.ui" />
 		<!--PHP Project wizard:-->
 		<wizard
@@ -1253,12 +1253,12 @@
 	<extension point="org.eclipse.ui.exportWizards">
 		<category
 			id="org.eclipse.php.ui.PHP"
-			name="PHP" />
+			name="%category.name.2" />
 	</extension>
 	<extension point="org.eclipse.ui.themes">
 		<themeElementCategory
 			id="org.eclipse.php.ui.themePHP"
-			label="PHP" />
+			label="%themeElementCategory.label.0" />
 	</extension>
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
