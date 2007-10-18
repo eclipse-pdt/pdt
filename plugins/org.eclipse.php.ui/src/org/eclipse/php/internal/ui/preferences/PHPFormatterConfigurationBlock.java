@@ -215,32 +215,4 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 		fUseTabs = (b.getSelectionIndex() == 0);
 		setValue(PREF_FORMATTER_USE_TABS, fUseTabs ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-
-	public Control createContentsWrapper(Composite composite) {
-		return createContents(composite);
-	}
-
-	public void disposeWrapper() {
-		dispose();
-	}
-
-	public boolean hasProjectSpecificOptionsWrapper(IProject project) {
-		return hasProjectSpecificOptions(project);
-	}
-
-	public void performApplyWrapper() {
-		performApply();
-	}
-
-	public void performDefaultsWrapper() {
-		performDefaults();
-	}
-
-	public boolean performOkWrapper() {
-		return performOk();
-	}
-
-	public void useProjectSpecificSettingsWrapper(boolean useProjectSpecificSettings) {
-		useProjectSpecificSettings(useProjectSpecificSettings);
-	}
 }
