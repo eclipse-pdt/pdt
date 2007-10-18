@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
  *
  */
 public class AbstractPath implements Cloneable {
-	
-	private final Pattern VOLNAME = Pattern.compile("([A-Za-z]:\\\\)(.*)");
+
+	private final Pattern VOLNAME = Pattern.compile("([A-Za-z]:[/\\\\])(.*)");
 	private final Pattern PROTOCOL = Pattern.compile("([A-Za-z]*://)(.*)");
 	private LinkedList<String> segments;
 	private String device;
@@ -83,11 +83,11 @@ public class AbstractPath implements Cloneable {
 	public void addLastSegment(String segment) {
 		segments.addLast(segment);
 	}
-	
+
 	public String[] getSegments() {
 		return segments.toArray(new String[segments.size()]);
 	}
-	
+
 	public boolean isPrefixOf(AbstractPath path) {
 		Iterator<String> i1 = segments.iterator();
 		Iterator<String> i2 = path.segments.iterator();
