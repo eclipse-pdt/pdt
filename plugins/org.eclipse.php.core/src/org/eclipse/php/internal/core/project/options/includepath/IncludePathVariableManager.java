@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.core.IIncludePathVariableInitializer;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.IIncludePathVariableInitializer;
 
 public class IncludePathVariableManager {
 
@@ -178,5 +178,23 @@ public class IncludePathVariableManager {
 	public String[] getReservedVariables() {
 		Set reservedVariables = this.reservedVariables.keySet();
 		return (String[]) reservedVariables.toArray(new String[reservedVariables.size()]);
+	}
+
+	/**
+	 * Returns resolved IPath from the given path string that starts from include path variable
+	 * @param path Path string
+	 * @return resolved IPath or <code>null</code> if it couldn't be resolved
+	 */
+	public IPath resolveVariablePath (String path) {
+		int index = path.indexOf('/');
+		if (index != -1) {
+			String var = path.substring(0, index);
+			IPath varPath = getIncludePathVariable(var);
+			if (index + 1 < path.length()) {
+				varPath.append(path.substring(index + 1));
+			}
+			return varPath;
+		}
+		return getIncludePathVariable(path);
 	}
 }
