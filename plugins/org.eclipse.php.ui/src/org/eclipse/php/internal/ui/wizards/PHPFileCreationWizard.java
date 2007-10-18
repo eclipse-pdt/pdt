@@ -15,8 +15,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,7 +36,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.ui.*;
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
 public class PHPFileCreationWizard extends Wizard implements INewWizard {
@@ -106,9 +121,34 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * The worker method. It will find the container, create the
 		 * file if missing or just replace its contents, and open
 		 * the editor on the newly created file.
-		 * @param contents 
+		 * This method does not take an editor id to use when opening the file.
+		 * 
+		 * @param wizard
+		 * @param containerName
+		 * @param fileName
+		 * @param monitor
+		 * @param contents
+		 * @throws CoreException
+		 * @see {@link #createFile(Wizard, String, String, IProgressMonitor, String, String)}
 		 */
 		public static void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
+			createFile(wizard, containerName, fileName, monitor, null);
+		}
+
+		/**
+		 * The worker method. It will find the container, create the
+		 * file if missing or just replace its contents, and open
+		 * the editor on the newly created file.
+		 * 
+		 * @param wizard
+		 * @param containerName
+		 * @param fileName
+		 * @param monitor
+		 * @param contents
+		 * @param editorID An optional editor ID to use when opening the file (can be null).
+		 * @throws CoreException
+		 */
+		public static void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents, final String editorID) throws CoreException {
 			// create a sample file
 			monitor.beginTask(NLS.bind(PHPUIMessages.getString("newPhpFile_create"), fileName), 2);
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -158,7 +198,11 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				public void run() {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					try {
-						IDE.openEditor(page, file, true);
+						if (editorID == null) {
+							IDE.openEditor(page, file, true);
+						} else {
+							IDE.openEditor(page, file, editorID, true);
+						}
 					} catch (PartInitException e) {
 					}
 				}
