@@ -107,12 +107,40 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 	private String decodeValue(String valueData, String encoding) {
 		String res = valueData;
 		if (encoding != null && encoding.equalsIgnoreCase(ENCODING_BASE64)) {
-			if (valueData != null && valueData.trim().length() != 0)
-				res = new String(Base64.decode(valueData.trim().getBytes()));
+			if (valueData != null && valueData.trim().length() != 0) {
+				DBGpTarget target = (DBGpTarget)getDebugTarget();
+				res = Base64.decode(valueData.trim(), target.getSessionEncoding());
+			}
 		}
 		return res;
 	}
 
 	// override this definitely
 	abstract void genValueString(String data);
+
+	/*
+	// override these to enhance the way variables are displayed
+	// in the variable view, ie to reduce the refresh of all entities
+	// in there.
+	@Override
+	public boolean equals(Object obj) {
+		// should work for DBGpNullValue, DBGpNumValue
+		// DBGpResourceValue, DBGpUnInitValue, DBGpBoolValue
+		// but not container values.
+		if (!obj.getClass().isInstance(this)) {
+			return false;
+		}
+		DBGpValue value = (DBGpValue)obj;
+		if (!valueString.equals(value.valueString)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode() + valueString.hashCode();
+	}
+	*/
+	
 }

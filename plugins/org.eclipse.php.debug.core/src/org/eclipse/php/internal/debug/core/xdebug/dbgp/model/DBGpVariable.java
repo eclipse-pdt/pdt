@@ -19,6 +19,7 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
 
@@ -134,7 +135,7 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 			// attempt to set the property
 			if (((DBGpTarget) getDebugTarget()).setProperty(this, expression)) {
 				value.setValue(expression);
-				fireEvent(new DebugEvent(this, DebugEvent.CHANGE, DebugEvent.CONTENT));
+				fireChangeEvent(DebugEvent.CONTENT);
 			} else {
 				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.ID, DebugException.TARGET_REQUEST_FAILED, "program under debug rejected value change", null));
 			}
@@ -177,5 +178,55 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 	public String getAddress() {
 		return address;
 	}
+	
+	
+	/*
+	// implement equals and hashcode to all the viewer to determine if a variable has changed.
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof DBGpVariable)) {
+			DBGpLogger.debug(obj.getClass().getName() + " not the right type");
+			return false;
+		}
+		DBGpVariable variable = (DBGpVariable)obj;
 
+		
+		
+		if (!variable.getDebugTarget().equals(getDebugTarget())) {
+			DBGpLogger.debug(obj.getClass().getName() + " not the right DEBUG TARGET");			
+			return false;
+		}
+
+		DBGpLogger.debug("DBGpVariable equals:" + getFullName() + "=" + variable.getFullName());		
+		
+		if (!variable.getFullName().equals(this.getFullName())) {
+			return false;
+		}
+
+		
+		IValue myValue = null;
+		IValue otherValue = null;
+		try {
+			myValue = getValue();
+			otherValue = variable.getValue();
+			DBGpLogger.debug("DBGpVariable equals:" + myValue.getValueString() + "=" + otherValue.getValueString());
+		} catch (DebugException e) {
+		}
+				
+		if (myValue == otherValue || (myValue != null && myValue.equals(otherValue))) {
+			DBGpLogger.debug("DBGpVariable is EQUAL");			
+			return true;
+		}
+		DBGpLogger.debug("DBGpVariable is NOT EQUAL");					
+		return false;
+	}
+
+	public int hashCode() {
+		int varHash = getDebugTarget().hashCode() + value.hashCode() + getFullName().hashCode();
+		DBGpLogger.debug("DBGpVariable hashcode:" + getFullName() + "=" + varHash);		
+		return varHash;
+	}	
+    */
 }

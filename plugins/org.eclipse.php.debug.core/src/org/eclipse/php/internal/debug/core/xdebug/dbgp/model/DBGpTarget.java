@@ -92,11 +92,13 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
    private IThread[] allThreads;
 
    // stack frame tracking
-   private boolean refreshStackFrames;
+  // private boolean refreshStackFrames;
 
    private int currentStackLevel;
 
    private IStackFrame[] stackFrames;
+   
+   private IVariable[] currentVariables;
 
    private DBGpBreakpointFacade bpFacade;   
    
@@ -244,7 +246,10 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       if (targetState != STATE_INIT_SESSION_WAIT && targetState != STATE_STARTED_SESSION_WAIT) {
          DBGpLogger.logWarning("initiateSession in Wrong State: " + targetState, this, null);
       }
-      refreshStackFrames = true;
+      //refreshStackFrames = true;
+      stackFrames = null;
+      currentVariables = null;
+      
       superGlobalVars = null;
       session.startSession();
       // we are effectively suspended once the session has handshaked until we
@@ -772,7 +777,9 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
    public void suspended(int detail) {
       setState(STATE_STARTED_SUSPENDED);
       processQueuedBpCmds();
-      refreshStackFrames = true;
+      //refreshStackFrames = true;
+      stackFrames = null;
+      currentVariables = null;
       fireSuspendEvent(detail);
       langThread.fireSuspendEvent(detail);
    }
@@ -853,8 +860,9 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       // is global across the debug target, you could end up with 2 threads
       // doing this at the same time on will be getting the data and the other
       // will not and returning null as the data is not yet ready.
-      if (refreshStackFrames) {
-         refreshStackFrames = false;
+      //if (refreshStackFrames) {
+         //refreshStackFrames = false;
+	   if (stackFrames == null) {
          DBGpResponse resp = session.sendSyncCmd(DBGpCommand.stackGet);
          if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
             Node parent = resp.getParentNode();
@@ -905,29 +913,47 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     * @param level
     * @return
     */
-   public IVariable[] getAllVars(String level) {
-      boolean getSuperGlobals = showGLobals();
-      IVariable[] globals = null;
-      if (getSuperGlobals) {
-         globals = getSuperGlobalVars();
-      }
-      else {
-         globals = new IVariable[0];
-      }
-      IVariable[] locals = getContextLocalVars(level);
-      int totalLength = globals.length + locals.length;
-
-      IVariable[] merged = new IVariable[totalLength];
-
-      if (globals.length > 0) {
-         System.arraycopy(globals, 0, merged, 0, globals.length);
-      }
-      if (locals.length > 0) {
-         System.arraycopy(locals, 0, merged, globals.length, locals.length);
-      }
-
-      return merged;
+   public IVariable[] getVariables(String level) {
+	  if (level.equals("0")) {
+		  // level "0" is the current stack frame
+		  //TODO: we could cache previous level stack frames as well for
+		  //performance in stackframe switching in the future.
+		  //TODO: see if preferences have changed about superglobals
+		  if (currentVariables == null) {
+		      currentVariables = getContextAtLevel(level);
+		      return currentVariables;
+		  }
+		  DBGpLogger.debug("getVariables: returning cached variables");
+	      return currentVariables;
+	  }
+	  else {
+		  return getContextAtLevel(level);
+	  }
+	  
    }
+
+private IVariable[] getContextAtLevel(String level) {
+	  boolean getSuperGlobals = showGLobals();
+	  IVariable[] globals = null;
+	  if (getSuperGlobals) {
+	     globals = getSuperGlobalVars();
+	  }
+	  else {
+	     globals = new IVariable[0];
+	  }
+	  IVariable[] locals = getContextLocalVars(level);
+	  int totalLength = globals.length + locals.length;
+
+	  IVariable[] merged = new IVariable[totalLength];
+
+	  if (globals.length > 0) {
+	     System.arraycopy(globals, 0, merged, 0, globals.length);
+	  }
+	  if (locals.length > 0) {
+	     System.arraycopy(locals, 0, merged, globals.length, locals.length);
+	  }
+	  return merged;
+}
 
    /**
     * parse each variable request response, never returns null (IVariable[0])
@@ -963,7 +989,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
    public boolean setProperty(DBGpVariable var, String data) {
 
       // XDebug expects all data to be base64 encoded.
-      String encoded = new String(Base64.encode(data.getBytes()));
+      String encoded = Base64.encode(data, session.getSessionEncoding());		
       String fullName = var.getFullName();
       String stackLevel = var.getStackLevel();
       String args = "-n " + fullName + " -d " + stackLevel + " -l " + encoded.length() + " -- "
@@ -979,6 +1005,13 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       }
       DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propSet, args);
       if (resp.getTopAttribute("success").equals("1")) {
+    	 if (!stackLevel.equals("0")) {
+    		 // a variable has been changed on a previous stack
+    		 // the gui won't have updated the current stack
+    		 // level view, so we invalidate the cache to reload
+    		 // the data.
+    		 currentVariables = null;
+    	 }
          return true;
       }
       else {
@@ -1013,7 +1046,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     */
    public Node eval(String toEval) {
       // XDebug expects all data to be base64 encoded.
-      String encoded = new String(Base64.encode(toEval.getBytes()));
+      String encoded = Base64.encode(toEval, session.getSessionEncoding());
       String args = "-- " + encoded;
       DBGpResponse resp = session.sendSyncCmd(DBGpCommand.eval, args);
       return resp.getParentNode().getFirstChild();
@@ -1205,7 +1238,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
          if (debugMsg != null) {
             debugMsg += " with expression:" + condition.getExpression();
          }
-         args += " -- " + new String(Base64.encode(condition.getExpression().getBytes()));
+         args += " -- " + Base64.encode(condition.getExpression(), session.getSessionEncoding());
       }
       else if (condition.getType() == DBGpBreakpointCondition.HIT) {
          if (debugMsg != null) {
@@ -1698,6 +1731,15 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     */
    public boolean isWebLaunch() {
       return webLaunch;
+   }
+   
+   public String getSessionEncoding() {
+	   if (session != null) {
+		   return session.getSessionEncoding();
+	   }
+	   else {
+		   return DBGpSession.DEFAULT_SESSION_ENCODING;
+	   }
    }
 
    private int getMaxDepth() {

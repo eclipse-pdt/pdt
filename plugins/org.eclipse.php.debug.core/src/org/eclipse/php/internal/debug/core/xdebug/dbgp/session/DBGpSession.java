@@ -50,6 +50,10 @@ public class DBGpSession {
 		return creationTime;
 	}
 
+	/**
+	 * create a DBGpSession. This waits for the initial INIT response to be sent
+	 * @param connection the socket connection.
+	 */
 	public DBGpSession(Socket connection) {
 		creationTime = System.currentTimeMillis();
 		DBGpSocket = connection;
@@ -60,6 +64,8 @@ public class DBGpSession {
 			DBGpCmd = new DBGpCommand(DBGpSocket);
 			DBGpReader = new DataInputStream(DBGpSocket.getInputStream());
 			socketClosed = false;
+			
+			//TODO: Could look at supporting a timeout here.
 			byte[] response = readResponse();
 			if (response != null) {
 				DBGpResponse parsedResponse = new DBGpResponse();
@@ -70,8 +76,14 @@ public class DBGpSession {
 					initialScript = DBGpUtils.getFilenameFromURIString(parsedResponse.getFileUri());
 					isGood = true;
 				}
+				else {
+					DBGpLogger.logError("Init response not received. XML=" + parsedResponse.getRawXML(), this, null);				
+					//TODO: dialog box up					
+				}
 			}
-
+			else {
+				DBGpLogger.logError("Unexpected null from readResponse waiting for Init", this, null);								
+			}
 			if (!isGood) {
 				endSession();
 			}
@@ -86,7 +98,8 @@ public class DBGpSession {
 	}
 
 	/**
-	 * Start the session
+	 * Start the session. This schedules the job that listens for incoming responses
+	 * from the system being debugged as these can happen asynchronously.
 	 *
 	 */
 	public void startSession() {
@@ -96,7 +109,7 @@ public class DBGpSession {
 
 	/**
 	 * send an async command
-	 * @param cmd
+	 * @param cmd the command to send
 	 */
 	public void sendAsyncCmd(String cmd) {
 		sendAsyncCmd(cmd, null);
@@ -104,8 +117,8 @@ public class DBGpSession {
 
 	/**
 	 * send a sync command
-	 * @param cmd
-	 * @return
+	 * @param cmd the command to send
+	 * @return the response.
 	 */
 	public DBGpResponse sendSyncCmd(String cmd) {
 		return sendSyncCmd(cmd, null);
@@ -113,8 +126,8 @@ public class DBGpSession {
 
 	/**
 	 * send an async command with arguments
-	 * @param cmd
-	 * @param arguments
+	 * @param cmd the command
+	 * @param arguments its arguments
 	 */
 	public void sendAsyncCmd(String cmd, String arguments) {
 		int id = DBGpCommand.getNextId();
@@ -127,9 +140,9 @@ public class DBGpSession {
 
 	/**
 	 * send a sync command with arguments
-	 * @param cmd
-	 * @param arguments
-	 * @return
+	 * @param cmd the command 
+	 * @param arguments its arguments
+	 * @return the response
 	 */
 	public DBGpResponse sendSyncCmd(String cmd, String arguments) {
 		// this must be done before the command is sent because
@@ -153,10 +166,10 @@ public class DBGpSession {
 	}
 
 	/**
-	 * only call this if you are on the response thread
-	 * @param cmd
-	 * @param args
-	 * @return
+	 * only call this if you are on the response thread to send a sync command
+	 * @param cmd the command
+	 * @param args its arguments
+	 * @return the response.
 	 */
 	public DBGpResponse sendSyncCmdOnResponseThread(String cmd, String args) {
 		sendAsyncCmd(cmd, args); // can't send Sync command as we block waiting for the response thread
@@ -183,32 +196,45 @@ public class DBGpSession {
 		protected IStatus run(IProgressMonitor monitor) {
 			byte[] response = null;
 			while (!socketClosed) {
-				// here we need to block waiting for a reponse
+				// here we need to block waiting for a response
 				// then process that response
-				response = readResponse();
-				if (response != null) {
-					DBGpResponse parsedResponse = new DBGpResponse();
-					parsedResponse.parseResponse(response);
-					// allow cannot get property error as this is allowed.
-					if (parsedResponse.getErrorCode() == DBGpResponse.ERROR_OK || parsedResponse.getErrorCode() == DBGpResponse.ERROR_CANT_GET_PROPERTY) {
-
-						if (DBGpResponse.RESPONSE == parsedResponse.getType()) {
-
-							// The response handler only processes stop and break
-							// status responses, all others are ignored or returned
-							// to a sync caller.
-							if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
-								handleStopStatus();
-							} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
-								handleBreakStatus(parsedResponse);
+				
+				try {
+					response = readResponse();
+					if (response != null) {
+						DBGpResponse parsedResponse = new DBGpResponse();
+						parsedResponse.parseResponse(response);
+						// allow cannot get property error as this is allowed.
+						if (parsedResponse.getErrorCode() == DBGpResponse.ERROR_OK || parsedResponse.getErrorCode() == DBGpResponse.ERROR_CANT_GET_PROPERTY) {
+	
+							if (DBGpResponse.RESPONSE == parsedResponse.getType()) {
+	
+								// The response handler only processes stop and break
+								// status responses, all others are ignored or returned
+								// to a sync caller.
+								if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
+									handleStopStatus();
+								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
+									handleBreakStatus(parsedResponse);
+								}
+							} else if (DBGpResponse.STREAM == parsedResponse.getType()) {
+								handleStreamData(parsedResponse);
+							} else {
+								DBGpLogger.logWarning("Unknown type of XML: " + response, DBGpSession.this, null);
 							}
-						} else if (DBGpResponse.STREAM == parsedResponse.getType()) {
-							handleStreamData(parsedResponse);
-						} else {
-							DBGpLogger.logWarning("Unknown type of XML: " + response, DBGpSession.this, null);
 						}
+						unblockSyncCaller(parsedResponse);
 					}
-					unblockSyncCaller(parsedResponse);
+				}
+				catch (Throwable t) {
+					DBGpLogger.logException("Unexpected exception. Terminating the debug session", this, t);
+					endSession(); // end the session to exit the response loop.
+					
+					// send a dummy response back to unblock the target. It will know that the session has
+					// ended, but the dummy response will allow it to exit its current method.
+					DBGpResponse dummy = new DBGpResponse();
+					dummy.parseResponse(null);
+					unblockSyncCaller(dummy);
 				}
 			}
 
@@ -222,7 +248,9 @@ public class DBGpSession {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			debugTarget.sessionEnded();
+			// end the session here as we most likely terminated cleanly. It doesn't matter if 
+			// endSession is called multiple times.
+			endSession();
 			return Status.OK_STATUS;
 		}
 
@@ -246,11 +274,16 @@ public class DBGpSession {
 				idev.signalEvent();
 			} else {
 				// no one waiting for the response, so we need to check the response was
-				// ok and generate log info
+				// ok and generate log info. This could have been a response to an async
+				// invocation.
 				DBGpUtils.isGoodDBGpResponse(this, parsedResponse);
 			}
 		}
 
+		/**
+		 * This has yet to be implemented. 
+		 * @param parsedResponse
+		 */
 		private void handleStreamData(DBGpResponse parsedResponse) {
 			// ok, we need to put the stream somewhere
 			/*
@@ -268,6 +301,8 @@ public class DBGpSession {
 		 *
 		 */
 		private void handleStopStatus() {
+			endSession();
+			/*
 			try {
 				DBGpSocket.close();
 			} catch (IOException e) {
@@ -275,6 +310,7 @@ public class DBGpSession {
 				DBGpLogger.debugException(e);
 			}
 			socketClosed = true;
+			*/
 		}
 
 		/**
@@ -411,17 +447,35 @@ public class DBGpSession {
 	 * end this session
 	 *
 	 */
-	public void endSession() {
-		try {
-			DBGpSocket.close();
-			socketClosed = true;
-			if (debugTarget != null) {
-				debugTarget.sessionEnded();
+	public synchronized void endSession() {
+		if (!socketClosed) {
+			try {
+				DBGpSocket.shutdownInput();
 			}
-		} catch (IOException e) {
-			// Ignore the exception except for debug purposes
-			DBGpLogger.debugException(e);
+			catch (IOException e) {
+				
+			}
+			try {
+				DBGpSocket.shutdownOutput();
+			}
+			catch (IOException e) {
+				
+			}
+			
+	   		try {
+				socketClosed = true;	   			
+				DBGpSocket.close();
+				
+			} catch (IOException e) {
+				// Ignore the exception except for debug purposes
+				DBGpLogger.debugException(e);
+			}
 		}
+		if (debugTarget != null) {
+			debugTarget.sessionEnded();
+			debugTarget = null;
+		}
+		
 	}
 
 	/**
@@ -472,10 +526,18 @@ public class DBGpSession {
 		return strBuf.toString();
 	}
 
+	/**
+	 * get the current session encoding
+	 * @return the session encoding.
+	 */
 	public String getSessionEncoding() {
 		return sessionEncoding;
 	}
 
+	/**
+	 * set the session encoding
+	 * @param sessionEncoding session encoding.
+	 */
 	public void setSessionEncoding(String sessionEncoding) {
 		this.sessionEncoding = sessionEncoding;
 	}

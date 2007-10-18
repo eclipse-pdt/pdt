@@ -96,6 +96,37 @@ public class DBGpResponse {
 	public static final String REASON_ABORTED = "aborted";
 	public static final String REASON_EXCEPTION = "exception";
 
+
+
+	private DocumentBuilder db;
+	private Document doc;
+	private Node parent;
+
+	//type
+	public static final int PARSE_FAILURE = 0;
+	public static final int INIT = 1;
+	public static final int RESPONSE = 2;
+	public static final int STREAM = 3;
+	public static final int UNKNOWN_TYPE = 99;
+
+	int type;
+
+	//init attributes
+	private String idekey;
+	private String session;
+	private String engineVersion;
+	private String fileUri;
+
+	// Response attributes
+	private String id;
+	private String command;
+
+	// Status Response attributes
+	private String status;
+	private String reason;
+
+	// error responses
+	
 	/*
 	 * Error codes, eg
 
@@ -126,45 +157,21 @@ public class DBGpResponse {
 	 */
 	public static final int ERROR_OK = 0;
 	public static final int ERROR_CANT_GET_PROPERTY = 300;
+	
+	// own internal error codes
 	public static final int ERROR_UNKNOWN_ERROR_CODE = 10000;
 	public static final int ERROR_UNKNOWN_TYPE = 10001;
 	public static final int ERROR_PARSE_FAILURE = 10002;
-
-	private DocumentBuilder db;
-	private Document doc;
-	private Node parent;
-	private String rawXML;
-
-	//type
-	public static final int PARSE_FAILURE = 0;
-	public static final int INIT = 1;
-	public static final int RESPONSE = 2;
-	public static final int STREAM = 3;
-	public static final int UNKNOWN_TYPE = 99;
-
-	int type;
-
-	//init attributes
-	private String idekey;
-	private String session;
-	private String engineVersion;
-	private String fileUri;
-
-	// Response attributes
-	private String id;
-	private String command;
-
-	// Status Response attributes
-	private String status;
-	private String reason;
-
-	// error responses
+	public static final int ERROR_INVALID_RESPONSE = 10003;	
+	
 	int errorCode;
 	String errorMessage;
 
 	// stream data
 	private String streamType;
 	private String streamData;
+	
+	private byte[] rawXML;
 
 	public DBGpResponse() {
 		DocumentBuilderFactory dbFact = DocumentBuilderFactory.newInstance();
@@ -175,69 +182,65 @@ public class DBGpResponse {
 		}
 	}
 
-	/*
-	public void parseResponse(String xmlResponse) {
-	   rawXML = xmlResponse;
-	   errorCode = ERROR_OK;
-	   type = UNKNOWN_TYPE;
-	   if (db != null) {
-	      ByteArrayInputStream bais = new ByteArrayInputStream(xmlResponse.getBytes());
-	      parseResponse(bais);
-	   }
-	   else {
-	      type = PARSE_FAILURE;
-	   }
-	}
-	*/
-
 	public void parseResponse(byte[] xmlResponse) {
-		//rawXML = xmlResponse;
-		errorCode = ERROR_OK;
-		type = UNKNOWN_TYPE;
-		if (db != null) {
+		rawXML = xmlResponse;
+		if (db != null && xmlResponse != null) {
 			ByteArrayInputStream bais = new ByteArrayInputStream(xmlResponse);
 			parseResponse(bais);
 		} else {
-			type = PARSE_FAILURE;
+			type = PARSE_FAILURE;			
+			errorCode = ERROR_PARSE_FAILURE;			
 		}
 	}
 
-	public void parseResponse(InputStream is) {
+	private void parseResponse(InputStream is) {
 		id = null;
 		command = null;
+		type = UNKNOWN_TYPE;		
+		errorCode = ERROR_UNKNOWN_TYPE;
+		
 		try {
 			doc = db.parse(is);
 			parent = doc.getFirstChild();
 			String nodeName = parent.getNodeName();
 			if (nodeName.equals("response")) {
-				parseResponse();
+				parseResponseType();
 			} else if (nodeName.equals("init")) {
-				parseInit();
+				parseInitType();
 			} else if (nodeName.equals("stream")) {
-				parseStream();
-			}
+				parseStreamType();
+			} 
+			
 		} catch (SAXException e) {
 			DBGpLogger.logException(null, this, e);
 			type = PARSE_FAILURE;
+			errorCode = ERROR_PARSE_FAILURE;						
 		} catch (IOException e) {
 			DBGpLogger.logException(null, this, e);
 			type = PARSE_FAILURE;
+			errorCode = ERROR_PARSE_FAILURE;						
 		}
 		//System.out.println("wait for me");
 	}
 
-	private void parseStream() {
+	private void parseStreamType() {
 		type = STREAM;
 		streamType = getTopAttribute("type");
-		String encoding = getTopAttribute("Encoding"); // don't use yet, assume it is base64
 		Node Child = parent.getFirstChild();
 		if (Child != null) {
-			String data = Child.getNodeValue();
-			streamData = new String(Base64.decode(data.getBytes()));
+			streamData = Child.getNodeValue();
 		}
+		
+		if (streamType.length() != 0) {
+			errorCode = ERROR_OK;
+		}
+		else {
+			errorCode = ERROR_INVALID_RESPONSE;
+		}
+			
 	}
 
-	private void parseInit() {
+	private void parseInitType() {
 		// get the init information
 		type = INIT;
 		idekey = getTopAttribute("idekey");
@@ -256,9 +259,15 @@ public class DBGpResponse {
 				i = nodes.getLength();
 			}
 		}
+		if (idekey.length() != 0 && fileUri.length() != 0) {
+			errorCode = ERROR_OK;
+		}
+		else {
+			errorCode = ERROR_INVALID_RESPONSE;
+		}
 	}
 
-	private void parseResponse() {
+	private void parseResponseType() {
 		type = RESPONSE;
 		id = getTopAttribute("transaction_id");
 		command = getTopAttribute("command");
@@ -280,6 +289,14 @@ public class DBGpResponse {
 				if (dataNode != null) {
 					errorMessage = dataNode.getNodeValue();
 				}
+			}
+		}
+		else {
+			if (id.length() != 0) {
+				errorCode = ERROR_OK;
+			}
+			else {
+				errorCode = ERROR_INVALID_RESPONSE;
 			}
 		}
 	}
@@ -343,19 +360,23 @@ public class DBGpResponse {
 		return errorMessage;
 	}
 
-	public String getRawXML() {
-		return rawXML;
-	}
-
 	public String getEngineVersion() {
 		return engineVersion;
 	}
 
+	/**
+	 * this will either be null or base64 encoded. It needs to be decoded.
+	 * @return encoded stream data or null.
+	 */
 	public String getStreamData() {
 		return streamData;
 	}
 
 	public String getStreamType() {
 		return streamType;
+	}
+
+	public byte[] getRawXML() {
+		return rawXML;
 	}
 }

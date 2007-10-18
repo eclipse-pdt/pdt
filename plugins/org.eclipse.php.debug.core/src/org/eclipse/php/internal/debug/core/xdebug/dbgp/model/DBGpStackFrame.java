@@ -18,6 +18,7 @@ import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
 import org.w3c.dom.Node;
@@ -30,7 +31,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	private String fileName; // workspace file relative to project, null if not in workspace
 	private int lineNo; // line within the file of this stack frame
 	private String name = ""; // string to display in debugger for this stack frame
-	private IVariable[] variables; // variables exposed to this stack frame
+	//private IVariable[] variables; // variables exposed to this stack frame
 
 	public DBGpStackFrame(DBGpThread threadOwner, Node stackData) {
 		super(threadOwner.getDebugTarget());
@@ -103,6 +104,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
 	 */
 	public int getLineNumber() throws DebugException {
+		DBGpLogger.debug(this.hashCode() + "::DBGpStackFrame=" + lineNo );
 		return lineNo;
 	}
 
@@ -143,9 +145,9 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
 	public IVariable[] getVariables() throws DebugException {
-		if (variables == null) {
-			variables = ((DBGpTarget) getDebugTarget()).getAllVars(stackLevel);
-		}
+		// see equals() as to where variables cannot be cached in the stack frame
+		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo);
+		IVariable[] variables = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
 		return variables;
 	}
 
@@ -154,7 +156,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
 	 */
 	public boolean hasVariables() throws DebugException {
-		getVariables();
+		IVariable[] variables = getVariables();
 		return (variables != null && variables.length > 0);
 	}
 
@@ -293,14 +295,22 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		if (obj instanceof DBGpStackFrame) {
 			DBGpStackFrame sf = (DBGpStackFrame) obj;
 			try {
-
-				// must check variables as a stackframe could
-				// be on the same line as a previous one (eg looping
-				// breakpoint, but they are essentially different
-				// if the variable entries are both null, assume they are equal               
-				boolean isEqual = sf.getQualifiedFile().equals(getQualifiedFile()) && sf.getLineNumber() == getLineNumber() && sf.stackLevel.equals(stackLevel) && variables == sf.variables;
+				// a stack frame is equal if they are at the same level and for the same file
+				//
+				// if a stack frame is equal then eclipse doesn't refresh the variables pane
+				// but subsequent new stackframes created at the same level (but on different
+				// line numbers are not used to get the variables, the first one at the level
+				// is used (eg a stackframe for line 2 is used to get variables for all other
+				// lines at the same stack level, even though a stack level for one at say line
+				// 4 exists). 
+				//
+				// so to stop the refresh of the variables pane, stack frames at the same
+				// level should report as equal, but because of this a stack frame cannot
+				// cache the variables at that line as eclipse goes to the stack frame of
+				// another line number to get the stack variables. 
+				boolean isEqual = sf.getQualifiedFile().equals(getQualifiedFile()) && sf.stackLevel.equals(stackLevel);
 				return isEqual;
-			} catch (DebugException e) {
+			} catch (Exception e) {
 			}
 		}
 		return false;

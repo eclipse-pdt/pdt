@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol;
 
+import java.io.UnsupportedEncodingException;
+
 /* Base64 definition
 
  5.2.  Base64 Content-Transfer-Encoding
@@ -174,8 +176,43 @@ public class Base64 {
 		return result;
 
 	}
+	
+	public static String encode(String input, String sessionEncoding) {
+		byte[] byteInput = null;
+		String strResult = null;
+		try {
+			byteInput = input.getBytes(sessionEncoding);
+			byte[] result = encode(byteInput);
+			strResult = new String(result, sessionEncoding);			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			byteInput = input.getBytes();
+			byte[] result = encode(byteInput);
+			strResult = new String(result);			
+		}
+		return strResult;		
+	}
 
-	public static byte[] encode(byte[] input) {
+	public static String decode(String input, String sessionEncoding) {
+		byte[] byteInput = null;
+		String strResult = null;
+		try {
+			byteInput = input.getBytes(sessionEncoding);
+			byte[] result = decode(byteInput);
+			strResult = new String(result, sessionEncoding);			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			byteInput = input.getBytes();
+			byte[] result = decode(byteInput);
+			strResult = new String(result);			
+		}
+		return strResult;		
+	}
+	
+	
+	
+	
+	private static byte[] encode(byte[] input) {
 		int outsize = input.length / 3 * 4;
 		if (input.length % 3 != 0) {
 			outsize += 4;
@@ -223,7 +260,7 @@ public class Base64 {
 		return encoded;
 	}
 
-	public static byte[] decode(byte[] input) {
+	private static byte[] decode(byte[] input) {
 		int outsize = input.length;
 		outsize = outsize / 4 * 3;
 

@@ -26,8 +26,6 @@ public class DBGpSessionHandler {
 	private int sessionCount = 0;
 	private Object sessionCountMonitor = new Object();
 
-	private int fTimeout; // hold the ServerSocket timeout value
-
 	/**
 	 * Returns a singleton instance of the DBGpSessionHandler.
 	 * 
@@ -117,22 +115,4 @@ public class DBGpSessionHandler {
 		}
 		return allocated;
 	}
-//
-//	/**
-//	 * Returns the timeout that is set for the ServerSocket listener.
-//	 * 
-//	 * @return
-//	 */
-//	public int getTimeout() {
-//		return fTimeout;
-//	}
-//
-//	/**
-//	 * Sets the timeout for the ServerSocket listener.
-//	 * 
-//	 * @param timeout
-//	 */
-//	public void setTimeout(int timeout) {
-//		this.fTimeout = timeout;
-//	}
 }

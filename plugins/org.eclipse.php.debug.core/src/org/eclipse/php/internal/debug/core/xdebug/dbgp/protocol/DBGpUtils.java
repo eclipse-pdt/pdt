@@ -90,6 +90,10 @@ public class DBGpUtils {
 	public static boolean isGoodDBGpResponse(Object caller, DBGpResponse resp) {
 		//TODO: Improvement: Support adding own messages, different error level
 		//TODO: Improvement: Error_cant_get_property test to be optional
+		if (resp == null) {
+			return false;
+		}
+		
 		if (resp.getType() == DBGpResponse.RESPONSE) {
 
 			// ok, or cannot get property are good responses really.
