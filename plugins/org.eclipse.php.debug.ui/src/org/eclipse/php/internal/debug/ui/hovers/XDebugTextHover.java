@@ -88,6 +88,9 @@ public class XDebugTextHover extends AbstractPHPTextHover {
 	protected String getValueByEval(DBGpTarget debugTarget, String variable) {
 		String value = null;
 		Node resp = debugTarget.eval(variable); // note this is a synchronous call
+		if (resp == null) {
+			return "";
+		}
 		IVariable tempVar = new DBGpVariable(debugTarget, resp, "-2");
 
 		IValue val = null;
@@ -116,6 +119,9 @@ public class XDebugTextHover extends AbstractPHPTextHover {
 		String value = null;
 		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
 		Node resp = debugTarget.getProperty(variable, context.getStackLevel(), 0);
+		if (resp == null) {
+			return "";
+		}
 		IVariable tempVar = new DBGpVariable(debugTarget, resp, "-2");
 
 		IValue val = null;

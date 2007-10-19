@@ -100,14 +100,19 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 			}
 			*/
 			result = debugTarget.eval(testExp);
-			IVariable tempVar = new DBGpVariable(debugTarget, result, stackLevel);
-			evalResult = null;
-			try {
-				evalResult = tempVar.getValue();
-				if (evalResult == null) {
+			if (result != null) {
+				IVariable tempVar = new DBGpVariable(debugTarget, result, stackLevel);
+				evalResult = null;
+				try {
+					evalResult = tempVar.getValue();
+					if (evalResult == null) {
+						hasErrors = true;
+					}
+				} catch (Exception e) {
 					hasErrors = true;
 				}
-			} catch (Exception e) {
+			}
+			else {
 				hasErrors = true;
 			}
 		}
