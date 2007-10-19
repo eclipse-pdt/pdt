@@ -30,8 +30,6 @@ public interface IDELayer {
 
 	public String getEXEFileAttrName();
 
-	public String getEXEOverrideFirstLineAttrName();
-
 	public String getEXEFirstLineAttrName();
 
 	// required for EXE and Web launcher

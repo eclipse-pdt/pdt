@@ -130,10 +130,6 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 		return IDebugParametersKeys.FIRST_LINE_BREAKPOINT;
 	}
 
-	public String getEXEOverrideFirstLineAttrName() {
-		return IDebugParametersKeys.OVERRIDE_FIRST_LINE_BREAKPOINT;
-	}
-
 	public String getSystemDebugProperty() {
 		return "org.eclipse.php.debug.ui.activeDebugging";
 	}

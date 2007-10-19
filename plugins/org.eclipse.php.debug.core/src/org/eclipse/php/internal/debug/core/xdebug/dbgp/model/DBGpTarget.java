@@ -146,16 +146,16 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     * 
     * @param launch
     * @param process
-    * @param scriptName
+    * @param projectRelativeScript
     * @param stopAtStart
     * @throws CoreException
     */
-   public DBGpTarget(ILaunch launch, String scriptName, String ideKey,
+   public DBGpTarget(ILaunch launch, String projectRelativeScript, String ideKey,
          String sessionID, boolean stopAtStart) throws CoreException {
       this();
       this.stopAtStart = stopAtStart;
       this.launch = launch;
-      this.scriptName = scriptName;
+      this.scriptName = projectRelativeScript;
       this.ideKey = ideKey;
       this.webLaunch = false;
       this.sessionID = sessionID;

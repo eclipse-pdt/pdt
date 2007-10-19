@@ -22,6 +22,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
@@ -102,7 +103,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// determine stop at first line (first calc the default and then try to extract the configuration attribute).
 		IDELayer ide = IDELayerFactory.getIDELayer();
-		boolean stopAtFirstLine = ide.getStopAtFirstLine(proj);
+		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(proj);
 		stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, stopAtFirstLine);
 
 		// determine from eclipse config whether we use an internal browser or
