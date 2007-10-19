@@ -163,7 +163,9 @@ public class DBGpContainerValue extends DBGpValue {
 			page = ((DBGpContainerVariable) var).getPage();
 		}
 		Node property = target.getProperty(var.getFullName(), var.getStackLevel(), page);
-		parseData(property);
+		if (property != null) {
+			parseData(property);
+		}
 	}
 
 	/*

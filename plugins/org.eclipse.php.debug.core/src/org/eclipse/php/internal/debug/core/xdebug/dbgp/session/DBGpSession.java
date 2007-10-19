@@ -204,25 +204,30 @@ public class DBGpSession {
 					if (response != null) {
 						DBGpResponse parsedResponse = new DBGpResponse();
 						parsedResponse.parseResponse(response);
-						// allow cannot get property error as this is allowed.
-						if (parsedResponse.getErrorCode() == DBGpResponse.ERROR_OK || parsedResponse.getErrorCode() == DBGpResponse.ERROR_CANT_GET_PROPERTY) {
-	
-							if (DBGpResponse.RESPONSE == parsedResponse.getType()) {
-	
-								// The response handler only processes stop and break
-								// status responses, all others are ignored or returned
-								// to a sync caller.
+						int respErrorCode = parsedResponse.getErrorCode(); 
+						
+						// we have a received something back from the debuggee so first
+						// we try to process a stop or break async response, even if the
+						// response was invalid.
+						if (respErrorCode == DBGpResponse.ERROR_OK || 
+							respErrorCode == DBGpResponse.ERROR_INVALID_RESPONSE) {
+							int respType = parsedResponse.getType(); 
+							
+							if ( respType == DBGpResponse.RESPONSE) {
 								if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
 									handleStopStatus();
 								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
 									handleBreakStatus(parsedResponse);
 								}
-							} else if (DBGpResponse.STREAM == parsedResponse.getType()) {
+							} else if (respType == DBGpResponse.STREAM && 
+									   respErrorCode != DBGpResponse.ERROR_INVALID_RESPONSE) {
 								handleStreamData(parsedResponse);
 							} else {
 								DBGpLogger.logWarning("Unknown type of XML: " + response, DBGpSession.this, null);
 							}
 						}
+						
+						// unblock any Sync caller who might be waiting regardless of what we got back
 						unblockSyncCaller(parsedResponse);
 					}
 				}

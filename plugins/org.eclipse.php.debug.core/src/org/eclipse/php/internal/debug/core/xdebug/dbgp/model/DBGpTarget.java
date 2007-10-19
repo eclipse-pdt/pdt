@@ -901,8 +901,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
    private IVariable[] getSuperGlobalVars() {
       if (superGlobalVars == null) {
          DBGpResponse resp = session.sendSyncCmd(DBGpCommand.contextGet, "-c 1");
-         // Parse this into a variables block, switch on preload just for
-         // this
+         // Parse this into a variables block, switch on preload just for this
          superGlobalVars = parseVarResp(resp, "-1");
       }
       return superGlobalVars;
@@ -967,7 +966,7 @@ private IVariable[] getContextAtLevel(String level) {
       // If you cannot get a property, then a single variable is created with
       // no information as their is a child node, if there are no variables
       // this method creates a 0 size array which is good.
-      if (resp.getErrorCode() == DBGpResponse.ERROR_OK) {
+      if (DBGpUtils.isGoodDBGpResponse(this, resp) && resp.getErrorCode() == DBGpResponse.ERROR_OK) {
          Node parent = resp.getParentNode();
          NodeList properties = parent.getChildNodes();
          variables = new DBGpVariable[properties.getLength()];
@@ -1001,22 +1000,23 @@ private IVariable[] getContextAtLevel(String level) {
          }
       }
       catch (DebugException e) {
-
       }
+      
       DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propSet, args);
-      if (resp.getTopAttribute("success").equals("1")) {
-    	 if (!stackLevel.equals("0")) {
-    		 // a variable has been changed on a previous stack
-    		 // the gui won't have updated the current stack
-    		 // level view, so we invalidate the cache to reload
-    		 // the data.
-    		 currentVariables = null;
-    	 }
-         return true;
+      boolean success = false;
+      if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+	      if (resp.getTopAttribute("success").equals("1")) {
+	    	 if (!stackLevel.equals("0")) {
+	    		 // a variable has been changed on a previous stack
+	    		 // the gui won't have updated the current stack
+	    		 // level view, so we invalidate the cache to reload
+	    		 // the data.
+	    		 currentVariables = null;
+	    	 }
+	    	 success = true;
+	      }
       }
-      else {
-         return false;
-      }
+      return success;
    }
 
    /**
@@ -1027,16 +1027,24 @@ private IVariable[] getContextAtLevel(String level) {
     * @return
     */
    public Node getProperty(String fullName, String stackLevel, int page) {
-      String args = "-n " + fullName + " -d " + stackLevel + " -p " + page;
-      if (stackLevel.equals("-1")) {
-         // the following line should work but doesn't in 2.0.0rc1 of XDebug
-         // args = "-n " + fullName + " -c 1 -p " + page;
-         // but the following works for both rc1 and beyond so will keep it
-         // like this for now.
-         args = "-n " + fullName + " -d " + getCurrentStackLevel() + " -p " + page;
-      }
-      DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propGet, args);
-      return resp.getParentNode().getFirstChild();
+	  if (fullName != null && fullName.trim().length() != 0) {
+	      String args = "-n " + fullName + " -d " + stackLevel + " -p " + page;
+	      if (stackLevel.equals("-1")) {
+	         // the following line should work but doesn't in 2.0.0rc1 of XDebug
+	         // args = "-n " + fullName + " -c 1 -p " + page;
+	         // but the following works for both rc1 and beyond so will keep it
+	         // like this for now.
+	         args = "-n " + fullName + " -d " + getCurrentStackLevel() + " -p " + page;
+	      }
+	      DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propGet, args);
+	      if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+	    	  return resp.getParentNode().getFirstChild();
+	      }
+	  }
+	  
+	  // either a bad response or we have a temporary variable from the watch expression
+	  // which we cannot get the results from.
+   	  return null;
    }
 
    /**
@@ -1049,7 +1057,12 @@ private IVariable[] getContextAtLevel(String level) {
       String encoded = Base64.encode(toEval, session.getSessionEncoding());
       String args = "-- " + encoded;
       DBGpResponse resp = session.sendSyncCmd(DBGpCommand.eval, args);
-      return resp.getParentNode().getFirstChild();
+      if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+    	  return resp.getParentNode().getFirstChild();
+      }
+      else {
+    	  return null;
+      }
    }
 
    /**
