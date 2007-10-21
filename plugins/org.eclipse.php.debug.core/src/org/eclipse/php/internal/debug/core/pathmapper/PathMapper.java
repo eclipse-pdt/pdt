@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.io.File;
@@ -29,7 +39,7 @@ public class PathMapper {
 		}
 		return instance;
 	}
-	
+
 	public void addEntry(String remoteFile, PathEntry entry) {
 		AbstractPath remotePath = new AbstractPath(remoteFile);
 		AbstractPath localPath = entry.getAbstractPath();
@@ -53,7 +63,7 @@ public class PathMapper {
 		}
 		return null;
 	}
-	
+
 	public PathEntry getLocalFile(String remoteFile) {
 		AbstractPath path = getPath(remoteToLocalMap, new AbstractPath(remoteFile));
 		if (path != null) {
@@ -76,7 +86,7 @@ public class PathMapper {
 		}
 		return null;
 	}
-	
+
 	protected AbstractPath getPath(Map<AbstractPath, AbstractPath> map, AbstractPath path) {
 		path = path.clone();
 		List<String> strippedSegments = new LinkedList<String>();
@@ -94,7 +104,7 @@ public class PathMapper {
 		}
 		return null;
 	}
-	
+
 	protected PathEntry.Type getPathType(AbstractPath path) {
 		path = path.clone();
 		while (path.getSegmentsCount() > 0) {

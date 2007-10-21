@@ -1,10 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.debug.core.pathmapper;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 
 /**
- * This class represents container for {@link PathMapper} 
+ * This class represents container for {@link PathMapper}
  * @author michael
  */
 public class PathEntry {
@@ -18,7 +28,7 @@ public class PathEntry {
 		INCLUDE_FOLDER("Include Path Folder"),
 		EXTERNAL("External File"),
 		;
-		
+
 		private String name;
 		private Type(String name) {
 			this.name = name;
@@ -32,7 +42,7 @@ public class PathEntry {
 	private Object container;
 	private AbstractPath abstractPath;
 	private Type type;
-	
+
 	/**
 	 * Constructs new path entry
 	 * @param path Path string
@@ -42,7 +52,7 @@ public class PathEntry {
 	public PathEntry(String path, Type type, Object container) {
 		this(new AbstractPath(path), type, container);
 	}
-	
+
 	/**
 	 * Constructs new path entry
 	 * @param path Abstract path
@@ -70,7 +80,7 @@ public class PathEntry {
 	public Type getType() {
 		return type;
 	}
-	
+
 	/**
 	 * Returns container of this file. It can be either workspace resource, include path, or folder on file system
 	 * @return container
@@ -78,7 +88,7 @@ public class PathEntry {
 	public Object getContainer() {
 		return container;
 	}
-	
+
 	/**
 	 * Returns path string of this entry. It can be either a path to existing file, or path
 	 * that contains variable from Include Path.
@@ -87,7 +97,7 @@ public class PathEntry {
 	public String getPath() {
 		return abstractPath.toString();
 	}
-	
+
 	/**
 	 * Returns path to the file that this entry contains. If original path contained variables
 	 * from Include Path it will be resolved.
@@ -100,7 +110,7 @@ public class PathEntry {
 		}
 		return getPath();
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof PathEntry)) {
 			return false;
@@ -108,11 +118,11 @@ public class PathEntry {
 		PathEntry other = (PathEntry) obj;
 		return other.abstractPath.equals(abstractPath) && other.type == type;
 	}
-	
+
 	public int hashCode() {
 		return abstractPath.hashCode() + 13 * type.ordinal();
 	}
-	
+
 	public String toString() {
 		StringBuilder buf = new StringBuilder("Path Entry: ");
 		buf.append(abstractPath).append(" (").append(type).append(")");

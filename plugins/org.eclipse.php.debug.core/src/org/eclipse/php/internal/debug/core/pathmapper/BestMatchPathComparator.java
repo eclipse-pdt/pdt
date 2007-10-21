@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.util.Comparator;
@@ -5,13 +15,13 @@ import java.util.Comparator;
 /**
  * This comparator compares between two path entries in determines which of them
  * best matches the given path in terms of number of matching last segments.
- * 
+ *
  * @author michael
  */
 public class BestMatchPathComparator implements Comparator<PathEntry> {
 
 	private String[] segments;
-	
+
 	/**
 	 * Constructs new best match comparator
 	 * @param path Abstract path of the file model

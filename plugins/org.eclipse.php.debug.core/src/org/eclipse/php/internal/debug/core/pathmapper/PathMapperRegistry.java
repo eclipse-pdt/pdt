@@ -10,7 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.pathmapper;
 
-public interface IPathEntryFilter {
+public class PathMapperRegistry {
 
-	public PathEntry[] filter(PathEntry[] entries, AbstractPath remotePath);
+	private static PathMapperRegistry instance;
+
+	private PathMapperRegistry() {
+	}
+
+	public synchronized static PathMapperRegistry getInstance() {
+		if (instance == null) {
+			instance = new PathMapperRegistry();
+		}
+		return instance;
+	}
 }
