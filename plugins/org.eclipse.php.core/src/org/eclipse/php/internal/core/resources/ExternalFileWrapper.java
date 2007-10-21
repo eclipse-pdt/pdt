@@ -10,38 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.resources;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.net.URI;
 
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.internal.resources.WorkspaceRoot;
 import org.eclipse.core.internal.watson.IPathRequestor;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFileState;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceProxy;
-import org.eclipse.core.resources.IResourceProxyVisitor;
-import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourceAttributes;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -73,7 +49,7 @@ public class ExternalFileWrapper implements IFile, IAdaptable, IResource, ICoreC
 			p = p.append(path.segment(0));
 			p = p.setDevice(path.getDevice());
 		}
-		
+
 		this.file = ResourcesPlugin.getWorkspace().getRoot().getFile(p);
 	}
 
@@ -448,7 +424,7 @@ public class ExternalFileWrapper implements IFile, IAdaptable, IResource, ICoreC
 	 */
 	public InputStream getContents() throws CoreException {
 		try {
-			return new FileInputStream(file.getFullPath().toFile());
+			return new FileInputStream(path.toFile());
 		} catch (FileNotFoundException e) {
 			throw new CoreException(new Status(IStatus.ERROR, PHPCorePlugin.ID, IStatus.ERROR, e.getMessage(), e));
 		}
@@ -1006,5 +982,10 @@ public class ExternalFileWrapper implements IFile, IAdaptable, IResource, ICoreC
 
 		public void setProperty(QualifiedName key, Object value) {
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return file.hashCode();
 	}
 }
