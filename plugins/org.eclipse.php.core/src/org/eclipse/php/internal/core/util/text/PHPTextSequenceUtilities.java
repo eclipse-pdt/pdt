@@ -28,7 +28,7 @@ public class PHPTextSequenceUtilities {
 	private static final Pattern COMMENT_START_PATTERN = Pattern.compile("(/[*])|(//)"); //$NON-NLS-1$
 	private static final Pattern COMMENT_END_PATTERN = Pattern.compile("[*]/"); //$NON-NLS-1$
 	private static final String START_COMMENT = "/*"; //$NON-NLS-1$
-//	private static final String END_COMMENT = "*/";
+	//	private static final String END_COMMENT = "*/";
 	private static final char END_LINE = '\n';
 	private static final Pattern FUNCTION_PATTERN = Pattern.compile("function\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern CLASS_PATTERN = Pattern.compile("(class|interface)\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
@@ -277,6 +277,8 @@ public class PHPTextSequenceUtilities {
 		int rv = startPosition;
 		int bracketsNum = 0;
 		char inStringMode = 0;
+		boolean inWhiteSpaceBeforeLiteral = false;
+		boolean inLiteral = false;
 		for (; rv > 0; rv--) {
 			char currChar = textSequence.charAt(rv - 1);
 			if (currChar == '\'' || currChar == '"') {
@@ -286,7 +288,24 @@ public class PHPTextSequenceUtilities {
 				continue;
 			}
 
-			if (!Character.isLetterOrDigit(currChar) && currChar != '_' && currChar != '$' && !(Character.isWhitespace(currChar) && currChar != '\n')) {
+			// The next block solves bug #205034:
+			// store state for whitespace before literals and if another literal comes before it - return 'not found'
+			if (Character.isLetterOrDigit(currChar) || currChar == '$') {
+				if (inWhiteSpaceBeforeLiteral) {
+					return -1;
+				}
+				inLiteral = true;
+			} else {
+				if (inLiteral && Character.isWhitespace(currChar)) {
+					inWhiteSpaceBeforeLiteral = true;
+				}
+				if (!Character.isWhitespace(currChar)) {
+					inWhiteSpaceBeforeLiteral = false;
+				}
+				inLiteral = false;
+			}
+
+			if (!Character.isLetterOrDigit(currChar) && currChar != '_' && currChar != '$' && !Character.isWhitespace(currChar)) {
 				switch (currChar) {
 					case '(':
 					case '[':
@@ -315,8 +334,6 @@ public class PHPTextSequenceUtilities {
 							}
 						}
 						break;
-					case '\n':
-						return -1;
 					default:
 						if (bracketsNum == 0) {
 							return -1;
@@ -342,7 +359,7 @@ public class PHPTextSequenceUtilities {
 				listStartPosition = startPosition;
 				beforeComma = false;
 			} else if (ch == ',') {
-				if(beforeComma) {
+				if (beforeComma) {
 					// only one comma may delimit a list
 					return endPosition;
 				}
@@ -357,6 +374,5 @@ public class PHPTextSequenceUtilities {
 		}
 		return listStartPosition;
 	}
-
 
 }
