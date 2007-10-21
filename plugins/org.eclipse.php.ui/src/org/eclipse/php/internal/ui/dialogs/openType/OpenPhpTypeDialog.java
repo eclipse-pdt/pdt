@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -116,18 +117,16 @@ public class OpenPhpTypeDialog extends Dialog {
 
 	private Object[] getElements() {
 
-		Object[] elements = initialElements;
+		CodeData[] elements = initialElements;
 
 		if (elements == null) {
-			ArrayList arrayList = new ArrayList();
+			LinkedHashSet<CodeData> arrayList = new LinkedHashSet<CodeData>();
 			// traverse over all the php projects and get the model for each
 			// one.
 			IProject[] projects = PHPUiPlugin.getWorkspace().getRoot().getProjects();
-			for (int i = 0; i < projects.length; i++) {
-				IProject project = projects[i];
+			for (IProject project : projects) {
 				try {
-					if (!project.exists() || !project.isOpen()
-						|| !project.hasNature(PHPNature.ID)) {
+					if (!project.exists() || !project.isOpen() || !project.hasNature(PHPNature.ID)) {
 						continue;
 					}
 				} catch (CoreException ce) {
@@ -146,39 +145,37 @@ public class OpenPhpTypeDialog extends Dialog {
 					}
 				}
 			}
-			elements = arrayList.toArray();
+			elements = arrayList.toArray(new CodeData[arrayList.size()]);
 		}
 
-		Arrays.sort(elements, new Comparator() {
-			public int compare(Object arg0, Object arg1) {
+		Comparator<CodeData> comparator = new Comparator<CodeData>() {
+			public int compare(CodeData arg0, CodeData arg1) {
 				return arg0.toString().compareToIgnoreCase(arg1.toString());
 			}
-		});
+		};
+		Arrays.sort(elements, comparator);
 
 		return elements;
 	}
 
-	private void addClassesData(CodeData[] classes, ArrayList arrayList) {
+	private void addClassesData(CodeData[] classes, Collection arrayList) {
 		addData(classes, arrayList);
-		for (int i = 0; i < classes.length; i++) {
-			PHPClassData classData = (PHPClassData) classes[i];
+		for (CodeData element : classes) {
+			PHPClassData classData = (PHPClassData) element;
 			addData(classData.getConsts(), arrayList);
 			addData(classData.getFunctions(), arrayList);
 		}
 	}
 
-	private void addData(CodeData[] classes, ArrayList arrayList) {
-		for (int i = 0; i < classes.length; i++) {
-			CodeData codeData = classes[i];
+	private void addData(CodeData[] classes, Collection arrayList) {
+		for (CodeData codeData : classes) {
 			arrayList.add(codeData);
 		}
 	}
 
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(title != null
-			? title
-			: PHPUIMessages.getString("OpenType_DialogTitle"));
+		newShell.setText(title != null ? title : PHPUIMessages.getString("OpenType_DialogTitle"));
 	}
 
 	public PHPCodeData getSelectedElement() {
