@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager.ContentTypeChangeEvent;
 import org.eclipse.core.runtime.content.IContentTypeManager.IContentTypeChangeListener;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
@@ -38,6 +39,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
+import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
 public class DebugSearchEngine {
@@ -48,16 +50,25 @@ public class DebugSearchEngine {
 	/**
 	 * Searches for all local resources that match provided remote file, and returns it in best match order.
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
+	 * @param launchConfiguration Launch configuration for the debug session
 	 * @return path entry or <code>null</code> in case it could not be found
 	 * @throws InterruptedException
 	 * @throws CoreException
 	 */
-	public static PathEntry find(String remoteFile, IProject currentProject) throws InterruptedException, CoreException {
-		return find(remoteFile, currentProject, null, null);
+	public static PathEntry find(String remoteFile, ILaunchConfiguration launchConfiguration) throws InterruptedException, CoreException {
+		PathEntry pathEntry = null;
+		String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+		if (projectName != null) {
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
+			pathEntry = find(pathMapper, remoteFile, project, null, null);
+		}
+		return pathEntry;
 	}
 
 	/**
 	 * Searches for all local resources that match provided remote file, and returns it in best match order.
+	 * @param pathMapper Path mapper to look at
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
 	 * @param currentWorkingDir Current working directory of PHP process
 	 * @param currentScriptDir Directory of current PHP file
@@ -65,13 +76,12 @@ public class DebugSearchEngine {
 	 * @throws InterruptedException
 	 * @throws CoreException
 	 */
-	public static PathEntry find(String remoteFile, IProject currentProject, String currentWorkingDir, String currentScriptDir) throws InterruptedException, CoreException {
+	private static PathEntry find(PathMapper pathMapper, String remoteFile, IProject currentProject, String currentWorkingDir, String currentScriptDir) throws InterruptedException, CoreException {
 		if (remoteFile == null) {
 			throw new NullPointerException();
 		}
 
-		// Look in the path mapper:
-		PathMapper pathMapper = PathMapper.getInstance();
+		// Look into the path mapper:
 		PathEntry localFile = pathMapper.getLocalFile(remoteFile);
 		if (localFile != null) {
 			return localFile;
@@ -147,7 +157,7 @@ public class DebugSearchEngine {
 			Collections.sort(results, bmComparator);
 			localFile = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]));
 			if (localFile != null) {
-				PathMapper.getInstance().addEntry(remoteFile, localFile);
+				pathMapper.addEntry(remoteFile, localFile);
 			}
 		}
 		return localFile;

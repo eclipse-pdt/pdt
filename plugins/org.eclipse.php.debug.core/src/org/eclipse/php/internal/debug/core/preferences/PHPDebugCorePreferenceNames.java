@@ -14,9 +14,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
 /**
  * Common preference keys used by PHP Debug
- * 
  */
-
 public class PHPDebugCorePreferenceNames {
 	private PHPDebugCorePreferenceNames() {
 		// empty private constructor so users cannot instantiate class
@@ -32,6 +30,7 @@ public class PHPDebugCorePreferenceNames {
 	public static final String INSTALLED_PHP_LOCATIONS = Debug_ID + "installedPHPLocations";//$NON-NLS-1$
 	public static final String INSTALLED_PHP_DEBUGGERS = Debug_ID + "installedPHPDebuggers";//$NON-NLS-1$
 	public static final String INSTALLED_PHP_DEFAULTS = Debug_ID + "installedPHPDefaults";//$NON-NLS-1$
+
 	// Project default PHP executables keys
 	public static final String DEFAULT_PHP = Debug_ID + "defaultPHP";//$NON-NLS-1$
 

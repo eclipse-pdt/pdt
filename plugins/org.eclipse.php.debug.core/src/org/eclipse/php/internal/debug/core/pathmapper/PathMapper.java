@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -19,25 +20,18 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
-public class PathMapper {
+public class PathMapper implements IXMLPreferencesStorable {
 
 	private Map<AbstractPath, AbstractPath> remoteToLocalMap;
 	private Map<AbstractPath, AbstractPath> localToRemoteMap;
 	private Map<AbstractPath, PathEntry.Type> localToPathEntryType;
-	private static PathMapper instance;
 
-	private PathMapper() {
+	public PathMapper() {
 		remoteToLocalMap = new HashMap<AbstractPath, AbstractPath>();
 		localToRemoteMap = new HashMap<AbstractPath, AbstractPath>();
 		localToPathEntryType = new HashMap<AbstractPath, PathEntry.Type>();
-	}
-
-	public static synchronized PathMapper getInstance() {
-		if (instance == null) {
-			instance = new PathMapper();
-		}
-		return instance;
 	}
 
 	public void addEntry(String remoteFile, PathEntry entry) {
@@ -78,9 +72,9 @@ public class PathMapper {
 				File file = new File(localFile);
 				if (file.exists()) {
 					if (type == PathEntry.Type.INCLUDE_FOLDER || type == PathEntry.Type.INCLUDE_VAR) {
-						return new PathEntry(path, type , null);
+						return new PathEntry(path, type, null);
 					}
-					return new PathEntry(path, type , file.getParentFile());
+					return new PathEntry(path, type, file.getParentFile());
 				}
 			}
 		}
@@ -115,5 +109,46 @@ public class PathMapper {
 			path.removeLastSegment();
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public synchronized void restoreFromMap(HashMap map) {
+		remoteToLocalMap.clear();
+		localToRemoteMap.clear();
+		localToPathEntryType.clear();
+
+		Iterator i = map.keySet().iterator();
+		while (i.hasNext()) {
+			map = (HashMap) i.next();
+			String localStr = (String) map.get("local"); //$NON-NLS-1$
+			String remoteStr = (String) map.get("remote"); //$NON-NLS-1$
+			String typeStr = (String) map.get("type"); //$NON-NLS-1$
+			if (localStr != null && remoteStr != null && typeStr != null) {
+				PathEntry.Type type = PathEntry.Type.valueOf(typeStr);
+				AbstractPath local = new AbstractPath(localStr);
+				AbstractPath remote = new AbstractPath(remoteStr);
+				remoteToLocalMap.put(remote, local);
+				localToRemoteMap.put(local, remote);
+				localToPathEntryType.put(local, type);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public synchronized HashMap storeToMap() {
+		HashMap entries = new HashMap();
+		Iterator<AbstractPath> i = localToRemoteMap.keySet().iterator();
+		int c= 1;
+		while (i.hasNext()) {
+			HashMap entry = new HashMap();
+			AbstractPath local = i.next();
+			AbstractPath remote = localToRemoteMap.get(local);
+			PathEntry.Type type = localToPathEntryType.get(local);
+			entry.put("local", local); //$NON-NLS-1$
+			entry.put("remote", remote); //$NON-NLS-1$
+			entry.put("type", type); //$NON-NLS-1$
+			entries.put("entry" + (c++), entry); //$NON-NLS-1$
+		}
+		return entries;
 	}
 }

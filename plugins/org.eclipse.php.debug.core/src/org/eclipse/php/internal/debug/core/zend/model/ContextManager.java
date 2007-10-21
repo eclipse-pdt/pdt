@@ -104,7 +104,7 @@ public class ContextManager {
 		Expression[] variables = new Expression[0];
 		if (!functionName.equals("")) {
 			String key = functionName + stack.getAbsoluteFileName();
-			variables = (Expression[]) fStackVariables.get(key);
+			variables = fStackVariables.get(key);
 		}
 		return variables;
 	}
@@ -148,11 +148,11 @@ public class ContextManager {
 
 	private void createStackVariables(StackLayer[] layers) {
 		fStackVariables.clear();
-		for (int i = 0; i < layers.length; i++) {
-			Expression[] stackVariables = layers[i].getVariables();
+		for (StackLayer element : layers) {
+			Expression[] stackVariables = element.getVariables();
 			if (stackVariables.length != 0) {
 				// TODO may need to fix for method name in classes
-				String key = layers[i].getCalledFunctionName() + RemoteDebugger.convertToSystemIndependentFileName(layers[i].getCalledFileName());
+				String key = element.getCalledFunctionName() + RemoteDebugger.convertToSystemIndependentFileName(element.getCalledFileName());
 				fStackVariables.put(key, stackVariables);
 			}
 		}
@@ -160,7 +160,7 @@ public class ContextManager {
 
 	private IVariable[] createVariables(boolean main, boolean update, boolean clear) {
 
-		DefaultExpressionsManager expressionsManager = (DefaultExpressionsManager) fTarget.getExpressionManager();
+		DefaultExpressionsManager expressionsManager = fTarget.getExpressionManager();
 		if (clear)
 			expressionsManager.clear();
 		Expression[] localVariables = expressionsManager.getLocalVariables(1);
@@ -180,7 +180,7 @@ public class ContextManager {
 			DefaultExpression gExp = new DefaultExpression(global);
 			String sArray = "Array";
 			String sArrayAsString = sArray + " [" + (new Integer(GlobalVariables.length).toString()) + "]";
-			ExpressionValue gEValue = new ExpressionValue(5, (Object) sArray, sArrayAsString, GlobalVariables);
+			ExpressionValue gEValue = new ExpressionValue(5, sArray, sArrayAsString, GlobalVariables);
 			gExp.setValue(gEValue);
 			variables[0] = new PHPVariable(fTarget, gExp, true);
 		}
@@ -190,13 +190,13 @@ public class ContextManager {
 
 	private String getLocalFileName(String filename, String context, int length, boolean isWindows) {
 		try {
-			PathEntry localFile = DebugSearchEngine.find(filename, fTarget.getProject());
+			PathEntry localFile = DebugSearchEngine.find(filename, fTarget.getLaunch().getLaunchConfiguration());
 			if (localFile != null) {
 				return localFile.getResolvedPath();
 			}
 		} catch (Exception e) {
 		}
-		
+
 		// First, check if the file name is located in one of the include paths.
 		// If so, ignore the given length and return the local file name after trimming
 		// the path from its beginning.
@@ -206,8 +206,8 @@ public class ContextManager {
 			PHPProjectOptions options = PHPProjectOptions.forProject(project);
 			if (options != null) {
 				IIncludePathEntry[] includePaths = options.readRawIncludePath();
-				for (int i = 0; i < includePaths.length; i++) {
-					String includePath = includePaths[i].getPath().toString();
+				for (IIncludePathEntry element : includePaths) {
+					String includePath = element.getPath().toString();
 					if (filename.startsWith(includePath)) {
 						return filename.substring(includePath.length());
 					}

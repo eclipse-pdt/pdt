@@ -28,7 +28,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.model.SimpleDebugHandler;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
-import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
@@ -38,7 +38,7 @@ import org.eclipse.php.internal.server.core.Server;
 
 /**
  * A PHP debug server handler.
- * 
+ *
  * @author Shalom Gibly
  */
 public class ServerDebugHandler extends SimpleDebugHandler {
@@ -61,10 +61,11 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void sessionStarted(String fileName, String uri, String query, String options) {
 		super.sessionStarted(fileName, uri, query, options);
-		
+
 		try {
 			PathEntry pathEntry = null;
-			String file = fDebugTarget.getLaunch().getLaunchConfiguration().getAttribute(Server.FILE_NAME, (String) null);
+			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
+			String file = launchConfiguration.getAttribute(Server.FILE_NAME, (String) null);
 			if (file != null) {
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
 				if (resource != null) {
@@ -72,11 +73,11 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				}
 			}
 			if (pathEntry != null) {
-				PathMapper.getInstance().addEntry(fileName, pathEntry);
+				PathMapperRegistry.getByLaunchConfiguration(launchConfiguration).addEntry(fileName, pathEntry);
 			}
 		} catch (CoreException e) {
 		}
-		
+
 		String sFileName = RemoteDebugger.convertToSystemIndependentFileName(fileName);
 
 		fDebugTarget.setLastFileName(sFileName);
@@ -108,9 +109,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	/**
 	 * Resolve and return the HTDocs folder.
-	 * @param fileName 
-	 * @param systemFileName 
-	 * @param uri 
+	 * @param fileName
+	 * @param systemFileName
+	 * @param uri
 	 * @param htdocs
 	 */
 	protected String getHTDocs(String fileName, String systemFileName, String uri) {
@@ -204,7 +205,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		} else if (fLastcmd.equals("stepInto")) {
 			fDebugTarget.suspended(DebugEvent.STEP_INTO);
 		} else if (fLastcmd.equals("terminate")) {
-			// Shouldn't happen, try to shut down cleanly 
+			// Shouldn't happen, try to shut down cleanly
 			fRemoteDebugger.finish();
 			fDebugTarget.terminated();
 		} else if (fLastcmd.equals("breakpointAdded")) {
@@ -259,7 +260,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		 } catch (DebugException e) {
 		 // Not likely to happened, since this is the second time we found the file.
 		 Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e);
-		 } 
+		 }
 		 }else {
 		 runPHPWebServer(fURL, fRequestPort, fIsStopAtFirstLine);
 		 terminated();
@@ -278,7 +279,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		String rName = sName;
 		if (!fDebugTarget.isPHPCGI()) {
 			try {
-				PathEntry entry = DebugSearchEngine.find(sName, fDebugTarget.getProject());
+				PathEntry entry = DebugSearchEngine.find(sName, fDebugTarget.getLaunch().getLaunchConfiguration());
 				if (entry != null) {
 					rName = entry.getResolvedPath();
 				}
@@ -286,7 +287,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			}
 //			length = fDebugTarget.getHTDocs().length() + fDebugTarget.getContextRoot().length();
 //			rName = sName.substring(length);
-//			// Check if the name exists in the workspace. 
+//			// Check if the name exists in the workspace.
 //			// If not, keep the original name.
 //			try {
 //				if (!ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(rName)).exists()) {
@@ -312,8 +313,8 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		fDebugTarget.getDebugErrors().add(debugError);
 
 		Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();
-		for (int i = 0; i < listeners.length; i++) {
-			((IPHPConsoleEventListener) listeners[i]).handleEvent(debugError);
+		for (Object element : listeners) {
+			((IPHPConsoleEventListener) element).handleEvent(debugError);
 		}
 
 	}
