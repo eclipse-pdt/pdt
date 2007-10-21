@@ -274,7 +274,15 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					continue;
 				PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(projects[i]);
 				if (model != null) {
-					String projectPath = projects[i].getLocation().toOSString();
+					String projectPath = "";
+					IPath location = projects[i].getLocation();
+					if (location == null){
+						projectPath = projects[i].getLocationURI().toString();
+					}
+					else {
+						projectPath = projects[i].getLocation().toOSString();
+					}
+					
 					String modelFilename;
 					if (filenameOS.startsWith(projectPath)) {
 						modelFilename = new Path(StringUtils.replace(filenameOS, projectPath, "")).toPortableString(); //$NON-NLS-1$
