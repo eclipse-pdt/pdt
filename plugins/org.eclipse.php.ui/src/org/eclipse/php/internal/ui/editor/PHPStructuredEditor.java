@@ -77,6 +77,7 @@ import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -115,7 +116,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Creates a dispatch action.
-		 * 
+		 *
 		 * @param resourceBundle the resource bundle
 		 * @param prefix the prefix
 		 * @param textOperationAction the text operation action
@@ -156,7 +157,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Tries to make an annotation hover focusable (or "sticky").
-		 * 
+		 *
 		 * @param sourceViewer the source viewer to display the hover over
 		 * @param annotationHover the hover to make focusable
 		 * @return <code>true</code> if successful, <code>false</code> otherwise
@@ -224,7 +225,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Tries to make a text hover focusable (or "sticky").
-		 * 
+		 *
 		 * @param sourceViewer the source viewer to display the hover over
 		 * @param textHover the hover to make focusable
 		 * @return <code>true</code> if successful, <code>false</code> otherwise
@@ -310,7 +311,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	/**
 	 * Information provider used to present focusable information shells.
-	 * 
+	 *
 	 * @since 3.2
 	 */
 	private static final class InformationProvider implements IInformationProvider, IInformationProviderExtension, IInformationProviderExtension2 {
@@ -363,9 +364,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				IDocument doc = getDocumentProvider().getDocument(getEditorInput());
 				if (doc instanceof IStructuredDocument) {
 					IStructuredDocumentRegion[] sdRegions = ((IStructuredDocument) doc).getStructuredDocumentRegions();
-					for (int i = 0; i < sdRegions.length; i++) {
-						Iterator regionsIt = sdRegions[i].getRegions().iterator();
-						reparseRegion(doc, regionsIt, sdRegions[i].getStartOffset());
+					for (IStructuredDocumentRegion element : sdRegions) {
+						Iterator regionsIt = element.getRegions().iterator();
+						reparseRegion(doc, regionsIt, element.getStartOffset());
 					}
 				}
 			} catch (BadLocationException e) {
@@ -383,7 +384,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	/**
 	 * iterate over regions in case of PhpScriptRegion reparse the region. in case of region contaioner iterate over the
 	 * container regions.
-	 * 
+	 *
 	 * @param doc structured document
 	 * @param regionsIt regions iterator
 	 * @param offset the container region start offset
@@ -407,7 +408,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	/** The information presenter. */
 	protected InformationPresenter fInformationPresenter;
-	
+
 	public PHPStructuredEditor() {
 		/**
 		 * Bug fix: #158170 Set WST's folding support enablement according to PHP editor folding support status. Must be
@@ -430,7 +431,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	/**
 	 * Create a preference store that combines the source editor preferences
 	 * with the base editor's preferences.
-	 * 
+	 *
 	 * @return IPreferenceStore
 	 */
 	private IPreferenceStore createCombinedPreferenceStore() {
@@ -475,19 +476,19 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			final MenuManager subMenu = new MenuManager(label, "org.eclipse.php.ui.source.menu"); //$NON-NLS-1$
 			subMenu.add(new GroupMarker("editGroup")); //$NON-NLS-1$
 			addAction(subMenu, "org.eclipse.php.ui.actions.ToggleCommentAction"); //$NON-NLS-1$
-			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT); //$NON-NLS-1$
-			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT); //$NON-NLS-1$
+			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT);
+			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT);
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, subMenu);
 
 			final String openGroup = "group.open"; //$NON-NLS-1$
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, new Separator(openGroup));
-			IAction action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN); //$NON-NLS-1$
+			IAction action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN);
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
-			action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION); //$NON-NLS-1$
+			action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION);
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
-			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); //$NON-NLS-1$
+			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
 
@@ -548,7 +549,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Creates a new smart line start action
-		 * 
+		 *
 		 * @param textWidget the styled text widget
 		 * @param doSelect a boolean flag which tells if the text up to the beginning of the line should be selected
 		 */
@@ -683,7 +684,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Create a new line end action.
-		 * 
+		 *
 		 * @param textWidget the styled text widget
 		 * @param doSelect a boolean flag which tells if the text up to the line end should be selected
 		 */
@@ -788,7 +789,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Creates a new next sub-word action.
-		 * 
+		 *
 		 * @param code Action code for the default operation. Must be an action code from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
@@ -830,7 +831,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Finds the next position after the given position.
-		 * 
+		 *
 		 * @param position the current position
 		 * @return the next position
 		 */
@@ -848,7 +849,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Sets the caret position to the sub-word boundary given with <code>position</code>.
-		 * 
+		 *
 		 * @param position Position where the action should move the caret
 		 */
 		protected abstract void setCaretPosition(int position);
@@ -897,7 +898,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Creates a new previous sub-word action.
-		 * 
+		 *
 		 * @param code Action code for the default operation. Must be an action code from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
@@ -939,7 +940,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Finds the previous position before the given position.
-		 * 
+		 *
 		 * @param position the current position
 		 * @return the previous position
 		 */
@@ -957,7 +958,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		/**
 		 * Sets the caret position to the sub-word boundary given with <code>position</code>.
-		 * 
+		 *
 		 * @param position Position where the action should move the caret
 		 */
 		protected abstract void setCaretPosition(int position);
@@ -1056,50 +1057,50 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		((ToggleCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new GotoMatchingBracketAction(this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET); //$NON-NLS-1$
-		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action); //$NON-NLS-1$
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
+		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action);
 
 		action = new AddBlockCommentActionDelegate(resourceBundle, "AddBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.add.block.comment"); //$NON-NLS-1$
-		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, action); //$NON-NLS-1$
-		markAsSelectionDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, action);
+		markAsSelectionDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT, true);
 		((BlockCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new RemoveBlockCommentActionDelegate(resourceBundle, "RemoveBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.remove.block.comment"); //$NON-NLS-1$
-		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT, action); //$NON-NLS-1$
-		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT, true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT, action);
+		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT, true);
 		((BlockCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new TextOperationAction(resourceBundle, "CommentAction_", this, ITextOperationTarget.PREFIX); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.comment"); //$NON-NLS-1$
-		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT, action); //$NON-NLS-1$
-		markAsStateDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT, true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT, action);
+		markAsStateDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT, true);
 
 		action = new TextOperationAction(resourceBundle, "UncommentAction_", this, ITextOperationTarget.PREFIX); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.uncomment"); //$NON-NLS-1$
-		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT, action); //$NON-NLS-1$
-		markAsStateDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT, true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT, action);
+		markAsStateDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT, true);
 
 		action = new OpenFunctionsManualAction(resourceBundle, this);
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.OpenFunctionsManualAction"); //$NON-NLS-1$
-		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, action); //$NON-NLS-1$
-		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, true); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, action);
+		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, true);
 
 		action = new OpenDeclarationAction(resourceBundle, this);
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.OpenDeclaration"); //$NON-NLS-1$
-		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action); //$NON-NLS-1$
-		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true); //$NON-NLS-1$
-		
+		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action);
+		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true);
+
 		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true); //$NON-NLS-1$
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
-		
+
 		resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowOutline.", this, ISourceViewer.QUICK_ASSIST); //$NON-NLS-1$
 		resAction.setActionDefinitionId("org.eclipse.pdt.ui.edit.text.php.show.outline"); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
-		
+
 		if (isExternal) {
 			// Override the way breakpoints are set on external files.
 			action = new ToggleExternalBreakpointAction(this, getVerticalRuler());
@@ -1171,16 +1172,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		int anchor = fBracketMatcher.getAnchor();
 		// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
-		int targetOffset = (ICharacterPairMatcher.RIGHT == anchor) ? offset + 1 : offset + length;
+		int targetOffset = ICharacterPairMatcher.RIGHT == anchor ? offset + 1 : offset + length;
 
 		boolean visible = false;
 		if (sourceViewer instanceof ITextViewerExtension5) {
 			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
-			visible = (extension.modelOffset2WidgetOffset(targetOffset) > -1);
+			visible = extension.modelOffset2WidgetOffset(targetOffset) > -1;
 		} else {
 			IRegion visibleRegion = sourceViewer.getVisibleRegion();
 			// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
-			visible = (targetOffset >= visibleRegion.getOffset() && targetOffset <= visibleRegion.getOffset() + visibleRegion.getLength());
+			visible = targetOffset >= visibleRegion.getOffset() && targetOffset <= visibleRegion.getOffset() + visibleRegion.getLength();
 		}
 
 		if (!visible) {
@@ -1260,7 +1261,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 									} else {
 										//parse the file in case the editor was closed without saving
 
-										// making sure the project model exists (in case the editor closing is during PDT startup) 
+										// making sure the project model exists (in case the editor closing is during PDT startup)
 										if (PHPWorkspaceModelManager.getInstance().getModelForProject(proj) != null) {
 											WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
 												public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
@@ -1280,20 +1281,22 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							}
 							//external php file
 							else {
-								String fileName = getModel().getBaseLocation();
-								if (externalRegistry.isEntryExist(fileName)) {
-									//if there are more than one editor opening the external file using "New Editor", do not remove it from model and registry
-									IEditorReference[] existingEditors = ((WorkbenchPage) PHPStructuredEditor.this.getSite().getWorkbenchWindow().getActivePage()).getEditorManager().findEditors(getEditorInput(), null, IWorkbenchPage.MATCH_INPUT);
+								IStructuredModel model = getModel();
+								if (model != null) {
+									String fileName = model.getBaseLocation();
+									if (externalRegistry.isEntryExist(fileName)) {
+										//if there are more than one editor opening the external file using "New Editor", do not remove it from model and registry
+										IEditorReference[] existingEditors = ((WorkbenchPage) PHPStructuredEditor.this.getSite().getWorkbenchWindow().getActivePage()).getEditorManager().findEditors(getEditorInput(), null, IWorkbenchPage.MATCH_INPUT);
 
-									// Make sure that the file has a full path before we try to remove it from the model.
-									if (existingEditors.length == 1) { //a single editor
-										IFile fileDecorator = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
-										PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
-										externalRegistry.removeFileEntry(fileName);
+										// Make sure that the file has a full path before we try to remove it from the model.
+										if (existingEditors.length == 1) { //a single editor
+											IFile fileDecorator = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
+											PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
+											externalRegistry.removeFileEntry(fileName);
+										}
 									}
 								}
 							}
-
 						}
 						getSite().getWorkbenchWindow().removePerspectiveListener(this);
 					}
@@ -1317,7 +1320,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		fInformationPresenter = new InformationPresenter(informationControlCreator);
 		fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		fInformationPresenter.install(getSourceViewer());
-		
+
 		// bug fix - #154817
 		StyledText styledText = getTextViewer().getTextWidget();
 		styledText.getContent().addTextChangeListener(new TextChangeListener() {
@@ -1372,7 +1375,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
 
-			//we add this test to provide model for PHP files opened from RSE (temp) project 
+			//we add this test to provide model for PHP files opened from RSE (temp) project
 			IProject proj = resource.getProject();
 			if (proj.isAccessible() && proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) {
 				PHPWorkspaceModelManager.getInstance().getModelForProject(proj, true);
@@ -1411,7 +1414,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (resource instanceof IFile) {
 			if (PHPModelUtil.isPhpFile((IFile) resource)) {
 				// Add file decorator entry to the list of external files:
-				if (externalPath != null && (resource instanceof ExternalFileWrapper)) {
+				if (externalPath != null && resource instanceof ExternalFileWrapper) {
 					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toString(), (ExternalFileWrapper) resource);
 					isExternal = true;
 				}
@@ -1519,7 +1522,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		//handle case of workspace file AND/OR an external file with more than 1 segment
-		return ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
+		return (ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
 	}
 
 	public PHPFileData getPHPFileData() {
@@ -1557,12 +1560,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	/**
 	 * Marks or unmarks the given action to be updated on text cursor position changes.
-	 * 
+	 *
 	 * @param actionId the action id
 	 * @param mark <code>true</code> if the action is cursor position dependent
 	 */
 	public void markAsCursorDependentAction(final String actionId, final boolean mark) {
-		assert (actionId != null);
+		assert actionId != null;
 		if (mark) {
 			if (!fCursorActions.contains(actionId))
 				fCursorActions.add(actionId);
@@ -1629,11 +1632,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	/**
 	 * Updates the specified action by calling <code>IUpdate.update</code> if applicable.
-	 * 
+	 *
 	 * @param actionId the action id
 	 */
 	private void updateAction(final String actionId) {
-		assert (actionId != null);
+		assert actionId != null;
 		final IAction action = getAction(actionId);
 		if (action instanceof IUpdate)
 			((IUpdate) action).update();
@@ -1657,9 +1660,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		final SourceViewerConfiguration configuration = getSourceViewerConfiguration();
 		final String[] types = configuration.getConfiguredContentTypes(getSourceViewer());
 
-		for (int i = 0; i < types.length; i++) {
-
-			final String t = types[i];
+		for (final String t : types) {
 
 			final ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer instanceof ITextViewerExtension2) {
@@ -1669,8 +1670,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				final int[] stateMasks = configuration.getConfiguredTextHoverStateMasks(getSourceViewer(), t);
 
 				if (stateMasks != null)
-					for (int j = 0; j < stateMasks.length; j++) {
-						final int stateMask = stateMasks[j];
+					for (final int stateMask : stateMasks) {
 						final ITextHover textHover = configuration.getTextHover(sourceViewer, t, stateMask);
 						((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t, stateMask);
 					}
