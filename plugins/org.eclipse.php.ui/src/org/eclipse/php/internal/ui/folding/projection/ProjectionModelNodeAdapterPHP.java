@@ -184,6 +184,11 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	private void createCodeDataAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPCodeData codeData, int startOffset, int endOffset, boolean collapse) {
 		UserData userData = codeData.getUserData();
 		int codeStartOffset = userData.getStartPosition();
+		int codeEndOffset = userData.getEndPosition();
+		if (document.getLineOfOffset(codeStartOffset) >= document.getLineOfOffset(codeEndOffset)) {
+			return;
+		}
+
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
 			// false - when adding new annotation - don't fold
@@ -192,12 +197,53 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition(), document);
 
 			if (existingAnnotation == null) {
+				// add to map containing all annotations for this adapter
+				currentAnnotations.put(newAnnotation, newPosition);
+				// add to map containing annotations to add
+				addedAnnotations.put(newAnnotation, newPosition);
+			} else {
+				// add to map containing all annotations for this adapter
+				currentAnnotations.put(existingAnnotation, newPosition);
+				// remove from map containing annotations to delete
+				previousAnnotations.remove(existingAnnotation);
+			}
+		}
+	}
+
+	/**
+	 * Computes current annotations on given CodeDatas.
+	 * @param fileData
+	 *
+	 * @param codeDatas
+	 * @param startOffset
+	 * @param endOffset
+	 * @param collapse
+	 */
+	private void createDocBlockAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPCodeData codeData, int startOffset, int endOffset, boolean collapse) {
+		final PHPDocBlock docBlock = codeData.getDocBlock();
+		// no need to add an empty doc block
+		if (docBlock == null) {
+			return;
+		}
+
+		int codeStartOffset = docBlock.getStartPosition();
+		int codeEndOffset = docBlock.getEndPosition();
+		if (document.getLineOfOffset(codeStartOffset) >= document.getLineOfOffset(codeEndOffset)) {
+			return;
+		}
+
+		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
+			// element may start in one PHP block and end in another.
+			// false - when adding new annotation - don't fold
+			final Position newPosition = createCommentPosition(codeStartOffset, docBlock.getEndPosition(), document);
+			final ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, true, shouldAutoCollapseAnnotations ? collapse : false);
+			final ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
+			if (existingAnnotation == null) {
 				// add to map containing all annotations for this
 				// adapter
 				currentAnnotations.put(newAnnotation, newPosition);
 				// add to map containing annotations to add
 				addedAnnotations.put(newAnnotation, newPosition);
-
 			} else {
 				// add to map containing all annotations for this
 				// adapter
@@ -256,72 +302,6 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		} catch (BadLocationException x) {
 			// concurrent modification
 			return new Region(startOffset, endOffsetOrg - startOffset);
-		}
-	}
-
-	/* TODO think in this direction:
-		private Position createPosition(int startOffset, int endOffset) {
-			assert endOffset <= document.getLength() : "illegal offset";
-			int lastCharOffset = endOffset;
-			try {
-				char lastChar = document.getChar(lastCharOffset);
-				while (Character.isWhitespace(lastChar) && lastChar != '\n' && lastChar != '\r') {
-					lastChar = document.getChar(++lastCharOffset);
-				}
-				if (lastChar == '\n') { // linux or windows
-					lastChar = document.getChar(++lastCharOffset);
-					if (lastChar == '\r') { // windows
-						lastChar = document.getChar(++lastCharOffset);
-					}
-				} else if (lastChar == '\r') { // mac
-					lastChar = document.getChar(++lastCharOffset);
-				}
-			} catch (BadLocationException e) {
-				// the only case here is when we arrived to the end of document
-				--lastCharOffset;
-			}
-
-			return new Position(startOffset, lastCharOffset - startOffset);
-		}
-	*/
-
-	/**
-	 * Computes current annotations on given CodeDatas.
-	 * @param fileData
-	 *
-	 * @param codeDatas
-	 * @param startOffset
-	 * @param endOffset
-	 * @param collapse
-	 */
-	private void createDocBlockAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPCodeData codeData, int startOffset, int endOffset, boolean collapse) {
-		final PHPDocBlock docBlock = codeData.getDocBlock();
-
-		// no need to add an empty doc block
-		if (docBlock == null) {
-			return;
-		}
-
-		int codeStartOffset = docBlock.getStartPosition();
-		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
-			// element may start in one PHP block and end in another.
-			// false - when adding new annotation - don't fold
-			final Position newPosition = createCommentPosition(codeStartOffset, docBlock.getEndPosition(), document);
-			final ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, true, shouldAutoCollapseAnnotations ? collapse : false);
-			final ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
-			if (existingAnnotation == null) {
-				// add to map containing all annotations for this
-				// adapter
-				currentAnnotations.put(newAnnotation, newPosition);
-				// add to map containing annotations to add
-				addedAnnotations.put(newAnnotation, newPosition);
-			} else {
-				// add to map containing all annotations for this
-				// adapter
-				currentAnnotations.put(existingAnnotation, newPosition);
-				// remove from map containing annotations to delete
-				previousAnnotations.remove(existingAnnotation);
-			}
 		}
 	}
 
