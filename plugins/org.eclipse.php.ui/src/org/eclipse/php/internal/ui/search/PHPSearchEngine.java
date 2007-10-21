@@ -75,7 +75,7 @@ public class PHPSearchEngine {
 		PHPWorspaceScope scope = new PHPWorspaceScope(searchFor);
 		for (int i = 0; i < projects.length; i++) {
 			try {
-				if (projects[i].hasNature(PHPNature.ID)) {
+				if (projects[i].isAccessible() && projects[i].hasNature(PHPNature.ID)) {
 					scope.add(projects[i]);
 				}
 			} catch (CoreException e) {
@@ -122,7 +122,7 @@ public class PHPSearchEngine {
 						addResultsFor(projectsInScope[i], fClasses[j].getFunctions(), stringPattern, caseSensitive, scope, textResult, monitor);
 					}
 					break;
-				case IPHPSearchConstants.CONSTANT:					
+				case IPHPSearchConstants.CONSTANT:
 					addResultsFor(projectsInScope[i], (PHPConstantData[]) userModel.getConstants(), stringPattern, caseSensitive, scope, textResult, monitor);
 //					 Add matches from the classes constants
 					for (int j = 0; j < fClasses.length; j++) {
@@ -130,7 +130,7 @@ public class PHPSearchEngine {
 					}
 					break;
 				default:
-			// DO NOTHING
+					// DO NOTHING
 			}
 
 		}
@@ -167,11 +167,11 @@ public class PHPSearchEngine {
 						addResultsFor(partialProjects[i], fileData.getConstants(), stringPattern, caseSensitive, scope, textResult, monitor);
 //						 Add matches from the classes constants
 						for (int z = 0; z < fClasses.length; z++) {
-							addResultsFor(partialProjects[i], fClasses[z].getConsts(), stringPattern, caseSensitive, scope, textResult, monitor);							
+							addResultsFor(partialProjects[i], fClasses[z].getConsts(), stringPattern, caseSensitive, scope, textResult, monitor);
 						}
 						break;
 					default:
-				// DO NOTHING
+						// DO NOTHING
 				}
 			}
 		}
@@ -230,7 +230,7 @@ public class PHPSearchEngine {
 			monitor.worked(1);
 		}
 	}
-	
+
 	private void addResultsFor(IProject project, PHPClassConstData[] constants, String stringPattern, boolean caseSensitive, IPHPSearchScope scope, PHPSearchResult textResult, IProgressMonitor monitor) {
 		for (int i = 0; i < constants.length; i++) {
 			if (i % 100 == 0) {
