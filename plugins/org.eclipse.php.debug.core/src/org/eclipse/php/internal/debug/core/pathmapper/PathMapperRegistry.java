@@ -109,8 +109,8 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 		}
 	}
 
-	public void storeToPreferences() {
-		XMLPreferencesWriter.write(PHPProjectPreferences.getModelPreferences(), PATH_MAPPER_PREF_KEY, this);
+	public static void storeToPreferences() {
+		XMLPreferencesWriter.write(PHPProjectPreferences.getModelPreferences(), PATH_MAPPER_PREF_KEY, getInstance());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -163,12 +163,12 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 	}
 
 	public void serverAdded(ServerManagerEvent event) {
-		serverPathMapper.put(event.getServer(), new PathMapper());
-
+		if (!serverPathMapper.containsKey(event.getServer())) {
+			serverPathMapper.put(event.getServer(), new PathMapper());
+		}
 	}
 
 	public void serverModified(ServerManagerEvent event) {
-		// TODO Auto-generated method stub
 	}
 
 	public void serverRemoved(ServerManagerEvent event) {
@@ -176,10 +176,12 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 	}
 
 	public void phpExeAdded(PHPExesEvent event) {
-		event.getPHPExeItem();
+		if (!phpExePathMapper.containsKey(event.getPHPExeItem())) {
+			phpExePathMapper.put(event.getPHPExeItem(), new PathMapper());
+		}
 	}
 
 	public void phpExeRemoved(PHPExesEvent event) {
-
+		phpExePathMapper.remove(event.getPHPExeItem());
 	}
 }

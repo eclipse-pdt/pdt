@@ -22,17 +22,18 @@ import java.util.Map;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 
 public class PathMapper implements IXMLPreferencesStorable {
 
 	private Map<AbstractPath, AbstractPath> remoteToLocalMap;
 	private Map<AbstractPath, AbstractPath> localToRemoteMap;
-	private Map<AbstractPath, PathEntry.Type> localToPathEntryType;
+	private Map<AbstractPath, Type> localToPathEntryType;
 
 	public PathMapper() {
 		remoteToLocalMap = new HashMap<AbstractPath, AbstractPath>();
 		localToRemoteMap = new HashMap<AbstractPath, AbstractPath>();
-		localToPathEntryType = new HashMap<AbstractPath, PathEntry.Type>();
+		localToPathEntryType = new HashMap<AbstractPath, Type>();
 	}
 
 	public synchronized void addEntry(String remoteFile, PathEntry entry) {
@@ -63,8 +64,8 @@ public class PathMapper implements IXMLPreferencesStorable {
 		AbstractPath path = getPath(remoteToLocalMap, new AbstractPath(remoteFile));
 		if (path != null) {
 			String localFile = path.toString();
-			PathEntry.Type type = getPathType(path);
-			if (type == PathEntry.Type.WORKSPACE) {
+			Type type = getPathType(path);
+			if (type == Type.WORKSPACE) {
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(localFile);
 				if (resource != null) {
 					return new PathEntry(path, type, resource.getParent());
@@ -72,7 +73,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 			} else {
 				File file = new File(localFile);
 				if (file.exists()) {
-					if (type == PathEntry.Type.INCLUDE_FOLDER || type == PathEntry.Type.INCLUDE_VAR) {
+					if (type == Type.INCLUDE_FOLDER || type == Type.INCLUDE_VAR) {
 						return new PathEntry(path, type, null);
 					}
 					return new PathEntry(path, type, file.getParentFile());
@@ -100,10 +101,10 @@ public class PathMapper implements IXMLPreferencesStorable {
 		return null;
 	}
 
-	protected PathEntry.Type getPathType(AbstractPath path) {
+	protected Type getPathType(AbstractPath path) {
 		path = path.clone();
 		while (path.getSegmentsCount() > 0) {
-			PathEntry.Type type = localToPathEntryType.get(path);
+			Type type = localToPathEntryType.get(path);
 			if (type != null) {
 				return type;
 			}
@@ -121,7 +122,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 		while (i.hasNext()) {
 			AbstractPath localPath = i.next();
 			AbstractPath remotePath = localToRemoteMap.get(localPath);
-			PathEntry.Type type = localToPathEntryType.get(localPath);
+			Type type = localToPathEntryType.get(localPath);
 			l.add(new Mapping(localPath, remotePath, type));
 		}
 		return l.toArray(new Mapping[l.size()]);
@@ -160,15 +161,34 @@ public class PathMapper implements IXMLPreferencesStorable {
 		localToPathEntryType.remove(mapping.localPath);
 	}
 
-	public static class Mapping {
+	public static class Mapping implements Cloneable {
 		public AbstractPath localPath;
 		public AbstractPath remotePath;
-		public PathEntry.Type type;
+		public Type type;
 
-		public Mapping(AbstractPath localPath, AbstractPath remotePath, PathEntry.Type type) {
+		public Mapping() {
+		}
+
+		public Mapping(AbstractPath localPath, AbstractPath remotePath, Type type) {
 			this.localPath = localPath;
 			this.remotePath = remotePath;
 			this.type = type;
+		}
+
+		public Mapping clone() {
+			return new Mapping(localPath, remotePath, type);
+		}
+
+		public boolean equals(Object obj) {
+			if (!(obj instanceof Mapping)) {
+				return false;
+			}
+			Mapping other = (Mapping) obj;
+			return other.localPath.equals(localPath) && other.remotePath.equals(remotePath) && other.type == type;
+		}
+
+		public int hashCode() {
+			return localPath.hashCode() + 13 * remotePath.hashCode() + 31 * type.hashCode();
 		}
 	}
 
@@ -185,7 +205,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 			String remoteStr = (String) map.get("remote"); //$NON-NLS-1$
 			String typeStr = (String) map.get("type"); //$NON-NLS-1$
 			if (localStr != null && remoteStr != null && typeStr != null) {
-				PathEntry.Type type = PathEntry.Type.valueOf(typeStr);
+				Type type = Type.valueOf(typeStr);
 				AbstractPath local = new AbstractPath(localStr);
 				AbstractPath remote = new AbstractPath(remoteStr);
 				remoteToLocalMap.put(remote, local);
@@ -204,7 +224,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 			HashMap entry = new HashMap();
 			AbstractPath local = i.next();
 			AbstractPath remote = localToRemoteMap.get(local);
-			PathEntry.Type type = localToPathEntryType.get(local);
+			Type type = localToPathEntryType.get(local);
 			entry.put("local", local); //$NON-NLS-1$
 			entry.put("remote", remote); //$NON-NLS-1$
 			entry.put("type", type); //$NON-NLS-1$

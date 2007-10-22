@@ -29,6 +29,7 @@ import org.eclipse.php.internal.debug.core.model.SimpleDebugHandler;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
@@ -69,7 +70,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			if (file != null) {
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
 				if (resource != null) {
-					pathEntry = new PathEntry(file, PathEntry.Type.WORKSPACE, resource.getParent());
+					pathEntry = new PathEntry(file, Type.WORKSPACE, resource.getParent());
 				}
 			}
 			if (pathEntry != null) {

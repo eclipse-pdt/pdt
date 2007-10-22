@@ -2,11 +2,30 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager.ContentTypeChangeEvent;
 import org.eclipse.core.runtime.content.IContentTypeManager.IContentTypeChangeListener;
@@ -22,6 +41,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -80,18 +100,18 @@ public class DebugSearchEngine {
 				Result<?, ?> result = PHPSearchEngine.find(remoteFile, currentWorkingDir, currentScriptDir, currentProject);
 				if (result instanceof ExternalFileResult) {
 					ExternalFileResult extFileResult = (ExternalFileResult) result;
-					return new PathEntry(extFileResult.getFile().getAbsolutePath(), PathEntry.Type.EXTERNAL, extFileResult.getContainer());
+					return new PathEntry(extFileResult.getFile().getAbsolutePath(), Type.EXTERNAL, extFileResult.getContainer());
 				}
 				if (result instanceof IncludedFileResult) {
 					IncludedFileResult incFileResult = (IncludedFileResult) result;
 					IIncludePathEntry container = incFileResult.getContainer();
-					PathEntry.Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? PathEntry.Type.INCLUDE_VAR : PathEntry.Type.INCLUDE_FOLDER;
+					Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
 					return new PathEntry(incFileResult.getFile().getAbsolutePath(), type, container);
 				}
 				// workspace file
 				ResourceResult resResult = (ResourceResult) result;
 				IResource resource = resResult.getFile();
-				return new PathEntry(resource.getFullPath().toOSString(), PathEntry.Type.WORKSPACE, resource.getParent());
+				return new PathEntry(resource.getFullPath().toOSString(), Type.WORKSPACE, resource.getParent());
 			}
 			return null;
 		}
@@ -153,8 +173,7 @@ public class DebugSearchEngine {
 	private static void searchOpenedEditors(LinkedList<PathEntry> results, String remoteFile) {
 		IWorkbenchPage workbenchpage = PHPUiPlugin.getActivePage();
 		IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
-		for (int i = 0; i < editorReferences.length; i++) {
-			IEditorReference editorReference = editorReferences[i];
+		for (IEditorReference editorReference : editorReferences) {
 			String name = editorReference.getName();
 			PathEntry entry = new PathEntry(name, PathEntry.Type.EXTERNAL, null);
 			results.add(entry);
@@ -209,7 +228,7 @@ public class DebugSearchEngine {
 	 */
 	private static void find(final File file, final AbstractPath path, final IIncludePathEntry container, final List<PathEntry> results) {
 		if (!file.isDirectory() && file.getName().equals(path.getLastSegment())) {
-			PathEntry.Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? PathEntry.Type.INCLUDE_VAR : PathEntry.Type.INCLUDE_FOLDER;
+			Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
 			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type, container);
 			results.add(pathEntry);
 			return;
@@ -239,7 +258,7 @@ public class DebugSearchEngine {
 				resource.accept(new IResourceVisitor() {
 					public boolean visit(IResource resource) throws CoreException {
 						if (resource.getName().equals(path.getLastSegment())) {
-							PathEntry pathEntry = new PathEntry(resource.getFullPath().toOSString(), PathEntry.Type.WORKSPACE, resource.getParent());
+							PathEntry pathEntry = new PathEntry(resource.getFullPath().toOSString(), Type.WORKSPACE, resource.getParent());
 							results.add(pathEntry);
 						}
 						return true;
