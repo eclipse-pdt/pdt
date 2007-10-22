@@ -273,7 +273,10 @@ public class PHPModelUtil {
 			return resource;
 		} else if (element instanceof PHPProjectModel) {
 			final PHPProjectModel projectModel = (PHPProjectModel) element;
-			final IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModel);
+			IProject project = projectModel.getProject(); 
+			if(project == null){
+				project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModel);
+			}
 			return project;
 		} else if (element instanceof IResource)
 			return (IResource) element;
