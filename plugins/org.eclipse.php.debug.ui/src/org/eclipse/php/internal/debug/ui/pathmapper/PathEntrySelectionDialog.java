@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.pathmapper;
 
 import java.io.File;
@@ -34,10 +44,10 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 	private DetailsLabelProvider detailsLabelProvider;
 
 	/**
-	 * Constructor 
+	 * Constructor
 	 * @param shell
 	 * @param path Abstract path of the file to match
-	 * @param files Files to choose 
+	 * @param files Files to choose
 	 */
 	public PathEntrySelectionDialog(Shell shell, AbstractPath path, PathEntry[] pathEntries) {
 		super(shell);
@@ -53,7 +63,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 	protected Control createExtendedContentArea(Composite parent) {
 		return null;
 	}
-	
+
 	class EntriesFilter extends ItemsFilter {
 		public EntriesFilter() {
 			super (new SearchPattern() {
@@ -65,7 +75,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 				}
 			});
 		}
-		
+
 		public boolean isConsistentItem(Object item) {
 			return true;
 		}
