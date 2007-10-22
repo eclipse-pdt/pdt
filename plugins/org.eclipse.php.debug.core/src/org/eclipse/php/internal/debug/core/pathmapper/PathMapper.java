@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -34,7 +35,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 		localToPathEntryType = new HashMap<AbstractPath, PathEntry.Type>();
 	}
 
-	public void addEntry(String remoteFile, PathEntry entry) {
+	public synchronized void addEntry(String remoteFile, PathEntry entry) {
 		AbstractPath remotePath = new AbstractPath(remoteFile);
 		AbstractPath localPath = entry.getAbstractPath();
 
@@ -109,6 +110,66 @@ public class PathMapper implements IXMLPreferencesStorable {
 			path.removeLastSegment();
 		}
 		return null;
+	}
+
+	/**
+	 * Returns contents of this path mapper
+	 */
+	public synchronized Mapping[] getMapping() {
+		List<Mapping> l = new ArrayList<Mapping>(localToRemoteMap.size());
+		Iterator<AbstractPath> i = localToRemoteMap.keySet().iterator();
+		while (i.hasNext()) {
+			AbstractPath localPath = i.next();
+			AbstractPath remotePath = localToRemoteMap.get(localPath);
+			PathEntry.Type type = localToPathEntryType.get(localPath);
+			l.add(new Mapping(localPath, remotePath, type));
+		}
+		return l.toArray(new Mapping[l.size()]);
+	}
+
+	/**
+	 * Sets this path mapper contents removing any previous mappings
+	 */
+	public synchronized void setMapping(Mapping[] mappings) {
+		remoteToLocalMap.clear();
+		localToRemoteMap.clear();
+		localToPathEntryType.clear();
+
+		for (Mapping mapping: mappings) {
+			localToRemoteMap.put(mapping.localPath, mapping.remotePath);
+			remoteToLocalMap.put(mapping.remotePath, mapping.localPath);
+			localToPathEntryType.put(mapping.localPath, mapping.type);
+		}
+	}
+
+	/**
+	 * Adds new mapping to this mapper
+	 */
+	public synchronized void addMapping(Mapping mapping) {
+		localToRemoteMap.put(mapping.localPath, mapping.remotePath);
+		remoteToLocalMap.put(mapping.remotePath, mapping.localPath);
+		localToPathEntryType.put(mapping.localPath, mapping.type);
+	}
+
+	/**
+	 * Removes mapping
+	 */
+	public synchronized void removeMapping(Mapping mapping) {
+		localToRemoteMap.remove(mapping.localPath);
+		remoteToLocalMap.remove(mapping.remotePath);
+		localToPathEntryType.remove(mapping.localPath);
+	}
+
+	public static class Mapping {
+		public AbstractPath localPath;
+		public AbstractPath remotePath;
+		public PathEntry.Type type;
+
+		public Mapping(AbstractPath localPath, AbstractPath remotePath, PathEntry.Type type) {
+			this.localPath = localPath;
+			this.remotePath = remotePath;
+			this.type = type;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
