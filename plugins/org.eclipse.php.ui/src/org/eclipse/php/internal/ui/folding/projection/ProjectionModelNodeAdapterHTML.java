@@ -278,7 +278,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			}
 
 			// only update when there is something to update
-			if (oldList != null && oldList.length > 0 || !additions.isEmpty() && modifyList.length > 0)
+			if (oldList != null && oldList.length > 0 || !additions.isEmpty() && modifyList != null && modifyList.length > 0)
 				fAdapterFactory.queueAnnotationModelChanges(node, oldList, additions, new HashMap());
 		}
 
