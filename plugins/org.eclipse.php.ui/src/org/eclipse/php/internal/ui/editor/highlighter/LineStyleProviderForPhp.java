@@ -171,6 +171,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		fColorTypes.put(PHPRegionTypes.PHPDOC_THROWS, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_STATIC, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_GLOBAL, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_USES, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_SUBPACKAGE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_FILESOURCE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_EXCEPTION, PreferenceConstants.EDITOR_PHPDOC_COLOR);
