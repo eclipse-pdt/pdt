@@ -200,10 +200,10 @@ public class PathMapper implements IXMLPreferencesStorable {
 
 		Iterator i = map.keySet().iterator();
 		while (i.hasNext()) {
-			map = (HashMap) i.next();
-			String localStr = (String) map.get("local"); //$NON-NLS-1$
-			String remoteStr = (String) map.get("remote"); //$NON-NLS-1$
-			String typeStr = (String) map.get("type"); //$NON-NLS-1$
+			HashMap entryMap = (HashMap) map.get(i.next());
+			String localStr = (String) entryMap.get("local"); //$NON-NLS-1$
+			String remoteStr = (String) entryMap.get("remote"); //$NON-NLS-1$
+			String typeStr = (String) entryMap.get("type"); //$NON-NLS-1$
 			if (localStr != null && remoteStr != null && typeStr != null) {
 				Type type = Type.valueOf(typeStr);
 				AbstractPath local = new AbstractPath(localStr);
@@ -227,7 +227,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 			Type type = localToPathEntryType.get(local);
 			entry.put("local", local); //$NON-NLS-1$
 			entry.put("remote", remote); //$NON-NLS-1$
-			entry.put("type", type); //$NON-NLS-1$
+			entry.put("type", type.name()); //$NON-NLS-1$
 			entries.put("entry" + (c++), entry); //$NON-NLS-1$
 		}
 		return entries;

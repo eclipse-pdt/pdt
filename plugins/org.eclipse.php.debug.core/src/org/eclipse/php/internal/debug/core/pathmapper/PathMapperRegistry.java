@@ -119,10 +119,11 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 		phpExePathMapper.clear();
 		Iterator i = map.keySet().iterator();
 		while (i.hasNext()) {
-			String serverName = (String) map.get("server"); //$NON-NLS-1$
-			String phpExeFile = (String) map.get("phpExe"); //$NON-NLS-1$
+			HashMap entryMap = (HashMap) map.get(i.next());
+			String serverName = (String) entryMap.get("server"); //$NON-NLS-1$
+			String phpExeFile = (String) entryMap.get("phpExe"); //$NON-NLS-1$
 			PathMapper pathMapper = new PathMapper();
-			pathMapper.restoreFromMap((HashMap) map.get("mapper")); //$NON-NLS-1$
+			pathMapper.restoreFromMap((HashMap) entryMap.get("mapper")); //$NON-NLS-1$
 			if (serverName != null) {
 				Server server = ServersManager.getServer(serverName);
 				if (server != null) {
