@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PHPExecutableDebuggerInitializer {
 
-	private ILaunch launch;
+	protected ILaunch launch;
 
 	/**
 	 * Constructs a new debugger initializer.
@@ -107,7 +107,7 @@ public class PHPExecutableDebuggerInitializer {
 			}
 			// Make sure that we have executable permissions on the file.
 			PHPexes.changePermissions(new File(phpCmdArray[0]));
-			
+
 			// Execute the command line.
 			Process p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDir);
 
