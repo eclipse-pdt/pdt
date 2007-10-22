@@ -120,7 +120,7 @@ ${cursor}</template>
 <template
 	name="fnc"
 	description="%description.php.functionStatement"
-	id="org.eclipse.php.ui.editor.templates.php.functionStatement"
+	id="org.eclipse.php.ui.editor.templates.php.fnc"
 	context="php"
 	enabled="true">function ${}()
 {
@@ -131,7 +131,7 @@ ${cursor}</template>
 <template
 	name="function"
 	description="%description.php.functionStatement"
-	id="org.eclipse.php.ui.editor.templates.php.functionStatement"
+	id="org.eclipse.php.ui.editor.templates.php.function"
 	context="php"
 	enabled="true">function ${}()
 {
@@ -142,7 +142,7 @@ ${cursor}</template>
 <template
 	name="cls"
 	description="%description.php.class"
-	id="org.eclipse.php.ui.editor.templates.php.class"
+	id="org.eclipse.php.ui.editor.templates.php.cls"
 	context="php"
 	enabled="true">class ${class_name} {
 	function ${function_name}() {
