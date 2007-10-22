@@ -20,13 +20,13 @@ import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesWriter;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
-import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.IServersManagerListener;
+import org.eclipse.php.internal.server.core.manager.ServerManagerEvent;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 
-public class PathMapperRegistry implements IXMLPreferencesStorable {
+public class PathMapperRegistry implements IXMLPreferencesStorable, IServersManagerListener, IPHPExesListener {
 
 	private static final String PATH_MAPPER_PREF_KEY = PHPDebugPlugin.getID() + ".pathMapper"; //$NON-NLS-1$
 
@@ -53,7 +53,13 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 	 * @return path mapper, or <code>null</code> if there's no one
 	 */
 	public static PathMapper getByPHPExe(PHPexeItem phpExe) {
-		return getInstance().phpExePathMapper.get(phpExe);
+		PathMapper result = getInstance().phpExePathMapper.get(phpExe);
+		if (result == null) {
+			result = new PathMapper();
+			getInstance().phpExePathMapper.put(phpExe, result);
+			PHPexes.getInstance().addPHPExesListener(getInstance());
+		}
+		return result;
 	}
 
 	/**
@@ -62,7 +68,14 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 	 * @return path mapper, or <code>null</code> if there's no one
 	 */
 	public static PathMapper getByServer(Server server) {
-		return getInstance().serverPathMapper.get(server);
+		PathMapper result = getInstance().serverPathMapper.get(server);
+		if (result == null) {
+			result = new PathMapper();
+			getInstance().serverPathMapper.put(server, result);
+			//create the link to servers manager here in order not to create tightly coupled relationship
+			ServersManager.addManagerListener(getInstance());
+		}
+		return result;
 	}
 
 	/**
@@ -147,5 +160,26 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 			elements.put("entry" + (c++), entry);
 		}
 		return elements;
+	}
+
+	public void serverAdded(ServerManagerEvent event) {
+		serverPathMapper.put(event.getServer(), new PathMapper());
+
+	}
+
+	public void serverModified(ServerManagerEvent event) {
+		// TODO Auto-generated method stub
+	}
+
+	public void serverRemoved(ServerManagerEvent event) {
+		serverPathMapper.remove(event.getServer());
+	}
+
+	public void phpExeAdded(PHPExesEvent event) {
+		event.getPHPExeItem();
+	}
+
+	public void phpExeRemoved(PHPExesEvent event) {
+
 	}
 }

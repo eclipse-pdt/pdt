@@ -309,7 +309,6 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			}
 		}
 		String dFileName = RemoteDebugger.convertToSystemIndependentFileName(rName);
-		debugError.setFileName(dFileName);
 		fDebugTarget.getDebugErrors().add(debugError);
 
 		Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();

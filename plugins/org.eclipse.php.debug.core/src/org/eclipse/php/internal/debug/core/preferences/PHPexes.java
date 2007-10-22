@@ -51,6 +51,8 @@ public class PHPexes {
 	// Hold a mapping to each debugger default PHPExeItem.
 	private HashMap<String, PHPexeItem> defaultItems = new HashMap<String, PHPexeItem>();
 
+	private final LinkedList<IPHPExesListener> listeners = new LinkedList<IPHPExesListener>();
+
 	/**
 	 * Returns a single instance of this PHPexes class.
 	 * 
@@ -137,6 +139,11 @@ public class PHPexes {
 			setDefaultItem(item);
 		}
 		map.put(item.getName(), item);
+		Iterator<IPHPExesListener> iter = listeners.iterator();
+		while (iter.hasNext()) {
+			PHPExesEvent phpExesEvent = new PHPExesEvent(item);
+			iter.next().phpExeAdded(phpExesEvent);
+		}
 	}
 
 	/**
@@ -409,6 +416,12 @@ public class PHPexes {
 				setDefaultItem(iterator.next());
 			}
 		}
+
+		Iterator<IPHPExesListener> iter = listeners.iterator();
+		while (iter.hasNext()) {
+			PHPExesEvent phpExesEvent = new PHPExesEvent(item);
+			iter.next().phpExeRemoved(phpExesEvent);
+		}
 	}
 
 	/**
@@ -473,5 +486,13 @@ public class PHPexes {
 		PHPDebugPlugin.getDefault().savePluginPreferences();
 		//		final String defaultString = defaultItem != null ? defaultItem.name : "";
 		//		prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP, defaultString);
+	}
+
+	public void addPHPExesListener(IPHPExesListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removePHPExesListener(IPHPExesListener listener) {
+		listeners.remove(listener);
 	}
 }
