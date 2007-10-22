@@ -13,9 +13,9 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class ModelSupport {
@@ -25,7 +25,7 @@ public class ModelSupport {
 	public static final CodeDataFilter NOT_STATIC_VARIABLES_FILTER = new StaticVariablesFilter(false);
 	public static final CodeDataFilter STATIC_FUNCTIONS_FILTER = new StaticFunctionsFilter(true);
 	public static final CodeDataFilter INTERNAL_CODEDATA_FILTER = new InternalPhpCodeData();
-	public static final CodeDataFilter NOT_MAGIC_FUNCTION = new MegicFunctionFilter(false);
+	public static final CodeDataFilter NOT_MAGIC_FUNCTION = new MagicFunctionFilter(false);
 
 	public static final CodeDataFilter PIRVATE_ACCESS_LEVEL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
@@ -40,6 +40,11 @@ public class ModelSupport {
 	public static final CodeDataFilter PUBLIC_ACCESS_LEVEL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
 			return (!PHPModifier.isPrivate(modifier) && !PHPModifier.isProtected(modifier));
+		}
+	};
+	public static final CodeDataFilter NOT_FINAL_FILTER = new AccessLevelFilter() {
+		public boolean verify(int modifier) {
+			return (!PHPModifier.isFinal(modifier));
 		}
 	};
 
@@ -627,16 +632,28 @@ public class ModelSupport {
 	 * @author guy.g
 	 *
 	 */
-	private static final class MegicFunctionFilter implements CodeDataFilter {
+	private static final class MagicFunctionFilter implements CodeDataFilter {
 
-		private static final String[] magicFunction = { "__construct", "__destruct", "__call", "__get", "__set", "__isset", "__unset", "__sleep", "__wakeup", "__toString", "__clone", "__autoload" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
+		private static String[] magicFunction;
 		boolean acceptMagicFunction;
 
 		/**
 		 * @param acceptMagicFunction the return value that should be returned if the function is a magic function.  
 		 */
-		MegicFunctionFilter(boolean acceptMagicFunction) {
+		MagicFunctionFilter(boolean acceptMagicFunction) {
 			this.acceptMagicFunction = acceptMagicFunction;
+			// use PHPCodeDataFactory to obtain a list of magic functions
+			// Assume PHP5
+			CodeData[] magics = PHPCodeDataFactory.createMagicMethods(PHPCodeDataFactory.createPHPClassData("dummyClass", Modifier.PUBLIC, null, PHPCodeDataFactory.createUserData("", 0, 0, 0, 0), null, PHPCodeDataFactory.EMPTY_INTERFACES_DATA_ARRAY, PHPCodeDataFactory.EMPTY_CLASS_VAR_DATA_ARRAY,
+				PHPCodeDataFactory.EMPTY_CLASS_CONST_DATA_ARRAY, PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY), true);
+			MagicFunctionFilter.magicFunction = new String[magics.length + 2];
+			// add "__construct" & "__destruct"
+			MagicFunctionFilter.magicFunction[0] = "__construct";
+			MagicFunctionFilter.magicFunction[1] = "__destruct";
+			// add the rest
+			for (int i = 2; i < MagicFunctionFilter.magicFunction.length; i++) {
+				MagicFunctionFilter.magicFunction[i] = magics[i - 2].getName();
+			}
 		}
 
 		public boolean accept(CodeData codeData) {
