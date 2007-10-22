@@ -51,6 +51,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
 			monitor.setCanceled(true);
 			monitor.done();
+			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);			
 			return;
 		}
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
@@ -80,6 +81,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		} catch (Throwable t) {
 			if (proj == null) {
 				Logger.logException("Could not execute the debug (Project is null).", t);
+				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);				
 				return;
 			}
 		}

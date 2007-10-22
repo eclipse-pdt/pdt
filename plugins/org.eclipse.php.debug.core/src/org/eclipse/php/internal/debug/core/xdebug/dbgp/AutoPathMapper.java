@@ -27,45 +27,47 @@ public class AutoPathMapper implements IFileMapper {
 
 	/**
 	 * 
-	 * @param launchScript
+	 * @param launchResource
 	 *            the launch script, with project info
 	 * @param initScript
 	 *            the initial script executed
 	 */
-	public void init(String launchScript, String initScript) {
-		if (launchScript == null || initScript == null) {
+	public void init(String launchResource, String initScript) {
+		if (launchResource == null || initScript == null) {
 			return;
 		}
 
-		IFile file = ResourcesPlugin.getWorkspace().getRoot()
-				.getFileForLocation(new Path(initScript));
+		//see if the file is in the workspace.
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(initScript));
 		if (file == null) {
 			
+			// file from debugee is not part of the workspace so 
+			// this means mapping will be required.
 			mappingRequired = true;
 
 			// determine the difference between the 2, ie project
 			// to external location.
-			launchScript = launchScript.replace("\\", "/").trim();
+			launchResource = launchResource.replace("\\", "/").trim();
 			initScript = initScript.replace("\\", "/").trim();
 
 			// try with the project in it
-			if (initScript.endsWith(launchScript)) {
+			if (initScript.contains(launchResource)) {
 				workspaceRemap = true;
-				int end = initScript.indexOf(launchScript);
+				int end = initScript.indexOf(launchResource);
 				externalLocPreAppend = initScript.substring(0, end);
 			} else {
 				// remove project and try again
 				// IPath path = new Path(launchScript);
 				int projEnd;
-				if (launchScript.startsWith("/")) {
-					projEnd = launchScript.indexOf('/', 1);
+				if (launchResource.startsWith("/")) {
+					projEnd = launchResource.indexOf('/', 1);
 				} else {
-					projEnd = launchScript.indexOf('/');
+					projEnd = launchResource.indexOf('/');
 				}
-				String newTest = launchScript.substring(projEnd);
+				String newTest = launchResource.substring(projEnd);
 				if (initScript.endsWith(newTest)) {
 					workspaceRemap = false;
-					launchProject = launchScript.substring(0, projEnd);
+					launchProject = launchResource.substring(0, projEnd);
 					int end = initScript.indexOf(newTest);
 					externalLocPreAppend = initScript.substring(0, end);
 				}
@@ -159,5 +161,5 @@ public class AutoPathMapper implements IFileMapper {
 
 	public boolean isMappingRequired() {
 		return mappingRequired;
-	}	
+	}		
 }
