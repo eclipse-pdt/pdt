@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PHPExecutableDebuggerInitializer {
 
-	private ILaunch launch;
+	protected ILaunch launch;
 
 	/**
 	 * Constructs a new debugger initializer.
