@@ -596,7 +596,13 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
 							}
 						} else {
-							fileName = (resource.getRawLocation()).toString();
+							IPath location = resource.getRawLocation();
+							if (location == null){
+								fileName = resource.getLocationURI().toString();
+							}else {
+								fileName = location.toString();
+							}
+							
 						}
 					}
 
