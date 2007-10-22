@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.debug.ui.pathmapper;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -19,8 +18,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
 import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -47,7 +47,6 @@ public class PathMappingComposite extends Composite {
 	private static final String[] columnHeaders = { "Path on server", "Local path" };
 	private static final ColumnLayoutData[] columnLayoutDatas = new ColumnLayoutData[] { new ColumnWeightData(50), new ColumnWeightData(50) };
 
-	private PathMapper pathMapper;
 	private ListDialogField fMapList;
 
 	public PathMappingComposite(Composite parent, int style) {
@@ -61,17 +60,22 @@ public class PathMappingComposite extends Composite {
 		fMapList.setTableColumns(new ListDialogField.ColumnsDescription(columnLayoutDatas, columnHeaders, true));
 
 		GridLayout layout = new GridLayout();
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		layout.numColumns = 2;
+		setLayout(layout);
+		setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		PixelConverter conv = new PixelConverter(this);
 
 		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(this, SWT.V_SCROLL | SWT.H_SCROLL);
+		scrolledCompositeImpl.setLayout(layout);
+		scrolledCompositeImpl.setLayoutData(new GridData(GridData.FILL_BOTH));
+
 		Composite composite = new Composite(scrolledCompositeImpl, SWT.NONE);
+		layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.numColumns = 2;
 		composite.setLayout(layout);
 		scrolledCompositeImpl.setContent(composite);
-		scrolledCompositeImpl.setLayout(layout);
 		scrolledCompositeImpl.setFont(getFont());
 
 		GridData data = new GridData(GridData.FILL_BOTH);
@@ -84,25 +88,58 @@ public class PathMappingComposite extends Composite {
 
 		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		scrolledCompositeImpl.setMinSize(size.x, size.y);
+
+		updateButtonsEnablement();
 	}
 
 	protected void handleAdd() {
+		PathMapperEntryDialog dialog = new PathMapperEntryDialog(getShell());
+		if (dialog.open() == Window.OK) {
+			Mapping mapping = dialog.getResult();
+			fMapList.addElement(mapping);
+		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void handleEdit() {
+		List l = fMapList.getSelectedElements();
+		if (l.size() == 1) {
+			Mapping oldElement = (Mapping) l.get(0);
+			PathMapperEntryDialog dialog = new PathMapperEntryDialog(getShell(), oldElement);
+			if (dialog.open() == Window.OK) {
+				Mapping newElement = dialog.getResult();
+				fMapList.replaceElement(oldElement, newElement);
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void handleRemove() {
-		Iterator<Mapping> i = fMapList.getSelectedElements().iterator();
-		while (i.hasNext()) {
-			pathMapper.removeMapping(i.next());
-		}
+		fMapList.removeElements(fMapList.getSelectedElements());
 	}
 
-	public void setData(PathMapper pathMapper) {
-		this.pathMapper = pathMapper;
-		fMapList.setElements(Arrays.asList(pathMapper.getMapping()));
+	/**
+	 * Accepts only Mapping[] type
+	 */
+	public void setData(Object data) {
+		if (!(data instanceof Mapping[])) {
+			throw new IllegalArgumentException("Data must be instance of Mapping[]");
+		}
+		Mapping[] mappings = (Mapping[]) data;
+		fMapList.setElements(Arrays.asList(mappings));
+		updateButtonsEnablement();
+	}
+
+	@SuppressWarnings("unchecked")
+	public Mapping[] getMappings() {
+		List l = fMapList.getElements();
+		return (Mapping[]) l.toArray(new Mapping[l.size()]);
+	}
+
+	protected void updateButtonsEnablement() {
+		List<?> selectedElements = fMapList.getSelectedElements();
+		fMapList.enableButton(IDX_EDIT, selectedElements.size() == 1);
+		fMapList.enableButton(IDX_REMOVE, selectedElements.size() > 0);
 	}
 
 	class ListAdapter implements IListAdapter {
@@ -125,9 +162,7 @@ public class PathMappingComposite extends Composite {
 		}
 
 		public void selectionChanged(ListDialogField field) {
-			List<?> selectedElements = field.getSelectedElements();
-			field.enableButton(IDX_EDIT, selectedElements.size() == 1);
-			field.enableButton(IDX_REMOVE, selectedElements.size() > 0);
+			updateButtonsEnablement();
 		}
 	}
 
@@ -137,13 +172,13 @@ public class PathMappingComposite extends Composite {
 		public Image getColumnImage(Object element, int columnIndex) {
 			if (columnIndex == 1) { // local path
 				PathMapper.Mapping mapping = (PathMapper.Mapping) element;
-				if (mapping.type == PathEntry.Type.EXTERNAL) {
+				if (mapping.type == Type.EXTERNAL) {
 					return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 				}
-				if (mapping.type == PathEntry.Type.INCLUDE_VAR) {
+				if (mapping.type == Type.INCLUDE_VAR) {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 				}
-				if (mapping.type == PathEntry.Type.INCLUDE_FOLDER) {
+				if (mapping.type == Type.INCLUDE_FOLDER) {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 				}
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(mapping.localPath.toString());

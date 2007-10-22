@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntr
 import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
 import org.eclipse.php.internal.debug.core.pathmapper.BestMatchPathComparator;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -66,7 +67,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 
 	class EntriesFilter extends ItemsFilter {
 		public EntriesFilter() {
-			super (new SearchPattern() {
+			super(new SearchPattern() {
 				public void setPattern(String stringPattern) {
 					if (!stringPattern.startsWith("*")) {
 						stringPattern = "*" + stringPattern;
@@ -146,11 +147,11 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 				return super.getImage(element);
 			}
 			PathEntry pathEntry = (PathEntry) element;
-			if (pathEntry.getType() == PathEntry.Type.EXTERNAL) {
+			if (pathEntry.getType() == Type.EXTERNAL) {
 				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 			}
 			if (pathEntry.getContainer() instanceof IncludePathEntry) {
-				if (pathEntry.getType() == PathEntry.Type.INCLUDE_VAR) {
+				if (pathEntry.getType() == Type.INCLUDE_VAR) {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 				} else {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
@@ -164,7 +165,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 				return super.getText(element);
 			}
 			PathEntry pathEntry = (PathEntry) element;
-			if (pathEntry.getType() == PathEntry.Type.EXTERNAL) {
+			if (pathEntry.getType() == Type.EXTERNAL) {
 				return ((File) pathEntry.getContainer()).getPath();
 			}
 			if (pathEntry.getContainer() instanceof IncludePathEntry) {
@@ -172,7 +173,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 				return entry.getPath().toOSString();
 			}
 			if (pathEntry.getContainer() instanceof IResource) {
-				String path = ((IResource)pathEntry.getContainer()).getFullPath().toPortableString();
+				String path = ((IResource) pathEntry.getContainer()).getFullPath().toPortableString();
 				if (path.startsWith("/")) {
 					path = path.substring(1);
 				}
