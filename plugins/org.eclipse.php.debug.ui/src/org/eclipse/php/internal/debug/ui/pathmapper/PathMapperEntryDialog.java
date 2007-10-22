@@ -17,11 +17,17 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
+import org.eclipse.php.internal.ui.explorer.ExplorerContentProvider;
+import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
+import org.eclipse.php.internal.ui.util.AppearanceAwareLabelProvider;
+import org.eclipse.php.internal.ui.util.PHPElementImageProvider;
+import org.eclipse.php.internal.ui.util.PHPElementLabels;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.swt.SWT;
@@ -52,13 +58,16 @@ public class PathMapperEntryDialog extends StatusDialog {
 	private Button fExternalPathBrowseBtn;
 
 	public PathMapperEntryDialog(Shell parent) {
-		super(parent);
+		this (parent, null);
 	}
 
 	public PathMapperEntryDialog(Shell parent, Mapping editData) {
 		super(parent);
 		if (editData != null) {
 			fEditData = editData.clone();
+			setTitle("Edit Path Mapping");
+		} else {
+			setTitle("Add new Path Mapping");
 		}
 	}
 
@@ -68,8 +77,6 @@ public class PathMapperEntryDialog extends StatusDialog {
 
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
-//		((GridLayout) parent.getLayout()).numColumns = 2;
-
 		PixelConverter pixelConverter = new PixelConverter(parent);
 
 		// Remote path text field:
@@ -123,6 +130,8 @@ public class PathMapperEntryDialog extends StatusDialog {
 		fWorkspacePathBrowseBtn.setText("&Browse");
 		fWorkspacePathBrowseBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
+				WorkspaceBrowseDialog dialog = new WorkspaceBrowseDialog(getShell());
+				dialog.open();
 			}
 		});
 
@@ -265,5 +274,40 @@ public class PathMapperEntryDialog extends StatusDialog {
 		fEditData = mapping;
 
 		updateStatus(StatusInfo.OK_STATUS);
+	}
+
+	class WorkspaceBrowseDialog extends StatusDialog {
+		private PHPTreeViewer fViewer;
+
+		public WorkspaceBrowseDialog(Shell parent) {
+			super(parent);
+			setTitle("Select Workspace Resource");
+		}
+
+		protected Control createDialogArea(Composite parent) {
+			parent = (Composite) super.createDialogArea(parent);
+			parent.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+			PixelConverter pixelConverter = new PixelConverter(parent);
+
+			fViewer = new PHPTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+			GridData layoutData = new GridData(GridData.FILL_BOTH);
+			layoutData.widthHint = pixelConverter.convertWidthInCharsToPixels(50);
+			layoutData.heightHint = pixelConverter.convertHeightInCharsToPixels(20);
+			fViewer.getControl().setLayoutData(layoutData);
+
+			ExplorerContentProvider contentProvider = new ExplorerContentProvider(null, false);
+			fViewer.setContentProvider(contentProvider);
+
+			AppearanceAwareLabelProvider labelProvider = new AppearanceAwareLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.P_COMPRESSED, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS | PHPElementImageProvider.OVERLAY_ICONS);
+			fViewer.setLabelProvider(labelProvider);
+
+			fViewer.setInput(PHPWorkspaceModelManager.getInstance());
+
+			return parent;
+		}
+
+		protected void validate() {
+		}
 	}
 }
