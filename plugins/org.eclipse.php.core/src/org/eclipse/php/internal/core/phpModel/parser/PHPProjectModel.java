@@ -407,4 +407,8 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 			projectModelListener.fileAdded(file);
 		}
 	}
+
+	public boolean isBuildNeeded() {
+		return userModel.isBuildNeeded();
+	}
 }

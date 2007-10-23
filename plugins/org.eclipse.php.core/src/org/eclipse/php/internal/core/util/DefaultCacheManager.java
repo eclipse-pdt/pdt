@@ -111,7 +111,7 @@ public class DefaultCacheManager {
 			}
 		}
 		if (!file.exists()) {
-		    file.mkdirs();
+			file.mkdirs();
 		}
 		return file;
 	}
@@ -188,10 +188,11 @@ public class DefaultCacheManager {
 	 * @param project An IProject
 	 * @param model	A IPhpModel (PHPUserModel)
 	 * @param isShared Indicate if the model is shared with other projects.
+	 * @return true if model was loaded successfully
 	 */
-	public void load(IProject project, IPhpModel model, boolean isShared) {
+	public boolean load(IProject project, IPhpModel model, boolean isShared) {
 		if (project == null || !(model instanceof PHPUserModel)) {
-			return;
+			return false;
 		}
 		PHPUserModel userModel = (PHPUserModel) model;
 		File cacheFile = null;
@@ -200,13 +201,17 @@ public class DefaultCacheManager {
 		} else {
 			cacheFile = new File(getCacheDir(project), DATA_MODEL_FILE_NAME);
 		}
-		innerLoadModel(userModel, cacheFile);
+		return innerLoadModel(userModel, cacheFile);
 	}
 
-	// Load the model from the disk.
-	private void innerLoadModel(PHPUserModel userModel, File cacheFile) {
+	/**
+	 *  Load the model from the disk.
+	 *  
+	 *  @return true if model was loaded successfully
+	 */
+	private boolean innerLoadModel(PHPUserModel userModel, File cacheFile) {
 		if (!cacheFile.exists()) {
-			return;
+			return false;
 		}
 		boolean invalidCache = false;
 		Runtime.getRuntime().gc();
@@ -233,6 +238,7 @@ public class DefaultCacheManager {
 		} catch (FileNotFoundException ex) {
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
+			return false;
 		} finally {
 			StreamUtils.closeStream(din);
 			StreamUtils.closeStream(bufin);
@@ -247,6 +253,7 @@ public class DefaultCacheManager {
 				}
 			}
 		}
+		return !invalidCache;
 	}
 
 	/**

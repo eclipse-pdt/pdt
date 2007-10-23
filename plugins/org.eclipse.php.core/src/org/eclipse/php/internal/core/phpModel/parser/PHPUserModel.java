@@ -458,4 +458,8 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	public void fileChanged(IFile file, IDocument sDocument) {
 	}
 
+	public boolean isBuildNeeded() {
+		return manager.isBuildNeeded();
+	}
+
 }

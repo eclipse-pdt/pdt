@@ -17,29 +17,34 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.php.internal.core.phpModel.parser.management.GlobalParsingManager;
 import org.eclipse.php.internal.core.phpModel.parser.management.UserModelParserClientFactoryVersionDependent;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.util.DefaultCacheManager;
 
 public class PHPUserModelManager {
 
 	private final PHPUserModel userModel;
-	private PHPUserModel cachedUserModel;
 
 	private final IProject project;
-	
-	private IParserClientFactory parserClientFactory;
 
-	PHPUserModelManager(IProject project, PHPUserModel userModel) {
+	private IParserClientFactory parserClientFactory;
+	private boolean buildNeeded = false;
+
+	PHPUserModelManager(final IProject project, PHPUserModel userModel) {
 		this.project = project;
 		this.userModel = userModel;
-		
 		parserClientFactory = new UserModelParserClientFactoryVersionDependent(this);
-		
+
 		GlobalParsingManager.getInstance().addParserClient(parserClientFactory, project);
-		
-		// Create a cached user model without initialization
-		cachedUserModel = new PHPUserModel();
-		DefaultCacheManager.instance().load(project, cachedUserModel, false);
+
+		//loading model from cache
+
+		if (project.exists()) {//the project exist test is for the case we're dealing with the dummy project for external files.
+			boolean modelLoaded = DefaultCacheManager.instance().load(project, this.userModel, false);
+
+			//if the model was not loaded from the cache then a build is needed 
+			if (!modelLoaded) {
+				buildNeeded = true;
+			}
+		}
 	}
 
 	public void dispose() {
@@ -53,14 +58,12 @@ public class PHPUserModelManager {
 		if (file.exists()) {
 			DefaultCacheManager.instance().save(project, userModel, false);
 		}
-		
+
 		GlobalParsingManager.getInstance().removeParserClient(parserClientFactory, project);
-		
+
 		parserClientFactory.dispose();
 		parserClientFactory = null;
-		
-		cachedUserModel.dispose();
-		cachedUserModel = null;
+
 	}
 
 	public void fileRemoved(IFile file) {
@@ -79,14 +82,14 @@ public class PHPUserModelManager {
 		return userModel;
 	}
 
-	public boolean shouldParse(String fileName) {
-		PHPFileData fileData = cachedUserModel.getFileData(fileName);
-		if (fileData != null && fileData.isValid()) {
-			userModel.insert(fileData);
-			cachedUserModel.delete(fileName);
-			return false;
+	public boolean isBuildNeeded() {
+		//the buildNeeded is a one time flag it is true only if the model is loaded and there is no cache 
+		//otherwise the build should be initiated according to the regular builders policy
+		if (buildNeeded) {
+			buildNeeded = false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 }

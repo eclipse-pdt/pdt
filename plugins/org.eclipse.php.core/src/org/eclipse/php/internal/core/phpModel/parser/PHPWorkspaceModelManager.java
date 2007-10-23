@@ -14,10 +14,12 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.CoreMessages;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
@@ -140,8 +142,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
-					project.accept(new FullPhpProjectBuildVisitor(monitor));
-					fireProjectModelChanged(project);
+					PHPWorkspaceModelManager.getInstance().getModelForProject(project, true);
 				} finally {
 					monitor.done();
 				}
@@ -173,8 +174,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 							return null;
 						}
 						if (hasNature) {
-							project.accept(new FullPhpProjectBuildVisitor(monitor));
-							fireProjectModelChanged(project);
+							PHPWorkspaceModelManager.getInstance().getModelForProject(project, true);
 						}
 						if (monitor.isCanceled()) {
 							break;
@@ -450,7 +450,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		fireProjectModelRemoved(removedProject);
 	}
 
-	private void putModel(IProject project, PHPProjectModel projectModel) {
+	private void putModel(final IProject project, PHPProjectModel projectModel) {
 		PHPProjectModel oldPhpProjectModel = (PHPProjectModel) models.get(project);
 		models.put(project, projectModel);
 		projectModel.initialize(project);
@@ -460,6 +460,43 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			this.copyUserModelListeners(projectModel.getPHPUserModel(), oldPhpProjectModel.getPHPUserModel().getModelListenerList());
 		}
 		fireProjectModelAdded(project);
+		if(projectModel.isBuildNeeded()){
+			//checking if we are currently at a job with build scheduling rule 
+			//because the build must run in such a job
+			boolean newJobNeeded = (Job.getJobManager().currentJob().getRule() != ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+			if (newJobNeeded) {
+				WorkspaceJob buildJob = new WorkspaceJob(NLS.bind(CoreMessages.getString("PHPWorkspaceModelManager_4"), project.getName())) {
+					@Override
+					public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+						buildModel(monitor, project);
+						return Status.OK_STATUS;
+					}
+				};
+				buildJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+				buildJob.setUser(false);
+				buildJob.schedule();
+
+			} else {
+				IProgressMonitor monitor = new NullProgressMonitor();
+				buildModel(monitor, project);
+			}
+		} else {
+			if(project.exists()){//the event should not be lunched if we're dealing with the defaultPHPProjectModel
+				fireProjectModelChanged(project);
+			}
+		}
+		
+	}
+	private void buildModel(IProgressMonitor monitor, IProject project) {
+		try {
+			project.accept(new FullPhpProjectBuildVisitor(monitor));
+			fireProjectModelChanged(project);
+		} catch (CoreException e) {
+			Logger.logException(e);
+		} finally {
+			monitor.done();
+		}
+
 	}
 
 	private void copyUserModelListeners(PHPUserModel newUserModel, List modelListenerList) {

@@ -77,11 +77,6 @@ public class UserModelParserClientFactoryVersionDependent implements IParserClie
 	}
 
 	public boolean isParsable(String fileName, int parsingReason) {
-		if ((parsingReason & fileAdded) != 0) {
-			if (!userModelManager.shouldParse(fileName)) {
-				return false;
-			}
-		}
 		return true;
 	}
 }
