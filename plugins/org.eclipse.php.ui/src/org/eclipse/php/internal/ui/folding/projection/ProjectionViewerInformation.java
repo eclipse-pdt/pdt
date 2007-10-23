@@ -10,15 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.folding.projection;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 /**
  * Contains information about a projection viewer and also manages updating
@@ -30,6 +32,8 @@ class ProjectionViewerInformation {
 	// org.eclipse.wst.css.ui.internal.projection
 	// org.eclipse.wst.html.ui.internal.projection
 	// org.eclipse.jst.jsp.ui.internal.projection
+
+	private static final Annotation[] EMPTY_ANNOTATIONS = new Annotation[] {};
 
 	/**
 	 * Listens to document to be aware of when to update the projection
@@ -112,8 +116,6 @@ class ProjectionViewerInformation {
 		return fDocument;
 	}
 
-
-
 	private List<ProjectionAnnotationModelChanges> getQueuedAnnotationChanges() {
 		if (fQueuedAnnotationChanges == null) {
 			fQueuedAnnotationChanges = new LinkedList<ProjectionAnnotationModelChanges>();
@@ -135,29 +137,113 @@ class ProjectionViewerInformation {
 	 */
 	void applyAnnotationModelChanges() {
 		List<ProjectionAnnotationModelChanges> queuedChanges = getQueuedAnnotationChanges();
-		// go through all the pending annotation changes and apply
-		// them to
-		// the projection annotation model
+		// go through all the pending annotation changes and apply:
 		while (!queuedChanges.isEmpty()) {
 			ProjectionAnnotationModelChanges changes = queuedChanges.remove(0);
 			try {
-				fProjectionAnnotationModel.modifyAnnotations(changes.getDeletions(), changes.getAdditions(), null);
-				Map modifications = changes.getModifications();
-				for (Object object : modifications.entrySet()) {
-					Map.Entry<ProjectionAnnotation, Position> entry = (Map.Entry<ProjectionAnnotation, Position>) object;
-					Position position = fProjectionAnnotationModel.getPosition(entry.getKey());
+
+				// 1. Collect annotations and their positions and store collapsed ones:
+				Set<Position> collapsedPositions = new HashSet<Position>();
+				Map<Position, ProjectionAnnotation> positionAnnotations = new HashMap<Position, ProjectionAnnotation>();
+				for (Iterator<ProjectionAnnotation> i = fProjectionAnnotationModel.getAnnotationIterator(); i.hasNext();) {
+					ProjectionAnnotation existingAnnotation = i.next();
+					Position position = fProjectionAnnotationModel.getPosition(existingAnnotation);
+					if (existingAnnotation.isCollapsed() && inScript(position.offset)) {
+						collapsedPositions.add(position);
+					}
+					positionAnnotations.put(position, existingAnnotation);
+				}
+
+				// 2. Delete the annotations marked as deleted, if they are not collapsed:
+				Annotation[] deletions = changes.getDeletions();
+				if (deletions == null) {
+					deletions = EMPTY_ANNOTATIONS;
+				}
+				Set<Position> persistentPositions = new HashSet<Position>(deletions.length);
+				for (Annotation deletion : deletions) {
+					Position position = fProjectionAnnotationModel.getPosition(deletion);
+					if (!collapsedPositions.contains(position)) {
+						fProjectionAnnotationModel.removeAnnotation(deletion);
+					} else {
+						persistentPositions.add(position);
+					}
+				}
+
+				// 3. Add missing annotations or replace existing ones with same persistent position:
+				Map<ProjectionAnnotation, Position> additions = changes.getAdditions();
+				for (Map.Entry<ProjectionAnnotation, Position> addition : additions.entrySet()) {
+					Position position = addition.getValue();
+					ProjectionAnnotation newAnnotation = addition.getKey();
+					if (!persistentPositions.contains(position)) {
+						fProjectionAnnotationModel.addAnnotation(newAnnotation, position);
+					} else {
+						ProjectionAnnotation existingAnnotation = positionAnnotations.get(position);
+						if (existingAnnotation.isCollapsed()) {
+							newAnnotation.markCollapsed();
+						} else {
+							newAnnotation.markExpanded();
+						}
+						fProjectionAnnotationModel.removeAnnotation(existingAnnotation);
+						fProjectionAnnotationModel.addAnnotation(newAnnotation, position);
+					}
+				}
+
+				//4. Replace positions for modified annotations or add if missing and not persistent:
+				Map<ProjectionAnnotation, Position> modifications = changes.getModifications();
+				for (Map.Entry<ProjectionAnnotation, Position> modification : modifications.entrySet()) {
+					ProjectionAnnotation modifiedAnnotation = modification.getKey();
+					Position modifiedPosition = modification.getValue();
+					Position position = fProjectionAnnotationModel.getPosition(modifiedAnnotation);
 					if (position == null) {
-						fProjectionAnnotationModel.addAnnotation(entry.getKey(),entry.getValue());
-					} else if (!position.equals(entry.getValue())) {
-						fProjectionAnnotationModel.modifyAnnotationPosition(entry.getKey(), entry.getValue());
+						if (!persistentPositions.contains(modifiedPosition)) {
+							fProjectionAnnotationModel.addAnnotation(modifiedAnnotation, modifiedPosition);
+						}
+					} else if (!modifiedPosition.equals(position)) {
+						fProjectionAnnotationModel.modifyAnnotationPosition(modifiedAnnotation, modifiedPosition);
 					}
 				}
 
 			} catch (RuntimeException e) {
-				// if anything goes wrong, log it be continue
-				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				Logger.logException(e);
 			}
 		}
+	}
+
+	/**
+	 * @param offset
+	 * @return true, if the offset is in script region (not string, comment, html or heredoc)
+	 */
+	private boolean inScript(int offset) {
+		IStructuredDocument document = (IStructuredDocument) fDocument;
+		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+		ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+
+		if (textRegion == null)
+			return false;
+
+		ITextRegionCollection container = sdRegion;
+
+		if (textRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) textRegion;
+			textRegion = container.getRegionAtCharacterOffset(offset);
+		}
+		if (!(textRegion instanceof PhpScriptRegion)) {
+			return false;
+		}
+
+		PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+
+		int internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
+
+		try {
+			if (phpScriptRegion.getPartition(internalOffset) != PHPPartitionTypes.PHP_DEFAULT) {
+				return false;
+			}
+			return true;
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+		}
+		return false;
 	}
 
 	/**
