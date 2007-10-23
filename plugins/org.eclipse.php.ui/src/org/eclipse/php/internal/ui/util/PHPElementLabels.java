@@ -19,6 +19,7 @@ import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.internal.ui.functions.PHPFunctionsContentProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -210,7 +211,7 @@ public class PHPElementLabels {
 	/**
 	 * User-readable string for separating the return type (e.g. " : ").
 	 */
-	public final static String DECL_STRING = " :"; //$NON-NLS-1$
+	public final static String DECL_STRING = " : "; //$NON-NLS-1$
 	/**
 	 * User-readable string for the default folder name (e.g. "(default folder)").
 	 */
@@ -237,7 +238,7 @@ public class PHPElementLabels {
 	public static void getElementLabel(Object element, long flags, StringBuffer buf) {
 		IContainer root = null;
 
-		if ((element instanceof PHPCodeData))
+		if (element instanceof PHPCodeData)
 			root = PHPModelUtil.getPHPFolderRoot((PHPCodeData) element);
 		if (root != null && getFlag(flags, PREPEND_ROOT_PATH)) {
 			getPHPFolderRootLabel(root, ROOT_QUALIFIED, buf);
@@ -254,6 +255,8 @@ public class PHPElementLabels {
 			buf.append(((PHPConstantData) element).getName());
 		} else if (element instanceof PHPClassConstData) {
 			buf.append(((PHPClassConstData) element).getName());
+		} else if (element instanceof PHPSuperClassNameData) {
+			buf.append(((PHPSuperClassNameData) element).getName());
 		} else if (element instanceof PHPFileData) {
 			getCompilationUnitLabel((PHPFileData) element, flags, buf);
 		} else if (element instanceof PHPIncludeFileData) {
@@ -365,11 +368,11 @@ public class PHPElementLabels {
 
 			//				String[] types= getFlag(flags, M_PARAMETER_TYPES) ? method.getParameterTypes() : null;
 			//				String[] names=  getFlag(flags, M_PARAMETER_NAMES)   ? method.getParameterNames() : null;
-			int nParams = (parameters != null && getFlag(flags, M_PARAMETER_TYPES)) ? parameters.length : 0;
+			int nParams = parameters != null && getFlag(flags, M_PARAMETER_TYPES) ? parameters.length : 0;
 
 			for (int i = 0; i < nParams; i++) {
 				if (i > 0) {
-					buf.append(COMMA_STRING); //$NON-NLS-1$
+					buf.append(COMMA_STRING);
 					buf.append(" "); //$NON-NLS-1$
 				}
 				if (getFlag(flags, M_PARAMETER_TYPES)) {
@@ -396,8 +399,7 @@ public class PHPElementLabels {
 		// return type
 		if (getFlag(flags, M_PRE_RETURNTYPE)) {
 			String rt = method.getReturnType();
-			buf.append(DECL_STRING);
-			buf.append(rt);
+			buf.insert(0, rt + DECL_STRING);
 		}
 
 		//			if (getFlag(flags, M_EXCEPTIONS) && method.exists()) {
@@ -427,7 +429,7 @@ public class PHPElementLabels {
 			if (container != null && container instanceof PHPClassData) {
 				containerClass = (PHPClassData) container;
 			}
-			getTypeLabel(containerClass, T_FULLY_QUALIFIED | (flags & P_COMPRESSED), buf);
+			getTypeLabel(containerClass, T_FULLY_QUALIFIED | flags & P_COMPRESSED, buf);
 		}
 
 	}
@@ -476,7 +478,7 @@ public class PHPElementLabels {
 			if (container != null && container instanceof PHPClassData) {
 				containerClass = (PHPClassData) container;
 			}
-			getTypeLabel(containerClass, T_FULLY_QUALIFIED | (flags & P_COMPRESSED), buf);
+			getTypeLabel(containerClass, T_FULLY_QUALIFIED | flags & P_COMPRESSED, buf);
 		}
 
 	}
@@ -531,12 +533,12 @@ public class PHPElementLabels {
 		} else {
 			int indexOfZip = cu.getName().indexOf(".zip"); //$NON-NLS-1$
 			if (indexOfZip != -1) {
-				// start the file label after the ".zip/" 				
+				// start the file label after the ".zip/"
 				//				String name = cu.getName().substring(indexOfZip += 5, cu.getName().length());
 				//buf.append(name);
 				buf.append(cu.getComparableName());
 			} else {
-				//				buf.append(cu.getName()); 
+				//				buf.append(cu.getName());
 				buf.append(cu.getComparableName());
 			}
 		}
@@ -598,7 +600,7 @@ public class PHPElementLabels {
 		PHPFunctionParameter[] parameters = method.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			if (i > 0) {
-				buf.append(COMMA_STRING); //$NON-NLS-1$
+				buf.append(COMMA_STRING);
 			}
 			buf.append(parameters[i].getClassType());
 			buf.append(" $" + parameters[i].getName()); //$NON-NLS-1$

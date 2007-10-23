@@ -22,8 +22,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-
 
 /**
  * Add the <code>StatusBarUpdater</code> to your ViewPart to have the statusbar
@@ -31,8 +31,10 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
  */
 public class StatusBarUpdater implements ISelectionChangedListener {
 
-	private final long LABEL_FLAGS = PHPElementLabels.DEFAULT_QUALIFIED | PHPElementLabels.ROOT_POST_QUALIFIED | PHPElementLabels.APPEND_ROOT_PATH | PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES | PHPElementLabels.M_APP_RETURNTYPE | PHPElementLabels.F_APP_TYPE_SIGNATURE
-		| PHPElementLabels.T_TYPE_PARAMETERS | PHPElementLabels.M_PRE_RETURNTYPE;
+	//	private final long LABEL_FLAGS = PHPElementLabels.DEFAULT_QUALIFIED | PHPElementLabels.ROOT_QUALIFIED | PHPElementLabels.APPEND_ROOT_PATH | PHPElementLabels.M_PARAMETER_TYPES | PHPElementLabels.M_PARAMETER_NAMES | PHPElementLabels.M_PRE_RETURNTYPE | PHPElementLabels.F_APP_TYPE_SIGNATURE
+	//		| PHPElementLabels.T_TYPE_PARAMETERS | PHPElementLabels.M_PRE_RETURNTYPE;
+
+	private final long LABEL_FLAGS = AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS;
 
 	private IStatusLineManager fStatusLineManager;
 
@@ -55,20 +57,28 @@ public class StatusBarUpdater implements ISelectionChangedListener {
 			int nElements = selection.size();
 			if (nElements > 1) {
 				return MessageFormat.format(PHPUIMessages.getString("StatusBarUpdater_num_elements_selected"), new Object[] { String.valueOf(nElements) });
-			} else {
-				Object elem = selection.getFirstElement();
-				if (elem instanceof PHPCodeData || elem instanceof PHPWorkspaceModelManager || elem instanceof PHPProjectModel) {
-					return formatPHPElementMessage(elem);
-				} else if (elem instanceof IResource) {
-					return formatResourceMessage((IResource) elem);
-				}
+			}
+			Object elem = selection.getFirstElement();
+			if (elem instanceof PHPCodeData || elem instanceof PHPWorkspaceModelManager || elem instanceof PHPProjectModel) {
+				return formatPHPElementMessage(elem);
+			} else if (elem instanceof IResource) {
+				return formatResourceMessage((IResource) elem);
 			}
 		}
 		return ""; //$NON-NLS-1$
 	}
 
 	private String formatPHPElementMessage(Object element) {
-		return PHPElementLabels.getElementLabel(element, LABEL_FLAGS);
+		String postfix = ""; //$NON-NLS-1$
+		if (element instanceof PHPCodeData) {
+			PHPCodeData codeData = (PHPCodeData) element;
+			UserData userData = codeData.getUserData();
+			if (userData != null)
+				postfix = " (" + userData.getFileName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		String text = PHPElementLabels.getElementLabel(element, LABEL_FLAGS);
+		return text + postfix;
+
 	}
 
 	private String formatResourceMessage(IResource element) {
