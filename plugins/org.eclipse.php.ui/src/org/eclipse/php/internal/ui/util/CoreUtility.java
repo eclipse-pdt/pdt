@@ -20,10 +20,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.osgi.framework.Bundle;
 
-
 public class CoreUtility {
-	
-
 
 	/**
 	 * Creates a folder and all parent folders if not existing.
@@ -33,14 +30,14 @@ public class CoreUtility {
 	 */
 	public static void createFolder(IFolder folder, boolean force, boolean local, IProgressMonitor monitor) throws CoreException {
 		if (!folder.exists()) {
-			IContainer parent= folder.getParent();
+			IContainer parent = folder.getParent();
 			if (parent instanceof IFolder) {
-				createFolder((IFolder)parent, force, local, null);
+				createFolder((IFolder) parent, force, local, null);
 			}
 			folder.create(force, local, monitor);
 		}
 	}
-	
+
 	/**
 	 * Creates an extension.  If the extension plugin has not
 	 * been loaded a busy cursor will be activated during the duration of
@@ -55,7 +52,7 @@ public class CoreUtility {
 		// Otherwise, show busy cursor then create extension.
 		String pluginId = element.getNamespaceIdentifier();
 		Bundle bundle = Platform.getBundle(pluginId);
-		if (bundle != null && bundle.getState() == Bundle.ACTIVE ) {
+		if (bundle != null && bundle.getState() == Bundle.ACTIVE) {
 			return element.createExecutableExtension(classAttribute);
 		} else {
 			final Object[] ret = new Object[1];
@@ -74,9 +71,8 @@ public class CoreUtility {
 			else
 				return ret[0];
 		}
-	}	
+	}
 
-	
 	/**
 	 * Starts a build in the background.
 	 * @param project The project to build or <code>null</code> to build the workspace.
@@ -85,21 +81,21 @@ public class CoreUtility {
 		getBuildJob(project).schedule();
 	}
 
-	
 	private static final class BuildJob extends Job {
 		private final IProject fProject;
+
 		private BuildJob(String name, IProject project) {
 			super(name);
-			fProject= project;
+			fProject = project;
 		}
-		
+
 		public boolean isCoveredBy(BuildJob other) {
 			if (other.fProject == null) {
 				return true;
 			}
 			return fProject != null && fProject.equals(fProject);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
 		 */
@@ -108,71 +104,72 @@ public class CoreUtility {
 				if (monitor.isCanceled()) {
 					return Status.CANCEL_STATUS;
 				}
-		        Job[] buildJobs = Platform.getJobManager().find(ResourcesPlugin.FAMILY_MANUAL_BUILD);
-		        for (int i= 0; i < buildJobs.length; i++) {
-		        	Job curr= buildJobs[i];
-		        	if (curr != this && curr instanceof BuildJob) {
-		        		BuildJob job= (BuildJob) curr;
-		        		if (job.isCoveredBy(this)) {
-		        			curr.cancel(); // cancel all other build jobs of our kind
-		        		}
-		        	}
+				Job[] buildJobs = Platform.getJobManager().find(ResourcesPlugin.FAMILY_MANUAL_BUILD);
+				for (Job curr : buildJobs) {
+					if (curr != this && curr instanceof BuildJob) {
+						BuildJob job = (BuildJob) curr;
+						if (job.isCoveredBy(this)) {
+							curr.cancel(); // cancel all other build jobs of our kind
+						}
+					}
 				}
 			}
 			try {
 				if (fProject != null) {
-					monitor.beginTask(MessageFormat.format(PHPUIMessages.getString("CoreUtility_buildproject_taskname"), new Object[] {fProject.getName()}), 2); 
-					fProject.build(IncrementalProjectBuilder.FULL_BUILD, new SubProgressMonitor(monitor,1));
-					PHPUiPlugin.getWorkspace().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new SubProgressMonitor(monitor,1));
+					monitor.beginTask(MessageFormat.format(PHPUIMessages.getString("CoreUtility_buildproject_taskname"), new Object[] { fProject.getName() }), 2);
+					fProject.build(IncrementalProjectBuilder.FULL_BUILD, new SubProgressMonitor(monitor, 1));
+					PHPUiPlugin.getWorkspace().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new SubProgressMonitor(monitor, 1));
 				} else {
-					monitor.beginTask(PHPUIMessages.getString("CoreUtility_buildall_taskname"), 2); 
+					monitor.beginTask(PHPUIMessages.getString("CoreUtility_buildall_taskname"), 2);
 					PHPUiPlugin.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD, new SubProgressMonitor(monitor, 2));
 				}
 			} catch (CoreException e) {
 				return e.getStatus();
 			} catch (OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
-			}
-			finally {
+			} finally {
 				monitor.done();
 			}
 			return Status.OK_STATUS;
 		}
+
 		public boolean belongsTo(Object family) {
 			return ResourcesPlugin.FAMILY_MANUAL_BUILD == family;
 		}
 	}
-	
+
 	/**
 	 * Returns a build job
 	 * @param project The project to build or <code>null</code> to build the workspace.
 	 */
 	public static Job getBuildJob(final IProject project) {
-		Job buildJob= new BuildJob(PHPUIMessages.getString("CoreUtility_job_title"), project);
+		Job buildJob = new BuildJob(PHPUIMessages.getString("CoreUtility_job_title"), project);
 		buildJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 		buildJob.setUser(true);
 		return buildJob;
 	}
-	
-	/**
-     * Set the autobuild to the value of the parameter and
-     * return the old one.
-     * 
-     * @param state the value to be set for autobuilding.
-     * @return the old value of the autobuild state
-     */
-    public static boolean enableAutoBuild(boolean state) throws CoreException {
-        IWorkspace workspace= ResourcesPlugin.getWorkspace();
-        IWorkspaceDescription desc= workspace.getDescription();
-        boolean isAutoBuilding= desc.isAutoBuilding();
-        if (isAutoBuilding != state) {
-            desc.setAutoBuilding(state);
-            workspace.setDescription(desc);
-        }
-        return isAutoBuilding;
-    }
 
-	public static boolean isPrefixOf(IPath prefix, IPath path) {
+	/**
+	 * Set the autobuild to the value of the parameter and
+	 * return the old one.
+	 *
+	 * @param state the value to be set for autobuilding.
+	 * @return the old value of the autobuild state
+	 */
+	public static boolean enableAutoBuild(boolean state) throws CoreException {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceDescription desc = workspace.getDescription();
+		boolean isAutoBuilding = desc.isAutoBuilding();
+		if (isAutoBuilding != state) {
+			desc.setAutoBuilding(state);
+			workspace.setDescription(desc);
+		}
+		return isAutoBuilding;
+	}
+
+	public static boolean isPartialPrefixOf(IPath prefix, IPath path) {
+		prefix = pathToLower(prefix);
+		path = pathToLower(path);
 		if (prefix.isPrefixOf(path))
 			return true;
 		if (prefix.segmentCount() > path.segmentCount())
@@ -181,5 +178,15 @@ public class CoreUtility {
 			return true;
 		return false;
 	}
-	
+
+	private static IPath pathToLower(IPath path) {
+		String pathString = path.toString();
+		int length = pathString.length();
+		char[] lowerChars = new char[length];
+		for (int i = 0; i < length; ++i) { // don't trust to String.toLowerCase(), because it's locale based, while Path's compare is not
+			lowerChars[i] = Character.toLowerCase(pathString.charAt(i));
+		}
+		return new Path(new String(lowerChars));
+	}
+
 }
