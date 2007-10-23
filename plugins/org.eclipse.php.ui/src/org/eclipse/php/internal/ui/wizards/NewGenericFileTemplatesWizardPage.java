@@ -105,11 +105,11 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			Template template = (Template) element;
 
 			switch (columnIndex) {
-				case 0 :
+				case 0:
 					return template.getName();
-				case 1 :
+				case 1:
 					return template.getDescription();
-				default :
+				default:
 					return ""; //$NON-NLS-1$
 			}
 		}
@@ -149,6 +149,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 */
 	private void configureTableResizing(final Composite parent, final Table table, final TableColumn column1, final TableColumn column2) {
 		parent.addControlListener(new ControlAdapter() {
+			@Override
 			public void controlResized(ControlEvent e) {
 				Rectangle area = parent.getClientArea();
 				Point preferredSize = table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
@@ -169,8 +170,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 					column1.setWidth(width / 2);
 					column2.setWidth(width / 2);
 					table.setSize(width, area.height);
-				}
-				else {
+				} else {
 					// table is getting bigger so make the table
 					// bigger first and then make the columns wider
 					// to match the client area width
@@ -194,6 +194,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		fUseTemplateButton.setLayoutData(data);
 		fUseTemplateButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				enableTemplates();
 			}
@@ -215,6 +216,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		data = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		link.setLayoutData(data);
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				linkClicked();
 			}
@@ -244,6 +246,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		fTableViewer.setContentProvider(new TemplateContentProvider());
 
 		fTableViewer.setSorter(new ViewerSorter() {
+			@Override
 			public int compare(Viewer viewer, Object object1, Object object2) {
 				if ((object1 instanceof Template) && (object2 instanceof Template)) {
 					Template left = (Template) object1;
@@ -256,6 +259,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 				return super.compare(viewer, object1, object2);
 			}
 
+			@Override
 			public boolean isSorterProperty(Object element, String property) {
 				return true;
 			}
@@ -284,8 +288,6 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		setControl(parent);
 	}
 
-
-
 	protected abstract String getNewFileWizardTemplatePageHelpId();
 
 	/**
@@ -301,10 +303,12 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
 			StructuredTextViewerConfiguration baseConfiguration = new PHPStructuredTextViewerConfiguration();
 
+			@Override
 			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 				return baseConfiguration.getConfiguredContentTypes(sourceViewer);
 			}
 
+			@Override
 			public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
 			}
@@ -353,8 +357,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 				fLastSelectedTemplateName = ""; //$NON-NLS-1$
 
 			fTableViewer.setSelection(null);
-		}
-		else {
+		} else {
 			setSelectedTemplate(fLastSelectedTemplateName);
 		}
 
@@ -400,8 +403,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			try {
 				TemplateBuffer buffer = context.evaluate(template);
 				templateString = buffer.getString();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new PHP", e); //$NON-NLS-1$
 			}
 		}
@@ -411,7 +413,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	void linkClicked() {
 		String pageId = getPreferencePageId();
-		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), pageId, new String[]{pageId}, null);
+		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), pageId, new String[] { pageId }, null);
 		dialog.open();
 		fTableViewer.refresh();
 	}
@@ -424,8 +426,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		if (templateName == null || templateName.length() == 0) {
 			fLastSelectedTemplateName = ""; //$NON-NLS-1$
 			fUseTemplateButton.setSelection(false);
-		}
-		else {
+		} else {
 			fLastSelectedTemplateName = templateName;
 			fUseTemplateButton.setSelection(true);
 		}
@@ -483,9 +484,6 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		if (template != null) {
 			fPatternViewer.getDocument().set(template.getPattern());
 		}
-		else {
-			fPatternViewer.getDocument().set(""); //$NON-NLS-1$
-		}
 	}
 
 	protected abstract String getTemplateContextTypeId();
@@ -493,6 +491,6 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	protected abstract String getUseTemplateMessage();
 
 	protected abstract String getTemplatesLocationMessage();
-	
+
 	protected abstract ContextTypeRegistry getTemplatesContextTypeRegistry();
 }
