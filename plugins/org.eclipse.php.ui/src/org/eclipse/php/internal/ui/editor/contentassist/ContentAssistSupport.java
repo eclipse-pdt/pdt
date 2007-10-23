@@ -315,6 +315,13 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		if (!haveSpacesAtEnd && isNewOrInstanceofStatment(projectModel, firstWord, lastWord, offset, selectionLength, explicit, type)) {
 			// the current position is inside new or instanceof statment.
+			if (lastWord.startsWith("$")) {
+				if (haveSpacesAtEnd) {
+					getRegularCompletion(viewer, projectModel, fileName, "", offset, selectionLength, explicit, container, phpScriptRegion, internalPHPRegion, document, isStrict); //$NON-NLS-1$
+				} else {
+					getRegularCompletion(viewer, projectModel, fileName, lastWord, offset, selectionLength, explicit, container, phpScriptRegion, internalPHPRegion, document, isStrict);
+				}
+			}
 			return;
 		}
 
