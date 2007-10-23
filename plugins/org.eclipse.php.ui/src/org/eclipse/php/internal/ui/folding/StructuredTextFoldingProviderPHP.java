@@ -289,7 +289,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#fileDataAdded(org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData)
 	 */
 	public void fileDataAdded(PHPFileData fileData) {
-		// nothing to do
+		fileDataChanged(fileData);
 	}
 
 	/** (non-Javadoc)
@@ -371,7 +371,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 						int siblingLevel = 0;
 						Node nextSibling = (Node) startNode;
 
-						// adds the php adapter to the document  
+						// adds the php adapter to the document
 						addAdapterToDocumentPHP(nextSibling.getOwnerDocument());
 
 						while (nextSibling != null && siblingLevel < MAX_SIBLINGS) {
