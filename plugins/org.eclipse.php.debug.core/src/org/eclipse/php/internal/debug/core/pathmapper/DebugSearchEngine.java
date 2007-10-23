@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
@@ -24,8 +25,11 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
 
 public class DebugSearchEngine {
 
@@ -151,14 +155,36 @@ public class DebugSearchEngine {
 		return localFile;
 	}
 
-	private static void searchOpenedEditors(LinkedList<PathEntry> results, String remoteFile) {
-		IWorkbenchPage workbenchpage = PHPUiPlugin.getActivePage();
-		IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
-		for (IEditorReference editorReference : editorReferences) {
-			String name = editorReference.getName();
-			PathEntry entry = new PathEntry(name, PathEntry.Type.EXTERNAL, null);
-			results.add(entry);
-		}
+	private static void searchOpenedEditors(final LinkedList<PathEntry> results, final String remoteFile) {
+		PHPUiPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				IEditorReference[] editors = PHPUiPlugin.getActivePage().getEditorReferences();
+				for (IEditorReference editor : editors) {
+					String fileName = "";
+					IEditorInput editorInput = null;
+					try {
+						editorInput = editor.getEditorInput();
+					} catch (PartInitException e) {
+						continue;
+					}
+					if (editorInput instanceof FileEditorInput) {
+						FileEditorInput input = (FileEditorInput) editorInput;
+						IPath location = input.getFile().getLocation();
+						if (location == null) {
+							fileName = input.getFile().getLocationURI().toString();
+						} else {
+							fileName = location.toString();
+						}
+					} else if (editorInput instanceof FileStoreEditorInput) {
+						FileStoreEditorInput input = (FileStoreEditorInput) editorInput;
+						fileName = URIUtil.toPath(input.getURI()).toString();
+					}
+					if (new Path(remoteFile).lastSegment().equalsIgnoreCase(new Path(fileName).lastSegment())) {
+						results.add(new PathEntry(fileName, PathEntry.Type.EXTERNAL, null));
+					}
+				}
+			}
+		});
 	}
 
 	private static PathEntry filterItems(AbstractPath remotePath, PathEntry[] entries) {
