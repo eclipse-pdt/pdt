@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * Main Include Path node under project.
  */
-class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListener, ModelListener, IncludePathModelListener {
+public class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChangeListener, ModelListener, IncludePathModelListener {
 
 	private IncludePathTreeContent provider;
 
