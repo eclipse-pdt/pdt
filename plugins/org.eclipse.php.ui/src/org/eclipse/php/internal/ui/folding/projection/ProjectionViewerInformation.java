@@ -190,16 +190,18 @@ class ProjectionViewerInformation {
 
 				//4. Replace positions for modified annotations or add if missing and not persistent:
 				Map<ProjectionAnnotation, Position> modifications = changes.getModifications();
-				for (Map.Entry<ProjectionAnnotation, Position> modification : modifications.entrySet()) {
-					ProjectionAnnotation modifiedAnnotation = modification.getKey();
-					Position modifiedPosition = modification.getValue();
-					Position position = fProjectionAnnotationModel.getPosition(modifiedAnnotation);
-					if (position == null) {
-						if (!persistentPositions.contains(modifiedPosition)) {
-							fProjectionAnnotationModel.addAnnotation(modifiedAnnotation, modifiedPosition);
+				if(modifications != null) {
+					for (Map.Entry<ProjectionAnnotation, Position> modification : modifications.entrySet()) {
+						ProjectionAnnotation modifiedAnnotation = modification.getKey();
+						Position modifiedPosition = modification.getValue();
+						Position position = fProjectionAnnotationModel.getPosition(modifiedAnnotation);
+						if (position == null) {
+							if (!persistentPositions.contains(modifiedPosition)) {
+								fProjectionAnnotationModel.addAnnotation(modifiedAnnotation, modifiedPosition);
+							}
+						} else if (!modifiedPosition.equals(position)) {
+							fProjectionAnnotationModel.modifyAnnotationPosition(modifiedAnnotation, modifiedPosition);
 						}
-					} else if (!modifiedPosition.equals(position)) {
-						fProjectionAnnotationModel.modifyAnnotationPosition(modifiedAnnotation, modifiedPosition);
 					}
 				}
 
