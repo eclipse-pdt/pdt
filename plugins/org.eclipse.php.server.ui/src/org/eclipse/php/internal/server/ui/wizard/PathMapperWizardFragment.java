@@ -33,7 +33,6 @@ public class PathMapperWizardFragment extends CompositeWizardFragment {
 
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
 		compositeFragment = new PathMapperCompositeFragment(parent, new WizardControlWrapper(handle), false);
-		// TODO : compositeFragment.setImageDescriptor()
 		return compositeFragment;
 	}
 

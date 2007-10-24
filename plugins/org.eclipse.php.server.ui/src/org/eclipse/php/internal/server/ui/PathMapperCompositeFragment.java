@@ -34,6 +34,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 		super(parent, handler, isForEditing);
 		controlHandler.setTitle("Server Path Mapping");
 		controlHandler.setDescription("Specify mapping between server and local paths");
+		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
 		setDisplayName("Path Mapping");
 		setTitle("Edit Server Path Mapping");
 		setDescription("Configure Server Path Mapping");
