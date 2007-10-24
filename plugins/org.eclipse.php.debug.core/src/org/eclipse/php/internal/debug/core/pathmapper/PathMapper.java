@@ -190,6 +190,12 @@ public class PathMapper implements IXMLPreferencesStorable {
 		public int hashCode() {
 			return localPath.hashCode() + 13 * remotePath.hashCode() + 31 * type.hashCode();
 		}
+
+		public String toString() {
+			StringBuilder buf = new StringBuilder("Mapping { ");
+			buf.append(localPath).append(", ").append(remotePath).append(", ").append(type);
+			return buf.toString();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -228,7 +234,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 			entry.put("local", local); //$NON-NLS-1$
 			entry.put("remote", remote); //$NON-NLS-1$
 			entry.put("type", type.name()); //$NON-NLS-1$
-			entries.put("entry" + (c++), entry); //$NON-NLS-1$
+			entries.put("mapping" + (c++), entry); //$NON-NLS-1$
 		}
 		return entries;
 	}

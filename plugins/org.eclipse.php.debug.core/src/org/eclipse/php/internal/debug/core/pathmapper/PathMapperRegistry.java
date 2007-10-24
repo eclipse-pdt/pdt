@@ -149,7 +149,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 			PathMapper pathMapper = serverPathMapper.get(server);
 			entry.put("server", server.getName()); //$NON-NLS-1$
 			entry.put("mapper", pathMapper.storeToMap()); //$NON-NLS-1$
-			elements.put("entry" + (c++), entry); //$NON-NLS-1$
+			elements.put("pathMapper" + (c++), entry); //$NON-NLS-1$
 		}
 		i = phpExePathMapper.keySet().iterator();
 		while (i.hasNext()) {
@@ -158,7 +158,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 			PathMapper pathMapper = phpExePathMapper.get(phpExeItem);
 			entry.put("phpExe", phpExeItem.getPhpEXE().toString());
 			entry.put("mapper", pathMapper.storeToMap());
-			elements.put("entry" + (c++), entry);
+			elements.put("pathMapper" + (c++), entry);
 		}
 		return elements;
 	}
