@@ -64,7 +64,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 	 */
 	public IStackFrame[] getStackFrames() throws DebugException {
 		if (isSuspended()) {
-			return ((DBGpTarget) getDebugTarget()).getStackFrames();
+			return ((DBGpTarget) getDebugTarget()).getCurrentStackFrames();
 		} else {
 			return new IStackFrame[0];
 		}

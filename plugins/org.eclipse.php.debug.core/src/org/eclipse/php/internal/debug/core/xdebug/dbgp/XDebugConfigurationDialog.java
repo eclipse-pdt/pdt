@@ -36,6 +36,7 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 	//	private Text timeoutTextBox;
 	private Button showGlobals;
 	private Spinner variableDepth;
+	private Button useMultiSession;
 	private XDebugDebuggerConfiguration xdebugDebuggerConfiguration;
 
 	/**
@@ -52,16 +53,19 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
 		setTitle(PHPDebugCoreMessages.XDebugConfigurationDialog_xdebugSettings);
-		Composite composite = createSubsection(parent, "Xdebug/DBGp"); //$NON-NLS-1$
-		addLabelControl(composite, "Debug port", XDebugUIAttributeConstants.XDEBUG_PREF_PORT); //$NON-NLS-1$
+		Composite composite = createSubsection(parent, PHPDebugCoreMessages.XDebugConfigurationDialog_xdebugSettings);		
+		addLabelControl(composite, PHPDebugCoreMessages.DebuggerConfigurationDialog_debugPort, XDebugUIAttributeConstants.XDEBUG_PREF_PORT); //$NON-NLS-1$
 		portTextBox = addNumTextField(composite, XDebugUIAttributeConstants.XDEBUG_PREF_PORT, 5, 2, false);
+		
 		//		addLabelControl(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_debugPortTimeout, XDebugUIAttributeConstants.XDEBUG_PREF_TIMEOUT);
 		//		timeoutTextBox = addNumTextField(composite, XDebugUIAttributeConstants.XDEBUG_PREF_TIMEOUT, 5, 2, true);
 		//		addLabelControl(composite, "Default server URL", XDebugUIAttributeConstants.XDEBUG_PREF_DEFAULTSERVERURL); //$NON-NLS-1$
 		//		defaultServerURLBox = addDefaultServerURLTextField(composite, XDebugUIAttributeConstants.XDEBUG_PREF_DEFAULTSERVERURL, 2);
+		
 		showGlobals = addCheckBox(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_showSuperGlobals, XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, 0);
 		addLabelControl(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_maxArrayDepth, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH);
-		variableDepth = addVariableLevel(composite, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, 1, 100, 2);
+		variableDepth = addVariableLevel(composite, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, 1, 100, 2);		
+		useMultiSession = addCheckBox(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_useMultisession, XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, 0);
 		internalInitializeValues(); // Initialize the dialog's values.
 		return composite;
 	}
@@ -93,6 +97,8 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 
 		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, showGlobals.getSelection());
 		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, variableDepth.getSelection());
+		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, useMultiSession.getSelection());
+		
 		//		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_DEFAULTSERVERURL, defaultServerURLBox.getText());
 		PHPDebugPlugin.getDefault().savePluginPreferences(); // save
 		super.okPressed();
@@ -111,6 +117,8 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		//		int timeout = prefs.getInt(XDebugUIAttributeConstants.XDEBUG_PREF_TIMEOUT);
 		//		timeoutTextBox.setText(Integer.toString(timeout));
 		showGlobals.setSelection(prefs.getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS));
+		useMultiSession.setSelection(prefs.getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION));
+		
 		variableDepth.setSelection(prefs.getInt(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH));
 		//		defaultServerURLBox.setText(prefs.getString(XDebugUIAttributeConstants.XDEBUG_PREF_DEFAULTSERVERURL));
 	}

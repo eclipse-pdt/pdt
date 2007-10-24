@@ -14,22 +14,33 @@ import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugUIAttributeConstants;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.PHPServerCoreMessages;
@@ -121,15 +132,23 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		// then create the start and stop debug URLs
 		String[] startStopURLs;
 		String baseURL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
-		DBGpTarget target = null;
+		IDBGpDebugTarget target = null;
 		
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {		
 			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();
 			String sessionId = DBGpSessionHandler.getInstance().generateSessionId();
 			startStopURLs = generateStartStopDebugURLs(baseURL, sessionId, ideKey);
-			String launchScript = configuration.getAttribute(Server.FILE_NAME, (String) null);						
-			target = new DBGpTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
-			DBGpSessionHandler.getInstance().addSessionListener(target);			
+			String launchScript = configuration.getAttribute(Server.FILE_NAME, (String) null);
+			
+			// determine if we should use the multisession manager or the single session manager
+			if (ide.getPrefs().getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION)) {
+				target = new DBGpMultiSessionTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
+				launch.addDebugTarget(target); //has to be added now, not later.
+			}
+			else {
+				target = new DBGpTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);				
+			}
+			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)target);			
 		}
 		else {
 			startStopURLs = new String[] {baseURL, null};
@@ -172,7 +191,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			// display an error about not being able to launch a browser
 			Logger.logException("we have an exception on the browser", exception[0]);
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
-				DBGpSessionHandler.getInstance().removeSessionListener(target);
+				DBGpSessionHandler.getInstance().removeSessionListener((IDBGpSessionListener)target);
 			}
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 		}

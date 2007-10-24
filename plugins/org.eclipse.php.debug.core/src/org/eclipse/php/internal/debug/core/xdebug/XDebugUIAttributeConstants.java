@@ -17,8 +17,12 @@ public interface XDebugUIAttributeConstants {
 	public static final String XDEBUG_PREF_PORT = PHPDebugPlugin.ID + ".xdebug_port";
 	public static final String XDEBUG_PREF_SHOWSUPERGLOBALS = PHPDebugPlugin.ID + ".xdebug_showSuperGlobals";
 	public static final String XDEBUG_PREF_ARRAYDEPTH = PHPDebugPlugin.ID + ".xdebug_arrayDepth";
+	public static final String XDEBUG_PREF_MULTISESSION = PHPDebugPlugin.ID + ".xdebug_multisession";
+	
 
 	// launch id constants
+	/*
 	public static final String LAUNCH_CONFIG_TYPE_EXE = "org.eclipse.php.xdebug.core.XdebugExelaunchConfigurationType";
 	public static final String LAUNCH_CONFIG_TYPE_WEB = "org.eclipse.php.xdebug.core.XdebugWeblaunchConfigurationType";
+	*/
 }

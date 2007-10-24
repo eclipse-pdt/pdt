@@ -21,6 +21,7 @@ public class XDebugPreferenceInit {
 		prefs.setDefault(XDebugUIAttributeConstants.XDEBUG_PREF_PORT, getPortDefault());
 		prefs.setDefault(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, showSuperGlobalsDefault());
 		prefs.setDefault(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, getDepthDefault());
+		prefs.setDefault(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, useMultiSessionDefault());		
 	}
 
 	public static int getDepthDefault() {
@@ -38,8 +39,14 @@ public class XDebugPreferenceInit {
 	public static boolean showSuperGlobalsDefault() {
 		return true;
 	}
+	
+	public static boolean useMultiSessionDefault() {
+		return false;
+	}
 
+	/*
 	public static String getDefaultServerURL() {
 		return "http://localhost";
 	}
+	*/
 }

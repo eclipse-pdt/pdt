@@ -36,14 +36,14 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionListener;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
-      IBreakpointManagerListener, DBGpSessionListener {
+public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep,
+      IBreakpointManagerListener, IDBGpSessionListener {
 
    // used to identify this debug target with the associated
    // script being debugged.
@@ -128,7 +128,6 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
    
    private AutoPathMapper autoMapper = null;
    
-   
    /**
     * Base constructor
     * 
@@ -138,7 +137,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       setState(STATE_CREATE);
       ideKey = DBGpSessionHandler.getInstance().getIDEKey();
       allThreads = new IThread[0]; // needs to be defined when target is added to launch
-      fireCreationEvent();
+      fireCreationEvent();            
    }
 
    /**
@@ -151,7 +150,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     * @throws CoreException
     */
    public DBGpTarget(ILaunch launch, String projectRelativeScript, String ideKey,
-         String sessionID, boolean stopAtStart) throws CoreException {
+         String sessionID, boolean stopAtStart) {
       this();
       this.stopAtStart = stopAtStart;
       this.launch = launch;
@@ -186,6 +185,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       this.browser = browser;
       this.process = null; // no process indicates a web launch
    }
+   
 
    /**
     * wait for the initial dbgp session to be established
@@ -199,19 +199,26 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       setState(STATE_INIT_SESSION_WAIT);
 
       try {
+    	 boolean launchIsCanceled = false;
+    	 if (launchMonitor != null) {
+    		 launchIsCanceled = launchMonitor.isCanceled();
+    	 }
          while (session == null && !launch.isTerminated() && !isTerminating()
-               && !launchMonitor.isCanceled()) {
+               && !launchIsCanceled) {
 
             // if we got here then session has not been updated
             // by the other thread yet, so wait. We wait for
             // an event or a timeout. Even if we timeout we could
             // still get the session before we re-enter the loop.
-//            te.waitForEvent(DBGpSessionHandler.getInstance().getTimeout());
             te.waitForEvent(XDebugPreferenceInit.getTimeoutDefault());
          }
 
          if (session != null && session.isActive()) {
-            if (!isTerminating() && !launch.isTerminated() && !launchMonitor.isCanceled()) {
+        	 if (launchMonitor != null) {
+        		 launchIsCanceled = launchMonitor.isCanceled();
+        	 }
+        	 
+            if (!isTerminating() && !launch.isTerminated() && !launchIsCanceled) {
                langThread = new DBGpThread(this);
                allThreads = new IThread[] {langThread};
                langThread.fireCreationEvent();
@@ -515,7 +522,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     * Terminate this debug target, either because we
     * are terminating the thing being debugged or we
     * are disconnecting
-    * @param isTerminate if we are terminating
+    * @param isTerminate if we are terminating rather than disconnecting
     */
    public void terminateDebugTarget(boolean isTerminate) {
       // check we haven't already terminated
@@ -630,7 +637,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
       // can only step return if there is a method above it, ie there is
       // at least one stack frame above the current stack frame.   
       try {
-         if (isSuspended() && getStackFrames().length > 1) {
+         if (isSuspended() && getCurrentStackFrames().length > 1) {
             return true;
          }
       }
@@ -734,6 +741,8 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
          setState(STATE_DISCONNECTED);
          if (session != null) {
             if (process != null) {
+               // can only detach a process, detaching on a web server stops xdebug
+               // from establishing any more sessions.	
                session.sendAsyncCmd(DBGpCommand.detach);
                terminateDebugTarget(false);
             }
@@ -846,7 +855,7 @@ public class DBGpTarget extends DBGpElement implements IDebugTarget, IStep,
     * @throws DebugException
     *             if unable to perform the request
     */
-   protected synchronized IStackFrame[] getStackFrames() throws DebugException {
+   protected synchronized IStackFrame[] getCurrentStackFrames() throws DebugException {
       /*
        * <response command="stack_get" transaction_id="transaction_id"> <stack
        * level="{NUM}" type="file|eval|?" filename="..." lineno="{NUM}"
@@ -972,7 +981,7 @@ private IVariable[] getContextAtLevel(String level) {
          variables = new DBGpVariable[properties.getLength()];
          for (int i = 0; i < properties.getLength(); i++) {
             Node property = properties.item(i);
-            variables[i] = new DBGpVariable((DBGpTarget)getDebugTarget(), property, reportedLevel);
+            variables[i] = new DBGpVariable(this, property, reportedLevel);
          }
       }
       return variables;
@@ -1126,7 +1135,7 @@ private IVariable[] getContextAtLevel(String level) {
 
    public String mapInboundFileIfRequired(String decodedFile) {
       String mappedFile = decodedFile;
-      if (webLaunch) {
+      //TODO: use remapper for both continual and oneshot launches if (webLaunch) {
          IFileMapper mapper = FilenameMapperRegistry.getRegistry().getActiveMapper();
          
          // if no external mapper, see if we should use the automapper.
@@ -1143,7 +1152,7 @@ private IVariable[] getContextAtLevel(String level) {
                // ingore any user generated exceptions
             }
          }
-      }
+      //}
       return mappedFile;
    }
 
@@ -1227,7 +1236,7 @@ private IVariable[] getContextAtLevel(String level) {
 
       // if it is a weblaunch, see if we have an active mapper to map the workspace
       // file to the absolute path of the remote script.
-      if (webLaunch) {
+      //TODO: Use mapping in one shot and multi launch modes if (webLaunch) {
          IFileMapper mapper = FilenameMapperRegistry.getRegistry().getActiveMapper();
          if (mapper == null && autoMapper.isMappingRequired()) {
         	 mapper = autoMapper;
@@ -1244,7 +1253,7 @@ private IVariable[] getContextAtLevel(String level) {
                // protect against any exceptions in the user API.
             }
          }
-      }
+      //}
 
       String args = "-t line -f " + DBGpUtils.getFileURIString(fileName) + " -n " + lineNumber;
       if (condition.getType() == DBGpBreakpointCondition.EXPR) {

@@ -64,12 +64,14 @@ public class AutoPathMapper implements IFileMapper {
 				} else {
 					projEnd = launchResource.indexOf('/');
 				}
+				if (projEnd != -1) {
 				String newTest = launchResource.substring(projEnd);
-				if (initScript.endsWith(newTest)) {
-					workspaceRemap = false;
-					launchProject = launchResource.substring(0, projEnd);
-					int end = initScript.indexOf(newTest);
-					externalLocPreAppend = initScript.substring(0, end);
+					if (initScript.endsWith(newTest)) {
+						workspaceRemap = false;
+						launchProject = launchResource.substring(0, projEnd);
+						int end = initScript.indexOf(newTest);
+						externalLocPreAppend = initScript.substring(0, end);
+					}
 				}
 			}
 		}
@@ -128,7 +130,7 @@ public class AutoPathMapper implements IFileMapper {
 				file = ResourcesPlugin.getWorkspace().getRoot().getFile(
 						new Path(projectFile));
 
-				if (file != null) {
+				if (file != null && file.getRawLocation() != null) {
 					result = file.getRawLocation().toString();
 				}
 			}
