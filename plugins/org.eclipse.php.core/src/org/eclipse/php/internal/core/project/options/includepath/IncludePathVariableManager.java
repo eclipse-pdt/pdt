@@ -54,7 +54,9 @@ public class IncludePathVariableManager {
 			varPath = (IPath) variables.get(variableName);
 		} else {
 			varPath = (IPath) variables.get(path.segment(0));
-			varPath = varPath.append(path.removeFirstSegments(1));
+			if (varPath != null) {
+				varPath = varPath.append(path.removeFirstSegments(1));
+			}
 		}
 		return varPath;
 	}
@@ -122,7 +124,7 @@ public class IncludePathVariableManager {
 		if (pathsString.length() > 0)
 			paths = pathsString.split(","); //$NON-NLS-1$
 		// Not good since empty paths are allowed!!!
-		// assert (names.length == paths.length); 
+		// assert (names.length == paths.length);
 		for (int i = 0; i < names.length; i++) {
 			String path;
 			if (i < paths.length) {
@@ -142,8 +144,7 @@ public class IncludePathVariableManager {
 			return;
 
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCoreConstants.PLUGIN_ID, PHPCoreConstants.IP_VARIABLE_INITIALIZER_EXTPOINT_ID);
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
+		for (IConfigurationElement element : elements) {
 			if ("variable".equals(element.getName())) { //$NON-NLS-1$
 				String name = element.getAttribute("name"); //$NON-NLS-1$
 				String value = element.getAttribute("value"); //$NON-NLS-1$
@@ -190,8 +191,8 @@ public class IncludePathVariableManager {
 		if (index != -1) {
 			String var = path.substring(0, index);
 			IPath varPath = getIncludePathVariable(var);
-			if (index + 1 < path.length()) {
-				varPath.append(path.substring(index + 1));
+			if (varPath != null && index + 1 < path.length()) {
+				varPath = varPath.append(path.substring(index + 1));
 			}
 			return varPath;
 		}
