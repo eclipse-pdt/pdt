@@ -11,23 +11,39 @@
 package org.eclipse.php.internal.debug.ui.pathmapper;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.StatusDialog;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
+import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
-import org.eclipse.php.internal.ui.explorer.ExplorerContentProvider;
-import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
-import org.eclipse.php.internal.ui.util.AppearanceAwareLabelProvider;
-import org.eclipse.php.internal.ui.util.PHPElementImageProvider;
-import org.eclipse.php.internal.ui.util.PHPElementLabels;
+import org.eclipse.php.internal.debug.ui.pathmapper.PathMapperEntryDialog.WorkspaceBrowseDialog.IPFile;
+import org.eclipse.php.internal.ui.treecontent.IncludesNode;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
+import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.swt.SWT;
@@ -35,6 +51,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -45,6 +62,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 public class PathMapperEntryDialog extends StatusDialog {
 
@@ -58,7 +77,7 @@ public class PathMapperEntryDialog extends StatusDialog {
 	private Button fExternalPathBrowseBtn;
 
 	public PathMapperEntryDialog(Shell parent) {
-		this (parent, null);
+		this(parent, null);
 	}
 
 	public PathMapperEntryDialog(Shell parent, Mapping editData) {
@@ -131,7 +150,31 @@ public class PathMapperEntryDialog extends StatusDialog {
 		fWorkspacePathBrowseBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				WorkspaceBrowseDialog dialog = new WorkspaceBrowseDialog(getShell());
-				dialog.open();
+				if (dialog.open() == Window.OK) {
+					Object selectedElement = dialog.getSelectedElement();
+					fWorkspacePathText.setData(null);
+					if (selectedElement instanceof IResource) {
+						IResource resource = (IResource) selectedElement;
+						fWorkspacePathText.setText(resource.getFullPath().toString());
+						fWorkspacePathText.setData(Type.WORKSPACE);
+					} else if (selectedElement instanceof IIncludePathEntry) {
+						IIncludePathEntry includePathEntry = (IIncludePathEntry) selectedElement;
+						fWorkspacePathText.setData(includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER);
+						if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+							IPath incPath = IncludePathVariableManager.instance().resolveVariablePath(includePathEntry.getPath().toString());
+							if (incPath != null) {
+								fWorkspacePathText.setText(incPath.toOSString());
+							}
+						} else {
+							fWorkspacePathText.setText(includePathEntry.getPath().toOSString());
+						}
+					} else if (selectedElement instanceof IPFile) {
+						IPFile ipFile = (IPFile) selectedElement;
+						IIncludePathEntry includePathEntry = ipFile.includePathEntry;
+						fWorkspacePathText.setData(includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER);
+						fWorkspacePathText.setText(ipFile.file.getAbsolutePath());
+					}
+				}
 			}
 		});
 
@@ -192,6 +235,7 @@ public class PathMapperEntryDialog extends StatusDialog {
 				fExternalPathText.setText(fEditData.localPath.toString());
 			} else {
 				fWorkspacePathText.setText(fEditData.localPath.toString());
+				fWorkspacePathText.setData(fEditData.type);
 			}
 		}
 		fWorkspacePathBtn.notifyListeners(SWT.Selection, new Event());
@@ -226,20 +270,10 @@ public class PathMapperEntryDialog extends StatusDialog {
 			}
 
 			boolean pathExistsInWorkspace = false;
-			Object data = fWorkspacePathText.getData();
-
-			if (data instanceof IIncludePathEntry) {
-				IIncludePathEntry includePathEntry = (IIncludePathEntry) data;
-				if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-					mapping.type = Type.INCLUDE_VAR;
-					IPath path = IncludePathVariableManager.instance().resolveVariablePath(workspacePath);
-					pathExistsInWorkspace = path.toFile().exists();
-				} else {
-					mapping.type = Type.INCLUDE_FOLDER;
-					pathExistsInWorkspace = new File(workspacePath).exists();
-				}
+			mapping.type = (Type) fWorkspacePathText.getData();
+			if (mapping.type == Type.INCLUDE_FOLDER  || mapping.type == Type.INCLUDE_VAR) {
+				pathExistsInWorkspace = new File(workspacePath).exists();
 			} else {
-				mapping.type = Type.WORKSPACE;
 				pathExistsInWorkspace = (ResourcesPlugin.getWorkspace().getRoot().findMember(workspacePath) != null);
 			}
 			if (!pathExistsInWorkspace) {
@@ -273,15 +307,20 @@ public class PathMapperEntryDialog extends StatusDialog {
 
 		fEditData = mapping;
 
-		updateStatus(StatusInfo.OK_STATUS);
+		updateStatus(Status.OK_STATUS);
 	}
 
 	class WorkspaceBrowseDialog extends StatusDialog {
-		private PHPTreeViewer fViewer;
+		private TreeViewer fViewer;
+		private Object selectedElement;
 
 		public WorkspaceBrowseDialog(Shell parent) {
 			super(parent);
 			setTitle("Select Workspace Resource");
+		}
+
+		public Object getSelectedElement() {
+			return selectedElement;
 		}
 
 		protected Control createDialogArea(Composite parent) {
@@ -290,24 +329,172 @@ public class PathMapperEntryDialog extends StatusDialog {
 
 			PixelConverter pixelConverter = new PixelConverter(parent);
 
-			fViewer = new PHPTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+			fViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 			GridData layoutData = new GridData(GridData.FILL_BOTH);
-			layoutData.widthHint = pixelConverter.convertWidthInCharsToPixels(50);
+			layoutData.widthHint = pixelConverter.convertWidthInCharsToPixels(70);
 			layoutData.heightHint = pixelConverter.convertHeightInCharsToPixels(20);
 			fViewer.getControl().setLayoutData(layoutData);
 
-			ExplorerContentProvider contentProvider = new ExplorerContentProvider(null, false);
-			fViewer.setContentProvider(contentProvider);
+			fViewer.setContentProvider(new ContentProvider());
+			fViewer.setLabelProvider(new LabelProvider());
 
-			AppearanceAwareLabelProvider labelProvider = new AppearanceAwareLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.P_COMPRESSED, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS | PHPElementImageProvider.OVERLAY_ICONS);
-			fViewer.setLabelProvider(labelProvider);
+			fViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					validate();
+				}
+			});
 
-			fViewer.setInput(PHPWorkspaceModelManager.getInstance());
+			fViewer.setInput(ResourcesPlugin.getWorkspace().getRoot());
 
 			return parent;
 		}
 
 		protected void validate() {
+			IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
+			Object element = selection.getFirstElement();
+			if (element == null || element instanceof IncludesNode) {
+				updateStatus(new StatusInfo(IStatus.ERROR, ""));
+				return;
+			}
+			selectedElement = element;
+			updateStatus(Status.OK_STATUS);
+		}
+
+		class IPFile {
+			IIncludePathEntry includePathEntry;
+			File file;
+
+			IPFile(IIncludePathEntry includePathEntry, File file) {
+				this.includePathEntry = includePathEntry;
+				this.file = file;
+			}
+
+			public int hashCode() {
+				return file.hashCode() + 13 * includePathEntry.hashCode();
+			}
+
+			public boolean equals(Object obj) {
+				if (!(obj instanceof IPFile)) {
+					return false;
+				}
+				IPFile other = (IPFile) obj;
+				return other.file.equals(file) && other.includePathEntry.equals(includePathEntry);
+			}
+		}
+
+		class ContentProvider implements ITreeContentProvider {
+
+			public Object[] getChildren(Object parentElement) {
+				try {
+					if (parentElement instanceof IContainer) {
+						List<Object> r = new LinkedList<Object>();
+						// Add all members:
+						IContainer container = (IContainer) parentElement;
+						IResource[] members = container.members();
+						for (IResource member : members) {
+							if (member instanceof IContainer && member.isAccessible()) {
+								r.add(member);
+							}
+						}
+						// Add include paths:
+						if (parentElement instanceof IProject) {
+							IProject project = (IProject) parentElement;
+							PHPProjectOptions options = PHPProjectOptions.forProject(project);
+							if (options != null) {
+								IIncludePathEntry[] includePath = options.readRawIncludePath();
+								r.addAll(Arrays.asList(includePath));
+							}
+						}
+						return r.toArray();
+					} else if (parentElement instanceof IIncludePathEntry) {
+						IIncludePathEntry includePathEntry = (IIncludePathEntry) parentElement;
+						IPath path = includePathEntry.getPath();
+						File file = null;
+						if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+							file = path.toFile();
+						} else if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+							path = IncludePathVariableManager.instance().resolveVariablePath(path.toString());
+							if (path != null) {
+								file = path.toFile();
+							}
+						}
+						if (file != null) {
+							return getChildren(new IPFile(includePathEntry, file));
+						}
+					} else if (parentElement instanceof IPFile) {
+						IPFile ipFile = (IPFile) parentElement;
+						File file = ipFile.file;
+						if (file.isDirectory()) {
+							File dirs[] = file.listFiles(new FileFilter() {
+								public boolean accept(File pathname) {
+									return pathname.isDirectory();
+								}
+							});
+							List<Object> r = new ArrayList<Object>(dirs.length);
+							for (File dir : dirs) {
+								r.add(new IPFile(ipFile.includePathEntry, dir));
+							}
+							return r.toArray();
+						}
+					}
+				} catch (CoreException e) {
+				}
+				return new Object[0];
+			}
+
+			public Object getParent(Object element) {
+				if (element instanceof IResource) {
+					return ((IResource) element).getParent();
+				}
+				if (element instanceof IPFile) {
+					IPFile ipFile = (IPFile) element;
+					return new IPFile(ipFile.includePathEntry, ipFile.file.getParentFile());
+				}
+				return null;
+			}
+
+			public boolean hasChildren(Object element) {
+				return getChildren(element).length > 0;
+			}
+
+			public Object[] getElements(Object inputElement) {
+				return getChildren(inputElement);
+			}
+
+			public void dispose() {
+			}
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			}
+		}
+
+		class LabelProvider extends PHPUILabelProvider {
+
+			public Image getImage(Object element) {
+				if (element instanceof IIncludePathEntry) {
+					IIncludePathEntry includePathEntry = (IIncludePathEntry) element;
+					if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+						return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
+					} else {
+						return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+					}
+				}
+				if (element instanceof IPFile) {
+					return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+				}
+				return super.getImage(element);
+			}
+
+			public String getText(Object element) {
+				if (element instanceof IIncludePathEntry) {
+					IIncludePathEntry includePathEntry = (IIncludePathEntry) element;
+					return includePathEntry.getPath().toOSString();
+				}
+				if (element instanceof IPFile) {
+					return ((IPFile) element).file.getName();
+				}
+				return super.getText(element);
+			}
 		}
 	}
 }
