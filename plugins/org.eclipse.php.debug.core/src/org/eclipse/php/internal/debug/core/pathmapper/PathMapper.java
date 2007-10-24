@@ -200,6 +200,9 @@ public class PathMapper implements IXMLPreferencesStorable {
 
 	@SuppressWarnings("unchecked")
 	public synchronized void restoreFromMap(HashMap map) {
+		if (map == null) {
+			return;
+		}
 		remoteToLocalMap.clear();
 		localToRemoteMap.clear();
 		localToPathEntryType.clear();
@@ -233,8 +236,10 @@ public class PathMapper implements IXMLPreferencesStorable {
 			Type type = localToPathEntryType.get(local);
 			entry.put("local", local); //$NON-NLS-1$
 			entry.put("remote", remote); //$NON-NLS-1$
-			entry.put("type", type.name()); //$NON-NLS-1$
-			entries.put("mapping" + (c++), entry); //$NON-NLS-1$
+			if (type != null) {
+				entry.put("type", type.name()); //$NON-NLS-1$
+			}
+			entries.put("item" + (c++), entry); //$NON-NLS-1$
 		}
 		return entries;
 	}

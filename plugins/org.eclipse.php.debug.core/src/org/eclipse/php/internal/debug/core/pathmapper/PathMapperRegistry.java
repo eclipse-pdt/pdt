@@ -115,8 +115,16 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 
 	@SuppressWarnings("unchecked")
 	public synchronized void restoreFromMap(HashMap map) {
+		if (map == null) {
+			return;
+		}
 		serverPathMapper.clear();
 		phpExePathMapper.clear();
+
+		map = (HashMap)map.get("pathMappers"); //$NON-NLS-1$
+		if (map == null) {
+			return;
+		}
 		Iterator i = map.keySet().iterator();
 		while (i.hasNext()) {
 			HashMap entryMap = (HashMap) map.get(i.next());
@@ -149,18 +157,20 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 			PathMapper pathMapper = serverPathMapper.get(server);
 			entry.put("server", server.getName()); //$NON-NLS-1$
 			entry.put("mapper", pathMapper.storeToMap()); //$NON-NLS-1$
-			elements.put("pathMapper" + (c++), entry); //$NON-NLS-1$
+			elements.put("item" + (c++), entry); //$NON-NLS-1$
 		}
 		i = phpExePathMapper.keySet().iterator();
 		while (i.hasNext()) {
 			HashMap entry = new HashMap();
 			PHPexeItem phpExeItem = (PHPexeItem) i.next();
 			PathMapper pathMapper = phpExePathMapper.get(phpExeItem);
-			entry.put("phpExe", phpExeItem.getPhpEXE().toString());
-			entry.put("mapper", pathMapper.storeToMap());
-			elements.put("pathMapper" + (c++), entry);
+			entry.put("phpExe", phpExeItem.getPhpEXE().toString()); //$NON-NLS-1$
+			entry.put("mapper", pathMapper.storeToMap()); //$NON-NLS-1$
+			elements.put("item" + (c++), entry); //$NON-NLS-1$
 		}
-		return elements;
+		HashMap root = new HashMap();
+		root.put("pathMappers", elements); //$NON-NLS-1$
+		return root;
 	}
 
 	public void serverAdded(ServerManagerEvent event) {

@@ -44,11 +44,11 @@ public class PHPexeItem {
 	public String getDebuggerID() {
 		return debuggerID;
 	}
-	
+
 	public void setDebuggerID(String debuggerID) {
 		this.debuggerID = debuggerID;
 	}
-	
+
 	public File getLocation() {
 		return location;
 	}
@@ -70,8 +70,8 @@ public class PHPexeItem {
 
 		// Try each candidate in order.  The first one found wins.  Thus, the order
 		// of fgCandidateJavaLocations is significant.
-		for (int i = 0; i < fgCandidatePHPLocations.length; i++) {
-			File javaFile = new File(phpLocation, fgCandidatePHPLocations[i]);
+		for (String element : fgCandidatePHPLocations) {
+			File javaFile = new File(phpLocation, element);
 			if (javaFile.isFile()) {
 				return javaFile;
 			}
@@ -83,6 +83,10 @@ public class PHPexeItem {
 		return phpEXE;
 	}
 
+	public int hashCode() {
+		return name.hashCode() + 13 * location.hashCode();
+	}
+
 	public boolean equals(Object other) {
 		if (other == this)
 			return true;
@@ -90,6 +94,10 @@ public class PHPexeItem {
 			return false;
 		PHPexeItem item2 = (PHPexeItem) other;
 		return item2.name.equals(name) && item2.location.equals(location);
+	}
+
+	public String toString() {
+		return new StringBuilder(name).append(" (path: ").append(location.getAbsolutePath()).append(")").toString();
 	}
 
 	public String getVersion() {
@@ -102,7 +110,7 @@ public class PHPexeItem {
 
 	/**
 	 * Returns it this exe item is editable (e.g. a user defined item).
-	 * 
+	 *
 	 * @return True, if this item can be edited.
 	 */
 	public boolean isEditable() {
@@ -111,7 +119,7 @@ public class PHPexeItem {
 
 	/**
 	 * Returns if this item is the default exe item.
-	 * 
+	 *
 	 * @return if this item is the default exe item.
 	 */
 	public boolean isDefault() {
@@ -120,7 +128,7 @@ public class PHPexeItem {
 
 	/**
 	 * Set or un-set this item to be the default php exe item.
-	 *  
+	 *
 	 * @param isDefault the value to set
 	 */
 	public void setDefault(boolean isDefault) {
