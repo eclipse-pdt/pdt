@@ -155,8 +155,8 @@ public class PathMapperEntryDialog extends StatusDialog {
 					fWorkspacePathText.setData(null);
 					if (selectedElement instanceof IResource) {
 						IResource resource = (IResource) selectedElement;
-						fWorkspacePathText.setText(resource.getFullPath().toString());
 						fWorkspacePathText.setData(Type.WORKSPACE);
+						fWorkspacePathText.setText(resource.getFullPath().toString());
 					} else if (selectedElement instanceof IIncludePathEntry) {
 						IIncludePathEntry includePathEntry = (IIncludePathEntry) selectedElement;
 						fWorkspacePathText.setData(includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER);

@@ -8,14 +8,26 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.debug.ui.preferences.phps;
+package org.eclipse.php.internal.debug.ui.wizards;
 
-import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
 
-public interface IAddPHPexeDialogRequestor {
+public class ClosableWizardDialog extends WizardDialog {
+	/**
+	 * Constructor for ClosableWizardDialog.
+	 * @param shell
+	 * @param wizard
+	 */
+	public ClosableWizardDialog(Shell shell, IWizard wizard) {
+		super(shell, wizard);
+	}
 
-	public boolean isDuplicateName(String name);
-
-	public void phpExeAdded(PHPexeItem vm);
-
+	/**
+	 * The Finish button has been pressed.
+	 */
+	public void finishPressed() {
+		super.finishPressed();
+	}
 }
