@@ -36,7 +36,7 @@ public class DebugSearchEngine {
 
 	private static PHPFilenameFilter PHP_FILTER = new PHPFilenameFilter();
 	private static IPathEntryFilter[] filters;
-
+	
 	/**
 	 * Searches for all local resources that match provided remote file, and returns it in best match order.
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
@@ -46,12 +46,26 @@ public class DebugSearchEngine {
 	 * @throws CoreException
 	 */
 	public static PathEntry find(String remoteFile, ILaunchConfiguration launchConfiguration) throws InterruptedException, CoreException {
+		return find(remoteFile, launchConfiguration, null, null);
+	}
+
+	/**
+	 * Searches for all local resources that match provided remote file, and returns it in best match order.
+	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
+	 * @param launchConfiguration Launch configuration for the debug session
+	 * @param currentWorkingDir Current working directory of PHP process
+	 * @param currentScriptDir Directory of current PHP file
+	 * @return path entry or <code>null</code> in case it could not be found
+	 * @throws InterruptedException
+	 * @throws CoreException
+	 */
+	public static PathEntry find(String remoteFile, ILaunchConfiguration launchConfiguration, String currentWorkingDir, String currentScriptDir) throws InterruptedException, CoreException {
 		PathEntry pathEntry = null;
 		String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
 		if (projectName != null) {
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
-			pathEntry = find(pathMapper, remoteFile, project, null, null);
+			pathEntry = find(pathMapper, remoteFile, project, currentWorkingDir, currentScriptDir);
 		}
 		return pathEntry;
 	}
