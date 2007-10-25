@@ -10,17 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -66,6 +64,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			PathEntry pathEntry = null;
 			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
 			String file = launchConfiguration.getAttribute(Server.FILE_NAME, (String) null);
+			if (file == null) {
+				file = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+			}
 			if (file != null) {
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
 				if (resource != null) {
@@ -224,35 +225,21 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	public void parsingErrorOccured(DebugError debugError) {
 		super.parsingErrorOccured(debugError);
 		String sName = debugError.getFullPathName();
-//		int length;
 		String rName = sName;
-		if (!fDebugTarget.isPHPCGI()) {
-			try {
-				PathEntry entry = DebugSearchEngine.find(sName, fDebugTarget.getLaunch().getLaunchConfiguration());
-				if (entry != null) {
-					rName = entry.getResolvedPath();
-				}
-			} catch (Exception e) {
+		try {
+			PathEntry entry = DebugSearchEngine.find(sName, fDebugTarget.getLaunch().getLaunchConfiguration());
+			if (entry != null) {
+				rName = entry.getResolvedPath();
+				debugError.setFileName(rName);
 			}
-		} else {
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			IFile file = root.getFileForLocation(new Path(sName));
-			if (file != null) {
-				if (root.getProject(fDebugTarget.getProjectName()).equals(file.getProject())) {
-					rName = file.getProjectRelativePath().toOSString();
-				} else {
-					rName = ".." + file.getFullPath().toOSString();
-				}
-			}
+		} catch (Exception e) {
 		}
-		String dFileName = RemoteDebugger.convertToSystemIndependentFileName(rName);
 		fDebugTarget.getDebugErrors().add(debugError);
 
 		Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();
 		for (Object element : listeners) {
 			((IPHPConsoleEventListener) element).handleEvent(debugError);
 		}
-
 	}
 
 	/* (non-Javadoc)
