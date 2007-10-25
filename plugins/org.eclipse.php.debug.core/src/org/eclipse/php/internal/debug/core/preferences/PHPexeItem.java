@@ -84,7 +84,10 @@ public class PHPexeItem {
 	}
 
 	public int hashCode() {
-		return name.hashCode() + 13 * location.hashCode();
+		if (name != null && location != null) {
+			return name.hashCode() + 13 * location.hashCode();
+		}
+		return 0;
 	}
 
 	public boolean equals(Object other) {
