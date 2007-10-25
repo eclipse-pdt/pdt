@@ -47,9 +47,11 @@ public class PathMapper implements IXMLPreferencesStorable {
 			remotePath.removeLastSegment();
 			localPath.removeLastSegment();
 		}
-		remoteToLocalMap.put(remotePath, localPath);
-		localToRemoteMap.put(localPath, remotePath);
-		localToPathEntryType.put(localPath, entry.getType());
+		if (!remotePath.equals(localPath)) {
+			remoteToLocalMap.put(remotePath, localPath);
+			localToRemoteMap.put(localPath, remotePath);
+			localToPathEntryType.put(localPath, entry.getType());
+		}
 	}
 
 	public String getRemoteFile(String localFile) {
