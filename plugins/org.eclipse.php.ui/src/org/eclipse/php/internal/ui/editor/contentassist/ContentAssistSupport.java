@@ -132,7 +132,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (completionProposalGroup == null) {
 			return templateProposals;
 		}
-		return merg(completionProposalGroup.getCompletionProposals(), templateProposals);
+		return merg(completionProposalGroup.getCompletionProposals(getProjectModel(phpEditorModel), phpEditorModel.getFileData().getName()), templateProposals);
 	}
 
 	protected ICompletionProposal[] getTemplates(ITextViewer viewer, int offset) {
@@ -163,13 +163,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		final int originalOffset = viewer.getSelectedRange().x;
 		final boolean isStrict = originalOffset != offset ? true : false;
 
-		PHPProjectModel projectModel = editorModel.getProjectModel();
-
-		// if there is no project model (the file is not part of a project)
-		// get the default project model
-		if (projectModel == null) {
-			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
-		}
+		PHPProjectModel projectModel = getProjectModel(editorModel);
 
 		String fileName = null;
 		PHPFileData fileData = editorModel.getFileData(true);
@@ -342,6 +336,17 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		return;
+	}
+
+	private PHPProjectModel getProjectModel(DOMModelForPHP editorModel) {
+		PHPProjectModel projectModel = editorModel.getProjectModel();
+
+		// if there is no project model (the file is not part of a project)
+		// get the default project model
+		if (projectModel == null) {
+			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
+		}
+		return projectModel;
 	}
 
 	protected static boolean isFunctionCall(PHPProjectModel projectModel, String functionName) {
@@ -1457,9 +1462,20 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	private class NewStatmentCompletionProposalGroup extends CompletionProposalGroup {
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			PHPClassData classData = (PHPClassData) codeData;
-			int suffixOffset = classData.getConstructor().getParameters().length > 0 ? 1 : 2;
+			PHPFunctionData constructor = getRealConstructor(classData);
+			int suffixOffset = constructor.getParameters().length > 0 ? 1 : 2;
 
-			return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true); //$NON-NLS-1$ //$NON-NLS-2$
+			return new CodeDataCompletionProposal(constructor, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		private PHPFunctionData getRealConstructor(PHPClassData classData) {
+			if (classData.hasConstructor()) {
+				return classData.getConstructor();
+			}
+			CodeData parentConstructor = projectModel.getClassFunctionData(fileName, classData.getName(), "__construct"); //$NON-NLS-1$
+			if (parentConstructor != null)
+				return (PHPFunctionData) parentConstructor;
+			return classData.getConstructor();
 		}
 	}
 

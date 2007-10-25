@@ -13,8 +13,8 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import java.util.ArrayList;
 
 import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-
 
 public abstract class CompletionProposalGroup {
 
@@ -23,7 +23,9 @@ public abstract class CompletionProposalGroup {
 	protected CodeDataCompletionProposal[] completionProposals;
 	protected String key;
 	protected int selectionLength;
-	
+	protected PHPProjectModel projectModel;
+	protected String fileName;
+
 	public CompletionProposalGroup() {
 		setData(0, null, null, selectionLength);
 		setOffset(0);
@@ -31,10 +33,10 @@ public abstract class CompletionProposalGroup {
 
 	public void setData(int offset, CodeData[] data, String key, int selectionLength, boolean isKeyStrict) {
 		setOffset(offset);
-		if(isKeyStrict) {
+		if (isKeyStrict) {
 			ArrayList strictData = new ArrayList(1);
-			for(int i = 0; i < data.length;  ++i)
-				if(key.equalsIgnoreCase(data[i].getName())) {
+			for (int i = 0; i < data.length; ++i)
+				if (key.equalsIgnoreCase(data[i].getName())) {
 					strictData.add(data[i]);
 				}
 			data = (CodeData[]) strictData.toArray(new CodeData[strictData.size()]);
@@ -43,11 +45,11 @@ public abstract class CompletionProposalGroup {
 		this.key = key;
 		this.selectionLength = selectionLength;
 	}
-	
+
 	public void setData(int offset, CodeData[] data, String key, int selectionLength) {
 		setData(offset, data, key, selectionLength, false);
 	}
-	
+
 	public int getOffset() {
 		return offset;
 	}
@@ -65,7 +67,9 @@ public abstract class CompletionProposalGroup {
 		codeDataProposals = newProposals;
 	}
 
-	public CodeDataCompletionProposal[] getCompletionProposals() {
+	public CodeDataCompletionProposal[] getCompletionProposals(PHPProjectModel projectModel, String fileName) {
+		this.projectModel = projectModel;
+		this.fileName = fileName;
 		if (completionProposals == null) {
 			this.completionProposals = calcCompletionProposals();
 		}
@@ -78,7 +82,7 @@ public abstract class CompletionProposalGroup {
 		}
 
 		CodeData[] tmp = ModelSupport.getCodeDataStartingWith(codeDataProposals, key);
-		
+
 		// filter internal code data
 		tmp = ModelSupport.removeFilteredCodeData(tmp, ModelSupport.INTERNAL_CODEDATA_FILTER);
 
@@ -88,6 +92,6 @@ public abstract class CompletionProposalGroup {
 		}
 		return result;
 	}
-	
+
 	abstract protected CodeDataCompletionProposal createProposal(CodeData codeData);
 }
