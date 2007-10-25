@@ -56,11 +56,11 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 		this.pathEntries = pathEntries;
 		this.comparator = new BestMatchPathComparator(path);
 
+		// Set dummy selection history to avoid null pointer exception
 		setSelectionHistory(new SelectionHistory() {
 			protected Object restoreItemFromMemento(IMemento memento) {
 				return null;
 			}
-
 			protected void storeItemToMemento(Object item, IMemento memento) {
 			}
 		});
