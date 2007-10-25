@@ -186,7 +186,7 @@ public class PHPSearchEngine {
 	 */
 	public static class ResourceResult extends Result<Object, IFile> {
 		public ResourceResult(IFile file) {
-			super(null, file);
+			super(file.getParent(), file);
 		}
 	}
 
@@ -204,7 +204,7 @@ public class PHPSearchEngine {
 	 */
 	public static class ExternalFileResult extends Result<Object, File> {
 		public ExternalFileResult(File file) {
-			super(null, file);
+			super(file.getParentFile(), file);
 		}
 	}
 }
