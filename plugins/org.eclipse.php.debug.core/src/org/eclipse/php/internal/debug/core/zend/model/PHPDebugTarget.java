@@ -15,29 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IMarkerDelta;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IBreakpointManager;
-import org.eclipse.debug.core.IBreakpointManagerListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IMemoryBlock;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStackFrame;
-import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.ui.AbstractDebugView;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
@@ -49,23 +32,12 @@ import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchProxy;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
-import org.eclipse.php.internal.debug.core.model.BreakpointSet;
-import org.eclipse.php.internal.debug.core.model.DebugOutput;
-import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
-import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
-import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
-import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
+import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
+import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
-import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
-import org.eclipse.php.internal.debug.core.zend.debugger.DebugHandlersRegistry;
-import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitializersRegistry;
-import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
-import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
-import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
-import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -75,6 +47,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
  * PHP Debug Target
  */
 public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBreakpointManagerListener {
+
+	private ContextManager fContextManager;
 
 	// containing launch object
 	protected ILaunch fLaunch;
@@ -121,7 +95,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	protected String fProjectName = "";
 	protected IProject fProject;
 	protected int fSuspendCount;
-	protected ContextManager fContextManager;
 	protected Vector<IPHPConsoleEventListener> fConsoleEventListeners = new Vector<IPHPConsoleEventListener>();
 	protected Vector<DebugError> fDebugError = new Vector<DebugError>();
 	protected StartLock fStartLock = new StartLock();
@@ -1085,5 +1058,9 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		String className = getClass().getName();
 		className = className.substring(className.lastIndexOf('.') + 1);
 		return className + "@" + Integer.toHexString(hashCode());
+	}
+
+	public ContextManager getContextManager() {
+		return fContextManager;
 	}
 }

@@ -178,4 +178,8 @@ public class ContextManager {
 		}
 		return variables;
 	}
+
+	public Object getRemoteDebugger() {
+		return fDebugger;
+	}
 }
