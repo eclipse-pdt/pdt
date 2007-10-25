@@ -5,7 +5,6 @@ import java.io.FileFilter;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
@@ -24,12 +23,15 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IURIEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.FileStoreEditorInput;
-import org.eclipse.ui.part.FileEditorInput;
 
 public class DebugSearchEngine {
 
@@ -157,7 +159,7 @@ public class DebugSearchEngine {
 		}
 
 		//search in opened editors
-		searchOpenedEditors(results, remoteFile);
+		searchOpenedEditors(results, abstractPath);
 
 		if (results.size() > 0) {
 			Collections.sort(results, bmComparator);
@@ -169,30 +171,32 @@ public class DebugSearchEngine {
 		return localFile;
 	}
 
-	private synchronized static void searchOpenedEditors(final LinkedList<PathEntry> results, final String remoteFile) {
-		IEditorReference[] editors = PHPUiPlugin.getActivePage().getEditorReferences();
+	private static void searchOpenedEditors(LinkedList<PathEntry> results, AbstractPath remotePath) {
+		// Collect open editor references:
+		List<IEditorReference> editors = new ArrayList<IEditorReference>(0);
+		IWorkbench workbench= PlatformUI.getWorkbench();
+		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
+		for (IWorkbenchWindow element : windows) {
+			IWorkbenchPage[] pages= element.getPages();
+			for (IWorkbenchPage element2 : pages) {
+				IEditorReference[] references= element2.getEditorReferences();
+				editors.addAll(Arrays.asList(references));
+			}
+		}
+
+		// Collect external files opened in editors:
 		for (IEditorReference editor : editors) {
-			String fileName = "";
 			IEditorInput editorInput = null;
 			try {
 				editorInput = editor.getEditorInput();
 			} catch (PartInitException e) {
 				continue;
 			}
-			if (editorInput instanceof FileEditorInput) {
-				FileEditorInput input = (FileEditorInput) editorInput;
-				IPath location = input.getFile().getLocation();
-				if (location == null) {
-					fileName = input.getFile().getLocationURI().toString();
-				} else {
-					fileName = location.toString();
+			if (editorInput instanceof FileStoreEditorInput) {
+				File file = new File(((IURIEditorInput)editorInput).getURI());
+				if (file.exists() && file.getName().equals(remotePath.getLastSegment())) {
+					results.add(new PathEntry(file.getAbsolutePath(), PathEntry.Type.EXTERNAL, file.getParentFile()));
 				}
-			} else if (editorInput instanceof FileStoreEditorInput) {
-				FileStoreEditorInput input = (FileStoreEditorInput) editorInput;
-				fileName = URIUtil.toPath(input.getURI()).toString();
-			}
-			if (new Path(remoteFile).lastSegment().equalsIgnoreCase(new Path(fileName).lastSegment())) {
-				results.add(new PathEntry(fileName, PathEntry.Type.EXTERNAL, new File(fileName).getParentFile()));
 			}
 		}
 	}
