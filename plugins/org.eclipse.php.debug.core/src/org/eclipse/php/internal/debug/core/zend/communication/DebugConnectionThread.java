@@ -10,15 +10,27 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.communication;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -60,7 +72,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * The debug connection thread is responsible of initializing and handle a single debug session that was
  * triggered by a remote or local debugger.
- * 
+ *
  * @author shalom
  */
 public class DebugConnectionThread implements Runnable {
@@ -89,7 +101,7 @@ public class DebugConnectionThread implements Runnable {
 
 	/**
 	 * Constructs a new DebugConnectionThread with a given Socket.
-	 * 
+	 *
 	 * @param socket
 	 */
 	public DebugConnectionThread(Socket socket) {
@@ -275,7 +287,7 @@ public class DebugConnectionThread implements Runnable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param request
 	 * @param responseHandler
 	 */
@@ -393,7 +405,7 @@ public class DebugConnectionThread implements Runnable {
 
 	/**
 	 * Reads and returns the message type from the data input stream.
-	 * 
+	 *
 	 * @return The message type id.
 	 * @throws IOException
 	 */
@@ -462,7 +474,7 @@ public class DebugConnectionThread implements Runnable {
 	/**
 	 * Extract the session id from the query.
 	 * Return -1 if no session id was located.
-	 * 
+	 *
 	 * @param query
 	 * @return The session id, or -1 if non was located in the query.
 	 */
@@ -481,10 +493,10 @@ public class DebugConnectionThread implements Runnable {
 	}
 
 	/**
-	 * Hook the debug session to the correct ILaunch that started it. 
+	 * Hook the debug session to the correct ILaunch that started it.
 	 * In case there is no such launch, the user will have to fill in some of the details needed to start a debug
 	 * session correctly.
-	 *  
+	 *
 	 * @param debugSessionStartedNotification
 	 * @return True, if the debug session hook was successful; False, otherwise.
 	 */
@@ -494,7 +506,7 @@ public class DebugConnectionThread implements Runnable {
 		if (sessionID == 0) {
 			sessionID = getSessionID(debugSessionStartedNotification.getOptions());
 		}
-		// Get the launch, but keep it in the mapper for any other debug requests that are 
+		// Get the launch, but keep it in the mapper for any other debug requests that are
 		// related to the debug session id.
 		// The launch is mapped until the launches are cleared.
 		ILaunch launch = PHPSessionLaunchMapper.get(sessionID);
@@ -502,8 +514,7 @@ public class DebugConnectionThread implements Runnable {
 			// We cannot find a launch the we can associate to the given session id (if any)
 			// Try to take the first launch that is terminated and has a 'Debug all Pages' attribute.
 			ILaunch[] launchs = DebugPlugin.getDefault().getLaunchManager().getLaunches();
-			for (int i = 0; i < launchs.length; i++) {
-				ILaunch aLaunch = launchs[i];
+			for (ILaunch aLaunch : launchs) {
 				String debugType = aLaunch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
 				if (aLaunch.isTerminated() && (IPHPConstants.DEBUGGING_ALL_PAGES.equals(debugType) || IPHPConstants.DEBUGGING_START_FROM.equals(debugType))) {
 					launch = aLaunch;
@@ -515,17 +526,17 @@ public class DebugConnectionThread implements Runnable {
 			// Remove any debug targets and processes that were terminated.
 			IDebugTarget[] debugTargets = launch.getDebugTargets();
 			IProcess[] processes = launch.getProcesses();
-			for (int i = 0; i < debugTargets.length; i++) {
-				if (debugTargets[i].isTerminated()) {
-					launch.removeDebugTarget(debugTargets[i]);
+			for (IDebugTarget element : debugTargets) {
+				if (element.isTerminated()) {
+					launch.removeDebugTarget(element);
 				} else {
 					// Do not allow any other targets or processes when an active debug target exists
 					return true;
 				}
 			}
-			for (int i = 0; i < processes.length; i++) {
-				if (processes[i].isTerminated()) {
-					launch.removeProcess(processes[i]);
+			for (IProcess element : processes) {
+				if (element.isTerminated()) {
+					launch.removeProcess(element);
 				}
 			}
 
@@ -543,7 +554,7 @@ public class DebugConnectionThread implements Runnable {
 	 * Handle a debug session hook error.
 	 * This method can be subclassed for handling more complex causes.
 	 * The default implementation is to display the toString() value of the cause and return false.
-	 * 
+	 *
 	 * @param cause An object that represents the cause for the error. Can be a String description or a different
 	 * 				complex object that can supply more information.
 	 * @return True, if the error was fixed in this method; False, otherwise.
@@ -559,7 +570,7 @@ public class DebugConnectionThread implements Runnable {
 
 	/**
 	 * Hook a server debug session
-	 * 
+	 *
 	 * @param launch An {@link ILaunch}
 	 * @param startedNotification	A DebugSessionStartedNotification
 	 */
@@ -577,7 +588,6 @@ public class DebugConnectionThread implements Runnable {
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
 		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, ""));
 		String URL = launchConfiguration.getAttribute(Server.BASE_URL, "");
-		String contextRoot = launchConfiguration.getAttribute(Server.CONTEXT_ROOT, "");
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(launchDecorator.getProject());
 		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 		boolean runWithDebug = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
@@ -585,7 +595,7 @@ public class DebugConnectionThread implements Runnable {
 			runWithDebug = false;
 		}
 		PHPProcess process = new PHPProcess(launch, URL);
-		debugTarget = (PHPDebugTarget) createDebugTraget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
+		debugTarget = (PHPDebugTarget) createDebugTraget(this, launch, URL, requestPort, process, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
 		launch.addDebugTarget(debugTarget);
 		// A fix for Linux display problem.
 		// This code will auto-expand the debugger view tree.
@@ -603,18 +613,18 @@ public class DebugConnectionThread implements Runnable {
 	/**
 	 * Creates a new IDebugTarget.
 	 * This create method is usually used when hooking a PHP web page launch.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
-	protected IDebugTarget createDebugTraget(DebugConnectionThread thread, ILaunch launch, String url, int requestPort, PHPProcess process, String contextRoot, boolean runWithDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
-		return new PHPDebugTarget(thread, launch, url, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, project);
+	protected IDebugTarget createDebugTraget(DebugConnectionThread thread, ILaunch launch, String url, int requestPort, PHPProcess process, boolean runWithDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
+		return new PHPDebugTarget(thread, launch, url, requestPort, process, runWithDebug, stopAtFirstLine, project);
 	}
 
 	/**
 	 * Creates a new IDebugTarget.
 	 * This create method is usually used when hooking a PHP executable launch.
-	 * 
-	 * @throws CoreException 
+	 *
+	 * @throws CoreException
 	 */
 	protected IDebugTarget createDebugTarget(DebugConnectionThread thread, ILaunch launch, String phpExeString, String debugFileName, String workspaceRootPath, int requestPort, PHPProcess process, boolean runWithDebugInfo, boolean stopAtFirstLine, IProject project) throws CoreException {
 		return new PHPDebugTarget(thread, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
@@ -622,7 +632,7 @@ public class DebugConnectionThread implements Runnable {
 
 	/**
 	 * Hook a PHP executable debug session
-	 * 
+	 *
 	 * @param launch An {@link ILaunch}
 	 * @param startedNotification	A DebugSessionStartedNotification
 	 */
@@ -952,7 +962,7 @@ public class DebugConnectionThread implements Runnable {
 
 		/**
 		 * Sets the transfer encoding.
-		 * 
+		 *
 		 * @param transferEncoding
 		 */
 		public void setTransferEncoding(String transferEncoding) {
@@ -960,9 +970,9 @@ public class DebugConnectionThread implements Runnable {
 		}
 
 		/**
-		 * Set the debug output encoding. 
+		 * Set the debug output encoding.
 		 * The output encoding effects the {@link OutputNotification} strings encoding.
-		 * 
+		 *
 		 * @param outputEncoding
 		 */
 		public void setOutputEncoding(String outputEncoding) {
@@ -1083,7 +1093,7 @@ public class DebugConnectionThread implements Runnable {
 					// when in processing of a message.
 					synchronized (this) {
 						int messageType = getMessageType(in);
-						// If this is the first message, the protocol is still held as invalid. 
+						// If this is the first message, the protocol is still held as invalid.
 						// Check that the first message has the DebugSessionStartedNotification type. If not, then we
 						// can assume that the remote debugger protocol has a different version then expected.
 						if (!validProtocol && messageType != startMessageId) {
