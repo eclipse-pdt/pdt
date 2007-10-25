@@ -23,7 +23,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugEvent;
@@ -83,7 +82,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	// program name
 	protected String fName;
-	protected String fHTDocs;
 	protected String fURL;
 	protected int fRequestPort;
 	protected DebugOutput fOutput = new DebugOutput();
@@ -601,23 +599,12 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 								fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
 								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
 							} else {
-//								fileName = fHTDocs + '/' + (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
 								PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(fLaunch.getLaunchConfiguration());
 								fileName = pathMapper.getRemoteFile((String) marker.getAttribute(IPHPConstants.STORAGE_FILE));
 							}
 						} else {
 							PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(fLaunch.getLaunchConfiguration());
 							fileName = pathMapper.getRemoteFile(resource.getFullPath().toString());
-//							if (fHTDocs == null || fHTDocs.length() == 0) {
-//								if (fContextRoot == null || fContextRoot.length() <= 1) {
-//									fileName = resource.getProjectRelativePath().toString();
-//								} else {
-//									fileName = fContextRoot + resource.getProjectRelativePath();
-//								}
-//							} else {
-//								fileName = fHTDocs + fContextRoot + resource.getProjectRelativePath();
-//							}
-							//							fileName = resource.getProjectRelativePath().toString();
 						}
 					} else {
 						if (resource instanceof ExternalFileWrapper) {
@@ -790,20 +777,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 *             if unable to perform the request
 	 */
 	protected IStackFrame[] getStackFrames() throws DebugException {
-		int length = 0;
-		String context;
-		if (!fIsPHPCGI) {
-			length = fHTDocs.length();
-			context = fContextRoot;
-		} else {
-			IPath raw = fProject.getLocation();
-			if (raw != null) {
-				String location = raw.toPortableString();
-				length = location.length() + 1;
-			}
-			context = null;
-		}
-		return fContextManager.getStackFrames(length, context, fIsServerWindows);
+		return fContextManager.getStackFrames();
 	}
 
 	/**
@@ -1055,10 +1029,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		return fIsPHPCGI;
 	}
 
-	public void setHTDocs(String fHTDocs) {
-		this.fHTDocs = fHTDocs;
-	}
-
 	public StartLock getStartLock() {
 		return fStartLock;
 	}
@@ -1073,10 +1043,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	public int getRequestPort() {
 		return fRequestPort;
-	}
-
-	public String getHTDocs() {
-		return fHTDocs;
 	}
 
 	public String getContextRoot() {

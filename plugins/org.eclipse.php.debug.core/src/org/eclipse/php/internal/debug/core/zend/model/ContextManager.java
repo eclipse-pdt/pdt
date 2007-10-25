@@ -13,16 +13,10 @@ package org.eclipse.php.internal.debug.core.zend.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
-import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpression;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
@@ -51,8 +45,7 @@ public class ContextManager {
 		fStackVariables = new HashMap<String, Expression[]>();
 	}
 
-	public IStackFrame[] getStackFrames(int length, String context, boolean isWindows) throws DebugException {
-
+	public IStackFrame[] getStackFrames() throws DebugException {
 		// check to see if eclipse is getting the same stack frames again.
 		PHPstack stack = fDebugger.getCallStack();
 		PHPThread thread = (PHPThread) fTarget.getThreads()[0];
@@ -62,7 +55,7 @@ public class ContextManager {
 			main = true;
 
 		if (fPreviousFrames == null) {
-			fPreviousFrames = createNewFrames(layers, thread, length, context, isWindows);
+			fPreviousFrames = createNewFrames(layers, thread);
 			fVariables = createVariables(main, false, true);
 			createStackVariables(layers);
 			fSuspendCount = fTarget.getSuspendCount();
@@ -79,11 +72,11 @@ public class ContextManager {
 		if (layersSame) {
 			fVariables = createVariables(main, false, false);
 		} else {
-			fPreviousFrames = createNewFrames(layers, thread, length, context, isWindows);
+			fPreviousFrames = createNewFrames(layers, thread);
 			fVariables = createVariables(main, false, true);
 		}
 		int topID = fPreviousFrames[0] instanceof PHPStackFrame ? ((PHPStackFrame) fPreviousFrames[0]).getIdentifier() : 0;
-		fPreviousFrames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (main) ? "" : fPreviousFrames[1].getName(), fTarget.getLastStop(), topID, getLocalFileName(fTarget.getLastFileName(), context, length, isWindows));
+		fPreviousFrames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (main) ? "" : fPreviousFrames[1].getName(), fTarget.getLastStop(), topID, RemoteDebugger.convertToLocalFilename(fTarget.getLastFileName(), fTarget));
 		createStackVariables(layers);
 		return fPreviousFrames;
 	}
@@ -126,22 +119,21 @@ public class ContextManager {
 			&& layer.getCalledFunctionName().equals(prevLayer.getCalledFunctionName()) && layer.getCalledLineNumber() == prevLayer.getCalledLineNumber();
 	}
 
-	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread, int length, String context, boolean isWindows) throws DebugException {
-
+	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread) throws DebugException {
 		IStackFrame[] frames = new IStackFrame[((layers.length - 1) * 2) + 1];
 		int frameCt = ((layers.length - 1) * 2 + 1);
 		for (int i = 1; i < layers.length; i++) {
 			String sName = RemoteDebugger.convertToSystemIndependentFileName(layers[i].getCallerFileName());
-			String rName = getLocalFileName(sName, context, length, isWindows);
+			String rName = RemoteDebugger.convertToLocalFilename(sName, fTarget);
 			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i].getCallerFunctionName(), layers[i].getCallerLineNumber() + 1, frameCt, rName);
 			frameCt--;
 			sName = RemoteDebugger.convertToSystemIndependentFileName(layers[i].getCalledFileName());
-			rName = getLocalFileName(sName, context, length, isWindows);
+			rName = RemoteDebugger.convertToLocalFilename(sName, fTarget);
 			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i].getCalledFunctionName(), layers[i].getCalledLineNumber() + 1, frameCt, layers[i], rName);
 			frameCt--;
 		}
 
-		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), fTarget.getLastStop(), frameCt, getLocalFileName(fTarget.getLastFileName(), context, length, isWindows));
+		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), fTarget.getLastStop(), frameCt, RemoteDebugger.convertToLocalFilename(fTarget.getLastFileName(), fTarget));
 		fPreviousLayers = layers;
 		return frames;
 	}
@@ -185,58 +177,5 @@ public class ContextManager {
 			variables[0] = new PHPVariable(fTarget, gExp, true);
 		}
 		return variables;
-
 	}
-
-	private String getLocalFileName(String filename, String context, int length, boolean isWindows) {
-		try {
-			PathEntry localFile = DebugSearchEngine.find(filename, fTarget.getLaunch().getLaunchConfiguration());
-			if (localFile != null) {
-				return localFile.getResolvedPath();
-			}
-		} catch (Exception e) {
-		}
-
-		// First, check if the file name is located in one of the include paths.
-		// If so, ignore the given length and return the local file name after trimming
-		// the path from its beginning.
-		// Fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=171414
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fTarget.getProjectName());
-		if (project != null) {
-			PHPProjectOptions options = PHPProjectOptions.forProject(project);
-			if (options != null) {
-				IIncludePathEntry[] includePaths = options.readRawIncludePath();
-				for (IIncludePathEntry element : includePaths) {
-					String includePath = element.getPath().toString();
-					if (filename.startsWith(includePath)) {
-						return filename.substring(includePath.length());
-					}
-				}
-			}
-		}
-		String rName = (filename.length() > length) ? filename.substring(length) : '/' + filename;
-		if (context == null) {
-			if (rName.startsWith("/")) {
-				rName = rName.substring(1);
-			}
-			return rName;
-		}
-		if (isWindows) {
-			if ((rName.toLowerCase()).startsWith(context.toLowerCase())) {
-				rName = rName.substring(context.length());
-			} else {
-				rName = rName.substring(1);
-			}
-		} else {
-			if (rName.startsWith(context)) {
-				rName = rName.substring(context.length());
-			}
-			//            else {
-			//                rName = rName.substring(1);
-			//            }
-		}
-
-		return rName;
-	}
-
 }

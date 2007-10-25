@@ -15,18 +15,58 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
+import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.AssignValueRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugScriptEndedNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionClosedNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebuggerErrorNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.HeaderOutputNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.OutputNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.ParsingErrorNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.ReadyNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverResponse;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 /**
- * An IRemoteDebugger implementation. 
+ * An IRemoteDebugger implementation.
  */
 public class RemoteDebugger implements IRemoteDebugger {
 
@@ -95,11 +135,18 @@ public class RemoteDebugger implements IRemoteDebugger {
 		} else if (msg instanceof ParsingErrorNotification) {
 			ParsingErrorNotification parseError = (ParsingErrorNotification) msg;
 			String errorText = parseError.getErrorText();
-			String fileName = convertToSystemDependentFileName(parseError.getFileName());
+			String fileName = "";
+			Path errorFilePath = new Path(parseError.getFileName());
+			if ((errorFilePath.segmentCount() > 1) && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
+				fileName = errorFilePath.lastSegment();
+			} else {
+				fileName = convertToSystemDependentFileName(parseError.getFileName());
+			}
+
 			int lineNumber = parseError.getLineNumber();
 			int errorLevel = parseError.getErrorLevel();
 
-			DebugError debugError = new DebugError(errorLevel, fileName, lineNumber, errorText);
+			DebugError debugError = new DebugError(errorLevel, convertToSystemDependentFileName(parseError.getFileName()), lineNumber, errorText);
 			debugHandler.parsingErrorOccured(debugError);
 		} else if (msg instanceof DebuggerErrorNotification) {
 			DebuggerErrorNotification parseError = (DebuggerErrorNotification) msg;
@@ -134,7 +181,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Converts the given file name to a system independent file name. 
+	 * Converts the given file name to a system independent file name.
 	 * The convertion is platform independent and is similar to calling the convertToSystemIndependentFileName(fileName, true)
 	 * @param fileName
 	 * @return
@@ -168,11 +215,27 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return fileName;
 	}
 
+	/**
+	 * Returns local file name corresponding to the given remote path
+	 * @param remoteFile
+	 * @return local file, or remoteFile as is in case of resolving failure
+	 */
+	public static String convertToLocalFilename(String remoteFile, PHPDebugTarget debugTarget) {
+		try {
+			PathEntry localFile = DebugSearchEngine.find(remoteFile, debugTarget.getLaunch().getLaunchConfiguration());
+			if (localFile != null) {
+				return localFile.getResolvedPath();
+			}
+		} catch (Exception e) {
+		}
+		return remoteFile; // in case of failure
+	}
+
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Sends the request through the communication connection and returns response 
-	 * 
+	 * Sends the request through the communication connection and returns response
+	 *
 	 * @param message request that will be sent to the debugger
 	 * @return message response recieved from the debugger
 	 */
@@ -199,7 +262,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	/**
 	 * Sends custom notification through the communication connection
-	 * 
+	 *
 	 * @param message notification that will be delivered to the debugger
 	 * @return <code>true</code> if succeeded sending the message, <code>false</code> - otherwise
 	 */
@@ -520,7 +583,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	/**
 	 * Returns true if the protocol was successfully set by this debugger.
-	 * 
+	 *
 	 * @return True, if the protocol was set; False, otherwise.
 	 */
 	public boolean isProtocolSet() {
