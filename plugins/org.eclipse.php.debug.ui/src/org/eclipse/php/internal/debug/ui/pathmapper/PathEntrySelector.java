@@ -24,9 +24,9 @@ public class PathEntrySelector implements IPathEntryFilter {
 	public PathEntrySelector() {
 	}
 
-	public synchronized PathEntry[] filter(final PathEntry[] entries, final AbstractPath remotePath) {
+	public PathEntry[] filter(final PathEntry[] entries, final AbstractPath remotePath) {
 		final List<PathEntry> l = new LinkedList<PathEntry>();
-		Display.getDefault().syncExec(new Runnable() {
+		Runnable r = new Runnable() {
 			public void run() {
 				PathEntrySelectionDialog selectDialog = new PathEntrySelectionDialog(Display.getDefault().getActiveShell(), remotePath, entries);
 				if (selectDialog.open() == Window.OK) {
@@ -36,7 +36,12 @@ public class PathEntrySelector implements IPathEntryFilter {
 					}
 				}
 			}
-		});
+		};
+		if (Display.getCurrent() != null) {
+			r.run();
+		} else {
+			Display.getDefault().syncExec(r);
+		}
 		return l.toArray(new PathEntry[l.size()]);
 	}
 }
