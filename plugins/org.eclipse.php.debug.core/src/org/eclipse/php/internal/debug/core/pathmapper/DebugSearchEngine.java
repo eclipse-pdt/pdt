@@ -25,6 +25,7 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
@@ -96,7 +97,7 @@ public class DebugSearchEngine {
 				// workspace file
 				ResourceResult resResult = (ResourceResult) result;
 				IResource resource = resResult.getFile();
-				return new PathEntry(resource.getFullPath().toOSString(), Type.WORKSPACE, resource.getParent());
+				return new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
 			}
 			return null;
 		}
@@ -156,7 +157,7 @@ public class DebugSearchEngine {
 	}
 
 	private static void searchOpenedEditors(final LinkedList<PathEntry> results, final String remoteFile) {
-		PHPUiPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
+		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				IEditorReference[] editors = PHPUiPlugin.getActivePage().getEditorReferences();
 				for (IEditorReference editor : editors) {
@@ -183,8 +184,17 @@ public class DebugSearchEngine {
 						results.add(new PathEntry(fileName, PathEntry.Type.EXTERNAL, null));
 					}
 				}
+				synchronized (results) {
+					results.notify();
+				}
 			}
 		});
+		synchronized (results) {
+			try {
+				results.wait();
+			} catch (InterruptedException e) {
+			}
+		}
 	}
 
 	private static PathEntry filterItems(AbstractPath remotePath, PathEntry[] entries) {
@@ -265,7 +275,7 @@ public class DebugSearchEngine {
 				resource.accept(new IResourceVisitor() {
 					public boolean visit(IResource resource) throws CoreException {
 						if (resource.getName().equals(path.getLastSegment())) {
-							PathEntry pathEntry = new PathEntry(resource.getFullPath().toOSString(), Type.WORKSPACE, resource.getParent());
+							PathEntry pathEntry = new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
 							results.add(pathEntry);
 						}
 						return true;
