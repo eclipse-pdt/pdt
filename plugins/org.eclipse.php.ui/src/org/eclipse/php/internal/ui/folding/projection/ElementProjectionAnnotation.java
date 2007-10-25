@@ -118,10 +118,7 @@ public class ElementProjectionAnnotation extends ProjectionAnnotation {
 	 */
 	@Override
 	public void markCollapsed() {
-		/* workaround for BUG85874 */
-		// do not mark collapsed if annotation is not visible
-		if (fIsVisible)
-			super.markCollapsed();
+		super.markCollapsed();
 	}
 
 }

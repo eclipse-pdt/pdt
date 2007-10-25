@@ -141,7 +141,6 @@ class ProjectionViewerInformation {
 		while (!queuedChanges.isEmpty()) {
 			ProjectionAnnotationModelChanges changes = queuedChanges.remove(0);
 			try {
-
 				// 1. Collect annotations and their positions and store collapsed ones:
 				Set<Position> collapsedPositions = new HashSet<Position>();
 				Map<Position, ProjectionAnnotation> positionAnnotations = new HashMap<Position, ProjectionAnnotation>();
@@ -183,14 +182,15 @@ class ProjectionViewerInformation {
 						} else {
 							newAnnotation.markExpanded();
 						}
-						fProjectionAnnotationModel.removeAnnotation(existingAnnotation);
-						fProjectionAnnotationModel.addAnnotation(newAnnotation, position);
+						Map annotationAddition = new HashMap(1);
+						annotationAddition.put(newAnnotation, position);
+						fProjectionAnnotationModel.replaceAnnotations(new Annotation[] { existingAnnotation }, annotationAddition);
 					}
 				}
 
 				//4. Replace positions for modified annotations or add if missing and not persistent:
 				Map<ProjectionAnnotation, Position> modifications = changes.getModifications();
-				if(modifications != null) {
+				if (modifications != null) {
 					for (Map.Entry<ProjectionAnnotation, Position> modification : modifications.entrySet()) {
 						ProjectionAnnotation modifiedAnnotation = modification.getKey();
 						Position modifiedPosition = modification.getValue();
@@ -238,10 +238,19 @@ class ProjectionViewerInformation {
 		int internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
 
 		try {
-			if (phpScriptRegion.getPartition(internalOffset) != PHPPartitionTypes.PHP_DEFAULT) {
-				return false;
+			String partitionType = phpScriptRegion.getPartition(internalOffset);
+			if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
+				return true;
 			}
-			return true;
+
+			if (partitionType == PHPPartitionTypes.PHP_DOC || partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
+				ITextRegion phpToken = phpScriptRegion.getPhpToken(internalOffset);
+				if (phpToken.getStart() == internalOffset) {
+					return true;
+				}
+			}
+
+			return false;
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
