@@ -179,7 +179,7 @@ public class ContextManager {
 		return variables;
 	}
 
-	public Object getRemoteDebugger() {
+	public IRemoteDebugger getRemoteDebugger() {
 		return fDebugger;
 	}
 }
