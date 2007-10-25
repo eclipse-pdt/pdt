@@ -25,7 +25,6 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
@@ -36,7 +35,7 @@ public class DebugSearchEngine {
 
 	private static PHPFilenameFilter PHP_FILTER = new PHPFilenameFilter();
 	private static IPathEntryFilter[] filters;
-	
+
 	/**
 	 * Searches for all local resources that match provided remote file, and returns it in best match order.
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
@@ -170,43 +169,30 @@ public class DebugSearchEngine {
 		return localFile;
 	}
 
-	private static void searchOpenedEditors(final LinkedList<PathEntry> results, final String remoteFile) {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				IEditorReference[] editors = PHPUiPlugin.getActivePage().getEditorReferences();
-				for (IEditorReference editor : editors) {
-					String fileName = "";
-					IEditorInput editorInput = null;
-					try {
-						editorInput = editor.getEditorInput();
-					} catch (PartInitException e) {
-						continue;
-					}
-					if (editorInput instanceof FileEditorInput) {
-						FileEditorInput input = (FileEditorInput) editorInput;
-						IPath location = input.getFile().getLocation();
-						if (location == null) {
-							fileName = input.getFile().getLocationURI().toString();
-						} else {
-							fileName = location.toString();
-						}
-					} else if (editorInput instanceof FileStoreEditorInput) {
-						FileStoreEditorInput input = (FileStoreEditorInput) editorInput;
-						fileName = URIUtil.toPath(input.getURI()).toString();
-					}
-					if (new Path(remoteFile).lastSegment().equalsIgnoreCase(new Path(fileName).lastSegment())) {
-						results.add(new PathEntry(fileName, PathEntry.Type.EXTERNAL, null));
-					}
-				}
-				synchronized (results) {
-					results.notify();
-				}
-			}
-		});
-		synchronized (results) {
+	private synchronized static void searchOpenedEditors(final LinkedList<PathEntry> results, final String remoteFile) {
+		IEditorReference[] editors = PHPUiPlugin.getActivePage().getEditorReferences();
+		for (IEditorReference editor : editors) {
+			String fileName = "";
+			IEditorInput editorInput = null;
 			try {
-				results.wait();
-			} catch (InterruptedException e) {
+				editorInput = editor.getEditorInput();
+			} catch (PartInitException e) {
+				continue;
+			}
+			if (editorInput instanceof FileEditorInput) {
+				FileEditorInput input = (FileEditorInput) editorInput;
+				IPath location = input.getFile().getLocation();
+				if (location == null) {
+					fileName = input.getFile().getLocationURI().toString();
+				} else {
+					fileName = location.toString();
+				}
+			} else if (editorInput instanceof FileStoreEditorInput) {
+				FileStoreEditorInput input = (FileStoreEditorInput) editorInput;
+				fileName = URIUtil.toPath(input.getURI()).toString();
+			}
+			if (new Path(remoteFile).lastSegment().equalsIgnoreCase(new Path(fileName).lastSegment())) {
+				results.add(new PathEntry(fileName, PathEntry.Type.EXTERNAL, new File(fileName).getParentFile()));
 			}
 		}
 	}
