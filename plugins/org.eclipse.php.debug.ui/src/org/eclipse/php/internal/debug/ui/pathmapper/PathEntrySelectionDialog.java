@@ -31,6 +31,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
@@ -54,6 +55,15 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 		super(shell);
 		this.pathEntries = pathEntries;
 		this.comparator = new BestMatchPathComparator(path);
+
+		setSelectionHistory(new SelectionHistory() {
+			protected Object restoreItemFromMemento(IMemento memento) {
+				return null;
+			}
+
+			protected void storeItemToMemento(Object item, IMemento memento) {
+			}
+		});
 
 		setTitle("Select local resource that matches remote file");
 		setMessage(NLS.bind("Select local resource that matches remote file ''{0}''\n\nUse pattern to filter results (? = any character, * = any string):", path.toString()));
