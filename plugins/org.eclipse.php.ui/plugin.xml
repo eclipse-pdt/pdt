@@ -451,7 +451,7 @@
 				allowLabelUpdate="true"
 				definitionId="org.eclipse.php.ui.edit.text.OpenDeclaration"
 				id="org.eclipse.php.ui.actions.OpenDeclaration"
-				label="%OpenTypeAction.label"
+				label="%OpenDeclarationAction.label"
 				menubarPath="navigate/open.ext2"
 				retarget="true" />
 		</actionSet>
