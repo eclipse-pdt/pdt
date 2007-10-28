@@ -76,8 +76,10 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			}
 			if (pathEntry != null) {
 				PathMapperRegistry.getByLaunchConfiguration(launchConfiguration).addEntry(fileName, pathEntry);
+			} else {
+				DebugSearchEngine.find(fileName, launchConfiguration);
 			}
-		} catch (CoreException e) {
+		} catch (Exception e) {
 		}
 
 		String sFileName = RemoteDebugger.convertToSystemIndependentFileName(fileName);
