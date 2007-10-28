@@ -234,8 +234,8 @@ public class PathMapperEntryDialog extends StatusDialog {
 				fWorkspacePathBtn.setSelection(false);
 				fExternalPathText.setText(fEditData.localPath.toString());
 			} else {
-				fWorkspacePathText.setText(fEditData.localPath.toString());
 				fWorkspacePathText.setData(fEditData.type);
+				fWorkspacePathText.setText(fEditData.localPath.toString());
 			}
 		}
 		fWorkspacePathBtn.notifyListeners(SWT.Selection, new Event());
