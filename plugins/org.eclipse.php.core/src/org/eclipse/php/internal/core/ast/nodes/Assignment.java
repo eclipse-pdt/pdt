@@ -79,7 +79,7 @@ public class Assignment extends Expression {
 			case OP_CONCAT_EQUAL:
 				return ".="; //$NON-NLS-1$
 			case OP_AND_EQUAL:
-				return "&="; //$NON-NLS-1$
+				return "&amp;="; //$NON-NLS-1$
 			case OP_OR_EQUAL:
 				return "|="; //$NON-NLS-1$
 			case OP_XOR_EQUAL:
@@ -125,6 +125,7 @@ public class Assignment extends Expression {
 		buffer.append(tab).append("</Assignment>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.ASSIGNMENT;
 	}
