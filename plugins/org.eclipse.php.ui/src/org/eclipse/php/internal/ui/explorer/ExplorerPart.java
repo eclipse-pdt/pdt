@@ -778,7 +778,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		} finally {
 			fViewer.getControl().setRedraw(true);
 		}
-		if (isRootInputChange && fWorkingSetModel.needsConfiguration()) {
+		if (isRootInputChange && fWorkingSetModel!= null && fWorkingSetModel.needsConfiguration()) {
 			ConfigureWorkingSetAction action = new ConfigureWorkingSetAction(getSite());
 			action.setWorkingSetModel(fWorkingSetModel);
 			action.run();
