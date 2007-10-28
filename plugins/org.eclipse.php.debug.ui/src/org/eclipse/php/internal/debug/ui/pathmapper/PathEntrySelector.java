@@ -18,6 +18,9 @@ import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
 import org.eclipse.php.internal.debug.core.pathmapper.IPathEntryFilter;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 public class PathEntrySelector implements IPathEntryFilter {
 
@@ -28,7 +31,19 @@ public class PathEntrySelector implements IPathEntryFilter {
 		final List<PathEntry> l = new LinkedList<PathEntry>();
 		Runnable r = new Runnable() {
 			public void run() {
-				PathEntrySelectionDialog selectDialog = new PathEntrySelectionDialog(Display.getDefault().getActiveShell(), remotePath, entries);
+				// grab usable shell from somewhere:
+				Shell shell = Display.getDefault().getActiveShell();
+				if (shell == null) {
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					if (window == null) {
+						IWorkbenchWindow windows[] = PlatformUI.getWorkbench().getWorkbenchWindows();
+						window = windows[0];
+					}
+					if (window != null) {
+						shell = window.getShell();
+					}
+				}
+				PathEntrySelectionDialog selectDialog = new PathEntrySelectionDialog(shell, remotePath, entries);
 				if (selectDialog.open() == Window.OK) {
 					PathEntry pathEntry = (PathEntry) selectDialog.getFirstResult();
 					if (pathEntry != null) {
