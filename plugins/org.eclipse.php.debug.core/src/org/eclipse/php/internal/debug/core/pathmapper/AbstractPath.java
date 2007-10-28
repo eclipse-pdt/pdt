@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  */
 public class AbstractPath implements Cloneable {
 
-	private final Pattern VOLNAME = Pattern.compile("([A-Za-z]:[/\\\\])(.*)");
+	private final Pattern VOLNAME = Pattern.compile("([A-Za-z]:)[/\\\\](.*)");
 	private final Pattern PROTOCOL = Pattern.compile("([A-Za-z]*://)(.*)");
 	private LinkedList<String> segments;
 	private String device;
@@ -45,7 +45,7 @@ public class AbstractPath implements Cloneable {
 			Matcher m = VOLNAME.matcher(path);
 			if (m.matches()) { // Windows path
 				sepChar = '\\';
-				device = m.group(1);
+				device = m.group(1) + "\\"; // correct path from C:/ to C:\
 				path = m.group(2);
 			} else if (path.startsWith("/")) { // Unix path
 				sepChar = '/';

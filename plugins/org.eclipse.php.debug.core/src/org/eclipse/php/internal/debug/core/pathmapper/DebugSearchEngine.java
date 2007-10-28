@@ -66,7 +66,9 @@ public class DebugSearchEngine {
 		if (projectName != null) {
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
-			pathEntry = find(pathMapper, remoteFile, project, currentWorkingDir, currentScriptDir);
+			if (pathMapper != null) {
+				pathEntry = find(pathMapper, remoteFile, project, currentWorkingDir, currentScriptDir);
+			}
 		}
 		return pathEntry;
 	}

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -69,7 +70,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			}
 			if (file != null) {
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
-				if (resource != null) {
+				if (resource instanceof IFile) {
 					pathEntry = new PathEntry(file, Type.WORKSPACE, resource.getParent());
 				}
 			}
