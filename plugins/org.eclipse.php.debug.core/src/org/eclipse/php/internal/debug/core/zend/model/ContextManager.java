@@ -142,7 +142,7 @@ public class ContextManager {
 			frameCt--;
 		}
 
-		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), fTarget.getLastStop(), frameCt, resolveRemoteFile (fTarget.getLastFileName()));
+		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), fTarget.getLastStop(), frameCt, resolveRemoteFile(fTarget.getLastFileName()));
 		fPreviousLayers = layers;
 		return frames;
 	}
