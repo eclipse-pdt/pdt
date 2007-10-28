@@ -837,9 +837,6 @@ public class PreferenceConstants {
 		// Show line numbers:
 		editorStore.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER, true);
 
-		// Another current line color:
-		PreferenceConverter.setDefault(editorStore, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE_COLOR, new RGB(255, 255, 206));
-
 		// disabling the spelling detection till we find a way to refine it the run only on strings and comments.
 		editorStore.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED, false);
 
