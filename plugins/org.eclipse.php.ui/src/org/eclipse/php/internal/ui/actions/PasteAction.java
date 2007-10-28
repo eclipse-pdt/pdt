@@ -13,10 +13,7 @@ package org.eclipse.php.internal.ui.actions;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.core.runtime.Assert;
@@ -288,7 +285,7 @@ public class PasteAction extends SelectionDispatchAction {
 			if (!(resource instanceof IContainer))
 				return false;
 			for (int i = 0; i < clipboardResources.length; i++) {
-				if (!(clipboardResources[i] instanceof IFile))
+				if (!(clipboardResources[i] instanceof IFile) && !(clipboardResources[i] instanceof IFolder))
 					return false;
 			}
 			return true;
