@@ -56,12 +56,15 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 	private final int IDX_EDIT = 2;
 	private final int IDX_REMOVE = 3;
 
+	private int currentActionIdx = -1;
+
 	public LibrariesWorkbookPage(ListDialogField includePathList, IWorkbenchPreferenceContainer pageContainer) {
 		fIncludePathList = includePathList;
 		fPageContainer = pageContainer;
 		fSWTControl = null;
 
-		String[] buttonLabels = new String[] { PHPUIMessages.getString("LibrariesWorkbookPage_libraries_addvariable_button"), PHPUIMessages.getString("LibrariesWorkbookPage_libraries_addincludepathfolder_button"), PHPUIMessages.getString("LibrariesWorkbookPage_libraries_edit_button"), PHPUIMessages.getString("LibrariesWorkbookPage_libraries_remove_button") };
+		String[] buttonLabels = new String[] { PHPUIMessages.getString("LibrariesWorkbookPage_libraries_addvariable_button"), PHPUIMessages.getString("LibrariesWorkbookPage_libraries_addincludepathfolder_button"), PHPUIMessages.getString("LibrariesWorkbookPage_libraries_edit_button"),
+			PHPUIMessages.getString("LibrariesWorkbookPage_libraries_remove_button") };
 
 		LibrariesAdapter adapter = new LibrariesAdapter();
 
@@ -176,15 +179,19 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 		IPListElement[] libentries = null;
 		switch (index) {
 			case IDX_ADDVAR: /* add variable */
+				currentActionIdx = IDX_ADDVAR;
 				libentries = openVariableSelectionDialog(null);
 				break;
 			case IDX_ADDFOL: /* add folder */
+				currentActionIdx = IDX_ADDFOL;
 				libentries = openIncludeFolderDialog(null);
 				break;
 			case IDX_EDIT: /* edit */
+				currentActionIdx = IDX_EDIT;
 				editEntry();
 				return;
 			case IDX_REMOVE: /* remove */
+				currentActionIdx = IDX_REMOVE;
 				removeEntry();
 				return;
 		}
@@ -612,14 +619,17 @@ public class LibrariesWorkbookPage extends IncludePathBasePage implements Includ
 				}
 			}
 		}
-		final Object[] elementsToRemoveArray = elementsToRemove.toArray();
-		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
-				for (int i = 0; i < elementsToRemoveArray.length; ++i) {
-					fLibrariesList.removeElement(elementsToRemoveArray[i]);
+
+		if (currentActionIdx != IDX_EDIT) {
+			final Object[] elementsToRemoveArray = elementsToRemove.toArray();
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					for (int i = 0; i < elementsToRemoveArray.length; ++i) {
+						fLibrariesList.removeElement(elementsToRemoveArray[i]);
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	public void dispose() {
