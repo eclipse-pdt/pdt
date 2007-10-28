@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -52,7 +49,7 @@ public class OpenPhpTypeDialog extends Dialog {
 
 	private String initFilterText;
 
-	private PhpTypeFilter phpTypeFilter = new PhpTypeFilter();
+	private final PhpTypeFilter phpTypeFilter = new PhpTypeFilter();
 
 	private String title;
 
@@ -66,6 +63,7 @@ public class OpenPhpTypeDialog extends Dialog {
 		this.title = title;
 	}
 
+	@Override
 	protected Point getInitialSize() {
 		return getShell().computeSize(500, 400, true);
 	}
@@ -82,6 +80,7 @@ public class OpenPhpTypeDialog extends Dialog {
 		return phpTypeFilter;
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 		CompositeFactory phpTypeFilterCompositeFactory = new CompositeFactory() {
@@ -147,7 +146,18 @@ public class OpenPhpTypeDialog extends Dialog {
 			}
 			elements = arrayList.toArray(new CodeData[arrayList.size()]);
 		}
+		return sortAndremoveDuplicates(elements);
+	}
 
+	/**
+	 * Sorts and removes duplicate elements  
+	 * @param elements
+	 */
+	private Object[] sortAndremoveDuplicates(CodeData[] elements) {
+		// sort
+		if (elements.length == 0) {
+			return new Object[0];
+		}
 		Comparator<CodeData> comparator = new Comparator<CodeData>() {
 			public int compare(CodeData arg0, CodeData arg1) {
 				return arg0.toString().compareToIgnoreCase(arg1.toString());
@@ -155,7 +165,17 @@ public class OpenPhpTypeDialog extends Dialog {
 		};
 		Arrays.sort(elements, comparator);
 
-		return elements;
+		// remove redundant elements
+		CodeData last = elements[0];
+		final List<Object> result = new ArrayList<Object>();
+		result.add(last);
+		for (CodeData codeData : elements) {
+			if (last != codeData && comparator.compare(last, codeData) != 0) {
+				result.add(codeData);
+			}
+			last = codeData;
+		}
+		return result.toArray();
 	}
 
 	private void addClassesData(CodeData[] classes, Collection arrayList) {
@@ -173,6 +193,7 @@ public class OpenPhpTypeDialog extends Dialog {
 		}
 	}
 
+	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(title != null ? title : PHPUIMessages.getString("OpenType_DialogTitle"));
@@ -182,16 +203,19 @@ public class OpenPhpTypeDialog extends Dialog {
 		return selectedElement;
 	}
 
+	@Override
 	protected void okPressed() {
 		selectedElement = (PHPCodeData) basicSelector.getSelectedElement();
 		super.okPressed();
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		super.createButtonsForButtonBar(parent);
 		getButton(IDialogConstants.OK_ID).setEnabled(false);
 	}
 
+	@Override
 	public boolean close() {
 		basicSelector.close();
 
