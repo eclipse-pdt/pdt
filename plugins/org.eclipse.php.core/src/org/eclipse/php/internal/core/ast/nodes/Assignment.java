@@ -79,7 +79,7 @@ public class Assignment extends Expression {
 			case OP_CONCAT_EQUAL:
 				return ".="; //$NON-NLS-1$
 			case OP_AND_EQUAL:
-				return "&amp;="; //$NON-NLS-1$
+				return "&="; //$NON-NLS-1$
 			case OP_OR_EQUAL:
 				return "|="; //$NON-NLS-1$
 			case OP_XOR_EQUAL:
