@@ -227,16 +227,11 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void parsingErrorOccured(DebugError debugError) {
 		super.parsingErrorOccured(debugError);
-		String sName = debugError.getFullPathName();
-		String rName = sName;
-		try {
-			PathEntry entry = DebugSearchEngine.find(sName, fDebugTarget.getLaunch().getLaunchConfiguration());
-			if (entry != null) {
-				rName = entry.getResolvedPath();
-				debugError.setFileName(rName);
-			}
-		} catch (Exception e) {
-		}
+
+		// resolve path
+		String localFileName = RemoteDebugger.convertToLocalFilename(debugError.getFullPathName(), fDebugTarget);
+		debugError.setFileName(localFileName);
+
 		fDebugTarget.getDebugErrors().add(debugError);
 
 		Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();

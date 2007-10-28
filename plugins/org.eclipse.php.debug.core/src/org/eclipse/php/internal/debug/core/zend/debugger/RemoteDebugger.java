@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -221,6 +222,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @return local file, or remoteFile as is in case of resolving failure
 	 */
 	public static String convertToLocalFilename(String remoteFile, PHPDebugTarget debugTarget) {
+		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
+			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
+			if (wsFile != null) {
+				return wsFile.getFullPath().toString();
+			}
+		}
 		try {
 			PathEntry localFile = DebugSearchEngine.find(remoteFile, debugTarget.getLaunch().getLaunchConfiguration());
 			if (localFile != null) {
