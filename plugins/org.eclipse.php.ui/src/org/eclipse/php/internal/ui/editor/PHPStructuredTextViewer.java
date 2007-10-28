@@ -11,6 +11,7 @@ import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.information.IInformationPresenter;
+import org.eclipse.jface.text.projection.ProjectionMapping;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
@@ -44,16 +45,15 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 	}
-	
+
 	public PHPStructuredTextViewer(ITextEditor textEditor, Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 		this.textEditor = textEditor;
 	}
-	
+
 	public ITextEditor getTextEditor() {
 		return textEditor;
 	}
-
 
 	/**
 	 * This method overrides WST since sometimes we get a subset of the document and NOT the whole document, although the case is FORMAT_DOCUMENT. In all other cases we call the parent method.
@@ -61,7 +61,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	public void doOperation(int operation) {
 		Point selection = getTextWidget().getSelection();
 		int cursorPosition = selection.x;
-		// save the last cursor position and the top visible line.  
+		// save the last cursor position and the top visible line.
 		int selectionLength = selection.y - selection.x;
 		int topLine = getTextWidget().getTopIndex();
 		if (operation == FORMAT_DOCUMENT) {
@@ -84,7 +84,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			} finally {
 				// end recording
 				selection = getTextWidget().getSelection();
-				
+
 				selectionLength = selection.y - selection.x;
 				endRecording(cursorPosition, selectionLength);
 				// return the cursor to its original position after the formatter change its position.
@@ -98,7 +98,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// IStructuredDocument sDoc = (IStructuredDocument) getDocument();
 			// IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selection.x);
 			// ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selection.x);
-			//			
+			//
 			// boolean shouldFormat = false;
 			//
 			// if (textRegion instanceof ITextRegionContainer) {
@@ -124,9 +124,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			if (config != null) {
 				PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) config;
 				IContentAssistProcessor[] all = structuredTextViewerConfiguration.getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
-				for (int i = 0; i < all.length; i++) {
-					if (all[i] instanceof IContentAssistProcessorForPHP) {
-						((IContentAssistProcessorForPHP) all[i]).explicitActivationRequest();
+				for (IContentAssistProcessor element : all) {
+					if (element instanceof IContentAssistProcessorForPHP) {
+						((IContentAssistProcessorForPHP) element).explicitActivationRequest();
 					}
 				}
 			}
@@ -207,7 +207,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	public void configure(SourceViewerConfiguration configuration) {
 
 		super.configure(configuration);
-		
+
 		// release old annotation hover before setting new one
 		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {
 			((StructuredTextAnnotationHover) fAnnotationHover).release();
@@ -220,15 +220,15 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			return;
 		}
 		config = configuration;
-		
+
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
 		IContentAssistant newPHPAssistant = phpConfiguration.getPHPContentAssistant(this, true);
-		
+
 		// Uninstall content assistant created in super:
 		if (fContentAssistant != null) {
 			fContentAssistant.uninstall();
 		}
-		
+
 		// Assign, and configure our content assistant:
 		fContentAssistant = newPHPAssistant;
 		if (fContentAssistant != null) {
@@ -238,27 +238,28 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// 248036 - disable the content assist operation if no content assistant
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
 		}
-		
-		fOutlinePresenter= phpConfiguration.getOutlinePresenter(this);
+
+		fOutlinePresenter = phpConfiguration.getOutlinePresenter(this);
 		if (fOutlinePresenter != null)
 			fOutlinePresenter.install(this);
 	}
-	
+
 	/**
 	 * override the parent method to prevent initialization of wrong
-	 * fAnnotationHover specific instance 
+	 * fAnnotationHover specific instance
 	 */
 	protected void ensureAnnotationHoverManagerInstalled() {
 		if (fAnnotationHover instanceof PHPStructuredTextAnnotationHover) {
 			super.ensureAnnotationHoverManagerInstalled();
 		}
 	}
-	
+
 	/**
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#modelLine2WidgetLine(int)
-	 * TODO: ask Seva why he put this here - we shouldn't handle things like this 
+	 * Workaround for bug #195600 IllegalState is thrown by {@link ProjectionMapping#toImageLine(int)}
 	 */
+	@Override
 	public int modelLine2WidgetLine(int modelLine) {
 		try {
 			return super.modelLine2WidgetLine(modelLine);
@@ -266,4 +267,18 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			return -1;
 		}
 	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.jface.text.TextViewer#getClosestWidgetLineForModelLine(int)
+	 * Workaround for bug #195600 IllegalState is thrown by {@link ProjectionMapping#toImageLine(int)}
+	 */
+	@Override
+	protected int getClosestWidgetLineForModelLine(int modelLine) {
+		try {
+			return super.getClosestWidgetLineForModelLine(modelLine);
+		} catch (IllegalStateException e) {
+			return -1;
+		}
+	}
+
 }
