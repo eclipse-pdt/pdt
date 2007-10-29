@@ -47,7 +47,7 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 			} else {
 				// Search for a file in a Workspace
 				file = (IFile)ResourcesPlugin.getWorkspace().getRoot().findMember(fileName);
-				if (file.exists()) {
+				if (file != null) {
 					fileObject = file;
 				} else {
 					PHPFileData fileData = null;
