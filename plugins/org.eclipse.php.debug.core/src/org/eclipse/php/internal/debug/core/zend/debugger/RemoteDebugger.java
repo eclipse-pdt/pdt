@@ -24,6 +24,8 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
@@ -222,7 +224,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @return local file, or remoteFile as is in case of resolving failure
 	 */
 	public static String convertToLocalFilename(String remoteFile, PHPDebugTarget debugTarget) {
-		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
+		if (new File(remoteFile).exists()) {
 			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
 			if (wsFile != null) {
 				return wsFile.getFullPath().toString();
@@ -236,6 +238,27 @@ public class RemoteDebugger implements IRemoteDebugger {
 		} catch (Exception e) {
 		}
 		return remoteFile; // in case of failure
+	}
+
+	/**
+	 * Returns remote file name corresponding to the given local path
+	 * @param localFile
+	 * @return remote file path, or localFile in case it couldn't be resolved
+	 */
+	public static String convertToRemoteFilename(String localFile, PHPDebugTarget debugTarget) {
+		IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(localFile));
+		if (wsFile.exists() && wsFile.getLocation() != null) {
+			File fsFile = wsFile.getLocation().toFile();
+			if (fsFile.exists()) {
+				return fsFile.getAbsolutePath();
+			}
+		}
+		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
+		String remoteFile = pathMapper.getRemoteFile(localFile);
+		if (remoteFile != null) {
+			return remoteFile;
+		}
+		return localFile;
 	}
 
 	// ---------------------------------------------------------------------------

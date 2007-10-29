@@ -55,8 +55,6 @@ import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
-import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
-import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
@@ -66,6 +64,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManag
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
+import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -591,12 +590,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 								fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
 								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
 							} else {
-								PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(fLaunch.getLaunchConfiguration());
-								fileName = pathMapper.getRemoteFile((String) marker.getAttribute(IPHPConstants.STORAGE_FILE));
+								fileName = RemoteDebugger.convertToRemoteFilename((String) marker.getAttribute(IPHPConstants.STORAGE_FILE), this);
 							}
 						} else {
-							PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(fLaunch.getLaunchConfiguration());
-							fileName = pathMapper.getRemoteFile(resource.getFullPath().toString());
+							fileName = RemoteDebugger.convertToRemoteFilename(resource.getFullPath().toString(), this);
 						}
 					} else {
 						if (resource instanceof ExternalFileWrapper) {

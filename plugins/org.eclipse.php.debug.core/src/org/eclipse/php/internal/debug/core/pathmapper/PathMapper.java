@@ -40,6 +40,11 @@ public class PathMapper implements IXMLPreferencesStorable {
 		AbstractPath remotePath = new AbstractPath(remoteFile);
 		AbstractPath localPath = entry.getAbstractPath().clone(); // don't break original entry path
 
+		// last segments must match!
+		if (!remotePath.getLastSegment().equals(localPath.getLastSegment())) {
+			return;
+		}
+
 		while (remotePath.getSegmentsCount() > 1 && localPath.getSegmentsCount() > 1) {
 			if (!remotePath.getLastSegment().equals(localPath.getLastSegment())) {
 				break;
