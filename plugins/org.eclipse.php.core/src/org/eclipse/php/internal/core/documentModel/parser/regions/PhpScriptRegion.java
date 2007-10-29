@@ -38,7 +38,7 @@ import org.eclipse.wst.xml.core.internal.Logger;
  * <code> if (region.getType() == PHPRegionContext())  { (PhpScriptRegion) region } </code>   
  * @author Roy, 2007
  */
-public class PhpScriptRegion extends ForeignRegion {
+public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 	private static final String PHP_SCRIPT = "PHP Script"; //$NON-NLS-1$
 	private final PhpTokenContainer tokensContaier = new PhpTokenContainer();
@@ -102,6 +102,7 @@ public class PhpScriptRegion extends ForeignRegion {
 		return lexState != null && lexState.getTopState() == PhpLexer.ST_PHP_LINE_COMMENT;
 	}
 
+	@Override
 	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int requestStart, int lengthToReplace) {
 		isFullReparsed = true;
 		try {
@@ -123,7 +124,7 @@ public class PhpScriptRegion extends ForeignRegion {
 			final int oldEndOffset = offset + lengthToReplace;
 			final ITextRegion tokenEnd = tokensContaier.getToken(oldEndOffset);
 			int newTokenOffset = tokenStart.getStart();
-			
+
 			if (isHereDoc(tokenStart)) {
 				return null;
 			}
@@ -193,7 +194,7 @@ public class PhpScriptRegion extends ForeignRegion {
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 			return null; // causes to full reparse in this case
-		} 
+		}
 	}
 
 	/**
@@ -296,7 +297,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	private void setPhpTokens(PhpLexer lexer) {
 		setLength(0);
 		setTextLength(0);
-		
+
 		isFullReparsed = true;
 		assert lexer != null;
 
@@ -324,7 +325,6 @@ public class PhpScriptRegion extends ForeignRegion {
 		}
 	}
 
-
 	/**
 	 * Returns a stream that represents the new text
 	 * We have three regions:
@@ -340,7 +340,7 @@ public class PhpScriptRegion extends ForeignRegion {
 	private class DocumentReader extends Reader {
 
 		private static final String BAD_LOCATION_ERROR = "Bad location error "; //$NON-NLS-1$
-		
+
 		final private IStructuredDocument parent;
 		final private int startPhpRegion;
 		final private int endPhpRegion;
@@ -348,21 +348,22 @@ public class PhpScriptRegion extends ForeignRegion {
 		final private String change;
 		final private int requestStart;
 		final private int lengthToReplace;
-		
+
 		private int index;
 		private int internalIndex = 0;
-		
+
 		public DocumentReader(final IStructuredDocumentRegion flatnode, final String change, final int requestStart, final int lengthToReplace, final int newTokenOffset) {
 			this.parent = flatnode.getParentDocument();
 			this.startPhpRegion = flatnode.getStart() + getStart();
 			this.endPhpRegion = startPhpRegion + getLength();
 			this.changeLength = change.length();
 			this.index = startPhpRegion + newTokenOffset;
-			this.change = change; 
+			this.change = change;
 			this.requestStart = requestStart;
 			this.lengthToReplace = lengthToReplace;
 		}
 
+		@Override
 		public int read() throws IOException {
 			try {
 				// state 1) 
@@ -371,7 +372,7 @@ public class PhpScriptRegion extends ForeignRegion {
 				} // state 2)
 				if (internalIndex < changeLength) {
 					return change.charAt(internalIndex++);
-				} 
+				}
 				// skip the delted text
 				if (index < requestStart + lengthToReplace) {
 					index = requestStart + lengthToReplace;
@@ -384,38 +385,39 @@ public class PhpScriptRegion extends ForeignRegion {
 			}
 		}
 
+		@Override
 		public int read(char[] b, int off, int len) throws IOException {
 			if (b == null) {
-			    throw new NullPointerException();
-			} else if ((off < 0) || (off > b.length) || (len < 0) ||
-				   ((off + len) > b.length) || ((off + len) < 0)) {
-			    throw new IndexOutOfBoundsException();
+				throw new NullPointerException();
+			} else if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
+				throw new IndexOutOfBoundsException();
 			} else if (len == 0) {
-			    return 0;
+				return 0;
 			}
 
 			int c = read();
 			if (c == -1) {
-			    return -1;
+				return -1;
 			}
-			b[off] = (char)c;
+			b[off] = (char) c;
 
 			int i = 1;
 			try {
-			    for (; i < len ; i++) {
-				c = read();
-				if (c == -1) {
-				    break;
+				for (; i < len; i++) {
+					c = read();
+					if (c == -1) {
+						break;
+					}
+					if (b != null) {
+						b[off + i] = (char) c;
+					}
 				}
-				if (b != null) {
-				    b[off + i] = (char)c;
-				}
-			    }
 			} catch (IOException ee) {
 			}
 			return i;
 		}
 
+		@Override
 		public void close() throws IOException {
 		}
 	}
@@ -429,17 +431,18 @@ public class PhpScriptRegion extends ForeignRegion {
 	public class BlockDocumentReader extends Reader {
 
 		private static final String BAD_LOCATION_ERROR = "Bad location error "; //$NON-NLS-1$
-		
+
 		final private IDocument parent;
 		private int startPhpRegion;
 		final private int endPhpRegion;
-	
+
 		public BlockDocumentReader(final IDocument parent, final int startPhpRegion, final int length) {
 			this.parent = parent;
 			this.startPhpRegion = startPhpRegion;
 			this.endPhpRegion = startPhpRegion + length;
 		}
 
+		@Override
 		public int read() throws IOException {
 			try {
 				return startPhpRegion < endPhpRegion ? parent.getChar(startPhpRegion++) : -1;
@@ -448,38 +451,39 @@ public class PhpScriptRegion extends ForeignRegion {
 			}
 		}
 
+		@Override
 		public int read(char[] b, int off, int len) throws IOException {
 			if (b == null) {
-			    throw new NullPointerException();
-			} else if ((off < 0) || (off > b.length) || (len < 0) ||
-				   ((off + len) > b.length) || ((off + len) < 0)) {
-			    throw new IndexOutOfBoundsException();
+				throw new NullPointerException();
+			} else if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
+				throw new IndexOutOfBoundsException();
 			} else if (len == 0) {
-			    return 0;
+				return 0;
 			}
 
 			int c = read();
 			if (c == -1) {
-			    return -1;
+				return -1;
 			}
-			b[off] = (char)c;
+			b[off] = (char) c;
 
 			int i = 1;
 			try {
-			    for (; i < len ; i++) {
-				c = read();
-				if (c == -1) {
-				    break;
+				for (; i < len; i++) {
+					c = read();
+					if (c == -1) {
+						break;
+					}
+					if (b != null) {
+						b[off + i] = (char) c;
+					}
 				}
-				if (b != null) {
-				    b[off + i] = (char)c;
-				}
-			    }
 			} catch (IOException ee) {
 			}
 			return i;
 		}
 
+		@Override
 		public void close() throws IOException {
 		}
 	}
