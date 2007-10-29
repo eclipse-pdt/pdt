@@ -84,19 +84,32 @@ public class PHPexeItem {
 	}
 
 	public int hashCode() {
-		if (name != null && location != null) {
-			return name.hashCode() + 13 * location.hashCode();
-		}
-		return 0;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
 	}
 
-	public boolean equals(Object other) {
-		if (other == this)
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
-		if (!(other instanceof PHPexeItem))
+		if (obj == null)
 			return false;
-		PHPexeItem item2 = (PHPexeItem) other;
-		return item2.name.equals(name) && item2.location.equals(location);
+		if (getClass() != obj.getClass())
+			return false;
+		final PHPexeItem other = (PHPexeItem) obj;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
 
 	public String toString() {
