@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
  */
 public class AbstractPath implements Cloneable {
 
-	private final Pattern VOLNAME = Pattern.compile("([A-Za-z]:)[/\\\\](.*)");
-	private final Pattern PROTOCOL = Pattern.compile("([A-Za-z]*://)(.*)");
+	private static final Pattern VOLNAME = Pattern.compile("([A-Za-z]:)[/\\\\](.*)");
+	private static final Pattern PROTOCOL = Pattern.compile("([A-Za-z]*://)(.*)");
 	private LinkedList<String> segments;
 	private String device;
 	private char sepChar;
@@ -70,6 +70,15 @@ public class AbstractPath implements Cloneable {
 				segments.add(segment);
 			}
 		}
+	}
+
+	/**
+	 * Checks whether the given path is absolute
+	 * @param path
+	 * @return <code>true</code> if given path is the absolute one, otherwise <code>false</code>
+	 */
+	public static boolean isAbsolute(String path) {
+		return (path.startsWith("\\\\") || VOLNAME.matcher(path).matches() || path.startsWith("/") || PROTOCOL.matcher(path).matches());
 	}
 
 	protected AbstractPath(String device, char sepChar, LinkedList<String> segments) {
