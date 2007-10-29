@@ -52,7 +52,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Constructs a new Server.
-	 * 
+	 *
 	 * @param name
 	 * @param hostName
 	 * @param baseURL
@@ -88,7 +88,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Sets an arbitrary attribute to this Server.
-	 * 
+	 *
 	 * @param attributeName The attribute name
 	 * @param value The String value of this attribute.
 	 */
@@ -98,7 +98,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Returns an arbitrary attribute from this Server according to a given attribute name.
-	 * 
+	 *
 	 * @param attributeName The attribute name
 	 * @param defaultValue A default value to use if the attribute was not found
 	 * @return The String value of this attribute
@@ -109,13 +109,13 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Removed an attribute.
-	 * 
+	 *
 	 * @param attributeName The attribute name.
 	 */
 	public void removeAttribute(String attributeName) {
 		helper.removeAttribute(attributeName);
 	}
-	
+
 	public String getContextRoot(IProject project) {
 		PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		String contextRoot = (String) options.getOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
@@ -169,7 +169,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Return the root URL of this server.
-	 * 
+	 *
 	 * @return java.net.URL
 	 */
 	public URL getRootURL() {
@@ -229,6 +229,27 @@ public class Server implements IXMLPreferencesStorable {
 		} catch (Throwable e) {
 			;
 		}
+	}
+
+	public int hashCode() {
+		if (getName() != null) {
+			return getName().hashCode();
+		}
+		return 1;
+	}
+
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Server)) {
+			return false;
+		}
+		String name = getName();
+		String otherName = ((Server) obj).getName();
+		if (name == null) {
+			if (otherName != null) {
+				return false;
+			}
+		}
+		return name.equals(otherName);
 	}
 
 	/**
