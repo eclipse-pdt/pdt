@@ -451,7 +451,6 @@ public class InstalledPHPsBlock {
 			canRemoveOrEdit &= item.isEditable();
 		}
 		final int selectionCount = selection.size();
-		fEditButton.setEnabled(canRemoveOrEdit && selectionCount == 1);
 		fRemoveButton.setEnabled(canRemoveOrEdit && selectionCount > 0);
 		PHPexeItem selectedItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement();
 		fSetDefaultButton.setEnabled(selectionCount == 1 && selectedItem != null && !selectedItem.isDefault());
