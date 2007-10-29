@@ -83,13 +83,9 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	}
 
 	protected void validate() {
-		if (getServer() == null) {
-			setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
-			return;
-		}
 		setMessage(getDescription(), IMessageProvider.NONE);
+		setComplete(true);
 
-		// TODO : add validation
 		controlHandler.update();
 	}
 
