@@ -88,16 +88,8 @@ public class DebugSearchEngine {
 			throw new NullPointerException();
 		}
 
-		// Look into the path mapper:
-		PathEntry localFile = pathMapper.getLocalFile(remoteFile);
-		if (localFile != null) {
-			return localFile;
-		}
-
-		AbstractPath abstractPath;
-		try {
-			abstractPath = new AbstractPath(remoteFile);
-		} catch (IllegalArgumentException e) {
+		// If the given path is not absolute - use internal PHP search mechanism:
+		if (!AbstractPath.isAbsolute(remoteFile)) {
 			if (currentProject != null && currentWorkingDir != null && currentScriptDir != null) {
 				// This is not a full path, search using PHP Search Engine:
 				Result<?, ?> result = PHPSearchEngine.find(remoteFile, currentWorkingDir, currentScriptDir, currentProject);
@@ -119,8 +111,14 @@ public class DebugSearchEngine {
 			return null;
 		}
 
+		// First, look into the path mapper:
+		PathEntry localFile = pathMapper.getLocalFile(remoteFile);
+		if (localFile != null) {
+			return localFile;
+		}
+
+		AbstractPath abstractPath = new AbstractPath(remoteFile);
 		LinkedList<PathEntry> results = new LinkedList<PathEntry>();
-		BestMatchPathComparator bmComparator = new BestMatchPathComparator(abstractPath);
 
 		Object[] includePaths;
 		if (currentProject != null) {
@@ -164,7 +162,7 @@ public class DebugSearchEngine {
 		searchOpenedEditors(results, abstractPath);
 
 		if (results.size() > 0) {
-			Collections.sort(results, bmComparator);
+			Collections.sort(results, new BestMatchPathComparator(abstractPath));
 			localFile = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]));
 			if (localFile != null) {
 				pathMapper.addEntry(remoteFile, localFile);
