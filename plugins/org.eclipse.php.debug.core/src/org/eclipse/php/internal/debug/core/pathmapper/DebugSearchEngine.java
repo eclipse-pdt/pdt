@@ -40,6 +40,9 @@ public class DebugSearchEngine {
 
 	/**
 	 * Searches for all local resources that match provided remote file, and returns it in best match order.
+	 * This method skips internal PHP search mechanism, going straight to the path mapper, so it's good
+	 * only for resolving absolute paths.
+	 * 
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
 	 * @param launchConfiguration Launch configuration for the debug session
 	 * @return path entry or <code>null</code> in case it could not be found

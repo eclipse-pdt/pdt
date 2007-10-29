@@ -231,7 +231,13 @@ public class RemoteDebugger implements IRemoteDebugger {
 			}
 		}
 		try {
-			PathEntry localFile = DebugSearchEngine.find(remoteFile, debugTarget.getLaunch().getLaunchConfiguration());
+			String currentScriptDir = null;
+			PHPstack phpStack = debugTarget.getContextManager().getRemoteDebugger().getCallStack();
+			if (phpStack.getLayers() != null && phpStack.getLayers().length > 0) {
+				currentScriptDir = new File(phpStack.getLayers()[phpStack.getLayers().length - 1].getCalledFileName()).getParent();
+			}
+
+			PathEntry localFile = DebugSearchEngine.find(remoteFile, debugTarget.getLaunch().getLaunchConfiguration(), debugTarget.getProject().getLocation().toString(), currentScriptDir);
 			if (localFile != null) {
 				return localFile.getResolvedPath();
 			}
