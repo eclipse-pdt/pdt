@@ -54,22 +54,6 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		
 		layout.addShowInPart(ID_EXPLORER);
 
-		// add extension shortcuts
-		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut";  //$NON-NLS-1$
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(phpPerspectiveShortcut);
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			String perspectiveId = element.getAttribute("perspectiveId");  //$NON-NLS-1$
-			if (PERSPECTIVE_ID.equals(perspectiveId)) {
-				String type = element.getAttribute("type");  //$NON-NLS-1$
-				String additionId = element.getAttribute("additionId");  //$NON-NLS-1$
-				if (type.equals("Show View")) {  //$NON-NLS-1$
-					layout.addShowViewShortcut(additionId);
-				} else if (type.equals("Open Perspective")) {  //$NON-NLS-1$
-					layout.addPerspectiveShortcut(additionId);
-				}
-			}
-		}
 	}
 
 	/*
