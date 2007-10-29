@@ -42,7 +42,7 @@ public class DebugSearchEngine {
 	 * Searches for all local resources that match provided remote file, and returns it in best match order.
 	 * This method skips internal PHP search mechanism, going straight to the path mapper, so it's good
 	 * only for resolving absolute paths.
-	 * 
+	 *
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
 	 * @param launchConfiguration Launch configuration for the debug session
 	 * @return path entry or <code>null</code> in case it could not be found
@@ -106,10 +106,12 @@ public class DebugSearchEngine {
 					Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
 					return new PathEntry(incFileResult.getFile().getAbsolutePath(), type, container);
 				}
-				// workspace file
-				ResourceResult resResult = (ResourceResult) result;
-				IResource resource = resResult.getFile();
-				return new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
+				if (result != null) {
+					// workspace file
+					ResourceResult resResult = (ResourceResult) result;
+					IResource resource = resResult.getFile();
+					return new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
+				}
 			}
 			return null;
 		}
