@@ -73,23 +73,6 @@ public class PHPDebugPerspectiveFactory implements IPerspectiveFactory {
 		layout.addShowViewShortcut(ID_PHPBrowserOutput);
 		layout.addShowViewShortcut("org.eclipse.debug.ui.PHPStackView"); //$NON-NLS-N$
 		
-		// add extension shortcuts
-		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut"; //$NON-NLS-N$
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(phpPerspectiveShortcut);
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			String perspectiveId = element.getAttribute("perspectiveId"); //$NON-NLS-N$
-			if (PERSPECTIVE_ID.equals(perspectiveId)) {
-				String type = element.getAttribute("type"); //$NON-NLS-N$
-				String additionId = element.getAttribute("additionId"); //$NON-NLS-N$
-				if (type.equals("Show View")) { //$NON-NLS-N$
-					layout.addShowViewShortcut(additionId);
-				} else if (type.equals("Open Perspective")) { //$NON-NLS-N$
-					layout.addPerspectiveShortcut(additionId);
-				}
-			}
-		}
-		
 		setContentsOfShowViewMenu(layout);
 	}
 	
