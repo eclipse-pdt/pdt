@@ -59,49 +59,54 @@ public class PHPSearchEngine {
 		File file = new File(path);
 		if (file.isAbsolute()) {
 			return searchExternalOrWorkspaceFile(file);
-		} else if (path.matches("\\.\\.?[/\\\\].*")) { // check whether the path starts with ./ or ../
+		}
+		if (path.matches("\\.\\.?[/\\\\].*")) { // check whether the path starts with ./ or ../
 			file = new File(currentWorkingDir, path);
 			return searchExternalOrWorkspaceFile(file);
-		} else {
-			Object[] includePaths = buildIncludePath(currentProject);
-			for (Object includePath : includePaths) {
-				if (includePath instanceof IContainer) {
-					IContainer container = (IContainer) includePath;
-					IResource resource = container.findMember(path);
-					if (resource instanceof IFile) {
-						return new ResourceResult((IFile) resource);
-					}
-				} else if (includePath instanceof IIncludePathEntry) {
-					IIncludePathEntry entry = (IIncludePathEntry) includePath;
-					IPath entryPath = entry.getPath();
-					if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-						if (entry.getContentKind() != IIncludePathEntry.K_BINARY) { // We don't support lookup in archive
-							File entryDir = entryPath.toFile();
-							file = new File(entryDir, path);
-							if (file.exists()) {
-								return new IncludedFileResult(entry, file);
-							}
-						}
-					} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-						IProject project = (IProject) entry.getResource();
-						if (project.isAccessible()) {
-							IResource resource = project.findMember(path);
-							if (resource != null) {
-								return new IncludedFileResult(entry, file);
-							}
-						}
-					} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-						entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+		}
+
+		// look into include path:
+		Object[] includePaths = buildIncludePath(currentProject);
+		for (Object includePath : includePaths) {
+			if (includePath instanceof IContainer) {
+				IContainer container = (IContainer) includePath;
+				IResource resource = container.findMember(path);
+				if (resource instanceof IFile) {
+					return new ResourceResult((IFile) resource);
+				}
+			} else if (includePath instanceof IIncludePathEntry) {
+				IIncludePathEntry entry = (IIncludePathEntry) includePath;
+				IPath entryPath = entry.getPath();
+				if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+					if (entry.getContentKind() != IIncludePathEntry.K_BINARY) { // We don't support lookup in archive
 						File entryDir = entryPath.toFile();
 						file = new File(entryDir, path);
 						if (file.exists()) {
 							return new IncludedFileResult(entry, file);
 						}
 					}
+				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+					IProject project = (IProject) entry.getResource();
+					if (project.isAccessible()) {
+						IResource resource = project.findMember(path);
+						if (resource != null) {
+							return new IncludedFileResult(entry, file);
+						}
+					}
+				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+					entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+					File entryDir = entryPath.toFile();
+					file = new File(entryDir, path);
+					if (file.exists()) {
+						return new IncludedFileResult(entry, file);
+					}
 				}
 			}
 		}
-		return null;
+
+		// look at current script directory:
+		file = new File(currentScriptDir, path);
+		return searchExternalOrWorkspaceFile(file);
 	}
 
 	private static Result<?, ?> searchExternalOrWorkspaceFile(File file) {
