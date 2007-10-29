@@ -21,6 +21,7 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.ui.Logger;
@@ -42,11 +43,11 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	private Highlighter fHighlighter;
 	private boolean fInitialized;
 	private final PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
-	private Map fTextAttributes;
+	private Map<String, TextAttribute> fTextAttributes;
 	private IPreferenceStore fColorPreferences;
 
 	/** Contains region to style mapping */
-	protected static final Map fColorTypes = new HashMap(); // String (token type), String (color)
+	protected static final Map<String, String> fColorTypes = new HashMap<String, String>(); // String (token type), String (color)
 	static {
 		// Normal text:
 		fColorTypes.put(PHPRegionTypes.PHP_STRING, PreferenceConstants.EDITOR_NORMAL_COLOR);
@@ -208,9 +209,9 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	 * 
 	 * @return
 	 */
-	protected Map getTextAttributes() {
+	protected Map<String, TextAttribute> getTextAttributes() {
 		if (fTextAttributes == null) {
-			fTextAttributes = new HashMap();
+			fTextAttributes = new HashMap<String, TextAttribute>();
 			loadColors();
 		}
 		return fTextAttributes;
@@ -238,7 +239,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 
 		//return the defalt attributes if there is not highlight color for the region
 		if (result == null) {
-			result = (TextAttribute) getTextAttributes().get(PreferenceConstants.EDITOR_NORMAL_COLOR);
+			result = getTextAttributes().get(PreferenceConstants.EDITOR_NORMAL_COLOR);
 		}
 		return result;
 	}
@@ -251,7 +252,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	 * @return
 	 */
 	protected TextAttribute getAttributeFor(String type) {
-		return (TextAttribute) getTextAttributes().get(fColorTypes.get(type));
+		return getTextAttributes().get(fColorTypes.get(type));
 	}
 
 	/**
@@ -291,7 +292,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	}
 
 	public TextAttribute getTextAttributeForColor(String colorKey) {
-		return (TextAttribute) getTextAttributes().get(colorKey);
+		return getTextAttributes().get(colorKey);
 	}
 
 	/**
@@ -333,7 +334,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	 * @param holdResults
 	 * @return
 	 */
-	public boolean prepareTextRegion(ITextRegionCollection blockedRegion, int partitionStartOffset, int partitionLength, Collection holdResults) {
+	public boolean prepareTextRegion(ITextRegionCollection blockedRegion, int partitionStartOffset, int partitionLength, Collection<StyleRange> holdResults) {
 		boolean handled = false;
 		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
 		ITextRegion region = null;
@@ -390,7 +391,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		return handled;
 	}
 
-	public boolean prepareTextRegions(IStructuredDocumentRegion structuredDocumentRegion, int partitionStartOffset, int partitionLength, Collection holdResults) {
+	public boolean prepareTextRegions(IStructuredDocumentRegion structuredDocumentRegion, int partitionStartOffset, int partitionLength, Collection<StyleRange> holdResults) {
 		boolean handled = false;
 		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
 		while (structuredDocumentRegion != null && structuredDocumentRegion.getStartOffset() <= partitionEndOffset) {
@@ -463,7 +464,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	 * @param partitionLength 
 	 * @param partitionStartOffset 
 	 */
-	private boolean preparePhpRegions(Collection holdResults, PhpScriptRegion region, int regionStart, int partitionStartOffset, int partitionLength) {
+	private boolean preparePhpRegions(Collection<StyleRange> holdResults, IPhpScriptRegion region, int regionStart, int partitionStartOffset, int partitionLength) {
 		assert region.getType() == PHPRegionContext.PHP_CONTENT;
 
 		StyleRange styleRange = null;
@@ -524,7 +525,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	/*
 	 * Returns hash of color attributes
 	 */
-	public Map getColorTypesMap() {
+	public Map<String, String> getColorTypesMap() {
 		return fColorTypes;
 	}
 
