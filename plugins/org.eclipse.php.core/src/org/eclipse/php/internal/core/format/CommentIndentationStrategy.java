@@ -2,8 +2,8 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -15,6 +15,7 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 	 * If we are inside a comment, check the previous line:
 	 * In case it is the comment start (meaning the first line), this line will be indented.
 	 */
+	@Override
 	public void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int forOffset) throws BadLocationException {
 
 		if (lineNumber == 0) {
@@ -38,8 +39,8 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 			regionStart += tRegion.getStart();
 		}
 
-		if (tRegion instanceof PhpScriptRegion) {
-			PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+		if (tRegion instanceof IPhpScriptRegion) {
+			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 			tRegion = scriptRegion.getPhpToken(previousLine.getOffset() - regionStart);
 			if (tRegion.getStart() + regionStart < previousLine.getOffset()) {
 				tRegion = scriptRegion.getPhpToken(tRegion.getEnd());

@@ -12,8 +12,8 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -56,8 +56,8 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 			regionStart += tRegion.getStart();
 		}
 
-		if (tRegion instanceof PhpScriptRegion) {
-			PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+		if (tRegion instanceof IPhpScriptRegion) {
+			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 			tRegion = scriptRegion.getPhpToken(offset - regionStart - 1);
 
 			// go backward over the region to find a 'case' or 'default' region

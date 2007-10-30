@@ -16,8 +16,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.dom.AttrImplForPhp;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
@@ -32,11 +32,11 @@ import org.w3c.dom.Node;
 
 public class PhpFormatter implements IStructuredFormatter {
 
-	private IIndentationStrategy defaultIndentationStrategy = new DefaultIndentationStrategy();
-	private IIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
-	private IIndentationStrategy caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy();
-	private IIndentationStrategy commentIndentationStrategy = new CommentIndentationStrategy();
-	private IIndentationStrategy phpCloseTagIndentationStrategy = new PHPCloseTagIndentationStrategy();
+	private final IIndentationStrategy defaultIndentationStrategy = new DefaultIndentationStrategy();
+	private final IIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
+	private final IIndentationStrategy caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy();
+	private final IIndentationStrategy commentIndentationStrategy = new CommentIndentationStrategy();
+	private final IIndentationStrategy phpCloseTagIndentationStrategy = new PHPCloseTagIndentationStrategy();
 
 	protected PhpFormatConstraints fFormatContraints = null;
 	protected IStructuredFormatPreferences fFormatPreferences = null;
@@ -151,7 +151,7 @@ public class PhpFormatter implements IStructuredFormatter {
 
 	}
 
-	private StringBuffer resultBuffer = new StringBuffer();
+	private final StringBuffer resultBuffer = new StringBuffer();
 
 	/**
 	 * formats a PHP line according to the strategies and formatting conventions
@@ -205,8 +205,8 @@ public class PhpFormatter implements IStructuredFormatter {
 				regionStart += firstTokenInLine.getStart();
 			}
 
-			if (firstTokenInLine instanceof PhpScriptRegion) {
-				PhpScriptRegion scriptRegion = (PhpScriptRegion) firstTokenInLine;
+			if (firstTokenInLine instanceof IPhpScriptRegion) {
+				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) firstTokenInLine;
 				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart - regionStart);
 				if (firstTokenInLine != null && firstTokenInLine.getStart() + sdRegion.getStartOffset() < orginalLineStart && firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
 					firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart - regionStart + firstTokenInLine.getLength());
@@ -250,7 +250,7 @@ public class PhpFormatter implements IStructuredFormatter {
 			}
 			char oldChar = '\0';
 			if (oldIndentation.length() > 0) {
-				oldChar = oldIndentation.charAt(0); 
+				oldChar = oldIndentation.charAt(0);
 			}
 			if (newIndentation.length() != oldIndentation.length() || newChar != oldChar) {
 				document.replaceText(sdRegion, orginalLineStart, startingWhiteSpaces, newIndentation);

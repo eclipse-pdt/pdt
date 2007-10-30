@@ -14,7 +14,7 @@ import javax.swing.text.Segment;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
@@ -47,7 +47,7 @@ public final class TextSequenceUtilities {
 	 */
 	public static String getTypeByAbsoluteOffset(TextSequence textSequence, int sourceOffset) {
 		IStructuredDocumentRegion source = textSequence.getSource();
-		if(source.getEndOffset() == sourceOffset && source.getEndOffset() > 0) {
+		if (source.getEndOffset() == sourceOffset && source.getEndOffset() > 0) {
 			sourceOffset--;
 		}
 		ITextRegion tRegion = source.getRegionAtCharacterOffset(sourceOffset);
@@ -55,7 +55,7 @@ public final class TextSequenceUtilities {
 			return null;
 		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			try {
-				return ((PhpScriptRegion) tRegion).getPhpTokenType(sourceOffset - source.getStart() - tRegion.getStart());
+				return ((IPhpScriptRegion) tRegion).getPhpTokenType(sourceOffset - source.getStart() - tRegion.getStart());
 			} catch (BadLocationException e) {
 				assert false;
 				return null;
@@ -102,9 +102,9 @@ public final class TextSequenceUtilities {
 
 	private static class SimpleTextSequence extends AbstractTextSequence implements TextSequence {
 
-		private int offset;
+		private final int offset;
 
-		private int length;
+		private final int length;
 
 		SimpleTextSequence(IStructuredDocumentRegion source, Segment segment, int offset, int length, int segmentOriginalStart) {
 			super(source, segment, segmentOriginalStart);
@@ -116,6 +116,7 @@ public final class TextSequenceUtilities {
 			return segmentOriginalStart + offset + index;
 		}
 
+		@Override
 		protected int getSegmentOffset(int index) {
 			return segment.offset + offset + index;
 		}
@@ -140,6 +141,7 @@ public final class TextSequenceUtilities {
 			return new CompositeTextSequence(source, segment, newIndexes, segmentOriginalStart);
 		}
 
+		@Override
 		public String toString() {
 			return new String(segment.array, segment.offset + offset, length);
 		}
@@ -150,7 +152,7 @@ public final class TextSequenceUtilities {
 
 	private static class CompositeTextSequence extends AbstractTextSequence implements TextSequence {
 
-		private int[] indexes;
+		private final int[] indexes;
 
 		private int length = -1;
 
@@ -182,6 +184,7 @@ public final class TextSequenceUtilities {
 			return rv;
 		}
 
+		@Override
 		protected int getSegmentOffset(int index) {
 			int rv = segment.offset;
 			for (int i = 0; i < indexes.length; i += 2) {
@@ -287,6 +290,7 @@ public final class TextSequenceUtilities {
 			return new CompositeTextSequence(source, segment, newIndexes, segmentOriginalStart);
 		}
 
+		@Override
 		public String toString() {
 			StringBuffer buffer = new StringBuffer(length());
 			for (int i = 0; i < indexes.length; i += 2) {

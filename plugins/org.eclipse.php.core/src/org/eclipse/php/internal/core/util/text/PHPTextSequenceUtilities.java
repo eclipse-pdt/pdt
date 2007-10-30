@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -65,7 +65,7 @@ public class PHPTextSequenceUtilities {
 
 		// This text region must be of type PhpScriptRegion:
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
+			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 
 			try {
 				//	Set default starting position to the beginning of the PhpScriptRegion:

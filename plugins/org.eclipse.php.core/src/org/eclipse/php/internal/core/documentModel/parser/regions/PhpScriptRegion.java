@@ -45,7 +45,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	private final IProject project;
 
 	// true when the last reparse action is full reparse
-	public boolean isFullReparsed;
+	protected boolean isFullReparsed;
 
 	public PhpScriptRegion(String newContext, int startOffset, IProject project, PhpLexer phpLexer) {
 		super(newContext, startOffset, 0, 0, PhpScriptRegion.PHP_SCRIPT);
@@ -55,9 +55,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	/**
-	 * returns the php token type in the given offset 
-	 * @param offset
-	 * @throws BadLocationException 
+	 * @see IPhpScriptRegion#getPhpTokenType(int)
 	 */
 	public final String getPhpTokenType(int offset) throws BadLocationException {
 		final ITextRegion tokenForOffset = getPhpToken(offset);
@@ -65,41 +63,46 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	/**
-	 * returns the php token in the given offset
-	 * @param offset
-	 * @throws BadLocationException 
+	 * @see IPhpScriptRegion#getPhpToken(int)
 	 */
 	public final ITextRegion getPhpToken(int offset) throws BadLocationException {
 		return tokensContaier.getToken(offset);
 	}
 
 	/**
-	 * returns the php token in the given offset
-	 * @param offset
-	 * @throws BadLocationException 
+	 * @see IPhpScriptRegion#getPhpTokens(int, int)
 	 */
 	public final ITextRegion[] getPhpTokens(int offset, int length) throws BadLocationException {
 		return tokensContaier.getTokens(offset, length);
 	}
 
 	/**
-	 * @param offset
-	 * @return the internal partition of the given offset
-	 * @throws BadLocationException
+	 * @see IPhpScriptRegion#getPartition(int)
 	 */
 	public String getPartition(int offset) throws BadLocationException {
 		return tokensContaier.getPartitionType(offset);
 	}
 
 	/**
-	 *  
-	 * @param offset
-	 * @return true if the given offset is in line comment
-	 * @throws BadLocationException
+	 * @see IPhpScriptRegion#isLineComment(int)
 	 */
 	public boolean isLineComment(int offset) throws BadLocationException {
 		final LexerState lexState = tokensContaier.getState(offset);
 		return lexState != null && lexState.getTopState() == PhpLexer.ST_PHP_LINE_COMMENT;
+	}
+
+	/**
+	 * @see IPhpScriptRegion#isFullReparsed()
+	 */
+	public boolean isFullReparsed() {
+		return isFullReparsed;
+	}
+
+	/**
+	 * @see IPhpScriptRegion#setFullReparsed(boolean)
+	 */
+	public void setFullReparsed(boolean isFullReparse) {
+		isFullReparsed = isFullReparse;
 	}
 
 	@Override
@@ -198,10 +201,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	/**
-	 * Reparses the region given the 
-	 * @param doc
-	 * @param start
-	 * @param length
+	 * @see IPhpScriptRegion#completeReparse(IDocument, int, int)
 	 */
 	public void completeReparse(IDocument doc, int start, int length) {
 		PhpLexer lexer = getPhpLexer(project, new BlockDocumentReader(doc, start, length), null);

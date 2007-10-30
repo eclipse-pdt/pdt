@@ -13,8 +13,8 @@ package org.eclipse.php.internal.core.documentModel.partitioner;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TypedRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public abstract class PHPPartitionTypes {
@@ -61,7 +61,7 @@ public abstract class PHPPartitionTypes {
 	 * @return Starting region of the current partition
 	 * @throws BadLocationException
 	 */
-	public static final ITextRegion getPartitionStartRegion(PhpScriptRegion region, int offset) throws BadLocationException {
+	public static final ITextRegion getPartitionStartRegion(IPhpScriptRegion region, int offset) throws BadLocationException {
 		String partitionType = region.getPartition(offset);
 		ITextRegion internalRegion = region.getPhpToken(offset);
 		ITextRegion startRegion = internalRegion;
@@ -83,7 +83,7 @@ public abstract class PHPPartitionTypes {
 	 * @return Starting offset of the current partition
 	 * @throws BadLocationException
 	 */
-	public static final int getPartitionStart(PhpScriptRegion region, int offset) throws BadLocationException {
+	public static final int getPartitionStart(IPhpScriptRegion region, int offset) throws BadLocationException {
 		ITextRegion startRegion = getPartitionStartRegion(region, offset);
 		return startRegion.getStart();
 	}
@@ -96,7 +96,7 @@ public abstract class PHPPartitionTypes {
 	 * @return Ending region of the current partition
 	 * @throws BadLocationException
 	 */
-	public static final ITextRegion getPartitionEndRegion(PhpScriptRegion region, int offset) throws BadLocationException {
+	public static final ITextRegion getPartitionEndRegion(IPhpScriptRegion region, int offset) throws BadLocationException {
 		String partitionType = region.getPartition(offset);
 		ITextRegion internalRegion = region.getPhpToken(offset);
 		ITextRegion endRegion = internalRegion;
@@ -118,7 +118,7 @@ public abstract class PHPPartitionTypes {
 	 * @return Ending offset of the current partition
 	 * @throws BadLocationException
 	 */
-	public static final int getPartitionEnd(PhpScriptRegion region, int offset) throws BadLocationException {
+	public static final int getPartitionEnd(IPhpScriptRegion region, int offset) throws BadLocationException {
 		ITextRegion endRegion = getPartitionEndRegion(region, offset);
 		return endRegion.getEnd();
 	}
@@ -131,7 +131,7 @@ public abstract class PHPPartitionTypes {
 	 * @return typed region containing partition
 	 * @throws BadLocationException
 	 */
-	public static final ITypedRegion getPartition(PhpScriptRegion region, int offset) throws BadLocationException {
+	public static final ITypedRegion getPartition(IPhpScriptRegion region, int offset) throws BadLocationException {
 		String partitionType = region.getPartition(offset);
 		int startOffset = getPartitionStart(region, offset);
 		int endOffset = getPartitionEnd(region, offset);
