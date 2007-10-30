@@ -45,8 +45,8 @@ public class PHPSearchEngine {
 	 * Searches for the given path using internal PHP mechanism
 	 *
 	 * @param path File path to resolve
-	 * @param currentWorkingDir local Current working directory (usually: CWD of PHP process)
-	 * @param currentScriptDir Directory of current script (which is interpreted by the PHP at this time)
+	 * @param currentWorkingDir Current working directory (usually: CWD of PHP process), absolute (workspace of file system)
+	 * @param currentScriptDir Absolute (workspace of file system) directory of current script (which is interpreted by the PHP at this time)
 	 * @param currentProject Current project to which current script belongs
 	 * @return resolved path, or <code>null</code> in case of failure
 	 */
@@ -61,8 +61,7 @@ public class PHPSearchEngine {
 			return searchExternalOrWorkspaceFile(file);
 		}
 		if (path.matches("\\.\\.?[/\\\\].*")) { // check whether the path starts with ./ or ../
-			file = new File(currentWorkingDir, path);
-			return searchExternalOrWorkspaceFile(file);
+			return searchExternalOrWorkspaceFile(currentWorkingDir, path);
 		}
 
 		// look into include path:
@@ -105,17 +104,34 @@ public class PHPSearchEngine {
 		}
 
 		// look at current script directory:
-		file = new File(currentScriptDir, path);
-		return searchExternalOrWorkspaceFile(file);
+		return searchExternalOrWorkspaceFile(currentScriptDir, path);
+	}
+
+	private static Result<?, ?> searchExternalOrWorkspaceFile(String directory, String relativeFile) {
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(directory);
+		if (resource instanceof IContainer) {
+			IContainer container = (IContainer) resource;
+			IFile file = container.getFile(new Path(relativeFile));
+			if (file != null) {
+				return new ResourceResult(file);
+			}
+		}
+		File dir = new File(directory);
+		if (dir.isDirectory()) {
+			return searchExternalOrWorkspaceFile(new File(dir, relativeFile));
+		}
+		return null;
 	}
 
 	private static Result<?, ?> searchExternalOrWorkspaceFile(File file) {
-		IFile res = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(Path.fromOSString(file.getAbsolutePath()));
-		if (res != null) {
-			return new ResourceResult(res);
-		}
 		if (file.exists()) {
-			return new ExternalFileResult(file);
+			IFile res = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(Path.fromOSString(file.getAbsolutePath()));
+			if (res != null) {
+				return new ResourceResult(res);
+			}
+			if (file.exists()) {
+				return new ExternalFileResult(file);
+			}
 		}
 		return null;
 	}
