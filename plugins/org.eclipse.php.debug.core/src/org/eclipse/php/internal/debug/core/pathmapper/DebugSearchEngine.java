@@ -238,7 +238,9 @@ public class DebugSearchEngine {
 					}
 				}
 			}
-			filters = filtersMap.values().toArray(new IPathEntryFilter[filtersMap.size()]);
+			Collection<IPathEntryFilter> l = filtersMap.values();
+			l.remove(null); // remove null elements
+			filters = l.toArray(new IPathEntryFilter[filtersMap.size()]);
 		}
 		return filters;
 	}
