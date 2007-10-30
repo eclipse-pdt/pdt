@@ -17,12 +17,10 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
@@ -32,11 +30,7 @@ import org.eclipse.php.internal.ui.editor.hover.AbstractPHPTextHover;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 public class PHPDebugTextHover extends AbstractPHPTextHover {
 
@@ -51,15 +45,15 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 		if (flatNode != null) {
 			region = flatNode.getRegionAtCharacterOffset(offset);
 		}
-		
+
 		ITextRegionCollection container = flatNode;
-		if(region instanceof ITextRegionContainer){
-			container = (ITextRegionContainer)region;
+		if (region instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) region;
 			region = container.getRegionAtCharacterOffset(offset);
 		}
 
 		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
+			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 			try {
 				region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
 			} catch (BadLocationException e) {
@@ -98,10 +92,10 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 	 * @return An array of integers that contains the offset and the length of the evaluation request.
 	 */
 	protected int[] getVariableRange(final ITextViewer textViewer, final int offset, final int length) {
-		final int[] variableRange = new int[] {offset, length};
+		final int[] variableRange = new int[] { offset, length };
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
-				TextSelection selection = (TextSelection)textViewer.getSelectionProvider().getSelection();
+				TextSelection selection = (TextSelection) textViewer.getSelectionProvider().getSelection();
 				if (selection.isEmpty()) {
 					return;
 				}

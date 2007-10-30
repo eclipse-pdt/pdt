@@ -16,8 +16,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable;
@@ -51,7 +51,7 @@ public class XDebugTextHover extends AbstractPHPTextHover {
 			}
 
 			if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-				PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
+				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 				try {
 					region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
 				} catch (BadLocationException e) {
