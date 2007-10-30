@@ -463,7 +463,8 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		if(projectModel.isBuildNeeded()){
 			//checking if we are currently at a job with build scheduling rule 
 			//because the build must run in such a job
-			boolean newJobNeeded = (Job.getJobManager().currentJob().getRule() != ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+			Job currentJob = Job.getJobManager().currentJob();
+			boolean newJobNeeded = (currentJob == null || currentJob.getRule() != ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 			if (newJobNeeded) {
 				WorkspaceJob buildJob = new WorkspaceJob(NLS.bind(CoreMessages.getString("PHPWorkspaceModelManager_4"), project.getName())) {
 					@Override
