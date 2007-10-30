@@ -16,7 +16,7 @@ import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
@@ -58,6 +58,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	/**
 	 * This method overrides WST since sometimes we get a subset of the document and NOT the whole document, although the case is FORMAT_DOCUMENT. In all other cases we call the parent method.
 	 */
+	@Override
 	public void doOperation(int operation) {
 		Point selection = getTextWidget().getSelection();
 		int cursorPosition = selection.x;
@@ -169,6 +170,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 	}
 
+	@Override
 	protected IDocumentAdapter createDocumentAdapter() {
 		return new StructuredDocumentToTextAdapterForPhp(getTextWidget());
 	}
@@ -183,10 +185,11 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			super(styledTextWidget);
 		}
 
+		@Override
 		protected void redrawRegionChanged(RegionChangedEvent structuredDocumentEvent) {
 			if (structuredDocumentEvent != null && structuredDocumentEvent.getRegion() != null && structuredDocumentEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
-				final PhpScriptRegion region = (PhpScriptRegion) structuredDocumentEvent.getRegion();
-				if (region.isFullReparsed) {
+				final IPhpScriptRegion region = (IPhpScriptRegion) structuredDocumentEvent.getRegion();
+				if (region.isFullReparsed()) {
 					final TextRegionListImpl newList = new TextRegionListImpl();
 					newList.add(region);
 					final IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentEvent.getStructuredDocumentRegion();
@@ -194,7 +197,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 					final RegionsReplacedEvent regionsReplacedEvent = new RegionsReplacedEvent(structuredDocument, structuredDocumentRegion, structuredDocumentRegion, null, newList, null, 0, 0);
 					redrawRegionsReplaced(regionsReplacedEvent);
 				} else {
-					region.isFullReparsed = true;
+					region.setFullReparsed(true);
 				}
 			}
 			super.redrawRegionChanged(structuredDocumentEvent);
@@ -204,6 +207,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	/**
 	 * We override this function in order to use content assist for php and not use the default one dictated by StructuredTextViewerConfiguration
 	 */
+	@Override
 	public void configure(SourceViewerConfiguration configuration) {
 
 		super.configure(configuration);
@@ -248,6 +252,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * override the parent method to prevent initialization of wrong
 	 * fAnnotationHover specific instance
 	 */
+	@Override
 	protected void ensureAnnotationHoverManagerInstalled() {
 		if (fAnnotationHover instanceof PHPStructuredTextAnnotationHover) {
 			super.ensureAnnotationHoverManagerInstalled();

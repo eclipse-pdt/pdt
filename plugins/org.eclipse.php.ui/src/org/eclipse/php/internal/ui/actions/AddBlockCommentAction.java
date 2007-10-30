@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
@@ -43,10 +43,11 @@ public class AddBlockCommentAction extends BlockCommentAction {
 		super(bundle, prefix, editor);
 	}
 
+	@Override
 	protected void runInternal(ITextSelection selection, IDocumentExtension3 docExtension) throws BadLocationException, BadPartitioningException {
-		
+
 		MultiTextEdit multiEdit = new MultiTextEdit();
-		
+
 		int selectionOffset = selection.getOffset();
 		int selectionEndOffset = selectionOffset + selection.getLength();
 
@@ -54,16 +55,16 @@ public class AddBlockCommentAction extends BlockCommentAction {
 			IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 			IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
 			ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
-			
+
 			ITextRegionCollection container = sdRegion;
-			
-			if(textRegion instanceof ITextRegionContainer){
-				container = (ITextRegionContainer)textRegion;
+
+			if (textRegion instanceof ITextRegionContainer) {
+				container = (ITextRegionContainer) textRegion;
 				textRegion = container.getRegionAtCharacterOffset(selectionOffset);
 			}
 
 			if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-				PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 				ITypedRegion partition = PHPPartitionTypes.getPartition(phpScriptRegion, selectionOffset - container.getStartOffset() - phpScriptRegion.getStart());
 
 				int phpRegionStart = container.getStartOffset(phpScriptRegion);
@@ -75,12 +76,12 @@ public class AddBlockCommentAction extends BlockCommentAction {
 					lastPartition = partition;
 					partition = handleInteriorPartition(partition, multiEdit, docExtension, phpRegionStart);
 				}
-				if(partition == null){
+				if (partition == null) {
 					partition = lastPartition;
 				}
 				handleLastPartition(partition, multiEdit, selectionEndOffset, phpRegionStart);
 			}
-			
+
 			IStructuredTextUndoManager undoManager = sDoc.getUndoManager();
 			undoManager.beginRecording(this);
 			multiEdit.apply(sDoc);
@@ -156,16 +157,16 @@ public class AddBlockCommentAction extends BlockCommentAction {
 		IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 		IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(partEndOffset);
 		ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(partEndOffset);
-		
+
 		ITextRegionCollection container = sdRegion;
-		
-		if(textRegion instanceof ITextRegionContainer){
-			container = (ITextRegionContainer)textRegion;
+
+		if (textRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) textRegion;
 			textRegion = container.getRegionAtCharacterOffset(partEndOffset);
 		}
 
 		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 			partition = PHPPartitionTypes.getPartition(phpScriptRegion, partEndOffset - container.getStartOffset() - phpScriptRegion.getStart());
 			partType = partition.getType();
 			phpRegionStart = container.getStartOffset() + phpScriptRegion.getStart();
@@ -232,6 +233,7 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	/* (non-javadoc)
 	 * @see org.eclipse.php.internal.ui.actions.BlockCommentAction#isValidSelection(org.eclipse.jface.text.ITextSelection, org.eclipse.jface.text.IDocumentExtension3)
 	 */
+	@Override
 	protected boolean isValidSelection(ITextSelection selection, IDocumentExtension3 docExtension) {
 		int offset = selection.getOffset();
 		try {
@@ -243,7 +245,7 @@ public class AddBlockCommentAction extends BlockCommentAction {
 				}
 				ITextRegion region = sdRegion.getRegionAtCharacterOffset(offset);
 				if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
-					PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
+					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 					region = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 					if (!PHPPartitionTypes.isPHPMultiLineCommentState(region.getType())) {
 						return true;

@@ -8,7 +8,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.util.CodeDataResolver;
@@ -33,6 +33,7 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.Action#run()
 	 */
+	@Override
 	public void run() {
 		if (isValid()) {
 			doRun();
@@ -109,7 +110,7 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction {
 		}
 
 		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 			try {
 				textRegion = phpScriptRegion.getPhpToken(offset - structuredDocumentRegion.getStartOffset() - phpScriptRegion.getStart());
 			} catch (BadLocationException e) {

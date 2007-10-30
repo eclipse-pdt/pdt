@@ -25,8 +25,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
@@ -199,7 +199,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
 			if (container.getStartOffset(textRegion) == offset) {
 				ITextRegion regionBefore = container.getRegionAtCharacterOffset(offset - 1);
-				if (regionBefore instanceof PhpScriptRegion) {
+				if (regionBefore instanceof IPhpScriptRegion) {
 					textRegion = regionBefore;
 				}
 			} else {
@@ -224,12 +224,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			startOffset = sdRegion.getStartOffset(textRegion);
 		}
 
-		PhpScriptRegion phpScriptRegion = null;
+		IPhpScriptRegion phpScriptRegion = null;
 		String partitionType = null;
 		int internalOffset = 0;
 		ContextRegion internalPHPRegion = null;
-		if (textRegion instanceof PhpScriptRegion) {
-			phpScriptRegion = (PhpScriptRegion) textRegion;
+		if (textRegion instanceof IPhpScriptRegion) {
+			phpScriptRegion = (IPhpScriptRegion) textRegion;
 			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
@@ -354,7 +354,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return functionsData != null && functionsData.length > 0;
 	}
 
-	protected boolean isLineComment(ITextRegionCollection sdRegion, PhpScriptRegion phpScriptRegion, int offset) {
+	protected boolean isLineComment(ITextRegionCollection sdRegion, IPhpScriptRegion phpScriptRegion, int offset) {
 		int relativeOffset = offset - sdRegion.getStartOffset(phpScriptRegion);
 		try {
 			return phpScriptRegion.isLineComment(relativeOffset);
@@ -364,7 +364,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 	}
 
-	protected boolean isPHPSingleQuote(ITextRegionCollection sdRegion, PhpScriptRegion phpScriptRegion, ContextRegion internalRegion, IStructuredDocument document, int documentOffset) {
+	protected boolean isPHPSingleQuote(ITextRegionCollection sdRegion, IPhpScriptRegion phpScriptRegion, ContextRegion internalRegion, IStructuredDocument document, int documentOffset) {
 		if (PHPPartitionTypes.isPHPQuotesState(internalRegion.getType())) {
 			char firstChar;
 			int startOffset;
@@ -529,6 +529,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			super("php", 0, null, null, PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
+		@Override
 		public void accept(Visitor v) {
 			if (v instanceof PHPCompletionRendererVisitor) {
 				((PHPCompletionRendererVisitor) v).visit(this);
@@ -1408,6 +1409,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	protected class PHPCompletionProposalGroup extends CompletionProposalGroup {
 
+		@Override
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			String suffix = " "; //$NON-NLS-1$
 			int caretOffsetInSuffix = 1;
@@ -1445,6 +1447,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	private class RegularPHPCompletionProposalGroup extends PHPCompletionProposalGroup {
+		@Override
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			if (!(codeData instanceof PHPClassData)) {
 				return super.createProposal(codeData);
@@ -1454,12 +1457,14 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	private class ClassConstructorCompletionProposalGroup extends CompletionProposalGroup {
+		@Override
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "", "()", 1, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	private class NewStatmentCompletionProposalGroup extends CompletionProposalGroup {
+		@Override
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			PHPClassData classData = (PHPClassData) codeData;
 			PHPFunctionData constructor = getRealConstructor(classData);
@@ -1480,6 +1485,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	private class ArrayCompletionProposalGroup extends PHPCompletionProposalGroup {
+		@Override
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			if (!(codeData instanceof PHPVariableData)) {
 				return super.createProposal(codeData);
@@ -1494,6 +1500,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				super(codeData, offset, length, selectionLength, prefix, suffix, caretOffsetInSuffix, false);
 			}
 
+			@Override
 			public void apply(IDocument document) {
 				try {
 					boolean insertCompletion = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
@@ -1538,6 +1545,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	private class ClassVariableCallCompletionProposalGroup extends PHPCompletionProposalGroup {
+		@Override
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			if (codeData instanceof PHPClassVarData) {
 				return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "$", "", 0, false); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1548,6 +1556,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	private class ClassStaticCallCompletionProposalGroup extends PHPCompletionProposalGroup {
 
+		@Override
 		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
 			if (codeData instanceof PHPClassVarData) {
 				return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "$", "", 0, false); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1555,6 +1564,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return super.createProposal(codeData);
 		}
 
+		@Override
 		protected CodeDataCompletionProposal[] calcCompletionProposals() {
 
 			if (key.length() == 0) {

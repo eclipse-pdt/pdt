@@ -17,8 +17,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
@@ -31,7 +31,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
 public class PHPDocContentAssistSupport extends ContentAssistSupport {
@@ -40,7 +39,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 	private char[] autoActivationTriggers;
 
-	private CompletionProposalGroup phpDocCompletionProposalGroup = new PHPCompletionProposalGroup();
+	private final CompletionProposalGroup phpDocCompletionProposalGroup = new PHPCompletionProposalGroup();
 
 	protected IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -50,6 +49,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		}
 	};
 
+	@Override
 	protected void initPreferences(String prefKey) {
 		if (prefKey == null || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC.equals(prefKey)) {
 			autoActivationTriggers = PreferenceConstants.getPreferenceStore().getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC).trim().toCharArray();
@@ -64,10 +64,12 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		PreferenceConstants.getPreferenceStore().addPropertyChangeListener(WeakPropertyChangeListener.create(prefChangeListener, PreferenceConstants.getPreferenceStore()));
 	}
 
+	@Override
 	public char[] getAutoactivationTriggers() {
 		return autoActivationTriggers;
 	}
 
+	@Override
 	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer, boolean explicit) throws BadLocationException {
 
 		PHPProjectModel projectModel = editorModel.getProjectModel();
@@ -80,7 +82,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
-		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
+		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(viewer, offset);
 		ITextRegion textRegion = null;
 		// 	in case we are at the end of the document, asking for completion
 		if (offset == editorModel.getStructuredDocument().getLength()) {
@@ -105,7 +107,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
 			if (sdRegion.getStartOffset(textRegion) == offset) {
 				ITextRegion regionBefore = sdRegion.getRegionAtCharacterOffset(offset - 1);
-				if (regionBefore instanceof PhpScriptRegion) {
+				if (regionBefore instanceof IPhpScriptRegion) {
 					textRegion = regionBefore;
 				}
 			} else {
@@ -130,11 +132,11 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			startOffset = sdRegion.getStartOffset(textRegion);
 		}
 
-		PhpScriptRegion phpScriptRegion = null;
+		IPhpScriptRegion phpScriptRegion = null;
 		String partitionType = null;
 		int internalOffset = 0;
-		if (textRegion instanceof PhpScriptRegion) {
-			phpScriptRegion = (PhpScriptRegion) textRegion;
+		if (textRegion instanceof IPhpScriptRegion) {
+			phpScriptRegion = (IPhpScriptRegion) textRegion;
 			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
@@ -276,6 +278,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		return data.getDocBlock() != null ? data.getDocBlock().containsPosition(position) : false;
 	}
 
+	@Override
 	protected String getTemplateContext() {
 		return PHPTemplateContextTypeIds.PHPDOC;
 	}

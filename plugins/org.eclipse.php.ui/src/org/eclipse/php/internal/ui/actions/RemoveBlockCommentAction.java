@@ -17,8 +17,8 @@ import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.MultiTextEdit;
@@ -46,13 +46,14 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 		super(bundle, prefix, editor);
 	}
 
+	@Override
 	protected void runInternal(ITextSelection selection, IDocumentExtension3 docExtension) throws BadPartitioningException, BadLocationException {
 		int offset = selection.getOffset();
 		int endOffset = offset + selection.getLength();
 		if (!(docExtension instanceof IStructuredDocument)) {
 			return;
 		}
-		
+
 		MultiTextEdit multiEdit = new MultiTextEdit();
 		IStructuredDocument sDoc = (IStructuredDocument) docExtension;
 		do {
@@ -67,7 +68,7 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 			}
 
 			if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-				PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 				textRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 				if (PHPPartitionTypes.isPHPMultiLineCommentState(textRegion.getType())) {
 					ITextRegion startRegion = PHPPartitionTypes.getPartitionStartRegion(phpScriptRegion, textRegion.getStart());
@@ -75,10 +76,10 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 					if (startRegion.getType() == PHPRegionTypes.PHP_COMMENT_START && endRegion.getType() == PHPRegionTypes.PHP_COMMENT_END) {
 						int startCommentOffset = container.getStart() + phpScriptRegion.getStart() + startRegion.getStart();
 						int endCommentOffset = container.getStart() + phpScriptRegion.getStart() + endRegion.getStart();
-						
+
 						multiEdit.addChild(new DeleteEdit(startCommentOffset, startRegion.getLength()));
 						multiEdit.addChild(new DeleteEdit(endCommentOffset, getCommentEnd().length()));
-						
+
 						offset = endCommentOffset + endRegion.getLength();
 					} else {
 						break; // comment is not opened or not closed
@@ -102,6 +103,7 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.ui.actions.BlockCommentAction#isValidSelection(org.eclipse.jface.text.ITextSelection, org.eclipse.jface.text.IDocumentExtension3)
 	 */
+	@Override
 	protected boolean isValidSelection(ITextSelection selection, IDocumentExtension3 docExtension) {
 		int offset = selection.getOffset();
 		try {
@@ -113,7 +115,7 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 				}
 				ITextRegion region = sdRegion.getRegionAtCharacterOffset(offset);
 				if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
-					PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
+					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 					region = phpScriptRegion.getPhpToken(offset - sdRegion.getStartOffset() - phpScriptRegion.getStart());
 					if (PHPPartitionTypes.isPHPMultiLineCommentState(region.getType())) {
 						return true;

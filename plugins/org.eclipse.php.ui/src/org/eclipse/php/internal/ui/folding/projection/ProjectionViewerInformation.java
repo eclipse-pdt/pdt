@@ -17,7 +17,7 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
@@ -40,7 +40,7 @@ class ProjectionViewerInformation {
 	 * annotation model.
 	 */
 	private static class DocumentListener implements IDocumentListener {
-		private ProjectionViewerInformation fInfo;
+		private final ProjectionViewerInformation fInfo;
 
 		public DocumentListener(ProjectionViewerInformation info) {
 			fInfo = info;
@@ -73,7 +73,7 @@ class ProjectionViewerInformation {
 	 * documentchanged has been fired.
 	 */
 	private static class PostDocumentChangedListener implements IDocumentExtension.IReplace {
-		private ProjectionViewerInformation fInfo;
+		private final ProjectionViewerInformation fInfo;
 
 		public PostDocumentChangedListener(ProjectionViewerInformation info) {
 			fInfo = info;
@@ -89,11 +89,11 @@ class ProjectionViewerInformation {
 	 * Projection annotation model current associated with this projection
 	 * viewer
 	 */
-	private ProjectionAnnotationModel fProjectionAnnotationModel;
+	private final ProjectionAnnotationModel fProjectionAnnotationModel;
 	/**
 	 * Document currently associated with this projection viewer
 	 */
-	private IDocument fDocument;
+	private final IDocument fDocument;
 	/**
 	 * Listener to fProjectionViewer's document
 	 */
@@ -229,11 +229,11 @@ class ProjectionViewerInformation {
 			container = (ITextRegionContainer) textRegion;
 			textRegion = container.getRegionAtCharacterOffset(offset);
 		}
-		if (!(textRegion instanceof PhpScriptRegion)) {
+		if (!(textRegion instanceof IPhpScriptRegion)) {
 			return false;
 		}
 
-		PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+		final IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 
 		int internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
 

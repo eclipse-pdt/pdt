@@ -18,8 +18,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
@@ -45,7 +45,7 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 		if (phpCodeData == null) {
 			return;
 		}
-		
+
 		for (int i = 0; i < phpCodeData.length; ++i) {
 			PHPCodeData codeData = phpCodeData[i];
 			IEditorPart editorPart;
@@ -61,18 +61,18 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 			IEditorInput editorInput = editorPart.getEditorInput();
 			IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
 			if (codeData instanceof PHPFileData) {
-				handleFileDocBlock((PHPFileData)codeData, (IStructuredDocument)document);
+				handleFileDocBlock((PHPFileData) codeData, (IStructuredDocument) document);
 			}
 			PHPDocBlock docBlock = PHPDocTool.createPhpDoc(codeData);
 			int startPosition = getCodeDataOffset(codeData);
-			String dockBlockText = insertDocBlock(codeData, (IStructuredDocument)document, startPosition);
-			if(dockBlockText == null) {
+			String dockBlockText = insertDocBlock(codeData, (IStructuredDocument) document, startPosition);
+			if (dockBlockText == null) {
 				return;
 			}
 			String shortDescription = docBlock.getShortDescription();
 			int shortDescriptionInnerOffset = dockBlockText.indexOf(shortDescription);
 			int shortDescriptionStartOffset = startPosition + shortDescriptionInnerOffset;
-	
+
 			EditorUtility.revealInEditor(textEditor, shortDescriptionStartOffset, shortDescription.length());
 		}
 	}
@@ -90,7 +90,7 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 		if (selection == null || !(selection instanceof IStructuredSelection)) {
 			return;
 		}
-		
+
 		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 		phpCodeData = new PHPCodeData[structuredSelection.size()];
 		Iterator i = structuredSelection.iterator();
@@ -109,22 +109,22 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 	 * @param document The IStructuredDocument that we are working on
 	 */
 	private void handleFileDocBlock(PHPFileData data, IStructuredDocument document) {
-		
+
 		// Find the first PHP script region:
 		IStructuredDocumentRegion sdRegion = document.getFirstStructuredDocumentRegion();
-		PhpScriptRegion phpScriptRegion = null;
+		IPhpScriptRegion phpScriptRegion = null;
 		while (sdRegion != null) {
 			ITextRegion region = sdRegion.getFirstRegion();
 			if (region.getType() == PHPRegionContext.PHP_OPEN) {
 				region = sdRegion.getRegionAtCharacterOffset(region.getEnd());
 				if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
-					phpScriptRegion = (PhpScriptRegion)region;
+					phpScriptRegion = (IPhpScriptRegion) region;
 					break;
 				}
 			}
 			sdRegion = sdRegion.getNext();
 		}
-		
+
 		if (phpScriptRegion != null) {
 			try {
 				ITextRegion textRegion = phpScriptRegion.getPhpToken(0);
@@ -132,7 +132,7 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 				if (textRegion.getType() == PHPRegionTypes.PHP_CLASS) {
 					// add a class doc at textRegion.getStart() + sdRegion.getStartOffset()
 					addClassBlock(document, data, offset);
-				} else if (textRegion.getType() == PHPRegionTypes.PHP_FUNCTION){
+				} else if (textRegion.getType() == PHPRegionTypes.PHP_FUNCTION) {
 					addFunctionBlock(document, data, offset);
 				} else if (textRegion.getType() == PHPRegionTypes.PHP_STRING && document.get(offset, textRegion.getLength()).trim().equalsIgnoreCase("define")) { //$NON-NLS-1$
 					addConstantBlock(document, data, offset);

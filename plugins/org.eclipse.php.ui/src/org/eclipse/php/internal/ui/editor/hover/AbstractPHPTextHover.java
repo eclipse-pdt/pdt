@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
@@ -32,7 +32,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 
 	protected Pattern tab = Pattern.compile("\t"); //$NON-NLS-1$
 	protected IEditorPart fEditor;
-	private IBindingService fBindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+	private final IBindingService fBindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 
 	public IEditorPart getEditorPart() {
 		return fEditor;
@@ -41,7 +41,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 	public void setEditorPart(IEditorPart editorPart) {
 		fEditor = editorPart;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.text.ITextHover#getHoverRegion(org.eclipse.jface.text.ITextViewer, int)
 	 */
@@ -55,22 +55,22 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 		if (flatNode != null) {
 			region = flatNode.getRegionAtCharacterOffset(offset);
 		}
-		
+
 		ITextRegionCollection container = flatNode;
-		if(region instanceof ITextRegionContainer){
-			container = (ITextRegionContainer)region;
+		if (region instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) region;
 			region = container.getRegionAtCharacterOffset(offset);
 		}
 
 		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-			PhpScriptRegion phpScriptRegion = (PhpScriptRegion)region;
+			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 			try {
 				region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
 			} catch (BadLocationException e) {
 				region = null;
 			}
 			if (region != null) {
-				return new Region(container.getStartOffset() + phpScriptRegion.getStart() + region.getStart() , region.getLength());
+				return new Region(container.getStartOffset() + phpScriptRegion.getStart() + region.getStart(), region.getLength());
 			}
 		}
 		return null;

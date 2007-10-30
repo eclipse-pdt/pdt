@@ -14,8 +14,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -38,6 +38,7 @@ import org.w3c.dom.Node;
  */
 public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 
+	@Override
 	public void doubleClicked(ITextViewer textViewer) {
 		if (textViewer instanceof StructuredTextViewer) {
 			StructuredTextViewer structuredTextViewer = (StructuredTextViewer) textViewer;
@@ -52,16 +53,16 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 							IStructuredDocumentRegion sdRegion = structuredModel.getStructuredDocument().getRegionAtCharacterOffset(caretPosition);
 							if (sdRegion != null) {
 								ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(caretPosition);
-								
+
 								ITextRegionCollection container = sdRegion;
-								if(tRegion instanceof ITextRegionContainer){
-									container = (ITextRegionContainer)tRegion;
+								if (tRegion instanceof ITextRegionContainer) {
+									container = (ITextRegionContainer) tRegion;
 									tRegion = container.getRegionAtCharacterOffset(caretPosition);
 								}
 
 								// We should always hit the PhpScriptRegion:
 								if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-									PhpScriptRegion phpScriptRegion = (PhpScriptRegion) tRegion;
+									IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 									tRegion = phpScriptRegion.getPhpToken(caretPosition - container.getStartOffset() - phpScriptRegion.getStart());
 
 									// Handle double-click on PHPDoc tags:

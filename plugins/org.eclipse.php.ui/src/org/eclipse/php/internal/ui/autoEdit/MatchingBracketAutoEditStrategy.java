@@ -15,8 +15,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
@@ -146,13 +146,13 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 				}
 
 				ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(currOffset);
-				
+
 				// in case the cursor on the beginning of '?>' tag
 				// we decrease the offset to get the PhpScriptRegion 
 				if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
 					tRegion = sdRegion.getRegionAtCharacterOffset(currOffset - 1);
 				}
-				
+
 				int regionStart = sdRegion.getStartOffset(tRegion);
 				// in case of container we have the extract the PhpScriptRegion
 				if (tRegion instanceof ITextRegionContainer) {
@@ -161,8 +161,8 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 					regionStart += tRegion.getStart();
 				}
 
-				if (tRegion instanceof PhpScriptRegion) {
-					PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+				if (tRegion instanceof IPhpScriptRegion) {
+					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 					tRegion = scriptRegion.getPhpToken(currOffset - regionStart);
 
 					while (tRegion != null) {
@@ -242,8 +242,8 @@ public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrateg
 				tRegion = container.getRegionAtCharacterOffset(offset);
 			}
 
-			if (tRegion instanceof PhpScriptRegion) {
-				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+			if (tRegion instanceof IPhpScriptRegion) {
+				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				tRegion = scriptRegion.getPhpToken(offset - sdRegion.getStartOffset(scriptRegion));
 
 				if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_TOKEN) {

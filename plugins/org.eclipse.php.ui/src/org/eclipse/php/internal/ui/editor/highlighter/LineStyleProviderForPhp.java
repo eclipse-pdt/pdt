@@ -23,7 +23,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
@@ -356,7 +355,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 			} else {
 
 				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-					handled = preparePhpRegions(holdResults, (PhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
+					handled = preparePhpRegions(holdResults, (IPhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
 				} else {
 					attr = getAttributeFor(region);
 					if (attr != null) {
@@ -414,7 +413,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 				} else {
 
 					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-						handled = preparePhpRegions(holdResults, (PhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
+						handled = preparePhpRegions(holdResults, (IPhpScriptRegion) region, startOffset, partitionStartOffset, partitionLength);
 					} else {
 
 						attr = getAttributeFor(region);

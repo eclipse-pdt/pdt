@@ -20,8 +20,8 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.*;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -53,8 +53,8 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 	private boolean collapsePHPDoc;
 	private boolean allowCollapsing;
 	private IModelStateListener modelStateListener;
-	private ArrayList toRemove;
-	private Map newFolds;
+	private final ArrayList toRemove;
+	private final Map newFolds;
 	private Timer timer;
 	private IDocument document;
 	private TimerTask timerTask;
@@ -96,6 +96,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 				failCount = 0;
 			} else {
 				TimerTask thread = new TimerTask() {
+					@Override
 					public void run() {
 						if (failCount++ < MAX_RETRY) {
 							projectionEnabled();
@@ -200,7 +201,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 						// In this map we use the AnnotatedPosition as keys
 						Iterator existing = model.getAnnotationIterator();
 						LinkedHashMap exitingHashMap = new LinkedHashMap();
-						while ( existing.hasNext() ) {
+						while (existing.hasNext()) {
 							ProjectionAnnotation existingAnnotation = (ProjectionAnnotation) existing.next();
 							Position existingPosition = model.getPosition(existingAnnotation);
 							exitingHashMap.put(existingPosition, existingAnnotation);
@@ -208,7 +209,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 
 						Iterator additionsIterator = additions.values().iterator();
 
-						while ( additionsIterator.hasNext() ) {
+						while (additionsIterator.hasNext()) {
 							AnnotatedPosition addedPosition = (AnnotatedPosition) additionsIterator.next();
 							// Try to remove the added Position from the existing positions.
 							// If the position was found and removed, then it was not new. Otherwise, it's a new
@@ -224,7 +225,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 						// to be removed from the model.
 						boolean removeAnyway = false;
 						Iterator annotationsToRemove = exitingHashMap.entrySet().iterator();
-						while ( annotationsToRemove.hasNext() ) {
+						while (annotationsToRemove.hasNext()) {
 							Entry entry = (Entry) annotationsToRemove.next();
 							AnnotatedPosition position = (AnnotatedPosition) entry.getKey();
 							PHPProjectionAnnotation projectionToRemove = (PHPProjectionAnnotation) entry.getValue();
@@ -513,7 +514,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
 			if (container.getStartOffset(textRegion) == offset) {
 				ITextRegion regionBefore = container.getRegionAtCharacterOffset(offset - 1);
-				if (regionBefore instanceof PhpScriptRegion) {
+				if (regionBefore instanceof IPhpScriptRegion) {
 					textRegion = regionBefore;
 				}
 			} else {
@@ -521,12 +522,12 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 			}
 		}
 
-		PhpScriptRegion phpScriptRegion = null;
+		IPhpScriptRegion phpScriptRegion = null;
 		String partitionType = null;
 		int internalOffset = 0;
 
-		if (textRegion instanceof PhpScriptRegion) {
-			phpScriptRegion = (PhpScriptRegion) textRegion;
+		if (textRegion instanceof IPhpScriptRegion) {
+			phpScriptRegion = (IPhpScriptRegion) textRegion;
 			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
@@ -627,6 +628,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 			this.annotation = annotation;
 		}
 
+		@Override
 		public String toString() {
 			return "[AnnotatedPosition (" + getOffset() + ", " + getLength() + ")]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
@@ -760,6 +762,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 			this.isComment = isComment;
 		}
 
+		@Override
 		public boolean equals(Object other) {
 			if (other == this) {
 				return true;
@@ -773,6 +776,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 		/*
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString() {
 			return "PHPProjectionAnnotation:\n" + //$NON-NLS-1$
 				"\telement: \t" + phpElement.toString() + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
@@ -782,6 +786,7 @@ public class DefaultPHPFoldingStructureProvider implements IProjectionListener, 
 	}
 
 	private class FoldingTimerTask extends TimerTask {
+		@Override
 		public void run() {
 			updateFolds();
 			timer.cancel();

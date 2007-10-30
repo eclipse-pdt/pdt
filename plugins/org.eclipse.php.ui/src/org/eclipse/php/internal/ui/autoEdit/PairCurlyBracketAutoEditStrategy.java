@@ -13,8 +13,8 @@ package org.eclipse.php.internal.ui.autoEdit;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.format.CurlyCloseIndentationStrategy;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -57,8 +57,8 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			}
 
 			// find the specified php token in the PhpScriptRegion
-			if (tRegion instanceof PhpScriptRegion) {
-				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+			if (tRegion instanceof IPhpScriptRegion) {
+				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				tRegion = scriptRegion.getPhpToken(offset - regionStart);
 
 				return tRegion;
@@ -175,7 +175,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 		return whiteSpacesAdded;
 	}
 
-	private CurlyCloseIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
+	private final CurlyCloseIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
 
 	private void addCurlyCloseBracket(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) {
 
