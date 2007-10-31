@@ -111,6 +111,13 @@
            fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
            id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
            name="Basic Factory"/>
+     <wizardAndCompositeFragment
+           class="org.eclipse.php.internal.server.ui.PathMapperFragmentFactory"
+           fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
+           id="org.eclipse.php.internal.server.ui.PathMapperFragmentFactory"
+           name="Path Mapper Fragment"
+           placeAfter="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory">
+     </wizardAndCompositeFragment>
   </extension>
   <extension
         point="org.eclipse.ui.preferencePages">
