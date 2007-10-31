@@ -27,7 +27,7 @@ import org.eclipse.ui.IPersistableElement;
 
 /**
  * Editor input for a stack frame for which source could not be located.
- * 
+ *
  */
 public class PHPSourceNotFoundEditorInput extends PlatformObject implements IEditorInput {
 
@@ -45,8 +45,8 @@ public class PHPSourceNotFoundEditorInput extends PlatformObject implements IEdi
 	/**
 	 * Constructs an editor input for the given stack frame,
 	 * to indicate source could not be found.
-	 * A default tooltip and text will appear in the editor. 
-	 * 
+	 * A default tooltip and text will appear in the editor.
+	 *
 	 * @param frame stack frame
 	 * @see #PHPSourceNotFoundEditorInput(PHPSourceNotFoundInput, String)
 	 */
@@ -60,7 +60,7 @@ public class PHPSourceNotFoundEditorInput extends PlatformObject implements IEdi
 	/**
 	 * Constructs an editor input for the given stack frame,
 	 * to indicate source could not be found.
-	 * 
+	 *
 	 * @param frame stack frame
 	 * @param tooltipText The text that will appear in the editor.
 	 */
@@ -92,9 +92,10 @@ public class PHPSourceNotFoundEditorInput extends PlatformObject implements IEdi
 	public String getName() {
 		try {
 			String fullName = fFrame.getName();
-			return new Path(fullName).lastSegment();
+			String lastSegment = new Path(fullName).lastSegment();
+			return lastSegment == null ? fullName : lastSegment;
 		} catch (DebugException e) {
-			return PHPDebugUIMessages.SourceNotFoundEditorInput_Source_Not_Found_1; //$NON-NLS-1$
+			return PHPDebugUIMessages.SourceNotFoundEditorInput_Source_Not_Found_1; 
 		}
 	}
 
@@ -110,7 +111,7 @@ public class PHPSourceNotFoundEditorInput extends PlatformObject implements IEdi
 	 */
 	public String getToolTipText() {
 		if (fTooltipText == null) {
-			return MessageFormat.format(PHPDebugUIMessages.SourceNotFoundEditorInput_Source_not_found_for__0__2, new String[] { fFrameText }); //$NON-NLS-1$
+			return MessageFormat.format(PHPDebugUIMessages.SourceNotFoundEditorInput_Source_not_found_for__0__2, new String[] { fFrameText }); 
 		}
 		return fTooltipText;
 	}

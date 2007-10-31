@@ -555,5 +555,29 @@
           class="org.eclipse.php.internal.debug.ui.hovers.XDebugTextHover"
           id="org.eclipse.php.xdebug.ui.hover.XDebugTextHover">
     	</hover>
-    </extension> 
+    </extension>
+ <extension
+       point="org.eclipse.php.debug.core.pathEntryFilters">
+    <filter
+          class="org.eclipse.php.internal.debug.ui.pathmapper.PathEntrySelector"
+          id="org.eclipse.php.debug.ui.pathEntrySelector"
+          name="Path Entry Selector Dialog">
+    </filter>
+ </extension>
+ <extension
+       point="org.eclipse.php.ui.wizardAndCompositeFragments">
+    <wizardAndCompositeFragment
+          class="org.eclipse.php.internal.debug.ui.wizards.PHPExeCompositeFragmentFactory"
+          fragmentsGroupID="org.eclipse.php.debug.ui.phpExeWizardCompositeFragment"
+          id="org.eclipse.php.internal.debug.ui.preferences.phps.PHPExeCompositeFragmentFactory"
+          name="Basic Fragment">
+    </wizardAndCompositeFragment>
+    <wizardAndCompositeFragment
+          class="org.eclipse.php.internal.debug.ui.wizards.PathMapperFragmentFactory"
+          fragmentsGroupID="org.eclipse.php.debug.ui.phpExeWizardCompositeFragment"
+          id="org.eclipse.php.internal.debug.ui.preferences.phps.PathMapperFragmentFactory"
+          name="Path Mapper Fragment"
+          placeAfter="org.eclipse.php.internal.debug.ui.preferences.phps.PHPExeCompositeFragmentFactory">
+    </wizardAndCompositeFragment>
+ </extension> 
 </plugin>

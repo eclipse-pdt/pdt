@@ -66,7 +66,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 			target = (PHPDebugTarget) fLaunch.getDebugTarget();
 		}
 		if (target != null)
-			target.addConsoleEventListener(new PHPConsoleListener(debugMonitor, fConsole, fLaunch, fPHPHyperLink));
+			target.addConsoleEventListener(new PHPConsoleListener(debugMonitor, fPHPHyperLink));
 
 		super.connect(process, fConsole);
 

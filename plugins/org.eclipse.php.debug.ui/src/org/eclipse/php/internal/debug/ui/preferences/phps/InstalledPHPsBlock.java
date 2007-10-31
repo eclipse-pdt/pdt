@@ -14,36 +14,72 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IFontProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.debug.ui.wizards.ClosableWizardDialog;
+import org.eclipse.php.internal.debug.ui.wizards.PHPExeEditDialog;
+import org.eclipse.php.internal.debug.ui.wizards.PHPExeWizard;
 import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PlatformUI;
 
 /**
- * A composite that displays installed PHP's in a table. PHPs can be 
+ * A composite that displays installed PHP's in a table. PHPs can be
  * added, removed, edited, and searched for.
  * <p>
  * This block implements ISelectionProvider - it sends selection change events
@@ -53,9 +89,9 @@ import org.eclipse.swt.widgets.*;
  * @author seva, shalom
  *
  */
-public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
+public class InstalledPHPsBlock {
 
-	/** 
+	/**
 	 * Content provider to show a list of PHPs
 	 */
 	class PHPsContentProvider implements IStructuredContentProvider {
@@ -172,10 +208,18 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	 * Bring up a dialog that lets the user create a new VM definition.
 	 */
 	private void addPHPexe() {
-		final AddPHPexeDialog dialog = new AddPHPexeDialog(this, getShell(), phpExes, null);
-		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_7);
-		if (dialog.open() != Window.OK)
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		NullProgressMonitor monitor = new NullProgressMonitor();
+		PHPexeItem phpExeItem = null;
+		PHPExeWizard wizard = new PHPExeWizard(phpExes.getAllItems());
+		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+		if (dialog.open() == Window.CANCEL) {
+			monitor.setCanceled(true);
 			return;
+		}
+		phpExeItem = (PHPexeItem) wizard.getRootFragment().getWizardModel().getObject(PHPExeWizard.MODEL);
+		fPHPexes.add(phpExeItem);
+		phpExes.addItem(phpExeItem);
 		fPHPExeList.refresh();
 		commitChanges();
 	}
@@ -225,7 +269,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 
 	/**
 	 * Creates this block's control in the given control.
-	 * 
+	 *
 	 * @param ancestor containing control
 	 *  the user that opens the installed PHPs pref page for PHP management,
 	 *  or to provide 'add, remove, edit, and search' buttons.
@@ -381,13 +425,20 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	private void editPHPexe() {
 		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
 		final PHPexeItem phpExe = (PHPexeItem) selection.getFirstElement();
-		if (phpExe == null)
+		if (phpExe == null) {
 			return;
-		final AddPHPexeDialog dialog = new AddPHPexeDialog(this, getShell(), phpExes, phpExe);
+		}
+		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(), phpExe.getPhpEXE(), phpExe.getDebuggerID(), phpExe.isEditable());
+		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), phpExeToEdit, phpExes.getAllItems());
 		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
-		if (dialog.open() != Window.OK)
+		if (dialog.open() != Window.OK) {
 			return;
-		fPHPExeList.refresh(phpExe);
+		}
+		phpExe.setName(phpExeToEdit.getName());
+		phpExe.setLocation(phpExeToEdit.getLocation());
+		phpExe.setDebuggerID(phpExeToEdit.getDebuggerID());
+
+		fPHPExeList.refresh();
 		commitChanges();
 	}
 
@@ -400,7 +451,6 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 			canRemoveOrEdit &= item.isEditable();
 		}
 		final int selectionCount = selection.size();
-		fEditButton.setEnabled(canRemoveOrEdit && selectionCount == 1);
 		fRemoveButton.setEnabled(canRemoveOrEdit && selectionCount > 0);
 		PHPexeItem selectedItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement();
 		fSetDefaultButton.setEnabled(selectionCount == 1 && selectedItem != null && !selectedItem.isDefault());
@@ -426,7 +476,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 
 	/**
 	 * Returns this block's control
-	 * 
+	 *
 	 * @return control
 	 */
 	public Control getControl() {
@@ -435,7 +485,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 
 	/**
 	 * Returns the PHPs currently being displayed in this block
-	 * 
+	 *
 	 * @return PHPs currently being displayed in this block
 	 */
 	public PHPexeItem[] getPHPs() {
@@ -458,14 +508,6 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		return false;
 	}
 
-	/** (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.ui.preferences.phps.IAddPHPexeDialogRequestor#phpExeAdded(org.eclipse.php.internal.debug.core.preferences.PHPexeItem)
-	 */
-	public void phpExeAdded(final PHPexeItem phpExe) {
-		fPHPexes.add(phpExe);
-		fPHPExeList.refresh();
-	}
-
 	private void removePHPexes() {
 		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
 		final PHPexeItem[] phpExes = new PHPexeItem[selection.size()];
@@ -484,9 +526,9 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	}
 
 	public void removePHPs(final PHPexeItem[] phpExes) {
-		for (int i = 0; i < phpExes.length; i++) {
-			fPHPexes.remove(phpExes[i]);
-			this.phpExes.removeItem(phpExes[i]);
+		for (PHPexeItem element : phpExes) {
+			fPHPexes.remove(element);
+			this.phpExes.removeItem(element);
 		}
 		fPHPExeList.refresh();
 	}
@@ -544,7 +586,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	/**
 	 * Restore table settings from the given dialog store using the
 	 * given key.
-	 * 
+	 *
 	 * @param settings dialog settings store
 	 * @param qualifier key to restore settings from
 	 */
@@ -591,7 +633,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	/**
 	 * Persist table settings into the give dialog store, prefixed
 	 * with the given key.
-	 * 
+	 *
 	 * @param settings dialog store
 	 * @param qualifier key qualifier
 	 */
@@ -607,7 +649,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	 */
 	protected void search() {
 
-		// choose a root directory for the search 
+		// choose a root directory for the search
 		final DirectoryDialog dialog = new DirectoryDialog(getShell());
 		dialog.setMessage(PHPDebugUIMessages.InstalledPHPsBlock_9);
 		dialog.setText(PHPDebugUIMessages.InstalledPHPsBlock_10);
@@ -655,12 +697,13 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 				while (isDuplicateName(nameCopy)) {
 					nameCopy = name + '(' + i++ + ')';
 				}
-				// Since the search for PHP exe option does not 'know' the debugger id it should assign to the PHPexeItem, 
+				// Since the search for PHP exe option does not 'know' the debugger id it should assign to the PHPexeItem,
 				// we call for PHPexes.getDefaultDebuggerId() - which can also return null in some cases.
 				final PHPexeItem phpExe = new PHPexeItem(nameCopy, location, PHPDebuggersRegistry.getDefaultDebuggerId(), true);
 				if (phpExe.getPhpEXE() != null) {
+					fPHPexes.add(phpExe);
 					phpExes.addItem(phpExe);
-					phpExeAdded(phpExe);
+					fPHPExeList.refresh();
 				}
 			}
 		}
@@ -671,7 +714,7 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 	 * Searches the specified directory recursively for installed PHP executables, adding each
 	 * detected executable to the <code>found</code> list. Any directories specified in
 	 * the <code>ignore</code> are not traversed.
-	 * 
+	 *
 	 * @param directory
 	 * @param found
 	 * @param types
@@ -692,10 +735,10 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 		if (names == null)
 			return;
 		final List subDirs = new ArrayList();
-		for (int i = 0; i < names.length; i++) {
+		for (String element : names) {
 			if (monitor.isCanceled())
 				return;
-			final File file = new File(directory, names[i]);
+			final File file = new File(directory, element);
 			//			PHPexeItem[] vmTypes = phpExes.getEditableItems();
 			if (file.isDirectory()) {
 				try {
@@ -725,13 +768,14 @@ public class InstalledPHPsBlock implements IAddPHPexeDialogRequestor {
 
 	/**
 	 * Sets the PHPs to be displayed in this block
-	 * 
+	 *
 	 * @param phpExes PHPs to be displayed
 	 */
 	protected void setPHPs(final PHPexeItem[] phpExes) {
 		fPHPexes.clear();
-		for (int i = 0; i < phpExes.length; i++)
-			fPHPexes.add(phpExes[i]);
+		for (PHPexeItem element : phpExes) {
+			fPHPexes.add(element);
+		}
 		fPHPExeList.setInput(fPHPexes);
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
