@@ -21,6 +21,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.folding.projection.Element.ElementFactory;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.w3c.dom.Node;
@@ -144,82 +145,123 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		final boolean foldingFunctions = adapterFactory.isFoldingFunctions();
 		final boolean foldingClasses = adapterFactory.isFoldingClasses();
 
+		Element fileElement = ElementFactory.createFileElement(fileData);
 		// adds the file doc block
-		createDocBlockAnnotations(currentAnnotations, addedAnnotations, fileData, startOffset, endOffset, foldingPhpDoc);
+		createDocBlockAnnotations(fileElement, fileData, currentAnnotations, addedAnnotations, startOffset, endOffset, foldingPhpDoc);
 
 		PHPClassData[] classes = fileData.getClasses();
+		Map<String, Integer> classIndices = new HashMap<String, Integer>();
 		for (PHPClassData classData : classes) {
-			createCodeDataAnnotations(currentAnnotations, addedAnnotations, classData, startOffset, endOffset, foldingClasses);
-			createDocBlockAnnotations(currentAnnotations, addedAnnotations, classData, startOffset, endOffset, foldingPhpDoc);
+			Integer classIndex = classIndices.get(classData.getName());
+			if (classIndex == null) {
+				classIndex = new Integer(0);
+			} else {
+				classIndex++;
+			}
+			classIndices.put(classData.getName(), classIndex);
+			Element classElement = createCodeDataAnnotations(fileElement, classData, currentAnnotations, addedAnnotations, classIndex, startOffset, endOffset, foldingClasses, foldingPhpDoc);
 			PHPFunctionData[] methods = classData.getFunctions();
+			Map<String, Integer> methodIndices = new HashMap<String, Integer>();
 			for (PHPFunctionData methodData : methods) {
-				createCodeDataAnnotations(currentAnnotations, addedAnnotations, methodData, startOffset, endOffset, foldingFunctions);
-				createDocBlockAnnotations(currentAnnotations, addedAnnotations, methodData, startOffset, endOffset, foldingPhpDoc);
+				Integer methodIndex = methodIndices.get(methodData.getName());
+				if (methodIndex == null) {
+					methodIndex = new Integer(0);
+				} else {
+					methodIndex++;
+				}
+				methodIndices.put(methodData.getName(), methodIndex);
+				createCodeDataAnnotations(classElement, methodData, currentAnnotations, addedAnnotations, methodIndex, startOffset, endOffset, foldingFunctions, foldingPhpDoc);
 			}
 			PHPClassVarData[] variables = classData.getVars();
+			Map<String, Integer> variableIndices = new HashMap<String, Integer>();
 			for (PHPClassVarData variableData : variables) {
-				createDocBlockAnnotations(currentAnnotations, addedAnnotations, variableData, startOffset, endOffset, foldingPhpDoc);
+				Integer variableIndex = variableIndices.get(variableData.getName());
+				if (variableIndex == null) {
+					variableIndex = new Integer(0);
+				} else {
+					variableIndex++;
+				}
+				variableIndices.put(variableData.getName(), variableIndex);
+				createCodeDataAnnotations(classElement, variableData, currentAnnotations, addedAnnotations, variableIndex, startOffset, endOffset, false, foldingPhpDoc);
 			}
 
 			PHPClassConstData[] constants = classData.getConsts();
-			for (PHPClassConstData variableData : constants) {
-				createDocBlockAnnotations(currentAnnotations, addedAnnotations, variableData, startOffset, endOffset, foldingPhpDoc);
+			Map<String, Integer> constantIndices = new HashMap<String, Integer>();
+			for (PHPClassConstData constantData : constants) {
+				Integer constantIndex = constantIndices.get(constantData.getName());
+				if (constantIndex == null) {
+					constantIndex = new Integer(0);
+				} else {
+					constantIndex++;
+				}
+				constantIndices.put(constantData.getName(), constantIndex);
+				createCodeDataAnnotations(classElement, constantData, currentAnnotations, addedAnnotations, constantIndex, startOffset, endOffset, false, foldingPhpDoc);
 			}
 		}
 
 		PHPFunctionData[] functions = fileData.getFunctions();
+		Map<String, Integer> functionIndices = new HashMap<String, Integer>();
 		for (PHPFunctionData functionData : functions) {
-			createCodeDataAnnotations(currentAnnotations, addedAnnotations, functionData, startOffset, endOffset, foldingFunctions);
-			createDocBlockAnnotations(currentAnnotations, addedAnnotations, functionData, startOffset, endOffset, foldingPhpDoc);
+			Integer functionIndex = functionIndices.get(functionData.getName());
+			if (functionIndex == null) {
+				functionIndex = new Integer(0);
+			} else {
+				functionIndex++;
+			}
+			functionIndices.put(functionData.getName(), functionIndex);
+			createCodeDataAnnotations(fileElement, functionData, currentAnnotations, addedAnnotations, functionIndex, startOffset, endOffset, foldingFunctions, foldingPhpDoc);
 		}
 	}
 
 	/**
 	 * Computes current annotations on given CodeDatas.
-	 *
-	 * @param codeDatas
 	 * @param startOffset
 	 * @param endOffset
+	 * @param codeDatas
 	 */
-	private void createCodeDataAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPCodeData codeData, int startOffset, int endOffset, boolean collapse) {
+	private Element createCodeDataAnnotations(Element parentElement, PHPCodeData codeData, Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, int index, int startOffset, int endOffset, boolean collapse, boolean collapseDoc) {
 		UserData userData = codeData.getUserData();
 		int codeStartOffset = userData.getStartPosition();
 		int codeEndOffset = userData.getEndPosition();
 		if (document.getLineOfOffset(codeStartOffset) >= document.getLineOfOffset(codeEndOffset)) {
-			return;
+			return null;
 		}
 
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
 			// false - when adding new annotation - don't fold
-			ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, false, shouldAutoCollapseAnnotations ? collapse : false);
-			ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
+			ElementProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(parentElement, codeData, index, shouldAutoCollapseAnnotations ? collapse : false);
+			ElementProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition(), document);
-
+			final Element element;
 			if (existingAnnotation == null) {
 				// add to map containing all annotations for this adapter
 				currentAnnotations.put(newAnnotation, newPosition);
 				// add to map containing annotations to add
 				addedAnnotations.put(newAnnotation, newPosition);
+				element = newAnnotation.element;
 			} else {
 				// add to map containing all annotations for this adapter
 				currentAnnotations.put(existingAnnotation, newPosition);
 				// remove from map containing annotations to delete
 				previousAnnotations.remove(existingAnnotation);
+				element = newAnnotation.element;
 			}
+			createDocBlockAnnotations(element, codeData, currentAnnotations, addedAnnotations, startOffset, endOffset, collapseDoc);
+			return element;
 		}
+		return null;
 	}
 
 	/**
 	 * Computes current annotations on given CodeDatas.
-	 * @param fileData
-	 *
-	 * @param codeDatas
 	 * @param startOffset
 	 * @param endOffset
 	 * @param collapse
+	 * @param fileData
+	 * @param codeDatas
 	 */
-	private void createDocBlockAnnotations(Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, PHPCodeData codeData, int startOffset, int endOffset, boolean collapse) {
+	private void createDocBlockAnnotations(Element parentElement, PHPCodeData codeData, Map<ProjectionAnnotation, Position> currentAnnotations, Map<ProjectionAnnotation, Position> addedAnnotations, int startOffset, int endOffset, boolean collapse) {
 		final PHPDocBlock docBlock = codeData.getDocBlock();
 		// no need to add an empty doc block
 		if (docBlock == null) {
@@ -236,8 +278,8 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			// element may start in one PHP block and end in another.
 			// false - when adding new annotation - don't fold
 			final Position newPosition = createCommentPosition(codeStartOffset, docBlock.getEndPosition(), document);
-			final ProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(codeData, true, shouldAutoCollapseAnnotations ? collapse : false);
-			final ProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
+			final ElementProjectionAnnotation newAnnotation = new ElementProjectionAnnotation(parentElement, docBlock, shouldAutoCollapseAnnotations ? collapse : false);
+			final ElementProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			if (existingAnnotation == null) {
 				// add to map containing all annotations for this
 				// adapter
@@ -309,12 +351,12 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 	 * @param classData
 	 * @return
 	 */
-	private ProjectionAnnotation getExistingAnnotation(ProjectionAnnotation projectionAnnotation) {
+	private ElementProjectionAnnotation getExistingAnnotation(ElementProjectionAnnotation projectionAnnotation) {
 		assert projectionAnnotation != null : PHPUIMessages.getString("ProjectionModelNodeAdapterPHP.3"); //$NON-NLS-1$
 		if (!previousAnnotations.isEmpty()) {
 			for (ProjectionAnnotation annotation : previousAnnotations.keySet()) {
 				if (projectionAnnotation.equals(annotation)) {
-					return annotation;
+					return (ElementProjectionAnnotation) annotation;
 				}
 			}
 		}

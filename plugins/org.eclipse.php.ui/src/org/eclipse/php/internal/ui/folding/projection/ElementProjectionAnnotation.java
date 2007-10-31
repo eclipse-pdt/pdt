@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.folding.projection;
 
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
 import org.eclipse.php.internal.ui.folding.projection.Element.ElementFactory;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
@@ -35,8 +36,12 @@ public class ElementProjectionAnnotation extends ProjectionAnnotation {
 		this.element = element;
 	}
 
-	public ElementProjectionAnnotation(PHPCodeData codeData, boolean isPhpDoc, boolean collapse) {
-		this(ElementFactory.createElement(codeData, isPhpDoc), collapse);
+	public ElementProjectionAnnotation(Element parentElement, PHPCodeData codeData, int index, boolean collapse) {
+		this(ElementFactory.createElement(parentElement, codeData, index), collapse);
+	}
+
+	public ElementProjectionAnnotation(Element parentElement, PHPDocBlock codeData, boolean collapse) {
+		this(ElementFactory.createDocElement(parentElement, codeData), collapse);
 	}
 
 	///////////////
