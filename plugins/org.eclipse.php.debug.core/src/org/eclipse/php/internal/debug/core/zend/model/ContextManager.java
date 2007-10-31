@@ -17,14 +17,7 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpression;
-import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
-import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
-import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
-import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
-import org.eclipse.php.internal.debug.core.zend.debugger.PHPstack;
-import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
-import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
+import org.eclipse.php.internal.debug.core.zend.debugger.*;
 
 public class ContextManager {
 
@@ -34,6 +27,7 @@ public class ContextManager {
 	private IStackFrame[] fPreviousFrames = null;
 	private Map<String, Expression[]> fStackVariables;
 	private Map<String, String> fResolvedFiles;
+	private Map<String, String> fResolvedStackLayersMap;
 
 	private int fSuspendCount;
 	private IVariable[] fVariables;
@@ -45,6 +39,7 @@ public class ContextManager {
 		fDebugger = debugger;
 		fStackVariables = new HashMap<String, Expression[]>();
 		fResolvedFiles = new HashMap<String, String>();
+		fResolvedStackLayersMap = new HashMap<String, String>();
 	}
 
 	private String resolveRemoteFile(String remoteFile) {
@@ -52,6 +47,29 @@ public class ContextManager {
 			fResolvedFiles.put(remoteFile, RemoteDebugger.convertToLocalFilename(remoteFile, fTarget));
 		}
 		return fResolvedFiles.get(remoteFile);
+	}
+
+	/**
+	 * Cache a resolved CalledFileName from a stack layer.
+	 * @param nonResolvedTuple - A concatenation of 2 Strings : The CallerFileName and CalledFileName(Non Resolved)
+	 * @param resolvedCalled   - A Resolved value of the called File Name 
+	 */
+	public void cacheResolvedStackLayers(String nonResolvedTuple, String resolvedCalled) {
+		if (!fResolvedStackLayersMap.containsKey(nonResolvedTuple)) {
+			fResolvedStackLayersMap.put(nonResolvedTuple, resolvedCalled);
+		}
+	}
+
+	/**
+	 * Returns the cached resolved stack layer called file name
+	 * @param nonResolvedTuple
+	 * @return an empty string if not cached already
+	 */
+	public String getCachedResolvedStackLayer(String nonResolvedTuple) {
+		if (fResolvedStackLayersMap.containsKey(nonResolvedTuple)) {
+			return fResolvedFiles.get(nonResolvedTuple);
+		}
+		return "";
 	}
 
 	public IStackFrame[] getStackFrames() throws DebugException {
