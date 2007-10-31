@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jface.text.contentassist.IContextInformationPresenter;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.SWT;
@@ -21,20 +22,24 @@ import org.eclipse.swt.custom.StyleRange;
 public class PHPContextInformationValidator implements IContextInformationValidator, IContextInformationPresenter {
 
 	private IContextInformation fInformation;
-    private ITextViewer fViewer;
-    private int fPosition;
-    private int fCurrentParameter;
-    
+	private ITextViewer fViewer;
+	private int fPosition;
+	private int fCurrentParameter;
+
 	public void install(IContextInformation info, ITextViewer viewer, int offset) {
-        fInformation= info;
-        fViewer= viewer;
-        fPosition= offset;
-        fCurrentParameter= -1;
+		fInformation = info;
+		fViewer = viewer;
+		if(info instanceof IContextInformationExtension) {
+			fPosition = ((IContextInformationExtension) info).getContextInformationPosition();
+		} else {
+			fPosition = offset;
+		}
+		fCurrentParameter = -1;
 	}
-	
+
 	private int getCommentEnd(IDocument d, int pos, int end) throws BadLocationException {
 		while (pos < end) {
-			char curr= d.getChar(pos);
+			char curr = d.getChar(pos);
 			pos++;
 			if (curr == '*') {
 				if (pos < end && d.getChar(pos) == '/') {
@@ -47,7 +52,7 @@ public class PHPContextInformationValidator implements IContextInformationValida
 
 	private int getStringEnd(IDocument d, int pos, int end, char ch) throws BadLocationException {
 		while (pos < end) {
-			char curr= d.getChar(pos);
+			char curr = d.getChar(pos);
 			pos++;
 			if (curr == '\\') {
 				// ignore escaped characters
@@ -63,56 +68,56 @@ public class PHPContextInformationValidator implements IContextInformationValida
 
 		Assert.isTrue((increments.length() != 0 || decrements.length() != 0) && !increments.equals(decrements));
 
-		int nestingLevel= 0;
-		int charCount= 0;
+		int nestingLevel = 0;
+		int charCount = 0;
 		while (start < end) {
-			char curr= document.getChar(start++);
+			char curr = document.getChar(start++);
 			switch (curr) {
 				case '/':
 					if (start < end) {
-						char next= document.getChar(start);
+						char next = document.getChar(start);
 						if (next == '*') {
 							// a comment starts, advance to the comment end
-							start= getCommentEnd(document, start + 1, end);
+							start = getCommentEnd(document, start + 1, end);
 						} else if (next == '/') {
 							// '//'-comment: nothing to do anymore on this line
-							start= end;
+							start = end;
 						}
 					}
 					break;
 				case '*':
 					if (start < end) {
-						char next= document.getChar(start);
+						char next = document.getChar(start);
 						if (next == '/') {
 							// we have been in a comment: forget what we read before
-							charCount= 0;
-							++ start;
+							charCount = 0;
+							++start;
 						}
 					}
 					break;
 				case '"':
 				case '\'':
-					start= getStringEnd(document, start, end, curr);
+					start = getStringEnd(document, start, end, curr);
 					break;
 				default:
 
 					if (considerNesting) {
 
 						if ('(' == curr)
-							++ nestingLevel;
+							++nestingLevel;
 						else if (')' == curr)
-							-- nestingLevel;
+							--nestingLevel;
 
 						if (nestingLevel != 0)
 							break;
 					}
 
 					if (increments.indexOf(curr) >= 0) {
-						++ charCount;
+						++charCount;
 					}
 
 					if (decrements.indexOf(curr) >= 0) {
-						-- charCount;
+						--charCount;
 					}
 			}
 		}
@@ -125,24 +130,24 @@ public class PHPContextInformationValidator implements IContextInformationValida
 			if (offset < fPosition)
 				return false;
 
-			IDocument document= fViewer.getDocument();
-			IRegion line= document.getLineInformationOfOffset(fPosition);
+			IDocument document = fViewer.getDocument();
+			IRegion line = document.getLineInformationOfOffset(fPosition);
 
 			if (offset < line.getOffset() || offset >= document.getLength())
 				return false;
 
-			return getCharCount(document, fPosition, offset, "(<", ")>", false) >= 0;  //$NON-NLS-1$//$NON-NLS-2$
+			return getCharCount(document, fPosition, offset, "(<", ")>", false) >= 0; //$NON-NLS-1$//$NON-NLS-2$
 
 		} catch (BadLocationException x) {
 			return false;
 		}
 	}
 
-	public boolean updatePresentation (int offset, TextPresentation presentation) {
-		int currentParameter= -1;
+	public boolean updatePresentation(int offset, TextPresentation presentation) {
+		int currentParameter = -1;
 
 		try {
-			currentParameter= getCharCount(fViewer.getDocument(), fPosition, offset, ",", "", true);  //$NON-NLS-1$//$NON-NLS-2$
+			currentParameter = getCharCount(fViewer.getDocument(), fPosition, offset, ",", "", true); //$NON-NLS-1$//$NON-NLS-2$
 		} catch (BadLocationException x) {
 			return false;
 		}
@@ -153,35 +158,35 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		}
 
 		presentation.clear();
-		fCurrentParameter= currentParameter;
+		fCurrentParameter = currentParameter;
 
 		// this check was added in order to workaround bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=191849
 		// when it will be resolved this check can be removed.
-		if(fInformation == null){
+		if (fInformation == null) {
 			return false;
 		}
-		String s= fInformation.getInformationDisplayString();
-		int start= 0;
-		int occurrences= 0;
+		String s = fInformation.getInformationDisplayString();
+		int start = 0;
+		int occurrences = 0;
 		while (occurrences < fCurrentParameter) {
-			int found= s.indexOf(',', start);
+			int found = s.indexOf(',', start);
 			if (found == -1)
 				break;
-			start= found + 1;
-			++ occurrences;
+			start = found + 1;
+			++occurrences;
 		}
-		
+
 		if (occurrences < fCurrentParameter) {
 			presentation.addStyleRange(new StyleRange(0, s.length(), null, null, SWT.NORMAL));
 			return true;
 		}
 
 		if (start == -1)
-			start= 0;
+			start = 0;
 
-		int end= s.indexOf(',', start);
+		int end = s.indexOf(',', start);
 		if (end == -1)
-			end= s.length();
+			end = s.length();
 
 		if (start > 0)
 			presentation.addStyleRange(new StyleRange(0, start, null, null, SWT.NORMAL));

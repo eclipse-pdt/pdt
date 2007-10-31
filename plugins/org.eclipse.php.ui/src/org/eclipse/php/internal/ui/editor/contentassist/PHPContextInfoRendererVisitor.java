@@ -10,19 +10,22 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
-
 
 public class PHPContextInfoRendererVisitor extends SimplePHPCodeDataVisitor {
 
 	private String text;
 	protected StringBuffer buffer;
+	private PHPProjectModel projectModel;
 
 	public PHPContextInfoRendererVisitor() {
 		buffer = new StringBuffer();
 	}
 
-	public void init(CodeData codeData) {
+	public void init(PHPProjectModel projectModel, CodeData codeData) {
+		this.projectModel = projectModel;
 		buffer.setLength(0);
 		codeData.accept(this);
 		text = buffer.toString();
@@ -60,11 +63,10 @@ public class PHPContextInfoRendererVisitor extends SimplePHPCodeDataVisitor {
 	}
 
 	public void visit(PHPClassData codeData) {
-		if (codeData.hasConstructor()) {
-			visit(codeData.getConstructor());
-		}/* else {
-			super.visit(codeData);
-		}*/
+		PHPFunctionData constructor = PHPModelUtil.getRealConstructor(projectModel, codeData.getUserData().getFileName(), codeData);
+		if(constructor != null) {
+			visit(constructor);
+		}
 	}
 
 	public void visit(PHPKeywordData codeData) {

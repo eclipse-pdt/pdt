@@ -12,15 +12,12 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.*;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.PHPCodeDataHTMLDescriptionUtilities;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 public class CodeDataCompletionProposal implements ICompletionProposal, ICompletionProposalExtension2, ICompletionProposalExtension3, ICompletionProposalExtension4 {
 
@@ -42,8 +39,9 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 	private PHPProjectModel projectModel;
 	private ContextInformation contextInfo;
 	private boolean showTypeHints;
+	private int offset;
 
-	public CodeDataCompletionProposal(CodeData codeData, int offset, int length, int selectionLength, String prefix, String suffix, int caretOffsetInSuffix, boolean showTypeHints) {
+	public CodeDataCompletionProposal(PHPProjectModel projectModel, CodeData codeData, int offset, int length, int selectionLength, String prefix, String suffix, int caretOffsetInSuffix, boolean showTypeHints) {
 		this.codeData = codeData;
 		this.replacementOffset = offset;
 		this.replacementLength = length;
@@ -52,6 +50,12 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 		this.suffix = suffix;
 		this.caretOffsetInSuffix = caretOffsetInSuffix;
 		this.showTypeHints = showTypeHints;
+		this.projectModel = projectModel;
+		this.offset = offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 
 	protected String getReplacementString() {
@@ -81,7 +85,7 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 			while (position < end) {
 				char ch = document.getChar(position);
 				if (isDelimeter(ch, phpDelimiters)) {
-					// solve bug #139028 - avoid case of double suffix, in case there already is one. 
+					// solve bug #139028 - avoid case of double suffix, in case there already is one.
 					if (suffix.startsWith(String.valueOf(ch))) {
 						suffix = ""; //$NON-NLS-1$
 					}
@@ -96,8 +100,8 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 	}
 
 	private static final boolean isDelimeter(char ch, char[] delimeters) {
-		for (int i = 0; i < delimeters.length; i++) {
-			if (ch == delimeters[i]) {
+		for (char element : delimeters) {
+			if (ch == element) {
 				return true;
 			}
 		}
@@ -112,18 +116,6 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 	}
 
 	public void selected(ITextViewer viewer, boolean smartToggle) {
-		if (projectModel == null) {
-			IStructuredModel structuredModel = null;
-			try {
-				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
-				if (structuredModel != null && structuredModel instanceof DOMModelForPHP) {
-					projectModel = ((DOMModelForPHP) structuredModel).getProjectModel();
-				}
-			} finally {
-				if (structuredModel != null)
-					structuredModel.releaseFromRead();
-			}
-		}
 	}
 
 	public void unselected(ITextViewer viewer) {
@@ -163,7 +155,7 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 			return null;
 		}
 		if (contextInfo == null) {
-			contextRendererVisitor.init(codeData);
+			contextRendererVisitor.init(projectModel, codeData);
 			String contextInfoString = contextRendererVisitor.getDisplayString().trim();
 			if (contextInfoString.length() > 0) {
 				contextInfo = new ContextInformation(null, contextRendererVisitor.getDisplayString());
@@ -206,7 +198,7 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 	public CodeData getCodeData() {
 		return codeData;
 	}
-	
+
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("proposal: ").append(displayText); //$NON-NLS-1$

@@ -24,7 +24,6 @@ public abstract class CompletionProposalGroup {
 	protected String key;
 	protected int selectionLength;
 	protected PHPProjectModel projectModel;
-	protected String fileName;
 
 	public CompletionProposalGroup() {
 		setData(0, null, null, selectionLength);
@@ -67,16 +66,18 @@ public abstract class CompletionProposalGroup {
 		codeDataProposals = newProposals;
 	}
 
-	public CodeDataCompletionProposal[] getCompletionProposals(PHPProjectModel projectModel, String fileName) {
+	public CodeDataCompletionProposal[] getCompletionProposals(PHPProjectModel projectModel) {
 		this.projectModel = projectModel;
-		this.fileName = fileName;
 		if (completionProposals == null) {
-			this.completionProposals = calcCompletionProposals();
+			this.completionProposals = calcCompletionProposals(projectModel);
+			for (CodeDataCompletionProposal proposal : this.completionProposals) {
+				proposal.setOffset(offset);
+			}
 		}
 		return completionProposals;
 	}
 
-	protected CodeDataCompletionProposal[] calcCompletionProposals() {
+	protected CodeDataCompletionProposal[] calcCompletionProposals(PHPProjectModel projectModel) {
 		if (codeDataProposals == null || codeDataProposals.length == 0) {
 			return ContentAssistSupport.EMPTY_CodeDataCompletionProposal_ARRAY;
 		}
@@ -88,10 +89,10 @@ public abstract class CompletionProposalGroup {
 
 		CodeDataCompletionProposal[] result = new CodeDataCompletionProposal[tmp.length];
 		for (int i = 0; i < tmp.length; i++) {
-			result[i] = createProposal(tmp[i]);
+			result[i] = createProposal(projectModel, tmp[i]);
 		}
 		return result;
 	}
 
-	abstract protected CodeDataCompletionProposal createProposal(CodeData codeData);
+	abstract protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData);
 }

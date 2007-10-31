@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.util.Visitor;
@@ -132,7 +133,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (completionProposalGroup == null) {
 			return templateProposals;
 		}
-		return merg(completionProposalGroup.getCompletionProposals(getProjectModel(phpEditorModel), phpEditorModel.getFileData().getName()), templateProposals);
+		return merg(completionProposalGroup.getCompletionProposals(getProjectModel(phpEditorModel)), templateProposals);
 	}
 
 	protected ICompletionProposal[] getTemplates(ITextViewer viewer, int offset) {
@@ -1410,7 +1411,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	protected class PHPCompletionProposalGroup extends CompletionProposalGroup {
 
 		@Override
-		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
+		protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData) {
 			String suffix = " "; //$NON-NLS-1$
 			int caretOffsetInSuffix = 1;
 			boolean showTypeHints = false;
@@ -1442,53 +1443,44 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				suffix = ""; //$NON-NLS-1$
 				caretOffsetInSuffix = 0;
 			}
-			return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "", suffix, caretOffsetInSuffix, showTypeHints); //$NON-NLS-1$
+			return new CodeDataCompletionProposal(projectModel, codeData, getOffset() - key.length(), key.length(), selectionLength, "", suffix, caretOffsetInSuffix, showTypeHints); //$NON-NLS-1$
 		}
 	}
 
 	private class RegularPHPCompletionProposalGroup extends PHPCompletionProposalGroup {
 		@Override
-		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
+		protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData) {
 			if (!(codeData instanceof PHPClassData)) {
-				return super.createProposal(codeData);
+				return super.createProposal(projectModel, codeData);
 			}
-			return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "", "::", 2, false); //$NON-NLS-1$ //$NON-NLS-2$
+			return new CodeDataCompletionProposal(projectModel, codeData, getOffset() - key.length(), key.length(), selectionLength, "", "::", 2, false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	private class ClassConstructorCompletionProposalGroup extends CompletionProposalGroup {
 		@Override
-		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
-			return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "", "()", 1, true); //$NON-NLS-1$ //$NON-NLS-2$
+		protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData) {
+			return new CodeDataCompletionProposal(projectModel, codeData, getOffset() - key.length(), key.length(), selectionLength, "", "()", 1, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	private class NewStatmentCompletionProposalGroup extends CompletionProposalGroup {
 		@Override
-		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
+		protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData) {
 			PHPClassData classData = (PHPClassData) codeData;
-			PHPFunctionData constructor = getRealConstructor(classData);
+			PHPFunctionData constructor = PHPModelUtil.getRealConstructor(projectModel, classData.getUserData().getFileName(), classData);
 			int suffixOffset = constructor.getParameters().length > 0 ? 1 : 2;
 
-			return new CodeDataCompletionProposal(constructor, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true); //$NON-NLS-1$ //$NON-NLS-2$
+			return new CodeDataCompletionProposal(projectModel, classData, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		private PHPFunctionData getRealConstructor(PHPClassData classData) {
-			if (classData.hasConstructor()) {
-				return classData.getConstructor();
-			}
-			CodeData parentConstructor = projectModel.getClassFunctionData(fileName, classData.getName(), "__construct"); //$NON-NLS-1$
-			if (parentConstructor != null)
-				return (PHPFunctionData) parentConstructor;
-			return classData.getConstructor();
-		}
 	}
 
 	private class ArrayCompletionProposalGroup extends PHPCompletionProposalGroup {
 		@Override
-		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
+		protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData) {
 			if (!(codeData instanceof PHPVariableData)) {
-				return super.createProposal(codeData);
+				return super.createProposal(projectModel, codeData);
 			}
 			CodeDataCompletionProposal proposal = new ArrayCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "'", "'", 1); //$NON-NLS-1$ //$NON-NLS-2$
 			return proposal;
@@ -1497,7 +1489,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		private class ArrayCompletionProposal extends CodeDataCompletionProposal {
 
 			public ArrayCompletionProposal(CodeData codeData, int offset, int length, int selectionLength, String prefix, String suffix, int caretOffsetInSuffix) {
-				super(codeData, offset, length, selectionLength, prefix, suffix, caretOffsetInSuffix, false);
+				super(projectModel, codeData, offset, length, selectionLength, prefix, suffix, caretOffsetInSuffix, false);
 			}
 
 			@Override
@@ -1546,29 +1538,29 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	private class ClassVariableCallCompletionProposalGroup extends PHPCompletionProposalGroup {
 		@Override
-		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
+		protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData) {
 			if (codeData instanceof PHPClassVarData) {
-				return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "$", "", 0, false); //$NON-NLS-1$ //$NON-NLS-2$
+				return new CodeDataCompletionProposal(projectModel, codeData, getOffset() - key.length(), key.length(), selectionLength, "$", "", 0, false); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			return super.createProposal(codeData);
+			return super.createProposal(projectModel, codeData);
 		}
 	}
 
 	private class ClassStaticCallCompletionProposalGroup extends PHPCompletionProposalGroup {
 
 		@Override
-		protected CodeDataCompletionProposal createProposal(CodeData codeData) {
+		protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData) {
 			if (codeData instanceof PHPClassVarData) {
-				return new CodeDataCompletionProposal(codeData, getOffset() - key.length(), key.length(), selectionLength, "$", "", 0, false); //$NON-NLS-1$ //$NON-NLS-2$
+				return new CodeDataCompletionProposal(projectModel, codeData, getOffset() - key.length(), key.length(), selectionLength, "$", "", 0, false); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			return super.createProposal(codeData);
+			return super.createProposal(projectModel, codeData);
 		}
 
 		@Override
-		protected CodeDataCompletionProposal[] calcCompletionProposals() {
+		protected CodeDataCompletionProposal[] calcCompletionProposals(PHPProjectModel projectModel) {
 
 			if (key.length() == 0) {
-				return super.calcCompletionProposals();
+				return super.calcCompletionProposals(projectModel);
 			}
 
 			CodeData[] tmp;
@@ -1582,7 +1574,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 			CodeDataCompletionProposal[] result = new CodeDataCompletionProposal[tmp.length];
 			for (int i = 0; i < tmp.length; i++) {
-				result[i] = createProposal(tmp[i]);
+				result[i] = createProposal(projectModel, tmp[i]);
 			}
 			return result;
 		}
