@@ -33,8 +33,6 @@ import org.eclipse.ui.activities.WorkbenchActivityHelper;
  */
 public class PHPexes {
 
-	public static final String ZEND_DEBUGGER_ID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
-
 	private static final String DEFAULT_ATTRIBUTE = "default"; //$NON-NLS-1$
 	private static final String EXTENSION_POINT_NAME = "phpExe"; //$NON-NLS-1$
 	private static final String LOCATION_ATTRIBUTE = "location"; //$NON-NLS-1$
@@ -43,7 +41,7 @@ public class PHPexes {
 	private static final String PHPEXE_TAG = "phpExe"; //$NON-NLS-1$
 	public static final String SEPARATOR = ";";
 	private static final String VERSION_ATTRIBUTE = "version"; //$NON-NLS-1$
-	
+
 	private static Object lock = new Object();
 	// A singleton instance
 	private static PHPexes instance;
@@ -52,6 +50,8 @@ public class PHPexes {
 	private HashMap<String, HashMap<String, PHPexeItem>> items = new HashMap<String, HashMap<String, PHPexeItem>>();
 	// Hold a mapping to each debugger default PHPExeItem.
 	private HashMap<String, PHPexeItem> defaultItems = new HashMap<String, PHPexeItem>();
+
+	private final LinkedList<IPHPExesListener> listeners = new LinkedList<IPHPExesListener>();
 
 	/**
 	 * Returns a single instance of this PHPexes class.
@@ -139,6 +139,11 @@ public class PHPexes {
 			setDefaultItem(item);
 		}
 		map.put(item.getName(), item);
+		Iterator<IPHPExesListener> iter = listeners.iterator();
+		while (iter.hasNext()) {
+			PHPExesEvent phpExesEvent = new PHPExesEvent(item);
+			iter.next().phpExeAdded(phpExesEvent);
+		}
 	}
 
 	/**
@@ -342,7 +347,7 @@ public class PHPexes {
 				String debuggerID = element.getAttribute(DEBUGGER_ID_ATTRIBUTE);
 				if (debuggerID == null || debuggerID.equals("")) {
 					// The debugger id is an optional field, so in case that none was entered assign the debugger to Zend. 
-					debuggerID = ZEND_DEBUGGER_ID;
+					debuggerID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 				}
 				final boolean isDefault = "true".equalsIgnoreCase(element.getAttribute(DEFAULT_ATTRIBUTE));
 
@@ -411,6 +416,12 @@ public class PHPexes {
 				setDefaultItem(iterator.next());
 			}
 		}
+
+		Iterator<IPHPExesListener> iter = listeners.iterator();
+		while (iter.hasNext()) {
+			PHPExesEvent phpExesEvent = new PHPExesEvent(item);
+			iter.next().phpExeRemoved(phpExesEvent);
+		}
 	}
 
 	/**
@@ -475,5 +486,13 @@ public class PHPexes {
 		PHPDebugPlugin.getDefault().savePluginPreferences();
 		//		final String defaultString = defaultItem != null ? defaultItem.name : "";
 		//		prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP, defaultString);
+	}
+
+	public void addPHPExesListener(IPHPExesListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removePHPExesListener(IPHPExesListener listener) {
+		listeners.remove(listener);
 	}
 }

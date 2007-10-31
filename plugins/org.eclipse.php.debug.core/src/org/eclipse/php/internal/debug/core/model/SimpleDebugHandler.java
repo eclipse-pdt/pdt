@@ -9,7 +9,7 @@
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
 /**
- * 
+ *
  */
 package org.eclipse.php.internal.debug.core.model;
 
@@ -31,9 +31,9 @@ public abstract class SimpleDebugHandler implements IDebugHandler {
 		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: debuggerErrorOccured: " + debugError);
 	}
 
-	public void sessionStarted(String fileName, String uri, String query, String options) {
+	public void sessionStarted(String remoteFile, String uri, String query, String options) {
 		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: sessionStarted ");
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler:        fileName: " + fileName);
+		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler:        fileName: " + remoteFile);
 		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler:        uri: " + uri);
 		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler:        query: " + query);
 		Logger.debugMSG("[" + this + "]  PHPSimpleDebugHandler:       options: " + options);

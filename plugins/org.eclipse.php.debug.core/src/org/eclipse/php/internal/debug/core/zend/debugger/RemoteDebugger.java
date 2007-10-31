@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -21,13 +22,54 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
+import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.AssignValueRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugScriptEndedNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionClosedNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebuggerErrorNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.HeaderOutputNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.OutputNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.ParsingErrorNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.ReadyNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverResponse;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 /**
- * An IRemoteDebugger implementation. 
+ * An IRemoteDebugger implementation.
  */
 public class RemoteDebugger implements IRemoteDebugger {
 
@@ -77,39 +119,51 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public void handleNotification(Object msg) {
 		if (msg instanceof OutputNotification) {
+
 			String output = ((OutputNotification) msg).getOutput();
 			debugHandler.newOutput(output);
+
 		} else if (msg instanceof ReadyNotification) {
+
 			ReadyNotification readyNotification = (ReadyNotification) msg;
 			String currentFile = readyNotification.getFileName();
 			int currentLine = readyNotification.getLineNumber();
-			debugHandler.ready(convertToSystemDependentFileName(currentFile), currentLine);
+			debugHandler.ready(currentFile, currentLine);
+
 		} else if (msg instanceof DebugSessionStartedNotification) {
+
 			DebugSessionStartedNotification debugSessionStartedNotification = (DebugSessionStartedNotification) msg;
 			String fileName = debugSessionStartedNotification.getFileName();
 			String uri = debugSessionStartedNotification.getUri();
 			String query = debugSessionStartedNotification.getQuery();
 			String options = debugSessionStartedNotification.getOptions();
 			debugHandler.sessionStarted(fileName, uri, query, options);
+
 		} else if (msg instanceof HeaderOutputNotification) {
+
 			debugHandler.newHeaderOutput(((HeaderOutputNotification) msg).getOutput());
+
 		} else if (msg instanceof ParsingErrorNotification) {
+
 			ParsingErrorNotification parseError = (ParsingErrorNotification) msg;
 			String errorText = parseError.getErrorText();
-			String fileName = "";
+
+			String fileName;
 			Path errorFilePath = new Path(parseError.getFileName());
 			if ((errorFilePath.segmentCount() > 1) && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
 				fileName = errorFilePath.lastSegment();
 			} else {
-				fileName = convertToSystemDependentFileName(parseError.getFileName());
+				fileName = parseError.getFileName();
 			}
 
 			int lineNumber = parseError.getLineNumber();
 			int errorLevel = parseError.getErrorLevel();
 
-			DebugError debugError = new DebugError(errorLevel, convertToSystemDependentFileName(parseError.getFileName()), lineNumber, errorText);
+			DebugError debugError = new DebugError(errorLevel, fileName, lineNumber, errorText);
 			debugHandler.parsingErrorOccured(debugError);
+
 		} else if (msg instanceof DebuggerErrorNotification) {
+
 			DebuggerErrorNotification parseError = (DebuggerErrorNotification) msg;
 			int errorLevel = parseError.getErrorLevel();
 			DebugError debugError = new DebugError();
@@ -120,7 +174,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 			debugError.setCode(errorLevel);
 			debugHandler.debuggerErrorOccured(debugError);
+
 		} else if (msg instanceof DebugScriptEndedNotification) {
+
 			debugHandler.handleScriptEnded(); // 2 options: close message or // XXX - uncomment
 			// start profile
 		}
@@ -142,45 +198,59 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Converts the given file name to a system independent file name. 
-	 * The convertion is platform independent and is similar to calling the convertToSystemIndependentFileName(fileName, true)
-	 * @param fileName
-	 * @return
+	 * Returns local file name corresponding to the given remote path
+	 * @param remoteFile
+	 * @return local file, or remoteFile as is in case of resolving failure
 	 */
-	public static String convertToSystemIndependentFileName(String fileName) {
-		return convertToSystemIndependentFileName(fileName, true);
+	public static String convertToLocalFilename(String remoteFile, PHPDebugTarget debugTarget) {
+		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
+			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
+			if (wsFile != null) {
+				return wsFile.getFullPath().toString();
+			}
+		}
+		try {
+			String currentScriptDir = null;
+			PHPstack phpStack = debugTarget.getContextManager().getRemoteDebugger().getCallStack();
+			if (phpStack.getLayers() != null && phpStack.getLayers().length > 0) {
+				currentScriptDir = new File(phpStack.getLayers()[phpStack.getLayers().length - 1].getCalledFileName()).getParent();
+			}
+
+			PathEntry localFile = DebugSearchEngine.find(remoteFile, debugTarget.getLaunch().getLaunchConfiguration(), debugTarget.getProject().getLocation().toString(), currentScriptDir);
+			if (localFile != null) {
+				return localFile.getResolvedPath();
+			}
+		} catch (Exception e) {
+		}
+		return remoteFile; // in case of failure
 	}
 
 	/**
-	 * Converts the given file name to a system independent file name. If the ignoreSystemType is false, the
-	 * convertion will occure only if the current system is Microsoft Windows.
-	 * @param fileName
-	 * @return
+	 * Returns remote file name corresponding to the given local path
+	 * @param localFile
+	 * @return remote file path, or localFile in case it couldn't be resolved
 	 */
-	public static String convertToSystemIndependentFileName(String fileName, boolean ignoreSystemType) {
-		if (fileName == null)
-			return null;
-		if (ignoreSystemType || File.separatorChar == '\\') {
-			fileName = fileName.replace('\\', '/');
+	public static String convertToRemoteFilename(String localFile, PHPDebugTarget debugTarget) {
+		IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(localFile));
+		if (debugTarget.isPHPCGI() && wsFile.exists() && wsFile.getLocation() != null) {
+			File fsFile = wsFile.getLocation().toFile();
+			if (fsFile.exists()) {
+				return fsFile.getAbsolutePath();
+			}
 		}
-		return fileName;
-	}
-
-	public static final String convertToSystemDependentFileName(String fileName) {
-		if (fileName == null)
-			return null;
-		if (File.separatorChar == '\\') {
-			fileName = fileName.replace('/', File.separatorChar);
-			fileName = fileName.replace('\\', File.separatorChar);
+		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
+		String remoteFile = pathMapper.getRemoteFile(localFile);
+		if (remoteFile != null) {
+			return remoteFile;
 		}
-		return fileName;
+		return localFile;
 	}
 
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Sends the request through the communication connection and returns response 
-	 * 
+	 * Sends the request through the communication connection and returns response
+	 *
 	 * @param message request that will be sent to the debugger
 	 * @return message response recieved from the debugger
 	 */
@@ -207,7 +277,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	/**
 	 * Sends custom notification through the communication connection
-	 * 
+	 *
 	 * @param message notification that will be delivered to the debugger
 	 * @return <code>true</code> if succeeded sending the message, <code>false</code> - otherwise
 	 */
@@ -234,7 +304,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			AddBreakpointRequest request = new AddBreakpointRequest();
 			Breakpoint tmpBreakpoint = (Breakpoint) bp.clone();
-			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName(), false);
+			String fileName = tmpBreakpoint.getFileName();
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
 			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
@@ -256,7 +326,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			AddBreakpointRequest request = new AddBreakpointRequest();
 			Breakpoint tmpBreakpoint = (Breakpoint) breakpoint.clone();
-			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName(), false);
+			String fileName = tmpBreakpoint.getFileName();
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
 			AddBreakpointResponse response = (AddBreakpointResponse) connection.sendRequest(request);
@@ -528,7 +598,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	/**
 	 * Returns true if the protocol was successfully set by this debugger.
-	 * 
+	 *
 	 * @return True, if the protocol was set; False, otherwise.
 	 */
 	public boolean isProtocolSet() {
@@ -792,10 +862,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 				layer.setCallerLineNumber(layer.getCallerLineNumber() - 1);
 				layer.setCalledLineNumber(layer.getCalledLineNumber() - 1);
 
-				layer.setCallerFileName(convertToSystemDependentFileName(layer.getCallerFileName()));
-				layer.setCalledFileName(convertToSystemDependentFileName(layer.getCalledFileName()));
+				layer.setCallerFileName(layer.getCallerFileName());
+				layer.setCalledFileName(layer.getCalledFileName());
 			}
-
 		}
 	}
 
@@ -858,7 +927,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			if (request instanceof AddBreakpointRequest) {
 				AddBreakpointRequest addBreakpointRequest = (AddBreakpointRequest) request;
 				Breakpoint bp = addBreakpointRequest.getBreakpoint();
-				String fileName = convertToSystemDependentFileName(bp.getFileName());
+				String fileName = bp.getFileName();
 				int lineNumber = bp.getLineNumber();
 				int id = -1;
 				if (response != null) {

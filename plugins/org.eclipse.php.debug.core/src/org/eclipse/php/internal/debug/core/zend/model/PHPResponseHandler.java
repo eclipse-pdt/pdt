@@ -13,7 +13,6 @@ package org.eclipse.php.internal.debug.core.zend.model;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
-import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 
 public class PHPResponseHandler {
 
@@ -31,7 +30,6 @@ public class PHPResponseHandler {
 	public class BreakpointAddedResponseHandler implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointAddedResponseHandler {
 
 		public void breakpointAdded(String fileName, int lineNumber, int id, boolean success) {
-			fileName = RemoteDebugger.convertToSystemIndependentFileName(fileName, false);
 			String info = "Filename: " + fileName + " lineNumber " + lineNumber + " id: " + id;
 			if (success) {
 				IBreakpoint breakpoint = fDebugTarget.findBreakpoint(fileName, lineNumber);
@@ -40,7 +38,7 @@ public class PHPResponseHandler {
 					org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint rbp = lineBreakpoint.getRuntimeBreakpoint();
 					rbp.setID(id);
 				} else {
-					// it is still possible that the breakpoint we are dealing with was not registered to the 
+					// it is still possible that the breakpoint we are dealing with was not registered to the
 					// BreakpointManager because it's a Run-To-Line breakpoint.
 					Logger.trace("debug", "PHPResponseHandler:: BreakpointAddedResponseHandler unable to find breakpoint " + info);
 				}

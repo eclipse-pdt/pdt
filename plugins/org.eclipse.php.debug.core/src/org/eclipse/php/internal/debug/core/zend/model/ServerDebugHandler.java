@@ -11,29 +11,34 @@
 package org.eclipse.php.internal.debug.core.zend.model;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.model.SimpleDebugHandler;
+import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
 import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.server.core.Server;
 
 /**
  * A PHP debug server handler.
- * 
+ *
  * @author Shalom Gibly
  */
 public class ServerDebugHandler extends SimpleDebugHandler {
@@ -54,14 +59,49 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		return fRemoteDebugger;
 	}
 
-	public void sessionStarted(String fileName, String uri, String query, String options) {
-		super.sessionStarted(fileName, uri, query, options);
-		String sFileName = RemoteDebugger.convertToSystemIndependentFileName(fileName);
+	public void sessionStarted(String remoteFile, String uri, String query, String options) {
+		super.sessionStarted(remoteFile, uri, query, options);
 
-		fDebugTarget.setLastFileName(sFileName);
+		try {
+			PathEntry pathEntry = null;
+			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
+			String debugFileName = launchConfiguration.getAttribute(Server.FILE_NAME, (String) null);
+			if (debugFileName == null) {
+				debugFileName = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+			}
+			if (debugFileName != null) {
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(debugFileName);
+				if (resource instanceof IFile) {
+					pathEntry = new PathEntry(debugFileName, Type.WORKSPACE, resource.getParent());
+				} else if (resource instanceof IProject) {
+					IProject project = (IProject) resource;
+					int idx = remoteFile.lastIndexOf('/');
+					if (idx == -1) {
+						idx = remoteFile.lastIndexOf('\\');
+					}
+					String lastSegment;
+					if (idx != -1) {
+						lastSegment = remoteFile.substring(idx+1);
+					} else {
+						lastSegment = remoteFile;
+					}
+					IFile file = project.getFile(lastSegment);
+					if (file != null) {
+						pathEntry = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, project);
+					}
+				}
+			}
+			if (pathEntry != null) {
+				PathMapperRegistry.getByLaunchConfiguration(launchConfiguration).addEntry(remoteFile, pathEntry);
+			} else {
+				DebugSearchEngine.find(remoteFile, launchConfiguration);
+			}
+		} catch (Exception e) {
+		}
+
+		fDebugTarget.setLastFileName(remoteFile);
 		if (!fDebugTarget.isPHPCGI()) {
 			fDebugTarget.setServerWindows(false);
-			fDebugTarget.setHTDocs(getHTDocs(fileName, sFileName, uri));
 		}
 
 		StartLock startLock = fDebugTarget.getStartLock();
@@ -83,56 +123,6 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				startLock.setRunStart(true);
 			}
 		}
-	}
-
-	/**
-	 * Resolve and return the HTDocs folder.
-	 * @param fileName 
-	 * @param systemFileName 
-	 * @param uri 
-	 * @param htdocs
-	 */
-	protected String getHTDocs(String fileName, String systemFileName, String uri) {
-		int index;
-		// clean any additional slashes in the file name and the uri
-		uri = uri.replaceAll("/+", "/");
-		systemFileName = systemFileName.replaceAll("/+", "/");
-		// check for Windows, since case isn't always returned correctly
-		if (fileName.startsWith(":\\", 1)) {
-			index = systemFileName.toLowerCase().lastIndexOf(uri.toLowerCase());
-			fDebugTarget.setServerWindows(true);
-		} else {
-			if (uri.startsWith("/~")) {
-				int iUDir = uri.indexOf("/", 1);
-				uri = uri.substring(iUDir);
-			}
-			index = systemFileName.lastIndexOf(uri);
-		}
-		if (index > -1) {
-			return systemFileName.substring(0, index);
-		}
-		// We have a server mapping directive that cause the htdocs calculation
-		// to fail. Calc the document root according to the mapping.
-
-		// Set the context root to the path separator.
-		fDebugTarget.setContextRoot(String.valueOf(IPath.SEPARATOR));
-		// traverse the paths till we extract the document root (which includes the context root)
-		IPath uriPath = Path.fromOSString(uri);
-		IPath filePath = Path.fromOSString(systemFileName);
-		String lastUrlSegment = null;
-		for (int i = uriPath.segmentCount() - 1; i >= 0; i--) {
-			lastUrlSegment = uriPath.segment(i);
-			String filePathLastSegment = filePath.lastSegment();
-			if (lastUrlSegment.equals(filePathLastSegment)) {
-				filePath = filePath.removeLastSegments(1);
-			} else {
-				return filePath.toString();
-			}
-		}
-		if (lastUrlSegment == null) {
-			return "";
-		}
-		return filePath.toString() + IPath.SEPARATOR + lastUrlSegment;
 	}
 
 	public void connectionEstablished() {
@@ -158,7 +148,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		super.ready(fileName, lineNumber);
 
 		fDebugTarget.setLastStop(lineNumber);
-		fDebugTarget.setLastFileName(RemoteDebugger.convertToSystemIndependentFileName(fileName));
+		fDebugTarget.setLastFileName(fileName);
 		String fLastcmd = fDebugTarget.getLastCommand();
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: lastCMD " + fLastcmd);
 
@@ -183,7 +173,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		} else if (fLastcmd.equals("stepInto")) {
 			fDebugTarget.suspended(DebugEvent.STEP_INTO);
 		} else if (fLastcmd.equals("terminate")) {
-			// Shouldn't happen, try to shut down cleanly 
+			// Shouldn't happen, try to shut down cleanly
 			fRemoteDebugger.finish();
 			fDebugTarget.terminated();
 		} else if (fLastcmd.equals("breakpointAdded")) {
@@ -238,7 +228,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		 } catch (DebugException e) {
 		 // Not likely to happened, since this is the second time we found the file.
 		 Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e);
-		 } 
+		 }
 		 }else {
 		 runPHPWebServer(fURL, fRequestPort, fIsStopAtFirstLine);
 		 terminated();
@@ -252,44 +242,17 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void parsingErrorOccured(DebugError debugError) {
 		super.parsingErrorOccured(debugError);
-		String sName = debugError.getFullPathName();
-		int length;
-		String rName;
-		if (!fDebugTarget.isPHPCGI()) {
-			length = fDebugTarget.getHTDocs().length() + fDebugTarget.getContextRoot().length();
-			rName = sName.substring(length);
-			// Check if the name exists in the workspace. 
-			// If not, keep the original name.
-			try {
-				if (!ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(rName)).exists()) {
-					rName = sName;
-				}
-			} catch (Exception e) {
-				rName = sName;
-			}
-		} else {
-			length = fDebugTarget.getWorkspacePath().length() + fDebugTarget.getProjectName().length();
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			IFile file = root.getFileForLocation(new Path(sName));
-			if (file != null) {
-				if (root.getProject(fDebugTarget.getProjectName()).equals(file.getProject())) {
-					rName = file.getProjectRelativePath().toOSString();
-				} else {
-					rName = ".." + file.getFullPath().toOSString();
-				}
-			} else {
-				rName = sName;
-			}
-		}
-		String dFileName = RemoteDebugger.convertToSystemIndependentFileName(rName);
-		debugError.setFileName(dFileName);
+
+		// resolve path
+		String localFileName = RemoteDebugger.convertToLocalFilename(debugError.getFullPathName(), fDebugTarget);
+		debugError.setFileName(localFileName);
+
 		fDebugTarget.getDebugErrors().add(debugError);
 
 		Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();
-		for (int i = 0; i < listeners.length; i++) {
-			((IPHPConsoleEventListener) listeners[i]).handleEvent(debugError);
+		for (Object element : listeners) {
+			((IPHPConsoleEventListener) element).handleEvent(debugError);
 		}
-
 	}
 
 	/* (non-Javadoc)

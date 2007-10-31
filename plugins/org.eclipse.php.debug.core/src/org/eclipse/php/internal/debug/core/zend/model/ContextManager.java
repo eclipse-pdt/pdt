@@ -13,13 +13,9 @@ package org.eclipse.php.internal.debug.core.zend.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 
@@ -29,7 +25,9 @@ public class ContextManager {
 	private IRemoteDebugger fDebugger;
 	private StackLayer[] fPreviousLayers;
 	private IStackFrame[] fPreviousFrames = null;
-	private Map fStackVariables;
+	private Map<String, Expression[]> fStackVariables;
+	private Map<String, String> fResolvedFiles;
+	private Map<String, String> fResolvedStackLayersMap;
 
 	private int fSuspendCount;
 	private IVariable[] fVariables;
@@ -39,11 +37,42 @@ public class ContextManager {
 		fTarget = target;
 		fSuspendCount = target.getSuspendCount();
 		fDebugger = debugger;
-		fStackVariables = new HashMap();
+		fStackVariables = new HashMap<String, Expression[]>();
+		fResolvedFiles = new HashMap<String, String>();
+		fResolvedStackLayersMap = new HashMap<String, String>();
 	}
 
-	public IStackFrame[] getStackFrames(int length, String context, boolean isWindows) throws DebugException {
+	private String resolveRemoteFile(String remoteFile) {
+		if (!fResolvedFiles.containsKey(remoteFile)) {
+			fResolvedFiles.put(remoteFile, RemoteDebugger.convertToLocalFilename(remoteFile, fTarget));
+		}
+		return fResolvedFiles.get(remoteFile);
+	}
 
+	/**
+	 * Cache a resolved CalledFileName from a stack layer.
+	 * @param nonResolvedTuple - A concatenation of 2 Strings : The CallerFileName and CalledFileName(Non Resolved)
+	 * @param resolvedCalled   - A Resolved value of the called File Name 
+	 */
+	public void cacheResolvedStackLayers(String nonResolvedTuple, String resolvedCalled) {
+		if (!fResolvedStackLayersMap.containsKey(nonResolvedTuple)) {
+			fResolvedStackLayersMap.put(nonResolvedTuple, resolvedCalled);
+		}
+	}
+
+	/**
+	 * Returns the cached resolved stack layer called file name
+	 * @param nonResolvedTuple
+	 * @return an empty string if not cached already
+	 */
+	public String getCachedResolvedStackLayer(String nonResolvedTuple) {
+		if (fResolvedStackLayersMap.containsKey(nonResolvedTuple)) {
+			return fResolvedStackLayersMap.get(nonResolvedTuple);
+		}
+		return "";
+	}
+
+	public IStackFrame[] getStackFrames() throws DebugException {
 		// check to see if eclipse is getting the same stack frames again.
 		PHPstack stack = fDebugger.getCallStack();
 		PHPThread thread = (PHPThread) fTarget.getThreads()[0];
@@ -53,7 +82,7 @@ public class ContextManager {
 			main = true;
 
 		if (fPreviousFrames == null) {
-			fPreviousFrames = createNewFrames(layers, thread, length, context, isWindows);
+			fPreviousFrames = createNewFrames(layers, thread);
 			fVariables = createVariables(main, false, true);
 			createStackVariables(layers);
 			fSuspendCount = fTarget.getSuspendCount();
@@ -70,11 +99,11 @@ public class ContextManager {
 		if (layersSame) {
 			fVariables = createVariables(main, false, false);
 		} else {
-			fPreviousFrames = createNewFrames(layers, thread, length, context, isWindows);
+			fPreviousFrames = createNewFrames(layers, thread);
 			fVariables = createVariables(main, false, true);
 		}
 		int topID = fPreviousFrames[0] instanceof PHPStackFrame ? ((PHPStackFrame) fPreviousFrames[0]).getIdentifier() : 0;
-		fPreviousFrames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (main) ? "" : fPreviousFrames[1].getName(), fTarget.getLastStop(), topID, getLocalFileName(fTarget.getLastFileName(), context, length, isWindows));
+		fPreviousFrames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (main) ? "" : fPreviousFrames[1].getName(), fTarget.getLastStop(), topID, resolveRemoteFile(fTarget.getLastFileName()));
 		createStackVariables(layers);
 		return fPreviousFrames;
 	}
@@ -95,7 +124,7 @@ public class ContextManager {
 		Expression[] variables = new Expression[0];
 		if (!functionName.equals("")) {
 			String key = functionName + stack.getAbsoluteFileName();
-			variables = (Expression[]) fStackVariables.get(key);
+			variables = fStackVariables.get(key);
 		}
 		return variables;
 	}
@@ -117,33 +146,32 @@ public class ContextManager {
 			&& layer.getCalledFunctionName().equals(prevLayer.getCalledFunctionName()) && layer.getCalledLineNumber() == prevLayer.getCalledLineNumber();
 	}
 
-	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread, int length, String context, boolean isWindows) throws DebugException {
-
+	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread) throws DebugException {
 		IStackFrame[] frames = new IStackFrame[((layers.length - 1) * 2) + 1];
 		int frameCt = ((layers.length - 1) * 2 + 1);
 		for (int i = 1; i < layers.length; i++) {
-			String sName = RemoteDebugger.convertToSystemIndependentFileName(layers[i].getCallerFileName());
-			String rName = getLocalFileName(sName, context, length, isWindows);
+			String sName = layers[i].getCallerFileName();
+			String rName = resolveRemoteFile(sName);
 			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i].getCallerFunctionName(), layers[i].getCallerLineNumber() + 1, frameCt, rName);
 			frameCt--;
-			sName = RemoteDebugger.convertToSystemIndependentFileName(layers[i].getCalledFileName());
-			rName = getLocalFileName(sName, context, length, isWindows);
+			sName = layers[i].getCalledFileName();
+			rName = resolveRemoteFile(sName);
 			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i].getCalledFunctionName(), layers[i].getCalledLineNumber() + 1, frameCt, layers[i], rName);
 			frameCt--;
 		}
 
-		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), fTarget.getLastStop(), frameCt, getLocalFileName(fTarget.getLastFileName(), context, length, isWindows));
+		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), fTarget.getLastStop(), frameCt, resolveRemoteFile(fTarget.getLastFileName()));
 		fPreviousLayers = layers;
 		return frames;
 	}
 
 	private void createStackVariables(StackLayer[] layers) {
 		fStackVariables.clear();
-		for (int i = 0; i < layers.length; i++) {
-			Expression[] stackVariables = layers[i].getVariables();
+		for (StackLayer element : layers) {
+			Expression[] stackVariables = element.getVariables();
 			if (stackVariables.length != 0) {
 				// TODO may need to fix for method name in classes
-				String key = layers[i].getCalledFunctionName() + RemoteDebugger.convertToSystemIndependentFileName(layers[i].getCalledFileName());
+				String key = element.getCalledFunctionName() + element.getCalledFileName();
 				fStackVariables.put(key, stackVariables);
 			}
 		}
@@ -151,7 +179,7 @@ public class ContextManager {
 
 	private IVariable[] createVariables(boolean main, boolean update, boolean clear) {
 
-		DefaultExpressionsManager expressionsManager = (DefaultExpressionsManager) fTarget.getExpressionManager();
+		DefaultExpressionsManager expressionsManager = fTarget.getExpressionManager();
 		if (clear)
 			expressionsManager.clear();
 		Expression[] localVariables = expressionsManager.getLocalVariables(1);
@@ -171,55 +199,14 @@ public class ContextManager {
 			DefaultExpression gExp = new DefaultExpression(global);
 			String sArray = "Array";
 			String sArrayAsString = sArray + " [" + (new Integer(GlobalVariables.length).toString()) + "]";
-			ExpressionValue gEValue = new ExpressionValue(5, (Object) sArray, sArrayAsString, GlobalVariables);
+			ExpressionValue gEValue = new ExpressionValue(5, sArray, sArrayAsString, GlobalVariables);
 			gExp.setValue(gEValue);
 			variables[0] = new PHPVariable(fTarget, gExp, true);
 		}
 		return variables;
-
 	}
 
-	private String getLocalFileName(String filename, String context, int length, boolean isWindows) {
-		// First, check if the file name is located in one of the include paths.
-		// If so, ignore the given length and return the local file name after trimming
-		// the path from its beginning.
-		// (Fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=171414)
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fTarget.getProjectName());
-		if (project != null) {
-			PHPProjectOptions options = PHPProjectOptions.forProject(project);
-			if (options != null) {
-				IIncludePathEntry[] includePaths = options.readRawIncludePath();
-				for (int i = 0; i < includePaths.length; i++) {
-					String includePath = includePaths[i].getPath().toString();
-					if (filename.startsWith(includePath)) {
-						return filename.substring(includePath.length());
-					}
-				}
-			}
-		}
-		String rName = (filename.length() > length) ? filename.substring(length) : '/' + filename;
-		if (context == null) {
-			if (rName.startsWith("/")) {
-				rName = rName.substring(1);
-			}
-			return rName;
-		}
-		if (isWindows) {
-			if ((rName.toLowerCase()).startsWith(context.toLowerCase())) {
-				rName = rName.substring(context.length());
-			} else {
-				rName = rName.substring(1);
-			}
-		} else {
-			if (rName.startsWith(context)) {
-				rName = rName.substring(context.length());
-			}
-			//            else {
-			//                rName = rName.substring(1);
-			//            }
-		}
-
-		return rName;
+	public IRemoteDebugger getRemoteDebugger() {
+		return fDebugger;
 	}
-
 }
