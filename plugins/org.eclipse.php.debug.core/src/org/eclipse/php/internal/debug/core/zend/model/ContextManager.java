@@ -67,7 +67,7 @@ public class ContextManager {
 	 */
 	public String getCachedResolvedStackLayer(String nonResolvedTuple) {
 		if (fResolvedStackLayersMap.containsKey(nonResolvedTuple)) {
-			return fResolvedFiles.get(nonResolvedTuple);
+			return fResolvedStackLayersMap.get(nonResolvedTuple);
 		}
 		return "";
 	}
