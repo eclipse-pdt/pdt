@@ -19,10 +19,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
-import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 
 public class BreakpointSet {
 
@@ -44,23 +44,23 @@ public class BreakpointSet {
 			IIncludePathEntry[] entries = options.readRawIncludePath();
 
 			if (entries != null) {
-				for (int i = 0; i < entries.length; i++) {
-					if (entries[i].getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-						IPath path = entries[i].getPath();
+				for (IIncludePathEntry element : entries) {
+					if (element.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+						IPath path = element.getPath();
 						File file = new File(path.toString());
-						fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
-					} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-						IResource includeResource = entries[i].getResource();
+						fDirectories.add(file.getAbsolutePath());
+					} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+						IResource includeResource = element.getResource();
 						if (includeResource instanceof IProject) {
 							fProjects.add(includeResource);
 						}
-					} else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-						IPath path = entries[i].getPath();
+					} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+						IPath path = element.getPath();
 						String variableName = path.toString();
 						File file = getVariableFile(variableName);
 						if (file != null) {
 							if (file.isDirectory()) {
-								fDirectories.add(RemoteDebugger.convertToSystemIndependentFileName(file.getAbsolutePath()));
+								fDirectories.add(file.getAbsolutePath());
 							}
 						}
 					}
@@ -89,11 +89,11 @@ public class BreakpointSet {
 			String storageType = marker.getAttribute(IPHPConstants.STORAGE_TYPE, "");
 
 			if (storageType.equals(IPHPConstants.STORAGE_TYPE_INCLUDE)) {
-				String includeBasedir = (String) marker.getAttribute(IPHPConstants.STORAGE_INC_BASEDIR, "");
+				String includeBasedir = marker.getAttribute(IPHPConstants.STORAGE_INC_BASEDIR, "");
 				if (!"".equals(includeBasedir)) {
 					Object[] dirs = fDirectories.toArray();
-					for (int i = 0; i < dirs.length; i++) {
-						if (includeBasedir.equals((String) dirs[i]))
+					for (Object element : dirs) {
+						if (includeBasedir.equals(element))
 							return true;
 					}
 					return false;
@@ -102,8 +102,9 @@ public class BreakpointSet {
 			return true;
 		} else {
 			IProject project = resource.getProject();
-			if (fProject.equals(project))
+			if (fProject.equals(project) || fProject.equals(PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject())){
 				return true;
+			}
 			return fProjects.contains(project);
 		}
 	}

@@ -119,39 +119,51 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public void handleNotification(Object msg) {
 		if (msg instanceof OutputNotification) {
+
 			String output = ((OutputNotification) msg).getOutput();
 			debugHandler.newOutput(output);
+
 		} else if (msg instanceof ReadyNotification) {
+
 			ReadyNotification readyNotification = (ReadyNotification) msg;
 			String currentFile = readyNotification.getFileName();
 			int currentLine = readyNotification.getLineNumber();
-			debugHandler.ready(convertToSystemDependentFileName(currentFile), currentLine);
+			debugHandler.ready(currentFile, currentLine);
+
 		} else if (msg instanceof DebugSessionStartedNotification) {
+
 			DebugSessionStartedNotification debugSessionStartedNotification = (DebugSessionStartedNotification) msg;
 			String fileName = debugSessionStartedNotification.getFileName();
 			String uri = debugSessionStartedNotification.getUri();
 			String query = debugSessionStartedNotification.getQuery();
 			String options = debugSessionStartedNotification.getOptions();
 			debugHandler.sessionStarted(fileName, uri, query, options);
+
 		} else if (msg instanceof HeaderOutputNotification) {
+
 			debugHandler.newHeaderOutput(((HeaderOutputNotification) msg).getOutput());
+
 		} else if (msg instanceof ParsingErrorNotification) {
+
 			ParsingErrorNotification parseError = (ParsingErrorNotification) msg;
 			String errorText = parseError.getErrorText();
-			String fileName = "";
+
+			String fileName;
 			Path errorFilePath = new Path(parseError.getFileName());
 			if ((errorFilePath.segmentCount() > 1) && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
 				fileName = errorFilePath.lastSegment();
 			} else {
-				fileName = convertToSystemDependentFileName(parseError.getFileName());
+				fileName = parseError.getFileName();
 			}
 
 			int lineNumber = parseError.getLineNumber();
 			int errorLevel = parseError.getErrorLevel();
 
-			DebugError debugError = new DebugError(errorLevel, convertToSystemDependentFileName(parseError.getFileName()), lineNumber, errorText);
+			DebugError debugError = new DebugError(errorLevel, fileName, lineNumber, errorText);
 			debugHandler.parsingErrorOccured(debugError);
+
 		} else if (msg instanceof DebuggerErrorNotification) {
+
 			DebuggerErrorNotification parseError = (DebuggerErrorNotification) msg;
 			int errorLevel = parseError.getErrorLevel();
 			DebugError debugError = new DebugError();
@@ -162,7 +174,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 			debugError.setCode(errorLevel);
 			debugHandler.debuggerErrorOccured(debugError);
+
 		} else if (msg instanceof DebugScriptEndedNotification) {
+
 			debugHandler.handleScriptEnded(); // 2 options: close message or // XXX - uncomment
 			// start profile
 		}
@@ -184,47 +198,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Converts the given file name to a system independent file name.
-	 * The convertion is platform independent and is similar to calling the convertToSystemIndependentFileName(fileName, true)
-	 * @param fileName
-	 * @return
-	 */
-	public static String convertToSystemIndependentFileName(String fileName) {
-		return convertToSystemIndependentFileName(fileName, true);
-	}
-
-	/**
-	 * Converts the given file name to a system independent file name. If the ignoreSystemType is false, the
-	 * convertion will occure only if the current system is Microsoft Windows.
-	 * @param fileName
-	 * @return
-	 */
-	public static String convertToSystemIndependentFileName(String fileName, boolean ignoreSystemType) {
-		if (fileName == null)
-			return null;
-		if (ignoreSystemType || File.separatorChar == '\\') {
-			fileName = fileName.replace('\\', '/');
-		}
-		return fileName;
-	}
-
-	public static final String convertToSystemDependentFileName(String fileName) {
-		if (fileName == null)
-			return null;
-		if (File.separatorChar == '\\') {
-			fileName = fileName.replace('/', File.separatorChar);
-			fileName = fileName.replace('\\', File.separatorChar);
-		}
-		return fileName;
-	}
-
-	/**
 	 * Returns local file name corresponding to the given remote path
 	 * @param remoteFile
 	 * @return local file, or remoteFile as is in case of resolving failure
 	 */
 	public static String convertToLocalFilename(String remoteFile, PHPDebugTarget debugTarget) {
-		if (new File(remoteFile).exists()) {
+		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
 			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
 			if (wsFile != null) {
 				return wsFile.getFullPath().toString();
@@ -253,7 +232,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	public static String convertToRemoteFilename(String localFile, PHPDebugTarget debugTarget) {
 		IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(localFile));
-		if (wsFile.exists() && wsFile.getLocation() != null) {
+		if (debugTarget.isPHPCGI() && wsFile.exists() && wsFile.getLocation() != null) {
 			File fsFile = wsFile.getLocation().toFile();
 			if (fsFile.exists()) {
 				return fsFile.getAbsolutePath();
@@ -325,7 +304,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			AddBreakpointRequest request = new AddBreakpointRequest();
 			Breakpoint tmpBreakpoint = (Breakpoint) bp.clone();
-			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName(), false);
+			String fileName = tmpBreakpoint.getFileName();
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
 			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
@@ -347,7 +326,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			AddBreakpointRequest request = new AddBreakpointRequest();
 			Breakpoint tmpBreakpoint = (Breakpoint) breakpoint.clone();
-			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName(), false);
+			String fileName = tmpBreakpoint.getFileName();
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
 			AddBreakpointResponse response = (AddBreakpointResponse) connection.sendRequest(request);
@@ -883,10 +862,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 				layer.setCallerLineNumber(layer.getCallerLineNumber() - 1);
 				layer.setCalledLineNumber(layer.getCalledLineNumber() - 1);
 
-				layer.setCallerFileName(convertToSystemDependentFileName(layer.getCallerFileName()));
-				layer.setCalledFileName(convertToSystemDependentFileName(layer.getCalledFileName()));
+				layer.setCallerFileName(layer.getCallerFileName());
+				layer.setCalledFileName(layer.getCalledFileName());
 			}
-
 		}
 	}
 
@@ -949,7 +927,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			if (request instanceof AddBreakpointRequest) {
 				AddBreakpointRequest addBreakpointRequest = (AddBreakpointRequest) request;
 				Breakpoint bp = addBreakpointRequest.getBreakpoint();
-				String fileName = convertToSystemDependentFileName(bp.getFileName());
+				String fileName = bp.getFileName();
 				int lineNumber = bp.getLineNumber();
 				int id = -1;
 				if (response != null) {

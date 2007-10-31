@@ -132,11 +132,11 @@ public class ContextManager {
 		IStackFrame[] frames = new IStackFrame[((layers.length - 1) * 2) + 1];
 		int frameCt = ((layers.length - 1) * 2 + 1);
 		for (int i = 1; i < layers.length; i++) {
-			String sName = RemoteDebugger.convertToSystemIndependentFileName(layers[i].getCallerFileName());
+			String sName = layers[i].getCallerFileName();
 			String rName = resolveRemoteFile(sName);
 			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i].getCallerFunctionName(), layers[i].getCallerLineNumber() + 1, frameCt, rName);
 			frameCt--;
-			sName = RemoteDebugger.convertToSystemIndependentFileName(layers[i].getCalledFileName());
+			sName = layers[i].getCalledFileName();
 			rName = resolveRemoteFile(sName);
 			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i].getCalledFunctionName(), layers[i].getCalledLineNumber() + 1, frameCt, layers[i], rName);
 			frameCt--;
@@ -153,7 +153,7 @@ public class ContextManager {
 			Expression[] stackVariables = element.getVariables();
 			if (stackVariables.length != 0) {
 				// TODO may need to fix for method name in classes
-				String key = element.getCalledFunctionName() + RemoteDebugger.convertToSystemIndependentFileName(element.getCalledFileName());
+				String key = element.getCalledFunctionName() + element.getCalledFileName();
 				fStackVariables.put(key, stackVariables);
 			}
 		}

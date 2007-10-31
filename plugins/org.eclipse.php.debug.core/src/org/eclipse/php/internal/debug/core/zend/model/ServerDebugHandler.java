@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.core.zend.model;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -58,33 +59,47 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		return fRemoteDebugger;
 	}
 
-	public void sessionStarted(String fileName, String uri, String query, String options) {
-		super.sessionStarted(fileName, uri, query, options);
+	public void sessionStarted(String remoteFile, String uri, String query, String options) {
+		super.sessionStarted(remoteFile, uri, query, options);
 
 		try {
 			PathEntry pathEntry = null;
 			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
-			String file = launchConfiguration.getAttribute(Server.FILE_NAME, (String) null);
-			if (file == null) {
-				file = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+			String debugFileName = launchConfiguration.getAttribute(Server.FILE_NAME, (String) null);
+			if (debugFileName == null) {
+				debugFileName = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 			}
-			if (file != null) {
-				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
+			if (debugFileName != null) {
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(debugFileName);
 				if (resource instanceof IFile) {
-					pathEntry = new PathEntry(file, Type.WORKSPACE, resource.getParent());
+					pathEntry = new PathEntry(debugFileName, Type.WORKSPACE, resource.getParent());
+				} else if (resource instanceof IProject) {
+					IProject project = (IProject) resource;
+					int idx = remoteFile.lastIndexOf('/');
+					if (idx == -1) {
+						idx = remoteFile.lastIndexOf('\\');
+					}
+					String lastSegment;
+					if (idx != -1) {
+						lastSegment = remoteFile.substring(idx+1);
+					} else {
+						lastSegment = remoteFile;
+					}
+					IFile file = project.getFile(lastSegment);
+					if (file != null) {
+						pathEntry = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, project);
+					}
 				}
 			}
 			if (pathEntry != null) {
-				PathMapperRegistry.getByLaunchConfiguration(launchConfiguration).addEntry(fileName, pathEntry);
+				PathMapperRegistry.getByLaunchConfiguration(launchConfiguration).addEntry(remoteFile, pathEntry);
 			} else {
-				DebugSearchEngine.find(fileName, launchConfiguration);
+				DebugSearchEngine.find(remoteFile, launchConfiguration);
 			}
 		} catch (Exception e) {
 		}
 
-		String sFileName = RemoteDebugger.convertToSystemIndependentFileName(fileName);
-
-		fDebugTarget.setLastFileName(sFileName);
+		fDebugTarget.setLastFileName(remoteFile);
 		if (!fDebugTarget.isPHPCGI()) {
 			fDebugTarget.setServerWindows(false);
 		}
@@ -133,7 +148,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		super.ready(fileName, lineNumber);
 
 		fDebugTarget.setLastStop(lineNumber);
-		fDebugTarget.setLastFileName(RemoteDebugger.convertToSystemIndependentFileName(fileName));
+		fDebugTarget.setLastFileName(fileName);
 		String fLastcmd = fDebugTarget.getLastCommand();
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: lastCMD " + fLastcmd);
 
