@@ -56,6 +56,16 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 
 public class PHPModelUtil {
 
+	public static PHPFunctionData getRealConstructor(PHPProjectModel projectModel, String fileName, PHPClassData classData) {
+		if (classData.hasConstructor()) {
+			return classData.getConstructor();
+		}
+		CodeData parentConstructor = projectModel.getClassFunctionData(fileName, classData.getName(), "__construct");
+		if (parentConstructor != null)
+			return (PHPFunctionData) parentConstructor;
+		return classData.getConstructor();
+	}
+
 	public static class PHPContainerStringConverter {
 		public static Object toContainer(final String sPath) {
 			final IPath path = Path.fromPortableString(sPath);
