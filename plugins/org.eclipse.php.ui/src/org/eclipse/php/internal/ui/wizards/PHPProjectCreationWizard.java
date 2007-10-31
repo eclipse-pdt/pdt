@@ -76,8 +76,10 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	public void doAddPages() {
-		addDeafaultPages();
-		addContributedPages();
+		// if we succeeded adding the default pages, add the contributed pages
+		if(addDeafaultPages()){
+			addContributedPages();
+		}
 
 	}
 
@@ -91,9 +93,10 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 		}
 	}
 
-	protected void addDeafaultPages() {
+	protected boolean addDeafaultPages() {
 		addPage(basePage = new PHPProjectWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
 		addPage(includePathPage = new PHPIncludePathPage(getDataModel(), "page2")); //$NON-NLS-1$
+		return true;
 	}
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
