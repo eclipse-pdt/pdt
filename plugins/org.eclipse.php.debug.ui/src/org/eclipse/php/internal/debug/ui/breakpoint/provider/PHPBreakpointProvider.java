@@ -16,8 +16,18 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -26,9 +36,8 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
-import org.eclipse.php.internal.core.resources.ExternalFileDecorator;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
-import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -77,7 +86,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				Map attributes = new HashMap();
 				String pathName = null;
 				if (input instanceof IURIEditorInput) {
-					if (res instanceof ExternalFileDecorator) {
+					if (res instanceof ExternalFileWrapper) {
 						pathName = res.getFullPath().toString();
 					} else {
 						pathName = URIUtil.toPath(((IURIEditorInput) input).getURI()).toString();
@@ -85,7 +94,6 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				} else {
 					pathName = ((NonExistingPHPFileEditorInput) input).getPath().toString();
 				}
-				String fileName = RemoteDebugger.convertToSystemIndependentFileName(pathName);
 				if (res instanceof IWorkspaceRoot) {
 					// We are dealing with remote
 					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_REMOTE);
@@ -93,8 +101,8 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 					// We are dealing with storage
 					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_EXTERNAL);
 				}
-				attributes.put(IPHPConstants.STORAGE_FILE, fileName);
-				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
+				attributes.put(IPHPConstants.STORAGE_FILE, pathName);
+				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, pathName);
 
 				try {
 					Integer lineNumberInt = new Integer(editorLineNumber);
@@ -112,7 +120,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				IStorage storage = ((IStorageEditorInput) input).getStorage();
 
 				Map attributes = new HashMap();
-				String fileName = "";
+				String fileName;
 
 				String secondaryId = storage.getFullPath().toString();
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, secondaryId);
@@ -120,9 +128,8 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				if (storage instanceof LocalFileStorage) {
 					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_INCLUDE);
 
-					fileName = RemoteDebugger.convertToSystemIndependentFileName(((LocalFileStorage) storage).getName());
+					fileName =((LocalFileStorage) storage).getName();
 					String incDir = ((LocalFileStorage) storage).getIncBaseDirName();
-					incDir = RemoteDebugger.convertToSystemIndependentFileName(incDir);
 					if (incDir != null) {
 						fileName = secondaryId.substring(incDir.length() + 1);
 					}
@@ -164,7 +171,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 	 * Finds a valid position somewhere on lineNumber in document, idoc, where a
 	 * breakpoint can be set and returns that position. -1 is returned if a
 	 * position could not be found.
-	 * 
+	 *
 	 * @param idoc
 	 * @param editorLineNumber
 	 * @return position to set breakpoint or -1 if no position could be found
