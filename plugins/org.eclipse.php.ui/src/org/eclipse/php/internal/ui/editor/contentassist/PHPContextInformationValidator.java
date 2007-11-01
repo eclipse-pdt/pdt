@@ -29,7 +29,7 @@ public class PHPContextInformationValidator implements IContextInformationValida
 	public void install(IContextInformation info, ITextViewer viewer, int offset) {
 		fInformation = info;
 		fViewer = viewer;
-		if(info instanceof IContextInformationExtension) {
+		if (info instanceof IContextInformationExtension) {
 			fPosition = ((IContextInformationExtension) info).getContextInformationPosition();
 		} else {
 			fPosition = offset;
@@ -136,7 +136,7 @@ public class PHPContextInformationValidator implements IContextInformationValida
 			if (offset < line.getOffset() || offset >= document.getLength())
 				return false;
 
-			return getCharCount(document, fPosition, offset, "(<", ")>", false) >= 0; //$NON-NLS-1$//$NON-NLS-2$
+			return getCharCount(document, fPosition, offset, "(", ")", false) >= 0; //$NON-NLS-1$//$NON-NLS-2$
 
 		} catch (BadLocationException x) {
 			return false;
