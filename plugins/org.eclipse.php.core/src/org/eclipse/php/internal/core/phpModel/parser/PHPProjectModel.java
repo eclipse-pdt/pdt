@@ -37,7 +37,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 	}
 
 	/**
-	 * Initialize a non-project model 
+	 * Initialize a non-project model
 	 * this means we initialize the default model
 	 */
 	public void initialize() {
@@ -75,8 +75,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 
 	private void addModelListenrs() {
 		IPhpModel[] models = getModels();
-		for (int i = 0; i < models.length; i++) {
-			IPhpModel phpModel = models[i];
+		for (IPhpModel phpModel : models) {
 			if (phpModel instanceof IProjectModelListener) {
 				addProjectModelListener((IProjectModelListener) phpModel);
 			}
@@ -95,9 +94,9 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 
 	public Object getExternalResource(PHPFileData fileData) {
 		IPhpModel[] models = getModels();
-		for (int i = 0; i < models.length; i++) {
-			if (models[i] instanceof ExternalFilesModel) {
-				Object rv = ((ExternalFilesModel) models[i]).getExternalResource(fileData);
+		for (IPhpModel element : models) {
+			if (element instanceof ExternalFilesModel) {
+				Object rv = ((ExternalFilesModel) element).getExternalResource(fileData);
 				if (rv != null) {
 					return rv;
 				}
@@ -135,7 +134,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null && !subClasses.contains(superClass)) {
 			subClasses.add(classData.getName());
-			String fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
+			String fileName = classData.isUserCode() ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
 			return getUserActiveConstructor(getClass(fileName, superClass), subClasses);
 		}
 		return null;
@@ -160,7 +159,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null && !subClasses.contains(superClass)) {
 			subClasses.add(className);
-			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
+			fileName = classData.isUserCode() ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
 			return getClassFunctionData(fileName, superClass, functionName, subClasses);
 		}
 		return null;
@@ -182,7 +181,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null && !subClasses.contains(superClass)) {
 			subClasses.add(className);
-			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
+			fileName = classData.isUserCode() ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
 			superFunctions = ModelSupport.getFilteredCodeData(getClassFunctions(fileName, superClass, startsWith, subClasses), ModelSupport.PROTECTED_ACCESS_LEVEL_FILTER);
 		}
 		return ModelSupport.removeRepeatedNames(ModelSupport.mergeAndRemoveDuplicated(functions, superFunctions));
@@ -199,15 +198,15 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		}
 
 		CodeData[] variables = classData.getVars();
-		for (int i = 0; i < variables.length; i++) {
-			if (variables[i].getName().equals(startsWith)) {
-				return variables[i];
+		for (CodeData element : variables) {
+			if (element.getName().equals(startsWith)) {
+				return element;
 			}
 		}
 
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null) {
-			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
+			fileName = classData.isUserCode() ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
 			return getClassVariablesData(fileName, superClass, startsWith);
 		}
 
@@ -233,7 +232,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null && !subClasses.contains(superClass)) {
 			subClasses.add(className);
-			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
+			fileName = classData.isUserCode() ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
 			superVariables = ModelSupport.getFilteredCodeData(getClassVariables(fileName, superClass, startsWith, subClasses), ModelSupport.PROTECTED_ACCESS_LEVEL_FILTER);
 		}
 		return ModelSupport.merge(variables, superVariables);
@@ -249,15 +248,15 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 			return null;
 		}
 		CodeData[] consts = classData.getConsts();
-		for (int i = 0; i < consts.length; i++) {
-			if (consts[i].getName().equals(constName)) {
-				return consts[i];
+		for (CodeData element : consts) {
+			if (element.getName().equals(constName)) {
+				return element;
 			}
 		}
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null && !subClasses.contains(superClass)) {
 			subClasses.add(className);
-			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
+			fileName = classData.isUserCode() ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
 			CodeData classConstsData = getClassConstsData(fileName, superClass, constName, subClasses);
 			if (classConstsData != null) {
 				return classConstsData;
@@ -265,9 +264,8 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		}
 
 		final PHPInterfaceNameData[] interfacesNamesData = classData.getInterfacesNamesData();
-		for (int i = 0; i < interfacesNamesData.length; i++) {
-			PHPInterfaceNameData interfaceNameData = interfacesNamesData[i];
-			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
+		for (PHPInterfaceNameData interfaceNameData : interfacesNamesData) {
+			fileName = classData.isUserCode() ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
 			final CodeData classConstsData = getClassConstsData(fileName, interfaceNameData.getName(), constName);
 			if (classConstsData != null) {
 				return classConstsData;
@@ -284,7 +282,7 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 	private CodeData[] getClassConsts(String fileName, String className, String startsWith, HashSet subClasses) {
 		PHPClassData classData = getClass(fileName, className);
 		if (classData == null) {
-			return null;
+			return new CodeData[0];
 		}
 
 		CodeData[] variables = ModelSupport.getCodeDataStartingWith(classData.getConsts(), startsWith);
@@ -293,13 +291,13 @@ public class PHPProjectModel extends FilterableCompositePhpModel implements IPhp
 		String superClass = classData.getSuperClassData().getName();
 		if (superClass != null && !subClasses.contains(superClass)) {
 			subClasses.add(className);
-			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
+			fileName = classData.isUserCode() ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
 			superConsts.addAll(Arrays.asList(getClassConsts(fileName, superClass, startsWith, subClasses)));
 		}
 		PHPInterfaceNameData[] interfacesNamesData = classData.getInterfacesNamesData();
 		for (PHPInterfaceNameData interfaceNameData : interfacesNamesData) {
 			String interfaceName = interfaceNameData.getName();
-			fileName = (classData.isUserCode()) ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
+			fileName = classData.isUserCode() ? classData.getUserData().getFileName() : ""; //$NON-NLS-1$
 			superConsts.addAll(Arrays.asList(getClassConsts(fileName, interfaceName, startsWith)));
 		}
 		return ModelSupport.merge(variables, superConsts.toArray(new CodeData[superConsts.size()]));
