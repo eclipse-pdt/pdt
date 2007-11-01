@@ -70,7 +70,7 @@ public class StaticFieldAccess extends StaticDispatch {
 		return field;
 	}
 
-	public ASTNode getProperty() {
+	public ASTNode getMember() {
 		return getField();
 	}
 

@@ -37,5 +37,5 @@ public abstract class Dispatch extends VariableBase {
 	/**
 	 * @return the property of the diaptch
 	 */
-	public abstract VariableBase getProperty();
+	public abstract VariableBase getMember();
 }

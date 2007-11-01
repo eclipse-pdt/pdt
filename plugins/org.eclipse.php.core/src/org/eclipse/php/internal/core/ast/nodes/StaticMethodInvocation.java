@@ -73,7 +73,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 		return method;
 	}
 
-	public ASTNode getProperty() {
+	public ASTNode getMember() {
 		return getMethod();
 	}
 }

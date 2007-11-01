@@ -73,7 +73,7 @@ public class MethodInvocation extends Dispatch {
 		return method;
 	}
 
-	public VariableBase getProperty() {
+	public VariableBase getMember() {
 		return getMethod();
 	}
 }

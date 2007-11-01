@@ -30,5 +30,5 @@ public abstract class StaticDispatch extends VariableBase {
 		return className;
 	}
 
-	public abstract ASTNode getProperty();
+	public abstract ASTNode getMember();
 }

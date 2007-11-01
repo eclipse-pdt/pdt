@@ -75,7 +75,7 @@ public class StaticConstantAccess extends StaticDispatch {
 		return constant;
 	}
 
-	public ASTNode getProperty() {
+	public ASTNode getMember() {
 		return getConstant();
 	}
 }

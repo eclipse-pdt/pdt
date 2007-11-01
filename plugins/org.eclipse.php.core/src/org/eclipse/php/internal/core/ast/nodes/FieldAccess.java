@@ -71,7 +71,7 @@ public class FieldAccess extends Dispatch {
 		return field;
 	}
 
-	public VariableBase getProperty() {
+	public VariableBase getMember() {
 		return getField();
 	}
 }
