@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.phpModel.phpElementData;
 public interface PHPClassData extends PHPCodeData {
 
 	public static final String CONSTRUCTOR = "__construct"; //$NON-NLS-1$
-	public static final String DESCRUCTOR = "__destruct"; //$NON-NLS-1$
+	public static final String DESTRUCTOR = "__destruct"; //$NON-NLS-1$
 
 	/**
 	 * returns the super class.
