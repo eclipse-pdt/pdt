@@ -825,43 +825,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			functions = projectModel.getClassFunctions(fileName, className, startWith.length() == 0 ? "" : startWith); //$NON-NLS-1$
 		}
 		PHPClassData classData = projectModel.getClass(fileName, className);
-		//adding the default C'tor and D'tor if they don't exist
-		boolean ctorExists = false;
-		boolean dtorExists = false;
-		for (CodeData data : functions) {
-			if (data.getName().equals(PHPClassData.CONSTRUCTOR)) {
-				ctorExists = true;
-			}
-			if (data.getName().equals(PHPClassData.DESCRUCTOR)) {
-				dtorExists = true;
-			}
-		}
-		int addedFunctions = 0;
-		if (!ctorExists) {
-			addedFunctions++;
-		}
-		if (!dtorExists) {
-			addedFunctions++;
-		}
-		CodeData[] result = functions;
-		if (addedFunctions > 0) {
-			result = new CodeData[functions.length + addedFunctions];
-			System.arraycopy(functions, 0, result, 0, functions.length);
 
-			if (ctorExists) {
-				if (!dtorExists) {
-					result[functions.length] = PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESCRUCTOR, PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null);
-				}
-			} else {
-				result[functions.length] = PHPCodeDataFactory.createPHPFuctionData(PHPClassData.CONSTRUCTOR, PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null);
-				if (!dtorExists) {
-					result[functions.length + 1] = PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESCRUCTOR, PHPModifier.PUBLIC, null, classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null);
-				}
-			}
-		}
-		result = ModelSupport.getFilteredCodeData(result, ModelSupport.PROTECTED_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC);
+		functions = ModelSupport.getFilteredCodeData(functions, ModelSupport.PROTECTED_ACCESS_LEVEL_FILTER_EXCLUDE_VARS_NOT_STATIC);
 		completionProposalGroup = phpCompletionProposalGroup;
-		completionProposalGroup.setData(offset, result, startWith, selectionLength, isStrict);
+		completionProposalGroup.setData(offset, functions, startWith, selectionLength, isStrict);
 	}
 
 	protected PHPClassData getContainerClassData(PHPProjectModel projectModel, String fileName, int offset) {
@@ -1468,8 +1435,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		@Override
 		protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData) {
 			PHPClassData classData = (PHPClassData) codeData;
-			PHPFunctionData constructor = PHPModelUtil.getRealConstructor(projectModel, classData.getUserData().getFileName(), classData);
-			int suffixOffset = constructor.getParameters().length > 0 ? 1 : 2;
+			PHPFunctionData constructor = classData.getUserData() != null ? PHPModelUtil.getRealConstructor(projectModel, classData.getUserData().getFileName(), classData) : null;
+			int suffixOffset = constructor != null && constructor.getParameters().length > 0 ? 1 : 2;
 
 			return new CodeDataCompletionProposal(projectModel, classData, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true); //$NON-NLS-1$ //$NON-NLS-2$
 		}
