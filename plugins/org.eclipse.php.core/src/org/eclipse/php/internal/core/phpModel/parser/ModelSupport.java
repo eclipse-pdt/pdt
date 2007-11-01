@@ -39,12 +39,12 @@ public class ModelSupport {
 	};
 	public static final CodeDataFilter PUBLIC_ACCESS_LEVEL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
-			return (!PHPModifier.isPrivate(modifier) && !PHPModifier.isProtected(modifier));
+			return !PHPModifier.isPrivate(modifier) && !PHPModifier.isProtected(modifier);
 		}
 	};
 	public static final CodeDataFilter NOT_FINAL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
-			return (!PHPModifier.isFinal(modifier));
+			return !PHPModifier.isFinal(modifier);
 		}
 	};
 
@@ -121,7 +121,7 @@ public class ModelSupport {
 		int length = startsWith.length();
 		for (int i = start; i < sortedArray.length; i++) {
 			String name = useComparableName ? ((ComparableName) sortedArray[i]).getComparableName() : sortedArray[i].getName();
-			name = (name.length() > length) ? name.substring(0, length) : name;
+			name = name.length() > length ? name.substring(0, length) : name;
 			if (caseSensitive) {
 				if (name.compareTo(startsWith) > 0) {
 					end = i - 1;
@@ -132,7 +132,7 @@ public class ModelSupport {
 				break;
 			}
 		}
-		int arrayLength = (end < start) ? 0 : end - start + 1;
+		int arrayLength = end < start ? 0 : end - start + 1;
 		CodeData[] rv = new CodeData[arrayLength];
 		System.arraycopy(sortedArray, start, rv, 0, rv.length);
 		return rv;
@@ -182,12 +182,12 @@ public class ModelSupport {
 		int start = 0;
 		int end = sortedArray.length - 1;
 		while (start <= end) {
-			int mid = (start + end) >> 1;
+			int mid = start + end >> 1;
 			String name = useComparableName ? ((ComparableName) sortedArray[mid]).getComparableName() : sortedArray[mid].getName();
 			if (!exactName && name.length() > searchNameLength) {
 				name = name.substring(0, searchNameLength);
 			}
-			int compareResult = (caseSensitive ? name.compareTo(searchName) : name.compareToIgnoreCase(searchName));
+			int compareResult = caseSensitive ? name.compareTo(searchName) : name.compareToIgnoreCase(searchName);
 			if (compareResult == 0) {
 				start = mid;
 				break;
@@ -263,12 +263,12 @@ public class ModelSupport {
 		int start = 0;
 		int end = sortedArray.length - 1;
 		while (start <= end) {
-			int mid = (start + end) >> 1;
+			int mid = start + end >> 1;
 			String name = sortedArray[mid].getName();
 			if (name.length() > searchNameLength) {
 				name = name.substring(0, searchNameLength);
 			}
-			int compareResult = (caseSensitive ? name.compareTo(searchName) : name.compareToIgnoreCase(searchName));
+			int compareResult = caseSensitive ? name.compareTo(searchName) : name.compareToIgnoreCase(searchName);
 			if (compareResult == 0) {
 				start = mid;
 				break;
@@ -317,10 +317,10 @@ public class ModelSupport {
 		}
 		ArrayList<CodeData> newCodeDataList = new ArrayList<CodeData>();
 		String baseName = ""; //$NON-NLS-1$
-		for (int i = 0; i < sortedArray.length; i++) {
-			String curName = sortedArray[i].getName();
+		for (CodeData element : sortedArray) {
+			String curName = element.getName();
 			if (!baseName.equals(curName)) {
-				newCodeDataList.add(sortedArray[i]);
+				newCodeDataList.add(element);
 			}
 			baseName = curName;
 		}
@@ -455,12 +455,12 @@ public class ModelSupport {
 
 	public static CodeData[] getFilteredCodeData(CodeData[] data, CodeDataFilter codeDataFilter) {
 		if (data == null || data.length == 0) {
-			return data;
+			return new CodeData[0];
 		}
 		List listResult = new ArrayList();
-		for (int i = 0; i < data.length; i++) {
-			if (codeDataFilter.accept(data[i])) {
-				listResult.add(data[i]);
+		for (CodeData element : data) {
+			if (codeDataFilter.accept(element)) {
+				listResult.add(element);
 			}
 		}
 		CodeData[] result = new CodeData[listResult.size()];
@@ -502,7 +502,7 @@ public class ModelSupport {
 		int length = startsWith.length();
 		for (int i = start; i < sortedArray.length; i++) {
 			String name = sortedArray[i].getName();
-			name = (name.length() > length) ? name.substring(0, length) : name;
+			name = name.length() > length ? name.substring(0, length) : name;
 			if (caseSensitive) {
 				if (name.compareTo(startsWith) > 0) {
 					end = i - 1;
@@ -513,7 +513,7 @@ public class ModelSupport {
 				break;
 			}
 		}
-		int arrayLength = (end < start) ? 0 : end - start + 1;
+		int arrayLength = end < start ? 0 : end - start + 1;
 		File[] rv = new File[arrayLength];
 		System.arraycopy(sortedArray, start, rv, 0, rv.length);
 		return rv;
@@ -628,7 +628,7 @@ public class ModelSupport {
 	}
 
 	/**
-	 * filters magic functions (constructors are considered as magic functions) 
+	 * filters magic functions (constructors are considered as magic functions)
 	 * @author guy.g
 	 *
 	 */
@@ -638,7 +638,7 @@ public class ModelSupport {
 		boolean acceptMagicFunction;
 
 		/**
-		 * @param acceptMagicFunction the return value that should be returned if the function is a magic function.  
+		 * @param acceptMagicFunction the return value that should be returned if the function is a magic function.
 		 */
 		MagicFunctionFilter(boolean acceptMagicFunction) {
 			this.acceptMagicFunction = acceptMagicFunction;
@@ -678,12 +678,11 @@ public class ModelSupport {
 		}
 
 		/**
-		 * checking if the function name is one of the known magic functions  
+		 * checking if the function name is one of the known magic functions
 		 * @return <code>true</code> if the function is a magic function
 		 */
 		private boolean isMagicFunction(String functionName) {
-			for (int i = 0; i < magicFunction.length; i++) {
-				String magicFunctionName = magicFunction[i];
+			for (String magicFunctionName : magicFunction) {
 				if (magicFunctionName.equals(functionName)) {
 					return true;
 				}
