@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager.ContentTypeChangeEvent;
 import org.eclipse.core.runtime.content.IContentTypeManager.IContentTypeChangeListener;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
@@ -44,33 +45,34 @@ public class DebugSearchEngine {
 	 * only for resolving absolute paths.
 	 *
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
-	 * @param launchConfiguration Launch configuration for the debug session
+	 * @param debugTarget Current debug target
 	 * @return path entry or <code>null</code> in case it could not be found
 	 * @throws InterruptedException
 	 * @throws CoreException
 	 */
-	public static PathEntry find(String remoteFile, ILaunchConfiguration launchConfiguration) throws InterruptedException, CoreException {
-		return find(remoteFile, launchConfiguration, null, null);
+	public static PathEntry find(String remoteFile, IDebugTarget debugTarget) throws InterruptedException, CoreException {
+		return find(remoteFile, debugTarget, null, null);
 	}
 
 	/**
 	 * Searches for all local resources that match provided remote file, and returns it in best match order.
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
-	 * @param launchConfiguration Launch configuration for the debug session
+	 * @param debugTarget Current debug target
 	 * @param currentWorkingDir Current working directory of PHP process
 	 * @param currentScriptDir Directory of current PHP file
 	 * @return path entry or <code>null</code> in case it could not be found
 	 * @throws InterruptedException
 	 * @throws CoreException
 	 */
-	public static PathEntry find(String remoteFile, ILaunchConfiguration launchConfiguration, String currentWorkingDir, String currentScriptDir) throws InterruptedException, CoreException {
+	public static PathEntry find(String remoteFile, IDebugTarget debugTarget, String currentWorkingDir, String currentScriptDir) throws InterruptedException, CoreException {
 		PathEntry pathEntry = null;
+		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
 		String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
 		if (projectName != null) {
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
 			if (pathMapper != null) {
-				pathEntry = find(pathMapper, remoteFile, project, currentWorkingDir, currentScriptDir);
+				pathEntry = find(pathMapper, remoteFile, project, currentWorkingDir, currentScriptDir, debugTarget);
 			}
 		}
 		return pathEntry;
@@ -82,11 +84,12 @@ public class DebugSearchEngine {
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
 	 * @param currentWorkingDir Current working directory of PHP process
 	 * @param currentScriptDir Directory of current PHP file
+	 * @param debugTarget Current debug target
 	 * @return path entry or <code>null</code> in case it could not be found
 	 * @throws InterruptedException
 	 * @throws CoreException
 	 */
-	private static PathEntry find(PathMapper pathMapper, String remoteFile, IProject currentProject, String currentWorkingDir, String currentScriptDir) throws InterruptedException, CoreException {
+	private static PathEntry find(PathMapper pathMapper, String remoteFile, IProject currentProject, String currentWorkingDir, String currentScriptDir, IDebugTarget debugTarget) throws InterruptedException, CoreException {
 		if (remoteFile == null) {
 			throw new NullPointerException();
 		}
@@ -168,7 +171,7 @@ public class DebugSearchEngine {
 
 		if (results.size() > 0) {
 			Collections.sort(results, new BestMatchPathComparator(abstractPath));
-			localFile = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]));
+			localFile = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]), debugTarget);
 			if (localFile != null) {
 				pathMapper.addEntry(remoteFile, localFile);
 			}
@@ -206,10 +209,10 @@ public class DebugSearchEngine {
 		}
 	}
 
-	private static PathEntry filterItems(AbstractPath remotePath, PathEntry[] entries) {
+	private static PathEntry filterItems(AbstractPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
 		IPathEntryFilter[] filters = initializePathEntryFilters();
 		for (int i = 0; i < filters.length; ++i) {
-			entries = filters[i].filter(entries, remotePath);
+			entries = filters[i].filter(entries, remotePath, debugTarget);
 		}
 		return entries.length > 0 ? entries[0] : null;
 	}
@@ -285,7 +288,10 @@ public class DebugSearchEngine {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				resource.accept(new IResourceVisitor() {
 					public boolean visit(IResource resource) throws CoreException {
-						if (resource.getName().equals(path.getLastSegment())) {
+						if (!resource.isAccessible()) {
+							return false;
+						}
+						if (resource instanceof IFile && resource.getName().equals(path.getLastSegment())) {
 							PathEntry pathEntry = new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
 							results.add(pathEntry);
 						}

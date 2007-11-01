@@ -86,7 +86,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 						lastSegment = remoteFile;
 					}
 					IFile file = project.getFile(lastSegment);
-					if (file != null) {
+					if (file != null && file.exists()) {
 						pathEntry = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, project);
 					}
 				}
@@ -94,7 +94,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			if (pathEntry != null) {
 				PathMapperRegistry.getByLaunchConfiguration(launchConfiguration).addEntry(remoteFile, pathEntry);
 			} else {
-				DebugSearchEngine.find(remoteFile, launchConfiguration);
+				DebugSearchEngine.find(remoteFile, fDebugTarget);
 			}
 		} catch (Exception e) {
 		}

@@ -107,6 +107,10 @@ public class AbstractPath implements Cloneable {
 		return segments.toArray(new String[segments.size()]);
 	}
 
+	public char getSeparatorChar() {
+		return sepChar;
+	}
+
 	public boolean isPrefixOf(AbstractPath path) {
 		Iterator<String> i1 = segments.iterator();
 		Iterator<String> i2 = path.segments.iterator();
@@ -130,7 +134,7 @@ public class AbstractPath implements Cloneable {
 		return buf.toString();
 	}
 
-	protected AbstractPath clone() {
+	public AbstractPath clone() {
 		LinkedList<String> segments = new LinkedList<String>();
 		Iterator<String> i = this.segments.iterator();
 		while (i.hasNext()) {

@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.pathmapper;
 
+import org.eclipse.debug.core.model.IDebugTarget;
+
 public interface IPathEntryFilter {
 
-	public PathEntry[] filter(PathEntry[] entries, AbstractPath remotePath);
+	public PathEntry[] filter(PathEntry[] entries, AbstractPath remotePath, IDebugTarget debugTarget);
 }

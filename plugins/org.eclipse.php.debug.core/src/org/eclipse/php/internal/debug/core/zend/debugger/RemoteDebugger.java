@@ -203,22 +203,26 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @return local file, or remoteFile as is in case of resolving failure
 	 */
 	public static String convertToLocalFilename(String remoteFile, PHPDebugTarget debugTarget) {
+		if (debugTarget.getContextManager().isResolveBlacklisted(remoteFile)) {
+			return remoteFile;
+		}
+
 		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
 			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
 			if (wsFile != null) {
 				return wsFile.getFullPath().toString();
 			}
 		}
-		try {
-			String currentScriptDir = null;
-			PHPstack phpStack = debugTarget.getContextManager().getRemoteDebugger().getCallStack();
-			if (phpStack.getLayers() != null && phpStack.getLayers().length > 0) {
-				currentScriptDir = new File(phpStack.getLayers()[phpStack.getLayers().length - 1].getCalledFileName()).getParent();
-			}
 
-			PathEntry localFile = DebugSearchEngine.find(remoteFile, debugTarget.getLaunch().getLaunchConfiguration(), debugTarget.getProject().getLocation().toString(), currentScriptDir);
-			if (localFile != null) {
-				return localFile.getResolvedPath();
+		try {
+			String previousScript = debugTarget.resolvePreviousScript();
+			String currentScriptDir = "";
+			if (previousScript != null) {
+				currentScriptDir = new Path(previousScript).removeLastSegments(1).toString();
+			}
+			PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, debugTarget.getProject().getLocation().toString(), currentScriptDir);
+			if (pathEntry != null) {
+				return pathEntry.getResolvedPath();
 			}
 		} catch (Exception e) {
 		}

@@ -17,7 +17,9 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
+import org.eclipse.php.internal.debug.core.zend.model.ResolveBlackList.Type;
 
 public class ContextManager {
 
@@ -28,6 +30,7 @@ public class ContextManager {
 	private Map<String, Expression[]> fStackVariables;
 	private Map<String, String> fResolvedFiles;
 	private Map<String, String> fResolvedStackLayersMap;
+	private ResolveBlackList fResolveBlackList;
 
 	private int fSuspendCount;
 	private IVariable[] fVariables;
@@ -40,6 +43,7 @@ public class ContextManager {
 		fStackVariables = new HashMap<String, Expression[]>();
 		fResolvedFiles = new HashMap<String, String>();
 		fResolvedStackLayersMap = new HashMap<String, String>();
+		fResolveBlackList = new ResolveBlackList();
 	}
 
 	private String resolveRemoteFile(String remoteFile) {
@@ -52,7 +56,7 @@ public class ContextManager {
 	/**
 	 * Cache a resolved CalledFileName from a stack layer.
 	 * @param nonResolvedTuple - A concatenation of 2 Strings : The CallerFileName and CalledFileName(Non Resolved)
-	 * @param resolvedCalled   - A Resolved value of the called File Name 
+	 * @param resolvedCalled   - A Resolved value of the called File Name
 	 */
 	public void cacheResolvedStackLayers(String nonResolvedTuple, String resolvedCalled) {
 		if (!fResolvedStackLayersMap.containsKey(nonResolvedTuple)) {
@@ -70,6 +74,14 @@ public class ContextManager {
 			return fResolvedStackLayersMap.get(nonResolvedTuple);
 		}
 		return "";
+	}
+
+	public void addToResolveBlacklist(AbstractPath path, Type type) {
+		fResolveBlackList.add(path, type);
+	}
+
+	public boolean isResolveBlacklisted (String remoteFile) {
+		return fResolveBlackList.containsEntry(remoteFile);
 	}
 
 	public IStackFrame[] getStackFrames() throws DebugException {
