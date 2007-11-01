@@ -59,7 +59,7 @@ public class ActionUtils {
 	}
 
 	public static boolean isProject(Object element) {
-		return (element instanceof PHPProjectModel) || (element instanceof IProject);
+		return element instanceof PHPProjectModel || element instanceof IProject;
 	}
 
 	public static IResource[] getResources(List elements) {
@@ -81,9 +81,9 @@ public class ActionUtils {
 
 	public static IResource[] getResources(final Object[] elements) {
 		List result = new ArrayList();
-		for (int index = 0; index < elements.length; index++) {
-			if (elements[index] instanceof IResource)
-				result.add(elements[index]);
+		for (Object element : elements) {
+			if (element instanceof IResource)
+				result.add(element);
 		}
 		return (IResource[]) result.toArray(new IResource[result.size()]);
 	}
@@ -91,13 +91,13 @@ public class ActionUtils {
 	public static IResource[] getPHPResources(final Object[] elements) {
 		List result = new ArrayList();
 
-		for (int index = 0; index < elements.length; index++) {
-			if (elements[index] instanceof IFile) {
-				if (contentType.isAssociatedWith(((IResource) elements[index]).getName())) {
-					result.add(elements[index]);
+		for (Object element : elements) {
+			if (element instanceof IFile) {
+				if (contentType.isAssociatedWith(((IResource) element).getName())) {
+					result.add(element);
 				}
-			} else if (elements[index] instanceof IResource) // other resource then file
-				result.add(elements[index]);
+			} else if (element instanceof IResource) // other resource then file
+				result.add(element);
 		}
 		return (IResource[]) result.toArray(new IResource[result.size()]);
 	}
@@ -107,20 +107,18 @@ public class ActionUtils {
 	}
 
 	public static Object[] getPHPElements(List elements, boolean phpFileDataIsResource) {
-		List resources = new ArrayList(elements.size());
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
-			Object element = iter.next();
+		List phpElements = new ArrayList(elements.size());
+		for (Object element : elements) {
 			if (element instanceof PHPCodeData || element instanceof PHPProjectModel || element instanceof PHPWorkspaceModelManager)
 				if (!phpFileDataIsResource || !(element instanceof PHPFileData))
-					resources.add(element);
+					phpElements.add(element);
 		}
-		return resources.toArray();
+		return phpElements.toArray();
 	}
 
 	public static Object[] getPHPElements(final Object[] elements) {
 		List resources = new ArrayList(elements.length);
-		for (int i = 0; i < elements.length; i++) {
-			Object element = elements[i];
+		for (Object element : elements) {
 			if (element instanceof PHPCodeData || element instanceof PHPProjectModel || element instanceof PHPWorkspaceModelManager)
 				resources.add(element);
 		}
@@ -131,7 +129,7 @@ public class ActionUtils {
 		IResource resource = PHPModelUtil.getResource(element);
 		if (resource == null) {
 			return false;
-		} else if ((resource instanceof IFile) && ExternalFilesRegistry.getInstance().isEntryExist((IFile)resource)) {
+		} else if (resource instanceof IFile && ExternalFilesRegistry.getInstance().isEntryExist((IFile) resource)) {
 			return true;
 		}
 		IProject resourceProject = resource.getProject();
