@@ -63,8 +63,8 @@ public class PHPContextInfoRendererVisitor extends SimplePHPCodeDataVisitor {
 	}
 
 	public void visit(PHPClassData codeData) {
-		PHPFunctionData constructor = PHPModelUtil.getRealConstructor(projectModel, codeData.getUserData().getFileName(), codeData);
-		if(constructor != null) {
+		PHPFunctionData constructor = codeData.getUserData() != null ? PHPModelUtil.getRealConstructor(projectModel, codeData.getUserData().getFileName(), codeData) : null;
+		if (constructor != null) {
 			visit(constructor);
 		}
 	}
