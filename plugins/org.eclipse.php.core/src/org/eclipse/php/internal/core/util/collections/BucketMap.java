@@ -6,34 +6,28 @@ package org.eclipse.php.internal.core.util.collections;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
-import sun.reflect.Reflection;
-import sun.reflect.ReflectionFactory;
+public class BucketMap<K, V> {
+	private Map<K, Set<V>> map;
 
-public class BucketMap/* <K,V> */{
-	private Map/* <K, Set<V>> */map;
-
-	private Set setDefault = new HashSet(1);
+	private Set<V> defaultSet = new HashSet<V>(1);
 
 	public BucketMap() {
-		map = new HashMap();
+		map = new HashMap<K, Set<V>>();
 	}
 
-	public BucketMap(Set set) {
+	public BucketMap(Set<V> set) {
 		this();
-		setDefault = set;
+		defaultSet = set;
 	}
 
 	public BucketMap(int size) {
-		map = new HashMap(size);
+		map = new HashMap<K, Set<V>>(size);
 	}
 
-	public void add(/* K */Object key, /* V */Object value) {
-		Set/* <V> */values = (Set) map.get(key);
+	public void add(K key, V value) {
+		Set<V> values = map.get(key);
 		if (values == null) {
 			values = createSet();
 			map.put(key, values);
@@ -44,23 +38,24 @@ public class BucketMap/* <K,V> */{
 	/**
 	 * @return
 	 */
-	private Set createSet() {
-		if (setDefault instanceof Cloneable) {
+	private Set<V> createSet() {
+		if (defaultSet instanceof Cloneable) {
 			try {
-				Method method = setDefault.getClass().getMethod("clone", null); //$NON-NLS-1$
-				return (Set) method.invoke(setDefault, new Object[] {});
-			} catch (Exception e) {}
+				Method method = defaultSet.getClass().getMethod("clone", (Class<?>) null); //$NON-NLS-1$
+				return (Set<V>) method.invoke(defaultSet, new Object[] {});
+			} catch (Exception e) {
+			}
 		}
 		try {
-			return (Set) setDefault.getClass().newInstance();
+			return defaultSet.getClass().newInstance();
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
-			return new HashSet();
+			return new HashSet<V>(1);
 		}
 	}
 
-	public void addAll(/* K */Object key, Collection/* <V> */newValues) {
-		Set/* <V> */values = (Set) map.get(key);
+	public void addAll(K key, Collection<V> newValues) {
+		Set<V> values = map.get(key);
 		if (values == null) {
 			values = createSet();
 			map.put(key, values);
@@ -68,16 +63,16 @@ public class BucketMap/* <K,V> */{
 		values.addAll(newValues);
 	}
 
-	public void merge(BucketMap bucketMap) {
-		for (Iterator i = bucketMap.getKeys().iterator(); i.hasNext();) {
-			Object/* <K> */key = /* <K> */i.next();
+	public void merge(BucketMap<K, V> bucketMap) {
+		for (K key : bucketMap.getKeys()) {
 			addAll(key, bucketMap.getSet(key));
 		}
 	}
 
-	public boolean contains(/* K */Object key, /* V */Object value) {
-		Set/* <V> */values = (Set) map.get(key);
-		if (values == null) return false;
+	public boolean contains(K key, V value) {
+		Set<V> values = map.get(key);
+		if (values == null)
+			return false;
 		return values.contains(value);
 	}
 
@@ -85,29 +80,30 @@ public class BucketMap/* <K,V> */{
 		return map.containsKey(key);
 	}
 
-	public Set/* <V> */get(/* K */Object key) {
-		Set/* <V> */values = getSet(key);
-		if (values == null) return new HashSet(0);
+	public Set<V> get(K key) {
+		Set<V> values = getSet(key);
+		if (values == null)
+			return createSet();
 		return values;
 	}
 
-	public Set/* <V> */getSet(Object key) {
-		return (Set) map.get(key);
+	public Set<V> getSet(Object key) {
+		return map.get(key);
 	}
 
-	public Set/* <V> */getAll() {
-		Set valuesSet = createSet();
-		for (Iterator i = map.values().iterator(); i.hasNext();) {
-			Set values = (Set) i.next();
-			for (Iterator j = values.iterator(); j.hasNext();)
-				valuesSet.add(j.next());
+	public Set<V> getAll() {
+		Set<V> valuesSet = createSet();
+		for (Set<V> values : map.values()) {
+			for (V v : values)
+				valuesSet.add(v);
 		}
 		return valuesSet;
 	}
 
-	public boolean remove(/* K */Object key, /* V */Object value) {
-		Set/* <K> */values = (Set) map.get(key);
-		if (values == null) return false;
+	public boolean remove(K key, V value) {
+		Set<V> values = map.get(key);
+		if (values == null)
+			return false;
 		boolean result = values.remove(value);
 		if (values.size() == 0) {
 			map.remove(key);
@@ -115,17 +111,17 @@ public class BucketMap/* <K,V> */{
 		return result;
 	}
 
-	public/* V */Object[] removeAll(Object/* K */key) {
-		Set/* <V> */removedStrings = (Set) map.remove(key);
-		if (removedStrings != null) return removedStrings.toArray();
-		return new Object[0];
+	public Collection<V> removeAll(K key) {
+		if (map.remove(key) != null)
+			return map.remove(key);
+		return createSet();
 	}
 
 	public void clear() {
 		map.clear();
 	}
 
-	public Set getKeys() {
+	public Set<K> getKeys() {
 		return map.keySet();
 	}
 }
