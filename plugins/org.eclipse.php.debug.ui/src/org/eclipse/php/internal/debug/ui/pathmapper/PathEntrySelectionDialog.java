@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.ui.pathmapper;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Comparator;
 
 import org.eclipse.core.resources.IResource;
@@ -19,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
@@ -42,8 +44,8 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 
 	private static final String DIALOG_SETTINGS = "org.eclipse.php.internal.debug.core.pathmapper.PathEntrySelectionDialogSettings"; //$NON-NLS-1$
 	private PathEntry[] pathEntries;
-	private BestMatchPathComparator comparator;
-	private DetailsLabelProvider detailsLabelProvider;
+	private Comparator<PathEntry> comparator;
+	private ILabelProvider detailsLabelProvider;
 
 	/**
 	 * Constructor
@@ -54,7 +56,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 	public PathEntrySelectionDialog(Shell shell, AbstractPath path, PathEntry[] pathEntries) {
 		super(shell);
 		this.pathEntries = pathEntries;
-		this.comparator = new BestMatchPathComparator(path);
+		this.comparator = Collections.reverseOrder(new BestMatchPathComparator(path));
 
 		// Set dummy selection history to avoid null pointer exception
 		setSelectionHistory(new SelectionHistory() {
@@ -67,15 +69,32 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 
 		setTitle("Select local resource that matches remote file");
 		setMessage(NLS.bind("Select local resource that matches remote file ''{0}''\n\nUse pattern to filter results (? = any character, * = any string):", path.toString()));
-		setListLabelProvider(new LabelProvider());
-		setDetailsLabelProvider(detailsLabelProvider = new DetailsLabelProvider());
+		setListLabelProvider(createListLabelProvider());
+		setDetailsLabelProvider(createDetailsLabelProvider());
+	}
+
+	/**
+	 * Override this method for providing another list label provider
+	 */
+	protected ILabelProvider createListLabelProvider() {
+		return new LabelProvider();
+	}
+
+	/**
+	 * Override this method for providing another details label provider
+	 */
+	protected ILabelProvider createDetailsLabelProvider() {
+		if (detailsLabelProvider == null) {
+			detailsLabelProvider = new DetailsLabelProvider();
+		}
+		return detailsLabelProvider;
 	}
 
 	protected Control createExtendedContentArea(Composite parent) {
 		return null;
 	}
 
-	class EntriesFilter extends ItemsFilter {
+	public class EntriesFilter extends ItemsFilter {
 		public EntriesFilter() {
 			super(new SearchPattern() {
 				public void setPattern(String stringPattern) {
@@ -92,7 +111,10 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 		}
 
 		public boolean matchItem(Object item) {
-			return matches(((PathEntry) item).getAbstractPath().toString());
+			if (item instanceof PathEntry) {
+				return matches(((PathEntry) item).getAbstractPath().toString());
+			}
+			return true;
 		}
 	}
 
@@ -124,7 +146,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 		return null;
 	}
 
-	protected Comparator<PathEntry> getItemsComparator() {
+	protected Comparator<?> getItemsComparator() {
 		return comparator;
 	}
 
@@ -132,7 +154,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 		return Status.OK_STATUS;
 	}
 
-	private class LabelProvider extends org.eclipse.jface.viewers.LabelProvider {
+	protected class LabelProvider extends org.eclipse.jface.viewers.LabelProvider {
 		public Image getImage(Object element) {
 			if (!(element instanceof PathEntry)) {
 				return super.getImage(element);
@@ -145,11 +167,11 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 				return super.getText(element);
 			}
 			PathEntry pathEntry = (PathEntry) element;
-			return NLS.bind("{0} - {1}", pathEntry.getAbstractPath().getLastSegment(), detailsLabelProvider.getText(element));
+			return NLS.bind("{0} - {1}", pathEntry.getAbstractPath().getLastSegment(), createDetailsLabelProvider().getText(element));
 		}
 	}
 
-	private class DetailsLabelProvider extends org.eclipse.jface.viewers.LabelProvider {
+	protected class DetailsLabelProvider extends org.eclipse.jface.viewers.LabelProvider {
 		private PHPUILabelProvider phpLabelProvider = new PHPUILabelProvider();
 
 		public Image getImage(Object element) {

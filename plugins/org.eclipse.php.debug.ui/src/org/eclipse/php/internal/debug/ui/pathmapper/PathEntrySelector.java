@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.ui.pathmapper;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
 import org.eclipse.php.internal.debug.core.pathmapper.IPathEntryFilter;
@@ -27,7 +28,7 @@ public class PathEntrySelector implements IPathEntryFilter {
 	public PathEntrySelector() {
 	}
 
-	public PathEntry[] filter(final PathEntry[] entries, final AbstractPath remotePath) {
+	public PathEntry[] filter(final PathEntry[] entries, final AbstractPath remotePath, final IDebugTarget debugTarget) {
 		final List<PathEntry> l = new LinkedList<PathEntry>();
 		Runnable r = new Runnable() {
 			public void run() {
@@ -43,12 +44,9 @@ public class PathEntrySelector implements IPathEntryFilter {
 						shell = window.getShell();
 					}
 				}
-				PathEntrySelectionDialog selectDialog = new PathEntrySelectionDialog(shell, remotePath, entries);
-				if (selectDialog.open() == Window.OK) {
-					PathEntry pathEntry = (PathEntry) selectDialog.getFirstResult();
-					if (pathEntry != null) {
-						l.add(pathEntry);
-					}
+				PathEntry entry = runFilterDialog(shell, remotePath, entries, debugTarget);
+				if (entry != null) {
+					l.add(entry);
 				}
 			}
 		};
@@ -58,5 +56,13 @@ public class PathEntrySelector implements IPathEntryFilter {
 			Display.getDefault().syncExec(r);
 		}
 		return l.toArray(new PathEntry[l.size()]);
+	}
+
+	protected PathEntry runFilterDialog(Shell shell, AbstractPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
+		PathEntrySelectionDialog selectDialog = new PathEntrySelectionDialog(shell, remotePath, entries);
+		if (selectDialog.open() == Window.OK) {
+			return (PathEntry) selectDialog.getFirstResult();
+		}
+		return null;
 	}
 }
