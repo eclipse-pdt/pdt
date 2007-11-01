@@ -576,7 +576,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (isClassTriger) {
 			if (isParent) {
 				if (className != "") { //$NON-NLS-1$
-					showParentCall(projectModel, fileName, offset, className, functionName, selectionLength, explicit, isStrict);
+					showClassStaticCall(projectModel, fileName, offset, className, functionName, selectionLength, explicit);
 				}
 			} else {
 				showClassStaticCall(projectModel, fileName, offset, className, functionName, selectionLength, explicit);
