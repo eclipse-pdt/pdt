@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.model.SimpleDebugHandler;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
@@ -97,6 +98,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				DebugSearchEngine.find(remoteFile, fDebugTarget);
 			}
 		} catch (Exception e) {
+			PHPDebugPlugin.log(e);
 		}
 
 		fDebugTarget.setLastFileName(remoteFile);
