@@ -49,7 +49,19 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 			runWithDebug = launch.getLaunchConfiguration().getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
 		} catch (CoreException e1) {
 		}
-		final String debugQuery = (!runWithDebug && ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) ? encodedURL : encodedURL + '?' + parametersInitializer.generateQuery(launch);
+
+		final String debugQuery;
+		if (!runWithDebug && ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
+			debugQuery = encodedURL;
+		} else {
+			String query = parametersInitializer.generateQuery(launch);
+			if (encodedURL.indexOf('?') == -1) {
+				debugQuery = encodedURL + '?' + query;
+			} else {
+				debugQuery = encodedURL + '&' + query;
+			}
+		}
+
 		if (isDebugMode) {
 			System.out.println("debugQuery = " + debugQuery);
 		}
