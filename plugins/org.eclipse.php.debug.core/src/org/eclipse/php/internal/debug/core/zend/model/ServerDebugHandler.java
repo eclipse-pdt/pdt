@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -63,6 +65,13 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void sessionStarted(String remoteFile, String uri, String query, String options) {
 		super.sessionStarted(remoteFile, uri, query, options);
+
+		// Hack for the case when htdocs is symlinked to the workspace.
+		// Zend Debugger resolves symbolic links later, and it fucks up the path mapper:
+		try {
+			remoteFile = new File(remoteFile).getCanonicalPath();
+		} catch (Exception e) {
+		}
 
 		try {
 			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
