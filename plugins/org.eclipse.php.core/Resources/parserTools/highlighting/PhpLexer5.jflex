@@ -574,9 +574,11 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     "@license"       {return PHPDOC_LICENSE;}
     "@link"          {return PHPDOC_LINK;}
     "@magic"         {return PHPDOC_MAGIC;}
+    "@method"        {return PHPDOC_METHOD;}    
     "@name"          {return PHPDOC_NAME;}
     "@package"       {return PHPDOC_PACKAGE;}
     "@param"         {return PHPDOC_PARAM;}
+    "@property"      {return PHPDOC_PROPERTY;}
     "@return"        {return PHPDOC_RETURN;}
     "@see"           {return PHPDOC_SEE;}
     "@since"         {return PHPDOC_SINCE;}

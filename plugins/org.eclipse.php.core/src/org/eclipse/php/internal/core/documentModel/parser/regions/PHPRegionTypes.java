@@ -319,19 +319,19 @@ public interface PHPRegionTypes {
 	static final String PHPDOC_SEE = "PHPDOC_SEE"; //$NON-NLS-1$
 
 	static final String PHP_COMMENT = "PHP_COMMENT"; //$NON-NLS-1$
-	
+
 	static final String PHP_COMMENT_START = "PHP_COMMENT_START"; //$NON-NLS-1$
-	
+
 	static final String PHP_COMMENT_END = "PHP_COMMENT_END"; //$NON-NLS-1$
 
 	static final String PHP_LINE_COMMENT = "PHP_LINE_COMMENT"; //$NON-NLS-1$
-	
+
 	static final String PHPDOC_COMMENT = "PHPDOC_COMMENT"; //$NON-NLS-1$
-	
+
 	static final String PHPDOC_COMMENT_START = "PHPDOC_COMMENT_START"; //$NON-NLS-1$
-	
+
 	static final String PHPDOC_COMMENT_END = "PHPDOC_COMMENT_END"; //$NON-NLS-1$
-	
+
 	static final String PHPDOC_NAME = "PHPDOC_NAME"; //$NON-NLS-1$
 
 	static final String PHPDOC_DESC = "PHPDOC_DESC"; //$NON-NLS-1$
@@ -353,6 +353,10 @@ public interface PHPRegionTypes {
 	static final String PHPDOC_INTERNAL = "PHPDOC_INTERNAL"; //$NON-NLS-1$
 
 	static final String PHPDOC_TUTORIAL = "PHPDOC_TUTORIAL"; //$NON-NLS-1$
+
+	static final String PHPDOC_METHOD = "PHPDOC_METHOD"; //$NON-NLS-1$
+
+	static final String PHPDOC_PROPERTY = "PHPDOC_PROPERTY"; //$NON-NLS-1$
 
 	static final String PHPDOC_USES = "PHPDOC_USES"; //$NON-NLS-1$
 
