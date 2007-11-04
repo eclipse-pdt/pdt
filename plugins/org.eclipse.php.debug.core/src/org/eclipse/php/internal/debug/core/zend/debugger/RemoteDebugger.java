@@ -212,6 +212,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			if (wsFile != null) {
 				return wsFile.getFullPath().toString();
 			}
+			return remoteFile;
 		}
 
 		try {
