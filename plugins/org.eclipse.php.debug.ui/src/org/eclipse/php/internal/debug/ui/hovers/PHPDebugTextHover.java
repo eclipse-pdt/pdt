@@ -26,6 +26,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManag
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
+import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.hover.AbstractPHPTextHover;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -35,10 +36,18 @@ import org.eclipse.wst.sse.core.internal.provisional.text.*;
 public class PHPDebugTextHover extends AbstractPHPTextHover {
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		PHPDebugTarget debugTarget = getDebugTarget();
-		if (debugTarget == null || textViewer == null || textViewer.getDocument() == null) {
+		if (textViewer == null || textViewer.getDocument() == null) {
 			return null;
 		}
+		if (textViewer instanceof PHPStructuredTextViewer) {
+			setEditorPart(((PHPStructuredTextViewer)textViewer).getTextEditor());
+		}
+
+		PHPDebugTarget debugTarget = getDebugTarget();
+		if (debugTarget == null) {
+			return null;
+		}
+
 		int offset = hoverRegion.getOffset();
 		IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument()).getRegionAtCharacterOffset(offset);
 		ITextRegion region = null;
@@ -80,12 +89,12 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 
 	/**
 	 * In case the user selected a text in the document and then hover over it, we would like to evaluate the selected text and not
-	 * only the hover region that is under the mouse pointer. 
+	 * only the hover region that is under the mouse pointer.
 	 * In this case a we check for the selected text area and if the hover region contains in the selection, we evaluate the entire selection.
 	 * In case that we hover over a different code area, the original hover region is used for the evaluation.
-	 * 
+	 *
 	 * Note that this kind of behavior allows evaluation of arrays content such as $array[0] evaluation.
-	 * 
+	 *
 	 * @param textViewer
 	 * @param offset The original hover region offset.
 	 * @param length The original hover region length.
@@ -114,7 +123,7 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 
 	/**
 	 * Returns the variable value.
-	 * 
+	 *
 	 * @param variable The variable name
 	 * @return
 	 */
@@ -139,8 +148,8 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 		return value;
 	}
 
-	// Returns the php debug target that is in contex. 
-	// In case that 
+	// Returns the php debug target that is in contex.
+	// In case that
 	protected PHPDebugTarget getDebugTarget() {
 		try {
 			IAdaptable adaptable = DebugUITools.getDebugContext();
