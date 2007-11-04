@@ -133,15 +133,20 @@ public class PHPDebuggersRegistry {
 	private void loadDebuggers() {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 		final IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
+		//We use the following HashMap in order to accumulate non PDT debugger configurations.
+		//that are extension to point: org.eclipse.php.debug.core.phpDebuggers
+		HashMap<String, AbstractDebuggerConfiguration> nonPDTConfigurations = new HashMap<String, AbstractDebuggerConfiguration>();
 		for (final IConfigurationElement element : elements) {
-			
+
 			if (DEBUGGER_TAG.equals(element.getName())) {
 				final String name = element.getAttribute(NAME_ATTRIBUTE);
 				final String id = element.getAttribute(ID_ATTRIBUTE);
+				boolean isPDT = element.getNamespaceIdentifier().startsWith("org.eclipse.php");
 				boolean filter = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
 					public String getLocalId() {
 						return id;
 					}
+
 					public String getPluginId() {
 						return element.getNamespaceIdentifier();
 					}
@@ -167,10 +172,20 @@ public class PHPDebuggersRegistry {
 						configuration.setPort(-1);
 					}
 					configurations.put(id, configuration);
+					if (!isPDT) {
+						nonPDTConfigurations.put(id, configuration);
+					}
 				} catch (CoreException e) {
 					Logger.logException(e);
 				}
 			}
+		}
+		// Override any PDT debugger settings with any extension of debugger configuration.
+		Set<String> keySet = nonPDTConfigurations.keySet();
+		for (String key : keySet) {
+			AbstractDebuggerConfiguration configuration = nonPDTConfigurations.get(key);
+			configurations.put(key, configuration);
+			debuggers.put(configuration.getDebuggerId(), configuration.getName());
 		}
 	}
 

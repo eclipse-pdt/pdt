@@ -324,7 +324,7 @@
       <phpDebugger
             debuggerConfiguration="org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerConfiguration"
             id="org.eclipse.php.debug.core.zendDebugger"
-            name="Zend">
+            name="Zend Debugger">
       </phpDebugger>
       <phpDebugger
             debuggerConfiguration="org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerConfiguration"
