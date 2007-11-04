@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-
 import java.util.Arrays;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
@@ -32,13 +31,13 @@ public class PHPDocLanguageModel {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static {
 		phpDocTags = new PHPDocTagData[] { PHPDocCodeDataFactory.createPHPDocTagData("abstract", "abstract"), PHPDocCodeDataFactory.createPHPDocTagData("access", "access"), PHPDocCodeDataFactory.createPHPDocTagData("author", "author"),
-			PHPDocCodeDataFactory.createPHPDocTagData("copyright", "copyright"), PHPDocCodeDataFactory.createPHPDocTagData("deprecated", "deprecated"), PHPDocCodeDataFactory.createPHPDocTagData("example", "example"), PHPDocCodeDataFactory.createPHPDocTagData("exception", "exception"),
-			PHPDocCodeDataFactory.createPHPDocTagData("final", "final"), PHPDocCodeDataFactory.createPHPDocTagData("global", "global"), PHPDocCodeDataFactory.createPHPDocTagData("ignore", "ignore"), PHPDocCodeDataFactory.createPHPDocTagData("internal", "internal"),
-			PHPDocCodeDataFactory.createPHPDocTagData("link", "link"), PHPDocCodeDataFactory.createPHPDocTagData("magic", "magic"), PHPDocCodeDataFactory.createPHPDocTagData("name", "name"), PHPDocCodeDataFactory.createPHPDocTagData("return", "return"),
-			PHPDocCodeDataFactory.createPHPDocTagData("package", "package"), PHPDocCodeDataFactory.createPHPDocTagData("param", "param"), PHPDocCodeDataFactory.createPHPDocTagData("see", "see"), PHPDocCodeDataFactory.createPHPDocTagData("since", "since"),
-			PHPDocCodeDataFactory.createPHPDocTagData("static", "static"), PHPDocCodeDataFactory.createPHPDocTagData("staticvar", "staticvar"), PHPDocCodeDataFactory.createPHPDocTagData("subpackage", "subpackage"), PHPDocCodeDataFactory.createPHPDocTagData("throws", "throws"),
-			PHPDocCodeDataFactory.createPHPDocTagData("todo", "todo"), PHPDocCodeDataFactory.createPHPDocTagData("var", "var"), PHPDocCodeDataFactory.createPHPDocTagData("version", "version") };
+			PHPDocCodeDataFactory.createPHPDocTagData("category", "category"), PHPDocCodeDataFactory.createPHPDocTagData("copyright", "copyright"), PHPDocCodeDataFactory.createPHPDocTagData("deprecated", "deprecated,"), PHPDocCodeDataFactory.createPHPDocTagData("example", "example"),
+			PHPDocCodeDataFactory.createPHPDocTagData("final", "final"), PHPDocCodeDataFactory.createPHPDocTagData("filesource", "filesource"), PHPDocCodeDataFactory.createPHPDocTagData("global", "global"), PHPDocCodeDataFactory.createPHPDocTagData("ignore", "ignore"),
+			PHPDocCodeDataFactory.createPHPDocTagData("internal", "internal"), PHPDocCodeDataFactory.createPHPDocTagData("license", "license"), PHPDocCodeDataFactory.createPHPDocTagData("link", "link"), PHPDocCodeDataFactory.createPHPDocTagData("method", "method"),
+			PHPDocCodeDataFactory.createPHPDocTagData("name", "name"), PHPDocCodeDataFactory.createPHPDocTagData("package", "package"), PHPDocCodeDataFactory.createPHPDocTagData("param", "param"), PHPDocCodeDataFactory.createPHPDocTagData("property", "property"),
+			PHPDocCodeDataFactory.createPHPDocTagData("return", "return"), PHPDocCodeDataFactory.createPHPDocTagData("see", "see"), PHPDocCodeDataFactory.createPHPDocTagData("since", "since"), PHPDocCodeDataFactory.createPHPDocTagData("static", "static"),
+			PHPDocCodeDataFactory.createPHPDocTagData("staticvar", "staticvar"), PHPDocCodeDataFactory.createPHPDocTagData("subpackage", "subpackage"), PHPDocCodeDataFactory.createPHPDocTagData("todo", "todo"), PHPDocCodeDataFactory.createPHPDocTagData("tutorial", "tutorial"),
+			PHPDocCodeDataFactory.createPHPDocTagData("uses", "uses"), PHPDocCodeDataFactory.createPHPDocTagData("var", "var"), PHPDocCodeDataFactory.createPHPDocTagData("version", "version") };
 		Arrays.sort(phpDocTags);
-
 	}
 }
