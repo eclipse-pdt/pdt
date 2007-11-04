@@ -41,6 +41,7 @@ public class PHPexes {
 	private static final String PHPEXE_TAG = "phpExe"; //$NON-NLS-1$
 	public static final String SEPARATOR = ";";
 	private static final String VERSION_ATTRIBUTE = "version"; //$NON-NLS-1$
+	public static final String ZEND_DEBUGGER_ID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 
 	private static Object lock = new Object();
 	// A singleton instance
