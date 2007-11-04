@@ -146,6 +146,8 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		fColorTypes.put(PHPRegionTypes.PHP_HEREDOC_TAG, PreferenceConstants.EDITOR_HEREDOC_COLOR);
 
 		// PHPDoc
+		fColorTypes.put(PHPRegionTypes.PHPDOC_METHOD, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_PROPERTY, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_VAR, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_SEE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_NAME, PreferenceConstants.EDITOR_PHPDOC_COLOR);
