@@ -8,9 +8,9 @@ import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
 public class ResolveBlackList {
 
 	public enum Type {
-		RECURSIVE,
-		FOLDER,
 		FILE,
+		FOLDER,
+		RECURSIVE,
 	}
 
 	private Map<AbstractPath, Type> list;
