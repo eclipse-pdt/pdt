@@ -640,7 +640,7 @@ NEWLINE=("\r"|"\n"|"\r\n")
 //	yymore();
 }
 
-<ST_ONE_LINE_COMMENT>[^\n\r?%>]*{ANY_CHAR} {
+<ST_ONE_LINE_COMMENT>[^\n\r?%>]*(.|{NEWLINE}) {
 	String yytext = yytext();
 	switch (yytext.charAt(yytext.length() - 1)) {
 		case '?':
@@ -653,12 +653,6 @@ NEWLINE=("\r"|"\n"|"\r\n")
 			yybegin(ST_IN_SCRIPTING);
 	}
 //	yymore();
-}
-
-<ST_ONE_LINE_COMMENT>{NEWLINE} {
-	handleLineCommentEnd();
-	yybegin(ST_IN_SCRIPTING);
-	//return T_COMMENT;
 }
 
 <ST_ONE_LINE_COMMENT>"?>"|"%>" {
