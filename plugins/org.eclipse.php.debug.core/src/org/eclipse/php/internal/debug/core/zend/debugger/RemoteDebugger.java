@@ -163,6 +163,39 @@ public class RemoteDebugger implements IRemoteDebugger {
 		debugHandler.connectionTimedout();
 	}
 
+	public String sendCWDRequest() {
+		try {
+			EvalRequest request = new EvalRequest();
+			request.setCommand("getcwd()");
+			IDebugResponseMessage response = sendCustomRequest(request);
+			if (response != null && response instanceof EvalResponse) {
+				return ((EvalResponse) response).getResult();
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns local path corresponding to the current working directory of the PHP script,
+	 * which is currently running.
+	 *
+	 * @param debugTarget
+	 * @return
+	 */
+	public static String getCurrentWorkingDirectory(PHPDebugTarget debugTarget) {
+		String cwd = ((RemoteDebugger)debugTarget.getRemoteDebugger()).sendCWDRequest();
+		if (cwd != null) {
+			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
+			PathEntry cwdEntry = pathMapper.getLocalFile(cwd);
+			if (cwdEntry != null) {
+				cwd = cwdEntry.getResolvedPath();
+			}
+		}
+		return cwd;
+	}
+
 	/**
 	 * Returns local file name corresponding to the given remote path
 	 * @param remoteFile
@@ -187,7 +220,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 			if (previousScript != null) {
 				currentScriptDir = new Path(previousScript).removeLastSegments(1).toString();
 			}
-			PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, debugTarget.getProject().getLocation().toString(), currentScriptDir);
+
+			String cwd = getCurrentWorkingDirectory(debugTarget);
+			PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd == null ? "" : cwd, currentScriptDir);
 			if (pathEntry != null) {
 				return pathEntry.getResolvedPath();
 			}
