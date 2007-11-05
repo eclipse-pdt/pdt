@@ -49,9 +49,9 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * PHP debug options preferences add-on.
- * This add-on specifies the default debugger, executable and server for the workspace or the 
- * project specific. 
- * 
+ * This add-on specifies the default debugger, executable and server for the workspace or the
+ * project specific.
+ *
  * @author Shalom Gibly
  */
 public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
@@ -59,6 +59,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	private static final String SERVERS_PAGE_ID = "org.eclipse.php.server.internal.ui.PHPServersPreferencePage"; //$NON-NLS-1$
 	private static final String PHP_EXE_PAGE_ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"; //$NON-NLS-1$
 	private Button fStopAtFirstLine;
+	private Text fClientIP;
 	private Combo fDefaultDebugger;
 	private Combo fDefaultServer;
 	private Combo fDefaultPHPExe;
@@ -126,6 +127,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 			loadPHPExes(fDefaultPHPExe, exes.getItems(PHPDebugPlugin.getCurrentDebuggerId()));
 		}
 		fStopAtFirstLine.setSelection(stopAtFirstLine);
+		fClientIP.setText(prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP));
 		fDefaultDebugger.select(fDefaultDebugger.indexOf(debuggerName));
 		fDefaultServer.select(fDefaultServer.indexOf(serverName));
 		fDefaultPHPExe.select(fDefaultPHPExe.indexOf(phpExeName));
@@ -149,6 +151,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	public void performDefaults() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		fStopAtFirstLine.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE));
+		fClientIP.setText(prefs.getDefaultString(PHPDebugCorePreferenceNames.CLIENT_IP));
 		loadDebuggers(fDefaultDebugger);
 		loadServers(fDefaultServer);
 		loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getItems(PHPDebugPlugin.getCurrentDebuggerId()));
@@ -163,7 +166,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	private void addProjectPreferenceSubsection(Composite composite) {
 		// Set a height hint for the group.
 		GridData gd = (GridData) composite.getLayoutData();
-		gd.heightHint = 240;
+		gd.heightHint = 260;
 		composite.setLayoutData(gd);
 		addLabelControl(composite, PHPDebugUIMessages.PhpDebugPreferencePage_phpDebugger, PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
 		fDefaultDebugger = addCombo(composite, 2);
@@ -202,6 +205,13 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		expandbleOutputEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding + " (" + fOutputEncodingSettings.getIANATag() + ")");
 		fStopAtFirstLine = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_1, PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, 0);
 
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("Client Host/IP:");
+		fClientIP = new Text(composite, SWT.BORDER);
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 2;
+		fClientIP.setLayoutData(layoutData);
+
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				// Expand the debug encoding after the component is layout.
@@ -215,7 +225,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 			}
 		});
 
-		// Add a default debugger listener that will update the possible executables 
+		// Add a default debugger listener that will update the possible executables
 		// and, maybe, servers that can work with this debugger.
 		fDefaultDebugger.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -233,8 +243,8 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 			combo.select(0);
 			return;
 		}
-		for (int i = 0; i < items.length; i++) {
-			combo.add(items[i].getName());
+		for (PHPexeItem element : items) {
+			combo.add(element.getName());
 		}
 		// select the default item for the current selected debugger
 		if (fDefaultDebugger.getItemCount() > 0) {
@@ -264,8 +274,8 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		combo.removeAll();
 		Server[] servers = ServersManager.getServers();
 		if (servers != null) {
-			for (int i = 0; i < servers.length; i++) {
-				combo.add(servers[i].getName());
+			for (Server element : servers) {
+				combo.add(element.getName());
 			}
 			// select first item in list
 			if (combo.getItemCount() > 0) {
@@ -439,6 +449,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 			if (project == null) {
 				// Workspace settings
 				prefs.setValue(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
+				prefs.setValue(PHPDebugCorePreferenceNames.CLIENT_IP, fClientIP.getText());
 				prefs.setValue(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getIANATag());
 				prefs.setValue(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getIANATag());
 				prefs.setValue(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, getSelectedDebuggerId());
