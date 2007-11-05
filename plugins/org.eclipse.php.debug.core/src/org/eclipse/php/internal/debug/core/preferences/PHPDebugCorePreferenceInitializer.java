@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.core.preferences;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.php.internal.debug.core.HostsCollector;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;

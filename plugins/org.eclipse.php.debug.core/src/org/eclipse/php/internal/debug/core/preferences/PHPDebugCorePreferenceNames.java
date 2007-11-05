@@ -24,6 +24,7 @@ public class PHPDebugCorePreferenceNames {
 
 	public static final String STOP_AT_FIRST_LINE = Debug_ID + "stop_at_first_line_string";//$NON-NLS-1$
 	public static final String ZEND_DEBUG_PORT = Debug_ID + "zend_debug_port";//$NON-NLS-1$
+	public static final String CLIENT_IP = Debug_ID + "client_ip";//$NON-NLS-1$
 
 	// Workspace defaults PHP executables keys
 	public static final String INSTALLED_PHP_NAMES = Debug_ID + "installedPHPNames";//$NON-NLS-1$
