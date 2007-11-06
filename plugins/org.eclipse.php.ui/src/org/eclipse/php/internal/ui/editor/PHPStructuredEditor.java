@@ -357,7 +357,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 	}
 
-	private final IPreferencesPropagatorListener phpVersionListener = new IPreferencesPropagatorListener() {
+	protected final IPreferencesPropagatorListener phpVersionListener = new IPreferencesPropagatorListener() {
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			try {
 				// get the structured document and go over its regions
