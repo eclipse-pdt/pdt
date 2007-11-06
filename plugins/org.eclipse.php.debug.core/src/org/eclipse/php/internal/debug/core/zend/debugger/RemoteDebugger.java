@@ -169,7 +169,10 @@ public class RemoteDebugger implements IRemoteDebugger {
 			request.setCommand("getcwd()");
 			IDebugResponseMessage response = sendCustomRequest(request);
 			if (response != null && response instanceof EvalResponse) {
-				return ((EvalResponse) response).getResult();
+				String result = ((EvalResponse) response).getResult();
+				if (!"[Error]".equals(result)) {
+					return result;
+				}
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
