@@ -12,8 +12,6 @@ import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -27,17 +25,12 @@ public class ServerCompositeFragment extends CompositeFragment {
 	protected Text name;
 	protected Text url;
 	protected Combo combo;
-	protected Button publish;
-	protected Text publishDir;
-	protected Button browseButton;
-	protected Button publishCheckBox;
-	protected Label locationLabel;
 	private ValuesCache originalValuesCache = new ValuesCache();
 	private ValuesCache modifiedValuesCache;
 
 	/**
 	 * ServerCompositeFragment
-	 * 
+	 *
 	 * @param parent the parent composite
 	 * @param wizard the wizard handle
 	 */
@@ -52,7 +45,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 	/**
 	 * Override the super setData to handle only Server types.
-	 * 
+	 *
 	 * @throws IllegalArgumentException if the given object is not a {@link Server}
 	 */
 	public void setData(Object server) throws IllegalArgumentException {
@@ -98,7 +91,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 			}
 		});
 		createURLGroup(this);
-		createProjectLocationGroup(this);
 		init();
 		validate();
 
@@ -112,8 +104,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 		if (name == null || server == null)
 			return;
 
-		originalValuesCache.canPublish = server.canPublish();
-		originalValuesCache.publishDir = server.getDocumentRoot();
 		originalValuesCache.url = server.getBaseURL();
 		originalValuesCache.serverName = server.getName();
 		originalValuesCache.host = server.getHost();
@@ -147,8 +137,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 		} else {
 			name.setText(""); //$NON-NLS-1$
 		}
-		String documentRoot = originalValuesCache.publishDir;
-		publishDir.setText(documentRoot);
 
 		String baseURL = originalValuesCache.url;
 		if (!baseURL.equals("")) { //$NON-NLS-1$
@@ -173,11 +161,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 				setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			}
 		}
-		boolean selected = originalValuesCache.canPublish;
-		publishCheckBox.setSelection(selected);
-		publishDir.setEnabled(selected);
-		browseButton.setEnabled(selected);
-		locationLabel.setEnabled(selected);
 		if (originalValuesCache.serverName != null && originalValuesCache.serverName.length() > 0) {
 			setTitle(PHPServerUIMessages.getString("ServerCompositeFragment.editServer") + " [" + originalValuesCache.serverName + ']'); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
@@ -257,82 +240,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 		});
 	}
 
-	private final void createProjectLocationGroup(Composite parent) {
-
-		Font font = parent.getFont();
-		// project specification group
-		Group projectGroup = new Group(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 3;
-		projectGroup.setLayout(layout);
-		projectGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		projectGroup.setFont(font);
-		projectGroup.setText(PHPServerUIMessages.getString("ServerCompositeFragment.publishInfo")); //$NON-NLS-1$
-
-		publishCheckBox = new Button(projectGroup, SWT.CHECK | SWT.RIGHT);
-		publishCheckBox.setText(PHPServerUIMessages.getString("ServerCompositeFragment.publishToServer")); //$NON-NLS-1$
-		publishCheckBox.setFont(font);
-
-		publishCheckBox.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent se) {
-				Button b = (Button) se.getSource();
-				boolean selected = b.getSelection();
-
-				publishDir.setEnabled(selected);
-				browseButton.setEnabled(selected);
-				locationLabel.setEnabled(selected);
-
-				if (getServer() != null)
-					//					server.setPublish(selected);
-					modifiedValuesCache.canPublish = selected;
-			}
-		});
-
-		GridData buttonData = new GridData();
-		buttonData.horizontalSpan = 3;
-		publishCheckBox.setLayoutData(buttonData);
-
-		createUserSpecifiedProjectLocationGroup(projectGroup);
-	}
-
-	private void createUserSpecifiedProjectLocationGroup(Composite projectGroup) {
-		Font font = projectGroup.getFont();
-		// location label
-		locationLabel = new Label(projectGroup, SWT.NONE);
-		locationLabel.setFont(font);
-		locationLabel.setText(PHPServerUIMessages.getString("ServerCompositeFragment.directory")); //$NON-NLS-1$
-
-		// project location entry field
-		publishDir = new Text(projectGroup, SWT.BORDER);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
-		data.widthHint = 305;
-		publishDir.setLayoutData(data);
-		publishDir.setFont(font);
-		publishDir.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (getServer() != null)
-					//					server.setDocumentRoot(publishDir.getText());
-					modifiedValuesCache.publishDir = publishDir.getText();
-				validate();
-			}
-		});
-
-		// browse button
-		browseButton = new Button(projectGroup, SWT.PUSH);
-		browseButton.setFont(font);
-		browseButton.setText(PHPServerUIMessages.getString("ServerCompositeFragment.browse")); //$NON-NLS-1$
-		browseButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				DirectoryDialog dialog = new DirectoryDialog(ServerCompositeFragment.this.getShell());
-				dialog.setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.selectDocumentRoot")); //$NON-NLS-1$
-				dialog.setFilterPath(publishDir.getText());
-				String selectedDirectory = dialog.open();
-				if (selectedDirectory != null)
-					publishDir.setText(selectedDirectory);
-			}
-		});
-	}
-
 	private boolean checkServerName(String name) {
 		name = name.trim();
 		if (name.equals(originalValuesCache.serverName)) {
@@ -361,8 +268,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 			if (server != null) {
 				server.setPort(String.valueOf(modifiedValuesCache.port));
 				server.setBaseURL(modifiedValuesCache.url);
-				server.setDocumentRoot(modifiedValuesCache.publishDir);
-				server.setPublish(modifiedValuesCache.canPublish);
 			}
 			server.setHost(modifiedValuesCache.host);
 			server.setName(modifiedValuesCache.serverName);
@@ -384,15 +289,13 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 * @see org.eclipse.php.internal.server.ui.CompositeFragment#performCancel()
 	 */
 	public boolean performCancel() {
-		// Since the performOk might be triggered if this composite is inside a wizard fragment, we have to 
+		// Since the performOk might be triggered if this composite is inside a wizard fragment, we have to
 		// implement the perform cancel to revert any changes made.
 		try {
 			Server server = getServer();
 			if (server != null) {
 				server.setPort(String.valueOf(originalValuesCache.port));
 				server.setBaseURL(originalValuesCache.url);
-				server.setDocumentRoot(originalValuesCache.publishDir);
-				server.setPublish(originalValuesCache.canPublish);
 			}
 			server.setHost(originalValuesCache.host);
 			server.setName(originalValuesCache.serverName);
@@ -405,9 +308,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 	// A class used as a local original IServerWorkingCopy values cache.
 	private class ValuesCache {
-		boolean canPublish;
 		String serverName;
-		String publishDir;
 		String url;
 		String host;
 		int port;
@@ -416,9 +317,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		}
 
 		public ValuesCache(ValuesCache cache) {
-			this.canPublish = cache.canPublish;
 			this.serverName = cache.serverName;
-			this.publishDir = cache.publishDir;
 			this.url = cache.url;
 			this.port = cache.port;
 			this.host = cache.host;

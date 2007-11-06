@@ -74,8 +74,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		fServersList.setDialogFieldListener(adapter);
 		fServersList.setRemoveButtonIndex(IDX_REMOVE);
 
-		String[] columnsHeaders = new String[] { PHPServerUIMessages.getString("PHPServersConfigurationBlock.name"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.url"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.publish") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		ColumnLayoutData[] layoutDatas = new ColumnLayoutData[] { new ColumnWeightData(40), new ColumnWeightData(40), new ColumnWeightData(20) };
+		String[] columnsHeaders = new String[] { PHPServerUIMessages.getString("PHPServersConfigurationBlock.name"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.url") }; //$NON-NLS-1$ //$NON-NLS-2$
+		ColumnLayoutData[] layoutDatas = new ColumnLayoutData[] { new ColumnWeightData(40), new ColumnWeightData(40) };
 		fServersList.setTableColumns(new ListDialogField.ColumnsDescription(layoutDatas, columnsHeaders, true));
 
 		if (fServersList.getSize() > 0) {
@@ -274,6 +274,9 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		}
 
 		public Image getColumnImage(Object element, int columnIndex) {
+			if (columnIndex == 0) {
+				return ServersPluginImages.get(ServersPluginImages.IMG_SERVER);
+			}
 			return null;
 		}
 
@@ -292,9 +295,6 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 				return serverName;
 			} else if (columnIndex == 1) {
 				return server.getHost();
-			} else if (columnIndex == 2) {
-
-				return server.canPublish() ? PHPServerUIMessages.getString("PHPServersConfigurationBlock.yes") : PHPServerUIMessages.getString("PHPServersConfigurationBlock.no"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return element.toString();
 		}
