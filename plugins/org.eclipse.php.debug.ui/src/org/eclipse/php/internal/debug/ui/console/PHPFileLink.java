@@ -23,9 +23,9 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
- * 
+ *
  * @author seva
- * 
+ *
  * A version of {@link FileLink} which also supports external resources
  *
  */
@@ -38,7 +38,7 @@ public class PHPFileLink implements IHyperlink {
 
 	/**
 	 * Constructs a hyperlink to the specified file.
-	 * 
+	 *
 	 * @param file the file to open when activated
 	 * <code>null</code> if the default editor should be used
 	 * @param fileOffset the offset in the file to select when activated, or -1
@@ -103,13 +103,8 @@ public class PHPFileLink implements IHyperlink {
 	}
 
 	public void linkEntered() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void linkExited() {
-		// TODO Auto-generated method stub
-
 	}
-
 }

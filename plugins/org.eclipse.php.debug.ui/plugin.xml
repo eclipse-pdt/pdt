@@ -3,6 +3,7 @@
 <plugin>
    <extension-point id="launchConfigurationTabs" name="Launch Configuration Tabs" schema="schema/launchConfigurationTabs.exsd"/>
    <extension-point id="phpDebugModelPresentations" name="PHP Debug Model Presentations" schema="schema/phpDebugModelPresentations.exsd"/>
+   <extension-point id="phpConsoleListeners" name="PHP Console Listener" schema="schema/phpConsoleListeners.exsd"/>
    <extension
          point="org.eclipse.debug.ui.debugModelPresentations">
       <debugModelPresentation
@@ -579,5 +580,12 @@
           name="Path Mapper Fragment"
           placeAfter="org.eclipse.php.internal.debug.ui.preferences.phps.PHPExeCompositeFragmentFactory">
     </wizardAndCompositeFragment>
+ </extension>
+ <extension
+       point="org.eclipse.php.debug.ui.phpConsoleListeners">
+    <listener
+          class="org.eclipse.php.internal.debug.ui.console.PHPConsoleListener"
+          id="org.eclipse.php.internal.debug.ui.console.PHPConsoleListener">
+    </listener>
  </extension> 
 </plugin>

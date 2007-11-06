@@ -5,6 +5,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
@@ -17,17 +18,17 @@ import org.eclipse.ui.console.IHyperlink;
 
 public class PHPConsoleListener implements IPHPConsoleEventListener {
 
-	private DebugConsoleMonitor fConsoleMonitor;
-	private PHPHyperLink fPHPHyperLink;
+	protected ILaunch fLaunch;
+	protected DebugConsoleMonitor fConsoleMonitor;
+	protected PHPHyperLink fPHPHyperLink;
 
-	public PHPConsoleListener(DebugConsoleMonitor consoleMonitor, PHPHyperLink link) {
-		super();
+	public void init(ILaunch launch, DebugConsoleMonitor consoleMonitor, PHPHyperLink link) {
+		fLaunch = launch;
 		fConsoleMonitor = consoleMonitor;
 		fPHPHyperLink = link;
 	}
 
 	public void handleEvent(DebugError debugError) {
-
 		IHyperlink link = createLink(debugError);
 		String message = debugError.toString().trim();
 		fPHPHyperLink.addLink(link, message, message.length() - debugError.getErrorTextLength());
@@ -35,7 +36,6 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 	}
 
 	protected IHyperlink createLink(DebugError debugError) {
-
 		IHyperlink fileLink = null;
 		String fileName = debugError.getFullPathName();
 		int lineNumber = debugError.getLineNumber();
@@ -75,5 +75,4 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 		}
 		return fileLink;
 	}
-
 }
