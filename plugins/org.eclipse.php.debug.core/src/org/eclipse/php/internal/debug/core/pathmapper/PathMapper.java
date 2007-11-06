@@ -26,19 +26,19 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 
 public class PathMapper implements IXMLPreferencesStorable {
 
-	private Map<AbstractPath, AbstractPath> remoteToLocalMap;
-	private Map<AbstractPath, AbstractPath> localToRemoteMap;
-	private Map<AbstractPath, Type> localToPathEntryType;
+	private Map<VirtualPath, VirtualPath> remoteToLocalMap;
+	private Map<VirtualPath, VirtualPath> localToRemoteMap;
+	private Map<VirtualPath, Type> localToPathEntryType;
 
 	public PathMapper() {
-		remoteToLocalMap = new HashMap<AbstractPath, AbstractPath>();
-		localToRemoteMap = new HashMap<AbstractPath, AbstractPath>();
-		localToPathEntryType = new HashMap<AbstractPath, Type>();
+		remoteToLocalMap = new HashMap<VirtualPath, VirtualPath>();
+		localToRemoteMap = new HashMap<VirtualPath, VirtualPath>();
+		localToPathEntryType = new HashMap<VirtualPath, Type>();
 	}
 
 	public synchronized void addEntry(String remoteFile, PathEntry entry) {
-		AbstractPath remotePath = new AbstractPath(remoteFile);
-		AbstractPath localPath = entry.getAbstractPath().clone(); // don't break original entry path
+		VirtualPath remotePath = new VirtualPath(remoteFile);
+		VirtualPath localPath = entry.getAbstractPath().clone(); // don't break original entry path
 
 		// last segments must match!
 		if (!remotePath.getLastSegment().equals(localPath.getLastSegment())) {
@@ -60,7 +60,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 	}
 
 	public String getRemoteFile(String localFile) {
-		AbstractPath path = getPath(localToRemoteMap, new AbstractPath(localFile));
+		VirtualPath path = getPath(localToRemoteMap, new VirtualPath(localFile));
 		if (path != null) {
 			return path.toString();
 		}
@@ -68,7 +68,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 	}
 
 	public PathEntry getLocalFile(String remoteFile) {
-		AbstractPath path = getPath(remoteToLocalMap, new AbstractPath(remoteFile));
+		VirtualPath path = getPath(remoteToLocalMap, new VirtualPath(remoteFile));
 		if (path != null) {
 			String localFile = path.toString();
 			Type type = getPathType(path);
@@ -90,11 +90,11 @@ public class PathMapper implements IXMLPreferencesStorable {
 		return null;
 	}
 
-	protected AbstractPath getPath(Map<AbstractPath, AbstractPath> map, AbstractPath path) {
+	protected VirtualPath getPath(Map<VirtualPath, VirtualPath> map, VirtualPath path) {
 		path = path.clone();
 		List<String> strippedSegments = new LinkedList<String>();
 		while (path.getSegmentsCount() > 0) {
-			AbstractPath mapPath = map.get(path);
+			VirtualPath mapPath = map.get(path);
 			if (mapPath != null) {
 				mapPath = mapPath.clone();
 				ListIterator<String> i = strippedSegments.listIterator(strippedSegments.size());
@@ -108,7 +108,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 		return null;
 	}
 
-	protected Type getPathType(AbstractPath path) {
+	protected Type getPathType(VirtualPath path) {
 		path = path.clone();
 		while (path.getSegmentsCount() > 0) {
 			Type type = localToPathEntryType.get(path);
@@ -125,10 +125,10 @@ public class PathMapper implements IXMLPreferencesStorable {
 	 */
 	public synchronized Mapping[] getMapping() {
 		List<Mapping> l = new ArrayList<Mapping>(localToRemoteMap.size());
-		Iterator<AbstractPath> i = localToRemoteMap.keySet().iterator();
+		Iterator<VirtualPath> i = localToRemoteMap.keySet().iterator();
 		while (i.hasNext()) {
-			AbstractPath localPath = i.next();
-			AbstractPath remotePath = localToRemoteMap.get(localPath);
+			VirtualPath localPath = i.next();
+			VirtualPath remotePath = localToRemoteMap.get(localPath);
 			Type type = localToPathEntryType.get(localPath);
 			l.add(new Mapping(localPath, remotePath, type));
 		}
@@ -169,14 +169,14 @@ public class PathMapper implements IXMLPreferencesStorable {
 	}
 
 	public static class Mapping implements Cloneable {
-		public AbstractPath localPath;
-		public AbstractPath remotePath;
+		public VirtualPath localPath;
+		public VirtualPath remotePath;
 		public Type type;
 
 		public Mapping() {
 		}
 
-		public Mapping(AbstractPath localPath, AbstractPath remotePath, Type type) {
+		public Mapping(VirtualPath localPath, VirtualPath remotePath, Type type) {
 			this.localPath = localPath;
 			this.remotePath = remotePath;
 			this.type = type;
@@ -222,8 +222,8 @@ public class PathMapper implements IXMLPreferencesStorable {
 			String typeStr = (String) entryMap.get("type"); //$NON-NLS-1$
 			if (localStr != null && remoteStr != null && typeStr != null) {
 				Type type = Type.valueOf(typeStr);
-				AbstractPath local = new AbstractPath(localStr);
-				AbstractPath remote = new AbstractPath(remoteStr);
+				VirtualPath local = new VirtualPath(localStr);
+				VirtualPath remote = new VirtualPath(remoteStr);
 				remoteToLocalMap.put(remote, local);
 				localToRemoteMap.put(local, remote);
 				localToPathEntryType.put(local, type);
@@ -234,12 +234,12 @@ public class PathMapper implements IXMLPreferencesStorable {
 	@SuppressWarnings("unchecked")
 	public synchronized HashMap storeToMap() {
 		HashMap entries = new HashMap();
-		Iterator<AbstractPath> i = localToRemoteMap.keySet().iterator();
+		Iterator<VirtualPath> i = localToRemoteMap.keySet().iterator();
 		int c= 1;
 		while (i.hasNext()) {
 			HashMap entry = new HashMap();
-			AbstractPath local = i.next();
-			AbstractPath remote = localToRemoteMap.get(local);
+			VirtualPath local = i.next();
+			VirtualPath remote = localToRemoteMap.get(local);
 			Type type = localToPathEntryType.get(local);
 			entry.put("local", local); //$NON-NLS-1$
 			entry.put("remote", remote); //$NON-NLS-1$

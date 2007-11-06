@@ -17,7 +17,7 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
+import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.model.ResolveBlackList.Type;
 
@@ -76,7 +76,7 @@ public class ContextManager {
 		return "";
 	}
 
-	public void addToResolveBlacklist(AbstractPath path, Type type) {
+	public void addToResolveBlacklist(VirtualPath path, Type type) {
 		fResolveBlackList.add(path, type);
 	}
 

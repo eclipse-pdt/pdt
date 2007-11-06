@@ -40,7 +40,7 @@ public class PathEntry {
 	}
 
 	private Object container;
-	private AbstractPath abstractPath;
+	private VirtualPath abstractPath;
 	private Type type;
 
 	/**
@@ -50,7 +50,7 @@ public class PathEntry {
 	 * @param container This path container. It can be either workspace resource, include path, or folder on file system
 	 */
 	public PathEntry(String path, Type type, Object container) {
-		this(new AbstractPath(path), type, container);
+		this(new VirtualPath(path), type, container);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class PathEntry {
 	 * @param type Path entry type
 	 * @param container This path container. It can be either workspace resource, include path, or folder on file system
 	 */
-	public PathEntry(AbstractPath path, Type type, Object container) {
+	public PathEntry(VirtualPath path, Type type, Object container) {
 		this.abstractPath = path;
 		this.type = type;
 		this.container = container;
@@ -69,7 +69,7 @@ public class PathEntry {
 	 * Returns abstract path of this entry
 	 * @return abstract path
 	 */
-	public AbstractPath getAbstractPath() {
+	public VirtualPath getAbstractPath() {
 		return abstractPath;
 	}
 

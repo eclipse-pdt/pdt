@@ -95,7 +95,7 @@ public class DebugSearchEngine {
 		}
 
 		// If the given path is not absolute - use internal PHP search mechanism:
-		if (!AbstractPath.isAbsolute(remoteFile)) {
+		if (!VirtualPath.isAbsolute(remoteFile)) {
 			if (currentProject != null && currentWorkingDir != null && currentScriptDir != null) {
 				// This is not a full path, search using PHP Search Engine:
 				Result<?, ?> result = PHPSearchEngine.find(remoteFile, currentWorkingDir, currentScriptDir, currentProject);
@@ -125,7 +125,7 @@ public class DebugSearchEngine {
 			return localFile;
 		}
 
-		AbstractPath abstractPath = new AbstractPath(remoteFile);
+		VirtualPath abstractPath = new VirtualPath(remoteFile);
 		LinkedList<PathEntry> results = new LinkedList<PathEntry>();
 
 		Object[] includePaths;
@@ -179,7 +179,7 @@ public class DebugSearchEngine {
 		return localFile;
 	}
 
-	private static void searchOpenedEditors(LinkedList<PathEntry> results, AbstractPath remotePath) {
+	private static void searchOpenedEditors(LinkedList<PathEntry> results, VirtualPath remotePath) {
 		// Collect open editor references:
 		List<IEditorReference> editors = new ArrayList<IEditorReference>(0);
 		IWorkbench workbench= PlatformUI.getWorkbench();
@@ -209,7 +209,7 @@ public class DebugSearchEngine {
 		}
 	}
 
-	private static PathEntry filterItems(AbstractPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
+	private static PathEntry filterItems(VirtualPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
 		IPathEntryFilter[] filters = initializePathEntryFilters();
 		for (int i = 0; i < filters.length; ++i) {
 			entries = filters[i].filter(entries, remotePath, debugTarget);
@@ -257,7 +257,7 @@ public class DebugSearchEngine {
 	 * @param results List of results to return
 	 * @throws InterruptedException
 	 */
-	private static void find(final File file, final AbstractPath path, final IIncludePathEntry container, final List<PathEntry> results) {
+	private static void find(final File file, final VirtualPath path, final IIncludePathEntry container, final List<PathEntry> results) {
 		if (!file.isDirectory() && file.getName().equals(path.getLastSegment())) {
 			Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
 			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type, container);
@@ -280,7 +280,7 @@ public class DebugSearchEngine {
 	 * @param results List of results to return
 	 * @throws InterruptedException
 	 */
-	private static void find(final IResource resource, final AbstractPath path, final List<PathEntry> results) throws InterruptedException {
+	private static void find(final IResource resource, final VirtualPath path, final List<PathEntry> results) throws InterruptedException {
 		if (resource == null || !resource.exists() || !resource.isAccessible()) {
 			return;
 		}

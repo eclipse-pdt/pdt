@@ -3,7 +3,7 @@ package org.eclipse.php.internal.debug.core.zend.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
+import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 
 public class ResolveBlackList {
 
@@ -13,22 +13,22 @@ public class ResolveBlackList {
 		RECURSIVE,
 	}
 
-	private Map<AbstractPath, Type> list;
+	private Map<VirtualPath, Type> list;
 
 	public ResolveBlackList() {
-		list = new HashMap<AbstractPath, Type>();
+		list = new HashMap<VirtualPath, Type>();
 	}
 
-	public void add(AbstractPath path, Type type) {
+	public void add(VirtualPath path, Type type) {
 		list.put(path, type);
 	}
 
 	public boolean containsEntry(String file) {
-		if (!AbstractPath.isAbsolute(file)) {
+		if (!VirtualPath.isAbsolute(file)) {
 			return false;
 		}
-		for (AbstractPath path: list.keySet()) {
-			AbstractPath tmp = new AbstractPath(file);
+		for (VirtualPath path: list.keySet()) {
+			VirtualPath tmp = new VirtualPath(file);
 			Type type = list.get(path);
 			if (type == Type.FILE) {
 				if (path.equals(tmp)) {

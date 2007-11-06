@@ -17,11 +17,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class represents abstract storage for path-style entities (file-system paths, URLs)
+ * This class represents path-style entities (file-system paths, URLs)
  * @author michael
  *
  */
-public class AbstractPath implements Cloneable {
+public class VirtualPath implements Cloneable {
 
 	private static final Pattern VOLNAME = Pattern.compile("([A-Za-z]:)[/\\\\](.*)");
 	private static final Pattern PROTOCOL = Pattern.compile("([A-Za-z]*://)(.*)");
@@ -33,7 +33,7 @@ public class AbstractPath implements Cloneable {
 	 * Constructs new abstract path instance
 	 * @param path Full path
 	 */
-	public AbstractPath(String path) {
+	public VirtualPath(String path) {
 		if (path == null) {
 			throw new NullPointerException();
 		}
@@ -81,7 +81,7 @@ public class AbstractPath implements Cloneable {
 		return (path.startsWith("\\\\") || VOLNAME.matcher(path).matches() || path.startsWith("/") || PROTOCOL.matcher(path).matches());
 	}
 
-	protected AbstractPath(String device, char sepChar, LinkedList<String> segments) {
+	protected VirtualPath(String device, char sepChar, LinkedList<String> segments) {
 		this.device = device;
 		this.sepChar = sepChar;
 		this.segments = segments;
@@ -111,7 +111,7 @@ public class AbstractPath implements Cloneable {
 		return sepChar;
 	}
 
-	public boolean isPrefixOf(AbstractPath path) {
+	public boolean isPrefixOf(VirtualPath path) {
 		Iterator<String> i1 = segments.iterator();
 		Iterator<String> i2 = path.segments.iterator();
 		while (i1.hasNext() && i2.hasNext()) {
@@ -134,13 +134,13 @@ public class AbstractPath implements Cloneable {
 		return buf.toString();
 	}
 
-	public AbstractPath clone() {
+	public VirtualPath clone() {
 		LinkedList<String> segments = new LinkedList<String>();
 		Iterator<String> i = this.segments.iterator();
 		while (i.hasNext()) {
 			segments.add(i.next());
 		}
-		AbstractPath path = new AbstractPath(device, sepChar, segments);
+		VirtualPath path = new VirtualPath(device, sepChar, segments);
 		return path;
 	}
 
@@ -149,10 +149,10 @@ public class AbstractPath implements Cloneable {
 	}
 
 	public boolean equals(Object obj) {
-		if (!(obj instanceof AbstractPath)) {
+		if (!(obj instanceof VirtualPath)) {
 			return false;
 		}
-		AbstractPath other = (AbstractPath) obj;
+		VirtualPath other = (VirtualPath) obj;
 		return other.device.equals(device) && other.segments.equals(segments) && other.sepChar == sepChar;
 	}
 }

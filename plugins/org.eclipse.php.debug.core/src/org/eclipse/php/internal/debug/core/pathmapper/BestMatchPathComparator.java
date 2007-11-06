@@ -26,7 +26,7 @@ public class BestMatchPathComparator implements Comparator<PathEntry> {
 	 * Constructs new best match comparator
 	 * @param path Abstract path of the file model
 	 */
-	public BestMatchPathComparator(AbstractPath path) {
+	public BestMatchPathComparator(VirtualPath path) {
 		this.segments = path.getSegments();
 	}
 
