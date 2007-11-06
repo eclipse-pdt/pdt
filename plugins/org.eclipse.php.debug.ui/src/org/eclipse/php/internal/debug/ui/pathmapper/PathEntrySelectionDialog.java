@@ -23,7 +23,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
-import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
+import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.pathmapper.BestMatchPathComparator;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
@@ -53,7 +53,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 	 * @param path Abstract path of the file to match
 	 * @param files Files to choose
 	 */
-	public PathEntrySelectionDialog(Shell shell, AbstractPath path, PathEntry[] pathEntries) {
+	public PathEntrySelectionDialog(Shell shell, VirtualPath path, PathEntry[] pathEntries) {
 		super(shell);
 		this.pathEntries = pathEntries;
 		this.comparator = Collections.reverseOrder(new BestMatchPathComparator(path));

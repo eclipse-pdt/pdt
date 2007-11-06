@@ -37,7 +37,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
-import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
+import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
 import org.eclipse.php.internal.debug.ui.pathmapper.PathMapperEntryDialog.WorkspaceBrowseDialog.IPFile;
@@ -255,7 +255,7 @@ public class PathMapperEntryDialog extends StatusDialog {
 			return;
 		}
 		try {
-			mapping.remotePath = new AbstractPath(remotePathStr);
+			mapping.remotePath = new VirtualPath(remotePathStr);
 		} catch (IllegalArgumentException e) {
 			setError("Path on server is illegal or not absolute!");
 			return;
@@ -281,7 +281,7 @@ public class PathMapperEntryDialog extends StatusDialog {
 				return;
 			}
 			try {
-				mapping.localPath = new AbstractPath(workspacePath);
+				mapping.localPath = new VirtualPath(workspacePath);
 			} catch (IllegalArgumentException e) {
 				setError("Path in workspace is illegal or not absolute!");
 				return;
@@ -298,7 +298,7 @@ public class PathMapperEntryDialog extends StatusDialog {
 			}
 			try {
 				mapping.type = Type.EXTERNAL;
-				mapping.localPath = new AbstractPath(externalPath);
+				mapping.localPath = new VirtualPath(externalPath);
 			} catch (IllegalArgumentException e) {
 				setError("Path in file system is illegal or not absolute!");
 				return;

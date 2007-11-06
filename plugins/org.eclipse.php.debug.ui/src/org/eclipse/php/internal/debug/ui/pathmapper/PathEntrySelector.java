@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.debug.core.pathmapper.AbstractPath;
+import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.pathmapper.IPathEntryFilter;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.swt.widgets.Display;
@@ -28,7 +28,7 @@ public class PathEntrySelector implements IPathEntryFilter {
 	public PathEntrySelector() {
 	}
 
-	public PathEntry[] filter(final PathEntry[] entries, final AbstractPath remotePath, final IDebugTarget debugTarget) {
+	public PathEntry[] filter(final PathEntry[] entries, final VirtualPath remotePath, final IDebugTarget debugTarget) {
 		final List<PathEntry> l = new LinkedList<PathEntry>();
 		Runnable r = new Runnable() {
 			public void run() {
@@ -58,7 +58,7 @@ public class PathEntrySelector implements IPathEntryFilter {
 		return l.toArray(new PathEntry[l.size()]);
 	}
 
-	protected PathEntry runFilterDialog(Shell shell, AbstractPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
+	protected PathEntry runFilterDialog(Shell shell, VirtualPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
 		PathEntrySelectionDialog selectDialog = new PathEntrySelectionDialog(shell, remotePath, entries);
 		if (selectDialog.open() == Window.OK) {
 			return (PathEntry) selectDialog.getFirstResult();
