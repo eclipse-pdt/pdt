@@ -21,16 +21,13 @@ import org.eclipse.php.internal.debug.core.zend.debugger.IDebuggerInitializer;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPWebServerDebuggerInitializer;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
-import org.eclipse.php.internal.server.core.PHPServerCoreMessages;
 import org.eclipse.php.internal.server.core.Server;
-import org.eclipse.php.internal.server.core.deploy.DeployFilter;
-import org.eclipse.php.internal.server.core.deploy.FileUtil;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * A launch configuration delegate class for launching a PHP web page script.
- * 
+ *
  * @author shalom
  *
  */
@@ -45,7 +42,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	/**
-	 * Override the extended getLaunch to create a PHPLaunch. 
+	 * Override the extended getLaunch to create a PHPLaunch.
 	 */
 	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
@@ -96,15 +93,6 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			return;
 		}
 
-		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
-		if (publish) {
-			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
-				// Return if the publish failed.
-				displayErrorMessage(PHPServerCoreMessages.getString("FileUtil.serverPublishError"));
-				terminated();
-				return;
-			}
-		}
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		String project = proj.getFullPath().toString();
 		wc.setAttribute(IPHPConstants.PHP_Project, project);
@@ -138,9 +126,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	/*
-	 * Override the super preLaunchCheck to make sure that the server we are using is still valid. 
+	 * Override the super preLaunchCheck to make sure that the server we are using is still valid.
 	 * If not, notify the user that a change should be made and open the launch configuration page to do so.
-	 * 
+	 *
 	 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#preLaunchCheck(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public boolean preLaunchCheck(final ILaunchConfiguration configuration, final String mode, IProgressMonitor monitor) throws CoreException {
@@ -162,7 +150,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Initiate a debug session.
-	 * 
+	 *
 	 * @param launch
 	 */
 	protected void initiateDebug(ILaunch launch) {
@@ -185,7 +173,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Create an {@link IDebuggerInitializer}.
-	 * 
+	 *
 	 * @return An {@link IDebuggerInitializer} instance.
 	 */
 	protected IDebuggerInitializer createDebuggerInitilizer() {
@@ -194,7 +182,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Displays a dialod with an error message.
-	 * 
+	 *
 	 * @param message The error to display.
 	 */
 	protected void displayErrorMessage(final String message) {
@@ -207,7 +195,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Throws a IStatus in a Debug Event
-	 * 
+	 *
 	 */
 	public void fireError(IStatus status) {
 		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
@@ -217,7 +205,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Throws a IStatus in a Debug Event
-	 * 
+	 *
 	 */
 	public void fireError(String errorMessage, Exception e) {
 		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e);
@@ -227,7 +215,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	/**
-	 * Called when the debug session was terminated. 
+	 * Called when the debug session was terminated.
 	 */
 	public void terminated() {
 		DebugEvent event = null;
@@ -248,7 +236,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Fires a debug event
-	 * 
+	 *
 	 * @param event 	The event to be fired
 	 */
 	public void fireEvent(DebugEvent event) {

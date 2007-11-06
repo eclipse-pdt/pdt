@@ -43,10 +43,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandle
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
-import org.eclipse.php.internal.server.core.PHPServerCoreMessages;
 import org.eclipse.php.internal.server.core.Server;
-import org.eclipse.php.internal.server.core.deploy.DeployFilter;
-import org.eclipse.php.internal.server.core.deploy.FileUtil;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -62,7 +59,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
 			monitor.setCanceled(true);
 			monitor.done();
-			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);			
+			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			return;
 		}
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
@@ -83,7 +80,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			return;
 		}
 
-		// Get the project from the file name      
+		// Get the project from the file name
 		String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
 		IPath filePath = new Path(fileName);
 		IProject proj = null;
@@ -92,17 +89,6 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		} catch (Throwable t) {
 			if (proj == null) {
 				Logger.logException("Could not execute the debug (Project is null).", t);
-				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);				
-				return;
-			}
-		}
-
-		// Publish the files if specified.
-		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
-		if (publish) {
-			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
-				// Return if the publish failed.
-				displayErrorMessage(PHPServerCoreMessages.getString("FileUtil.serverPublishError"));
 				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 				return;
 			}
@@ -133,28 +119,28 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		String[] startStopURLs;
 		String baseURL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
 		IDBGpDebugTarget target = null;
-		
-		if (mode.equals(ILaunchManager.DEBUG_MODE)) {		
+
+		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();
 			String sessionId = DBGpSessionHandler.getInstance().generateSessionId();
 			startStopURLs = generateStartStopDebugURLs(baseURL, sessionId, ideKey);
 			String launchScript = configuration.getAttribute(Server.FILE_NAME, (String) null);
-			
+
 			// determine if we should use the multisession manager or the single session manager
 			if (ide.getPrefs().getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION)) {
 				target = new DBGpMultiSessionTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
 				launch.addDebugTarget(target); //has to be added now, not later.
 			}
 			else {
-				target = new DBGpTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);				
+				target = new DBGpTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
 			}
-			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)target);			
+			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)target);
 		}
 		else {
 			startStopURLs = new String[] {baseURL, null};
 		}
 		final String startURL = startStopURLs[0];
-		
+
 		// load the URL into the appropriate web browser
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
 		subMonitor.beginTask("Launching browser", 10);
@@ -185,7 +171,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			}
 			else {
 				// launched ok, so remove the launch from the debug view as we are not debugging.
-				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);				
+				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			}
 		} else {
 			// display an error about not being able to launch a browser
@@ -200,7 +186,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 	/**
 	 * Displays a dialog with an error message.
-	 * 
+	 *
 	 * @param message The error to display.
 	 */
 	protected void displayErrorMessage(final String message) {
