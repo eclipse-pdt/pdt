@@ -116,7 +116,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	}
 
 	/** Last selected template name */
-	private String fLastSelectedTemplateName;
+	protected String fLastSelectedTemplateName;
 	/** The viewer displays the pattern of selected template. */
 	private SourceViewer fPatternViewer;
 	/** The table presenting the templates. */
@@ -124,7 +124,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	/** Template store used by this wizard page */
 	private TemplateStore fTemplateStore;
 	/** Checkbox for using templates. */
-	private Button fUseTemplateButton;
+	protected Button fUseTemplateButton;
 
 	public NewGenericFileTemplatesWizardPage(String title, String description) {
 		super("NewGenericTemplatesWizardPage", title, null); //$NON-NLS-1$
@@ -345,7 +345,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * Enable/disable controls in page based on fUseTemplateButton's current
 	 * state.
 	 */
-	void enableTemplates() {
+	protected void enableTemplates() {
 		boolean enabled = fUseTemplateButton.getSelection();
 
 		if (!enabled) {
@@ -421,7 +421,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	/**
 	 * Load the last template name used in New HTML File wizard.
 	 */
-	private void loadLastSavedPreferences() {
+	protected void loadLastSavedPreferences() {
 		String templateName = getPreferenceStore().getString(PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
 		if (templateName == null || templateName.length() == 0) {
 			fLastSelectedTemplateName = ""; //$NON-NLS-1$
