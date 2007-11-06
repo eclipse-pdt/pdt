@@ -10,14 +10,25 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.php.internal.debug.core.launching.DebugConsoleMonitor;
+import org.eclipse.php.internal.debug.core.launching.PHPHyperLink;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 
 public interface IPHPConsoleEventListener {
 
+	/**
+	 * Initialize this PHP console event listener
+	 * @param launch Current launch
+	 * @param consoleMonitor Console monitor
+	 * @param link Hyper link container
+	 */
+	public void init(ILaunch launch, DebugConsoleMonitor consoleMonitor, PHPHyperLink link);
+
     /**
      * Notification the given event occurred in the target program
-     * being interpretted.
-     * 
+     * being interpreted.
+     *
      * @param event the event
      */
     public void handleEvent(DebugError debugError);

@@ -17,11 +17,11 @@ import org.eclipse.ui.console.IHyperlink;
 
 public class PHPHyperLink {
 
-    private List fLinks;
+	private List<HyperlinkEntry> fLinks;
 
     public void addLink(IHyperlink link, String message, int length) {
         if (fLinks == null) {
-            fLinks = new Vector();
+            fLinks = new Vector<HyperlinkEntry>();
         }
         HyperlinkEntry hLink = new HyperlinkEntry(link, message, length);
         fLinks.add(hLink);
@@ -30,15 +30,14 @@ public class PHPHyperLink {
     public HyperlinkEntry getHyperlinkEntry(String message) {
     	if (fLinks != null) {
 	        Object[] alinks = fLinks.toArray();
-	        for (int i = 0; i < alinks.length; i++) {
-	            String linkMessage = ((HyperlinkEntry) alinks[i]).getMessage();
+	        for (Object element : alinks) {
+	            String linkMessage = ((HyperlinkEntry) element).getMessage();
 	            if ((linkMessage.trim()).equals(message.trim())) {
-	                return ((HyperlinkEntry) alinks[i]);
+	                return ((HyperlinkEntry) element);
 	            }
 	        }
     	}
         return null;
-
     }
 
     public void dispose() {
