@@ -32,12 +32,9 @@ public class Server implements IXMLPreferencesStorable {
 	public static final String NAME = "name";
 	public static final String BASE_URL = "base_url";
 	public static final String DOCUMENT_ROOT = "document_root";
-	public static final String PUBLISH = "publish";
-	public static final String PUBLISH_TO = "publish_to";
 	public static final String PORT = "port";
 	public static final String HOSTNAME = "hostname";
 	public static final String FILE_NAME = "file_name";
-	public static final String CONTEXT_ROOT = "context_root";
 
 	private static final int DEFAULT_HTTP_PORT = 80;
 
@@ -59,13 +56,12 @@ public class Server implements IXMLPreferencesStorable {
 	 * @param documentRoot
 	 * @param publish
 	 */
-	public Server(String name, String host, String baseURL, String documentRoot, boolean publish) {
+	public Server(String name, String host, String baseURL, String documentRoot) {
 		this();
 		setName(name);
 		setHost(host);
 		setBaseURL(baseURL);
 		setDocumentRoot(documentRoot);
-		setPublish(publish);
 	}
 
 	/**
@@ -157,14 +153,6 @@ public class Server implements IXMLPreferencesStorable {
 
 	public String getDocumentRoot() {
 		return getAttribute(Server.DOCUMENT_ROOT, "");
-	}
-
-	public boolean canPublish() {
-		return Boolean.valueOf(getAttribute(Server.PUBLISH, "false")).booleanValue();
-	}
-
-	public void setPublish(boolean publish) {
-		setAttribute(Server.PUBLISH, Boolean.toString(publish));
 	}
 
 	/**

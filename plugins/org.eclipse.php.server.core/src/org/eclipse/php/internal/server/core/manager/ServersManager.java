@@ -33,7 +33,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * A manager for PHP Servers.
- * 
+ *
  * @author shalom
  */
 public class ServersManager implements PropertyChangeListener {
@@ -44,7 +44,7 @@ public class ServersManager implements PropertyChangeListener {
 	public static final String DEFAULT_SERVER_PREFERENCES_KEY = "defaultPHPServer";
 
 	// defaultServersMap holds a mapping between an IProject to a Server.
-	// We take advantage of the NULL wrapping to indicate that a null values will also 
+	// We take advantage of the NULL wrapping to indicate that a null values will also
 	// be mapped to a server (the workspace server).
 	private HashMap defaultServersMap = new HashMap();
 	// Holds a server name to Server instance mapping.
@@ -71,7 +71,7 @@ public class ServersManager implements PropertyChangeListener {
 
 	/**
 	 * Adds an IServersManagerListener.
-	 * 
+	 *
 	 * @param listener
 	 */
 	public static void addManagerListener(IServersManagerListener listener) {
@@ -83,7 +83,7 @@ public class ServersManager implements PropertyChangeListener {
 
 	/**
 	 * Removes an IServersManagerListener.
-	 * 
+	 *
 	 * @param listener
 	 */
 	public static void removeManagerListener(IServersManagerListener listener) {
@@ -92,10 +92,10 @@ public class ServersManager implements PropertyChangeListener {
 
 	/**
 	 * Adds a Server to the manager.
-	 * If a server with the same name exists in the manager, the existing server will be overidden with 
+	 * If a server with the same name exists in the manager, the existing server will be overidden with
 	 * the new one and event notifications will be fired for the removal and for the addition.
 	 * Note: The added server is not saved into the preferences until the {@link #save()} is called.
-	 * 
+	 *
 	 * @param server A Server
 	 * @see #save()
 	 */
@@ -119,15 +119,15 @@ public class ServersManager implements PropertyChangeListener {
 
 	/**
 	 * Removes a Server from the manager.
-	 * In case that that given server is set to be the default server for a project, 
+	 * In case that that given server is set to be the default server for a project,
 	 * the project will be set with the workspace default server.
-	 * 
+	 *
 	 * @param serverName The name of the server.
 	 * @return The removed Server; null if non was found to be removed.
 	 */
 	public static Server removeServer(String serverName) {
 		// Do it the long way...
-		// Check if the removed server is the workspace default, and if so, replace the default to the 
+		// Check if the removed server is the workspace default, and if so, replace the default to the
 		// first in the list.
 		ServersManager manager = ServersManager.getInstance();
 		Server removedServer = (Server) manager.servers.remove(serverName);
@@ -144,7 +144,7 @@ public class ServersManager implements PropertyChangeListener {
 		}
 
 		if (workspaceDefault == removedServer) {
-			// If the workspace default server is the same as the one we wish to remove, 
+			// If the workspace default server is the same as the one we wish to remove,
 			// we should replace it.
 			Server[] servers = getServers();
 			if (servers.length > 0) {
@@ -156,9 +156,9 @@ public class ServersManager implements PropertyChangeListener {
 		// Check that if any one of the mapped projects holds a reference to the removed server.
 		// If so, replace it with the new default server.
 		Object[] keys = manager.defaultServersMap.keySet().toArray();
-		for (int i = 0; i < keys.length; i++) {
-			if (removedServer == manager.defaultServersMap.get(keys[i])) {
-				setDefaultServer((IProject) keys[i], workspaceDefault);
+		for (Object element : keys) {
+			if (removedServer == manager.defaultServersMap.get(element)) {
+				setDefaultServer((IProject) element, workspaceDefault);
 			}
 		}
 
@@ -173,7 +173,7 @@ public class ServersManager implements PropertyChangeListener {
 
 	/**
 	 * Returns a Server from the manager.
-	 * 
+	 *
 	 * @param serverName The name of the server.
 	 * @return The Server; null if non was found.
 	 */
@@ -184,7 +184,7 @@ public class ServersManager implements PropertyChangeListener {
 
 	/**
 	 * Returns all the Servers that are managed by this manager.
-	 * 
+	 *
 	 * @return An array of Servers.
 	 */
 	public static Server[] getServers() {
@@ -197,7 +197,7 @@ public class ServersManager implements PropertyChangeListener {
 
 	/**
 	 * Returns the dafault debug server.
-	 * 
+	 *
 	 * @return
 	 */
 	public static Server getDefaultServer(IProject project) {
@@ -216,7 +216,7 @@ public class ServersManager implements PropertyChangeListener {
 			}
 		}
 		// If the server was no found in our hash, try to load it from the preferences.
-		// This part of code should only happen one time when the first call for the 
+		// This part of code should only happen one time when the first call for the
 		// getDefaultServer. Once it's done, there is no reason to re-load the servers definitions
 		// from the preferences (XML).
 		if (server == null) {
@@ -248,7 +248,7 @@ public class ServersManager implements PropertyChangeListener {
 				manager.save();
 			}
 		}
-		
+
 		//fixed bug 197579 - in case of no default server mark the first server as default
 		if (server == null) {
 			if (manager.servers.size() > 0) {
@@ -273,7 +273,7 @@ public class ServersManager implements PropertyChangeListener {
 	 * In case that the given project is null, the setting if for the workspace.
 	 * In case that the given server is null, the preferences value stored for the given project
 	 * will be removed.
-	 * 
+	 *
 	 * @param project A project to assign to a default server.
 	 * @param server A default server for the given project.
 	 */
@@ -291,7 +291,7 @@ public class ServersManager implements PropertyChangeListener {
 	/**
 	 * Sets the default debug server.
 	 * In case that the given project is null, the setting if for the workspace.
-	 * 
+	 *
 	 * @param project A project to assign to a default server.
 	 * @param serverName A default server name for the given project.
 	 */
@@ -303,13 +303,13 @@ public class ServersManager implements PropertyChangeListener {
 
 	/**
 	 * Creates and adds a server.
-	 * 
+	 *
 	 * @param name
 	 * @param baseURL
 	 * @return
 	 */
 	public static Server createServer(String name, String baseURL) {
-		Server server = new Server(name, "localhost", baseURL, "", false);
+		Server server = new Server(name, "localhost", baseURL, "");
 		addServer(server);
 		return server;
 	}
@@ -347,12 +347,11 @@ public class ServersManager implements PropertyChangeListener {
 
 	// Loads the servers from the preferences store.
 	private void loadServers() {
-		// Read all the configurations of the servers from the preferences and place them into the 
+		// Read all the configurations of the servers from the preferences and place them into the
 		// servers hash (map name to Server instance).
 		HashMap[] serversConfigs = XMLPreferencesReader.read(Activator.getDefault().getPluginPreferences(), SERVERS_PREFERENCES_KEY);
 		// Then we create the servers from their configurations...
-		for (int i = 0; i < serversConfigs.length; i++) {
-			HashMap serverMap = serversConfigs[i];
+		for (HashMap serverMap : serversConfigs) {
 			Server server = new Server();
 			server.restoreFromMap(serverMap);
 			String serverName = server.getName();
@@ -364,7 +363,7 @@ public class ServersManager implements PropertyChangeListener {
 
 	/**
 	 * Fires a ServerManagerEvent to all the registered IServersManagerListeners.
-	 * 
+	 *
 	 * @param event
 	 */
 	public void fireEvent(ServerManagerEvent event) {
@@ -380,20 +379,20 @@ public class ServersManager implements PropertyChangeListener {
 	}
 
 	private void fireAddEvent(ServerManagerEvent event, IServersManagerListener[] allListeners) {
-		for (int i = 0; i < allListeners.length; i++) {
-			allListeners[i].serverAdded(event);
+		for (IServersManagerListener element : allListeners) {
+			element.serverAdded(event);
 		}
 	}
 
 	private void fireRemoveEvent(ServerManagerEvent event, IServersManagerListener[] allListeners) {
-		for (int i = 0; i < allListeners.length; i++) {
-			allListeners[i].serverRemoved(event);
+		for (IServersManagerListener element : allListeners) {
+			element.serverRemoved(event);
 		}
 	}
 
 	private void fireModifiedEvent(ServerManagerEvent event, IServersManagerListener[] allListeners) {
-		for (int i = 0; i < allListeners.length; i++) {
-			allListeners[i].serverModified(event);
+		for (IServersManagerListener element : allListeners) {
+			element.serverModified(event);
 		}
 	}
 

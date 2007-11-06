@@ -15,16 +15,11 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.server.core.Activator;
 import org.eclipse.php.internal.server.core.Logger;
 import org.eclipse.php.internal.server.core.PHPServerCoreMessages;
-import org.eclipse.php.internal.server.core.Server;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * Utility class with an assortment of useful file methods.
@@ -44,41 +39,6 @@ public class FileUtil {
 	 */
 	private FileUtil() {
 		super();
-	}
-
-	/**
-	 * Publish the project files into the server.
-	 * 
-	 * @param server A Server.
-	 * @param configuration ILaunchConfiguration that will be used to obtain the context root of the deployment.
-	 * @param monitor A progress monitor.
-	 */
-	public static boolean publish(Server server, IProject project, ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
-		return publish(server, project, configuration, EMPTY_MAP, monitor);
-	}
-
-	/**
-	 * Publish the project files into the server.
-	 * 
-	 * @param server A Server.
-	 * @param configuration ILaunchConfiguration that will be used to obtain the context root of the deployment.
-	 * @param ignoredResources A Map of resources names that will be ignored in the copy process.
-	 * @param monitor A progress monitor.
-	 */
-	public static boolean publish(Server server, IProject project, ILaunchConfiguration configuration, Map ignoredResources, IProgressMonitor monitor) throws CoreException {
-		String contextRoot = configuration.getAttribute(Server.PUBLISH_TO, (String) null);
-		IPath to = new Path(server.getDocumentRoot());
-		if (contextRoot != null && !contextRoot.equals("")) { //$NON-NLS-1$
-			to = to.append(contextRoot);
-		}
-
-		IPath location = project.getLocation();
-		if (location == null) {
-			return false;
-		}
-		String source = location.toOSString();
-		String dest = to.toOSString();
-		return smartCopyDirectory(source, dest, ignoredResources, monitor);
 	}
 
 	/**
@@ -247,7 +207,7 @@ public class FileUtil {
 	 * Copys a directory from a to b, only modifying as needed
 	 * and deleting old files and directories.
 	 * This method also gets a Map of ignored resources that will not be copied in the process. The Map should
-	 * hold string names of the resources (without their paths) and the copy process will ignore any file 
+	 * hold string names of the resources (without their paths) and the copy process will ignore any file
 	 * or any directory (and its sub-hirarchy) that appears in the ignored map.
 	 * (Note: In the future we might wanna pass the full ignore path and not just the name)
 	 *
@@ -259,7 +219,7 @@ public class FileUtil {
 	 */
 	public static boolean smartCopyDirectory(String from, String to, Map ignoredResources, IProgressMonitor monitor) {
 		long timeDifference = 0L;
-		// Create a temporary file on the, possibly, remote machine. Then check the time of 
+		// Create a temporary file on the, possibly, remote machine. Then check the time of
 		// the creation with compare to the local time.
 		// In case that the time gap is higher then the CONSTANT_TIME_DIFF update the timeDifference variable.
 		try {
@@ -295,7 +255,6 @@ public class FileUtil {
 				toFiles = toDir.listFiles();
 				if (toFiles == null) {
 					monitor.done();
-					displayPublishError();
 					return false;
 				}
 				int toSize = toFiles.length;
@@ -326,7 +285,6 @@ public class FileUtil {
 				}
 				if (!toDir.mkdirs()) {
 					monitor.done();
-					displayPublishError();
 					return false;
 				}
 			}
@@ -393,14 +351,5 @@ public class FileUtil {
 			Logger.logException("Error smart copying directory " + from + " - " + to, e); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
-	}
-
-	private static void displayPublishError() {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				ErrorDialog.openError(Display.getDefault().getActiveShell(),
-					PHPServerCoreMessages.getString("FileUtil.publishError"), PHPServerCoreMessages.getString("FileUtil.serverPublishError"), new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, PHPServerCoreMessages.getString("FileUtil.writePermissionError"), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			}
-		});
 	}
 }
