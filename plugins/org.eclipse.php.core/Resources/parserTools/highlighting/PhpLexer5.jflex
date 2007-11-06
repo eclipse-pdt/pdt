@@ -81,7 +81,7 @@ package org.eclipse.php.internal.core.documentModel.parser;
         return yy_endRead;
     }
 
-    protected char[] getYy_buffer() {
+    public char[] getYy_buffer() {
         return yy_buffer;
     }
     
