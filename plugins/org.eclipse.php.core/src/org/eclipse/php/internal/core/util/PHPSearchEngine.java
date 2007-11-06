@@ -84,20 +84,20 @@ public class PHPSearchEngine {
 							return new IncludedFileResult(entry, file);
 						}
 					}
-				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-					IProject project = (IProject) entry.getResource();
-					if (project.isAccessible()) {
-						IResource resource = project.findMember(path);
-						if (resource != null) {
-							return new IncludedFileResult(entry, file);
-						}
-					}
 				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 					entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
 					File entryDir = entryPath.toFile();
 					file = new File(entryDir, path);
 					if (file.exists()) {
 						return new IncludedFileResult(entry, file);
+					}
+				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+					IProject project = (IProject) entry.getResource();
+					if (project.isAccessible()) {
+						IResource resource = project.findMember(path);
+						if (resource instanceof IFile) {
+							return new ResourceResult((IFile)resource);
+						}
 					}
 				}
 			}
@@ -166,7 +166,9 @@ public class PHPSearchEngine {
 		if (projectOptions != null) {
 			IIncludePathEntry[] includePath = projectOptions.readRawIncludePath();
 			for (IIncludePathEntry entry : includePath) {
-				results.add(entry);
+				if (entry.getEntryKind() != IIncludePathEntry.IPE_PROJECT) { // we add this project later as a referenced project
+					results.add(entry);
+				}
 			}
 		}
 		// Collect referenced projects and their include paths:
