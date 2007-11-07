@@ -41,6 +41,7 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.ui.editor.input.IPlatformIndependentPathEditorInput;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.IEditorInput;
@@ -62,7 +63,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 			editorLineNumber = document.getLineOfOffset(pos) + 1;
 		} catch (BadLocationException e) {
 			Logger.logException(e);
-			return new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), "Invalid breakpoint location");
+			return new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), "Invalid breakpoint locationgetRawPath();");
 
 		}
 		IStatus status = null;
@@ -84,11 +85,13 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 			} else if (input instanceof IURIEditorInput || (input instanceof NonExistingPHPFileEditorInput)) {
 				Map<String, String> attributes = new HashMap<String, String>();
 				String pathName = null;
-				if (input instanceof IURIEditorInput) {
+				if (input instanceof IPlatformIndependentPathEditorInput) {
+					pathName = ((IPlatformIndependentPathEditorInput)input).getPath();
+				} else if (input instanceof IURIEditorInput) {
 					if (res instanceof ExternalFileWrapper) {
 						pathName = res.getFullPath().toString();
 					} else {
-						pathName = ((IURIEditorInput) input).getName();
+						pathName = ((IURIEditorInput) input).getURI().getPath();
 					}
 				} else {
 					pathName = ((NonExistingPHPFileEditorInput) input).getPath().toString();

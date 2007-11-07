@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.pathmapper.IPathEntryFilter;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
