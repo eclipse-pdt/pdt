@@ -15,12 +15,18 @@ import java.io.File;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.ui.*;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
  * This "Pageless" Wizard is the main entry point for creating a new Untitled PHP Document.
@@ -64,8 +70,38 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 		f.deleteOnExit();
 		IWorkbenchPage page = fWindow.getActivePage();
 		try {
-			page.openEditor(input, UNTITLED_EDITOR_ID);
+			IEditorPart editor = page.openEditor(input, UNTITLED_EDITOR_ID);
+			ITextEditor textEditor = null;
+			if (editor instanceof ITextEditor) {
+				textEditor = (ITextEditor) editor;
+			}
+			PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(f.getAbsolutePath());
+			if (fileData == null || textEditor == null) {
+				return true;
+			}
+			//find first php block
+			if ((fileData.getPHPBlocks() != null) && (fileData.getPHPBlocks().length > 0)) {
+				// calculate length of the start tag
+				UserData startTag = fileData.getPHPBlocks()[0].getPHPStartTag();
+				int startTagEndPosition = startTag.getEndPosition() - startTag.getStartPosition();
+				// handle short tag - '<?'
+				if (startTagEndPosition == 2) {
+					int startTagLineNum = startTag.getStopLine();
+					IEditorInput editorInput = textEditor.getEditorInput();
+					IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
+					// calculate the length of the line delimiter for the start tag line
+					int lineDelimLength = document.getLineDelimiter(startTagLineNum).length();
+					// add to the tag length, so we jump to the next line
+					startTagEndPosition += lineDelimLength;
+					
+				}
+				// position the cursor at the end of the start tag
+				textEditor.selectAndReveal(startTagEndPosition, 0);
+			}
 		} catch (PartInitException e) {
+			Logger.logException(e);
+			return false;
+		} catch (BadLocationException e) {
 			Logger.logException(e);
 			return false;
 		}
