@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.util.Comparator;
 
+
 /**
  * This comparator compares between two path entries in determines which of them
  * best matches the given path in terms of number of matching last segments.
