@@ -32,7 +32,6 @@ import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.launching.PHPLaunchProxy;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
@@ -315,9 +314,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 * @see org.eclipse.debug.core.model.IDebugElement#getLaunch()
 	 */
 	public ILaunch getLaunch() {
-		if (fLaunch instanceof PHPLaunchProxy) {
-			return ((PHPLaunchProxy) fLaunch).getLaunch();
-		}
 		return fLaunch;
 	}
 

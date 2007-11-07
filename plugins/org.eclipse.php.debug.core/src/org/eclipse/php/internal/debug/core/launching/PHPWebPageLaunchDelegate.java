@@ -88,10 +88,6 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
 		} catch (Throwable t) {
 		}
-		if (proj == null) {
-			Logger.log(Logger.ERROR, "Could not execute the debug (Project is null).");
-			return;
-		}
 
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		String project = proj.getFullPath().toString();
@@ -112,7 +108,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 		// Generate a session id for this launch and put it in the map
 		int sessionID = DebugSessionIdGenerator.generateSessionID();
-		PHPSessionLaunchMapper.put(sessionID, new PHPServerLaunchDecorator(launch, proj));
+		PHPSessionLaunchMapper.put(sessionID, launch);
 
 		// Fill all rest of the attributes:
 		launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));

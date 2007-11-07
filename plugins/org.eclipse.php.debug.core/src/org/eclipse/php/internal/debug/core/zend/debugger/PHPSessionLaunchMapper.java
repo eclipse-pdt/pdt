@@ -15,13 +15,13 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchesListener;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.php.internal.core.util.collections.IntMap;
-import org.eclipse.php.internal.debug.core.launching.PHPServerLaunchDecorator;
+import org.eclipse.php.internal.core.util.collections.IntMap.Entry;
 import org.eclipse.swt.browser.Browser;
 
 /**
  * This class is responsible for mapping debug session id's to the ILaunch that is responsible for
  * the session.
- * 
+ *
  * @author Shalom Gibly
  */
 public class PHPSessionLaunchMapper implements ILaunchesListener {
@@ -44,7 +44,7 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 
 	/**
 	 * Put a session Id mapping to an ILaunch.
-	 * 
+	 *
 	 * @param sessionID
 	 * @param launch
 	 */
@@ -55,7 +55,7 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	/**
 	 * Returns the ILaunch mapped to the given session ID.
 	 * In case there is no such map, null is returned.
-	 * 
+	 *
 	 * @param sessionID
 	 * @return	The mapped ILaunch, or null if non exists.
 	 */
@@ -66,7 +66,7 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	/**
 	 * Removes the ILaunch mapped to the given sessionID and returns it.
 	 * Returns null if no such session ID was found in the mapper.
-	 * 
+	 *
 	 * @param sessionID
 	 * @return	The removed ILaunch, or null if non exists.
 	 */
@@ -86,15 +86,10 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 		// Remove any launch mapping if the launch was removed and we are still mapping it.
 		IntMap.Entry[] entries = new IntMap.Entry[map.size()];
 		map.entrySet().toArray(entries);
-		for (int i = 0; i < entries.length; i++) {
-			IntMap.Entry entry = entries[i];
-			for (int j = 0; j < launches.length; j++) {
-				if (entry.getValue() == launches[j]) {
+		for (Entry entry : entries) {
+			for (ILaunch element : launches) {
+				if (entry.getValue() == element) {
 					map.remove(entry.getKey());
-				} else if (entry.getValue() instanceof PHPServerLaunchDecorator) {
-					if (((PHPServerLaunchDecorator) entry.getValue()).getLaunch() == launches[j]) {
-						map.remove(entry.getKey());
-					}
 				}
 			}
 		}
@@ -107,16 +102,15 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	}
 
 	/**
-	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property. 
-	 * This method is important for any action that is defined to be visible when a debug session is 
+	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property.
+	 * This method is important for any action that is defined to be visible when a debug session is
 	 * active (such as the Run to Line action).
-	 * 
+	 *
 	 * @param launches
 	 */
 	public static void updateSystemProperty(ILaunch[] launches) {
 		boolean hasActiveLaunch = false;
-		for (int i = 0; i < launches.length; i++) {
-			ILaunch launch = launches[i];
+		for (ILaunch launch : launches) {
 			hasActiveLaunch |= !launch.isTerminated();
 		}
 		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true" : "false");

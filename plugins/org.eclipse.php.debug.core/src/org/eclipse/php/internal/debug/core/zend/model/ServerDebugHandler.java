@@ -66,57 +66,65 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	public void sessionStarted(String remoteFile, String uri, String query, String options) {
 		super.sessionStarted(remoteFile, uri, query, options);
 
-		// Hack for the case when htdocs is symlinked to the workspace.
-		// Zend Debugger resolves symbolic links later, and it fucks up the path mapper:
-		try {
-			remoteFile = new File(remoteFile).getCanonicalPath();
-		} catch (Exception e) {
-		}
-
-		try {
-			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
-			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
-			PathEntry pathEntry = pathMapper.getLocalFile(remoteFile);
-
-			// If such file doesn't exist in path mapper yet, add it:
-			if (pathEntry == null) {
-				// Try to find a map point:
-				String debugFileName = launchConfiguration.getAttribute(Server.FILE_NAME, (String) null);
-				if (debugFileName == null) {
-					debugFileName = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+		if (isUsingPathMapper()) {
+			// Hack for the case when htdocs is symlinked to the workspace.
+			// Zend Debugger resolves symbolic links later, and it fucks up the path mapper:
+			try {
+				File file = new File(remoteFile);
+				if (file.exists()) {
+					remoteFile = file.getCanonicalPath();
 				}
-				if (debugFileName != null) {
-					IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(debugFileName);
-					if (resource instanceof IFile) {
-						pathEntry = new PathEntry(debugFileName, Type.WORKSPACE, resource.getParent());
-					} else if (resource instanceof IProject) {
-						IProject project = (IProject) resource;
-						int idx = remoteFile.lastIndexOf('/');
-						if (idx == -1) {
-							idx = remoteFile.lastIndexOf('\\');
+			} catch (Exception e) {
+			}
+
+			try {
+				ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
+				PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
+
+				if (pathMapper != null) {
+					PathEntry pathEntry = pathMapper.getLocalFile(remoteFile);
+
+					// If such file doesn't exist in path mapper yet, add it:
+					if (pathEntry == null) {
+						// Try to find a map point:
+						String debugFileName = launchConfiguration.getAttribute(Server.FILE_NAME, (String) null);
+						if (debugFileName == null) {
+							debugFileName = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 						}
-						String lastSegment;
-						if (idx != -1) {
-							lastSegment = remoteFile.substring(idx+1);
+						if (debugFileName != null) {
+							IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(debugFileName);
+							if (resource instanceof IFile) {
+								pathEntry = new PathEntry(debugFileName, Type.WORKSPACE, resource.getParent());
+							} else if (resource instanceof IProject) {
+								IProject project = (IProject) resource;
+								int idx = remoteFile.lastIndexOf('/');
+								if (idx == -1) {
+									idx = remoteFile.lastIndexOf('\\');
+								}
+								String lastSegment;
+								if (idx != -1) {
+									lastSegment = remoteFile.substring(idx + 1);
+								} else {
+									lastSegment = remoteFile;
+								}
+								IFile file = project.getFile(lastSegment);
+								if (file != null && file.exists()) {
+									pathEntry = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, project);
+								}
+							}
+						}
+						if (pathEntry != null) {
+							// Map remote file to the map point:
+							pathMapper.addEntry(remoteFile, pathEntry);
 						} else {
-							lastSegment = remoteFile;
-						}
-						IFile file = project.getFile(lastSegment);
-						if (file != null && file.exists()) {
-							pathEntry = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, project);
+							// Find the local file, and map it:
+							DebugSearchEngine.find(remoteFile, fDebugTarget);
 						}
 					}
 				}
-				if (pathEntry != null) {
-					// Map remote file to the map point:
-					pathMapper.addEntry(remoteFile, pathEntry);
-				} else {
-					// Find the local file, and map it:
-					DebugSearchEngine.find(remoteFile, fDebugTarget);
-				}
+			} catch (Exception e) {
+				PHPDebugPlugin.log(e);
 			}
-		} catch (Exception e) {
-			PHPDebugPlugin.log(e);
 		}
 
 		fDebugTarget.setLastFileName(remoteFile);
@@ -143,6 +151,10 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				startLock.setRunStart(true);
 			}
 		}
+	}
+
+	protected boolean isUsingPathMapper() {
+		return true;
 	}
 
 	public void connectionEstablished() {

@@ -27,64 +27,59 @@ import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 
 public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 
-    private IProject project;
-//    private ILaunchConfiguration configuration;
+	private IProject project;
 
-    public PHPCompositeSourceContainer(IProject project, ILaunchConfiguration configuration) {
-        this.project = project;
-//        this.configuration = configuration;
-    }
+	public PHPCompositeSourceContainer(IProject project, ILaunchConfiguration configuration) {
+		this.project = project;
+	}
 
-    protected ISourceContainer[] createSourceContainers() throws CoreException {
+	protected ISourceContainer[] createSourceContainers() throws CoreException {
+		ArrayList<ISourceContainer> containers = new ArrayList<ISourceContainer>();
 
-        ArrayList<ISourceContainer> containers = new ArrayList<ISourceContainer>();
-        ISourceContainer projectContainer = new PHPProjectSourceContainer(project, false);
-        containers.add(projectContainer);
-        PHPProjectOptions options = PHPProjectOptions.forProject(project);
-        if (options != null) {
-            IIncludePathEntry[] entries = options.readRawIncludePath();
+		ISourceContainer projectContainer = new ProjectSourceContainer(project, false);
+		containers.add(projectContainer);
+		PHPProjectOptions options = PHPProjectOptions.forProject(project);
+		if (options != null) {
+			IIncludePathEntry[] entries = options.readRawIncludePath();
+			if (entries != null) {
+				for (IIncludePathEntry element : entries) {
+					if (element.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+						IPath path = element.getPath();
+						File file = new File(path.toString());
+						if (element.getContentKind() == IIncludePathEntry.K_BINARY) {
+							containers.add(new PHPExternalArchiveSourceContainer(file.getAbsolutePath(), false, project));
+						} else {
+							containers.add(new PHPDirectorySourceContainer(file, false, project));
+						}
+					} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+						IResource includeResource = element.getResource();
+						if (includeResource instanceof IProject) {
+							IProject includeProject = (IProject) element.getResource();
+							containers.add(new ProjectSourceContainer(includeProject, false));
+						}
+					} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+						IPath path = element.getPath();
+						containers.add(new PHPVariableSourceContainer(path, project));
+					}
+				}
+			}
+		}
 
-            if (entries != null) {
-                for (int i = 0; i < entries.length; i++) {
-                    if (entries[i].getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-                        IPath path = entries[i].getPath();
-                        File file = new File(path.toString());
-                        if (entries[i].getContentKind() == IIncludePathEntry.K_BINARY) {
-                            containers.add(new PHPExternalArchiveSourceContainer(file.getAbsolutePath(), false, project));
-                        } else {
-                            containers.add(new PHPDirectorySourceContainer(file, false, project));
-                        }
-                    } else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-                        IResource includeResource = entries[i].getResource();
-                        if (includeResource instanceof IProject) {
-                            IProject includeProject = (IProject) entries[i].getResource();
-                            containers.add(new ProjectSourceContainer(includeProject, false));
-                        }
-                    } else if (entries[i].getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-                        IPath path = entries[i].getPath();
-                        containers.add(new PHPVariableSourceContainer(path, project));
-                    }
-                }
-            }
-        }
-        ISourceContainer[] scontainers = new ISourceContainer[containers.size()];
-        containers.toArray(scontainers);
-        return scontainers;
-    }
+		ISourceContainer[] scontainers = new ISourceContainer[containers.size()];
+		containers.toArray(scontainers);
+		return scontainers;
+	}
 
-    public Object[] findSourceElements(String name) throws CoreException {
-        Object [] objs = super.findSourceElements(name);
-        return objs;
-    }
+	public Object[] findSourceElements(String name) throws CoreException {
+		Object[] objs = super.findSourceElements(name);
+		return objs;
+	}
 
-    public String getName() {
-        return "PHPComposite";
-    }
+	public String getName() {
+		return "PHPComposite";
+	}
 
-    public ISourceContainerType getType() {
-        //        return getSourceContainerType("xxxx");
-        return null;
-    }
-    
-
+	public ISourceContainerType getType() {
+		return null;
+	}
 }

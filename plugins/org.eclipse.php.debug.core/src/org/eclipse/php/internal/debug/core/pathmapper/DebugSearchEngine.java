@@ -67,13 +67,16 @@ public class DebugSearchEngine {
 	public static PathEntry find(String remoteFile, IDebugTarget debugTarget, String currentWorkingDir, String currentScriptDir) throws InterruptedException, CoreException {
 		PathEntry pathEntry = null;
 		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
+
+		IProject project = null;
 		String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
 		if (projectName != null) {
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
-			if (pathMapper != null) {
-				pathEntry = find(pathMapper, remoteFile, project, currentWorkingDir, currentScriptDir, debugTarget);
-			}
+			project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		}
+
+		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
+		if (pathMapper != null) {
+			pathEntry = find(pathMapper, remoteFile, project, currentWorkingDir, currentScriptDir, debugTarget);
 		}
 		return pathEntry;
 	}

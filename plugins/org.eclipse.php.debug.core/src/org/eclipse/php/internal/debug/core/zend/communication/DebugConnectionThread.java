@@ -56,7 +56,6 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
-import org.eclipse.php.internal.debug.core.launching.PHPServerLaunchDecorator;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
@@ -540,7 +539,7 @@ public class DebugConnectionThread implements Runnable {
 				}
 			}
 
-			if (launch instanceof PHPServerLaunchDecorator || Boolean.toString(true).equals(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
+			if (Boolean.toString(true).equals(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
 				hookServerDebug(launch, debugSessionStartedNotification);
 			} else {
 				hookPHPExeDebug(launch, debugSessionStartedNotification);
@@ -576,26 +575,25 @@ public class DebugConnectionThread implements Runnable {
 	 */
 	protected void hookServerDebug(final ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
-		PHPServerLaunchDecorator launchDecorator;
-		if (launch instanceof PHPServerLaunchDecorator) {
-			launchDecorator = (PHPServerLaunchDecorator) launch;
-		} else {
-			// Get the project by its name
-			String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-			launchDecorator = new PHPServerLaunchDecorator(launch, project);
+		String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+
+		IProject project = null;
+		if (projectName != null) {
+			project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		}
+
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
 		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, ""));
 		String URL = launchConfiguration.getAttribute(Server.BASE_URL, "");
-		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(launchDecorator.getProject());
+
+		boolean stopAtFirstLine = project == null ? true : PHPProjectPreferences.getStopAtFirstLine(project);
 		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 		boolean runWithDebug = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebug = false;
 		}
 		PHPProcess process = new PHPProcess(launch, URL);
-		debugTarget = (PHPDebugTarget) createDebugTraget(this, launch, URL, requestPort, process, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
+		debugTarget = (PHPDebugTarget) createDebugTraget(this, launch, URL, requestPort, process, runWithDebug, stopAtFirstLine, project);
 		launch.addDebugTarget(debugTarget);
 		// A fix for Linux display problem.
 		// This code will auto-expand the debugger view tree.

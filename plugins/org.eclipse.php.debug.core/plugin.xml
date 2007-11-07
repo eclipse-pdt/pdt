@@ -20,6 +20,15 @@
             id="org.eclipse.php.debug.core.sourceLookupDirector.php">
       </sourceLocator>
    </extension>
+   <extension
+         point="org.eclipse.debug.core.sourceContainerTypes">
+      <sourceContainerType
+            class="org.eclipse.php.internal.debug.core.sourcelookup.containers.WorkspaceRootSourceContainer"
+            description="This source container is used for searching files in the root"
+            id="org.eclipse.php.debug.core.containerType.workspaceRoot"
+            name="Workspace Root Source Container">
+      </sourceContainerType>
+   </extension>
    
    <extension
          point="org.eclipse.debug.core.sourcePathComputers">

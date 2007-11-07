@@ -27,47 +27,45 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 public class BreakpointSet {
 
 	private IProject fProject;
-	private ArrayList fDirectories;
-	private ArrayList fProjects;
-
-//	private boolean fIsPHPCGI;
+	private ArrayList<String> fDirectories;
+	private ArrayList<IProject> fProjects;
 
 	public BreakpointSet(IProject project, boolean isPHPCGI) {
 
 		fProject = project;
-//		fIsPHPCGI = isPHPCGI;
-		fDirectories = new ArrayList();
-		fProjects = new ArrayList();
+		fDirectories = new ArrayList<String>();
+		fProjects = new ArrayList<IProject>();
 
-		PHPProjectOptions options = PHPProjectOptions.forProject(project);
-		if (options != null) {
-			IIncludePathEntry[] entries = options.readRawIncludePath();
+		if (project != null) {
+			PHPProjectOptions options = PHPProjectOptions.forProject(project);
+			if (options != null) {
+				IIncludePathEntry[] entries = options.readRawIncludePath();
 
-			if (entries != null) {
-				for (IIncludePathEntry element : entries) {
-					if (element.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-						IPath path = element.getPath();
-						File file = new File(path.toString());
-						fDirectories.add(file.getAbsolutePath());
-					} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-						IResource includeResource = element.getResource();
-						if (includeResource instanceof IProject) {
-							fProjects.add(includeResource);
-						}
-					} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-						IPath path = element.getPath();
-						String variableName = path.toString();
-						File file = getVariableFile(variableName);
-						if (file != null) {
-							if (file.isDirectory()) {
-								fDirectories.add(file.getAbsolutePath());
+				if (entries != null) {
+					for (IIncludePathEntry element : entries) {
+						if (element.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+							IPath path = element.getPath();
+							File file = new File(path.toString());
+							fDirectories.add(file.getAbsolutePath());
+						} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+							IResource includeResource = element.getResource();
+							if (includeResource instanceof IProject) {
+								fProjects.add((IProject)includeResource);
+							}
+						} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+							IPath path = element.getPath();
+							String variableName = path.toString();
+							File file = getVariableFile(variableName);
+							if (file != null) {
+								if (file.isDirectory()) {
+									fDirectories.add(file.getAbsolutePath());
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-
 	}
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
@@ -102,7 +100,7 @@ public class BreakpointSet {
 			return true;
 		} else {
 			IProject project = resource.getProject();
-			if (fProject.equals(project) || fProject.equals(PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject())){
+			if (fProject.equals(project) || fProject.equals(PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject())) {
 				return true;
 			}
 			return fProjects.contains(project);

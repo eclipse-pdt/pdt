@@ -191,9 +191,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 		String cwd = ((RemoteDebugger)debugTarget.getRemoteDebugger()).sendCWDRequest();
 		if (cwd != null) {
 			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
-			PathEntry cwdEntry = pathMapper.getLocalFile(cwd);
-			if (cwdEntry != null) {
-				cwd = cwdEntry.getResolvedPath();
+			if (pathMapper != null) {
+				PathEntry cwdEntry = pathMapper.getLocalFile(cwd);
+				if (cwdEntry != null) {
+					cwd = cwdEntry.getResolvedPath();
+				}
 			}
 		}
 		return cwd;
@@ -250,9 +252,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 			}
 		}
 		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
-		String remoteFile = pathMapper.getRemoteFile(localFile);
-		if (remoteFile != null) {
-			return remoteFile;
+		if (pathMapper != null) {
+			String remoteFile = pathMapper.getRemoteFile(localFile);
+			if (remoteFile != null) {
+				return remoteFile;
+			}
 		}
 		return localFile;
 	}
