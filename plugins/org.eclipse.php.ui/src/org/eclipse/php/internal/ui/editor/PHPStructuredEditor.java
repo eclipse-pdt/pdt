@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
@@ -1455,6 +1457,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			}
 		} else {
 			super.doSetInput(input);
+		}
+
+		ImageDescriptor imageDescriptor = input.getImageDescriptor();
+		if (imageDescriptor != null) {
+			setTitleImage(JFaceResources.getResources().createImageWithDefault(imageDescriptor));
 		}
 	}
 
