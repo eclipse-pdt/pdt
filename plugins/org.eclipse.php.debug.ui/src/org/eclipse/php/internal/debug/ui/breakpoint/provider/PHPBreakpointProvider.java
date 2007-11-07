@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -83,13 +82,13 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				} catch (BadLocationException e) {
 				}
 			} else if (input instanceof IURIEditorInput || (input instanceof NonExistingPHPFileEditorInput)) {
-				Map attributes = new HashMap();
+				Map<String, String> attributes = new HashMap<String, String>();
 				String pathName = null;
 				if (input instanceof IURIEditorInput) {
 					if (res instanceof ExternalFileWrapper) {
 						pathName = res.getFullPath().toString();
 					} else {
-						pathName = URIUtil.toPath(((IURIEditorInput) input).getURI()).toString();
+						pathName = ((IURIEditorInput) input).getName();
 					}
 				} else {
 					pathName = ((NonExistingPHPFileEditorInput) input).getPath().toString();
@@ -119,7 +118,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 			} else if (input instanceof IStorageEditorInput) {
 				IStorage storage = ((IStorageEditorInput) input).getStorage();
 
-				Map attributes = new HashMap();
+				Map<String, String> attributes = new HashMap<String, String>();
 				String fileName;
 
 				String secondaryId = storage.getFullPath().toString();
