@@ -82,7 +82,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			if (source == fileLocationButton)
 				handleFileLocationButtonSelected();
 			else if (source == argumentVariablesButton)
-				handleVariablesButtonSelected(argumentField);
+				handleChangeFileToDebug(debugFileTextField);
 			else if (source == breakOnFirstLine)
 				handleBreakButtonSelected();
 		}
@@ -90,7 +90,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 	public final static String FIRST_EDIT = "editedByPHPExecutableLaunchTab"; //$NON-NLS-1$
 
-	private Text argumentField;
+	private Text debugFileTextField;
 	private Button argumentVariablesButton;
 
 	protected Button breakOnFirstLine;
@@ -156,12 +156,12 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		group.setLayoutData(gd);
 		group.setFont(parent.getFont());
 
-		argumentField = new Text(group, SWT.SINGLE | SWT.BORDER);
+		debugFileTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
-		argumentField.setLayoutData(gd);
-		argumentField.addModifyListener(fListener);
-		addControlAccessibleListener(argumentField, group.getText());
+		debugFileTextField.setLayoutData(gd);
+		debugFileTextField.addModifyListener(fListener);
+		addControlAccessibleListener(debugFileTextField, group.getText());
 
 		argumentVariablesButton = createPushButton(group, PHPDebugUIMessages.Browse, null);
 		gd = (GridData) argumentVariablesButton.getLayoutData();
@@ -319,11 +319,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	/**
-	 * A variable entry button has been pressed for the given text
-	 * field. Prompt the user for a variable and enter the result
-	 * in the given field.
+	 * A callback method when changing the file to debug via 'Browse'
 	 */
-	private void handleVariablesButtonSelected(final Text textField) {
+	private void handleChangeFileToDebug(final Text textField) {
 		IFile file = null;
 		final IResource resource = LaunchUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures(), true);
 		if (resource instanceof IFile)
@@ -415,12 +413,12 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
 
 		String arguments = null;
-		if (!enableFileSelection || (arguments = argumentField.getText().trim()).length() == 0) {
+		if (!enableFileSelection || (arguments = debugFileTextField.getText().trim()).length() == 0) {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, (String) null);
 		} else {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, arguments);
-			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, argumentField.getData().toString());
+			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, debugFileTextField.getData().toString());
 		}
 		final boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo != null && runWithDebugInfo.getSelection() : true;
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
@@ -498,8 +496,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		enableFileSelection = enabled;
 		if (argumentVariablesButton != null)
 			argumentVariablesButton.setVisible(enabled);
-		if (argumentField != null)
-			argumentField.setVisible(enabled);
+		if (debugFileTextField != null)
+			debugFileTextField.setVisible(enabled);
 
 	}
 
@@ -526,9 +524,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		} catch (final CoreException ce) {
 			Logger.log(Logger.ERROR, "Error reading configuration", ce); //$NON-NLS-1$
 		}
-		if (argumentField != null) {
-			argumentField.setText(arguments);
-			argumentField.setData(fullPath);
+		if (debugFileTextField != null) {
+			debugFileTextField.setText(arguments);
+			debugFileTextField.setData(fullPath);
 		}
 	}
 
