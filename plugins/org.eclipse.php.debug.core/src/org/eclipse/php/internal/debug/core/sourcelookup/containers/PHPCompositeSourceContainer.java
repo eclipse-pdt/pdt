@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -71,6 +72,10 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 	}
 
 	public Object[] findSourceElements(String name) throws CoreException {
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(name);
+		if (resource != null) {
+			return new Object[] { resource };
+		}
 		Object[] objs = super.findSourceElements(name);
 		return objs;
 	}
