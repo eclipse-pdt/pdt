@@ -54,7 +54,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * PHP executable launch tab is a launch configuration tab for the PHP Script launching. 
+ * PHP executable launch tab is a launch configuration tab for the PHP Script launching.
  */
 public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	static private class ControlAccessibleListener extends AccessibleAdapter {
@@ -134,8 +134,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		//strip mnemonic (&)
 		final String[] strs = controlName.split("&"); //$NON-NLS-1$
 		final StringBuffer stripped = new StringBuffer();
-		for (int i = 0; i < strs.length; i++)
-			stripped.append(strs[i]);
+		for (String element : strs)
+			stripped.append(element);
 		control.getAccessible().addAccessibleListener(new ControlAccessibleListener(stripped.toString()));
 	}
 
@@ -202,7 +202,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		final GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		mainComposite.setLayout(layout);
 		mainComposite.setLayoutData(gridData);
-		
+
 		scrolledCompositeImpl.setContent(mainComposite);
 		scrolledCompositeImpl.setLayout(layout);
 		scrolledCompositeImpl.setFont(parent.getFont());
@@ -225,7 +225,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	/**
 	 * Creates the controls needed to edit the working directory
 	 * attribute of an external tool
-	 * 
+	 *
 	 * @param parent the composite to create the controls in
 	 */
 
@@ -247,7 +247,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	/**
 	 * Creates the controls needed to edit the location
 	 * attribute of an external tool
-	 * 
+	 *
 	 * @param group the composite to create the controls in
 	 */
 	protected void createLocationComponent(final Composite parent) {
@@ -422,7 +422,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, arguments);
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, argumentField.getData().toString());
 		}
-		final boolean debugInfo = enableDebugInfoOption ? (runWithDebugInfo != null && runWithDebugInfo.getSelection()) : true;
+		final boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo != null && runWithDebugInfo.getSelection() : true;
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
 		if (breakOnFirstLine != null)
 			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
@@ -434,7 +434,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * This method sets the class name of the launch delegate that is associated with the debugger that
 	 * was defined to this launch configuration.
 	 * The class name is retrieved from the debugger's {@link IDebuggerConfiguration}.
-	 * 
+	 *
 	 * @param configuration	A ILaunchConfigurationWorkingCopy
 	 */
 	protected void applyLaunchDelegateConfiguration(final ILaunchConfigurationWorkingCopy configuration) {
