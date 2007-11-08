@@ -41,12 +41,12 @@ public class PathMapper implements IXMLPreferencesStorable {
 		VirtualPath localPath = entry.getAbstractPath().clone(); // don't break original entry path
 
 		// last segments must match!
-		if (!remotePath.getLastSegment().equals(localPath.getLastSegment())) {
+		if (!remotePath.getLastSegment().equalsIgnoreCase(localPath.getLastSegment())) {
 			return;
 		}
 
 		while (remotePath.getSegmentsCount() > 1 && localPath.getSegmentsCount() > 1) {
-			if (!remotePath.getLastSegment().equals(localPath.getLastSegment())) {
+			if (!remotePath.getLastSegment().equalsIgnoreCase(localPath.getLastSegment())) {
 				break;
 			}
 			remotePath.removeLastSegment();

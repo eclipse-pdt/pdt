@@ -17,9 +17,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class represents path-style entities (file-system paths, URLs)
- * @author michael
+ * This class represents path-style entities (file-system paths, URLs).
+ * Paths are case insensitive.
  *
+ * @author michael
  */
 public class VirtualPath implements Cloneable {
 
@@ -153,6 +154,14 @@ public class VirtualPath implements Cloneable {
 			return false;
 		}
 		VirtualPath other = (VirtualPath) obj;
-		return other.device.equals(device) && other.segments.equals(segments) && other.sepChar == sepChar;
+		boolean segmentsEqual = other.segments.size() == segments.size();
+		if (segmentsEqual) {
+			Iterator<String> i = segments.iterator();
+			Iterator<String> j = other.segments.iterator();
+			while (segmentsEqual && i.hasNext() && j.hasNext()) {
+				segmentsEqual &= i.next().equalsIgnoreCase(j.next());
+			}
+		}
+		return other.device.equalsIgnoreCase(device) && segmentsEqual && other.sepChar == sepChar;
 	}
 }
