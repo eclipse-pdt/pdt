@@ -723,12 +723,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		for (IBreakpoint element : breakpoints) {
 			((PHPLineBreakpoint) element).setConditionChanged(false);
 			breakpointAdded(element);
-			/*            try {
-			 breakpoints[i].delete();
-			 } catch (CoreException e) {
-			 // TODO Auto-generated catch block
-			 e.printStackTrace();
-			 } */
 		}
 	}
 
