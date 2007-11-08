@@ -176,7 +176,13 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	}
 
 	private void recursiveParse(File folder, ParserClient client, PHPIncludePathModel model, PHPIncludePathModel cachedModel) {
+		if (folder == null) {
+			return;
+		}
 		File[] children = folder.listFiles();
+		if (children == null) {
+			return;
+		}
 
 		for (File file : children) {
 			if (file.isDirectory()) {
