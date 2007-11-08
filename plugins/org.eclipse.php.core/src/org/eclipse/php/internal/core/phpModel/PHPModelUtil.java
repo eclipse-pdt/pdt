@@ -325,17 +325,21 @@ public class PHPModelUtil {
 		int numOfInterfaces = interfaceNameDatas.length;
 		ArrayList interfacesList = new ArrayList();
 		for (int i = 0; i < numOfInterfaces; i++) {
-			if (interfaceNameDatas[i] == null)
+			if (interfaceNameDatas[i] == null) {
 				continue;
+			}
 			final String interfaceName = interfaceNameDatas[i].getName();
-			if (interfaceName == null)
+			if (interfaceName == null) {
 				continue;
+			}
 			final PHPFileData fileData = getPHPFileContainer(classData);
 			String fileName = null;
-			if (fileData != null)
+			if (fileData != null) {
 				fileName = fileData.getName();
-			if (fileName.equals("")) //$NON-NLS-1$
+			}
+			if ("".equals(fileName)) {
 				fileName = null;
+			}
 			PHPClassData interfaceClassData = null;
 			// first try to find in the same user model:
 			final IResource resource = getResource(classData);
