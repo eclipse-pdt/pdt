@@ -1050,11 +1050,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 * Determines PHP script path which is currently interpreted by iterating over the stack
 	 * @return resolved PHP script path or <code>null</code> in case it couldn't be resolved
 	 */
-	public String resolvePreviousScript() {
-		StackLayer[] layers = getContextManager().getRemoteDebugger().getCallStack().getLayers();
+	public String resolvePreviousScript(StackLayer[] layers) {
 		String previousFileName = null;
 		if (layers != null && layers.length > 1) {
-			for (int i = 2; i < layers.length; i++) {
+			for (int i = 1; i < layers.length; i++) {
 				String callerFileName = layers[i].getCallerFileName();
 				String calledFileName = layers[i].getCalledFileName();
 				String resolvedCalledFile = getContextManager().getCachedResolvedStackLayer(callerFileName + calledFileName);
@@ -1082,7 +1081,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 				if (resolvedCalledFile.length() > 0) {
 					layers[i].setCalledFileName(resolvedCalledFile);
 					if (i + 1 < layers.length) {
-						layers[i + 1].setCalledFileName(resolvedCalledFile);
+						layers[i + 1].setCallerFileName(resolvedCalledFile);
 					}
 				}
 			}

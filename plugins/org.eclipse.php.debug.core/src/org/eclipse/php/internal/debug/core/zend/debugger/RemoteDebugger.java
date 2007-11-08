@@ -220,7 +220,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 
 		try {
-			String previousScript = debugTarget.resolvePreviousScript();
+			StackLayer[] layers = debugTarget.getContextManager().getRemoteDebugger().getCallStack().getLayers();
+			String previousScript = debugTarget.resolvePreviousScript(layers);
 			String currentScriptDir = "";
 			if (previousScript != null) {
 				currentScriptDir = new Path(previousScript).removeLastSegments(1).toString();
