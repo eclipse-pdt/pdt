@@ -116,6 +116,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 						if (pathEntry != null) {
 							// Map remote file to the map point:
 							pathMapper.addEntry(remoteFile, pathEntry);
+							PathMapperRegistry.storeToPreferences();
 						} else {
 							// Find the local file, and map it:
 							DebugSearchEngine.find(remoteFile, fDebugTarget);

@@ -177,6 +177,7 @@ public class DebugSearchEngine {
 			localFile = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]), debugTarget);
 			if (localFile != null) {
 				pathMapper.addEntry(remoteFile, localFile);
+				PathMapperRegistry.storeToPreferences();
 			}
 		}
 		return localFile;
