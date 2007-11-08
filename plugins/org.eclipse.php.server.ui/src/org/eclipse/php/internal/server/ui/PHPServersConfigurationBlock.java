@@ -294,7 +294,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 				}
 				return serverName;
 			} else if (columnIndex == 1) {
-				return server.getHost();
+				return server.getBaseURL();
 			}
 			return element.toString();
 		}
