@@ -60,6 +60,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	private static final String PHP_EXE_PAGE_ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"; //$NON-NLS-1$
 	private Button fStopAtFirstLine;
 	private Text fClientIP;
+	private Label fClientIPLabel;
 	private Combo fDefaultDebugger;
 	private Combo fDefaultServer;
 	private Combo fDefaultPHPExe;
@@ -133,6 +134,11 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		fDefaultPHPExe.select(fDefaultPHPExe.indexOf(phpExeName));
 		fDebugEncodingSettings.setIANATag(transferEncoding);
 		fOutputEncodingSettings.setIANATag(outputEncoding);
+
+		if (getProject(propertyPage) != null) {
+			fClientIP.setVisible(false);
+			fClientIPLabel.setVisible(false);
+		}
 	}
 
 	public boolean performOK(boolean isProjectSpecific) {
@@ -205,8 +211,8 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		expandbleOutputEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding + " (" + fOutputEncodingSettings.getIANATag() + ")");
 		fStopAtFirstLine = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_1, PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, 0);
 
-		Label label = new Label(composite, SWT.NONE);
-		label.setText("Client Host/IP:");
+		fClientIPLabel = new Label(composite, SWT.NONE);
+		fClientIPLabel.setText("Client Host/IP:");
 		fClientIP = new Text(composite, SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 2;
