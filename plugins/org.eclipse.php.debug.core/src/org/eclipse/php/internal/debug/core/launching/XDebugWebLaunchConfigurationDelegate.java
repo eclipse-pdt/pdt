@@ -29,6 +29,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
@@ -129,6 +130,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			// determine if we should use the multisession manager or the single session manager
 			if (ide.getPrefs().getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION)) {
 				target = new DBGpMultiSessionTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
+				target.setPathMapper(PathMapperRegistry.getByServer(server));
 				launch.addDebugTarget(target); //has to be added now, not later.
 			}
 			else {

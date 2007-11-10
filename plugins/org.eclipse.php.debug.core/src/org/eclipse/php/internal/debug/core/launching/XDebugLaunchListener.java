@@ -16,6 +16,7 @@ import org.eclipse.debug.core.ILaunchesListener;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
 
 /**
  * This class is responsible for mapping debug session id's to the ILaunch that is responsible for
@@ -79,7 +80,7 @@ public class XDebugLaunchListener implements ILaunchesListener {
 		for (int i = 0; i < launches.length; i++) {
 			ILaunch launch = launches[i];
 			IDebugTarget target = launch.getDebugTarget();
-			if (target instanceof DBGpTarget && ((DBGpTarget) target).isWebLaunch()) {
+			if (target instanceof IDBGpDebugTarget && ((IDBGpDebugTarget) target).isWebLaunch()) {
 				// this is a web launch
 				webLaunchActive = added;
 			}

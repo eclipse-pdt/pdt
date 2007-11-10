@@ -63,7 +63,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		stackLevel = DBGpResponse.getAttribute(stackData, "level");
 		lineNo = Integer.parseInt(line);
 		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename"));
-		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapInboundFileIfRequired(qualifiedFile);
+		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapToWorkspaceFileIfRequired(qualifiedFile);
 		// check to see if the file exists in the workspace
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(qualifiedFile));//             findFilesForLocation(new Path(fileName));
 		if (file != null) {

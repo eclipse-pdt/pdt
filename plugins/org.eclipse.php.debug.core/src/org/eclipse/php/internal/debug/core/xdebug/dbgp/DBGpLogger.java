@@ -23,26 +23,26 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
  */
 public class DBGpLogger {
 
-	private static boolean debugOn = false;
+	private static boolean debugOn = true;
 
 	public static boolean debugState() {
-		return false;
+		return true;
 	}
 
 	public static boolean debugCmd() {
-		return false;
+		return true;
 	}
 
 	public static boolean debugResp() {
-		return false;
+		return true;
 	}
 
 	public static boolean debugBP() {
-		return false;
+		return true;
 	}
 
 	public static boolean debugSession() {
-		return false;
+		return true;
 	}
 
 	/**

@@ -250,8 +250,6 @@ public class DBGpSession {
 				// session has ended.
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			// end the session here as we most likely terminated cleanly. It doesn't matter if 
 			// endSession is called multiple times.
@@ -375,7 +373,7 @@ public class DBGpSession {
 					try {
 						lineno = Integer.parseInt(line);
 						String filename = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename"));
-						filename = debugTarget.mapInboundFileIfRequired(filename);
+						filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
 						debugTarget.breakpointHit(filename, lineno);
 					} catch (NumberFormatException nfe) {
 						DBGpLogger.logException("Unexpected number format exception", this, nfe);

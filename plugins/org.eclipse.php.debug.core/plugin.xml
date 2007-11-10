@@ -8,7 +8,6 @@
    <extension-point id="phpDebugHandlers" name="PHP Debug Handler" schema="schema/phpDebugHandlers.exsd"/>
    <extension-point id="phpExe" name="PHP exe" schema="schema/phpExe.exsd"/>
    <extension-point id="phpDebugParametersInitializers" name="phpDebugParametersInitializers" schema="schema/phpDebugParametersInitializer.exsd"/>
-   <extension-point id="fileMapper" name="XDebug File mapping" schema="schema/fileMapper.exsd"/>
    <extension-point id="phpDebuggers" name="PHP Debuggers" schema="schema/phpDebuggers.exsd"/>
    <extension-point id="pathEntryFilters" name="PHP Path Entry Filters" schema="schema/pathEntryFilters.exsd"/>
     

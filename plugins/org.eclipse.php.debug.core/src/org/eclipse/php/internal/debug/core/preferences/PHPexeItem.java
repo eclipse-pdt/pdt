@@ -14,7 +14,7 @@ import java.io.File;
 
 public class PHPexeItem {
 
-	private static final String[] fgCandidatePHPLocations = { "php", "php.exe" }; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] fgCandidatePHPLocations = { "php", "php.exe", "php.cmd"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	String name;
 	File location;

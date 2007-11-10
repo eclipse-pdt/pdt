@@ -25,15 +25,5 @@ public interface IDELayer {
 	// required for Launch Listener
 	public String getSystemDebugProperty();
 
-	// required for EXE launcher
-	public String getEXELocationAttrName();
-
-	public String getEXEFileAttrName();
-
-	public String getEXEFirstLineAttrName();
-
-	// required for EXE and Web launcher
-	public boolean getStopAtFirstLine(IProject project);
-
 	public Preferences getPrefs();
 }

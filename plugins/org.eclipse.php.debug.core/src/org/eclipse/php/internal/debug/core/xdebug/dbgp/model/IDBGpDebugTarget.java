@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
 
@@ -20,4 +21,7 @@ public interface IDBGpDebugTarget extends IDebugTarget {
 	public void waitForInitialSession(DBGpBreakpointFacade facade,
 			DBGpPreferences sessionPrefs, IProgressMonitor launchMonitor);	
 	
+	public void setPathMapper(PathMapper mapper);
+	
+	public boolean isWebLaunch();
 }

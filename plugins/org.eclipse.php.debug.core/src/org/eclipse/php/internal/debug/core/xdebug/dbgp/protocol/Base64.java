@@ -185,7 +185,6 @@ public class Base64 {
 			byte[] result = encode(byteInput);
 			strResult = new String(result, sessionEncoding);			
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			byteInput = input.getBytes();
 			byte[] result = encode(byteInput);
 			strResult = new String(result);			
@@ -201,7 +200,6 @@ public class Base64 {
 			byte[] result = decode(byteInput);
 			strResult = new String(result, sessionEncoding);			
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			byteInput = input.getBytes();
 			byte[] result = decode(byteInput);
 			strResult = new String(result);			

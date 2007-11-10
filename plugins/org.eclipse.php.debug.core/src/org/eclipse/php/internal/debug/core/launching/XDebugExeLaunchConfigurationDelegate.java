@@ -24,11 +24,13 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.phpIni.IniModifier;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
@@ -50,8 +52,8 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		IDELayer idelayer = IDELayerFactory.getIDELayer();
 
 		// get the exe, project name, file name
-		final String phpExeString = configuration.getAttribute(idelayer.getEXELocationAttrName(), (String) null);
-		final String phpScriptString = configuration.getAttribute(idelayer.getEXEFileAttrName(), (String) null);
+		final String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
+		final String phpScriptString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 		if (phpScriptString == null || phpScriptString.trim().length() == 0) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			displayErrorMessage("No script specified");
@@ -164,6 +166,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			String sessionID = DBGpSessionHandler.getInstance().generateSessionId();
 			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();			
 			target = new DBGpTarget(launch, phpFile.toOSString(), ideKey, sessionID, stopAtFirstLine);
+			target.setPathMapper(PathMapperRegistry.getByLaunchConfiguration(configuration));
 			DBGpSessionHandler.getInstance().addSessionListener(target);
 			envVarString = createDebugLaunchEnvironment(configuration, sessionID, ideKey, phpExe);
 		}
