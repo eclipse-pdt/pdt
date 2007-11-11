@@ -115,7 +115,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 
 	private void verifyDefaultPHP(PHPexeItem php) {
 		if (php != null) {
-			boolean exist = php.getLocation().exists();
+			boolean exist = php.getExecutableDirectory().exists();
 			// If all library locations exist, check the corresponding entry in the list,
 			// otherwise remove the PHP setting
 			if (!exist) {

@@ -139,7 +139,7 @@ public class InstalledPHPsBlock {
 						}
 						return debuggerName;
 					case 2:
-						return phpExe.getLocation().getAbsolutePath();
+						return phpExe.getExecutableDirectory().getAbsolutePath();
 				}
 			}
 			return element.toString();
@@ -428,14 +428,15 @@ public class InstalledPHPsBlock {
 		if (phpExe == null) {
 			return;
 		}
-		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(), phpExe.getPhpEXE(), phpExe.getDebuggerID(), phpExe.isEditable());
+		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(), phpExe.getPhpExecutable(), phpExe.getINILocation(), phpExe.getDebuggerID(), phpExe.isEditable());
 		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), phpExeToEdit, phpExes.getAllItems());
 		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
 		if (dialog.open() != Window.OK) {
 			return;
 		}
 		phpExe.setName(phpExeToEdit.getName());
-		phpExe.setLocation(phpExeToEdit.getLocation());
+		phpExe.setExecutableDirectory(phpExeToEdit.getExecutableDirectory());
+		phpExe.setINILocation(phpExeToEdit.getINILocation());
 		phpExe.setDebuggerID(phpExeToEdit.getDebuggerID());
 
 		fPHPExeList.refresh();
@@ -661,7 +662,7 @@ public class InstalledPHPsBlock {
 		final Set exstingLocations = new HashSet();
 		Iterator iter = fPHPexes.iterator();
 		while (iter.hasNext())
-			exstingLocations.add(((PHPexeItem) iter.next()).getPhpEXE().getParentFile());
+			exstingLocations.add(((PHPexeItem) iter.next()).getPhpExecutable().getParentFile());
 
 		// search
 		final File rootDir = new File(path);
@@ -699,8 +700,8 @@ public class InstalledPHPsBlock {
 				}
 				// Since the search for PHP exe option does not 'know' the debugger id it should assign to the PHPexeItem,
 				// we call for PHPexes.getDefaultDebuggerId() - which can also return null in some cases.
-				final PHPexeItem phpExe = new PHPexeItem(nameCopy, location, PHPDebuggersRegistry.getDefaultDebuggerId(), true);
-				if (phpExe.getPhpEXE() != null) {
+				final PHPexeItem phpExe = new PHPexeItem(nameCopy, location, null, PHPDebuggersRegistry.getDefaultDebuggerId(), true);
+				if (phpExe.getPhpExecutable() != null) {
 					fPHPexes.add(phpExe);
 					phpExes.addItem(phpExe);
 					fPHPExeList.refresh();
@@ -793,7 +794,7 @@ public class InstalledPHPsBlock {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
-					return left.getLocation().getAbsolutePath().compareToIgnoreCase(right.getLocation().getAbsolutePath());
+					return left.getExecutableDirectory().getAbsolutePath().compareToIgnoreCase(right.getExecutableDirectory().getAbsolutePath());
 				}
 				return super.compare(viewer, e1, e2);
 			}

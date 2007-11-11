@@ -41,7 +41,6 @@ import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -198,7 +197,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				if (defaultEXE == null) {
 					defaultEXE = getWorkspaceDefaultExe();
 				}
-				String phpExeName = (defaultEXE != null) ? defaultEXE.getPhpEXE().getAbsolutePath().toString() : null;
+				String phpExeName = (defaultEXE != null) ? defaultEXE.getPhpExecutable().getAbsolutePath().toString() : null;
 
 				if (phpExeName == null) {
 					MessageDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text);
@@ -282,7 +281,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
 
-				if (phpPathString.equals(fileName) && exeName.equals(defaultEXE.getPhpEXE().getAbsolutePath().toString())) {
+				if (phpPathString.equals(fileName) && exeName.equals(defaultEXE.getPhpExecutable().getAbsolutePath().toString())) {
 					config = configs[i].getWorkingCopy();
 					break;
 				}
@@ -310,7 +309,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getScriptLaunchDelegateClass());
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
-		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, defaultEXE.getPhpEXE().getAbsolutePath().toString());
+		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, defaultEXE.getPhpExecutable().getAbsolutePath().toString());
 		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(phpProject));
 

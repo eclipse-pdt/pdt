@@ -128,12 +128,16 @@ public class PHPDebugUIMessages extends NLS {
 	public static String addPHPexeDialog_browse1;
 	public static String addPHPexeDialog_duplicateName;
 	public static String addPHPexeDialog_enterLocation;
+	public static String addPHPexeDialog_enterINILocation;
 	public static String addPHPexeDialog_enterName;
 	public static String addPHPexeDialog_phpHome;
+	public static String addPHPexeDialog_phpIni;
 	public static String addPHPexeDialog_phpDebugger;
 	public static String addPHPexeDialog_phpName;
 	public static String addPHPexeDialog_locationNotExists;
+	public static String addPHPexeDialog_iniLocationNotExists;
 	public static String addPHPexeDialog_pickPHPRootDialog_message;
+	public static String addPHPexeDialog_pickPHPIniDialog_message;
 	public static String addPHPexeDialog_readOnlyPHPExe;
 
 	public static String PHPexesComboBlock_1;
