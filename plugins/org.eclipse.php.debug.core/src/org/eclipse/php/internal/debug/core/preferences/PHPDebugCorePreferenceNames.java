@@ -29,6 +29,7 @@ public class PHPDebugCorePreferenceNames {
 	// Workspace defaults PHP executables keys
 	public static final String INSTALLED_PHP_NAMES = Debug_ID + "installedPHPNames";//$NON-NLS-1$
 	public static final String INSTALLED_PHP_LOCATIONS = Debug_ID + "installedPHPLocations";//$NON-NLS-1$
+	public static final String INSTALLED_PHP_INIS = Debug_ID + "installedPHPInis";//$NON-NLS-1$
 	public static final String INSTALLED_PHP_DEBUGGERS = Debug_ID + "installedPHPDebuggers";//$NON-NLS-1$
 	public static final String INSTALLED_PHP_DEFAULTS = Debug_ID + "installedPHPDefaults";//$NON-NLS-1$
 
