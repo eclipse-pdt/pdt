@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.core.util;
 
 import java.io.*;
-import java.util.ArrayList;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -25,99 +24,94 @@ import org.eclipse.php.internal.core.CoreMessages;
 public class FileUtils {
 
 	/**
-	 * Checks if a file exists under the workspace root.
+	 * Checks if a resource exists under the workspace root.
 	 * 
-	 * @param filePath
+	 * @param resourcePath
 	 * @return True, if the file exists; False, otherwise.
 	 */
-	public static boolean fileExists(String filePath) {
-		if (filePath == null || "".equals(filePath)) { //$NON-NLS-1$
+	public static boolean resourceExists(String resourcePath) {
+		if (resourcePath == null || "".equals(resourcePath)) { //$NON-NLS-1$
 			return false;
 		}
-		boolean fileExists = false;
+		boolean resourceExists = false;
 		try {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			IPath path = new Path(filePath);
+			IPath path = new Path(resourcePath);
 
-			fileExists = root.exists(path);
+			resourceExists = root.exists(path);
 		} catch (Exception e) {
 		}
-		return fileExists;
+		return resourceExists;
 	}
-	
-	  /**
-	  * Fetch the entire contents of a text file, and return it in a String.
-	  * This style of implementation does not throw Exceptions to the caller.
-	  *
-	  * @param file is a file which already exists and can be read.
-	  */
-	  static public String getContents(File file) throws IOException {
-	    StringBuffer contents = new StringBuffer();
 
-	    BufferedReader input = null;
-	    try {
-	      //FileReader always assumes default encoding is OK!
-	      input = new BufferedReader( new FileReader(file) );
-	      String line = null; 
+	/**
+	* Fetch the entire contents of a text file, and return it in a String.
+	* This style of implementation does not throw Exceptions to the caller.
+	*
+	* @param file is a file which already exists and can be read.
+	*/
+	static public String getContents(File file) throws IOException {
+		StringBuffer contents = new StringBuffer();
 
-	      while (( line = input.readLine()) != null){
-	        contents.append(line);
-	        contents.append(System.getProperty("line.separator")); //$NON-NLS-1$
-	      }
-	    }
-	    catch (FileNotFoundException ex) {
-	      ex.printStackTrace();
-	    }
-	    catch (IOException ex){
-	      ex.printStackTrace();
-	    }
-	    finally {
-	      try {
-	        if (input!= null) {
-	          input.close();
-	        }
-	      }
-	      catch (IOException ex) {
-	        throw ex;	    	 
-	      }
-	    }
-	    return contents.toString();
-	  }
+		BufferedReader input = null;
+		try {
+			//FileReader always assumes default encoding is OK!
+			input = new BufferedReader(new FileReader(file));
+			String line = null;
 
-	  /**
-	  * Change the contents of text file in its entirety, overwriting any
-	  * existing text.
-	  *
-	  * This style of implementation throws all exceptions to the caller.
-	  *
-	  * @param file is an existing file which can be written to.
-	  * @throws IllegalArgumentException if param does not comply.
-	  * @throws FileNotFoundException if the file does not exist.
-	  * @throws IOException if problem encountered during write.
-	  */
-	  static public void setContents(File file, String contents)
-	                                 throws FileNotFoundException, IOException {
-	    if (file == null) {
-	      throw new IllegalArgumentException(CoreMessages.getString("FileUtils_2"));
-	    }
-	    if (!file.exists()) {
-	      throw new FileNotFoundException (CoreMessages.getString("FileUtils_3") + file);
-	    }
-	    if (!file.isFile()) {
-	      throw new IllegalArgumentException(CoreMessages.getString("FileUtils_4") + file);
-	    }
-	    if (!file.canWrite()) {
-	      throw new IllegalArgumentException(CoreMessages.getString("FileUtils_5") + file);
-	    }
+			while ((line = input.readLine()) != null) {
+				contents.append(line);
+				contents.append(System.getProperty("line.separator")); //$NON-NLS-1$
+			}
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (input != null) {
+					input.close();
+				}
+			} catch (IOException ex) {
+				throw ex;
+			}
+		}
+		return contents.toString();
+	}
 
-	    Writer output = null;
-	    try {
-	      //FileWriter always assumes default encoding is OK!
-	      output = new BufferedWriter( new FileWriter(file) );
-	      output.write( contents );
-	    }
-	    finally {
-	      if (output != null) output.close();
-	    }
-	  }
+	/**
+	* Change the contents of text file in its entirety, overwriting any
+	* existing text.
+	*
+	* This style of implementation throws all exceptions to the caller.
+	*
+	* @param file is an existing file which can be written to.
+	* @throws IllegalArgumentException if param does not comply.
+	* @throws FileNotFoundException if the file does not exist.
+	* @throws IOException if problem encountered during write.
+	*/
+	static public void setContents(File file, String contents) throws FileNotFoundException, IOException {
+		if (file == null) {
+			throw new IllegalArgumentException(CoreMessages.getString("FileUtils_2"));
+		}
+		if (!file.exists()) {
+			throw new FileNotFoundException(CoreMessages.getString("FileUtils_3") + file);
+		}
+		if (!file.isFile()) {
+			throw new IllegalArgumentException(CoreMessages.getString("FileUtils_4") + file);
+		}
+		if (!file.canWrite()) {
+			throw new IllegalArgumentException(CoreMessages.getString("FileUtils_5") + file);
+		}
+
+		Writer output = null;
+		try {
+			//FileWriter always assumes default encoding is OK!
+			output = new BufferedWriter(new FileWriter(file));
+			output.write(contents);
+		} finally {
+			if (output != null)
+				output.close();
+		}
+	}
 }
