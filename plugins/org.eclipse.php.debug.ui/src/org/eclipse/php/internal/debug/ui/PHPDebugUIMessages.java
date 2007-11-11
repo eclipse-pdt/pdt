@@ -47,6 +47,8 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String PHPDebugPreferencesAddon_selectedEncoding;
 
+	public static String PHPExecutableLaunchTab_isNotPHPFile;
+
 	public static String PHPLaunchingPreferencePage_Always;
 	public static String PHPLaunchingPreferencePage_multipleMessage;
 	public static String PHPLaunchingPreferencePage_switchToPHPMessage;

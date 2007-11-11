@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
@@ -27,7 +26,9 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
+import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
@@ -264,23 +265,12 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public void deactivated(final ILaunchConfigurationWorkingCopy workingCopy) {
 	}
 
-	private boolean fileExists(final String projectPath) {
-		if (projectPath == null || "".equals(projectPath))
-			return false;
-
-		final IPath p3 = new Path(projectPath);
-		final boolean file = ResourcesPlugin.getWorkspace().getRoot().exists(p3);
-		if (file)
-			return true;
-		return false;
-	}
-
 	protected PHPexeDescriptor getDefaultPHPexeDescriptor() {
 		return null;
 	}
 
 	public String getName() {
-		return "PHP Script";
+		return "PHP Script"; //$NON-NLS-1$
 	}
 
 	protected PHPexeDescriptor getSpecificPHPexeDescriptor() {
@@ -328,7 +318,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			file = (IFile) resource;
 		if (file != null) {
 			textField.setText(file.getFullPath().toString());
-			String fileName = "";
+			String fileName = ""; //$NON-NLS-1$
 			IPath location = file.getLocation();
 			if (location != null) {
 				fileName = location.toString();
@@ -368,7 +358,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public boolean isValid(final ILaunchConfiguration launchConfig) {
 		setErrorMessage(null);
 		try {
-			final String phpExe = launchConfig.getAttribute(PHPCoreConstants.ATTR_LOCATION, "");
+			final String phpExe = launchConfig.getAttribute(PHPCoreConstants.ATTR_LOCATION, ""); //$NON-NLS-1$
 			boolean phpExeExists = true;
 			try {
 				final File file = new File(phpExe);
@@ -383,14 +373,32 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			}
 
 			if (enableFileSelection) {
-				final String phpFile = launchConfig.getAttribute(PHPCoreConstants.ATTR_FILE, "");
-				if (!fileExists(phpFile)) {
+				final String phpFile = launchConfig.getAttribute(PHPCoreConstants.ATTR_FILE, ""); //$NON-NLS-1$
+				if (!FileUtils.resourceExists(phpFile)) {
 					if (ExternalFilesRegistry.getInstance().isEntryExist(phpFile)) {
 						// Allow external files that are open in the editor.
 						return true;
 					}
 					setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
 					return false;
+				} else {//resource DOES exist
+					IResource fileToData = ResourcesPlugin.getWorkspace().getRoot().findMember(phpFile);
+					//check if not a file (project, folder etc.)
+					if ((fileToData.getType() != IResource.FILE) || !PHPModelUtil.hasPhpExtention((IFile) fileToData)) {
+						setErrorMessage(phpFile + PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
+						return false;
+					}
+
+					//if valid PHP file, update text field data
+					else {
+						String dataLocation = ""; //$NON-NLS-1$
+						if (fileToData.getLocation() == null) {
+							dataLocation = fileToData.getLocationURI().toString();
+						} else {
+							dataLocation = fileToData.getLocation().toString();
+						}
+						debugFileTextField.setData(dataLocation);
+					}
 				}
 			}
 		} catch (final CoreException e) {
@@ -452,7 +460,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
 		try {
 			String location = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, ""); //$NON-NLS-1$
-			if (location.equals("")) {
+			if (location.equals("")) { //$NON-NLS-1$
 				PHPexes phpExes = PHPexes.getInstance();
 				final PHPexeItem phpExeItem = phpExes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 				if (phpExeItem == null)
