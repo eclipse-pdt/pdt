@@ -182,7 +182,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 	 */
 	static ILaunchConfiguration createConfiguration(IProject project, String fileName, Server server, ILaunchConfigurationType configType, String mode) throws CoreException {
 		ILaunchConfiguration config = null;
-		if (!FileUtils.fileExists(fileName)) {
+		if (!FileUtils.resourceExists(fileName)) {
 			return null;
 		}
 		String URL = server.getBaseURL() + '/' + new Path(fileName).removeFirstSegments(1);

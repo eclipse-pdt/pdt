@@ -761,7 +761,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			}
 
 			String fileName = launchConfig.getAttribute(Server.FILE_NAME, ""); //$NON-NLS-1$
-			if (!FileUtils.fileExists(fileName)) {
+			if (!FileUtils.resourceExists(fileName)) {
 				setErrorMessage(PHPServerUIMessages.getString("ServerTab.file_project_doesNotExist")); //$NON-NLS-1$
 				return false;
 			}
