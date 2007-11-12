@@ -343,13 +343,29 @@ public class PHPsComboBlock implements ISelectionProvider {
 	 * 
 	 * @return The executable's location.
 	 */
-	public String getSelectedLocation() {
+	public String getSelectedExecutablePath() {
 		final PHPexeItem item = getPHPexe();
 		if (item != null)
 			return item.getPhpExecutable().toString();
 		return ""; //$NON-NLS-1$
 	}
 
+	/**
+	 * Returns the location of the PHP ini file, or an empty string, if none was defined.
+	 * 
+	 * @return The php ini location.
+	 */
+	public String getSelectedIniPath() {
+		final PHPexeItem item = getPHPexe();
+		if (item != null) {
+			if (item.getINILocation() != null) {
+				return item.getINILocation().toString();
+			}
+		}
+		return ""; //$NON-NLS-1$
+	}
+	
+	
 	/**
 	 * Returns the id of the selected debugger.
 	 *  

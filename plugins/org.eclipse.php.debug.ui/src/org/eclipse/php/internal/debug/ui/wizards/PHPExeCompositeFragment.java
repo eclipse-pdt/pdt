@@ -203,7 +203,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			fPHPRoot.setTextWithoutUpdate(phpExeItem.getExecutableDirectory().getAbsolutePath());
 			fPHPRoot.setEnabled(phpExeItem.isEditable());
 			if (phpExeItem.getINILocation() != null) {
-				fPHPIni.setTextWithoutUpdate(phpExeItem.getINILocation().getAbsolutePath());
+				fPHPIni.setTextWithoutUpdate(phpExeItem.getINILocation().toString());
 			}
 			fPHPIni.setEnabled(phpExeItem.isEditable());
 			String debuggerID = phpExeItem.getDebuggerID();

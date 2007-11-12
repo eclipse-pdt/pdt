@@ -358,7 +358,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public boolean isValid(final ILaunchConfiguration launchConfig) {
 		setErrorMessage(null);
 		try {
-			final String phpExe = launchConfig.getAttribute(PHPCoreConstants.ATTR_LOCATION, ""); //$NON-NLS-1$
+			final String phpExe = launchConfig.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
 			boolean phpExeExists = true;
 			try {
 				final File file = new File(phpExe);
@@ -412,12 +412,21 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void performApply(final ILaunchConfigurationWorkingCopy configuration) {
 		final String debuggerID = phpsComboBlock.getSelectedDebuggerId();
-		final String location = phpsComboBlock.getSelectedLocation();
-		if (location.length() == 0) {
-			configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
+		// Set the executable path
+		final String selectedExecutable = phpsComboBlock.getSelectedExecutablePath();
+		if (selectedExecutable.length() == 0) {
+			configuration.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		} else {
-			configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
+			configuration.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, selectedExecutable);
 		}
+		// Set the PHP ini path
+		final String iniPath = phpsComboBlock.getSelectedIniPath();
+		if (iniPath.length() == 0) {
+			configuration.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
+		} else {
+			configuration.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, iniPath);
+		}
+
 		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
 
 		String arguments = null;
@@ -459,14 +468,18 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
 		try {
-			String location = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, ""); //$NON-NLS-1$
-			if (location.equals("")) { //$NON-NLS-1$
+			String executableLocation = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
+			if (executableLocation.equals("")) { //$NON-NLS-1$
 				PHPexes phpExes = PHPexes.getInstance();
 				final PHPexeItem phpExeItem = phpExes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 				if (phpExeItem == null)
 					return;
-				location = phpExeItem.getPhpExecutable().toString();
-				configuration.setAttribute(PHPCoreConstants.ATTR_LOCATION, location);
+				executableLocation = phpExeItem.getPhpExecutable().toString();
+				configuration.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, executableLocation);
+
+				String iniPath = phpExeItem.getINILocation() != null ? phpExeItem.getINILocation().toString() : null;
+				configuration.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, iniPath);
+
 				configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPDebugPlugin.getStopAtFirstLine());
 				applyLaunchDelegateConfiguration(configuration);
 			}
@@ -560,9 +573,11 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	protected void updateLocation(final ILaunchConfiguration configuration) {
 		String location = ""; //$NON-NLS-1$
+		String iniPath = ""; //$NON-NLS-1$
 		String debuggerID = ""; //$NON-NLS-1$
 		try {
-			location = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, ""); //$NON-NLS-1$
+			location = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
+			iniPath = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, ""); //$NON-NLS-1$
 			debuggerID = configuration.getAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin.getCurrentDebuggerId());
 		} catch (final CoreException ce) {
 			Logger.log(Logger.ERROR, "Error reading configuration", ce); //$NON-NLS-1$
@@ -570,7 +585,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		final PHPexes exes = PHPexes.getInstance();
 		PHPexeItem phpexe;
 		if (location != null && location.length() > 0) {
-			phpexe = exes.getItemForFile(location);
+			phpexe = exes.getItemForFile(location, iniPath);
 		} else {
 			phpexe = exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 		}

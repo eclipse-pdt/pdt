@@ -279,9 +279,11 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			int numConfigs = configs == null ? 0 : configs.length;
 			for (int i = 0; i < numConfigs; i++) {
 				String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
-
-				if (phpPathString.equals(fileName) && exeName.equals(defaultEXE.getPhpExecutable().getAbsolutePath().toString())) {
+				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+				String iniPath = configs[i].getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String)null);
+				PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName, iniPath);
+				
+				if (phpPathString.equals(fileName) && defaultEXE.equals(item)) {
 					config = configs[i].getWorkingCopy();
 					break;
 				}
@@ -309,7 +311,9 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getScriptLaunchDelegateClass());
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
-		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, defaultEXE.getPhpExecutable().getAbsolutePath().toString());
+		wc.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, defaultEXE.getPhpExecutable().getAbsolutePath().toString());
+		String iniPath = defaultEXE.getINILocation() != null ? defaultEXE.getINILocation().toString() : null;
+		wc.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, iniPath);
 		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(phpProject));
 
