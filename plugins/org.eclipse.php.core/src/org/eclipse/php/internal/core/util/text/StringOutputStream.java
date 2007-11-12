@@ -16,12 +16,6 @@ public class StringOutputStream extends OutputStream {
 	protected List<String> strings = new ArrayList<String>();
 	protected StringBuffer buffer = new StringBuffer();
 
-	public StringOutputStream() {
-	}
-
-	public void close() {
-	}
-
 	public void flush() {
 		strings.add(buffer.toString());
 		buffer = new StringBuffer();
