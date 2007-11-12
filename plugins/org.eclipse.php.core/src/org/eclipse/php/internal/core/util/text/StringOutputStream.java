@@ -41,7 +41,7 @@ public class StringOutputStream extends OutputStream {
 	}
 
 	public String getString(int i) {
-		return strings.get(i).toString();
+		return strings.get(i);
 	}
 
 	public String[] getStrings() {
