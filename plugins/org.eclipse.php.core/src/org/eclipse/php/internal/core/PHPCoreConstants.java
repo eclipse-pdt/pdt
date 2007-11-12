@@ -29,7 +29,8 @@ public interface PHPCoreConstants {
 	public static final String PHP5 = PHPVersion.PHP5;
 	
 	public static final String ATTR_WORKING_DIRECTORY = "ATTR_WORKING_DIRECTORY"; //$NON-NLS-1$
-	public static final String ATTR_LOCATION = "ATTR_LOCATION"; //$NON-NLS-1$
+	public static final String ATTR_EXECUTABLE_LOCATION = "ATTR_LOCATION"; //$NON-NLS-1$
+	public static final String ATTR_INI_LOCATION = "ATTR_INI_LOCATION"; //$NON-NLS-1$
 	public static final String ATTR_TOOL_ARGUMENTS = "ATTR_TOOL_ARGUMENTS"; //$NON-NLS-1$
 	public static final String ATTR_FILE = "ATTR_FILE"; //$NON-NLS-1$
 	public static final String ATTR_FILE_FULL_PATH = "ATTR_FILE_FULL_PATH"; //$NON-NLS-1$
