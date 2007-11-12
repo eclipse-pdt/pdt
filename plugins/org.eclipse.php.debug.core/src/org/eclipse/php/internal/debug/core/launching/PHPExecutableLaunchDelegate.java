@@ -27,13 +27,13 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.phpIni.IniModifier;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.phpIni.IniModifier;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitializersRegistry;
@@ -92,7 +92,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		if (monitor.isCanceled())
 			return;
 
-		final String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
+		final String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+		final String phpIniPath = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
 		final String projectName = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
 		final String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 		final boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
@@ -160,10 +161,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
-		//		if (!saveFiles(project, monitor)) {
-		//			return;
-		//		}
-		File phpIni = IniModifier.findPHPIni(phpExeString);
+
+		// Locate the php ini by using the attribute. If the attribute was null, try to locate an ini that exists next to the executable.
+		File phpIni = (phpIniPath != null) ? new File(phpIniPath) : IniModifier.findPHPIni(phpExeString);
 		if (project != dummyProject && project.hasNature(PHPNature.ID)) {
 			if (phpIni != null) {
 				File tempIni = IniModifier.addIncludePath(phpIni, project);

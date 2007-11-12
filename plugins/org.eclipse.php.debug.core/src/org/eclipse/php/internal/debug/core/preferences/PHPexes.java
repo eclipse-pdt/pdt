@@ -220,10 +220,11 @@ public class PHPexes {
 	 * Search for the executable file name in all of the registered {@link PHPexeItem}s and return
 	 * a reference to the one that refer to the same file.
 	 * 
-	 * @param exeFileName The executable file name.
+	 * @param exeFilePath The executable file name.
+	 * @param iniFilePath The php ini file path (can be null).
 	 * @return The corresponding {@link PHPexeItem}, or null if none was found.
 	 */
-	public PHPexeItem getItemForFile(final String exeFileName) {
+	public PHPexeItem getItemForFile(String exeFilePath, String iniFilePath) {
 		Set<String> installedDebuggers = PHPDebuggersRegistry.getDebuggersIds();
 		for (String debuggerId : installedDebuggers) {
 			HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
@@ -231,7 +232,14 @@ public class PHPexes {
 				Set<String> exeNames = installedExes.keySet();
 				for (String name : exeNames) {
 					PHPexeItem exeItem = installedExes.get(name);
-					if (exeFileName.equals(exeItem.getPhpExecutable().toString())) {
+					// Check for ini equality
+					boolean iniEquals = true;
+					if (iniFilePath == null) {
+						iniEquals = exeItem.getINILocation() == null;
+					} else {
+						iniEquals = exeItem.getINILocation() == null ? false : iniFilePath.equals(exeItem.getINILocation().toString());
+					}
+					if (iniEquals && exeFilePath.equals(exeItem.getPhpExecutable().toString())) {
 						return exeItem;
 					}
 				}

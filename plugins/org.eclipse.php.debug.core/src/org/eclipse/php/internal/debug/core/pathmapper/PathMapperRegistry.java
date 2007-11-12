@@ -90,9 +90,10 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 			if (serverName != null) {
 				pathMapper = getByServer(ServersManager.getServer(serverName));
 			} else {
-				String phpExe = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
+				String phpExe = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+				String phpIni = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
 				if (phpExe != null) {
-					pathMapper = getByPHPExe(PHPexes.getInstance().getItemForFile(phpExe));
+					pathMapper = getByPHPExe(PHPexes.getInstance().getItemForFile(phpExe, phpIni));
 				}
 			}
 		} catch (CoreException e) {
@@ -130,6 +131,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 			HashMap entryMap = (HashMap) map.get(i.next());
 			String serverName = (String) entryMap.get("server"); //$NON-NLS-1$
 			String phpExeFile = (String) entryMap.get("phpExe"); //$NON-NLS-1$
+			String phpIniFile = (String) entryMap.get("phpIni"); //$NON-NLS-1$
 			PathMapper pathMapper = new PathMapper();
 			pathMapper.restoreFromMap((HashMap) entryMap.get("mapper")); //$NON-NLS-1$
 			if (serverName != null) {
@@ -138,7 +140,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 					serverPathMapper.put(server, pathMapper);
 				}
 			} else if (phpExeFile != null) {
-				PHPexeItem phpExeItem = PHPexes.getInstance().getItemForFile(phpExeFile);
+				PHPexeItem phpExeItem = PHPexes.getInstance().getItemForFile(phpExeFile, phpIniFile);
 				if (phpExeItem != null) {
 					phpExePathMapper.put(phpExeItem, pathMapper);
 				}
@@ -165,6 +167,9 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 			PHPexeItem phpExeItem = (PHPexeItem) i.next();
 			PathMapper pathMapper = phpExePathMapper.get(phpExeItem);
 			entry.put("phpExe", phpExeItem.getPhpExecutable().toString()); //$NON-NLS-1$
+			if (phpExeItem.getINILocation() != null){ 
+				entry.put("phpIni", phpExeItem.getINILocation().toString()); //$NON-NLS-1$
+			}
 			entry.put("mapper", pathMapper.storeToMap()); //$NON-NLS-1$
 			elements.put("item" + (c++), entry); //$NON-NLS-1$
 		}
