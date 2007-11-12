@@ -69,9 +69,17 @@ public class DebugSearchEngine {
 		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
 
 		IProject project = null;
-		String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
-		if (projectName != null) {
-			project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		if (currentScriptDir != null) {
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(currentScriptDir);
+			if (resource != null) {
+				project = resource.getProject();
+			}
+		}
+		if (project == null) {
+			String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+			if (projectName != null) {
+				project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			}
 		}
 
 		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
