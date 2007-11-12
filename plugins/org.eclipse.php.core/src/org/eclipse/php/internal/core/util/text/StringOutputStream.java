@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class StringOutputStream extends OutputStream {
 
-	protected List<StringBuffer> buffers = new ArrayList<StringBuffer>();
+	protected List<String> strings = new ArrayList<String>();
 	protected StringBuffer buffer = new StringBuffer();
 
 	public StringOutputStream() {
@@ -23,7 +23,7 @@ public class StringOutputStream extends OutputStream {
 	}
 
 	public void flush() {
-		buffers.add(buffer);
+		strings.add(buffer.toString());
 		buffer = new StringBuffer();
 	}
 
@@ -47,14 +47,10 @@ public class StringOutputStream extends OutputStream {
 	}
 
 	public String getString(int i) {
-		return buffers.get(i).toString();
+		return strings.get(i).toString();
 	}
 
 	public String[] getStrings() {
-		List<String> strings = new ArrayList<String>(buffers.size());
-		for (StringBuffer buffer : buffers) {
-			strings.add(buffer.toString());
-		}
 		return strings.toArray(new String[strings.size()]);
 	}
 }
