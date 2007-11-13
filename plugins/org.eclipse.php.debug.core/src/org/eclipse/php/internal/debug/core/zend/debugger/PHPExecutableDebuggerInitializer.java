@@ -109,6 +109,8 @@ public class PHPExecutableDebuggerInitializer {
 
 			// Execute the command line.
 			Process p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDir);
+			// Attach a crash detector
+			new Thread(new ProcessCrashDetector(p)).start();
 
 			Runnable reader = new ProcessOutputReader(p);
 			new Thread(reader).start();

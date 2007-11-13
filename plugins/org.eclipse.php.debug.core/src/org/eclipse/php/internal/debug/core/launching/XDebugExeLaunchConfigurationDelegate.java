@@ -38,6 +38,7 @@ import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
+import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
 import org.eclipse.swt.widgets.Display;
 
 public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
@@ -201,6 +202,9 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 		
 		final Process phpExeProcess = DebugPlugin.exec(cmdLine, workingDir, envVarString);
+		// Attach a crash detector
+		new Thread(new ProcessCrashDetector(phpExeProcess)).start();
+		
 		IProcess eclipseProcessWrapper = null;
 		if (phpExeProcess != null) {
 			subMonitor.worked(10);

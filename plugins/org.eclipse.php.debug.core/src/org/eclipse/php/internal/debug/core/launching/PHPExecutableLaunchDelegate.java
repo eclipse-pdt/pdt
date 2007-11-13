@@ -39,6 +39,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicat
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitializersRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPExecutableDebuggerInitializer;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
+import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.swt.widgets.Display;
 
@@ -274,6 +275,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 
 			final Process p = DebugPlugin.exec(cmdLine, workingDir, envp);
+			// Attach a crash detector
+			new Thread(new ProcessCrashDetector(p)).start();
+			
 			IProcess process = null;
 
 			// add process type to process attributes
