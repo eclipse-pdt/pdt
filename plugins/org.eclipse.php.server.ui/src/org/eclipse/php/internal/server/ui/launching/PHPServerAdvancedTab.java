@@ -104,9 +104,12 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 				if (!isOpenInBrowser) {
 					debugFirstPageBt.setSelection(true);
 					debugAllPagesBt.setSelection(false);
-					debugStartFromBt.setSelection(false);
-					debugContinueBt.setSelection(false);
+				} else {
+					debugFirstPageBt.setSelection(false);
+					debugAllPagesBt.setSelection(true);
 				}
+				debugStartFromBt.setSelection(false);
+				debugContinueBt.setSelection(false);
 				enableSessionSettingButtons(isOpenInBrowser);
 				updateLaunchConfigurationDialog();
 			}
