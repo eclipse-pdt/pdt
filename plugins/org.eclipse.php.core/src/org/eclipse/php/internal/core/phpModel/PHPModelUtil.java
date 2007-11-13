@@ -286,7 +286,7 @@ public class PHPModelUtil {
 		String fileName = null;
 		if (fileData != null)
 			fileName = fileData.getName();
-		if (fileName.equals("")) //$NON-NLS-1$
+		if (fileName != null && fileName.equals("")) //$NON-NLS-1$
 			fileName = null;
 		PHPClassData superClassData = null;
 		IPhpModel model = null;
