@@ -376,11 +376,11 @@ public class PHPLaunchUtilities {
 	 * PDT is waiting for the debugger's response.
 	 * Once a response arrives, the {@link #hideWaitForDebuggerMessage()} should be called to remove 
 	 * the window.
-	 * In case a response does not arrive, there is a good chance that the {@link #showDebuggerErrorMessage()} should
+	 * In case a response does not arrive, there is a good chance that the {@link #showLaunchErrorMessage()} should
 	 * be called.
 	 * @param debugConnectionThread 
 	 * @see #hideWaitForDebuggerMessage()
-	 * @see #showDebuggerErrorMessage()
+	 * @see #showLaunchErrorMessage()
 	 */
 	public static void showWaitForDebuggerMessage(final DebugConnectionThread debugConnectionThread) {
 		if (progressDialog != null) {
@@ -420,12 +420,8 @@ public class PHPLaunchUtilities {
 	 * Display a standard error message to indicating an fatal error detected while staring a debug session.
 	 * A fatal error occurs when the remote debugger does not exist or has a different version.
 	 */
-	public static void showDebuggerErrorMessage() {
-		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
-				MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Error, PHPDebugCoreMessages.Debugger_Error_Message);
-			}
-		});
+	public static void showLaunchErrorMessage() {
+		showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_Launch_Error, PHPDebugCoreMessages.Debugger_Error_Message);
 	}
 
 	/**
@@ -434,10 +430,21 @@ public class PHPLaunchUtilities {
 	 * 
 	 * @param errorMessage The message to display.
 	 */
-	public static void showDebuggerErrorMessage(final String errorMessage) {
+	public static void showLaunchErrorMessage(final String errorMessage) {
+		showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_Launch_Error, errorMessage);
+	}
+	
+	/**
+	 * Display an error message to indicating an fatal error detected while staring a debug session.
+	 * A fatal error occurs when the remote debugger does not exist or has a different version.
+	 * 
+	 * @param title The error message title.
+	 * @param errorMessage The message to display.
+	 */
+	public static void showDebuggerErrorMessage(final String title, final String errorMessage) {
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
-				MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Error, errorMessage);
+				MessageDialog.openError(Display.getDefault().getActiveShell(), title, errorMessage);
 			}
 		});
 	}
