@@ -25,15 +25,10 @@ import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
 public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     private PHPThread fThread;
-
     private String fName;
-
     private String fFileName;
-
     private int fPC;
-
     private int fId;
-
     private String fResName;
 
     public PHPStackFrame(IThread thread, String fileName, String funcName, int lineNumber, int id, String rName) {
@@ -58,7 +53,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStackFrame#getThread()
      */
     public IThread getThread() {
@@ -67,7 +62,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
      */
     public IVariable[] getVariables() throws DebugException {
@@ -76,7 +71,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
      */
     public boolean hasVariables() throws DebugException {
@@ -85,7 +80,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
      */
     public int getLineNumber() throws DebugException {
@@ -98,7 +93,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStackFrame#getCharStart()
      */
     public int getCharStart() throws DebugException {
@@ -107,7 +102,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStackFrame#getCharEnd()
      */
     public int getCharEnd() throws DebugException {
@@ -116,7 +111,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStackFrame#getName()
      */
     public String getName() throws DebugException {
@@ -125,7 +120,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStackFrame#getRegisterGroups()
      */
     public IRegisterGroup[] getRegisterGroups() throws DebugException {
@@ -134,7 +129,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStackFrame#hasRegisterGroups()
      */
     public boolean hasRegisterGroups() throws DebugException {
@@ -143,7 +138,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStep#canStepInto()
      */
     public boolean canStepInto() {
@@ -152,7 +147,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStep#canStepOver()
      */
     public boolean canStepOver() {
@@ -161,7 +156,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStep#canStepReturn()
      */
     public boolean canStepReturn() {
@@ -170,7 +165,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStep#isStepping()
      */
     public boolean isStepping() {
@@ -179,7 +174,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStep#stepInto()
      */
     public void stepInto() throws DebugException {
@@ -188,7 +183,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStep#stepOver()
      */
     public void stepOver() throws DebugException {
@@ -197,7 +192,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.IStep#stepReturn()
      */
     public void stepReturn() throws DebugException {
@@ -206,7 +201,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
      */
     public boolean canResume() {
@@ -215,7 +210,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
      */
     public boolean canSuspend() {
@@ -224,7 +219,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
      */
     public boolean isSuspended() {
@@ -233,7 +228,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.ISuspendResume#resume()
      */
     public void resume() throws DebugException {
@@ -242,7 +237,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
      */
     public void suspend() throws DebugException {
@@ -251,7 +246,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
      */
     public boolean canTerminate() {
@@ -260,7 +255,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
      */
     public boolean isTerminated() {
@@ -269,7 +264,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.debug.core.model.ITerminate#terminate()
      */
     public void terminate() throws DebugException {
@@ -278,7 +273,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /**
      * Returns the name of the source file this stack frame is associated with.
-     * 
+     *
      * @return the name of the source file this stack frame is associated with
      */
     public String getSourceName() {
@@ -287,7 +282,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /**
      * Returns the file name with full path.
-     * 
+     *
      * @return the file name with full path
      */
     public String getAbsoluteFileName() {
@@ -296,7 +291,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object obj) {
@@ -306,21 +301,16 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
         if (obj instanceof PHPStackFrame) {
             PHPStackFrame sf = (PHPStackFrame) obj;
             try {
-                return sf.fId == fId && sf.checkSourceName().equals(checkSourceName()) && sf.getName().equals(getName());
+                return sf.fId == fId && sf.getSourceName().equals(getSourceName()) && sf.getName().equals(getName());
             } catch (DebugException e) {
             }
         }
         return false;
     }
 
-    private String checkSourceName() {
-        return fResName;
- 
-    }
-    
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
@@ -329,7 +319,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
     /**
      * Returns this stack frame's unique identifier within its thread
-     * 
+     *
      * @return this stack frame's unique identifier within its thread
      */
     protected int getIdentifier() {
@@ -337,9 +327,9 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
     }
 
     /**
-     * Returns this frame's PHP stack variables 
-     * 
-     * @return this frame's PHP stack variables 
+     * Returns this frame's PHP stack variables
+     *
+     * @return this frame's PHP stack variables
      */
     public Expression[] getStackVariables() {
         return ((PHPDebugTarget) getDebugTarget()).getStackVariables(this);

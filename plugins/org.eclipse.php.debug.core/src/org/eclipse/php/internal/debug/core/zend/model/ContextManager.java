@@ -28,7 +28,6 @@ public class ContextManager {
 	private StackLayer[] fPreviousLayers;
 	private IStackFrame[] fPreviousFrames = null;
 	private Map<String, Expression[]> fStackVariables;
-	private Map<String, String> fResolvedFiles;
 	private Map<String, String> fResolvedStackLayersMap;
 	private ResolveBlackList fResolveBlackList;
 
@@ -41,16 +40,8 @@ public class ContextManager {
 		fSuspendCount = target.getSuspendCount();
 		fDebugger = debugger;
 		fStackVariables = new HashMap<String, Expression[]>();
-		fResolvedFiles = new HashMap<String, String>();
 		fResolvedStackLayersMap = new HashMap<String, String>();
 		fResolveBlackList = new ResolveBlackList();
-	}
-
-	private String resolveRemoteFile(String remoteFile) {
-		if (!fResolvedFiles.containsKey(remoteFile)) {
-			fResolvedFiles.put(remoteFile, RemoteDebugger.convertToLocalFilename(remoteFile, fTarget));
-		}
-		return fResolvedFiles.get(remoteFile);
 	}
 
 	/**
@@ -110,12 +101,28 @@ public class ContextManager {
 		boolean layersSame = compareLayers(layers, fPreviousLayers);
 		if (layersSame) {
 			fVariables = createVariables(main, false, false);
+
+			// Update top of the stack frame:
+			int topID = fPreviousFrames[0] instanceof PHPStackFrame ? ((PHPStackFrame) fPreviousFrames[0]).getIdentifier() : 0;
+
+			RemoteDebugger remoteDebugger = (RemoteDebugger) fDebugger;
+			String cwd = remoteDebugger.getCurrentWorkingDirectory();
+			String currentScript = null;
+			for (int i = 1, frameCt = ((layers.length - 1) * 2 + 1); i < layers.length; ++i, frameCt -= 2) {
+				if (!layers[i].getCalledFileName().equals(fTarget.getLastFileName())) {
+					PHPStackFrame stackFrame = (PHPStackFrame) fPreviousFrames[frameCt - 1];
+					currentScript = (stackFrame).getSourceName();
+					break;
+				}
+			}
+			String resolvedFile = remoteDebugger.convertToLocalFilename(fTarget.getLastFileName(), cwd, currentScript);
+			fPreviousFrames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (main) ? "" : fPreviousFrames[1].getName(), fTarget.getLastStop(), topID, resolvedFile);
+
 		} else {
 			fPreviousFrames = createNewFrames(layers, thread);
 			fVariables = createVariables(main, false, true);
 		}
-		int topID = fPreviousFrames[0] instanceof PHPStackFrame ? ((PHPStackFrame) fPreviousFrames[0]).getIdentifier() : 0;
-		fPreviousFrames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (main) ? "" : fPreviousFrames[1].getName(), fTarget.getLastStop(), topID, resolveRemoteFile(fTarget.getLastFileName()));
+
 		createStackVariables(layers);
 		return fPreviousFrames;
 	}
@@ -159,20 +166,28 @@ public class ContextManager {
 	}
 
 	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread) throws DebugException {
+		RemoteDebugger remoteDebugger = (RemoteDebugger) fDebugger;
+		String cwd = remoteDebugger.getCurrentWorkingDirectory();
+		String currentScript = null;
+
 		IStackFrame[] frames = new IStackFrame[((layers.length - 1) * 2) + 1];
 		int frameCt = ((layers.length - 1) * 2 + 1);
 		for (int i = 1; i < layers.length; i++) {
 			String sName = layers[i].getCallerFileName();
-			String rName = resolveRemoteFile(sName);
+			String rName = remoteDebugger.convertToLocalFilename(sName, cwd, frameCt < frames.length ? ((PHPStackFrame)frames[frameCt]).getSourceName() : null);
 			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i].getCallerFunctionName(), layers[i].getCallerLineNumber() + 1, frameCt, rName);
 			frameCt--;
 			sName = layers[i].getCalledFileName();
-			rName = resolveRemoteFile(sName);
+			rName = remoteDebugger.convertToLocalFilename(sName, cwd, rName);
 			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i].getCalledFunctionName(), layers[i].getCalledLineNumber() + 1, frameCt, layers[i], rName);
 			frameCt--;
+			if (!layers[i].getCalledFileName().equals(fTarget.getLastFileName())) {
+				currentScript = rName;
+			}
 		}
 
-		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), fTarget.getLastStop(), frameCt, resolveRemoteFile(fTarget.getLastFileName()));
+		String resolvedFile = remoteDebugger.convertToLocalFilename(fTarget.getLastFileName(), cwd, currentScript);
+		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), fTarget.getLastStop(), frameCt, resolvedFile);
 		fPreviousLayers = layers;
 		return frames;
 	}
@@ -192,8 +207,13 @@ public class ContextManager {
 	private IVariable[] createVariables(boolean main, boolean update, boolean clear) {
 
 		DefaultExpressionsManager expressionsManager = fTarget.getExpressionManager();
-		if (clear)
+		if (expressionsManager == null) {
+			return new IVariable[0];
+		}
+
+		if (clear) {
 			expressionsManager.clear();
+		}
 		Expression[] localVariables = expressionsManager.getLocalVariables(1);
 		Expression[] GlobalVariables = expressionsManager.getGlobalVariables(1);
 		IVariable[] variables;

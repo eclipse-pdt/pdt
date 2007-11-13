@@ -35,7 +35,7 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
     /**
      * Constructs a line breakpoint on the given resource at the given line
      * number.
-     * 
+     *
      * @param resource
      *            file on which to set the breakpoint
      * @param lineNumber
@@ -54,8 +54,8 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
                 marker.setAttribute(IPHPConstants.Condition, "");
                 marker.setAttribute(IBreakpoint.PERSISTED, true);
                 marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);*/
-                
-        
+
+
                 attributes.put(IBreakpoint.ENABLED, Boolean.TRUE);
                 attributes.put(IBreakpoint.ID, getModelIdentifier());
                 attributes.put(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { resource.getName(), Integer.toString(lineNumber) }));

@@ -24,10 +24,6 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
-import org.eclipse.php.internal.core.util.PHPSearchEngine;
-import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
-import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
-import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
@@ -1038,50 +1034,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	public ContextManager getContextManager() {
 		return fContextManager;
-	}
-
-	/**
-	 * Determines PHP script path which is currently interpreted by iterating over the stack
-	 * @return resolved PHP script path or <code>null</code> in case it couldn't be resolved
-	 */
-	public String resolvePreviousScript(StackLayer[] layers) {
-		String previousFileName = null;
-		if (layers != null && layers.length > 1) {
-			for (int i = 1; i < layers.length; i++) {
-				String callerFileName = layers[i].getCallerFileName();
-				String calledFileName = layers[i].getCalledFileName();
-				String resolvedCalledFile = getContextManager().getCachedResolvedStackLayer(callerFileName + calledFileName);
-
-				//if the couldn't find a cached resolved called file name
-				//run the PHP search engine
-				if (resolvedCalledFile.length() == 0) {//this means there's no cached resolved file name
-					try {
-						Result<?, ?> result = PHPSearchEngine.find(calledFileName, getProject().getLocation().toString(), new Path(callerFileName).removeLastSegments(1).toString(), getProject());
-						if (result instanceof ResourceResult) {
-							// workspace file
-							ResourceResult resResult = (ResourceResult) result;
-							IResource resource = resResult.getFile();
-							resolvedCalledFile = resource.getFullPath().toString();
-						} else if (result instanceof IncludedFileResult) {
-							IncludedFileResult incFileResult = (IncludedFileResult) result;
-							resolvedCalledFile = incFileResult.getFile().getAbsolutePath().toString();
-						}
-					} catch (Exception e) {
-						PHPDebugPlugin.log(e);
-					}
-					//cache the resolved file name
-					getContextManager().cacheResolvedStackLayers(callerFileName + calledFileName, resolvedCalledFile);
-				}
-				if (resolvedCalledFile.length() > 0) {
-					layers[i].setCalledFileName(resolvedCalledFile);
-					if (i + 1 < layers.length) {
-						layers[i + 1].setCallerFileName(resolvedCalledFile);
-					}
-				}
-			}
-			previousFileName = layers[layers.length - 1].getCalledFileName();
-		}
-		return previousFileName;
 	}
 
 	public IBreakpointManager getBreakpointManager() {

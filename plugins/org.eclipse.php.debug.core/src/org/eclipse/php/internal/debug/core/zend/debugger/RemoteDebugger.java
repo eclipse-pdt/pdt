@@ -18,6 +18,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
@@ -32,6 +34,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThr
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 import org.eclipse.php.internal.ui.Logger;
 
 /**
@@ -184,11 +187,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Returns local path corresponding to the current working directory of the PHP script,
 	 * which is currently running.
 	 *
-	 * @param debugTarget
-	 * @return
+	 * @return current working directory
 	 */
-	public static String getCurrentWorkingDirectory(PHPDebugTarget debugTarget) {
-		String cwd = ((RemoteDebugger)debugTarget.getRemoteDebugger()).sendCWDRequest();
+	public String getCurrentWorkingDirectory() {
+		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
+		String cwd = sendCWDRequest();
 		if (cwd != null) {
 			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
 			if (pathMapper != null) {
@@ -202,15 +205,45 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Returns local file name corresponding to the given remote path
-	 * @param remoteFile
-	 * @return local file, or remoteFile as is in case of resolving failure
+	 *  Returns local file name corresponding to the given remote path.
+	 *  This method asks debugger for the current working directory before resolving.
+	 *
+	 * @param remoteFile File to resolve
+	 * @return local file, or remoteFile in case of resolving failure
 	 */
-	public static String convertToLocalFilename(String remoteFile, PHPDebugTarget debugTarget) {
+	public String convertToLocalFilename(String remoteFile) {
+		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
+
+		String currentScript = null;
+		// detect current script:
+		try {
+			IStackFrame[] stackFrames = debugTarget.getContextManager().getStackFrames();
+			if (stackFrames.length > 0) {
+				if (stackFrames[0] instanceof PHPStackFrame) {
+					PHPStackFrame phpLastFrame = (PHPStackFrame) stackFrames[0];
+					currentScript = phpLastFrame.getSourceName();
+				}
+			}
+		} catch (DebugException e) {
+			Logger.logException(e);
+		}
+		return convertToLocalFilename(remoteFile, getCurrentWorkingDirectory(), currentScript);
+	}
+
+	/**
+	 * Returns local file name corresponding to the given remote path
+	 * @param remoteFile File to resolve
+	 * @param cwd Current working directory received from the debugger
+	 * @param currentScript Script that is on the top of the debug stack currently
+	 * @return local file, or remoteFile in case of resolving failure
+	 */
+	public String convertToLocalFilename(String remoteFile, String cwd, String currentScript) {
+		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
 		if (debugTarget.getContextManager().isResolveBlacklisted(remoteFile)) {
 			return remoteFile;
 		}
 
+		// If we are running local debugger, check if "remote" file exists and return it if it does
 		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
 			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
 			if (wsFile != null) {
@@ -220,15 +253,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 
 		try {
-			StackLayer[] layers = debugTarget.getContextManager().getRemoteDebugger().getCallStack().getLayers();
-			String previousScript = debugTarget.resolvePreviousScript(layers);
-			String currentScriptDir = "";
-			if (previousScript != null) {
-				currentScriptDir = new Path(previousScript).removeLastSegments(1).toString();
+			String currentScriptDir = null;
+			if (currentScript != null) {
+				currentScriptDir = new Path(currentScript).removeLastSegments(1).toString();
 			}
 
-			String cwd = getCurrentWorkingDirectory(debugTarget);
-			PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd == null ? "" : cwd, currentScriptDir);
+			PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd, currentScriptDir);
 			if (pathEntry != null) {
 				return pathEntry.getResolvedPath();
 			}

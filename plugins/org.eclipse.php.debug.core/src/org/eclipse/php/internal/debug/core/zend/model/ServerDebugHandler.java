@@ -277,7 +277,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		super.parsingErrorOccured(debugError);
 
 		// resolve path
-		String localFileName = RemoteDebugger.convertToLocalFilename(debugError.getFullPathName(), fDebugTarget);
+		String localFileName = ((RemoteDebugger)fRemoteDebugger).convertToLocalFilename(debugError.getFullPathName(), null, null);
 		debugError.setFileName(localFileName);
 
 		fDebugTarget.getDebugErrors().add(debugError);
