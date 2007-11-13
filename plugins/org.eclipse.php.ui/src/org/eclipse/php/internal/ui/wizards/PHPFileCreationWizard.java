@@ -15,18 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -35,13 +25,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 
 public class PHPFileCreationWizard extends Wizard implements INewWizard {
@@ -81,7 +67,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					FileCreator.createFile(PHPFileCreationWizard.this, containerName, fileName, monitor, contents);
+					new FileCreator().createFile(PHPFileCreationWizard.this, containerName, fileName, monitor, contents);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -122,7 +108,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * file if missing or just replace its contents, and open
 		 * the editor on the newly created file.
 		 * This method does not take an editor id to use when opening the file.
-		 * 
+		 *
 		 * @param wizard
 		 * @param containerName
 		 * @param fileName
@@ -131,7 +117,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * @throws CoreException
 		 * @see {@link #createFile(Wizard, String, String, IProgressMonitor, String, String)}
 		 */
-		public static void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
+		public void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
 			createFile(wizard, containerName, fileName, monitor, contents, null);
 		}
 
@@ -139,7 +125,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * The worker method. It will find the container, create the
 		 * file if missing or just replace its contents, and open
 		 * the editor on the newly created file.
-		 * 
+		 *
 		 * @param wizard
 		 * @param containerName
 		 * @param fileName
@@ -148,7 +134,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * @param editorID An optional editor ID to use when opening the file (can be null).
 		 * @throws CoreException
 		 */
-		public static void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents, final String editorID) throws CoreException {
+		public void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents, final String editorID) throws CoreException {
 			// create a sample file
 			monitor.beginTask(NLS.bind(PHPUIMessages.getString("newPhpFile_create"), fileName), 2);
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -166,7 +152,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			if (lineSeparator == null)
 				lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);
 			if (contents != null) {
-				contents = contents.replaceAll("(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$ //$NON-NLS-2$	
+				contents = contents.replaceAll("(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$
 			}
 
 			try {
@@ -178,7 +164,11 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				}
 				stream.close();
 			} catch (IOException e) {
+				Logger.logException(e);
+				return;
 			}
+
+			normalizeFile(file);
 
 			// Change file encoding:
 			/*if (container instanceof IProject) {
@@ -225,6 +215,13 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			IStatus status = new Status(IStatus.ERROR, PHPUIMessages.getString("PHPFileCreationWizard.4"), IStatus.OK, message, null); //$NON-NLS-1$
 			throw new CoreException(status);
 		}
+
+		/**
+		 * @param file
+		 */
+		protected void normalizeFile(IFile file) {
+		}
+
 	}
 
 }
