@@ -417,13 +417,27 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Display an error message to indicating an fatal error detected while staring a debug session.
+	 * Display a standard error message to indicating an fatal error detected while staring a debug session.
 	 * A fatal error occurs when the remote debugger does not exist or has a different version.
 	 */
 	public static void showDebuggerErrorMessage() {
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Error, PHPDebugCoreMessages.Debugger_Error_Message);
+			}
+		});
+	}
+
+	/**
+	 * Display an error message to indicating an fatal error detected while staring a debug session.
+	 * A fatal error occurs when the remote debugger does not exist or has a different version.
+	 * 
+	 * @param errorMessage The message to display.
+	 */
+	public static void showDebuggerErrorMessage(final String errorMessage) {
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Error, errorMessage);
 			}
 		});
 	}
