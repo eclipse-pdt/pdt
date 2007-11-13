@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
@@ -260,7 +259,7 @@ public class PHPExecutableDebuggerInitializer {
 				final String message = msg;
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Error, message);
+						MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Launch_Error, message);
 						DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 					}
 				});
