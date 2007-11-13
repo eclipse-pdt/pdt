@@ -41,6 +41,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	 */
 	public PHPFileCreationWizard() {
 		super();
+		setWindowTitle(PHPUIMessages.getString("PHPFileCreationWizard.5")); //$NON-NLS-1$
 		setNeedsProgressMonitor(true);
 	}
 
