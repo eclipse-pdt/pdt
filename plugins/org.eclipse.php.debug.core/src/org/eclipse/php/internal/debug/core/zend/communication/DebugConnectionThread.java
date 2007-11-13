@@ -10,27 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.communication;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -262,7 +250,7 @@ public class DebugConnectionThread implements Runnable {
 					} else {
 						closeConnection();
 						PHPLaunchUtilities.hideWaitForDebuggerMessage();
-						PHPLaunchUtilities.showDebuggerErrorMessage();
+						PHPLaunchUtilities.showLaunchErrorMessage();
 					}
 					if (!isConnected())
 						break;
@@ -1175,6 +1163,7 @@ public class DebugConnectionThread implements Runnable {
 				} catch (EOFException exc) {
 					shutDown();
 				} catch (SocketException exc) {
+					PHPLaunchUtilities.showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_General_Error, "Connection reset");
 					shutDown();
 				} catch (IOException exc) {
 					PHPDebugPlugin.log(exc);
