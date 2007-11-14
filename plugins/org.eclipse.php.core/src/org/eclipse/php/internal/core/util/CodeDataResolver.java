@@ -132,12 +132,12 @@ public class CodeDataResolver {
 					int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
 					TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + tRegion.getLength(), sRegion, true);
 					int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
-					int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statement, endPosition, true);
+					int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, endPosition, true);
 					String elementName = statement.subSequence(startPosition, endPosition).toString();
 
 					// Determine previous word:
 					int prevWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, startPosition);
-					int prevWordStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statement, prevWordEnd, false);
+					int prevWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, prevWordEnd, false);
 					String prevWord = statement.subSequence(prevWordStart, prevWordEnd).toString();
 
 					// Determine next word:
@@ -190,7 +190,7 @@ public class CodeDataResolver {
 
 							// Determine pre-list word:
 							final int preListWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, listStartPosition);
-							final int preListWordStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statement, preListWordEnd, false);
+							final int preListWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, preListWordEnd, false);
 							final String preListWord = statement.subSequence(preListWordStart, preListWordEnd).toString();
 
 							if ("extends".equalsIgnoreCase(preListWord) || "implements".equalsIgnoreCase(preListWord)) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -437,7 +437,7 @@ public class CodeDataResolver {
 		if (fileData == null) {
 			return null;
 		}
-		int classNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statementText, propertyEndPosition, true);
+		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
 			if (className.equals("self")) { //$NON-NLS-1$
@@ -468,7 +468,7 @@ public class CodeDataResolver {
 		// if its function call calc the return type.
 		if (statementText.charAt(propertyEndPosition - 1) == ')') {
 			int functionNameEnd = getFunctionNameEndOffset(statementText, propertyEndPosition - 1);
-			int functionNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statementText, functionNameEnd, false);
+			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, functionNameEnd, false);
 
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
 			PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset);

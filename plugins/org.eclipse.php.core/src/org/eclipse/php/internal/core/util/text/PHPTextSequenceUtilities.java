@@ -220,7 +220,7 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
-	public static int readIdentifiarStartIndex(TextSequence textSequence, int startPosition, boolean includeDolar) {
+	public static int readIdentifierStartIndex(TextSequence textSequence, int startPosition, boolean includeDolar) {
 		while (startPosition > 0) {
 			char ch = textSequence.charAt(startPosition - 1);
 			if (!Character.isLetterOrDigit(ch) && ch != '_') {
@@ -234,7 +234,7 @@ public class PHPTextSequenceUtilities {
 		return startPosition;
 	}
 
-	public static int readIdentifiarEndIndex(TextSequence textSequence, int startPosition, boolean includeDolar) {
+	public static int readIdentifierEndIndex(TextSequence textSequence, int startPosition, boolean includeDolar) {
 		int length = textSequence.length();
 		if (includeDolar && startPosition < length && textSequence.charAt(startPosition) == '$') {
 			startPosition++;
