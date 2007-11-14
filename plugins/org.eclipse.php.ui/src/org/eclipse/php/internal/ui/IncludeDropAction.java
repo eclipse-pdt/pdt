@@ -73,7 +73,7 @@ public class IncludeDropAction extends FileDropAction {
 		IStructuredDocumentRegion region = document.getRegionAtCharacterOffset(offset);
 		if (region == null)
 			return null;
-		TextSequence statement = PHPTextSequenceUtilities.getStatment(offset, region, false);
+		TextSequence statement = PHPTextSequenceUtilities.getStatement(offset, region, false);
 		if (statement == null)
 			return null;
 		String partitionType = TextSequenceUtilities.getTypeByAbsoluteOffset(statement, offset);
