@@ -284,7 +284,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		int totalLength = statementText.length();
 
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength); // read whitespace
-		int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statementText, endPosition, true);
+		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 		String lastWord = statementText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
 
@@ -300,7 +300,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startPosition); // read whitespace
-		startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statementText, endPosition, true);
+		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 		String firstWord = statementText.subSequence(startPosition, endPosition).toString();
 
 		if (!haveSpacesAtEnd && isNewOrInstanceofStatement(projectModel, firstWord, lastWord, offset, selectionLength, explicit, type)) {
@@ -389,7 +389,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 		int length = text.length();
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, length);
-		int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(text, endPosition, false);
+		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, false);
 		if (endPosition != length && startPosition != endPosition) {
 			return false;
 		}
@@ -410,7 +410,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 		endPosition--;
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, endPosition);
-		startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(text, endPosition, true);
+		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, true);
 		String variableName = text.subSequence(startPosition, endPosition).toString();
 
 		if (variableName.startsWith("$")) { //$NON-NLS-1$
@@ -640,7 +640,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	 */
 	protected String innerGetClassName(PHPProjectModel projectModel, String fileName, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line) {
 
-		int classNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statementText, propertyEndPosition, true);
+		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
 			if (className.equals("self")) { //$NON-NLS-1$
@@ -676,7 +676,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		// if its function call calc the return type.
 		if (statementText.charAt(propertyEndPosition - 1) == ')') {
 			int functionNameEnd = getFunctionNameEndOffset(statementText, propertyEndPosition - 1);
-			int functionNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statementText, functionNameEnd, false);
+			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, functionNameEnd, false);
 
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
 			PHPClassData classData = getContainerClassData(projectModel, fileName, offset);
@@ -962,7 +962,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(text, text.length());
-		int wordStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(text, wordEnd, false);
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(text, wordEnd, false);
 		String word = text.subSequence(wordStart, wordEnd).toString();
 
 		String functionNameStart;
@@ -1022,7 +1022,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		text = text.subTextSequence(classIdentifierEndPosition, text.length());
 
 		int endPosition = text.length();
-		int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(text, endPosition, false);
+		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, false);
 		String lastWord = text.subSequence(startPosition, endPosition).toString();
 
 		Matcher extendsMatcher = extendsPattern.matcher(text);
@@ -1041,7 +1041,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, startPosition);
-		startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(text, endPosition, true);
+		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, true);
 		String firstWord = text.subSequence(startPosition, endPosition).toString();
 
 		if (firstWord.equalsIgnoreCase("extends")) { //$NON-NLS-1$
@@ -1256,7 +1256,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		startPosition = PHPTextSequenceUtilities.readForwardSpaces(text, startPosition + 1); // + 1 for the '('
-		int endPosition = PHPTextSequenceUtilities.readIdentifiarEndIndex(text, startPosition, false);
+		int endPosition = PHPTextSequenceUtilities.readIdentifierEndIndex(text, startPosition, false);
 		String className = text.subSequence(startPosition, endPosition).toString();
 
 		if (endPosition == text.length()) {
@@ -1326,7 +1326,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		int endPosition = startPosition - 1;
 
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, endPosition);
-		startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(text, endPosition, true);
+		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, true);
 		String variableName = text.subSequence(startPosition, endPosition).toString();
 
 		if (variableName.startsWith("$")) { //$NON-NLS-1$

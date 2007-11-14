@@ -160,7 +160,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 		int totalLength = statementText.length();
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength); // read whitespace
-		int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statementText, endPosition, true);
+		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 		String lastWord = statementText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
 
