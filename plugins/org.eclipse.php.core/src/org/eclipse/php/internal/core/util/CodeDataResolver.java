@@ -130,7 +130,7 @@ public class CodeDataResolver {
 
 					// Determine element name:
 					int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
-					TextSequence statement = PHPTextSequenceUtilities.getStatment(elementStart + tRegion.getLength(), sRegion, true);
+					TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + tRegion.getLength(), sRegion, true);
 					int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
 					int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statement, endPosition, true);
 					String elementName = statement.subSequence(startPosition, endPosition).toString();
@@ -433,12 +433,12 @@ public class CodeDataResolver {
 	/**
 	 * getting an instance and finding its type.
 	 */
-	private String innerGetClassName(PHPProjectModel projectModel, PHPFileData fileData, TextSequence statmentText, int propertyEndPosition, boolean isClassTriger, int offset, int line) {
+	private String innerGetClassName(PHPProjectModel projectModel, PHPFileData fileData, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line) {
 		if (fileData == null) {
 			return null;
 		}
-		int classNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, propertyEndPosition, true);
-		String className = statmentText.subSequence(classNameStart, propertyEndPosition).toString();
+		int classNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statementText, propertyEndPosition, true);
+		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
 			if (className.equals("self")) { //$NON-NLS-1$
 				PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset - 6); // the
@@ -462,15 +462,15 @@ public class CodeDataResolver {
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
 			// set the new statement start location as the original (absolute) one
-			int statementStart = statmentText.getOriginalOffset(0);
+			int statementStart = statementText.getOriginalOffset(0);
 			return PHPFileDataUtilities.getVariableType(fileData, className, statementStart, line, projectModel, true);
 		}
 		// if its function call calc the return type.
-		if (statmentText.charAt(propertyEndPosition - 1) == ')') {
-			int functionNameEnd = getFunctionNameEndOffset(statmentText, propertyEndPosition - 1);
-			int functionNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, functionNameEnd, false);
+		if (statementText.charAt(propertyEndPosition - 1) == ')') {
+			int functionNameEnd = getFunctionNameEndOffset(statementText, propertyEndPosition - 1);
+			int functionNameStart = PHPTextSequenceUtilities.readIdentifiarStartIndex(statementText, functionNameEnd, false);
 
-			String functionName = statmentText.subSequence(functionNameStart, functionNameEnd).toString();
+			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
 			PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset);
 			if (classData != null) { // if its a clss function
 				return getFunctionReturnType(projectModel, fileData, classData.getName(), functionName);
@@ -490,17 +490,17 @@ public class CodeDataResolver {
 	 * this function searches the sequence from the right closing bracket ")" and finding the position of the left "("
 	 * the offset has to be the offset of the "("
 	 */
-	private int getFunctionNameEndOffset(TextSequence statmentText, int offset) {
-		if (statmentText.charAt(offset) != ')') {
+	private int getFunctionNameEndOffset(TextSequence statementText, int offset) {
+		if (statementText.charAt(offset) != ')') {
 			return 0;
 		}
 		int currChar = offset;
 		int bracketsNum = 1;
 		while (bracketsNum != 0 && currChar >= 0) {
 			currChar--;
-			if (statmentText.charAt(currChar) == ')') {
+			if (statementText.charAt(currChar) == ')') {
 				bracketsNum++;
-			} else if (statmentText.charAt(currChar) == '(') {
+			} else if (statementText.charAt(currChar) == '(') {
 				bracketsNum--;
 			}
 		}
@@ -510,8 +510,8 @@ public class CodeDataResolver {
 	/**
 	 * finding the type of the class variable.
 	 */
-	private String getVarType(PHPProjectModel projectModel, PHPFileData fileData, String className, String varName, int statmentStart, int line) {
-		String tempType = PHPFileDataUtilities.getVariableType(fileData.getName(), "this;*" + varName, statmentStart, line, projectModel.getPHPUserModel(), true); //$NON-NLS-1$
+	private String getVarType(PHPProjectModel projectModel, PHPFileData fileData, String className, String varName, int statementStart, int line) {
+		String tempType = PHPFileDataUtilities.getVariableType(fileData.getName(), "this;*" + varName, statementStart, line, projectModel.getPHPUserModel(), true); //$NON-NLS-1$
 		if (tempType != null) {
 			return tempType;
 		}
@@ -534,7 +534,7 @@ public class CodeDataResolver {
 		if (superClassNameData == null) {
 			return null;
 		}
-		return getVarType(projectModel, fileData, superClassNameData.getName(), varName, statmentStart, line);
+		return getVarType(projectModel, fileData, superClassNameData.getName(), varName, statementStart, line);
 	}
 
 	/**

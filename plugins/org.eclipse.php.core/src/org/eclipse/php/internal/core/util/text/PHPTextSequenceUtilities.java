@@ -46,7 +46,7 @@ public class PHPTextSequenceUtilities {
 	 *
 	 * @return text sequence of the statement
 	 */
-	public static TextSequence getStatment(int offset, IStructuredDocumentRegion sdRegion, boolean removeComments) {
+	public static TextSequence getStatement(int offset, IStructuredDocumentRegion sdRegion, boolean removeComments) {
 		int documentOffset = offset;
 		if (documentOffset == sdRegion.getEndOffset()) {
 			documentOffset -= 1;
@@ -153,10 +153,10 @@ public class PHPTextSequenceUtilities {
 	}
 
 	/**
-	 * Checks if we are inside function declaretion statment.
-	 * If yes the start offset of the function, otherwisw returns -1.
+	 * Checks if we are inside function declaration statement.
+	 * If yes the start offset of the function, otherwise returns -1.
 	 */
-	public static int isInFunctionDeclaretion(TextSequence textSequence) {
+	public static int isInFunctionDeclaration(TextSequence textSequence) {
 		Matcher matcher = FUNCTION_PATTERN.matcher(textSequence);
 		// search for the 'function' word.
 		while (matcher.find()) {
@@ -188,7 +188,7 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
-	public static int isInClassDeclaretion(TextSequence textSequence) {
+	public static int isInClassDeclaration(TextSequence textSequence) {
 		Matcher matcher = CLASS_PATTERN.matcher(textSequence);
 		// search for the 'class' or 'interface words.
 		while (matcher.find()) {
@@ -197,7 +197,7 @@ public class PHPTextSequenceUtilities {
 			if (startOffset != 0 && Character.isJavaIdentifierStart(textSequence.charAt(startOffset - 1))) {
 				continue;
 			}
-			// verfy state
+			// verify state
 			String type = TextSequenceUtilities.getType(textSequence, startOffset + 1);
 			if (PHPPartitionTypes.isPHPRegularState(type)) {
 				int endOffset = matcher.end();
