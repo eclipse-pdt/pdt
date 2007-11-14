@@ -12,19 +12,25 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
+import org.eclipse.php.internal.core.util.PHPSearchEngine;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -34,7 +40,6 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThr
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
-import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 import org.eclipse.php.internal.ui.Logger;
 
 /**
@@ -48,6 +53,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	protected boolean protocolSet;
 	private DebugConnectionThread connection;
 	private IDebugHandler debugHandler;
+	private Map<String, String> resolvedFiles;
 
 	/**
 	 * Creates new RemoteDebugSession
@@ -58,6 +64,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		this.debugHandler = debugHandler;
 		connection.setCommunicationAdministrator(this);
 		connection.setCommunicationClient(this);
+		resolvedFiles = new HashMap<String, String>();
 	}
 
 	public IDebugHandler getDebugHandler() {
@@ -212,20 +219,10 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @return local file, or remoteFile in case of resolving failure
 	 */
 	public String convertToLocalFilename(String remoteFile) {
-		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
-
 		String currentScript = null;
-		// detect current script:
-		try {
-			IStackFrame[] stackFrames = debugTarget.getContextManager().getStackFrames();
-			if (stackFrames.length > 0) {
-				if (stackFrames[0] instanceof PHPStackFrame) {
-					PHPStackFrame phpLastFrame = (PHPStackFrame) stackFrames[0];
-					currentScript = phpLastFrame.getSourceName();
-				}
-			}
-		} catch (DebugException e) {
-			Logger.logException(e);
+		PHPstack callStack = getCallStack();
+		if (callStack.getSize() > 0) {
+			currentScript = callStack.getLayer(callStack.getSize() - 1).getResolvedCalledFileName();
 		}
 		return convertToLocalFilename(remoteFile, getCurrentWorkingDirectory(), currentScript);
 	}
@@ -243,30 +240,40 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return remoteFile;
 		}
 
-		// If we are running local debugger, check if "remote" file exists and return it if it does
-		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
-			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
-			if (wsFile != null) {
-				return wsFile.getFullPath().toString();
+		String resolvedFileKey = new StringBuilder(remoteFile).append(cwd).append(currentScript).toString();
+		if (!resolvedFiles.containsKey(resolvedFileKey)) {
+			String resolvedFile = null;
+			// If we are running local debugger, check if "remote" file exists and return it if it does
+			if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
+				IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
+				if (wsFile != null) {
+					resolvedFile = wsFile.getFullPath().toString();
+				} else {
+					resolvedFile = remoteFile;
+				}
 			}
-			return remoteFile;
-		}
+			if (resolvedFile == null) {
+				try {
+					String currentScriptDir = null;
+					if (currentScript != null) {
+						currentScriptDir = new Path(currentScript).removeLastSegments(1).toString();
+					}
 
-		try {
-			String currentScriptDir = null;
-			if (currentScript != null) {
-				currentScriptDir = new Path(currentScript).removeLastSegments(1).toString();
+					PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd, currentScriptDir);
+					if (pathEntry != null) {
+						resolvedFile = pathEntry.getResolvedPath();
+					}
+				} catch (InterruptedException e) {
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
 			}
-
-			PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd, currentScriptDir);
-			if (pathEntry != null) {
-				return pathEntry.getResolvedPath();
+			if (resolvedFile == null) {
+				resolvedFile = remoteFile; // in case of failure
 			}
-		} catch (InterruptedException e) {
-		} catch (CoreException e) {
-			Logger.logException(e);
+			resolvedFiles.put(resolvedFileKey, resolvedFile);
 		}
-		return remoteFile; // in case of failure
+		return resolvedFiles.get(resolvedFileKey);
 	}
 
 	/**
@@ -901,15 +908,44 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return remoteStack;
 	}
 
-	private static void convertToSystem(PHPstack remoteStack) {
+	private void convertToSystem(PHPstack remoteStack) {
 		if (remoteStack != null) {
+			String currentWorkingDir = getCurrentWorkingDirectory();
+
 			for (int i = 0; i < remoteStack.getSize(); i++) {
 				StackLayer layer = remoteStack.getLayer(i);
 				layer.setCallerLineNumber(layer.getCallerLineNumber() - 1);
 				layer.setCalledLineNumber(layer.getCalledLineNumber() - 1);
 
-				layer.setCallerFileName(layer.getCallerFileName());
-				layer.setCalledFileName(layer.getCalledFileName());
+				if (i > 0) {
+					String previousScript = remoteStack.getLayer(i - 1).getResolvedCalledFileName();
+					String previousScriptDir = ".";
+					int idx = previousScript.lastIndexOf('/');
+					if (idx == -1) {
+						idx = previousScript.lastIndexOf('\\');
+					}
+					if (idx != -1) {
+						previousScriptDir = previousScript.substring(0, idx);
+					}
+
+					IProject project = null;
+					IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(previousScript);
+					if (resource != null) {
+						project = resource.getProject();
+					} else {
+						project = debugHandler.getDebugTarget().getProject();
+					}
+					Result<?, ?> result = PHPSearchEngine.find(layer.getCalledFileName(), currentWorkingDir, previousScriptDir, project);
+					if (result instanceof ResourceResult) {
+						layer.setResolvedCalledFileName(((ResourceResult) result).getFile().getFullPath().toString());
+					} else if (result instanceof IncludedFileResult) {
+						layer.setResolvedCalledFileName(((IncludedFileResult) result).getFile().getAbsolutePath());
+					} else if (result instanceof ExternalFileResult) {
+						layer.setResolvedCalledFileName(((ExternalFileResult) result).getFile().getAbsolutePath());
+					}
+				} else {
+					layer.setResolvedCalledFileName(layer.getCalledFileName());
+				}
 			}
 		}
 	}
@@ -960,7 +996,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	// ---------------------------------------------------------------------------
 	// ---------------------------------------------------------------------------
 
-	private static class ThisHandleResponse implements ResponseHandler {
+	private class ThisHandleResponse implements ResponseHandler {
 		Object responseHandler;
 
 		public ThisHandleResponse(Object responseHandler) {

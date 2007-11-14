@@ -30,19 +30,20 @@ public class StackLayer {
     private int callerLineNumber;
     private String callerFunctionName;
 
+    private String resolvedCalledFileName;
     private String calledFileName;
     private int calledLineNumber;
     private String calledFunctionName;
 
-    private List variables;
-    
+    private List<Expression> variables;
+
     private ExpressionsValueDeserializer expressionValueDeserializer;
 
     /**
      * Creates new StackLayer
      */
     public StackLayer(String transferEncoding) {
-        variables = new ArrayList(6);
+        variables = new ArrayList<Expression>(6);
         expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
     }
 
@@ -98,6 +99,14 @@ public class StackLayer {
         this.calledFileName = calledFileName;
     }
 
+    public final String getResolvedCalledFileName() {
+        return resolvedCalledFileName;
+    }
+
+    public final void setResolvedCalledFileName(String resolvedCalledFileName) {
+        this.resolvedCalledFileName = resolvedCalledFileName;
+    }
+
     public final int getCalledLineNumber() {
         return calledLineNumber;
     }
@@ -135,7 +144,7 @@ public class StackLayer {
         return arrayVariables;
     }
 
-    public Iterator iterator() {
+    public Iterator<Expression> iterator() {
         return variables.iterator();
     }
 
@@ -152,7 +161,7 @@ public class StackLayer {
         }
         StringBuffer buffer = new StringBuffer(getCallerFunctionName() + '(');
         for (int i = 0; i < variables.size(); i++) {
-            Expression expression = (Expression) variables.get(i);
+            Expression expression = variables.get(i);
             buffer.append(" $");
             buffer.append(expression.getLastName());
             if (i != variables.size() - 1) {
