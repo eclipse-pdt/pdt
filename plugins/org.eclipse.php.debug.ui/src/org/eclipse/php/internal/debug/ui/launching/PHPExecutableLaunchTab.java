@@ -377,6 +377,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				if (!FileUtils.resourceExists(phpFile)) {
 					if (ExternalFilesRegistry.getInstance().isEntryExist(phpFile)) {
 						// Allow external files that are open in the editor.
+						debugFileTextField.setData(phpFile);
 						return true;
 					}
 					setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
