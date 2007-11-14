@@ -14,9 +14,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
@@ -30,6 +32,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.preferences.CorePreferenceConstants;
+import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -433,7 +439,7 @@ public class PHPLaunchUtilities {
 	public static void showLaunchErrorMessage(final String errorMessage) {
 		showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_Launch_Error, errorMessage);
 	}
-	
+
 	/**
 	 * Display an error message to indicating an fatal error detected while staring a debug session.
 	 * A fatal error occurs when the remote debugger does not exist or has a different version.
@@ -620,6 +626,8 @@ public class PHPLaunchUtilities {
 		if (!"".equals(phpIniLocation) && phpIniLocation != null) {
 			phpConfigDir = phpIniLocation;
 		}
+		// Check if we should treat ASP tags as PHP tags
+		String aspTags = isUsingASPTags(getProject(configuration)) ? "on" : "off";
 
 		// Important!!! 
 		// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
@@ -630,16 +638,39 @@ public class PHPLaunchUtilities {
 		}
 
 		if (splitArgs.length == 0) {
-			cmdLine = new String[] { phpExe, "-c", phpConfigDir, scriptPath };
+			cmdLine = new String[] { phpExe, "-c", phpConfigDir, "-d", "asp_tags=" + aspTags, scriptPath };
 		} else {
-			cmdLine = new String[splitArgs.length + 4];
+			cmdLine = new String[splitArgs.length + 6];
 			cmdLine[0] = phpExe;
 			cmdLine[1] = "-c";
 			cmdLine[2] = phpConfigDir;
-			cmdLine[3] = scriptPath;
+			cmdLine[3] = "-d";
+			cmdLine[4] = "asp_tags=" + aspTags;
+			cmdLine[5] = scriptPath;
 			System.arraycopy(splitArgs, 0, cmdLine, 4, splitArgs.length);
 		}
 		return cmdLine;
+	}
+
+	/**
+	 * Returns the project that is related to the launch configuration.
+	 * 
+	 * @param configuration
+	 * @return
+	 */
+	private static IProject getProject(ILaunchConfiguration configuration) {
+		try {
+			String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+			final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+			final IPath filePath = new Path(fileNameString);
+			IResource res = workspaceRoot.findMember(filePath);
+			if (res != null) {
+				return res.getProject();
+			}
+		} catch (CoreException ce) {
+			Logger.logException(ce);
+		}
+		return null;
 	}
 
 	/*
@@ -658,5 +689,20 @@ public class PHPLaunchUtilities {
 			return new String[0];
 		}
 		return VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(arguments).split(" "); //$NON-NLS-1$
+	}
+
+	/**
+	 * Returns true if the given project is using ASP tags as PHP tags.
+	 * 
+	 * @param project an {@link IProject}.
+	 * @return True, if ASP tags are supported, false otherwise.
+	 */
+	public static boolean isUsingASPTags(IProject project) {
+		PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.getPluginId(), PHPCorePlugin.getDefault().getPreferenceStore());
+		String value = preferencesSupport.getPreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS, null, project);
+		if (value == null) {
+			value = preferencesSupport.getWorkspacePreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS);
+		}
+		return Boolean.valueOf(value).booleanValue();
 	}
 }
