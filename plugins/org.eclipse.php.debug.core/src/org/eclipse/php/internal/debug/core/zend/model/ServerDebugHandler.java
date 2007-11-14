@@ -111,6 +111,8 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 								if (file != null && file.exists()) {
 									pathEntry = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, project);
 								}
+							} else if (new File(debugFileName).exists()) {
+								pathEntry = new PathEntry(debugFileName, Type.EXTERNAL, new File(debugFileName).getParentFile());
 							}
 						}
 						if (pathEntry != null) {
