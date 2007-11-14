@@ -51,12 +51,12 @@ public class PHPEditorTextHoverDescriptor {
 	public static PHPEditorTextHoverDescriptor[] getContributedHovers() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHP_EDITOR_TEXT_HOVER_EXTENSION_POINT);
-		
+
 		Arrays.sort(elements, new Comparator() {
 			public int compare(Object o1, Object o2) {
 				IConfigurationElement e1 = (IConfigurationElement)o1;
 				IConfigurationElement e2 = (IConfigurationElement)o2;
-				
+
 				int p1 = 0;
 				int p2 = 0;
 				try {
@@ -67,10 +67,10 @@ public class PHPEditorTextHoverDescriptor {
 					p2 = Integer.valueOf(e2.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
 				} catch (NumberFormatException e) {
 				}
-				return p2 - p1;
+				return (int) Math.signum(p2 - p1);
 			}
 		});
-		
+
 		PHPEditorTextHoverDescriptor[] hoverDescs = createDescriptors(elements);
 		initializeFromPreferences(hoverDescs);
 		return hoverDescs;
@@ -182,8 +182,7 @@ public class PHPEditorTextHoverDescriptor {
 
 	private static PHPEditorTextHoverDescriptor[] createDescriptors(IConfigurationElement[] elements) {
 		List result = new ArrayList(elements.length);
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
+		for (IConfigurationElement element : elements) {
 			if (HOVER_TAG.equals(element.getName())) {
 				PHPEditorTextHoverDescriptor desc = new PHPEditorTextHoverDescriptor(element);
 				result.add(desc);
