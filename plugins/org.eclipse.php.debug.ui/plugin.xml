@@ -261,9 +261,16 @@
            class="org.eclipse.php.internal.debug.ui.hovers.PHPDebugTextHover"
            description="%phpVariableHoverDescription"
            id="org.eclipse.php.debug.ui.hovers.PHPDebugTextHover"
-           label="%phpVariableHoverLabel"
-           priority="200">
+           label="%phpVariableZendHoverLabel"
+           priority="700">
     	</hover>
+     <hover
+           class="org.eclipse.php.internal.debug.ui.hovers.XDebugTextHover"
+           description="%phpVariableHoverDescription"
+           id="org.eclipse.php.xdebug.ui.hover.XDebugTextHover"
+           label="%phpVariableXDebugHoverLabel"
+           priority="700">
+     </hover>
     </extension>
     
     <extension point="org.eclipse.ui.preferencePages">
@@ -550,14 +557,6 @@
          	delegateClass="org.eclipse.php.internal.debug.ui.watch.XDebugWatchExpressionDelegate"/>
    </extension> 
    
-	<extension point="org.eclipse.php.ui.phpEditorTextHovers">
-	    <hover
-          label="Variable Values"
-          description="Shows the value of the selected variable when debugging"
-          class="org.eclipse.php.internal.debug.ui.hovers.XDebugTextHover"
-          id="org.eclipse.php.xdebug.ui.hover.XDebugTextHover">
-    	</hover>
-    </extension>
  <extension
        point="org.eclipse.php.debug.core.pathEntryFilters">
     <filter
