@@ -108,7 +108,7 @@ public class ContextManager {
 			RemoteDebugger remoteDebugger = (RemoteDebugger) fDebugger;
 			String cwd = remoteDebugger.getCurrentWorkingDirectory();
 			String currentScript = null;
-			for (int i = 1, frameCt = ((layers.length - 1) * 2 + 1); i < layers.length; ++i, frameCt -= 2) {
+			for (int i = layers.length - 1, frameCt = ((layers.length - 1) * 2 + 1); i >= 0; --i, frameCt -= 2) {
 				if (!layers[i].getCalledFileName().equals(fTarget.getLastFileName())) {
 					PHPStackFrame stackFrame = (PHPStackFrame) fPreviousFrames[frameCt - 1];
 					currentScript = (stackFrame).getSourceName();
