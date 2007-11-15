@@ -215,7 +215,7 @@ public class DebugSearchEngine {
 			}
 			if (editorInput instanceof FileStoreEditorInput) {
 				File file = new File(((IURIEditorInput)editorInput).getURI());
-				if (file.exists() && file.getName().equals(remotePath.getLastSegment())) {
+				if (file.exists() && file.getName().equalsIgnoreCase(remotePath.getLastSegment())) {
 					results.add(new PathEntry(file.getAbsolutePath(), PathEntry.Type.EXTERNAL, file.getParentFile()));
 				}
 			}
