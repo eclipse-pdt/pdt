@@ -325,7 +325,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 	}
 
-	public void handleClassConstDeclaration(String constName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
+	public void handleClassConstDeclaration(String constName, String value, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
 		UserData userData = PHPCodeDataFactory.createUserData(workingFileName, startPosition, endPosition, stopPosition, 0);
 		PHPClassConstData classConstData = PHPCodeDataFactory.createPHPClassConstData(constName, docInfo, userData);
 		classConsts.add(classConstData);

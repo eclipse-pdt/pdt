@@ -459,7 +459,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			}
 		}
 
-		public void handleClassConstDeclaration(String constName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
+		public void handleClassConstDeclaration(String constName, String value, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
 			PHPClassConstData classConstData = PHPCodeDataFactory.createPHPClassConstData(constName, docInfo, null);
 			classConstsList.add(classConstData);
 		}

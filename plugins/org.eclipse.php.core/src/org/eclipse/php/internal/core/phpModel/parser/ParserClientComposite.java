@@ -83,10 +83,10 @@ public class ParserClientComposite extends HashSet implements ParserClient {
 		}
 	}
 
-	public void handleClassConstDeclaration(String constName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
+	public void handleClassConstDeclaration(String constName, String value, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
 		for (Iterator iter = iterator(); iter.hasNext();) {
 			ParserClient parserClient = (ParserClient) iter.next();
-			parserClient.handleClassConstDeclaration(constName, docInfo, startPosition, endPosition, stopPosition);
+			parserClient.handleClassConstDeclaration(constName, value, docInfo, startPosition, endPosition, stopPosition);
 		}
 	}
 
