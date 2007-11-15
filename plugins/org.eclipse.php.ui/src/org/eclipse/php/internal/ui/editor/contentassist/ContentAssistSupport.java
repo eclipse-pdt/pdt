@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.documentModel.dom.Utils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -58,6 +60,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	public static final ICompletionProposal[] EMPTY_CompletionProposal_ARRAY = new ICompletionProposal[0];
 	public static final CodeDataCompletionProposal[] EMPTY_CodeDataCompletionProposal_ARRAY = new CodeDataCompletionProposal[0];
 	private static final PHPProposalComperator proposalsComperator = new PHPProposalComperator();
+
+	private static String[] CLASS_KEYWORDS = { "abstract", "const", "function", "private", "protected", "public", "static", "var" }; // must be ordered!
 
 	protected boolean showVariablesFromOtherFiles;
 	protected boolean determineObjectTypeFromOtherFile;
@@ -428,10 +432,22 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (!explicit && startsWith.length() == 0)
 			return;
 
+		boolean inClass = false;
+
+		PHPCodeData codeData = Utils.getCodeData(projectModel.getFileData(fileName), offset);
+
+		if (codeData.getUserData().getStopPosition() > offset) {
+			codeData = codeData.getContainer();
+		}
+
+		if (codeData instanceof PHPClassData) {
+			inClass = true;
+		}
+
 		if (internalPhpRegion != null) {
 			final String type = internalPhpRegion.getType();
 
-			if (startsWith.startsWith("$")) { //$NON-NLS-1$
+			if (startsWith.startsWith("$") && !inClass) { //$NON-NLS-1$
 				if (!explicit && !autoShowVariables)
 					return;
 				try {
@@ -471,7 +487,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] constants = null;
 		CodeData[] keywords = null;
 
-		if (explicit || autoShowFunctionsKeywordsConstants) {
+		if ((explicit || autoShowFunctionsKeywordsConstants) && !inClass) {
 			if (startsWith.length() == 0)
 				functions = projectModel.getFunctions();
 			else {
@@ -484,15 +500,20 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				else {
 					constants = projectModel.getConstants(startsWith, constantCaseSensitive);
 				}
+		}
 
-			keywords = projectModel.getKeywordData();
+		keywords = projectModel.getKeywordData();
+		if (inClass) {
+			keywords = filterClassKeywords(keywords);
 		}
 
 		CodeData[] classes = null;
-		if (showClassNamesInGlobalList)
-			if (explicit || autoShowClassNames)
-				classes = projectModel.getClasses();
+		if (!inClass) {
+			if (showClassNamesInGlobalList)
+				if (explicit || autoShowClassNames)
+					classes = projectModel.getClasses();
 
+		}
 		CodeData[] mergeData = null;
 		if (shouldAddPHPTag(document, offset, startsWith))
 			mergeData = phpTagDataArray;
@@ -508,6 +529,27 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		templateProposals = getTemplates(viewer, offset);
 
 		return;
+	}
+
+	/**
+	 * @param keywords
+	 * @return
+	 */
+	private CodeData[] filterClassKeywords(CodeData[] keywords) {
+		List<CodeData> filteredKeywords = new ArrayList<CodeData>();
+		for (int i = 0, j = 0; i < keywords.length && j < CLASS_KEYWORDS.length;) {
+			int compared = keywords[i].getName().compareTo(CLASS_KEYWORDS[j]);
+			if (compared < 0) {
+				i++;
+			} else if (compared > 0) {
+				j++;
+			} else {
+				filteredKeywords.add(keywords[i]);
+				i++;
+				j++;
+			}
+		}
+		return filteredKeywords.toArray(new CodeData[filteredKeywords.size()]);
 	}
 
 	private boolean shouldAddPHPTag(IStructuredDocument doc, int offset, String startsWith) {
