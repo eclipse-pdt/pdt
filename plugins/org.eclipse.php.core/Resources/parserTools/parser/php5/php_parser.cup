@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.phpModel.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_parser.cup,v 1.1 2007/08/13 14:15:31 ggurfinke Exp $
+////    $Id: php_parser.cup,v 1.2 2007/11/15 15:54:19 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -415,7 +415,7 @@ non terminal dynamic_class_name_reference;
 non terminal String base_variable;
 non terminal dynamic_class_name_variable_properties;
 non terminal dynamic_class_name_variable_property;
-non terminal static_class_constant;
+non terminal String static_class_constant;
 non terminal String base_variable_with_function_calls;
 
 
@@ -911,11 +911,11 @@ class_variable_declaration:decl T_COMMA T_VARIABLE:var
 class_constant_declaration ::=
 class_constant_declaration T_COMMA:comma T_STRING:constName T_EQUAL static_scalar:value
 {:
-    parser.getParserClient().handleClassConstDeclaration(constName, parser.getPHPDoc(commaleft), commaleft, valueright, constNameleft);
+    parser.getParserClient().handleClassConstDeclaration(constName, value, parser.getPHPDoc(commaleft), commaleft, valueright, constNameleft);
 :}
 | T_CONST:tconst T_STRING:constName T_EQUAL static_scalar:value
 {:
-    parser.getParserClient().handleClassConstDeclaration(constName, parser.getPHPDoc(tconstleft), tconstleft, valueright, constNameleft);
+    parser.getParserClient().handleClassConstDeclaration(constName, value, parser.getPHPDoc(tconstleft), tconstleft, valueright, constNameleft);
 :}
 
 ;
@@ -1141,15 +1141,19 @@ common_scalar:scalar
 {: RESULT = scalar; :}
 | string_st:str
 {: RESULT = str; :}
-| T_PLUS static_scalar
-| T_MINUS static_scalar
+| T_PLUS static_scalar:str
+{: RESULT = "+" + str; :}
+| T_MINUS static_scalar:str
+{: RESULT = "-" + str; :}
 | T_ARRAY T_OPEN_PARENTHESE static_array_pair_list T_CLOSE_PARENTHESE
-{: RESULT = "array"; :}
-| static_class_constant
+{: RESULT = "array(...)"; :}
+| static_class_constant:clsConst
+{: RESULT = clsConst; :}
 ;
 
 static_class_constant ::=
-T_STRING T_PAAMAYIM_NEKUDOTAYIM T_STRING
+T_STRING:str T_PAAMAYIM_NEKUDOTAYIM T_STRING:str2
+{: RESULT = str+"::"+str2; :}
 ;
 
 scalar ::=
