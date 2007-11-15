@@ -65,6 +65,10 @@ public class DebugSearchEngine {
 	 * @throws CoreException
 	 */
 	public static PathEntry find(String remoteFile, IDebugTarget debugTarget, String currentWorkingDir, String currentScriptDir) throws InterruptedException, CoreException {
+		if (remoteFile == null) {
+			throw new NullPointerException();
+		}
+
 		PathEntry pathEntry = null;
 		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
 
@@ -80,6 +84,31 @@ public class DebugSearchEngine {
 			if (projectName != null) {
 				project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			}
+		}
+
+		// If the given path is not absolute - use internal PHP search mechanism:
+		if (!VirtualPath.isAbsolute(remoteFile)) {
+			if (project != null && currentWorkingDir != null && currentScriptDir != null) {
+				// This is not a full path, search using PHP Search Engine:
+				Result<?, ?> result = PHPSearchEngine.find(remoteFile, currentWorkingDir, currentScriptDir, project);
+				if (result instanceof ExternalFileResult) {
+					ExternalFileResult extFileResult = (ExternalFileResult) result;
+					return new PathEntry(extFileResult.getFile().getAbsolutePath(), Type.EXTERNAL, extFileResult.getContainer());
+				}
+				if (result instanceof IncludedFileResult) {
+					IncludedFileResult incFileResult = (IncludedFileResult) result;
+					IIncludePathEntry container = incFileResult.getContainer();
+					Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
+					return new PathEntry(incFileResult.getFile().getAbsolutePath(), type, container);
+				}
+				if (result != null) {
+					// workspace file
+					ResourceResult resResult = (ResourceResult) result;
+					IResource resource = resResult.getFile();
+					return new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
+				}
+			}
+			return null;
 		}
 
 		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
@@ -101,34 +130,6 @@ public class DebugSearchEngine {
 	 * @throws CoreException
 	 */
 	private static PathEntry find(PathMapper pathMapper, String remoteFile, IProject currentProject, String currentWorkingDir, String currentScriptDir, IDebugTarget debugTarget) throws InterruptedException, CoreException {
-		if (remoteFile == null) {
-			throw new NullPointerException();
-		}
-
-		// If the given path is not absolute - use internal PHP search mechanism:
-		if (!VirtualPath.isAbsolute(remoteFile)) {
-			if (currentProject != null && currentWorkingDir != null && currentScriptDir != null) {
-				// This is not a full path, search using PHP Search Engine:
-				Result<?, ?> result = PHPSearchEngine.find(remoteFile, currentWorkingDir, currentScriptDir, currentProject);
-				if (result instanceof ExternalFileResult) {
-					ExternalFileResult extFileResult = (ExternalFileResult) result;
-					return new PathEntry(extFileResult.getFile().getAbsolutePath(), Type.EXTERNAL, extFileResult.getContainer());
-				}
-				if (result instanceof IncludedFileResult) {
-					IncludedFileResult incFileResult = (IncludedFileResult) result;
-					IIncludePathEntry container = incFileResult.getContainer();
-					Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
-					return new PathEntry(incFileResult.getFile().getAbsolutePath(), type, container);
-				}
-				if (result != null) {
-					// workspace file
-					ResourceResult resResult = (ResourceResult) result;
-					IResource resource = resResult.getFile();
-					return new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
-				}
-			}
-			return null;
-		}
 
 		// First, look into the path mapper:
 		PathEntry localFile = pathMapper.getLocalFile(remoteFile);

@@ -15,7 +15,6 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesWriter;
@@ -89,13 +88,13 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 			String serverName = launchConfiguration.getAttribute(Server.NAME, (String) null);
 			if (serverName != null) {
 				pathMapper = getByServer(ServersManager.getServer(serverName));
-			} else {
+			}/* else {
 				String phpExe = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 				String phpIni = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
 				if (phpExe != null) {
 					pathMapper = getByPHPExe(PHPexes.getInstance().getItemForFile(phpExe, phpIni));
 				}
-			}
+			}*/
 		} catch (CoreException e) {
 			PHPDebugPlugin.log(e);
 		}
@@ -167,7 +166,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 			PHPexeItem phpExeItem = (PHPexeItem) i.next();
 			PathMapper pathMapper = phpExePathMapper.get(phpExeItem);
 			entry.put("phpExe", phpExeItem.getPhpExecutable().toString()); //$NON-NLS-1$
-			if (phpExeItem.getINILocation() != null){ 
+			if (phpExeItem.getINILocation() != null){
 				entry.put("phpIni", phpExeItem.getINILocation().toString()); //$NON-NLS-1$
 			}
 			entry.put("mapper", pathMapper.storeToMap()); //$NON-NLS-1$
