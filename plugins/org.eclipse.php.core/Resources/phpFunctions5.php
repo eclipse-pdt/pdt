@@ -20847,7 +20847,7 @@ define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
 // End of calendar v.
 
-// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.20 2007/10/12 09:17:39 mspector Exp $
+// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.21 2007/11/15 10:18:13 mspector Exp $
 
 /**
  * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
@@ -20899,7 +20899,7 @@ function exif_imagetype ($filename) {}
 
 define ('EXIF_USE_MBSTRING', 0);
 
-// End of exif v.1.4 $Id: phpFunctions5.php,v 1.20 2007/10/12 09:17:39 mspector Exp $
+// End of exif v.1.4 $Id: phpFunctions5.php,v 1.21 2007/11/15 10:18:13 mspector Exp $
 
 // Start of gmp v.
 
@@ -26746,6 +26746,65 @@ class ErrorException extends Exception  {
 	final public function getTraceAsString () {}
 
 	public function __toString () {}
+
+}
+
+interface Traversable  {
+}
+
+interface IteratorAggregate implements Traversable {
+
+	abstract public function getIterator () {}
+
+}
+
+interface Iterator implements Traversable {
+
+	abstract public function current () {}
+
+	abstract public function next () {}
+
+	abstract public function key () {}
+
+	abstract public function valid () {}
+
+	abstract public function rewind () {}
+
+}
+
+interface ArrayAccess  {
+
+	/**
+	 * @param offset
+	 */
+	abstract public function offsetExists ($offset) {}
+
+	/**
+	 * @param offset
+	 */
+	abstract public function offsetGet ($offset) {}
+
+	/**
+	 * @param offset
+	 * @param value
+	 */
+	abstract public function offsetSet ($offset, $value) {}
+
+	/**
+	 * @param offset
+	 */
+	abstract public function offsetUnset ($offset) {}
+
+}
+
+interface Serializable  {
+
+	abstract public function serialize () {}
+
+	/**
+	 * @param serialized
+	 */
+	abstract public function unserialize ($serialized) {}
 
 }
 

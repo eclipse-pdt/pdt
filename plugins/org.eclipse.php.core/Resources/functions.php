@@ -39,7 +39,7 @@ foreach ($intFunctions["internal"] as $intFunction) {
 	}
 }
 
-$intClasses = get_declared_classes();
+$intClasses = array_merge (get_declared_classes(), get_declared_interfaces());
 foreach ($intClasses as $intClass) {
 	if (!$processedClasses[strtolower($intClass)]) {
 		print_class (new ReflectionClass ($intClass));
