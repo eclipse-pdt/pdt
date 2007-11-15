@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
@@ -253,19 +252,14 @@ public class RemoteDebugger implements IRemoteDebugger {
 				}
 			}
 			if (resolvedFile == null) {
-				try {
-					String currentScriptDir = null;
-					if (currentScript != null) {
-						currentScriptDir = new Path(currentScript).removeLastSegments(1).toString();
-					}
+				String currentScriptDir = null;
+				if (currentScript != null) {
+					currentScriptDir = new Path(currentScript).removeLastSegments(1).toString();
+				}
 
-					PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd, currentScriptDir);
-					if (pathEntry != null) {
-						resolvedFile = pathEntry.getResolvedPath();
-					}
-				} catch (InterruptedException e) {
-				} catch (CoreException e) {
-					Logger.logException(e);
+				PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd, currentScriptDir);
+				if (pathEntry != null) {
+					resolvedFile = pathEntry.getResolvedPath();
 				}
 			}
 			if (resolvedFile == null) {

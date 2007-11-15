@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager.ContentTypeChangeEvent;
 import org.eclipse.core.runtime.content.IContentTypeManager.IContentTypeChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
@@ -47,10 +48,8 @@ public class DebugSearchEngine {
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
 	 * @param debugTarget Current debug target
 	 * @return path entry or <code>null</code> in case it could not be found
-	 * @throws InterruptedException
-	 * @throws CoreException
 	 */
-	public static PathEntry find(String remoteFile, IDebugTarget debugTarget) throws InterruptedException, CoreException {
+	public static PathEntry find(String remoteFile, IDebugTarget debugTarget) {
 		return find(remoteFile, debugTarget, null, null);
 	}
 
@@ -61,10 +60,8 @@ public class DebugSearchEngine {
 	 * @param currentWorkingDir Current working directory of PHP process
 	 * @param currentScriptDir Directory of current PHP file
 	 * @return path entry or <code>null</code> in case it could not be found
-	 * @throws InterruptedException
-	 * @throws CoreException
 	 */
-	public static PathEntry find(String remoteFile, IDebugTarget debugTarget, String currentWorkingDir, String currentScriptDir) throws InterruptedException, CoreException {
+	public static PathEntry find(String remoteFile, IDebugTarget debugTarget, String currentWorkingDir, String currentScriptDir) {
 		if (remoteFile == null) {
 			throw new NullPointerException();
 		}
@@ -80,9 +77,14 @@ public class DebugSearchEngine {
 			}
 		}
 		if (project == null) {
-			String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
-			if (projectName != null) {
-				project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+			String projectName;
+			try {
+				projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+				if (projectName != null) {
+					project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+				}
+			} catch (CoreException e) {
+				PHPDebugPlugin.log(e);
 			}
 		}
 
@@ -113,7 +115,7 @@ public class DebugSearchEngine {
 
 		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
 		if (pathMapper != null) {
-			pathEntry = find(pathMapper, remoteFile, project, currentWorkingDir, currentScriptDir, debugTarget);
+			pathEntry = find(pathMapper, remoteFile, project, debugTarget);
 		}
 		return pathEntry;
 	}
@@ -122,74 +124,92 @@ public class DebugSearchEngine {
 	 * Searches for all local resources that match provided remote file, and returns it in best match order.
 	 * @param pathMapper Path mapper to look at
 	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
-	 * @param currentWorkingDir Current working directory of PHP process
-	 * @param currentScriptDir Directory of current PHP file
 	 * @param debugTarget Current debug target
 	 * @return path entry or <code>null</code> in case it could not be found
-	 * @throws InterruptedException
-	 * @throws CoreException
 	 */
-	private static PathEntry find(PathMapper pathMapper, String remoteFile, IProject currentProject, String currentWorkingDir, String currentScriptDir, IDebugTarget debugTarget) throws InterruptedException, CoreException {
+	private static PathEntry find(final PathMapper pathMapper, final String remoteFile, final IProject currentProject, final IDebugTarget debugTarget) {
 
-		// First, look into the path mapper:
-		PathEntry localFile = pathMapper.getLocalFile(remoteFile);
-		if (localFile != null) {
-			return localFile;
-		}
+		final PathEntry[] localFile = new PathEntry[1];
 
-		VirtualPath abstractPath = new VirtualPath(remoteFile);
-		LinkedList<PathEntry> results = new LinkedList<PathEntry>();
-
-		Object[] includePaths;
-		if (currentProject != null) {
-			includePaths = PHPSearchEngine.buildIncludePath(currentProject);
-		} else {
-			// Search in the whole workspace:
-			Set<Object> s = new HashSet<Object>();
-			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-			for (IProject project : projects) {
-				PHPSearchEngine.buildIncludePath(project, s);
-			}
-			includePaths = s.toArray();
-		}
-
-		// Iterate over all include path, and search for a requested file
-		for (Object includePath : includePaths) {
-			if (includePath instanceof IContainer) {
-				find((IContainer) includePath, abstractPath, results);
-			} else if (includePath instanceof IIncludePathEntry) {
-				IIncludePathEntry entry = (IIncludePathEntry) includePath;
-				IPath entryPath = entry.getPath();
-				if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-					if (entry.getContentKind() != IIncludePathEntry.K_BINARY) { // We don't support lookup in archive
-						File entryDir = entryPath.toFile();
-						find(entryDir, abstractPath, entry, results);
-					}
-				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-					IProject project = (IProject) entry.getResource();
-					if (project.isAccessible()) {
-						find(project, abstractPath, results);
-					}
-				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-					entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
-					File entryDir = entryPath.toFile();
-					find(entryDir, abstractPath, entry, results);
+		Job findJob = new Job("Searching for local file...") {
+			protected IStatus run(IProgressMonitor monitor) {
+				// First, look into the path mapper:
+				localFile[0] = pathMapper.getLocalFile(remoteFile);
+				if (localFile[0] != null) {
+					return Status.OK_STATUS;
 				}
+
+				VirtualPath abstractPath = new VirtualPath(remoteFile);
+				LinkedList<PathEntry> results = new LinkedList<PathEntry>();
+
+				Object[] includePaths;
+				if (currentProject != null) {
+					includePaths = PHPSearchEngine.buildIncludePath(currentProject);
+				} else {
+					// Search in the whole workspace:
+					Set<Object> s = new HashSet<Object>();
+					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+					for (IProject project : projects) {
+						PHPSearchEngine.buildIncludePath(project, s);
+					}
+					includePaths = s.toArray();
+				}
+
+				// Iterate over all include path, and search for a requested file
+				for (Object includePath : includePaths) {
+					if (includePath instanceof IContainer) {
+						try {
+							find((IContainer) includePath, abstractPath, results);
+						} catch (InterruptedException e) {
+							PHPDebugPlugin.log(e);
+						}
+					} else if (includePath instanceof IIncludePathEntry) {
+						IIncludePathEntry entry = (IIncludePathEntry) includePath;
+						IPath entryPath = entry.getPath();
+						if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+							if (entry.getContentKind() != IIncludePathEntry.K_BINARY) { // We don't support lookup in archive
+								File entryDir = entryPath.toFile();
+								find(entryDir, abstractPath, entry, results);
+							}
+						} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+							IProject project = (IProject) entry.getResource();
+							if (project.isAccessible()) {
+								try {
+									find(project, abstractPath, results);
+								} catch (InterruptedException e) {
+									PHPDebugPlugin.log(e);
+								}
+							}
+						} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+							entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+							File entryDir = entryPath.toFile();
+							find(entryDir, abstractPath, entry, results);
+						}
+					}
+				}
+
+				//search in opened editors
+				searchOpenedEditors(results, abstractPath);
+
+				if (results.size() > 0) {
+					Collections.sort(results, new BestMatchPathComparator(abstractPath));
+					localFile[0] = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]), debugTarget);
+					if (localFile[0] != null) {
+						pathMapper.addEntry(remoteFile, localFile[0]);
+						PathMapperRegistry.storeToPreferences();
+					}
+				}
+				return Status.OK_STATUS;
 			}
+		};
+
+		findJob.schedule();
+		try {
+			findJob.join();
+		} catch (InterruptedException e) {
 		}
 
-		//search in opened editors
-		searchOpenedEditors(results, abstractPath);
-
-		if (results.size() > 0) {
-			Collections.sort(results, new BestMatchPathComparator(abstractPath));
-			localFile = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]), debugTarget);
-			if (localFile != null) {
-				pathMapper.addEntry(remoteFile, localFile);
-				PathMapperRegistry.storeToPreferences();
-			}
-		}
-		return localFile;
+		return localFile[0];
 	}
 
 	private static void searchOpenedEditors(LinkedList<PathEntry> results, VirtualPath remotePath) {
