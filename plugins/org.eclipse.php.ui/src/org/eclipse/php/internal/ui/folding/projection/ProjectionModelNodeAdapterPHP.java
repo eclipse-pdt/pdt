@@ -223,7 +223,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		UserData userData = codeData.getUserData();
 		int codeStartOffset = userData.getStartPosition();
 		int codeEndOffset = userData.getEndPosition();
-		if (document.getLineOfOffset(codeStartOffset) >= document.getLineOfOffset(codeEndOffset)) {
+		if (document.getLineOfOffset(codeStartOffset) == document.getLineOfOffset(codeEndOffset)) {
 			return null;
 		}
 
