@@ -12,6 +12,7 @@ import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ProjectionMapping;
+import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
@@ -34,6 +35,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
@@ -284,6 +286,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		} catch (IllegalStateException e) {
 			return -1;
 		}
+	}
+
+	/**
+	 * Reconciles the whole document (to re-run PHPValidator)
+	 */
+	public void reconcile() {
+		((StructuredRegionProcessor)fReconciler).processDirtyRegion(new DirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT, getDocument().get()));
+
 	}
 
 }

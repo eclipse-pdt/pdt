@@ -371,6 +371,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 						Iterator regionsIt = element.getRegions().iterator();
 						reparseRegion(doc, regionsIt, element.getStartOffset());
 					}
+					PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) getTextViewer();
+					textViewer.reconcile();
 				}
 			} catch (BadLocationException e) {
 			}
@@ -1314,7 +1316,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 											existingEditors = activePage.getEditorManager().findEditors(getEditorInput(), null, IWorkbenchPage.MATCH_INPUT);
 										}
 										// Make sure that the file has a full path before we try to remove it from the model.
-										if ((existingEditors == null) || (existingEditors.length == 1)) { //a single editor
+										if (existingEditors == null || existingEditors.length == 1) { //a single editor
 											IFile fileDecorator = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
 											PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
 											externalRegistry.removeFileEntry(fileName);
@@ -1554,7 +1556,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		//handle case of workspace file AND/OR an external file with more than 1 segment
-		return (ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
+		return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 	}
 
 	public PHPFileData getPHPFileData() {
