@@ -32,9 +32,9 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * A local PHP script debugger initializer.
- * This debugger initializer sets the necessary environment and program arguments for the PHP 
+ * This debugger initializer sets the necessary environment and program arguments for the PHP
  * process and then starts the process.
- * 
+ *
  * @author Shalom Gibly
  */
 public class PHPExecutableDebuggerInitializer {
@@ -43,7 +43,7 @@ public class PHPExecutableDebuggerInitializer {
 
 	/**
 	 * Constructs a new debugger initializer.
-	 * 
+	 *
 	 * @param launch
 	 * @throws IOException
 	 */
@@ -53,7 +53,7 @@ public class PHPExecutableDebuggerInitializer {
 
 	/**
 	 * Initialize the php executable debugger.
-	 * 
+	 *
 	 * @param phpExe
 	 * @param fileName
 	 * @param query
@@ -64,7 +64,7 @@ public class PHPExecutableDebuggerInitializer {
 
 	/**
 	 * Initialize the php executable debugger.
-	 * 
+	 *
 	 * @param phpExe
 	 * @param fileName
 	 * @param query
@@ -81,7 +81,7 @@ public class PHPExecutableDebuggerInitializer {
 			}
 			String originalPHPConfigDir = phpConfigDir;
 
-			// Important!!! 
+			// Important!!!
 			// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
 			// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
 			phpConfigDir = (new File(phpConfigDir)).getParentFile().getAbsolutePath();
@@ -102,6 +102,7 @@ public class PHPExecutableDebuggerInitializer {
 			// Check if we need to change the executable path to a CGI executable in case we don't
 			// need to support command arguments.
 			if (phpCmdArray.length == 4) {
+				// FIXME this is not true, since if you use ASP tags you have 6 parameters (bug #210195)
 				phpCmdArray[0] = PHPexes.changeToCGI(phpCmdArray[0]);
 			}
 			// Make sure that we have executable permissions on the file.
@@ -141,7 +142,7 @@ public class PHPExecutableDebuggerInitializer {
 
 	/**
 	 * Returns the specific launch environment settings for this php script launch.
-	 * 
+	 *
 	 * @param fileName
 	 * @param query
 	 * @param phpConfigDir
@@ -160,7 +161,7 @@ public class PHPExecutableDebuggerInitializer {
 		env.put("PHPRC", phpConfigDir); //$NON-NLS-1$
 		String OS = System.getProperty("os.name"); //$NON-NLS-1$
 		if (!OS.startsWith("Win")) { //$NON-NLS-1$
-			if (OS.startsWith("Mac")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (OS.startsWith("Mac")) { //$NON-NLS-1$
 				env.put("DYLD_LIBRARY_PATH", workingDir); //$NON-NLS-1$
 			} else {
 				env.put("LD_LIBRARY_PATH", workingDir); //$NON-NLS-1$
@@ -246,7 +247,7 @@ public class PHPExecutableDebuggerInitializer {
 			} catch (IOException exc) {
 				PHPDebugPlugin.log(exc);
 			}
-			// In case this thread ended and we do not have any IDebugTarget (PHPDebugTarget) hooked in the 
+			// In case this thread ended and we do not have any IDebugTarget (PHPDebugTarget) hooked in the
 			// launch that was created, we can tell that there is something wrong, and probably there is no debugger
 			// installed (e.g. the debugger dll/so is not properly configured in the php.ini).
 			if (launch != null && launch.getDebugTarget() == null) {
