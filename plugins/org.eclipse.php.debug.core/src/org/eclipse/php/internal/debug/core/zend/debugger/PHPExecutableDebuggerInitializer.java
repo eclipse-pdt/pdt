@@ -24,6 +24,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
@@ -101,8 +102,7 @@ public class PHPExecutableDebuggerInitializer {
 
 			// Check if we need to change the executable path to a CGI executable in case we don't
 			// need to support command arguments.
-			if (phpCmdArray.length == 4) {
-				// FIXME this is not true, since if you use ASP tags you have 6 parameters (bug #210195)
+			if (launch.getLaunchConfiguration().getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null) == null) {
 				phpCmdArray[0] = PHPexes.changeToCGI(phpCmdArray[0]);
 			}
 			// Make sure that we have executable permissions on the file.
