@@ -99,10 +99,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		public IWorkspaceModelListener getListener() {
 			if (listener == null) {
 				SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.internal.core.workspaceModelListener") { //$NON-NLS-1$
-					public void run() throws Exception {
-						listener = (IWorkspaceModelListener) element.createExecutableExtension("class"); //$NON-NLS-1$
-					}
-				});
+						public void run() throws Exception {
+							listener = (IWorkspaceModelListener) element.createExecutableExtension("class"); //$NON-NLS-1$
+						}
+					});
 			}
 			return listener;
 		}
@@ -276,13 +276,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				if (model != null) {
 					String projectPath = "";
 					IPath location = projects[i].getLocation();
-					if (location == null){
+					if (location == null) {
 						projectPath = projects[i].getLocationURI().toString();
-					}
-					else {
+					} else {
 						projectPath = projects[i].getLocation().toOSString();
 					}
-					
+
 					String modelFilename;
 					if (filenameOS.startsWith(projectPath)) {
 						modelFilename = new Path(StringUtils.replace(filenameOS, projectPath, "")).toPortableString(); //$NON-NLS-1$
@@ -308,6 +307,9 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	private synchronized PHPFileData getModelForExternalFile(IFile externalFile) {
+		if (!PHPModelUtil.isPhpFile(externalFile)) {
+			return null;
+		}
 		PHPFileData fileData = null;
 		PHPProjectModel externalProjectModel = getDefaultPHPProjectModel();
 		// initialize for first time
@@ -460,11 +462,11 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			this.copyUserModelListeners(projectModel.getPHPUserModel(), oldPhpProjectModel.getPHPUserModel().getModelListenerList());
 		}
 		fireProjectModelAdded(project);
-		if(projectModel.isBuildNeeded()){
-			//checking if we are currently at a job with build scheduling rule 
+		if (projectModel.isBuildNeeded()) {
+			//checking if we are currently at a job with build scheduling rule
 			//because the build must run in such a job
 			Job currentJob = Job.getJobManager().currentJob();
-			boolean newJobNeeded = (currentJob == null || currentJob.getRule() != ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+			boolean newJobNeeded = currentJob == null || currentJob.getRule() != ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
 			if (newJobNeeded) {
 				WorkspaceJob buildJob = new WorkspaceJob(NLS.bind(CoreMessages.getString("PHPWorkspaceModelManager_4"), project.getName())) {
 					@Override
@@ -482,12 +484,13 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				buildModel(monitor, project);
 			}
 		} else {
-			if(project.exists()){//the event should not be lunched if we're dealing with the defaultPHPProjectModel
+			if (project.exists()) {//the event should not be lunched if we're dealing with the defaultPHPProjectModel
 				fireProjectModelChanged(project);
 			}
 		}
-		
+
 	}
+
 	private void buildModel(IProgressMonitor monitor, IProject project) {
 		try {
 			project.accept(new FullPhpProjectBuildVisitor(monitor));
