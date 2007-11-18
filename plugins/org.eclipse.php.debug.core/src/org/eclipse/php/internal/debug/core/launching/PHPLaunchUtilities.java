@@ -63,13 +63,13 @@ public class PHPLaunchUtilities {
 	private static DebuggerDelayProgressMonitorDialog progressDialog;
 
 	/**
-	 * Display the Debug Output view in case it's hidden or not initialized. 
-	 * In case where the Browser Output view is visible, nothing will happen and the Browser Output 
+	 * Display the Debug Output view in case it's hidden or not initialized.
+	 * In case where the Browser Output view is visible, nothing will happen and the Browser Output
 	 * will remain as the visible view during the debug session.
-	 * 
+	 *
 	 * Note that the behavior given by this function is mainly needed when we are in a PHP Perspective (not debug)
 	 * and a session without a breakpoint was launched. So in this case a 'force' output display is triggered.
-	 * 
+	 *
 	 * This function also take into account the PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS flag and does not
 	 * show the debug views in case it was not chosen from the preferences.
 	 */
@@ -111,7 +111,7 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Returns true if the is at least one active PHP debug session.
-	 * 
+	 *
 	 * @return True, if there is an active debug session; False, otherwise.
 	 */
 	public static boolean hasPHPDebugLaunch() {
@@ -129,7 +129,7 @@ public class PHPLaunchUtilities {
 	 *
 	 * @param newLaunchConfiguration
 	 * @param newLaunch
-	 * @return True, if the launch can be continued; False, otherwise. 
+	 * @return True, if the launch can be continued; False, otherwise.
 	 * @throws CoreException
 	 */
 	public static boolean notifyPreviousLaunches(ILaunch newLaunch) throws CoreException {
@@ -251,11 +251,11 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Make all the necessary checks to see if the current launch can be launched with regards to the previous
-	 * launches that has 'debug all pages' attribute. 
-	 * @throws CoreException 
+	 * launches that has 'debug all pages' attribute.
+	 * @throws CoreException
 	 */
 	public static boolean checkDebugAllPages(final ILaunchConfiguration newLaunchConfiguration, final ILaunch newLaunch) throws CoreException {
-		// If the remote debugger already supports multiple debugging with the 'debug all pages', 
+		// If the remote debugger already supports multiple debugging with the 'debug all pages',
 		// we do not have to do a thing and we can return.
 		if (PHPDebugPlugin.supportsMultipleDebugAllPages()) {
 			return true;
@@ -336,10 +336,10 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Returns if the given launch configuration holds an attribute for 'debug all pages'.
-	 * 
+	 *
 	 * @param launchConfiguration An {@link ILaunchConfiguration}
 	 * @return True, if the configuration holds an attribute for 'debug all pages'.
-	 * @throws CoreException 
+	 * @throws CoreException
 	 */
 	public static boolean isDebugAllPages(ILaunch launch) throws CoreException {
 		String attribute = launch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
@@ -348,10 +348,10 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Returns if the given launch configuration holds an attribute for 'start debug from'.
-	 * 
+	 *
 	 * @param launchConfiguration An {@link ILaunchConfiguration}
 	 * @return True, if the configuration holds an attribute for 'start debug from'.
-	 * @throws CoreException 
+	 * @throws CoreException
 	 */
 	public static boolean isStartDebugFrom(ILaunch launch) throws CoreException {
 		String attribute = launch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
@@ -362,8 +362,8 @@ public class PHPLaunchUtilities {
 	private static void removeAndTerminateOldLaunches(ILaunch newLaunch) {
 		ILaunchManager lManager = DebugPlugin.getDefault().getLaunchManager();
 		Object[] launches = lManager.getLaunches();
-		for (int i = 0; i < launches.length; i++) {
-			ILaunch launch = (ILaunch) launches[i];
+		for (Object element : launches) {
+			ILaunch launch = (ILaunch) element;
 			if (launch != newLaunch) {
 				if (!launch.isTerminated()) {
 					try {
@@ -380,11 +380,11 @@ public class PHPLaunchUtilities {
 	/**
 	 * Display a wait window, indicating the user that the debug session is in progress and the
 	 * PDT is waiting for the debugger's response.
-	 * Once a response arrives, the {@link #hideWaitForDebuggerMessage()} should be called to remove 
+	 * Once a response arrives, the {@link #hideWaitForDebuggerMessage()} should be called to remove
 	 * the window.
 	 * In case a response does not arrive, there is a good chance that the {@link #showLaunchErrorMessage()} should
 	 * be called.
-	 * @param debugConnectionThread 
+	 * @param debugConnectionThread
 	 * @see #hideWaitForDebuggerMessage()
 	 * @see #showLaunchErrorMessage()
 	 */
@@ -406,7 +406,7 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Hides the progress indicator that appears when user is waiting for the debugger to response.
-	 * 
+	 *
 	 * @see #showWaitForDebuggerMessage()
 	 */
 	public static void hideWaitForDebuggerMessage() {
@@ -433,7 +433,7 @@ public class PHPLaunchUtilities {
 	/**
 	 * Display an error message to indicating an fatal error detected while staring a debug session.
 	 * A fatal error occurs when the remote debugger does not exist or has a different version.
-	 * 
+	 *
 	 * @param errorMessage The message to display.
 	 */
 	public static void showLaunchErrorMessage(final String errorMessage) {
@@ -443,7 +443,7 @@ public class PHPLaunchUtilities {
 	/**
 	 * Display an error message to indicating an fatal error detected while staring a debug session.
 	 * A fatal error occurs when the remote debugger does not exist or has a different version.
-	 * 
+	 *
 	 * @param title The error message title.
 	 * @param errorMessage The message to display.
 	 */
@@ -456,7 +456,7 @@ public class PHPLaunchUtilities {
 	}
 
 	/*
-	 * A class used to hold the message dialog results 
+	 * A class used to hold the message dialog results
 	 */
 	private static class DialogResultHolder {
 		private int returnCode;
@@ -508,7 +508,7 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Opens the launch configuration dialog on the given launch configuration in the given mode.
-	 * 
+	 *
 	 * @param configuration An {@link ILaunchConfiguration}
 	 * @param mode The launch mode (Run/Debug)
 	 */
@@ -545,7 +545,7 @@ public class PHPLaunchUtilities {
 	 * variables we might want to add.
 	 * Note: Additional environments may override the native environment attributes, but disregarded
 	 * when an equivalent launch configuration attribute is set for the given launch.
-	 * 
+	 *
 	 * @param configuration the launch configuration
 	 * @param additionalEnv additional environment strings
 	 * @return the complete environment
@@ -611,12 +611,12 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Creates and returns a command line invocation string for the execution of the PHP script.
-	 * 
+	 *
 	 * @param configuration
 	 * @param phpExe
 	 * @param phpConfigDir
 	 * @param scriptPath
-	 * @param phpIniLocation 
+	 * @param phpIniLocation
 	 * @return
 	 * @throws CoreException
 	 */
@@ -629,7 +629,7 @@ public class PHPLaunchUtilities {
 		// Check if we should treat ASP tags as PHP tags
 		String aspTags = isUsingASPTags(getProject(configuration)) ? "on" : "off";
 
-		// Important!!! 
+		// Important!!!
 		// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
 		// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
 		File configDirFile = new File(phpConfigDir);
@@ -647,14 +647,14 @@ public class PHPLaunchUtilities {
 			cmdLine[3] = "-d";
 			cmdLine[4] = "asp_tags=" + aspTags;
 			cmdLine[5] = scriptPath;
-			System.arraycopy(splitArgs, 0, cmdLine, 4, splitArgs.length);
+			System.arraycopy(splitArgs, 0, cmdLine, 6, splitArgs.length);
 		}
 		return cmdLine;
 	}
 
 	/**
 	 * Returns the project that is related to the launch configuration.
-	 * 
+	 *
 	 * @param configuration
 	 * @return
 	 */
@@ -678,13 +678,13 @@ public class PHPLaunchUtilities {
 	 * variable substitution as well.
 	 * The arguments are extracted from the IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS configuration
 	 * attribute.
-	 * 
+	 *
 	 * @param configuration the launch configuration
 	 * @return the program arguments
 	 * @throws CoreException rethrown exception
 	 */
 	private static String[] getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
-		String arguments = configuration.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null); //$NON-NLS-1$
+		String arguments = configuration.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null); 
 		if (arguments == null || arguments.trim().equals("")) { //$NON-NLS-1$
 			return new String[0];
 		}
@@ -693,7 +693,7 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Returns true if the given project is using ASP tags as PHP tags.
-	 * 
+	 *
 	 * @param project an {@link IProject}.
 	 * @return True, if ASP tags are supported, false otherwise.
 	 */
