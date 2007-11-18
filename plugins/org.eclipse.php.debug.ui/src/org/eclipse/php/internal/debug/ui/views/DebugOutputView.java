@@ -46,7 +46,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 
 /**
- * View of the PHP parameter stack 
+ * View of the PHP parameter stack
  */
 public class DebugOutputView extends AbstractDebugView implements ISelectionListener {
 
@@ -65,7 +65,7 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
     protected Viewer createViewer(Composite parent) {
         int styles= SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION;
         StructuredTextViewer fSourceViewer= new StructuredTextViewer(parent, null, null, false, styles);
-        StructuredTextViewerConfigurationHTML config = new StructuredTextViewerConfigurationHTML();             
+        StructuredTextViewerConfigurationHTML config = new StructuredTextViewerConfigurationHTML();
         fSourceViewer.configure(config);
         fSourceViewer.setEditable(false);
         getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
@@ -78,10 +78,10 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
-						
+
 						if(!(obj instanceof PHPDebugTarget))
 							continue;
-					
+
 						if ( events[i].getKind() == DebugEvent.TERMINATE) {
 							target = (PHPDebugTarget)obj;
 							Job job = new UIJob("debug output") {
@@ -97,9 +97,9 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
 			}
 		};
 		DebugPlugin.getDefault().addDebugEventListener(terminateListener);
-     
+
 		debugViewHelper = new DebugViewHelper();
-		
+
         return fSourceViewer;
     }
 
@@ -131,11 +131,11 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
- 
+
     	PHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
         update(target);
     }
-    
+
     private synchronized void update(PHPDebugTarget target) {
         PHPDebugTarget oldTarget = fTarget;
         int oldcount = fUpdateCount;
@@ -147,14 +147,14 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
         	if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
 	        	DebugOutput outputBuffer = fTarget.getOutputBufffer();
 	        	fUpdateCount = outputBuffer.getUpdateCount();
-	 
+
 	        	// check if output hasn't been updated
 	        	if (fTarget == oldTarget && fUpdateCount == oldcount) return;
-	        	
+
 	            ss = new HTMLDocumentLoader();
 	            dd = (BasicStructuredDocument)ss.createNewStructuredDocument();
 	            IModelManager mmanager = StructuredModelManager.getModelManager();
-	            dd.setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForHTML.ContentTypeID_HTML).getParser()); 
+	            dd.setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForHTML.ContentTypeID_HTML).getParser());
 	            String output = outputBuffer.toString();
 	            dd.setText(this, output);
 	            try {
@@ -168,7 +168,7 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
 	            input = dd;
         	} else {
         		// Not Suspended or Terminated
-        		
+
         		//the following is a fix for bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=205688
         		//if the target is not suspended or terminated fTarget should get back its old value
         		//so that in the next time the function is called it will not consider this target
@@ -194,7 +194,7 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
      * @see org.eclipse.debug.ui.AbstractDebugView#createActions()
      */
     protected void createActions() {
-      
+
 
     }
 
@@ -217,6 +217,6 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
         PHPDebugTarget target = debugViewHelper.getSelectionElement(null);
         update(target);
     }
-    
-    
+
+
 }
