@@ -14,9 +14,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
 
 /**
- * PHPClassDataDecorator is a simple proxy decorator that implements PHPClassConstData. 
+ * PHPClassDataDecorator is a simple proxy decorator that implements PHPClassConstData.
  * This class is needed for identifying the source of this proxy as a PHPClassConstData.
- * 
+ *
  * @author shalom
  */
 public class PHPClassConstantDataDecorator extends PHPDataDecorator implements PHPClassConstData {
@@ -31,6 +31,13 @@ public class PHPClassConstantDataDecorator extends PHPDataDecorator implements P
 	public PHPClassConstantDataDecorator(PHPClassConstData source, IProject project) {
 		super(source, project);
 		this.source = source;
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData#getValue()
+	 */
+	public String getValue() {
+		return source.getValue();
 	}
 
 //	public String getValue() {

@@ -38,14 +38,13 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		if (fileName != null) {
 			File file = new File(fileName);
 			Path path = new Path(fileName);
-			if ((path.getDevice() != null) && !file.exists()){
+			if (path.getDevice() != null && !file.exists()) {
 				fileName = new Path(fileName).lastSegment();
 				descriptionText.append(getLocationTableRow(fileName));
-			}
-			else {
+			} else {
 				descriptionText.append(getLocationTableRow(fileName));
 			}
-			
+
 		}
 
 		// append the class name if it exists
@@ -100,12 +99,12 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		String desc = classData.getDescription();
 
 		fileName = classData.isUserCode() ? classData.getUserData().getFileName() : null;
-		
+
 		if (fileName != null) {
 			File file = new File(fileName);
 			Path path = new Path(fileName);
 			//Do not show the full path of an Untitled PHP Document's file, replace it with the last segment
-			if ((path.getDevice() != null) && !file.exists()){
+			if (path.getDevice() != null && !file.exists()) {
 				fileName = new Path(fileName).lastSegment();
 			}
 		}
@@ -130,8 +129,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		}
 		if (implement != null) {
 			descriptionText.append("<br><dt>Implements</dt>"); //$NON-NLS-1$
-			for (int i = 0; i < implement.length; i++) {
-				String interfaceName = implement[i];
+			for (String interfaceName : implement) {
 				descriptionText.append("<dd>"); //$NON-NLS-1$
 				descriptionText.append(interfaceName);
 				descriptionText.append("</dd>"); //$NON-NLS-1$
@@ -164,14 +162,13 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 			File file = new File(fileName);
 			Path path = new Path(fileName);
 			//Do not show the full path of an Untitled PHP Document's file, replace it with the last segment
-			if ((path.getDevice() != null) && !file.exists()){
+			if (path.getDevice() != null && !file.exists()) {
 				fileName = new Path(fileName).lastSegment();
 				descriptionText.append(getLocationTableRow(fileName));
-			}
-			else {
+			} else {
 				descriptionText.append(getLocationTableRow(fileName));
 			}
-			
+
 		}
 		if (className != null) {
 			descriptionText.append(getClassNameTableRow(className, projectModel));
@@ -208,23 +205,32 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		String desc = codeData.getDescription();
 		String className = codeData.getContainer().getName();
 		String fileName = codeData.getUserData() != null ? codeData.getUserData().getFileName() : null;
+		String value = codeData.getValue();
 
 		if (fileName != null) {
 			File file = new File(fileName);
 			Path path = new Path(fileName);
 			//Do not show the full path of an Untitled PHP Document's file, replace it with the last segment
-			if ((path.getDevice() != null) && !file.exists()){
+			if (path.getDevice() != null && !file.exists()) {
 				fileName = new Path(fileName).lastSegment();
 				descriptionText.append(getLocationTableRow(fileName));
-			}
-			else {
+			} else {
 				descriptionText.append(getLocationTableRow(fileName));
 			}
-			
+
 		}
+
 		if (className != null) {
 			descriptionText.append(getClassNameTableRow(className, projectModel));
 		}
+
+		if (value != null && value.length() > 0) {
+			descriptionText.append("<br><dt>Value</dt>"); //$NON-NLS-1$
+			descriptionText.append("<dd>"); //$NON-NLS-1$
+			descriptionText.append(value);
+			descriptionText.append("</dd>"); //$NON-NLS-1$
+		}
+
 		if (desc.length() > 0) {
 			descriptionText.append(getDescriptionTableRow(desc));
 		}
@@ -252,8 +258,7 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 		String arg = see.getValue();
 		String[] args = arg.split(","); //$NON-NLS-1$
 
-		for (int i = 0; i < args.length; i++) {
-			String ref = args[i];
+		for (String ref : args) {
 			// find a file:
 			if (projectModel.getFileData(ref) != null) {
 				helpBuffer.append(ref);
@@ -271,24 +276,22 @@ public class PHPCodeDataHTMLDescriptionUtilities {
 			}
 			boolean shouldBreak = false;
 			if (phpCodeData instanceof PHPFunctionData && phpCodeData.getContainer() != null && phpCodeData.getContainer() instanceof PHPClassData) {
-				String ref_orig = ref;
 				if (ref.indexOf('(') != -1) {
-					ref_orig = ref.substring(0, ref.indexOf('('));
+					ref = ref.substring(0, ref.indexOf('('));
 				}
-				if (fileName != null && projectModel.getClassFunctionData(fileName, phpCodeData.getContainer().getName(), ref_orig) != null) {
+				if (fileName != null && projectModel.getClassFunctionData(fileName, phpCodeData.getContainer().getName(), ref) != null) {
 					helpBuffer.append(ref);
 					break;
 				}
 				if (fileName != null) {
 					PHPCodeContext context = ModelSupport.createContext(phpCodeData);
-					ref_orig = ref;
+					ref = ref;
 					if (ref.startsWith("$")) { //$NON-NLS-1$
-						ref_orig = ref.substring(1);
+						ref = ref.substring(1);
 					}
-					CodeData[] data = projectModel.getVariables(fileName, context, ref_orig, true);
-					for (int j = 0; j < data.length; j++) {
-						CodeData codeData = data[j];
-						if (((PHPCodeData) codeData).getName().equals(ref_orig)) {
+					CodeData[] data = projectModel.getVariables(fileName, context, ref, true);
+					for (CodeData codeData : data) {
+						if (((PHPCodeData) codeData).getName().equals(ref)) {
 							helpBuffer.append(ref);
 							shouldBreak = true;
 							break;
