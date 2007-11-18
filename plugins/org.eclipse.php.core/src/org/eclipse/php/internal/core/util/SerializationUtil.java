@@ -20,6 +20,8 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
 import org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory;
 import org.eclipse.php.internal.core.phpModel.parser.VariableContextBuilder;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 
 public class SerializationUtil {
 
@@ -28,8 +30,8 @@ public class SerializationUtil {
 	public static void serialize(ICachable[] datas, DataOutputStream output) throws IOException {
 		if (datas != null) {
 			output.writeInt(datas.length);
-			for (int i = 0; i < datas.length; i++) {
-				serialize((PHPFileData) datas[i], output);
+			for (ICachable element : datas) {
+				serialize((PHPFileData) element, output);
 			}
 		} else {
 			output.writeInt(0);
@@ -68,8 +70,8 @@ public class SerializationUtil {
 	private static void serialize(PHPClassData[] classes, DataOutputStream output) throws IOException {
 		if (classes != null) {
 			output.writeInt(classes.length);
-			for (int i = 0; i < classes.length; i++) {
-				serialize(classes[i], output);
+			for (PHPClassData element : classes) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -91,8 +93,8 @@ public class SerializationUtil {
 	private static void serialize(PHPClassConstData[] consts, DataOutputStream output) throws IOException {
 		if (consts != null) {
 			output.writeInt(consts.length);
-			for (int i = 0; i < consts.length; i++) {
-				serialize(consts[i], output);
+			for (PHPClassConstData element : consts) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -100,6 +102,7 @@ public class SerializationUtil {
 	private static void serialize(PHPClassConstData data, DataOutputStream output) throws IOException {
 		if (data != null) {
 			writeString(data.getName(), output);
+			writeString(data.getValue(), output);
 			serialize(data.getDocBlock(), output);
 			serialize(data.getUserData(), output);
 		}
@@ -108,8 +111,8 @@ public class SerializationUtil {
 	private static void serialize(PHPClassVarData[] vars, DataOutputStream output) throws IOException {
 		if (vars != null) {
 			output.writeInt(vars.length);
-			for (int i = 0; i < vars.length; i++) {
-				serialize(vars[i], output);
+			for (PHPClassVarData element : vars) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -127,8 +130,8 @@ public class SerializationUtil {
 	private static void serialize(PHPClassData.PHPInterfaceNameData[] interfacesNamesData, DataOutputStream output) throws IOException {
 		if (interfacesNamesData != null) {
 			output.writeInt(interfacesNamesData.length);
-			for (int i = 0; i < interfacesNamesData.length; i++) {
-				serialize(interfacesNamesData[i], output);
+			for (PHPInterfaceNameData element : interfacesNamesData) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -162,8 +165,8 @@ public class SerializationUtil {
 	private static void serialize(PHPConstantData[] constants, DataOutputStream output) throws IOException {
 		if (constants != null) {
 			output.writeInt(constants.length);
-			for (int i = 0; i < constants.length; i++) {
-				serialize(constants[i], output);
+			for (PHPConstantData element : constants) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -180,8 +183,8 @@ public class SerializationUtil {
 	private static void serialize(PHPDocTag[] tags, DataOutputStream output) throws IOException {
 		if (tags != null) {
 			output.writeInt(tags.length);
-			for (int i = 0; i < tags.length; i++) {
-				serialize(tags[i], output);
+			for (PHPDocTag element : tags) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -196,8 +199,8 @@ public class SerializationUtil {
 	private static void serialize(PHPBlock[] phpBlocks, DataOutputStream output) throws IOException {
 		if (phpBlocks != null) {
 			output.writeInt(phpBlocks.length);
-			for (int i = 0; i < phpBlocks.length; i++) {
-				serialize(phpBlocks[i], output);
+			for (PHPBlock element : phpBlocks) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -212,8 +215,8 @@ public class SerializationUtil {
 	private static void serialize(IPHPMarker[] markers, DataOutputStream output) throws IOException {
 		if (markers != null) {
 			output.writeInt(markers.length);
-			for (int i = 0; i < markers.length; i++) {
-				serialize(markers[i], output);
+			for (IPHPMarker element : markers) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -238,8 +241,8 @@ public class SerializationUtil {
 			PHPVariableData[] list = (PHPVariableData[]) contextsToVariables.get(key);
 			serialize(key, output);
 			output.writeInt(list.length);
-			for (int i = 0; i < list.length; i++) {
-				serialize(list[i], output);
+			for (PHPVariableData element : list) {
+				serialize(element, output);
 			}
 		}
 
@@ -274,8 +277,8 @@ public class SerializationUtil {
 	private static void serialize(PHPIncludeFileData[] includeFiles, DataOutputStream output) throws IOException {
 		if (includeFiles != null) {
 			output.writeInt(includeFiles.length);
-			for (int i = 0; i < includeFiles.length; i++) {
-				serialize(includeFiles[i], output);
+			for (PHPIncludeFileData element : includeFiles) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -307,8 +310,8 @@ public class SerializationUtil {
 	private static void serialize(PHPFunctionData[] functions, DataOutputStream output) throws IOException {
 		if (functions != null) {
 			output.writeInt(functions.length);
-			for (int i = 0; i < functions.length; i++) {
-				serialize(functions[i], output);
+			for (PHPFunctionData element : functions) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -327,8 +330,8 @@ public class SerializationUtil {
 	private static void serialize(PHPFunctionData.PHPFunctionParameter[] parameters, DataOutputStream output) throws IOException {
 		if (parameters != null) {
 			output.writeInt(parameters.length);
-			for (int i = 0; i < parameters.length; i++) {
-				serialize(parameters[i], output);
+			for (PHPFunctionParameter element : parameters) {
+				serialize(element, output);
 			}
 		}
 	}
@@ -370,17 +373,17 @@ public class SerializationUtil {
 		PHPDocBlock docBlock = deserializeDocBlock(inputStream);
 		long lastModified = inputStream.readLong();
 		PHPFileData data = PHPCodeDataFactory.createPHPFileData(fileName, userData, classes, functions, variablesTypeManager, includeFiles, constants, markers, phpBlocks, docBlock, lastModified);
-		for (int i = 0; i < classes.length; i++) {
-			classes[i].setContainer(data);
+		for (PHPClassData element : classes) {
+			element.setContainer(data);
 		}
-		for (int i = 0; i < functions.length; i++) {
-			functions[i].setContainer(data);
+		for (PHPFunctionData element : functions) {
+			element.setContainer(data);
 		}
-		for (int i = 0; i < includeFiles.length; i++) {
-			includeFiles[i].setContainer(data);
+		for (PHPIncludeFileData element : includeFiles) {
+			element.setContainer(data);
 		}
-		for (int i = 0; i < constants.length; i++) {
-			constants[i].setContainer(data);
+		for (PHPConstantData element : constants) {
+			element.setContainer(data);
 		}
 
 		return data;
@@ -418,14 +421,14 @@ public class SerializationUtil {
 		PHPClassConstData[] consts = deserializeClassConstArray(inputStream);
 		PHPFunctionData[] functions = deserializeFunctionDataArray(inputStream);
 		PHPClassData rv = PHPCodeDataFactory.createPHPClassData(name, modifier, docBlock, userData, superClass, interfaces, vars, consts, functions);
-		for (int i = 0; i < vars.length; i++) {
-			vars[i].setContainer(rv);
+		for (PHPClassVarData element : vars) {
+			element.setContainer(rv);
 		}
-		for (int i = 0; i < consts.length; i++) {
-			consts[i].setContainer(rv);
+		for (PHPClassConstData element : consts) {
+			element.setContainer(rv);
 		}
-		for (int i = 0; i < functions.length; i++) {
-			functions[i].setContainer(rv);
+		for (PHPFunctionData element : functions) {
+			element.setContainer(rv);
 		}
 		return rv;
 	}
@@ -440,9 +443,10 @@ public class SerializationUtil {
 
 	private static PHPClassConstData deserializeClassConst(DataInputStream inputStream) throws IOException {
 		String name = readString(inputStream);
+		String value = readString(inputStream);
 		PHPDocBlock docBlock = deserializeDocBlock(inputStream);
 		UserData userData = deserializeUserData(inputStream);
-		return PHPCodeDataFactory.createPHPClassConstData(name, docBlock, userData);
+		return PHPCodeDataFactory.createPHPClassConstData(name, value, docBlock, userData);
 	}
 
 	private static PHPClassVarData[] deserializeClassVarDataArray(DataInputStream inputStream) throws IOException {
@@ -634,8 +638,8 @@ public class SerializationUtil {
 		PHPFunctionData.PHPFunctionParameter[] parameter = deserializeFunctionsParameterArray(inputStream);
 		String returnType = readString(inputStream);
 		PHPFunctionData rv = PHPCodeDataFactory.createPHPFuctionData(name, modifier, docBlock, userData, parameter, returnType);
-		for (int i = 0; i < parameter.length; i++) {
-			parameter[i].setContainer(rv);
+		for (PHPFunctionParameter element : parameter) {
+			element.setContainer(rv);
 		}
 		return rv;
 	}

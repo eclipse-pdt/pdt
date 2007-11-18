@@ -13,13 +13,7 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
@@ -27,18 +21,8 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 
 public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
@@ -295,9 +279,9 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			if (parameterName.charAt(0) == '$') {
 				parameterName = parameterName.substring(1);
 			}
-			for (int i = 0; i < parameters.length; i++) {
-				if (parameterName.equalsIgnoreCase(parameters[i].getName())) {
-					return parameters[i];
+			for (PHPFunctionParameter element : parameters) {
+				if (parameterName.equalsIgnoreCase(element.getName())) {
+					return element;
 				}
 			}
 			return null;
@@ -317,7 +301,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 				Iterator it = docInfo.getTags(PHPDocTag.PARAM);
 				while (it.hasNext()) {
 					PHPDocTag param = (PHPDocTag) it.next();
-					String arg = (param.getValue()).trim();
+					String arg = param.getValue().trim();
 					String[] values = arg.split(" ");
 					String name = null;
 					String type = null;
@@ -419,11 +403,11 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 					for (int i = 0; i < consts.length; ++i) {
 						((PHPCodeDataFactory.PHPClassConstDataImp) consts[i]).setContainer(classData);
 					}
-					for (int i = 0; i < vars.length; i++) {
-						((PHPCodeDataFactory.PHPClassVarDataImp) vars[i]).setContainer(classData);
+					for (PHPClassVarData element : vars) {
+						((PHPCodeDataFactory.PHPClassVarDataImp) element).setContainer(classData);
 					}
-					for (int i = 0; i < func.length; i++) {
-						((PHPCodeDataFactory.PHPFunctionDataImp) func[i]).setContainer(classData);
+					for (PHPFunctionData element : func) {
+						((PHPCodeDataFactory.PHPFunctionDataImp) element).setContainer(classData);
 					}
 
 					classData.setConsts(consts);
@@ -445,7 +429,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 				Iterator it = docInfo.getTags(PHPDocTag.VAR);
 				while (it.hasNext()) {
 					PHPDocTag varTag = (PHPDocTag) it.next();
-					String value = (varTag.getValue()).trim();
+					String value = varTag.getValue().trim();
 					String[] values = value.split(" ");
 					classType = values[0];
 				}
@@ -460,7 +444,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		}
 
 		public void handleClassConstDeclaration(String constName, String value, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
-			PHPClassConstData classConstData = PHPCodeDataFactory.createPHPClassConstData(constName, docInfo, null);
+			PHPClassConstData classConstData = PHPCodeDataFactory.createPHPClassConstData(constName, value, docInfo, null);
 			classConstsList.add(classConstData);
 		}
 
@@ -490,16 +474,16 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			functionsList.toArray(arrayFunctions);
 			Arrays.sort(arrayFunctions);
 			functions = arrayFunctions;
-			for (int i = 0; i < arrayFunctions.length; i++) {
-				functionsHash.put(arrayFunctions[i].getName(), arrayFunctions[i]);
+			for (PHPFunctionData element : arrayFunctions) {
+				functionsHash.put(element.getName(), element);
 			}
 
 			PHPClassData[] arrayClasses = new PHPClassData[classesList.size()];
 			classesList.toArray(arrayClasses);
 			Arrays.sort(arrayClasses);
 			classes = arrayClasses;
-			for (int i = 0; i < arrayClasses.length; i++) {
-				classesHash.put(arrayClasses[i].getName(), arrayClasses[i]);
+			for (PHPClassData element : arrayClasses) {
+				classesHash.put(element.getName(), element);
 			}
 
 			PHPConstantData[] arratConstans = new PHPConstantData[constansList.size()];

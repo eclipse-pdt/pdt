@@ -12,4 +12,6 @@ package org.eclipse.php.internal.core.phpModel.phpElementData;
 
 public interface PHPClassConstData extends PHPCodeData {
 
+	String getValue();
+
 }

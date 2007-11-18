@@ -56,8 +56,8 @@ public class PHPCodeDataFactory {
 	/**
 	 * Returns new PHPClassVarData.
 	 */
-	public static PHPClassConstData createPHPClassConstData(String name, PHPDocBlock docBlock, UserData userData) {
-		return new PHPClassConstDataImp(name, docBlock, userData);
+	public static PHPClassConstData createPHPClassConstData(String name, String value, PHPDocBlock docBlock, UserData userData) {
+		return new PHPClassConstDataImp(name, value, docBlock, userData);
 	}
 
 	/**
@@ -392,11 +392,18 @@ public class PHPCodeDataFactory {
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	static class PHPClassConstDataImp extends PHPCodeDataImp implements PHPClassConstData {
 
+		private String value;
+
 		/**
 		 * Construct a new PHPClassConstDataImp.
 		 */
-		public PHPClassConstDataImp(String name, PHPDocBlock docBlock, UserData userData) {
+		public PHPClassConstDataImp(String name, String value, PHPDocBlock docBlock, UserData userData) {
 			super(name, docBlock, userData);
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
 		}
 
 		public void accept(Visitor v) {
