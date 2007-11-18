@@ -223,10 +223,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		UserData userData = codeData.getUserData();
 		int codeStartOffset = userData.getStartPosition();
 		int codeEndOffset = userData.getEndPosition();
-		if (document.getLineOfOffset(codeStartOffset) == document.getLineOfOffset(codeEndOffset)) {
-			return null;
-		}
-
+		boolean createAnnotation = document.getLineOfOffset(codeStartOffset) != document.getLineOfOffset(codeEndOffset);
 		if (codeStartOffset > startOffset && codeStartOffset < endOffset) {
 			// element may start in one PHP block and end in another.
 			// false - when adding new annotation - don't fold
@@ -234,18 +231,19 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			ElementProjectionAnnotation existingAnnotation = getExistingAnnotation(newAnnotation);
 			Position newPosition = createPosition(codeStartOffset, userData.getEndPosition(), document);
 			final Element element;
-			if (existingAnnotation == null) {
-				// add to map containing all annotations for this adapter
-				currentAnnotations.put(newAnnotation, newPosition);
-				// add to map containing annotations to add
-				addedAnnotations.put(newAnnotation, newPosition);
-				element = newAnnotation.element;
-			} else {
-				// add to map containing all annotations for this adapter
-				currentAnnotations.put(existingAnnotation, newPosition);
-				// remove from map containing annotations to delete
-				previousAnnotations.remove(existingAnnotation);
-				element = newAnnotation.element;
+			element = newAnnotation.element;
+			if (createAnnotation) {
+				if (existingAnnotation == null) {
+					// add to map containing all annotations for this adapter
+					currentAnnotations.put(newAnnotation, newPosition);
+					// add to map containing annotations to add
+					addedAnnotations.put(newAnnotation, newPosition);
+				} else {
+					// add to map containing all annotations for this adapter
+					currentAnnotations.put(existingAnnotation, newPosition);
+					// remove from map containing annotations to delete
+					previousAnnotations.remove(existingAnnotation);
+				}
 			}
 			createDocBlockAnnotations(element, codeData, currentAnnotations, addedAnnotations, startOffset, endOffset, collapseDoc);
 			return element;
