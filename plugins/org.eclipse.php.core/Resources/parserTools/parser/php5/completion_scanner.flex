@@ -77,7 +77,6 @@ import java.util.regex.Pattern;
                  yy_currentPos -= yy_startRead;
                  yy_markedPos -= yy_startRead;
                  yy_pushbackPos -= yy_startRead;
-                 lastPhpDocStart = new Integer(lastPhpDocStart.intValue() - yy_startRead);
                  yy_startRead = 0;
              }
 
