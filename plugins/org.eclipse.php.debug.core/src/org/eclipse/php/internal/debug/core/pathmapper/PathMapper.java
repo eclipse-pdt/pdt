@@ -67,6 +67,15 @@ public class PathMapper implements IXMLPreferencesStorable {
 		return null;
 	}
 
+	/**
+	 * Returns exact mapping for the given remote path (if exists)
+	 * @param remoteFile Remote path
+	 * @return virtual path
+	 */
+	public VirtualPath getLocalPathMapping(VirtualPath remotePath) {
+		return remoteToLocalMap.get(remotePath);
+	}
+
 	public PathEntry getLocalFile(String remoteFile) {
 		VirtualPath path = getPath(remoteToLocalMap, new VirtualPath(remoteFile));
 		if (path != null) {

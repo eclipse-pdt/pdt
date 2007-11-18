@@ -140,6 +140,15 @@ public class DebugSearchEngine {
 				}
 
 				VirtualPath abstractPath = new VirtualPath(remoteFile);
+
+				// Check whether we have an exact mapping for the remote path
+				// If so - we shouldn't proceed with search (we should have this file right in the mapped folder)
+				VirtualPath testPath = abstractPath.clone();
+				testPath.removeLastSegment();
+				if (pathMapper.getLocalPathMapping(testPath) != null) {
+					return Status.OK_STATUS;
+				}
+
 				LinkedList<PathEntry> results = new LinkedList<PathEntry>();
 
 				Object[] includePaths;
