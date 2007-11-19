@@ -69,12 +69,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		runBuild();
 
 		attachProjectOpenObserver();
-
-		initLanguageModels();
-	}
-
-	private void initLanguageModels() {
-		PHPLanguageManagerProvider.instance();
 	}
 
 	private void initGlobalModelListeners() {
@@ -150,6 +144,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			}
 		};
 		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+		cleanJob.setPriority(Job.BUILD);
 		cleanJob.setUser(false);
 		cleanJob.schedule();
 	}
@@ -188,6 +183,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			}
 		};
 		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+		cleanJob.setPriority(Job.BUILD);
 		cleanJob.setUser(false);
 		cleanJob.schedule();
 	}
