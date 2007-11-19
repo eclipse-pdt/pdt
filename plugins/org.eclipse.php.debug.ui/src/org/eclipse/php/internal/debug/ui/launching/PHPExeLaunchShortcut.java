@@ -197,7 +197,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				if (defaultEXE == null) {
 					defaultEXE = getWorkspaceDefaultExe();
 				}
-				String phpExeName = (defaultEXE != null) ? defaultEXE.getPhpExecutable().getAbsolutePath().toString() : null;
+				String phpExeName = (defaultEXE != null) ? defaultEXE.getExecutable().getAbsolutePath().toString() : null;
 
 				if (phpExeName == null) {
 					MessageDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text);
@@ -311,7 +311,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getScriptLaunchDelegateClass());
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
-		wc.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, defaultEXE.getPhpExecutable().getAbsolutePath().toString());
+		wc.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, defaultEXE.getExecutable().getAbsolutePath().toString());
 		String iniPath = defaultEXE.getINILocation() != null ? defaultEXE.getINILocation().toString() : null;
 		wc.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, iniPath);
 		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());

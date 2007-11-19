@@ -25,7 +25,6 @@ import org.eclipse.php.internal.ui.wizards.CompositeFragment;
 import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.php.internal.ui.wizards.fields.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -34,7 +33,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 
 	private PHPexeItem[] existingItems;
 	private StringDialogField fPHPexeName;
-	private StringButtonDialogField fPHPRoot;
+	private StringButtonDialogField fPHPExePath;
 	private StringButtonDialogField fPHPIni;
 	private List<String> debuggersIds;
 	private Label fDebuggersLabel;
@@ -73,7 +72,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 	}
 
 	protected File getInstallLocation() {
-		return new File(fPHPRoot.getText());
+		return new File(fPHPExePath.getText());
 	}
 
 	protected File getIniLocation() {
@@ -96,19 +95,19 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		fPHPexeName = new StringDialogField();
 		fPHPexeName.setLabelText(PHPDebugUIMessages.addPHPexeDialog_phpName);
 
-		fPHPRoot = new StringButtonDialogField(new IStringButtonAdapter() {
+		fPHPExePath = new StringButtonDialogField(new IStringButtonAdapter() {
 			public void changeControlPressed(DialogField field) {
-				DirectoryDialog dialog = new DirectoryDialog(getShell());
-				dialog.setFilterPath(fPHPRoot.getText());
-				dialog.setMessage(PHPDebugUIMessages.addPHPexeDialog_pickPHPRootDialog_message);
+				FileDialog dialog = new FileDialog(getShell());
+				dialog.setFilterPath(fPHPExePath.getText());
+				dialog.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPRootDialog_message);
 				String newPath = dialog.open();
 				if (newPath != null) {
-					fPHPRoot.setText(newPath);
+					fPHPExePath.setText(newPath);
 				}
 			}
 		});
-		fPHPRoot.setLabelText(PHPDebugUIMessages.addPHPexeDialog_phpHome);
-		fPHPRoot.setButtonLabel(PHPDebugUIMessages.addPHPexeDialog_browse1);
+		fPHPExePath.setLabelText(PHPDebugUIMessages.addPHPexeDialog_phpHome);
+		fPHPExePath.setButtonLabel(PHPDebugUIMessages.addPHPexeDialog_browse1);
 
 		fPHPIni = new StringButtonDialogField(new IStringButtonAdapter() {
 			public void changeControlPressed(DialogField field) {
@@ -126,8 +125,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		fPHPIni.setButtonLabel(PHPDebugUIMessages.addPHPexeDialog_browse1);
 
 		fPHPexeName.doFillIntoGrid(parent, 3);
-		fPHPRoot.doFillIntoGrid(parent, 3);
-		((GridData) fPHPRoot.getTextControl(parent).getLayoutData()).widthHint = pixelConverter.convertWidthInCharsToPixels(50);
+		fPHPExePath.doFillIntoGrid(parent, 3);
+		((GridData) fPHPExePath.getTextControl(parent).getLayoutData()).widthHint = pixelConverter.convertWidthInCharsToPixels(50);
 
 		fPHPIni.doFillIntoGrid(parent, 3);
 		((GridData) fPHPIni.getTextControl(parent).getLayoutData()).widthHint = pixelConverter.convertWidthInCharsToPixels(50);
@@ -165,7 +164,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			}
 		});
 
-		fPHPRoot.setDialogFieldListener(new IDialogFieldListener() {
+		fPHPExePath.setDialogFieldListener(new IDialogFieldListener() {
 			public void dialogFieldChanged(DialogField field) {
 				validate();
 			}
@@ -182,7 +181,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		PHPexeItem phpExeItem = getPHPExeItem();
 		if (phpExeItem == null || phpExeItem.getName() == null) {
 			fPHPexeName.setText(""); //$NON-NLS-1$
-			fPHPRoot.setText(""); //$NON-NLS-1$
+			fPHPExePath.setText(""); //$NON-NLS-1$
 			fPHPIni.setText(""); //$NON-NLS-1$
 			String defaultDebuggerId = PHPDebuggersRegistry.getDefaultDebuggerId();
 			if (defaultDebuggerId != null) {
@@ -200,8 +199,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			initialName = phpExeItem.getName();
 			fPHPexeName.setTextWithoutUpdate(phpExeItem.getName());
 			fPHPexeName.setEnabled(phpExeItem.isEditable());
-			fPHPRoot.setTextWithoutUpdate(phpExeItem.getExecutableDirectory().getAbsolutePath());
-			fPHPRoot.setEnabled(phpExeItem.isEditable());
+			fPHPExePath.setTextWithoutUpdate(phpExeItem.getExecutable().getAbsolutePath());
+			fPHPExePath.setEnabled(phpExeItem.isEditable());
 			if (phpExeItem.getINILocation() != null) {
 				fPHPIni.setTextWithoutUpdate(phpExeItem.getINILocation().toString());
 			}
@@ -256,7 +255,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			}
 		}
 
-		String locationName = fPHPRoot.getText();
+		String locationName = fPHPExePath.getText();
 		if (locationName.length() == 0) {
 			setMessage(PHPDebugUIMessages.addPHPexeDialog_enterLocation, IMessageProvider.INFORMATION);
 			return;
@@ -265,21 +264,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		final File executableLocation = new File(locationName);
 		if (!executableLocation.exists()) {
 			setMessage(PHPDebugUIMessages.addPHPexeDialog_locationNotExists, IMessageProvider.ERROR);
-			return;
-		}
-
-		final boolean[] error = new boolean[1];
-		Runnable r = new Runnable() {
-			public void run() {
-				File phpExecutable = PHPexeItem.findPHPExecutable(executableLocation);
-				if (phpExecutable == null) {
-					setMessage(PHPDebugUIMessages.PHPexe_executable_was_not_found_1, IMessageProvider.ERROR);
-					error[0] = true;
-				}
-			}
-		};
-		BusyIndicator.showWhile(getShell().getDisplay(), r);
-		if (error[0]) {
 			return;
 		}
 
@@ -294,7 +278,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		}
 
 		phpExeItem.setName(name);
-		phpExeItem.setExecutableDirectory(executableLocation);
+		phpExeItem.setExecutable(executableLocation);
 		phpExeItem.setDebuggerID(debuggersIds.get(fDebuggers.getSelectionIndex()));
 		phpExeItem.setINILocation(iniFile);
 		setMessage(getDescription(), IMessageProvider.NONE);

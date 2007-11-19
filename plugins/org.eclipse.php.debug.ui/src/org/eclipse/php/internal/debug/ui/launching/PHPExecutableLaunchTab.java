@@ -475,7 +475,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				final PHPexeItem phpExeItem = phpExes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 				if (phpExeItem == null)
 					return;
-				executableLocation = phpExeItem.getPhpExecutable().toString();
+				executableLocation = phpExeItem.getExecutable().toString();
 				configuration.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, executableLocation);
 
 				String iniPath = phpExeItem.getINILocation() != null ? phpExeItem.getINILocation().toString() : null;

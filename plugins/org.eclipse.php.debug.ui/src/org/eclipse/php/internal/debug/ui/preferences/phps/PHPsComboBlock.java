@@ -97,7 +97,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 			public String getDescription() {
 				final PHPexeItem def = exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 				if (def != null)
-					return def.getName() + " (" + def.getPhpExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					return def.getName() + " (" + def.getExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				return "No PHP exes defined"; //$NON-NLS-1$
 			}
 		};
@@ -216,7 +216,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 				new ShowPHPsPreferences().run(null);
 				fillWithWorkspacePHPexes();
 				if (phpExecutables.contains(selected)) {
-					String name = selected.getName() + " (" + selected.getPhpExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+					String name = selected.getName() + " (" + selected.getExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					fExecutablesCombo.select(fExecutablesCombo.indexOf(name));
 				}
 			}
@@ -346,7 +346,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	public String getSelectedExecutablePath() {
 		final PHPexeItem item = getPHPexe();
 		if (item != null)
-			return item.getPhpExecutable().toString();
+			return item.getExecutable().toString();
 		return ""; //$NON-NLS-1$
 	}
 
@@ -460,7 +460,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 		int i = 0;
 		while (iter.hasNext()) {
 			final PHPexeItem item = iter.next();
-			names[i] = item.getName() + " (" + item.getPhpExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			names[i] = item.getName() + " (" + item.getExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			i++;
 		}
 		if (names.length == 0) {
@@ -469,7 +469,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 		fExecutablesCombo.setItems(names);
 		PHPexeItem defaultExe = exes.getDefaultItem(getSelectedDebuggerId());
 		if (defaultExe != null) {
-			String defaultName = defaultExe.getName() + " (" + defaultExe.getPhpExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			String defaultName = defaultExe.getName() + " (" + defaultExe.getExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			fExecutablesCombo.select(fExecutablesCombo.indexOf(defaultName));
 		} else {
 			fExecutablesCombo.select(0);

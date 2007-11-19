@@ -139,7 +139,7 @@ public class InstalledPHPsBlock {
 						}
 						return debuggerName;
 					case 2:
-						return phpExe.getExecutableDirectory().getAbsolutePath();
+						return phpExe.getExecutable().getAbsolutePath();
 				}
 			}
 			return element.toString();
@@ -160,6 +160,8 @@ public class InstalledPHPsBlock {
 		}
 
 	}
+
+	private static final String[] PHP_CANDIDATE_BIN = {"php", "php-cli", "php-cgi", "php.exe", "php-cli.exe", "php-cgi.exe"};
 
 	// Action buttons
 	private Button fAddButton;
@@ -428,14 +430,14 @@ public class InstalledPHPsBlock {
 		if (phpExe == null) {
 			return;
 		}
-		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(), phpExe.getPhpExecutable(), phpExe.getINILocation(), phpExe.getDebuggerID(), phpExe.isEditable());
+		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(), phpExe.getExecutable(), phpExe.getINILocation(), phpExe.getDebuggerID(), phpExe.isEditable());
 		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), phpExeToEdit, phpExes.getAllItems());
 		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
 		if (dialog.open() != Window.OK) {
 			return;
 		}
 		phpExe.setName(phpExeToEdit.getName());
-		phpExe.setExecutableDirectory(phpExeToEdit.getExecutableDirectory());
+		phpExe.setExecutable(phpExeToEdit.getExecutable());
 		phpExe.setINILocation(phpExeToEdit.getINILocation());
 		phpExe.setDebuggerID(phpExeToEdit.getDebuggerID());
 
@@ -509,6 +511,7 @@ public class InstalledPHPsBlock {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void removePHPexes() {
 		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
 		final PHPexeItem[] phpExes = new PHPexeItem[selection.size()];
@@ -659,14 +662,14 @@ public class InstalledPHPsBlock {
 			return;
 
 		// ignore installed locations
-		final Set exstingLocations = new HashSet();
-		Iterator iter = fPHPexes.iterator();
+		final Set<File> exstingLocations = new HashSet<File>();
+		Iterator<PHPexeItem> iter = fPHPexes.iterator();
 		while (iter.hasNext())
-			exstingLocations.add(((PHPexeItem) iter.next()).getPhpExecutable().getParentFile());
+			exstingLocations.add(iter.next().getExecutable().getParentFile());
 
 		// search
 		final File rootDir = new File(path);
-		final List locations = new ArrayList();
+		final List<File> locations = new ArrayList<File>();
 
 		final IRunnableWithProgress r = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) {
@@ -687,21 +690,20 @@ public class InstalledPHPsBlock {
 		}
 
 		if (locations.isEmpty())
-			MessageDialog.openInformation(getShell(), PHPDebugUIMessages.InstalledPHPsBlock_12, MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_13, new String[] { path }));
+			MessageDialog.openInformation(getShell(), PHPDebugUIMessages.InstalledPHPsBlock_12, MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_13, new Object[] { path }));
 		else {
-			iter = locations.iterator();
-			while (iter.hasNext()) {
-				final File location = (File) iter.next();
-				final String name = PHPDebugUIMessages.InstalledPHPsBlock_16;
-				String nameCopy = new String(name);
+			Iterator<File> iter2 = locations.iterator();
+			while (iter2.hasNext()) {
+				File location = iter2.next();
+				PHPexeItem phpExe = new PHPexeItem(null, location, null, PHPDebuggersRegistry.getDefaultDebuggerId(), true);
+				String nameCopy = new String(phpExe.getName());
 				int i = 1;
 				while (isDuplicateName(nameCopy)) {
-					nameCopy = name + '(' + i++ + ')';
+					nameCopy = phpExe.getName() + '[' + i++ + ']';
 				}
 				// Since the search for PHP exe option does not 'know' the debugger id it should assign to the PHPexeItem,
 				// we call for PHPexes.getDefaultDebuggerId() - which can also return null in some cases.
-				final PHPexeItem phpExe = new PHPexeItem(nameCopy, location, null, PHPDebuggersRegistry.getDefaultDebuggerId(), true);
-				if (phpExe.getPhpExecutable() != null) {
+				if (phpExe.getExecutable() != null) {
 					fPHPexes.add(phpExe);
 					phpExes.addItem(phpExe);
 					fPHPExeList.refresh();
@@ -721,13 +723,13 @@ public class InstalledPHPsBlock {
 	 * @param types
 	 * @param ignore
 	 */
-	protected void search(final File directory, final List found, final Set ignore, final IProgressMonitor monitor) {
+	protected void search(final File directory, final List<File> found, final Set<File> ignore, final IProgressMonitor monitor) {
 		if (monitor.isCanceled())
 			return;
 
 		// Search the root directory
 		if (!ignore.contains(directory)) {
-			final File foundExe = PHPexeItem.findPHPExecutable(directory);
+			final File foundExe = findPHPExecutable(directory);
 			if (foundExe != null)
 				found.add(foundExe);
 		}
@@ -735,7 +737,7 @@ public class InstalledPHPsBlock {
 		final String[] names = directory.list();
 		if (names == null)
 			return;
-		final List subDirs = new ArrayList();
+		final List<File> subDirs = new ArrayList<File>();
 		for (String element : names) {
 			if (monitor.isCanceled())
 				return;
@@ -743,13 +745,13 @@ public class InstalledPHPsBlock {
 			//			PHPexeItem[] vmTypes = phpExes.getEditableItems();
 			if (file.isDirectory()) {
 				try {
-					monitor.subTask(MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_14, new String[] { Integer.toString(found.size()), file.getCanonicalPath() }));
+					monitor.subTask(MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_14, new Object[] { Integer.toString(found.size()), file.getCanonicalPath() }));
 				} catch (final IOException e) {
 				}
 				if (!ignore.contains(file)) {
 					if (monitor.isCanceled())
 						return;
-					final File foundExe = PHPexeItem.findPHPExecutable(file);
+					final File foundExe = findPHPExecutable(file);
 					if (foundExe != null) {
 						found.add(foundExe);
 						ignore.add(file);
@@ -759,12 +761,32 @@ public class InstalledPHPsBlock {
 			}
 		}
 		while (!subDirs.isEmpty()) {
-			final File subDir = (File) subDirs.remove(0);
+			final File subDir = subDirs.remove(0);
 			search(subDir, found, ignore, monitor);
 			if (monitor.isCanceled())
 				return;
 		}
+	}
 
+	/**
+	 * Locate a PHP executable file in the PHP location given to this method.
+	 * The location should be a directory.
+	 * The search is done for php and php.exe only.
+	 *
+	 * @param phpLocation A directory that might hold a PHP executable.
+	 * @return A PHP executable file.
+	 */
+	private static File findPHPExecutable(File phpLocation) {
+
+		// Try each candidate in order.  The first one found wins.  Thus, the order
+		// of fgCandidateJavaLocations is significant.
+		for (String element : PHP_CANDIDATE_BIN) {
+			File javaFile = new File(phpLocation, element);
+			if (javaFile.exists() && !javaFile.isDirectory()) {
+				return javaFile;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -794,7 +816,7 @@ public class InstalledPHPsBlock {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
-					return left.getExecutableDirectory().getAbsolutePath().compareToIgnoreCase(right.getExecutableDirectory().getAbsolutePath());
+					return left.getExecutable().getAbsolutePath().compareToIgnoreCase(right.getExecutable().getAbsolutePath());
 				}
 				return super.compare(viewer, e1, e2);
 			}
