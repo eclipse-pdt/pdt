@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
-import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
@@ -551,6 +553,7 @@ public class PHPLaunchUtilities {
 	 * @return the complete environment
 	 * @throws CoreException rethrown exception
 	 */
+	@SuppressWarnings("unchecked")
 	public static String[] getEnvironment(ILaunchConfiguration configuration, String[] additionalEnv) throws CoreException {
 
 		if (additionalEnv == null) {
@@ -570,7 +573,7 @@ public class PHPLaunchUtilities {
 			totalEnv = asAttributesArray(additionalEnvMap);
 		} else {
 			// We have nothing in the environment tab, so we need to set currentEnv ourselves to the current environment
-			Map nativeEnvironment = DebugPlugin.getDefault().getLaunchManager().getNativeEnvironmentCasePreserved();
+			Map<String, String> nativeEnvironment = DebugPlugin.getDefault().getLaunchManager().getNativeEnvironmentCasePreserved();
 			// Make sure we override any native environment with the additional environment values
 			nativeEnvironment.putAll(additionalEnvMap);
 			totalEnv = asAttributesArray(nativeEnvironment);
@@ -610,46 +613,67 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
+	 * Returns PHP CGI related parameters needed for launch
+	 *
+	 * @param fileName
+	 * @param query
+	 * @param phpConfigDir
+	 * @param workingDir
+	 * @return A map of environment settings.
+	 */
+	public static Map<String, String> getPHPCGILaunchEnvironment(String fileName, String query, String phpConfigDir, String workingDir, String[] scriptArguments) {
+		Map<String, String> env = new HashMap<String, String>();
+		env.put("REQUEST_METHOD", "GET"); //$NON-NLS-1$ //$NON-NLS-2$
+		env.put("SCRIPT_FILENAME", fileName); //$NON-NLS-1$
+		env.put("SCRIPT_NAME", fileName); //$NON-NLS-1$
+		env.put("PATH_TRANSLATED", fileName); //$NON-NLS-1$
+		env.put("PATH_INFO", fileName); //$NON-NLS-1$
+
+		// Build query string
+		StringBuilder queryStringBuf = new StringBuilder(query);
+		queryStringBuf.append("&debug_host=127.0.0.1"); //$NON-NLS-1$
+		if (scriptArguments != null) {
+			for (String arg : scriptArguments) {
+				queryStringBuf.append('&').append(arg);
+			}
+		}
+		env.put("QUERY_STRING", queryStringBuf.toString());
+
+		env.put("REDIRECT_STATUS", "1"); //$NON-NLS-1$
+		env.put("PHPRC", phpConfigDir); //$NON-NLS-1$
+		String OS = System.getProperty("os.name"); //$NON-NLS-1$
+		if (!OS.startsWith("Win")) { //$NON-NLS-1$
+			if (OS.startsWith("Mac")) { //$NON-NLS-1$
+				env.put("DYLD_LIBRARY_PATH", workingDir); //$NON-NLS-1$
+			} else {
+				env.put("LD_LIBRARY_PATH", workingDir); //$NON-NLS-1$
+			}
+		}
+		return env;
+	}
+
+	/**
 	 * Creates and returns a command line invocation string for the execution of the PHP script.
 	 *
-	 * @param configuration
-	 * @param phpExe
-	 * @param phpConfigDir
-	 * @param scriptPath
-	 * @param phpIniLocation
-	 * @return
+	 * @param configuration Launch configuration
+	 * @param phpExe PHP Executable path
+	 * @param phpConfigDir PHP configuration file location (directory where php.ini resides)
+	 * @param scriptPath Script path
+	 * @param phpIniLocation PHP configuration file path
+	 * @param args Command line arguments, if using PHP CLI, otherwise - <code>null</code>
+	 * @return commands array
 	 * @throws CoreException
 	 */
-	public static String[] getCommandLine(ILaunchConfiguration configuration, String phpExe, String phpConfigDir, String scriptPath, String phpIniLocation) throws CoreException {
-		String[] cmdLine = null;
-		String[] splitArgs = getProgramArguments(configuration);
-		if (!"".equals(phpIniLocation) && phpIniLocation != null) {
-			phpConfigDir = phpIniLocation;
-		}
+	public static String[] getCommandLine(ILaunchConfiguration configuration, String phpExe, String phpConfigDir, String scriptPath, String[] args) throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		String aspTags = isUsingASPTags(getProject(configuration)) ? "on" : "off";
 
-		// Important!!!
-		// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
-		// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
-		File configDirFile = new File(phpConfigDir);
-		if (!configDirFile.isDirectory()) {
-			phpConfigDir = (new File(phpConfigDir)).getParentFile().getAbsolutePath();
+		List<String> cmdLineList = new LinkedList<String>();
+		cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c", phpConfigDir, "-d", "asp_tags=" + aspTags, scriptPath }));
+		if (args != null) {
+			cmdLineList.addAll(Arrays.asList(args));
 		}
-
-		if (splitArgs.length == 0) {
-			cmdLine = new String[] { phpExe, "-c", phpConfigDir, "-d", "asp_tags=" + aspTags, scriptPath };
-		} else {
-			cmdLine = new String[splitArgs.length + 6];
-			cmdLine[0] = phpExe;
-			cmdLine[1] = "-c";
-			cmdLine[2] = phpConfigDir;
-			cmdLine[3] = "-d";
-			cmdLine[4] = "asp_tags=" + aspTags;
-			cmdLine[5] = scriptPath;
-			System.arraycopy(splitArgs, 0, cmdLine, 6, splitArgs.length);
-		}
-		return cmdLine;
+		return cmdLineList.toArray(new String[cmdLineList.size()]);
 	}
 
 	/**
@@ -673,7 +697,7 @@ public class PHPLaunchUtilities {
 		return null;
 	}
 
-	/*
+	/**
 	 * Returns the program arguments from the launch configuration. Program arguments will allow
 	 * variable substitution as well.
 	 * The arguments are extracted from the IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS configuration
@@ -683,8 +707,8 @@ public class PHPLaunchUtilities {
 	 * @return the program arguments
 	 * @throws CoreException rethrown exception
 	 */
-	private static String[] getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
-		String arguments = configuration.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null); 
+	public static String[] getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
+		String arguments = configuration.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null);
 		if (arguments == null || arguments.trim().equals("")) { //$NON-NLS-1$
 			return new String[0];
 		}

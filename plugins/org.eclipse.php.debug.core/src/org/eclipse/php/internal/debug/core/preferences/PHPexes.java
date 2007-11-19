@@ -27,8 +27,8 @@ import org.eclipse.ui.activities.WorkbenchActivityHelper;
 
 /**
  * A managing class for all the registered PHP executables.
- * As of PDT 1.0 this class can handle multiple debuggers. 
- * 
+ * As of PDT 1.0 this class can handle multiple debuggers.
+ *
  * @author Shalom Gibly
  */
 public class PHPexes {
@@ -47,7 +47,7 @@ public class PHPexes {
 	// A singleton instance
 	private static PHPexes instance;
 
-	// Hold a mapping from the debugger ID to a map of installed 
+	// Hold a mapping from the debugger ID to a map of installed
 	private HashMap<String, HashMap<String, PHPexeItem>> items = new HashMap<String, HashMap<String, PHPexeItem>>();
 	// Hold a mapping to each debugger default PHPExeItem.
 	private HashMap<String, PHPexeItem> defaultItems = new HashMap<String, PHPexeItem>();
@@ -56,7 +56,7 @@ public class PHPexes {
 
 	/**
 	 * Returns a single instance of this PHPexes class.
-	 * 
+	 *
 	 * @return A singleton PHPexes instance.
 	 */
 	public static PHPexes getInstance() {
@@ -71,35 +71,6 @@ public class PHPexes {
 	// Private constructor
 	private PHPexes() {
 		load();
-	}
-
-	/**
-	 * Take the given PHP CLI executable path and change it to PHP CGI path.
-	 * We assume that there is a php-cgi file in the same location. If we cannot find one, 
-	 * we return the given executable path.
-	 * 
-	 * @param phpCLIPath
-	 * @return php CGI path (or the given CLI, if no such php executable exists)
-	 */
-	public static String changeToCGI(String phpCLIPath) {
-		File cgi = new File(phpCLIPath);
-		File parentFile = cgi.getParentFile();
-		File cli = null;
-		if (Platform.getOS().equals(Platform.OS_WIN32)) {
-			cli = new File(parentFile, "php-cgi.exe");
-		} else {
-			// Check the case of the name
-			String name = cgi.getName();
-			if (Character.isUpperCase(name.charAt(0))) {
-				cli = new File(parentFile, name + "-CGI");
-			} else {
-				cli = new File(parentFile, name + "-cgi");
-			}
-		}
-		if (cli.exists()) {
-			return cli.getAbsolutePath();
-		}
-		return phpCLIPath;
 	}
 
 	/**
@@ -123,7 +94,7 @@ public class PHPexes {
 	/**
 	 * Adds a {@link PHPexeItem} to the list of installed items that are assigned to its debugger id.
 	 * Note that the first inserted item will set to be the default one until a call to {@link #setDefaultItem(PHPexeItem)} is made.
-	 * 
+	 *
 	 * @param item
 	 * @see #setDefaultItem(PHPexeItem)
 	 * @see #getItem(String, String)
@@ -149,7 +120,7 @@ public class PHPexes {
 
 	/**
 	 * Returns the default item for the specified debugger.
-	 * 
+	 *
 	 * @return The default PHPexeItem for the given debugger, or null if no such debugger exists.
 	 */
 	public PHPexeItem getDefaultItem(String debuggerId) {
@@ -158,7 +129,7 @@ public class PHPexes {
 
 	/**
 	 * Returns true if there are PHP executables registered to the given debugger.
-	 * 
+	 *
 	 * @param debuggerId The debugger id.
 	 * @return True, if there are executables for this debugger; False, otherwise.
 	 * @see #hasItems()
@@ -170,7 +141,7 @@ public class PHPexes {
 
 	/**
 	 * Returns true if there are any registered PHP executables.
-	 * 
+	 *
 	 * @return True, if there is at least one registered PHP executable; False, otherwise.
 	 * @see #hasItems(String)
 	 */
@@ -180,7 +151,7 @@ public class PHPexes {
 
 	/**
 	 * Returns all the editable items.
-	 * 
+	 *
 	 * @return An array of editable PHPExeItems.
 	 */
 	public PHPexeItem[] getEditableItems() {
@@ -198,12 +169,12 @@ public class PHPexes {
 				}
 			}
 		}
-		return (PHPexeItem[]) list.toArray(new PHPexeItem[list.size()]);
+		return list.toArray(new PHPexeItem[list.size()]);
 	}
 
 	/**
 	 * Returns the {@link PHPexeItem} for the given debuggerId that has the given name.
-	 * 
+	 *
 	 * @param debuggerId
 	 * @param name
 	 * @return A {@link PHPexeItem} or null if none is installed.
@@ -219,7 +190,7 @@ public class PHPexes {
 	/**
 	 * Search for the executable file name in all of the registered {@link PHPexeItem}s and return
 	 * a reference to the one that refer to the same file.
-	 * 
+	 *
 	 * @param exeFilePath The executable file name.
 	 * @param iniFilePath The php ini file path (can be null).
 	 * @return The corresponding {@link PHPexeItem}, or null if none was found.
@@ -239,7 +210,7 @@ public class PHPexes {
 					} else {
 						iniEquals = exeItem.getINILocation() == null ? false : iniFilePath.equals(exeItem.getINILocation().toString());
 					}
-					if (iniEquals && exeFilePath.equals(exeItem.getPhpExecutable().toString())) {
+					if (iniEquals && exeFilePath.equals(exeItem.getExecutable().toString())) {
 						return exeItem;
 					}
 				}
@@ -250,7 +221,7 @@ public class PHPexes {
 
 	/**
 	 * Returns the PHPExeItems registered for the given debugger id.
-	 * 
+	 *
 	 * @param debuggerId
 	 * @return An array of installed exe items for the given debugger; null if no such debugger is registered, or the debugger does not have any executables.
 	 */
@@ -265,7 +236,7 @@ public class PHPexes {
 
 	/**
 	 * Returns an array of all the installed {@link PHPexeItem}s for all the installed debuggers.
-	 * 
+	 *
 	 * @return An array of all the installed debuggers.
 	 */
 	public PHPexeItem[] getAllItems() {
@@ -328,7 +299,7 @@ public class PHPexes {
 		for (int i = 0; i < phpExecutablesLocations.length; i++) {
 			String iniLocation = "null".equals(phpIniLocations[i]) ? null : phpIniLocations[i]; //$NON-NLS-1$
 			final PHPexeItem item = new PHPexeItem(names[i], phpExecutablesLocations[i], iniLocation, debuggers[i]);
-			if (item.getPhpExecutable() != null) {
+			if (item.getExecutable() != null) {
 				boolean filterItem = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
 					public String getLocalId() {
 						return item.getDebuggerID();
@@ -360,24 +331,24 @@ public class PHPexes {
 		}
 	}
 
-	/*
+	/**
 	 * Load the PHP executables that were defined in the extensions.
 	 */
+	@SuppressWarnings("unchecked")
 	private void loadExtensions() {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 		final IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
 
 		boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		for (int i = 0; i < elements.length; i++) {
-			final IConfigurationElement element = elements[i];
+		for (final IConfigurationElement element : elements) {
 			if (PHPEXE_TAG.equals(element.getName())) {
 				final String name = element.getAttribute(NAME_ATTRIBUTE);
 				String location = element.getAttribute(LOCATION_ATTRIBUTE);
 				final String version = element.getAttribute(VERSION_ATTRIBUTE);
 				String debuggerID = element.getAttribute(DEBUGGER_ID_ATTRIBUTE);
 				if (debuggerID == null || debuggerID.equals("")) {
-					// The debugger id is an optional field, so in case that none was entered assign the debugger to Zend. 
+					// The debugger id is an optional field, so in case that none was entered assign the debugger to Zend.
 					debuggerID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 				}
 				final boolean isDefault = "true".equalsIgnoreCase(element.getAttribute(DEFAULT_ATTRIBUTE));
@@ -425,11 +396,11 @@ public class PHPexes {
 	}
 
 	/**
-	 * Removes an item. 
-	 * In case the removed item was the default one, a different random item will be picked to be the 
+	 * Removes an item.
+	 * In case the removed item was the default one, a different random item will be picked to be the
 	 * new default one for the specific debugger.
-	 * 
-	 * @param debuggerID 
+	 *
+	 * @param debuggerID
 	 * @param item
 	 */
 	public void removeItem(PHPexeItem item) {
@@ -457,7 +428,7 @@ public class PHPexes {
 
 	/**
 	 * Sets a default exe item for its debugger id.
-	 * 
+	 *
 	 * @param defaultItem
 	 */
 	public void setDefaultItem(PHPexeItem defaultItem) {
@@ -476,7 +447,7 @@ public class PHPexes {
 
 	/**
 	 * Sets a default exe item for the given debugger.
-	 * 
+	 *
 	 * @param debuggerID
 	 * @param defaultItem
 	 */
@@ -505,7 +476,7 @@ public class PHPexes {
 				namesString.append(SEPARATOR);
 				debuggersString.append(SEPARATOR);
 			}
-			locationsString.append(item.getExecutableDirectory().toString());
+			locationsString.append(item.getExecutable().toString());
 			inisString.append(item.getINILocation() != null ? item.getINILocation().toString() : "null"); //$NON-NLS-1$
 			namesString.append(item.getName());
 			debuggersString.append(item.getDebuggerID());

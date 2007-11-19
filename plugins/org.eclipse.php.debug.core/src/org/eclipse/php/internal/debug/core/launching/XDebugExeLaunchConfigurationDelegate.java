@@ -79,7 +79,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		IProject project = res.getProject();
 
 		// check the launch for stop at first line, if not there go to project specifics
-		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project); 
+		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
 		stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, stopAtFirstLine);
 
 		// Set Project Name as this is required by the source lookup computer delegate
@@ -136,7 +136,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 		wc.doSave();
 
-		
+
 
 
 		// add process type to process attributes, basically the name of the exe that was launched
@@ -162,12 +162,12 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 
 
-		// create any environment variables, and build the command line  
+		// create any environment variables, and build the command line
 		String[] envVarString = null;
 		DBGpTarget target = null;
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			String sessionID = DBGpSessionHandler.getInstance().generateSessionId();
-			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();			
+			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();
 			target = new DBGpTarget(launch, phpFile.toOSString(), ideKey, sessionID, stopAtFirstLine);
 			target.setPathMapper(PathMapperRegistry.getByLaunchConfiguration(configuration));
 			DBGpSessionHandler.getInstance().addSessionListener(target);
@@ -192,19 +192,19 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 
 		String[] cmdLine = null;
-		if (workingDir == projectDir) { 
+		if (workingDir == projectDir) {
 			// script name is relative to the project directory
 			cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.toOSString());
 		}
 		else {
 			// script is relative to the working directory.
-			cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.lastSegment()); 
+			cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.lastSegment());
 		}
-		
+
 		final Process phpExeProcess = DebugPlugin.exec(cmdLine, workingDir, envVarString);
 		// Attach a crash detector
 		new Thread(new ProcessCrashDetector(phpExeProcess)).start();
-		
+
 		IProcess eclipseProcessWrapper = null;
 		if (phpExeProcess != null) {
 			subMonitor.worked(10);
@@ -217,7 +217,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 				throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.ID, 0, null, null));
 			}
-			
+
 			if (mode.equals(ILaunchManager.DEBUG_MODE) && target != null) {
 				target.setProcess(eclipseProcessWrapper);
 				launch.addDebugTarget(target);
@@ -227,7 +227,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		} else {
 			// we did not launch
-			if (mode.equals(ILaunchManager.DEBUG_MODE)) {			
+			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				DBGpSessionHandler.getInstance().removeSessionListener(target);
 			}
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
@@ -245,7 +245,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 */
 	public String[] createDebugLaunchEnvironment(ILaunchConfiguration configuration, String sessionID, String ideKey, IPath phpExe) throws CoreException {
 		// create XDebug required environment variables, need the
-		// session handler to start listening and generate a session id      
+		// session handler to start listening and generate a session id
 
 		String configEnv = "XDEBUG_CONFIG=remote_enable=1 idekey=" + ideKey;
 		String extraDBGpEnv = "DBGP_IDEKEY=" + ideKey;
@@ -268,9 +268,12 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 */
 	public String[] createCommandLine(ILaunchConfiguration configuration, String phpConfigDir, String exeName, String scriptName) throws CoreException {
 		String phpIniLocation = configuration.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION, "");
-		return PHPLaunchUtilities.getCommandLine(configuration, exeName, phpConfigDir, scriptName, phpIniLocation);
+		if (!"".equals(phpIniLocation)) {
+			phpConfigDir = new File(phpIniLocation).getParent();
+		}
+		return PHPLaunchUtilities.getCommandLine(configuration, exeName, phpConfigDir, scriptName, null);
 	}
-	
+
 	private String getLibraryPath(IPath exePath) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
@@ -282,7 +285,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 	/**
 	 * Displays a dialog with an error message.
-	 * 
+	 *
 	 * @param message The error to display.
 	 */
 	protected void displayErrorMessage(final String message) {

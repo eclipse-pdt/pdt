@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
@@ -24,10 +23,10 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.swt.widgets.Display;
 
@@ -75,41 +74,46 @@ public class PHPExecutableDebuggerInitializer {
 	public void initializeDebug(String phpExe, String fileName, String query, Map<String, String> envVariables, String phpIniLocation) {
 		try {
 			IPath phpExePath = new Path(phpExe);
+			File phpExeFile = new File(phpExe);
 			File workingDir = new File(phpExePath.removeLastSegments(1).toString());
-			String phpConfigDir = workingDir.getAbsolutePath();
-			if (phpIniLocation != null && !phpIniLocation.equals("")) {
-				phpConfigDir = phpIniLocation;
-			}
-			String originalPHPConfigDir = phpConfigDir;
 
-			// Important!!!
-			// Note that php executable -c parameter (for php 4) must get the path to the directory that contains the php.ini file.
-			// We cannot use a full path to the php.ini file nor modify the file name! (for example php.temp.ini).
-			phpConfigDir = (new File(phpConfigDir)).getParentFile().getAbsolutePath();
+			// Determine configuration file directory:
+			String phpConfigDir = phpExeFile.getParent();
+			if (phpIniLocation != null && !phpIniLocation.equals("")) {
+				phpConfigDir = new File(phpIniLocation).getParent();
+			}
+
+			// Detect PHP SAPI type:
+			String sapiType = null;
+			PHPexeItem[] items = PHPexes.getInstance().getAllItems();
+			for (PHPexeItem item : items) {
+				if (item.getExecutable().equals(phpExeFile)) {
+					sapiType = item.getSapiType();
+					break;
+				}
+			}
+
+			String[] args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
 
 			// Prepare the environment
+			Map<String, String> additionalLaunchEnvironment = PHPLaunchUtilities.getPHPCGILaunchEnvironment(fileName, query, phpConfigDir, workingDir.getAbsolutePath(), sapiType == PHPexeItem.SAPI_CGI ? args : null);
 			if (envVariables == null) {
-				envVariables = getAdditionalLaunchEnvironment(fileName, query, phpConfigDir, workingDir.getAbsolutePath());
+				envVariables = additionalLaunchEnvironment;
 			} else {
-				Map<String, String> additionalLaunchEnvironment = getAdditionalLaunchEnvironment(fileName, query, phpConfigDir, workingDir.getAbsolutePath());
 				additionalLaunchEnvironment.putAll(envVariables);
 				envVariables = additionalLaunchEnvironment;
 			}
 			String[] environmetVars = PHPLaunchUtilities.getEnvironment(launch.getLaunchConfiguration(), asAttributesArray(envVariables));
 
 			// Prepare the command line.
-			String[] phpCmdArray = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExe, originalPHPConfigDir, fileName, phpIniLocation);
+			String[] phpCmdArray = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExe, phpConfigDir, fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null);
 
-			// Check if we need to change the executable path to a CGI executable in case we don't
-			// need to support command arguments.
-			if (launch.getLaunchConfiguration().getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null) == null) {
-				phpCmdArray[0] = PHPexes.changeToCGI(phpCmdArray[0]);
-			}
 			// Make sure that we have executable permissions on the file.
 			PHPexes.changePermissions(new File(phpCmdArray[0]));
 
 			// Execute the command line.
 			Process p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDir);
+
 			// Attach a crash detector
 			new Thread(new ProcessCrashDetector(p)).start();
 
@@ -138,40 +142,6 @@ public class PHPExecutableDebuggerInitializer {
 			attributes[index++] = entry.getKey() + '=' + entry.getValue();
 		}
 		return attributes;
-	}
-
-	/**
-	 * Returns the specific launch environment settings for this php script launch.
-	 *
-	 * @param fileName
-	 * @param query
-	 * @param phpConfigDir
-	 * @param workingDir
-	 * @return A map of environment settings.
-	 */
-	protected Map<String, String> getAdditionalLaunchEnvironment(String fileName, String query, String phpConfigDir, String workingDir) {
-		Map<String, String> env = new HashMap<String, String>();
-		env.put("REQUEST_METHOD", "GET"); //$NON-NLS-1$ //$NON-NLS-2$
-		env.put("SCRIPT_FILENAME", fileName); //$NON-NLS-1$
-		env.put("SCRIPT_NAME", fileName); //$NON-NLS-1$
-		env.put("PATH_TRANSLATED", fileName); //$NON-NLS-1$
-		env.put("PATH_INFO", fileName); //$NON-NLS-1$
-		env.put("QUERY_STRING", query + "&debug_host=127.0.0.1"); //$NON-NLS-1$ //$NON-NLS-2$
-		env.put("REDIRECT_STATUS", "1"); //$NON-NLS-1$
-		env.put("PHPRC", phpConfigDir); //$NON-NLS-1$
-		String OS = System.getProperty("os.name"); //$NON-NLS-1$
-		if (!OS.startsWith("Win")) { //$NON-NLS-1$
-			if (OS.startsWith("Mac")) { //$NON-NLS-1$
-				env.put("DYLD_LIBRARY_PATH", workingDir); //$NON-NLS-1$
-			} else {
-				env.put("LD_LIBRARY_PATH", workingDir); //$NON-NLS-1$
-			}
-		}
-		return env;
-	}
-
-	private void initializeSystemEnvironmentVariables() throws IOException {
-
 	}
 
 	//	private void initializeSystemEnvironmentVariables() throws IOException {
@@ -255,9 +225,9 @@ public class PHPExecutableDebuggerInitializer {
 				boolean isRunMode = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode());
 				String msg = null;
 				if (isRunMode) {
-					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_3, new String[] { launchName });
+					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_3, new Object[] { launchName });
 				} else {
-					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2, new String[] { launchName });
+					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2, new Object[] { launchName });
 				}
 				final String message = msg;
 				Display.getDefault().asyncExec(new Runnable() {

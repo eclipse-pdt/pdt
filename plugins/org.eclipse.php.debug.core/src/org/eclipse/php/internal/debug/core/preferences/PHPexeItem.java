@@ -10,22 +10,35 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.preferences;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.debug.core.DebugPlugin;
 
 /**
  * A PHP executable item.
- * An item has a name, version, path, ini path and a debugger ID.
+ * An item has a name, version, path, configuration file path and a debugger ID.
  * It can be editable or non-editable in case it was loaded from an extension point.
- * 
- * @author shalom
+ *
+ * @author shalom, michael
  */
 public class PHPexeItem {
 
-	private static final String[] fgCandidatePHPLocations = { "php", "php.exe" }; //$NON-NLS-1$ //$NON-NLS-2$
+	public static final String SAPI_CLI = "CLI"; //$NON-NLS-1$
+	public static final String SAPI_CGI = "CGI"; //$NON-NLS-1$
+
+	private static final Pattern PHP_VERSION = Pattern.compile("PHP (\\d\\.\\d\\.\\d+).*? \\((.*?)\\)"); //$NON-NLS-1$
+	private static final Pattern PHP_CLI_CONFIG = Pattern.compile("Configuration File \\(php.ini\\) Path => (.*?)"); //$NON-NLS-1$
+	private static final Pattern PHP_CGI_CONFIG = Pattern.compile("Configuration File \\(php.ini\\) Path </td><td class=\"v\">(.*?)</td>"); //$NON-NLS-1$
+
+	private String sapiType;
 	private String name;
-	private File executableDirectory;
-	private File iniLocation;
-	private File phpExecutable;
+	private File config;
+	private File executable;
 	private String version;
 	private boolean editable = true;
 	private String debuggerID;
@@ -33,37 +46,40 @@ public class PHPexeItem {
 
 	/**
 	 * Constructs a new PHP executable item.
-	 * 
+	 *
 	 * @param name
 	 * @param phpDirectoryPath
-	 * @param iniPath The php.ini location (can be null)
+	 * @param config The configuration file location (can be null)
 	 * @param debuggerID
 	 */
-	public PHPexeItem(String name, String phpDirectoryPath, String iniPath, String debuggerID) {
+	public PHPexeItem(String name, String executable, String config, String debuggerID) {
 		this.name = name;
 		this.debuggerID = debuggerID;
-		setExecutableDirectory(new File(phpDirectoryPath));
-		if (iniPath != null && iniPath.length() > 0) {
-			setINILocation(new File(iniPath));
+		this.executable = new File(executable);
+		if (config != null && config.length() > 0) {
+			this.config = new File(config);
 		}
+
+		detectFromPHPExe();
 	}
 
 	/**
 	 * Constructs a new PHP executable item.
-	 * 
+	 *
 	 * @param name
-	 * @param phpExecutable
+	 * @param executable
 	 * @param iniLocation
 	 * @param debuggerID
 	 * @param editable
 	 */
-	public PHPexeItem(String name, File phpExecutable, File iniLocation, String debuggerID, boolean editable) {
+	public PHPexeItem(String name, File executable, File iniLocation, String debuggerID, boolean editable) {
 		this.name = name;
-		this.phpExecutable = phpExecutable;
-		this.editable = editable;
-		this.executableDirectory = phpExecutable.getParentFile();
-		this.iniLocation = iniLocation;
+		this.executable = executable;
+		this.config = iniLocation;
 		this.debuggerID = debuggerID;
+		this.editable = editable;
+
+		detectFromPHPExe();
 	}
 
 	/**
@@ -82,7 +98,7 @@ public class PHPexeItem {
 
 	/**
 	 * Set the debugger ID that can use this item.
-	 * 
+	 *
 	 * @param debuggerID A debugger ID.
 	 */
 	public void setDebuggerID(String debuggerID) {
@@ -90,51 +106,44 @@ public class PHPexeItem {
 	}
 
 	/**
-	 * Returns the PHP executable directory.
-	 * 
-	 * @return The executable directory.
-	 */
-	public File getExecutableDirectory() {
-		return executableDirectory;
-	}
-
-	/**
-	 * Returns the php.ini path.
-	 * The returned value can be null in case the value was not set. In this case, the ini location 
+	 * Returns the configuration file path.
+	 * The returned value can be null in case the value was not set. In this case, the ini location
 	 * is assumed to be next to the php executable.
-	 * 
-	 * @return The php.ini location.
+	 *
+	 * @return The configuration file location.
 	 */
 	public File getINILocation() {
-		return iniLocation;
-	}
-
-	/**
-	 * Sets the PHP executable directory.
-	 * Setting this directory will also cause for the php executable to be changed and 
-	 * the ini location to be set to null.
-	 * 
-	 * @param location The executable location.
-	 * @see #findPHPExecutable(File)
-	 */
-	public void setExecutableDirectory(File location) {
-		this.executableDirectory = location;
-		phpExecutable = findPHPExecutable(location);
-		this.iniLocation = null;
+		return config;
 	}
 
 	/**
 	 * Set the PHP ini location.
-	 * 
+	 *
 	 * @param location The ini location (can be null).
 	 */
 	public void setINILocation(File location) {
-		this.iniLocation = location;
+		this.config = location;
+	}
+
+	/**
+	 * Returns SAPI type of this PHP executable
+	 * @return
+	 */
+	public String getSapiType() {
+		return sapiType;
+	}
+
+	/**
+	 * Sets SAPI type of this PHP executable
+	 * @param sapiType
+	 */
+	public void setSapiType(String sapiType) {
+		this.sapiType = sapiType;
 	}
 
 	/**
 	 * Returns the name of this PHP executable item.
-	 * 
+	 *
 	 * @return The name of the item.
 	 */
 	public String getName() {
@@ -143,7 +152,7 @@ public class PHPexeItem {
 
 	/**
 	 * Sets the name of this item.
-	 * 
+	 *
 	 * @param name The name of the item.
 	 */
 	public void setName(String name) {
@@ -151,49 +160,29 @@ public class PHPexeItem {
 	}
 
 	/**
-	 * Locate a PHP executable file in the PHP location given to this method.
-	 * The location should be a directory.
-	 * The search is done for php and php.exe only.
-	 * 
-	 * @param phpLocation A directory that might hold a PHP executable.
-	 * @return A PHP executable file.
-	 */
-	public static File findPHPExecutable(File phpLocation) {
-
-		// Try each candidate in order.  The first one found wins.  Thus, the order
-		// of fgCandidateJavaLocations is significant.
-		for (String element : fgCandidatePHPLocations) {
-			File javaFile = new File(phpLocation, element);
-			if (javaFile.isFile()) {
-				return javaFile;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Returns the php executable file.
-	 * 
-	 * @return The php executable file.
+	 *
+	 * @return The php executable file.iniLocation
 	 */
-	public File getPhpExecutable() {
-		return phpExecutable;
+	public File getExecutable() {
+		return executable;
 	}
 
 	/**
 	 * Sets the php executable path.
 	 * Setting the path also sets the executable directory and reset the ini location to null.
-	 * 
+	 *
 	 * @return The php executable file.
 	 * @throws IllegalArgumentException in case the file is null.
 	 */
-	public void setPhpExecutable(File phpExecutable) {
-		if (phpExecutable == null) {
+	public void setExecutable(File executable) {
+		if (executable == null) {
 			throw new IllegalArgumentException("PHP executable path is null");
 		}
-		this.phpExecutable = phpExecutable;
-		this.executableDirectory = phpExecutable.getParentFile();
-		this.iniLocation = null;
+		this.executable = executable;
+		this.config = null;
+
+		detectFromPHPExe();
 	}
 
 	/*
@@ -203,8 +192,8 @@ public class PHPexeItem {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((phpExecutable == null) ? 0 : phpExecutable.hashCode());
-		result = prime * result + ((iniLocation == null) ? 0 : iniLocation.hashCode());
+		result = prime * result + ((executable == null) ? 0 : executable.hashCode());
+		result = prime * result + ((config == null) ? 0 : config.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
@@ -224,18 +213,11 @@ public class PHPexeItem {
 			return false;
 		}
 		final PHPexeItem other = (PHPexeItem) obj;
-		if (executableDirectory == null) {
-			if (other.executableDirectory != null) {
+		if (config == null) {
+			if (other.config != null) {
 				return false;
 			}
-		} else if (!executableDirectory.equals(other.executableDirectory)) {
-			return false;
-		}
-		if (iniLocation == null) {
-			if (other.iniLocation != null) {
-				return false;
-			}
-		} else if (!iniLocation.equals(other.iniLocation)) {
+		} else if (!config.equals(other.config)) {
 			return false;
 		}
 		if (name == null) {
@@ -251,12 +233,17 @@ public class PHPexeItem {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return new StringBuilder(name).append(" (path: ").append(executableDirectory.getAbsolutePath()).append(")").toString();
+		StringBuilder buf = new StringBuilder(name);
+		buf.append(" [path: ").append(executable.getAbsolutePath());
+		buf.append(", config file: ").append(config.getAbsolutePath());
+		buf.append(", sapi: ").append(sapiType);
+		buf.append("]");
+		return buf.toString();
 	}
 
 	/**
 	 * Returns the version of the item.
-	 * 
+	 *
 	 * @return The item's version.
 	 */
 	public String getVersion() {
@@ -265,7 +252,7 @@ public class PHPexeItem {
 
 	/**
 	 * Sets the version of the item.
-	 * 
+	 *
 	 * @param version The item's version.
 	 */
 	public void setVersion(String version) {
@@ -297,5 +284,88 @@ public class PHPexeItem {
 	 */
 	public void setDefault(boolean isDefault) {
 		this.isDefault = isDefault;
+	}
+
+	/**
+	 * Detects various things like: type, version, default configuration file, etc. from the PHP binary
+	 */
+	protected void detectFromPHPExe() {
+		if (executable == null) {
+			throw new IllegalStateException("PHP executable path is null"); //$NON-NLS-1$
+		}
+		try {
+			// Create temporary directory:
+			File tempDir = File.createTempFile("phpexe", null); //$NON-NLS-1$
+			tempDir.delete();
+			tempDir.mkdir();
+
+			// Create empty configuration file:
+			File tempPHPIni = new File(tempDir, "php.ini"); //$NON-NLS-1$
+			tempPHPIni.createNewFile();
+
+			try {
+				// Detect version and type:
+				String output = exec(executable.getAbsolutePath(), "-c", tempDir.getAbsolutePath(), "-v");
+				Matcher m = PHP_VERSION.matcher(output);
+				if (m.find()) {
+					version = m.group(1);
+					String type = m.group(2);
+					if (type.startsWith("cgi")) { //$NON-NLS-1$
+						sapiType = SAPI_CGI;
+					} else if (type.startsWith("cli")) { //$NON-NLS-1$
+						sapiType = SAPI_CLI;
+					} else {
+						DebugPlugin.logDebugMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
+						return;
+					}
+
+					if (name == null) {
+						name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					}
+				} else {
+					DebugPlugin.logDebugMessage("CanconfigFile't determine version of the PHP executable"); //$NON-NLS-1$
+					return;
+				}
+
+				// Detect default PHP.ini location:
+				if (config == null) {
+					output = exec(executable.getAbsolutePath(), "-c", tempDir.getAbsolutePath(), "-i");
+					if (sapiType == SAPI_CLI) {
+						m = PHP_CLI_CONFIG.matcher(output);
+					} else if (sapiType == SAPI_CGI) {
+						m = PHP_CGI_CONFIG.matcher(output);
+					}
+					if (m.find()) {
+						String configDir = m.group(1);
+						config = new File(configDir.trim(), "php.ini");
+					} else {
+						DebugPlugin.logDebugMessage("Can't determine PHP.ini location of the PHP executable"); //$NON-NLS-1$
+						return;
+					}
+				}
+			} finally {
+				tempPHPIni.delete();
+				tempDir.delete();
+			}
+		} catch (IOException e) {
+			DebugPlugin.log(e);
+		}
+	}
+
+	/**
+	 * Executes given command
+	 *
+	 * @param cmd Command array
+	 * @throws IOException
+	 */
+	private static String exec(String... cmd) throws IOException {
+		Process p = Runtime.getRuntime().exec(cmd);
+		BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		StringBuilder buf = new StringBuilder();
+		String l;
+		while ((l = r.readLine()) != null) {
+			buf.append(l).append('\n');
+		}
+		return buf.toString();
 	}
 }

@@ -165,7 +165,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 			HashMap entry = new HashMap();
 			PHPexeItem phpExeItem = (PHPexeItem) i.next();
 			PathMapper pathMapper = phpExePathMapper.get(phpExeItem);
-			entry.put("phpExe", phpExeItem.getPhpExecutable().toString()); //$NON-NLS-1$
+			entry.put("phpExe", phpExeItem.getExecutable().toString()); //$NON-NLS-1$
 			if (phpExeItem.getINILocation() != null){
 				entry.put("phpIni", phpExeItem.getINILocation().toString()); //$NON-NLS-1$
 			}

@@ -35,6 +35,8 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.phpIni.IniModifier;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitializersRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPExecutableDebuggerInitializer;
@@ -55,26 +57,27 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	protected Map<String, String> envVariables = null;
 
 	/**
-	 * Override the extended getLaunch to create a PHPLaunch. 
+	 * Override the extended getLaunch to create a PHPLaunch.
 	 */
 	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
 	}
 
-	public void debugPHPExecutable(final ILaunch launch, final String phpExe, final String fileToDebug) throws DebugException {
+	public void debugPHPExecutable(ILaunch launch, String phpExe, String fileToDebug) throws DebugException {
 		try {
 			launch.setAttribute(EXECUTABLE_LAUNCH, "true");
 			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
-			final PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
+			PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
 			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath(), parametersInitializer.generateQuery(launch), envVariables, launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION));
-		} catch (final java.io.IOException e1) {
+
+		} catch (java.io.IOException e1) {
 			Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e1);
-			final String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;
+			String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;
 			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e1));
 		}
 	}
 
-	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
+	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		// Check that the debug daemon is functional
 		// DEBUGGER - Make sure that the active debugger id is indeed Zend's debugger
 		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
@@ -93,11 +96,11 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		if (monitor.isCanceled())
 			return;
 
-		final String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-		final String phpIniPath = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
-		final String projectName = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
-		final String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-		final boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
+		String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+		String phpIniPath = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
+		String projectName = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
+		String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+		boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
 
 		if (monitor.isCanceled())
 			return;
@@ -112,8 +115,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			return;
 		}
 
-		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		final IPath filePath = new Path(fileNameString);
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IPath filePath = new Path(fileNameString);
 		IProject project = null;
 		IProject dummyProject = null;
 		String absolutePath = null;
@@ -149,10 +152,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 		} else {
 			try {
-				final IPath projectPath = new Path(projectName);
+				IPath projectPath = new Path(projectName);
 				project = workspaceRoot.getProject(projectPath.lastSegment());
 				absolutePath = filePath.makeAbsolute().toString();
-			} catch (final Exception e) {
+			} catch (Exception e) {
 			}
 		}
 
@@ -180,10 +183,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
 			boolean stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
-			final int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+			int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
 			// Set Project Name
-			final String projectString = project.getFullPath().toString();
+			String projectString = project.getFullPath().toString();
 
 			ILaunchConfigurationWorkingCopy wc;
 			if (configuration.isWorkingCopy())
@@ -201,7 +204,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				return;
 
 			// Generate a session id for this launch and put it in the map
-			final int sessionID = DebugSessionIdGenerator.generateSessionID();
+			int sessionID = DebugSessionIdGenerator.generateSessionID();
 			PHPSessionLaunchMapper.put(sessionID, launch);
 
 			// Define all needed debug attributes:
@@ -211,15 +214,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 			// Trigger the debug session by initiating a debug requset to the php.exe
 			debugPHPExecutable(launch, phpExeString, absolutePath);
+
 		} else {
 			// resolve location
-			final IPath phpExe = new Path(phpExeString);
+			IPath phpExe = new Path(phpExeString);
 
 			if (monitor.isCanceled())
 				return;
-
-			// resolve working directory
-			//            String projectFolderString = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String)null);
 
 			IPath projectLocation = project.getRawLocation();
 			if (projectLocation == null)
@@ -228,7 +229,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			if (monitor.isCanceled())
 				return;
 
-			//            String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String)null);
 			IPath phpFile = new Path(fileNameString);
 			if (fileNameString.startsWith("/"))
 				phpFile = phpFile.removeFirstSegments(1);
@@ -242,20 +242,37 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				return;
 
 			File workingDir = new File(phpExe.removeLastSegments(1).toString());
-			String phpConfigDir = workingDir.getAbsolutePath();
+			File phpExeFile = new File(phpExeString);
 
 			String phpIniLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
+
+			// Determine PHP configuration file location:
+			String phpConfigDir = phpExeFile.getParent();
 			if (phpIniLocation != null && !phpIniLocation.equals("")) {
-				phpConfigDir = phpIniLocation;
+				phpConfigDir = new File(phpIniLocation).getParent();
 			}
-			final IResource res = workspaceRoot.findMember(filePath);
+
+			IResource res = workspaceRoot.findMember(filePath);
 			String fileName = null;
 			if (res != null) {
 				fileName = res.getLocation().toOSString();
 			} else {
 				fileName = filePath.toOSString();
 			}
-			final String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExe.toOSString(), phpConfigDir, fileName, phpIniLocation);
+
+			// Detect PHP SAPI type:
+			String sapiType = null;
+			PHPexeItem[] items = PHPexes.getInstance().getAllItems();
+			for (PHPexeItem item : items) {
+				if (item.getExecutable().equals(phpExeFile)) {
+					sapiType = item.getSapiType();
+					break;
+				}
+			}
+
+			String[] args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
+			String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExe.toOSString(), phpConfigDir, fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null);
+
 			// Set library search path:
 			if (!WINDOWS) {
 				StringBuffer buf = new StringBuffer();
@@ -274,31 +291,34 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				envp = envpNew;
 			}
 
-			final Process p = DebugPlugin.exec(cmdLine, workingDir, envp);
+			Process p = DebugPlugin.exec(cmdLine, workingDir, envp);
+
 			// Attach a crash detector
 			new Thread(new ProcessCrashDetector(p)).start();
-			
+
 			IProcess process = null;
 
 			// add process type to process attributes
-			final Map processAttributes = new HashMap();
+			Map<String, String> processAttributes = new HashMap<String, String>();
 			String programName = phpExe.lastSegment();
-			final String extension = phpExe.getFileExtension();
-			if (extension != null)
+			String extension = phpExe.getFileExtension();
+
+			if (extension != null) {
 				programName = programName.substring(0, programName.length() - (extension.length() + 1));
+			}
+
 			programName = programName.toLowerCase();
 			processAttributes.put(IProcess.ATTR_PROCESS_TYPE, programName);
 
 			if (p != null) {
 				subMonitor = new SubProgressMonitor(monitor, 80); // 10+80 of 100;
-				subMonitor.beginTask(MessageFormat.format("start launch", new String[] { configuration.getName() }), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				subMonitor.beginTask(MessageFormat.format("start launch", new Object[] { configuration.getName() }), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 				process = DebugPlugin.newProcess(launch, p, phpExe.toOSString(), processAttributes);
 				if (process == null) {
 					p.destroy();
 					throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null));
 				}
 				subMonitor.done();
-
 			}
 			process.setAttribute(IProcess.ATTR_CMDLINE, fileNameString);
 
@@ -308,7 +328,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				 if (RefreshTab.getRefreshScope(configuration) != null) {
 				 BackgroundResourceRefresher refresher = new BackgroundResourceRefresher(configuration, process);
 				 refresher.startBackgroundRefresh();
-				 }               
+				 }
 				 */
 			} else {
 				// wait for process to exit
@@ -319,7 +339,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 							break;
 						}
 						Thread.sleep(50);
-					} catch (final InterruptedException e) {
+					} catch (InterruptedException e) {
 					}
 
 				// refresh resources
@@ -327,7 +347,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				RefreshTab.refreshResources(configuration, subMonitor);
 			}
 		}
-
 	}
 
 	private void displayErrorMessage(final String message) {
