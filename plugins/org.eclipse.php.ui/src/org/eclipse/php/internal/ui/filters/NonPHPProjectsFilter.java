@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.project.PHPNature;
-
+import org.eclipse.php.internal.ui.Logger;
 
 /**
  * Filters non-java projects
@@ -34,15 +34,16 @@ public class NonPHPProjectsFilter extends ViewerFilter {
 			return true;
 		else if (element instanceof IProject) {
 			IProject project = (IProject) element;
-			try {
-				if (!project.hasNature(PHPNature.ID))
-					return false;
-			} catch (CoreException e) {
+			if (project.isAccessible()) {
+				try {
+					return project.hasNature(PHPNature.ID);
+				} catch (CoreException e) {
+					Logger.logException(e);
+					return true;
+				}
 			}
-			return project.isOpen();
-
+			return true;
 		}
-
 		return true;
 	}
 }
