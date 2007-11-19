@@ -13,9 +13,7 @@ import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ProjectionMapping;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
-import org.eclipse.jface.text.source.IOverviewRuler;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.*;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -43,6 +41,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private SourceViewerConfiguration config;
 	private ITextEditor textEditor;
 	private IInformationPresenter fOutlinePresenter;
+
+	private IAnnotationHover fProjectionAnnotationHover;
 
 	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
@@ -177,6 +177,22 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		return new StructuredDocumentToTextAdapterForPhp(getTextWidget());
 	}
 
+	/** (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.projection.ProjectionViewer#addVerticalRulerColumn(org.eclipse.jface.text.source.IVerticalRulerColumn)
+	 *
+	 * This method is only called to add Projection ruler column.
+	 * It's actually a hack to override Projection presentation (information control) in order to enable syntax highlighting
+	 */
+	@Override
+	public void addVerticalRulerColumn(IVerticalRulerColumn column) {
+		// bug #210211 fix
+		if (fProjectionAnnotationHover == null) {
+			fProjectionAnnotationHover = new PHPStructuredTextProjectionAnnotationHover();
+		}
+		((AnnotationRulerColumn) column).setHover(fProjectionAnnotationHover);
+		super.addVerticalRulerColumn(column);
+	}
+
 	public class StructuredDocumentToTextAdapterForPhp extends StructuredDocumentToTextAdapter {
 
 		public StructuredDocumentToTextAdapterForPhp() {
@@ -220,6 +236,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 		// set PHP fAnnotationHover and initial the AnnotationHoverManager
 		setAnnotationHover(new PHPStructuredTextAnnotationHover());
+
 		ensureAnnotationHoverManagerInstalled();
 
 		if (!(configuration instanceof PHPStructuredTextViewerConfiguration)) {
@@ -292,7 +309,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * Reconciles the whole document (to re-run PHPValidator)
 	 */
 	public void reconcile() {
-		((StructuredRegionProcessor)fReconciler).processDirtyRegion(new DirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT, getDocument().get()));
+		((StructuredRegionProcessor) fReconciler).processDirtyRegion(new DirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT, getDocument().get()));
 
 	}
 
