@@ -35,7 +35,6 @@ public class PHPWebPageLaunchConfigurationTab extends ServerLaunchConfigurationT
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true); // Always run with debug info
-		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUG_TYPE, PHPDebugCorePreferenceNames.PHP_WEB_PAGE_DEBUG);
 	}
 
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {
