@@ -34,10 +34,9 @@ public class PHPexeItem {
 	private static final Pattern PHP_VERSION = Pattern.compile("PHP (\\d\\.\\d\\.\\d+).*? \\((.*?)\\)"); //$NON-NLS-1$
 	private static final Pattern PHP_CLI_CONFIG = Pattern.compile("Configuration File \\(php.ini\\) Path => (.*?)"); //$NON-NLS-1$
 	private static final Pattern PHP_CGI_CONFIG = Pattern.compile("Configuration File \\(php.ini\\) Path </td><td class=\"v\">(.*?)</td>"); //$NON-NLS-1$
-	private static final String DEFAULT_NAME = "PHP Executable";
 
 	private String sapiType;
-	private String name = DEFAULT_NAME;
+	private String name;
 	private File config;
 	private File executable;
 	private String version;
@@ -306,7 +305,7 @@ public class PHPexeItem {
 
 			try {
 				PHPexes.changePermissions(executable);
-				
+
 				// Detect version and type:
 				String output = exec(executable.getAbsolutePath(), "-c", tempDir.getAbsolutePath(), "-v");
 				Matcher m = PHP_VERSION.matcher(output);
@@ -322,7 +321,7 @@ public class PHPexeItem {
 						return;
 					}
 
-					if (name == null || name == DEFAULT_NAME) {
+					if (name == null) {
 						name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 				} else {
