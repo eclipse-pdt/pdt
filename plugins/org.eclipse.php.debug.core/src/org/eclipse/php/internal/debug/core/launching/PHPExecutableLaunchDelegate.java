@@ -15,9 +15,23 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
@@ -49,9 +63,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	/** Constant value indicating if the current platform is Windows */
 	private static final boolean WINDOWS = java.io.File.separatorChar == '\\';
 	public static final String SAVE_AUTOMATICALLY = "save_automatically";
-
-	/** Indicator for an executable ILaunch (inserted into the launch attributes) */
-	public static final String EXECUTABLE_LAUNCH = "executable_launch";
 	private final static String UNTITLED_FOLDER_PATH = "Untitled_Documents";
 
 	protected Map<String, String> envVariables = null;
@@ -65,7 +76,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 	public void debugPHPExecutable(ILaunch launch, String phpExe, String fileToDebug) throws DebugException {
 		try {
-			launch.setAttribute(EXECUTABLE_LAUNCH, "true");
+			launch.setAttribute(IDebugParametersKeys.EXECUTABLE_LAUNCH, Boolean.toString(true));
 			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
 			PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
 			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath(), parametersInitializer.generateQuery(launch), envVariables, launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION));
@@ -93,8 +104,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 		PHPLaunchUtilities.showDebugView();
 		IProgressMonitor subMonitor; // the total of monitor is 100
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 
 		String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		String phpIniPath = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
@@ -102,8 +114,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 		boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
 
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 
 		if (fileNameString == null || fileNameString.equals("")) {
 			displayErrorMessage("Please set a valid PHP file for this launch.");
@@ -189,19 +202,22 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			String projectString = project.getFullPath().toString();
 
 			ILaunchConfigurationWorkingCopy wc;
-			if (configuration.isWorkingCopy())
+			if (configuration.isWorkingCopy()) {
 				wc = (ILaunchConfigurationWorkingCopy) configuration;
-			else
+			} else {
 				wc = configuration.getWorkingCopy();
+			}
 			wc.setAttribute(IPHPConstants.PHP_Project, projectString);
 
 			// Set transfer encoding:
 			wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
 			wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(project));
+			wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE, IDebugParametersKeys.PHP_EXE_SCRIPT_DEBUG);
 			wc.doSave();
 
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 
 			// Generate a session id for this launch and put it in the map
 			int sessionID = DebugSessionIdGenerator.generateSessionID();
@@ -219,27 +235,33 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			// resolve location
 			IPath phpExe = new Path(phpExeString);
 
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 
 			IPath projectLocation = project.getRawLocation();
-			if (projectLocation == null)
+			if (projectLocation == null) {
 				projectLocation = project.getLocation();
+			}
 
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 
 			IPath phpFile = new Path(fileNameString);
-			if (fileNameString.startsWith("/"))
+			if (fileNameString.startsWith("/")) {
 				phpFile = phpFile.removeFirstSegments(1);
+			}
 
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 
 			String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
 
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 
 			File workingDir = new File(phpExe.removeLastSegments(1).toString());
 			File phpExeFile = new File(phpExeString);
@@ -332,7 +354,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				 */
 			} else {
 				// wait for process to exit
-				while (!process.isTerminated())
+				while (!process.isTerminated()) {
 					try {
 						if (monitor.isCanceled()) {
 							process.terminate();
@@ -341,6 +363,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
 					}
+				}
 
 				// refresh resources
 				subMonitor = new SubProgressMonitor(monitor, 10); // 10+80+10 of 100;

@@ -44,10 +44,6 @@ public class PHPDebugCorePreferenceNames {
 	public static final String TRANSFER_ENCODING = Debug_ID + "transfer_encoding";//$NON-NLS-1$
 	public static final String OUTPUT_ENCODING = Debug_ID + "output_encoding";//$NON-NLS-1$
 	public static final String CONFIGURATION_DELEGATE_CLASS = Debug_ID + "configuration_delegate_class";//$NON-NLS-1$
-
+	
 	public static final String PHP_DEBUGGER_ID = Debug_ID + "php_debugger_id";//$NON-NLS-1$
-	public static final String PHP_DEBUG_TYPE = "php_debug_type";
-	public static final String PHP_EXE_SCRIPT_DEBUG = "php_exe_script_debug";
-	public static final String PHP_WEB_SCRIPT_DEBUG = "php_web_script_debug";
-	public static final String PHP_WEB_PAGE_DEBUG = "php_web_page_debug";
 }
