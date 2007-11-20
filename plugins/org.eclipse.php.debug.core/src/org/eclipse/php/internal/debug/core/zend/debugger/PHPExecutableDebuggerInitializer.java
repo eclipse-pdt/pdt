@@ -54,10 +54,11 @@ public class PHPExecutableDebuggerInitializer {
 	 *
 	 * @param phpExe
 	 * @param fileName
+	 * @param workingDir
 	 * @param query
 	 */
-	public void initializeDebug(String phpExe, String fileName, String query) {
-		initializeDebug(phpExe, fileName, query, null, null);
+	public void initializeDebug(String phpExe, String fileName, String workingDir, String query) {
+		initializeDebug(phpExe, fileName, workingDir, query, null, null);
 	}
 
 	/**
@@ -65,11 +66,12 @@ public class PHPExecutableDebuggerInitializer {
 	 *
 	 * @param phpExe
 	 * @param fileName
+	 * @param workingDir
 	 * @param query
 	 * @param envVariables
 	 * @param phpIniLocation
 	 */
-	public void initializeDebug(String phpExe, String fileName, String query, Map<String, String> envVariables, String phpIniLocation) {
+	public void initializeDebug(String phpExe, String fileName, String workingDir, String query, Map<String, String> envVariables, String phpIniLocation) {
 		try {
 			File phpExeFile = new File(phpExe);
 
@@ -108,8 +110,7 @@ public class PHPExecutableDebuggerInitializer {
 			PHPexes.changePermissions(new File(phpCmdArray[0]));
 
 			// Execute the command line.
-			File workingDir = new File(fileName).getParentFile();
-			Process p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDir);
+			Process p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, new File(workingDir));
 
 			// Attach a crash detector
 			new Thread(new ProcessCrashDetector(p)).start();

@@ -77,9 +77,17 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	public void debugPHPExecutable(ILaunch launch, String phpExe, String fileToDebug) throws DebugException {
 		try {
 			launch.setAttribute(IDebugParametersKeys.EXECUTABLE_LAUNCH, Boolean.toString(true));
+
 			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
 			PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
-			debuggerInitializer.initializeDebug(new File(phpExe).getAbsolutePath(), new File(fileToDebug).getAbsolutePath(), parametersInitializer.generateQuery(launch), envVariables, launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION));
+
+			String phpExeString = new File(phpExe).getAbsolutePath();
+			String fileName = new File(fileToDebug).getAbsolutePath();
+			String query = parametersInitializer.generateQuery(launch);
+			String iniFileLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
+			String workingDir = new File(fileToDebug).getParentFile().getAbsolutePath();
+
+			debuggerInitializer.initializeDebug(phpExeString, fileName, workingDir, query, envVariables, iniFileLocation);
 
 		} catch (java.io.IOException e1) {
 			Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e1);
