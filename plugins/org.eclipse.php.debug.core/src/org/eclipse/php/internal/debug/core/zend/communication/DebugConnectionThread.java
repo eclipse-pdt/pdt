@@ -85,6 +85,7 @@ public class DebugConnectionThread implements Runnable {
 	protected int peerResponseTimeout = 500; // 0.5 seconds.
 	protected PHPDebugTarget debugTarget;
 	private Thread theThread;
+	private boolean isFirstTimeRequestHandler;
 
 	/**
 	 * Constructs a new DebugConnectionThread with a given Socket.
@@ -93,6 +94,7 @@ public class DebugConnectionThread implements Runnable {
 	 */
 	public DebugConnectionThread(Socket socket) {
 		this.socket = socket;
+		isFirstTimeRequestHandler = true;
 		requestsTable = new IntHashtable();
 		responseTable = new IntHashtable();
 		responseHandlers = new Hashtable();
@@ -853,6 +855,10 @@ public class DebugConnectionThread implements Runnable {
 								IDebugMessageHandler requestHandler = DebugMessagesRegistry.getHandler((IDebugRequestMessage) newInputMessage);
 
 								if (requestHandler instanceof IDebugRequestHandler) {
+									if (isFirstTimeRequestHandler) {
+										((IDebugRequestHandler) requestHandler).init();
+										isFirstTimeRequestHandler = false;
+									}
 									requestHandler.handle((IDebugRequestMessage) newInputMessage, debugTarget);
 									IDebugResponseMessage response = ((IDebugRequestHandler) requestHandler).getResponseMessage();
 
