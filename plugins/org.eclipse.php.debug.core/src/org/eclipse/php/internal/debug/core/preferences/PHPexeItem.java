@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 
 /**
  * A PHP executable item.
@@ -293,62 +294,56 @@ public class PHPexeItem {
 		if (executable == null) {
 			throw new IllegalStateException("PHP executable path is null"); //$NON-NLS-1$
 		}
+
+		// Create empty configuration file:
+		File tempPHPIni = PHPINIUtil.createTemporaryPHPINIFile();
+
 		try {
-			// Create temporary directory:
-			File tempDir = File.createTempFile("phpexe", null); //$NON-NLS-1$
-			tempDir.delete();
-			tempDir.mkdir();
+			PHPexes.changePermissions(executable);
 
-			// Create empty configuration file:
-			File tempPHPIni = new File(tempDir, "php.ini"); //$NON-NLS-1$
-			tempPHPIni.createNewFile();
-
-			try {
-				PHPexes.changePermissions(executable);
-
-				// Detect version and type:
-				String output = exec(executable.getAbsolutePath(), "-c", tempDir.getAbsolutePath(), "-v");
-				Matcher m = PHP_VERSION.matcher(output);
-				if (m.find()) {
-					version = m.group(1);
-					String type = m.group(2);
-					if (type.startsWith("cgi")) { //$NON-NLS-1$
-						sapiType = SAPI_CGI;
-					} else if (type.startsWith("cli")) { //$NON-NLS-1$
-						sapiType = SAPI_CLI;
-					} else {
-						DebugPlugin.logDebugMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
-						return;
-					}
-
-					if (name == null) {
-						name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					}
+			// Detect version and type:
+			String output = exec(executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
+			Matcher m = PHP_VERSION.matcher(output);
+			if (m.find()) {
+				version = m.group(1);
+				String type = m.group(2);
+				if (type.startsWith("cgi")) { //$NON-NLS-1$
+					sapiType = SAPI_CGI;
+				} else if (type.startsWith("cli")) { //$NON-NLS-1$
+					sapiType = SAPI_CLI;
 				} else {
-					DebugPlugin.logDebugMessage("CanconfigFile't determine version of the PHP executable"); //$NON-NLS-1$
+					DebugPlugin.logDebugMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
 					return;
 				}
 
-				// Detect default PHP.ini location:
-				if (config == null) {
-					output = exec(executable.getAbsolutePath(), "-c", tempDir.getAbsolutePath(), "-i");
-					if (sapiType == SAPI_CLI) {
-						m = PHP_CLI_CONFIG.matcher(output);
-					} else if (sapiType == SAPI_CGI) {
-						m = PHP_CGI_CONFIG.matcher(output);
-					}
-					if (m.find()) {
-						String configDir = m.group(1);
-						config = new File(configDir.trim(), "php.ini");
-					} else {
-						DebugPlugin.logDebugMessage("Can't determine PHP.ini location of the PHP executable"); //$NON-NLS-1$
-						return;
-					}
+				if (name == null) {
+					name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
-			} finally {
-				tempPHPIni.delete();
-				tempDir.delete();
+			} else {
+				DebugPlugin.logDebugMessage("CanconfigFile't determine version of the PHP executable"); //$NON-NLS-1$
+				return;
 			}
+
+			// Detect default PHP.ini location:
+			if (config == null) {
+				output = exec(executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$
+				if (sapiType == SAPI_CLI) {
+					m = PHP_CLI_CONFIG.matcher(output);
+				} else if (sapiType == SAPI_CGI) {
+					m = PHP_CGI_CONFIG.matcher(output);
+				}
+				if (m.find()) {
+					String configDir = m.group(1);
+					config = new File(configDir.trim(), "php.ini"); //$NON-NLS-1$
+					if (!config.exists()) {
+						config = null;
+					}
+				} else {
+					DebugPlugin.logDebugMessage("Can't determine PHP.ini location of the PHP executable"); //$NON-NLS-1$
+					return;
+				}
+			}
+
 		} catch (IOException e) {
 			DebugPlugin.log(e);
 		}
