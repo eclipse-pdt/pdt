@@ -176,7 +176,10 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 	           		return;
 	           	}
 	        }
-	        int startIdx = output.indexOf("\r\n"); //$NON-NLS-1$
+	        int startIdx = output.indexOf("\r\n\r\n"); //$NON-NLS-1$
+	        if (startIdx == -1) {
+	        	startIdx = output.indexOf("\r\n"); //$NON-NLS-1$
+	        }
 	        if (startIdx != -1) {
 	        	output = output.substring(startIdx + 2);
 	        }
