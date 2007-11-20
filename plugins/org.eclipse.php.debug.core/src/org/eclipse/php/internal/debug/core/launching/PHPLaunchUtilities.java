@@ -618,10 +618,10 @@ public class PHPLaunchUtilities {
 	 * @param fileName
 	 * @param query
 	 * @param phpConfigDir
-	 * @param workingDir
+	 * @param phpExeDir
 	 * @return A map of environment settings.
 	 */
-	public static Map<String, String> getPHPCGILaunchEnvironment(String fileName, String query, String phpConfigDir, String workingDir, String[] scriptArguments) {
+	public static Map<String, String> getPHPCGILaunchEnvironment(String fileName, String query, String phpConfigDir, String phpExeDir, String[] scriptArguments) {
 		Map<String, String> env = new HashMap<String, String>();
 		env.put("REQUEST_METHOD", "GET"); //$NON-NLS-1$ //$NON-NLS-2$
 		env.put("SCRIPT_FILENAME", fileName); //$NON-NLS-1$
@@ -644,9 +644,9 @@ public class PHPLaunchUtilities {
 		String OS = System.getProperty("os.name"); //$NON-NLS-1$
 		if (!OS.startsWith("Win")) { //$NON-NLS-1$
 			if (OS.startsWith("Mac")) { //$NON-NLS-1$
-				env.put("DYLD_LIBRARY_PATH", workingDir); //$NON-NLS-1$
+				env.put("DYLD_LIBRARY_PATH", phpExeDir); //$NON-NLS-1$
 			} else {
-				env.put("LD_LIBRARY_PATH", workingDir); //$NON-NLS-1$
+				env.put("LD_LIBRARY_PATH", phpExeDir); //$NON-NLS-1$
 			}
 		}
 		return env;

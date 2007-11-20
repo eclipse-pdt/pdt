@@ -47,7 +47,7 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.phpIni.IniModifier;
+import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
@@ -180,13 +180,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
 
 		// Locate the php ini by using the attribute. If the attribute was null, try to locate an ini that exists next to the executable.
-		File phpIni = (phpIniPath != null) ? new File(phpIniPath) : IniModifier.findPHPIni(phpExeString);
+		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
 		if (project != dummyProject && project.hasNature(PHPNature.ID)) {
-			if (phpIni != null) {
-				File tempIni = IniModifier.addIncludePath(phpIni, project);
-				if (tempIni != null) {
-					launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
-				}
+			File tempIni = PHPINIUtil.createTemporaryPHPINIFile(phpIni);
+			if (tempIni != null) {
+				PHPINIUtil.prepareBeforeDebug(tempIni, phpExeString, project);
+				launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 			}
 		} else {
 			if (phpIni != null) {
@@ -263,7 +262,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				return;
 			}
 
-			File workingDir = new File(phpExe.removeLastSegments(1).toString());
 			File phpExeFile = new File(phpExeString);
 
 			String phpIniLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
@@ -304,7 +302,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 					buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
 				}
 				buf.append('=');
-				buf.append(workingDir.getAbsolutePath());
+				buf.append(phpExeFile.getParent());
 				String[] envpNew = new String[envp == null ? 1 : envp.length + 1];
 				if (envp != null) {
 					System.arraycopy(envp, 0, envpNew, 0, envp.length);
@@ -313,6 +311,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				envp = envpNew;
 			}
 
+			File workingDir = new File(fileName).getParentFile();
 			Process p = DebugPlugin.exec(cmdLine, workingDir, envp);
 
 			// Attach a crash detector

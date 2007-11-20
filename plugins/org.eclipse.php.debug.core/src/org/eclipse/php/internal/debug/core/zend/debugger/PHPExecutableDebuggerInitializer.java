@@ -16,8 +16,6 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
@@ -73,9 +71,7 @@ public class PHPExecutableDebuggerInitializer {
 	 */
 	public void initializeDebug(String phpExe, String fileName, String query, Map<String, String> envVariables, String phpIniLocation) {
 		try {
-			IPath phpExePath = new Path(phpExe);
 			File phpExeFile = new File(phpExe);
-			File workingDir = new File(phpExePath.removeLastSegments(1).toString());
 
 			// Determine configuration file directory:
 			String phpConfigDir = phpExeFile.getParent();
@@ -96,7 +92,7 @@ public class PHPExecutableDebuggerInitializer {
 			String[] args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
 
 			// Prepare the environment
-			Map<String, String> additionalLaunchEnvironment = PHPLaunchUtilities.getPHPCGILaunchEnvironment(fileName, query, phpConfigDir, workingDir.getAbsolutePath(), sapiType == PHPexeItem.SAPI_CGI ? args : null);
+			Map<String, String> additionalLaunchEnvironment = PHPLaunchUtilities.getPHPCGILaunchEnvironment(fileName, query, phpConfigDir, phpExeFile.getParent(), sapiType == PHPexeItem.SAPI_CGI ? args : null);
 			if (envVariables == null) {
 				envVariables = additionalLaunchEnvironment;
 			} else {
@@ -112,6 +108,7 @@ public class PHPExecutableDebuggerInitializer {
 			PHPexes.changePermissions(new File(phpCmdArray[0]));
 
 			// Execute the command line.
+			File workingDir = new File(fileName).getParentFile();
 			Process p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDir);
 
 			// Attach a crash detector

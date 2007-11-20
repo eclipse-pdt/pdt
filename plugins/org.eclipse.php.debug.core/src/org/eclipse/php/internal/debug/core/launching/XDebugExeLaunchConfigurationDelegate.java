@@ -30,7 +30,7 @@ import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
-import org.eclipse.php.internal.debug.core.phpIni.IniModifier;
+import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
@@ -121,13 +121,12 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// Resolve the PHP ini location
 		// Locate the php ini by using the attribute. If the attribute was null, try to locate an ini that exists next to the executable.
-		File phpIni = (phpIniPath != null) ? new File(phpIniPath) : IniModifier.findPHPIni(phpExeString);
+		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
 		if (/*project != dummyProject &&*/project.hasNature(PHPNature.ID)) {
-			if (phpIni != null) {
-				File tempIni = IniModifier.addIncludePath(phpIni, project);
-				if (tempIni != null) {
-					wc.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
-				}
+			File tempIni = PHPINIUtil.createTemporaryPHPINIFile(phpIni);
+			if (tempIni != null) {
+				PHPINIUtil.prepareBeforeDebug(tempIni, phpExeString, project);
+				wc.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 			}
 		} else {
 			if (phpIni != null) {
