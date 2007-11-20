@@ -27,7 +27,6 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
@@ -766,7 +765,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			}
 
 			String fileName = launchConfig.getAttribute(Server.FILE_NAME, ""); //$NON-NLS-1$
-			if (!FileUtils.resourceExists(fileName)) {
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fileName);
+			if (!(resource instanceof IFile)) {
 				setErrorMessage(PHPServerUIMessages.getString("ServerTab.file_project_doesNotExist")); //$NON-NLS-1$
 				return false;
 			}
