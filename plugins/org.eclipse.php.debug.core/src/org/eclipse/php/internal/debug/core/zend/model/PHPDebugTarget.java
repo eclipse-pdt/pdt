@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.core.zend.model;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -86,7 +87,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	//	private IVariable[] fVariables;
 	protected String fWorkspacePath = "";
-	protected String fProjectName = "";
 	protected IProject fProject;
 	protected int fSuspendCount;
 	protected Vector<IPHPConsoleEventListener> fConsoleEventListeners = new Vector<IPHPConsoleEventListener>();
@@ -166,8 +166,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		fProcess = process;
 		fIsRunAsDebug = runAsDebug;
 		fProject = project;
-		if (project != null)
-			fProjectName = project.getName();
 		fProcess.setAttribute(IProcess.ATTR_PROCESS_TYPE, IPHPConstants.PHPProcessType);
 		((PHPProcess) fProcess).setDebugTarget(this);
 		fRequestPort = requestPort;
@@ -498,7 +496,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 */
 	public static IBreakpoint createBreakpoint(IResource resource, int lineNumber) throws CoreException {
 
-		return createBreakpoint(resource, lineNumber, new java.util.HashMap(10));
+		return createBreakpoint(resource, lineNumber, new HashMap<String, String>(10));
 	}
 
 	/**
@@ -512,7 +510,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 *            java.util.Map of attributes to add to breakpoint
 	 *
 	 */
-	public static IBreakpoint createBreakpoint(IResource resource, int lineNumber, Map attributes) throws CoreException {
+	public static IBreakpoint createBreakpoint(IResource resource, int lineNumber, Map<String, String> attributes) throws CoreException {
 		IBreakpoint point = null;
 		try {
 			point = new PHPConditionalBreakpoint(resource, lineNumber, attributes);
@@ -1002,12 +1000,12 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		return fWorkspacePath;
 	}
 
-	public String getProjectName() {
-		return fProjectName + "/";
-	}
-
 	public IProject getProject() {
 		return fProject;
+	}
+
+	public void setProject(IProject project) {
+		fProject = project;
 	}
 
 	public List<DebugError> getDebugErrors() {

@@ -20,10 +20,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
+import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -95,22 +97,6 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 							IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(debugFileName);
 							if (resource instanceof IFile) {
 								pathEntry = new PathEntry(debugFileName, Type.WORKSPACE, resource.getParent());
-							} else if (resource instanceof IProject) {
-								IProject project = (IProject) resource;
-								int idx = remoteFile.lastIndexOf('/');
-								if (idx == -1) {
-									idx = remoteFile.lastIndexOf('\\');
-								}
-								String lastSegment;
-								if (idx != -1) {
-									lastSegment = remoteFile.substring(idx + 1);
-								} else {
-									lastSegment = remoteFile;
-								}
-								IFile file = project.getFile(lastSegment);
-								if (file != null && file.exists()) {
-									pathEntry = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, project);
-								}
 							} else if (new File(debugFileName).exists()) {
 								pathEntry = new PathEntry(debugFileName, Type.EXTERNAL, new File(debugFileName).getParentFile());
 							}
@@ -121,7 +107,21 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 							PathMapperRegistry.storeToPreferences();
 						} else {
 							// Find the local file, and map it:
-							DebugSearchEngine.find(remoteFile, fDebugTarget);
+							pathEntry = DebugSearchEngine.find(remoteFile, fDebugTarget);
+						}
+					}
+
+					// Assign this project to Debug Target:
+					if (fDebugTarget.getProject() == null && pathEntry != null && pathEntry.getType() == Type.WORKSPACE) {
+						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(pathEntry.getPath());
+						IProject project = resource.getProject();
+						fDebugTarget.setProject(project);
+						try {
+							ILaunchConfigurationWorkingCopy wc = launchConfiguration.getWorkingCopy();
+							wc.getAttribute(IPHPConstants.PHP_Project, project.getName());
+							wc.doSave();
+						} catch (CoreException e) {
+							PHPDebugPlugin.log(e);
 						}
 					}
 				}
@@ -279,7 +279,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		super.parsingErrorOccured(debugError);
 
 		// resolve path
-		String localFileName = ((RemoteDebugger)fRemoteDebugger).convertToLocalFilename(debugError.getFullPathName(), null, null);
+		String localFileName = ((RemoteDebugger) fRemoteDebugger).convertToLocalFilename(debugError.getFullPathName(), null, null);
 		if (localFileName == null) {
 			localFileName = debugError.getFullPathName();
 		}

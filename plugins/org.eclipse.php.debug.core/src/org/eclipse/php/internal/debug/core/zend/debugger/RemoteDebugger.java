@@ -756,9 +756,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Returns the transfer encoding for the current project.
 	 */
 	private String getTransferEncoding() {
-		String projectName = debugHandler.getDebugTarget().getProjectName();
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-		return PHPProjectPreferences.getTransferEncoding(project);
+		IProject project = debugHandler.getDebugTarget().getProject();
+		return project == null ? null : PHPProjectPreferences.getTransferEncoding(project);
 	}
 
 	/**
@@ -908,6 +907,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				layer.setCallerLineNumber(layer.getCallerLineNumber() - 1);
 				layer.setCalledLineNumber(layer.getCalledLineNumber() - 1);
 
+				layer.setResolvedCalledFileName(layer.getCalledFileName());
 				if (i > 0) {
 					String previousScript = remoteStack.getLayer(i - 1).getResolvedCalledFileName();
 					String previousScriptDir = ".";
@@ -926,16 +926,17 @@ public class RemoteDebugger implements IRemoteDebugger {
 					} else {
 						project = debugHandler.getDebugTarget().getProject();
 					}
-					Result<?, ?> result = PHPSearchEngine.find(layer.getCalledFileName(), currentWorkingDir, previousScriptDir, project);
-					if (result instanceof ResourceResult) {
-						layer.setResolvedCalledFileName(((ResourceResult) result).getFile().getFullPath().toString());
-					} else if (result instanceof IncludedFileResult) {
-						layer.setResolvedCalledFileName(((IncludedFileResult) result).getFile().getAbsolutePath());
-					} else if (result instanceof ExternalFileResult) {
-						layer.setResolvedCalledFileName(((ExternalFileResult) result).getFile().getAbsolutePath());
+
+					if (project != null) {
+						Result<?, ?> result = PHPSearchEngine.find(layer.getCalledFileName(), currentWorkingDir, previousScriptDir, project);
+						if (result instanceof ResourceResult) {
+							layer.setResolvedCalledFileName(((ResourceResult) result).getFile().getFullPath().toString());
+						} else if (result instanceof IncludedFileResult) {
+							layer.setResolvedCalledFileName(((IncludedFileResult) result).getFile().getAbsolutePath());
+						} else if (result instanceof ExternalFileResult) {
+							layer.setResolvedCalledFileName(((ExternalFileResult) result).getFile().getAbsolutePath());
+						}
 					}
-				} else {
-					layer.setResolvedCalledFileName(layer.getCalledFileName());
 				}
 			}
 		}
