@@ -162,7 +162,7 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 					String fileProjectName = '/' + fi.getFile().getProject().getName();
 
 					// First, check if the project name is the same.
-					if (!launchProjectName.equals(fileProjectName)) {
+					if (launchProjectName != null && !launchProjectName.equals(fileProjectName)) {
 						return null;
 					}
 					// Check for the file path within the project
