@@ -112,7 +112,7 @@ public class PHPSearchEngine {
 		if (resource instanceof IContainer) {
 			IContainer container = (IContainer) resource;
 			IFile file = container.getFile(new Path(relativeFile));
-			if (file != null) {
+			if (file != null && file.exists()) {
 				return new ResourceResult(file);
 			}
 		}
