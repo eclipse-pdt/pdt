@@ -110,7 +110,13 @@ public class PHPExecutableDebuggerInitializer {
 			PHPexes.changePermissions(new File(phpCmdArray[0]));
 
 			// Execute the command line.
-			Process p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, new File(workingDir));
+			Process p;
+			File workingDirFile = new File(workingDir);
+			if (workingDirFile.exists()) {
+				p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDirFile);
+			} else {
+				p = Runtime.getRuntime().exec(phpCmdArray, environmetVars);
+			}
 
 			// Attach a crash detector
 			new Thread(new ProcessCrashDetector(p)).start();

@@ -241,18 +241,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		} else {
 			// resolve location
 			IPath phpExe = new Path(phpExeString);
-
-			if (monitor.isCanceled()) {
-				return;
-			}
-
 			IPath projectLocation = project.getRawLocation();
 			if (projectLocation == null) {
 				projectLocation = project.getLocation();
-			}
-
-			if (monitor.isCanceled()) {
-				return;
 			}
 
 			IPath phpFile = new Path(fileNameString);
@@ -260,18 +251,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				phpFile = phpFile.removeFirstSegments(1);
 			}
 
-			if (monitor.isCanceled()) {
-				return;
-			}
-
 			String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
-
-			if (monitor.isCanceled()) {
-				return;
-			}
-
 			File phpExeFile = new File(phpExeString);
-
 			String phpIniLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
 
 			// Determine PHP configuration file location:
@@ -319,8 +300,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				envp = envpNew;
 			}
 
+			if (monitor.isCanceled()) {
+				return;
+			}
+
 			File workingDir = new File(fileName).getParentFile();
-			Process p = DebugPlugin.exec(cmdLine, workingDir, envp);
+			Process p = workingDir.exists() ? DebugPlugin.exec(cmdLine, workingDir, envp) : DebugPlugin.exec(cmdLine, null, envp);
 
 			// Attach a crash detector
 			new Thread(new ProcessCrashDetector(p)).start();
