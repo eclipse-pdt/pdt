@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.doubleclick;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -70,6 +69,15 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 										structuredTextViewer.setSelectedRange(container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart(), tRegion.getTextLength());
 										return; // Stop processing
 									}
+
+									// check if the user double clicked on a variable in the PHPDoc block
+									// fix bug#201079
+									if (tRegion.getType() == PHPRegionTypes.PHPDOC_COMMENT || tRegion.getType() == PHPRegionTypes.PHP_LINE_COMMENT || tRegion.getType() == PHPRegionTypes.PHP_COMMENT) {
+										if(resetVariableSelectionRangeInComments(textViewer, structuredTextViewer)){
+											return;
+										}
+									}
+
 								}
 							}
 						}
@@ -86,5 +94,29 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 
 		// We reach here only if there was an error or one of conditions hasn't met our requirements:
 		super.doubleClicked(textViewer);
+	}
+
+	/**
+	 * When the user double click on a variable in a comment, include the preceding $ sign in the selection
+	 * (bug#201079)
+	 * @param textViewer
+	 * @param structuredTextViewer
+	 * @return whether the user double clicked on a variable or not
+	 * @throws BadLocationException
+	 */
+	private boolean resetVariableSelectionRangeInComments(ITextViewer textViewer, StructuredTextViewer structuredTextViewer) throws BadLocationException {
+		super.doubleClicked(textViewer);
+		Point selectedRange = structuredTextViewer.getSelectedRange();
+		int offset = selectedRange.x;
+
+		if (offset > 0) {
+			IDocument document = structuredTextViewer.getDocument();
+			char previousChar = document.getChar(offset - 1);
+			if (previousChar == '$') {
+				structuredTextViewer.setSelectedRange(offset - 1, selectedRange.y+1);		
+				return true;
+			}
+		}
+		return false;
 	}
 }
