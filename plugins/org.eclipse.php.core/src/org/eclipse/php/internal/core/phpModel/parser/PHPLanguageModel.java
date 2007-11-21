@@ -128,7 +128,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	}
 
 	public PHPClassData getClass(String fileName, String className) {
-		return (PHPClassData) classesHash.get(className);
+		return (PHPClassData) classesHash.get(getNormalizedString(className));
 	}
 
 	public CodeData[] getClass(String className) {
@@ -173,6 +173,10 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	private final String getNormalizedString(final String name) {
+		return name.trim().toLowerCase();
+	}
 
 	private void initVariables() {
 
@@ -483,7 +487,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			Arrays.sort(arrayClasses);
 			classes = arrayClasses;
 			for (PHPClassData element : arrayClasses) {
-				classesHash.put(element.getName(), element);
+				classesHash.put(getNormalizedString(element.getName()), element);
 			}
 
 			PHPConstantData[] arratConstans = new PHPConstantData[constansList.size()];
