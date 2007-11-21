@@ -215,7 +215,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 *  This method asks debugger for the current working directory before resolving.
 	 *
 	 * @param remoteFile File to resolve
-	 * @return local file, or remoteFile in case of resolving failure
+	 * @return local file, or <code>null</code> in case of resolving failure
 	 */
 	public String convertToLocalFilename(String remoteFile) {
 		String currentScript = null;
@@ -231,7 +231,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @param remoteFile File to resolve
 	 * @param cwd Current working directory received from the debugger
 	 * @param currentScript Script that is on the top of the debug stack currently
-	 * @return local file, or remoteFile in case of resolving failure
+	 * @return local file, or <code>null</code> in case of resolving failure
 	 */
 	public String convertToLocalFilename(String remoteFile, String cwd, String currentScript) {
 		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
@@ -261,9 +261,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 				if (pathEntry != null) {
 					resolvedFile = pathEntry.getResolvedPath();
 				}
-			}
-			if (resolvedFile == null) {
-				resolvedFile = remoteFile; // in case of failure
 			}
 			resolvedFiles.put(resolvedFileKey, resolvedFile);
 		}

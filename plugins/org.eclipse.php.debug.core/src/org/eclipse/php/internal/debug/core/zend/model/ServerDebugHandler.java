@@ -280,6 +280,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 		// resolve path
 		String localFileName = ((RemoteDebugger)fRemoteDebugger).convertToLocalFilename(debugError.getFullPathName(), null, null);
+		if (localFileName == null) {
+			localFileName = debugError.getFullPathName();
+		}
 		debugError.setFileName(localFileName);
 
 		fDebugTarget.getDebugErrors().add(debugError);
