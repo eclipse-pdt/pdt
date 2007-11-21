@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 
 /**
@@ -39,6 +40,7 @@ public class PHPexeItem {
 	private String sapiType;
 	private String name;
 	private File config;
+	private File detectedConfig;
 	private File executable;
 	private String version;
 	private boolean editable = true;
@@ -115,6 +117,15 @@ public class PHPexeItem {
 	 */
 	public File getINILocation() {
 		return config;
+	}
+
+	/**
+	 * Returns the detected configuration file path.
+	 *
+	 * @return The detected configuration file location.
+	 */
+	public File getDetectedINILocation() {
+		return detectedConfig;
 	}
 
 	/**
@@ -312,7 +323,7 @@ public class PHPexeItem {
 				} else if (type.startsWith("cli")) { //$NON-NLS-1$
 					sapiType = SAPI_CLI;
 				} else {
-					DebugPlugin.logDebugMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
+					PHPDebugPlugin.logWarningMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
 					return;
 				}
 
@@ -320,12 +331,12 @@ public class PHPexeItem {
 					name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			} else {
-				DebugPlugin.logDebugMessage("CanconfigFile't determine version of the PHP executable"); //$NON-NLS-1$
+				PHPDebugPlugin.logWarningMessage("Can't determine version of the PHP executable"); //$NON-NLS-1$
 				return;
 			}
 
 			// Detect default PHP.ini location:
-			if (config == null) {
+			if (detectedConfig == null) {
 				output = exec(executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$
 				if (sapiType == SAPI_CLI) {
 					m = PHP_CLI_CONFIG.matcher(output);
@@ -334,16 +345,15 @@ public class PHPexeItem {
 				}
 				if (m.find()) {
 					String configDir = m.group(1);
-					config = new File(configDir.trim(), "php.ini"); //$NON-NLS-1$
-					if (!config.exists()) {
-						config = null;
+					detectedConfig = new File(configDir.trim(), "php.ini"); //$NON-NLS-1$
+					if (!detectedConfig.exists()) {
+						detectedConfig = null;
 					}
 				} else {
-					DebugPlugin.logDebugMessage("Can't determine PHP.ini location of the PHP executable"); //$NON-NLS-1$
+					PHPDebugPlugin.logWarningMessage("Can't determine PHP.ini location of the PHP executable"); //$NON-NLS-1$
 					return;
 				}
 			}
-
 		} catch (IOException e) {
 			DebugPlugin.log(e);
 		}

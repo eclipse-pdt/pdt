@@ -38,6 +38,7 @@ public class PHPDebugPlugin extends Plugin {
 
 	public static final String ID = "org.eclipse.php.debug.core"; //$NON-NLS-1$
 	public static final int INTERNAL_ERROR = 10001;
+	public static final int INTERNAL_WARNING = 10002;
 
 	//The shared instance.
 	private static PHPDebugPlugin plugin;
@@ -206,6 +207,10 @@ public class PHPDebugPlugin extends Plugin {
 
 	public static void logErrorMessage(String message) {
 		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, message, null));
+	}
+
+	public static void logWarningMessage(String message) {
+		log(new Status(IStatus.WARNING, ID, INTERNAL_WARNING, message, null));
 	}
 
 	/**
