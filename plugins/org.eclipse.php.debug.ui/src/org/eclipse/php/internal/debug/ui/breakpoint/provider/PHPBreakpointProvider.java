@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -91,7 +92,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 					if (res instanceof ExternalFileWrapper) {
 						pathName = res.getFullPath().toString();
 					} else {
-						pathName = ((IURIEditorInput) input).getURI().getPath();
+						pathName = URIUtil.toPath(((IURIEditorInput) input).getURI()).toString();
 					}
 				} else {
 					pathName = ((NonExistingPHPFileEditorInput) input).getPath().toString();
