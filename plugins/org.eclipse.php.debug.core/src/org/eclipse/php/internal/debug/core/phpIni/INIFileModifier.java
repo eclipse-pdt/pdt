@@ -255,7 +255,7 @@ public class INIFileModifier {
 					if (m.matches()) {
 						String oldName = m.group(1);
 						String oldValue = m.group(2);
-						if (oldName.equals(name) && (commentPattern == null || oldValue.matches(commentPattern))) {
+						if (!line.startsWith(";") && oldName.equals(name) && (commentPattern == null || oldValue.matches(commentPattern))) {
 							section.lines.set(i, ';' + line);
 						}
 					}
