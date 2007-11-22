@@ -145,6 +145,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			if (fOutlinePresenter != null) {
 				fOutlinePresenter.showInformation();
 			}
+		} else if (operation == SHIFT_LEFT) {
+			shift(false, false, true);
 		} else {
 			super.doOperation(operation);
 		}
