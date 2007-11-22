@@ -161,8 +161,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				IPath location = res.getLocation();
 				if (location != null) {
 					absolutePath = location.toString();
-				} else if (res.getLocationURI() != null) {
-					absolutePath = res.getLocationURI().toString();
 				} else {
 					absolutePath = res.getFullPath().toString();
 				}
