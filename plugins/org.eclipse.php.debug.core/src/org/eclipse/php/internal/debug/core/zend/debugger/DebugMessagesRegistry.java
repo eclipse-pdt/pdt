@@ -128,7 +128,7 @@ public class DebugMessagesRegistry {
 		}
 
 		public IDebugMessageHandler createHandler() {
-			final IDebugMessageHandler[] handler = new IDebugMessageHandler[0];
+			final IDebugMessageHandler[] handler = new IDebugMessageHandler[1];
 			SafeRunnable.run(new SafeRunnable("Error creation handler for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") {
 				public void run() throws Exception {
 					handler[0] = (IDebugMessageHandler) element.createExecutableExtension(HANDLER_ATTRIBUTE);
