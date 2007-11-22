@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-
 /**
  * A PHPIncludePathModel. 
  * The include path model is a user model for the include path that also holds a type identifier
@@ -18,12 +17,8 @@ package org.eclipse.php.internal.core.phpModel.parser;
  */
 public class PHPIncludePathModel extends PHPUserModel {
 
-	public static final int TYPE_LIBRARY = 0;
-	public static final int TYPE_VARIABLE = 1;
-	public static final int TYPE_UNKNOWN = 2;
-
 	private final String id;
-	private final int type;
+	private final IncludePathModelType type;
 
 	/**
 	 * Constructs a new PHPIncludePathModel.
@@ -31,7 +26,7 @@ public class PHPIncludePathModel extends PHPUserModel {
 	 * @param root
 	 * @param type The type of the model.
 	 */
-	public PHPIncludePathModel(String root, int type) {
+	public PHPIncludePathModel(String root, IncludePathModelType type) {
 		this.id = root;
 		this.type = type;
 	}
@@ -43,7 +38,7 @@ public class PHPIncludePathModel extends PHPUserModel {
 	 * @param root
 	 */
 	public PHPIncludePathModel(String root) {
-		this(root, TYPE_UNKNOWN);
+		this(root, IncludePathModelType.UNKNOWN); 
 	}
 
 	public String getID() {
@@ -53,7 +48,23 @@ public class PHPIncludePathModel extends PHPUserModel {
 	public void dispose() {
 	}
 
-	public int getType() {
+	public IncludePathModelType getType() {
 		return type;
 	}
+	
+	/**
+	 * Define Includepath types - library, variable or unknown
+	 */
+	public enum IncludePathModelType {
+
+		LIBRARY("Library"), VARIABLE("Variable"), UNKNOWN("Unknown");
+
+		private final String label;
+		private IncludePathModelType(String label) {
+			this.label = label;
+		}
+		public String toString() {
+			return label;
+		}		
+	}	
 }

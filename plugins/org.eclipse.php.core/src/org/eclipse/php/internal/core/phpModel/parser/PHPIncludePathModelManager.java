@@ -28,6 +28,7 @@ import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
+import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel.IncludePathModelType;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
@@ -159,7 +160,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	}
 
 	private void innerAddLibrary(File library) {
-		PHPIncludePathModel model = new PHPIncludePathModel(library.getPath(), PHPIncludePathModel.TYPE_LIBRARY);
+		PHPIncludePathModel model = new PHPIncludePathModel(library.getPath(), IncludePathModelType.LIBRARY);
 
 		PHPLanguageManager languageManager = PHPLanguageManagerProvider.instance().getPHPLanguageManager(phpVersion);
 		ParserClient client = languageManager.createParserClient(model, project);
@@ -167,7 +168,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 		updateExtentionList();
 		if (library.exists()) {
 			// Load the cache for the library
-			PHPIncludePathModel cacheModel = new PHPIncludePathModel(library.getPath(), PHPIncludePathModel.TYPE_LIBRARY);
+			PHPIncludePathModel cacheModel = new PHPIncludePathModel(library.getPath(), IncludePathModelType.LIBRARY);
 			DefaultCacheManager.instance().load(project, cacheModel, true);
 			recursiveParse(library, client, model, cacheModel);
 		}
@@ -579,7 +580,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 	private void innerAddVariable(IPath variable) {
 		updateExtentionList();
 		String variableName = variable.toString();
-		PHPIncludePathModel model = new PHPIncludePathModel(variableName, PHPIncludePathModel.TYPE_VARIABLE);
+		PHPIncludePathModel model = new PHPIncludePathModel(variableName, IncludePathModelType.VARIABLE);
 		PHPLanguageManager languageManager = PHPLanguageManagerProvider.instance().getPHPLanguageManager(phpVersion);
 		ParserClient client = languageManager.createParserClient(model, project);
 
@@ -587,13 +588,13 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 
 		if (file != null)
 			if (file.isDirectory()) {
-				PHPIncludePathModel cachedModel = new PHPIncludePathModel(variableName, PHPIncludePathModel.TYPE_VARIABLE);
+				PHPIncludePathModel cachedModel = new PHPIncludePathModel(variableName, IncludePathModelType.VARIABLE);
 				DefaultCacheManager.instance().load(project, cachedModel, true);
 				recursiveParse(file, client, model, cachedModel);
 			} else {
 				String fileName = file.getName();
 				if (isPhpFile(fileName)) {
-					PHPIncludePathModel cachedModel = new PHPIncludePathModel(variableName, PHPIncludePathModel.TYPE_VARIABLE);
+					PHPIncludePathModel cachedModel = new PHPIncludePathModel(variableName, IncludePathModelType.VARIABLE);
 					DefaultCacheManager.instance().load(project, cachedModel, true);
 					PHPFileData fileData = cachedModel.getFileData(fileName);
 					// If the file is cached, update the model with the cached version.

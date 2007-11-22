@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.parser.*;
+import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel.IncludePathModelType;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
@@ -668,7 +669,7 @@ public class PHPModelUtil {
 	public static IPath getIncludeModelLocation(IPhpModel model) {
 		if (model instanceof PHPIncludePathModel) {
 			PHPIncludePathModel includeModel = (PHPIncludePathModel) model;
-			if (includeModel.getType() == PHPIncludePathModel.TYPE_VARIABLE) {
+			if (includeModel.getType() == IncludePathModelType.VARIABLE) {
 				return IncludePathVariableManager.instance().getIncludePathVariable(model.getID());
 			}
 		}
