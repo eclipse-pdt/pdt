@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPCorePlugin;
- 
+
 /**
  * Storage implementation for zip entries.
  * <p>
@@ -36,26 +36,26 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  * @since 3.0
  */
 public class ZipEntryStorage extends PlatformObject implements IStorage {
-	
+
 	/**
 	 * Zip file associated with zip entry
 	 */
 	private ZipFile fArchive;
-	
+
 	/**
 	 * Zip entry
 	 */
 	private ZipEntry fZipEntry;
-    
+
     /**
      * project that contains the include Path
      */
-    private IProject fProject;    
-	
+    private IProject fProject;
+
 	/**
 	 * Constructs a new storage implementation for the
 	 * given zip entry in the specified zip file
-	 * 
+	 *
 	 * @param archive zip file
 	 * @param entry zip entry
 	 */
@@ -86,14 +86,12 @@ public class ZipEntryStorage extends PlatformObject implements IStorage {
 	 * @see org.eclipse.core.resources.IStorage#getName()
 	 */
 	public String getName() {
-		int index = getZipEntry().getName().lastIndexOf('\\');
+		String zipEntryName = getZipEntry().getName();
+		int index = Math.max(zipEntryName.lastIndexOf('\\'), zipEntryName.indexOf('/'));
 		if (index == -1) {
-			index = getZipEntry().getName().lastIndexOf('/');
+			return zipEntryName;
 		}
-		if (index == -1) {
-			return getZipEntry().getName();
-		} 
-		return getZipEntry().getName().substring(index + 1);
+		return zipEntryName.substring(index + 1);
 	}
 
 	/* (non-Javadoc)
@@ -102,74 +100,74 @@ public class ZipEntryStorage extends PlatformObject implements IStorage {
 	public boolean isReadOnly() {
 		return true;
 	}
-	
+
 	/**
 	 * Sets the archive containing the zip entry.
-	 * 
+	 *
 	 * @param archive a zip file
 	 */
 	private void setArchive(ZipFile archive) {
 		fArchive = archive;
 	}
-	
+
 	/**
 	 * Returns the archive containing the zip entry.
-	 * 
+	 *
 	 * @return zip file
 	 */
 	public ZipFile getArchive() {
 		return fArchive;
-	}	
-	
+	}
+
 	/**
 	 * Sets the entry that contains the source.
-	 * 
+	 *
 	 * @param entry the entry that contains the source
 	 */
 	private void setZipEntry(ZipEntry entry) {
 		fZipEntry = entry;
 	}
-	
+
 	/**
 	 * Returns the entry that contains the source
-	 * 
+	 *
 	 * @return zip entry
 	 */
 	public ZipEntry getZipEntry() {
 		return fZipEntry;
-	}		
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object object) {		
+	public boolean equals(Object object) {
 		return object instanceof ZipEntryStorage &&
 			 getArchive().getName().equals(((ZipEntryStorage)object).getArchive().getName()) &&
 			 getZipEntry().getName().equals(((ZipEntryStorage)object).getZipEntry().getName());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
 		return getZipEntry().getName().hashCode();
 	}
-    
+
     /**
      * Sets the project that contains the Include Path.
-     * 
+     *
      * @param project the IProject that contains the include Path
      */
     public void setProject(IProject project) {
         fProject = project;
     }
-    
+
     /**
      * Returns the project that contains the Include Path
-     * 
+     *
      * @return IProject that contains the Include Path
      */
     public IProject getProject() {
         return fProject;
-    }   
+    }
 }
