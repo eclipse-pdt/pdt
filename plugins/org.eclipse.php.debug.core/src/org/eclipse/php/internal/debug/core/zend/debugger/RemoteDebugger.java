@@ -982,10 +982,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				if (i > 0) {
 					String previousScript = remoteStack.getLayer(i - 1).getResolvedCalledFileName();
 					String previousScriptDir = ".";
-					int idx = previousScript.lastIndexOf('/');
-					if (idx == -1) {
-						idx = previousScript.lastIndexOf('\\');
-					}
+					int idx = Math.max(previousScript.lastIndexOf('/'), previousScript.lastIndexOf('\\'));
 					if (idx != -1) {
 						previousScriptDir = previousScript.substring(0, idx);
 					}
