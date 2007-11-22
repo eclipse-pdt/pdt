@@ -394,9 +394,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 					else {
 						String dataLocation = ""; //$NON-NLS-1$
 						if (fileToData.getLocation() == null) {
-							dataLocation = fileToData.getLocationURI().toString();
+							dataLocation = fileToData.getFullPath().toOSString();
 						} else {
-							dataLocation = fileToData.getLocation().toString();
+							dataLocation = fileToData.getLocation().toOSString();
 						}
 						debugFileTextField.setData(dataLocation);
 					}
