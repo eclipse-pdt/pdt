@@ -16,13 +16,8 @@ public interface IDebugRequestHandler extends IDebugMessageHandler {
 
 	/**
 	 * Return relevant response message that we need to send to the debugger
-	 * 
+	 *
 	 * @return message message of type IDebugResponseMessage
 	 */
 	IDebugResponseMessage getResponseMessage();
-	
-	/**
-	 * Initialize the handler
-	 */
-	void init();
 }

@@ -14,8 +14,10 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -77,7 +79,7 @@ public class DebugConnectionThread implements Runnable {
 	protected boolean isDebugMode = System.getProperty("loggingDebug") != null; //$NON-NLS-1$
 	private IntHashtable requestsTable;
 	private IntHashtable responseTable;
-	private Hashtable responseHandlers;
+	private Hashtable<Integer, ResponseHandler> responseHandlers;
 	private InputManager inputManager;
 	private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	private DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
@@ -85,7 +87,7 @@ public class DebugConnectionThread implements Runnable {
 	protected int peerResponseTimeout = 500; // 0.5 seconds.
 	protected PHPDebugTarget debugTarget;
 	private Thread theThread;
-	private boolean isFirstTimeRequestHandler;
+	private Map<IDebugRequestMessage, IDebugMessageHandler> requestHandlers;
 
 	/**
 	 * Constructs a new DebugConnectionThread with a given Socket.
@@ -94,10 +96,10 @@ public class DebugConnectionThread implements Runnable {
 	 */
 	public DebugConnectionThread(Socket socket) {
 		this.socket = socket;
-		isFirstTimeRequestHandler = true;
 		requestsTable = new IntHashtable();
 		responseTable = new IntHashtable();
-		responseHandlers = new Hashtable();
+		responseHandlers = new Hashtable<Integer, ResponseHandler>();
+		requestHandlers = new HashMap<IDebugRequestMessage, IDebugMessageHandler>();
 		theThread = new Thread(this);
 		theThread.start();
 	}
@@ -149,6 +151,14 @@ public class DebugConnectionThread implements Runnable {
 
 	public void setPeerResponseTimeout(int peerResponseTimeout) {
 		this.peerResponseTimeout = peerResponseTimeout;
+	}
+
+	private IDebugMessageHandler createRequestHandler(IDebugRequestMessage message) {
+		if (!requestHandlers.containsKey(message)) {
+			IDebugMessageHandler requestHandler = DebugMessagesRegistry.getHandler(message);
+			requestHandlers.put(message, requestHandler);
+		}
+		return requestHandlers.get(message);
 	}
 
 	/**
@@ -785,6 +795,7 @@ public class DebugConnectionThread implements Runnable {
 			queueIn(CONNECTION_CLOSED_MSG);
 		}
 
+		@SuppressWarnings("unchecked")
 		private synchronized void resetCommunication() {
 			// Now we can stop the input manager.
 			if (inputManager != null)
@@ -833,10 +844,7 @@ public class DebugConnectionThread implements Runnable {
 
 					Object newInputMessage = inputMessageQueue.queueOut();
 
-					//System.out.println("InputMessageHandler handle: " + newInputMessage);
-
 					// do not stop until the message is processed.
-
 					synchronized (this) {
 						try {
 							if (newInputMessage instanceof DebugSessionStartedNotification) {
@@ -847,24 +855,15 @@ public class DebugConnectionThread implements Runnable {
 									handleConnectionClosed();
 								}
 							} else if (newInputMessage instanceof IDebugNotificationMessage) {
-								//System.out.println("Processing notification:"+ newInputMessage);
 								getCommunicationClient().handleNotification(newInputMessage);
 							} else if (newInputMessage instanceof IDebugRequestMessage) {
 
-								//								int reqId = ((IDebugRequestMessage) newInputMessage).getID();
-								IDebugMessageHandler requestHandler = DebugMessagesRegistry.getHandler((IDebugRequestMessage) newInputMessage);
+								IDebugMessageHandler requestHandler = createRequestHandler((IDebugRequestMessage) newInputMessage);
 
 								if (requestHandler instanceof IDebugRequestHandler) {
-									if (isFirstTimeRequestHandler) {
-										((IDebugRequestHandler) requestHandler).init();
-										isFirstTimeRequestHandler = false;
-									}
 									requestHandler.handle((IDebugRequestMessage) newInputMessage, debugTarget);
 									IDebugResponseMessage response = ((IDebugRequestHandler) requestHandler).getResponseMessage();
 
-									//Log.writeLog("Client Sending response: " +response);
-									//ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-									//DataOutputStream outArray = new DataOutputStream (byteArray );
 									byteArray.reset();
 									response.serialize(outArray);
 									if (isDebugMode) {
@@ -880,10 +879,9 @@ public class DebugConnectionThread implements Runnable {
 								}
 							} else if (newInputMessage instanceof IDebugResponseMessage) {
 								IDebugResponseMessage r = (IDebugResponseMessage) newInputMessage;
-								//                                Object requestId = new Integer(r.getID()); // take the req id from the response.
-								int requestId = r.getID(); // take the req id from the response.
+								int requestId = r.getID(); // take the request ID from the response.
 								IDebugRequestMessage req = (IDebugRequestMessage) requestsTable.remove(requestId); // find the request.
-								ResponseHandler handler = (ResponseHandler) responseHandlers.remove(new Integer(requestId)); // find the handler.
+								ResponseHandler handler = responseHandlers.remove(new Integer(requestId)); // find the handler.
 								handler.handleResponse(req, r);
 							} else if (newInputMessage == STOP_MSG) {
 								synchronized (STOP_MSG) {
@@ -1090,7 +1088,7 @@ public class DebugConnectionThread implements Runnable {
 						// can assume that the remote debugger protocol has a different version then expected.
 						if (!validProtocol && messageType != startMessageId) {
 							// display an error message that the protocol in used is wrong.
-							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new String[] { String.valueOf(RemoteDebugger.PROTOCOL_ID) });
+							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new Object[] { String.valueOf(RemoteDebugger.PROTOCOL_ID) });
 							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
 							DebugPlugin.log(status);
 							Display.getDefault().asyncExec(new Runnable() {
@@ -1138,7 +1136,7 @@ public class DebugConnectionThread implements Runnable {
 							}
 							//responseQueue.queueIn(message);
 							//INSERT RESPONSE TO TABLE AND RELEASE THE THREAD WAITING FOR THE REQUEST
-							ResponseHandler handler = (ResponseHandler) responseHandlers.get(new Integer(idd)); // find the handler.
+							ResponseHandler handler = responseHandlers.get(new Integer(idd)); // find the handler.
 							if (handler == null) {
 								responseTable.put(/*requestId*/idd, message);
 								IDebugRequestMessage req = (IDebugRequestMessage) requestsTable.remove(idd); // find the request.
