@@ -80,7 +80,9 @@ public class PHPINIUtil {
 					if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 						entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
 					}
-					includePath.add(entryPath.toFile().getAbsolutePath());
+					if (entryPath != null) {
+						includePath.add(entryPath.toFile().getAbsolutePath());
+					}
 				} else if (pathObject instanceof IContainer) {
 					IContainer container = (IContainer) pathObject;
 					IPath location = container.getLocation();
