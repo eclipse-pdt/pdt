@@ -41,7 +41,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
@@ -187,16 +186,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 		// Locate the php ini by using the attribute. If the attribute was null, try to locate an ini that exists next to the executable.
 		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
-		if (project != dummyProject && project.hasNature(PHPNature.ID)) {
-			File tempIni = PHPINIUtil.createTemporaryPHPINIFile(phpIni);
-			if (tempIni != null) {
-				PHPINIUtil.prepareBeforeDebug(tempIni, phpExeString, project);
-				launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
-			}
+		File tempIni = PHPINIUtil.createTemporaryPHPINIFile(phpIni);
+		if (tempIni != null) {
+			PHPINIUtil.prepareBeforeDebug(tempIni, phpExeString, project);
+			launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 		} else {
-			if (phpIni != null) {
-				launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, phpIni.getAbsolutePath());
-			}
+			displayErrorMessage("Failed to create temporary PHP.ini file for debug session");
+			return;
 		}
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {

@@ -127,8 +127,13 @@ public class PHPINIUtil {
 		File phpIniFile = null;
 		try {
 			// Create temporary directory:
-			File tempDir = File.createTempFile("zend", null); //$NON-NLS-1$
-			tempDir.delete();
+			File tempDir = new File(System.getProperty("java.io.tmpdir"), "zend_debug"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (!tempDir.exists()) {
+				tempDir.mkdir();
+				tempDir.deleteOnExit();
+			}
+			tempDir = File.createTempFile("session", null, tempDir); //$NON-NLS-1$
+			tempDir.delete(); // delete temp file
 			tempDir.mkdir();
 			tempDir.deleteOnExit();
 
