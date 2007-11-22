@@ -573,7 +573,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 							if (location == null) {
 								fileName = resource.getLocationURI().toString();
 							} else {
-								fileName = location.toString();
+								fileName = location.toOSString();
 							}
 						}
 					}
