@@ -178,7 +178,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	 * Returns a trimmed string changed to lower case
 	 */
 	private final String getNormalizedString(final String name) {
-		return name.trim().toLowerCase();
+		return (name == null) ? null : name.trim().toLowerCase();
 	}
 
 	private void initVariables() {
