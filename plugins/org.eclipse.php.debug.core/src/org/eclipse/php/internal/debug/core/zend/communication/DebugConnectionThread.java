@@ -87,7 +87,7 @@ public class DebugConnectionThread implements Runnable {
 	protected int peerResponseTimeout = 500; // 0.5 seconds.
 	protected PHPDebugTarget debugTarget;
 	private Thread theThread;
-	private Map<IDebugRequestMessage, IDebugMessageHandler> requestHandlers;
+	private Map<Integer, IDebugMessageHandler> requestHandlers;
 
 	/**
 	 * Constructs a new DebugConnectionThread with a given Socket.
@@ -99,7 +99,7 @@ public class DebugConnectionThread implements Runnable {
 		requestsTable = new IntHashtable();
 		responseTable = new IntHashtable();
 		responseHandlers = new Hashtable<Integer, ResponseHandler>();
-		requestHandlers = new HashMap<IDebugRequestMessage, IDebugMessageHandler>();
+		requestHandlers = new HashMap<Integer, IDebugMessageHandler>();
 		theThread = new Thread(this);
 		theThread.start();
 	}
@@ -154,11 +154,11 @@ public class DebugConnectionThread implements Runnable {
 	}
 
 	private IDebugMessageHandler createRequestHandler(IDebugRequestMessage message) {
-		if (!requestHandlers.containsKey(message)) {
+		if (!requestHandlers.containsKey(message.getType())) {
 			IDebugMessageHandler requestHandler = DebugMessagesRegistry.getHandler(message);
-			requestHandlers.put(message, requestHandler);
+			requestHandlers.put(message.getType(), requestHandler);
 		}
-		return requestHandlers.get(message);
+		return requestHandlers.get(message.getType());
 	}
 
 	/**
