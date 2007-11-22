@@ -67,8 +67,11 @@ public class PHPINIUtil {
 	 * @param phpIniFile PHP configuration file instance
 	 * @param phpExePath Path to the PHP executable
 	 * @param project Current project
+	 * @return created temporary PHP configuration file
 	 */
-	public static void prepareBeforeDebug(File phpIniFile, String phpExePath, IProject project) {
+	public static File prepareBeforeDebug(File phpIniFile, String phpExePath, IProject project) {
+		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
+
 		// Modify include path:
 		if (project != null) {
 			Object[] path = PHPSearchEngine.buildIncludePath(project);
@@ -93,17 +96,18 @@ public class PHPINIUtil {
 					includePath.add(pathObject.toString());
 				}
 			}
-			modifyIncludePath(phpIniFile, includePath.toArray(new String[includePath.size()]));
+			modifyIncludePath(tempIniFile, includePath.toArray(new String[includePath.size()]));
 		}
 
 		// Modify Zend Debugger extension entry:
-		File phpExeDir = new File(phpExePath).getParentFile();
-		if (phpExeDir != null) {
-			File debuggerFile = new File(phpExeDir, Platform.OS_WIN32.equals(Platform.getOS()) ? "ZendDebugger.dll" : "ZendDebugger.so"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (phpIniFile != null) {
+			File debuggerFile = new File(phpIniFile.getParentFile(), Platform.OS_WIN32.equals(Platform.getOS()) ? "ZendDebugger.dll" : "ZendDebugger.so"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (debuggerFile.exists()) {
-				modifyDebuggerExtensionPath(phpIniFile, debuggerFile.getAbsolutePath());
+				modifyDebuggerExtensionPath(tempIniFile, debuggerFile.getAbsolutePath());
 			}
 		}
+
+		return tempIniFile;
 	}
 
 	/**

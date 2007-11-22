@@ -184,16 +184,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
 
-		// Locate the php ini by using the attribute. If the attribute was null, try to locate an ini that exists next to the executable.
+		// Locate the php.ini by using the attribute. If the attribute was null, try to locate an php.ini that exists next to the executable.
 		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
-		File tempIni = PHPINIUtil.createTemporaryPHPINIFile(phpIni);
-		if (tempIni != null) {
-			PHPINIUtil.prepareBeforeDebug(tempIni, phpExeString, project);
-			launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
-		} else {
-			displayErrorMessage("Failed to create temporary PHP.ini file for debug session");
-			return;
-		}
+		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString, project);
+		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
 			boolean stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));

@@ -25,7 +25,6 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -122,20 +121,10 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		// Resolve the PHP ini location
 		// Locate the php ini by using the attribute. If the attribute was null, try to locate an ini that exists next to the executable.
 		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
-		if (/*project != dummyProject &&*/project.hasNature(PHPNature.ID)) {
-			File tempIni = PHPINIUtil.createTemporaryPHPINIFile(phpIni);
-			if (tempIni != null) {
-				PHPINIUtil.prepareBeforeDebug(tempIni, phpExeString, project);
-				wc.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
-			}
-		} else {
-			if (phpIni != null) {
-				wc.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, phpIni.getAbsolutePath());
-			}
-		}
+		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString, project);
+		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
+
 		wc.doSave();
-
-
 
 
 		// add process type to process attributes, basically the name of the exe that was launched
