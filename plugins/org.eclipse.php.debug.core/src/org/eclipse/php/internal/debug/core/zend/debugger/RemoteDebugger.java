@@ -85,6 +85,7 @@ import org.eclipse.php.internal.ui.Logger;
 public class RemoteDebugger implements IRemoteDebugger {
 
 	public static final int PROTOCOL_ID = 2006040701;
+	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 	private static final Pattern EVALD_CODE_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : eval\\(\\)'d code"); //$NON-NLS-1$
 
 	protected boolean isDebugMode = System.getProperty("loggingDebug") != null;
@@ -222,11 +223,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public String sendCWDRequest() {
 		try {
 			EvalRequest request = new EvalRequest();
-			request.setCommand("getcwd()");
+			request.setCommand("getcwd()"); //$NON-NLS-1$
 			IDebugResponseMessage response = sendCustomRequest(request);
 			if (response != null && response instanceof EvalResponse) {
 				String result = ((EvalResponse) response).getResult();
-				if (!"[Error]".equals(result)) {
+				if (!EVAL_ERROR.equals(result)) {
 					return result;
 				}
 			}
@@ -255,6 +256,29 @@ public class RemoteDebugger implements IRemoteDebugger {
 			}
 		}
 		return cwd;
+	}
+
+	/**
+	 * Sets current working directory on the debugger side
+	 *
+	 * @param cwd Current working directory to set
+	 * @return <code>true</code> if success, <code>false</code> - otherwise
+	 */
+	public boolean setCurrentWorkingDirectory(String cwd) {
+		try {
+			EvalRequest request = new EvalRequest();
+			request.setCommand(String.format("chdir('%1$s')", cwd));
+			IDebugResponseMessage response = sendCustomRequest(request);
+			if (response != null && response instanceof EvalResponse) {
+				String result = ((EvalResponse) response).getResult();
+				if (!EVAL_ERROR.equals(result)) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return false;
 	}
 
 	/**
