@@ -368,6 +368,12 @@
 				name="nature"
 				value="org.eclipse.php.core.PHPNature" />
 		</page>
+		<page
+			class="org.eclipse.php.internal.ui.preferences.IncludePathInfoPage"
+			id="org.eclipse.php.ui.preferences.PreferencePages.IncludePathInfoPage"
+			name="%phpIncludepathPreferenceName"
+			objectClass="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel">
+		</page>
 	</extension>
 
 	<!--Adapters:-->

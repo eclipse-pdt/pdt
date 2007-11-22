@@ -110,7 +110,7 @@ public class PHPElementImageProvider {
 		} else if (element instanceof PHPIncludePathModel) {
 			PHPIncludePathModel model = (PHPIncludePathModel)element;
 			switch (model.getType()) {
-				case PHPIncludePathModel.TYPE_VARIABLE:
+				case VARIABLE:
 					return PHPPluginImages.DESC_OBJS_ENV_VAR;
 				default:
 					return PHPPluginImages.DESC_OBJS_LIBRARY;

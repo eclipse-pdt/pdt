@@ -34,6 +34,7 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel.IncludePathModelType;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
@@ -289,7 +290,7 @@ public class EditorUtility {
 			return null;
 
 		PHPIncludePathModel includePathModel = (PHPIncludePathModel) input.getData();
-		if (includePathModel.getType() == PHPIncludePathModel.TYPE_VARIABLE) {
+		if (includePathModel.getType() == IncludePathModelType.VARIABLE) {
 			IPath includePath = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
 			return includePath.toOSString();
 		}
