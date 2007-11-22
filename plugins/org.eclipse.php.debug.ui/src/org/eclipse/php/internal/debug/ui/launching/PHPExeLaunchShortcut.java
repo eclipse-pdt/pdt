@@ -180,8 +180,6 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 						//check for non null values - EFS issues
 						if (location != null) {
 							phpFileLocation = location.toString();
-						} else if (file.getLocationURI() != null) {
-							phpFileLocation = file.getLocationURI().toString();
 						} else {
 							phpFileLocation = file.getFullPath().toString();
 						}
@@ -280,9 +278,9 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			for (int i = 0; i < numConfigs; i++) {
 				String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-				String iniPath = configs[i].getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String)null);
+				String iniPath = configs[i].getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
 				PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName, iniPath);
-				
+
 				if (phpPathString.equals(fileName) && defaultEXE.equals(item)) {
 					config = configs[i].getWorkingCopy();
 					break;
