@@ -290,7 +290,7 @@ public class CodeDataResolver {
 						}
 
 						String className = getClassName(projectModel, fileData, statement, startPosition, offset, sDoc.getLineOfOffset(offset));
-						CodeData[] classDatas = getMatchingClasses(className, projectModel, fileName);
+						CodeData[] classDatas = className == null ? EMPTY : getMatchingClasses(className, projectModel, fileName);
 
 						// Is it function or method:
 						if ("(".equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) { //$NON-NLS-1$
