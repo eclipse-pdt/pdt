@@ -91,7 +91,22 @@ public abstract class AbstractCodeData implements CodeData {
 			return -1;
 		}
 		CodeData other = ((CodeData) o);
-		int rv = name.compareToIgnoreCase(other.getName());
+        String otherName = other.getName();
+        int minNameLength = Math.min(name.length(), otherName.length());
+        for(int i = 0; i< minNameLength; i++){
+        	char ch1 = name.charAt(0);
+        	char ch2 = otherName.charAt(0);
+        	if(ch1 == '_'){
+        		if(ch2 == '_'){
+        			continue;
+        		}
+        		return 1;
+        	} else if(ch2 == '_'){
+        		return -1;
+        	}
+        	break;
+        }
+		int rv = name.compareToIgnoreCase(otherName);
 		if (rv != 0) {
 			return rv;
 		}
