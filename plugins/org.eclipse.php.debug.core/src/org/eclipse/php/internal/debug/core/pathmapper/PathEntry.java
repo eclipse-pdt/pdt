@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.pathmapper;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
-
 /**
  * This class represents container for {@link PathMapper}
  * @author michael
@@ -104,10 +101,10 @@ public class PathEntry {
 	 * @return resolved path
 	 */
 	public String getResolvedPath() {
-		if (type == Type.INCLUDE_VAR) {
-			IPath resolvedPath = IncludePathVariableManager.instance().resolveVariablePath(getPath());
-			return resolvedPath.toOSString();
-		}
+//		if (type == Type.INCLUDE_VAR) {
+//			IPath resolvedPath = IncludePathVariableManager.instance().resolveVariablePath(getPath());
+//			return resolvedPath.toOSString();
+//		}
 		return getPath();
 	}
 
