@@ -73,9 +73,8 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 									// check if the user double clicked on a variable in the PHPDoc block
 									// fix bug#201079
 									if (tRegion.getType() == PHPRegionTypes.PHPDOC_COMMENT || tRegion.getType() == PHPRegionTypes.PHP_LINE_COMMENT || tRegion.getType() == PHPRegionTypes.PHP_COMMENT) {
-										if(resetVariableSelectionRangeInComments(textViewer, structuredTextViewer)){
-											return;
-										}
+										resetVariableSelectionRangeInComments(textViewer, structuredTextViewer);
+										return;
 									}
 
 								}
@@ -101,10 +100,9 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 	 * (bug#201079)
 	 * @param textViewer
 	 * @param structuredTextViewer
-	 * @return whether the user double clicked on a variable or not
 	 * @throws BadLocationException
 	 */
-	private boolean resetVariableSelectionRangeInComments(ITextViewer textViewer, StructuredTextViewer structuredTextViewer) throws BadLocationException {
+	private void resetVariableSelectionRangeInComments(ITextViewer textViewer, StructuredTextViewer structuredTextViewer) throws BadLocationException {
 		super.doubleClicked(textViewer);
 		Point selectedRange = structuredTextViewer.getSelectedRange();
 		int offset = selectedRange.x;
@@ -113,10 +111,11 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 			IDocument document = structuredTextViewer.getDocument();
 			char previousChar = document.getChar(offset - 1);
 			if (previousChar == '$') {
-				structuredTextViewer.setSelectedRange(offset - 1, selectedRange.y+1);		
-				return true;
+				structuredTextViewer.setSelectedRange(offset - 1, selectedRange.y + 1);
+				// handle one letter variable name selection (the default just selectes the $ sign)
+			} else if(selectedRange.y == 1 && document.getChar(offset) == '$'){				
+				structuredTextViewer.setSelectedRange(offset, selectedRange.y + 1);
 			}
 		}
-		return false;
 	}
 }
