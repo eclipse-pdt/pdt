@@ -1027,6 +1027,10 @@ public class PhpLexer5 extends PhpLexer {
     	initialize(parameters[6]);
     }
 
+    protected boolean isHeredocState(int state){
+    	return state == ST_PHP_HEREDOC;
+    }
+    
     public int[] getParamenters(){
     	return new int[]{yy_markedPos, yy_pushbackPos, yy_currentPos, yy_startRead, yy_endRead, yyline, yy_lexical_state};
     }

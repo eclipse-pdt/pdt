@@ -54,19 +54,13 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	public abstract void reset(Reader reader, char[] buffer, int[] parameters);
 
 	public abstract int yystate();
+	
+	protected abstract boolean isHeredocState(int state);
 
 	public abstract int[] getParamenters();
 
 	// A pool of states. To avoid creation of a new state on each createMemento.
 	private static final IntHashtable lexerStates = new IntHashtable(100);
-	final public static int ST_PHP_BACKQUOTE = 8;
-	final public static int ST_PHP_COMMENT = 16;
-	final public static int ST_PHP_DOC_COMMENT = 18;
-	final public static int ST_PHP_DOUBLE_QUOTES = 4;
-	final public static int ST_PHP_HEREDOC = 12;
-	final public static int ST_PHP_IN_SCRIPTING = 2;
-	final public static int ST_PHP_LINE_COMMENT = 20;
-	final public static int ST_PHP_SINGLE_QUOTE = 6;
 
 	/**
 	 * This character denotes the end of file
@@ -117,7 +111,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 		Object state = lexerStates.get(key);
 		if (state == null) {
 			state = new BasicLexerState(this);
-			if (getYy_lexical_state() == PhpLexer.ST_PHP_HEREDOC)
+			if (isHeredocState(getYy_lexical_state()))
 				state = new HeredocState((BasicLexerState) state, this);
 			lexerStates.put(key, state);
 		}

@@ -778,7 +778,7 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
 	yypushback(1); // begin with the last char
 	
 	int[] currentParameters = getParamenters();
-	currentParameters[6] = PhpLexer.ST_PHP_IN_SCRIPTING;
+	currentParameters[6] = ST_PHP_IN_SCRIPTING;
 	
 	final PhpLexer phpLexer = PhpScriptRegion.getPhpLexer(project, yy_reader, yy_buffer, currentParameters); 
 	bufferedTextRegion = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
@@ -979,9 +979,11 @@ private final String doBlockTagScan() throws IOException {
 }
 
 private IProject project;
+private int ST_PHP_IN_SCRIPTING = -1;
 
 public void setProject(IProject project){
 	this.project = project;
+	ST_PHP_IN_SCRIPTING = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_IN_SCRIPTING);
 }
 
 public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){

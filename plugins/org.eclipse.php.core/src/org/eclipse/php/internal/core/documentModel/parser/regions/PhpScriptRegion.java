@@ -19,6 +19,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.documentModel.parser.PHPLexerStates;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer4;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer5;
@@ -43,6 +44,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	private static final String PHP_SCRIPT = "PHP Script"; //$NON-NLS-1$
 	private final PhpTokenContainer tokensContaier = new PhpTokenContainer();
 	private final IProject project;
+	private int ST_PHP_LINE_COMMENT = -1;
+	private int ST_PHP_IN_SCRIPTING = -1;
 
 	// true when the last reparse action is full reparse
 	protected boolean isFullReparsed;
@@ -51,6 +54,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		super(newContext, startOffset, 0, 0, PhpScriptRegion.PHP_SCRIPT);
 
 		this.project = project;
+		ST_PHP_LINE_COMMENT = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_LINE_COMMENT);
+		ST_PHP_IN_SCRIPTING = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_IN_SCRIPTING);
 		completeReparse(phpLexer);
 	}
 
@@ -88,7 +93,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 */
 	public boolean isLineComment(int offset) throws BadLocationException {
 		final LexerState lexState = tokensContaier.getState(offset);
-		return lexState != null && lexState.getTopState() == PhpLexer.ST_PHP_LINE_COMMENT;
+		return lexState != null && lexState.getTopState() == ST_PHP_LINE_COMMENT;
 	}
 
 	/**
@@ -137,7 +142,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			final LexerState endState = tokensContaier.getState(tokenEnd.getEnd() + 1);
 
 			final PhpTokenContainer newContainer = new PhpTokenContainer();
-			final PhpLexer phpLexer = getPhpLexer(project, new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset), startState);
+			final PhpLexer phpLexer = getPhpLexer(new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset), startState);
 
 			Object state = startState;
 			try {
@@ -204,7 +209,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @see IPhpScriptRegion#completeReparse(IDocument, int, int)
 	 */
 	public void completeReparse(IDocument doc, int start, int length) {
-		PhpLexer lexer = getPhpLexer(project, new BlockDocumentReader(doc, start, length), null);
+		PhpLexer lexer = getPhpLexer(new BlockDocumentReader(doc, start, length), null);
 		completeReparse(lexer);
 	}
 
@@ -250,7 +255,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @param stream
 	 * @return a new lexer for the given project with the given stream
 	 */
-	private static PhpLexer getPhpLexer(IProject project, Reader stream, LexerState startState) {
+	private PhpLexer getPhpLexer(Reader stream, LexerState startState) {
 		PhpLexer lexer;
 		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
 		if (phpVersion.equals(PHPCoreConstants.PHP5)) {
@@ -258,7 +263,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		} else {
 			lexer = new PhpLexer4(stream);
 		}
-		lexer.initialize(PhpLexer.ST_PHP_IN_SCRIPTING);
+		lexer.initialize(ST_PHP_IN_SCRIPTING);
 		lexer.setPatterns(project);
 
 		// set the wanted state
