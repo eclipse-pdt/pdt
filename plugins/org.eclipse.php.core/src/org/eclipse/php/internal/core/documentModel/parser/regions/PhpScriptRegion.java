@@ -275,27 +275,6 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	/**
-	 * @param project
-	 * @param stream
-	 * @return a new lexer for the given project with the given stream
-	 */
-	public static PhpLexer getPhpLexer(IProject project, java.io.Reader reader, char[] buffer, int[] parameters) {
-		PhpLexer lexer;
-		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-		if (phpVersion.equals(PHPCoreConstants.PHP5)) {
-			lexer = new PhpLexer5(reader);
-		} else {
-			lexer = new PhpLexer4(reader);
-		}
-		lexer.initialize(parameters[6]);
-		lexer.reset(reader, buffer, parameters);
-		lexer.setPatterns(project);
-
-		lexer.setAspTags(UseAspTagsHandler.useAspTagsAsPhp(project));
-		return lexer;
-	}
-
-	/**
 	 * @param script 
 	 * @return a list of php tokens
 	 */
