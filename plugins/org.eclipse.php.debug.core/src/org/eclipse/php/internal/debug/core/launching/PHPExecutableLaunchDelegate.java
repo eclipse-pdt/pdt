@@ -254,7 +254,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			if (res != null) {
 				fileName = res.getLocation().toOSString();
 			} else {
-				fileName = filePath.toOSString();
+				fileName = filePath.toString();
 			}
 
 			// Detect PHP SAPI type:
