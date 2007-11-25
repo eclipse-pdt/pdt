@@ -29,6 +29,7 @@ import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -55,6 +56,8 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 	 */
 	public PathEntrySelectionDialog(Shell shell, VirtualPath path, PathEntry[] pathEntries) {
 		super(shell);
+		setShellStyle(getShellStyle() | SWT.RESIZE);
+
 		this.pathEntries = pathEntries;
 		this.comparator = Collections.reverseOrder(new BestMatchPathComparator(path));
 

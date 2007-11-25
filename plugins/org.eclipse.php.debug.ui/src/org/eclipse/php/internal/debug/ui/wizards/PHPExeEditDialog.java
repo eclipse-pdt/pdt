@@ -43,6 +43,8 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 
 	public PHPExeEditDialog(Shell shell, PHPexeItem phpExeItem, PHPexeItem[] existingItems) {
 		super(shell);
+		setShellStyle(getShellStyle() | SWT.RESIZE);
+
 		this.existingItems = existingItems;
 		this.phpExeItem = phpExeItem;
 		runtimeComposites = new ArrayList<CompositeFragment>(3);
