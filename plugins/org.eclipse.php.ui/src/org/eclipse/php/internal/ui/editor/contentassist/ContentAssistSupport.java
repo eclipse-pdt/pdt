@@ -64,6 +64,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	private static String[] CLASS_KEYWORDS = { "abstract", "const", "function", "private", "protected", "public", "static", "var" }; // must be ordered!
 
 	protected boolean showVariablesFromOtherFiles;
+	protected boolean groupCompletionOptions;
 	protected boolean determineObjectTypeFromOtherFile;
 	protected boolean disableConstants;
 	protected boolean showClassNamesInGlobalList;
@@ -88,9 +89,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (prefKey == null || PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS.equals(prefKey)
 			|| PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION.equals(prefKey) || PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE.equals(prefKey) || PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES.equals(prefKey)
 			|| PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES.equals(prefKey)
-			|| PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP.equals(prefKey)) {
+			|| PreferenceConstants.CODEASSIST_GROUP_OPTIONS.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP.equals(prefKey)) {
 
 			showVariablesFromOtherFiles = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES);
+			groupCompletionOptions = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_GROUP_OPTIONS);
 			disableConstants = !PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
 			showClassNamesInGlobalList = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
 			showNonStrictOptions = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
@@ -137,6 +139,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (completionProposalGroup == null) {
 			return templateProposals;
 		}
+		completionProposalGroup.setGroupOptions(groupCompletionOptions);
 		return merg(completionProposalGroup.getCompletionProposals(getProjectModel(phpEditorModel)), templateProposals);
 	}
 
@@ -1566,7 +1569,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		@Override
-		protected CodeDataCompletionProposal[] calcCompletionProposals(PHPProjectModel projectModel) {
+		protected ICompletionProposal[] calcCompletionProposals(PHPProjectModel projectModel) {
 
 			if (key.length() == 0) {
 				return super.calcCompletionProposals(projectModel);

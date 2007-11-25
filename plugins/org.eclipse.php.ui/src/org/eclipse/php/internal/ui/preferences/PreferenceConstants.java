@@ -339,6 +339,15 @@ public class PreferenceConstants {
 	public final static String CODEASSIST_SHOW_NON_STRICT_OPTIONS = "contentAssistShowNonStrictOptions"; //$NON-NLS-1$
 
 	/**
+	 * A named preference that controls whether to group options
+	 * <p>
+	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
+	 * <code>false</code> invisible.
+	 * </p>
+	 */
+	public final static String CODEASSIST_GROUP_OPTIONS = "contentAssistGroupOptions"; //$NON-NLS-1$
+
+	/**
 	 * A named preference that controls if code assist also contains proposals from other files
 	 * <p>
 	 * Value is of type <code>Boolean</code>. if <code>false<code> code assist only contains visible members. If
@@ -746,7 +755,7 @@ public class PreferenceConstants {
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
-	 * 
+	 *
 	 * @since 3.1
 	 * @see IStructuredTextFoldingProvider#FOLDING_ENABLED
 	 */
@@ -758,7 +767,7 @@ public class PreferenceConstants {
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
-	 * 
+	 *
 	 * @since 3.1
 	 */
 	public static final String EDITOR_FOLDING_PROVIDER = "editor_folding_provider"; //$NON-NLS-1$
@@ -795,7 +804,7 @@ public class PreferenceConstants {
 	 * A named preference that defines the key for the hover modifier state masks.
 	 * The value is only used if the value of <code>EDITOR_TEXT_HOVER_MODIFIERS</code>
 	 * cannot be resolved to valid SWT modifier bits.
-	 * 
+	 *
 	 * @see #EDITOR_TEXT_HOVER_MODIFIERS
 	 */
 	public static final String EDITOR_TEXT_HOVER_MODIFIER_MASKS = PHPUiPlugin.ID + "hoverModifierMasks"; //$NON-NLS-1$
@@ -806,7 +815,7 @@ public class PreferenceConstants {
 	public static final String PHP_MANUAL_SITE = "phpManualSite"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that defines the key for the stored PHP Manual sites 
+	 * A named preference that defines the key for the stored PHP Manual sites
 	 */
 	public static final String PHP_MANUAL_SITES = "phpManualSites"; //$NON-NLS-1$
 
@@ -900,6 +909,7 @@ public class PreferenceConstants {
 		store.setDefault(CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, true);
 		store.setDefault(CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
 		store.setDefault(CODEASSIST_SHOW_NON_STRICT_OPTIONS, true);
+		store.setDefault(CODEASSIST_GROUP_OPTIONS, false);
 		store.setDefault(CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
 		store.setDefault(CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
 		store.setDefault(CODEASSIST_AUTOACTIVATION, true);
@@ -907,9 +917,9 @@ public class PreferenceConstants {
 		store.setDefault(CODEASSIST_AUTOACTIVATION_DELAY, 200);
 		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>"); //$NON-NLS-1$
 		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@"); //$NON-NLS-1$
-		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, true); //$NON-NLS-1$
-		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, true); //$NON-NLS-1$
-		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, true); //$NON-NLS-1$
+		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, true);
+		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, true);
+		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, true);
 
 		// SyntaxColoringPage
 		store.setDefault(EDITOR_NORMAL_COLOR, EDITOR_NORMAL_DEFAULT_COLOR);
@@ -960,7 +970,7 @@ public class PreferenceConstants {
 		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.NEVER);
 
 		// default locale
-		if ((store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE)).equals("")) { //$NON-NLS-1$
+		if (store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE).equals("")) { //$NON-NLS-1$
 			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, Locale.getDefault().toString());
 			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
 		}

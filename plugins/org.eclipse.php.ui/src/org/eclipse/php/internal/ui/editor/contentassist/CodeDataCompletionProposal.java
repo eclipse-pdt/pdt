@@ -208,4 +208,36 @@ public class CodeDataCompletionProposal implements ICompletionProposal, IComplet
 		buffer.append(" suffix: ").append(suffix); //$NON-NLS-1$
 		return buffer.toString();
 	}
+
+	PHPProjectModel getProjectModel() {
+		return projectModel;
+	}
+
+	int getOffset() {
+		return replacementOffset;
+	}
+
+	int getLength() {
+		return replacementLength;
+	}
+
+	int getSelectionLength() {
+		return selectionLength;
+	}
+
+	String getPrefix() {
+		return prefix;
+	}
+
+	String getSuffix() {
+		return suffix;
+	}
+
+	int getCaretOffsetInSuffix() {
+		return caretOffsetInSuffix;
+	}
+
+	boolean getShowHints() {
+		return showTypeHints;
+	}
 }

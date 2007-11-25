@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * 
+ *
  * @author guy.g
  *
  */
@@ -25,6 +25,7 @@ public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPConten
 	protected Button caseSensitiveForConstantsCheckBox;
 	protected Button showClassNamesInGlobalListCheckBox;
 	protected Button showNonStrictOptionsCheckBox;
+	protected Button groupCompletionsCheckBox;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent, PHPUIMessages.getString("CodeAssistPreferencePage_filtersSectionLabel"));
@@ -32,6 +33,7 @@ public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPConten
 		caseSensitiveForConstantsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_caseSensitiveForConstants"), PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, 0);
 		showClassNamesInGlobalListCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showClassNamesInGlobal"), PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, 0);
 		showNonStrictOptionsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showNonStrictOptions"), PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, 0); //$NON-NLS-1$
+		groupCompletionsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_groupCompletionOptions"), PreferenceConstants.CODEASSIST_GROUP_OPTIONS, 0); //$NON-NLS-1$
 	}
 
 }
