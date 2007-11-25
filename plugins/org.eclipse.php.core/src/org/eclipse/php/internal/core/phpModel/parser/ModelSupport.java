@@ -127,7 +127,7 @@ public class ModelSupport {
 					end = i - 1;
 					break;
 				}
-			} else if (name.compareToIgnoreCase(startsWith) > 0) {
+			} else if (name.compareToIgnoreCase(startsWith) != 0) {
 				end = i - 1;
 				break;
 			}
