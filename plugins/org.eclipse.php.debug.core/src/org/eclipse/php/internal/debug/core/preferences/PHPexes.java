@@ -208,7 +208,7 @@ public class PHPexes {
 					if (iniFilePath == null) {
 						iniEquals = exeItem.getINILocation() == null;
 					} else {
-						iniEquals = exeItem.getINILocation() == null ? false : iniFilePath.equals(exeItem.getINILocation().toString());
+						iniEquals = exeItem.getINILocation() == null ? iniFilePath == null || iniFilePath.equals("") : iniFilePath.equals(exeItem.getINILocation().toString());
 					}
 					if (iniEquals && exeFilePath.equals(exeItem.getExecutable().toString())) {
 						return exeItem;
