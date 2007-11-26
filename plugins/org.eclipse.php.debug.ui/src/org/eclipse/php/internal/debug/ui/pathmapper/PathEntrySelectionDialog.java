@@ -16,13 +16,16 @@ import java.util.Comparator;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
+import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.debug.core.pathmapper.BestMatchPathComparator;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
@@ -66,6 +69,7 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 			protected Object restoreItemFromMemento(IMemento memento) {
 				return null;
 			}
+
 			protected void storeItemToMemento(Object item, IMemento memento) {
 			}
 		});
@@ -185,12 +189,11 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 			if (pathEntry.getType() == Type.EXTERNAL) {
 				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 			}
-			if (pathEntry.getContainer() instanceof IncludePathEntry) {
-				if (pathEntry.getType() == Type.INCLUDE_VAR) {
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
-				} else {
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
-				}
+			if (pathEntry.getType() == Type.INCLUDE_VAR) {
+				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
+			}
+			if (pathEntry.getType() == Type.INCLUDE_FOLDER) {
+				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 			}
 			return phpLabelProvider.getImage(pathEntry.getContainer());
 		}
@@ -204,8 +207,20 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 				return ((File) pathEntry.getContainer()).getPath();
 			}
 			if (pathEntry.getContainer() instanceof IncludePathEntry) {
+				String parentFolder = new File(pathEntry.getPath()).getParentFile().getAbsolutePath();
 				IncludePathEntry entry = (IncludePathEntry) pathEntry.getContainer();
-				return entry.getPath().toOSString();
+				if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+					IPath resolvedVar = IncludePathVariableManager.instance().getIncludePathVariable(entry.getPath().toString());
+					String varPath = resolvedVar.toFile().getAbsolutePath();
+					if (parentFolder.startsWith(varPath)) {
+						String suffix = parentFolder.substring(varPath.length());
+						if (suffix.startsWith("/")) {
+							suffix = suffix.substring(1);
+						}
+						return entry.getPath().toString() + '/' + suffix;
+					}
+				}
+				return parentFolder;
 			}
 			if (pathEntry.getContainer() instanceof IResource) {
 				String path = ((IResource) pathEntry.getContainer()).getFullPath().toPortableString();
