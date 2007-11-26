@@ -176,7 +176,7 @@ public abstract class CompletionProposalGroup {
 		final boolean childHasBrothers = childCount > 1 && !allEqual;
 
 		for (final IPath childRoot : childrenRoots) {
-			final Collection<IPath> childCompletionProposal = calculateProposalPaths(completionTree, childRoot, childHasBrothers);
+			final Collection<IPath> childCompletionProposal = calculateProposalPaths(completionTree, childRoot, hasBrothers || childHasBrothers);
 			if (childCompletionProposal != null)
 				childCompletions.addAll(childCompletionProposal);
 		}
@@ -201,7 +201,7 @@ public abstract class CompletionProposalGroup {
 			}
 			return results;
 		}
-		
+
 		// else:
 		// 1. Create tree of all the elements:
 		final ElementTree completionTree = buildCompletionTree(projectModel, codeDatas);
