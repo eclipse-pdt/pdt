@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.php.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.core" id="languageModelExtensions" name="Language Model Extension"/>
+         <meta.schema plugin="org.eclipse.php.core" id="phpModelExtensions" name="PHP Model Extension"/>
       </appInfo>
       <documentation>
          This extension point allows to add a new set of PHP elements into PHP language model in order to make them available in Code Assist.
@@ -117,9 +117,9 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;extension point=&quot;org.eclipse.php.core.languageModelExtensions&quot;&gt;
+         &lt;extension point=&quot;org.eclipse.php.core.phpModelExtensions&quot;&gt;
     &lt;languageModelExtension
-          id=&quot;org.eclipse.php.core.languageModelExtension.imageMagic&quot;
+          id=&quot;org.eclipse.php.core.phpModelExtension.imageMagic&quot;
           name=&quot;PHP elements for ImageMagick PEAR library&quot;
           file=&quot;Resources/imageMagick.php&quot;
           phpVersion=&quot;5&quot;/&gt;
@@ -133,7 +133,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         If class that implements &lt;code&gt;org.eclipse.php.internal.core.phpModel.ILanguageModelExtension&lt;/code&gt; is specified all the information will be taken from there.
+         If class that implements &lt;code&gt;org.eclipse.php.internal.core.phpModel.IPHPModelExtension&lt;/code&gt; is specified all the information will be taken from there.
       </documentation>
    </annotation>
 

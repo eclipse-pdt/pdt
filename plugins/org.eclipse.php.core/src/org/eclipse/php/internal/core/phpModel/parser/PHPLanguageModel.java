@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.ILanguageModelExtension;
+import org.eclipse.php.internal.core.phpModel.IPHPModelExtension;
 import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
@@ -237,34 +237,37 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 			// load language model extensions:
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPCorePlugin.ID, "languageModelExtensions"); //$NON-NLS-1$
+			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPCorePlugin.ID, "phpModelExtensions"); //$NON-NLS-1$
+
 			for (IConfigurationElement element : elements) {
 				if ("model".equals(element.getName())) { //$NON-NLS-1$
 					String id = element.getAttribute("id"); //$NON-NLS-1$
+
 					try {
-						boolean enabled;
-						String file, phpVersion;
-						String className = element.getAttribute("class"); //$NON-NLS-1$
-						if (className != null) {
-							ILanguageModelExtension extension = (ILanguageModelExtension) element.createExecutableExtension(className);
+						String enabledAttr = element.getAttribute("enabled"); //$NON-NLS-1$
+						boolean enabled = (enabledAttr == null) ? true : Boolean.parseBoolean(enabledAttr);
+						String file = element.getAttribute("file"); //$NON-NLS-1$
+						String phpVersion = element.getAttribute("phpVersion"); //$NON-NLS-1$
+
+						if (element.getAttribute("class") != null) { //$NON-NLS-1$
+							IPHPModelExtension extension = (IPHPModelExtension) element.createExecutableExtension("class"); //$NON-NLS-1$
 							enabled = extension.isEnabled();
-							file = extension.getFile();
-							phpVersion = extension.getPHPVersion();
-						} else {
-							String enabledAttr = element.getAttribute("enabled"); //$NON-NLS-1$
-							enabled = (enabledAttr == null) ? true : Boolean.parseBoolean(enabledAttr);
-							file = element.getAttribute("file"); //$NON-NLS-1$
-							phpVersion = element.getAttribute("phpVersion"); //$NON-NLS-1$
+							if (extension.getFile() != null) {
+								file = extension.getFile();
+							}
+							if (extension.getPHPVersion() != null) {
+								phpVersion = extension.getPHPVersion();
+							}
 						}
 
 						if (enabled && getPHPVersion().equals(phpVersion)) {
-							reader = new InputStreamReader(FileLocator.openStream(PHPCorePlugin.getDefault().getBundle(), new Path(file), false));
+							reader = new InputStreamReader(FileLocator.openStream(Platform.getBundle(element.getNamespaceIdentifier()), new Path(file), false));
 							innerParserClient = new InnerParserClient();
 							executer = new ParserExecuter(phpParserManager, null, innerParserClient, file, reader, new Pattern[0], 0, false);
 							executer.run();
 						}
 					} catch (CoreException e) {
-						PHPCorePlugin.logErrorMessage(NLS.bind("Error loading language model extension ID {0}", id)); //$NON-NLS-1$
+						PHPCorePlugin.logErrorMessage(NLS.bind("Error loading PHP model extension ID {0}", id)); //$NON-NLS-1$
 					}
 				}
 			}

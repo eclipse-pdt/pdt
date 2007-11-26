@@ -1,6 +1,6 @@
 package org.eclipse.php.internal.core.phpModel;
 
-public interface ILanguageModelExtension {
+public interface IPHPModelExtension {
 
 	/**
 	 * Returns path to the PHP file that contains language model
