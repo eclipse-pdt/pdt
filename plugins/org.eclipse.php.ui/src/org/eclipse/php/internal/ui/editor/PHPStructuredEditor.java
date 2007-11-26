@@ -1272,7 +1272,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					if (partRef.getPart(false) == getEditorPart()) {
 						final IFile file = getFile();
 						if (file != null) {
-							ExternalFilesRegistry externalRegistry = ExternalFilesRegistry.getInstance();
+							final ExternalFilesRegistry externalRegistry = ExternalFilesRegistry.getInstance();
 							if (file.exists()) {
 								IProject proj = file.getProject();
 								try {
@@ -1307,7 +1307,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							else {
 								IStructuredModel model = getModel();
 								if (model != null) {
-									String fileName = model.getBaseLocation();
+									final String fileName = model.getBaseLocation();
 									if (externalRegistry.isEntryExist(fileName)) {
 										//if there are more than one editor opening the external file using "New Editor", do not remove it from model and registry
 										IEditorReference[] existingEditors = null;
@@ -1317,9 +1317,17 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 										}
 										// Make sure that the file has a full path before we try to remove it from the model.
 										if (existingEditors == null || existingEditors.length == 1) { //a single editor
-											IFile fileDecorator = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
-											PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
-											externalRegistry.removeFileEntry(fileName);
+											final IFile fileDecorator = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
+											WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
+												@Override
+												public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+													PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
+													externalRegistry.removeFileEntry(fileName);
+													return Status.OK_STATUS;
+												}
+											};
+											job.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+											job.schedule();
 										}
 									}
 								}
