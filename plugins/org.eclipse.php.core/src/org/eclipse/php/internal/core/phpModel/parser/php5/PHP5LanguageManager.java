@@ -35,6 +35,10 @@ public class PHP5LanguageManager implements PHPLanguageManager {
 	public String getPHPFunctionPath() {
 		return PHP5_FUNCTIONS_PATH;
 	}
+	
+	public String getPHPMajorVerison() {
+		return "5"; //$NON-NLS-1$
+	}
 
 	public ParserClient createParserClient(PHPUserModel userModel, IProject project) {
 		return new PHP5DefaultParserClient(userModel, project);

@@ -6,6 +6,7 @@
    <extension-point id="workspaceModelListener" name="workspaceModelListener" schema="schema/workspaceModelListener.exsd"/>
    <extension-point id="phpBuilderExtensions" name="PHP Builder Extension" schema="schema/phpBuilderExtensions.exsd"/>
    <extension-point id="modelFilter" name="PHP Model Filter" schema="schema/modelFilter.exsd"/>
+   <extension-point id="languageModelExtensions" name="Language Model Extension" schema="schema/languageModelExtensions.exsd"/>
    
 	<!-- PHP Model Handler -->
 	<extension

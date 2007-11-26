@@ -30,13 +30,13 @@ public interface PHPDocBlock extends Serializable {
 
 	String getLongDescription();
 
-	Iterator getTags();
+	Iterator<PHPDocTag> getTags();
 
 	PHPDocTag[] getTagsAsArray();
 
-	Iterator getTags(int id);
-	
-	public boolean hasTagOf(int id);	
+	Iterator<PHPDocTag> getTags(int id);
+
+	public boolean hasTagOf(int id);
 
 	int getType();
 

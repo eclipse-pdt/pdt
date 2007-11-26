@@ -19,7 +19,6 @@ public interface PHPLanguageManager {
 	public String getPHPFunctionPath();
 
 	public ParserClient createParserClient(PHPUserModel userModel, IProject project);
-	
-	public IPhpModel getModel();
 
+	public IPhpModel getModel();
 }
