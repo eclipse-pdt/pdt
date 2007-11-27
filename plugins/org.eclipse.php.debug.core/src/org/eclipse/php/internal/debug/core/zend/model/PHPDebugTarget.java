@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import java.net.URI;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -575,7 +576,12 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 						} else {
 							IPath location = resource.getRawLocation();
 							if (location == null) {
-								fileName = resource.getLocationURI().toString();
+								URI locationURI = resource.getLocationURI();
+								if (locationURI != null) {
+									fileName = locationURI.toString();
+								} else {
+									fileName = resource.getFullPath().toOSString();
+								}
 							} else {
 								fileName = location.toOSString();
 							}
