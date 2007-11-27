@@ -8,6 +8,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
@@ -46,7 +47,11 @@ class TemporaryCompletionProposal implements ICompletionProposal {
 			textViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
 					textViewer.removeSelectionChangedListener(this);
-					textViewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+					BusyIndicator.showWhile(textViewer.getControl().getDisplay(), new Runnable() {
+						public void run() {
+							textViewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+						}
+					});
 				}
 			});
 		}

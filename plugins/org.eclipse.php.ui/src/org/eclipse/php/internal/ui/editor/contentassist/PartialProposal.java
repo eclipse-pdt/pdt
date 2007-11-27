@@ -1,6 +1,5 @@
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.core.runtime.Path;
 
 /**
  * A wrapper for CodeDataCompletionProposal which reduces display string's common suffix
@@ -8,11 +7,11 @@ import org.eclipse.core.runtime.Path;
  */
 class PartialProposal extends CodeDataCompletionProposal {
 
-	private int matchingSegments;
+	private int segmentsToCut;
 
-	public PartialProposal(CodeDataCompletionProposal proposal, int matchingSegments) {
+	public PartialProposal(CodeDataCompletionProposal proposal, int segmentsToCut) {
 		super(proposal.getProjectModel(), proposal.getCodeData(), proposal.getOffset(), proposal.getLength(), proposal.getSelectionLength(), proposal.getPrefix(), proposal.getSuffix(), proposal.getCaretOffsetInSuffix(), proposal.getShowHints());
-		this.matchingSegments = matchingSegments;
+		this.segmentsToCut = segmentsToCut;
 	}
 
 	/** (non-Javadoc)
@@ -21,6 +20,6 @@ class PartialProposal extends CodeDataCompletionProposal {
 	@Override
 	public String getDisplayString() {
 		String displayString = super.getDisplayString();
-		return (matchingSegments != 0 ? "..._" : "") + new Path(displayString.replaceAll("_", "/")).removeFirstSegments(matchingSegments).toString().replaceAll("/", "_"); //$NON-NLS-1$
+		return (segmentsToCut != 0 ? CompletionProposalGroup.COLLAPSED_PREFIX + CompletionProposalGroup.ELEMENT_NAME_SEPARATOR : "") + CompletionProposalGroup.elementPathToName(CompletionProposalGroup.elementNameToPath(displayString).removeFirstSegments(segmentsToCut)); //$NON-NLS-1$
 	}
 }

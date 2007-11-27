@@ -348,6 +348,15 @@ public class PreferenceConstants {
 	public final static String CODEASSIST_GROUP_OPTIONS = "contentAssistGroupOptions"; //$NON-NLS-1$
 
 	/**
+	 * A named preference that controls whether to cut common prefix
+	 * <p>
+	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
+	 * <code>false</code> invisible.
+	 * </p>
+	 */
+	public final static String CODEASSIST_CUT_COMMON_PREFIX = "contentAssistCutPrefix"; //$NON-NLS-1$
+
+	/**
 	 * A named preference that controls if code assist also contains proposals from other files
 	 * <p>
 	 * Value is of type <code>Boolean</code>. if <code>false<code> code assist only contains visible members. If
@@ -910,6 +919,7 @@ public class PreferenceConstants {
 		store.setDefault(CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
 		store.setDefault(CODEASSIST_SHOW_NON_STRICT_OPTIONS, true);
 		store.setDefault(CODEASSIST_GROUP_OPTIONS, false);
+		store.setDefault(CODEASSIST_CUT_COMMON_PREFIX, false);
 		store.setDefault(CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
 		store.setDefault(CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
 		store.setDefault(CODEASSIST_AUTOACTIVATION, true);

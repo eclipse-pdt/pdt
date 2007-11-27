@@ -25,14 +25,15 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 
 public abstract class CompletionProposalGroup {
 
+	public static final String ELEMENT_NAME_SEPARATOR = "_"; //$NON-NLS-1$
 	/**
 	 *
 	 */
-	private static final String ELEMENT_NAME_SEPARATOR = "_"; //$NON-NLS-1$
-	/**
-	 *
-	 */
-	private static final String COLLAPSED_STRING = "..."; //$NON-NLS-1$
+	public static final String COLLAPSED_PREFIX = "..."; //$NON-NLS-1$
+
+	public static final String COLLAPSED_SUFFIX = "*"; //$NON-NLS-1$
+
+	public static final String PATH_SEPARATOR = Character.toString(IPath.SEPARATOR);
 	/**
 	 *
 	 */
@@ -41,10 +42,11 @@ public abstract class CompletionProposalGroup {
 	protected CodeData[] codeDataProposals;
 	protected ICompletionProposal[] completionProposals;
 	protected String key;
-	protected int matchingSegments;
+	protected int segmentsToCut;
 	protected int selectionLength;
 	protected PHPProjectModel projectModel;
 	protected boolean groupOptions;
+	protected boolean cutCommonPrefix;
 
 	public CompletionProposalGroup() {
 		setData(0, null, null, selectionLength);
@@ -64,13 +66,13 @@ public abstract class CompletionProposalGroup {
 		setCodeDataProposals(data);
 		this.key = key;
 		if (key != null) {
-			IPath keyPath = new Path(key.replaceAll(ELEMENT_NAME_SEPARATOR, "/"));
-			matchingSegments = keyPath.segmentCount();
-			if (matchingSegments > 0 && !keyPath.hasTrailingSeparator()) {
-				--matchingSegments;
+			IPath keyPath = elementNameToPath(key);
+			if (cutCommonPrefix) {
+				segmentsToCut = keyPath.segmentCount();
+				if (segmentsToCut > 0 && !keyPath.hasTrailingSeparator()) {
+					--segmentsToCut;
+				}
 			}
-		} else {
-			matchingSegments = 0;
 		}
 
 		this.selectionLength = selectionLength;
@@ -197,7 +199,7 @@ public abstract class CompletionProposalGroup {
 			// this is the default option - just create proposals for each code data and return the array
 			ICompletionProposal[] results = new ICompletionProposal[codeDatas.length];
 			for (int i = 0; i < results.length; ++i) {
-				results[i] = createProposal(projectModel, codeDatas[i]);
+				results[i] = createElementProposal(projectModel, codeDatas[i]);
 			}
 			return results;
 		}
@@ -211,20 +213,16 @@ public abstract class CompletionProposalGroup {
 			final Path root = COMPLETION_TREE_ROOT;
 			// 2. Extract only the relevant element and group paths from the tree:
 			final Collection<IPath> completionProposalPaths = calculateProposalPaths(completionTree, root, false);
-			IPath keyPath = elementNameToPath(key);
 			for (final IPath completionProposalPath : completionProposalPaths) {
 				Object elementData = completionTree.getElementData(completionProposalPath);
 				if (elementData != null) {
-					proposals.add(new PartialProposal(createProposal(projectModel, (CodeData) elementData), matchingSegments));
+					proposals.add(createElementProposal(projectModel, elementData));
 				} else {
-					int matchingFirstSegments = keyPath.segmentCount();
 
 					// show directories even if matched:
-					if (matchingFirstSegments > 0 && !keyPath.hasTrailingSeparator())
-						--matchingFirstSegments;
 					IPath replacementPath = completionProposalPath.removeFirstSegments(1);
 					String replacement = elementPathToName(replacementPath) + ELEMENT_NAME_SEPARATOR;
-					proposals.add(createGroupProposal(completionProposalPath, matchingFirstSegments, replacement));
+					proposals.add(createGroupProposal(completionProposalPath, replacement));
 				}
 			}
 		}
@@ -232,17 +230,24 @@ public abstract class CompletionProposalGroup {
 		return proposals.toArray(new ICompletionProposal[proposals.size()]);
 	}
 
-	private String elementPathToName(IPath replacementPath) {
-		return replacementPath.toString().replaceAll("/", ELEMENT_NAME_SEPARATOR); //$NON-NLS-1$
+	private CodeDataCompletionProposal createElementProposal(PHPProjectModel projectModel, Object elementData) {
+		if (!cutCommonPrefix) {
+			return createProposal(projectModel, (CodeData) elementData);
+		}
+		return new PartialProposal(createProposal(projectModel, (CodeData) elementData), segmentsToCut);
 	}
 
-	private Path elementNameToPath(String elementName) {
-		return new Path(elementName.replaceAll(ELEMENT_NAME_SEPARATOR, "/")); //$NON-NLS-1$
+	static String elementPathToName(IPath replacementPath) {
+		return replacementPath.toString().replaceAll(PATH_SEPARATOR, ELEMENT_NAME_SEPARATOR);
 	}
 
-	private TemporaryCompletionProposal createGroupProposal(final IPath completionProposalPath, int matchingFirstSegments, String replacement) {
+	static Path elementNameToPath(String elementName) {
+		return new Path(elementName.replaceAll(ELEMENT_NAME_SEPARATOR, PATH_SEPARATOR));
+	}
+
+	private TemporaryCompletionProposal createGroupProposal(final IPath completionProposalPath, String replacement) {
 		return new TemporaryCompletionProposal(new CompletionProposal(replacement, getOffset() - key.length(), key.length(), replacement.length(), null,
-			(matchingFirstSegments > 0 ? COLLAPSED_STRING + ELEMENT_NAME_SEPARATOR : "") + elementPathToName(completionProposalPath.removeFirstSegments(matchingFirstSegments + 1)) + ELEMENT_NAME_SEPARATOR + COLLAPSED_STRING, null, null)); //$NON-NLS-1$
+			(segmentsToCut > 0 ? COLLAPSED_PREFIX + ELEMENT_NAME_SEPARATOR : "") + elementPathToName(completionProposalPath.removeFirstSegments(segmentsToCut + 1)) + ELEMENT_NAME_SEPARATOR + COLLAPSED_SUFFIX, null, null)); //$NON-NLS-1$
 	}
 
 	abstract protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData);
@@ -253,4 +258,9 @@ public abstract class CompletionProposalGroup {
 	public void setGroupOptions(boolean groupCompletionOptions) {
 		this.groupOptions = groupCompletionOptions;
 	}
+
+	public void setCutCommonPrefix(boolean cutCommonPrefix) {
+		this.cutCommonPrefix = cutCommonPrefix;
+	}
+
 }
