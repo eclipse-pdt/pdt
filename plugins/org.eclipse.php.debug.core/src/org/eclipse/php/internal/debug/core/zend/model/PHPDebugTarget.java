@@ -553,7 +553,11 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 								fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
 								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
 							} else {
-								fileName = RemoteDebugger.convertToRemoteFilename((String) marker.getAttribute(IPHPConstants.STORAGE_FILE), this);
+								String includeFile = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
+								if (IPHPConstants.STORAGE_TYPE_INCLUDE.equals(marker.getAttribute(IPHPConstants.STORAGE_TYPE))) {
+									includeFile = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, includeFile);
+								}
+								fileName = RemoteDebugger.convertToRemoteFilename(includeFile, this);
 							}
 						} else {
 							fileName = RemoteDebugger.convertToRemoteFilename(resource.getFullPath().toString(), this);
