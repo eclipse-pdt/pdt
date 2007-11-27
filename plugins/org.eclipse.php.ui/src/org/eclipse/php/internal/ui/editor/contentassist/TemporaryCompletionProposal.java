@@ -1,5 +1,8 @@
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -8,6 +11,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -47,11 +51,21 @@ class TemporaryCompletionProposal implements ICompletionProposal {
 			textViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
 					textViewer.removeSelectionChangedListener(this);
-					BusyIndicator.showWhile(textViewer.getControl().getDisplay(), new Runnable() {
+					final long delay = PreferenceConstants.getPreferenceStore().getInt(PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY);
+					new Timer("Temporary Completion delay").schedule(new TimerTask() {
+						@Override
 						public void run() {
-							textViewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+							textViewer.getControl().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									BusyIndicator.showWhile(textViewer.getControl().getDisplay(), new Runnable() {
+										public void run() {
+											textViewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+										}
+									});
+								}
+							});
 						}
-					});
+					}, delay);
 				}
 			});
 		}
