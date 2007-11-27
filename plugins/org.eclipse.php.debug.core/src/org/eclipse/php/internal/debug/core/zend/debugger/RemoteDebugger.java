@@ -36,6 +36,7 @@ import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
@@ -351,11 +352,13 @@ public class RemoteDebugger implements IRemoteDebugger {
 				return fsFile.getAbsolutePath();
 			}
 		}
-		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
-		if (pathMapper != null) {
-			String remoteFile = pathMapper.getRemoteFile(localFile);
-			if (remoteFile != null) {
-				return remoteFile;
+		if (VirtualPath.isAbsolute(localFile)) {
+			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
+			if (pathMapper != null) {
+				String remoteFile = pathMapper.getRemoteFile(localFile);
+				if (remoteFile != null) {
+					return remoteFile;
+				}
 			}
 		}
 		return localFile;
