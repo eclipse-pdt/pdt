@@ -13,11 +13,10 @@ package org.eclipse.php.internal.core.documentModel.partitioner;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
-public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHTML implements PHPRegionTypes {
+public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHTML {
 
 	public String getContentType(final int offset, final boolean preferOpenPartitions) {
 		final ITypedRegion partition = getPartition(offset);
