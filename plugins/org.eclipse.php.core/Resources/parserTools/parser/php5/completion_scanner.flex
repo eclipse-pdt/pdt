@@ -44,11 +44,13 @@ import java.util.regex.Pattern;
 %standalone
 %state ST_IN_SCRIPTING
 %state ST_DOUBLE_QUOTES
-%state ST_SINGLE_QUOTE
 %state ST_BACKQUOTE
 %state ST_HEREDOC
+%state ST_START_HEREDOC
+%state ST_END_HEREDOC
 %state ST_LOOKING_FOR_PROPERTY
 %state ST_LOOKING_FOR_VARNAME
+%state ST_VAR_OFFSET
 %state ST_COMMENT
 %state ST_DOCBLOCK
 %state ST_ONE_LINE_COMMENT
@@ -374,9 +376,19 @@ HNUM="0x"[0-9a-fA-F]+
 LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 WHITESPACE=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
-ESCAPED_AND_WHITESPACE=[\n\t\r #'.:;,()|\^&+-//*=%!~<>?@]+
 ANY_CHAR=(.|[\n])
 NEWLINE=("\r"|"\n"|"\r\n")
+DOUBLE_QUOTES_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$\"\\{]|("\\"{ANY_CHAR})))
+BACKQUOTE_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$`\\{]|("\\"{ANY_CHAR})))
+HEREDOC_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$\n\r\\{]|("\\"[^\n\r])))
+HEREDOC_NEWLINE=((({LABEL}";"?((("{"+|"$"+)"\\"?)|"\\"))|(("{"*|"$"*)"\\"?)){NEWLINE})
+HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR=(("{"+[^$\n\r\\{])|("{"*"\\"[^\n\r])|{HEREDOC_LITERAL_DOLLAR})
+HEREDOC_NON_LABEL=([^a-zA-Z_\x7f-\xff$\n\r\\{]|{HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR})
+HEREDOC_LABEL_NO_NEWLINE=({LABEL}([^a-zA-Z0-9_\x7f-\xff;$\n\r\\{]|(";"[^$\n\r\\{])|(";"?{HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR})))
+DOUBLE_QUOTES_CHARS=("{"*([^$\"\\{]|("\\"{ANY_CHAR}))|{DOUBLE_QUOTES_LITERAL_DOLLAR})
+BACKQUOTE_CHARS=("{"*([^$`\\{]|("\\"{ANY_CHAR}))|{BACKQUOTE_LITERAL_DOLLAR})
+HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDOC_NEWLINE}+({HEREDOC_NON_LABEL}|{HEREDOC_LABEL_NO_NEWLINE})))
+
 
 %%
 
@@ -520,9 +532,13 @@ NEWLINE=("\r"|"\n"|"\r\n")
 	return createSymbol(ParserConstants5.T_IMPLEMENTS);
 }
 
-<ST_IN_SCRIPTING,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"->" {
+<ST_IN_SCRIPTING>"->" {
     pushState(ST_LOOKING_FOR_PROPERTY);
     return createSymbol(ParserConstants5.T_OBJECT_OPERATOR);
+}
+
+<ST_LOOKING_FOR_PROPERTY>"->" {
+	return createSymbol(ParserConstants5.T_OBJECT_OPERATOR);
 }
 
 <ST_LOOKING_FOR_PROPERTY>{LABEL} {
@@ -560,6 +576,10 @@ NEWLINE=("\r"|"\n"|"\r\n")
 }
 
 <ST_IN_SCRIPTING>"("{TABS_AND_SPACES}"string"{TABS_AND_SPACES}")" {
+	return createSymbol(ParserConstants5.T_STRING_CAST);
+}
+
+<ST_IN_SCRIPTING>"("{TABS_AND_SPACES}"binary"{TABS_AND_SPACES}")" {
 	return createSymbol(ParserConstants5.T_STRING_CAST);
 }
 
@@ -829,7 +849,11 @@ NEWLINE=("\r"|"\n"|"\r\n")
     return createFullSymbol(ParserConstants5.T_DNUMBER);
 }
 
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>{LNUM}|{HNUM} { /* treat numbers (almost) as strings inside encapsulated strings */
+<ST_VAR_OFFSET>0|([1-9][0-9]*) {
+	return createFullSymbol(ParserConstants5.T_NUM_STRING);
+}
+
+<ST_VAR_OFFSET>{LNUM}|{HNUM} { /* treat numbers (almost) as strings inside encapsulated strings */
     return createSymbol(ParserConstants5.T_NUM_STRING);
 }
 
@@ -899,8 +923,63 @@ NEWLINE=("\r"|"\n"|"\r\n")
 	//return T_OPEN_TAG;
 }
 
-<ST_IN_SCRIPTING,ST_DOUBLE_QUOTES,ST_HEREDOC,ST_BACKQUOTE>"$"{LABEL} {
+<ST_IN_SCRIPTING,ST_DOUBLE_QUOTES,ST_HEREDOC,ST_BACKQUOTE,ST_VAR_OFFSET>"$"{LABEL} {
     return createFullSymbol(ParserConstants5.T_VARIABLE);
+}
+
+<ST_DOUBLE_QUOTES,ST_HEREDOC,ST_BACKQUOTE>"$"{LABEL}"->"[a-zA-Z_\x7f-\xff] {
+	yypushback(3);
+	pushState(ST_LOOKING_FOR_PROPERTY);
+	return createFullSymbol(ParserConstants5.T_VARIABLE);
+}
+
+<ST_DOUBLE_QUOTES,ST_HEREDOC,ST_BACKQUOTE>"$"{LABEL}"[" {
+	yypushback(1);
+	pushState(ST_VAR_OFFSET);
+	return createFullSymbol(ParserConstants5.T_VARIABLE);
+}
+
+<ST_VAR_OFFSET>"]" {
+	popState();
+	return createFullSymbol(ParserConstants5.T_CLOSE_RECT);
+}
+
+//this is instead {TOKENS}|[{}"`]
+<ST_VAR_OFFSET> {
+    ";"                     {return createSymbol(ParserConstants5.T_SEMICOLON);}
+    ":"                     {return createSymbol(ParserConstants5.T_NEKUDOTAIM);}
+    ","                     {return createSymbol(ParserConstants5.T_COMMA);}
+    "."                     {return createSymbol(ParserConstants5.T_NEKUDA);}
+    "["                     {return createSymbol(ParserConstants5.T_OPEN_RECT);}
+//    "]"                     {return createSymbol(ParserConstants5.T_CLOSE_RECT);} //we dont need this line because the rull before deals with it
+    "("                     {return createSymbol(ParserConstants5.T_OPEN_PARENTHESE);}
+    ")"                     {return createSymbol(ParserConstants5.T_CLOSE_PARENTHESE);}
+    "|"                     {return createSymbol(ParserConstants5.T_OR);}
+    "^"                     {return createSymbol(ParserConstants5.T_KOVA);}
+    "&"                     {return createSymbol(ParserConstants5.T_REFERENCE);}
+    "+"                     {return createSymbol(ParserConstants5.T_PLUS);}
+    "-"                     {return createSymbol(ParserConstants5.T_MINUS);}
+    "/"                     {return createSymbol(ParserConstants5.T_DIV);}
+    "*"                     {return createSymbol(ParserConstants5.T_TIMES);}
+    "="                     {return createSymbol(ParserConstants5.T_EQUAL);}
+    "%"                     {return createSymbol(ParserConstants5.T_PRECENT);}
+    "!"                     {return createSymbol(ParserConstants5.T_NOT);}
+    "~"                     {return createSymbol(ParserConstants5.T_TILDA);}
+    "$"                     {return createSymbol(ParserConstants5.T_DOLLAR);}
+    "<"                     {return createSymbol(ParserConstants5.T_RGREATER);}
+    ">"                     {return createSymbol(ParserConstants5.T_LGREATER);}
+    "?"                     {return createSymbol(ParserConstants5.T_QUESTION_MARK);}
+    "@"                     {return createSymbol(ParserConstants5.T_AT);}
+    "{"                     {return createSymbol(ParserConstants5.T_CURLY_OPEN);}
+    "}"                     {return createSymbol(ParserConstants5.T_CURLY_CLOSE);}
+    "\""                     {return createSymbol(ParserConstants5.T_QUATE);}
+    "`"                     {return createSymbol(ParserConstants5.T_BACKQUATE);}
+}
+
+<ST_VAR_OFFSET>[ \n\r\t\\'#] {
+	yypushback(1);
+	popState();
+	return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_IN_SCRIPTING>"define" {
@@ -908,11 +987,7 @@ NEWLINE=("\r"|"\n"|"\r\n")
     return createFullSymbol(ParserConstants5.T_DEFINE);
 }
 
-<ST_IN_SCRIPTING>{LABEL} {
-    return createFullSymbol(ParserConstants5.T_STRING);
-}
-
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>{LABEL} {
+<ST_IN_SCRIPTING,ST_VAR_OFFSET>{LABEL} {
     return createFullSymbol(ParserConstants5.T_STRING);
 }
 
@@ -1023,21 +1098,22 @@ appendTextToComment();
     }
 }
 
-<ST_IN_SCRIPTING>([\"]([^$\"\\]|("\\".))*[\"]) {
+<ST_IN_SCRIPTING>(b?[\"]{DOUBLE_QUOTES_CHARS}*("{"*|"$"*)[\"]) {
     return createFullSymbol(ParserConstants5.T_CONSTANT_ENCAPSED_STRING);
 }
 
-<ST_IN_SCRIPTING>([']([^'\\]|("\\".))*[']) {
+<ST_IN_SCRIPTING>(b?[']([^'\\]|("\\"{ANY_CHAR}))*[']) {
     return createFullSymbol(ParserConstants5.T_CONSTANT_ENCAPSED_STRING);
 }
 
-<ST_IN_SCRIPTING>[\"] {
+<ST_IN_SCRIPTING>b?[\"] {
     yybegin(ST_DOUBLE_QUOTES);
     return createSymbol(ParserConstants5.T_QUATE);
 }
 
-<ST_IN_SCRIPTING>"<<<"{TABS_AND_SPACES}{LABEL}{NEWLINE} {
-    heredoc = yytext().substring(3).trim();    // for '<<<'
+<ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}{LABEL}{NEWLINE} {
+    int removeChars = (yytext().charAt(0) == 'b')?4:3;
+    heredoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
     yybegin(ST_HEREDOC);
     return createSymbol(ParserConstants5.T_START_HEREDOC);
 }
@@ -1047,70 +1123,56 @@ appendTextToComment();
     return createSymbol(ParserConstants5.T_BACKQUATE);
 }
 
-<ST_IN_SCRIPTING>['] {
-    yybegin(ST_SINGLE_QUOTE);
-    return createSymbol(ParserConstants5.T_SINGLE_QUATE);
+<ST_START_HEREDOC>{ANY_CHAR} {
+	yypushback(1);
+	yybegin(ST_HEREDOC);
 }
 
-<ST_HEREDOC>^{LABEL}(";")?{NEWLINE} {
+<ST_START_HEREDOC>{LABEL}";"?[\n\r] {
     String text = yytext();
-    int length = text.length();
+    int length = text.length() - 1;
     text = text.trim();
-    boolean foundNP = false;
+    
+    yypushback(1);
+    
     if (text.endsWith(";")) {
         text = text.substring(0, text.length() - 1);
-        foundNP = true;
+        yypushback(1);
     }
     if (text.equals(heredoc)) {
-        if (foundNP) {
-            yypushback(length - text.length());
-        }
         heredoc = null;
         yybegin(ST_IN_SCRIPTING);
         return createSymbol(ParserConstants5.T_END_HEREDOC);
     } else {
-        return createFullSymbol(ParserConstants5.T_STRING);
+    	   yybegin(ST_HEREDOC);
     }
 }
 
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>{ESCAPED_AND_WHITESPACE} {
-    return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
-}
+<ST_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
+    	String text = yytext();
 
-<ST_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {
-    return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
-}
-
-<ST_DOUBLE_QUOTES>[`]+ {
-    return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
-}
-
-<ST_BACKQUOTE>[\"]+ {
-    return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
-}
-
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"$"[^a-zA-Z_\x7f-\xff{] {
-    if (yylength() == 2) {
-        yypushback(1);
+    if (text.charAt(text.length() - 2)== ';') {
+		text = text.substring(0, text.length() - 2);
+        	yypushback(1);
+    } else {
+		text = text.substring(0, text.length() - 1);
     }
-    return createSymbol(ParserConstants5.T_CHARACTER);
+	
+	int textLength = text.length();
+	int heredocLength = heredoc.length();
+	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
+		yypushback(2);
+        	yybegin(ST_END_HEREDOC);
+	   	return createFullSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
+	}
+	yypushback(1);
+	
 }
 
-// ENCAPSED_TOKENS
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC> {
-    "["     {return createSymbol(ParserConstants5.T_OPEN_RECT);}
-
-    "]"     {return createSymbol(ParserConstants5.T_CLOSE_RECT); }
-
-    "$"     {return createSymbol(ParserConstants5.T_DOLLAR); }
-    
-    "{"     {return createSymbol(ParserConstants5.T_CURLY_OPEN); }
-    
-    "}"     {return createSymbol(ParserConstants5.T_CURLY_CLOSE); }
-}
-
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"\\{" {
-	return createSymbol(ParserConstants5.T_STRING);
+<ST_END_HEREDOC>{ANY_CHAR} {
+     heredoc = null;
+	yybegin(ST_IN_SCRIPTING);
+	return createFullSymbol(ParserConstants5.T_END_HEREDOC);
 }
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"{$" {
@@ -1119,49 +1181,42 @@ appendTextToComment();
     return createSymbol(ParserConstants5.T_CURLY_OPEN_WITH_DOLAR);
 }
 
-<ST_SINGLE_QUOTE>"\\'" {
-    return createSymbol(ParserConstants5.T_CHARACTER);
+<ST_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}+ {
+	return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
 }
 
-<ST_SINGLE_QUOTE>"\\\\" {
-    return createSymbol(ParserConstants5.T_CHARACTER);
+/*
+The original parsing rule was {DOUBLE_QUOTES_CHARS}*("{"{2,}|"$"{2,}|(("{"+|"$"+)[\"]))
+but jflex doesn't support a{n,} so we changed a{2,} to aa+
+*/
+<ST_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[\"])) {
+    yypushback(1);
+    return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
 }
 
-<ST_DOUBLE_QUOTES>"\\\"" {
-    return createSymbol(ParserConstants5.T_CHARACTER);
+<ST_BACKQUOTE>{BACKQUOTE_CHARS}+ {
+	return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
 }
 
-<ST_BACKQUOTE>"\\`" {
-    return createSymbol(ParserConstants5.T_CHARACTER);
+/*
+The original parsing rule was {BACKQUOTE_CHARS}*("{"{2,}|"$"{2,}|(("{"+|"$"+)[`]))
+but jflex doesn't support a{n,} so we changed a{2,} to aa+
+*/
+<ST_BACKQUOTE>{BACKQUOTE_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[`])) {
+	yypushback(1);
+	return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
 }
 
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"\\"[0-7]{1,3} {
-    return createSymbol(ParserConstants5.T_CHARACTER);
+<ST_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
+	return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
 }
 
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"\\x"[0-9A-Fa-f]{1,2} {
-    return createSymbol(ParserConstants5.T_CHARACTER);
-}
-
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"\\"{ANY_CHAR} {
-    switch (yytext().charAt(1)) {
-        case 'n':
-            break;
-        case 't':
-            break;
-        case 'r':
-            break;
-        case '\\':
-            break;
-        case '$':
-            break;
-        default:
-            return createSymbol(ParserConstants5.T_BAD_CHARACTER);
-    }
-    return createSymbol(ParserConstants5.T_CHARACTER);
-}
-
-<ST_HEREDOC>[\"'`]+ {
+/*
+The original parsing rule was {HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{"{2,}|"$"{2,})
+but jflex doesn't support a{n,} so we changed a{2,} to aa+
+*/
+<ST_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{""{"+|"$""$"+) {
+    yypushback(1);
     return createSymbol(ParserConstants5.T_ENCAPSED_AND_WHITESPACE);
 }
 
@@ -1175,11 +1230,6 @@ appendTextToComment();
     return createSymbol(ParserConstants5.T_BACKQUATE);
 }
 
-<ST_SINGLE_QUOTE>['] {
-    yybegin(ST_IN_SCRIPTING);
-    return createSymbol(ParserConstants5.T_SINGLE_QUATE);
-}
-
-<ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_SINGLE_QUOTE,ST_HEREDOC>{ANY_CHAR} {
+<ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC,ST_START_HEREDOC,ST_END_HEREDOC,ST_VAR_OFFSET>{ANY_CHAR} {
 	// do nothing
 }

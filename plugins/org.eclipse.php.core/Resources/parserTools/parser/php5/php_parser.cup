@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.phpModel.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_parser.cup,v 1.2 2007/11/15 15:54:19 ggurfinke Exp $
+////    $Id: php_parser.cup,v 1.3 2007/11/27 14:53:36 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1165,7 +1165,6 @@ string_st:str
 | common_scalar:scalar
 {: RESULT = scalar; :}
 | T_QUATE encaps_list T_QUATE
-| T_SINGLE_QUATE encaps_list T_SINGLE_QUATE
 | T_START_HEREDOC encaps_list T_END_HEREDOC
 ;
 
@@ -1344,16 +1343,7 @@ non_empty_array_pair_list T_COMMA expr T_DOUBLE_ARROW expr
 
 encaps_list ::=
 encaps_list encaps_var
-| encaps_list string_st
-| encaps_list T_NUM_STRING
 | encaps_list T_ENCAPSED_AND_WHITESPACE
-| encaps_list T_CHARACTER
-| encaps_list T_BAD_CHARACTER
-| encaps_list T_OPEN_RECT
-| encaps_list T_CLOSE_RECT
-| encaps_list T_CURLY_OPEN
-| encaps_list T_CURLY_CLOSE
-| encaps_list T_OBJECT_OPERATOR
 | /* empty */
 ;
 
