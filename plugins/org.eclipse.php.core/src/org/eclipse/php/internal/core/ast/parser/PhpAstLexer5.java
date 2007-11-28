@@ -2682,7 +2682,7 @@ public class PhpAstLexer5 implements org.eclipse.php.internal.core.ast.parser.As
           { 
     int removeChars = (yytext().charAt(0) == 'b')?4:3;
     heredoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
-    yybegin(ST_HEREDOC);
+    yybegin(ST_START_HEREDOC);
     return createSymbol(ParserConstants5.T_START_HEREDOC);
  }
         case 819: break;
