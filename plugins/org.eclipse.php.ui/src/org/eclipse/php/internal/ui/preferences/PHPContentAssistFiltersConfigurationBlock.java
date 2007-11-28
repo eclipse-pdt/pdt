@@ -35,6 +35,7 @@ public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPConten
 		showClassNamesInGlobalListCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showClassNamesInGlobal"), PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, 0);
 		showNonStrictOptionsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showNonStrictOptions"), PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, 0); //$NON-NLS-1$
 		groupCompletionsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_groupCompletionOptions"), PreferenceConstants.CODEASSIST_GROUP_OPTIONS, 0); //$NON-NLS-1$
-		cutCommonPrefixCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_cutCommonPrefix"), PreferenceConstants.CODEASSIST_CUT_COMMON_PREFIX, 0); //$NON-NLS-1$
+		// XXX removed temporarily (we're not sure we want it (damn)):
+		// cutCommonPrefixCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_cutCommonPrefix"), PreferenceConstants.CODEASSIST_CUT_COMMON_PREFIX, 0); //$NON-NLS-1$
 	}
 }
