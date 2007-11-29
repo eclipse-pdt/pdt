@@ -92,6 +92,9 @@
 			<newWizardShortcut id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard" />
 
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator" />
+   <viewShortcut
+         id="org.eclipse.ui.views.ResourceNavigator">
+   </viewShortcut>
 		</perspectiveExtension>
 
 		<perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
