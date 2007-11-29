@@ -158,7 +158,7 @@ public class PHPSearchEngine {
 		if (results.contains(project)) {
 			return;
 		}
-		if (!project.isAccessible()) {
+		if (!project.isAccessible() || !project.isOpen()) {
 			return;
 		}
 		// Collect include paths:
