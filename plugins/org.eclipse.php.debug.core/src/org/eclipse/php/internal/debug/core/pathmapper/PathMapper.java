@@ -45,7 +45,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 			return;
 		}
 
-		while (remotePath.getSegmentsCount() > 1 && localPath.getSegmentsCount() > 1) {
+		while (remotePath.getSegmentsCount() > 0 && localPath.getSegmentsCount() > 1) { // local path is limited to have at least one segment
 			if (!remotePath.getLastSegment().equalsIgnoreCase(localPath.getLastSegment())) {
 				break;
 			}
@@ -101,20 +101,32 @@ public class PathMapper implements IXMLPreferencesStorable {
 
 	protected VirtualPath getPath(Map<VirtualPath, VirtualPath> map, VirtualPath path) {
 		path = path.clone();
+		VirtualPath mapPath = null;
 		List<String> strippedSegments = new LinkedList<String>();
+
 		while (path.getSegmentsCount() > 0) {
-			VirtualPath mapPath = map.get(path);
+			mapPath = map.get(path);
 			if (mapPath != null) {
 				mapPath = mapPath.clone();
-				ListIterator<String> i = strippedSegments.listIterator(strippedSegments.size());
-				while (i.hasPrevious()) {
-					mapPath.addLastSegment(i.previous());
-				}
-				return mapPath;
+				break;
 			}
 			strippedSegments.add(path.removeLastSegment());
 		}
-		return null;
+		// Check whether device is mapped (path contains only device):
+		if (mapPath == null) {
+			mapPath = map.get(path);
+			if (mapPath != null) {
+				mapPath = mapPath.clone();
+			}
+		}
+		// Append all stripped segments to the result path:
+		if (mapPath != null) {
+			ListIterator<String> i = strippedSegments.listIterator(strippedSegments.size());
+			while (i.hasPrevious()) {
+				mapPath.addLastSegment(i.previous());
+			}
+		}
+		return mapPath;
 	}
 
 	protected Type getPathType(VirtualPath path) {
