@@ -3686,7 +3686,7 @@ class CUP$PhpParser5$actions {
           case 280: // static_scalar ::= T_ARRAY T_OPEN_PARENTHESE static_array_pair_list T_CLOSE_PARENTHESE 
             {
               String RESULT = null;
-		 RESULT = "array(...)"; 
+		 RESULT = "array()"; 
               CUP$PhpParser5$result = new org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol(45/*static_scalar*/, ((org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol)CUP$PhpParser5$stack.elementAt(CUP$PhpParser5$top-3)).left, ((org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol)CUP$PhpParser5$stack.elementAt(CUP$PhpParser5$top-0)).right, RESULT);
             }
           return CUP$PhpParser5$result;
