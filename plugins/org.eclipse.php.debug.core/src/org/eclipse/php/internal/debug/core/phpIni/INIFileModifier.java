@@ -282,21 +282,17 @@ public class INIFileModifier {
 	protected void read() throws IOException {
 		BufferedReader r = new BufferedReader(new FileReader(configFile));
 		String line;
-		INIFileSection currentSection = null;
+		INIFileSection currentSection = new INIFileSection(GLOBAL_SECTION);
+		sections.add(currentSection);
 		while ((line = r.readLine()) != null) {
 			line = line.trim();
 			Matcher m = SECTION_PATTERN.matcher(line);
 			if (m.matches()) {
 				String sectionName = m.group(1);
 				currentSection = new INIFileSection(sectionName);
-			} else {
-				if (currentSection == null) {
-					currentSection = new INIFileSection(GLOBAL_SECTION);
-				}
-				currentSection.lines.add(line);
-			}
-			if (sections.isEmpty() || sections.get(sections.size()-1) != currentSection) {
 				sections.add(currentSection);
+			} else {
+				currentSection.lines.add(line);
 			}
 		}
 		r.close();
