@@ -90,7 +90,7 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 					String context = model.getStringProperty(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
 					options.setOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT, context);
 					IIncludePathEntry[] includePath = (IIncludePathEntry[]) model.getProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH);
-					options.setRawIncludePath(includePath, (SubProgressMonitor) monitor);
+					options.setRawIncludePath(includePath, new SubProgressMonitor(monitor, includePath.length));
 					// options.saveChanges(monitor);
 
 					if (model.isPropertySet(Keys.PHP_VERSION)) {
@@ -103,7 +103,7 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 					return Status.OK_STATUS;
 				}
 			};
-			job.setRule(project);
+			job.setRule(project.getWorkspace().getRuleFactory().modifyRule(project));
 			job.schedule();
 		} catch (CoreException e) {
 			Logger.logException(e);
