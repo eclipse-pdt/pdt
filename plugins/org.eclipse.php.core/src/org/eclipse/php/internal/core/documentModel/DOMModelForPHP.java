@@ -8,6 +8,7 @@ package org.eclipse.php.internal.core.documentModel;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.core.documentModel.dom.DOMDocumentForPHP;
@@ -82,7 +83,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		// external file
-		if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
+		if (file != null && ExternalFilesRegistry.getInstance().isEntryExist(file)) {
 			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
 			return fileData;
 		}
@@ -154,7 +155,10 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 			if (Platform.getOS() != Platform.OS_WIN32) {
 				path = path.replace('\\', '/');
 			}
-			result = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(path));
+			IPath osPath = Path.fromOSString(path);
+			if(osPath.segmentCount() >= 2){
+				result = ResourcesPlugin.getWorkspace().getRoot().getFile(osPath);
+			}
 		}
 		return result;
 	}
