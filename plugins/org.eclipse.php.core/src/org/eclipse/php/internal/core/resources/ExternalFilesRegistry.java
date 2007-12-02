@@ -101,6 +101,9 @@ public class ExternalFilesRegistry {
 	 * @return true/false
 	 */
 	public boolean isEntryExist(IFile file) {
+		if(file == null){
+			return false;
+		}
 		Collection<IFile> coll = externalFilesRegistry.values();
 		for (Iterator<IFile> iterator = coll.iterator(); iterator.hasNext();) {
 			IFile iFile = iterator.next();
