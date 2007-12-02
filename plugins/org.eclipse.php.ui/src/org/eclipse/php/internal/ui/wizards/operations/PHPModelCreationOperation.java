@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -31,77 +32,79 @@ import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 
-public class PHPModuleCreationOperation extends AbstractDataModelOperation implements IProjectCreationPropertiesNew {
+public class PHPModelCreationOperation extends AbstractDataModelOperation implements IProjectCreationPropertiesNew {
 
 	// List of WizardPageFactory(s) added trough the phpWizardPages extention point
-	private List /* WizardPageFactory */ wizardPageFactories = new ArrayList();
-	
-	public PHPModuleCreationOperation(IDataModel dataModel, List wizardPageFactories) {
-		super(dataModel); 
+	private List /* WizardPageFactory */wizardPageFactories = new ArrayList();
+
+	public PHPModelCreationOperation(IDataModel dataModel, List wizardPageFactories) {
+		super(dataModel);
 		this.wizardPageFactories = wizardPageFactories;
 	}
-	
-	public PHPModuleCreationOperation(IDataModel dataModel) {
-		super(dataModel); 
+
+	public PHPModelCreationOperation(IDataModel dataModel) {
+		super(dataModel);
 	}
+
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		try {
 			IProgressMonitor subMonitor = new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN);
-			IProjectDescription desc = (IProjectDescription) model.getProperty(PROJECT_DESCRIPTION);
-			IProject project = (IProject) model.getProperty(PROJECT);
+			final IProjectDescription desc = (IProjectDescription) model.getProperty(PROJECT_DESCRIPTION);
+			final IProject project = (IProject) model.getProperty(PROJECT);
 			if (!project.exists()) {
 				project.create(desc, subMonitor);
 			}
-			
+
 			if (monitor.isCanceled())
 				throw new OperationCanceledException();
 			subMonitor = new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN);
 
 			project.open(subMonitor);
-			
+
 			// For every page added to the projectCreationWizard, call its execute method
-			// Here the project settings should be stored into the preferences 
+			// Here the project settings should be stored into the preferences
 			// This action needs to happen here, after the project has been created and opened
 			// and before setNatureIds is called
-			
-			for (Iterator iter = wizardPageFactories.iterator(); iter.hasNext();) {
-				WizardPageFactory pageFactory = (WizardPageFactory) iter.next();
-				pageFactory.execute();
-			}
-			
 
-			String[] natureIds = (String[]) model.getProperty(PROJECT_NATURES);
-			if (null != natureIds) {
-				desc = project.getDescription();
-				desc.setNatureIds(natureIds);
-				project.setDescription(desc, monitor);
-			}
+			// NOTE: project opening can take time if it's built from existing source (bug #205444)
+			// Thus the next should run as the same type of workspace job.
+			WorkspaceJob job = new WorkspaceJob("Saving project options") {
 
-			try {
-				PHPNature nature = (PHPNature) project.getNature(PHPNature.ID);
-				PHPProjectOptions options = nature.getOptions();
-				String defaultEncodeing = model.getStringProperty(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
-				options.setOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING, defaultEncodeing);
-				String context = model.getStringProperty(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
-				options.setOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT, context);
-				IIncludePathEntry[] includePath = (IIncludePathEntry[]) model.getProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH);
-				options.setRawIncludePath(includePath, (SubProgressMonitor)monitor);
-//				options.saveChanges(monitor);
-                
-                if (model.isPropertySet(Keys.PHP_VERSION)) {
-                    String version = model.getStringProperty(Keys.PHP_VERSION);
-                    PhpVersionProjectPropertyHandler.setVersion(version, project);
-                    boolean useASPTags = model.getBooleanProperty(Keys.EDITOR_USE_ASP_TAGS);
-                    UseAspTagsHandler.setUseAspTagsAsPhp(useASPTags, project);
-                }
-                
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
+				@Override
+				public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+					for (Iterator iter = wizardPageFactories.iterator(); iter.hasNext();) {
+						WizardPageFactory pageFactory = (WizardPageFactory) iter.next();
+						pageFactory.execute();
+					}
 
-			if (monitor.isCanceled())
-				throw new OperationCanceledException();
+					String[] natureIds = (String[]) model.getProperty(PROJECT_NATURES);
+					if (null != natureIds) {
+						desc.setNatureIds(natureIds);
+						project.setDescription(desc, monitor);
+					}
 
+					PHPNature nature = (PHPNature) project.getNature(PHPNature.ID);
+					PHPProjectOptions options = nature.getOptions();
+					String defaultEncodeing = model.getStringProperty(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
+					options.setOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING, defaultEncodeing);
+					String context = model.getStringProperty(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
+					options.setOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT, context);
+					IIncludePathEntry[] includePath = (IIncludePathEntry[]) model.getProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH);
+					options.setRawIncludePath(includePath, (SubProgressMonitor) monitor);
+					// options.saveChanges(monitor);
+
+					if (model.isPropertySet(Keys.PHP_VERSION)) {
+						String version = model.getStringProperty(Keys.PHP_VERSION);
+						PhpVersionProjectPropertyHandler.setVersion(version, project);
+						boolean useASPTags = model.getBooleanProperty(Keys.EDITOR_USE_ASP_TAGS);
+						UseAspTagsHandler.setUseAspTagsAsPhp(useASPTags, project);
+					}
+
+					return Status.OK_STATUS;
+				}
+			};
+			job.setRule(project);
+			job.schedule();
 		} catch (CoreException e) {
 			Logger.logException(e);
 		} finally {

@@ -34,20 +34,20 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP4, PHPVersion.PHP5 };
 
 	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.getString("PHPCreationDataModelProvider.0"), PHPUIMessages.getString("PHPCreationDataModelProvider.1") }; //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	private static final String ID = "org.eclipse.php.ui.wizards.PHPProjectCreationWizard"; //$NON-NLS-1$
-	
+
 //	 List of WizardPageFactory(s) added trough the phpWizardPages extention point
 	private List /* WizardPageFactory */ wizardPageFactories = new ArrayList();
 
-	
+
 	public PHPCreationDataModelProvider(List wizardPageFactories) {
 		super();
 		this.wizardPageFactories = wizardPageFactories;
 	}
-	
+
 	public PHPCreationDataModelProvider() {
-		super();		
+		super();
 	}
 
 	public void init() {
@@ -62,30 +62,30 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 		propertyNames.add(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
 		propertyNames.add(PHPCoreConstants.PHPOPTION_INCLUDE_PATH);
         propertyNames.add(Keys.EDITOR_USE_ASP_TAGS);
-        
+
 		//		propertyNames.add(IProjectCreationProperties.PROJECT_DESCRIPTION);
-        
-        // get the specific properties from each page registered for phpProjectCreation 
+
+        // get the specific properties from each page registered for phpProjectCreation
         // in the extention point ID (above)
         // and add them to the model properties
-        
+
         IWizardPage[] pageGenerators = PHPWizardPagesRegistry.getPageFactories(ID);
 		if (pageGenerators != null) {
-			for (int i = 0; i < pageGenerators.length; i++) {		
-				WizardPageFactory page = (WizardPageFactory) pageGenerators[i];
+			for (IWizardPage element : pageGenerators) {
+				WizardPageFactory page = (WizardPageFactory) element;
 				Set pagePropertieNames = page.getPropertyNames();
-				
+
 				for (Iterator iter = pagePropertieNames.iterator(); iter.hasNext();) {
-					propertyNames.add((String) iter.next());					
+					propertyNames.add(iter.next());
 				}
 			}
-		}       
+		}
 		return propertyNames;
 
 	}
 
 	public IDataModelOperation getDefaultOperation() {
-		return new PHPModuleCreationOperation(getDataModel(), wizardPageFactories);
+		return new PHPModelCreationOperation(getDataModel(), wizardPageFactories);
 	}
 
 	protected final void addPHPNature() {
@@ -123,7 +123,7 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 	}
 
 		// override so the null is never returned, because it causes future execptions
-	protected IProject getProject() {		
+	protected IProject getProject() {
 		IProject project= super.getProject();
 		if (project==null)
 			project=ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY"); //$NON-NLS-1$
