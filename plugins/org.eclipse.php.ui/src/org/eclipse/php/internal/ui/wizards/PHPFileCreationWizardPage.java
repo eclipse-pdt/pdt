@@ -293,6 +293,10 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	public String getContainerName() {
 		return containerText.getText();
 	}
+	
+	public void setContainerName(String containerPath) {
+		containerText.setText(containerPath);
+	}
 
 	public String getFileName() {
 		return fileText.getText();
