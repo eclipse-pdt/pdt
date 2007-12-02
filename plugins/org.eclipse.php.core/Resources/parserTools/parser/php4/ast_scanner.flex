@@ -771,7 +771,7 @@ yybegin(ST_DOCBLOCK);
 }
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>{ESCAPED_AND_WHITESPACE} {
-    return createSymbol(ParserConstants4.T_ENCAPSED_AND_WHITESPACE);
+    return createFullSymbol(ParserConstants4.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {

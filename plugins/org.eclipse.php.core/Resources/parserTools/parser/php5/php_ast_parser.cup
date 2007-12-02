@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.1 2007/08/13 14:15:31 ggurfinke Exp $
+////    $Id: php_ast_parser.cup,v 1.2 2007/12/02 11:57:22 rganor Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -60,8 +60,6 @@ terminal  String T_STRING_VARNAME;
 terminal  String T_VARIABLE;
 terminal  String T_NUM_STRING;
 terminal  T_INLINE_HTML;
-terminal  String T_CHARACTER;
-terminal  String T_BAD_CHARACTER;
 terminal  String T_ENCAPSED_AND_WHITESPACE;
 terminal  String T_CONSTANT_ENCAPSED_STRING;
 terminal  T_ECHO;
@@ -154,7 +152,7 @@ terminal T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
 terminal T_OPEN_PARENTHESE,T_CLOSE_PARENTHESE;
 terminal T_NEKUDOTAIM;
 terminal T_DOLLAR;
-terminal T_QUATE,T_BACKQUATE,T_SINGLE_QUATE;
+terminal T_QUATE,T_BACKQUATE;
 
 /* Non terminals */
 
@@ -2093,12 +2091,6 @@ string_st:scalar
 	RESULT = quote;
 :}
 
-| T_SINGLE_QUATE:start encaps_list:list T_SINGLE_QUATE:end
-{:
-	Quote quote = new Quote(startleft, endright, list, Quote.QT_SINGLE);
-	RESULT = quote;
-:}
-
 | T_START_HEREDOC:start encaps_list:list T_END_HEREDOC:end
 {:
 	Quote hereDoc = new Quote(startleft, endright, list, Quote.QT_HEREDOC);
@@ -2527,72 +2519,9 @@ encaps_list:list encaps_var:var
 	RESULT = list;
 :}
 
-| encaps_list:list string_st:string
-{:
-	Scalar scalar = new Scalar(stringleft, stringright, string, Scalar.TYPE_STRING);
-	list.add(scalar);
-	RESULT = list;
-:}
-
-| encaps_list:list T_NUM_STRING:string
-{:
-	Scalar scalar = new Scalar(stringleft, stringright, string, Scalar.TYPE_STRING);
-	list.add(scalar);
-	RESULT = list;
-:}
-
 | encaps_list:list T_ENCAPSED_AND_WHITESPACE:string
 {:
-	Scalar scalar = new Scalar(stringleft, stringright, string, Scalar.TYPE_UNKNOWN);
-	list.add(scalar);
-	RESULT = list;
-:}
-
-| encaps_list:list T_CHARACTER:string
-{:
-	Scalar scalar = new Scalar(stringleft, stringright, string, Scalar.TYPE_STRING);
-	list.add(scalar);
-	RESULT = list;
-:}
-
-| encaps_list:list T_BAD_CHARACTER:string
-{:
-	Scalar scalar = new Scalar(stringleft, stringright, string, Scalar.TYPE_STRING);
-	list.add(scalar);
-	RESULT = list;
-:}
-
-| encaps_list:list T_OPEN_RECT:string
-{:
-	Scalar scalar = new Scalar(stringleft, stringright, "[", Scalar.TYPE_STRING);
-	list.add(scalar);
-	RESULT = list;
-:}
-
-| encaps_list:list T_CLOSE_RECT:string
-{:
-	Scalar scalar = new Scalar(stringleft, stringright, "]", Scalar.TYPE_STRING);
-	list.add(scalar);
-	RESULT = list;
-:}
-
-| encaps_list:list T_CURLY_OPEN:string
-{:
-	Scalar scalar = new Scalar(stringleft, stringright, "{", Scalar.TYPE_STRING);
-	list.add(scalar);
-	RESULT = list;
-:}
-
-| encaps_list:list T_CURLY_CLOSE:string
-{:
-	Scalar scalar = new Scalar(stringleft, stringright, "}", Scalar.TYPE_STRING);
-	list.add(scalar);
-	RESULT = list;
-:}
-
-| encaps_list:list T_OBJECT_OPERATOR:string
-{:
-	Scalar scalar = new Scalar(stringleft, stringright, "->", Scalar.TYPE_STRING);
+	Scalar scalar = new Scalar(stringleft, stringright, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
 	list.add(scalar);
 	RESULT = list;
 :}
