@@ -22,6 +22,7 @@ public class PhpNewFileTemplateContextType extends TemplateContextType {
 
 	public PhpNewFileTemplateContextType() {
 		super();
+		addResolver(new GlobalTemplateVariables.Cursor());
 		addResolver(new GlobalTemplateVariables.Date());
 		addResolver(new GlobalTemplateVariables.Dollar());
 		addResolver(new GlobalTemplateVariables.Time());

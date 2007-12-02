@@ -306,7 +306,7 @@ ${cursor}</template>
 	id="org.eclipse.php.ui.editor.templates.newPhp.author"
 	context="newPhp"
 	enabled="true">&lt;?php
-
+${cursor}
 ?&gt;</template>
 
 <template
@@ -327,7 +327,7 @@ ${cursor}</template>
     &lt;body&gt;
     &lt;p&gt;This page uses frames. The current browser you are using does not support frames.&lt;/p&gt;
     &lt;?php
-
+${cursor}
 	?&gt;
     &lt;/body&gt;
     &lt;/noframes&gt;

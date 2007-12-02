@@ -27,8 +27,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.wizards.NewGenericFileTemplatesWizardPage.CompiledTemplate;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 public class PHPFileCreationWizard extends Wizard implements INewWizard {
 
@@ -64,11 +67,11 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		final String containerName = phpFileCreationWizardPage.getContainerName();
 		final String fileName = phpFileCreationWizardPage.getFileName();
-		final String contents = this.newPhpTemplatesWizardPage.getTemplateString();
+		final CompiledTemplate template = this.newPhpTemplatesWizardPage.compileTemplate();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					new FileCreator().createFile(PHPFileCreationWizard.this, containerName, fileName, monitor, contents);
+					new FileCreator().createFile(PHPFileCreationWizard.this, containerName, fileName, monitor, template.string, template.offset);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -119,7 +122,11 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * @see {@link #createFile(Wizard, String, String, IProgressMonitor, String, String)}
 		 */
 		public void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents) throws CoreException {
-			createFile(wizard, containerName, fileName, monitor, contents, null);
+			createFile(wizard, containerName, fileName, monitor, contents, 0, null);
+		}
+
+		public void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents, int offset) throws CoreException {
+			createFile(wizard, containerName, fileName, monitor, contents, offset, null);
 		}
 
 		/**
@@ -135,7 +142,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * @param editorID An optional editor ID to use when opening the file (can be null).
 		 * @throws CoreException
 		 */
-		public void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents, final String editorID) throws CoreException {
+		public void createFile(Wizard wizard, String containerName, String fileName, IProgressMonitor monitor, String contents, final int offset, final String editorID) throws CoreException {
 			// create a sample file
 			monitor.beginTask(NLS.bind(PHPUIMessages.getString("newPhpFile_create"), fileName), 2);
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -169,8 +176,6 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				return;
 			}
 
-			normalizeFile(file);
-
 			// Change file encoding:
 			/*if (container instanceof IProject) {
 				PHPProjectOptions options = PHPProjectOptions.forProject((IProject) container);
@@ -189,11 +194,17 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				public void run() {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					try {
+						IEditorPart editor;
 						if (editorID == null) {
-							IDE.openEditor(page, file, true);
+							editor = IDE.openEditor(page, file, true);
 						} else {
-							IDE.openEditor(page, file, editorID, true);
+							editor = IDE.openEditor(page, file, editorID, true);
 						}
+						if (editor instanceof PHPStructuredEditor) {
+							StructuredTextViewer textViewer = ((PHPStructuredEditor) editor).getTextViewer();
+							textViewer.setSelectedRange(offset, 0);
+						}
+						normalizeFile(file);
 					} catch (PartInitException e) {
 					}
 				}

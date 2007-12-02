@@ -16,6 +16,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
@@ -51,7 +52,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 /**
  * Templates page in new file wizard. Allows users to select a new file
  * template to be applied in new file.
- * 
+ *
  */
 public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
@@ -133,7 +134,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	/**
 	 * Correctly resizes the table so no phantom columns appear
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 * @param buttons
@@ -248,7 +249,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		fTableViewer.setSorter(new ViewerSorter() {
 			@Override
 			public int compare(Viewer viewer, Object object1, Object object2) {
-				if ((object1 instanceof Template) && (object2 instanceof Template)) {
+				if (object1 instanceof Template && object2 instanceof Template) {
 					Template left = (Template) object1;
 					Template right = (Template) object2;
 					int result = left.getName().compareToIgnoreCase(right.getName());
@@ -294,7 +295,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * Creates, configures and returns a source viewer to present the template
 	 * pattern on the preference page. Clients may override to provide a
 	 * custom source viewer featuring e.g. syntax coloring.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 * @return a configured source viewer
@@ -367,14 +368,14 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	/**
 	 * Return the template preference page id
-	 * 
+	 *
 	 * @return
 	 */
 	protected abstract String getPreferencePageId();
 
 	/**
 	 * Get the currently selected template.
-	 * 
+	 *
 	 * @return
 	 */
 	private Template getSelectedTemplate() {
@@ -387,14 +388,24 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		return template;
 	}
 
+	public static class CompiledTemplate {
+		public final String string;
+		public final int offset;
+
+		public CompiledTemplate(String string, int offset) {
+			this.string = string;
+			this.offset = offset;
+		}
+	}
+
 	/**
 	 * Returns template string to insert.
-	 * 
+	 *
 	 * @return String to insert or null if none is to be inserted
 	 */
-	public String getTemplateString() {
-		String templateString = null;
-
+	public CompiledTemplate compileTemplate() {
+		String string = null;
+		int offset = 0;
 		Template template = getSelectedTemplate();
 		if (template != null) {
 			TemplateContextType contextType = getTemplatesContextTypeRegistry().getContextType(getTemplateContextTypeId());
@@ -402,13 +413,34 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			TemplateContext context = new DocumentTemplateContext(contextType, document, 0, 0);
 			try {
 				TemplateBuffer buffer = context.evaluate(template);
-				templateString = buffer.getString();
+				string = buffer.getString();
+				TemplateVariable[] variables = buffer.getVariables();
+				boolean hasPositions = false;
+				for (int i = 0; i != variables.length; i++) {
+					TemplateVariable variable = variables[i];
+					if ("cursor".equals(variable.getName())) {
+						offset = variable.getOffsets()[0];
+					}
+				}
+
 			} catch (Exception e) {
 				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new PHP", e); //$NON-NLS-1$
 			}
 		}
 
-		return templateString;
+		return new CompiledTemplate(string, offset);
+	}
+
+	public TemplateProposal createTemplateProposal() {
+		TemplateProposal proposal = null;
+		Template template = getSelectedTemplate();
+		if (template != null) {
+			TemplateContextType contextType = getTemplatesContextTypeRegistry().getContextType(getTemplateContextTypeId());
+			TemplateContext context = new DocumentTemplateContext(contextType, new Document(), 0, 0);
+			proposal = new TemplateProposal(template, context, new Region(0, 0), null);
+		}
+
+		return proposal;
 	}
 
 	void linkClicked() {
@@ -453,7 +485,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * Select a template in the table viewer given the template name. If
 	 * template name cannot be found or templateName is null, just select
 	 * first item in table. If no items in table select nothing.
-	 * 
+	 *
 	 * @param templateName
 	 */
 	private void setSelectedTemplate(String templateName) {
