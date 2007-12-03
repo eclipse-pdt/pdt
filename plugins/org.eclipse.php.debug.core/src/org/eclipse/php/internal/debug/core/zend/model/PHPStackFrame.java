@@ -124,7 +124,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
      * @see org.eclipse.debug.core.model.IStackFrame#getRegisterGroups()
      */
     public IRegisterGroup[] getRegisterGroups() throws DebugException {
-        return null;
+        return new IRegisterGroup[0];
     }
 
     /*
