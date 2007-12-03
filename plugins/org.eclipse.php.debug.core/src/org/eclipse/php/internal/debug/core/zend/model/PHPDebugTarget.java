@@ -132,7 +132,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	}
 
 	public static String getWorkspaceRootPath(IWorkspace ws) {
-		return ws.getRoot().getRawLocation().toString() + "/";
+		return ws.getRoot().getRawLocation().toOSString() + "/";
 	}
 
 	public PHPDebugTarget(DebugConnectionThread connectionThread, ILaunch launch, String phpExe, String fileToDebug, String workspacePath, int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
@@ -548,7 +548,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 					String fileName;
 					if (!fIsPHPCGI) {
 						if (resource instanceof ExternalFileWrapper) {
-							fileName = resource.toString();
+							fileName = resource.getFullPath().toOSString();
 						} else if (resource instanceof IWorkspaceRoot) {
 							if (IPHPConstants.STORAGE_TYPE_REMOTE.equals(marker.getAttribute(IPHPConstants.STORAGE_TYPE))) {
 								fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
@@ -565,7 +565,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 						}
 					} else {
 						if (resource instanceof ExternalFileWrapper) {
-							fileName = resource.toString();
+							fileName = resource.getFullPath().toOSString();
 						} else if (resource instanceof IWorkspaceRoot) {
 							// If the breakpoint was set on a non-workspace file, make sure that the file name for the breakpoint
 							// is taken correctly.

@@ -45,7 +45,7 @@ public class BreakpointSet {
 					for (IIncludePathEntry element : entries) {
 						if (element.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
 							IPath path = element.getPath();
-							File file = new File(path.toString());
+							File file = new File(path.toOSString());
 							fDirectories.add(file.getAbsolutePath());
 						} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
 							IResource includeResource = element.getResource();
@@ -54,7 +54,7 @@ public class BreakpointSet {
 							}
 						} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 							IPath path = element.getPath();
-							String variableName = path.toString();
+							String variableName = path.toOSString();
 							File file = getVariableFile(variableName);
 							if (file != null) {
 								if (file.isDirectory()) {

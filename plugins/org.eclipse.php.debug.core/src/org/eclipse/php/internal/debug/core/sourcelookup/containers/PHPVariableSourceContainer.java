@@ -36,7 +36,7 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
     }
 
     protected ISourceContainer[] createSourceContainers() throws CoreException {
-        String variableName = fPath.toString();
+        String variableName = fPath.toOSString();
         File file = getVariableFile(variableName);
         ISourceContainer[] container = new ISourceContainer[1];
         if (file.isDirectory()) {

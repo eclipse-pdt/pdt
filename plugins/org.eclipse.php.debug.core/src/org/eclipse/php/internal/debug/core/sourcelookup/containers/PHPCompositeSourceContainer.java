@@ -46,7 +46,7 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 				for (IIncludePathEntry element : entries) {
 					if (element.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
 						IPath path = element.getPath();
-						File file = new File(path.toString());
+						File file = new File(path.toOSString());
 						if (element.getContentKind() == IIncludePathEntry.K_BINARY) {
 							containers.add(new PHPExternalArchiveSourceContainer(file.getAbsolutePath(), false, project));
 						} else {

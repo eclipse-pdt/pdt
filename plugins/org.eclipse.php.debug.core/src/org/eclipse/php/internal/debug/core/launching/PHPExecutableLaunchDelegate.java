@@ -143,12 +143,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		if (projectName == null) {
 			IResource res = workspaceRoot.findMember(filePath);
 			//Fix bug #202741
-			if (res == null && (!WINDOWS || ExternalFilesRegistry.getInstance().isEntryExist(filePath.toString())/*|| filePath.getDevice() != null*/)) {
+			if (res == null && (!WINDOWS || ExternalFilesRegistry.getInstance().isEntryExist(filePath.toOSString())/*|| filePath.getDevice() != null*/)) {
 				// Get a dummy project because we are probably executing a file that is located out
 				// of the workspace.
 				dummyProject = ExternalFilesRegistry.getInstance().getExternalFilesProject();
 				project = dummyProject;
-				absolutePath = filePath.makeAbsolute().toString();
+				absolutePath = filePath.makeAbsolute().toOSString();
 			} else {
 				if (res == null || !res.isAccessible()) {
 					displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
@@ -159,7 +159,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				project = res.getProject();
 				IPath location = res.getLocation();
 				if (location != null) {
-					absolutePath = location.toString();
+					absolutePath = location.toOSString();
 				} else {
 					absolutePath = res.getFullPath().toString();
 				}

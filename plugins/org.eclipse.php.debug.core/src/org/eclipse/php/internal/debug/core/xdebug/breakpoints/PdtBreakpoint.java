@@ -77,7 +77,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 		} else {
 
 			// a file in the workspace, handles included projects
-			fileName = (resource.getRawLocation()).toString();
+			fileName = (resource.getRawLocation()).toOSString();
 			if (resource instanceof IFile) {
 				workspaceFile = (IFile) resource;
 			}
