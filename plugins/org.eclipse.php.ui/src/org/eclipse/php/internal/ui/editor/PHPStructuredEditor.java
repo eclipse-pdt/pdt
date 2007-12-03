@@ -1307,7 +1307,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							else {
 								IStructuredModel model = getModel();
 								if (model != null) {
-									final String fileName = model.getBaseLocation();
+									final String fileName = new Path(model.getBaseLocation()).toOSString();
 									if (externalRegistry.isEntryExist(fileName)) {
 										//if there are more than one editor opening the external file using "New Editor", do not remove it from model and registry
 										IEditorReference[] existingEditors = null;
@@ -1317,11 +1317,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 										}
 										// Make sure that the file has a full path before we try to remove it from the model.
 										if (existingEditors == null || existingEditors.length == 1) { //a single editor
-											final IFile fileDecorator = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
+											final IFile fileWrapper = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
 											WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
 												@Override
 												public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-													PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
+													PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileWrapper);
 													externalRegistry.removeFileEntry(fileName);
 													return Status.OK_STATUS;
 												}
@@ -1431,7 +1431,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			} else {
 				// This is, probably, a remote storage:
 				externalPath = storage.getFullPath();
-				resource = ExternalFileWrapper.createFile(externalPath.toString());
+				resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 			}
 		} else if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			// External file editor input. It's usually used when opening PHP file
@@ -1444,21 +1444,21 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			} else {
 				externalPath = URIUtil.toPath(((IURIEditorInput) input).getURI());
 			}
-			resource = ExternalFileWrapper.createFile(externalPath.toString());
+			resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 		}
 
 		if (resource instanceof IFile) {
 			if (PHPModelUtil.isPhpFile((IFile) resource)) {
 				// Add file decorator entry to the list of external files:
 				if (externalPath != null && resource instanceof ExternalFileWrapper) {
-					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toString(), (ExternalFileWrapper) resource);
+					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toOSString(), (ExternalFileWrapper) resource);
 					isExternal = true;
 				}
 				// Remove an older record from the external files registry in case this editor
 				// is being reused to display a new content.
 				IEditorInput oldInput = getEditorInput();
 				if (oldInput != null && oldInput instanceof IStorageEditorInput) {
-					String storagePath = ((IStorageEditorInput) oldInput).getStorage().getFullPath().toString();
+					String storagePath = ((IStorageEditorInput) oldInput).getStorage().getFullPath().toOSString();
 					ExternalFilesRegistry.getInstance().removeFileEntry(storagePath);
 				}
 				PhpSourceParser.editFile.set(resource);
@@ -1555,12 +1555,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			}
 		}
 		IPath path = new Path(getModel().getBaseLocation());
-		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
-			return ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+			return ExternalFilesRegistry.getInstance().getFileEntry(path.toOSString());
 		}
 		//could be that it is an external file BUT was already removed !, check :
 		else if (path.segmentCount() == 1) {
-			return ExternalFileWrapper.createFile(path.toString());
+			return ExternalFileWrapper.createFile(path.toOSString());
 		}
 
 		//handle case of workspace file AND/OR an external file with more than 1 segment
