@@ -104,7 +104,7 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 	 */
 	public IFile getFile() {
 		NonExistingPHPFileEditorInput editorInput = (NonExistingPHPFileEditorInput) getEditorInput();
-		return ExternalFilesRegistry.getInstance().getFileEntry(editorInput.getPath().toString());
+		return ExternalFilesRegistry.getInstance().getFileEntry(editorInput.getPath().toOSString());
 	}
 
 	/**
