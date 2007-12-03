@@ -104,7 +104,7 @@ public class NonExistingPHPFileEditorInput implements IEditorInput, ILocationPro
 			return this;
 		}
 		if (IResource.class == adapter) {			
-			return ExternalFilesRegistry.getInstance().getFileEntry(getPath().toString());
+			return ExternalFilesRegistry.getInstance().getFileEntry(getPath().toOSString());
 		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
