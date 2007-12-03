@@ -998,7 +998,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 						project = debugHandler.getDebugTarget().getProject();
 					}
 
-					if (project != null) {
+					if (layer.getCalledFileName() != null && currentWorkingDir != null && project != null) {
 						Result<?, ?> result = PHPSearchEngine.find(layer.getCalledFileName(), currentWorkingDir, previousScriptDir, project);
 						if (result instanceof ResourceResult) {
 							layer.setResolvedCalledFileName(((ResourceResult) result).getFile().getFullPath().toString());
