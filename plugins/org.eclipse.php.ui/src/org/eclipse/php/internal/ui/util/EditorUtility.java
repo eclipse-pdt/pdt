@@ -241,7 +241,7 @@ public class EditorUtility {
 				Path path = new Path(externalSource.getPath());
 
 				// If this is external file:
-				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
+				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
 					//first check maybe it is an untitled PHP document
 					if ((path.segmentCount() > 1) && path.segment(path.segmentCount() - 2).equals("Untitled_Documents")) { //$NON-NLS-1$
 						return new NonExistingPHPFileEditorInput(path);
@@ -485,7 +485,7 @@ public class EditorUtility {
 				IEditorInput editorInput = null;
 
 				// If this file is external - put it into the external files registry
-				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
+				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
 					IFile localIFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 					if (!localIFile.exists()) {
 						IFile externalFile = ExternalFileWrapper.createFile(fileName);
@@ -494,7 +494,7 @@ public class EditorUtility {
 				}
 
 				// If this is external file:
-				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
+				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
 					editorInput = new FileStoreEditorInput(new LocalFile(localFile));
 				} else {
 					LocalFileStorage fileStorage = new LocalFileStorage(localFile);
