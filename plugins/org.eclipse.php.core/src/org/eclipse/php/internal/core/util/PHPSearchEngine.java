@@ -14,11 +14,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -96,7 +92,7 @@ public class PHPSearchEngine {
 					if (project.isAccessible()) {
 						IResource resource = project.findMember(path);
 						if (resource instanceof IFile) {
-							return new ResourceResult((IFile)resource);
+							return new ResourceResult((IFile) resource);
 						}
 					}
 				}
@@ -111,7 +107,12 @@ public class PHPSearchEngine {
 		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(directory);
 		if (resource instanceof IContainer) {
 			IContainer container = (IContainer) resource;
-			IFile file = container.getFile(new Path(relativeFile));
+			IFile file = null;
+			IPath relativePath = new Path(relativeFile);
+			if (relativePath.segmentCount() > 1) {
+				file = container.getFile(relativePath);
+			}
+
 			if (file != null && file.exists()) {
 				return new ResourceResult(file);
 			}
