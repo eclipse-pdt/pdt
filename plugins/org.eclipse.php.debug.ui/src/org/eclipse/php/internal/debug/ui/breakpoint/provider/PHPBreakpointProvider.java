@@ -90,9 +90,9 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 					pathName = ((IPlatformIndependentPathEditorInput)input).getPath();
 				} else if (input instanceof IURIEditorInput) {
 					if (res instanceof ExternalFileWrapper) {
-						pathName = res.getFullPath().toString();
+						pathName = res.getFullPath().toOSString();
 					} else {
-						pathName = URIUtil.toPath(((IURIEditorInput) input).getURI()).toString();
+						pathName = URIUtil.toPath(((IURIEditorInput) input).getURI()).toOSString();
 					}
 				} else {
 					pathName = ((NonExistingPHPFileEditorInput) input).getPath().toString();
@@ -125,7 +125,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				Map<String, String> attributes = new HashMap<String, String>();
 				String fileName;
 
-				String secondaryId = storage.getFullPath().toString();
+				String secondaryId = storage.getFullPath().toOSString();
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, secondaryId);
 
 				if (storage instanceof LocalFileStorage) {

@@ -73,7 +73,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 						LocalFileStorageEditorInput editorInput = (LocalFileStorageEditorInput) obj;
 						// Try to get it first from the external files registry.
 						IPath fullPath = editorInput.getStorage().getFullPath();
-						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toString());
+						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toOSString());
 						if (file == null) {
 							file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(fullPath);
 						}
@@ -85,7 +85,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 							fullPath = ((NonExistingPHPFileEditorInput) obj).getPath();
 						}
 
-						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toString());
+						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toOSString());
 					}
 				}
 				try {

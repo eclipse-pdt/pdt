@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.debug.ui.launching;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.eclipse.core.filesystem.URIUtil;
@@ -114,10 +115,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			}
 
 			if (path != null) {
-				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
-					file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+					file = ExternalFilesRegistry.getInstance().getFileEntry(path.toOSString());
 				} else {
-					file = ExternalFileWrapper.createFile(path.toString());
+					file = ExternalFileWrapper.createFile(path.toOSString());
 				}
 			}
 		}
@@ -175,11 +176,15 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					project = file.getProject();
 					IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 					if (contentType.isAssociatedWith(file.getName())) {
-						phpPathString = file.getFullPath().toString();
+						if (new File(file.getFullPath().toOSString()).exists()) {
+							phpPathString = file.getFullPath().toOSString();
+						} else {
+							phpPathString = file.getFullPath().toString();
+						}
 						IPath location = file.getLocation();
 						//check for non null values - EFS issues
 						if (location != null) {
-							phpFileLocation = location.toString();
+							phpFileLocation = location.toOSString();
 						} else {
 							phpFileLocation = file.getFullPath().toString();
 						}

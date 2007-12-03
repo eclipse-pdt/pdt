@@ -42,8 +42,8 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileName));
 		if (file == null) {
 			Object fileObject = null;
-			if (ExternalFilesRegistry.getInstance().isEntryExist(fileName)) {
-				fileObject = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
+			if (ExternalFilesRegistry.getInstance().isEntryExist(new Path(fileName).toOSString())) {
+				fileObject = ExternalFilesRegistry.getInstance().getFileEntry(new Path(fileName).toOSString());
 			} else {
 				// Search for a file in a Workspace
 				file = (IFile)ResourcesPlugin.getWorkspace().getRoot().findMember(fileName);

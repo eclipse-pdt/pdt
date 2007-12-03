@@ -146,7 +146,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 			return ((IFileEditorInput) input).getFile();
 		}
 		if (input instanceof IURIEditorInput) {
-			String filePath = ((IURIEditorInput)input).getURI().getPath();
+			String filePath = new Path(((IURIEditorInput)input).getURI().getPath()).toOSString();
 			IFile result = ExternalFilesRegistry.getInstance().getFileEntry(filePath);
 			if (result == null && filePath.length() > 0 && filePath.charAt(0) == '/') {
 				return ExternalFilesRegistry.getInstance().getFileEntry(filePath.substring(1));

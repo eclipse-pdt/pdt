@@ -321,9 +321,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			String fileName = ""; //$NON-NLS-1$
 			IPath location = file.getLocation();
 			if (location != null) {
-				fileName = location.toString();
-			} else if (resource.getLocationURI() != null) {
-				fileName = resource.getLocationURI().toString();
+				fileName = location.toOSString();
 			} else {
 				fileName = resource.getFullPath().toString();
 			}

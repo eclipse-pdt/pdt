@@ -71,7 +71,7 @@ public class PHPFileLink implements IHyperlink {
 					NonExistingPHPFileEditorInput editorInput = new NonExistingPHPFileEditorInput(externalPath);
 					editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_UNTITLED_EDITOR_ID, false);
 				} else {
-					FileStoreEditorInput editorInput = new FileStoreEditorInput(FileStoreFactory.createFileStore(new File(externalFile.getFullPath().toString())));
+					FileStoreEditorInput editorInput = new FileStoreEditorInput(FileStoreFactory.createFileStore(new File(externalFile.getFullPath().toOSString())));
 					editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_EDITOR_ID, false);
 				}
 			} else if (fFile instanceof IFile) {

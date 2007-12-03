@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.ui.breakpoint.adapter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.ui.actions.IRunToLineTarget;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
@@ -28,7 +29,7 @@ public class PHPEditorAdapterFactory implements IAdapterFactory {
 		IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
 		if (resource == null && editorPart.getEditorInput() instanceof FileStoreEditorInput) {
 			FileStoreEditorInput input = (FileStoreEditorInput) editorPart.getEditorInput();
-			String filePath = input.getURI().getPath();
+			String filePath = new Path(input.getURI().getPath()).toOSString();
 			resource = ExternalFilesRegistry.getInstance().getFileEntry(filePath);
 			if (resource == null && filePath.length() > 0 && filePath.charAt(0) == '/') {
 				resource = ExternalFilesRegistry.getInstance().getFileEntry(filePath.substring(1));
