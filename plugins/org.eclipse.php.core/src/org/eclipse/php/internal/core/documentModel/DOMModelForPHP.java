@@ -83,8 +83,8 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		// external file
-		if (file != null && ExternalFilesRegistry.getInstance().isEntryExist(file)) {
-			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
+		if ((file != null) && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toOSString())) {
+			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(new Path(getBaseLocation()).toOSString());
 			return fileData;
 		}
 
@@ -99,7 +99,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		IFile iFile = getIFile();
-		if (ExternalFilesRegistry.getInstance().isEntryExist(iFile)) {
+		if (ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toOSString())) {
 			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
@@ -148,15 +148,15 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		if (result != null) {
 			return result;
 		}
-		if (ExternalFilesRegistry.getInstance().isEntryExist(path)) {
-			result = ExternalFilesRegistry.getInstance().getFileEntry(path);
+		if (ExternalFilesRegistry.getInstance().isEntryExist(new Path(path).toOSString())) {
+			result = ExternalFilesRegistry.getInstance().getFileEntry(new Path(path).toOSString());
 		}
 		if (result == null) {
 			if (Platform.getOS() != Platform.OS_WIN32) {
 				path = path.replace('\\', '/');
 			}
 			IPath osPath = Path.fromOSString(path);
-			if(osPath.segmentCount() >= 2){
+			if (osPath.segmentCount() > 1) {
 				result = ResourcesPlugin.getWorkspace().getRoot().getFile(osPath);
 			}
 		}

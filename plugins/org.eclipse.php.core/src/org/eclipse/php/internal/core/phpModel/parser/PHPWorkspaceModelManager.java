@@ -314,10 +314,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		}
 
 		// use full path to distinguish between files with the same name (same project model...)
-		fileData = externalProjectModel.getFileData(externalFile.getFullPath().toString());
+		fileData = externalProjectModel.getFileData(externalFile.getFullPath().toOSString());
 		if (fileData == null) {
 			externalProjectModel.addFileToModel(externalFile);
-			fileData = externalProjectModel.getFileData(externalFile.getFullPath().toString());
+			fileData = externalProjectModel.getFileData(externalFile.getFullPath().toOSString());
 		}
 		return fileData;
 	}
@@ -325,7 +325,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public PHPFileData getModelForFile(IFile file, boolean forceCreation) {
 		PHPProjectModel projModel = getModelForProject(file.getProject(), forceCreation);
 		if (projModel == null) {
-			if (file instanceof ExternalFileWrapper && ExternalFilesRegistry.getInstance().isEntryExist(file)) {
+			if (file instanceof ExternalFileWrapper && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toOSString())) {
 				return getModelForExternalFile(file);
 			}
 			return null;
@@ -343,10 +343,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public PHPFileData getModelForFile(String filename) {
 		IPath path = Path.fromOSString(filename);
 		IFile file;
-		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
-			file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+			file = ExternalFilesRegistry.getInstance().getFileEntry(path.toOSString());
 		} else {
-			file = ExternalFileWrapper.createFile(path.toString());
+			file = ExternalFileWrapper.createFile(path.toOSString());
 		}
 		PHPFileData result = null;
 		result = getModelForFile(filename, false);
@@ -592,7 +592,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		if (projectModel == null && !file.exists()) {
 			projectModel = getDefaultPHPProjectModel();
 			// distinguish between include path and external files:
-			if (projectModel.getFileData(file.getFullPath().toString()) == null) {
+			if (projectModel.getFileData(file.getFullPath().toOSString()) == null) {
 				return;
 			}
 		}

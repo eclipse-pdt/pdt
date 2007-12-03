@@ -260,8 +260,8 @@ public class PHPModelUtil {
 			if (path.segmentCount() < 2) // path doesnt include project name, return null
 				return null;
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-			if (resource == null && ExternalFilesRegistry.getInstance().isEntryExist(filename)) {
-				resource = ExternalFilesRegistry.getInstance().getFileEntry(filename);
+			if (resource == null && ExternalFilesRegistry.getInstance().isEntryExist(new Path(filename).toOSString())) {
+				resource = ExternalFilesRegistry.getInstance().getFileEntry(new Path(filename).toOSString());
 			}
 			return resource;
 		} else if (element instanceof PHPProjectModel) {

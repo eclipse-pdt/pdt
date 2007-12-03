@@ -107,7 +107,7 @@ public class ExternalFilesRegistry {
 		Collection<IFile> coll = externalFilesRegistry.values();
 		for (Iterator<IFile> iterator = coll.iterator(); iterator.hasNext();) {
 			IFile iFile = iterator.next();
-			if (iFile.getFullPath().equals(file.getFullPath())) {
+			if (iFile.getFullPath().toOSString().equals(file.getFullPath().toOSString())) {
 				return true;
 			}
 		}
