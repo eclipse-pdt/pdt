@@ -236,7 +236,7 @@
 	<extension point="org.eclipse.core.filebuffers.annotationModelCreation">
 		<factory
 			contentTypeId="org.eclipse.php.core.phpsource"
-			class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactory" />
+			class="org.eclipse.php.internal.ui.editor.PHPResourceMarkerAnnotationModelFactory" />
 	</extension>
 
 	<!--======================================================================================-->
