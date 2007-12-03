@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 public class PHPFileCreationWizard extends Wizard implements INewWizard {
 
 	protected PHPFileCreationWizardPage phpFileCreationWizardPage;
-	private ISelection selection;
+	protected ISelection selection;
 	protected NewPhpTemplatesWizardPage newPhpTemplatesWizardPage;
 
 	/**

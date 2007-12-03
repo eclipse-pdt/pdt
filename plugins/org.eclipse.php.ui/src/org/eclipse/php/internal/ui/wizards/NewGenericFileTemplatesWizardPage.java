@@ -415,7 +415,6 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 				TemplateBuffer buffer = context.evaluate(template);
 				string = buffer.getString();
 				TemplateVariable[] variables = buffer.getVariables();
-				boolean hasPositions = false;
 				for (int i = 0; i != variables.length; i++) {
 					TemplateVariable variable = variables[i];
 					if ("cursor".equals(variable.getName())) {
