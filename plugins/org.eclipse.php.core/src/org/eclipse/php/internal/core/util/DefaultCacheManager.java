@@ -214,7 +214,7 @@ public class DefaultCacheManager {
 			return false;
 		}
 		boolean invalidCache = false;
-		Runtime.getRuntime().gc();
+//		Runtime.getRuntime().gc();
 		FileInputStream in = null;
 		BufferedInputStream bufin = null;
 		DataInputStream din = null;
