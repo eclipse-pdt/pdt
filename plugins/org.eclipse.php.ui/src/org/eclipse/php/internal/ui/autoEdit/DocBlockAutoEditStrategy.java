@@ -148,7 +148,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 			int lineStart = lineInfo.getOffset();
 			String line = document.get(lineStart, command.offset - lineStart);
 
-			Matcher m = Pattern.compile("\\/\\*+").matcher(line); //$NON-NLS-1$
+			Matcher m = (isDocBlock) ? Pattern.compile("\\/\\*\\*").matcher(line) : Pattern.compile("\\/\\*").matcher(line); //$NON-NLS-1$
 			m.find();
 			String commentStart = line.substring(m.start(), m.end());
 			int commentStartLength = commentStart.length();
