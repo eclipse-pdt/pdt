@@ -107,14 +107,10 @@ public class PHPSearchEngine {
 		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(directory);
 		if (resource instanceof IContainer) {
 			IContainer container = (IContainer) resource;
-			IFile file = null;
-			IPath relativePath = new Path(relativeFile);
-			if (relativePath.segmentCount() > 1) {
-				file = container.getFile(relativePath);
-			}
+			IResource file = container.findMember(relativeFile);
 
-			if (file != null && file.exists()) {
-				return new ResourceResult(file);
+			if (file instanceof IFile) {
+				return new ResourceResult((IFile) file);
 			}
 		}
 		File dir = new File(directory);
