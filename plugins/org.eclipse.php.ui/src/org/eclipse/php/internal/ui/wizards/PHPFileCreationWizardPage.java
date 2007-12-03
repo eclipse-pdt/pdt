@@ -58,6 +58,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 
 	protected static final String UTF_8 = "UTF 8"; //$NON-NLS-1$
 	protected static final String NO_TEMPLATE = "-- none -- "; //$NON-NLS-1$
+	protected Label targetResourceLabel;
 
 	/**
 	 * Constructor for SampleNewWizardPage.
@@ -101,8 +102,8 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			}
 		});
 
-		label = new Label(container, SWT.NULL);
-		label.setText(PHPUIMessages.getString("PHPFileCreationWizardPage.7")); //$NON-NLS-1$
+		targetResourceLabel = new Label(container, SWT.NULL);
+		targetResourceLabel.setText(PHPUIMessages.getString("PHPFileCreationWizardPage.7")); //$NON-NLS-1$
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		fileText.setFocus();
@@ -282,7 +283,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		updateStatus(null);
 	}
 
-	IContainer getContainer(final String text) {
+	protected IContainer getContainer(final String text) {
 		final Path path = new Path(text);
 
 		final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
@@ -290,7 +291,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 
 	}
 
-	private void updateStatus(final String message) {
+	protected void updateStatus(final String message) {
 		setErrorMessage(message);
 		setPageComplete(message == null);
 	}
