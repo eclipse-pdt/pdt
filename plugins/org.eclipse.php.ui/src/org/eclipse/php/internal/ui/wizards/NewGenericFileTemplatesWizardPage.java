@@ -25,10 +25,11 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -388,46 +389,14 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		return template;
 	}
 
-	public static class CompiledTemplate {
-		public final String string;
-		public final int offset;
-
-		public CompiledTemplate(String string, int offset) {
-			this.string = string;
-			this.offset = offset;
-		}
-	}
-
 	/**
 	 * Returns template string to insert.
 	 *
 	 * @return String to insert or null if none is to be inserted
 	 */
 	public CompiledTemplate compileTemplate() {
-		String string = null;
-		int offset = 0;
 		Template template = getSelectedTemplate();
-		if (template != null) {
-			TemplateContextType contextType = getTemplatesContextTypeRegistry().getContextType(getTemplateContextTypeId());
-			IDocument document = new Document();
-			TemplateContext context = new DocumentTemplateContext(contextType, document, 0, 0);
-			try {
-				TemplateBuffer buffer = context.evaluate(template);
-				string = buffer.getString();
-				TemplateVariable[] variables = buffer.getVariables();
-				for (int i = 0; i != variables.length; i++) {
-					TemplateVariable variable = variables[i];
-					if ("cursor".equals(variable.getName())) {
-						offset = variable.getOffsets()[0];
-					}
-				}
-
-			} catch (Exception e) {
-				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new PHP", e); //$NON-NLS-1$
-			}
-		}
-
-		return new CompiledTemplate(string, offset);
+		return PHPTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template);
 	}
 
 	public TemplateProposal createTemplateProposal() {

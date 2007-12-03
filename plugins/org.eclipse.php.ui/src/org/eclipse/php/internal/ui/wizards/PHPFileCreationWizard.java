@@ -28,7 +28,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.wizards.NewGenericFileTemplatesWizardPage.CompiledTemplate;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
@@ -67,7 +68,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		final String containerName = phpFileCreationWizardPage.getContainerName();
 		final String fileName = phpFileCreationWizardPage.getFileName();
-		final CompiledTemplate template = this.newPhpTemplatesWizardPage.compileTemplate();
+		final PHPTemplateStore.CompiledTemplate template = this.newPhpTemplatesWizardPage.compileTemplate();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {

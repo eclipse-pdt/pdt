@@ -14,19 +14,23 @@ import java.io.File;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.templates.Template;
+import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.UntitledPHPEditor;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
 import org.eclipse.ui.*;
-import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 
 /**
  * This "Pageless" Wizard is the main entry point for creating a new Untitled PHP Document.
@@ -71,37 +75,36 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 		IWorkbenchPage page = fWindow.getActivePage();
 		try {
 			IEditorPart editor = page.openEditor(input, UNTITLED_EDITOR_ID);
-			ITextEditor textEditor = null;
-			if (editor instanceof ITextEditor) {
-				textEditor = (ITextEditor) editor;
+			UntitledPHPEditor textEditor = null;
+			if (editor instanceof UntitledPHPEditor) {
+				textEditor = (UntitledPHPEditor) editor;
 			}
-			PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(f.getAbsolutePath());
-			if (fileData == null || textEditor == null) {
+			PHPWorkspaceModelManager.getInstance().getModelForFile(f.getAbsolutePath());
+			if (textEditor == null) {
 				return true;
 			}
-			//find first php block
-			if ((fileData.getPHPBlocks() != null) && (fileData.getPHPBlocks().length > 0)) {
-				// calculate length of the start tag
-				UserData startTag = fileData.getPHPBlocks()[0].getPHPStartTag();
-				int startTagEndPosition = startTag.getEndPosition() - startTag.getStartPosition();
-				// handle short tag - '<?'
-				if (startTagEndPosition == 2) {
-					int startTagLineNum = startTag.getStopLine();
-					IEditorInput editorInput = textEditor.getEditorInput();
-					IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
-					// calculate the length of the line delimiter for the start tag line
-					int lineDelimLength = document.getLineDelimiter(startTagLineNum).length();
-					// add to the tag length, so we jump to the next line
-					startTagEndPosition += lineDelimLength;
-					
-				}
-				// position the cursor at the end of the start tag
-				textEditor.selectAndReveal(startTagEndPosition, 0);
+
+			//Load the last template name used in New PHP File wizard.
+			String templateName = PHPUiPlugin.getDefault().getPreferenceStore().getString(PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
+			if (templateName == null || templateName.length() == 0) {
+				return true;
 			}
+
+			TemplateStore templateStore = PHPUiPlugin.getDefault().getTemplateStore();
+			Template template = templateStore.findTemplate(templateName);
+			if (template == null) {
+				return true;
+			}
+			CompiledTemplate compiledTemplate = PHPTemplateStore.compileTemplate(PHPUiPlugin.getDefault().getTemplateContextRegistry(), template);
+			IDocumentProvider documentProvider = textEditor.getDocumentProvider();
+			IDocument document = textEditor.getDocument();
+			document.set(compiledTemplate.string);
+			documentProvider.saveDocument(null, textEditor.getEditorInput(), document, true);
+			textEditor.selectAndReveal(compiledTemplate.offset, 0);
 		} catch (PartInitException e) {
 			Logger.logException(e);
 			return false;
-		} catch (BadLocationException e) {
+		} catch (CoreException e) {
 			Logger.logException(e);
 			return false;
 		}
