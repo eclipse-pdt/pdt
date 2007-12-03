@@ -5,6 +5,7 @@
 package org.eclipse.php.internal.ui.editor;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -86,7 +87,7 @@ public class LinkingSelectionListener implements ISelectionListener {
 			//Check if PHPCodeData since selection can be FileData, FunctionData etc...
 			if (selectedElement instanceof PHPCodeData) {
 				UserData userData = ((PHPCodeData) selectedElement).getUserData();
-				if (userData != null && ExternalFilesRegistry.getInstance().isEntryExist(userData.getFileName())) {
+				if (userData != null && ExternalFilesRegistry.getInstance().isEntryExist(new Path(userData.getFileName()).toOSString())) {
 					return;
 				}
 			}
