@@ -1178,9 +1178,16 @@
 				menubarPath="source/sourceGroup"
 				id="org.eclipse.php.ui.actions.AddDescriptionAction">
 				<enablement>
-					<objectState
-						name="actionFilterContributorId"
-						value="org.eclipse.php.ui.phpCodeData.AddPHPDocActionFilterContributor" />
+       <and>
+          <objectState
+                name="actionFilterContributorId"
+                value="org.eclipse.php.ui.phpCodeData.AddPHPDocActionFilterContributor">
+          </objectState>
+          <objectState
+                name="actionFilterContributorId"
+                value="org.eclipse.php.ui.actions.filters.SourceActionFilterNotInEFS">
+          </objectState>
+       </and>
 				</enablement>
 			</action>
 		</objectContribution>
@@ -1193,6 +1200,10 @@
 		<contributor
 			class="org.eclipse.php.internal.ui.phpCodeData.CodeDataActionFilterContributor"
 			id="org.eclipse.php.ui.phpCodeData.CodeDataActionFilterContributor" />
+  <contributor
+        class="org.eclipse.php.internal.ui.actions.filters.SourceActionFilterNotInEFS"
+        id="org.eclipse.php.ui.actions.filters.SourceActionFilterNotInEFS">
+  </contributor>
 	</extension>
 
 	<extension point="org.eclipse.php.ui.foldingStructureProviders">
