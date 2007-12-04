@@ -154,7 +154,7 @@ public class CodeDataResolver {
 					if (elementName.length() > 0) {
 						String fileName = fileData != null ? fileData.getName() : null;
 
-						PHPClassData classData = fileData != null ? PHPFileDataUtilities.getContainerClassDada(fileData, offset) : null;
+						PHPClassData classData = fileData != null ? PHPFileDataUtilities.getContainerClassData(fileData, offset) : null;
 
 						// If we are in function declaration:
 						if ("function".equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
@@ -290,14 +290,30 @@ public class CodeDataResolver {
 						}
 
 						String className = getClassName(projectModel, fileData, statement, startPosition, offset, sDoc.getLineOfOffset(offset));
-						CodeData[] classDatas = className == null ? EMPTY : getMatchingClasses(className, projectModel, fileName);
+						CodeData[] allClassDatas = null;
+						if (className != null) {
+							String[] classNames = className.split("\\|");
+							for (String realClassName : classNames) {
+								realClassName = realClassName.trim();
+								CodeData[] classDatas = getMatchingClasses(realClassName, projectModel, fileName);
+								if (allClassDatas == null) {
+									allClassDatas = classDatas;
+								} else {
+									allClassDatas = ModelSupport.merge(allClassDatas, classDatas);
+								}
+							}
+						}
+
+						if (allClassDatas == null) {
+							allClassDatas = EMPTY;
+						}
 
 						// Is it function or method:
 						if ("(".equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) { //$NON-NLS-1$
 							CodeData[] result = null;
-							if (classDatas.length > 0) {
-								for (int i = 0; i < classDatas.length; ++i) {
-									result = ModelSupport.merge(result, toArray(projectModel.getClassFunctionData(fileName, className, elementName)));
+							if (allClassDatas.length > 0) {
+								for (CodeData currentClassData : allClassDatas) {
+									result = ModelSupport.merge(result, toArray(projectModel.getClassFunctionData(fileName, currentClassData.getName(), elementName)));
 								}
 							} else {
 								result = projectModel.getFilteredFunctions(fileName, elementName);
@@ -307,12 +323,12 @@ public class CodeDataResolver {
 							return result == null ? EMPTY : result;
 						}
 
-						if (classDatas.length > 0) {
+						if (allClassDatas.length > 0) {
 							// Check whether this is a class constant:
 							if (startPosition > 0) {
 								if ("::".equals(trigger) && elementName.charAt(0) != '$') { //$NON-NLS-1$
 									CodeData[] result = null;
-									for (int i = 0; i < classDatas.length; ++i) {
+									for (int i = 0; i < allClassDatas.length; ++i) {
 										result = ModelSupport.merge(result, toArray(projectModel.getClassConstsData(fileName, className, elementName)));
 									}
 									return result == null ? EMPTY : result;
@@ -323,10 +339,10 @@ public class CodeDataResolver {
 							CodeData[] result = null;
 							if (elementName.charAt(0) == '$')
 								elementName = elementName.substring(1);
-							for (int i = 0; i < classDatas.length; ++i) {
+							for (CodeData currentClassData : allClassDatas) {
 								// String fileName = classDatas[i].isUserCode() ?
 								// classDatas[i].getUserData().getFileName() : "";
-								result = ModelSupport.merge(result, toArray(projectModel.getClassVariablesData(fileName, className, elementName)));
+								result = ModelSupport.merge(result, toArray(projectModel.getClassVariablesData(fileName, currentClassData.getName(), elementName)));
 							}
 							return result == null ? EMPTY : result;
 						}
@@ -441,7 +457,7 @@ public class CodeDataResolver {
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
 			if (className.equals("self")) { //$NON-NLS-1$
-				PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset - 6); // the
+				PHPClassData classData = PHPFileDataUtilities.getContainerClassData(fileData, offset - 6); // the
 				// offset
 				// before
 				// self::
@@ -449,7 +465,7 @@ public class CodeDataResolver {
 					return classData.getName();
 				}
 			} else if (className.equals("parent")) { //$NON-NLS-1$
-				PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset - 8); // the
+				PHPClassData classData = PHPFileDataUtilities.getContainerClassData(fileData, offset - 8); // the
 				// offset
 				// before
 				// parent::
@@ -471,7 +487,7 @@ public class CodeDataResolver {
 			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, functionNameEnd, false);
 
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
-			PHPClassData classData = PHPFileDataUtilities.getContainerClassDada(fileData, offset);
+			PHPClassData classData = PHPFileDataUtilities.getContainerClassData(fileData, offset);
 			if (classData != null) { // if its a clss function
 				return getFunctionReturnType(projectModel, fileData, classData.getName(), functionName);
 			}
