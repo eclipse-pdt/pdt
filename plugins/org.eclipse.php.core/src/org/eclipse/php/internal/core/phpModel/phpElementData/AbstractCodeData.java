@@ -90,7 +90,7 @@ public abstract class AbstractCodeData implements CodeData {
 		if (!(o instanceof CodeData)) {
 			return -1;
 		}
-		CodeData other = ((CodeData) o);
+		CodeData other = (CodeData) o;
         String otherName = other.getName();
         int minNameLength = Math.min(name.length(), otherName.length());
         for(int i = 0; i< minNameLength; i++){
@@ -127,7 +127,7 @@ public abstract class AbstractCodeData implements CodeData {
 		if (getUserData() == null) {
 			return name;
 		}
-		return name + " (in " + getUserData().getFileName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		return name + " in " + getUserData().getFileName(); //$NON-NLS-1$
 	}
 
 	/**
@@ -151,5 +151,5 @@ public abstract class AbstractCodeData implements CodeData {
 	public Object getAdapter(Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
-	
+
 }

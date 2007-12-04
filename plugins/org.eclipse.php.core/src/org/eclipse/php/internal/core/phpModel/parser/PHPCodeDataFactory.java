@@ -233,6 +233,15 @@ public class PHPCodeDataFactory {
 			return "";
 		}
 
+		public String toString() {
+			StringBuffer string = new StringBuffer(name);
+			boolean hasContainer = getContainer() != null;
+			boolean hasUserData = userData != null;
+			if (container != null) {
+				string.append(" in " + container.toString());
+			}
+			return string.toString();
+		}
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
