@@ -133,6 +133,9 @@ public class OpenPhpElementDialog extends Dialog {
 					continue;
 				}
 				PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
+				if (projectModel == null) {
+					continue;
+				}
 				IPhpModel[] models = projectModel.getModels();
 				IPHPLanguageModel languageModel = projectModel.getPHPLanguageModel();
 				for (int j = 0; j < models.length; ++j) {
@@ -150,7 +153,7 @@ public class OpenPhpElementDialog extends Dialog {
 	}
 
 	/**
-	 * Sorts and removes duplicate elements  
+	 * Sorts and removes duplicate elements
 	 * @param elements
 	 */
 	private Object[] sortAndremoveDuplicates(CodeData[] elements) {
