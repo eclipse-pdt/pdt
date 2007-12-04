@@ -12,7 +12,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
  *
  * @author michael
  */
-public class EndProcessFileNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
+public class ContinueProcessFileNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
 	public void deserialize(DataInputStream in) throws IOException {
 	}

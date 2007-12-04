@@ -75,7 +75,7 @@ import org.eclipse.php.internal.ui.Logger;
  */
 public class RemoteDebugger implements IRemoteDebugger {
 
-	public static final int PROTOCOL_ID = 2006040701;
+	public static final int PROTOCOL_ID = 2006040702;
 	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 
 	protected boolean isDebugMode = System.getProperty("loggingDebug") != null;

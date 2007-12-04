@@ -3,7 +3,7 @@ package org.eclipse.php.internal.debug.core.zend.debugger.handlers;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.EndProcessFileNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.ContinueProcessFileNotification;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartProcessFileNotification;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
@@ -17,6 +17,6 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 
 		// send notification to tell debugger to continue processing file:
 		DebugConnectionThread connectionThread = debugTarget.getRemoteDebugger().getConnectionThread();
-		connectionThread.sendNotification(new EndProcessFileNotification());
+		connectionThread.sendNotification(new ContinueProcessFileNotification());
 	}
 }

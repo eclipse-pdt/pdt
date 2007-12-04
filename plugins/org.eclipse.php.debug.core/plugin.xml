@@ -318,9 +318,9 @@
             name="Start Process File Notification">
       </message>
       <message
-            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.EndProcessFileNotification"
-            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.EndProcessFileNotification"
-            name="End Process File Notification">
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.ContinueProcessFileNotification"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.ContinueProcessFileNotification"
+            name="Continue Process File Notification">
       </message>
 
   </extension>
