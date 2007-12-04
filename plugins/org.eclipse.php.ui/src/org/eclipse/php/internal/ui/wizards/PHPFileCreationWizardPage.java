@@ -307,4 +307,8 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	public String getFileName() {
 		return fileText.getText();
 	}
+
+	public IProject getProject() {
+		return project;
+	}
 }
