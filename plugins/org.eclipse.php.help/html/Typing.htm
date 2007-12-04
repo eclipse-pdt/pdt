@@ -18,7 +18,7 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-img_whs1 { border:none; width:441px; height:280px; float:none; border-style:none; }
+img_whs1 { border:none; border-style:none; width:396px; height:359px; float:none; }
 p.whs2 { font-style:normal; }
 table.whs3 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 col.whs4 { width:7.093%; }
@@ -66,7 +66,7 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nGetting Started\nPHP Preferences\nEditor Preferences\nTyping Preferences");
+	addTocInfo("Welcome to the Online Help\nReference\nPHP Preferences\nEditor Preferences\nTyping Preferences");
 addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
@@ -101,8 +101,9 @@ if (window.writeIntopicBar)
 	style="x-condition: PDT;"><span style="x-condition: PDT;">Typing Preferences</span></p>
 
 <p><span style="margin-left: 0px;">T</span>he Typing preferences page allows 
- you to configure which code and language patterns that <span style="x-condition: PDT;">PDT</span> will automatically 
- complete, and whether the tab key will indent the current line.</p>
+ you to configure which code and language patterns that <span style="x-condition: PDT;">for EclipsePDT</span> will 
+ automatically complete, and whether the tab key will indent the current 
+ line.</p>
 
 <p>&nbsp;</p>
 
@@ -112,30 +113,36 @@ if (window.writeIntopicBar)
 
 <p>&nbsp;</p>
 
-<p class=picture><img src="typing.png" x-maintain-ratio="TRUE" width="441px" height="280px" border="0" class="img_whs1"></p>
+<p class=picture><img src="typing.png" x-maintain-ratio="TRUE" width="396px" height="359px" border="0" class="img_whs1"></p>
 
 <p class=Strong>Automatically Close</p>
 
-<p class="whs2"><span style="x-condition: PDT;">PDT</span> can be set to automatically 
- complete the following types of patterns:</p>
+<p class="whs2"><span style="x-condition: PDT;">for EclipsePDT</span> can be set 
+ to automatically complete the following types of patterns:</p>
 
 <ul>
 	
 	<li class=kadov-p-CListBullet1><p class=ListBullet1>&quot;Strings&quot; 
- - Automatically inserts a pair of double quotes. </p></li>
+ - A pair of double quotes (&quot;&quot;) will be inserted when a single 
+ quotation markl (&quot;) is entered.</p></li>
 	
 	<li class=kadov-p-CListBullet1><p class=ListBullet1>(Parentheses) and 
- [Square] brackets - Automatically inserts a pair of brackets. </p></li>
+ [Square] brackets - A pair of brackets will be inserted when the opening 
+ bracket is entered.</p></li>
 	
-	<li class=kadov-p-CListBullet1><p class=ListBullet1>{Braces} - Automatically 
- inserts a pair of curly brackets </p></li>
+	<li class=kadov-p-CListBullet1><p class=ListBullet1>{Braces} - A pair 
+ of braces will be inserted when the opening brace is entered.</p></li>
 	
 	<li class=kadov-p-CListBullet1><p class=ListBullet1>PhpDoc and comment 
  regions - Automatically completes <a href="phpDoc_Comments.htm">PHPDoc</a> 
- symbols for phpDoc Block comments</p></li>
+ symbols for phpDoc Block comments.</p></li>
 	
-	<li class=kadov-p-CListBullet1><p class=ListBullet1>--&gt; Add Phpdoc 
- tags - Add Phpdoc tags</p></li>
+	<li class=kadov-p-CListBullet1><p class=ListBullet1>- Add Phpdoc tags 
+ - Adds Phpdoc tags</p></li>
+	
+	<li class=kadov-p-CListBullet1><p class=ListBullet1>Close PHP tag - 
+ A closing PHP tag (?&gt;) will be inserted when the opening PHP tag (&lt;?) 
+ is entered.</p></li>
 </ul>
 
 <p class=ListBullet1
@@ -144,9 +151,9 @@ if (window.writeIntopicBar)
  style="x-condition: PDT;">PDT</span> to auto-complete. </p>
 
 <p class=ListBullet1
-	style="font-style: normal;">To use the auto-complete function, in the 
- editor type the opening character and press enter. The matching character 
- will be automatically inserted.</p>
+	style="font-style: normal;">To use the auto-complete function type 
+ the opening character in the editor. The matching character will be automatically 
+ inserted.</p>
 
 <p class=Strong>Tabulators</p>
 

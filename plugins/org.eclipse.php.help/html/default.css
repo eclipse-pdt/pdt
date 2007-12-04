@@ -278,7 +278,8 @@ LI.kadov-P-CInsideChapterLast {
                                text-transform:uppercase;  }
 P.FIgureCaption { 
                  text-align:Center; 
-                 font-size:8pt;  }
+                 font-size:8pt; 
+                 x-next-type:P;  }
 LI.kadov-P-CFIgureCaption { 
                            text-align:Center; 
                            font-size:8pt;  }

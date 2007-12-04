@@ -23,9 +23,10 @@ col.whs2 { width:100%; }
 tr.whs3 { x-cell-content-align:top; }
 td.whs4 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-left-style:none; border-top-style:none; border-right-style:none; }
 td.whs5 { width:100%; padding-right:10px; padding-left:10px; }
-div.whs6 { width:100%; }
-p.whs7 { text-align:right; x-condition:Online; }
-p.whs8 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+td.whs6 { width:100%; padding-right:10px; padding-left:10px; x-condition:Drafts; }
+div.whs7 { width:100%; }
+p.whs8 { text-align:right; x-condition:Online; }
+p.whs9 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -101,13 +102,29 @@ if (window.writeIntopicBar)
 <tr valign="top" class="whs3">
 <td colspan="1" rowspan="1" width="100%" class="whs5">
 <p>&nbsp;</p></td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="100%" discard="yes" class="whs6">
+<p>&nbsp;</p></td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="100%" class="whs5">
+<p><a HREF="Preferences.htm">PHP Preferences</a></td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="100%" class="whs5">
+<p><a HREF="Menus.htm">Menus</a></td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="100%" class="whs5">
+<p>&nbsp;</td></tr>
 </table>
 
-<div placeholder id="footer" class="whs6">
- <p align="right" class="whs7"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+<div placeholder id="footer" class="whs7">
+ <p align="right" class="whs8"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
 	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs8">PHP Development Tool</p>
+ <p align="center" class="whs9">PHP Development Tool</p>
 </div>
 <script type="text/javascript" language="javascript1.2">
 <!--

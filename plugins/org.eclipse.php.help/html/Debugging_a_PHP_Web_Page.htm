@@ -31,16 +31,17 @@ img_whs10 { border:none; width:28px; height:33px; float:none; border-style:none;
 td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 ol.whs12 { list-style:decimal; }
 img_whs13 { border:none; width:39px; height:25px; float:none; border-style:none; }
-img_whs14 { border:none; width:512px; height:425px; float:none; border-style:none; }
-td.whs15 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-p.whs16 { x-condition:Online; }
-table.whs17 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-td.whs18 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-img_whs20 { border:none; width:28px; height:18px; float:none; border-style:none; }
-div.whs21 { width:100%; }
-p.whs22 { text-align:right; x-condition:Online; }
-p.whs23 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+img_whs14 { border:none; width:543px; height:401px; float:none; border-style:none; }
+img_whs15 { border:none; width:423px; height:263px; float:none; }
+td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+p.whs17 { x-condition:Online; }
+table.whs18 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs19 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+td.whs20 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+img_whs21 { border:none; width:28px; height:18px; float:none; border-style:none; }
+div.whs22 { width:100%; }
+p.whs23 { text-align:right; x-condition:Online; }
+p.whs24 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -108,9 +109,7 @@ if (window.writeIntopicBar)
  a PHP Web Page</p>
 
 <p>This procedure describes how to debug whole applications, projects, 
- files or collections of files that are already on the server. Using the 
- debugging process, you can also create an application in <span style="x-condition: PDT;">PDT</span> and publish 
- it to the server before debugging.</p>
+ files or collections of files that are already on the server. </p>
 
 <p class=Note>Note:</p>
 
@@ -152,61 +151,48 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 		class=kadov-p><p>Double-click the PHP Web Page option to create 
  a new debug configuration.</p></li>
 </ol>
-<p class=picture>&nbsp;<img src="debug_new_phpwebpage_config.png" x-maintain-ratio="TRUE" width="512px" height="425px" border="0" class="img_whs14"></p>
+<p class=picture>&nbsp;<img src="debug_new_phpwebpage_config.png" x-maintain-ratio="TRUE" width="543px" height="401px" border="0" class="img_whs14"></p>
 <ol start="5" type="1" class="whs12">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Enter a name for the new configuration.</p></li>
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>Select the Server Debugger to be used. <span style="x-condition: PDT;">PDT </span>supports 
- both the Zend Debugger and XDebug.</p></li>
+		class=kadov-p><p>Select the Server Debugger to be used. <span style="x-condition: PDT;">PDT 
+ supports both the Zend Debugger and XDebug.</span></p></li>
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Select your server from the list.<br>
 	If you have not yet configured your server, click the underlined 'PHP 
- Servers' shortcut. The Servers preferences page will open. Configure your 
- server by following the instructions on '<a href="PHP_Servers.htm#Adding_servers">adding 
- a new server</a>' under the PHP Servers Preferences page.</p></li>
+ Servers' shortcut. The PHP Servers preferences page will open. Configure 
+ your server by following the instructions on '<a href="PHP_Servers.htm#Adding_servers">adding 
+ a new server</a>' under the PHP Servers Preferences page topic.</p></li>
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>Under PHP File, click Browse and select the first 
- file which launches your application.</p></li>
+		class=kadov-p><p>Under PHP File, click Browse and select your 'debug 
+ target' file (the file from which the debugging process will start.)</p></li>
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>If the files do not yet exist on the server, you 
- will need to publish them before they are debugged by doing the following:</p></li>
+		class=kadov-p><p>Select whether the Debugger should stop at the 
+ First Line by marking/unmarking the 'Break at First Line' checkbox.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>The URL to be debugged will have been automatically 
+ created based on the file name and your server address. If the URL does 
+ not point to your debug target's location, unmark the Auto Generate checkbox 
+ and modify the URL.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>For further Debug options, select the Advanced 
+ tab, which has the following options:</p></li>
 </ol>
-<ol start="1" type="1" class="whs12">
-	
-	<li style="list-style: lower-roman;"
-		type=i
-		class=kadov-p><p>Ensure that the Publish Projects to this Server 
- checkbox is marked within the Server settings, and specify the Directory 
- to which the files should be published. (To do this, click Configure under 
- the Server category.) </p></li>
-	
-	<li style="list-style: lower-roman;"
-		type=i
-		class=kadov-p><p>Mark the Publish files to Server checkbox and, 
- if necessary, add the root folder to which you would like to publish the 
- file in the 'Publish To' box.</p></li>
-	
-	<li style="list-style: lower-roman;"
-		type=i
-		class=kadov-p><p>Ensure that the URL is correct. If it is not correct, 
- unmark the Auto Generate checkbox and manually change the URL.</p></li>
-</ol>
+<p class=picture><img src="debug_new_phpwebpage_advanced_config.png" x-maintain-ratio="TRUE" width="423px" height="263px" border="0" class="img_whs15"></p>
 <ol start="10" type="1" class="whs12">
 	
 	<li style="margin-left: -20px;"
-		class=kadov-p><p>For further debug options, select the Advanced 
- tab, which has the following options:</p></li>
-	
-	<li style="margin-left: -20px;"
 		class=kadov-p-CListBullet2><p class=ListBullet2>Open in Browser 
- - Mark if you would like the application to be displayed in <span style="x-condition: PDT;">PDT's</span> internal 
- browser while it is run.</p></li>
+ - Mark if you would like the application to be displayed in <span style="x-condition: PDT;">PDT's</span> 
+ internal browser while it is run.</p></li>
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p-CListBullet2><p class=ListBullet2>Choose whether 
@@ -227,7 +213,7 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
  pages linked to the URL being debugged.</span></p></li>
 	
 	</ol>
-<ol start="11" type="1" class="whs12">
+<ol start="12" type="1" class="whs12">
 	
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Click Apply and then Debug.</p></li>
@@ -238,41 +224,41 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 </ol></td></tr>
 
 <tr valign="top" class="whs4">
-<td rowspan="1" colspan="2" width="100%" class="whs15">
-<p class="whs16"><a href="Analyzing_Debugger_Results.htm"
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p class="whs17"><a href="Analyzing_Debugger_Results.htm"
 									style="x-condition: Online;">Click 
  here</a> for more on Running and Analyzing the debugging process.</p>
 </td>
 </tr>
 </table>
 
-<table x-use-null-cells cellspacing="0" width="100%" class="whs17">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs18">
 <col class="whs2">
 <col class="whs3">
 
 <tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="7.093%" class="whs18">
+<td colspan="1" rowspan="1" width="7.093%" class="whs19">
 <p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs19">
+<td colspan="1" rowspan="1" width="92.907%" class="whs20">
 <p>&nbsp;</td></tr>
 
 <tr valign="top" class="whs4">
 <td width="7.093%" class="whs9">
-<p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs20"></td>
+<p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs21"></td>
 <td width="92.907%" class="whs11">
 <p class="whs8">Related Links:</p>
-<p class="whs16"><a href="Working_with_the_Debugger.htm"><span 
+<p class="whs17"><a href="Working_with_the_Debugger.htm"><span 
  style="x-condition: Online;">Working with the Debugger</span></a></p>
-<p class="whs16"><a href="Debugging.htm"><span style="x-condition: Online;">Debugging</span></a></p>
-<p class="whs16"><span 
+<p class="whs17"><a href="Debugging.htm"><span style="x-condition: Online;">Debugging</span></a></p>
+<p class="whs17"><span 
  style="x-condition: Online;">Debugging a PHP Script</span></p>
-<p class="whs16"><a href="Debug.htm"><span style="x-condition: Online;">Debug 
+<p class="whs17"><a href="Debug.htm"><span style="x-condition: Online;">Debug 
  Preferences</span></a></p>
-<p class="whs16"><a href="Locally_Debugging_a_PHP_Script.htm"><span 
+<p class="whs17"><a href="Locally_Debugging_a_PHP_Script.htm"><span 
  style="x-condition: Online;">Locally Debugging a PHP Script</span></a></p>
-<p class="whs16"><a href="Analyzing_Debugger_Results.htm"><span 
+<p class="whs17"><a href="Analyzing_Debugger_Results.htm"><span 
  style="x-condition: Online;">Running and Analyzing Debugger Results</span></a></p>
-<p class="whs16"><a href="Run.htm"
+<p class="whs17"><a href="Run.htm"
 									style="x-condition: Online;">Run Menu</a></td></tr>
 
 <tr valign="top" class="whs4">
@@ -282,11 +268,11 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 <p>&nbsp;</td></tr>
 </table>
 
-<div placeholder id="footer" class="whs21">
- <p align="right" class="whs22"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+<div placeholder id="footer" class="whs22">
+ <p align="right" class="whs23"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
 	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs23">PHP Development Tool</p>
+ <p align="center" class="whs24">PHP Development Tool</p>
 </div>
 <script type="text/javascript" language="javascript1.2">
 <!--

@@ -19,7 +19,7 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 </style><style type="text/css">
 <!--
 p.whs1 { font-style:normal; }
-img_whs2 { border:none; width:321px; height:520px; float:none; border-style:none; }
+img_whs2 { border:none; border-style:none; width:353px; height:446px; float:none; }
 table.whs3 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 col.whs4 { width:7.093%; }
 col.whs5 { width:92.907%; }
@@ -66,7 +66,7 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nGetting Started\nPHP Preferences\nEditor Preferences\nCode Assist Preferences");
+	addTocInfo("Welcome to the Online Help\nReference\nPHP Preferences\nEditor Preferences\nCode Assist Preferences");
 addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
@@ -118,7 +118,7 @@ if (window.writeIntopicBar)
 <p>&nbsp;</p>
 
 <p class=picture
-	style="x-condition: PDT;"><img src="code_assist_preferences_pdt.png" x-maintain-ratio="TRUE" width="321px" height="520px" border="0" class="img_whs2"></p>
+	style="x-condition: PDT;"><img src="code_assist_preferences_pdt.png" x-maintain-ratio="TRUE" width="353px" height="446px" border="0" class="img_whs2"></p>
 
 <p>&nbsp;</p>
 
@@ -169,6 +169,10 @@ if (window.writeIntopicBar)
 	<li style="margin-left: -20px;"
 		class=kadov-p-CListBullet2><p class=ListBullet2>Show non-strict 
  options : Will show options which go against PHP strict practice.</p></li>
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p-CListBullet2><p class=ListBullet2>Group completion 
+ options: Groups options according to element type.</p></li>
 </ul>
 
 <p class=Strong
@@ -185,11 +189,11 @@ if (window.writeIntopicBar)
  delay: Determines the delay before the Code Assist box is automatically 
  displayed.</p></li>
 	
-	<li style="margin-left: -20px;"
+	<li style="margin-left: -20px; x-condition: PDT;"
 		class=kadov-p-CListBullet2><p class=ListBullet2>Auto-activation 
  triggers for PHP: Sets the characters that determine PHP context.</p></li>
 	
-	<li style="margin-left: -20px;"
+	<li style="margin-left: -20px; x-condition: PDT;"
 		class=kadov-p-CListBullet2><p class=ListBullet2>Auto-activation 
  triggers for PHPDoc: Sets the characters that determine PHP context.</p></li>
 </ul>
