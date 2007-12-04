@@ -150,29 +150,35 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	private void runBuild() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		final ArrayList<IProject> phpProjects = new ArrayList<IProject>();
+		for (IProject project : projects) {
+			if (!project.isOpen()) {
+				continue;
+			}
+			try {
+				if (project.hasNature(PHPNature.ID)) {
+					phpProjects.add(project);
+				}
+			} catch (CoreException e) {
+				PHPCorePlugin.log(e);
+			}
+		}
+		if (phpProjects.isEmpty()) {
+			return;
+		}
 		WorkspaceJob cleanJob = new WorkspaceJob(CoreMessages.getString("PHPWorkspaceModelManager_5")) {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
-					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-					monitor.beginTask(CoreMessages.getString("PHPWorkspaceModelManager_5"), projects.length);
+					monitor.beginTask(CoreMessages.getString("PHPWorkspaceModelManager_5"), phpProjects.size());
 
-					for (IProject project : projects) {
-						if (!project.isOpen()) {
-							continue;
-						}
-						boolean hasNature;
-						try {
-							hasNature = project.hasNature(PHPNature.ID);
-						} catch (CoreException e) {
-							PHPCorePlugin.log(e);
-							return null;
-						}
-						if (hasNature) {
+					for (IProject project : phpProjects) {
+						if (project.isOpen()) {
 							PHPWorkspaceModelManager.getInstance().getModelForProject(project, true);
-						}
-						if (monitor.isCanceled()) {
-							break;
+							if (monitor.isCanceled()) {
+								break;
+							}
 						}
 						monitor.worked(1);
 					}
