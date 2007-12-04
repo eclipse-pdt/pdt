@@ -20,6 +20,9 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.php.internal.core.Logger;
@@ -30,6 +33,7 @@ import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.wizards.operations.PHPCreationDataModelProvider;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
@@ -61,10 +65,10 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	/**
-	 * This operation is called after the Wizard  is created (and before the doAddPages) 
+	 * This operation is called after the Wizard  is created (and before the doAddPages)
 	 * and it is used to define all the properties that the wizard pages will set
 	 * (not necessarly store as properties).
-	 * All the wizard pages may access these properties.  
+	 * All the wizard pages may access these properties.
 	 */
 	protected IDataModelProvider getDefaultProvider() {
 		return new PHPCreationDataModelProvider(wizardPageFactories);
@@ -72,7 +76,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	public void doAddPages() {
@@ -118,23 +122,30 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	protected void postPerformFinish() throws InvocationTargetException {
-		BasicNewProjectResourceWizard.updatePerspective(configElement);
-
 		if (createdProject != null) {
-			//			 Save any project-specific data (Fix Bug# 143406)
+			// Save any project-specific data (Fix Bug# 143406)
 			try {
 				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();
 			} catch (BackingStoreException e) {
 				Logger.logException(e);
 			}
 		}
+
+		UIJob j = new UIJob("") { //$NON-NLS-1$
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				BasicNewProjectResourceWizard.updatePerspective(configElement);
+				return Status.OK_STATUS;
+			}
+		};
+		j.setUser(false);
+		j.schedule();
 	}
 
 	private void populateWizardFactoryList() {
 		IWizardPage[] pageGenerators = PHPWizardPagesRegistry.getPageFactories(ID);
 		if (pageGenerators != null) {
-			for (int i = 0; i < pageGenerators.length; i++) {
-				WizardPageFactory pageFactory = (WizardPageFactory) pageGenerators[i];
+			for (IWizardPage element : pageGenerators) {
+				WizardPageFactory pageFactory = (WizardPageFactory) element;
 				wizardPageFactories.add(pageFactory);
 			}
 		}
