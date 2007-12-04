@@ -446,7 +446,7 @@
 			visible="false"
 			id="org.eclipse.php.ui.PHPActionSet">
 			<action
-				class="org.eclipse.php.internal.ui.actions.OpenTypeAction"
+				class="org.eclipse.php.internal.ui.actions.OpenPhpElementAction"
 				definitionId="org.eclipse.php.ui.navigate.open.type"
 				disabledIcon="icons/full/dtool16/opentype.gif"
 				icon="icons/full/etool16/opentype.gif"

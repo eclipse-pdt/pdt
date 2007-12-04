@@ -16,7 +16,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.dialogs.openType.OpenPhpTypeDialog;
+import org.eclipse.php.internal.ui.dialogs.openType.OpenPhpElementDialog;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -54,7 +54,7 @@ public class PHPCodeHyperLink implements IHyperlink {
 		CodeData[] initialElements = codeDatas;
 		String initialText = codeDatas[0].getName();
 		if (codeDatas.length > 1) {
-			OpenPhpTypeDialog dialog = new OpenPhpTypeDialog(Display.getDefault().getActiveShell());
+			OpenPhpElementDialog dialog = new OpenPhpElementDialog(Display.getDefault().getActiveShell());
 			dialog.getFilter().setSelectClasses(false);
 			dialog.getFilter().setSelectFunctions(false);
 			dialog.getFilter().setSelectConstants(false);

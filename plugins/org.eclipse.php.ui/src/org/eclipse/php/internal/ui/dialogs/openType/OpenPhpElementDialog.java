@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-public class OpenPhpTypeDialog extends Dialog {
+public class OpenPhpElementDialog extends Dialog {
 
 	private PHPCodeData selectedElement = null;
 
@@ -53,12 +53,12 @@ public class OpenPhpTypeDialog extends Dialog {
 
 	private String title;
 
-	public OpenPhpTypeDialog(Shell parentShell) {
+	public OpenPhpElementDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 
-	public OpenPhpTypeDialog(Shell parentShell, String title) {
+	public OpenPhpElementDialog(Shell parentShell, String title) {
 		this(parentShell);
 		this.title = title;
 	}
@@ -105,10 +105,10 @@ public class OpenPhpTypeDialog extends Dialog {
 		basicSelector.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (event.getSelection().isEmpty()) {
-					OpenPhpTypeDialog.this.getButton(IDialogConstants.OK_ID).setEnabled(false);
+					OpenPhpElementDialog.this.getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
 				}
-				OpenPhpTypeDialog.this.getButton(IDialogConstants.OK_ID).setEnabled(true);
+				OpenPhpElementDialog.this.getButton(IDialogConstants.OK_ID).setEnabled(true);
 			}
 		});
 		return composite;

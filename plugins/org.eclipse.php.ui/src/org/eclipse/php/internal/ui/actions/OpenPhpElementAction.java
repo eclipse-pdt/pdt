@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.dialogs.openType.OpenPhpTypeDialog;
+import org.eclipse.php.internal.ui.dialogs.openType.OpenPhpElementDialog;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.swt.widgets.Shell;
@@ -25,13 +25,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 
-public class OpenTypeAction implements IWorkbenchWindowActionDelegate {
+public class OpenPhpElementAction implements IWorkbenchWindowActionDelegate {
 
 	//---- IWorkbenchWindowActionDelegate ------------------------------------------------
 
 	public void run(IAction action) {
 		Shell parent = PHPUiPlugin.getActiveWorkbenchShell();
-		OpenPhpTypeDialog dialog = new OpenPhpTypeDialog(parent);
+		OpenPhpElementDialog dialog = new OpenPhpElementDialog(parent);
 
 		int result = dialog.open();
 		if (result != IDialogConstants.OK_ID) {
