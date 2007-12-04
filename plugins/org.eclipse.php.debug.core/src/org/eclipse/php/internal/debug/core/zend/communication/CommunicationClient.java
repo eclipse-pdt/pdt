@@ -18,8 +18,6 @@ package org.eclipse.php.internal.debug.core.zend.communication;
  */
 public interface CommunicationClient {
 
-    public void handleNotification(Object msg);
-
     public void handlePeerResponseTimeout();
 
     public void handleMultipleBindings();

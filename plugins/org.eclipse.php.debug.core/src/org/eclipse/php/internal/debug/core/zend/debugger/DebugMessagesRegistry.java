@@ -113,7 +113,11 @@ public class DebugMessagesRegistry {
 	 * Return handler according to the message
 	 */
 	public static IDebugMessageHandler getHandler(IDebugMessage message) {
-		return ((DebugMessageHandlerFactory) getInstance().getHandlers().get(message.getType())).createHandler();
+		DebugMessageHandlerFactory debugMessageHandlerFactory = ((DebugMessageHandlerFactory) getInstance().getHandlers().get(message.getType()));
+		if (debugMessageHandlerFactory != null) {
+			return debugMessageHandlerFactory.createHandler();
+		}
+		return null;
 	}
 
 	/**

@@ -14,9 +14,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -47,10 +44,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreak
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsResponse;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugScriptEndedNotification;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionClosedNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebuggerErrorNotification;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalResponse;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackRequest;
@@ -61,12 +55,8 @@ import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableVal
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueResponse;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.HeaderOutputNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.OutputNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.ParsingErrorNotification;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.ReadyNotification;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartRequest;
@@ -87,7 +77,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public static final int PROTOCOL_ID = 2006040701;
 	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
-	private static final Pattern EVALD_CODE_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : eval\\(\\)'d code"); //$NON-NLS-1$
 
 	protected boolean isDebugMode = System.getProperty("loggingDebug") != null;
 	protected boolean protocolSet;
@@ -131,79 +120,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public void connectionClosed() {
 		debugHandler.connectionClosed();
 		protocolSet = false;
-	}
-
-	public void handleNotification(Object msg) {
-		if (msg instanceof OutputNotification) {
-
-			String output = ((OutputNotification) msg).getOutput();
-			debugHandler.newOutput(output);
-
-		} else if (msg instanceof ReadyNotification) {
-
-			ReadyNotification readyNotification = (ReadyNotification) msg;
-			String currentFile = readyNotification.getFileName();
-			int currentLine = readyNotification.getLineNumber();
-			debugHandler.ready(currentFile, currentLine);
-
-		} else if (msg instanceof DebugSessionStartedNotification) {
-
-			DebugSessionStartedNotification debugSessionStartedNotification = (DebugSessionStartedNotification) msg;
-			String fileName = debugSessionStartedNotification.getFileName();
-			String uri = debugSessionStartedNotification.getUri();
-			String query = debugSessionStartedNotification.getQuery();
-			String options = debugSessionStartedNotification.getOptions();
-			debugHandler.sessionStarted(fileName, uri, query, options);
-
-		} else if (msg instanceof HeaderOutputNotification) {
-
-			debugHandler.newHeaderOutput(((HeaderOutputNotification) msg).getOutput());
-
-		} else if (msg instanceof ParsingErrorNotification) {
-
-			ParsingErrorNotification parseError = (ParsingErrorNotification) msg;
-			String errorText = parseError.getErrorText();
-
-			String fileName = parseError.getFileName();
-			try {
-				Path errorFilePath = new Path(parseError.getFileName());
-				if (errorFilePath.segmentCount() > 1 && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
-					fileName = errorFilePath.lastSegment();
-				}
-			} catch (RuntimeException e) { // if new Path() fails - do nothing
-			}
-
-			int lineNumber = parseError.getLineNumber();
-			int errorLevel = parseError.getErrorLevel();
-
-			// Check whether the problematic file is actually eval() code:
-			Matcher m = EVALD_CODE_PATTERN.matcher(fileName);
-			if (m.matches()) {
-				fileName = m.group(1);
-				lineNumber = Integer.parseInt(m.group(2));
-			}
-
-			DebugError debugError = new DebugError(errorLevel, fileName, lineNumber, errorText);
-			debugHandler.parsingErrorOccured(debugError);
-
-		} else if (msg instanceof DebuggerErrorNotification) {
-
-			DebuggerErrorNotification parseError = (DebuggerErrorNotification) msg;
-			int errorLevel = parseError.getErrorLevel();
-			DebugError debugError = new DebugError();
-			String errorText = parseError.getErrorText();
-			if (errorText != null && !errorText.equals("")) {
-				debugError.setErrorText(errorText);
-			}
-
-			debugError.setCode(errorLevel);
-			debugHandler.debuggerErrorOccured(debugError);
-
-		} else if (msg instanceof DebugScriptEndedNotification) {
-
-			debugHandler.handleScriptEnded(); // 2 options: close message or // XXX - uncomment
-			// start profile
-		}
 	}
 
 	public void closeDebugSession() {
