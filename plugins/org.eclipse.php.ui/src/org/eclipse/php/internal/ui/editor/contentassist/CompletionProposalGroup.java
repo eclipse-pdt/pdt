@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 
 import org.eclipse.core.internal.watson.ElementTree;
 import org.eclipse.core.runtime.IPath;
@@ -149,6 +150,18 @@ public abstract class CompletionProposalGroup {
 			} else {
 				tree.createElement(path, null);
 			}
+		} else {
+			if (data != null) {
+				Object oldData = tree.getElementData(path);
+				if (oldData instanceof LinkedHashSet) {
+					((LinkedHashSet<CodeData>) oldData).add(data);
+				} else {
+					LinkedHashSet<CodeData> newData = new LinkedHashSet<CodeData>(2);
+					newData.add((CodeData)oldData);
+					newData.add(data);
+					tree.setElementData(path, newData);
+				}
+			}
 		}
 	}
 
@@ -215,14 +228,23 @@ public abstract class CompletionProposalGroup {
 			final Collection<IPath> completionProposalPaths = calculateProposalPaths(completionTree, root, false);
 			for (final IPath completionProposalPath : completionProposalPaths) {
 				Object elementData = completionTree.getElementData(completionProposalPath);
-				if (elementData != null) {
-					proposals.add(createElementProposal(projectModel, elementData));
+				Collection<CodeData> elementDatas;
+				if (!(elementData instanceof Collection)) {
+					elementDatas = Arrays.asList(new CodeData[] { (CodeData) elementData });
 				} else {
+					elementDatas = (Collection<CodeData>) elementData;
+				}
 
-					// show directories even if matched:
-					IPath replacementPath = completionProposalPath.removeFirstSegments(1);
-					String replacement = elementPathToName(replacementPath) + ELEMENT_NAME_SEPARATOR;
-					proposals.add(createGroupProposal(completionProposalPath, replacement));
+				for (CodeData currentData : elementDatas) {
+					if (currentData != null) {
+						proposals.add(createElementProposal(projectModel, currentData));
+					} else {
+
+						// show directories even if matched:
+						IPath replacementPath = completionProposalPath.removeFirstSegments(1);
+						String replacement = elementPathToName(replacementPath) + ELEMENT_NAME_SEPARATOR;
+						proposals.add(createGroupProposal(completionProposalPath, replacement));
+					}
 				}
 			}
 		}

@@ -830,15 +830,30 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void showClassCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean isInstanceOf, boolean addVariableDollar, boolean explicit, boolean isStrict) {
-		CodeData[] functions = null;
-		if (explicit || autoShowFunctionsKeywordsConstants) {
-			functions = projectModel.getClassFunctions(fileName, className, startWith.length() == 0 ? "" : startWith); //$NON-NLS-1$
+		CodeData[] allFunctions = null;
+		CodeData[] allClassVariables = null;
+
+		String[] classNames = className.split("\\|");
+		for (String realClassName : classNames) {
+			realClassName = realClassName.trim();
+			if (explicit || autoShowFunctionsKeywordsConstants) {
+				CodeData[] functions = projectModel.getClassFunctions(fileName, realClassName, startWith.length() == 0 ? "" : startWith); //$NON-NLS-1$
+				if (allFunctions == null) {
+					allFunctions = functions;
+				} else {
+					allFunctions = ModelSupport.merge(allFunctions, functions);
+				}
+			}
+			if (explicit || autoShowVariables) {
+				CodeData[] classVariables = ModelSupport.getFilteredCodeData(projectModel.getClassVariables(fileName, realClassName, ""), ModelSupport.NOT_STATIC_VARIABLES_FILTER); //$NON-NLS-1$
+				if (allClassVariables == null) {
+					allClassVariables = classVariables;
+				} else {
+					allClassVariables = ModelSupport.merge(allClassVariables, classVariables);
+				}
+			}
 		}
-		CodeData[] classVariables = null;
-		if (explicit || autoShowVariables) {
-			classVariables = ModelSupport.getFilteredCodeData(projectModel.getClassVariables(fileName, className, ""), ModelSupport.NOT_STATIC_VARIABLES_FILTER); //$NON-NLS-1$
-		}
-		CodeData[] result = ModelSupport.getFilteredCodeData(ModelSupport.merge(functions, classVariables), getAccessLevelFilter(projectModel, fileName, className, offset, isInstanceOf));
+		CodeData[] result = ModelSupport.getFilteredCodeData(ModelSupport.merge(allFunctions, allClassVariables), getAccessLevelFilter(projectModel, fileName, className, offset, isInstanceOf));
 
 		if (addVariableDollar) {
 			completionProposalGroup = classVariableCallCompletionProposalGroup;
@@ -881,7 +896,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	protected PHPClassData getContainerClassData(PHPProjectModel projectModel, String fileName, int offset) {
 		PHPFileData fileData = projectModel.getFileData(fileName);
-		return PHPFileDataUtilities.getContainerClassDada(fileData, offset);
+		return PHPFileDataUtilities.getContainerClassData(fileData, offset);
 	}
 
 	/**

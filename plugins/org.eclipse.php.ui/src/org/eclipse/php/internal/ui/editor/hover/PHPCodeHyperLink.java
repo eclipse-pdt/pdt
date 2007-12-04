@@ -49,8 +49,10 @@ public class PHPCodeHyperLink implements IHyperlink {
 		if (codeDatas == null) {
 			return;
 		}
-		
-		CodeData codeData;
+
+		CodeData codeData = null;
+		CodeData[] initialElements = codeDatas;
+		String initialText = codeDatas[0].getName();
 		if (codeDatas.length > 1) {
 			OpenPhpTypeDialog dialog = new OpenPhpTypeDialog(Display.getDefault().getActiveShell());
 			dialog.getFilter().setSelectClasses(false);
@@ -62,15 +64,17 @@ public class PHPCodeHyperLink implements IHyperlink {
 				dialog.getFilter().setSelectConstants(true);
 			} else if (codeDatas[0] instanceof PHPFunctionData) {
 				dialog.getFilter().setSelectFunctions(true);
-			} else {
-				return; // duh
+			} else if (codeDatas[0] instanceof PHPClassVarData) {
+				codeData = codeDatas[0];
 			}
-			dialog.setInitialElements(codeDatas);
-			dialog.setInitFilterText(codeDatas[0].getName());
-			if (dialog.open() == Dialog.CANCEL) {
-				return;
+			if (codeData == null) {
+				dialog.setInitialElements(codeDatas);
+				dialog.setInitFilterText(codeDatas[0].getName());
+				if (dialog.open() == Dialog.CANCEL) {
+					return;
+				}
+				codeData = dialog.getSelectedElement();
 			}
-			codeData = dialog.getSelectedElement();
 		} else {
 			codeData = codeDatas[0];
 		}

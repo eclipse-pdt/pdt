@@ -64,42 +64,6 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 	}
 
 	/**
-	 * This is an override in order to provide the PHP template content
-	 * for the Untitled PHP document
-	 */
-	protected void doSetInput(IEditorInput input) throws CoreException {
-		//check if this input is already opened in an editor
-		//this can happen when user Right-Click an editor's tab and selects the "New Editor"
-		IEditorPart existingEditor = ((WorkbenchPage) this.getSite().getWorkbenchWindow().getActivePage()).getEditorManager().findEditor(input);
-
-		super.doSetInput(input);
-		final TextFileDocumentProvider documentProvider = (TextFileDocumentProvider) getDocumentProvider();
-		final IDocument document = documentProvider.getDocument(input);
-
-		//New Untitled document (after check it doest not already exist
-		if (existingEditor == null) {
-			String content = loadPHPTemplate();
-			document.set(content);
-			documentProvider.saveDocument(null, input, document, true);
-		}
-	}
-
-	//Load the last template name used in New HTML File wizard.
-	private String loadPHPTemplate() {
-		String templateName = getPreferenceStore().getString(PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
-		if (templateName == null || templateName.length() == 0) {
-			return ""; //$NON-NLS-1$
-		}
-
-		PHPTemplateStore fTemplateStore = (PHPTemplateStore) PHPUiPlugin.getDefault().getTemplateStore();
-		Template template = fTemplateStore.findTemplate(templateName);
-		if (template != null) {
-			return template.getPattern();
-		}
-		return ""; //$NON-NLS-1$
-	}
-
-	/**
 	 * Overrides the call to wst model and simply returns the Dummy document's file
 	 */
 	public IFile getFile() {
