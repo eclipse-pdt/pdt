@@ -56,7 +56,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 			// If the lookup returned an empty elements array, check if the source is outside the workspace.
 			String fileName = null;
 			if (object instanceof PHPStackFrame) {
-				fileName = ((PHPStackFrame) object).getAbsoluteFileName();
+				fileName = ((PHPStackFrame) object).getSourceName();
 			} else if (object instanceof DBGpStackFrame) {
 				fileName = ((DBGpStackFrame) object).getQualifiedFile();
 			}
