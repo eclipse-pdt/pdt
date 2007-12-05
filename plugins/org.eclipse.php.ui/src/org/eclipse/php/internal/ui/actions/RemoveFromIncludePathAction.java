@@ -70,12 +70,14 @@ public class RemoveFromIncludePathAction extends SelectionDispatchAction {
 			PHPProjectModel[] projectModels = PHPWorkspaceModelManager.getInstance().listModels();
 			for (int i = 0; project == null && i < projectModels.length; ++i) {
 				PHPIncludePathModelManager includePathModelManager = (PHPIncludePathModelManager) projectModels[i].getModel(PHPIncludePathModelManager.COMPOSITE_INCLUDE_PATH_MODEL_ID);
-				IPhpModel[] models = includePathModelManager.listModels();
-				for (int j = 0; project == null && j < models.length; ++j) {
-					if (models[j] == includePathModel) {
-						project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModels[i]);
+				if (includePathModelManager != null) {
+					IPhpModel[] models = includePathModelManager.listModels();
+					for (int j = 0; project == null && j < models.length; ++j) {
+						if (models[j] == includePathModel) {
+							project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModels[i]);
+						}
 					}
-				}
+				} 
 			}
 			if (project != null) {
 				final PHPProjectOptions options = PHPProjectOptions.forProject(project);
