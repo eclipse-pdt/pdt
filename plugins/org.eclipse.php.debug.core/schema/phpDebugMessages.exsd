@@ -80,6 +80,13 @@
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="overridesId" type="string">
+            <annotation>
+               <documentation>
+                  ID of debug message to override
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

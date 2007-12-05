@@ -197,10 +197,15 @@ public class DebugSearchEngine {
 					}
 				}
 
+				boolean foundInWorkspace = results.size()> 0;
+
 				//search in opened editors
 				searchOpenedEditors(results, abstractPath);
 
-				if (results.size() > 0) {
+				if (!foundInWorkspace && results.size() == 1 && abstractPath.equals(results.getFirst().getAbstractPath())) {
+					localFile[0] = results.getFirst();
+				}
+				else if (results.size() > 0) {
 					Collections.sort(results, new BestMatchPathComparator(abstractPath));
 					localFile[0] = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]), debugTarget);
 					if (localFile[0] != null) {

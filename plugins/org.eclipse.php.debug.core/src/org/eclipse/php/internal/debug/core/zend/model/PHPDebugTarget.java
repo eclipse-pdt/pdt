@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.eclipse.debug.ui.AbstractDebugView;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
@@ -32,9 +34,15 @@ import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.model.*;
+import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
+import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -1046,5 +1054,65 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	public IBreakpointManager getBreakpointManager() {
 		return fBreakpointManager;
+	}
+
+	/**
+	 * Maps first debug file in the path mapper
+	 * @param remoteFile Server file path
+	 * @return mapped path entry or <code>null</code> in case of error
+	 */
+	public PathEntry mapFirstDebugFile(String remoteFile) {
+		try {
+			ILaunchConfiguration launchConfiguration = getLaunch().getLaunchConfiguration();
+			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
+
+			if (pathMapper != null) {
+				PathEntry pathEntry = pathMapper.getLocalFile(remoteFile);
+
+				// If such file doesn't exist in path mapper yet, add it:
+				if (pathEntry == null) {
+					// Try to find a map point:
+					String debugFileName = launchConfiguration.getAttribute(Server.FILE_NAME, (String) null);
+					if (debugFileName == null) {
+						debugFileName = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+					}
+					if (debugFileName != null) {
+						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(debugFileName);
+						if (resource instanceof IFile) {
+							pathEntry = new PathEntry(debugFileName, Type.WORKSPACE, resource.getParent());
+						} else if (new File(debugFileName).exists()) {
+							pathEntry = new PathEntry(debugFileName, Type.EXTERNAL, new File(debugFileName).getParentFile());
+						}
+					}
+					if (pathEntry != null) {
+						// Map remote file to the map point:
+						pathMapper.addEntry(remoteFile, pathEntry);
+						PathMapperRegistry.storeToPreferences();
+					} else {
+						// Find the local file, and map it:
+						pathEntry = DebugSearchEngine.find(remoteFile, this);
+					}
+				}
+
+				// Assign this project to Debug Target:
+				if (getProject() == null && pathEntry != null && pathEntry.getType() == Type.WORKSPACE) {
+					IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(pathEntry.getPath());
+					IProject project = resource.getProject();
+					setProject(project);
+					try {
+						ILaunchConfigurationWorkingCopy wc = launchConfiguration.getWorkingCopy();
+						wc.getAttribute(IPHPConstants.PHP_Project, project.getName());
+						wc.doSave();
+					} catch (CoreException e) {
+						PHPDebugPlugin.log(e);
+					}
+				}
+
+				return pathEntry;
+			}
+		} catch (Exception e) {
+			PHPDebugPlugin.log(e);
+		}
+		return null;
 	}
 }

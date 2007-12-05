@@ -75,14 +75,16 @@ import org.eclipse.php.internal.ui.Logger;
  */
 public class RemoteDebugger implements IRemoteDebugger {
 
-	public static final int PROTOCOL_ID = 2006040702;
+	/** Protocol ID this remote debugger is compatible with */
+	public static final int[] PROTOCOL_ID = { 2006040702, 2006040701 };
+
 	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 
 	protected boolean isDebugMode = System.getProperty("loggingDebug") != null;
-	protected boolean protocolSet;
 	private DebugConnectionThread connection;
 	private IDebugHandler debugHandler;
 	private Map<String, String> resolvedFiles;
+	private int currentProtocolId = 0;
 
 	/**
 	 * Creates new RemoteDebugSession
@@ -106,7 +108,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public void closeConnection() {
 		connection.closeConnection();
-		protocolSet = false;
 	}
 
 	public void setPeerResponseTimeout(int timeout) {
@@ -119,13 +120,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public void connectionClosed() {
 		debugHandler.connectionClosed();
-		protocolSet = false;
 	}
 
 	public void closeDebugSession() {
 		if (connection.isConnected()) {
 			connection.sendNotification(new DebugSessionClosedNotification());
-			protocolSet = false;
 		}
 	}
 
@@ -224,6 +223,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public String convertToLocalFilename(String remoteFile, String cwd, String currentScript) {
 		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
 		if (debugTarget.getContextManager().isResolveBlacklisted(remoteFile)) {
+			return remoteFile;
+		}
+
+		// check if this file is already local
+		if (ResourcesPlugin.getWorkspace().getRoot().findMember(remoteFile) != null) {
 			return remoteFile;
 		}
 
@@ -328,7 +332,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic addBreakpoint Returns true if successed sending the request,
+	 * Asynchronic addBreakpoint Returns true if succeeded sending the request,
 	 * false otherwise.
 	 */
 	public boolean addBreakpoint(Breakpoint bp, BreakpointAddedResponseHandler responseHandler) {
@@ -350,7 +354,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic addBreakpoint Returns true if successed adding the
+	 * Synchronic addBreakpoint Returns true if succeeded adding the
 	 * Breakpoint.
 	 */
 	public void addBreakpoint(Breakpoint breakpoint) {
@@ -374,7 +378,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic removeBreakpoint Returns true if successed sending the
+	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
 	public boolean removeBreakpoint(int id, BreakpointRemovedResponseHandler responseHandler) {
@@ -388,7 +392,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Ssynchronic removeBreakpoint Returns true if successed removing the
+	 * Ssynchronic removeBreakpoint Returns true if succeeded removing the
 	 * Breakpoint.
 	 */
 	public boolean removeBreakpoint(int id) {
@@ -407,7 +411,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic removeBreakpoint Returns true if successed sending the
+	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
 	public boolean removeBreakpoint(Breakpoint breakpoint, BreakpointRemovedResponseHandler responseHandler) {
@@ -415,7 +419,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic removeBreakpoint Returns true if successed removing the
+	 * Synchronic removeBreakpoint Returns true if succeeded removing the
 	 * Breakpoint.
 	 */
 	public boolean removeBreakpoint(Breakpoint breakpoint) {
@@ -423,7 +427,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic removeAllBreakpoints Returns true if successed sending the
+	 * Asynchronic removeAllBreakpoints Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
 	public boolean removeAllBreakpoints(AllBreakpointRemovedResponseHandler responseHandler) {
@@ -436,7 +440,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic removeAllBreakpoints Returns true if successed removing all
+	 * Synchronic removeAllBreakpoints Returns true if succeeded removing all
 	 * the Breakpoint.
 	 */
 	public boolean removeAllBreakpoints() {
@@ -454,7 +458,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic stepInto Returns true if successed sending the request, false
+	 * Asynchronic stepInto Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean stepInto(StepIntoResponseHandler responseHandler) {
@@ -467,7 +471,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic stepInto Returns true if successed stepInto.
+	 * Synchronic stepInto Returns true if succeeded stepInto.
 	 */
 	public boolean stepInto() {
 		if (!this.isActive()) {
@@ -484,7 +488,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic stepOver Returns true if successed sending the request, false
+	 * Asynchronic stepOver Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean stepOver(StepOverResponseHandler responseHandler) {
@@ -502,7 +506,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic stepOver Returns true if successed stepOver.
+	 * Synchronic stepOver Returns true if succeeded stepOver.
 	 */
 	public boolean stepOver() {
 		if (!this.isActive()) {
@@ -519,7 +523,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic stepOut Returns true if successed sending the request, false
+	 * Asynchronic stepOut Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean stepOut(StepOutResponseHandler responseHandler) {
@@ -537,7 +541,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic stepOut Returns true if successed stepOut.
+	 * Synchronic stepOut Returns true if succeeded stepOut.
 	 */
 	public boolean stepOut() {
 		if (!this.isActive()) {
@@ -554,7 +558,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic go Returns true if successed sending the request, false
+	 * Asynchronic go Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean go(GoResponseHandler responseHandler) {
@@ -572,7 +576,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic go Returns true if successed go.
+	 * Synchronic go Returns true if succeeded go.
 	 */
 	public boolean go() {
 		if (!this.isActive()) {
@@ -589,16 +593,17 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic start Returns true if successed sending the request, false
-	 * otherwise.
+	 * Asynchronic start Returns true if succeeded sending the request, false otherwise.
 	 */
 	public boolean start(StartResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
 		}
-		if (!setProtocol(getProtocolID())) {
+
+		if (!detectProtocolID()) {
 			return false;
 		}
+
 		debugHandler.getDebugTarget().installDeferredBreakpoints();
 		StartRequest request = new StartRequest();
 		try {
@@ -611,15 +616,17 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic start Returns true if successed start.
+	 * Synchronic start Returns true if succeeded start.
 	 */
 	public boolean start() {
 		if (!this.isActive()) {
 			return false;
 		}
-		if (!setProtocol(getProtocolID())) {
+
+		if (!detectProtocolID()) {
 			return false;
 		}
+
 		StartRequest request = new StartRequest();
 		try {
 			StartResponse response = (StartResponse) connection.sendRequest(request);
@@ -630,13 +637,18 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return false;
 	}
 
-	/**
-	 * Returns true if the protocol was successfully set by this debugger.
-	 *
-	 * @return True, if the protocol was set; False, otherwise.
-	 */
-	public boolean isProtocolSet() {
-		return protocolSet;
+	protected boolean detectProtocolID() {
+		for (int protocolId : getCompatibleProtocolID()) {
+			if (setProtocol(protocolId)) {
+				currentProtocolId = protocolId;
+				break;
+			}
+		}
+		if (currentProtocolId > 0) {
+			return true;
+		}
+		getDebugHandler().wrongDebugServer();
+		return false;
 	}
 
 	/*
@@ -649,28 +661,23 @@ public class RemoteDebugger implements IRemoteDebugger {
 		IDebugResponseMessage response = sendCustomRequest(request);
 		if (response != null && response instanceof SetProtocolResponse) {
 			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
-			if (responceProtocolID != protocolID) {
-				getDebugHandler().wrongDebugServer();
-				protocolSet = false;
-			} else {
-				protocolSet = true;
+			if (responceProtocolID == protocolID) {
+				return true;
 			}
-		} else {
-			protocolSet = false;
 		}
-		return protocolSet;
+		return false;
 	}
 
-	/**
-	 * Returns the protocol ID that should be used by this debugger.
-	 * @return
-	 */
-	protected int getProtocolID() {
+	public int getProtocolID() {
+		return currentProtocolId;
+	}
+
+	protected int[] getCompatibleProtocolID() {
 		return PROTOCOL_ID;
 	}
 
 	/**
-	 * Asynchronic pause Returns true if successed sending the request, false
+	 * Asynchronic pause Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean pause(PauseResponseHandler responseHandler) {
@@ -688,7 +695,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic pause Returns true if successed pause.
+	 * Synchronic pause Returns true if succeeded pause.
 	 */
 	public boolean pause() {
 		if (!this.isActive()) {
@@ -705,7 +712,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic pause Returns true if successed sending the request, false
+	 * Asynchronic pause Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean eval(String commandString, EvalResponseHandler responseHandler) {
@@ -773,7 +780,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic pause Returns true if successed pause.
+	 * Synchronic pause Returns true if succeeded pause.
 	 */
 	public String eval(String commandString) {
 		if (!this.isActive()) {
@@ -803,7 +810,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	public void finish() {
 		connection.closeConnection();
-		protocolSet = false;
 	}
 
 	/**

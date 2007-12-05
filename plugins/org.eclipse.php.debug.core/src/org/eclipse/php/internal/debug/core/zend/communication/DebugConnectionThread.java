@@ -266,7 +266,6 @@ public class DebugConnectionThread implements Runnable {
 					}
 					if (!isConnected())
 						break;
-					//System.out.println("rewaiting");
 				}
 			}
 			PHPLaunchUtilities.hideWaitForDebuggerMessage();
@@ -275,12 +274,10 @@ public class DebugConnectionThread implements Runnable {
 			}
 			return response;
 
-		} catch (IOException exc) { // Return null for any exception
-			//Log.writeLog("No Connection");
-			//Log.writeLog(exc);
-
-		} catch (InterruptedException exc) {// Return null for any exception
-			//Log.writeLog(exc);
+		} catch (IOException e) { // Return null for any exception
+			PHPDebugPlugin.log(e);
+		} catch (InterruptedException e) {// Return null for any exception
+			PHPDebugPlugin.log(e);
 		}
 		return null;
 	}
@@ -291,14 +288,11 @@ public class DebugConnectionThread implements Runnable {
 	 * @param responseHandler
 	 */
 	public void sendRequest(Object request, ResponseHandler responseHandler) {
-		//Integer msgId = new Integer(lastRequestID++);
 		int msgId = lastRequestID++;
 		IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
 		try {
-			//System.out.println("sending:"+request);
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
-			//msg.setID(msgId.intValue());
 			theMsg.setID(msgId);
 			theMsg.serialize(dataOutputStream);
 
@@ -380,7 +374,6 @@ public class DebugConnectionThread implements Runnable {
 		if (inputMessageHandler == null) {
 			inputMessageHandler = new InputMessageHandler(out);
 		} else {
-			//inputMessageHandler.start(out,true);
 			inputMessageHandler.waitForStart(out, true);
 		}
 	}
@@ -394,7 +387,6 @@ public class DebugConnectionThread implements Runnable {
 			if (inputManager == null) {
 				inputManager = new InputManager(in);
 			} else {
-				//inputManager.start(in,out);
 				inputManager.waitForStart(in);
 			}
 		} catch (Exception exc) {
@@ -419,7 +411,6 @@ public class DebugConnectionThread implements Runnable {
 		if (!isInitialized) {
 			return;
 		}
-		//        System.out.println("close connection");
 		if (socket != null) {
 			try {
 				socket.shutdownInput();
@@ -462,7 +453,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 	}
 
-	/*
+	/**
 	 * In case of a peerResponseTimeout exception we let the communication client handle the
 	 * logic of the peerResponseTimeout.
 	 */
@@ -897,13 +888,13 @@ public class DebugConnectionThread implements Runnable {
 							else { // no debug target - probably creation of debug session hasn't succeeded
 								handleConnectionClosed();
 							}
-						} catch (Exception exc) { // error processing the current message.
-							PHPDebugPlugin.log(exc);
+						} catch (Exception e) { // error processing the current message.
+							PHPDebugPlugin.log(e);
 						}
 					}
 
-				} catch (Exception exc) {
-					PHPDebugPlugin.log(exc);
+				} catch (Exception e) {
+					PHPDebugPlugin.log(e);
 				}
 			}
 		}
@@ -1156,15 +1147,11 @@ public class DebugConnectionThread implements Runnable {
 						}
 					} // end of synchronized part.
 
-				} catch (EOFException exc) {
+				} catch (IOException e) {
+//					PHPDebugPlugin.log(e);
 					shutDown();
-				} catch (SocketException exc) {
-					shutDown();
-				} catch (IOException exc) {
-					PHPDebugPlugin.log(exc);
-					shutDown();
-				} catch (Exception exc) {
-					PHPDebugPlugin.log(exc);
+				} catch (Exception e) {
+					PHPDebugPlugin.log(e);
 				}
 			}
 		}

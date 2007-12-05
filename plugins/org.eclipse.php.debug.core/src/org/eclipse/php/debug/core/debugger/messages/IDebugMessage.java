@@ -24,7 +24,7 @@ public interface IDebugMessage {
 
 	/**
 	 * Serialize this debug message to an output stream
-	 * @param out output stream this message is going to be written to 
+	 * @param out output stream this message is going to be written to
 	 */
 	public void serialize(DataOutputStream out) throws IOException;
 
@@ -33,13 +33,13 @@ public interface IDebugMessage {
 	 * @param in input stream this message is going to be read from
 	 */
 	public void deserialize(DataInputStream in) throws IOException;
-	
+
 	/**
 	 * Sets the debug transfer encoding for this message
 	 * @param String transfer encoding
 	 */
 	public void setTransferEncoding(String encoding);
-	
+
 	/**
 	 * Returns current debug transfer encoding for this message
 	 * @return String transfer encoding

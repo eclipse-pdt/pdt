@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
+import java.util.Collection;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -29,6 +32,7 @@ public class DebugMessagesRegistry {
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String HANDLER_ATTRIBUTE = "handler"; //$NON-NLS-1$
+	private static final String OVERRIDES_ATTRIBUTE = "overridesId"; //$NON-NLS-1$
 
 	/** This hash storing debug messagesHash by their type */
 	private IntHashtable messagesHash = new IntHashtable(50);
@@ -47,24 +51,39 @@ public class DebugMessagesRegistry {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
 
+		Map<String, IConfigurationElement> configElementsMap = new HashMap<String, IConfigurationElement>();
 		for (final IConfigurationElement element : elements) {
 			if (MESSAGE_TAG.equals(element.getName())) {
-				final IDebugMessage messages[] = new IDebugMessage[1];
+				String messageId = element.getAttribute(ID_ATTRIBUTE);
+				if (!configElementsMap.containsKey(messageId)) {
+					configElementsMap.put(messageId, element);
+				}
+				String overridesId = element.getAttribute(OVERRIDES_ATTRIBUTE);
+				if (overridesId != null) {
+					configElementsMap.put(overridesId, null);
+				}
+			}
+		}
 
-				SafeRunnable.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") {
-					public void run() throws Exception {
-						messages[0] = (IDebugMessage) element.createExecutableExtension(CLASS_ATTRIBUTE);
-					}
-				});
+		Collection<IConfigurationElement> configElements = configElementsMap.values();
+		configElements.remove(null);
 
-				if (messages[0] != null && !this.messagesHash.containsKey(messages[0].getType())) {
-					this.messagesHash.put(messages[0].getType(), messages[0]);
-					messagesTypes.put(element.getAttribute(ID_ATTRIBUTE), new Integer(messages[0].getType()));
+		for (final IConfigurationElement element : configElements) {
+			final IDebugMessage messages[] = new IDebugMessage[1];
 
-					String handlerClass = element.getAttribute(HANDLER_ATTRIBUTE);
-					if (handlerClass != null && !handlers.containsKey(messages[0].getType())) {
-						handlers.put(messages[0].getType(), new DebugMessageHandlerFactory(element));
-					}
+			SafeRunnable.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") {
+				public void run() throws Exception {
+					messages[0] = (IDebugMessage) element.createExecutableExtension(CLASS_ATTRIBUTE);
+				}
+			});
+
+			if (messages[0] != null && !this.messagesHash.containsKey(messages[0].getType())) {
+				messagesHash.put(messages[0].getType(), messages[0]);
+				messagesTypes.put(element.getAttribute(ID_ATTRIBUTE), new Integer(messages[0].getType()));
+
+				String handlerClass = element.getAttribute(HANDLER_ATTRIBUTE);
+				if (handlerClass != null && !handlers.containsKey(messages[0].getType())) {
+					handlers.put(messages[0].getType(), new DebugMessageHandlerFactory(element));
 				}
 			}
 		}
