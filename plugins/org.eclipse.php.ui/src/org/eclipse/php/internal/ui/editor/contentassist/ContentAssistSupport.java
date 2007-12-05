@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +36,6 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.util.Visitor;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
-import org.eclipse.php.internal.core.util.text.StringUtils;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateCompletionProcessor;
@@ -49,7 +51,6 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	/**
 	 *
 	 */
-	private static final String PHPDOC_CLASS_NAME_SEPARATOR = "\\|"; //$NON-NLS-1$
 	protected static final char[] phpDelimiters = new char[] { '?', ':', ';', '|', '^', '&', '<', '>', '+', '-', '.', '*', '/', '%', '!', '~', '[', ']', '(', ')', '{', '}', '@', '\n', '\t', ' ', ',', '$', '\'', '\"' };
 	protected static final String CLASS_FUNCTIONS_TRIGGER = "::"; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
@@ -68,7 +69,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	protected boolean showVariablesFromOtherFiles;
 	protected boolean groupCompletionOptions;
 	protected boolean cutCommonPrefix;
-	protected boolean determineObjectTypeFromOtherFile;
+	public boolean determineObjectTypeFromOtherFile;
 	protected boolean disableConstants;
 	protected boolean showClassNamesInGlobalList;
 	protected boolean showNonStrictOptions;
@@ -678,11 +679,15 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		if (bracketIndex == -1) {
 			//meaning its a class variable and not a function
-			return getVarType(projectModel, fileName, className, propertyName, offset, line);
+			return PHPModelUtil.getVarType(projectModel, fileName, className, propertyName, offset, line, determineObjectTypeFromOtherFile);
 		}
 
 		String functionName = propertyName.substring(0, bracketIndex).trim();
-		return getFunctionReturnType(projectModel, fileName, className, functionName);
+		return PHPModelUtil.getFunctionReturnType(projectModel, fileName, className, functionName);
+	}
+
+	protected String getFunctionReturnType(PHPProjectModel projectModel, String fileName, String className, String functionName) {
+		return PHPModelUtil.getFunctionReturnType(projectModel, fileName, className, functionName);
 	}
 
 	/**
@@ -731,7 +736,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
 			PHPClassData classData = getContainerClassData(projectModel, fileName, offset);
 			if (classData != null) { //if its a clss function
-				return getFunctionReturnType(projectModel, fileName, classData.getName(), functionName);
+				return PHPModelUtil.getFunctionReturnType(projectModel, fileName, classData.getName(), functionName);
 			}
 			// if its a non class function
 			PHPFileData fileData = projectModel.getFileData(fileName);
@@ -750,108 +755,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return functionData != null;
 	}
 
-	/**
-	 * finding the type of the class variable.
-	 */
-	protected String getVarType(PHPProjectModel projectModel, String fileName, String className, String varName, int statementStart, int line) {
-		String tempType = PHPFileDataUtilities.getVariableType(fileName, "this;*" + varName, statementStart, line, projectModel.getPHPUserModel(), determineObjectTypeFromOtherFile); //$NON-NLS-1$
-		if (tempType != null) {
-			return tempType;
-		}
-
-		// process multiple classes variables and compile their types for recursive multiple resolution
-		String[] realClassNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
-		Set<String> varClassNames = new LinkedHashSet<String>();
-		for (String realClassName : realClassNames) {
-			realClassName = realClassName.trim();
-			CodeData classVar = projectModel.getClassVariablesData(fileName, realClassName, varName);
-			if (classVar != null) {
-				if (classVar instanceof PHPClassVarData) {
-					varClassNames.add(((PHPClassVarData) classVar).getClassType());
-				}
-				continue;
-			}
-			// checking if the variable belongs to one of the class's ancestor
-			PHPClassData classData = projectModel.getClass(fileName, realClassName);
-
-			if (classData == null) {
-				continue;
-			}
-			PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
-			if (superClassNameData == null) {
-				continue;
-			}
-			String classVarClassName = getVarType(projectModel, fileName, superClassNameData.getName(), varName, statementStart, line);
-			if (classVarClassName != null) {
-				varClassNames.add(classVarClassName);
-			}
-		}
-		return StringUtils.implodeStrings(varClassNames, "|"); //$NON-NLS-1$
-	}
-
-	/**
-	 * finding the return type of the function.
-	 */
-	protected String getFunctionReturnType(PHPProjectModel projectModel, String fileName, String className, String functionName) {
-		String[] realClassNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
-		Set<String> functionReturnClassNames = new LinkedHashSet<String>();
-		for (String realClassName : realClassNames) {
-			realClassName = realClassName.trim();
-			CodeData classFunction = projectModel.getClassFunctionData(fileName, realClassName, functionName);
-			if (classFunction != null) {
-				if (classFunction instanceof PHPFunctionData) {
-					functionReturnClassNames.add(((PHPFunctionData) classFunction).getReturnType());
-				}
-				continue;
-			}
-
-			// checking if the function belongs to one of the class's ancestor
-			PHPClassData classData = projectModel.getClass(fileName, realClassName);
-
-			if (classData == null) {
-				continue;
-			}
-			String functionReturnClassName = null;
-			PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
-			if (superClassNameData != null) {
-				functionReturnClassName = getFunctionReturnType(projectModel, fileName, superClassNameData.getName(), functionName);
-			}
-
-			// checking if its a non-class function from within the file
-			if (functionReturnClassName == null) {
-				PHPFileData fileData = projectModel.getFileData(fileName);
-				CodeData[] functions = fileData.getFunctions();
-				for (CodeData function : functions) {
-					if (function.getName().equals(functionName)) {
-						if (function instanceof PHPFunctionData) {
-							functionReturnClassName = ((PHPFunctionData) function).getReturnType();
-						}
-					}
-				}
-			}
-
-			// checking if its a non-class function from within the project
-			if (functionReturnClassName == null) {
-				CodeData[] functions = projectModel.getFunctions();
-				for (CodeData function : functions) {
-					if (function.getName().equals(functionName)) {
-						if (function instanceof PHPFunctionData) {
-							functionReturnClassName = ((PHPFunctionData) function).getReturnType();
-						}
-					}
-				}
-			}
-			functionReturnClassNames.add(functionReturnClassName);
-		}
-		return StringUtils.implodeStrings(functionReturnClassNames, "|"); //$NON-NLS-1$
-	}
-
 	protected void showClassCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean isInstanceOf, boolean addVariableDollar, boolean explicit, boolean isStrict) {
 		CodeData[] allFunctions = null;
 		CodeData[] allClassVariables = null;
 
 		// collecting multiple classes in case class name has string separated by "|", which may be used in doc-block
-		String[] classNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
+		String[] classNames = className.split(PHPModelUtil.PHPDOC_CLASS_NAME_SEPARATOR);
 		for (String realClassName : classNames) {
 			realClassName = realClassName.trim();
 			if (explicit || autoShowFunctionsKeywordsConstants) {
