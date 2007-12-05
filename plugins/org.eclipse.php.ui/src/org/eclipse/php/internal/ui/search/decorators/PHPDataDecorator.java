@@ -17,9 +17,9 @@ import org.eclipse.php.internal.core.util.Visitor;
 /**
  * PHP code data decorator that added a check for leaf state functionallity and can also
  * hold the project that contains it.
- * 
+ *
  * This class is not intended to be instantiate.
- * 
+ *
  * @author shalom
  */
 public abstract class PHPDataDecorator implements IPHPDataLeafMarker {
@@ -30,7 +30,7 @@ public abstract class PHPDataDecorator implements IPHPDataLeafMarker {
 
 	/**
 	 * Constructs a new PHPDataDecorator.
-	 * 
+	 *
 	 * @param source
 	 * @param project
 	 * @param isLeaf
@@ -40,18 +40,18 @@ public abstract class PHPDataDecorator implements IPHPDataLeafMarker {
 		this.project = project;
 		this.isLeaf = isLeaf;
 	}
-	
+
 	/**
 	 * Constructs a new PHPDataDecorator.
 	 * The isLeaf is set to true.
-	 * 
+	 *
 	 * @param source
 	 * @param project
 	 */
 	public PHPDataDecorator(PHPCodeData source, IProject project) {
 		this(source, project,true);
 	}
-	
+
 	public void setContainer(PHPCodeData container) {
 		source.setContainer(container);
 	}
@@ -94,7 +94,7 @@ public abstract class PHPDataDecorator implements IPHPDataLeafMarker {
 		source.accept(v);
 	}
 
-	public int compareTo(Object arg0) {
+	public int compareTo(CodeData arg0) {
 		return source.compareTo(arg0);
 	}
 
@@ -109,7 +109,7 @@ public abstract class PHPDataDecorator implements IPHPDataLeafMarker {
 	public void setLeaf(boolean isLeaf) {
 		this.isLeaf = isLeaf;
 	}
-	
+
 	public boolean isLeaf() {
 		return isLeaf;
 	}
@@ -117,14 +117,14 @@ public abstract class PHPDataDecorator implements IPHPDataLeafMarker {
 	public IProject getProject() {
 		return project;
 	}
-	
+
 	public boolean equals(Object other) {
 		if (other instanceof PHPDataDecorator) {
 			return this.hashCode() == ((PHPDataDecorator)other).hashCode();
 		}
 		return false;
 	}
-	
+
 	public int hashCode() {
 		UserData userData = getUserData();
 		return (userData.getStartPosition() + userData.getFileName()).hashCode() + getClass().hashCode();

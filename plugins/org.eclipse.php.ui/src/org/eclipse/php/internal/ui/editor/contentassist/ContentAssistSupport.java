@@ -48,6 +48,10 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
 public class ContentAssistSupport implements IContentAssistSupport {
 
+	/**
+	 *
+	 */
+	private static final String PHPDOC_CLASS_NAME_SEPARATOR = "\\|"; //$NON-NLS-1$
 	protected static final char[] phpDelimiters = new char[] { '?', ':', ';', '|', '^', '&', '<', '>', '+', '-', '.', '*', '/', '%', '!', '~', '[', ']', '(', ')', '{', '}', '@', '\n', '\t', ' ', ',', '$', '\'', '\"' };
 	protected static final String CLASS_FUNCTIONS_TRIGGER = "::"; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
@@ -790,7 +794,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return null;
 		}
 
-		// checking if the function bellongs to one of the class's ancestor
+		// checking if the function belongs to one of the class's ancestor
 		PHPClassData classData = projectModel.getClass(fileName, className);
 
 		if (classData == null) {
@@ -833,24 +837,17 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] allFunctions = null;
 		CodeData[] allClassVariables = null;
 
-		String[] classNames = className.split("\\|");
+		// collecting for multiple classes in case class name has string separated by "|", which may be used in doc-block
+		String[] classNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
 		for (String realClassName : classNames) {
 			realClassName = realClassName.trim();
 			if (explicit || autoShowFunctionsKeywordsConstants) {
 				CodeData[] functions = projectModel.getClassFunctions(fileName, realClassName, startWith.length() == 0 ? "" : startWith); //$NON-NLS-1$
-				if (allFunctions == null) {
-					allFunctions = functions;
-				} else {
-					allFunctions = ModelSupport.merge(allFunctions, functions);
-				}
+				allFunctions = ModelSupport.merge(allFunctions, functions);
 			}
 			if (explicit || autoShowVariables) {
 				CodeData[] classVariables = ModelSupport.getFilteredCodeData(projectModel.getClassVariables(fileName, realClassName, ""), ModelSupport.NOT_STATIC_VARIABLES_FILTER); //$NON-NLS-1$
-				if (allClassVariables == null) {
-					allClassVariables = classVariables;
-				} else {
-					allClassVariables = ModelSupport.merge(allClassVariables, classVariables);
-				}
+				allClassVariables = ModelSupport.merge(allClassVariables, classVariables);
 			}
 		}
 		CodeData[] result = ModelSupport.getFilteredCodeData(ModelSupport.merge(allFunctions, allClassVariables), getAccessLevelFilter(projectModel, fileName, className, offset, isInstanceOf));
