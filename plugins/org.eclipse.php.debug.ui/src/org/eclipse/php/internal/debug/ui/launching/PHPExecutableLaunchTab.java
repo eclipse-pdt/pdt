@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
@@ -312,20 +313,21 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * A callback method when changing the file to debug via 'Browse'
 	 */
 	private void handleChangeFileToDebug(final Text textField) {
-		IFile file = null;
 		final IResource resource = LaunchUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures(), true);
-		if (resource instanceof IFile)
-			file = (IFile) resource;
-		if (file != null) {
-			textField.setText(file.getFullPath().toString());
-			String fileName = ""; //$NON-NLS-1$
-			IPath location = file.getLocation();
-			if (location != null) {
-				fileName = location.toOSString();
+		if (resource instanceof IFile) {
+			if (resource instanceof ExternalFileWrapper) {
+				textField.setText(resource.getFullPath().toOSString());
 			} else {
-				fileName = resource.getFullPath().toString();
+				textField.setText(resource.getFullPath().toString());
 			}
-			textField.setData(fileName);
+			String fileLocation = ""; //$NON-NLS-1$
+			IPath location = resource.getLocation();
+			if (location != null) {
+				fileLocation = location.toOSString();
+			} else {
+				fileLocation = resource.getFullPath().toString();
+			}
+			textField.setData(fileLocation);
 		}
 	}
 
