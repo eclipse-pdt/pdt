@@ -81,6 +81,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	private PHPTemplateCompletionProcessor templateCompletionProcessor;
 
+	enum States {
+		CATCH, NEW, INSTANCEOF
+	};
+
 	protected IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event != null) {
@@ -289,7 +293,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 		}
 
-		if (isInCatchStatement(projectModel, statementText, offset, selectionLength, explicit)) {
+		if (isInCatchStatement(projectModel, fileData, statementText, offset, selectionLength, explicit)) {
 			// the current position is inside catch statement.
 			return;
 		}
@@ -301,7 +305,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		String lastWord = statementText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
 
-		if (haveSpacesAtEnd && isNewOrInstanceofStatement(projectModel, lastWord, "", offset, selectionLength, explicit, type)) { //$NON-NLS-1$
+		if (haveSpacesAtEnd && isNewOrInstanceofStatement(projectModel, fileData, lastWord, "", offset, selectionLength, explicit, type)) { //$NON-NLS-1$
 			// the current position is inside new or instanceof statement.
 			return;
 		}
@@ -316,7 +320,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 		String firstWord = statementText.subSequence(startPosition, endPosition).toString();
 
-		if (!haveSpacesAtEnd && isNewOrInstanceofStatement(projectModel, firstWord, lastWord, offset, selectionLength, explicit, type)) {
+		if (!haveSpacesAtEnd && isNewOrInstanceofStatement(projectModel, fileData, firstWord, lastWord, offset, selectionLength, explicit, type)) {
 			// the current position is inside new or instanceof statement.
 			if (lastWord.startsWith("$")) {
 				if (haveSpacesAtEnd) {
@@ -1211,7 +1215,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		return newClasses;
 	}
 
-	protected boolean isInCatchStatement(PHPProjectModel projectModel, TextSequence text, int offset, int selectionLength, boolean explicit) {
+	protected boolean isInCatchStatement(PHPProjectModel projectModel, PHPFileData fileData, TextSequence text, int offset, int selectionLength, boolean explicit) {
 		Matcher matcher = catchPattern.matcher(text);
 		int catchStart = text.length();
 		while (matcher.find()) {
@@ -1242,40 +1246,62 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		String className = text.subSequence(startPosition, endPosition).toString();
 
 		if (endPosition == text.length()) {
-			showClassList(projectModel, className, offset, selectionLength, false, explicit);
+			showClassList(projectModel, fileData, className, offset, selectionLength, States.CATCH, explicit);
 		}
 		return true;
 	}
 
-	protected void showClassList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean isNewStatement, boolean explicit) {
+	protected void showClassList(PHPProjectModel projectModel, PHPFileData fileData, String startWith, int offset, int selectionLength, States state, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
 
-		CodeData[] classes;
-		if (isNewStatement) {
-			completionProposalGroup = newStatementCompletionProposalGroup;
-			classes = getOnlyClasses(projectModel);
-		} else {
-			completionProposalGroup = phpCompletionProposalGroup;
-			classes = projectModel.getClasses();
+		CodeData[] classes = null;
+
+		switch (state) {
+			case NEW:
+				completionProposalGroup = newStatementCompletionProposalGroup;
+				classes = getOnlyClasses(projectModel);
+				classes = addSelfKeywordToProposals(classes);
+				break;
+			case INSTANCEOF:
+				completionProposalGroup = phpCompletionProposalGroup;
+				classes = projectModel.getClasses();
+				classes = addSelfKeywordToProposals(classes);
+				break;
+			case CATCH:
+				completionProposalGroup = phpCompletionProposalGroup;
+				classes = projectModel.getClasses();
+				break;
+			default:
+				break;
 		}
 
 		completionProposalGroup.setData(offset, classes, startWith, selectionLength);
 	}
 
-	protected boolean isNewOrInstanceofStatement(PHPProjectModel projectModel, String keyword, String startWith, int offset, int selectionLength, boolean explicit, String type) {
+	private CodeData[] addSelfKeywordToProposals(CodeData[] classes) {
+		CodeData selfKeyword = PHPCodeDataFactory.createPHPKeywordData("self", "::", 2);
+		CodeData[] proposalArray = new CodeData[classes.length + 1];
+		System.arraycopy(classes, 0, proposalArray, 0, classes.length);
+		proposalArray[classes.length] = selfKeyword;
+
+		Arrays.sort(proposalArray);
+		return proposalArray;
+	}
+
+	protected boolean isNewOrInstanceofStatement(PHPProjectModel projectModel, PHPFileData fileData, String keyword, String startWith, int offset, int selectionLength, boolean explicit, String type) {
 		if (PHPPartitionTypes.isPHPQuotesState(type)) {
 			return false;
 		}
 
 		if (keyword.equalsIgnoreCase("instanceof")) { //$NON-NLS-1$
-			showClassList(projectModel, startWith, offset, selectionLength, false, explicit);
+			showClassList(projectModel, fileData, startWith, offset, selectionLength, States.INSTANCEOF, explicit);
 			return true;
 		}
 
 		if (keyword.equalsIgnoreCase("new")) { //$NON-NLS-1$
-			showClassList(projectModel, startWith, offset, selectionLength, true, explicit);
+			showClassList(projectModel, fileData, startWith, offset, selectionLength, States.NEW, explicit);
 			return true;
 		}
 
@@ -1416,11 +1442,15 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	private class NewStatementCompletionProposalGroup extends CompletionProposalGroup {
 		@Override
 		protected CodeDataCompletionProposal createProposal(PHPProjectModel projectModel, CodeData codeData) {
-			PHPClassData classData = (PHPClassData) codeData;
-			PHPFunctionData constructor = classData.getUserData() != null ? PHPModelUtil.getRealConstructor(projectModel, classData.getUserData().getFileName(), classData) : null;
-			int suffixOffset = constructor != null && constructor.getParameters().length > 0 ? 1 : 2;
-
-			return new CodeDataCompletionProposal(projectModel, classData, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true); //$NON-NLS-1$ //$NON-NLS-2$
+			PHPCodeData phpCodeData = (PHPCodeData) codeData;
+			if (phpCodeData instanceof PHPClassData) {
+				PHPClassData classData = (PHPClassData) phpCodeData;
+				PHPFunctionData constructor = classData.getUserData() != null ? PHPModelUtil.getRealConstructor(projectModel, classData.getUserData().getFileName(), classData) : null;
+				int suffixOffset = constructor != null && constructor.getParameters().length > 0 ? 1 : 2;
+				return new CodeDataCompletionProposal(projectModel, classData, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				return new CodeDataCompletionProposal(projectModel, phpCodeData, getOffset() - key.length(), key.length(), selectionLength, "", "()", 2, true); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 
 	}
