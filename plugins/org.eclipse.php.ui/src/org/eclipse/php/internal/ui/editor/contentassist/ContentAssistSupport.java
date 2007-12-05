@@ -24,6 +24,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.Utils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -1256,18 +1257,24 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 		}
 
+		boolean addSelfKeyword = needToAddSelfKeyword(fileData, offset);
+
 		CodeData[] classes = null;
 
 		switch (state) {
 			case NEW:
 				completionProposalGroup = newStatementCompletionProposalGroup;
 				classes = getOnlyClasses(projectModel);
-				classes = addSelfKeywordToProposals(classes);
+				if (addSelfKeyword) {
+					classes = addSelfKeywordToProposals(classes);
+				}
 				break;
 			case INSTANCEOF:
 				completionProposalGroup = phpCompletionProposalGroup;
 				classes = projectModel.getClasses();
-				classes = addSelfKeywordToProposals(classes);
+				if (addSelfKeyword) {
+					classes = addSelfKeywordToProposals(classes);
+				}
 				break;
 			case CATCH:
 				completionProposalGroup = phpCompletionProposalGroup;
@@ -1278,6 +1285,37 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		}
 
 		completionProposalGroup.setData(offset, classes, startWith, selectionLength);
+	}
+
+	/**
+	 * The "self" keyword needs to be added only if we are in a class method
+	 * and it is not an abstract class or an interface
+	 * @param fileData
+	 * @param offset
+	 * @return whether the self keyword should be added
+	 */
+	private boolean needToAddSelfKeyword(PHPFileData fileData, int offset) {
+
+		boolean addSelfKeyword = false;
+		// get the class / function
+		PHPCodeContext context = ModelSupport.createContext(fileData, offset);
+		String className = context.getContainerClassName();
+		String functionName = context.getContainerFunctionName();
+
+		if (className != null && className.trim().length() > 0 && functionName != null && functionName.trim().length() > 0) {
+			addSelfKeyword = true;
+			PHPClassData[] classes = fileData.getClasses();
+			for (PHPClassData classData : classes) {
+				if (classData.getName().equals(className)) {
+					int modifiers = classData.getModifiers();
+					if (PHPModifier.isAbstract(modifiers) || PHPModifier.isInterface(modifiers)) {
+						return false;
+					}
+				}
+			}
+		}
+
+		return addSelfKeyword;
 	}
 
 	private CodeData[] addSelfKeywordToProposals(CodeData[] classes) {
