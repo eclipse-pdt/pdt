@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -760,26 +757,43 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (tempType != null) {
 			return tempType;
 		}
-		CodeData classVar = projectModel.getClassVariablesData(fileName, className, varName);
-		if (classVar != null) {
-			if (classVar instanceof PHPClassVarData) {
-				return ((PHPClassVarData) classVar).getClassType();
+
+		// process multiple classes variables and compile their types for recursive multiple resolution
+		String[] realClassNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
+		Set<String> varClassNames = new LinkedHashSet<String>();
+		for (String realClassName : realClassNames) {
+			realClassName = realClassName.trim();
+			CodeData classVar = projectModel.getClassVariablesData(fileName, realClassName, varName);
+			if (classVar != null) {
+				if (classVar instanceof PHPClassVarData) {
+					varClassNames.add(((PHPClassVarData) classVar).getClassType());
+				}
+				continue;
 			}
-			return null;
-		}
+			// checking if the variable belongs to one of the class's ancestor
+			PHPClassData classData = projectModel.getClass(fileName, realClassName);
 
-		// checking if the var bellongs to one of the class's ancestor
-
-		PHPClassData classData = projectModel.getClass(fileName, className);
-
-		if (classData == null) {
-			return null;
+			if (classData == null) {
+				continue;
+			}
+			PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
+			if (superClassNameData == null) {
+				continue;
+			}
+			String classVarClassName = getVarType(projectModel, fileName, superClassNameData.getName(), varName, statementStart, line);
+			if (classVarClassName != null) {
+				varClassNames.add(classVarClassName);
+			}
 		}
-		PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
-		if (superClassNameData == null) {
-			return null;
+		StringBuffer compositeVarClassName = new StringBuffer();
+		for (Iterator<String> i = varClassNames.iterator(); i.hasNext();) {
+			String varClassName = i.next();
+			compositeVarClassName.append(varClassName);
+			if (i.hasNext()) {
+				compositeVarClassName.append("|"); //$NON-NLS-1$
+			}
 		}
-		return getVarType(projectModel, fileName, superClassNameData.getName(), varName, statementStart, line);
+		return compositeVarClassName.toString();
 	}
 
 	/**
@@ -837,7 +851,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] allFunctions = null;
 		CodeData[] allClassVariables = null;
 
-		// collecting for multiple classes in case class name has string separated by "|", which may be used in doc-block
+		// collecting multiple classes in case class name has string separated by "|", which may be used in doc-block
 		String[] classNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
 		for (String realClassName : classNames) {
 			realClassName = realClassName.trim();
