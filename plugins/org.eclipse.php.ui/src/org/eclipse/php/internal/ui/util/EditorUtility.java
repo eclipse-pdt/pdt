@@ -218,7 +218,7 @@ public class EditorUtility {
 			return getEditorInput((PHPCodeData) ((TreeItem) input).getData(), project, incDir);
 		}
 
-		if (input instanceof PHPCodeData) {
+		if (input instanceof PHPCodeData) {			
 			return getEditorInput((PHPCodeData) input, null, null);
 		}
 
@@ -234,7 +234,7 @@ public class EditorUtility {
 	private static IEditorInput getEditorInput(final PHPCodeData element, final IProject project, final String incDir) {
 
 		final IResource resource = PHPModelUtil.getResource(element);
-		if (resource == null || !resource.exists() || !resource.getProject().equals(project)) {
+		if (resource == null || !resource.exists()) {
 			final Object source = PHPModelUtil.getExternalResource(element, project);
 			if (source instanceof File) {
 				File externalSource = (File) source;
