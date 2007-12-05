@@ -636,10 +636,10 @@ public class PHPCodeDataFactory {
 
 		// fix bug 9124.
 		// We can have 2 constants differ only in capitalization.
-		public int compareTo(Object o) {
-			int rv = super.compareTo(o);
-			if (rv != 0) {
-				return rv;
+		public int compareTo(CodeData o) {
+			int compared = super.compareTo(o);
+			if (compared != 0) {
+				return compared;
 			}
 			if (!(o instanceof PHPConstantDataImp)) {
 				return -1;
@@ -731,7 +731,7 @@ public class PHPCodeDataFactory {
 			return comparableName;
 		}
 
-		public int compareTo(Object o) {
+		public int compareTo(CodeData o) {
 			return comparableName.compareToIgnoreCase(((ComparableName) o).getComparableName());
 		}
 	}

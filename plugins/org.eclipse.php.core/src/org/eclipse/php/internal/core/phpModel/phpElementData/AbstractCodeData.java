@@ -86,11 +86,7 @@ public abstract class AbstractCodeData implements CodeData {
 	 * @param o the object that we compare to.
 	 * @return
 	 */
-	public int compareTo(Object o) {
-		if (!(o instanceof CodeData)) {
-			return -1;
-		}
-		CodeData other = (CodeData) o;
+	public int compareTo(CodeData other) {
         String otherName = other.getName();
         int minNameLength = Math.min(name.length(), otherName.length());
         for(int i = 0; i< minNameLength; i++){
@@ -106,9 +102,9 @@ public abstract class AbstractCodeData implements CodeData {
         	}
         	break;
         }
-		int rv = name.compareToIgnoreCase(otherName);
-		if (rv != 0) {
-			return rv;
+		int compared = name.compareToIgnoreCase(otherName);
+		if (compared != 0) {
+			return compared;
 		}
 		boolean otherIsUserCode = other.isUserCode();
 		if (!isUserCode) {

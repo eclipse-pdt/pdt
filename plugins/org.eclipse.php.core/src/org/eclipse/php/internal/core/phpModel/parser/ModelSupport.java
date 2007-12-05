@@ -20,6 +20,10 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class ModelSupport {
 
+	/**
+	 *
+	 */
+	private static final CodeData[] EMPTY_DATA = new CodeData[0];
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	public static final CodeDataFilter STATIC_VARIABLES_FILTER = new StaticVariablesFilter(true);
 	public static final CodeDataFilter NOT_STATIC_VARIABLES_FILTER = new StaticVariablesFilter(false);
@@ -331,62 +335,57 @@ public class ModelSupport {
 
 	}
 
-	public static CodeData[] mergeAndRemoveDuplicated(CodeData[] sortedArray1, CodeData[] sortedArray2) {
-		if (sortedArray1 == null) {
+	public static CodeData[] mergeNoDuplicates(CodeData[] sortedArray1, CodeData[] sortedArray2) {
+		if (sortedArray1 == null || sortedArray1.length == 0) {
+			if (sortedArray2 == null) {
+				return EMPTY_DATA;
+			}
 			return sortedArray2;
 		}
-		if (sortedArray2 == null) {
+		if (sortedArray2 == null || sortedArray2.length == 0) {
 			return sortedArray1;
 		}
-		if (sortedArray1.length == 0) {
-			return sortedArray2;
-		}
-		if (sortedArray2.length == 0) {
-			return sortedArray1;
-		}
-		List result = new ArrayList(sortedArray1.length + sortedArray2.length);
+		List<CodeData> merged = new ArrayList<CodeData>(sortedArray1.length + sortedArray2.length);
 		int pointer1 = 0;
 		int pointer2 = 0;
 		while (pointer1 != sortedArray1.length || pointer2 != sortedArray2.length) {
 			if (pointer1 == sortedArray1.length) {
-				result.add(sortedArray2[pointer2++]);
+				merged.add(sortedArray2[pointer2++]);
 				continue;
 			}
 			if (pointer2 == sortedArray2.length) {
-				result.add(sortedArray1[pointer1++]);
+				merged.add(sortedArray1[pointer1++]);
 				continue;
 			}
-			int compareTo = sortedArray1[pointer1].compareTo(sortedArray2[pointer2]);
-			if (compareTo == 0) {
-				result.add(sortedArray1[pointer1++]);
+			int compared = sortedArray1[pointer1].compareTo(sortedArray2[pointer2]);
+			if (compared == 0) {
+				merged.add(sortedArray1[pointer1++]);
 				pointer2++;
 				continue;
 			}
-			if (compareTo < 0) {
-				result.add(sortedArray1[pointer1++]);
+			if (compared < 0) {
+				merged.add(sortedArray1[pointer1++]);
 			} else {
-				result.add(sortedArray2[pointer2++]);
+				merged.add(sortedArray2[pointer2++]);
 			}
 		}
 
-		CodeData[] rv = new CodeData[result.size()];
-		result.toArray(rv);
-		return rv;
+		CodeData[] result = new CodeData[merged.size()];
+		merged.toArray(result);
+		return result;
 	}
 
 	public static CodeData[] merge(CodeData[] sortedArray1, CodeData[] sortedArray2) {
-		if (sortedArray1 == null) {
+		if (sortedArray1 == null || sortedArray1.length == 0) {
+			if (sortedArray2 == null) {
+				return EMPTY_DATA;
+			}
 			return sortedArray2;
 		}
-		if (sortedArray2 == null) {
+		if (sortedArray2 == null || sortedArray2.length == 0) {
 			return sortedArray1;
 		}
-		if (sortedArray1.length == 0) {
-			return sortedArray2;
-		}
-		if (sortedArray2.length == 0) {
-			return sortedArray1;
-		}
+
 		int size = sortedArray1.length + sortedArray2.length;
 		CodeData[] rv = new CodeData[size];
 
@@ -455,9 +454,9 @@ public class ModelSupport {
 
 	public static CodeData[] getFilteredCodeData(CodeData[] data, CodeDataFilter codeDataFilter) {
 		if (data == null || data.length == 0) {
-			return new CodeData[0];
+			return EMPTY_DATA;
 		}
-		List listResult = new ArrayList();
+		List<CodeData> listResult = new ArrayList<CodeData>();
 		for (CodeData element : data) {
 			if (codeDataFilter.accept(element)) {
 				listResult.add(element);
@@ -472,7 +471,7 @@ public class ModelSupport {
 		if (data == null || data.length == 0) {
 			return data;
 		}
-		List listResult = new ArrayList();
+		List<CodeData> listResult = new ArrayList<CodeData>();
 		for (int i = 0; i < data.length; i++) {
 			if (!codeDataFilter.accept(data[i])) {
 				listResult.add(data[i]);

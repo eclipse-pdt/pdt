@@ -18,9 +18,9 @@ import org.eclipse.php.internal.core.util.Visitable;
 import org.eclipse.php.internal.core.util.Visitor;
 
 /**
- * The top level interface for all langauges code.
+ * The top level interface for all languages code.
  */
-public interface CodeData extends Comparable, Serializable, Visitable, IAdaptable {
+public interface CodeData extends Comparable<CodeData>, Serializable, Visitable, IAdaptable {
 
 	/**
 	 * Returns the name of the CodeData.

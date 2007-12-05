@@ -32,6 +32,11 @@ import org.eclipse.wst.sse.core.internal.util.ProjectResolver;
 
 public class CodeDataResolver {
 
+	/**
+	 *
+	 */
+	private static final String DOC_BLOCK_CLASS_NAME_SEPARATOR = "\\|"; //$NON-NLS-1$
+
 	private static final CodeData[] EMPTY = {};
 
 	private static CodeDataResolver instance;
@@ -289,23 +294,16 @@ public class CodeDataResolver {
 							return matchingClasses;
 						}
 
+						// collecting multiple classes in case class name has string separated by "|", which may be used in doc-block
 						String className = getClassName(projectModel, fileData, statement, startPosition, offset, sDoc.getLineOfOffset(offset));
-						CodeData[] allClassDatas = null;
+						CodeData[] allClassDatas = EMPTY;
 						if (className != null) {
-							String[] classNames = className.split("\\|");
+							String[] classNames = className.split(DOC_BLOCK_CLASS_NAME_SEPARATOR);
 							for (String realClassName : classNames) {
 								realClassName = realClassName.trim();
 								CodeData[] classDatas = getMatchingClasses(realClassName, projectModel, fileName);
-								if (allClassDatas == null) {
-									allClassDatas = classDatas;
-								} else {
-									allClassDatas = ModelSupport.merge(allClassDatas, classDatas);
-								}
+								allClassDatas = ModelSupport.merge(allClassDatas, classDatas);
 							}
-						}
-
-						if (allClassDatas == null) {
-							allClassDatas = EMPTY;
 						}
 
 						// Is it function or method:
