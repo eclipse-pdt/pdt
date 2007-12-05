@@ -8,7 +8,8 @@ package org.eclipse.php.internal.core.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -20,10 +21,10 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
-import org.eclipse.php.internal.core.util.text.StringUtils;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -437,11 +438,11 @@ public class CodeDataResolver {
 
 		if (bracketIndex == -1) {
 			// meaning its a class variable and not a function
-			return getVarType(projectModel, fileData.getName(), className, propertyName, offset, line);
+			return PHPModelUtil.getVarType(projectModel, fileData.getName(), className, propertyName, offset, line, true);
 		}
 
 		String functionName = propertyName.substring(0, bracketIndex).trim();
-		return getFunctionReturnType(projectModel, fileData.getName(), className, functionName);
+		return PHPModelUtil.getFunctionReturnType(projectModel, fileData.getName(), className, functionName);
 	}
 
 	/**
@@ -487,7 +488,7 @@ public class CodeDataResolver {
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
 			PHPClassData classData = PHPFileDataUtilities.getContainerClassData(fileData, offset);
 			if (classData != null) { // if its a clss function
-				return getFunctionReturnType(projectModel, fileData.getName(), classData.getName(), functionName);
+				return PHPModelUtil.getFunctionReturnType(projectModel, fileData.getName(), classData.getName(), functionName);
 			}
 			// if its a non class function
 			PHPFunctionData[] functions = fileData.getFunctions();
@@ -519,110 +520,6 @@ public class CodeDataResolver {
 			}
 		}
 		return currChar;
-	}
-
-	/**
-	 * finding the type of the class variable.
-	 */
-	private String getVarType(PHPProjectModel projectModel, String fileName, String className, String varName, int statementStart, int line) {
-		String tempType = PHPFileDataUtilities.getVariableType(fileName, "this;*" + varName, statementStart, line, projectModel.getPHPUserModel(), true); //$NON-NLS-1$
-		if (tempType != null) {
-			return tempType;
-		}
-
-		// process multiple classes variables and compile their types for recursive multiple resolution
-		String[] realClassNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
-		Set<String> varClassNames = new LinkedHashSet<String>();
-		for (String realClassName : realClassNames) {
-			realClassName = realClassName.trim();
-			CodeData classVar = projectModel.getClassVariablesData(fileName, realClassName, varName);
-			if (classVar != null) {
-				if (classVar instanceof PHPClassVarData) {
-					varClassNames.add(((PHPClassVarData) classVar).getClassType());
-				}
-				continue;
-			}
-			// checking if the variable belongs to one of the class's ancestor
-			PHPClassData classData = projectModel.getClass(fileName, realClassName);
-
-			if (classData == null) {
-				continue;
-			}
-			PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
-			if (superClassNameData == null) {
-				continue;
-			}
-			String classVarClassName = getVarType(projectModel, fileName, superClassNameData.getName(), varName, statementStart, line);
-			if (classVarClassName != null) {
-				varClassNames.add(classVarClassName);
-			}
-		}
-		StringBuffer compositeVarClassName = new StringBuffer();
-		for (Iterator<String> i = varClassNames.iterator(); i.hasNext();) {
-			String varClassName = i.next();
-			compositeVarClassName.append(varClassName);
-			if (i.hasNext()) {
-				compositeVarClassName.append("|"); //$NON-NLS-1$
-			}
-		}
-		return compositeVarClassName.toString();
-	}
-
-	/**
-	 * finding the return type of the function.
-	 */
-	private String getFunctionReturnType(PHPProjectModel projectModel, String fileName, String className, String functionName) {
-		String[] realClassNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
-		Set<String> functionReturnClassNames = new LinkedHashSet<String>();
-		for (String realClassName : realClassNames) {
-			realClassName = realClassName.trim();
-			CodeData classFunction = projectModel.getClassFunctionData(fileName, realClassName, functionName);
-			if (classFunction != null) {
-				if (classFunction instanceof PHPFunctionData) {
-					functionReturnClassNames.add(((PHPFunctionData) classFunction).getReturnType());
-				}
-				continue;
-			}
-
-			// checking if the function belongs to one of the class's ancestor
-			PHPClassData classData = projectModel.getClass(fileName, realClassName);
-
-			if (classData == null) {
-				continue;
-			}
-			String functionReturnClassName = null;
-			PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
-			if (superClassNameData != null) {
-				functionReturnClassName = getFunctionReturnType(projectModel, fileName, superClassNameData.getName(), functionName);
-			}
-
-			// checking if its a non-class function from within the file
-			if (functionReturnClassName == null) {
-				PHPFileData fileData = projectModel.getFileData(fileName);
-				CodeData[] functions = fileData.getFunctions();
-				for (CodeData function : functions) {
-					if (function.getName().equals(functionName)) {
-						if (function instanceof PHPFunctionData) {
-							functionReturnClassName = ((PHPFunctionData) function).getReturnType();
-						}
-					}
-				}
-			}
-
-			// checking if its a non-class function from within the project
-			if (functionReturnClassName == null) {
-				CodeData[] functions = projectModel.getFunctions();
-				for (CodeData function : functions) {
-					if (function.getName().equals(functionName)) {
-						if (function instanceof PHPFunctionData) {
-							functionReturnClassName = ((PHPFunctionData) function).getReturnType();
-						}
-					}
-				}
-			}
-			functionReturnClassNames.add(functionReturnClassName);
-		}
-		return StringUtils.implodeStrings(functionReturnClassNames, "|"); //$NON-NLS-1$
 	}
 
 	private CodeData[] toArray(CodeData codeData) {

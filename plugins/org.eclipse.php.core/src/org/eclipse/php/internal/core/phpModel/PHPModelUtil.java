@@ -29,8 +29,11 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSup
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
+import org.eclipse.php.internal.core.util.text.StringUtils;
 
 public class PHPModelUtil {
+
+	public static final String PHPDOC_CLASS_NAME_SEPARATOR = "\\|"; //$NON-NLS-1$
 
 	public static PHPFunctionData getRealConstructor(PHPProjectModel projectModel, String fileName, PHPClassData classData) {
 		if (classData.hasConstructor()) {
@@ -47,6 +50,100 @@ public class PHPModelUtil {
 		if (parentDestructor != null)
 			return (PHPFunctionData) parentDestructor;
 		return null;
+	}
+
+	/**
+	 * finding the return type of the function.
+	 */
+	public static String getFunctionReturnType(PHPProjectModel projectModel, String fileName, String className, String functionName) {
+		if (className == null) {
+
+			// checking if its a non-class function from within the file
+			PHPFunctionData function = projectModel.getFunction(fileName, functionName);
+			if (function != null)
+				return function.getReturnType();
+
+			// checking if its a non-class function from within the project
+			CodeData[] functions = projectModel.getFunctions();
+			for (CodeData projectFunction : functions) {
+				if (projectFunction.getName().equals(functionName)) {
+					if (projectFunction instanceof PHPFunctionData) {
+						return ((PHPFunctionData) projectFunction).getReturnType();
+					}
+				}
+			}
+			return null;
+		}
+		String[] realClassNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
+		Set<String> functionReturnClassNames = new LinkedHashSet<String>();
+		for (String realClassName : realClassNames) {
+			realClassName = realClassName.trim();
+			CodeData classFunction = projectModel.getClassFunctionData(fileName, realClassName, functionName);
+			if (classFunction != null) {
+				if (classFunction instanceof PHPFunctionData) {
+					functionReturnClassNames.add(((PHPFunctionData) classFunction).getReturnType());
+				}
+				continue;
+			}
+
+			// checking if the function belongs to one of the class's ancestor
+			PHPClassData classData = projectModel.getClass(fileName, realClassName);
+
+			if (classData == null) {
+				continue;
+			}
+			String functionReturnClassName = null;
+			PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
+			if (superClassNameData != null) {
+				String superClassName = superClassNameData.getName();
+				if (superClassName != null) {
+					functionReturnClassName = getFunctionReturnType(projectModel, fileName, superClassName, functionName);
+				}
+			}
+			if (functionReturnClassName != null) {
+				functionReturnClassNames.add(functionReturnClassName);
+			}
+		}
+		return StringUtils.implodeStrings(functionReturnClassNames, "|"); //$NON-NLS-1$
+	}
+
+	/**
+	 * finding the type of the class variable.
+	 */
+	public static String getVarType(PHPProjectModel projectModel, String fileName, String className, String varName, int statementStart, int line, boolean determineObjectTypeFromOtherFile) {
+		String tempType = PHPFileDataUtilities.getVariableType(fileName, "this;*" + varName, statementStart, line, projectModel.getPHPUserModel(), determineObjectTypeFromOtherFile); //$NON-NLS-1$
+		if (tempType != null) {
+			return tempType;
+		}
+
+		// process multiple classes variables and compile their types for recursive multiple resolution
+		String[] realClassNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
+		Set<String> varClassNames = new LinkedHashSet<String>();
+		for (String realClassName : realClassNames) {
+			realClassName = realClassName.trim();
+			CodeData classVar = projectModel.getClassVariablesData(fileName, realClassName, varName);
+			if (classVar != null) {
+				if (classVar instanceof PHPClassVarData) {
+					varClassNames.add(((PHPClassVarData) classVar).getClassType());
+				}
+				continue;
+			}
+			// checking if the variable belongs to one of the class's ancestor
+			PHPClassData classData = projectModel.getClass(fileName, realClassName);
+
+			if (classData == null) {
+				continue;
+			}
+			PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
+			if (superClassNameData == null) {
+				continue;
+			}
+			String classVarClassName = getVarType(projectModel, fileName, superClassNameData.getName(), varName, statementStart, line, determineObjectTypeFromOtherFile);
+			if (classVarClassName != null) {
+				varClassNames.add(classVarClassName);
+			}
+		}
+		return StringUtils.implodeStrings(varClassNames, "|"); //$NON-NLS-1$
 	}
 
 	public static class PHPContainerStringConverter {
