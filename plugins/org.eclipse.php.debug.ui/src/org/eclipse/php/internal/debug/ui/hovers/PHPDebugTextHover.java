@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.hovers;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.text.BadLocationException;
@@ -21,7 +20,6 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -40,7 +38,7 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 			return null;
 		}
 		if (textViewer instanceof PHPStructuredTextViewer) {
-			setEditorPart(((PHPStructuredTextViewer)textViewer).getTextEditor());
+			setEditorPart(((PHPStructuredTextViewer) textViewer).getTextEditor());
 		}
 
 		PHPDebugTarget debugTarget = getDebugTarget();
@@ -151,36 +149,25 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 	// Returns the php debug target that is in contex.
 	// In case that
 	protected PHPDebugTarget getDebugTarget() {
-		try {
-			IAdaptable adaptable = DebugUITools.getDebugContext();
-			if (adaptable instanceof PHPStackFrame) {
-				PHPStackFrame stackFrame = (PHPStackFrame) adaptable;
-				IEditorInput ei = getEditorPart().getEditorInput();
-				if (ei instanceof FileEditorInput) {
-					FileEditorInput fi = (FileEditorInput) getEditorPart().getEditorInput();
-					String launchProjectName = stackFrame.getLaunch().getLaunchConfiguration().getAttribute(IPHPConstants.PHP_Project, (String) null);
-					String fileProjectName = '/' + fi.getFile().getProject().getName();
+		IAdaptable adaptable = DebugUITools.getDebugContext();
+		if (adaptable instanceof PHPStackFrame) {
+			PHPStackFrame stackFrame = (PHPStackFrame) adaptable;
+			IEditorInput ei = getEditorPart().getEditorInput();
+			if (ei instanceof FileEditorInput) {
+				FileEditorInput fi = (FileEditorInput) getEditorPart().getEditorInput();
 
-					// First, check if the project name is the same.
-					if (launchProjectName != null && !launchProjectName.equals(fileProjectName)) {
-						return null;
-					}
-					// Check for the file path within the project
-					String fileInDebug = stackFrame.getSourceName();
-					String fileInProject = fi.getFile().getProjectRelativePath().toString();
-					if (fileInDebug != null && fileInDebug.endsWith('/' + fileInProject) || fileInDebug.equals(fileInProject)) {
-						PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
-						return debugTarget;
-					}
-				} else {
-					// File on the include Path
+				// Check for the file path within the project
+				String fileInDebug = stackFrame.getSourceName();
+				String fileInProject = fi.getFile().getProjectRelativePath().toString();
+				if (fileInDebug != null && fileInDebug.endsWith('/' + fileInProject) || fileInDebug.equals(fileInProject)) {
 					PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
 					return debugTarget;
 				}
-
+			} else {
+				// File on the include Path
+				PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
+				return debugTarget;
 			}
-		} catch (CoreException e) {
-			Logger.logException("Error retrieving the PHPDebugTarget.\n", e);
 		}
 		return null;
 	}
