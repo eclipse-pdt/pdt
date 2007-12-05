@@ -8,8 +8,7 @@ package org.eclipse.php.internal.core.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -35,7 +34,7 @@ public class CodeDataResolver {
 	/**
 	 *
 	 */
-	private static final String DOC_BLOCK_CLASS_NAME_SEPARATOR = "\\|"; //$NON-NLS-1$
+	private static final String PHPDOC_CLASS_NAME_SEPARATOR = "\\|"; //$NON-NLS-1$
 
 	private static final CodeData[] EMPTY = {};
 
@@ -298,7 +297,7 @@ public class CodeDataResolver {
 						String className = getClassName(projectModel, fileData, statement, startPosition, offset, sDoc.getLineOfOffset(offset));
 						CodeData[] allClassDatas = EMPTY;
 						if (className != null) {
-							String[] classNames = className.split(DOC_BLOCK_CLASS_NAME_SEPARATOR);
+							String[] classNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
 							for (String realClassName : classNames) {
 								realClassName = realClassName.trim();
 								CodeData[] classDatas = getMatchingClasses(realClassName, projectModel, fileName);
@@ -437,7 +436,7 @@ public class CodeDataResolver {
 
 		if (bracketIndex == -1) {
 			// meaning its a class variable and not a function
-			return getVarType(projectModel, fileData, className, propertyName, offset, line);
+			return getVarType(projectModel, fileData.getName(), className, propertyName, offset, line);
 		}
 
 		String functionName = propertyName.substring(0, bracketIndex).trim();
@@ -524,31 +523,48 @@ public class CodeDataResolver {
 	/**
 	 * finding the type of the class variable.
 	 */
-	private String getVarType(PHPProjectModel projectModel, PHPFileData fileData, String className, String varName, int statementStart, int line) {
-		String tempType = PHPFileDataUtilities.getVariableType(fileData.getName(), "this;*" + varName, statementStart, line, projectModel.getPHPUserModel(), true); //$NON-NLS-1$
+	private String getVarType(PHPProjectModel projectModel, String fileName, String className, String varName, int statementStart, int line) {
+		String tempType = PHPFileDataUtilities.getVariableType(fileName, "this;*" + varName, statementStart, line, projectModel.getPHPUserModel(), true); //$NON-NLS-1$
 		if (tempType != null) {
 			return tempType;
 		}
-		CodeData classVar = projectModel.getClassVariablesData(fileData.getName(), className, varName);
-		if (classVar != null) {
-			if (classVar instanceof PHPClassVarData) {
-				return ((PHPClassVarData) classVar).getClassType();
+
+		// process multiple classes variables and compile their types for recursive multiple resolution
+		String[] realClassNames = className.split(PHPDOC_CLASS_NAME_SEPARATOR);
+		Set<String> varClassNames = new LinkedHashSet<String>();
+		for (String realClassName : realClassNames) {
+			realClassName = realClassName.trim();
+			CodeData classVar = projectModel.getClassVariablesData(fileName, realClassName, varName);
+			if (classVar != null) {
+				if (classVar instanceof PHPClassVarData) {
+					varClassNames.add(((PHPClassVarData) classVar).getClassType());
+				}
+				continue;
 			}
-			return null;
-		}
+			// checking if the variable belongs to one of the class's ancestor
+			PHPClassData classData = projectModel.getClass(fileName, realClassName);
 
-		// checking if the var bellongs to one of the class's ancestor
-
-		PHPClassData classData = projectModel.getClass(fileData.getName(), className);
-
-		if (classData == null) {
-			return null;
+			if (classData == null) {
+				continue;
+			}
+			PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
+			if (superClassNameData == null) {
+				continue;
+			}
+			String classVarClassName = getVarType(projectModel, fileName, superClassNameData.getName(), varName, statementStart, line);
+			if (classVarClassName != null) {
+				varClassNames.add(classVarClassName);
+			}
 		}
-		PHPClassData.PHPSuperClassNameData superClassNameData = classData.getSuperClassData();
-		if (superClassNameData == null) {
-			return null;
+		StringBuffer compositeVarClassName = new StringBuffer();
+		for (Iterator<String> i = varClassNames.iterator(); i.hasNext();) {
+			String varClassName = i.next();
+			compositeVarClassName.append(varClassName);
+			if (i.hasNext()) {
+				compositeVarClassName.append("|"); //$NON-NLS-1$
+			}
 		}
-		return getVarType(projectModel, fileData, superClassNameData.getName(), varName, statementStart, line);
+		return compositeVarClassName.toString();
 	}
 
 	/**
