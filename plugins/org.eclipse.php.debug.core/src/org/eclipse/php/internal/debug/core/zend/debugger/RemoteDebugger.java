@@ -90,7 +90,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * that allows to control debug state when debugger is preparing processing new file. We use this state
 	 * for doing on-demand path mapping, and for sending breakpoints for the next file.
 	 */
-	public static final int PROTOCOL_ID_2006040702 = 2006040702;
+	public static final int PROTOCOL_ID_2006040703 = 2006040703;
 
 	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 
@@ -657,21 +657,16 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	protected boolean detectProtocolID() {
 		// check whether debugger is using the latest protocol ID:
-		if (setProtocol(PROTOCOL_ID_2006040702)) {
-			setCurrentProtocolID(PROTOCOL_ID_2006040702);
+		if (setProtocol(PROTOCOL_ID_2006040703)) {
 			return true;
 		}
-
 		// check whether debugger is using one of older protocol ID:
 		if (setProtocol(PROTOCOL_ID_2006040701)) {
 
 			// warn user that he is using an old debugger
 			warnOlderDebugVersion();
-
-			setCurrentProtocolID(PROTOCOL_ID_2006040701);
 			return true;
 		}
-
 		// user is using an incompatible version of debugger:
 		getDebugHandler().wrongDebugServer();
 		return false;
@@ -698,14 +693,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (response != null && response instanceof SetProtocolResponse) {
 			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
 			if (responceProtocolID == protocolID) {
+				currentProtocolId = protocolID;
 				return true;
 			}
 		}
 		return false;
-	}
-
-	protected void setCurrentProtocolID(int protocolID) {
-		currentProtocolId = protocolID;
 	}
 
 	public int getCurrentProtocolID() {
