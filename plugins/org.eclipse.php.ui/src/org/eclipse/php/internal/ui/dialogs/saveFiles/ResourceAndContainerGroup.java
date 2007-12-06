@@ -67,9 +67,9 @@ public class ResourceAndContainerGroup implements Listener {
     private int problemType = PROBLEM_NONE;
 
     // widgets
-    private ContainerSelectionGroup containerGroup;
+    protected ContainerSelectionGroup containerGroup;
 
-    private Text resourceNameField;
+    protected Text resourceNameField;
     
     /**
      * The resource extension for the resource name field.
