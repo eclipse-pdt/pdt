@@ -44,6 +44,6 @@ public interface IRemoteDebugger extends Debugger, CommunicationClient, Communic
 	/**
 	 * @return current protocol ID that is used in this debug session
 	 */
-	public int getProtocolID();
+	public int getCurrentProtocolID();
 
 }

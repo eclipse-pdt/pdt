@@ -19,6 +19,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
@@ -59,6 +62,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerR
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerResponse;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartProcessFileNotification;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartResponse;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoRequest;
@@ -69,14 +73,24 @@ import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverReques
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverResponse;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * An IRemoteDebugger implementation.
  */
 public class RemoteDebugger implements IRemoteDebugger {
 
-	/** Protocol ID this remote debugger is compatible with */
-	public static final int[] PROTOCOL_ID = { 2006040702, 2006040701 };
+	/**
+	 * Original PDT protocol ID from 04/2006
+	 */
+	public static final int PROTOCOL_ID_2006040701 = 2006040701;
+
+	/**
+	 * Improved protocol ID from 06/2007 which provides new message type ({@link StartProcessFileNotification})
+	 * that allows to control debug state when debugger is preparing processing new file. We use this state
+	 * for doing on-demand path mapping, and for sending breakpoints for the next file.
+	 */
+	public static final int PROTOCOL_ID_2006040702 = 2006040702;
 
 	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 
@@ -637,24 +651,46 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return false;
 	}
 
+	/**
+	 * This method is used for detecting protocol version of Debugger
+	 * @return <code>true</code> if succeeded to detect, otherwise <code>false</code>
+	 */
 	protected boolean detectProtocolID() {
-		for (int protocolId : getCompatibleProtocolID()) {
-			if (setProtocol(protocolId)) {
-				currentProtocolId = protocolId;
-				break;
-			}
-		}
-		if (currentProtocolId > 0) {
+		// check whether debugger is using the latest protocol ID:
+		if (setProtocol(PROTOCOL_ID_2006040702)) {
+			setCurrentProtocolID(PROTOCOL_ID_2006040702);
 			return true;
 		}
+
+		// check whether debugger is using one of older protocol ID:
+		if (setProtocol(PROTOCOL_ID_2006040701)) {
+
+			// warn user that he is using an old debugger
+			warnOlderDebugVersion();
+
+			setCurrentProtocolID(PROTOCOL_ID_2006040701);
+			return true;
+		}
+
+		// user is using an incompatible version of debugger:
 		getDebugHandler().wrongDebugServer();
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.Debugger#setProtocol(int)
-	 */
+	public static void warnOlderDebugVersion() {
+		final IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
+		String dontShowWarning = preferenceStore.getString("DontShowOlderDebuggerWarning"); //$NON-NLS-1$
+		if (!MessageDialogWithToggle.ALWAYS.equals(dontShowWarning)) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialogWithToggle.openInformation(
+						Display.getDefault().getActiveShell(), "Old Zend Debugger Protocol ID", "The Zend Debugger protocol ID is older than the one you are using.\n\nSome debugging features may not work properly!",
+							"Don't show this message", false, preferenceStore, "DontShowOlderDebuggerWarning"); //$NON-NLS-1$
+				}
+			});
+		}
+	}
+
 	public boolean setProtocol(int protocolID) {
 		SetProtocolRequest request = new SetProtocolRequest();
 		request.setProtocolID(protocolID);
@@ -668,12 +704,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return false;
 	}
 
-	public int getProtocolID() {
-		return currentProtocolId;
+	protected void setCurrentProtocolID(int protocolID) {
+		currentProtocolId = protocolID;
 	}
 
-	protected int[] getCompatibleProtocolID() {
-		return PROTOCOL_ID;
+	public int getCurrentProtocolID() {
+		return currentProtocolId;
 	}
 
 	/**

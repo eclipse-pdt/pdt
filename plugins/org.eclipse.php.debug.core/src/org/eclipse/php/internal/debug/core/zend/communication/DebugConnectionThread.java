@@ -1061,6 +1061,7 @@ public class DebugConnectionThread implements Runnable {
 						}
 						Logger.log(Logger.ERROR, "Socket error (length is negative): possibly Server is SSL, Client is not."); //$NON-NLS-1$
 					}
+
 					// We have a new message. process it !!.
 					// This part is synchronized since we do not want the thread to be stopped
 					// when in processing of a message.
@@ -1071,7 +1072,7 @@ public class DebugConnectionThread implements Runnable {
 						// can assume that the remote debugger protocol has a different version then expected.
 						if (!validProtocol && messageType != startMessageId) {
 							// display an error message that the protocol in used is wrong.
-							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new Object[] { String.valueOf(RemoteDebugger.PROTOCOL_ID) });
+							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new Object[] { String.valueOf(RemoteDebugger.PROTOCOL_ID_2006040702) });
 							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
 							DebugPlugin.log(status);
 							Display.getDefault().asyncExec(new Runnable() {

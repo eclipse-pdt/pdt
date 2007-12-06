@@ -19,35 +19,26 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugMessageResponseImpl;
 
 public class SetProtocolResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
-	
+
 	private int fProtocolID;
-	
+
 	public void setProtocolID (int protocolID) {
 		fProtocolID = protocolID;
 	}
-	
+
 	public int getProtocolID() {
 		return fProtocolID;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#deserialize(java.io.DataInputStream)
-	 */
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setProtocolID(in.readInt());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#getType()
-	 */
 	public int getType() {
 		return 11000;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#serialize(java.io.DataOutputStream)
-	 */
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());
