@@ -146,12 +146,15 @@ class ProjectParsingManager implements IProjectModelListener {
 			else if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
 				project = ExternalFilesRegistry.getInstance().getExternalFilesProject();
 			}
+			if (project == null) { // XXX very quick change on a real resource (undo-redo-undo-redo)!
+				return;
+			}
 			Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(project);
 			String fileToParseName = file.getFullPath().toString();
 			if (new File(fileToParseName).exists()){
 				fileToParseName = file.getFullPath().toOSString();
 			}
-			
+
 			parserManager.parseNow(reader, fileToParseName, file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
