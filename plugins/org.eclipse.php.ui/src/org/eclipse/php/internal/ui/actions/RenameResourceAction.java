@@ -10,20 +10,21 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.AbstractOperation;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.TriggeredOperations;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
@@ -33,6 +34,8 @@ import org.eclipse.php.internal.ui.explorer.ExplorerPart;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.eclipse.ui.internal.ViewSite;
 import org.eclipse.ui.views.navigator.ResourceNavigatorRenameAction;
 
@@ -53,18 +56,18 @@ public class RenameResourceAction extends SelectionDispatchAction {
 	}
 
 	public void selectionChanged(IStructuredSelection selection) {
-		if(selection instanceof ITextSelection) {
+		if (selection instanceof ITextSelection) {
 			setEnabled(true);
 			return;
 		}
-		if(selection.size() != 1) {
+		if (selection.size() != 1) {
 			setEnabled(false);
 			return;
 		}
 		Object object = selection.toArray()[0];
-		if(object instanceof PHPFileData || object instanceof IResource) {
+		if (object instanceof PHPFileData || object instanceof IResource) {
 			IResource res = PHPModelUtil.getResource(object);
-			if(res != null && res.exists()) {
+			if (res != null && res.exists()) {
 				setEnabled(true);
 			} else {
 				setEnabled(false);
@@ -94,7 +97,7 @@ public class RenameResourceAction extends SelectionDispatchAction {
 		if (selection.size() != 1)
 			return null;
 		Object first = selection.getFirstElement();
-		if ((first instanceof PHPCodeData) && !(first instanceof PHPFileData))
+		if (first instanceof PHPCodeData && !(first instanceof PHPFileData))
 			return null;
 		first = PHPModelUtil.getResource(first);
 		if (!(first instanceof IResource))
@@ -116,18 +119,34 @@ public class RenameResourceAction extends SelectionDispatchAction {
 		 * @see org.eclipse.ui.views.navigator.ResourceNavigatorRenameAction#runWithNewPath(org.eclipse.core.runtime.IPath, org.eclipse.core.resources.IResource)
 		 */
 		protected void runWithNewPath(IPath path, IResource resource) {
-			// Get the breakpoints and bookmarks that were set on this resource before running the 
-			// workbench action. Add these markers after the workbench action is processed.
-			final ArrayList breakpoints = new ArrayList(6);
-			final ArrayList oldAttributes = new ArrayList(6);
-			IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
+			IUndoableOperation operation = createOperation(path, resource);
 			try {
-				IMarker[] markers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
-				for (int i = 0; i < markers.length; i++) {
-					IBreakpoint breakpoint = breakpointManager.getBreakpoint(markers[i]);
-					if (breakpoint != null && !breakpoints.contains(breakpoint)) {
-						breakpoints.add(breakpoint);
-						oldAttributes.add(breakpoint.getMarker().getAttributes());
+				TriggeredOperations triggeredOperations = new TriggeredOperations(operation, PlatformUI.getWorkbench().getOperationSupport().getOperationHistory());
+				PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(triggeredOperations, new NullProgressMonitor(), WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
+
+			} catch (ExecutionException e) {
+				if (e.getCause() instanceof CoreException) {
+					Logger.logException(e.getCause());
+				} else {
+					Logger.logException(e);
+				}
+			}
+		}
+
+		protected void doRunWithNewPath(final IPath path, final IResource resource, final Map<Integer, IBreakpoint> breakpoints, final Map<Integer, Map<String, Object>> breakpointAttributes) {
+			// Get the breakpoints and bookmarks that were set on this resource before running the
+			// workbench action. Add these markers after the workbench action is processed.
+			final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
+			try {
+				synchronized (this) { // this can run simultaneously
+					IMarker[] markers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
+					for (IMarker marker : markers) {
+						IBreakpoint breakpoint = breakpointManager.getBreakpoint(marker);
+						Integer line = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
+						if (breakpoint != null) {
+							breakpoints.put(line, breakpoint);
+							breakpointAttributes.put(line, breakpoint.getMarker().getAttributes());
+						}
 					}
 				}
 			} catch (CoreException e) {
@@ -135,28 +154,72 @@ public class RenameResourceAction extends SelectionDispatchAction {
 			}
 			// Call the super implementation
 			super.runWithNewPath(path, resource);
-
 			// Add the breakpoints that got removed after the rename action.
-			Iterator breakpointsIterator = breakpoints.iterator();
-			Iterator attributesIterator = oldAttributes.iterator();
-			while (breakpointsIterator.hasNext()) {
-				IBreakpoint breakpoint = (IBreakpoint) breakpointsIterator.next();
-				Map oldAttributesMap = (Map) attributesIterator.next();
-				try {
-					IMarker newMarker = ResourcesPlugin.getWorkspace().getRoot().getFile(path).createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker"); //$NON-NLS-1$
-					// Fix the breakpoint's tooltip string before applying the old attributes to the new marker.
-					String oldMessge = (String) oldAttributesMap.get(IMarker.MESSAGE);
-					if (oldMessge != null) {
-						oldAttributesMap.put(IMarker.MESSAGE, oldMessge.replaceFirst(resource.getName(), path.lastSegment()));
+			final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			WorkspaceJob createMarker = new WorkspaceJob("Creating markers") {
+				@Override
+				public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+					synchronized (this) {
+						IFile oldFile = workspace.getRoot().getFile(resource.getFullPath());
+						if (oldFile.isAccessible()) { // in case the old file exists (fast undo-redo)
+							return Status.CANCEL_STATUS;
+
+						}
+						IFile file = (IFile) workspace.getRoot().findMember(path);
+						if (file == null) {
+							return Status.CANCEL_STATUS;
+						}
+						for (final Integer line : breakpoints.keySet()) {
+							final Map<String, Object> oldAttributesMap = breakpointAttributes.get(line);
+							IMarker newMarker = file.createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker"); //$NON-NLS-1$
+							// Fix the breakpoint's tooltip string before applying the old attributes to the new marker.
+							String oldMessge = (String) oldAttributesMap.get(IMarker.MESSAGE);
+							if (oldMessge != null) {
+								oldAttributesMap.put(IMarker.MESSAGE, oldMessge.replaceFirst(resource.getName(), path.lastSegment()));
+							}
+							newMarker.setAttributes(oldAttributesMap);
+							IBreakpoint breakpoint = breakpoints.get(line);
+							breakpoint.setMarker(newMarker);
+							breakpointManager.addBreakpoint(breakpoint);
+						}
 					}
-					newMarker.setAttributes(oldAttributesMap);
-					breakpoint.setMarker(newMarker);
-					breakpointManager.addBreakpoint(breakpoint);
-				} catch (CoreException e) {
-					Logger.logException(e);
+					return Status.OK_STATUS;
 				}
-			}
+			};
+			createMarker.setRule(workspace.getRoot());
+			createMarker.setSystem(true);
+			createMarker.schedule(1000); // wait for UI refresh which refreshes the markers
 		}
 
+		protected IUndoableOperation createOperation(final IPath path, final IResource resource) {
+			IUndoableOperation operation = new AbstractOperation("Advanced rename") { //$NON-NLS-1$
+				private IPath oldPath = resource.getFullPath();
+				final private Map<Integer, IBreakpoint> breakpoints = new HashMap<Integer, IBreakpoint>(6);
+				final private Map<Integer, Map<String, Object>> breakpointAttributes = new HashMap<Integer, Map<String, Object>>(6);
+
+				@Override
+				public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+					doRunWithNewPath(path, resource, breakpoints, breakpointAttributes);
+					return Status.OK_STATUS;
+				}
+
+				@Override
+				public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+					IResource newResource = ResourcesPlugin.getWorkspace().getRoot().findMember(resource.getFullPath());
+					selectionChanged(new StructuredSelection(newResource));
+					doRunWithNewPath(path, newResource, breakpoints, breakpointAttributes);
+					return Status.OK_STATUS;
+				}
+
+				@Override
+				public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+					IResource newResource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+					selectionChanged(new StructuredSelection(newResource));
+					doRunWithNewPath(oldPath, newResource, breakpoints, breakpointAttributes);
+					return Status.OK_STATUS;
+				}
+			};
+			return operation;
+		}
 	}
 }
