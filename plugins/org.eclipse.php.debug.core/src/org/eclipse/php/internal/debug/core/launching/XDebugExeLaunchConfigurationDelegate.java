@@ -18,8 +18,18 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -31,8 +41,9 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
-import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
@@ -49,24 +60,21 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			return;
 		}
 
-		IDELayer idelayer = IDELayerFactory.getIDELayer();
-
-		// get the exe, project name, file name
+		// get the launch info: php exe, php ini
 		final String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-		final String phpIniPath = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
+		final String phpIniString = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
 		final String phpScriptString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
 		if (phpScriptString == null || phpScriptString.trim().length() == 0) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			displayErrorMessage("No script specified");
 			return;
 		}
-
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			return;
 		}
 
-		// locate the project and absolute path of the file
+		// locate the project from the php script
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		final IPath filePath = new Path(phpScriptString);
 		final IResource res = workspaceRoot.findMember(filePath);
@@ -107,7 +115,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		final IPath projectPath = new Path(location);
 		final File projectDir = projectPath.toFile();
 
-		// resolve the php script (remove the project directory)
+		// resolve the php script relative to the project directory (ie doesn't have the project name on the path)
 		IPath phpFile = new Path(phpScriptString);
 		if (phpScriptString.startsWith("/")) {
 			phpFile = phpFile.removeFirstSegments(1);
@@ -120,7 +128,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// Resolve the PHP ini location
 		// Locate the php ini by using the attribute. If the attribute was null, try to locate an ini that exists next to the executable.
-		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
+		File phpIni = (phpIniString != null && new File(phpIniString).exists()) ? new File(phpIniString) : PHPINIUtil.findPHPIni(phpExeString);
 		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString, project);
 		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 
@@ -149,8 +157,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			return;
 		}
 
-
-		// create any environment variables, and build the command line
+		// determine the environment variables
 		String[] envVarString = null;
 		DBGpTarget target = null;
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
@@ -179,16 +186,36 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			}
 		}
 
+		// Detect PHP SAPI type and thus where we need arguments
+		File phpExeFile = new File(phpExeString);		
+		String sapiType = null;
+		PHPexeItem[] items = PHPexes.getInstance().getAllItems();
+		for (PHPexeItem item : items) {
+			if (item.getExecutable().equals(phpExeFile)) {
+				sapiType = item.getSapiType();
+				break;
+			}
+		}
+		String[] args = null;
+		if (sapiType == PHPexeItem.SAPI_CLI) {
+			args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
+		}
+
+		//define the command line for launching
 		String[] cmdLine = null;
 		if (workingDir == projectDir) {
 			// script name is relative to the project directory
-			cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.toOSString());
+			//cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.toOSString());
+			cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(), phpFile.toOSString(), args);
 		}
 		else {
 			// script is relative to the working directory.
 			cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.lastSegment());
+			cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(), phpFile.lastSegment(), args);
+			
 		}
 
+		// Launch the process
 		final Process phpExeProcess = DebugPlugin.exec(cmdLine, workingDir, envVarString);
 		// Attach a crash detector
 		new Thread(new ProcessCrashDetector(phpExeProcess)).start();
@@ -206,6 +233,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 				throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.ID, 0, null, null));
 			}
 
+			//if launching in debug mode, create the debug infrastructure and link it with the launched process
 			if (mode.equals(ILaunchManager.DEBUG_MODE) && target != null) {
 				target.setProcess(eclipseProcessWrapper);
 				launch.addDebugTarget(target);

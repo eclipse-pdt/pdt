@@ -135,6 +135,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			}
 			else {
 				target = new DBGpTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
+				target.setPathMapper(PathMapperRegistry.getByServer(server));				
 			}
 			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)target);
 		}
