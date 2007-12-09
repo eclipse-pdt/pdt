@@ -32,15 +32,16 @@ img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none;
 td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 ol.whs13 { list-style:decimal; }
 img_whs14 { border:none; border-style:none; width:398px; height:262px; float:none; }
-td.whs15 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-table.whs16 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-td.whs17 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-td.whs18 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-img_whs19 { border:none; width:28px; height:18px; float:none; border-style:none; }
-p.whs20 { x-condition:Online; }
-div.whs21 { width:100%; }
-p.whs22 { text-align:right; x-condition:Online; }
-p.whs23 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+p.whs15 { x-condition:PDT; }
+td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs17 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs18 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+img_whs20 { border:none; width:28px; height:18px; float:none; border-style:none; }
+p.whs21 { x-condition:Online; }
+div.whs22 { width:100%; }
+p.whs23 { text-align:right; x-condition:Online; }
+p.whs24 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -157,10 +158,30 @@ if (window.writeIntopicBar)
 	<li style="margin-left: -20px;"
 		class=kadov-p><p>Enter the URL that points to its document root.</p></li>
 	
-	<li style="margin-left: -20px; x-condition: PDT;"
-		class=kadov-p><p>Click Finish.</p></li>
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>Click &nbsp;Next.<br>
+	The Server Path Mapping dialog appears.</p></li>
 </ol>
-<ol start="4" type="1" class="whs13">
+<ol start="5" type="1" class="whs13">
+	
+	<li style="margin-left: -20px;"
+		class=kadov-p><p>If you would like to map a path on your server 
+ to a local path, click Add and enter: </p></li>
+	
+	<li class=kadov-p-CListBullet1><p class=ListBullet1>The Path on your 
+ server.</p></li>
+	
+	<li class=kadov-p-CListBullet1><p class=ListBullet1>The path you would 
+ like to map it to in your Workspace or on your File System.<br>
+	See <a HREF="Adding_a_Server_Path_Map.htm">Adding a Server Location 
+ Path Map</a> for more information.</p></li>
+</ol>
+<ol start="6" type="1" class="whs13">
+	
+	<li style="margin-left: -20px; /*begin!kadov{{*/ x-condition: PDT; /*}}end!kadov*/ "
+		class=kadov-P><p class="whs15">Click Finish.</p></li>
+</ol>
+<ol start="6" type="1" class="whs13">
 	
 	</ol>
 <ol start="9" type="1" class="whs13">
@@ -168,7 +189,7 @@ if (window.writeIntopicBar)
 	</ol></td></tr>
 
 <tr valign="top" class="whs5">
-<td rowspan="1" colspan="2" width="100%" class="whs15">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
 <p>Your new server configuration will be added to the server list<span 
  style="x-condition: PDT;">.</span></td>
 </tr>
@@ -178,27 +199,27 @@ if (window.writeIntopicBar)
 
 <p>Click OK to apply your settings.</p>
 
-<table x-use-null-cells cellspacing="0" width="100%" class="whs16">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs17">
 <col class="whs3">
 <col class="whs4">
 
 <tr valign="top" class="whs5">
-<td colspan="1" rowspan="1" width="7.093%" class="whs17">
+<td colspan="1" rowspan="1" width="7.093%" class="whs18">
 <p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs18">
+<td colspan="1" rowspan="1" width="92.907%" class="whs19">
 <p>&nbsp;</td></tr>
 
 <tr valign="top" class="whs5">
 <td width="7.093%" class="whs10">
-<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs19"></td>
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs20"></td>
 <td width="92.907%" class="whs12">
 <p class="whs9">Related Links:</p>
-<p class="whs20"><a href="Debugging.htm"
+<p class="whs21"><a href="Debugging.htm"
 									style="x-condition: Online;">Debugging</a></p>
-<p class="whs20"><a href="Debugging_a_PHP_Web_Page.htm"
+<p class="whs21"><a href="Debugging_a_PHP_Web_Page.htm"
 									style="x-condition: Online;">Debugging 
  a PHP Web Page</a></p>
-<p class="whs20"><a HREF="Preferences.htm">PHP Preferences</a></td></tr>
+<p class="whs21"><a HREF="Preferences.htm">PHP Preferences</a></td></tr>
 
 <tr valign="top" class="whs5">
 <td colspan="1" rowspan="1" width="7.093%" class="whs10">
@@ -207,11 +228,11 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 
-<div placeholder id="footer" class="whs21">
- <p align="right" class="whs22"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+<div placeholder id="footer" class="whs22">
+ <p align="right" class="whs23"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
 	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs23">PHP Development Tool</p>
+ <p align="center" class="whs24">PHP Development Tool</p>
 </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
