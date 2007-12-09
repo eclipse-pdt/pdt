@@ -34,6 +34,7 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.internal.core.util.Visitor;
 import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -41,6 +42,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
+import org.eclipse.php.internal.ui.functions.PHPFunctionsPart;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
@@ -1257,7 +1259,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			return;
 		}
 
-		boolean addSelfKeyword = needToAddSelfKeyword(fileData, offset);
+		// get the class data for "self". In case of null, the self function will not be added
+		PHPClassData selfClassData  = getSelfClassData(fileData, offset);
 
 		CodeData[] classes = null;
 
@@ -1265,15 +1268,15 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			case NEW:
 				completionProposalGroup = newStatementCompletionProposalGroup;
 				classes = getOnlyClasses(projectModel);
-				if (addSelfKeyword) {
-					classes = addSelfKeywordToProposals(classes);
+				if (selfClassData != null) {
+					classes = addSelfFunctionToProposals(classes, selfClassData);
 				}
 				break;
 			case INSTANCEOF:
 				completionProposalGroup = phpCompletionProposalGroup;
 				classes = projectModel.getClasses();
-				if (addSelfKeyword) {
-					classes = addSelfKeywordToProposals(classes);
+				if (selfClassData != null) {
+					classes = addSelfFunctionToProposals(classes, selfClassData);
 				}
 				break;
 			case CATCH:
@@ -1288,41 +1291,65 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	/**
-	 * The "self" keyword needs to be added only if we are in a class method
+	 * The "self" function needs to be added only if we are in a class method
 	 * and it is not an abstract class or an interface
 	 * @param fileData
-	 * @param offset
-	 * @return whether the self keyword should be added
+	 * @param offset 
+	 * @return the self class data or null in case not found 
 	 */
-	private boolean needToAddSelfKeyword(PHPFileData fileData, int offset) {
+	private PHPClassData getSelfClassData(PHPFileData fileData, int offset) {
 
-		boolean addSelfKeyword = false;
 		// get the class / function
 		PHPCodeContext context = ModelSupport.createContext(fileData, offset);
 		String className = context.getContainerClassName();
 		String functionName = context.getContainerFunctionName();
 
 		if (className != null && className.trim().length() > 0 && functionName != null && functionName.trim().length() > 0) {
-			addSelfKeyword = true;
 			PHPClassData[] classes = fileData.getClasses();
 			for (PHPClassData classData : classes) {
 				if (classData.getName().equals(className)) {
 					int modifiers = classData.getModifiers();
 					if (PHPModifier.isAbstract(modifiers) || PHPModifier.isInterface(modifiers)) {
-						return false;
+						return null;
+					} else {
+						return classData;
 					}
 				}
 			}
 		}
 
-		return addSelfKeyword;
+		return null;
 	}
 
-	private CodeData[] addSelfKeywordToProposals(CodeData[] classes) {
-		CodeData selfKeyword = PHPCodeDataFactory.createPHPKeywordData("self", "::", 2);
+	/**
+	 * Adds the self function with the relevant data to the proposals array
+	 * @param classes
+	 * @param classData
+	 * @return the updated proposals array
+	 */
+	private CodeData[] addSelfFunctionToProposals(CodeData[] classes, PHPClassData classData) {
+		
+		//  find the constructor between the class functions
+		PHPFunctionData constructorData = null;
+		PHPFunctionData[] classFunctions = classData.getFunctions();
+		for (PHPFunctionData functionData : classFunctions) {
+			if(functionData.getName() == classData.getName() || functionData.getName().equals("__construct")){
+				constructorData = functionData;
+				break;
+			}
+		}
+		
+		CodeData selfFunction = null;
+		if(constructorData != null){
+			PHPDocBlock docBlock = constructorData.getDocBlock();
+			selfFunction = PHPCodeDataFactory.createPHPFuctionData("self", classData.getModifiers(), new PHPDocBlockImp(docBlock.getShortDescription(),docBlock.getLongDescription(), docBlock.getTagsAsArray(), PHPDocBlockImp.FUNCTION_DOCBLOCK), classData.getUserData(), constructorData.getParameters(), "void");
+		} else {
+			selfFunction = PHPCodeDataFactory.createPHPFuctionData("self", classData.getModifiers(), new PHPDocBlockImp("","",new PHPDocTag[0],PHPDocBlockImp.FUNCTION_DOCBLOCK) , classData.getUserData(), new PHPFunctionParameter[0], null);
+		}
+		 
 		CodeData[] proposalArray = new CodeData[classes.length + 1];
 		System.arraycopy(classes, 0, proposalArray, 0, classes.length);
-		proposalArray[classes.length] = selfKeyword;
+		proposalArray[classes.length] = selfFunction;
 
 		Arrays.sort(proposalArray);
 		return proposalArray;
@@ -1486,7 +1513,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				PHPFunctionData constructor = classData.getUserData() != null ? PHPModelUtil.getRealConstructor(projectModel, classData.getUserData().getFileName(), classData) : null;
 				int suffixOffset = constructor != null && constructor.getParameters().length > 0 ? 1 : 2;
 				return new CodeDataCompletionProposal(projectModel, classData, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true); //$NON-NLS-1$ //$NON-NLS-2$
-			} else {
+			} else if (phpCodeData instanceof PHPFunctionData){
+				// special case for self()
+				PHPFunctionData functionData = (PHPFunctionData) phpCodeData;				
+				int suffixOffset = functionData != null && functionData.getParameters().length > 0 ? 1 : 2;
+				return new CodeDataCompletionProposal(projectModel, functionData, getOffset() - key.length(), key.length(), selectionLength, "", "()", suffixOffset, true); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {				
 				return new CodeDataCompletionProposal(projectModel, phpCodeData, getOffset() - key.length(), key.length(), selectionLength, "", "()", 2, true); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
