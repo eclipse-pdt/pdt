@@ -75,7 +75,8 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 						IPath fullPath = editorInput.getStorage().getFullPath();
 						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toOSString());
 						if (file == null) {
-							file = ((IWorkspaceRoot) ResourcesPlugin.getWorkspace().getRoot()).getFile(fullPath);
+							return false; //if the files are not in the ExternalFilesRegistry then this 
+							//means they are coming from include path and we don't want to allow debugging those files directly only through user's files.
 						}
 					} else if (obj instanceof IURIEditorInput || obj instanceof NonExistingPHPFileEditorInput) {
 						IPath fullPath = null;
