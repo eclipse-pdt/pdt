@@ -25,6 +25,8 @@ import org.eclipse.php.internal.ui.wizards.CompositeFragment;
 import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.php.internal.ui.wizards.fields.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -174,6 +176,20 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			public void dialogFieldChanged(DialogField field) {
 				validate();
 			}
+		});
+		
+		fDebuggers.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				validate();
+				
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				validate();
+				
+			}
+			
 		});
 	}
 
