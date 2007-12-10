@@ -155,41 +155,48 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 	private void addProjectPreferenceSubsection(Composite composite) {
 
-		Composite inner = new Composite(composite, SWT.NONE);
-		inner.setFont(composite.getFont());
+		Group defultPrefsGroup = new Group(composite, SWT.BORDER);
+		defultPrefsGroup.setText("Default Settings");
+		defultPrefsGroup.setFont(composite.getFont());
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 3;
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
 		layout.verticalSpacing = 10;
-		inner.setLayout(layout);
-		inner.setLayoutData(new GridData(GridData.FILL_BOTH));
+		defultPrefsGroup.setLayout(layout);
+		defultPrefsGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		addLabelControl(inner, PHPDebugUIMessages.PhpDebugPreferencePage_phpDebugger, PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
-		fDefaultDebugger = addCombo(inner, 2);
-		addLink(inner, "<a>Configure...</a>", DEBUGGERS_PAGE_ID);
+		addLabelControl(defultPrefsGroup, PHPDebugUIMessages.PhpDebugPreferencePage_phpDebugger, PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
+		fDefaultDebugger = addCombo(defultPrefsGroup, 2);
+		addLink(defultPrefsGroup, "<a>Configure...</a>", DEBUGGERS_PAGE_ID);
 
-		addLabelControl(inner, PHPDebugUIMessages.PhpDebugPreferencePage_9, ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
-		fDefaultServer = addCombo(inner, 2);
-		addLink(inner, PHPDebugUIMessages.PhpDebugPreferencePage_serversLink, SERVERS_PAGE_ID);
+		addLabelControl(defultPrefsGroup, PHPDebugUIMessages.PhpDebugPreferencePage_9, ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
+		fDefaultServer = addCombo(defultPrefsGroup, 2);
+		addLink(defultPrefsGroup, PHPDebugUIMessages.PhpDebugPreferencePage_serversLink, SERVERS_PAGE_ID);
 
-		addLabelControl(inner, PHPDebugUIMessages.PhpDebugPreferencePage_12, PHPDebugCorePreferenceNames.DEFAULT_PHP);
-		fDefaultPHPExe = addCombo(inner, 2);
-		addLink(inner, PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink, PHP_EXE_PAGE_ID);
+		addLabelControl(defultPrefsGroup, PHPDebugUIMessages.PhpDebugPreferencePage_12, PHPDebugCorePreferenceNames.DEFAULT_PHP);
+		fDefaultPHPExe = addCombo(defultPrefsGroup, 2);
+		addLink(defultPrefsGroup, PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink, PHP_EXE_PAGE_ID);
 
 		new Label(composite, SWT.NONE); // dummy label
 
-		addLabelControl(composite, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding, PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
-		inner = new Composite(composite, SWT.NONE);
-		inner.setFont(composite.getFont());
+		Group encodingGroup = new Group(composite, SWT.BORDER);
+		encodingGroup.setText("Encoding Settings");
+		encodingGroup.setLayout(new GridLayout());
+		encodingGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		addLabelControl(encodingGroup, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding, PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
+		Composite inner = new Composite(encodingGroup, SWT.NONE);
+		inner.setFont(encodingGroup.getFont());
 		inner.setLayout(new GridLayout(3, false));
 		fDebugEncodingSettings = addEncodingSettings(inner, PHPDebugUIMessages.PHPDebugPreferencesAddon_selectedEncoding);
 
-		addLabelControl(composite, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding, PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
-		inner = new Composite(composite, SWT.NONE);
-		inner.setFont(composite.getFont());
+		addLabelControl(encodingGroup, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding, PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
+		inner = new Composite(encodingGroup, SWT.NONE);
+		inner.setFont(encodingGroup.getFont());
 		inner.setLayout(new GridLayout(3, false));
 		fOutputEncodingSettings = addEncodingSettings(inner, PHPDebugUIMessages.PHPDebugPreferencesAddon_selectedEncoding);
+
+		new Label(composite, SWT.NONE); // dummy label
+
 		fStopAtFirstLine = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_1, PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, 0);
 
 		// Add a default debugger listener that will update the possible executables
