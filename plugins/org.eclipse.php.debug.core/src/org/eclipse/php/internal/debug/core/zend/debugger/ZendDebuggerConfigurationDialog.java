@@ -40,6 +40,7 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 
 	private Text fDebugTextBox;
 	private Button fRunWithDebugInfo;
+	private Text fClientIP;
 	private ZendDebuggerConfiguration zendDebuggerConfiguration;
 
 	/**
@@ -69,6 +70,12 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 		fDebugTextBox.addModifyListener(new DebugPortValidateListener());
 
 		fRunWithDebugInfo = addCheckBox(composite, PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_runWithDebugInfo, PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, 0);
+
+		addLabelControl(composite, "Client Host/IP:", PHPDebugCorePreferenceNames.CLIENT_IP);
+		fClientIP = addTextField(composite, PHPDebugCorePreferenceNames.CLIENT_IP, 0, 2);
+		gridData = (GridData)fClientIP.getLayoutData();
+		gridData.widthHint = convertWidthInCharsToPixels(100);
+
 		internalInitializeValues(); // Initialize the dialog's values.
 
 		return composite;
@@ -78,12 +85,14 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		fRunWithDebugInfo.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
 		fDebugTextBox.setText(Integer.toString(prefs.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)));
+		fClientIP.setText(prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP));
 	}
 
 	protected void okPressed() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		prefs.setValue(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, fRunWithDebugInfo.getSelection());
 		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, fDebugTextBox.getText());
+		prefs.setValue(PHPDebugCorePreferenceNames.CLIENT_IP, fClientIP.getText());
 		PHPDebugPlugin.getDefault().savePluginPreferences(); // save
 		super.okPressed();
 	}
