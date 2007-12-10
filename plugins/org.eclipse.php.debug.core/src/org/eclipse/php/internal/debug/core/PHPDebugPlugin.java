@@ -25,6 +25,7 @@ import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguratio
 import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
@@ -174,7 +175,16 @@ public class PHPDebugPlugin extends Plugin {
 			return -1;
 		}
 		return debuggerConfiguration.getPort();
+	}
 
+	/**
+	 * Returns debug hosts
+	 * @return debug hosts suitable for URL parameter
+	 */
+	public static String getDebugHosts() {
+		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		String hosts = prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP);
+		return hosts.replaceAll(",", "%2C");
 	}
 
 	public static String getWorkspaceDefaultServer() {

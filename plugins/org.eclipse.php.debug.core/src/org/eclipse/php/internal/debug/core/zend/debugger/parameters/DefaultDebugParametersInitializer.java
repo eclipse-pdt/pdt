@@ -17,7 +17,6 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.HostsCollector;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -48,7 +47,7 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		parameters.put(SEND_SESS_END, "1");
 
 		if (getBooleanValue(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
-			parameters.put(DEBUG_HOST, HostsCollector.getHosts());
+			parameters.put(DEBUG_HOST, PHPDebugPlugin.getDebugHosts());
 			parameters.put(DEBUG_NO_CACHE, Long.toString(System.currentTimeMillis()));
 		}
 
