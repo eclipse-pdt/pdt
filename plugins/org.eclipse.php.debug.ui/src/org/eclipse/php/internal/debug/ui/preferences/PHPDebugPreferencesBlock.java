@@ -54,8 +54,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	private static final String PHP_EXE_PAGE_ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"; //$NON-NLS-1$
 
 	private Button fStopAtFirstLine;
-	private Text fClientIP;
-	private Label fClientIPLabel;
 	private Combo fDefaultDebugger;
 	private Combo fDefaultServer;
 	private Combo fDefaultPHPExe;
@@ -121,17 +119,11 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 			loadPHPExes(fDefaultPHPExe, exes.getItems(PHPDebugPlugin.getCurrentDebuggerId()));
 		}
 		fStopAtFirstLine.setSelection(stopAtFirstLine);
-		fClientIP.setText(prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP)); 
 		fDefaultDebugger.select(fDefaultDebugger.indexOf(debuggerName));
 		fDefaultServer.select(fDefaultServer.indexOf(serverName));
 		fDefaultPHPExe.select(fDefaultPHPExe.indexOf(phpExeName));
 		fDebugEncodingSettings.setIANATag(transferEncoding);
 		fOutputEncodingSettings.setIANATag(outputEncoding);
-
-		if (getProject(propertyPage) != null) {
-			fClientIP.setVisible(false);
-			fClientIPLabel.setVisible(false);
-		}
 	}
 
 	public boolean performOK(boolean isProjectSpecific) {
@@ -150,7 +142,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	public void performDefaults() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		fStopAtFirstLine.setSelection(prefs.getDefaultBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE));
-		fClientIP.setText(prefs.getDefaultString(PHPDebugCorePreferenceNames.CLIENT_IP));
 		loadDebuggers(fDefaultDebugger);
 		loadServers(fDefaultServer);
 		loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getItems(PHPDebugPlugin.getCurrentDebuggerId()));
@@ -200,12 +191,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		inner.setLayout(new GridLayout(3, false));
 		fOutputEncodingSettings = addEncodingSettings(inner, PHPDebugUIMessages.PHPDebugPreferencesAddon_selectedEncoding);
 		fStopAtFirstLine = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_1, PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, 0);
-
-		fClientIPLabel = addLabelControl(composite, "Client Host/IP:", PHPDebugCorePreferenceNames.CLIENT_IP);
-		fClientIP = new Text(composite, SWT.BORDER);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = 2;
-		fClientIP.setLayoutData(layoutData);
 
 		// Add a default debugger listener that will update the possible executables
 		// and, maybe, servers that can work with this debugger.
@@ -377,7 +362,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 			if (project == null) {
 				// Workspace settings
 				prefs.setValue(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
-				prefs.setValue(PHPDebugCorePreferenceNames.CLIENT_IP, fClientIP.getText());
 				prefs.setValue(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getIANATag());
 				prefs.setValue(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getIANATag());
 				prefs.setValue(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, getSelectedDebuggerId());
