@@ -17,21 +17,16 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNam
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.ui.preferences.AbstractPHPPreferencePageBlock;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * A PHP debug preferences page Workspace UI addon.
  * This addon adds 3 check boxes for the debug perspective, debug info and debug views.
- * 
+ *
  * @author shalom
  */
-public class PHPDebugPreferencesWorkspaceAddon extends AbstractPHPPreferencePageBlock {
+public class WorkbenchOptionsBlock extends AbstractPHPPreferencePageBlock {
 
 	private Button fOpenInBrowser;
 	private Button fOpenDebugViews;
@@ -39,7 +34,7 @@ public class PHPDebugPreferencesWorkspaceAddon extends AbstractPHPPreferencePage
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = addPageContents(parent);
-		addWorkspacePreferenceSubsection(createSubsection(composite, PHPDebugUIMessages.PhpDebugPreferencePage_0));
+		addWorkspacePreferenceSubsection(composite);
 	}
 
 	public void initializeValues(PreferencePage propertyPage) {

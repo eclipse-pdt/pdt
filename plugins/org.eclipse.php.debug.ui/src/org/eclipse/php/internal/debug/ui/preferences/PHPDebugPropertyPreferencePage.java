@@ -13,11 +13,9 @@ package org.eclipse.php.internal.debug.ui.preferences;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.AbstractPHPPropertyPreferencePage;
-import org.eclipse.php.internal.ui.preferences.PHPPreferencePageBlocksRegistry;
-import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -27,19 +25,17 @@ import org.eclipse.ui.IWorkbench;
 
 /**
  * The main PHP | Debug preferences page.
- * 
+ *
  * @author Shalom Gibly
  */
 public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferencePage {
 
+	private PHPDebugPreferencesBlock debugPreferencesBlock;
 	protected Label fDefaultURLLabel;
 	protected Text fDefaultURLTextBox;
 
-	private PHPDebuggersTable table;
-
 	public PHPDebugPropertyPreferencePage() {
 		super();
-
 	}
 
 	protected String getPreferenceNodeQualifier() {
@@ -64,48 +60,22 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 	public String getTitle() {
 		return PHPDebugUIMessages.PhpDebugPreferencePage_8;
 	}
-	
-	/**
-	 * Override the default creation on the workspace content to add a fixed debuggers table that will display all the
-	 * supported debuggers and will allow their preferences modification.
-	 */
-	protected Control createWorkspaceContents(Composite composite) {
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
-		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
-		group.setLayout(new GridLayout());
-		// Add the debuggers table
-		createDebuggersTable(group);
-		try {
-			workspaceAddons = PHPPreferencePageBlocksRegistry.getPHPPreferencePageBlock(getPreferencePageID());
-			for (int i = 0; i < workspaceAddons.length; i++) {
-				workspaceAddons[i].setCompositeAddon(group);
-				workspaceAddons[i].initializeValues(this);
-			}
-		} catch (Exception e) {
-			PHPUiPlugin.log(e);
-		}
-		scrolledCompositeImpl.setContent(group);
-		return scrolledCompositeImpl;
+
+	protected Control createCommonContents(Composite parent) {
+		Composite comp = new Composite(parent, SWT.NONE);
+		comp.setLayout(new GridLayout());
+		comp.setFont(parent.getFont());
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		comp.setLayoutData(gd);
+
+		debugPreferencesBlock = new PHPDebugPreferencesBlock();
+		debugPreferencesBlock.setCompositeAddon(comp);
+		debugPreferencesBlock.initializeValues(this);
+
+		return comp;
 	}
 
-	/**
-	 * Overrides the super preformDefaults to make sure that the debuggers table also gets updated
-	 * to its default values.
-	 */
-	public void performDefaults() {
-		table.performDefaults();
-		super.performDefaults();
-	}
-	
-	/**
-	 * Creates the debuggers table.
-	 * The created table allows only viewing and modifying any existing debugger that is 
-	 * registered thought the phpDebuggers extension point.
-	 * 
-	 * @param composite
-	 */
-	protected void createDebuggersTable(Composite composite) {
-		table = new PHPDebuggersTable();
-		table.createControl(composite);
+	protected Control createProjectContents(Composite parent) {
+		return createCommonContents(parent);
 	}
 }

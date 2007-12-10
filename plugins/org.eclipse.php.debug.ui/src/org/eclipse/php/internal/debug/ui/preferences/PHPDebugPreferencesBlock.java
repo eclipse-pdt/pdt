@@ -22,7 +22,6 @@ import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
@@ -31,19 +30,13 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.ui.preferences.AbstractPHPPreferencePageBlock;
-import org.eclipse.php.internal.ui.util.ScrolledPageContent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.internal.forms.widgets.FormUtil;
 import org.eclipse.wst.xml.ui.internal.preferences.EncodingSettings;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -54,10 +47,12 @@ import org.osgi.service.prefs.BackingStoreException;
  *
  * @author Shalom Gibly
  */
-public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
+public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
+	private static final String DEBUGGERS_PAGE_ID = "org.eclipse.php.debug.ui.installedDebuggersPage"; //$NON-NLS-1$
 	private static final String SERVERS_PAGE_ID = "org.eclipse.php.server.internal.ui.PHPServersPreferencePage"; //$NON-NLS-1$
 	private static final String PHP_EXE_PAGE_ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"; //$NON-NLS-1$
+
 	private Button fStopAtFirstLine;
 	private Text fClientIP;
 	private Label fClientIPLabel;
@@ -68,12 +63,10 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	private EncodingSettings fDebugEncodingSettings;
 	private EncodingSettings fOutputEncodingSettings;
 	private PreferencePage propertyPage;
-	private ExpandableComposite expandbleDebugEncoding;
-	private ExpandableComposite expandbleOutputEncoding;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = addPageContents(parent);
-		addProjectPreferenceSubsection(createSubsection(composite, PHPDebugUIMessages.PhpDebugPreferencePage_6));
+		addProjectPreferenceSubsection(composite);
 	}
 
 	public void initializeValues(PreferencePage propertyPage) {
@@ -128,7 +121,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 			loadPHPExes(fDefaultPHPExe, exes.getItems(PHPDebugPlugin.getCurrentDebuggerId()));
 		}
 		fStopAtFirstLine.setSelection(stopAtFirstLine);
-		fClientIP.setText(prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP));
+		fClientIP.setText(prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP)); 
 		fDefaultDebugger.select(fDefaultDebugger.indexOf(debuggerName));
 		fDefaultServer.select(fDefaultServer.indexOf(serverName));
 		fDefaultPHPExe.select(fDefaultPHPExe.indexOf(phpExeName));
@@ -170,66 +163,49 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 	}
 
 	private void addProjectPreferenceSubsection(Composite composite) {
-		// Set a height hint for the group.
-		GridData gd = (GridData) composite.getLayoutData();
-		gd.heightHint = 260;
-		composite.setLayoutData(gd);
-		addLabelControl(composite, PHPDebugUIMessages.PhpDebugPreferencePage_phpDebugger, PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
-		fDefaultDebugger = addCombo(composite, 2);
-		new Label(composite, SWT.NONE); // dummy label
-		addLabelControl(composite, PHPDebugUIMessages.PhpDebugPreferencePage_9, ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
-		fDefaultServer = addCombo(composite, 2);
-		addLink(composite, PHPDebugUIMessages.PhpDebugPreferencePage_serversLink, SERVERS_PAGE_ID);
-		addLabelControl(composite, PHPDebugUIMessages.PhpDebugPreferencePage_12, PHPDebugCorePreferenceNames.DEFAULT_PHP);
-		fDefaultPHPExe = addCombo(composite, 2);
-		addLink(composite, PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink, PHP_EXE_PAGE_ID);
 
-		final ScrolledPageContent sc1 = new ScrolledPageContent(composite);
-		Composite comp = sc1.getBody();
-		GridLayout layout = new GridLayout(3, false);
+		Composite inner = new Composite(composite, SWT.NONE);
+		inner.setFont(composite.getFont());
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 3;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		comp.setLayout(layout);
+		layout.verticalSpacing = 10;
+		inner.setLayout(layout);
+		inner.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 3;
-		sc1.setLayoutData(gd);
+		addLabelControl(inner, PHPDebugUIMessages.PhpDebugPreferencePage_phpDebugger, PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
+		fDefaultDebugger = addCombo(inner, 2);
+		addLink(inner, "<a>Configure...</a>", DEBUGGERS_PAGE_ID);
 
-		expandbleDebugEncoding = createStyleSection(comp, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding, 3);
-		Composite inner = new Composite(expandbleDebugEncoding, SWT.NONE);
+		addLabelControl(inner, PHPDebugUIMessages.PhpDebugPreferencePage_9, ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
+		fDefaultServer = addCombo(inner, 2);
+		addLink(inner, PHPDebugUIMessages.PhpDebugPreferencePage_serversLink, SERVERS_PAGE_ID);
+
+		addLabelControl(inner, PHPDebugUIMessages.PhpDebugPreferencePage_12, PHPDebugCorePreferenceNames.DEFAULT_PHP);
+		fDefaultPHPExe = addCombo(inner, 2);
+		addLink(inner, PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink, PHP_EXE_PAGE_ID);
+
+		new Label(composite, SWT.NONE); // dummy label
+
+		addLabelControl(composite, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding, PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
+		inner = new Composite(composite, SWT.NONE);
 		inner.setFont(composite.getFont());
 		inner.setLayout(new GridLayout(3, false));
-		expandbleDebugEncoding.setClient(inner);
 		fDebugEncodingSettings = addEncodingSettings(inner, PHPDebugUIMessages.PHPDebugPreferencesAddon_selectedEncoding);
 
-		expandbleOutputEncoding = createStyleSection(comp, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding, 3);
-		inner = new Composite(expandbleOutputEncoding, SWT.NONE);
+		addLabelControl(composite, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding, PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
+		inner = new Composite(composite, SWT.NONE);
 		inner.setFont(composite.getFont());
 		inner.setLayout(new GridLayout(3, false));
-		expandbleOutputEncoding.setClient(inner);
 		fOutputEncodingSettings = addEncodingSettings(inner, PHPDebugUIMessages.PHPDebugPreferencesAddon_selectedEncoding);
-		expandbleOutputEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding + " (" + fOutputEncodingSettings.getIANATag() + ")");
 		fStopAtFirstLine = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_1, PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, 0);
 
-		fClientIPLabel = new Label(composite, SWT.NONE);
-		fClientIPLabel.setText("Client Host/IP:");
+		fClientIPLabel = addLabelControl(composite, "Client Host/IP:", PHPDebugCorePreferenceNames.CLIENT_IP);
 		fClientIP = new Text(composite, SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 2;
 		fClientIP.setLayoutData(layoutData);
-
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				// Expand the debug encoding after the component is layout.
-				// This code fixes an issue that caused the top encoding combo to scroll automatically
-				// without any reasonable cause.
-				expandbleDebugEncoding.setExpanded(true);
-				ScrolledPageContent spc = (ScrolledPageContent) FormUtil.getScrolledComposite(expandbleDebugEncoding);
-				Point p = spc.getSize();
-				spc.setSize(p.x, 70);
-				spc.getParent().layout();
-			}
-		});
 
 		// Add a default debugger listener that will update the possible executables
 		// and, maybe, servers that can work with this debugger.
@@ -313,60 +289,6 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		}
 	}
 
-	private ExpandableComposite createStyleSection(Composite parent, String label, int nColumns) {
-		ExpandableComposite excomposite = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
-		excomposite.setText(label);
-		excomposite.setExpanded(false);
-		excomposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
-		excomposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, nColumns, 1));
-		excomposite.addExpansionListener(new ExpansionAdapter() {
-			public void expansionStateChanged(ExpansionEvent e) {
-				expandedStateChanged((ExpandableComposite) e.getSource());
-			}
-		});
-		return excomposite;
-	}
-
-	private void expandedStateChanged(ExpandableComposite expandable) {
-		if (expandable.isExpanded()) {
-			if (expandable == expandbleDebugEncoding) {
-				expandbleDebugEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding);
-				expandbleOutputEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding + " (" + fOutputEncodingSettings.getIANATag() + ")");
-				expandbleOutputEncoding.setExpanded(false);
-			} else {
-				expandbleOutputEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding);
-				expandbleDebugEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding + " (" + fDebugEncodingSettings.getIANATag() + ")");
-				expandbleDebugEncoding.setExpanded(false);
-			}
-		} else { // folded
-			if (expandable == expandbleDebugEncoding) {
-				expandbleDebugEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding + " (" + fDebugEncodingSettings.getIANATag() + ")");
-				expandbleOutputEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding);
-				expandbleOutputEncoding.setExpanded(true);
-			} else {
-				expandbleOutputEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding + " (" + fOutputEncodingSettings.getIANATag() + ")");
-				expandbleDebugEncoding.setText(PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding);
-				expandbleDebugEncoding.setExpanded(true);
-			}
-		}
-
-		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(expandable);
-		if (parentScrolledComposite != null) {
-			parentScrolledComposite.reflow(true);
-		}
-	}
-
-	private ScrolledPageContent getParentScrolledComposite(Control control) {
-		Control parent = control.getParent();
-		while (!(parent instanceof ScrolledPageContent) && parent != null) {
-			parent = parent.getParent();
-		}
-		if (parent instanceof ScrolledPageContent) {
-			return (ScrolledPageContent) parent;
-		}
-		return null;
-	}
-
 	private void addLink(Composite parent, String label, final String propertyPageID) {
 		Link link = new Link(parent, SWT.NONE);
 		link.setFont(parent.getFont());
@@ -374,7 +296,7 @@ public class PHPDebugPreferencesAddon extends AbstractPHPPreferencePageBlock {
 		link.setText(label);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(PHPDebugPreferencesAddon.this.propertyPage.getShell(), propertyPageID, null, null);
+				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(PHPDebugPreferencesBlock.this.propertyPage.getShell(), propertyPageID, null, null);
 				dialog.setBlockOnOpen(true);
 				dialog.addPageChangedListener(new IPageChangedListener() {
 					public void pageChanged(PageChangedEvent event) {
