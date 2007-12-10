@@ -33,12 +33,12 @@ public class WorkbenchOptionsPreferencePage extends PreferencePage implements IW
 	public void init(IWorkbench workbench) {
 	}
 
-	public boolean performOK(boolean isProjectSpecific) {
-		return workbenchOptionsBlock.performOK(isProjectSpecific);
+	protected void performApply() {
+		workbenchOptionsBlock.performApply(false);
 	}
 
-	public void performApply(boolean isProjectSpecific) {
-		workbenchOptionsBlock.performApply(isProjectSpecific);
+	public boolean performOk() {
+		return workbenchOptionsBlock.performOK(false);
 	}
 
 	public boolean performCancel() {
