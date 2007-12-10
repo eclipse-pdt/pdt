@@ -9,7 +9,7 @@
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
 /**
- * 
+ *
  */
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
@@ -20,14 +20,19 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.AbstractDebuggerConfigurationDialog;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * Zend debugger configuration class.
- * 
+ *
  * @author Shalom Gibly
  * @since PDT 1.0
  */
@@ -39,36 +44,33 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 
 	/**
 	 * Constructs a new Zend debugger configuration dialog.
-	 * @param zendDebuggerConfiguration 
+	 * @param zendDebuggerConfiguration
 	 * @param parentShell
 	 */
 	public ZendDebuggerConfigurationDialog(ZendDebuggerConfiguration zendDebuggerConfiguration, Shell parentShell) {
 		super(parentShell);
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 		this.zendDebuggerConfiguration = zendDebuggerConfiguration;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
-	 */
-	protected Point getInitialSize() {
-		Point p = super.getInitialSize();
-		p.y -= 50;
-		return p;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-	 */
 	protected Control createDialogArea(Composite parent) {
+		initializeDialogUnits(parent);
+
 		parent = (Composite) super.createDialogArea(parent);
 		setTitle(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_zendDebuggerSettings);
+
 		Composite composite = createSubsection(parent, PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_zendDebugger);
+
 		addLabelControl(composite, PHPDebugCoreMessages.DebuggerConfigurationDialog_debugPort, PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT);
 		fDebugTextBox = addTextField(composite, PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 6, 2);
+		GridData gridData = (GridData)fDebugTextBox.getLayoutData();
+		gridData.widthHint = convertWidthInCharsToPixels(100);
+
 		fDebugTextBox.addModifyListener(new DebugPortValidateListener());
+
 		fRunWithDebugInfo = addCheckBox(composite, PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_runWithDebugInfo, PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, 0);
 		internalInitializeValues(); // Initialize the dialog's values.
+
 		return composite;
 	}
 
@@ -78,9 +80,6 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 		fDebugTextBox.setText(Integer.toString(prefs.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-	 */
 	protected void okPressed() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		prefs.setValue(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, fRunWithDebugInfo.getSelection());

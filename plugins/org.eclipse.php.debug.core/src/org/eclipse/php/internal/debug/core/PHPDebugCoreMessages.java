@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Strings used by PHP Debugger Core
- * 
+ *
  */
 public class PHPDebugCoreMessages extends NLS {
     private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.core.PHPDebugCoreMessages";//$NON-NLS-1$
@@ -28,20 +28,19 @@ public class PHPDebugCoreMessages extends NLS {
     public static String DebuggerConnection_Problem_2;
     public static String DebuggerConnection_Problem_3;
     public static String DebuggerConnection_Failed_1;
-    public static String DebuggerConnection_Exception_1;
     public static String Debugger_Unexpected_Error_1;
     public static String Debugger_ResourceNotFound;
     public static String Debugger_LaunchError_title;
     public static String Debugger_InvalidDebugResource;
-    public static String Debugger_Error;
+    public static String Debugger_General_Error;
+    public static String Debugger_Launch_Error;
     public static String Debugger_Error_Message;
     public static String Debugger_Error_Message_2;
     public static String Debugger_Error_Message_3;
+    public static String Debugger_Error_Crash_Message;
     public static String Debugger_Incompatible_Protocol;
     public static String Port_Error_Message_Message;
     public static String Port_Error_Message_Title;
-    
-    public static String configurationError;
 
 	public static String PHPLaunchUtilities_activeLaunchDetected;
 	public static String PHPLaunchUtilities_confirmation;
@@ -52,7 +51,7 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String PHPLaunchUtilities_PHPPerspectiveSwitchMessage;
 	public static String PHPLaunchUtilities_terminate;
 	public static String PHPLaunchUtilities_waitingForDebugger;
-	
+
 	public static String PHPWebPageLaunchDelegate_serverNotFound;
 
 	public static String DebuggerConfigurationDialog_debugPort;
@@ -61,7 +60,7 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String ZendDebuggerConfigurationDialog_runWithDebugInfo;
 	public static String ZendDebuggerConfigurationDialog_zendDebugger;
 	public static String ZendDebuggerConfigurationDialog_zendDebuggerSettings;
-	
+
 	public static String XDebugConfigurationDialog_invalidTimeout;
 	public static String XDebugConfigurationDialog_invalidTimeoutValue;
 	public static String XDebugConfigurationDialog_maxArrayDepth;
