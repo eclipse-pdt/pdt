@@ -394,7 +394,7 @@
             id="org.eclipse.php.debug.ui.page1"
             name="%launchingPreferencePageName">
          <keywordReference
-               id="org.eclipse.php.debug.ui.debug">
+               id="org.eclipse.php.debug.ui.launching">
          </keywordReference>
       </page>
       <page
@@ -403,7 +403,7 @@
             id="org.eclipse.php.debug.ui.installedDebuggersPage"
             name="Installed Debuggers">
          <keywordReference
-               id="org.eclipse.php.debug.ui.debug">
+               id="org.eclipse.php.debug.ui.installedDebuggers">
          </keywordReference>
       </page>
       <page
@@ -412,7 +412,7 @@
             id="org.eclipse.php.debug.ui.workbenchOptionsPage"
             name="Workbench Options">
          <keywordReference
-               id="org.eclipse.php.debug.ui.debug">
+               id="org.eclipse.php.debug.ui.workbench">
          </keywordReference>
       </page>
       <page
@@ -420,7 +420,7 @@
             category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
             class="org.eclipse.php.internal.debug.ui.preferences.phps.PHPsPreferencePage"
             id="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage">
-         <keywordReference id="org.eclipse.php.debug.ui.debug"/>
+         <keywordReference id="org.eclipse.php.debug.ui.phpExecutables"/>
       </page>
     </extension>
 	<extension point="org.eclipse.ui.propertyPages">
@@ -438,7 +438,30 @@
         id="org.eclipse.php.debug.ui.property.PHPConditionalBreakpointPropertyPage"
         name="%PHPConditionalBreakpointPage.name"
         objectClass="org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint"/>
-	</extension>	
+	</extension>
+ <extension
+       point="org.eclipse.ui.keywords">
+    <keyword
+          id="org.eclipse.php.debug.ui.debug"
+          label="Debug Keywords">
+    </keyword>
+    <keyword
+          id="org.eclipse.php.debug.ui.launching"
+          label="multiple debug sessions">
+    </keyword>
+    <keyword
+          id="org.eclipse.php.debug.ui.installedDebuggers"
+          label="installed debuggers zend xdebug configure port host">
+    </keyword>
+    <keyword
+          id="org.eclipse.php.debug.ui.workbench"
+          label="workbench open browser perspective switch debug">
+    </keyword>
+    <keyword
+          id="org.eclipse.php.debug.ui.phpExecutables"
+          label="PHP exe executable binary debug">
+    </keyword>
+ </extension>	
 	<extension
          point="org.eclipse.ui.perspectives">
       <perspective
