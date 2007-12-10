@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.IInternalDebugUIConstants;
 import org.eclipse.debug.ui.IDebugUIConstants;
@@ -21,6 +25,7 @@ import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguratio
 import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
@@ -34,6 +39,7 @@ public class PHPDebugPlugin extends Plugin {
 
 	public static final String ID = "org.eclipse.php.debug.core"; //$NON-NLS-1$
 	public static final int INTERNAL_ERROR = 10001;
+	public static final int INTERNAL_WARNING = 10002;
 
 	//The shared instance.
 	private static PHPDebugPlugin plugin;
@@ -87,6 +93,8 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		XDebugLaunchListener.shutdown();
+		savePluginPreferences();
+
 		super.stop(context);
 		plugin = null;
 		DebugUIPlugin.getDefault().getPreferenceStore().setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES, fInitialAutoRemoveLaunches);
@@ -125,7 +133,7 @@ public class PHPDebugPlugin extends Plugin {
 
 	/**
 	 * Returns the debugger id that is currently in use.
-	 * 
+	 *
 	 * @return The debugger id that is in use.
 	 * @since PDT 1.0
 	 */
@@ -136,7 +144,7 @@ public class PHPDebugPlugin extends Plugin {
 
 	/**
 	 * Returns true if the auto-save is on for any dirty file that exists when a Run/Debug launch is triggered.
-	 * 
+	 *
 	 * @deprecated since PDT 1.0, this method simply extracts the value of IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH
 	 * from the {@link DebugUIPlugin}
 	 */
@@ -155,9 +163,9 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	/**
-	 * Returns the debugger port for the given debugger id. 
+	 * Returns the debugger port for the given debugger id.
 	 * Return -1 if the debuggerId does not exist, or the debugger does not have a debug port.
-	 * 
+	 *
 	 * @param debuggerId
 	 * @return The debug port, or -1.
 	 */
@@ -167,7 +175,16 @@ public class PHPDebugPlugin extends Plugin {
 			return -1;
 		}
 		return debuggerConfiguration.getPort();
+	}
 
+	/**
+	 * Returns debug hosts
+	 * @return debug hosts suitable for URL parameter
+	 */
+	public static String getDebugHosts() {
+		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		String hosts = prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP);
+		return hosts.replaceAll(",", "%2C");
 	}
 
 	public static String getWorkspaceDefaultServer() {
@@ -202,10 +219,14 @@ public class PHPDebugPlugin extends Plugin {
 		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, message, null));
 	}
 
+	public static void logWarningMessage(String message) {
+		log(new Status(IStatus.WARNING, ID, INTERNAL_WARNING, message, null));
+	}
+
 	/**
-	 * Returns if multiple sessions of debug launches are allowed when one of the launches 
+	 * Returns if multiple sessions of debug launches are allowed when one of the launches
 	 * contains a 'debug all pages' attribute.
-	 * 
+	 *
 	 * @return True, the multiple sessions are allowed; False, otherwise.
 	 */
 	public static boolean supportsMultipleDebugAllPages() {
@@ -214,8 +235,8 @@ public class PHPDebugPlugin extends Plugin {
 
 	/**
 	 * Allow or disallow the multiple debug sessions that has a launch attribute of 'debug all pages'.
-	 * 
-	 * @param supported 
+	 *
+	 * @param supported
 	 */
 	public static void setMultipleDebugAllPages(boolean supported) {
 		fIsSupportingMultipleDebugAllPages = supported;
@@ -224,11 +245,11 @@ public class PHPDebugPlugin extends Plugin {
 	//
 	//	/**
 	//	 * Returns true if the auto remove launches was disabled by a PHP launch.
-	//	 * The auto remove flag is usually disabled when a PHP server launch was triggered and a 
+	//	 * The auto remove flag is usually disabled when a PHP server launch was triggered and a
 	//	 * 'debug all pages' flag was on.
 	//	 * Note that this method will return true only if a php launch set it and the debug preferences has a 'true'
 	//	 * value for IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES.
-	//	 * 
+	//	 *
 	//	 * @return True iff the auto remove old launches was disabled.
 	//	 */
 	//	public static boolean isDisablingAutoRemoveLaunches() {
@@ -236,12 +257,12 @@ public class PHPDebugPlugin extends Plugin {
 	//	}
 
 	/**
-	 * Enable or disable the auto remove old launches flag. 
-	 * The auto remove flag is usually disabled when a PHP server launch was triggered and a 
+	 * Enable or disable the auto remove old launches flag.
+	 * The auto remove flag is usually disabled when a PHP server launch was triggered and a
 	 * 'debug all pages' flag was on.
-	 * Note that this method actually sets the IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES preferences key 
+	 * Note that this method actually sets the IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES preferences key
 	 * for the {@link DebugUIPlugin}.
-	 * 
+	 *
 	 * @param disableAutoRemoveLaunches
 	 */
 	public static void setDisableAutoRemoveLaunches(boolean disableAutoRemoveLaunches) {
@@ -253,14 +274,14 @@ public class PHPDebugPlugin extends Plugin {
 
 	/**
 	 * Returns the initial value of the auto-remove-old launches.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean getInitialAutoRemoveLaunches() {
 		return fInitialAutoRemoveLaunches;
 	}
 
-	// 
+	//
 	private class AutoRemoveOldLaunchesListener implements IPropertyChangeListener {
 
 		public void propertyChange(PropertyChangeEvent event) {

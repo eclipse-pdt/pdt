@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.preferences;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
@@ -36,5 +40,23 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 		preferences.setDefault(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
 		preferences.setDefault(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID); // The default is Zend's debugger
 		preferences.setDefault(IPHPConstants.PHP_DEBUG_PARAMETERS_INITIALIZER, "org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
+
+		try {
+			StringBuilder b = new StringBuilder();
+			Enumeration<NetworkInterface> ii = NetworkInterface.getNetworkInterfaces();
+			while (ii.hasMoreElements()) {
+				NetworkInterface i = ii.nextElement();
+				Enumeration<InetAddress> aa = i.getInetAddresses();
+				while (aa.hasMoreElements()) {
+					InetAddress a = aa.nextElement();
+					if (a instanceof Inet4Address && !a.isLoopbackAddress()) {
+						b.append(a.getHostAddress()).append(",");
+					}
+				}
+			}
+			b.append("127.0.0.1"); //$NON-NLS-1$
+			preferences.setDefault(PHPDebugCorePreferenceNames.CLIENT_IP, b.toString());
+		} catch (Exception e) {
+		}
 	}
 }
