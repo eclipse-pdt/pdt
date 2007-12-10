@@ -390,15 +390,6 @@
 		</page>
       <page
             category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
-            class="org.eclipse.php.internal.debug.ui.preferences.PHPLaunchingPreferencePage"
-            id="org.eclipse.php.debug.ui.page1"
-            name="%launchingPreferencePageName">
-         <keywordReference
-               id="org.eclipse.php.debug.ui.launching">
-         </keywordReference>
-      </page>
-      <page
-            category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
             class="org.eclipse.php.internal.debug.ui.preferences.InstalledDebuggersPreferencePage"
             id="org.eclipse.php.debug.ui.installedDebuggersPage"
             name="Installed Debuggers">
@@ -446,16 +437,12 @@
           label="Debug Keywords">
     </keyword>
     <keyword
-          id="org.eclipse.php.debug.ui.launching"
-          label="multiple debug sessions">
-    </keyword>
-    <keyword
           id="org.eclipse.php.debug.ui.installedDebuggers"
           label="installed debuggers zend xdebug configure port host">
     </keyword>
     <keyword
           id="org.eclipse.php.debug.ui.workbench"
-          label="workbench open browser perspective switch debug">
+          label="workbench open browser perspective switch debug multiple debug sessions">
     </keyword>
     <keyword
           id="org.eclipse.php.debug.ui.phpExecutables"
