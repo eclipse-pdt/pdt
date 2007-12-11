@@ -11,22 +11,29 @@
 package org.eclipse.php.internal.ui.containers;
 
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
+import org.eclipse.ui.IEditorInput;
 
 public class LocalFileStorageEditorInput extends StorageEditorInput {
 
 	/**
 	 * Constructs an editor input for the given storage
-	 */	
+	 */
 	public LocalFileStorageEditorInput(LocalFileStorage storage) {
 		super(storage);
 	}
-	
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IEditorInput#exists()
 	 */
 	public boolean exists() {
-		return ((LocalFileStorage)getStorage()).getFile().exists();
+		return ((LocalFileStorage) getStorage()).getFile().exists();
+	}
+
+	/**
+	 * @see IEditorInput#getToolTipText()
+	 */
+	public String getToolTipText() {
+		return getStorage().getFullPath().toOSString();//use OS String when local storage
 	}
 
 }

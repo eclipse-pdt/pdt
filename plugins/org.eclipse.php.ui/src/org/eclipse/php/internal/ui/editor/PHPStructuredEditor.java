@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
@@ -35,7 +37,7 @@ import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -53,6 +55,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
@@ -276,6 +279,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see org.eclipse.jface.action.IAction#run()
 		 */
+		@Override
 		public void run() {
 
 			final ISourceViewer sourceViewer = getSourceViewer();
@@ -316,9 +320,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	private static final class InformationProvider implements IInformationProvider, IInformationProviderExtension, IInformationProviderExtension2 {
 
-		private IInformationControlCreator fControlCreator;
-		private Object fHoverInfo;
-		private IRegion fHoverRegion;
+		private final IInformationControlCreator fControlCreator;
+		private final Object fHoverInfo;
+		private final IRegion fHoverRegion;
 
 		InformationProvider(final IRegion hoverRegion, final Object hoverInfo, final IInformationControlCreator controlCreator) {
 			fHoverRegion = hoverRegion;
@@ -356,7 +360,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 	}
 
-	private IPreferencesPropagatorListener phpVersionListener = new IPreferencesPropagatorListener() {
+	protected final IPreferencesPropagatorListener phpVersionListener = new IPreferencesPropagatorListener() {
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			try {
 				// get the structured document and go over its regions
@@ -368,6 +372,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 						Iterator regionsIt = element.getRegions().iterator();
 						reparseRegion(doc, regionsIt, element.getStartOffset());
 					}
+					PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) getTextViewer();
+					textViewer.reconcile();
 				}
 			} catch (BadLocationException e) {
 			}
@@ -396,8 +402,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			if (region instanceof ITextRegionContainer) {
 				reparseRegion(doc, ((ITextRegionContainer) region).getRegions().iterator(), offset + region.getStart());
 			}
-			if (region instanceof PhpScriptRegion) {
-				final PhpScriptRegion phpRegion = (PhpScriptRegion) region;
+			if (region instanceof IPhpScriptRegion) {
+				final IPhpScriptRegion phpRegion = (IPhpScriptRegion) region;
 				phpRegion.completeReparse(doc, offset + region.getStart(), region.getLength());
 			}
 		}
@@ -418,10 +424,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		SSEUIPlugin.getDefault().getPreferenceStore().setValue(IStructuredTextFoldingProvider.FOLDING_ENABLED, foldingEnabled);
 	}
 
+	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 	}
 
+	@Override
 	protected void initializeEditor() {
 		super.initializeEditor();
 
@@ -441,6 +449,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		return new ChainedPreferenceStore(new IPreferenceStore[] { sseEditorPrefs, baseEditorPrefs, phpEditorPrefs });
 	}
 
+	@Override
 	protected void setDocumentProvider(IEditorInput input) {
 		if (input instanceof FileStoreEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			setDocumentProvider(new TextFileDocumentProvider());
@@ -449,6 +458,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 	}
 
+	@Override
 	public void dispose() {
 		PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
 		super.dispose();
@@ -457,6 +467,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	/*
 	 * @see AbstractTextEditor#editorContextMenuAboutToShow(IMenuManager)
 	 */
+	@Override
 	public void editorContextMenuAboutToShow(IMenuManager menu) {
 		super.editorContextMenuAboutToShow(menu);
 
@@ -468,6 +479,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 	}
 
+	@Override
 	protected void addContextMenuActions(final IMenuManager menu) {
 		super.addContextMenuActions(menu);
 
@@ -495,6 +507,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 	}
 
+	@Override
 	protected void createNavigationActions() {
 		super.createNavigationActions();
 		final StyledText textWidget = getSourceViewer().getTextWidget();
@@ -545,7 +558,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	protected class SmartLineStartAction extends LineStartAction {
 
-		private boolean fDoSelect;
+		private final boolean fDoSelect;
 
 		/**
 		 * Creates a new smart line start action
@@ -561,6 +574,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see org.eclipse.ui.texteditor.AbstractTextEditor.LineStartAction#getLineStartPosition(java.lang.String, int, java.lang.String)
 		 */
+		@Override
 		protected int getLineStartPosition(final IDocument document, final String line, final int length, final int offset) {
 
 			String type = IDocument.DEFAULT_CONTENT_TYPE;
@@ -595,6 +609,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see org.eclipse.jface.action.IAction#run()
 		 */
+		@Override
 		public void run() {
 			boolean isSmartHomeEndEnabled = true;
 			IPreferenceStore store = getPreferenceStore();
@@ -680,7 +695,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	protected class SmartLineEndAction extends TextNavigationAction {
 
 		/** boolean flag which tells if the text up to the line end should be selected. */
-		private boolean fDoSelect;
+		private final boolean fDoSelect;
 
 		/**
 		 * Create a new line end action.
@@ -700,6 +715,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see org.eclipse.jface.action.IAction#run()
 		 */
+		@Override
 		public void run() {
 			boolean isSmartHomeEndEnabled = true;
 			IPreferenceStore store = getPreferenceStore();
@@ -804,6 +820,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see org.eclipse.jface.action.IAction#run()
 		 */
+		@Override
 		public void run() {
 			// Check whether the feature is enabled in Preferences
 			final IPreferenceStore store = getPreferenceStore();
@@ -870,6 +887,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see NextSubWordAction#setCaretPosition(int)
 		 */
+		@Override
 		protected void setCaretPosition(final int position) {
 			final ISourceViewer viewer = getSourceViewer();
 
@@ -913,6 +931,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see org.eclipse.jface.action.IAction#run()
 		 */
+		@Override
 		public void run() {
 			// Check whether we are in a java code partition and the preference is enabled
 			final IPreferenceStore store = getPreferenceStore();
@@ -981,6 +1000,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see NextSubWordAction#setCaretPosition(int)
 		 */
+		@Override
 		protected void setCaretPosition(final int position) {
 			getTextWidget().setCaretOffset(modelOffset2WidgetOffset(getSourceViewer(), position));
 		}
@@ -1003,6 +1023,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see PreviousSubWordAction#setCaretPosition(int)
 		 */
+		@Override
 		protected void setCaretPosition(final int position) {
 			final ISourceViewer viewer = getSourceViewer();
 
@@ -1039,11 +1060,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		/*
 		 * @see PreviousSubWordAction#setCaretPosition(int)
 		 */
+		@Override
 		protected void setCaretPosition(final int position) {
 			getTextWidget().setCaretOffset(modelOffset2WidgetOffset(getSourceViewer(), position));
 		}
 	}
 
+	@Override
 	protected void createActions() {
 		super.createActions();
 
@@ -1240,6 +1263,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		return new Region(selection.x, selection.y);
 	}
 
+	@Override
 	public void createPartControl(final Composite parent) {
 		super.createPartControl(parent);
 		getSite().getWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
@@ -1249,7 +1273,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					if (partRef.getPart(false) == getEditorPart()) {
 						final IFile file = getFile();
 						if (file != null) {
-							ExternalFilesRegistry externalRegistry = ExternalFilesRegistry.getInstance();
+							final ExternalFilesRegistry externalRegistry = ExternalFilesRegistry.getInstance();
 							if (file.exists()) {
 								IProject proj = file.getProject();
 								try {
@@ -1264,6 +1288,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 										// making sure the project model exists (in case the editor closing is during PDT startup)
 										if (PHPWorkspaceModelManager.getInstance().getModelForProject(proj) != null) {
 											WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
+												@Override
 												public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 													PHPWorkspaceModelManager.getInstance().addFileToModel(file);
 													return Status.OK_STATUS;
@@ -1283,16 +1308,27 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							else {
 								IStructuredModel model = getModel();
 								if (model != null) {
-									String fileName = model.getBaseLocation();
+									final String fileName = new Path(model.getBaseLocation()).toOSString();
 									if (externalRegistry.isEntryExist(fileName)) {
 										//if there are more than one editor opening the external file using "New Editor", do not remove it from model and registry
-										IEditorReference[] existingEditors = ((WorkbenchPage) PHPStructuredEditor.this.getSite().getWorkbenchWindow().getActivePage()).getEditorManager().findEditors(getEditorInput(), null, IWorkbenchPage.MATCH_INPUT);
-
+										IEditorReference[] existingEditors = null;
+										WorkbenchPage activePage = (WorkbenchPage) PHPStructuredEditor.this.getSite().getWorkbenchWindow().getActivePage();
+										if (activePage != null) {
+											existingEditors = activePage.getEditorManager().findEditors(getEditorInput(), null, IWorkbenchPage.MATCH_INPUT);
+										}
 										// Make sure that the file has a full path before we try to remove it from the model.
-										if (existingEditors.length == 1) { //a single editor
-											IFile fileDecorator = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
-											PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileDecorator);
-											externalRegistry.removeFileEntry(fileName);
+										if (existingEditors == null || existingEditors.length == 1) { //a single editor
+											final IFile fileWrapper = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
+											WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
+												@Override
+												public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+													PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileWrapper);
+													externalRegistry.removeFileEntry(fileName);
+													return Status.OK_STATUS;
+												}
+											};
+											job.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+											job.schedule();
 										}
 									}
 								}
@@ -1366,6 +1402,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	}
 
+	@Override
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		IResource resource = null;
 		IPath externalPath = null;
@@ -1395,7 +1432,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			} else {
 				// This is, probably, a remote storage:
 				externalPath = storage.getFullPath();
-				resource = ExternalFileWrapper.createFile(externalPath.toString());
+				resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 			}
 		} else if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			// External file editor input. It's usually used when opening PHP file
@@ -1408,21 +1445,21 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			} else {
 				externalPath = URIUtil.toPath(((IURIEditorInput) input).getURI());
 			}
-			resource = ExternalFileWrapper.createFile(externalPath.toString());
+			resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 		}
 
 		if (resource instanceof IFile) {
 			if (PHPModelUtil.isPhpFile((IFile) resource)) {
 				// Add file decorator entry to the list of external files:
 				if (externalPath != null && resource instanceof ExternalFileWrapper) {
-					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toString(), (ExternalFileWrapper) resource);
+					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toOSString(), (ExternalFileWrapper) resource);
 					isExternal = true;
 				}
 				// Remove an older record from the external files registry in case this editor
 				// is being reused to display a new content.
 				IEditorInput oldInput = getEditorInput();
 				if (oldInput != null && oldInput instanceof IStorageEditorInput) {
-					String storagePath = ((IStorageEditorInput) oldInput).getStorage().getFullPath().toString();
+					String storagePath = ((IStorageEditorInput) oldInput).getStorage().getFullPath().toOSString();
 					ExternalFilesRegistry.getInstance().removeFileEntry(storagePath);
 				}
 				PhpSourceParser.editFile.set(resource);
@@ -1435,10 +1472,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		} else {
 			super.doSetInput(input);
 		}
+
+		ImageDescriptor imageDescriptor = input.getImageDescriptor();
+		if (imageDescriptor != null) {
+			setTitleImage(JFaceResources.getResources().createImageWithDefault(imageDescriptor));
+		}
 	}
 
 	ISelectionChangedListener selectionListener;
 
+	@Override
 	public Object getAdapter(final Class required) {
 		final Object adapter = super.getAdapter(required);
 
@@ -1513,16 +1556,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			}
 		}
 		IPath path = new Path(getModel().getBaseLocation());
-		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
-			return ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+			return ExternalFilesRegistry.getInstance().getFileEntry(path.toOSString());
 		}
 		//could be that it is an external file BUT was already removed !, check :
 		else if (path.segmentCount() == 1) {
-			return ExternalFileWrapper.createFile(path.toString());
+			return ExternalFileWrapper.createFile(path.toOSString());
 		}
 
 		//handle case of workspace file AND/OR an external file with more than 1 segment
-		return (ResourcesPlugin.getWorkspace().getRoot()).getFile(path);
+		return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 	}
 
 	public PHPFileData getPHPFileData() {
@@ -1539,11 +1582,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.sse.ui.StructuredTextEditor#handleCursorPositionChanged()
 	 */
+	@Override
 	protected void handleCursorPositionChanged() {
 		updateCursorDependentActions();
 		super.handleCursorPositionChanged();
 	}
 
+	@Override
 	protected void handlePreferenceStoreChanged(final PropertyChangeEvent event) {
 		final String property = event.getProperty();
 		try {
@@ -1554,6 +1599,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 	}
 
+	@Override
 	protected void initializeKeyBindingScopes() {
 		setKeyBindingScopes(new String[] { "org.eclipse.php.ui.phpEditorScope" }); //$NON-NLS-1$
 	}
@@ -1598,7 +1644,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 					ITextRegion region = sdRegion.getRegionAtCharacterOffset(start);
 					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-						PhpScriptRegion phpScriptRegion = (PhpScriptRegion) region;
+						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 						try {
 							region = phpScriptRegion.getPhpToken(start - sdRegionStart - phpScriptRegion.getStart());
 
@@ -1683,7 +1729,19 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 	}
 
+	@Override
 	protected StructuredTextViewer createStructedTextViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
 		return new PHPStructuredTextViewer(this, parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(), styles);
+	}
+
+	@Override
+	public IDocumentProvider getDocumentProvider() {
+		if (getEditorInput() instanceof LocalFileStorageEditorInput) {
+			IDocumentProvider provider = LocalStorageModelProvider.getInstance();
+			if (provider != null) {
+				return provider;
+			}
+		}
+		return super.getDocumentProvider();
 	}
 }
