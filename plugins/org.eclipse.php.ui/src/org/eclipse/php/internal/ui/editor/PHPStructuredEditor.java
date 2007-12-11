@@ -55,6 +55,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
@@ -1731,5 +1732,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	@Override
 	protected StructuredTextViewer createStructedTextViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
 		return new PHPStructuredTextViewer(this, parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(), styles);
+	}
+
+	@Override
+	public IDocumentProvider getDocumentProvider() {
+		if (getEditorInput() instanceof LocalFileStorageEditorInput) {
+			IDocumentProvider provider = LocalStorageModelProvider.getInstance();
+			if (provider != null) {
+				return provider;
+			}
+		}
+		return super.getDocumentProvider();
 	}
 }
