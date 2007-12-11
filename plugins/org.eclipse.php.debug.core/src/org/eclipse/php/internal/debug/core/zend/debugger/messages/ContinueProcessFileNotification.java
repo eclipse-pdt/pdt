@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 
 /**
- * This message is sent by the Studio to the Debugger after it has received {@link StartProcessFileNotification},
+ * This message is sent by the PDT to the Debugger after it has received {@link StartProcessFileNotification},
  * and all needed preparations to the proceeding with new file (like: breakpoints, path mapper, etc...) where done.
  *
  * @author michael
