@@ -40,8 +40,14 @@ public class SourceActionFilterNotInEFS implements IActionFilterContributor {
 			}
 			fileName = (codeData).getUserData().getFileName();
 		}
+		// construct a path
+		Path fileNamePath = new Path(fileName);
+		// if it has only one segment 'getFile' throws an exception so return false anyway
+		if (fileNamePath.segmentCount() <= 1) {
+			return false;
+		}
 		// file is not in EFS, e.g include path
-		IFile checkFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
+		IFile checkFile = ResourcesPlugin.getWorkspace().getRoot().getFile(fileNamePath);
 		if (checkFile.exists()) {
 			return true;
 		}
