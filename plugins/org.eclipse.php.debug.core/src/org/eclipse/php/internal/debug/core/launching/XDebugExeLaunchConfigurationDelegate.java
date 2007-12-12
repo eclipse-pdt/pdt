@@ -205,14 +205,11 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		String[] cmdLine = null;
 		if (workingDir == projectDir) {
 			// script name is relative to the project directory
-			//cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.toOSString());
 			cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(), phpFile.toOSString(), args);
 		}
 		else {
 			// script is relative to the working directory.
-			cmdLine = createCommandLine(configuration, projectDir.toString(), phpExe.toOSString(), phpFile.lastSegment());
 			cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(), phpFile.lastSegment(), args);
-			
 		}
 
 		// Launch the process
@@ -273,24 +270,13 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		return envVarString;
 	}
 
-
 	/**
-	 * @param configuration the launch configuration
-	 * @param phpConfigDir ini directory location (probably never used)
-	 * @param exeName the name of the executable
-	 * @param scriptName name of script relative to working directory
-	 * @return the command line to be invoked.
-	 * @throws CoreException rethrown exception
+	 * create the LD_LIBRARY_PATH information
+	 * @param exePath the path to put into LD_LIBRARY_PATH
+	 * @return environment string
 	 */
-	public String[] createCommandLine(ILaunchConfiguration configuration, String phpConfigDir, String exeName, String scriptName) throws CoreException {
-		String phpIniLocation = configuration.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION, "");
-		if (!"".equals(phpIniLocation)) {
-			phpConfigDir = new File(phpIniLocation).getParent();
-		}
-		return PHPLaunchUtilities.getCommandLine(configuration, exeName, phpConfigDir, scriptName, null);
-	}
-
 	private String getLibraryPath(IPath exePath) {
+		//TODO: Should append if already present
 		StringBuffer buf = new StringBuffer();
 		buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
 		buf.append('=');
