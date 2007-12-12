@@ -348,17 +348,19 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		// Don't synchronize on lock, debugger may be hung. Just terminate.
 		if (!startLock.isStarted()) {
 			terminated();
+			fTermainateCalled = true;
 			return;
 		}
-		fTermainateCalled = true;
+
 		((PHPThread) getThreads()[0]).setStepping(false);
 		fTerminated = true;
 		fSuspended = false;
 		fLastcmd = "terminate";
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling closeDebugSession()");
 		debugger.closeDebugSession();
-		//		terminated(); // TODO - Might be needed...
-		//		fTermainateCalled = true;
+
+		terminated();
+		fTermainateCalled = true;
 	}
 
 	/**
