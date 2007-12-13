@@ -13,7 +13,6 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
@@ -80,7 +79,7 @@ public class PHPLanguageModelManager extends PhpModelProxy implements IPHPLangua
 			return PHPLanguageModelManager.this.project;
 		}
 	}
-	
+
 	public IPHPLanguageModel setDefaultLanguageModel() {
 		setVersion(PhpVersionProjectPropertyHandler.getVersion());
 		return this;
