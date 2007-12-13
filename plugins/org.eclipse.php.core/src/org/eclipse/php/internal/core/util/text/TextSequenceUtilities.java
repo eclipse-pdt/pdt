@@ -17,7 +17,6 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 
 public final class TextSequenceUtilities {
 
@@ -30,7 +29,11 @@ public final class TextSequenceUtilities {
 
 	public static TextSequence createTextSequence(IStructuredDocumentRegion source, int startOffset, int length) {
 
-		String s = (((BasicStructuredDocument) source.getParentDocument()).get(startOffset, length));
+		String s = "";//$NON-NLS-1$
+		try {
+			s = source.getParentDocument().get(startOffset, length);
+		} catch (BadLocationException e) {
+		}
 		Segment segment = new Segment(s.toCharArray(), 0, s.length());
 		return new SimpleTextSequence(source, segment, 0, segment.count, startOffset);
 	}
