@@ -48,6 +48,9 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 				evalJob.schedule();
 			}
 		}
+		else {
+			watchListener.watchEvaluationFinished(null);
+		}
 	}
 
 	/**
