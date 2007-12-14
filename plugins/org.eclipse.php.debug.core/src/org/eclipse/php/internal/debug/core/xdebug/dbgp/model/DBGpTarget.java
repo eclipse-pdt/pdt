@@ -204,11 +204,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		setState(STATE_INIT_SESSION_WAIT);
 
 		try {
-			boolean launchIsCanceled = false;
-			if (launchMonitor != null) {
-				launchIsCanceled = launchMonitor.isCanceled();
-			}
-			while (session == null && !launch.isTerminated() && !isTerminating() && !launchIsCanceled) {
+			while (session == null && !launch.isTerminated() && !isTerminating() && (launchMonitor != null && !launchMonitor.isCanceled())) {
 
 				// if we got here then session has not been updated
 				// by the other thread yet, so wait. We wait for
@@ -217,6 +213,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 				te.waitForEvent(XDebugPreferenceInit.getTimeoutDefault());
 			}
 
+			boolean launchIsCanceled = false;
 			if (session != null && session.isActive()) {
 				if (launchMonitor != null) {
 					launchIsCanceled = launchMonitor.isCanceled();
@@ -319,8 +316,11 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 				// resume();
 
 				if (session != null) {
+					// set state before issuing a run otherwise a timing window occurs where
+					// a run could suspend, the thread sets state to suspend but then this
+					// thread sets it to running.
+					setState(STATE_STARTED_RUNNING); 				
 					session.sendAsyncCmd(DBGpCommand.run);
-					setState(STATE_STARTED_RUNNING);
 				}
 
 			} else {
@@ -535,20 +535,27 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		}
 		if (STATE_TERMINATING == targetState) {
 			// we are terminating, if we are a web launch, we need to issue the
-			// stop URL
+			// stop URL, then terminate the debug target.
 			if (isWebLaunch()) {
 				sendStopDebugURL();
 			}
 			terminateDebugTarget(true);
 		} else {
 
-			// ok, the session ended and we are not terminating, if we are a web
-			// launch the we wait for the next session, otherwise terminate the
-			// debugtarget
+			// we were not terminating and the session ended. If we are a web
+			// launch, then we need to wait for the next session. Otherwise we
+			// terminate the debug target.
 			if (isWebLaunch()) {
+				if (isSuspended()) {
+					// if we are suspended, then inform eclipse we have resumed
+					// so all the user can do is terminate or disconnect while
+					// waiting for the next session.
+					fireResumeEvent(DebugEvent.RESUME);
+					langThread.fireResumeEvent(DebugEvent.RESUME);
+				}
+				stepping = false;				
 				setState(STATE_STARTED_SESSION_WAIT);
-				stepping = false;
-				langThread.setBreakpoints(null);
+				langThread.setBreakpoints(null);								
 			} else {
 				terminateDebugTarget(true);
 			}

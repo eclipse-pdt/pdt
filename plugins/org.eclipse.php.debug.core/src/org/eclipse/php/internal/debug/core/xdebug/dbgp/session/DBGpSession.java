@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -36,7 +38,7 @@ public class DBGpSession {
 	private AsyncResponseHandlerJob responseHandler;
 	private DBGpCommand DBGpCmd;
 	private DataInputStream DBGpReader;
-	private boolean socketClosed = false;
+	private boolean sessionActive = false;
 	private DBGpTarget debugTarget;
 	private Hashtable savedResponses = new Hashtable();
 	private String ideKey;
@@ -63,7 +65,7 @@ public class DBGpSession {
 		try {
 			DBGpCmd = new DBGpCommand(DBGpSocket);
 			DBGpReader = new DataInputStream(DBGpSocket.getInputStream());
-			socketClosed = false;
+			sessionActive = true;
 			
 			//TODO: Could look at supporting a timeout here.
 			byte[] response = readResponse();
@@ -130,11 +132,13 @@ public class DBGpSession {
 	 * @param arguments its arguments
 	 */
 	public void sendAsyncCmd(String cmd, String arguments) {
-		int id = DBGpCommand.getNextId();
-		try {
-			DBGpCmd.send(cmd, arguments, id, sessionEncoding);
-		} catch (IOException e) {
-			endSession();
+		if (sessionActive) {
+			int id = DBGpCommand.getNextId();
+			try {
+				DBGpCmd.send(cmd, arguments, id, sessionEncoding);
+			} catch (IOException e) {
+				endSession();
+			}
 		}
 	}
 
@@ -145,24 +149,27 @@ public class DBGpSession {
 	 * @return the response
 	 */
 	public DBGpResponse sendSyncCmd(String cmd, String arguments) {
-		// this must be done before the command is sent because
-		// the savedResponses must have the id and event in the
-		// table so that the response handler can locate it.
-		int id = DBGpCommand.getNextId();
-		Event idev = new Event();
-		Integer idObj = new Integer(id);
-		savedResponses.put(idObj, idev);
-
-		try {
-			DBGpCmd.send(cmd, arguments, id, sessionEncoding);
-			idev.waitForEvent(); // wait forever
-			return (DBGpResponse) savedResponses.remove(idObj);
-		} catch (InterruptedException e) {
-			return null;
-		} catch (IOException e) {
-			endSession();
-			return null;
+		if (sessionActive) {
+			// this must be done before the command is sent because
+			// the savedResponses must have the id and event in the
+			// table so that the response handler can locate it.
+			int id = DBGpCommand.getNextId();
+			Event idev = new Event();
+			Integer idObj = new Integer(id);
+			savedResponses.put(idObj, idev);
+	
+			try {
+				DBGpCmd.send(cmd, arguments, id, sessionEncoding);
+				idev.waitForEvent(); // wait forever
+				return (DBGpResponse) savedResponses.remove(idObj);
+			} catch (InterruptedException e) {
+				return null;
+			} catch (IOException e) {
+				endSession();
+				return null;
+			}
 		}
+		return null;
 	}
 
 	/**
@@ -195,7 +202,7 @@ public class DBGpSession {
 
 		protected IStatus run(IProgressMonitor monitor) {
 			byte[] response = null;
-			while (!socketClosed) {
+			while (sessionActive) {
 				// here we need to block waiting for a response
 				// then process that response
 				
@@ -215,7 +222,7 @@ public class DBGpSession {
 							
 							if ( respType == DBGpResponse.RESPONSE) {
 								if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
-									handleStopStatus();
+									handleStopStatus(parsedResponse);
 								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
 									handleBreakStatus(parsedResponse);
 								}
@@ -272,14 +279,33 @@ public class DBGpSession {
 				idObj = new Integer(DBGpCmd.getLastIdSent());
 			}
 			if (savedResponses.containsKey(idObj)) {
-				Event idev = (Event) savedResponses.get(idObj);
-				savedResponses.put(idObj, parsedResponse);
-				idev.signalEvent();
+				postAndSignalCaller(idObj, parsedResponse);
+				
 			} else {
 				// no one waiting for the response, so we need to check the response was
 				// ok and generate log info. This could have been a response to an async
 				// invocation.
 				DBGpUtils.isGoodDBGpResponse(this, parsedResponse);
+			}
+		}
+
+		private void postAndSignalCaller(Integer idObj, DBGpResponse parsedResponse) {
+			Object responder = savedResponses.get(idObj);
+			if (responder instanceof Event) {
+				// we have an event for the id so we need to respond
+				// and unblock the caller, otherwise it has already 
+				// been done (maybe from unblockAllCallers)
+				Event idev = (Event) responder;
+				savedResponses.put(idObj, parsedResponse);
+				idev.signalEvent();					
+			}
+		}
+		
+		private void unblockAllCallers(DBGpResponse parsedResponse) {
+			Set keys = savedResponses.keySet();
+			for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
+				Integer idObj = (Integer) iterator.next();
+				postAndSignalCaller(idObj, parsedResponse);
 			}
 		}
 
@@ -303,17 +329,9 @@ public class DBGpSession {
 		 * script has stopped, either by request or reached the end
 		 *
 		 */
-		private void handleStopStatus() {
+		private void handleStopStatus(DBGpResponse parsedResponse) {
 			endSession();
-			/*
-			try {
-				DBGpSocket.close();
-			} catch (IOException e) {
-				// Ignore the exception except for debug purposes
-				DBGpLogger.debugException(e);
-			}
-			socketClosed = true;
-			*/
+			unblockAllCallers(parsedResponse);			
 		}
 
 		/**
@@ -365,7 +383,7 @@ public class DBGpSession {
 
 				// we could have received a stop here so we need to check for this
 				if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
-					handleStopStatus();
+					handleStopStatus(parsedResponse);
 				} else {
 					Node stackData = parsedResponse.getParentNode().getFirstChild(); // get the first stack entry
 					String line = DBGpResponse.getAttribute(stackData, "lineno");
@@ -451,7 +469,8 @@ public class DBGpSession {
 	 *
 	 */
 	public synchronized void endSession() {
-		if (!socketClosed) {
+		if (sessionActive) {
+			sessionActive = false;	   						
 			try {
 				DBGpSocket.shutdownInput();
 			}
@@ -466,7 +485,6 @@ public class DBGpSession {
 			}
 			
 	   		try {
-				socketClosed = true;	   			
 				DBGpSocket.close();
 				
 			} catch (IOException e) {
@@ -478,7 +496,6 @@ public class DBGpSession {
 			debugTarget.sessionEnded();
 			debugTarget = null;
 		}
-		
 	}
 
 	/**
@@ -498,7 +515,7 @@ public class DBGpSession {
 	}
 
 	public boolean isActive() {
-		return !socketClosed;
+		return sessionActive;
 	}
 
 	/**
