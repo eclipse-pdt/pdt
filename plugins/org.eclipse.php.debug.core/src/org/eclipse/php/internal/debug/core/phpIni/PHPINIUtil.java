@@ -83,6 +83,19 @@ public class PHPINIUtil {
 					if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 						entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
 					}
+					if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+						IPath containerPath = entry.getResource().getLocation();
+						if (containerPath != null) {
+							entryPath = containerPath;
+						} else {
+							entryPath = entry.getPath();
+						}
+						// FIXME for Yaron:
+						// If the folder exists in FS, but it's sub-folder is RSE and we put the absolute location,
+						// Location will be available, but debugger won't find the sub-folder.
+						// On the other hand, if we run with no debug info, workspace paths won't be resolved at all.
+						// possible solution is to always put both of them in order to get the maximum compatibility for both of cases.
+					}
 					if (entryPath != null) {
 						includePath.add(entryPath.toFile().getAbsolutePath());
 					}

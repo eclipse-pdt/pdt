@@ -13,10 +13,7 @@ package org.eclipse.php.internal.debug.core.model;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -49,8 +46,8 @@ public class BreakpointSet {
 							fDirectories.add(file.getAbsolutePath());
 						} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
 							IResource includeResource = element.getResource();
-							if (includeResource instanceof IProject) {
-								fProjects.add((IProject)includeResource);
+							if (includeResource instanceof IContainer) {
+								fProjects.add(includeResource.getProject());
 							}
 						} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 							IPath path = element.getPath();

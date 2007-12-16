@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.sourcelookup.containers;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -53,9 +54,9 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 							containers.add(new PHPDirectorySourceContainer(file, false, project));
 						}
 					} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-						IResource includeResource = element.getResource();
-						if (includeResource instanceof IProject) {
-							IProject includeProject = (IProject) element.getResource();
+						IResource resource = element.getResource();
+						if (resource instanceof IContainer) {
+							IProject includeProject = element.getResource().getProject();
 							containers.add(new ProjectSourceContainer(includeProject, false));
 						}
 					} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
